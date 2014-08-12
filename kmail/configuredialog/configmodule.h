@@ -27,12 +27,11 @@
 #include "kmail_export.h"
 
 #include <kcmodule.h>
-
 class ConfigModule : public KCModule
 {
 public:
-  explicit ConfigModule( const KComponentData &instance, QWidget *parent=0 )
-     : KCModule ( instance, parent )
+  explicit ConfigModule( QWidget *parent=0 )
+     : KCModule ( parent ) 
      {}
   ~ConfigModule() {}
 

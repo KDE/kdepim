@@ -22,16 +22,15 @@
 #include "extendattributesutils_p.h"
 
 #include <KComboBox>
-#include <KPushButton>
+#include <QPushButton>
 #include <KSeparator>
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QWebElement>
-#include <QDebug>
 
 namespace ComposerEditorNG {
 
@@ -66,7 +65,7 @@ public:
         QHBoxLayout *hbox = new QHBoxLayout;
 
         if (settings == ExtendAttributesDialog::InlineStyle) {
-            attributesLineEdit = new KLineEdit;
+            attributesLineEdit = new QLineEdit;
             q->connect(attributesLineEdit, SIGNAL(textChanged(QString)), q, SLOT(_k_attributeLineEditChanged(QString)));
             hbox->addWidget(attributesLineEdit);
         } else {
@@ -81,7 +80,7 @@ public:
         hbox->addWidget(attributeValue);
 
         lay->addLayout(hbox);
-        removeAttribute = new KPushButton( i18n( "Remove" ) );
+        removeAttribute = new QPushButton( i18n( "Remove" ) );
         removeAttribute->setEnabled(false);
         q->connect(removeAttribute, SIGNAL(clicked(bool)), q, SLOT(_k_slotRemoveAttribute()));
         lay->addWidget(removeAttribute);
@@ -112,9 +111,9 @@ public:
     QMap<QString, QStringList> attributesMap;
     QTreeWidget *treeWidget;
     KComboBox *attributes;
-    KLineEdit *attributesLineEdit;
+    QLineEdit *attributesLineEdit;
     KComboBox *attributeValue;
-    KPushButton *removeAttribute;
+    QPushButton *removeAttribute;
 
     bool blockSignal;
     ExtendAttributesWidget *q;

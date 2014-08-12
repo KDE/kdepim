@@ -27,10 +27,9 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
+
 #include <QTabWidget>
 #include <QVBoxLayout>
-#include <QListWidget>
-#include <QLabel>
 #include <QCheckBox>
 
 SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
@@ -73,12 +72,12 @@ void SieveEditorConfigureDialog::saveServerSieveConfig()
 {
     mServerWidget->writeConfig();
     PimCommon::ConfigureImmutableWidgetUtils::saveCheckBox(mCloseWallet, SieveEditorGlobalConfig::self()->closeWalletItem());
-    SieveEditorGlobalConfig::self()->writeConfig();
+    SieveEditorGlobalConfig::self()->save();
 }
 
 void SieveEditorConfigureDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditorConfigureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditorConfigureDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -87,7 +86,7 @@ void SieveEditorConfigureDialog::readConfig()
 
 void SieveEditorConfigureDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditorConfigureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditorConfigureDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

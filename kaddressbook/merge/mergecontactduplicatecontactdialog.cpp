@@ -25,7 +25,7 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KGlobal>
+
 
 #include <QStackedWidget>
 #include <QLabel>
@@ -76,14 +76,14 @@ void MergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const 
         mStackedWidget->setCurrentWidget(mNoEnoughContactSelected);
     } else {
         SearchPotentialDuplicateContactJob *job = new SearchPotentialDuplicateContactJob(list, this);
-        connect(job,SIGNAL(finished(QList<Akonadi::Item::List>)), this, SLOT(slotDuplicateFound(QList<Akonadi::Item::List>)));
+        connect(job, &SearchPotentialDuplicateContactJob::finished, this, &MergeContactDuplicateContactDialog::slotDuplicateFound);
         job->start();
     }
 }
 
 void MergeContactDuplicateContactDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "MergeContactDuplicateContactDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactDuplicateContactDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -92,7 +92,7 @@ void MergeContactDuplicateContactDialog::readConfig()
 
 void MergeContactDuplicateContactDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "MergeContactDuplicateContactDialog");
+    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactDuplicateContactDialog");
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

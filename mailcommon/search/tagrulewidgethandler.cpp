@@ -22,15 +22,15 @@ using MailCommon::RegExpLineEdit;
 
 #include <pimcommon/widgets/minimumcombobox.h>
 
-#include <KDebug>
-#include <KIcon>
+#include <QDebug>
+#include <QIcon>
 #include <KLocale>
 #include <KJob>
 
-#include <Akonadi/Tag>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/TagFetchScope>
-#include <Akonadi/TagAttribute>
+#include <Tag>
+#include <TagFetchJob>
+#include <TagFetchScope>
+#include <TagAttribute>
 
 #include <QLineEdit>
 #include <QStackedWidget>
@@ -62,7 +62,7 @@ void FillTagComboJob::onDestroyed()
 {
     mComboBox = 0;
     setError(KJob::UserDefinedError);
-    kDebug() << "Combobox destroyed";
+    qDebug() << "Combobox destroyed";
     emitResult();
 }
 
@@ -76,12 +76,12 @@ void FillTagComboJob::start()
 void FillTagComboJob::onTagsFetched(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         setError(KJob::UserDefinedError);
         emitResult();
     }
     if (!mComboBox) {
-        kDebug() << "combobox already destroyed";
+        qDebug() << "combobox already destroyed";
         emitResult();
         return;
     }
@@ -94,7 +94,7 @@ void FillTagComboJob::onTagsFetched(KJob *job)
                 iconName = attr->iconName();
             }
         }
-        mComboBox->addItem( KIcon( iconName ), tag.name(), tag.url().url() );
+        mComboBox->addItem( QIcon::fromTheme( iconName ), tag.name(), tag.url().url() );
     }
     emitResult();
 }

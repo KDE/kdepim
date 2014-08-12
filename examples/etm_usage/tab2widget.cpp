@@ -30,8 +30,8 @@
 #include "entitytreewidget.h"
 #include "itemviewerwidget.h"
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
 
 class Tab2TreeWidget : public EntityTreeWidget
 {

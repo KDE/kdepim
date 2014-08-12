@@ -33,7 +33,7 @@
 #include "libkleo/backends/qgpgme/qgpgmenewcryptoconfig.h"
 
 #include <kapplication.h>
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kcmdlineargs.h>
 #include <iostream>
 
@@ -54,7 +54,7 @@ int main( int argc, char** argv ) {
   if ( newCryptoConfig )
       argc = 1; // hide from KDE
 
-  KAboutData aboutData( "test_cryptoconfig", 0, ki18n("CryptoConfig Test"), "0.1" );
+  K4AboutData aboutData( "test_cryptoconfig", 0, ki18n("CryptoConfig Test"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app( false );
 

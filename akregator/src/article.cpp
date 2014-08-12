@@ -29,14 +29,14 @@
 #include "storage.h"
 #include "utils.h"
 
-#include <syndication/syndication.h>
+#include <Syndication/Syndication>
 
 #include <QDateTime>
 #include <qdom.h>
 #include <QRegExp>
 #include <QList>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kurl.h>
 
 #include <cassert>

@@ -18,7 +18,7 @@
 #include "babelfishtranslator.h"
 #include "translatorutil.h"
 #include <kio/job.h>
-#include <KDebug>
+#include <QDebug>
 #include <KComboBox>
 
 using namespace MessageViewer;
@@ -143,7 +143,7 @@ void BabelFishTranslator::translate()
   body.replace(QLatin1String( "%20" ), QLatin1String( "+" ));
 
   QByteArray postData = QString( "ei=UTF-8&doit=done&fr=bf-res&intl=1&tt=urltext&trtext=%1&lp=%2_%3&btnTrTxt=Translate").arg( body, mFrom, mTo ).toLocal8Bit();
-  kDebug() << "URL:" << geturl << "(post data" << postData << ")";
+  qDebug() << "URL:" << geturl << "(post data" << postData << ")";
 
   KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,geturl);
   job->addMetaData( "content-type", "Content-Type: application/x-www-form-urlencoded" );

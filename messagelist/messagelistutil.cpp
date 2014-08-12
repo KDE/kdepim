@@ -20,11 +20,11 @@
 #include <QTextDocument>
 
 #include <KConfigGroup>
-#include <KMenu>
-#include <KIcon>
+#include <QMenu>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KMime/Message>
-#include <Akonadi/Item>
+#include <Item>
 
 using namespace MessageList::Core;
 
@@ -119,22 +119,22 @@ QColor MessageList::Util::todoDefaultMessageColor()
     return QColor( 0x0, 0x98, 0x0 );
 }
 
-void MessageList::Util::fillViewMenu( KMenu * menu, QObject *receiver )
+void MessageList::Util::fillViewMenu( QMenu * menu, QObject *receiver )
 {
-    KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
-    sortingMenu->setIcon( KIcon( QLatin1String( "view-sort-ascending" ) ) );
+    QMenu* sortingMenu = new QMenu( i18n( "Sorting" ), menu );
+    sortingMenu->setIcon( QIcon::fromTheme( QLatin1String( "view-sort-ascending" ) ) );
     menu->addMenu( sortingMenu );
     QObject::connect( sortingMenu, SIGNAL(aboutToShow()),
                       receiver, SLOT(sortOrderMenuAboutToShow()) );
 
-    KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ), menu );
-    aggregationMenu->setIcon( KIcon( QLatin1String( "view-process-tree" ) ) );
+    QMenu* aggregationMenu = new QMenu( i18n( "Aggregation" ), menu );
+    aggregationMenu->setIcon( QIcon::fromTheme( QLatin1String( "view-process-tree" ) ) );
     menu->addMenu( aggregationMenu );
     QObject::connect( aggregationMenu, SIGNAL(aboutToShow()),
                       receiver, SLOT(aggregationMenuAboutToShow()) );
 
-    KMenu* themeMenu = new KMenu( i18n( "Theme" ), menu );
-    themeMenu->setIcon( KIcon( QLatin1String( "preferences-desktop-theme" ) ) );
+    QMenu* themeMenu = new QMenu( i18n( "Theme" ), menu );
+    themeMenu->setIcon( QIcon::fromTheme( QLatin1String( "preferences-desktop-theme" ) ) );
     menu->addMenu( themeMenu );
     QObject::connect( themeMenu, SIGNAL(aboutToShow()),
                       receiver, SLOT(themeMenuAboutToShow()) );
@@ -171,6 +171,6 @@ QString MessageList::Util::contentSummary( const Akonadi::Item &item )
                 break;
         }
     }
-    return Qt::escape(ret);
+    return ret.toHtmlEscaped();
 }
 

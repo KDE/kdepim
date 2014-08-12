@@ -51,7 +51,7 @@
 #include "progressmanager.h"
 #include "searchbar.h"
 #include "selectioncontroller.h"
-#include "speechclient.h"
+//QT5 #include "speechclient.h"
 #include "subscriptionlistjobs.h"
 #include "subscriptionlistmodel.h"
 #include "subscriptionlistview.h"
@@ -63,16 +63,14 @@
 
 #include <kaction.h>
 #include <kdialog.h>
-#include <KDebug>
 #include <kfiledialog.h>
 #include <kfileitem.h>
 #include <kiconloader.h>
-#include <kinputdialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <krandom.h>
 #include <kshell.h>
-#include <kstandarddirs.h>
+
 #include <ktoggleaction.h>
 #include <ktoolinvocation.h>
 #include <kurl.h>
@@ -334,7 +332,7 @@ void Akregator::MainWidget::slotOnShutdown()
     delete m_mainTab;
     delete m_mainFrame;
 
-    Settings::self()->writeConfig();
+    Settings::self()->save();
 }
 
 
@@ -347,7 +345,7 @@ void Akregator::MainWidget::saveSettings()
     if ( std::count( spl2.begin(), spl2.end(), 0 ) == 0 )
         Settings::setSplitter2Sizes( spl2 );
     Settings::setViewMode( m_viewMode );
-    Settings::self()->writeConfig();
+    Settings::self()->save();
 }
 
 
@@ -992,7 +990,7 @@ void Akregator::MainWidget::slotArticleDelete()
         case 0:
             return;
         case 1:
-            msg = i18n("<qt>Are you sure you want to delete article <b>%1</b>?</qt>", Qt::escape(articles.first().title()));
+            msg = i18n("<qt>Are you sure you want to delete article <b>%1</b>?</qt>", articles.first().title().toHtmlEscaped());
             break;
         default:
             msg = i18np("<qt>Are you sure you want to delete the selected article?</qt>", "<qt>Are you sure you want to delete the %1 selected articles?</qt>", articles.count());
@@ -1083,14 +1081,15 @@ void Akregator::MainWidget::slotSetSelectedArticleRead()
 
 void Akregator::MainWidget::slotTextToSpeechRequest()
 {
-
     if (Kernel::self()->frameManager()->currentFrame() == m_mainFrame)
     {
         if (m_viewMode != CombinedView)
         {
+#if 0 //QT5
             // in non-combined view, read selected articles
             SpeechClient::self()->slotSpeak(m_selectionController->selectedArticles());
             // TODO: if article viewer has a selection, read only the selected text?
+#endif
         }
         else
         {
@@ -1131,7 +1130,7 @@ void Akregator::MainWidget::slotSetCurrentArticleReadDelayed()
 
 void Akregator::MainWidget::slotMouseOverInfo(const KFileItem& kifi)
 {
-    m_mainFrame->slotSetStatusText( kifi.isNull() ? QString() : kifi.url().prettyUrl() );
+    m_mainFrame->slotSetStatusText( kifi.isNull() ? QString() : kifi.url().toDisplayString() );
 }
 
 void Akregator::MainWidget::readProperties(const KConfigGroup &config)

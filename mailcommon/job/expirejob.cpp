@@ -32,17 +32,17 @@
 #include <libkdepim/misc/broadcaststatus.h>
 using KPIM::BroadcastStatus;
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
-#include <Akonadi/ItemDeleteJob>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemMoveJob>
+#include <ItemDeleteJob>
+#include <ItemModifyJob>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
+#include <ItemMoveJob>
 #include <Akonadi/KMime/MessageParts>
 #include <Akonadi/KMime/MessageStatus>
-#include <akonadi/kmime/messageflags.h>
+#include <Akonadi/KMime/MessageFlags>
 #include <KMime/Message>
 
 /*
@@ -67,7 +67,7 @@ ExpireJob::ExpireJob( const Akonadi::Collection &folder, bool immediate )
 
 ExpireJob::~ExpireJob()
 {
-    kDebug();
+    qDebug();
 }
 
 void ExpireJob::kill()
@@ -92,20 +92,20 @@ void ExpireJob::execute()
     }
 
     if ( unreadDays > 0 ) {
-        kDebug() << "ExpireJob: deleting unread older than"<< unreadDays << "days";
+        qDebug() << "ExpireJob: deleting unread older than"<< unreadDays << "days";
         mMaxUnreadTime = time(0) - unreadDays * 3600 * 24;
     }
     if ( readDays > 0 ) {
-        kDebug() << "ExpireJob: deleting read older than"<< readDays << "days";
+        qDebug() << "ExpireJob: deleting read older than"<< readDays << "days";
         mMaxReadTime = time(0) - readDays * 3600 * 24;
     }
 
     if ( ( mMaxUnreadTime == 0 ) && ( mMaxReadTime == 0 ) ) {
-        kDebug() << "ExpireJob: nothing to do";
+        qDebug() << "ExpireJob: nothing to do";
         deleteLater();
         return;
     }
-    kDebug() << "ExpireJob: starting to expire in folder" << mSrcFolder.name();
+    qDebug() << "ExpireJob: starting to expire in folder" << mSrcFolder.name();
     slotDoWork();
     // do nothing here, we might be deleted!
 }
@@ -120,7 +120,7 @@ void ExpireJob::slotDoWork()
 void ExpireJob::itemFetchResult( KJob *job )
 {
     if ( job->error() ) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         deleteLater();
         return;
     }
@@ -144,7 +144,7 @@ void ExpireJob::itemFetchResult( KJob *job )
             continue;
         }
 
-        if ( mb->date()->dateTime().dateTime().toTime_t() < maxTime ) {
+        if ( mb->date()->dateTime().toTime_t() < maxTime ) {
             mRemovedMsgs.append( item );
         }
     }
@@ -170,7 +170,7 @@ void ExpireJob::done()
 
         if ( expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete ) {
             // Expire by deletion, i.e. move to null target folder
-            kDebug() << "ExpireJob: finished expiring in folder"
+            qDebug() << "ExpireJob: finished expiring in folder"
                      << mSrcFolder.name()
                      << count << "messages to remove.";
             Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( mRemovedMsgs, this );
@@ -186,9 +186,9 @@ void ExpireJob::done()
                 str = i18n( "Cannot expire messages from folder %1: destination "
                             "folder %2 not found",
                             mSrcFolder.name(), expirationAttribute->expireToFolderId() );
-                kWarning() << str;
+                qWarning() << str;
             } else {
-                kDebug() << "ExpireJob: finished expiring in folder"
+                qDebug() << "ExpireJob: finished expiring in folder"
                          << mSrcFolder.name()
                          << mRemovedMsgs.count() << "messages to move to"
                          << mMoveToFolder.name();
@@ -216,7 +216,7 @@ void ExpireJob::done()
 void ExpireJob::slotMoveDone( KJob *job )
 {
     if ( job->error() ) {
-        kError() << job->error() << job->errorString();
+        qCritical() << job->error() << job->errorString();
     }
     Akonadi::ItemMoveJob *itemjob = dynamic_cast<Akonadi::ItemMoveJob *>( job );
     if ( itemjob ) {
@@ -245,7 +245,7 @@ void ExpireJob::slotMoveDone( KJob *job )
 void ExpireJob::slotExpireDone( KJob *job )
 {
     if ( job->error() ) {
-        kError() << job->error() << job->errorString();
+        qCritical() << job->error() << job->errorString();
     }
 
     QString msg;

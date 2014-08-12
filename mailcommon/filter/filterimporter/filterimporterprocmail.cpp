@@ -20,7 +20,7 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QFile>
 #include <QDir>
@@ -34,7 +34,7 @@ FilterImporterProcmail::FilterImporterProcmail( QFile *file )
     MailFilter *filter = 0;
     while ( !stream.atEnd() ) {
         QString line = stream.readLine();
-        kDebug() << " line :" << line << " filter " << filter;
+        qDebug() << " line :" << line << " filter " << filter;
         filter = parseLine( stream, line, filter );
     }
 
@@ -89,7 +89,7 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
             line.remove( QLatin1String( "^(To|Cc):" ) );
             fieldName = "<recipients>";
         } else {
-            kDebug()<<" line condition not parsed :"<<line;
+            qDebug()<<" line condition not parsed :"<<line;
         }
         SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, line );
         filter->pattern()->append( rule );

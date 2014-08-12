@@ -19,13 +19,13 @@
 #include "header/headerstyle_util.h"
 
 #include "header/headerstrategy.h"
-#include <kpimutils/linklocator.h>
+#include <KPIMUtils/kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
 
-#include <kpimutils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <KColorScheme>
 #include <KStandardDirs>
@@ -33,6 +33,7 @@ using KPIMUtils::LinkLocator;
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
+#include <QStandardPaths>
 
 using namespace MessageCore;
 using KPIMUtils::LinkLocator;
@@ -70,7 +71,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
         linkColor = QLatin1String("class =\"black\"");
     }
 
-    QString imgpath( KStandardDirs::locate("data",QLatin1String("libmessageviewer/pics/")) );
+    QString imgpath( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/")) );
     imgpath.prepend( QLatin1String("file:///") );
     imgpath.append(QLatin1String("enterprise_"));
     const QString borderSettings( QLatin1String(" padding-top: 0px; padding-bottom: 0px; border-width: 0px ") );

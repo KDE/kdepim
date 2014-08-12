@@ -21,9 +21,10 @@
 
 #include "attachmentfromurljob.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KIO/Scheduler>
+#include <KIO/TransferJob>
 #include <KLocalizedString>
 #include <KMimeType>
 #include <KLocale>
@@ -31,6 +32,7 @@
 #include <QtCore/QFileInfo>
 
 #include <boost/shared_ptr.hpp>
+#include <KFormat>
 
 using namespace MessageCore;
 
@@ -75,7 +77,7 @@ void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
 
     // Determine the MIME type and filename of the attachment.
     const QString mimeType = transferJob->mimetype();
-    kDebug() << "Mimetype is" << mimeType;
+    qDebug() << "Mimetype is" << mimeType;
 
     QString fileName = mUrl.fileName();
     if ( fileName.isEmpty() ) {
@@ -144,7 +146,7 @@ void AttachmentFromUrlJob::doStart()
         if ( size > maximumAllowedSize() ) {
             setError( KJob::UserDefinedError );
             setErrorText( i18n( "You may not attach files bigger than %1. Share it with storage service.",
-                                KGlobal::locale()->formatByteSize( maximumAllowedSize() ) ) );
+                                KFormat().formatByteSize( maximumAllowedSize() ) ) );
             emitResult();
             return;
         }

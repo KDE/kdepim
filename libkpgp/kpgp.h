@@ -72,7 +72,7 @@ enum Result
 class Base;
 class Block;
 
-class KPGP_EXPORT Module
+class LIBKPGP_EXPORT Module
 {
   friend class Block;
 

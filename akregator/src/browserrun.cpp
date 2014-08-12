@@ -26,7 +26,7 @@
 #include "openurlrequest.h"
 #include "frame.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 namespace Akregator {
 
@@ -60,7 +60,7 @@ void BrowserRun::foundMimeType(const QString& type)
             KRun::setPreferredService( selectedService->desktopEntryName() );
             KRun::foundMimeType( type );
         } else {
-            KRun::displayOpenWithDialog( url(), m_window, false, suggestedFileName() );
+            KRun::displayOpenWithDialog( QList<QUrl>() << url(), m_window, false, suggestedFileName() );
             setFinished(true);
         }
     }

@@ -26,11 +26,11 @@
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/AgentInstanceCreateJob>
-#include <Akonadi/AgentTypeDialog>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/AgentFilterProxyModel>
+#include <AkonadiCore/CollectionFetchJob>
+#include <AkonadiCore/AgentInstanceCreateJob>
+#include <AkonadiWidgets/AgentTypeDialog>
+#include <AkonadiCore/CollectionFetchScope>
+#include <AkonadiCore/AgentFilterProxyModel>
 #include <Akonadi/Contact/ContactEditorDialog>
 
 #include <KLocalizedString>
@@ -77,7 +77,7 @@ void CreateNewContactJob::slotCollectionsFetched(KJob*job)
     }
     if ( canCreateItemCollections.isEmpty() ) {
         Akonadi::AgentTypeDialog dlg( mParentWidget );
-        dlg.setCaption( i18n("Add to Address Book") );
+        dlg.setWindowTitle( i18n("Add to Address Book") );
         dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::Addressee::mimeType());
         dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::ContactGroup::mimeType());
         dlg.agentFilterProxyModel()->addCapabilityFilter( QLatin1String( "Resource" ) );

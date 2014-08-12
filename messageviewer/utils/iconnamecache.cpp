@@ -23,7 +23,7 @@
 #include <KIconLoader>
 
 namespace MessageViewer {
-K_GLOBAL_STATIC( IconNameCache, s_iconNameCache )
+Q_GLOBAL_STATIC( IconNameCache, s_iconNameCache )
 
 IconNameCache* IconNameCache::instance()
 {

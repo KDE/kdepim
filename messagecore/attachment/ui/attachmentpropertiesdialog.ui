@@ -107,8 +107,8 @@
       </layout>
      </item>
      <item row="2" column="1" colspan="2">
-      <widget class="KLineEdit" name="name">
-       <property name="showClearButton" stdset="0">
+      <widget class="QLineEdit" name="name">
+       <property name="clearButtonEnabled">
         <bool>false</bool>
        </property>
       </widget>
@@ -137,8 +137,8 @@
       </layout>
      </item>
      <item row="3" column="1" colspan="2">
-      <widget class="KLineEdit" name="description">
-       <property name="showClearButton" stdset="0">
+      <widget class="QLineEdit" name="description">
+       <property name="clearButtonEnabled">
         <bool>true</bool>
        </property>
       </widget>
@@ -208,11 +208,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
   <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>

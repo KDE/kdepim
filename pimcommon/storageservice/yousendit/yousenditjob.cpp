@@ -22,13 +22,10 @@
 
 #include <KLocalizedString>
 
-#include <qjson/parser.h>
 
-#include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
 #include <QPointer>
-#include <QFile>
 
 using namespace PimCommon;
 
@@ -275,6 +272,7 @@ void YouSendItJob::createFolderJob(const QString &foldername, const QString &des
 
 void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
 {
+#if 0 //QT5
     const QString data = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
     if (mError) {
@@ -388,10 +386,12 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         parseShareLink(data);
         break;
     }
+#endif
 }
 
 void YouSendItJob::parseShareLink(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
@@ -399,50 +399,59 @@ void YouSendItJob::parseShareLink(const QString &data)
         //TODO
         Q_EMIT shareLinkDone(QString());
     }
+#endif
     deleteLater();
 }
 
 void YouSendItJob::parseCopyFolder(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (!parseError(info)) {
         Q_EMIT copyFolderDone(QString());
     }
+#endif
     deleteLater();
 }
 
 void YouSendItJob::parseCopyFile(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (!parseError(info)) {
         Q_EMIT copyFileDone(QString());
     }
+#endif
     deleteLater();
 }
 
 void YouSendItJob::parseMoveFolder(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (!parseError(info)) {
         Q_EMIT moveFolderDone(QString());
     }
+#endif
     deleteLater();
 }
 
 void YouSendItJob::parseMoveFile(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (!parseError(info)) {
         Q_EMIT moveFileDone(QString());
     }
+#endif
     deleteLater();
 }
 
@@ -461,23 +470,27 @@ bool YouSendItJob::parseError(const QMap<QString, QVariant> &info)
 
 void YouSendItJob::parseRenameFile(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (!parseError(info)) {
         Q_EMIT renameFileDone(QString());
     }
+#endif
     deleteLater();
 }
 
 void YouSendItJob::parseRenameFolder(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (!parseError(info)) {
         Q_EMIT renameFolderDone(QString());
     }
+#endif
     deleteLater();
 }
 
@@ -520,6 +533,7 @@ void YouSendItJob::parseListFolder(const QString &data)
 
 void YouSendItJob::parseRequestToken(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -538,11 +552,13 @@ void YouSendItJob::parseRequestToken(const QString &data)
         }
         Q_EMIT authorizationFailed(error);
     }
+#endif
     deleteLater();
 }
 
 void YouSendItJob::parseAccountInfo(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
@@ -558,11 +574,13 @@ void YouSendItJob::parseAccountInfo(const QString &data)
         }
         Q_EMIT accountInfoDone(accountInfo);
     }
+#endif
     deleteLater();
 }
 
 void YouSendItJob::parseCreateFolder(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
@@ -572,12 +590,14 @@ void YouSendItJob::parseCreateFolder(const QString &data)
         newFolderName = info.value(QLatin1String("name")).toString();
     }
     Q_EMIT createFolderDone(newFolderName);
+#endif
     deleteLater();
 }
 
 
 void YouSendItJob::parseUploadFile(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     qDebug()<<" data "<<data;
@@ -589,6 +609,7 @@ void YouSendItJob::parseUploadFile(const QString &data)
         fileId = info.value(QLatin1String("fileId")).toString();
     }
     startUploadFile(fileId);
+#endif
 }
 
 void YouSendItJob::startUploadFile(const QString &fileId)

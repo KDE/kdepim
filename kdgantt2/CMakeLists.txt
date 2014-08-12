@@ -1,4 +1,4 @@
-KDE4_NO_ENABLE_FINAL(kdgantt2)
+add_definitions(-DTRANSLATION_DOMAIN=\"kdgantt2\")
 # Those paths need to be absolute since this file is included from other CMakeLists.txt files
 set(libkdgantt2_SRCS
 kdganttabstractgrid.cpp
@@ -44,14 +44,15 @@ set(libkdgantt_mocable_files
   kdgantttimescalezoomdialog
 )
 foreach(it ${libkdgantt_mocable_files})
-  qt4_generate_moc(${it}.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_${it}.cpp)
+  qt5_generate_moc(${it}.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_${it}.cpp)
   macro_add_file_dependencies(${it}.cpp ${CMAKE_BINARY_DIR}/kdgantt2/moc_${it}.cpp)
 endforeach(it)
 
-qt4_generate_moc(kdganttgraphicsview_p.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
+qt5_generate_moc(kdganttgraphicsview_p.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
 macro_add_file_dependencies(kdganttgraphicsview.cpp ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
-kde4_add_library(kdgantt2 ${LIBRARY_TYPE} ${libkdgantt2_SRCS})
-target_link_libraries(kdgantt2  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+add_library(kdgantt2 ${LIBRARY_TYPE} ${libkdgantt2_SRCS})
+generate_export_header(kdgantt2 BASE_NAME kdgantt)
+target_link_libraries(kdgantt2  Qt5::Widgets Qt5::PrintSupport )
 
-set_target_properties( kdgantt2 PROPERTIES VERSION 0.1.0 SOVERSION 0)
+set_target_properties( kdgantt2 PROPERTIES VERSION 1.0.0 SOVERSION 1)
 install(TARGETS kdgantt2 ${INSTALL_TARGETS_DEFAULT_ARGS} )

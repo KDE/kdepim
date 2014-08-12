@@ -18,28 +18,35 @@
 
 #include "notesagentnotedialog.h"
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
-#include <KLocalizedString>
 #include <KSharedConfig>
 
 #include <KMime/KMimeMessage>
 
+#include <QIcon>
+
 #include <QLineEdit>
 #include <QVBoxLayout>
-#include <QTextEdit>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 
 NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setButtons(Close);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setAttribute(Qt::WA_DeleteOnClose);
-    setWindowIcon( KIcon( QLatin1String("knotes") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
@@ -51,7 +58,8 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
     mNote = new PimCommon::RichTextEditorWidget;
     mNote->setReadOnly(true);
     vbox->addWidget(mNote);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 
@@ -104,7 +112,7 @@ void NotesAgentNoteDialog::slotFetchItem(KJob* job)
 
 void NotesAgentNoteDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "NotesAgentNoteDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "NotesAgentNoteDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -113,7 +121,7 @@ void NotesAgentNoteDialog::readConfig()
 
 void NotesAgentNoteDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "NotesAgentNoteDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "NotesAgentNoteDialog" );
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

@@ -21,7 +21,7 @@
 #include "widgets/selectheadertypecombobox.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -63,7 +63,7 @@ QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("With value:"));
     grid->addWidget(lab, 1, 0);
 
-    KLineEdit *value = new KLineEdit;
+    QLineEdit *value = new QLineEdit;
     connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
     grid->addWidget(value, 1, 1);
@@ -79,7 +79,7 @@ QString SieveConditionHeader::code(QWidget *w) const
     const SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
     const QString headerStr = headerType->code();
 
-    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+    const QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
     QString valueStr = value->text();
 
     valueStr = AutoCreateScriptUtil::fixListValue(valueStr);
@@ -108,7 +108,7 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
                     headerType->setCode(e.text());
                 } else if (index == 1) {
-                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+                    QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
                     value->setText(e.text().replace(QLatin1String("\""), QLatin1String("\\\"")));
                 } else {
                     tooManyArgument(tagName, index, 2, error);
@@ -121,7 +121,7 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
                     headerType->setCode(AutoCreateScriptUtil::listValueToStr(e));
                 } else if (index == 1) {
-                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+                    QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
                     value->setText(AutoCreateScriptUtil::listValueToStr(e));
                 } else {
                     tooManyArgument(tagName, index, 2, error);

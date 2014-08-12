@@ -20,14 +20,14 @@
 #include "importfilterinfogui.h"
 #include "importwizard.h"
 
-#include <KStandardDirs>
+#include <QStandardPaths>
 
 
 
 KMail1ImportData::KMail1ImportData(ImportWizard*parent)
     :AbstractImporter(parent)
 {
-    mPath = KStandardDirs::locateLocal( "config", QLatin1String("kmailrc") );
+    mPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1String("/kmailrc") ;
 }
 
 KMail1ImportData::~KMail1ImportData()

@@ -22,13 +22,13 @@
 #include <QWidget>
 #include "messageviewer_export.h"
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include <KMime/Message>
 #include <KCalCore/Event>
 
-class KLineEdit;
+class QLineEdit;
 class KDateTimeEdit;
-class KPushButton;
+class QPushButton;
 namespace Akonadi {
 class CollectionComboBox;
 }
@@ -57,7 +57,7 @@ private Q_SLOTS:
     void slotReturnPressed();
     void slotCollectionChanged(int);
     void slotOpenEditor();
-    void slotStartDateTimeChanged(const KDateTime &newDateTime);
+    void slotStartDateTimeChanged(const QDateTime &newDateTime);
     void slotUpdateButtons(const QString &subject);
 
 Q_SIGNALS:
@@ -71,12 +71,12 @@ private:
     void readConfig();
     Akonadi::Collection mCollection;
     KMime::Message::Ptr mMessage;
-    KLineEdit *mEventEdit;
+    QLineEdit *mEventEdit;
     Akonadi::CollectionComboBox *mCollectionCombobox;
     KDateTimeEdit *mStartDateTimeEdit;
     KDateTimeEdit *mEndDateTimeEdit;
-    KPushButton *mSaveButton;
-    KPushButton *mOpenEditorButton;
+    QPushButton *mSaveButton;
+    QPushButton *mOpenEditorButton;
 };
 }
 

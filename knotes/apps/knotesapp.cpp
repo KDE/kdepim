@@ -18,6 +18,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 *******************************************************************/
 
+#include "config-kdepim.h"
 #include "configdialog/knoteconfigdialog.h"
 
 #include "dialog/knoteselectednotesdialog.h"
@@ -52,28 +53,27 @@
 
 #include <KMime/KMimeMessage>
 #include "akonadi_next/note.h"
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemDeleteJob>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/ItemDeleteJob>
+#include <AkonadiCore/EntityDisplayAttribute>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
 
-#include <akonadi/control.h>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/Collection>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Session>
+#include <AkonadiCore/control.h>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/Session>
 #include <KMime/KMimeMessage>
 #include <KActionCollection>
 
 #include <KMessageBox>
 #include <kaction.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <khelpmenu.h>
-#include <kicon.h>
 #include <kiconeffect.h>
 #include <klocale.h>
-#include <kmenu.h>
+#include <QMenu>
 #include <kshortcutsdialog.h>
 #include <ksocketfactory.h>
 #include <kstandardaction.h>
@@ -85,11 +85,12 @@
 #include <KFileDialog>
 
 #include <kiconloader.h>
+#include <KGlobal>
+#include <KGlobalAccel>
 
 #include <QPixmap>
 #include <QClipboard>
 #include <QDBusConnection>
-#include <QTcpServer>
 
 #include <dnssd/publicservice.h>
 
@@ -116,54 +117,54 @@ KNotesApp::KNotesApp()
     QDBusConnection::sessionBus().registerObject( QLatin1String("/KNotes") , this );
     kapp->setQuitOnLastWindowClosed( false );
     // create the GUI...
-    KAction *action  = new KAction( KIcon( QLatin1String("document-new") ),
+    QAction *action  = new QAction( QIcon::fromTheme( QLatin1String("document-new") ),
                                     i18n( "New Note" ), this );
     actionCollection()->addAction( QLatin1String("new_note"), action );
-    action->setGlobalShortcut( KShortcut( Qt::ALT + Qt::SHIFT + Qt::Key_N ));
+    KGlobalAccel::setGlobalShortcut(action, QKeySequence(Qt::ALT + Qt::SHIFT + Qt::Key_N ));
     connect( action, SIGNAL(triggered()), SLOT(newNote()) );
 
-    action  = new KAction( KIcon( QLatin1String("edit-paste") ),
+    action  = new QAction( QIcon::fromTheme( QLatin1String("edit-paste") ),
                            i18n( "New Note From Clipboard" ), this );
     actionCollection()->addAction( QLatin1String("new_note_clipboard"), action );
-    action->setGlobalShortcut( KShortcut( Qt::ALT + Qt::SHIFT + Qt::Key_C ));
+    KGlobalAccel::setGlobalShortcut(action, QKeySequence(Qt::ALT + Qt::SHIFT + Qt::Key_C ));
     connect( action, SIGNAL(triggered()), SLOT(newNoteFromClipboard()) );
 
-    action  = new KAction( KIcon( QLatin1String("document-open") ),
+    action  = new QAction( QIcon::fromTheme( QLatin1String("document-open") ),
                            i18n( "New Note From Text File..." ), this );
     actionCollection()->addAction( QLatin1String("new_note_from_text_file"), action );
     connect( action, SIGNAL(triggered()), SLOT(newNoteFromTextFile()) );
 
 
-    action  = new KAction( KIcon(QLatin1String( "knotes") ), i18n( "Show All Notes" ), this );
+    action  = new QAction( QIcon::fromTheme(QLatin1String( "knotes") ), i18n( "Show All Notes" ), this );
     actionCollection()->addAction( QLatin1String("show_all_notes"), action );
-    action->setGlobalShortcut( KShortcut( Qt::ALT + Qt::SHIFT + Qt::Key_S ));
+    KGlobalAccel::setGlobalShortcut(action, QKeySequence( Qt::ALT + Qt::SHIFT + Qt::Key_S ));
     connect( action, SIGNAL(triggered()), SLOT(showAllNotes()) );
 
-    action  = new KAction( KIcon( QLatin1String("window-close") ),
+    action  = new QAction( QIcon::fromTheme( QLatin1String("window-close") ),
                            i18n( "Hide All Notes" ), this );
     actionCollection()->addAction( QLatin1String("hide_all_notes"), action );
-    action->setGlobalShortcut( KShortcut( Qt::ALT + Qt::SHIFT + Qt::Key_H ));
+    KGlobalAccel::setGlobalShortcut(action, QKeySequence( Qt::ALT + Qt::SHIFT + Qt::Key_H ));
     connect( action, SIGNAL(triggered()), SLOT(hideAllNotes()) );
 
-    action = new KAction( KIcon( QLatin1String("document-print") ),
+    action = new QAction( QIcon::fromTheme( QLatin1String("document-print") ),
                           i18nc( "@action:inmenu", "Print Selected Notes..." ), this );
     actionCollection()->addAction( QLatin1String("print_selected_notes"), action );
     connect( action, SIGNAL(triggered()), SLOT(slotPrintSelectedNotes()) );
 
-    action = new KAction( KIcon( QLatin1String("edit-delete") ),
+    QAction *act = KStandardAction::find( this, SLOT(slotOpenFindDialog()), actionCollection());
+    action = new QAction( QIcon::fromTheme( QLatin1String("edit-delete") ),
                           i18nc( "@action:inmenu", "Delete Selected Notes..." ), this );
     actionCollection()->addAction( QLatin1String("delete_selected_notes"), action );
     connect( action, SIGNAL(triggered()), SLOT(slotDeleteSelectedNotes()) );
 
-    KAction *act = KStandardAction::find( this, SLOT(slotOpenFindDialog()), actionCollection());
     //REmove shortcut here.
     act->setShortcut(0);
 
 
-
-    new KHelpMenu( this, KGlobal::mainComponent().aboutData(), false,
+#if 0 //QT5
+    new KHelpMenu( this, KComponentData::mainComponent().aboutData(), false,
                    actionCollection() );
-
+#endif
     KStandardAction::preferences( this, SLOT(slotPreferences()),
                                   actionCollection() );
     KStandardAction::keyBindings( this, SLOT(slotConfigureAccels()),
@@ -171,25 +172,25 @@ KNotesApp::KNotesApp()
     //FIXME: no shortcut removing!?
     KStandardAction::quit( this, SLOT(slotQuit()),
                            actionCollection() )->setShortcut( 0 );
-    setXMLFile( componentData().componentName() + QLatin1String("appui.rc") );
+    setXMLFile( QLatin1String("knotesappui.rc") );
 
     m_guiBuilder = new KXMLGUIBuilder( this );
     m_guiFactory = new KXMLGUIFactory( m_guiBuilder, this );
     m_guiFactory->addClient( this );
 
-    KMenu *contextMenu = static_cast<KMenu *>( m_guiFactory->container(
+    QMenu *contextMenu = static_cast<QMenu *>( m_guiFactory->container(
                                               QLatin1String("knotes_context"),
                                               this ) );
-    m_noteMenu = static_cast<KMenu *>( m_guiFactory->container(
+    m_noteMenu = static_cast<QMenu *>( m_guiFactory->container(
                                            QLatin1String("notes_menu"), this ) );
 
     // get the most recent XML UI file
-    QString xmlFileName = componentData().componentName() + QLatin1String("ui.rc");
-    QString filter = componentData().componentName() + QLatin1Char('/') + xmlFileName;
-    const QStringList fileList =
-            componentData().dirs()->findAllResources( "data", filter ) +
-            componentData().dirs()->findAllResources( "data", xmlFileName );
-
+    QString xmlFileName(QLatin1String("knotesui.rc"));//QT5 = componentData().componentName() + QLatin1String("ui.rc");
+    QString filter(QLatin1String("kxmlgui5/knotes/") + xmlFileName);//QT5 = componentData().componentName() + QLatin1Char('/') + xmlFileName;
+    const QStringList fileList = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, filter) + QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, xmlFileName);//QT5 =
+            //QT5 componentData().dirs()->findAllResources( "data", filter ) +
+            //QT5 componentData().dirs()->findAllResources( "data", xmlFileName );
+qDebug()<<" fileList :"<<fileList<<" filter :"<<filter;
     QString doc;
     KXMLGUIClient::findMostRecentXMLFile( fileList, doc );
     m_noteGUI.setContent( doc );
@@ -213,6 +214,7 @@ KNotesApp::KNotesApp()
     connect( mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
     connect( mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)) );
     connect( mNoteRecorder->changeRecorder(), SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
+    connect( qApp, SIGNAL(commitDataRequest(QSessionManager&)), this, SLOT(slotCommitData(QSessionManager&)), Qt::DirectConnection);
     updateNoteActions();
 }
 
@@ -332,14 +334,14 @@ void KNotesApp::showNote(const Akonadi::Entity::Id &id ) const
         KNote *note = mNotes.value(id);
         showNote( note );
     } else {
-        kWarning( 5500 ) << "hideNote: no note with id:" << id;
+        qWarning() << "hideNote: no note with id:" << id;
     }
 }
 
 void KNotesApp::showNote( KNote *note ) const
 {
     note->show();
-#ifdef Q_WS_X11
+#if KDEPIM_HAVE_X11
     if ( !note->isDesktopAssigned() ) {
         note->toDesktop( KWindowSystem::currentDesktop() );
     } else {
@@ -358,7 +360,7 @@ void KNotesApp::hideNote( const Akonadi::Item::Id &id ) const
         KNote *note = mNotes.value(id);
         note->hide();
     } else {
-        kWarning( 5500 ) << "hideNote: no note with id:" << id;
+        qWarning() << "hideNote: no note with id:" << id;
     }
 }
 
@@ -387,14 +389,14 @@ void KNotesApp::showAllNotes() const
 
 void KNotesApp::newNoteFromClipboard( const QString &name )
 {
-    const QString &text = KApplication::clipboard()->text();
+    const QString &text = QApplication::clipboard()->text();
     newNote( name, text );
 }
 
 void KNotesApp::newNoteFromTextFile()
 {
     QString text;
-    const QString filename = KFileDialog::getOpenFileName( KUrl(),
+    const QString filename = KFileDialog::getOpenFileName( QUrl(),
                                      QLatin1String("*.txt"),
                                      this,
                                      i18n("Select Text File") );
@@ -417,7 +419,7 @@ void KNotesApp::updateNetworkListener()
 
     if ( NoteShared::NoteSharedGlobalConfig::receiveNotes() ) {
         // create the socket and start listening for connections
-        m_publisher=new DNSSD::PublicService(NoteShared::NoteSharedGlobalConfig::senderID(), QLatin1String("_knotes._tcp"), NoteShared::NoteSharedGlobalConfig::port());
+        m_publisher=new KDNSSD::PublicService(NoteShared::NoteSharedGlobalConfig::senderID(), QLatin1String("_knotes._tcp"), NoteShared::NoteSharedGlobalConfig::port());
         m_publisher->publishAsync();
     }
 }
@@ -443,7 +445,7 @@ void KNotesApp::setName( const Akonadi::Item::Id &id, const QString &newName )
     if (mNotes.contains(id)) {
         mNotes.value(id)->setName(newName);
     } else {
-        kWarning( 5500 ) << "setName: no note with id:" << id;
+        qWarning() << "setName: no note with id:" << id;
     }
 }
 
@@ -452,7 +454,7 @@ void KNotesApp::setText( const Akonadi::Item::Id &id, const QString &newText )
     if (mNotes.contains(id)) {
         mNotes.value(id)->setText( newText );
     } else {
-        kWarning( 5500 ) << "setText: no note with id:" << id;
+        qWarning() << "setText: no note with id:" << id;
     }
 }
 
@@ -474,7 +476,7 @@ void KNotesApp::updateNoteActions()
         }
 
 
-        KAction *action = new KAction( replaceText.replace( QLatin1String("&"), QLatin1String("&&") ), this );
+        QAction *action = new QAction( replaceText.replace( QLatin1String("&"), QLatin1String("&&") ), this );
         action->setToolTip(realName);
         action->setObjectName(QString::number(note->noteId()));
         connect( action, SIGNAL(triggered(bool)), SLOT(slotShowNote()) );
@@ -496,7 +498,7 @@ void KNotesApp::updateNoteActions()
         actionCollection()->action( QLatin1String("show_all_notes") )->setEnabled( false );
         actionCollection()->action( QLatin1String("print_selected_notes") )->setEnabled( false );
         actionCollection()->action( QLatin1String("edit_find") )->setEnabled( false );
-        KAction *action = new KAction( i18n( "No Notes" ), this );
+        QAction *action = new QAction( i18n( "No Notes" ), this );
         action->setEnabled(false);
         m_noteActions.append( action );
     } else {
@@ -593,13 +595,13 @@ void KNotesApp::slotConfigureAccels()
     }
     if (keys->exec()) {
         keys->save();
-
+#if 0 //QT5
         // update GUI doc for new notes
         m_noteGUI.setContent(
                     KXMLGUIFactory::readConfigFile( componentData().componentName() + QLatin1String("ui.rc"),
                                                     componentData() )
                     );
-
+#endif
 
         if ( actionCollection ) {
             QHashIterator<Akonadi::Item::Id, KNote*> i(mNotes);
@@ -627,7 +629,7 @@ void KNotesApp::slotNoteKilled( Akonadi::Item::Id id)
 void KNotesApp::slotNoteDeleteFinished(KJob* job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         return;
     }
 }
@@ -650,7 +652,7 @@ void KNotesApp::slotPrintSelectedNotes()
 
 void KNotesApp::saveNotes(bool force, bool sync)
 {
-    KNotesGlobalConfig::self()->writeConfig();
+    KNotesGlobalConfig::self()->save();
     QHashIterator<Akonadi::Item::Id, KNote*> i(mNotes);
     while (i.hasNext()) {
         i.next();
@@ -664,10 +666,9 @@ void KNotesApp::slotQuit()
     kapp->quit();
 }
 
-bool KNotesApp::commitData( QSessionManager & )
+void KNotesApp::slotCommitData( QSessionManager & )
 {
     saveNotes(true, true);
-    return true;
 }
 
 void KNotesApp::slotSelectNote(Akonadi::Item::Id id)

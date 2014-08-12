@@ -90,7 +90,7 @@ namespace Kleo {
        only empty strings or anything other than fingerprints, the
        result is undefined.
     */
-    virtual KDE_DEPRECATED GpgME::Error start( const QStringList & fingerprints ) = 0;
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const QStringList & fingerprints ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::Error & result, const QByteArray & keyData, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );

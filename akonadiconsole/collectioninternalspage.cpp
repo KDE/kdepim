@@ -19,8 +19,9 @@
 
 #include "collectioninternalspage.h"
 
-#include <akonadi/collection.h>
-
+#include <AkonadiCore/collection.h>
+#include <QIcon>
+#include <KLocalizedString>
 using namespace Akonadi;
 
 CollectionInternalsPage::CollectionInternalsPage(QWidget * parent) :

@@ -21,7 +21,7 @@
 
 #include "signencryptfilescommand.h"
 
-using namespace KLEOPATRACLIENT_NAMESPACE;
+using namespace KleopatraClientCopy;
 
 SignEncryptFilesCommand::SignEncryptFilesCommand( QObject * p )
     : Command( p )

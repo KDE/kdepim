@@ -22,8 +22,8 @@
 #include "widgets/regexplineedit.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 
-#include <KDE/KLineEdit>
-#include <KDE/KLocale>
+#include <QLineEdit>
+#include <KLocale>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -105,7 +105,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
     KCompletion *comp = comboBox->completionObject();
     comp->setIgnoreCase(true);
     comp->insertItems(mParameterList);
-    comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+    comp->setCompletionMode(KCompletion::CompletionPopupAuto);
 
     QLabel *label = new QLabel( i18n( "Replace:" ), widget );
     label->setFixedWidth( label->sizeHint().width() );
@@ -119,10 +119,10 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
     label->setFixedWidth( label->sizeHint().width() );
     layout->addWidget( label, 0 );
 
-    KLineEdit *lineEdit = new KLineEdit( widget );
+    QLineEdit *lineEdit = new QLineEdit( widget );
     lineEdit->setObjectName( QLatin1String("replace") );
-    lineEdit->setClearButtonShown( true );
-    lineEdit->setTrapReturnKey(true);
+    lineEdit->setClearButtonEnabled( true );
+    //QT5 lineEdit->setTrapReturnKey(true);
     layout->addWidget( lineEdit, 1 );
 
     setParamWidgetValue( widget );
@@ -158,7 +158,7 @@ void FilterActionRewriteHeader::setParamWidgetValue( QWidget *paramWidget ) cons
     Q_ASSERT( regExpLineEdit );
     regExpLineEdit->setText( mRegExp.pattern() );
 
-    KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("replace") );
+    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("replace") );
     Q_ASSERT( lineEdit );
     lineEdit->setText( mReplacementString );
 }
@@ -173,7 +173,7 @@ void FilterActionRewriteHeader::applyParamWidgetValue( QWidget *paramWidget )
     Q_ASSERT( regExpLineEdit );
     mRegExp.setPattern( regExpLineEdit->text() );
 
-    const KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("replace") );
+    const QLineEdit *lineEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("replace") );
     Q_ASSERT( lineEdit );
     mReplacementString = lineEdit->text();
 }
@@ -188,7 +188,7 @@ void FilterActionRewriteHeader::clearParamWidget( QWidget *paramWidget ) const
     Q_ASSERT( regExpLineEdit );
     regExpLineEdit->clear();
 
-    KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("replace") );
+    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("replace") );
     Q_ASSERT( lineEdit );
     lineEdit->clear();
 }
@@ -206,7 +206,7 @@ QString FilterActionRewriteHeader::argsAsString() const
 
 QString FilterActionRewriteHeader::displayString() const
 {
-    return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + argsAsString().toHtmlEscaped() + QLatin1String( "\"" );
 }
 
 void FilterActionRewriteHeader::argsFromString( const QString &argsStr )

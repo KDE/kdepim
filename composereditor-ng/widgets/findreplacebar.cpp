@@ -20,7 +20,7 @@
 
 #include "findreplacebar.h"
 
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KColorScheme>
 #include <KMessageBox>
@@ -28,7 +28,7 @@
 #include <QHBoxLayout>
 #include <QToolButton>
 #include <QLabel>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QAction>
 #include <QMenu>
@@ -56,7 +56,6 @@ public:
     void _k_closeBar();
     void _k_slotHighlightAllChanged(bool highLight);
     void _k_slotCaseSensitivityChanged(bool sensitivity);
-    void _k_slotClearSearch();
     void _k_slotAutoSearch(const QString&);
     void _k_slotSearchText(bool backward = false, bool isAutoSearch = true);
     void _k_slotFindNext();
@@ -74,7 +73,7 @@ public:
     QString lastSearchStr;
 
     FindReplaceBar *q;
-    KLineEdit *search;
+    QLineEdit *search;
     QAction *caseSensitiveAct;
     QAction *highlightAll;
 
@@ -108,10 +107,6 @@ void FindReplaceBarPrivate::_k_closeBar()
     q->hide();
 }
 
-void FindReplaceBarPrivate::_k_slotClearSearch()
-{
-    clearSelections();
-}
 
 void FindReplaceBarPrivate::clearSelections()
 {
@@ -223,7 +218,7 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
     lay->setMargin( 2 );
 
     QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 
@@ -237,18 +232,18 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
     QLabel * label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
     lay->addWidget( label );
 
-    d->search = new KLineEdit( this );
+    d->search = new QLineEdit( this );
     d->search->setToolTip( i18n( "Text to search for" ) );
-    d->search->setClearButtonShown( true );
+    d->search->setClearButtonEnabled( true );
     label->setBuddy( d->search );
     lay->addWidget( d->search );
 
-    d->findNextButton = new QPushButton( KIcon( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
+    d->findNextButton = new QPushButton( QIcon::fromTheme( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
     d->findNextButton->setToolTip( i18n( "Jump to next match" ) );
     lay->addWidget( d->findNextButton );
     d->findNextButton->setEnabled( false );
 
-    d->findPreviousButton = new QPushButton( KIcon( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
+    d->findPreviousButton = new QPushButton( QIcon::fromTheme( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
     d->findPreviousButton->setToolTip( i18n( "Jump to previous match" ) );
     lay->addWidget( d->findPreviousButton );
     d->findPreviousButton->setEnabled( false );
@@ -269,7 +264,6 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
 
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(_k_closeBar()) );
     connect( d->caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(_k_slotCaseSensitivityChanged(bool)) );
-    connect( d->search, SIGNAL(clearButtonClicked()), this, SLOT(_k_slotClearSearch()) );
     connect( d->search, SIGNAL(textChanged(QString)), this, SLOT(_k_slotAutoSearch(QString)) );
     connect( d->findNextButton, SIGNAL(clicked()), this, SLOT(_k_slotFindNext()) );
     connect( d->findPreviousButton, SIGNAL(clicked()), this, SLOT(_k_slotFindPrevious()) );

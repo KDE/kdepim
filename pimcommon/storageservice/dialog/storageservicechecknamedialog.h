@@ -21,7 +21,7 @@
 
 #include <KDialog>
 #include "pimcommon_export.h"
-class KLineEdit;
+class QLineEdit;
 class QLabel;
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceCheckNameDialog : public KDialog
@@ -43,7 +43,7 @@ private slots:
 private:
     QRegExp mRegExp;
     QLabel *mInfo;
-    KLineEdit *mName;
+    QLineEdit *mName;
 };
 }
 

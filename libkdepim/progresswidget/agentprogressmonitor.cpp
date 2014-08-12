@@ -19,9 +19,8 @@
 
 #include "agentprogressmonitor.h"
 
-#include <Akonadi/AgentManager>
+#include <AgentManager>
 
-#include <KDebug>
 
 #include <QWeakPointer>
 

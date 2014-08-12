@@ -18,14 +18,14 @@
 #ifndef SCAMDETECTIONDETAILSDIALOG_H
 #define SCAMDETECTIONDETAILSDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 namespace PimCommon {
 class RichTextEditorWidget;
 }
 
 namespace MessageViewer {
-class ScamDetectionDetailsDialog : public KDialog
+class ScamDetectionDetailsDialog : public QDialog
 {
     Q_OBJECT
 public:

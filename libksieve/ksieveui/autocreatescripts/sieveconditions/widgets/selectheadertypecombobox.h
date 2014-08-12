@@ -19,12 +19,12 @@
 #define SELECTHEADERTYPECOMBOBOX_H
 
 #include <KComboBox>
-#include <KDialog>
+#include <QDialog>
 
 #include <QListWidget>
 
-class KLineEdit;
-
+class QLineEdit;
+class QPushButton;
 namespace KSieveUi {
 
 class SelectHeadersWidget : public QListWidget
@@ -45,7 +45,7 @@ private:
     void init();
 };
 
-class SelectHeadersDialog : public KDialog
+class SelectHeadersDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -63,8 +63,8 @@ private:
     void readConfig();
     void writeConfig();
     SelectHeadersWidget *mListWidget;
-    KLineEdit *mNewHeader;
-    KPushButton *mAddNewHeader;
+    QLineEdit *mNewHeader;
+    QPushButton *mAddNewHeader;
 };
 
 

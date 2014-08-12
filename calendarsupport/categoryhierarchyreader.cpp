@@ -19,7 +19,9 @@
 
 #include "categoryhierarchyreader.h"
 #include "categoryconfig.h"
+
 #include <KComboBox>
+
 #include <QTreeWidget>
 
 using namespace CalendarSupport;

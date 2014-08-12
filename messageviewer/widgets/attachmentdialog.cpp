@@ -24,7 +24,8 @@
 #include <kdialog.h>
 #include <kmessagebox.h>
 #include <klocale.h>
-
+#include <KGlobal>
+#include <KSharedConfig>
 using namespace MessageViewer;
 
 //---------------------------------------------------------------------
@@ -62,21 +63,23 @@ AttachmentDialog::AttachmentDialog( QWidget *parent, const QString &filenameText
 
 int AttachmentDialog::exec()
 {
-    KConfigGroup cg( KGlobal::config().data(), "Notification Messages" );
+    KConfigGroup cg( KSharedConfig::openConfig().data(), "Notification Messages" );
     if ( cg.hasKey( dontAskName ) )
         return cg.readEntry( dontAskName, 0 );
 
     bool again = false;
-    const int ret =
+    const int ret = 0;
+#if 0 //QT5
             KMessageBox::createKMessageBox( dialog, QMessageBox::Question, text, QStringList(),
                                             i18n( "Do not ask again" ), &again, 0 );
+#endif
 
     if ( ret == QDialog::Rejected )
         return Cancel;
     else {
         if ( again ) {
             KConfigGroup::WriteConfigFlags flags = KConfig::Persistent;
-            KConfigGroup cg( KGlobal::config().data(), "Notification Messages" );
+            KConfigGroup cg( KSharedConfig::openConfig().data(), "Notification Messages" );
             cg.writeEntry( dontAskName, ret, flags );
             cg.sync();
         }

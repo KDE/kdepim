@@ -21,6 +21,7 @@
 #include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <KSharedConfig>
 
 SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     : KDialog(parent)
@@ -67,13 +68,13 @@ SelectionTypeDialog::~SelectionTypeDialog()
 
 void SelectionTypeDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SelectionTypeDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SelectionTypeDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void SelectionTypeDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SelectionTypeDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SelectionTypeDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

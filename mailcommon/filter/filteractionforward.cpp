@@ -31,8 +31,9 @@
 #include <templateparser/customtemplates.h>
 #include <templateparser/customtemplates_kfg.h>
 
-#include <KDE/KLocale>
-#include <KDE/KLineEdit>
+#include <QDebug>
+#include <KLocale>
+#include <KLineEdit>
 
 #include <QHBoxLayout>
 
@@ -58,7 +59,7 @@ FilterAction::ReturnCode FilterActionForward::process(ItemContext &context , boo
     // which applies to sent messages
     if ( MessageCore::StringUtil::addressIsInAddressList( mParameter,
                                                           QStringList( msg->to()->asUnicodeString() ) ) ) {
-        kWarning() << "Attempt to forward to receipient of original message, ignoring.";
+        qWarning() << "Attempt to forward to receipient of original message, ignoring.";
         return ErrorButGoOn;
     }
 
@@ -70,7 +71,7 @@ FilterAction::ReturnCode FilterActionForward::process(ItemContext &context , boo
     KMime::Message::Ptr fwdMsg = factory.createForward();
     fwdMsg->to()->fromUnicodeString( fwdMsg->to()->asUnicodeString() + QLatin1Char( ',' ) + mParameter, "utf-8" );
     if ( !KernelIf->msgSender()->send( fwdMsg, MessageComposer::MessageSender::SendDefault ) ) {
-        kWarning() << "FilterAction: could not forward message (sending failed)";
+        qWarning() << "FilterAction: could not forward message (sending failed)";
         return ErrorButGoOn; // error: couldn't send
     } else
         sendMDN( context.item(), KMime::MDN::Dispatched );
@@ -97,7 +98,7 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
     MessageCore::EmailAddressRequester *addressRequester = qobject_cast<MessageCore::EmailAddressRequester*>( addressEdit );
     Q_ASSERT( addressRequester );
     KLineEdit *lineEdit = addressRequester->lineEdit();
-    lineEdit->setClearButtonShown(true);
+    lineEdit->setClearButtonEnabled(true);
     lineEdit->setTrapReturnKey(true);
     lineEdit->setToolTip( i18n( "The addressee to whom the message will be forwarded." ) );
     lineEdit->setWhatsThis( i18n( "The filter will forward the message to the addressee entered here." ) );

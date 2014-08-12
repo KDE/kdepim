@@ -17,7 +17,6 @@
 
 #include "textfindreplacewidget.h"
 
-#include <kicon.h>
 #include <klocale.h>
 #include <qpushbutton.h>
 #include <klineedit.h>
@@ -37,8 +36,8 @@ TextReplaceWidget::TextReplaceWidget(QWidget *parent)
     QLabel *label = new QLabel( i18nc( "Replace text", "Replace:" ), this );
     lay->addWidget( label );
 
-    mReplace = new KLineEdit;
-    mReplace->setClearButtonShown(true);
+    mReplace = new QLineEdit;
+    mReplace->setClearButtonEnabled(true);
     lay->addWidget(mReplace);
 
     mReplaceBtn = new QPushButton( i18n( "Replace" ), this );
@@ -57,7 +56,7 @@ TextReplaceWidget::~TextReplaceWidget()
 
 }
 
-KLineEdit *TextReplaceWidget::replace() const
+QLineEdit *TextReplaceWidget::replace() const
 {
     return mReplace;
 }
@@ -76,18 +75,18 @@ TextFindWidget::TextFindWidget(QWidget *parent)
     QLabel *label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
     lay->addWidget( label );
 
-    mSearch = new KLineEdit( this );
+    mSearch = new QLineEdit( this );
     mSearch->setToolTip( i18n( "Text to search for" ) );
-    mSearch->setClearButtonShown( true );
+    mSearch->setClearButtonEnabled( true );
     label->setBuddy( mSearch );
     lay->addWidget( mSearch );
 
-    mFindNextBtn = new QPushButton( KIcon( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
+    mFindNextBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
     mFindNextBtn->setToolTip( i18n( "Jump to next match" ) );
     lay->addWidget( mFindNextBtn );
     mFindNextBtn->setEnabled( false );
 
-    mFindPrevBtn = new QPushButton( KIcon( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
+    mFindPrevBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
     mFindPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
     lay->addWidget( mFindPrevBtn );
     mFindPrevBtn->setEnabled( false );
@@ -110,7 +109,6 @@ TextFindWidget::TextFindWidget(QWidget *parent)
     connect( mCaseSensitiveAct, SIGNAL(toggled(bool)), this, SIGNAL(updateSearchOptions()) );
     connect( mWholeWordAct, SIGNAL(toggled(bool)), this, SIGNAL(updateSearchOptions()) );
     connect( mSearch, SIGNAL(textChanged(QString)), this, SLOT(slotAutoSearch(QString)) );
-    connect( mSearch, SIGNAL(clearButtonClicked()), this, SIGNAL(clearSearch()) );
     setLayout(lay);
 }
 
@@ -160,9 +158,12 @@ void TextFindWidget::slotAutoSearch(const QString &str)
     mFindNextBtn->setEnabled( isNotEmpty );
     Q_EMIT searchStringEmpty( !isNotEmpty );
     Q_EMIT autoSearch(str);
+    if (str.isEmpty()) {
+       Q_EMIT clearSearch();
+    }
 }
 
-KLineEdit *TextFindWidget::search() const
+QLineEdit *TextFindWidget::search() const
 {
     return mSearch;
 }

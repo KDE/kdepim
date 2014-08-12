@@ -28,7 +28,9 @@
 
 #include <KCalendarSystem>
 
-#include <KDebug>
+#include <QDebug>
+
+#include <KLocale>
 
 using namespace IncidenceEditorNG;
 
@@ -93,9 +95,8 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   QList<QLineEdit*> lineEdits;
   lineEdits << mUi->mExceptionDateEdit->lineEdit() << mUi->mRecurrenceEndDate->lineEdit();
   foreach( QLineEdit *lineEdit, lineEdits ) {
-    KLineEdit *klineEdit = qobject_cast<KLineEdit*>( lineEdit );
-    if ( klineEdit )
-        klineEdit->setClearButtonShown( false );
+    if ( lineEdit )
+        lineEdit->setClearButtonEnabled( false );
   }
 #endif
 
@@ -460,12 +461,12 @@ bool IncidenceRecurrence::isValid() const
            incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) ) {
         mLastErrorString = i18n( "A recurring event or to-do must occur at least once. "
                                  "Adjust the recurring parameters." );
-        kDebug() << mLastErrorString;
+        qDebug() << mLastErrorString;
         return false;
       }
     } else {
       mLastErrorString = i18n( "The incidence's start date is invalid." );
-      kDebug() << mLastErrorString;
+      qDebug() << mLastErrorString;
       return false;
     }
 
@@ -487,7 +488,7 @@ void IncidenceRecurrence::addException()
     return;
   }
 
-  const QString dateStr = KGlobal::locale()->formatDate( date );
+  const QString dateStr = KLocale::global()->formatDate( date );
   if( mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty() ) {
     mExceptionDates.append( date );
     mUi->mExceptionList->addItem( dateStr );
@@ -504,7 +505,7 @@ void IncidenceRecurrence::fillCombos()
     return;
   }
 
-  const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+  const KCalendarSystem *calSys = KLocale::global()->calendar();
   // Next the monthly combo. This contains the following elements:
   // - nth day of the month
   // - (month.lastDay() - n)th day of the month
@@ -602,7 +603,7 @@ void IncidenceRecurrence::handleEndAfterOccurrencesChange( int currentValue )
 void IncidenceRecurrence::handleExceptionDateChange( const QDate &currentDate )
 {
   const QDate date = mUi->mExceptionDateEdit->date();
-  const QString dateStr = KGlobal::locale()->formatDate( date );
+  const QString dateStr = KLocale::global()->formatDate( date );
 
   mUi->mExceptionAddButton->setEnabled(
     currentDate >= mDateTime->startDate() &&
@@ -884,7 +885,7 @@ void IncidenceRecurrence::setDefaults()
   setFrequency( 1 );
 
   // -1 because we want between 0 and 6
-  const int day = KGlobal::locale()->calendar()->dayOfWeek( currentDate() ) - 1;
+  const int day = KLocale::global()->calendar()->dayOfWeek( currentDate() ) - 1;
 
   QBitArray checkDays( 7, 0 );
   checkDays.setBit( day );
@@ -919,7 +920,7 @@ void IncidenceRecurrence::setExceptionDates( const KCalCore::DateList &dates )
   mExceptionDates.clear();
   KCalCore::DateList::ConstIterator dit;
   for ( dit = dates.begin(); dit != dates.end(); ++dit ) {
-    mUi->mExceptionList->addItem( KGlobal::locale()->formatDate(* dit ) );
+    mUi->mExceptionList->addItem( KLocale::global()->formatDate(* dit ) );
     mExceptionDates.append( *dit );
   }
 }

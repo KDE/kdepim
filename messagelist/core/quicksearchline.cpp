@@ -20,15 +20,15 @@
 
 #include "quicksearchline.h"
 #include "core/settings.h"
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KComboBox>
 #include <KStandardDirs>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <QToolButton>
 #include <QHBoxLayout>
@@ -37,6 +37,7 @@
 #include <QLabel>
 #include <QKeyEvent>
 #include <QSignalMapper>
+#include <QStandardPaths>
 
 
 using namespace MessageList::Core;
@@ -83,7 +84,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     vbox->addWidget(mQuickSearchFilterWidget);
 
     mSearchEdit = new KLineEdit( this );
-    mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
+    mSearchEdit->setPlaceholderText( i18nc( "Search for messages.", "Search" ) );
     mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
     mSearchEdit->setClearButtonShown( true );
 
@@ -93,7 +94,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     hbox->addWidget( mSearchEdit );
 
-    mMoreOptions = new KPushButton(KIcon(QLatin1String("arrow-down-double")), i18n("More..."), this);
+    mMoreOptions = new QPushButton(QIcon::fromTheme(QLatin1String("arrow-down-double")), i18n("More..."), this);
     mMoreOptions->setObjectName(QLatin1String("moreoptions"));
     mMoreOptions->setFlat(true);
     mMoreOptions->setCheckable(true);
@@ -207,9 +208,9 @@ void QuickSearchLine::slotMoreOptionClicked(bool b)
 {
     mQuickSearchFilterWidget->setVisible(b);
     if (b) {
-        mMoreOptions->setIcon(KIcon(QLatin1String("arrow-up-double")));
+        mMoreOptions->setIcon(QIcon::fromTheme(QLatin1String("arrow-up-double")));
     } else {
-        mMoreOptions->setIcon(KIcon(QLatin1String("arrow-down-double")));
+        mMoreOptions->setIcon(QIcon::fromTheme(QLatin1String("arrow-down-double")));
     }
 }
 
@@ -291,10 +292,10 @@ QToolButton *QuickSearchLine::lockSearch() const
 void QuickSearchLine::slotLockSearchClicked( bool locked )
 {
     if ( locked ) {
-        mLockSearch->setIcon( KIcon( QLatin1String( "object-locked" ) ) );
+        mLockSearch->setIcon( QIcon::fromTheme( QLatin1String( "object-locked" ) ) );
         mLockSearch->setToolTip( i18nc( "@info:tooltip", "Clear the quick search field when changing folders" ) );
     } else {
-        mLockSearch->setIcon( KIcon( QLatin1String( "object-unlocked" ) ) );
+        mLockSearch->setIcon( QIcon::fromTheme( QLatin1String( "object-unlocked" ) ) );
         mLockSearch->setToolTip( i18nc( "@info:tooltip",
                                         "Prevent the quick search field from being cleared when changing folders" ) );
     }
@@ -381,11 +382,11 @@ void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLay
                                  i18nc( "@action:inmenu Status of a message", "Action Item" ),
                                  Akonadi::MessageStatus::statusToAct().toQInt32(), quickSearchButtonLayout );
 
-    createQuickSearchButton( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) ),
+    createQuickSearchButton( QIcon( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) ),
                                  i18nc( "@action:inmenu Status of a message", "Watched" ),
                                  Akonadi::MessageStatus::statusWatched().toQInt32(), quickSearchButtonLayout );
 
-    createQuickSearchButton( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) ),
+    createQuickSearchButton( QIcon( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) ),
                                  i18nc( "@action:inmenu Status of a message", "Ignored" ),
                                  Akonadi::MessageStatus::statusIgnored().toQInt32(), quickSearchButtonLayout );
 

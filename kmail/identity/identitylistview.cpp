@@ -32,14 +32,14 @@
 
 #include "identitylistview.h"
 
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
 
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
 #include "kmkernel.h"
 #endif
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString> // i18n
 #include <KIconLoader> // SmallIcon
 
@@ -160,7 +160,7 @@ void IdentityListView::editItem( QTreeWidgetItem *item, int column )
 
 void IdentityListView::commitData( QWidget *editor )
 {
-    kDebug() << "after editing";
+    qDebug() << "after editing";
 
     if ( !selectedItems().isEmpty() ) {
 

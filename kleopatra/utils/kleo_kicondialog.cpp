@@ -15,7 +15,6 @@
 
 #include "kleo_kicondialog.h"
 
-#include <kbuttongroup.h>
 #include <klistwidgetsearchline.h>
 #include <kapplication.h>
 #include <klocale.h>
@@ -83,7 +82,7 @@ public:
  */
 
 KIconCanvas::KIconCanvas(QWidget *parent)
-    : KListWidget(parent), d(new KIconCanvasPrivate(this))
+    : QListWidget(parent), d(new KIconCanvasPrivate(this))
 {
     setViewMode(IconMode);
     setUniformItemSizes(true);

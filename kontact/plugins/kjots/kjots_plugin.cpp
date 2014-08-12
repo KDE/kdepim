@@ -26,10 +26,10 @@
 
 #include <KontactInterface/Core>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 
 EXPORT_KONTACT_PLUGIN( KJotsPlugin, kjots )
@@ -37,27 +37,27 @@ EXPORT_KONTACT_PLUGIN( KJotsPlugin, kjots )
 KJotsPlugin::KJotsPlugin( KontactInterface::Core *core, const QVariantList & )
   : KontactInterface::Plugin( core, core, "kjots" ), m_interface( 0 )
 {
-  setComponentData( KontactPluginFactory::componentData() );
+  //QT5 setComponentData( KontactPluginFactory::componentData() );
 
-  KAction *action =
-    new KAction( KIcon( QLatin1String("document-new") ),
+  QAction *action =
+    new QAction( QIcon::fromTheme( QLatin1String("document-new") ),
                  i18nc( "@action:inmenu", "New KJots Page" ), this );
   actionCollection()->addAction( QLatin1String("new_kjots_page"), action );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_P ) );
-  action->setHelpText(
-    i18nc( "@info:status", "Create a new jots page" ) );
+  //QT5 action->setHelpText(
+    //i18nc( "@info:status", "Create a new jots page" ) );
   action->setWhatsThis(
     i18nc( "@info:whatsthis",
            "You will be presented with a dialog where you can create a new jots page." ) );
   connect( action, SIGNAL(triggered(bool)), SLOT(newPage()) );
   insertNewAction( action );
 
-  action = new KAction( KIcon( QLatin1String("address-book-new") ),
+  action = new QAction( QIcon::fromTheme( QLatin1String("address-book-new") ),
                         i18nc( "@action:inmenu", "New KJots Book" ), this );
   actionCollection()->addAction( QLatin1String("new_kjots_book"), action );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_B ) );
-  action->setHelpText(
-    i18nc( "@info:status", "Create a new jots book" ) );
+  //QT5 action->setHelpText(
+    //i18nc( "@info:status", "Create a new jots book" ) );
   action->setWhatsThis(
     i18nc( "@info:whatsthis",
            "You will be presented with a dialog where you can create a new jots book." ) );
@@ -144,4 +144,4 @@ int KJotsUniqueAppHandler::newInstance()
 
 }
 
-
+#include "kjots_plugin.moc"

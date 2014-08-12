@@ -25,7 +25,7 @@
 #ifndef KORG_KOPREFS_H
 #define KORG_KOPREFS_H
 
-#include "korganizer_export.h"
+#include "korganizer_core_export.h"
 #include "koprefs_base.h"
 
 #include <calendarviews/prefs.h>
@@ -45,10 +45,10 @@ class KORGANIZER_CORE_EXPORT KOPrefs : public KOPrefsBase
     void usrSetDefaults();
 
     /** Read preferences from config file */
-    void usrReadConfig();
+    void usrRead();
 
     /** Write preferences to config file */
-    void usrWriteConfig();
+    bool usrSave();
 
   private:
     /** Constructor disabled for public. Use instance() to create a KOPrefs

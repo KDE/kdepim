@@ -27,16 +27,13 @@
 #include <kalarmcal/alarmtext.h>
 #include <kalarmcal/kaevent.h>
 
-#ifndef USE_AKONADI
-#include <kcal/person.h>
-#endif
 
 #include <kurl.h>
 
 class QAbstractButton;
 class QGroupBox;
 class KComboBox;
-class KHBox;
+
 class EmailIdCombo;
 class CheckBox;
 class ComboBox;
@@ -103,8 +100,8 @@ class EditDisplayAlarmDlg : public EditAlarmDlg
 
         // Display alarm options
         ComboBox*           mTypeCombo;
-        KHBox*              mFileBox;
-        KHBox*              mFilePadding;
+        QWidget *              mFileBox;
+        QWidget *              mFilePadding;
         SoundPicker*        mSoundPicker;
         CheckBox*           mConfirmAck;
         FontColourButton*   mFontColourButton;
@@ -187,7 +184,7 @@ class EditCommandAlarmDlg : public EditAlarmDlg
         PickLogFileRadio*   mCmdLogToFile;
         RadioButton*        mCmdDiscardOutput;
         LineEdit*           mCmdLogFileEdit;     // log file URL edit box
-        KHBox*              mCmdPadding;
+        QWidget *              mCmdPadding;
 
         // Initial state of all controls
         bool                mSavedCmdScript;        // mCmdEdit->isScript() status
@@ -208,13 +205,8 @@ class EditEmailAlarmDlg : public EditAlarmDlg
         // N.B. setTime() must be called first to set the date-only characteristic,
         //      followed by setRecurrence().
         virtual void    setAction(KAEvent::SubAction, const AlarmText& = AlarmText());
-#ifdef USE_AKONADI
         void            setEmailFields(uint fromID, const KCalCore::Person::List&, const QString& subject,
                                        const QStringList& attachments);
-#else
-        void            setEmailFields(uint fromID, const QList<KCal::Person>&, const QString& subject,
-                                       const QStringList& attachments);
-#endif
         void            setBcc(bool);
 
         static QString  i18n_chk_CopyEmailToSelf();    // text of 'Copy email to self' checkbox
@@ -254,11 +246,7 @@ class EditEmailAlarmDlg : public EditAlarmDlg
         CheckBox*           mEmailBcc;
         QString             mAttachDefaultDir;
 
-#ifdef USE_AKONADI
         KCalCore::Person::List mEmailAddresses;  // list of addresses to send email to
-#else
-        QList<KCal::Person> mEmailAddresses;     // list of addresses to send email to
-#endif
 
         QStringList         mEmailAttachments;   // list of email attachment file names
 
@@ -311,7 +299,7 @@ class EditAudioAlarmDlg : public EditAlarmDlg
 
         // Audio alarm options
         SoundWidget*        mSoundConfig;
-        KHBox*              mPadding;          // allow top-adjustment of controls
+        QWidget *              mPadding;          // allow top-adjustment of controls
 
         // Initial state of all controls
         QString             mSavedFile;        // sound file

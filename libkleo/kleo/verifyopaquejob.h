@@ -73,7 +73,7 @@ namespace Kleo {
        signature data, while \a signedData contains the data over
        which the signature was made.
     */
-    virtual KDE_DEPRECATED GpgME::Error start( const QByteArray & signedData ) = 0;
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const QByteArray & signedData ) = 0;
 
     /*!
       \overload

@@ -22,18 +22,17 @@
 #define INCIDENCEEDITOR_INCIDENCEATTACHMENT_H
 
 #include "incidenceeditor-ng.h"
-
+class KUrl;
 namespace Ui {
   class EventOrTodoDesktop;
   class EventOrTodoMore;
 }
 
-class KAction;
-class KMenu;
+class QMenu;
 
 class QListWidgetItem;
 class QMimeData;
-
+class QAction;
 namespace IncidenceEditorNG {
 
 class AttachmentIconView;
@@ -96,15 +95,15 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
     Ui::EventOrTodoDesktop *mUi;
 #endif
 
-    KMenu *mPopupMenu;
-    KAction *mOpenAction;
-    KAction *mSaveAsAction;
+    QMenu *mPopupMenu;
+    QAction *mOpenAction;
+    QAction *mSaveAsAction;
 #ifndef QT_NO_CLIPBOARD
-    KAction *mCopyAction;
-    KAction *mCutAction;
+    QAction *mCopyAction;
+    QAction *mCutAction;
 #endif
-    KAction *mDeleteAction;
-    KAction *mEditAction;
+    QAction *mDeleteAction;
+    QAction *mEditAction;
 };
 
 }

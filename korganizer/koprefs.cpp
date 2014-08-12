@@ -26,8 +26,10 @@
 #include "koprefs.h"
 
 #include <KGlobalSettings>
-
+#include <KGlobal>
+#include <QDebug>
 #include <QDir>
+#include <QFontDatabase>
 
 class KOPrefsPrivate
 {
@@ -37,15 +39,13 @@ class KOPrefsPrivate
     KOPrefs *prefs;
 };
 
-K_GLOBAL_STATIC( KOPrefsPrivate, sInstance )
+Q_GLOBAL_STATIC( KOPrefsPrivate, sInstance )
 
 KOPrefs::KOPrefs() : KOPrefsBase()
 {
-  KGlobal::locale()->insertCatalog( QLatin1String("calendarsupport") );
-
   mEventViewsPrefs = EventViews::PrefsPtr( new EventViews::Prefs( this ) );
 
-  mDefaultMonthViewFont = KGlobalSettings::generalFont();
+  mDefaultMonthViewFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
   // make it a bit smaller
   mDefaultMonthViewFont.setPointSize(
     qMax( mDefaultMonthViewFont.pointSize() - 2, 6 ) );
@@ -61,14 +61,14 @@ KOPrefs::KOPrefs() : KOPrefsBase()
 
 KOPrefs::~KOPrefs()
 {
-  kDebug();
+  qDebug();
   mEventViewsPrefs->writeConfig();
 }
 
 KOPrefs *KOPrefs::instance()
 {
   if ( !sInstance.exists() ) {
-    sInstance->prefs->readConfig();
+    sInstance->prefs->load();
     sInstance->prefs->mEventViewsPrefs->readConfig();
   }
 
@@ -82,24 +82,24 @@ void KOPrefs::usrSetDefaults()
   KConfigSkeleton::usrSetDefaults();
 }
 
-void KOPrefs::usrReadConfig()
+void KOPrefs::usrRead()
 {
   KConfigGroup generalConfig( config(), "General" );
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
 
-  KConfigSkeleton::usrReadConfig();
+  KConfigSkeleton::usrRead();
 }
 
-void KOPrefs::usrWriteConfig()
+bool KOPrefs::usrSave()
 {
   KConfigGroup generalConfig( config(), "General" );
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
   timeScaleConfig.writeEntry( "Timescale Timezones", timeScaleTimezones() );
 
-  KConfigSkeleton::usrWriteConfig();
+  return KConfigSkeleton::usrSave();
 }
 
 void KOPrefs::setResourceColor ( const QString &cal, const QColor &color )

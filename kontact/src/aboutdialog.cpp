@@ -29,26 +29,32 @@ using namespace Kontact;
 #include <KontactInterface/Plugin>
 
 #include <KAboutData>
-#include <KComponentData>
 #include <KLocale>
-#include <KTextBrowser>
+#include <QTextBrowser>
+#include <KGlobal>
+#include <KConfigGroup>
+#include <QIcon>
+#include <KIconLoader>
 
 #include <QBoxLayout>
 #include <QLabel>
-#include <QTextEdit>
+#include <QPushButton>
+#include <KSharedConfig>
+#include <KWindowConfig>
 
 AboutDialog::AboutDialog( KontactInterface::Core *core )
     : KPageDialog( core ), mCore( core )
 {
-    setCaption( i18n( "About Kontact" ) );
-    setButtons( Close );
-    setDefaultButton( Close );
+    setWindowTitle( i18n( "About Kontact" ) );
+    setStandardButtons( QDialogButtonBox::Close );
+    button( QDialogButtonBox::Close )->setDefault(true);
     setModal( false );
-    showButtonSeparator( true );
+    //QT5 showButtonSeparator( true );
     setFaceType( KPageDialog::List );
+#if 0 //QT5
     addAboutData( i18n( "Kontact Container" ), QLatin1String( "kontact" ),
-                  KGlobal::mainComponent().aboutData() );
-
+                  KComponentData::mainComponent().aboutData() );
+#endif
     QList<KontactInterface::Plugin*> plugins = mCore->pluginList();
     QList<KontactInterface::Plugin*>::ConstIterator end = plugins.constEnd();
     QList<KontactInterface::Plugin*>::ConstIterator it = plugins.constBegin();
@@ -56,33 +62,33 @@ AboutDialog::AboutDialog( KontactInterface::Core *core )
         addAboutPlugin( *it );
     }
 
-    addLicenseText( KGlobal::mainComponent().aboutData() );
-
-    setInitialSize( QSize( 600, 400 ) );
-    restoreDialogSize( KConfigGroup( KGlobal::config(), "AboutDialog" ) );
-    connect( this, SIGNAL(finished(int)), this, SLOT(saveSize()) );
+    //QT5 addLicenseText( KComponentData::mainComponent().aboutData() );
+    resize(QSize( 600, 400 ));
+    KConfigGroup grp = KConfigGroup( KSharedConfig::openConfig(), "AboutDialog" );
+    KWindowConfig::restoreWindowSize( windowHandle(), grp);
+    connect(this, &AboutDialog::finished, this, &AboutDialog::saveSize);
 }
 
 void AboutDialog::saveSize()
 {
-    KConfigGroup group( KGlobal::config(), "AboutDialog" );
-    saveDialogSize( group );
+    KConfigGroup group( KSharedConfig::openConfig(), "AboutDialog" );
+    KWindowConfig::saveWindowSize(windowHandle(), group);
     group.sync();
 }
 
 void AboutDialog::addAboutPlugin( KontactInterface::Plugin *plugin )
 {
-    addAboutData( plugin->title(), plugin->icon(), plugin->aboutData() );
+    //QT5 addAboutData( plugin->title(), plugin->icon(), plugin->aboutData() );
 }
 
 void AboutDialog::addAboutData( const QString &title, const QString &icon,
                                 const KAboutData *about )
 {
-    QIcon pixmap = KIcon( icon );
+    QIcon pixmap = QIcon::fromTheme( icon );
 
     QFrame *topFrame = new QFrame();
     KPageWidgetItem *pageItem = new KPageWidgetItem( topFrame, title );
-    pageItem->setIcon( KIcon( pixmap ) );
+    pageItem->setIcon( pixmap );
 
     addPage( pageItem );
 
@@ -95,7 +101,7 @@ void AboutDialog::addAboutData( const QString &title, const QString &icon,
         QString text;
 
         text += QLatin1String("<p>");
-        text += QLatin1String("<b>") + about->programName() + QLatin1String("</b>");
+        //QT5 text += QLatin1String("<b>") + about->programName() + QLatin1String("</b>");
         text += QLatin1String("<br>");
 
         text += i18n( "Version %1", about->version() );
@@ -120,7 +126,7 @@ void AboutDialog::addAboutData( const QString &title, const QString &icon,
                     Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard | Qt::LinksAccessibleByMouse );
         topLayout->addWidget( label );
 
-        KTextBrowser *personView = new KTextBrowser( topFrame );
+        QTextBrowser *personView = new QTextBrowser( topFrame );
         personView->setReadOnly( true );
         topLayout->addWidget( personView, 1 );
 
@@ -277,23 +283,26 @@ QString AboutDialog::formatPerson( const QString &name, const QString &email )
 
 void AboutDialog::addLicenseText( const KAboutData *about )
 {
-    if ( !about || about->license().isEmpty() ) {
+    if ( !about || about->licenses().isEmpty() ) {
         return;
     }
-
     QPixmap pixmap = KIconLoader::global()->loadIcon( QLatin1String("help-about"),
                                                       KIconLoader::Desktop, 48 );
 
-    const QString title = i18n( "%1 License", about->programName() );
+    const QString title = i18n( "%1 License", about->displayName() );
 
     QFrame *topFrame = new QFrame();
     KPageWidgetItem *page = new KPageWidgetItem( topFrame, title );
-    page->setIcon( KIcon( pixmap ) );
+    page->setIcon( QIcon( pixmap ) );
     addPage( page );
     QBoxLayout *topLayout = new QVBoxLayout( topFrame );
 
-    KTextBrowser *textBrowser = new KTextBrowser( topFrame );
-    textBrowser->setHtml( QString::fromLatin1( "<pre>%1</pre>" ).arg( about->license() ) );
+    QTextBrowser *textBrowser = new QTextBrowser( topFrame );
+    QString licenseStr;
+    Q_FOREACH (const KAboutLicense &license,  about->licenses()) {
+       licenseStr += QString::fromLatin1( "<pre>%1</pre>" ).arg( license.text() );
+    }
+    textBrowser->setHtml( licenseStr );
 
     topLayout->addWidget( textBrowser );
 }

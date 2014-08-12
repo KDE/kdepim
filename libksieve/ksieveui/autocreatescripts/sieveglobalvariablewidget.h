@@ -21,8 +21,8 @@
 #include "sievewidgetpageabstract.h"
 #include <libkdepim/widgets/kwidgetlister.h>
 
-class KPushButton;
-class KLineEdit;
+class QPushButton;
+class QLineEdit;
 class QGridLayout;
 class QCheckBox;
 class QDomElement;
@@ -56,12 +56,12 @@ Q_SIGNALS:
 
 private:
     void initWidget();
-    KPushButton *mAdd;
-    KPushButton *mRemove;
+    QPushButton *mAdd;
+    QPushButton *mRemove;
     QGridLayout *mLayout;
-    KLineEdit *mVariableName;
+    QLineEdit *mVariableName;
     QCheckBox *mSetValueTo;
-    KLineEdit *mVariableValue;
+    QLineEdit *mVariableValue;
 };
 
 class SieveGlobalVariableLister : public KPIM::KWidgetLister

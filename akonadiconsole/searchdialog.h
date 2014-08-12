@@ -21,12 +21,12 @@
 #ifndef AKONADICONSOLE_SEARCHDIALOG_H
 #define AKONADICONSOLE_SEARCHDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
 
-class KLineEdit;
+class QLineEdit;
 class KTextEdit;
 
-class SearchDialog : public KDialog
+class SearchDialog : public QDialog
 {
   public:
     explicit SearchDialog( QWidget *parent = 0 );
@@ -36,7 +36,7 @@ class SearchDialog : public KDialog
     QString searchQuery() const;
 
   private:
-    KLineEdit *mName;
+    QLineEdit *mName;
     KTextEdit *mEdit;
 };
 

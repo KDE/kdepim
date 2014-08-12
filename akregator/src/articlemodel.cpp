@@ -28,15 +28,15 @@
 #include "akregatorconfig.h"
 #include "feed.h"
 
-#include <syndication/tools.h>
+#include <Syndication/Tools>
 
 #include <QMimeData>
 #include <QString>
 #include <QVector>
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
+#include <KUrl>
 
 #include <memory>
 
@@ -143,7 +143,7 @@ QVariant Akregator::ArticleModel::data( const QModelIndex& index, int role ) con
                 case FeedTitleColumn:
                     return article.feed() ? article.feed()->title() : QVariant();
                 case DateColumn:
-                    return KGlobal::locale()->formatDateTime(article.pubDate(),
+                    return KLocale::global()->formatDateTime(article.pubDate(),
                                                              KLocale::FancyShortDate );
                 case ItemTitleColumn:
                     return d->titleCache[row];

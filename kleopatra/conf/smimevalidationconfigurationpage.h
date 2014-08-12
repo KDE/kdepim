@@ -33,7 +33,7 @@
 #define KLEOPATRA_SMIMEVALIDATIONCONFIGURATIONPAGE_H
 
 #include <kcmodule.h>
-
+class KComponentData;
 namespace Kleo {
 namespace Config {
  

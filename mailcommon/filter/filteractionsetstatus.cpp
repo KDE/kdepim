@@ -19,8 +19,8 @@
 
 #include "filteractionsetstatus.h"
 
-#include <KDE/Akonadi/KMime/MessageStatus>
-#include <KDE/KLocale>
+#include <Akonadi/KMime/MessageStatus>
+#include <KLocale>
 using namespace MailCommon;
 
 FilterAction* FilterActionSetStatus::newAction()

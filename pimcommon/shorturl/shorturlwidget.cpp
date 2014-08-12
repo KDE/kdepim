@@ -19,7 +19,6 @@
 #include "shorturlutils.h"
 #include "abstractshorturl.h"
 #include "shorturl/shorturlconfiguredialog.h"
-
 #include <KPIMUtils/ProgressIndicatorLabel>
 
 #include <KLineEdit>
@@ -27,6 +26,7 @@
 #include <KMessageBox>
 #include <KToggleAction>
 #include <KRun>
+#include <QIcon>
 
 #include <QLabel>
 #include <QGridLayout>
@@ -34,6 +34,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QToolButton>
+#include <QPointer>
 
 using namespace PimCommon;
 
@@ -50,14 +51,14 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     setLayout(grid);
 
     QToolButton *closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 #ifndef QT_NO_ACCESSIBILITY
     closeBtn->setAccessibleName( i18n( "Close" ) );
 #endif
     closeBtn->setAutoRaise( true );
-    connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
+    connect(closeBtn, &QToolButton::clicked, this, &ShortUrlWidget::slotCloseWidget);
 
     grid->addWidget(closeBtn, 0, 0);
 
@@ -65,7 +66,7 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     grid->addWidget(mIndicatorLabel, 0, 1);
 
     QPushButton *configure = new QPushButton(i18n("Configure..."));
-    connect(configure, SIGNAL(clicked()), this, SLOT(slotConfigure()));
+    connect(configure, &QPushButton::clicked, this, &ShortUrlWidget::slotConfigure);
     grid->addWidget(configure, 0, 2);
 
     mShorturlServiceName = new QLabel(mEngine->shortUrlName());
@@ -73,39 +74,39 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
 
     mConvertButton = new QPushButton(i18n("Convert"));
     grid->addWidget(mConvertButton, 1, 2);
-    connect(mConvertButton, SIGNAL(clicked()), this, SLOT(slotConvertUrl()));
+    connect(mConvertButton, &QPushButton::clicked, this, &ShortUrlWidget::slotConvertUrl);
 
     mInsertShortUrl = new QPushButton(i18n("Insert Short Url"));
-    connect(mInsertShortUrl, SIGNAL(clicked()), this, SLOT(slotInsertShortUrl()));
+    connect(mInsertShortUrl, &QPushButton::clicked, this, &ShortUrlWidget::slotInsertShortUrl);
     grid->addWidget(mInsertShortUrl, 2, 2);
 
     QLabel *lab = new QLabel(i18n("Original url:"));
     grid->addWidget(lab, 3, 0);
 
     mOriginalUrl = new KLineEdit;
-    mOriginalUrl->setClearButtonShown(true);
+    mOriginalUrl->setClearButtonEnabled(true);
     mOriginalUrl->setTrapReturnKey(true);
-    connect(mOriginalUrl, SIGNAL(textChanged(QString)), this, SLOT(slotOriginalUrlChanged(QString)));
-    connect(mOriginalUrl, SIGNAL(returnPressed(QString)), this, SLOT(slotConvertUrl()));
+    connect(mOriginalUrl, &KLineEdit::textChanged, this, &ShortUrlWidget::slotOriginalUrlChanged);
+    connect(mOriginalUrl, &KLineEdit::returnPressed, this, &ShortUrlWidget::slotConvertUrl);
     grid->addWidget(mOriginalUrl, 3, 1);
 
     mCopyToClipboard = new QPushButton(i18n("Copy to clipboard"));
-    connect(mCopyToClipboard, SIGNAL(clicked()), this, SLOT(slotPasteToClipboard()));
+    connect(mCopyToClipboard, &QPushButton::clicked, this, &ShortUrlWidget::slotPasteToClipboard);
     grid->addWidget(mCopyToClipboard, 3, 2);
 
 
     lab = new QLabel(i18n("Short url:"));
     grid->addWidget(lab, 4, 0);
 
-    mShortUrl = new KLineEdit;
-    connect(mShortUrl, SIGNAL(textChanged(QString)), this, SLOT(slotShortUrlChanged(QString)));
+    mShortUrl = new QLineEdit;
+    connect(mShortUrl, &QLineEdit::textChanged, this, &ShortUrlWidget::slotShortUrlChanged);
     mShortUrl->setReadOnly(true);
     grid->addWidget(mShortUrl, 4, 1);
 
 
 
     mOpenShortUrl = new QPushButton(i18n("Open Short Url"));
-    connect(mOpenShortUrl, SIGNAL(clicked()), this, SLOT(slotOpenShortUrl()));
+    connect(mOpenShortUrl, &QPushButton::clicked, this, &ShortUrlWidget::slotOpenShortUrl);
     grid->addWidget(mOpenShortUrl, 4, 2);
 
 
@@ -158,8 +159,8 @@ void ShortUrlWidget::loadEngine()
     mEngine = PimCommon::ShortUrlUtils::loadEngine(this);
     if (mShorturlServiceName)
         mShorturlServiceName->setText(mEngine->shortUrlName());
-    connect(mEngine, SIGNAL(shortUrlDone(QString)), this, SLOT(slotShortUrlDone(QString)));
-    connect(mEngine, SIGNAL(shortUrlFailed(QString)), this, SLOT(slotShortUrlFailed(QString)));
+    connect(mEngine, &AbstractShortUrl::shortUrlDone, this, &ShortUrlWidget::slotShortUrlDone);
+    connect(mEngine, &AbstractShortUrl::shortUrlFailed, this, &ShortUrlWidget::slotShortUrlFailed);
 }
 
 void ShortUrlWidget::slotConvertUrl()

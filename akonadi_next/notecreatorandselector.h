@@ -25,7 +25,7 @@
 #include <QItemSelectionModel>
 #include <QTimer>
 
-#include <akonadi/collection.h>
+#include <collection.h>
 
 #include "akonadi_next_export.h"
 

@@ -8,11 +8,11 @@ set(composerhtmlSources
   composerhtmleditor.cpp
 )
 
-KDE4_ADD_EXECUTABLE(composerhtmleditor ${composerhtmlSources} )
-TARGET_LINK_LIBRARIES(composerhtmleditor ${QT_QTWEBKIT_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} composereditorng )
+add_executable(composerhtmleditor ${composerhtmlSources} )
+TARGET_LINK_LIBRARIES(composerhtmleditor Qt5::WebKitWidgets  KF5::KIOCore composereditorng )
 
 install(TARGETS composerhtmleditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   composerhtmleditorui.rc
-  DESTINATION  ${DATA_INSTALL_DIR}/composerhtmleditor)
+  DESTINATION  ${KXMLGUI_INSTALL_DIR}/composerhtmleditor)
 

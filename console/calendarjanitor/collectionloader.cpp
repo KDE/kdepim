@@ -24,11 +24,12 @@
 
 #include <KCalCore/Incidence>
 
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
+#include <AkonadiCore/CollectionFetchJob>
+#include <AkonadiCore/CollectionFetchScope>
 #include <QString>
 #include <QSet>
 
+#include <QDebug>
 
 CollectionLoader::CollectionLoader(QObject *parent) :
     QObject(parent)
@@ -63,7 +64,7 @@ void CollectionLoader::onCollectionsLoaded(KJob *job)
         }
         emit loaded(true);
     } else {
-        kError() << job->errorString();
+        qCritical() << job->errorString();
         emit loaded(false);
     }
 }

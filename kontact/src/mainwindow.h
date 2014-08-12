@@ -26,10 +26,9 @@
 #include "kontact_export.h"
 
 #include <KontactInterface/Core>
-
-namespace KontactInterface {
-class Plugin;
-}
+#include <KontactInterface/Plugin>
+#include <KUrl>
+#include <QAction>
 
 class KActionMenu;
 class KWebView;
@@ -142,7 +141,7 @@ private:
     QString mInitialActiveModule;
 
     QMap<QString, QPointer<QWidget> > mFocusWidgets;
-    QMap<KontactInterface::Plugin *, KAction *> mPluginAction;
+    QMap<KontactInterface::Plugin *, QAction *> mPluginAction;
 
     AboutDialog *mAboutDialog;
     bool mReallyClose;

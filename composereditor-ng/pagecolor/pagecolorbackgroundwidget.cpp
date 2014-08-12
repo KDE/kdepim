@@ -22,7 +22,7 @@
 #include "ui_pagecolorbackgroundwidget.h"
 
 #include <KImageIO>
-#include <KFileDialog>
+#include <QUrl>
 
 using namespace ComposerEditorNG;
 
@@ -33,7 +33,8 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
     ui->setupUi(this);
 
     const QStringList mimetypes = KImageIO::mimeTypes( KImageIO::Reading );
-    ui->backgroundImage->fileDialog()->setFilter(mimetypes.join( QLatin1String( " " ) ));
+//QT5
+    //ui->backgroundImage->fileDialog()->setFilter(mimetypes.join( QLatin1String( " " ) ));
     ui->groupBox->setEnabled(false);
     connect(ui->customColors,SIGNAL(toggled(bool)),ui->groupBox,SLOT(setEnabled(bool)));
 }
@@ -76,12 +77,12 @@ bool PageColorBackgroundWidget::useDefaultColor() const
     return ui->defaultColor->isChecked();
 }
 
-KUrl PageColorBackgroundWidget::backgroundImageUrl() const
+QUrl PageColorBackgroundWidget::backgroundImageUrl() const
 {
     return ui->backgroundImage->url();
 }
 
-void PageColorBackgroundWidget::setBackgroundImageUrl(const KUrl& url)
+void PageColorBackgroundWidget::setBackgroundImageUrl(const QUrl &url)
 {
     ui->backgroundImage->setUrl(url);
 }

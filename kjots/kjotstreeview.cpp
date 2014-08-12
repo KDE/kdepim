@@ -25,11 +25,11 @@
 #include <QClipboard>
 #include <QContextMenuEvent>
 #include <QMenu>
-
+#include <QMimeData>
 #include <KActionCollection>
 #include <KXMLGUIClient>
-#include <KColorDialog>
-#include <KInputDialog>
+#include <QColorDialog>
+#include <QInputDialog>
 #include <KLocalizedString>
 
 #include <KMime/KMimeMessage>
@@ -146,8 +146,8 @@ void KJotsTreeView::renameEntry()
           return;
 
       bool ok;
-      QString name = KInputDialog::getText( i18n( "Rename Page" ),
-          i18n( "Page title:" ), title, &ok, this );
+      const QString name = QInputDialog::getText( this, i18n( "Rename Page" ),
+          i18n( "Page title:" ), QLineEdit::Normal, title, &ok );
 
       if ( ok )
         model()->setData( idx, name, Qt::EditRole );
@@ -160,8 +160,8 @@ void KJotsTreeView::renameEntry()
     return;
 
   bool ok;
-  QString name = KInputDialog::getText( i18n( "Rename Book" ),
-      i18n( "Book name:" ), title, &ok, this );
+  const QString name = QInputDialog::getText( this, i18n( "Rename Book" ),
+      i18n( "Book name:" ), QLineEdit::Normal, title, &ok );
 
   if ( ok )
     model()->setData( idx, name, Qt::EditRole );
@@ -208,16 +208,14 @@ void KJotsTreeView::copyLinkAddress()
 void KJotsTreeView::changeColor()
 {
   QColor myColor;
-  int result = KColorDialog::getColor( myColor );
+  myColor = QColorDialog::getColor();
+  if ( myColor.isValid() ) {
+    QModelIndexList rows = selectionModel()->selectedRows();
 
-  if ( result != KColorDialog::Accepted )
-    return;
-
-  QModelIndexList rows = selectionModel()->selectedRows();
-
-  foreach ( const QModelIndex &idx, rows )
-  {
-    model()->setData(idx, myColor, Qt::BackgroundRole );
+    foreach ( const QModelIndex &idx, rows )
+    {
+      model()->setData(idx, myColor, Qt::BackgroundRole );
+    }
   }
 }
 

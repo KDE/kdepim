@@ -25,8 +25,8 @@
 #include "sender/messagesender.h"
 #include "messagecomposer/recipient/recipient.h"
 
-#include <akonadi/collection.h>
-#include <KDE/KMime/Message>
+#include <AkonadiCore/collection.h>
+#include <KMime/Message>
 
 #include <QObject>
 #include <KUrl>

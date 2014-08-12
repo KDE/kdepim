@@ -57,7 +57,6 @@
 #include <commands/lookupcertificatescommand.h>
 #include <commands/detailscommand.h>
 
-#include <KGlobal>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KCmdLineOptions>
@@ -75,13 +74,13 @@
 #include <boost/mem_fn.hpp>
 
 #include <memory>
+#include <KSharedConfig>
 
 using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace boost;
 
 static void add_resources() {
-  KGlobal::locale()->insertCatalog( QLatin1String("libkleopatra") );
   KIconLoader::global()->addAppDir( QLatin1String("libkleopatra") );
   KIconLoader::global()->addAppDir( QLatin1String("kwatchgnupg") );
   KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
@@ -206,7 +205,7 @@ public:
         const QString logFileName = QDir( dir ).absoluteFilePath( QString::fromLatin1( "kleopatra.log.%1" ).arg( mygetpid() ) );
         std::auto_ptr<QFile> logFile( new QFile( logFileName ) );
         if ( !logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ) {
-            kDebug() << "Could not open file for logging: " << logFileName << "\nLogging disabled";
+            qDebug() << "Could not open file for logging: " << logFileName << "\nLogging disabled";
             return;
         }
 
@@ -240,7 +239,7 @@ KleopatraApplication::KleopatraApplication()
 
 KleopatraApplication::~KleopatraApplication() {
     // work around kdelibs bug https://bugs.kde.org/show_bug.cgi?id=162514
-    KGlobal::config()->sync();
+    KSharedConfig::openConfig()->sync();
 }
 
 static QStringList files_from_args( const shared_ptr<const KCmdLineArgs> & args ) {
@@ -262,7 +261,7 @@ namespace {
 }
 
 int KleopatraApplication::newInstance() {
-    kDebug() << "ignoreNewInstance =" << d->ignoreNewInstance;
+    qDebug() << "ignoreNewInstance =" << d->ignoreNewInstance;
     if ( d->ignoreNewInstance )
         return 0;
 
@@ -277,7 +276,7 @@ int KleopatraApplication::newInstance() {
     kDebug( cms )     << "found CMS";
 
     if ( openpgp && cms ) {
-        kDebug() << "ambigious protocol: --openpgp and --cms";
+        qDebug() << "ambigious protocol: --openpgp and --cms";
         return 1;
     }
 
@@ -285,7 +284,7 @@ int KleopatraApplication::newInstance() {
     if ( args->isSet( "query" ) ) {
         const QString fingerPrint = args->getOption( "query" );
         if ( fingerPrint.isEmpty() ) {
-          kDebug() << "no fingerprint specified: --query";
+          qDebug() << "no fingerprint specified: --query";
           return 1;
         }
 
@@ -344,23 +343,23 @@ int KleopatraApplication::newInstance() {
         const _Funcs * it2 = std::find_if( it1+1, end( funcs ),
                                            boost::bind( &KCmdLineArgs::isSet, args, boost::bind( &_Funcs::opt, _1 ) ) );
         if ( it2 != end( funcs ) ) {
-            kDebug() << "ambiguous command" << it1->opt << "vs." << it2->opt;
+            qDebug() << "ambiguous command" << it1->opt << "vs." << it2->opt;
             return 1;
         }
         if ( files.empty() ) {
-            kDebug() << it1->opt << "without arguments";
+            qDebug() << it1->opt << "without arguments";
             return 1;
         }
-        kDebug() << "found" << it1->opt;
+        qDebug() << "found" << it1->opt;
         (this->*func)( files, openpgp ? GpgME::OpenPGP : cms ? GpgME::CMS : GpgME::UnknownProtocol );
     } else {
         if ( files.empty() ) {
             if ( ! ( d->firstNewInstance && isSessionRestored() ) ) {
-                kDebug() << "openOrRaiseMainWindow";
+                qDebug() << "openOrRaiseMainWindow";
                 openOrRaiseMainWindow();
             }
         } else {
-            kDebug() << "files without command"; // possible?
+            qDebug() << "files without command"; // possible?
             return 1;
         }
     }
@@ -421,16 +420,16 @@ void KleopatraApplication::toggleMainWindowVisibility()
 }
 
 void KleopatraApplication::restoreMainWindow() {
-    kDebug() << "restoring main window";
+    qDebug() << "restoring main window";
 
     // Sanity checks
     if ( !isSessionRestored() ) {
-        kDebug() << "Not in session restore";
+        qDebug() << "Not in session restore";
         return;
     }
 
     if ( mainWindow() ) {
-        kDebug() << "Already have main window";
+        qDebug() << "Already have main window";
         return;
     }
 

@@ -30,7 +30,7 @@
 #include "feediconmanager.h"
 #include "treenode.h"
 
-#include <syndication/syndication.h>
+#include <Syndication/Syndication>
 
 #include <QIcon>
 #include <QList>

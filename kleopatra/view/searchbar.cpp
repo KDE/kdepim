@@ -40,7 +40,6 @@
 #include <KLocalizedString>
 #include <KLineEdit>
 
-#include <QLabel>
 #include <QComboBox>
 #include <QHBoxLayout>
 
@@ -89,7 +88,7 @@ SearchBar::Private::Private( SearchBar * qq )
     layout->setMargin( 0 );
     lineEdit = new KLineEdit( q );
     lineEdit->setClearButtonShown( true );
-    lineEdit->setClickMessage(i18n("Search..."));
+    lineEdit->setPlaceholderText(i18n("Search..."));
     layout->addWidget( lineEdit, /*stretch=*/1 );
     combo = new QComboBox( q );
     layout->addWidget( combo );
@@ -119,7 +118,7 @@ SearchBar::~SearchBar() {}
 
 void SearchBar::updateClickMessage(const QString &shortcutStr)
 {
-    d->lineEdit->setClickMessage(i18n("Search...<%1>", shortcutStr));
+    d->lineEdit->setPlaceholderText(i18n("Search...<%1>", shortcutStr));
 }
 
 // slot

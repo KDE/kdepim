@@ -19,28 +19,35 @@
 
 // READ THE README FILE
 
-#include <KApplication>
+
 #include <KLocale>
 #include <KAboutData>
-#include <KCmdLineArgs>
+
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
-  KAboutData aboutData( "etm_usage", 0,
-                        ki18n( "ETM Test application" ),
-                        "0.99",
-                        ki18n( "Test app for EntityTreeModel" ),
-                        KAboutData::License_GPL,
-                        ki18n( "" ),
-                        KLocalizedString(),
-                        "http://pim.kde.org/akonadi/" );
+  KAboutData aboutData( QLatin1String("etm_usage"),
+                        i18n( "ETM Test application" ),
+                        QLatin1String("0.99"),
+                        i18n( "Test app for EntityTreeModel" ),
+                        KAboutLicense::GPL,
+                        QLatin1String("http://pim.kde.org/akonadi/") );
   aboutData.setProgramIconName( QLatin1String("akonadi") );
-  aboutData.addAuthor( ki18n( "Stephen Kelly" ), ki18n( "Author" ), "steveire@gmail.com" );
+  aboutData.addAuthor( i18n( "Stephen Kelly" ), i18n( "Author" ), QLatin1String("steveire@gmail.com") );
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
   app.setQuitOnLastWindowClosed(true);
 
   MainWindow mainWindow;

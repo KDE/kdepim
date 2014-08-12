@@ -21,8 +21,9 @@
 #include <KStandardDirs>
 #include <KConfigGroup>
 #include <KConfig>
-
+#include <KGlobal>
 #include <QDirIterator>
+#include <QStandardPaths>
 
 KNotePrintSelectThemeComboBox::KNotePrintSelectThemeComboBox(QWidget *parent)
     : QComboBox(parent)
@@ -41,10 +42,10 @@ void KNotePrintSelectThemeComboBox::loadThemes()
     const QString defaultTheme = KNotesGlobalConfig::self()->theme();
 
     const QString relativePath = QLatin1String("knotes/print/themes/");
-    QStringList themesDirectories = KGlobal::dirs()->findDirs("data", relativePath);
+    QStringList themesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, relativePath,QStandardPaths::LocateDirectory);
     if (themesDirectories.count() < 2) {
         //Make sure to add local directory
-        const QString localDirectory = KStandardDirs::locateLocal("data", relativePath);
+        const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativePath;
         if (!themesDirectories.contains(localDirectory)) {
             themesDirectories.append(localDirectory);
         }

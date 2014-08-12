@@ -39,9 +39,7 @@
 #include <QString>
 
 #include <kaction.h>
-#include <kdebug.h>
 #include <klibloader.h>
-#include <kmenu.h>
 #include <kmimetypetrader.h>
 #include <ktoolbarpopupaction.h>
 #include <kurl.h>

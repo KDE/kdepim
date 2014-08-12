@@ -46,11 +46,11 @@
 #include <QValidator>
 
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 
 #include <cassert>
+#include <KSharedConfig>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
@@ -179,7 +179,7 @@ private:
             errorLB->setFixedHeight( errorLB->minimumSizeHint().height() );
             errorLB->clear();
 
-            const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+            const KConfigGroup config( KSharedConfig::openConfig(), "CertificateCreationWizard" );
             const QStringList attrOrder = config.readEntry( "OpenPGPAttributeOrder",
                                                             QStringList() << QLatin1String("NAME!") << QLatin1String("EMAIL!") << QLatin1String("COMMENT") );
 
@@ -273,32 +273,32 @@ static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
     if ( !le )
       continue;
     const QString key = line.attr;
-    kDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
+    qDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
     if ( le->text().trimmed().isEmpty() ) {
         if ( key.endsWith(QLatin1Char('!')) ) {
             if ( line.regex.isEmpty() )
-                error = i18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
+                error = xi18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
             else
-                error = i18nc("@info","<interface>%1</interface> is required, but empty.<nl/>"
+                error = xi18nc("@info","<interface>%1</interface> is required, but empty.<nl/>"
                               "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
             return false;
         }
     } else if ( has_intermediate_input( le ) ) {
         if ( line.regex.isEmpty() )
-            error = i18nc("@info","<interface>%1</interface> is incomplete.", line.label );
+            error = xi18nc("@info","<interface>%1</interface> is incomplete.", line.label );
         else
-            error = i18nc("@info","<interface>%1</interface> is incomplete.<nl/>"
+            error = xi18nc("@info","<interface>%1</interface> is incomplete.<nl/>"
                           "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
         return false;
     } else if ( !le->hasAcceptableInput() ) {
         if ( line.regex.isEmpty() )
-            error = i18nc("@info","<interface>%1</interface> is invalid.", line.label );
+            error = xi18nc("@info","<interface>%1</interface> is invalid.", line.label );
         else
-            error = i18nc("@info","<interface>%1</interface> is invalid.<nl/>"
+            error = xi18nc("@info","<interface>%1</interface> is invalid.<nl/>"
                           "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
         return false;
     }
-    kDebug() << "ok" << endl;
+    qDebug() << "ok" << endl;
   }
   return true;
 }

@@ -19,10 +19,13 @@
 #include "pimcommon/storageservice/box/boxstorageservice.h"
 #include <QWidget>
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+#include <qdebug.h>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 
 BoxTestWidget::BoxTestWidget(QWidget *parent)
@@ -34,10 +37,18 @@ BoxTestWidget::BoxTestWidget(QWidget *parent)
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "box_gui", 0, ki18n("box_Gui"),
-                       "1.0", ki18n("Test for box"));
+    KAboutData aboutData( QLatin1String("box_gui"), i18n("box_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for box"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     BoxTestWidget *w = new BoxTestWidget;
     w->show();

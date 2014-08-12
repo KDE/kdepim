@@ -20,9 +20,9 @@
 
 #ifndef SIEVEEDITORTABWIDGET_H
 #define SIEVEEDITORTABWIDGET_H
-#include <KTabWidget>
+#include <QTabWidget>
 
-class SieveEditorTabWidget : public KTabWidget
+class SieveEditorTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:

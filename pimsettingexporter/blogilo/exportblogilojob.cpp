@@ -19,13 +19,14 @@
 
 #include "messageviewer/utils/kcursorsaver.h"
 
-#include <Akonadi/AgentManager>
+#include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
 #include <KStandardDirs>
 #include <KZip>
 
 #include <QWidget>
+#include <QStandardPaths>
 
 ExportBlogiloJob::ExportBlogiloJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -66,7 +67,7 @@ void ExportBlogiloJob::backupConfig()
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     const QString blogiloStr(QLatin1String("blogilorc"));
-    const QString blogilorc = KStandardDirs::locateLocal( "config", blogiloStr);
+    const QString blogilorc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + blogiloStr;
     backupFile(blogilorc, Utils::configsPath(), blogiloStr);
 
     Q_EMIT info(i18n("Config backup done."));
@@ -77,7 +78,7 @@ void ExportBlogiloJob::backupData()
     showInfo(i18n("Backing up data..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     const QString dbfileStr = QLatin1String( "blogilo.db" );
-    const QString dbfile = KStandardDirs::locateLocal( "data", QLatin1String( "blogilo/" ) + dbfileStr );
+    const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/blogilo/" ) + dbfileStr ;
 
     backupFile(dbfile, Utils::dataPath() +  QLatin1String( "/blogilo/" ), dbfileStr);
 

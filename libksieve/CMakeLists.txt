@@ -1,3 +1,4 @@
+project(libksieve)
 
 include(CheckTypeSize)
 check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
@@ -9,10 +10,12 @@ set(libksieve_parser_SRCS
   ${CMAKE_SOURCE_DIR}/libksieve/parser/parser.cpp
 )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libksieve\")
+
 add_subdirectory(ksieve)
 add_subdirectory(kmanagesieve)
 add_subdirectory(ksieveui)
-add_subdirectory(tests)
+add_subdirectory(autotests)
 
 ########### next target ###############
 
@@ -21,14 +24,15 @@ set(ksieve_LIB_SRCS
   ${libksieve_parser_SRCS}
 )
 
-kde4_add_library(ksieve ${LIBRARY_TYPE} ${ksieve_LIB_SRCS})
+add_library(ksieve ${LIBRARY_TYPE} ${ksieve_LIB_SRCS})
+generate_export_header(ksieve BASE_NAME ksieve)
 
-target_link_libraries(ksieve ${KDE4_KDECORE_LIBS})
+target_link_libraries(ksieve Qt5::Core KF5::I18n)
 
 set_target_properties(
   ksieve PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS ksieve ${INSTALL_TARGETS_DEFAULT_ARGS})

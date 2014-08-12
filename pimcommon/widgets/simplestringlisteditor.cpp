@@ -33,13 +33,14 @@
 
 #include "simplestringlisteditor.h"
 
-#include <kinputdialog.h>
+#include <qinputdialog.h>
 #include <kiconloader.h>
+#include <QIcon>
 #include <klocale.h>
-#include <kdebug.h>
-#include <kpushbutton.h>
+#include <qdebug.h>
+#include <QPushButton>
 #include <kdialog.h>
-#include <KMenu>
+#include <QMenu>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QListWidget>
@@ -75,7 +76,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
     hlay->addWidget( mListBox, 1 );
 
     if ( buttons == None ) {
-        kDebug() << "SimpleStringListBox called with no buttons."
+        qDebug() << "SimpleStringListBox called with no buttons."
                     "Consider using a plain QListBox instead!";
     }
 
@@ -122,11 +123,11 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
 
     if ( buttons & Up ) {
         if ( !(buttons & Down) ) {
-            kDebug() << "Are you sure you want to use an Up button"
+            qDebug() << "Are you sure you want to use an Up button"
                         "without a Down button??";
         }
-        mUpButton = new KPushButton( QString(), this );
-        mUpButton->setIcon( KIcon( QLatin1String("go-up") ) );
+        mUpButton = new QPushButton( QString(), this );
+        mUpButton->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
         mUpButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
         mUpButton->setAutoDefault( false );
         mUpButton->setEnabled( false ); // no selection yet
@@ -137,11 +138,11 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
 
     if ( buttons & Down ) {
         if ( !(buttons & Up) ) {
-            kDebug() << "Are you sure you want to use a Down button"
+            qDebug() << "Are you sure you want to use a Down button"
                         "without an Up button??";
         }
-        mDownButton = new KPushButton( QString(), this );
-        mDownButton->setIcon( KIcon( QLatin1String("go-down") ) );
+        mDownButton = new QPushButton( QString(), this );
+        mDownButton->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
         mDownButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
         mDownButton->setAutoDefault( false );
         mDownButton->setEnabled( false ); // no selection yet
@@ -213,26 +214,26 @@ void SimpleStringListEditor::setButtonText( ButtonCode button, const QString & t
         return;
     case Up:
     case Down:
-        kDebug() << "SimpleStringListEditor: Cannot change text of"
+        qDebug() << "SimpleStringListEditor: Cannot change text of"
                     "Up and Down buttons: they don't contains text!";
         return;
     default:
         if ( button & All )
-            kDebug() << "No such button!";
+            qDebug() << "No such button!";
         else
-            kDebug() << "Can only set text for one button at a time!";
+            qDebug() << "Can only set text for one button at a time!";
         return;
     }
 
-    kDebug() << "The requested button has not been created!";
+    qDebug() << "The requested button has not been created!";
 }
 
 void SimpleStringListEditor::addNewEntry()
 {
     bool ok = false;
-    QString newEntry = KInputDialog::getText( i18n("New Value"),
-                                              mAddDialogLabel, QString(),
-                                              &ok, this );
+    QString newEntry = QInputDialog::getText( this, i18n("New Value"),
+                                              mAddDialogLabel, QLineEdit::Normal, QString(),
+                                              &ok );
     if (ok)
         insertNewEntry(newEntry);
 }
@@ -269,9 +270,9 @@ void SimpleStringListEditor::slotRemove()
 QString SimpleStringListEditor::modifyEntry(const QString &text)
 {
     bool ok = false;
-    QString newText = KInputDialog::getText( i18n("Change Value"),
-                                             mAddDialogLabel, text,
-                                             &ok, this );
+    QString newText = QInputDialog::getText( this, i18n("Change Value"),
+                                             mAddDialogLabel, QLineEdit::Normal, text,
+                                             &ok );
     emit aboutToAdd( newText );
 
     if ( !ok || newText.isEmpty() || newText == text )
@@ -314,7 +315,7 @@ void SimpleStringListEditor::slotUp()
     const int numberOfItem( listWidgetItem.count() );
     const int currentRow = mListBox->currentRow();
     if ( ( numberOfItem == 1 ) && ( currentRow == 0 ) ) {
-        kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
+        qDebug() << "Called while the _topmost_ filter is selected, ignoring.";
         return;
     }
     bool wasMoved = false;
@@ -346,7 +347,7 @@ void SimpleStringListEditor::slotDown()
     const int numberOfItem( listWidgetItem.count() );
     const int currentRow = mListBox->currentRow();
     if ( ( numberOfItem == 1 ) && ( currentRow == numberOfElement - 1 ) ) {
-        kDebug() << "Called while the _last_ filter is selected, ignoring.";
+        qDebug() << "Called while the _last_ filter is selected, ignoring.";
         return;
     }
 
@@ -403,7 +404,7 @@ void SimpleStringListEditor::slotContextMenu(const QPoint &pos)
 {
     QList<QListWidgetItem *> lstSelectedItems = mListBox->selectedItems();
     const bool hasItemsSelected = !lstSelectedItems.isEmpty();
-    KMenu *menu = new KMenu( this );
+    QMenu *menu = new QMenu( this );
     if (mAddButton) {
         menu->addAction( mAddButton->text(), this, SLOT(slotAdd()));
     }

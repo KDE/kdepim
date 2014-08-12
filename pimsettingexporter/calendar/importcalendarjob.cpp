@@ -25,10 +25,14 @@
 #include <KConfigGroup>
 #include <KArchiveDirectory>
 #include <KArchiveEntry>
+#include <KArchive>
 #include <KZip>
+
+#include <QDebug>
 
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 static const QString storeCalendar = QLatin1String("backupcalendar/");
 
@@ -182,7 +186,7 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                kDebug()<<" Problem in archive. number of file "<<lst.count();
+                qDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }
     }
@@ -196,7 +200,7 @@ void ImportCalendarJob::restoreConfig()
     const KArchiveEntry* oldKorganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + oldKorganizerPrintrrcStr);
     if (oldKorganizerPrinterEntry && oldKorganizerPrinterEntry->isFile()) {
         const KArchiveFile* korganizerFile = static_cast<const KArchiveFile*>(oldKorganizerPrinterEntry);
-        const QString oldKorganizerPrintrrc = KStandardDirs::locateLocal( "config",  korganizerPrinterrcStr);
+        const QString oldKorganizerPrintrrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerPrinterrcStr;
         if (QFile(oldKorganizerPrintrrc).exists()) {
             if (overwriteConfigMessageBox(oldKorganizerPrintrrc)) {
                 copyToFile(korganizerFile, oldKorganizerPrintrrc, oldKorganizerPrintrrcStr, Utils::configsPath());
@@ -208,7 +212,7 @@ void ImportCalendarJob::restoreConfig()
         const KArchiveEntry* korganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerPrinterrcStr);
         if (korganizerPrinterEntry && korganizerPrinterEntry->isFile()) {
             const KArchiveFile* korganizerFile = static_cast<const KArchiveFile*>(korganizerPrinterEntry);
-            const QString korganizerPrinterrc = KStandardDirs::locateLocal( "config",  korganizerPrinterrcStr);
+            const QString korganizerPrinterrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerPrinterrcStr;
             if (QFile(korganizerPrinterrc).exists()) {
                 if (overwriteConfigMessageBox(korganizerPrinterrcStr)) {
                     copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
@@ -223,7 +227,7 @@ void ImportCalendarJob::restoreConfig()
     const KArchiveEntry* korganizerrcentry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerStr);
     if (korganizerrcentry && korganizerrcentry->isFile()) {
         const KArchiveFile* korganizerrcFile = static_cast<const KArchiveFile*>(korganizerrcentry);
-        const QString korganizerrc = KStandardDirs::locateLocal( "config",  korganizerStr);
+        const QString korganizerrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerStr;
         if (QFile(korganizerrc).exists()) {
             if (overwriteConfigMessageBox(korganizerStr)) {
                 importkorganizerConfig(korganizerrcFile, korganizerrc, korganizerStr, Utils::configsPath());
@@ -237,7 +241,7 @@ void ImportCalendarJob::restoreConfig()
     const KArchiveEntry* korgacrcentry  = mArchiveDirectory->entry(Utils::configsPath() + korgacStr);
     if (korgacrcentry && korgacrcentry->isFile()) {
         const KArchiveFile* korgacrcFile = static_cast<const KArchiveFile*>(korgacrcentry);
-        const QString korgacrc = KStandardDirs::locateLocal( "config",  korgacStr);
+        const QString korgacrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korgacStr;
         if (QFile(korgacrc).exists()) {
             if (overwriteConfigMessageBox(korgacStr)) {
                 copyToFile(korgacrcFile, korgacrc, korgacStr, Utils::configsPath());
@@ -252,7 +256,7 @@ void ImportCalendarJob::restoreConfig()
     if (freebusyentry && freebusyentry->isFile()) {
         const KArchiveFile* freebusyrcFile = static_cast<const KArchiveFile*>(freebusyentry);
 
-        const QString freebusypath = KStandardDirs::locateLocal( "data", QLatin1String("korganizer/") + freebusyStr );
+        const QString freebusypath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/") + freebusyStr ;
         if (QFile(freebusypath).exists()) {
             //TODO 4.12 merge it.
             if (overwriteConfigMessageBox(freebusyStr)) {
@@ -267,7 +271,7 @@ void ImportCalendarJob::restoreConfig()
     const KArchiveEntry *templateEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "korganizer/templates/" ) );
     if (templateEntry && templateEntry->isDirectory()) {
         //TODO 4.12 verify if template already exists.
-        const QString templatePath = KGlobal::dirs()->saveLocation("data", QLatin1String("korganizer/templates/"));
+        const QString templatePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("korganizer/templates/");
         const KArchiveDirectory *templateDir = static_cast<const KArchiveDirectory*>(templateEntry);
         templateDir->copyTo(templatePath);
     }

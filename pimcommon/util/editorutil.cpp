@@ -16,7 +16,6 @@
 */
 
 #include "editorutil.h"
-#include <QDebug>
 
 void PimCommon::EditorUtil::upperCase( QTextCursor &cursor )
 {

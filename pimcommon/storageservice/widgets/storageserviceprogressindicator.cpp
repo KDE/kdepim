@@ -20,6 +20,7 @@
 
 #include "storageserviceprogressindicator.h"
 #include <QTimer>
+#include <KIconLoader>
 
 using namespace PimCommon;
 
@@ -27,7 +28,8 @@ StorageServiceProgressIndicator::StorageServiceProgressIndicator(QObject *parent
     : QObject(parent),
       mProgressCount(0)
 {
-    mProgressPix = KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
+    KIconLoader loader;
+    mProgressPix = KIconLoader::global()->loadPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
     mProgressTimer = new QTimer(this);
     connect(mProgressTimer, SIGNAL(timeout()), this, SLOT(slotTimerDone()));
 }

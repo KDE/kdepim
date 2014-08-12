@@ -215,7 +215,7 @@ void FilterEvolution_v2::importMBox(const QString &mboxName, const QString &root
         long l = 0;
 
         while (!mbox.atEnd()) {
-            KTemporaryFile tmp;
+            QTemporaryFile tmp;
             tmp.open();
             /** @todo check if the file is really a mbox, maybe search for 'from' string at start */
             /* comment by Danny:

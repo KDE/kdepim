@@ -26,37 +26,37 @@
 
 #include "aboutdata.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcomponentdata.h>
 #include <kfiledialog.h>
 #include <kstandardaction.h>
-#include <kstandarddirs.h>
+
 #include <kpluginfactory.h>
 #include <klocale.h>
 #include <kstatusbar.h>
-
+#include <QIcon>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QTimer>
+#include <QStandardPaths>
 #include "kjotswidget.h"
 
-const KAboutData &createAboutData()
+const K4AboutData &createAboutData()
 {
     static AboutData aboutData;
     return aboutData;
 }
 
 K_PLUGIN_FACTORY(KJotsPartFactory, registerPlugin<KJotsPart>();)
-K_EXPORT_PLUGIN(KJotsPartFactory(createAboutData()))
 
 KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/ )
     : KParts::ReadOnlyPart(parent)
 {
     // we need an instance
-    setComponentData( KJotsPartFactory::componentData() );
+    //QT5 setComponentData( KJotsPartFactory::componentData() );
 
     // this should be your custom internal widget
     mComponent = new KJotsWidget(parentWidget, this);
@@ -67,7 +67,7 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
     initAction();
 
     // set our XML-UI resource file
-    setXMLFile(KStandardDirs::locate("data", QLatin1String("kjots/kjotspartui.rc")));
+    setXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kjots/kjotspartui.rc")));
 
     QTimer::singleShot(0, this, SLOT(delayedInitialization()));
 }
@@ -79,7 +79,7 @@ KJotsPart::~KJotsPart()
 
 void KJotsPart::initAction()
 {
-  KAction *action = new KAction( KIcon( QLatin1String("configure") ), i18n( "&Configure KJots..." ), this );
+  QAction *action = new QAction( QIcon::fromTheme( QLatin1String("configure") ), i18n( "&Configure KJots..." ), this );
   actionCollection()->addAction( QLatin1String("kjots_configure"), action );
   connect( action, SIGNAL(triggered(bool)), mComponent,
            SLOT(configure()) );
@@ -111,3 +111,4 @@ void KJotsPart::activeAnchorChanged(const QString &anchorTarget, const QString &
 // {
 //     return false;
 // }
+#include "kjotspart.moc"

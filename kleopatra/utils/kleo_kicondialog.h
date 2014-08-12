@@ -18,7 +18,7 @@
 #include <QPushButton>
 
 #include <kdialog.h>
-#include <klistwidget.h>
+#include <QListWidget>
 
 class KIconLoader;
 
@@ -28,7 +28,7 @@ namespace KioAvoidance {
 /**
  * Icon canvas for KIconDialog.
  */
-class KIconCanvas: public KListWidget
+class KIconCanvas: public QListWidget
 {
     Q_OBJECT
 

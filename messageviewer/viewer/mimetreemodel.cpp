@@ -27,11 +27,13 @@
 #include <kmime/kmime_content.h>
 #include <KMime/Message>
 
-#include <KDebug>
+#include <QDebug>
 #include <KIcon>
 #include <KLocalizedString>
 #include <KMimeType>
-
+#include <KGlobal>
+#include <KLocale>
+#include <KFormat>
 Q_DECLARE_METATYPE(KMime::Content*)
 Q_DECLARE_METATYPE(KMime::ContentIndex)
 
@@ -83,7 +85,7 @@ public:
         {
             const QString contentMimeType = QString::fromLatin1(content->contentType()->mimeType());
             KMimeType::Ptr mimeType = KMimeType::mimeType( contentMimeType );
-            if ( mimeType.isNull() )
+            if ( !mimeType )
                 return contentMimeType;
             return mimeType->comment();
         }
@@ -95,7 +97,7 @@ public:
     {
         if ( content->body().isEmpty() )
             return QString();
-        return KGlobal::locale()->formatByteSize( content->body().size() );
+        return KFormat().formatByteSize( content->body().size() );
     }
 
     KIcon iconForContent( KMime::Content *content )
@@ -103,11 +105,11 @@ public:
         if ( content->contentType( false ) )
         {
             KMimeType::Ptr mimeType = KMimeType::mimeType( QString::fromLatin1( content->contentType()->mimeType() ) );
-            if ( mimeType.isNull() || mimeType->name() == QLatin1String("application/octet-stream") ) {
+            if ( !mimeType || mimeType->name() == QLatin1String("application/octet-stream") ) {
                 const QString name = descriptionForContent(content);
                 mimeType = MessageViewer::Util::mimetype(name);
             }
-            if ( mimeType.isNull() || mimeType->iconName().isEmpty() )
+            if ( !mimeType || mimeType->iconName().isEmpty() )
                 return KIcon();
             if( mimeType->name().startsWith( QLatin1String( "multipart/" ) ) )
                 return KIcon( QLatin1String("folder") );

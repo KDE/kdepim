@@ -19,7 +19,7 @@
 
 #include "kcalitembrowseritem.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 using namespace CalendarSupport;
 using namespace CalendarSupport::KCal;

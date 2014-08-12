@@ -1,3 +1,0 @@
-# Configuration files (not kpartgui files)
-SKIP filters/filters.rc
-SKIP headers.rc

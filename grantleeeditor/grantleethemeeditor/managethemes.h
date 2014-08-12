@@ -19,13 +19,13 @@
 #define MANAGETHEMES_H
 
 #include "grantleethemeeditor_export.h"
-#include <KDialog>
+#include <QDialog>
 
 class QListWidget;
-class KPushButton;
+class QPushButton;
 namespace GrantleeThemeEditor {
 
-class GRANTLEETHEMEEDITOR_EXPORT ManageThemes : public KDialog
+class GRANTLEETHEMEEDITOR_EXPORT ManageThemes : public QDialog
 {
     Q_OBJECT
 public:
@@ -42,7 +42,7 @@ private:
     void initialize();
     QString mLocalDirectory;
     QListWidget *mListThemes;
-    KPushButton *mDeleteTheme;
+    QPushButton *mDeleteTheme;
 };
 }
 #endif // MANAGETHEMES_H

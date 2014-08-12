@@ -22,7 +22,7 @@
 
 #include "ui_collectionaclpage.h"
 
-#include <akonadi/collectionpropertiespage.h>
+#include <AkonadiWidgets/collectionpropertiespage.h>
 
 class CollectionAclPage : public Akonadi::CollectionPropertiesPage
 {

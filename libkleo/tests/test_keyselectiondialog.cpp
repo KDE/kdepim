@@ -31,21 +31,29 @@
 
 #include "libkleo/ui/keyselectiondialog.h"
 #include <gpgme++/key.h>
-#include <KApplication>
-#include <KComponentData>
-#include <kcmdlineargs.h>
-#include <kaboutdata.h>
+
+
+#include <KAboutData>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kdebug.h>
 
 #include <vector>
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 int main( int argc, char ** argv ) {
-  KAboutData aboutData( "test_keyselectiondialog", 0, ki18n("KeySelectionDialog Test"), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
+  KAboutData aboutData( QLatin1String("test_keyselectiondialog"), i18n("KeySelectionDialog Test"), QLatin1String("0.1") );
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  KAboutData::setApplicationData(aboutData);
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
-  KApplication app;
   KIconLoader::global()->addAppDir( "libkleopatra" );
   KIconLoader::global()->addAppDir( "kdepim" );
 

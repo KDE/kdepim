@@ -38,7 +38,7 @@
           <number>2</number>
          </property>
          <item>
-          <widget class="KListWidget" name="lstEntriesList">
+          <widget class="QListWidget" name="lstEntriesList">
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
@@ -75,14 +75,14 @@
             </spacer>
            </item>
            <item>
-            <widget class="KPushButton" name="btnEntriesUpdate">
+            <widget class="QPushButton" name="btnEntriesUpdate">
              <property name="toolTip">
               <string>Update list of entries</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="KPushButton" name="btnEntriesClear">
+            <widget class="QPushButton" name="btnEntriesClear">
              <property name="toolTip">
               <string>Clear list of entries</string>
              </property>
@@ -96,7 +96,7 @@
             </widget>
            </item>
            <item>
-            <widget class="KPushButton" name="btnEntriesRemove">
+            <widget class="QPushButton" name="btnEntriesRemove">
              <property name="toolTip">
               <string>Remove selected entry from server</string>
              </property>
@@ -183,14 +183,14 @@
               </spacer>
              </item>
              <item>
-              <widget class="KPushButton" name="btnCatReload">
+              <widget class="QPushButton" name="btnCatReload">
                <property name="toolTip">
                 <string>Reload list of categories</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="KPushButton" name="btnCatAdd">
+              <widget class="QPushButton" name="btnCatAdd">
                <property name="toolTip">
                 <string>Add a new category to the selected blog</string>
                </property>
@@ -224,7 +224,7 @@
               </widget>
              </item>
              <item>
-              <widget class="KLineEdit" name="txtCatTags"/>
+              <widget class="QLineEdit" name="txtCatTags"/>
              </item>
             </layout>
            </item>
@@ -437,7 +437,7 @@
                </spacer>
               </item>
               <item row="1" column="2">
-               <widget class="KPushButton" name="btnOptionsNow">
+               <widget class="QPushButton" name="btnOptionsNow">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -459,7 +459,7 @@
           </widget>
          </item>
          <item>
-          <widget class="KLineEdit" name="txtSlug"/>
+          <widget class="QLineEdit" name="txtSlug"/>
          </item>
          <item>
           <widget class="QLabel" name="lblOptionsTrackBack">
@@ -472,7 +472,7 @@
           </widget>
          </item>
          <item>
-          <widget class="KLineEdit" name="txtOptionsTrackback"/>
+          <widget class="QLineEdit" name="txtOptionsTrackback"/>
          </item>
          <item>
           <widget class="QLabel" name="label_2">
@@ -573,7 +573,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="KPushButton" name="btnLocalRemove">
+            <widget class="QPushButton" name="btnLocalRemove">
              <property name="toolTip">
               <string>Remove selected entry</string>
              </property>
@@ -614,29 +614,14 @@
    <header>kdatewidget.h</header>
   </customwidget>
   <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>KSeparator</class>
    <extends>QFrame</extends>
    <header>kseparator.h</header>
   </customwidget>
   <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
    <class>KTextEdit</class>
    <extends>QTextEdit</extends>
    <header>ktextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KListWidget</class>
-   <extends>QListWidget</extends>
-   <header>klistwidget.h</header>
   </customwidget>
   <customwidget>
    <class>PimCommon::CustomTextEdit</class>

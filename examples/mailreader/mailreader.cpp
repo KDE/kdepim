@@ -5,22 +5,23 @@
  */
 #include "mailreader.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitytreeview.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/session.h>
-#include <libkdepim/misc/statisticsproxymodel.h>
-#include <akonadi/kmime/messageparts.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiWidgets/entitytreeview.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/session.h>
+#include <AkonadiCore/statisticsproxymodel.h>
+#include <Akonadi/KMime/MessageParts>
 
-#include <KDE/KAction>
-#include <KDE/KConfigDialog>
-#include <KDE/KActionCollection>
-#include <KDE/KLocale>
-#include <KDE/KStandardAction>
-#include <KDE/KStatusBar>
+#include <QAction>
+#include <KConfigDialog>
+#include <KActionCollection>
+#include <KLocale>
+#include <KStandardAction>
+#include <KStatusBar>
+#include <QIcon>
 
 #include <QDockWidget>
 #include <QSortFilterProxyModel>
@@ -89,7 +90,7 @@ void mailreader::setupDocks()
   collectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   // ... with statistics...
-  KPIM::StatisticsProxyModel *statisticsProxyModel = new KPIM::StatisticsProxyModel( this );
+  Akonadi::StatisticsProxyModel *statisticsProxyModel = new Akonadi::StatisticsProxyModel( this );
   statisticsProxyModel->setToolTipEnabled( true );
   statisticsProxyModel->setExtraColumnsEnabled( false );
   statisticsProxyModel->setSourceModel( collectionFilter );
@@ -135,7 +136,7 @@ void mailreader::setupActions()
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
     KStandardAction::preferences(m_view, SLOT(slotConfigure()), actionCollection());
 
-    KAction *createTab = new KAction(KIcon(QLatin1String("tab-new")),
+    QAction *createTab = new QAction(QIcon::fromTheme(QLatin1String("tab-new")),
                                       i18n("Open a new tab"),
                                       this);
     actionCollection()->addAction(QLatin1String("new_tab"), createTab);
@@ -143,12 +144,12 @@ void mailreader::setupActions()
             m_messagePane, SLOT(createNewTab()));
 
 
-    m_previousMessage = new KAction(i18n("Previous Message"), this);
+    m_previousMessage = new QAction(i18n("Previous Message"), this);
     actionCollection()->addAction(QLatin1String("previous_message"), m_previousMessage);
-    connect(m_previousMessage, SIGNAL(triggered(bool)), SLOT(slotPreviousMessage()));
-    m_nextMessage = new KAction(i18n("Next Message"), this);
+    connect(m_previousMessage, &QAction::triggered, this, &mailreader::slotPreviousMessage);
+    m_nextMessage = new QAction(i18n("Next Message"), this);
     actionCollection()->addAction(QLatin1String("next_message"), m_nextMessage);
-    connect(m_nextMessage, SIGNAL(triggered(bool)), SLOT(slotNextMessage()));
+    connect(m_nextMessage, &QAction::triggered, this, &mailreader::slotNextMessage);
 }
 
 void mailreader::slotMessageSelected( const Akonadi::Item &item )
@@ -158,8 +159,8 @@ void mailreader::slotMessageSelected( const Akonadi::Item &item )
   Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( item, this );
   itemFetchJob->fetchScope().fetchFullPayload( true );
 
-  connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsReceived(Akonadi::Item::List)) );
-  connect( itemFetchJob, SIGNAL(result(KJob*)), SLOT(itemFetchDone(KJob*)) );
+  connect(itemFetchJob, &Akonadi::ItemFetchJob::itemsReceived, this, &mailreader::itemsReceived);
+  connect(itemFetchJob, &Akonadi::ItemFetchJob::result, this, &mailreader::itemFetchDone);
 
   m_view->showItem( item );
 }
@@ -170,7 +171,7 @@ void mailreader::itemsReceived(const Akonadi::Item::List &list )
 
   Akonadi::Item item = list.first();
 
-  kDebug() << item.payloadData() << item.hasPayload<KMime::Message::Ptr>();
+  qDebug() << item.payloadData() << item.hasPayload<KMime::Message::Ptr>();
 
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
@@ -181,7 +182,7 @@ void mailreader::itemsReceived(const Akonadi::Item::List &list )
 void mailreader::itemFetchDone(KJob *job)
 {
   if (job->error())
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
 }
 
 

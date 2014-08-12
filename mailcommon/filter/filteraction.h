@@ -20,13 +20,13 @@
 #ifndef MAILCOMMON_FILTERACTION_H
 #define MAILCOMMON_FILTERACTION_H
 
-#include "../mailcommon_export.h"
+#include "mailcommon_export.h"
 #include "../search/searchpattern.h"
 
 #include "itemcontext.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <Collection>
+#include <Item>
 
 #include <KMime/MDN>
 #include <KMime/KMimeMessage>

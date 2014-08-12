@@ -40,7 +40,7 @@
 #include <KDebug>
 #include <KGuiItem>
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
 #include <KStandardGuiItem>
 
 #include <QDialogButtonBox>
@@ -75,7 +75,7 @@ private:
     std::map<int, WizardPage*> idToPage;
     int currentId;
     QStackedWidget* stack;
-    KPushButton* nextButton;
+    QPushButton* nextButton;
     QPushButton* backButton;
     QPushButton* cancelButton;
     KGuiItem finishItem;
@@ -137,8 +137,8 @@ Wizard::Private::Private( Wizard * qq )
     q->connect( backButton, SIGNAL(clicked()), q, SLOT(back()) );
     box->addButton( backButton, QDialogButtonBox::ActionRole );
 
-    nextButton = new KPushButton;
-    nextButton->setGuiItem( nextItem );
+    nextButton = new QPushButton;
+    KGuiItem::assign(nextButton, nextItem );
     q->connect( nextButton, SIGNAL(clicked()), q, SLOT(next()) );
     box->addButton( nextButton, QDialogButtonBox::ActionRole );
     buttonLayout->addWidget( box );
@@ -148,7 +148,7 @@ Wizard::Private::Private( Wizard * qq )
     q->connect( q, SIGNAL(rejected()), q, SIGNAL(canceled()) ); 
 }
 
-Wizard::Private::~Private() { kDebug(); }
+Wizard::Private::~Private() { qDebug(); }
 
 
 
@@ -164,9 +164,9 @@ void Wizard::Private::updateButtonStates()
     WizardPage* const page = q->page( currentId );
     const KGuiItem customNext = page ? page->customNextButton() : KGuiItem();
     if ( customNext.text().isEmpty() && customNext.icon().isNull() )
-        nextButton->setGuiItem( isLast ? finishItem : nextItem );
+        KGuiItem::assign(nextButton, isLast ? finishItem : nextItem );
     else
-        nextButton->setGuiItem( customNext );
+        KGuiItem::assign( nextButton, customNext );
     nextButton->setEnabled( canGoToNext );
     cancelButton->setEnabled( !isLast || !canGoToNext );
     backButton->setEnabled( q->canGoToPreviousPage() );
@@ -200,7 +200,7 @@ Wizard::Wizard( QWidget * parent, Qt::WindowFlags f )
     
 }
 
-Wizard::~Wizard() { kDebug(); }
+Wizard::~Wizard() { qDebug(); }
 
 void Wizard::setPage( int id, WizardPage* widget )
 {

@@ -25,7 +25,7 @@
 
 
 #include <stdio.h>
-#include <KDebug>
+#include <QDebug>
 #include "kspellplugin.h"
 #include <QTextBoundaryFinder>
 #include "globalsettings_base.h"
@@ -89,11 +89,12 @@ void KWebSpellChecker::checkSpellingOfString(const QString& word, int* misspelli
     // sanity check
     if (misspellingLocation == NULL || misspellingLength == NULL)
         return;
-
+//QT5
+#if 0
     *misspellingLocation = -1;
     *misspellingLength = 0;
 
-    kDebug() << word << endl;
+    qDebug() << word << endl;
 
     QTextBoundaryFinder finder =  QTextBoundaryFinder(QTextBoundaryFinder::Word, word);
 
@@ -128,6 +129,7 @@ void KWebSpellChecker::checkSpellingOfString(const QString& word, int* misspelli
             inWord = true;
         }
     }
+#endif
 }
 
 QString KWebSpellChecker::autoCorrectSuggestionForMisspelledWord(const QString& word)
@@ -191,7 +193,8 @@ QObject* KWebKitPlatformPlugin::createExtension(Extension ext) const
     return NULL;
 }
 
-Q_EXPORT_PLUGIN2(kwebspellchecker, KWebKitPlatformPlugin)
-Q_IMPORT_PLUGIN(kwebspellchecker)
+//Q_EXPORT_PLUGIN2(kwebspellchecker, KWebKitPlatformPlugin)
+//QT5
+//Q_IMPORT_PLUGIN(kwebspellchecker)
 
 

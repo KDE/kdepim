@@ -41,7 +41,6 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QSignalMapper>
 #include <QtCore/QUuid>
-#include <QLabel>
 
 class EditorMore::Private
 {
@@ -135,7 +134,6 @@ class EditorMore::Private
     {
       if ( mContact.sound().data().isEmpty() )
         return;
-
       Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory );
       QBuffer* soundData = new QBuffer( player );
       soundData->setData( mContact.sound().data() );

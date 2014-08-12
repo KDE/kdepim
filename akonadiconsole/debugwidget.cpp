@@ -24,13 +24,13 @@
 #include "tracernotificationinterface.h"
 #include "connectionpage.h"
 
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 
 #include <KFileDialog>
 #include <KLocalizedString>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KTextEdit>
-#include <Akonadi/ServerManager>
+#include <AkonadiCore/ServerManager>
 
 #include <QPushButton>
 #include <QSplitter>
@@ -51,14 +51,14 @@ DebugWidget::DebugWidget( QWidget *parent )
   mDebugInterface = new DebugInterface( service, "/debug", QDBusConnection::sessionBus(), this );
   QCheckBox *cb = new QCheckBox( i18n("Enable debugger"), this );
   cb->setChecked( mDebugInterface->isValid() && mDebugInterface->tracer().value() == QLatin1String( "dbus" ) );
-  connect( cb, SIGNAL(toggled(bool)), SLOT(enableDebugger(bool)) );
+  connect(cb, &QCheckBox::toggled, this, &DebugWidget::enableDebugger);
   layout->addWidget( cb );
 
   QSplitter *splitter = new QSplitter( Qt::Vertical, this );
   splitter->setObjectName( "debugSplitter" );
   layout->addWidget( splitter );
 
-  mConnectionPages = new KTabWidget( splitter );
+  mConnectionPages = new QTabWidget( splitter );
   mConnectionPages->setTabsClosable( true );
 
   mGeneralView = new KTextEdit( splitter );
@@ -68,7 +68,7 @@ DebugWidget::DebugWidget( QWidget *parent )
   page->showAllConnections( true );
   mConnectionPages->addTab( page, "All" );
 
-  connect( mConnectionPages, SIGNAL(tabCloseRequested(int)), SLOT(tabCloseRequested(int)) );
+  connect(mConnectionPages, &QTabWidget::tabCloseRequested, this, &DebugWidget::tabCloseRequested);
 
   org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification( QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this );
 
@@ -104,11 +104,11 @@ DebugWidget::DebugWidget( QWidget *parent )
   buttonLayout->addWidget( closeAllTabsButton );
   buttonLayout->addWidget( saveRichtextButton );
 
-  connect( clearAllButton, SIGNAL(clicked()), this, SLOT(clearAllTabs()) );
-  connect( clearCurrentButton, SIGNAL(clicked()), this, SLOT(clearCurrentTab()) );
-  connect( clearGeneralButton, SIGNAL(clicked()), mGeneralView, SLOT(clear()) );
-  connect( closeAllTabsButton, SIGNAL(clicked()), this, SLOT(closeAllTabs()) );
-  connect( saveRichtextButton, SIGNAL(clicked()), this, SLOT(saveRichText()) );
+  connect(clearAllButton, &QPushButton::clicked, this, &DebugWidget::clearAllTabs);
+  connect(clearCurrentButton, &QPushButton::clicked, this, &DebugWidget::clearCurrentTab);
+  connect(clearGeneralButton, &QPushButton::clicked, mGeneralView, &KTextEdit::clear);
+  connect(closeAllTabsButton, &QPushButton::clicked, this, &DebugWidget::closeAllTabs);
+  connect(saveRichtextButton, &QPushButton::clicked, this, &DebugWidget::saveRichText);
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 }

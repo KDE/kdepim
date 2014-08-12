@@ -15,17 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <kdebug.h>
-#include <kcmdlineargs.h>
-#include <kapplication.h>
+#include <qdebug.h>
+
+
 #include <KDialog>
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 #include "messageviewer/adblock/adblocksettingwidget.h"
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "adblocksettings_gui", 0, ki18n("adblocksettingstest_Gui"),
-                       "1.0", ki18n("Test for adblocksettings"));
-    KApplication app;
+    KAboutData aboutData( QLatin1String("adblocksettings_gui"), i18n("adblocksettingstest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for adblocksettings"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     MessageViewer::AdBlockSettingWidget *w = new MessageViewer::AdBlockSettingWidget;
     KDialog dlg;

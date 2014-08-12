@@ -35,13 +35,13 @@ LdapSession::LdapSession(QObject* parent) :
   m_state( Disconnected ),
   m_currentJob( 0 )
 {
-  kDebug();
+  qDebug();
 }
 
 // runs in other thread
 void LdapSession::connectToServer(const KLDAP::LdapServer& server)
 {
-  kDebug();
+  qDebug();
   if ( m_state != Disconnected )
     return;
   m_server = server;
@@ -51,10 +51,10 @@ void LdapSession::connectToServer(const KLDAP::LdapServer& server)
 // runs in this thread
 void LdapSession::connectToServerInternal()
 {
-  kDebug();
+  qDebug();
   m_conn.setServer( m_server );
   if ( m_conn.connect() != 0 ) {
-    kWarning() << "failed to connect: " << m_conn.connectionError();
+    qWarning() << "failed to connect: " << m_conn.connectionError();
     return;
   }
   m_state = Connected;
@@ -64,7 +64,7 @@ void LdapSession::connectToServerInternal()
 // runs in other threads
 void LdapSession::disconnectAndDelete()
 {
-  kDebug();
+  qDebug();
   QMetaObject::invokeMethod( this, "quit", Qt::QueuedConnection );
   QMetaObject::invokeMethod( this, "deleteLater", Qt::QueuedConnection );
 }
@@ -72,19 +72,19 @@ void LdapSession::disconnectAndDelete()
 // runs in this thread
 void LdapSession::disconnectFromServerInternal()
 {
-  kDebug();
+  qDebug();
   m_conn.close();
   m_state = Disconnected;
 }
 
 void LdapSession::authenticate()
 {
-  kDebug();
+  qDebug();
   LdapOperation op( m_conn );
   while ( true ) {
     int retval = op.bind_s();
     if ( retval == 0 ) {
-      kDebug() << "connected!";
+      qDebug() << "connected!";
       m_state = Authenticated;
       return;
     }
@@ -100,7 +100,7 @@ void LdapSession::authenticate()
     } else {
 //       LDAPErr( retval );
       disconnectFromServerInternal();
-      kDebug() << "error" << retval;
+      qDebug() << "error" << retval;
       return;
     }
   }
@@ -109,10 +109,10 @@ void LdapSession::authenticate()
 // called from other thread
 LdapQueryJob* LdapSession::get(const KLDAP::LdapUrl& url)
 {
-  kDebug() << url;
+  qDebug() << url;
   LdapQueryJob* job = new LdapQueryJob( url, this );
   job->moveToThread( this ); // make sure the job is in the thread so that the result connections are queued
-  connect( job, SIGNAL(result(KJob*)), SLOT(jobDone(KJob*)) );
+  connect(job, &LdapQueryJob::result, this, &LdapSession::jobDone);
   QMutexLocker locker( &m_mutex );
   m_jobQueue.enqueue( job );
   QMetaObject::invokeMethod( this, "executeNext", Qt::QueuedConnection );

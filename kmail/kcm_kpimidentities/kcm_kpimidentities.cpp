@@ -23,12 +23,12 @@
 #include "identitypage.h"
 #include <kcomponentdata.h>
 
+
 extern "C"
 {
-KDE_EXPORT KCModule *create_kcm_kpimidentities( QWidget *parent, const char* )
+Q_DECL_EXPORT KCModule *create_kcm_kpimidentities( QWidget *parent, const char* )
 {
-    KComponentData instance( "kcmkmail_config_identity" ); // keep in sync with kmail for now to reuse kmail translations until after the string freeze
-    KMail::IdentityPage *page = new KMail::IdentityPage( instance, parent );
+    KMail::IdentityPage *page = new KMail::IdentityPage( parent );
     page->setObjectName( QLatin1String("kcm_kpimidentities") );
     return page;
 }

@@ -26,7 +26,7 @@
 #include <QtCore/QString>
 
 #include <Akonadi/KMime/MessageStatus>
-#include <Akonadi/Collection>
+#include <Collection>
 #include "quicksearchline.h"
 
 namespace MessageList

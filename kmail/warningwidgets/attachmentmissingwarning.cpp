@@ -17,8 +17,8 @@
 
 #include "attachmentmissingwarning.h"
 #include <KLocalizedString>
-#include <KAction>
-#include <KIcon>
+#include <QAction>
+#include <QIcon>
 
 AttachmentMissingWarning::AttachmentMissingWarning(QWidget *parent)
     :KMessageWidget(parent)
@@ -29,12 +29,12 @@ AttachmentMissingWarning::AttachmentMissingWarning(QWidget *parent)
     setText( i18n( "The message you have composed seems to refer to an attached file but you have not attached anything. Do you want to attach a file to your message?" ) );
     setWordWrap(true);
 
-    KAction *action = new KAction( KIcon(QLatin1String( "mail-attachment" )), i18n( "&Attach file" ), this );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotAttachFile()) );
+    QAction *action = new QAction( QIcon::fromTheme(QLatin1String( "mail-attachment" )), i18n( "&Attach file" ), this );
+    connect(action, &QAction::triggered, this, &AttachmentMissingWarning::slotAttachFile);
     addAction( action );
 
-    action = new KAction( KIcon(QLatin1String( "window-close" )), i18n( "&Remind me later" ), this );
-    connect( action, SIGNAL(triggered(bool)), SLOT(explicitlyClosed()) );
+    action = new QAction( QIcon::fromTheme(QLatin1String( "window-close" )), i18n( "&Remind me later" ), this );
+    connect(action, &QAction::triggered, this, &AttachmentMissingWarning::explicitlyClosed);
     addAction( action );
 
 }

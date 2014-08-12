@@ -102,8 +102,6 @@ QHash<Utils::AppsType, Utils::StoredTypes> TemplateSelection::loadTemplate(const
                 type = Utils::Akregator;
             else if (tagName == QLatin1String("blogilo"))
                 type = Utils::Blogilo;
-            else if (tagName == QLatin1String("knode"))
-                type = Utils::KNode;
             if (type != Utils::Unknown) {
                 Utils::StoredTypes storedType = loadStoredTypes(e);
                 if (storedType != Utils::None)
@@ -200,12 +198,6 @@ void TemplateSelection::createTemplate(const QHash<Utils::AppsType, Utils::impor
         }
         case Utils::Blogilo: {
             QDomElement tag = mDocument.createElement(QLatin1String("blogilo"));
-            root.appendChild(tag);
-            saveParameters(i.value().types, tag);
-            break;
-        }
-        case Utils::KNode: {
-            QDomElement tag = mDocument.createElement(QLatin1String("knode"));
             root.appendChild(tag);
             saveParameters(i.value().types, tag);
             break;

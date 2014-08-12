@@ -81,7 +81,7 @@ MainWidget::MainWidget( MainWindow* parent )
      */
     connect( mCollectionList, SIGNAL(clicked(Akonadi::Collection)),
              SLOT(collectionClicked(Akonadi::Collection)) );
-    connect( mIncidenceList, SIGNAL(clicked(QModelIndex)), SLOT(itemActivated(QModelIndex)) );
+    connect(mIncidenceList, &QTreeView::clicked, this, &MainWidget::itemActivated);
 }
 
 void MainWidget::collectionClicked( const Akonadi::Collection& collection )

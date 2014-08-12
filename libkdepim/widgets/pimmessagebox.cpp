@@ -24,48 +24,28 @@
 
 #include "pimmessagebox.h"
 
-#include <kmessagebox.h>
-#include <kdialog.h>
+#include <qdialog.h>
+#include <QPushButton>
 
-int PIMMessageBox::fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
+QDialogButtonBox::StandardButton PIMMessageBox::fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
                                   const QString &text,
                                   const QString &caption,
-                                  const KGuiItem &button1,
-                                  const KGuiItem &button2,
-                                  const KGuiItem &button3,
+                                  const QString &button1Text,
+                                  const QString &button2Text,
+                                  const QString &button3Text,
                                   KMessageBox::Options options )
 {
-    KDialog *dialog= new KDialog( parent );
-    dialog->setCaption( caption );
-    dialog->setButtons( KDialog::Yes | KDialog::No | KDialog::Ok | KDialog::Cancel );
+    QDialog *dialog= new QDialog( parent );
+    dialog->setWindowTitle( caption );
+    QDialogButtonBox *box = new QDialogButtonBox( QDialogButtonBox::Yes|QDialogButtonBox::No|QDialogButtonBox::Cancel|QDialogButtonBox::Ok, parent );
     dialog->setObjectName( QLatin1String("PIMMessageBox") );
-    dialog->setDefaultButton( KDialog::Yes );
-    dialog->setButtonGuiItem( KDialog::Ok, button3 );
-    dialog->setButtonGuiItem( KDialog::Yes, button1 );
-    dialog->setButtonGuiItem( KDialog::No, button2 );
-    //  QObject::connect( dialog, SIGNAL(yesClicked()), dialog, SLOT(slotYes()));
-    //  QObject::connect( dialog, SIGNAL(noClicked()), dialog, SLOT(slotNo()));
+    box->button(QDialogButtonBox::Ok)->setText(button3Text);
+    box->button(QDialogButtonBox::Yes)->setText(button1Text);
+    box->button(QDialogButtonBox::No)->setText(button2Text);
+    box->button(QDialogButtonBox::Yes)->setDefault(true);
 
     bool checkboxResult = false;
-    int result = KMessageBox::createKMessageBox(
-                dialog, type, text, QStringList(), QString(), &checkboxResult, options );
-
-    switch (result) {
-    case KDialog::Yes:
-        result = KMessageBox::Yes;
-        break;
-    case KDialog::No:
-        result = KMessageBox::No;
-        break;
-    case KDialog::Ok:
-        result = KMessageBox::Continue;
-        break;
-    case KDialog::Cancel:
-        result = KMessageBox::Cancel;
-        break;
-    default:
-        break;
-    }
-
+    QDialogButtonBox::StandardButton result = KMessageBox::createKMessageBox(
+                dialog, box, type, text, QStringList(), QString(), &checkboxResult, options );
     return result;
 }

@@ -55,7 +55,7 @@ void SieveScriptParsingErrorDialog::setError(QString script, QString error)
 
 void SieveScriptParsingErrorDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveScriptParsingErrorDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveScriptParsingErrorDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -64,14 +64,14 @@ void SieveScriptParsingErrorDialog::readConfig()
 
 void SieveScriptParsingErrorDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveScriptParsingErrorDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveScriptParsingErrorDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void SieveScriptParsingErrorDialog::slotSaveAs()
 {
     const QString filter = i18n( "all files (*)" );
-    PimCommon::Util::saveTextAs(mTextEdit->toPlainText(), filter, this, KUrl(), i18n("Save Log To File"));
+    PimCommon::Util::saveTextAs(mTextEdit->toPlainText(), filter, this, QUrl(), i18n("Save Log To File"));
 }
 
 

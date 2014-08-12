@@ -40,9 +40,11 @@
 
 #include <KIconLoader>
 
+#include <QDebug>
 #include <QBoxLayout>
 #include <QHeaderView>
 #include <QTreeWidget>
+#include <KLocale>
 
 using namespace EventViews;
 using namespace KCalCore;
@@ -63,7 +65,7 @@ static QString cleanSummary( const QString &summary, const KDateTime &next )
 
   if ( next.isValid() ) {
     const QString dateStr =
-      KGlobal::locale()->formatDate(
+      KLocale::global()->formatDate(
         next.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date(),
         KLocale::ShortDate );
     retStr = i18nc( "%1 is an item summary. %2 is the date when this item reoccurs",
@@ -351,13 +353,13 @@ void ListView::showDates( const QDate &start, const QDate &end, const QDate &pre
 
   KDateTime kStart( start );
   const QString startStr =
-    KGlobal::locale()->formatDate(
+    KLocale::global()->formatDate(
       kStart.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date(),
       KLocale::ShortDate );
 
   KDateTime kEnd( end );
   const QString endStr =
-    KGlobal::locale()->formatDate(
+    KLocale::global()->formatDate(
       kEnd.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date(),
       KLocale::ShortDate );
 
@@ -502,7 +504,7 @@ void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
     break;
   }
   default:
-    kDebug() << "Illegal action" << action;
+    qDebug() << "Illegal action" << action;
   }
 }
 

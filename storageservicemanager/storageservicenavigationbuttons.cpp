@@ -21,27 +21,25 @@
 #include "storageservicenavigationbuttons.h"
 
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 #include <KStandardShortcut>
 
-#include <QHBoxLayout>
 #include <QAction>
-#include <QWidgetAction>
 
 StorageServiceNavigationButtons::StorageServiceNavigationButtons(QWidget *parent)
     : QToolBar(parent)
 {
-    mHome = addAction(KIcon(QLatin1String("go-home")),i18n("Home"), this, SIGNAL(goHome()));
+    mHome = addAction(QIcon::fromTheme(QLatin1String("go-home")),i18n("Home"), this, SIGNAL(goHome()));
 
-    mGoBack = new QAction(KIcon(QLatin1String("go-previous")),i18n("Back"), this);
+    mGoBack = new QAction(QIcon::fromTheme(QLatin1String("go-previous")),i18n("Back"), this);
     addAction(mGoBack);
-    connect(mGoBack, SIGNAL(triggered()), SLOT(slotGoBackClicked()));
+    connect(mGoBack, &QAction::triggered, this, &StorageServiceNavigationButtons::slotGoBackClicked);
     mGoBack->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Back) );
     mGoBack->setEnabled(false);
 
-    mGoForward = new QAction(KIcon(QLatin1String("go-next")),i18n("Forward"), this);
+    mGoForward = new QAction(QIcon::fromTheme(QLatin1String("go-next")),i18n("Forward"), this);
     mGoForward->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Forward) );
-    connect(mGoForward, SIGNAL(triggered()), SLOT(slotGoForwardClicked()));
+    connect(mGoForward, &QAction::triggered, this, &StorageServiceNavigationButtons::slotGoForwardClicked);
     addAction(mGoForward);
     mGoForward->setEnabled(false);
 }

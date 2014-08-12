@@ -21,13 +21,12 @@
 
 #include "mailcommon_export.h"
 
-#include <KShortcut>
+#include <QKeySequence>
 
 #include <QColor>
 #include <QFont>
 #include <QSharedPointer>
-#include <QUrl>
-#include <akonadi/tag.h>
+#include <AkonadiCore/tag.h>
 
 namespace MailCommon {
 
@@ -73,7 +72,7 @@ public:
     QColor backgroundColor;
     QFont textFont;
     QString iconName;
-    KShortcut shortcut;
+    QKeySequence shortcut;
     bool inToolbar;
     bool isImmutable;
     // Priority, i.e. sort order of the tag. Only used when loading the tag, when saving

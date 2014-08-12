@@ -17,7 +17,7 @@
 
 #ifndef IMPORTWIZARDUTIL_H
 #define IMPORTWIZARDUTIL_H
-#include <KUrl>
+#include <QUrl>
 #include <QList>
 #include <QColor>
 #include <QString>
@@ -34,7 +34,7 @@ struct ldapStruct
     {
     }
 
-    KUrl ldapUrl;
+    QUrl ldapUrl;
     QString dn;
     QString saslMech;
     QString fileName;

@@ -9,15 +9,15 @@
 #include "search/searchpattern.h"
 #include "messageviewer/viewer/viewer.h"
 
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include <kio/job.h>
 #include <kmime/kmime_message.h>
 
 #include <QPointer>
 #include <QList>
-#include <akonadi/item.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/collection.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/collection.h>
 
 namespace Akonadi {
 class Tag;
@@ -25,7 +25,7 @@ class Tag;
 
 using Akonadi::MessageStatus;
 
-class KProgressDialog;
+class QProgressDialog;
 class KMMainWidget;
 
 template <typename T> class QSharedPointer;
@@ -137,7 +137,7 @@ protected:
 
 private:
     // ProgressDialog for transferring messages
-    QWeakPointer<KProgressDialog> mProgressDialog;
+    QWeakPointer<QProgressDialog> mProgressDialog;
     //Currently only one async command allowed at a time
     static int mCountJobs;
     int mCountMsgs;

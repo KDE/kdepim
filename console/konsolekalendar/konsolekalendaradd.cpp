@@ -34,21 +34,23 @@
 
 #include <calendarsupport/kcalprefs.h>
 
-#include <kdebug.h>
-#include <kstandarddirs.h>
+#include <qdebug.h>
+
 #include <ksystemtimezone.h>
 #include <klocale.h>
 
 #include <KCalCore/Event>
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QObject>
 #include <QEventLoop>
+#include <QElapsedTimer>
 
 #include <stdlib.h>
 #include <iostream>
+#include <QStandardPaths>
 
 using namespace KCalCore;
 using namespace std;
@@ -70,15 +72,15 @@ bool KonsoleKalendarAdd::addEvent()
 {
   bool status = true;
 
-  kDebug() << "konsolekalendaradd.cpp::addEvent()";
+  qDebug() << "konsolekalendaradd.cpp::addEvent()";
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n( "Insert Event &lt;Dry Run&gt;:" ).toLocal8Bit().data()
+    cout << i18n( "Insert Event <Dry Run>:" ).toLocal8Bit().data()
          << endl;
     printSpecs();
   } else {
     if ( m_variables->isVerbose() ) {
-      cout << i18n( "Insert Event &lt;Verbose&gt;:" ).toLocal8Bit().data()
+      cout << i18n( "Insert Event <Verbose>:" ).toLocal8Bit().data()
            << endl;
       printSpecs();
     }
@@ -115,7 +117,7 @@ bool KonsoleKalendarAdd::addEvent()
     }
     calendar->addEvent(event);
     loop.exec();
-    kDebug() << "Creation took " << t.elapsed() << "ms.";
+    qDebug() << "Creation took " << t.elapsed() << "ms.";
     status = calendar->incidence(event->uid()) != 0;
     if ( status ) {
       cout << i18n( "Success: \"%1\" inserted",
@@ -130,7 +132,7 @@ bool KonsoleKalendarAdd::addEvent()
     }
   }
 
-  kDebug() << "konsolekalendaradd.cpp::addEvent() | Done";
+  qDebug() << "konsolekalendaradd.cpp::addEvent() | Done";
   return status;
 }
 
@@ -143,7 +145,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
  * TODO_SERGIO
   QString fileName;
   if ( m_variables->getCalendarFile().isEmpty() ) {
-    fileName = KStandardDirs::locateLocal( "data", "korganizer/std.ics" );
+    fileName = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "korganizer/std.ics" ;
   } else {
     fileName = m_variables->getCalendarFile();
   }
@@ -152,12 +154,12 @@ bool KonsoleKalendarAdd::addImportedCalendar()
   if ( !cal->load( fileName ) ||
        !cal->load( m_variables->getImportFile() ) ||
        !cal->save( fileName ) ) {
-    kDebug() << "konsolekalendaradd.cpp::importCalendar() |"
+    qDebug() << "konsolekalendaradd.cpp::importCalendar() |"
              << "Can't import file:"
              << m_variables->getImportFile();
     return false;
   }
-  kDebug() << "konsolekalendaradd.cpp::importCalendar() |"
+  qDebug() << "konsolekalendaradd.cpp::importCalendar() |"
            << "Successfully imported file:"
            << m_variables->getImportFile();
            */

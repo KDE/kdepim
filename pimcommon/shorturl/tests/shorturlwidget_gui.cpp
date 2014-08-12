@@ -17,17 +17,28 @@
 
 #include "shorturlmainwidget.h"
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+#include <qdebug.h>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "shorturl_gui", 0, ki18n("ShortUrlTest_Gui"),
-                       "1.0", ki18n("Test for short url widget"));
+    KAboutData aboutData( QLatin1String("shorturl_gui"), i18n("ShortUrlTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for short url widget"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     ShortUrlMainWidget *w = new ShortUrlMainWidget;
 

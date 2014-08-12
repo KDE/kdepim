@@ -33,6 +33,7 @@
 
 #include <QGraphicsSceneMouseEvent>
 #include <QResizeEvent>
+#include <KLocale>
 
 static const int AUTO_REPEAT_DELAY = 600;
 
@@ -193,7 +194,7 @@ void MonthGraphicsView::drawBackground( QPainter *p, const QRectF & rect )
   font.setPointSize( 15 );
   p->setFont( font );
   const int dayLabelsHeight = 20;
-  const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+  const KCalendarSystem *calSys = KLocale::global()->calendar();
   p->drawText( QRect( 0,  0, // top right
                       static_cast<int> ( mScene->sceneRect().width() ),
                       static_cast<int> ( mScene->headerHeight() - dayLabelsHeight ) ),
@@ -341,7 +342,7 @@ void MonthGraphicsView::drawBackground( QPainter *p, const QRectF & rect )
       cell->downArrow()->hide();
     }
 
-    const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+    const KCalendarSystem *calSys = KLocale::global()->calendar();
 
     QString dayText;
     // Prepend month name if d is the first or last day of month

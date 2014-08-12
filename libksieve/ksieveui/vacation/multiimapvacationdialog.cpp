@@ -20,13 +20,16 @@
 #include "vacationpagewidget.h"
 #include "ksieveui/util/util.h"
 
-#include <Akonadi/AgentInstance>
+#include <AgentInstance>
 
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <kwindowsystem.h>
-#include <KTabWidget>
+#include <QTabWidget>
+#include <KIconLoader>
+#include <QUrl>
 
+#include <QTabBar>
 #include <QApplication>
 #include <QStackedWidget>
 #include <QVBoxLayout>
@@ -43,7 +46,7 @@ MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
 
     mStackedWidget = new QStackedWidget;
     setMainWidget(mStackedWidget);
-    mTabWidget = new KTabWidget;
+    mTabWidget = new QTabWidget;
     mStackedWidget->addWidget(mTabWidget);
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -92,7 +95,7 @@ void MultiImapVacationDialog::init()
         if ( instance.status() == Akonadi::AgentInstance::Broken )
             continue;
 
-        const KUrl url = KSieveUi::Util::findSieveUrlForAccount( instance.identifier() );
+        const QUrl url = KSieveUi::Util::findSieveUrlForAccount( instance.identifier() );
         if ( !url.isEmpty() ) {
             const QString serverName = instance.name();
             createPage(serverName, url);
@@ -107,10 +110,10 @@ void MultiImapVacationDialog::init()
         setButtons( Close );
     }
     if (mTabWidget->count() <= 1)
-        mTabWidget->setTabBarHidden(true);
+        mTabWidget->tabBar()->hide();
 }
 
-void MultiImapVacationDialog::createPage(const QString &serverName, const KUrl &url)
+void MultiImapVacationDialog::createPage(const QString &serverName, const QUrl &url)
 {
     VacationPageWidget *page = new VacationPageWidget;
     page->setServerUrl(url);
@@ -120,7 +123,7 @@ void MultiImapVacationDialog::createPage(const QString &serverName, const KUrl &
 
 void MultiImapVacationDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "MultiImapVacationDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "MultiImapVacationDialog" );
     const QSize size = group.readEntry( "Size", QSize() );
     if ( size.isValid() ) {
         resize( size );
@@ -131,7 +134,7 @@ void MultiImapVacationDialog::readConfig()
 
 void MultiImapVacationDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "MultiImapVacationDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "MultiImapVacationDialog" );
     group.writeEntry( "Size", size() );
 }
 

@@ -81,7 +81,7 @@ Akonadi::Item::List ContactsImportHandler::createItems( const QStringList &fileN
       }
     } else {
       const QString caption( i18n( "vCard Import Failed" ) );
-      const QString msg = i18nc( "@info",
+      const QString msg = xi18nc( "@info",
                                  "<para>When trying to read the vCard, there was an error opening the file <filename>%1</filename>:</para>"
                                  "<para>%2</para>",
                                  fileName,

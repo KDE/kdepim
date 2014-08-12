@@ -49,7 +49,7 @@
 #include <ktnef/ktnefmessage.h>
 #include <ktnef/ktnefattach.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KIconLoader>
 #include <KLocalizedString>
@@ -58,6 +58,7 @@
 
 #include <QApplication>
 #include <QDir>
+#include <KLocale>
 
 namespace {
 
@@ -75,7 +76,7 @@ namespace {
       const QString fileName = bodyPart->nodeHelper()->writeNodeToTempFile( bodyPart->content() );
       KTnef::KTNEFParser parser;
       if ( !parser.openFile( fileName ) || !parser.message()) {
-        kDebug() << "Could not parse" << fileName;
+        qDebug() << "Could not parse" << fileName;
         return Failed;
       }
 
@@ -98,7 +99,7 @@ namespace {
 
       QList<KTnef::KTNEFAttach*> tnefatts = parser.message()->attachmentList();
       if ( tnefatts.isEmpty() && inviteStr.isEmpty() ) {
-        kDebug() << "No attachments or invitation found in" << fileName;
+        qDebug() << "No attachments or invitation found in" << fileName;
 
         QString label = MessageViewer::NodeHelper::fileName( bodyPart->content() );
         label = MessageCore::StringUtil::quoteHtmlChars( label, true );
@@ -152,7 +153,7 @@ namespace {
         const QString dir = bodyPart->nodeHelper()->createTempDir( QLatin1String("ktnef-") + QString::number( i ) );
         parser.extractFileTo( att->name(), dir );
         bodyPart->nodeHelper()->addTempFile( dir + QDir::separator() + att->name() );
-        const QString href = QLatin1String("file:") + QString::fromLatin1(KUrl::toPercentEncoding( dir + QDir::separator() + att->name() ));
+        const QString href = QLatin1String("file:") + QString::fromLatin1(QUrl::toPercentEncoding( dir + QDir::separator() + att->name() ));
 
         const QString iconName = MessageViewer::Util::fileNameForMimetype( att->mimeTag(),
                                                             KIconLoader::Desktop, att->name() );
@@ -198,8 +199,8 @@ namespace {
 }
 
 extern "C"
-KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
+Q_DECL_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_application_mstnef_create_bodypart_formatter_plugin() {
-  KGlobal::locale()->insertCatalog( QLatin1String("messageviewer_application_mstnef_plugin") );
+  //QT5 KLocale::global()->insertCatalog( QLatin1String("messageviewer_application_mstnef_plugin") );
   return new Plugin();
 }

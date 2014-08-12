@@ -21,7 +21,7 @@
 
 #include "mailcommon_export.h"
 
-#include <Akonadi/EntityListView>
+#include <EntityListView>
 
 class KXMLGUIClient;
 class KActionCollection;

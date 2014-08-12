@@ -15,7 +15,7 @@
     <number>0</number>
    </property>
    <item row="1" column="2">
-    <widget class="KIntSpinBox" name="autoSaveInterval">
+    <widget class="QSpinBox" name="autoSaveInterval">
      <property name="whatsThis">
       <string>This is the number of minutes KJots will wait before automatically saving changes.</string>
      </property>
@@ -112,18 +112,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
- </customwidgets>
- <includes>
-  <include location="global">knuminput.h</include>
-  <include location="local">knuminput.h</include>
-  <include location="local">kfontdialog.h</include>
- </includes>
  <resources/>
  <connections>
   <connection>

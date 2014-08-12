@@ -1,12 +1,12 @@
 project(notes-mobile)
 
 include_directories(
-  ${KDEPIMLIBS_INCLUDE_DIR}
+  
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
 
 set(notes_mobile_SRCS
   notelistproxy.cpp
@@ -18,7 +18,7 @@ set(notes_mobile_SRCS
   searchwidget.cpp
 )
 
-qt4_wrap_ui(notes_mobile_SRCS searchwidget.ui)
+ki18n_wrap_ui(notes_mobile_SRCS searchwidget.ui)
 
 if(RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
@@ -26,13 +26,13 @@ endif()
 
 kde4_add_app_icon(notes_mobile_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-notes-mobile.png")
 
-kde4_add_executable(notes-mobile ${notes_mobile_SRCS})
+add_executable(notes-mobile ${notes_mobile_SRCS})
 
 target_link_libraries(notes-mobile
-  ${QT_QTDECLARATIVE_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KMBOX_LIBS}
+  Qt5::Declarative
+  KF5::AkonadiMime
+  KF5::Mime
+  KF5::Mbox
   kdepimmobileui
   kdepim
   akonadi_next
@@ -54,4 +54,4 @@ install(FILES
   DESTINATION ${DATA_INSTALL_DIR}/notes-mobile
 )
 
-kde4_install_icons(${ICON_INSTALL_DIR})
+ecm_install_icons(ICONS hi48-apps-notes-mobile.png  hi64-apps-notes-mobile.png  hi80-apps-notes-mobile-harmattan.png DESTINATION ${ICON_INSTALL_DIR})

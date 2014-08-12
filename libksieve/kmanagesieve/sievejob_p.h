@@ -18,7 +18,7 @@
 #include "sievejob.h"
 #include "session.h"
 
-#include <KUrl>
+#include <QUrl>
 #include <QtCore/QPointer>
 
 namespace KManageSieve {
@@ -47,14 +47,14 @@ class SieveJob::Private
       No
     };
 
-    static Session* sessionForUrl( const KUrl &url );
+    static Session* sessionForUrl( const QUrl &url );
 
     void run( Session *session );
     bool handleResponse( const Response &response, const QByteArray &data );
     void killed();
 
     SieveJob *q;
-    KUrl mUrl;
+    QUrl mUrl;
     QString mScript;
     QString mActiveScriptName;
     Existence mFileExists;
@@ -65,7 +65,7 @@ class SieveJob::Private
 
     bool mInteractive;
 
-    static QHash<KUrl, QPointer<Session> > m_sessionPool;
+    static QHash<QUrl, QPointer<Session> > m_sessionPool;
 };
 
 }

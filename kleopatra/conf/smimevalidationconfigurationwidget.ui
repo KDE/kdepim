@@ -129,7 +129,7 @@
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="KleopatraClient::Gui::CertificateRequester" native="1" name="OCSPResponderSignature" >
+       <widget class="KleopatraClientCopy::Gui::CertificateRequester" native="1" name="OCSPResponderSignature" >
         <property name="whatsThis" >
          <string>Choose here the certificate with which the OCSP server signs its replies.</string>
         </property>
@@ -318,7 +318,7 @@ The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KleopatraClient::Gui::CertificateRequester</class>
+   <class>KleopatraClientCopy::Gui::CertificateRequester</class>
    <extends>QWidget</extends>
    <header>libkleopatraclient/gui/certificaterequester.h</header>
    <container>1</container>

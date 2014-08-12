@@ -32,17 +32,16 @@
 
 #include "xfaceconfigurator.h"
 
-#include <akonadi/contact/contactsearchjob.h>
+#include <Akonadi/Contact/ContactSearchJob>
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <kfiledialog.h>
 #include <kglobalsettings.h>
-#include <kimageio.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 #include <kurl.h>
 #include <messageviewer/header/kxface.h>
@@ -55,6 +54,8 @@
 #include <QVBoxLayout>
 
 // #include <assert.h>
+#include <QFontDatabase>
+#include <QImageReader>
 using namespace KABC;
 using namespace KIO;
 using namespace KMail;
@@ -184,7 +185,7 @@ XFaceConfigurator::XFaceConfigurator( QWidget * parent )
     mTextEdit = new PimCommon::PlainTextEditor( page );
     page_vlay->addWidget( mTextEdit );
     mTextEdit->setWhatsThis( i18n( "Use this field to enter an arbitrary X-Face string." ) );
-    mTextEdit->setFont( KGlobalSettings::fixedFont() );
+    mTextEdit->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
     mTextEdit->setWordWrapMode( QTextOption::WrapAnywhere);
     mTextEdit->setSearchSupport(false);
     label2 = new QLabel( i18n("Examples are available at <a "
@@ -224,7 +225,7 @@ void XFaceConfigurator::setXFace( const QString & text )
     mTextEdit->setPlainText( text );
 }
 
-void XFaceConfigurator::setXfaceFromFile( const KUrl &url )
+void XFaceConfigurator::setXfaceFromFile( const QUrl &url )
 {
     QString tmpFile;
     if (KIO::NetAccess::download( url, tmpFile, this )) {
@@ -238,9 +239,12 @@ void XFaceConfigurator::setXfaceFromFile( const KUrl &url )
 
 void XFaceConfigurator::slotSelectFile()
 {
-    const QStringList mimeTypes = KImageIO::mimeTypes (KImageIO::Reading);
-    const QString filter = mimeTypes.join (QLatin1String(" "));
-    const KUrl url = KFileDialog::getOpenUrl( QString(), filter, this, QString() );
+    const QList<QByteArray> mimeTypes = QImageReader::supportedImageFormats();
+    QString filter;
+    Q_FOREACH ( const QByteArray &mime, mimeTypes) {
+        filter += QString::fromLatin1(mime);
+    }
+    const QUrl url = KFileDialog::getOpenUrl( QString(), filter, this, QString() );
     if ( !url.isEmpty() )
         setXfaceFromFile( url );
 }
@@ -282,7 +286,7 @@ void XFaceConfigurator::slotDelayedSelectFromAddressbook( KJob *job )
     }
     else
     {
-        const KUrl url = contact.photo().url();
+        const QUrl url = contact.photo().url();
         if( !url.isEmpty() )
             setXfaceFromFile( url );
         else

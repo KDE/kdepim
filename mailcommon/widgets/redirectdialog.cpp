@@ -37,21 +37,20 @@
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
 #include <KPIMUtils/Email>
-#include <KDE/KPIMIdentities/Identity>
-#include <KDE/KPIMIdentities/IdentityCombo>
-#include <KDE/KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityCombo>
+#include <KPIMIdentities/IdentityManager>
 
-#include <KDE/Mailtransport/Transport>
-#include <KDE/Mailtransport/TransportComboBox>
-#include <KDE/Mailtransport/TransportManager>
+#include <MailTransport/Transport>
+#include <MailTransport/TransportComboBox>
+#include <MailTransport/TransportManager>
 
 
 #include <KIconLoader>
 #include <KLocale>
 #include <KMessageBox>
-#include <KVBox>
+#include <QIcon>
 
-#include <QFrame>
 #include <QLabel>
 #include <QPushButton>
 #include <QTreeView>
@@ -72,11 +71,11 @@ RedirectWidget::RedirectWidget(QWidget *parent)
     mEdit = new MessageComposer::ComposerLineEdit( true );
     mEdit->setRecentAddressConfig( KernelIf->config().data() );
     mEdit->setMinimumWidth( 300 );
-    mEdit->setClearButtonShown( true );
+    mEdit->setClearButtonEnabled( true );
     hbox->addWidget(mEdit);
 
     QPushButton *BtnTo = new QPushButton( QString() );
-    BtnTo->setIcon( KIcon( QLatin1String("help-contents") ) );
+    BtnTo->setIcon( QIcon::fromTheme( QLatin1String("help-contents") ) );
     BtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     BtnTo->setMinimumSize( BtnTo->sizeHint() * 1.2 );
     BtnTo->setToolTip( i18n( "Use the Address-Selection Dialog" ) );

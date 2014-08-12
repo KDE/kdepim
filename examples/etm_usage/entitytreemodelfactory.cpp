@@ -23,13 +23,13 @@
 
 #include "entitytreemodelfactory.h"
 
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/session.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/session.h>
 
 #define WANTED_REMOTE_ID "WANTED_REMOTE_ID"
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchScope>
 
 using namespace Akonadi;
 
@@ -44,7 +44,7 @@ void EntityTreeModelFactory::createFromRemoteId(const QString& remoteId)
   Session *session = new Session("TEST", this);
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel, session);
   job->setProperty(WANTED_REMOTE_ID, remoteId);
-  connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(collectionsFetched(Akonadi::Collection::List)));
+  connect(job, &CollectionFetchJob::collectionsReceived, this, &EntityTreeModelFactory::collectionsFetched);
 }
 
 void EntityTreeModelFactory::collectionsFetched(const Akonadi::Collection::List& list)

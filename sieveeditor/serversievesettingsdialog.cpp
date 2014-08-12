@@ -23,30 +23,46 @@
 
 #include <KLocalizedString>
 #include <QVBoxLayout>
-#include <QLineEdit>
-#include <QSpinBox>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Add Server Sieve" ) );
-    setButtons( Cancel | Ok  );
+    setWindowTitle( i18n( "Add Server Sieve" ) );
 
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     mServerSieveSettings = new ServerSieveSettings;
-    connect(mServerSieveSettings, SIGNAL(enableOkButton(bool)), this, SLOT(enableButtonOk(bool)));
+    connect(mServerSieveSettings, &ServerSieveSettings::enableOkButton, this, &ServerSieveSettingsDialog::slotEnableButtonOk);
     lay->addWidget(mServerSieveSettings);
     lay->setMargin(0);
     w->setLayout(lay);
-    setMainWidget(w);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(w);
+    
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ServerSieveSettingsDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ServerSieveSettingsDialog::reject);
+    mainLayout->addWidget(buttonBox);
+
     resize(400,300);
-    enableButtonOk(false);
+    mOkButton->setEnabled(false);
 }
 
 ServerSieveSettingsDialog::~ServerSieveSettingsDialog()
 {
 
+}
+
+void ServerSieveSettingsDialog::slotEnableButtonOk(bool b)
+{
+   mOkButton->setEnabled(b);
 }
 
 QString ServerSieveSettingsDialog::serverName() const

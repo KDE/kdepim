@@ -34,9 +34,10 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfiggroup.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QTimer>
+#include <KSharedConfig>
 
 using namespace KAlarmCal;
 
@@ -57,7 +58,7 @@ WakeFromSuspendDlg::WakeFromSuspendDlg(QWidget* parent)
     setButtons(Close);
     mUi = new Ui_WakeFromSuspendDlgWidget;
     mUi->setupUi(mainWidget());
-    KConfigGroup config(KGlobal::config(), "General");
+    KConfigGroup config(KSharedConfig::openConfig(), "General");
     mUi->advanceWakeTime->setValue(Preferences::wakeFromSuspendAdvance());
 
     mMainWindow = qobject_cast<MainWindow*>(parent);
@@ -97,21 +98,12 @@ void WakeFromSuspendDlg::enableDisableUseButton()
     if (enable)
     {
         QString wakeFromSuspendId = KAlarm::checkRtcWakeConfig().value(0);
-#ifdef USE_AKONADI
         const KAEvent event = mMainWindow->selectedEvent();
         enable = event.isValid()
               && event.category() == CalEvent::ACTIVE
               && event.enabled()
               && !event.mainDateTime().isDateOnly()
               && event.id() != wakeFromSuspendId;
-#else
-        const KAEvent* event = mMainWindow->selectedEvent();
-        enable = event && event->isValid()
-              && event->category() == CalEvent::ACTIVE
-              && event->enabled()
-              && !event->mainDateTime().isDateOnly()
-              && event->id() != wakeFromSuspendId;
-#endif
     }
     mUi->useWakeButton->setEnabled(enable);
     checkPendingAlarm();
@@ -143,17 +135,12 @@ void WakeFromSuspendDlg::showWakeClicked()
         QStringList params = KAlarm::checkRtcWakeConfig();
         if (!params.isEmpty())
         {
-#ifdef USE_AKONADI
             KAEvent* event = AlarmCalendar::resources()->event(EventId(params[0].toLongLong(), params[1]));
             if (event)
             {
                 mMainWindow->selectEvent(event->itemId());
                 return;
             }
-#else
-            mMainWindow->selectEvent(params[0]);
-            return;
-#endif
         }
     }
     mMainWindow->clearSelection();
@@ -165,24 +152,17 @@ void WakeFromSuspendDlg::showWakeClicked()
 */
 void WakeFromSuspendDlg::useWakeClicked()
 {
-#ifdef USE_AKONADI
     KAEvent event = mMainWindow->selectedEvent();
     if (!event.isValid())
         return;
     KDateTime dt = event.mainDateTime().kDateTime();
-#else
-    KAEvent* event = mMainWindow->selectedEvent();
-    if (!event)
-        return;
-    KDateTime dt = event->mainDateTime().kDateTime();
-#endif
     if (dt.isDateOnly())
     {
         KAMessageBox::sorry(this, i18nc("@info", "Cannot schedule wakeup time for a date-only alarm"));
         return;
     }
     if (KAMessageBox::warningContinueCancel(this,
-                i18nc("@info", "<para>This wakeup will cancel any existing wakeup which has been set by KAlarm "
+                xi18nc("@info", "<para>This wakeup will cancel any existing wakeup which has been set by KAlarm "
                                "or any other application, because your computer can only schedule a single wakeup time.</para>"
                                "<para><b>Note:</b> Wake From Suspend is not supported at all on some computers, especially older ones, "
                                "and some computers only support setting a wakeup time up to 24 hours ahead. "
@@ -195,12 +175,8 @@ void WakeFromSuspendDlg::useWakeClicked()
     if (KAlarm::setRtcWakeTime(triggerTime, this))
     {
         QStringList param;
-#ifdef USE_AKONADI
         param << QString::number(event.collectionId()) << event.id() << QString::number(triggerTime);
-#else
-        param << event->id() << QString::number(triggerTime);
-#endif
-        KConfigGroup config(KGlobal::config(), "General");
+        KConfigGroup config(KSharedConfig::openConfig(), "General");
         config.writeEntry("RtcWake", param);
         config.sync();
         Preferences::setWakeFromSuspendAdvance(advance);

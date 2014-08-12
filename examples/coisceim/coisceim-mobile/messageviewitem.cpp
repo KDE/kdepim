@@ -34,7 +34,7 @@
 #include <messageviewer/utils/markmessagereadhandler.h>
 #include <messageviewer/viewer/viewer.h>
 #include <messageviewer/viewer/viewer_p.h>
-#include <KAction>
+#include <QAction>
 
 using namespace MessageViewer;
 

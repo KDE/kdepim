@@ -44,7 +44,8 @@
 #include <kiconloader.h>
 #include <kglobal.h>
 #include <kcomponentdata.h>
-#include <kicon.h>
+#include <qicon.h>
+#include <KDialog>
 #ifndef KDEPIM_ONLY_KLEO
 # include <kurlrequester.h>
 #endif
@@ -54,7 +55,6 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QRegExp>
-#include <QPixmap>
 #include <QVBoxLayout>
 #include <QList>
 #include <QHBoxLayout>
@@ -83,9 +83,9 @@ public:
 };
 
 }
-inline KIcon loadIcon( const QString &s ) {
+inline QIcon loadIcon( const QString &s ) {
   QString ss = s;
-  return KIcon( ss.replace( QRegExp( QLatin1String("[^a-zA-Z0-9_]") ), QLatin1String("-") ) );
+  return QIcon::fromTheme( ss.replace( QRegExp( QLatin1String("[^a-zA-Z0-9_]") ), QLatin1String("-") ) );
 }
 
 static unsigned int num_components_with_options( const Kleo::CryptoConfig * config ) {
@@ -614,7 +614,7 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
 void Kleo::CryptoConfigEntryPath::doSave()
 {
 #ifdef KDEPIM_ONLY_KLEO
-  mEntry->setURLValue( KUrl::fromPath( mFileNameRequester->fileName() ) );
+  mEntry->setURLValue( QUrl::fromLocalFile( mFileNameRequester->fileName() ) );
 #else
   mEntry->setURLValue( mUrlRequester->url() );
 #endif
@@ -676,7 +676,7 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
 void Kleo::CryptoConfigEntryDirPath::doSave()
 {
 #ifdef KDEPIM_ONLY_KLEO
-  mEntry->setURLValue( KUrl::fromPath( mFileNameRequester->fileName() ) );
+  mEntry->setURLValue( QUrl::fromLocalFile( mFileNameRequester->fileName() ) );
 #else
   mEntry->setURLValue( mUrlRequester->url() );
 #endif
@@ -766,7 +766,7 @@ Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
   }
 
   const int row = glay->rowCount();
-  mNumInput = new KIntNumInput( widget );
+  mNumInput = new QSpinBox( widget );
   QLabel *label = new QLabel( description(), widget );
   label->setBuddy( mNumInput );
   glay->addWidget( label, row, 1 );

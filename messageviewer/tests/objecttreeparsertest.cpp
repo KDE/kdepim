@@ -24,14 +24,14 @@
 #include "interfaces/htmlwriter.h"
 #include "messageviewer/viewer/csshelper.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
-#include "qtest_kde.h"
-#include <messagecore/tests/util.h>
+#include "qtest.h"
+#include <messagecore/autotests/util.h>
 
 using namespace MessageViewer;
 
-QTEST_KDEMAIN( ObjectTreeParserTester, GUI )
+QTEST_MAIN( ObjectTreeParserTester )
 
 void ObjectTreeParserTester::initTestCase()
 {

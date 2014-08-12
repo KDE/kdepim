@@ -30,7 +30,7 @@
 #include "job/addemailtoexistingcontactjob.h"
 
 #include "kdepim-version.h"
-#include <kpimutils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 #include <libkdepim/job/addemailaddressjob.h>
 #include <libkdepim/job/openemailaddressjob.h>
 #include <libkdepim/job/addemaildisplayjob.h>
@@ -47,7 +47,7 @@
 using MessageViewer::CSSHelper;
 #include "util.h"
 #include "utils/stringutil.h"
-
+#include <QCryptographicHash>
 #include <kmime/kmime_mdn.h>
 
 #include "messageviewer/viewer/viewer.h"
@@ -69,16 +69,15 @@ using MessageComposer::MessageFactory;
 #include <Akonadi/Contact/ContactEditorDialog>
 
 #include <kde_file.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <kaction.h>
-#include <kicon.h>
 #include <kcodecs.h>
 #include <ktoggleaction.h>
 #include <kservice.h>
 #include <KActionCollection>
 #include <KMessageBox>
-#include <KMenu>
+#include <QMenu>
 
 #include <QClipboard>
 
@@ -151,103 +150,103 @@ void KMReaderWin::createActions()
     // Message Menu
     //
     // new message to
-    mMailToComposeAction = new KAction( KIcon( QLatin1String("mail-message-new") ),
+    mMailToComposeAction = new QAction( QIcon::fromTheme( QLatin1String("mail-message-new") ),
                                         i18n( "New Message To..." ), this );
     ac->addAction(QLatin1String("mail_new"), mMailToComposeAction );
-    mMailToComposeAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable( mMailToComposeAction, false );
     connect( mMailToComposeAction, SIGNAL(triggered(bool)),
              SLOT(slotMailtoCompose()) );
 
     // reply to
-    mMailToReplyAction = new KAction( KIcon( QLatin1String("mail-reply-sender") ),
+    mMailToReplyAction = new QAction( QIcon::fromTheme( QLatin1String("mail-reply-sender") ),
                                       i18n( "Reply To..." ), this );
     ac->addAction( QLatin1String("mailto_reply"), mMailToReplyAction );
-    mMailToReplyAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable( mMailToReplyAction, false );
     connect( mMailToReplyAction, SIGNAL(triggered(bool)),
              SLOT(slotMailtoReply()) );
 
     // forward to
-    mMailToForwardAction = new KAction( KIcon( QLatin1String("mail-forward" )),
+    mMailToForwardAction = new QAction( QIcon::fromTheme( QLatin1String("mail-forward" )),
                                         i18n( "Forward To..." ), this );
-    mMailToForwardAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable( mMailToForwardAction, false );
     ac->addAction( QLatin1String("mailto_forward"), mMailToForwardAction );
     connect( mMailToForwardAction, SIGNAL(triggered(bool)),
              SLOT(slotMailtoForward()) );
 
 
     // add to addressbook
-    mAddAddrBookAction = new KAction( KIcon(QLatin1String( "contact-new") ),
+    mAddAddrBookAction = new QAction( QIcon::fromTheme(QLatin1String( "contact-new") ),
                                       i18n( "Add to Address Book" ), this );
-    mAddAddrBookAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable( mAddAddrBookAction, false );
     ac->addAction( QLatin1String("add_addr_book"), mAddAddrBookAction );
     connect( mAddAddrBookAction, SIGNAL(triggered(bool)),
              SLOT(slotMailtoAddAddrBook()) );
 
-    mAddEmailToExistingContactAction = new KAction( KIcon(QLatin1String( "contact-new") ),
+    mAddEmailToExistingContactAction = new QAction( QIcon::fromTheme(QLatin1String( "contact-new") ),
                                                     i18n( "Add to Existing Contact" ), this );
-    mAddEmailToExistingContactAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable( mAddEmailToExistingContactAction, false );
     ac->addAction( QLatin1String("add_to_existing_contact"), mAddAddrBookAction );
     connect( mAddEmailToExistingContactAction, SIGNAL(triggered(bool)),
              SLOT(slotMailToAddToExistingContact()) );
 
 
     // open in addressbook
-    mOpenAddrBookAction = new KAction( KIcon( QLatin1String("view-pim-contacts") ),
+    mOpenAddrBookAction = new QAction( QIcon::fromTheme( QLatin1String("view-pim-contacts") ),
                                        i18n( "Open in Address Book" ), this );
-    mOpenAddrBookAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable( mOpenAddrBookAction, false );
     ac->addAction( QLatin1String("openin_addr_book"), mOpenAddrBookAction );
     connect( mOpenAddrBookAction, SIGNAL(triggered(bool)),
              SLOT(slotMailtoOpenAddrBook()) );
     // bookmark message
-    mAddBookmarksAction = new KAction( KIcon( QLatin1String("bookmark-new") ), i18n( "Bookmark This Link" ), this );
-    mAddBookmarksAction->setShortcutConfigurable( false );
+    mAddBookmarksAction = new QAction( QIcon::fromTheme( QLatin1String("bookmark-new") ), i18n( "Bookmark This Link" ), this );
+    ac->setShortcutsConfigurable( mAddBookmarksAction, false );
     ac->addAction( QLatin1String("add_bookmarks"), mAddBookmarksAction );
     connect( mAddBookmarksAction, SIGNAL(triggered(bool)),
              SLOT(slotAddBookmarks()) );
 
-    mEditContactAction = new KAction( KIcon( QLatin1String("view-pim-contacts") ),
+    mEditContactAction = new QAction( QIcon::fromTheme( QLatin1String("view-pim-contacts") ),
                                       i18n( "Edit contact..." ), this );
-    mEditContactAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable( mEditContactAction, false );
     ac->addAction( QLatin1String("edit_contact"), mOpenAddrBookAction );
     connect( mEditContactAction, SIGNAL(triggered(bool)),
              SLOT(slotEditContact()) );
 
     // save URL as
-    mUrlSaveAsAction = new KAction( i18n( "Save Link As..." ), this );
+    mUrlSaveAsAction = new QAction( i18n( "Save Link As..." ), this );
     ac->addAction( QLatin1String("saveas_url"), mUrlSaveAsAction );
-    mUrlSaveAsAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable( mUrlSaveAsAction, false );
     connect( mUrlSaveAsAction, SIGNAL(triggered(bool)), SLOT(slotUrlSave()) );
 
     // find text
-    KAction *action = new KAction(KIcon(QLatin1String("edit-find")), i18n("&Find in Message..."), this);
+    QAction *action = new QAction(QIcon::fromTheme(QLatin1String("edit-find")), i18n("&Find in Message..."), this);
     ac->addAction(QLatin1String("find_in_messages"), action );
     connect(action, SIGNAL(triggered(bool)), SLOT(slotFind()));
-    action->setShortcut(KStandardShortcut::find());
+    action->setShortcut(KStandardShortcut::find().first());
 
     // save Image On Disk
-    mImageUrlSaveAsAction = new KAction( i18n( "Save Image On Disk..." ), this );
+    mImageUrlSaveAsAction = new QAction( i18n( "Save Image On Disk..." ), this );
     ac->addAction( QLatin1String("saveas_imageurl"), mImageUrlSaveAsAction );
-    mImageUrlSaveAsAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable(mImageUrlSaveAsAction, false );
     connect( mImageUrlSaveAsAction, SIGNAL(triggered(bool)), SLOT(slotSaveImageOnDisk()) );
 
     // View html options
-    mViewHtmlOptions = new KMenu(i18n("Show HTML Format"));
-    mViewAsHtml = new KAction( i18n("Show HTML format when mail comes from this contact"), mViewHtmlOptions);
-    mViewAsHtml->setShortcutConfigurable( false );
+    mViewHtmlOptions = new QMenu(i18n("Show HTML Format"));
+    mViewAsHtml = new QAction( i18n("Show HTML format when mail comes from this contact"), mViewHtmlOptions);
+    ac->setShortcutsConfigurable( mViewAsHtml,false );
     connect( mViewAsHtml, SIGNAL(triggered(bool)), SLOT(slotContactHtmlOptions()));
     mViewAsHtml->setCheckable(true);
     mViewHtmlOptions->addAction(mViewAsHtml);
 
-    mLoadExternalReference = new KAction( i18n("Load external reference when mail comes for this contact"), mViewHtmlOptions);
-    mLoadExternalReference->setShortcutConfigurable( false );
+    mLoadExternalReference = new QAction( i18n("Load external reference when mail comes for this contact"), mViewHtmlOptions);
+    ac->setShortcutsConfigurable( mLoadExternalReference, false );
     connect(mLoadExternalReference, SIGNAL(triggered(bool)), SLOT(slotContactHtmlOptions()));
     mLoadExternalReference->setCheckable(true);
     mViewHtmlOptions->addAction(mLoadExternalReference);
 
 
-    mShareImage = new KAction(i18n("Share image..."), this);
+    mShareImage = new QAction(i18n("Share image..."), this);
     ac->addAction( QLatin1String("share_imageurl"), mShareImage );
-    mShareImage->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable(mShareImage,false );
     connect(mShareImage, SIGNAL(triggered(bool)), SLOT(slotShareImage()));
 
 
@@ -328,8 +327,9 @@ QString KMReaderWin::newFeaturesMD5()
         str += kmailChanges[i];
     for ( int i = 0 ; i < numKMailNewFeatures ; ++i )
         str += kmailNewFeatures[i];
-    KMD5 md5( str );
-    return QLatin1String(md5.base64Digest());
+    QCryptographicHash md5(QCryptographicHash::Md5);
+    md5.addData( str );
+    return QLatin1String(md5.result().toBase64());
 }
 
 //-----------------------------------------------------------------------------
@@ -393,7 +393,7 @@ void KMReaderWin::displayAboutPage()
         QString featuresText =
                 i18n("<p>Some of the new features in this release of KMail include "
                      "(compared to KMail %1, which is part of KDE Software Compilation %2):</p>\n",
-                     QLatin1String("1.13"), QLatin1String(KDE::versionString()) ); // prior KMail and KDE version
+                     QLatin1String("1.13"), QLatin1String(KDEPIM_VERSION) ); // prior KMail and KDE version
         featuresText += QLatin1String("<ul>\n");
         for ( int i = 0 ; i < numKMailNewFeatures ; ++i )
             featuresText += QLatin1String("<li>") + i18n( kmailNewFeatures[i] ) + QLatin1String("</li>\n");
@@ -613,12 +613,12 @@ KToggleAction *KMReaderWin::toggleFixFontAction() const
     return mViewer->toggleFixFontAction();
 }
 
-KAction *KMReaderWin::toggleMimePartTreeAction() const
+QAction *KMReaderWin::toggleMimePartTreeAction() const
 {
     return mViewer->toggleMimePartTreeAction();
 }
 
-KAction *KMReaderWin::selectAllAction() const
+QAction *KMReaderWin::selectAllAction() const
 {
     return mViewer->selectAllAction();
 }
@@ -633,37 +633,37 @@ HeaderStyle * KMReaderWin::headerStyle() const
     return mViewer->headerStyle();
 }
 
-KAction *KMReaderWin::copyURLAction() const
+QAction *KMReaderWin::copyURLAction() const
 {
     return mViewer->copyURLAction();
 }
 
-KAction *KMReaderWin::copyImageLocation() const
+QAction *KMReaderWin::copyImageLocation() const
 {
     return mViewer->copyImageLocation();
 }
 
-KAction *KMReaderWin::copyAction() const
+QAction *KMReaderWin::copyAction() const
 {
     return mViewer->copyAction();
 }
 
-KAction *KMReaderWin::viewSourceAction() const
+QAction *KMReaderWin::viewSourceAction() const
 {
     return mViewer->viewSourceAction();
 }
 
-KAction *KMReaderWin::saveAsAction() const
+QAction *KMReaderWin::saveAsAction() const
 {
     return mViewer->saveAsAction();
 }
 
-KAction *KMReaderWin::findInMessageAction() const
+QAction *KMReaderWin::findInMessageAction() const
 {
     return mViewer->findInMessageAction();
 }
 
-KAction *KMReaderWin::urlOpenAction() const
+QAction *KMReaderWin::urlOpenAction() const
 {
     return mViewer->urlOpenAction();
 }
@@ -672,17 +672,17 @@ void KMReaderWin::setPrinting(bool enable)
     mViewer->setPrinting( enable );
 }
 
-KAction* KMReaderWin::speakTextAction() const
+QAction * KMReaderWin::speakTextAction() const
 {
     return mViewer->speakTextAction();
 }
 
-KAction* KMReaderWin::downloadImageToDiskAction() const
+QAction * KMReaderWin::downloadImageToDiskAction() const
 {
     return mImageUrlSaveAsAction;
 }
 
-KAction* KMReaderWin::translateAction() const
+QAction * KMReaderWin::translateAction() const
 {
     return mViewer->translateAction();
 }
@@ -694,7 +694,7 @@ void KMReaderWin::clear(bool force )
 
 void KMReaderWin::setMessage( const Akonadi::Item &item, Viewer::UpdateMode updateMode)
 {
-    kDebug() << Q_FUNC_INFO << parentWidget();
+    qDebug() << Q_FUNC_INFO << parentWidget();
     mViewer->setMessageItem( item, updateMode );
 }
 
@@ -795,7 +795,7 @@ void KMReaderWin::slotPrintComposeResult( KJob *job )
         if ( static_cast<KIO::Job*>(job)->ui() ) {
             static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
         } else {
-            kWarning() << "Composer for printing failed:" << composer->errorString();
+            qWarning() << "Composer for printing failed:" << composer->errorString();
         }
     }
 
@@ -875,17 +875,17 @@ void KMReaderWin::contactStored( const Akonadi::Item &item )
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Contact modified successfully" ) );
 }
 
-KAction *KMReaderWin::saveMessageDisplayFormatAction() const
+QAction *KMReaderWin::saveMessageDisplayFormatAction() const
 {
     return mViewer->saveMessageDisplayFormatAction();
 }
 
-KAction *KMReaderWin::resetMessageDisplayFormatAction() const
+QAction *KMReaderWin::resetMessageDisplayFormatAction() const
 {
     return mViewer->resetMessageDisplayFormatAction();
 }
 
-KAction *KMReaderWin::blockImage() const
+QAction *KMReaderWin::blockImage() const
 {
     return mViewer->blockImage();
 }
@@ -895,7 +895,7 @@ bool KMReaderWin::adblockEnabled() const
     return mViewer->adblockEnabled();
 }
 
-KAction *KMReaderWin::openBlockableItems() const
+QAction *KMReaderWin::openBlockableItems() const
 {
     return mViewer->openBlockableItems();
 }
@@ -912,17 +912,17 @@ bool KMReaderWin::isAShortUrl(const KUrl &url) const
     return mViewer->isAShortUrl(url);
 }
 
-KAction *KMReaderWin::expandShortUrlAction() const
+QAction *KMReaderWin::expandShortUrlAction() const
 {
     return mViewer->expandShortUrlAction();
 }
 
-KAction *KMReaderWin::createTodoAction() const
+QAction *KMReaderWin::createTodoAction() const
 {
     return mViewer->createTodoAction();
 }
 
-KAction *KMReaderWin::createEventAction() const
+QAction *KMReaderWin::createEventAction() const
 {
     return mViewer->createEventAction();
 }

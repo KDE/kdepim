@@ -34,38 +34,51 @@
 #include "notesharedglobalconfig.h"
 
 #include <kconfig.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <khistorycombobox.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
-#include <kvbox.h>
+
+#include <QVBoxLayout>
+#include <QLineEdit>
 #include <dnssd/servicemodel.h>
 #include <dnssd/servicebrowser.h>
 
 #include <QLabel>
 #include <QString>
-#include <QLineEdit>
 #include <QTreeView>
-#include <QSortFilterProxyModel>
-#include <QHeaderView>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 using namespace NoteShared;
 NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( caption );
-    setButtons( Ok|Cancel );
-    KVBox *page = new KVBox( this );
-    setMainWidget( page );
+    setWindowTitle( caption );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &NoteHostDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &NoteHostDialog::reject);
+    QWidget *page = new QWidget( this );
+    QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
+    pageVBoxLayout->setMargin(0);
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
+
     ( void ) new QLabel( i18n("Select recipient:"), page );
 
     m_servicesView = new QTreeView( page );
+    pageVBoxLayout->addWidget(m_servicesView);
     m_servicesView->setRootIsDecorated(false);
-    DNSSD::ServiceModel* mdl = new DNSSD::ServiceModel( new DNSSD::ServiceBrowser( QLatin1String("_knotes._tcp"), true ), this );
+    KDNSSD::ServiceModel* mdl = new KDNSSD::ServiceModel( new KDNSSD::ServiceBrowser( QLatin1String("_knotes._tcp"), true ), this );
     m_servicesView->setModel( mdl );
     m_servicesView->setSelectionBehavior( QAbstractItemView::SelectRows );
-    m_servicesView->hideColumn( DNSSD::ServiceModel::Port );
+    m_servicesView->hideColumn( KDNSSD::ServiceModel::Port );
     connect( m_servicesView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
              SLOT(serviceSelected(QModelIndex)) );
     connect( m_servicesView, SIGNAL(activated(QModelIndex)),
@@ -78,6 +91,7 @@ NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
     ( void ) new QLabel( i18n("Hostname or IP address:"), page );
 
     m_hostCombo = new KHistoryComboBox( true, page );
+    pageVBoxLayout->addWidget(m_hostCombo);
     m_hostCombo->setMinimumWidth( fontMetrics().maxWidth() * 15 );
     m_hostCombo->setDuplicatesEnabled( false );
 
@@ -99,7 +113,7 @@ NoteHostDialog::~NoteHostDialog()
     // Write known hosts to configfile
     NoteShared::NoteSharedGlobalConfig::setKnownHosts( m_hostCombo->historyItems() );
     NoteShared::NoteSharedGlobalConfig::setNoteHostDialogSize(size());
-    NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+    NoteShared::NoteSharedGlobalConfig::self()->save();
 }
 
 void NoteHostDialog::readConfig()
@@ -112,12 +126,12 @@ void NoteHostDialog::readConfig()
 
 void NoteHostDialog::slotTextChanged( const QString &text )
 {
-    enableButton( Ok, !text.isEmpty() );
+    mOkButton->setEnabled(!text.isEmpty());
 }
 
 void NoteHostDialog::serviceSelected( const QModelIndex& idx )
 {
-    DNSSD::RemoteService::Ptr srv=idx.data( DNSSD::ServiceModel::ServicePtrRole ).value<DNSSD::RemoteService::Ptr>();
+    KDNSSD::RemoteService::Ptr srv=idx.data( KDNSSD::ServiceModel::ServicePtrRole ).value<KDNSSD::RemoteService::Ptr>();
     m_hostCombo->lineEdit()->setText( srv->hostName() + QLatin1String(":") + QString::number( srv->port() ) );
 }
 
@@ -133,7 +147,7 @@ quint16 NoteHostDialog::port() const
 
 void NoteHostDialog::slotServiceDoubleClicked(const QModelIndex &idx)
 {
-    DNSSD::RemoteService::Ptr srv = idx.data( DNSSD::ServiceModel::ServicePtrRole ).value<DNSSD::RemoteService::Ptr>();
+    KDNSSD::RemoteService::Ptr srv = idx.data( KDNSSD::ServiceModel::ServicePtrRole ).value<KDNSSD::RemoteService::Ptr>();
     m_hostCombo->lineEdit()->setText( srv->hostName() + QLatin1String(":") + QString::number( srv->port() ) );
     accept();
 }

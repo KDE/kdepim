@@ -38,7 +38,7 @@
 
 #include <KCalCore/CalFilter>
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 
 #include <QHBoxLayout>
@@ -51,14 +51,14 @@ TodoViewQuickSearch::TodoViewQuickSearch( const Akonadi::ETMCalendar::Ptr &calen
   // no special margin because it is added by the view
   layout->setContentsMargins( 0, 0, 0, 0 );
 
-  mSearchLine = new KLineEdit( this );
+  mSearchLine = new QLineEdit( this );
   mSearchLine->setToolTip(
     i18nc( "@info:tooltip", "Filter on matching summaries" ) );
   mSearchLine->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Enter text here to filter the to-dos that are shown by matching summaries." ) );
-  mSearchLine->setClickMessage( i18nc( "@label in QuickSearchLine", "Search Summaries" ) );
-  mSearchLine->setClearButtonShown( true );
+  mSearchLine->setPlaceholderText( i18nc( "@label in QuickSearchLine", "Search Summaries" ) );
+  mSearchLine->setClearButtonEnabled( true );
   connect( mSearchLine, SIGNAL(textChanged(QString)),
            this, SIGNAL(searchTextChanged(QString)) );
 

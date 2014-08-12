@@ -21,19 +21,19 @@
 #include "vacationdialog.h"
 #include <kmanagesieve/sievejob.h>
 
-#include <akonadi/agentinstance.h>
-#include <kdebug.h>
+#include <agentinstance.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 
 
 using namespace KSieveUi;
 
-Vacation::Vacation(QObject * parent, bool checkOnly, const KUrl &url)
+Vacation::Vacation(QObject * parent, bool checkOnly, const QUrl &url)
     : QObject( parent ),
       mSieveJob( 0 ),
       mDialog( 0 ),
@@ -45,7 +45,7 @@ Vacation::Vacation(QObject * parent, bool checkOnly, const KUrl &url)
     } else {
         mUrl = url;
     }
-    kDebug() << "Vacation: found url \"" << mUrl.prettyUrl() <<"\"";
+    qDebug() << "Vacation: found url \"" << mUrl.toDisplayString() <<"\"";
     if ( mUrl.isEmpty() ) // nothing to do...
         return;
     mSieveJob = KManageSieve::SieveJob::get( mUrl );
@@ -62,36 +62,36 @@ Vacation::~Vacation() {
     mSieveJob = 0;
     delete mDialog;
     mDialog = 0;
-    kDebug() << "~Vacation()";
+    qDebug() << "~Vacation()";
 }
 
 
-KUrl Vacation::findURL(QString &serverName) const
+QUrl Vacation::findURL(QString &serverName) const
 {
     const Akonadi::AgentInstance::List instances = Util::imapAgentInstances();
     foreach ( const Akonadi::AgentInstance &instance, instances ) {
         if ( instance.status() == Akonadi::AgentInstance::Broken )
             continue;
 
-        const KUrl url = Util::findSieveUrlForAccount( instance.identifier() );
+        const QUrl url = Util::findSieveUrlForAccount( instance.identifier() );
         if ( !url.isEmpty() ) {
             serverName = instance.name();
             return url;
         }
     }
 
-    return KUrl();
+    return QUrl();
 }
 
 void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
                               const QString & script, bool active ) {
-    kDebug() << success
+    qDebug() << success
              << ", ?," << active << ")" << endl
              << "script:" << endl
              << script;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
-    if ( !mCheckOnly && mUrl.protocol() == QLatin1String("sieve") &&
+    if ( !mCheckOnly && mUrl.scheme() == QLatin1String("sieve") &&
          !job->sieveCapabilities().contains(QLatin1String("vacation")) ) {
         KMessageBox::sorry( 0, i18n( "Your server did not list \"vacation\" in "
                                      "its list of supported Sieve extensions;\n"
@@ -147,7 +147,7 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
 }
 
 void Vacation::slotDialogOk() {
-    kDebug();
+    qDebug();
     // compose a new script:
     const QString script = VacationUtils::composeScript( mDialog->messageText(),
                                           mDialog->notificationInterval(),
@@ -157,7 +157,7 @@ void Vacation::slotDialogOk() {
     const bool active = mDialog->activateVacation();
     emit scriptActive( active, mServerName);
 
-    kDebug() << "script:" << endl << script;
+    qDebug() << "script:" << endl << script;
 
     // and commit the dialog's settings to the server:
     mSieveJob = KManageSieve::SieveJob::put( mUrl, script, active, mWasActive );
@@ -169,13 +169,16 @@ void Vacation::slotDialogOk() {
                  SLOT(slotPutInactiveResult(KManageSieve::SieveJob*,bool)) );
 
     // destroy the dialog:
-    mDialog->delayedDestruct();
+    //mDialog->delayedDestruct();
+    mDialog->hide();
+    mDialog->deleteLater();
     mDialog = 0;
 }
 
 void Vacation::slotDialogCancel() {
-    kDebug();
-    mDialog->delayedDestruct();
+    qDebug();
+    mDialog->hide();
+    mDialog->deleteLater();
     mDialog = 0;
     emit result( false );
 }
@@ -196,7 +199,7 @@ void Vacation::handlePutResult( KManageSieve::SieveJob *, bool success, bool act
                                   : i18n("Sieve script installed successfully on the server.\n"
                                          "Out of Office reply has been deactivated.") );
 
-    kDebug() << "( ???," << success << ", ? )";
+    qDebug() << "( ???," << success << ", ? )";
     mSieveJob = 0; // job deletes itself after returning from this slot!
     emit result( success );
     emit scriptActive( activated, mServerName );

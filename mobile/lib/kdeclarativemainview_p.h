@@ -27,15 +27,14 @@
 #include "searchmanager.h"
 #include "statemachinebuilder.h"
 
-#include <akonadi/agentfilterproxymodel.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/etmviewstatesaver.h>
+#include <AkonadiCore/agentfilterproxymodel.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
 #include <kviewstatemaintainer.h>
 #include <klineedit.h>
 
 #include <QItemSelectionModel>
-#include <QStringListModel>
 #include <QPointer>
 
 class AgentStatusMonitor;

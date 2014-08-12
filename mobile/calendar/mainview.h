@@ -24,7 +24,7 @@
 #include "kdeclarativemainview.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <Akonadi/Entity>
+#include <AkonadiCore/Entity>
 #include <KCalCore/ScheduleMessage>
 
 #include <calendarviews/eventview.h>

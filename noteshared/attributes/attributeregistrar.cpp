@@ -20,7 +20,7 @@
 #include "notelockattribute.h"
 #include "showfoldernotesattribute.h"
 
-#include <akonadi/attributefactory.h>
+#include <AkonadiCore/attributefactory.h>
 
 namespace {
 

@@ -25,16 +25,16 @@
 #include "utils.h"
 #include "kcalprefs.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionDialog>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Item>
+#include <Collection>
+#include <CollectionDialog>
+#include <EntityDisplayAttribute>
+#include <EntityTreeModel>
+#include <Item>
 #include <Akonadi/Calendar/ETMCalendar>
-#include <akonadi/calendar/publishdialog.h>
+#include <Akonadi/Calendar/PublishDialog>
 #include <akonadi/calendar/calendarsettings.h>
 
-#include <KHolidays/Holidays>
+#include <KHolidays/kholidays/Holidays>
 
 #include <KCalCore/CalFilter>
 #include <KCalCore/Event>
@@ -50,16 +50,15 @@
 #include <KCalUtils/ICalDrag>
 #include <KCalUtils/VCalDrag>
 
-#include <Mailtransport/TransportManager>
+#include <MailTransport/TransportManager>
 
-#include <KIconLoader>
 #include <KUrl>
+#include <KIconLoader>
 
 #include <QAbstractItemModel>
 #include <QDrag>
 #include <QMimeData>
 #include <QModelIndex>
-#include <QPixmap>
 #include <QPointer>
 
 #include <boost/bind.hpp>
@@ -67,6 +66,7 @@
 #include <KPIMIdentities/IdentityManager>
 #include <KFileDialog>
 #include <KIO/NetAccess>
+#include <KDebug>
 
 using namespace CalendarSupport;
 using namespace KHolidays;
@@ -398,7 +398,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
   dlg->setCaption( i18n( "Select Calendar" ) );
   dlg->setDescription( i18n( "Select the calendar where this item will be stored." ) );
   dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
-  kDebug() << "selecting collections with mimeType in " << mimeTypes;
+  qDebug() << "selecting collections with mimeType in " << mimeTypes;
 
   dlg->setMimeTypeFilter( mimeTypes );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
@@ -413,7 +413,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
     collection = dlg->selectedCollection();
 
     if ( !collection.isValid() ) {
-      kWarning() << "An invalid collection was selected!";
+      qWarning() << "An invalid collection was selected!";
     }
   }
   delete dlg;
@@ -699,7 +699,7 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
   QString targetFile, targetDir;
   if ( attachments.count() > 1 ) {
     // get the dir
-    targetDir = KFileDialog::getExistingDirectory( KUrl( "kfiledialog:///saveAttachment" ),
+    targetDir = KFileDialog::getExistingDirectory(QUrl( QLatin1String("kfiledialog:///saveAttachment" )),
                                                    parentWidget,
                                                    i18n( "Save Attachments To" ) );
     if ( targetDir.isEmpty() ) {
@@ -716,7 +716,7 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
     if ( fileName.isEmpty() ) {
       fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
     }
-    targetFile = KFileDialog::getSaveFileName( KUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
+    targetFile = KFileDialog::getSaveFileName( QUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
                                    QString(),
                                    parentWidget,
                                    i18n( "Save Attachment" ) );
@@ -763,12 +763,12 @@ QStringList CalendarSupport::categories( const KCalCore::Incidence::List &incide
 bool CalendarSupport::mergeCalendar(const QString &srcFilename, const KCalCore::Calendar::Ptr &destCalendar)
 {
     if (srcFilename.isEmpty()) {
-        kError() << "Empty filename.";
+        qCritical() << "Empty filename.";
         return false;
     }
 
     if (!QFile::exists(srcFilename)) {
-        kError() << "File'" << srcFilename << "' doesn't exist.";
+        qCritical() << "File'" << srcFilename << "' doesn't exist.";
     }
 
     bool loadedSuccesfully = true;

@@ -21,8 +21,8 @@
 
 #include "stylesheetloader.h"
 
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
 
 #include <QtCore/QDate>
 #include <qplatformdefs.h>

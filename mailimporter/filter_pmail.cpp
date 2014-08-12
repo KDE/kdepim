@@ -20,7 +20,7 @@
 #include <QRegExp>
 #include <QPointer>
 #include <ktemporaryfile.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include "filter_pmail.h"
 
@@ -66,7 +66,7 @@ void FilterPMail::importMails( const QString  &chosenDir )
     const QStringList files = dir.entryList(QStringList()<<QLatin1String("*.[cC][nN][mM]")<<QLatin1String("*.[pP][mM][mM]")<<QLatin1String("*.[mM][bB][xX]"), QDir::Files, QDir::Name);
     totalFiles = files.count();
     currentFile = 0;
-    kDebug() <<"Count is" << totalFiles;
+    qDebug() <<"Count is" << totalFiles;
 
     if(!(folderParsed = parseFolderMatrix(mailDir()))) {
         filterInfo()->addErrorLogEntry(i18n("Cannot parse the folder structure; continuing import without subfolder support."));
@@ -91,7 +91,7 @@ void FilterPMail::processFiles(const QString &mask, void(FilterPMail::* workFunc
         return;
 
     const QStringList files = dir.entryList(QStringList(mask), QDir::Files, QDir::Name);
-    //kDebug() <<"Mask is" << mask <<" count is" << files.count();
+    //qDebug() <<"Mask is" << mask <<" count is" << files.count();
     QStringList::ConstIterator end = files.constEnd();
     for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile ) {
         // Notify current file
@@ -183,7 +183,7 @@ void FilterPMail::importMailFolder(const QString &file)
         bool first_msg = true;
 
         while (!f.atEnd()) {
-            KTemporaryFile tempfile;
+            QTemporaryFile tempfile;
             tempfile.open();
             filterInfo()->setCurrent( (int) ( ( (float) f.pos() / f.size() ) * 100 ) );
 
@@ -258,7 +258,7 @@ void FilterPMail::importUnixMailFolder(const QString &file)
         filterInfo()->addInfoLogEntry(i18n("Importing %1", QLatin1String("../") + QString::fromLatin1(pmg_head.folder)));
         l = f.readLine( line.data(),MAX_LINE); // read the first line which is unneeded
         while ( ! f.atEnd() ) {
-            KTemporaryFile tempfile;
+            QTemporaryFile tempfile;
             tempfile.open();
 
             // we lost the last line, which is the first line of the new message in
@@ -287,7 +287,7 @@ void FilterPMail::importUnixMailFolder(const QString &file)
 /** Parse the m_filterInfoormation about folderstructure to folderMatrix */
 bool FilterPMail::parseFolderMatrix( const QString  &chosendir )
 {
-    kDebug() <<"Start parsing the foldermatrix.";
+    qDebug() <<"Start parsing the foldermatrix.";
     filterInfo()->addInfoLogEntry(i18n("Parsing the folder structure..."));
 
     QFile hierarch(chosendir + QLatin1String("/hierarch.pm"));

@@ -15,23 +15,32 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-#include <akonadi/agentinstance.h>
-#include <kdebug.h>
+#include <agentinstance.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kmanagesieve/sievejob.h>
 #include <ksieveui/util/util.h>
 
 #include <QtCore/QTimer>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace KSieveUi;
 
 SieveDebugDialog::SieveDebugDialog( QWidget *parent )
-    : KDialog( parent ),
+    : QDialog( parent ),
       mSieveJob( 0 )
 {
-    setCaption( i18n( "Sieve Diagnostics" ) );
-    setButtons( Close );
+    setWindowTitle( i18n( "Sieve Diagnostics" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     // Collect all accounts
     const Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
@@ -41,7 +50,8 @@ SieveDebugDialog::SieveDebugDialog( QWidget *parent )
 
     mEdit = new PimCommon::PlainTextEditorWidget( this );
     mEdit->setReadOnly( true );
-    setMainWidget( mEdit );
+    mainLayout->addWidget(mEdit);
+    mainLayout->addWidget(buttonBox);
 
     mEdit->editor()->setPlainText( i18n( "Collecting diagnostic information about Sieve support...\n\n" ) );
 
@@ -57,13 +67,13 @@ SieveDebugDialog::~SieveDebugDialog()
         mSieveJob->kill();
         mSieveJob = 0;
     }
-    kDebug();
+    qDebug();
     writeConfig();
 }
 
 void SieveDebugDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveDebugDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveDebugDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(640, 480) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -72,7 +82,7 @@ void SieveDebugDialog::readConfig()
 
 void SieveDebugDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveDebugDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveDebugDialog" );
     group.writeEntry( "Size", size() );
 }
 
@@ -87,7 +97,7 @@ void SieveDebugDialog::slotDiagNextAccount()
     mEdit->editor()->appendPlainText( i18n( "------------------------------------------------------------\n" ) );
 
     // Detect URL for this IMAP account
-    const KUrl url = KSieveUi::Util::findSieveUrlForAccount( ident );
+    const QUrl url = KSieveUi::Util::findSieveUrlForAccount( ident );
     if ( !url.isValid() ) {
         mEdit->editor()->appendPlainText( i18n( "(Account does not support Sieve)\n\n" ) );
     } else {
@@ -124,7 +134,8 @@ void SieveDebugDialog::slotDiagNextScript()
 
     mUrl = KSieveUi::Util::findSieveUrlForAccount( mResourceIdentifier.first() );
 
-    mUrl.setFileName( scriptFile );
+    mUrl = mUrl.adjusted(QUrl::RemoveFilename);
+    mUrl.setPath(mUrl.path() + scriptFile);
 
     mSieveJob = KManageSieve::SieveJob::get( mUrl );
 
@@ -135,7 +146,7 @@ void SieveDebugDialog::slotDiagNextScript()
 void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool success,
                                       const QString &script, bool active )
 {
-    kDebug() << "( ??," << success
+    qDebug() << "( ??," << success
              << ", ?," << active << ")" << endl
              << "script:" << endl
              << script;
@@ -157,7 +168,7 @@ void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool s
 void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool success,
                                           const QStringList &scriptList, const QString &activeScript )
 {
-    kDebug() << "Success:" << success <<", List:" << scriptList.join(QLatin1String(",") ) <<
+    qDebug() << "Success:" << success <<", List:" << scriptList.join(QLatin1String(",") ) <<
                 ", active:" << activeScript;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 

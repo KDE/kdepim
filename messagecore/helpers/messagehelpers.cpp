@@ -18,16 +18,14 @@
  */
 
 #include "messagehelpers.h"
-
-#include <Akonadi/Item>
-
+#include <QDebug>
 using namespace MessageCore;
 using namespace MessageCore::Util;
 
 KMime::Message::Ptr MessageCore::Util::message( const Akonadi::Item &item )
 {
     if ( !item.hasPayload<KMime::Message::Ptr>() ) {
-        kWarning() << "Payload is not a MessagePtr!";
+        qWarning() << "Payload is not a MessagePtr!";
         return KMime::Message::Ptr();
     }
 

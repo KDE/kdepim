@@ -19,7 +19,7 @@
 #define SELECTMULTICOLLECTIONDIALOG_H
 #include "pimcommon_export.h"
 #include <KDialog>
-#include <Akonadi/Collection>
+#include <Collection>
 
 namespace PimCommon {
 class SelectMultiCollectionWidget;

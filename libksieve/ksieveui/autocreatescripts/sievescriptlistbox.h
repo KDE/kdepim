@@ -23,7 +23,7 @@
 class QListWidget;
 class QDomDocument;
 class QDomNode;
-class KPushButton;
+class QPushButton;
 
 namespace KSieveUi {
 class SieveScriptPage;
@@ -92,14 +92,14 @@ private:
     SieveScriptPage *createNewScript(const QString &newName, const QString &description = QString());
     QString createUniqName();
     QListWidget *mSieveListScript;
-    KPushButton *mBtnNew;
-    KPushButton *mBtnDelete;
-    KPushButton *mBtnRename;
-    KPushButton *mBtnDescription;
-    KPushButton *mBtnTop;
-    KPushButton *mBtnUp;
-    KPushButton *mBtnDown;
-    KPushButton *mBtnBottom;
+    QPushButton *mBtnNew;
+    QPushButton *mBtnDelete;
+    QPushButton *mBtnRename;
+    QPushButton *mBtnDescription;
+    QPushButton *mBtnTop;
+    QPushButton *mBtnUp;
+    QPushButton *mBtnDown;
+    QPushButton *mBtnBottom;
     int mScriptNumber;
 };
 }

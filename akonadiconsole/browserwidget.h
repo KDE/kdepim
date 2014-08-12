@@ -23,9 +23,9 @@
 #include <ui_browserwidget_itemview.h>
 #include <ui_browserwidget_contentview.h>
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-#include <akonadi/etmviewstatesaver.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
 
 #include <QWidget>
 
@@ -47,8 +47,6 @@ class Job;
 class StandardActionManager;
 class Monitor;
 class TagModel;
-}
-namespace KPIM {
 class StatisticsProxyModel;
 }
 
@@ -95,7 +93,7 @@ class BrowserWidget: public QWidget
     Akonadi::ChangeRecorder *mBrowserMonitor;
     AkonadiBrowserModel *mBrowserModel;
     Akonadi::EntityTreeView *mCollectionView;
-    KPIM::StatisticsProxyModel *statisticsProxyModel;
+    Akonadi::StatisticsProxyModel *statisticsProxyModel;
     Ui::ItemViewWidget itemUi;
     Ui::ContentViewWidget contentUi;
     Akonadi::Item mCurrentItem;

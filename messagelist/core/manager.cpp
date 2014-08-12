@@ -43,12 +43,14 @@
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
 #include <KConfig>
-#include <KDebug>
+#include <QDebug>
 #include <KIconLoader>
 #include <KGlobalSettings>
 #include <KApplication>
 #include <KLocalizedString>
 #include <KStandardDirs>
+#include <QFontDatabase>
+#include <QStandardPaths>
 
 using namespace MessageList::Core;
 
@@ -72,8 +74,8 @@ Manager::Manager()
     mPixmapMessageSent = new QPixmap( SmallIcon( QLatin1String( "mail-sent" ) ) );
     mPixmapMessageForwarded = new QPixmap( SmallIcon( QLatin1String( "mail-forwarded" ) ) );
     mPixmapMessageImportant = new QPixmap( SmallIcon( QLatin1String( "emblem-important" ) ) ); // "flag"
-    mPixmapMessageWatched = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) );
-    mPixmapMessageIgnored = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) );
+    mPixmapMessageWatched = new QPixmap( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) );
+    mPixmapMessageIgnored = new QPixmap( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) );
     mPixmapMessageSpam = new QPixmap( SmallIcon( QLatin1String( "mail-mark-junk" ) ) );
     mPixmapMessageHam = new QPixmap( SmallIcon( QLatin1String( "mail-mark-notjunk" ) ) );
     mPixmapMessageFullySigned = new QPixmap( SmallIcon( QLatin1String( "mail-signed-verified" ) ) );
@@ -87,13 +89,13 @@ Manager::Manager()
     mPixmapMessageAttachment = new QPixmap( SmallIcon( QLatin1String( "mail-attachment" ) ) );
     mPixmapMessageAnnotation = new QPixmap( SmallIcon( QLatin1String( "view-pim-notes" ) ) );
     mPixmapMessageInvitation = new QPixmap( SmallIcon( QLatin1String( "mail-invitation" ) ) );
-    if ( KApplication::isRightToLeft() )
+    if ( QApplication::isRightToLeft() )
         mPixmapShowMore = new QPixmap( SmallIcon( QLatin1String( "arrow-left" ) ) );
     else
         mPixmapShowMore = new QPixmap( SmallIcon( QLatin1String( "arrow-right" ) ) );
     mPixmapShowLess = new QPixmap( SmallIcon( QLatin1String( "arrow-down" ) ) );
-    mPixmapVerticalLine = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-vertical-separator-line.png" ) ) );
-    mPixmapHorizontalSpacer = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-horizontal-space.png" ) ) );
+    mPixmapVerticalLine = new QPixmap( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-vertical-separator-line.png" ) ) );
+    mPixmapHorizontalSpacer = new QPixmap( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-horizontal-space.png" ) ) );
 
     mCachedLocalizedUnknownText = i18nc( "Unknown date", "Unknown" ) ;
 
@@ -609,7 +611,7 @@ static Theme::Column * add_theme_simple_text_column( Theme * s, const QString &n
     Theme::Row * r = new Theme::Row();
 
     Theme::ContentItem * i = new Theme::ContentItem( type );
-    i->setFont( KGlobalSettings::generalFont() );
+    i->setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
 
     if ( alignRight )
         r->addRightItem( i );
@@ -623,7 +625,7 @@ static Theme::Column * add_theme_simple_text_column( Theme * s, const QString &n
         Theme::Row * r = new Theme::Row();
 
         Theme::ContentItem * i = new Theme::ContentItem( type );
-        i->setFont( KGlobalSettings::generalFont() );
+        i->setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
 
         if ( alignRight )
             r->addRightItem( i );
@@ -684,7 +686,7 @@ void Manager::createDefaultThemes()
     i = new Theme::ContentItem( Theme::ContentItem::ExpandedStateIcon );
     r->addLeftItem( i );
     i = new Theme::ContentItem( Theme::ContentItem::GroupHeaderLabel );
-    QFont bigFont = KGlobalSettings::generalFont();
+    QFont bigFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     bigFont.setBold( true );
     i->setFont( bigFont );
     i->setUseCustomFont( true );
@@ -751,7 +753,7 @@ void Manager::createDefaultThemes()
     i = new Theme::ContentItem( Theme::ContentItem::ExpandedStateIcon );
     r->addLeftItem( i );
     i = new Theme::ContentItem( Theme::ContentItem::GroupHeaderLabel );
-    QFont aBigFont = KGlobalSettings::generalFont();
+    QFont aBigFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     aBigFont.setBold( true );
     i->setFont( aBigFont );
     i->setUseCustomFont( true );
@@ -791,7 +793,7 @@ void Manager::createDefaultThemes()
     r = new Theme::Row();
     i = new Theme::ContentItem( Theme::ContentItem::SenderOrReceiver );
     i->setSoftenByBlending( true );
-    QFont aItalicFont = KGlobalSettings::generalFont();
+    QFont aItalicFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     aItalicFont.setItalic( true );
     i->setFont( aItalicFont );
     i->setUseCustomFont( true );
@@ -988,7 +990,7 @@ void Manager::loadConfiguration()
                         delete old;
                     mThemes.insert( set->id(), set );
                 } else {
-                    kWarning() << "Saved theme loading failed";
+                    qWarning() << "Saved theme loading failed";
                     delete set; // b0rken
                 }
             }
@@ -1006,7 +1008,7 @@ void Manager::loadConfiguration()
 
 void Manager::saveGlobalConfiguration()
 {
-    Settings::self()->writeConfig();
+    Settings::self()->save();
 }
 
 void Manager::saveConfiguration()

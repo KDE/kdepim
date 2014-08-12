@@ -23,13 +23,11 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
+#include <KUrl>
 
-#include <qjson/parser.h>
 #include <QFile>
-#include <QFileInfo>
 
 #include <QNetworkRequest>
-#include <QNetworkAccessManager>
 #include <QDateTime>
 #include <QStringList>
 #include <QDebug>
@@ -106,6 +104,7 @@ void DropBoxJob::getTokenAccess()
 
 void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
 {
+#if 0 //QT5
     const QString data = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
     if (mError) {
@@ -215,10 +214,13 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         parseCopyFolder(data);
         break;
     }
+#endif
 }
 
 QString DropBoxJob::extractPathFromData(const QString &data)
 {
+    QString name;
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     QString name;
@@ -226,6 +228,7 @@ QString DropBoxJob::extractPathFromData(const QString &data)
     if (info.contains(QLatin1String("path"))) {
         name = info.value(QLatin1String("path")).toString();
     }
+#endif
     return name;
 }
 
@@ -293,6 +296,7 @@ void DropBoxJob::parseDeleteFile(const QString &data)
 
 void DropBoxJob::parseAccountInfo(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -315,6 +319,7 @@ void DropBoxJob::parseAccountInfo(const QString &data)
 
 
     Q_EMIT accountInfoDone(accountInfo);
+#endif
     deleteLater();
 }
 
@@ -443,6 +448,7 @@ void DropBoxJob::listFolder(const QString &folder)
 
 void DropBoxJob::parseUploadFile(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -461,6 +467,7 @@ void DropBoxJob::parseUploadFile(const QString &data)
     }
     Q_EMIT uploadFileDone(itemName);
     shareLink(root, path);
+#endif
 }
 
 void DropBoxJob::shareLink(const QString &root, const QString &path)
@@ -671,6 +678,7 @@ void DropBoxJob::addDefaultUrlItem(QUrl &url)
 
 void DropBoxJob::parseShareLink(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     QString url;
@@ -679,6 +687,7 @@ void DropBoxJob::parseShareLink(const QString &data)
         url = info.value(QLatin1String("url")).toString();
     }
     Q_EMIT shareLinkDone(url);
+#endif
     deleteLater();
 }
 

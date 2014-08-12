@@ -21,11 +21,13 @@
 #include "messageviewer/header/headerstrategy.h"
 #include "messageviewer/header/grantleeheaderteststyle.h"
 
-#include <KPushButton>
+#include <QPushButton>
 #include <KLocale>
 #include <KConfigGroup>
 
+
 #include <QVBoxLayout>
+#include <KSharedConfig>
 
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     : GrantleeThemeEditor::PreviewWidget(parent)
@@ -39,7 +41,7 @@ PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     mViewer->setHeaderStyleAndStrategy(mGrantleeHeaderStyle,
                                        MessageViewer::HeaderStrategy::create(QString()));
     lay->addWidget(mViewer);
-    KPushButton *update = new KPushButton(i18n("Update view"));
+    QPushButton *update = new QPushButton(i18n("Update view"));
     connect(update, SIGNAL(clicked(bool)), this, SIGNAL(needUpdateViewer()));
     lay->addWidget(update);
     setLayout(lay);
@@ -65,7 +67,7 @@ void PreviewWidget::slotMainFileNameChanged(const QString &filename)
 
 void PreviewWidget::loadConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
         mDefaultEmail = group.readEntry("defaultEmail", themeeditorutil::defaultMail()).toLatin1();

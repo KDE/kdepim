@@ -21,7 +21,7 @@
 #ifndef __MESSAGELIST_UTILS_OPTIONSETEDITOR_H__
 #define __MESSAGELIST_UTILS_OPTIONSETEDITOR_H__
 
-#include <KTabWidget>
+#include <QTabWidget>
 
 class KLineEdit;
 class KTextEdit;
@@ -42,7 +42,7 @@ namespace Utils
 /**
  * The base class for the OptionSet editors. Provides common functionality.
  */
-class OptionSetEditor : public KTabWidget
+class OptionSetEditor : public QTabWidget
 {
     Q_OBJECT
 

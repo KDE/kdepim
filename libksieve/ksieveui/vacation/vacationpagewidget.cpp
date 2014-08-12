@@ -26,7 +26,7 @@
 
 #include <kmanagesieve/sievejob.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QStackedWidget>
@@ -84,7 +84,7 @@ VacationPageWidget::~VacationPageWidget()
     mSieveJob = 0;
 }
 
-void VacationPageWidget::setServerUrl(const KUrl &url)
+void VacationPageWidget::setServerUrl(const QUrl &url)
 {
     mUrl = url;
     mVacationEditWidget->setEnabled(false);
@@ -100,13 +100,13 @@ void VacationPageWidget::setServerName(const QString &serverName)
 
 void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool success, const QString & script, bool active )
 {
-    kDebug() << success
+    qDebug() << success
              << ", ?," << active << ")" << endl
              << "script:" << endl
              << script;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
-    if ( mUrl.protocol() == QLatin1String("sieve") &&
+    if ( mUrl.scheme() == QLatin1String("sieve") &&
          !job->sieveCapabilities().contains(QLatin1String("vacation")) ) {
         mStackWidget->setCurrentIndex(ScriptNotSupported);
         return;

@@ -30,20 +30,21 @@
 #include <KAboutData>
 #include <KComponentData>
 #include <KDialog>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KPluginInfo>
 #include <KService>
 #include <KServiceTypeTrader>
+
+
 
 #include <QLabel>
 #include <QVBoxLayout>
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kontactsummary( QWidget *parent, const char * ) {
-    KComponentData inst( "kcmkontactsummary" );
-    return new KCMKontactSummary( inst, parent );
+  Q_DECL_EXPORT KCModule *create_kontactsummary( QWidget *parent, const char * ) {
+    return new KCMKontactSummary( parent );
   }
 }
 
@@ -53,7 +54,7 @@ class PluginItem : public QTreeWidgetItem
     PluginItem( const KPluginInfo &info, QTreeWidget *parent )
       : QTreeWidgetItem( parent ), mInfo( info )
     {
-      setIcon( 0, KIcon( mInfo.icon() ) );
+      setIcon( 0, QIcon::fromTheme( mInfo.icon() ) );
       setText( 0, mInfo.name() );
       setToolTip( 0, mInfo.comment() );
       setFlags( Qt::ItemIsEnabled | Qt::ItemIsUserCheckable );
@@ -91,8 +92,8 @@ PluginView::~PluginView()
 {
 }
 
-KCMKontactSummary::KCMKontactSummary( const KComponentData &inst, QWidget *parent )
-  : KCModule( inst, parent )
+KCMKontactSummary::KCMKontactSummary( QWidget *parent )
+  : KCModule( parent )
 {
   setButtons( NoAdditionalButton );
   QVBoxLayout *layout = new QVBoxLayout( this );
@@ -112,13 +113,14 @@ KCMKontactSummary::KCMKontactSummary( const KComponentData &inst, QWidget *paren
   connect( mPluginView, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
            this, SLOT(changed()) );
 
-  KAboutData *about = new KAboutData( I18N_NOOP( "kontactsummary" ), 0,
-                                      ki18n( "KDE Kontact Summary" ),
-                                      0, KLocalizedString(), KAboutData::License_GPL,
-                                      ki18n( "(c), 2004 Tobias Koenig" ) );
-
-  about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
-  setAboutData( about );
+  KAboutData *about = new KAboutData(QStringLiteral("kontactsummary"),
+                                      i18n("kontactsummary"),
+                                      QString(),
+                                      i18n("KDE Kontact Summary"),
+                                      KAboutLicense::GPL,
+                                      i18n("(c), 2004 Tobias Koenig"));
+   about->addAuthor( ki18n( "Tobias Koenig" ).toString(), QString(), QStringLiteral("tokoe@kde.org") );
+   setAboutData(about);
 }
 
 void KCMKontactSummary::load()

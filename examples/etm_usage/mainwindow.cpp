@@ -23,7 +23,7 @@
 
 #include "mainwindow.h"
 
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 
 #include "desctab.h"
 #include "tab1widget.h"

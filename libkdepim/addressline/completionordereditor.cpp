@@ -36,25 +36,26 @@
 #include "ldap/ldapclientsearch.h"
 #include "ldap/ldapclientsearchconfig.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/monitor.h>
+#include <changerecorder.h>
+#include <collectionfilterproxymodel.h>
+#include <entitytreemodel.h>
+#include <monitor.h>
 
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kldap/ldapserver.h>
 
-#include <KDE/KConfigGroup>
-#include <KDE/KHBox>
-#include <KDE/KIcon>
-#include <KDE/KLocale>
-#include <KDE/KPushButton>
-#include <KDE/KVBox>
+
+#include <KConfigGroup>
+#include <QHBoxLayout>
+#include <QIcon>
+#include <KLocale>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 #include <QtDBus/QDBusConnection>
-#include <QToolButton>
 #include <QTreeWidget>
+#include <KSharedConfig>
 
 using namespace KPIM;
 
@@ -80,7 +81,7 @@ public:
 
     virtual QIcon icon() const
     {
-        return KIcon( QLatin1String("view-ldap-resource") );
+        return QIcon::fromTheme( QLatin1String("view-ldap-resource") );
     }
 
     virtual int completionWeight() const
@@ -204,9 +205,12 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
     new CompletionOrderEditorAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String("/"), this, QDBusConnection::ExportAdaptors );
 
-    KHBox* page = new KHBox( this );
+    QWidget* page = new QWidget( this );
+    QHBoxLayout *pageHBoxLayout = new QHBoxLayout(page);
+    pageHBoxLayout->setMargin(0);
     setMainWidget( page );
     mListView = new QTreeWidget( page );
+    pageHBoxLayout->addWidget(mListView);
     mListView->setColumnCount( 1 );
     mListView->setAlternatingRowColors( true );
     mListView->setIndentation( 0 );
@@ -214,31 +218,37 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
     mListView->setHeaderHidden ( true );
     mListView->setSortingEnabled( true );
 
-    KVBox* upDownBox = new KVBox( page );
-    mUpButton = new KPushButton( upDownBox );
+    QWidget* upDownBox = new QWidget( page );
+    QVBoxLayout *upDownBoxVBoxLayout = new QVBoxLayout(upDownBox);
+    upDownBoxVBoxLayout->setMargin(0);
+    pageHBoxLayout->addWidget(upDownBox);
+    mUpButton = new QPushButton( upDownBox );
+    upDownBoxVBoxLayout->addWidget(mUpButton);
     mUpButton->setAutoRepeat(true);
     mUpButton->setObjectName( QLatin1String("mUpButton") );
-    mUpButton->setIcon( KIcon(QLatin1String("go-up")) );
+    mUpButton->setIcon( QIcon::fromTheme(QLatin1String("go-up")) );
     mUpButton->setEnabled( false ); // b/c no item is selected yet
     mUpButton->setFocusPolicy( Qt::StrongFocus );
 
-    mDownButton = new KPushButton( upDownBox );
+    mDownButton = new QPushButton( upDownBox );
+    upDownBoxVBoxLayout->addWidget(mDownButton);
     mDownButton->setAutoRepeat(true);
     mDownButton->setObjectName( QLatin1String("mDownButton") );
-    mDownButton->setIcon( KIcon(QLatin1String("go-down")) );
+    mDownButton->setIcon( QIcon::fromTheme(QLatin1String("go-down")) );
     mDownButton->setEnabled( false ); // b/c no item is selected yet
     mDownButton->setFocusPolicy( Qt::StrongFocus );
 
     QWidget* spacer = new QWidget( upDownBox );
-    upDownBox->setStretchFactor( spacer, 100 );
+    upDownBoxVBoxLayout->addWidget(spacer);
+    upDownBoxVBoxLayout->setStretchFactor( spacer, 100 );
 
     connect( mListView, SIGNAL(itemSelectionChanged()),
              SLOT(slotSelectionChanged()) );
     connect( mListView, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
              SLOT(slotSelectionChanged()) );
-    connect( mUpButton, SIGNAL(clicked()), this, SLOT(slotMoveUp()) );
-    connect( mDownButton, SIGNAL(clicked()), this, SLOT(slotMoveDown()) );
-    connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
+    connect(mUpButton, &QPushButton::clicked, this, &CompletionOrderEditor::slotMoveUp);
+    connect(mDownButton, &QPushButton::clicked, this, &CompletionOrderEditor::slotMoveDown);
+    connect(this, &CompletionOrderEditor::okClicked, this, &CompletionOrderEditor::slotOk);
 
     loadCompletionItems();
     readConfig();
@@ -251,7 +261,7 @@ CompletionOrderEditor::~CompletionOrderEditor()
 
 void CompletionOrderEditor::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "CompletionOrderEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "CompletionOrderEditor" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -260,7 +270,7 @@ void CompletionOrderEditor::readConfig()
 
 void CompletionOrderEditor::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "CompletionOrderEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "CompletionOrderEditor" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

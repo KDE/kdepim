@@ -21,14 +21,14 @@
 
 #include <KLocalizedString>
 #include <KLocale>
-#include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 
 #include <QProgressBar>
 #include <QHBoxLayout>
 #include <QHideEvent>
 #include <QLabel>
 #include <QToolButton>
+#include <KFormat>
 
 using namespace PimCommon;
 
@@ -50,7 +50,7 @@ StorageServiceProgressWidget::StorageServiceProgressWidget(PimCommon::StorageSer
     box->addWidget(mProgressBar);
 
     mCancel = new QToolButton;
-    mCancel->setIcon(KIcon(QLatin1String("dialog-cancel")));
+    mCancel->setIcon(QIcon::fromTheme(QLatin1String("dialog-cancel")));
     connect(mCancel, SIGNAL(clicked()), this, SLOT(slotCancelTask()));
     box->addWidget(mCancel);
 
@@ -109,7 +109,7 @@ void StorageServiceProgressWidget::setBusyIndicator(bool busy)
 
 void StorageServiceProgressWidget::setProgressValue(qint64 done, qint64 total)
 {
-    mProgressInfo->setText(i18n("%1 on %2", KGlobal::locale()->formatByteSize(done), KGlobal::locale()->formatByteSize(total)));
+    mProgressInfo->setText(i18n("%1 on %2", KFormat().formatByteSize(done), KFormat().formatByteSize(total)));
     if (total > 0)
        mProgressBar->setValue((100*done)/total);
     else

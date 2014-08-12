@@ -29,7 +29,7 @@ GlobalSettings *GlobalSettings::self()
 {
   if ( !mSelf ) {
     mSelf = new GlobalSettings();
-    mSelf->readConfig();
+    mSelf->load();
   }
 
   return mSelf;

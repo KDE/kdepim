@@ -40,11 +40,14 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KWordWrap>
+#include <KIconLoader>
 
 #include <QDragEnterEvent>
 #include <QPainter>
 #include <QPixmapCache>
 #include <QToolTip>
+#include <QMimeData>
+#include <KLocale>
 
 using namespace KCalCore;
 using namespace EventViews;
@@ -939,33 +942,32 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   QString shortH;
   QString longH;
   if ( !isMultiItem() ) {
-    shortH = KGlobal::locale()->formatTime(incidence->dateTime( KCalCore::Incidence::RoleDisplayStart ).
+    shortH = KLocale::global()->formatTime(incidence->dateTime( KCalCore::Incidence::RoleDisplayStart ).
              toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
 
     if ( CalendarSupport::hasEvent( mIncidence ) ) {
       longH = i18n( "%1 - %2",
                     shortH,
-                    KGlobal::locale()->formatTime(
+                    KLocale::global()->formatTime(
                       incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec(
                         mEventView->preferences()->timeSpec() ).time() ) );
     } else {
       longH = shortH;
     }
   } else if ( !mMultiItemInfo->mFirstMultiItem ) {
-    shortH = KGlobal::locale()->formatTime(
+    shortH = KLocale::global()->formatTime(
       incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
     longH = shortH;
   } else {
-    shortH = KGlobal::locale()->formatTime(
+    shortH = KLocale::global()->formatTime(
       incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec(
         mEventView->preferences()->timeSpec() ).time() );
     longH = i18n( "- %1", shortH );
   }
 
-  KWordWrap *ww = KWordWrap::formatText(
+  KWordWrap ww = KWordWrap::formatText(
     fm, QRect( 0, 0, width() - ( 2 * margin ), -1 ), 0, mLabelText );
-  int th = ww->boundingRect().height();
-  delete ww;
+  int th = ww.boundingRect().height();
 
   int hlHeight = qMax( fm.boundingRect( longH ).height(),
                        qMax( alarmPxmp->height(),
@@ -1027,8 +1029,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     ww = KWordWrap::formatText(
       fm, QRect( 0, 0, txtWidth, ( height() - ( 2 * margin ) ) ), 0, mLabelText );
 
-    ww->drawText( &p, x, margin, Qt::AlignHCenter | KWordWrap::FadeOut );
-    delete ww;
+    ww.drawText( &p, x, margin, Qt::AlignHCenter | KWordWrap::FadeOut );
     return;
   }
 
@@ -1050,9 +1051,9 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
         // multi-day, all-day event
         shortH =
           i18n( "%1 - %2",
-                KGlobal::locale()->formatDate(
+                KLocale::global()->formatDate(
                   incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).date() ),
-                KGlobal::locale()->formatDate(
+                KLocale::global()->formatDate(
                   incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec(
                     mEventView->preferences()->timeSpec() ).date() ) );
         longH = shortH;
@@ -1122,14 +1123,13 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
 
   p.setBackground( QBrush( bgColor ) );
   p.setPen( textColor );
-  QString ws = ww->wrappedString();
+  QString ws = ww.wrappedString();
   if ( ws.left( ws.length()-1 ).indexOf( QLatin1Char('\n') ) >= 0 ) {
-    ww->drawText( &p, eventX, y, Qt::AlignLeft | KWordWrap::FadeOut );
+    ww.drawText( &p, eventX, y, Qt::AlignLeft | KWordWrap::FadeOut );
   } else {
-    ww->drawText( &p, eventX + ( txtWidth - ww->boundingRect().width() - 2 * margin ) / 2, y,
+    ww.drawText( &p, eventX + ( txtWidth - ww.boundingRect().width() - 2 * margin ) / 2, y,
                   Qt::AlignHCenter | KWordWrap::FadeOut );
   }
-  delete ww;
 
 }
 

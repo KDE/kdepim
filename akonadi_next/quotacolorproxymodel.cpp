@@ -20,8 +20,8 @@
 
 #include "quotacolorproxymodel.h"
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/collectionquotaattribute.h>
+#include <entitytreemodel.h>
+#include <collectionquotaattribute.h>
 
 #include <QColor>
 
@@ -47,7 +47,7 @@ class QuotaColorProxyModel::Private
 };
 
 QuotaColorProxyModel::QuotaColorProxyModel( QObject *parent )
-  : KIdentityProxyModel( parent ),
+  : QIdentityProxyModel( parent ),
     d( new Private( this ) )
 {
 }
@@ -97,12 +97,12 @@ QVariant QuotaColorProxyModel::data( const QModelIndex & index, int role) const
     }
   }
 
-  return KIdentityProxyModel::data( index, role );
+  return QIdentityProxyModel::data( index, role );
 }
 
 void QuotaColorProxyModel::setSourceModel( QAbstractItemModel *sourceModel )
 {
-  KIdentityProxyModel::setSourceModel( sourceModel );
+  QIdentityProxyModel::setSourceModel( sourceModel );
 
   if ( sourceModel ) {
     QHash<int, QByteArray> names = sourceModel->roleNames();

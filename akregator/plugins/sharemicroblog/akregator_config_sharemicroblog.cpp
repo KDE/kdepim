@@ -28,31 +28,28 @@
 #include <KAboutData>
 #include <KPluginFactory>
 #include <KLocalizedString>
-#include <kdemacros.h>
 
 #include <QVBoxLayout>
 
 using namespace Akregator;
 
 K_PLUGIN_FACTORY( KCMAkregatorShareConfigFactory, registerPlugin<KCMAkregatorShareConfig>(); )
-K_EXPORT_PLUGIN( KCMAkregatorShareConfigFactory( "kcmakrshareconfig" ) )
 
 KCMAkregatorShareConfig::KCMAkregatorShareConfig( QWidget* parent, const QVariantList& args )
-: KCModule( KCMAkregatorShareConfigFactory::componentData(), parent, args ),
+: KCModule( parent, args ),
     m_widget( new QWidget )
 {
     ui.setupUi( m_widget );
     QVBoxLayout *layout = new QVBoxLayout( this );
     layout->addWidget( m_widget );
+    KAboutData *about = new KAboutData( QLatin1String( "kcmakrshareconfig" ),
+                                        i18n( "Configure Share Services" ),
+                                        QString(), QString(), KAboutLicense::GPL,
+                                        i18n( "(c), 2004 - 2008 Frank Osterfeld" ) );
 
-    KAboutData* about = new KAboutData( I18N_NOOP( "kcmakrshareconfig" ), 0,
-                                        ki18n( "Configure Share Services" ),
-                                        0, KLocalizedString(), KAboutData::License_GPL,
-                                        ki18n( "(c), 2010 Artur Duque de Souza" ) );
+    about->addAuthor( i18n( "Frank Osterfeld" ), QString(), QStringLiteral("osterfeld@kde.org") );
 
-    about->addAuthor( ki18n( "Artur Duque de Souza" ), KLocalizedString(), "asouza@kde.org" );
     setAboutData( about );
-
     addConfig( ShareSettings::self(), m_widget );
 }
 
@@ -75,5 +72,5 @@ void KCMAkregatorShareConfig::load()
     if ( !serviceUrl.isEmpty() )
         ui.kcfg_ServiceUrl->setEditText(serviceUrl);
 }
-
+#include "akregator_config_sharemicroblog.moc"
 

@@ -18,12 +18,12 @@
 #ifndef FOLLOWUPREMINDERNOANSWERDIALOG_H
 #define FOLLOWUPREMINDERNOANSWERDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 namespace FollowUpReminder {
 class FollowUpReminderInfo;
 }
 class FollowUpReminderInfoWidget;
-class FollowUpReminderNoAnswerDialog : public KDialog
+class FollowUpReminderNoAnswerDialog : public QDialog
 {
     Q_OBJECT
 public:

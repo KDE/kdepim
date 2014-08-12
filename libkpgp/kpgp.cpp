@@ -19,14 +19,15 @@
 #include "kpgp.h"
 #include "kpgpbase.h"
 #include "kpgpui.h"
+#include "kpgp_debug.h"
 
-#include <kdebug.h>
-#include <klocale.h>
+#include <qdebug.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kconfigbase.h>
 #include <kconfiggroup.h>
 #include <kconfig.h>
-#include <kde_file.h>
+//#include <kde_file.h>
 
 #include <QLabel>
 #include <QCursor>
@@ -62,7 +63,7 @@ struct ModuleStatic {
   Module* kpgpObject;
 };
 
-K_GLOBAL_STATIC( ModuleStatic, s_module )
+Q_GLOBAL_STATIC( ModuleStatic, s_module )
 
 Module::Module()
   : mPublicKeys(),
@@ -206,7 +207,7 @@ Module::prepare( bool needPassPhrase, Block* block )
   if(needPassPhrase && !havePassPhrase) {
     if( ( tGPG == pgpType ) && ( 0 != getenv("GPG_AGENT_INFO") ) ) {
       // the user uses gpg-agent which asks itself for the passphrase
-      kDebug( 5326 ) <<"user uses gpg-agent -> don't ask for passphrase";
+      qCDebug(KPGP_LOG) <<"user uses gpg-agent -> don't ask for passphrase";
       // set dummy passphrase (because else signing doesn't work -> FIXME)
       setPassPhrase( QLatin1String("dummy") );
     }
@@ -246,7 +247,7 @@ Module::wipePassPhrase(bool freeMem)
     if ( passphrase_buffer_len )
       memset( passphrase, 0x00, passphrase_buffer_len );
     else {
-      kDebug( 5326 ) <<"wipePassPhrase: passphrase && !passphrase_buffer_len ???";
+      qCDebug(KPGP_LOG) <<"wipePassPhrase: passphrase && !passphrase_buffer_len ???";
       passphrase = 0;
     }
   }
@@ -563,13 +564,13 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
     recipientKeyIds[i] = keyIds;
   }
 
-  kDebug( 5326 ) <<"recipientKeyIds = (";
+  qCDebug(KPGP_LOG) <<"recipientKeyIds = (";
   QVector<KeyIDList>::const_iterator kit;
   for( kit = recipientKeyIds.constBegin(); kit != recipientKeyIds.constEnd(); ++kit ) {
-    kDebug( 5326 ) <<"( 0x" << (*kit).toStringList().join(QLatin1String(", 0x") )
+    qCDebug(KPGP_LOG) <<"( 0x" << (*kit).toStringList().join(QLatin1String(", 0x") )
                   << " ),\n";
   }
-  kDebug( 5326 ) <<")";
+  qCDebug(KPGP_LOG) <<")";
 
   if( showKeysForApproval || mShowKeyApprovalDlg ) {
     // #### FIXME: Until we support encryption with untrusted keys only
@@ -876,12 +877,12 @@ Module::rereadKey( const KeyID& keyID, const bool readTrust /* = true */ )
   {
     KeyList::Iterator it = std::lower_bound( mPublicKeys.begin(), mPublicKeys.end(), newKey, KeyCompare );
     mPublicKeys.insert( it, newKey );
-    kDebug( 5326 ) <<"New public key 0x" << newKey->primaryKeyID() <<" ("
+    qCDebug(KPGP_LOG) <<"New public key 0x" << newKey->primaryKeyID() <<" ("
                   << newKey->primaryUserID() << ").\n";
   }
   else if( ( 0 != oldKey ) && ( 0 == newKey ) )
   { // the key has been deleted in the meantime
-    kDebug( 5326 ) <<"Public key 0x" << oldKey->primaryKeyID() <<" ("
+    qCDebug(KPGP_LOG) <<"Public key 0x" << oldKey->primaryKeyID() <<" ("
                   << oldKey->primaryUserID() << ") will be removed.\n";
     mPublicKeys.removeAll( oldKey );
   }
@@ -1247,7 +1248,7 @@ Module::getEncryptionKeys( const QString& person )
   // First look for this person's address in the address->key dictionary
   KeyIDList keyIds = keysForAddress( address );
   if( !keyIds.isEmpty() ) {
-    kDebug( 5326 ) <<"Using encryption keys 0x"
+    qCDebug(KPGP_LOG) <<"Using encryption keys 0x"
                   << keyIds.toStringList().join( QLatin1String(", 0x") )
                   << "for" << person;
     // Check if all of the keys are a trusted and valid encryption keys
@@ -1292,7 +1293,7 @@ Module::getEncryptionKeys( const QString& person )
   KeyList matchingKeys;
 
   // search all keys which match the complete address
-  kDebug( 5326 ) <<"Looking for keys matching" << person <<" ...";
+  qCDebug(KPGP_LOG) <<"Looking for keys matching" << person <<" ...";
   for( ; it != mPublicKeys.end(); ++it ) {
     // search case insensitively in the list of userIDs of this key
     if( (*it)->matchesUserID( person, false ) ) {
@@ -1300,7 +1301,7 @@ Module::getEncryptionKeys( const QString& person )
                                          // the trust info for this key is read
       if( ( (*it)->isValidEncryptionKey() ) &&
           ( (*it)->keyTrust() >= KPGP_VALIDITY_MARGINAL ) ) {
-        kDebug( 5326 ) <<"Matching trusted key found:"
+        qCDebug(KPGP_LOG) <<"Matching trusted key found:"
                       << (*it)->primaryKeyID();
         matchingKeys.append( *it );
       }
@@ -1309,7 +1310,7 @@ Module::getEncryptionKeys( const QString& person )
 
   // if no keys match the complete address look for keys which match
   // the canonical mail address
-  kDebug( 5326 ) <<"Looking for keys matching" << address <<" ...";
+  qCDebug(KPGP_LOG) <<"Looking for keys matching" << address <<" ...";
   if( matchingKeys.isEmpty() ) {
     for ( it = mPublicKeys.begin(); it != mPublicKeys.end(); ++it ) {
       // search case insensitively in the list of userIDs of this key
@@ -1318,7 +1319,7 @@ Module::getEncryptionKeys( const QString& person )
                                            // the trust info for this key is read
         if( ( (*it)->isValidEncryptionKey() ) &&
             ( (*it)->keyTrust() >= KPGP_VALIDITY_MARGINAL ) ) {
-          kDebug( 5326 ) <<"Matching trusted key found:"
+          qCDebug(KPGP_LOG) <<"Matching trusted key found:"
                         << (*it)->primaryKeyID();
           matchingKeys.append( *it );
         }
@@ -1390,7 +1391,7 @@ Module::checkForPGP(void)
   havePgp=false;
 
   path = QString::fromLocal8Bit( getenv("PATH") );
-  pSearchPaths = path.split( QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts );
+  //QT5 pSearchPaths = path.split( QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts );
 
   haveGpg=false;
   // lets try gpg
@@ -1401,7 +1402,7 @@ Module::checkForPGP(void)
     path += QLatin1String("/gpg");
     if ( QFileInfo(path).isExecutable() )
     {
-      kDebug( 5326 ) <<"Kpgp: gpg found";
+      qCDebug(KPGP_LOG) <<"Kpgp: gpg found";
       havePgp=true;
       haveGpg=true;
       break;
@@ -1416,7 +1417,7 @@ Module::checkForPGP(void)
     path += QLatin1String("/pgpe");
     if ( QFileInfo(path).isExecutable() )
     {
-      kDebug( 5326 ) <<"Kpgp: pgp 5 found";
+      qCDebug(KPGP_LOG) <<"Kpgp: pgp 5 found";
       havePgp=true;
       havePGP5=true;
       break;
@@ -1431,7 +1432,7 @@ Module::checkForPGP(void)
       path += QLatin1String("/pgp");
       if ( QFileInfo(path).isExecutable() )
       {
-        kDebug( 5326 ) <<"Kpgp: pgp 2 or 6 found";
+        qCDebug(KPGP_LOG) <<"Kpgp: pgp 2 or 6 found";
         havePgp=true;
         break;
       }
@@ -1440,7 +1441,7 @@ Module::checkForPGP(void)
 
   if (!havePgp)
   {
-    kDebug( 5326 ) <<"Kpgp: no pgp found";
+    qCDebug(KPGP_LOG) <<"Kpgp: no pgp found";
   }
 
   return havePgp;
@@ -1457,45 +1458,45 @@ Module::assignPGPBase(void)
     switch (pgpType)
     {
       case tGPG:
-        kDebug( 5326 ) <<"Kpgp: assign pgp - gpg";
+        qCDebug(KPGP_LOG) <<"Kpgp: assign pgp - gpg";
         pgp = new BaseG();
         break;
 
       case tPGP2:
-        kDebug( 5326 ) <<"Kpgp: assign pgp - pgp 2";
+        qCDebug(KPGP_LOG) <<"Kpgp: assign pgp - pgp 2";
         pgp = new Base2();
         break;
 
       case tPGP5:
-        kDebug( 5326 ) <<"Kpgp: assign pgp - pgp 5";
+        qCDebug(KPGP_LOG) <<"Kpgp: assign pgp - pgp 5";
         pgp = new Base5();
         break;
 
       case tPGP6:
-        kDebug( 5326 ) <<"Kpgp: assign pgp - pgp 6";
+        qCDebug(KPGP_LOG) <<"Kpgp: assign pgp - pgp 6";
         pgp = new Base6();
         break;
 
       case tOff:
         // dummy handler
-        kDebug( 5326 ) <<"Kpgp: pgpBase is dummy";
+        qCDebug(KPGP_LOG) <<"Kpgp: pgpBase is dummy";
         pgp = new Base();
         break;
 
       case tAuto:
-        kDebug( 5326 ) <<"Kpgp: assign pgp - auto";
+        qCDebug(KPGP_LOG) <<"Kpgp: assign pgp - auto";
         // fall through
       default:
-        kDebug( 5326 ) <<"Kpgp: assign pgp - default";
+        qCDebug(KPGP_LOG) <<"Kpgp: assign pgp - default";
         if (haveGpg)
         {
-          kDebug( 5326 ) <<"Kpgp: pgpBase is gpg";
+          qCDebug(KPGP_LOG) <<"Kpgp: pgpBase is gpg";
           pgp = new BaseG();
           pgpType = tGPG;
         }
         else if(havePGP5)
         {
-          kDebug( 5326 ) <<"Kpgp: pgpBase is pgp 5";
+          qCDebug(KPGP_LOG) <<"Kpgp: pgpBase is pgp 5";
           pgp = new Base5();
           pgpType = tPGP5;
         }
@@ -1504,14 +1505,14 @@ Module::assignPGPBase(void)
           Base6 *pgp_v6 = new Base6();
           if (!pgp_v6->isVersion6())
           {
-            kDebug( 5326 ) <<"Kpgp: pgpBase is pgp 2";
+            qCDebug(KPGP_LOG) <<"Kpgp: pgpBase is pgp 2";
             delete pgp_v6;
             pgp = new Base2();
             pgpType = tPGP2;
           }
           else
           {
-            kDebug( 5326 ) <<"Kpgp: pgpBase is pgp 6";
+            qCDebug(KPGP_LOG) <<"Kpgp: pgpBase is pgp 6";
             pgp = pgp_v6;
             pgpType = tPGP6;
           }
@@ -1521,7 +1522,7 @@ Module::assignPGPBase(void)
   else
   {
     // dummy handler
-    kDebug( 5326 ) <<"Kpgp: pgpBase is dummy";
+    qCDebug(KPGP_LOG) <<"Kpgp: pgpBase is dummy";
     pgp = new Base();
     pgpType = tOff;
   }
@@ -1822,7 +1823,7 @@ Module::readAddressData()
     data.keyIds = KeyIDList::fromStringList( addrGroup.readEntry( "Key IDs" , QStringList() ) );
     data.encrPref = (EncryptPref) addrGroup.readEntry( "EncryptionPreference",
                                                           int(UnknownEncryptPref ));
-//     kDebug( 5326 ) <<"Read address" << i <<":" << address
+//     qCDebug(KPGP_LOG) <<"Read address" << i <<":" << address
 //                   << "\nKey IDs: 0x" << data.keyIds.toStringList().join(", 0x")
 //                   << "\nEncryption preference:" << data.encrPref;
     if ( !address.isEmpty() ) {

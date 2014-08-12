@@ -19,10 +19,9 @@
 */
 #include "tag.h"
 
-#include <Akonadi/Tag>
-#include <Akonadi/TagAttribute>
+#include <Tag>
+#include <TagAttribute>
 
-#include <QDebug>
 
 using namespace MailCommon;
 
@@ -53,7 +52,7 @@ Tag::Ptr Tag::fromAkonadi(const Akonadi::Tag& akonadiTag)
             tag->iconName = attr->iconName();
         }
         tag->inToolbar = attr->inToolbar();
-        tag->shortcut = KShortcut(attr->shortcut());
+        tag->shortcut = QKeySequence(attr->shortcut());
         tag->textColor = attr->textColor();
         tag->backgroundColor = attr->backgroundColor();
         if (!attr->font().isEmpty()) {

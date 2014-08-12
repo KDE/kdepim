@@ -30,18 +30,17 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 
-#include <kaboutdata.h>
+#include <KAboutData>
 #include <kapplication.h>
 #include <kcomponentdata.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kdemacros.h>
-#include <kdialogbuttonbox.h>
+#include <qdialogbuttonbox.h>
 #include <kgenericfactory.h>
-#include <khbox.h>
+#include <QHBoxLayout>
 #include <kiconloader.h>
 #include <klocale.h>
-#include <kvbox.h>
+#include <QVBoxLayout>
 #include <KMessageBox>
 
 #include "ldapclientsearch.h"
@@ -51,7 +50,6 @@
 #include "addhostdialog_p.h"
 
 K_PLUGIN_FACTORY( KCMLdapFactory, registerPlugin<KCMLdap>(); )
-K_EXPORT_PLUGIN( KCMLdapFactory( "kcmldap" ) )
 
 class LDAPItem : public QListWidgetItem
 {
@@ -83,17 +81,18 @@ private:
 };
 
 KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
-    : KCModule( KCMLdapFactory::componentData(), parent )
+    : KCModule( parent )
 {
     setButtons(KCModule::Apply);
-    KAboutData *about = new KAboutData( I18N_NOOP( "kcmldap" ), 0,
-                                        ki18n( "LDAP Server Settings" ),
-                                        0, KLocalizedString(), KAboutData::License_LGPL,
-                                        ki18n( "(c) 2009 - 2010 Tobias Koenig" ) );
+    KAboutData *about = new KAboutData(QStringLiteral("kcmldap"),
+                                      i18n("kcmldap"),
+                                      QString(),
+                                      i18n("LDAP Server Settings"),
+                                      KAboutLicense::LGPL,
+                                      i18n("(c) 2009 - 2010 Tobias Koenig"));
+    about->addAuthor( i18n( "Tobias Koenig" ), QString(), QStringLiteral("tokoe@kde.org") );
+    setAboutData(about);
 
-    about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
-    KGlobal::locale()->insertCatalog(QLatin1String("libkdepim"));
-    setAboutData( about );
     mClientSearchConfig = new KLDAP::LdapClientSearchConfig;
     initGUI();
 
@@ -318,38 +317,50 @@ void KCMLdap::initGUI()
     QLabel *label = new QLabel( i18n( "Check all servers that should be used:" ) );
     mainLayout->addWidget( label );
 
-    KHBox *hBox = new KHBox;
-    hBox->setSpacing( 6 );
+    QWidget *hBox = new QWidget;
+    QHBoxLayout *hBoxHBoxLayout = new QHBoxLayout(hBox);
+    hBoxHBoxLayout->setMargin(0);
+    hBoxHBoxLayout->setSpacing( 6 );
     mainLayout->addWidget(hBox);
     // Contents of the hbox: listview and up/down buttons on the right (vbox)
     mHostListView = new QListWidget( hBox );
+    hBoxHBoxLayout->addWidget(mHostListView);
     mHostListView->setSortingEnabled( false );
 
-    KVBox *upDownBox = new KVBox( hBox );
-    upDownBox->setSpacing( 6 );
+    QWidget *upDownBox = new QWidget( hBox );
+    QVBoxLayout *upDownBoxVBoxLayout = new QVBoxLayout(upDownBox);
+    upDownBoxVBoxLayout->setMargin(0);
+    hBoxHBoxLayout->addWidget(upDownBox);
+    upDownBoxVBoxLayout->setSpacing( 6 );
     mUpButton = new QToolButton( upDownBox );
-    mUpButton->setIcon( KIcon( QLatin1String("go-up") ) );
+    upDownBoxVBoxLayout->addWidget(mUpButton);
+    mUpButton->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
     mUpButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mUpButton->setEnabled( false ); // b/c no item is selected yet
 
     mDownButton = new QToolButton( upDownBox );
-    mDownButton->setIcon( KIcon( QLatin1String("go-down") ) );
+    upDownBoxVBoxLayout->addWidget(mDownButton);
+    mDownButton->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
     mDownButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mDownButton->setEnabled( false ); // b/c no item is selected yet
 
     QWidget *spacer = new QWidget( upDownBox );
-    upDownBox->setStretchFactor( spacer, 100 );
+    upDownBoxVBoxLayout->addWidget(spacer);
+    upDownBoxVBoxLayout->setStretchFactor( spacer, 100 );
 
     layout->addWidget( groupBox );
 
-    KDialogButtonBox *buttons = new KDialogButtonBox( this );
-    buttons->addButton( i18n( "&Add Host..." ),
-                        QDialogButtonBox::ActionRole, this, SLOT(slotAddHost()) );
+    QDialogButtonBox *buttons = new QDialogButtonBox( this );
+    QPushButton *add = buttons->addButton( i18n( "&Add Host..." ),
+                        QDialogButtonBox::ActionRole);
+    connect(add, SIGNAL(clicked()), this, SLOT(slotAddHost()) );
     mEditButton = buttons->addButton( i18n( "&Edit Host..." ),
-                                      QDialogButtonBox::ActionRole, this, SLOT(slotEditHost()) );
+                                      QDialogButtonBox::ActionRole);
+    connect(mEditButton, SIGNAL(clicked()), this, SLOT(slotEditHost()) );
     mEditButton->setEnabled( false );
     mRemoveButton = buttons->addButton( i18n( "&Remove Host" ),
-                                        QDialogButtonBox::ActionRole, this, SLOT(slotRemoveHost()) );
+                                        QDialogButtonBox::ActionRole);
+    connect(mRemoveButton, SIGNAL(clicked()), this, SLOT(slotRemoveHost()) );
     mRemoveButton->setEnabled( false );
     buttons->layout();
 
@@ -360,11 +371,11 @@ void KCMLdap::initGUI()
 
 QWidget* KCMLdap::dialogParent()
 {
-#ifdef Q_WS_MAEMO_5
+#ifdef Q_OS_MAEMO_5
     return 0;
 #else
     return this;
 #endif
 }
 
-#include "moc_kcmldap_p.cpp"
+#include "kcmldap.moc"

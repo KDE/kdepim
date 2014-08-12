@@ -29,7 +29,7 @@
 #include <QtCore/QList>
 
 class KComboBox;
-class KLineEdit;
+class QLineEdit;
 class KUrlRequester;
 
 class QButtonGroup;
@@ -52,7 +52,7 @@ protected Q_SLOTS:
 
 private Q_SLOTS:
     void setFile( const QString & );
-    void setFile( const KUrl & );
+    void setFile( const QUrl & );
     void urlChanged( const QString & );
 
     void customDelimiterChanged();
@@ -71,8 +71,8 @@ private:
 
     QTableView *mTable;
     QButtonGroup *mDelimiterGroup;
-    KLineEdit *mDelimiterEdit;
-    KLineEdit *mDatePatternEdit;
+    QLineEdit *mDelimiterEdit;
+    QLineEdit *mDatePatternEdit;
     KComboBox *mComboQuote;
     KComboBox *mCodecCombo;
     QCheckBox *mSkipFirstRow;

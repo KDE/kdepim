@@ -27,13 +27,15 @@
 
 
 #include <KLocalizedString>
-#include <KGlobal>
+
+#include <QDebug>
 
 #include <QBuffer>
 #include "contactdisplaymessagememento.h"
 #include "kxface.h"
 
-#include <kpimutils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
+#include <KLocale>
 
 using namespace MessageCore;
 
@@ -52,11 +54,11 @@ QString strToHtml( const QString &str, int flags ) {
 
 // Prepare the date string (when printing always use the localized date)
 QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
-    const KDateTime dateTime = message->date()->dateTime();
+    const QDateTime dateTime = message->date()->dateTime();
     if ( !dateTime.isValid() )
         return i18nc( "Unknown date", "Unknown" );
     if( printing ) {
-        KLocale * locale = KGlobal::locale();
+        KLocale * locale = KLocale::global();
         return locale->formatDateTime( dateTime );
     } else {
         if ( shortDate )
@@ -207,7 +209,7 @@ QString imgToDataUrl( const QImage &image )
     return QString::fromLatin1("data:image/%1;base64,%2").arg( QString::fromLatin1( "PNG" ), QString::fromLatin1( ba.toBase64() ) );
 }
 
-QString dateStr(const KDateTime &dateTime)
+QString dateStr(const QDateTime &dateTime)
 {
     const time_t unixTime = dateTime.toTime_t();
     return KMime::DateFormatter::formatDate(
@@ -216,9 +218,9 @@ QString dateStr(const KDateTime &dateTime)
                 unixTime, MessageCore::GlobalSettings::self()->customDateFormat() );
 }
 
-QString dateShortStr(const KDateTime &dateTime)
+QString dateShortStr(const QDateTime &dateTime)
 {
-    return KGlobal::locale()->formatDateTime( dateTime, KLocale::FancyShortDate );
+    return KLocale::global()->formatDateTime( dateTime, KLocale::FancyShortDate );
 }
 
 
@@ -320,7 +322,7 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
         const QString faceheader = message->headerByType( "Face" )->asUnicodeString();
         if ( !faceheader.isEmpty() ) {
 
-            kDebug() << "Found Face: header";
+            qDebug() << "Found Face: header";
 
             const QByteArray facestring = faceheader.toUtf8();
             // Spec says header should be less than 998 bytes
@@ -336,14 +338,14 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
                         settings.photoWidth = 48;
                         settings.photoHeight = 48;
                     } else {
-                        kDebug() << "Face: header image is" << faceimage.width() << "by"
+                        qDebug() << "Face: header image is" << faceimage.width() << "by"
                                  << faceimage.height() << "not 48x48 Pixels";
                     }
                 } else {
-                    kDebug() << "Failed to load decoded png from Face: header";
+                    qDebug() << "Failed to load decoded png from Face: header";
                 }
             } else {
-                kDebug() << "Face: header too long at" << facestring.length();
+                qDebug() << "Face: header too long at" << facestring.length();
             }
         }
     }

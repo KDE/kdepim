@@ -28,9 +28,9 @@
 #include <QTimer>
 
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemfetchscope.h>
 
 using namespace Akonadi;
 

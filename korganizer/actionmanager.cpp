@@ -27,7 +27,7 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-
+#include "config-kdepim.h"
 #include "actionmanager.h"
 #include "akonadicollectionview.h"
 #include "calendaradaptor.h"
@@ -44,7 +44,7 @@
 #include "reminderclient.h"
 #include "kocheckableproxymodel.h"
 
-#include <KHolidays/Holidays>
+#include <KHolidays/kholidays/Holidays>
 
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/eventarchiver.h>
@@ -53,10 +53,10 @@
 
 #include <incidenceeditor-ng/globalsettings.h>
 
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/EntityTreeView>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/ETMViewStateSaver>
+#include <AkonadiCore/EntityDisplayAttribute>
+#include <AkonadiWidgets/EntityTreeView>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiWidgets/ETMViewStateSaver>
 #include <Akonadi/Calendar/History>
 #include <Akonadi/Calendar/ICalImporter>
 
@@ -67,13 +67,12 @@
 
 #include <KMime/KMimeMessage>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
 #include <KFileDialog>
-#include <KGlobalSettings>
-#include <KMenu>
-#include <KMenuBar>
+#include <QMenu>
+#include <QMenuBar>
 #include <KMessageBox>
 #include <KMimeTypeTrader>
 #include <KProcess>
@@ -81,21 +80,26 @@
 #include <KShortcutsDialog>
 #include <KStandardAction>
 #include <KStandardDirs>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KTipDialog>
 #include <KToggleAction>
 #include <KWindowSystem>
 #include <KIO/NetAccess>
 #include <KNS3/DownloadDialog>
+#include <QIcon>
+#include <QDebug>
 
 #include <QApplication>
 #include <QTimer>
+#include <KSharedConfig>
+#include <KLocale>
+#include <QStandardPaths>
 
 KOWindowList *ActionManager::mWindowList = 0;
 
 ActionManager::ActionManager( KXMLGUIClient *client, CalendarView *widget,
                               QObject *parent, KOrg::MainWindow *mainWindow,
-                              bool isPart, KMenuBar *menuBar )
+                              bool isPart, QMenuBar *menuBar )
   : QObject( parent ),
     mCollectionViewShowAction( 0 ),
     mCollectionView( 0 ), mCollectionViewStateSaver( 0 ),
@@ -251,14 +255,14 @@ void ActionManager::createCalendarAkonadi()
 
 void ActionManager::initActions()
 {
-  KAction *action;
+  QAction *action;
 
   /*************************** FILE MENU **********************************/
 
   //~~~~~~~~~~~~~~~~~~~~~~~ LOADING / SAVING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if ( mIsPart ) {
     if ( mMainWindow->hasDocument() ) {
-      KAction *a = mACollection->addAction( KStandardAction::Open, this, SLOT(file_open()) );
+      QAction *a = mACollection->addAction( KStandardAction::Open, this, SLOT(file_open()) );
       mACollection->addAction( QLatin1String("korganizer_open"), a );
     }
 
@@ -278,50 +282,50 @@ void ActionManager::initActions()
   }
 
   //~~~~~~~~~~~~~~~~~~~~~~~~ IMPORT / EXPORT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  mImportAction = new KAction( i18n( "Import &Calendar..." ), this );
-  mImportAction->setHelpText(
-    i18n( "Merge the contents of another iCalendar" ) );
+  mImportAction = new QAction( i18n( "Import &Calendar..." ), this );
+  //QT5 mImportAction->setHelpText(
+    //i18n( "Merge the contents of another iCalendar" ) );
   mImportAction->setWhatsThis(
     i18n( "Select this menu entry if you would like to merge the contents "
           "of another iCalendar into your current calendar." ) );
   mACollection->addAction( QLatin1String("import_icalendar"), mImportAction );
   connect( mImportAction, SIGNAL(triggered(bool)), SLOT(file_import()) );
 
-  KAction *importAction = new KAction( i18n( "&Import From UNIX Ical Tool" ), this );
-  importAction->setHelpText(
-    i18n( "Import a calendar in another format" ) );
+  QAction *importAction = new QAction( i18n( "&Import From UNIX Ical Tool" ), this );
+  //QT5 importAction->setHelpText(
+    //i18n( "Import a calendar in another format" ) );
   importAction->setWhatsThis(
     i18n( "Select this menu entry if you would like to import the contents "
           "of a non-iCalendar formatted file into your current calendar." ) );
   mACollection->addAction( QLatin1String("import_ical"), importAction );
   connect( importAction, SIGNAL(triggered(bool)), SLOT(file_icalimport()) );
 
-  action = new KAction( i18n( "Get &Hot New Stuff..." ), this );
+  action = new QAction( i18n( "Get &Hot New Stuff..." ), this );
   mACollection->addAction( QLatin1String("downloadnewstuff"), action );
   connect( action, SIGNAL(triggered(bool)), SLOT(downloadNewStuff()) );
 
-  action = new KAction( i18n( "Export &Web Page..." ), this );
+  action = new QAction( i18n( "Export &Web Page..." ), this );
   mACollection->addAction( QLatin1String("export_web"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(exportWeb()) );
 
-  action = new KAction( i18n( "Export as &iCalendar..." ), this );
+  action = new QAction( i18n( "Export as &iCalendar..." ), this );
   mACollection->addAction( QLatin1String("export_icalendar"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(exportICalendar()) );
 
-  action = new KAction( i18n( "Export as &vCalendar..." ), this );
+  action = new QAction( i18n( "Export as &vCalendar..." ), this );
   mACollection->addAction( QLatin1String("export_vcalendar"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(exportVCalendar()) );
 
   //Laurent: 2009-03-24 comment it until upload will implement
-  //action = new KAction( i18n( "Upload &Hot New Stuff..." ), this );
+  //action = new QAction( i18n( "Upload &Hot New Stuff..." ), this );
   //mACollection->addAction( "uploadnewstuff", action );
   //connect( action, SIGNAL(triggered(bool)), SLOT(uploadNewStuff()) );
 
-  action = new KAction( i18n( "Archive O&ld Entries..." ), this );
+  action = new QAction( i18n( "Archive O&ld Entries..." ), this );
   mACollection->addAction( QLatin1String("file_archive"), action );
   connect( action, SIGNAL(triggered(bool)), SLOT(file_archive()) );
 
-  action = new KAction( i18n( "Pur&ge Completed To-dos" ), mACollection );
+  action = new QAction( i18n( "Pur&ge Completed To-dos" ), mACollection );
   mACollection->addAction( QLatin1String("purge_completed"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(purgeCompleted()) );
 
@@ -348,7 +352,7 @@ void ActionManager::initActions()
     mUndoAction = KStandardAction::undo( history, SLOT(undo()), mACollection );
     mRedoAction = KStandardAction::redo( history, SLOT(redo()), mACollection );
   }
-  mDeleteAction = new KAction( KIcon( QLatin1String("edit-delete") ), i18n( "&Delete" ), this );
+  mDeleteAction = new QAction( QIcon::fromTheme( QLatin1String("edit-delete") ), i18n( "&Delete" ), this );
   mACollection->addAction( QLatin1String("edit_delete"), mDeleteAction );
   connect( mDeleteAction, SIGNAL(triggered(bool)), mCalendarView, SLOT(appointment_delete()) );
   if ( mIsPart ) {
@@ -369,48 +373,48 @@ void ActionManager::initActions()
   /************************** VIEW MENU *********************************/
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ VIEWS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  action = new KAction( KIcon( QLatin1String("view-calendar-upcoming-events") ), i18n( "What's &Next" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-upcoming-events") ), i18n( "What's &Next" ), this );
   mACollection->addAction( QLatin1String("view_whatsnext"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(showWhatsNextView()) );
 
-  action = new KAction( KIcon( QLatin1String("view-calendar-month") ), i18n( "&Month" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-month") ), i18n( "&Month" ), this );
   mACollection->addAction( QLatin1String("view_month"), action );
   connect( action, SIGNAL(triggered(bool)),
            mCalendarView->viewManager(), SLOT(showMonthView()) );
 
-  action = new KAction( KIcon( QLatin1String("view-calendar-agenda") ), i18n( "&Agenda" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-agenda") ), i18n( "&Agenda" ), this );
   mACollection->addAction( QLatin1String("view_agenda"), action );
   connect( action, SIGNAL(triggered(bool)),
            mCalendarView->viewManager(), SLOT(showAgendaView()) );
 
-  action = new KAction( KIcon( QLatin1String("view-calendar-list") ), i18n( "&Event List" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-list") ), i18n( "&Event List" ), this );
   mACollection->addAction( QLatin1String("view_list"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(showListView()) );
 
-  action = new KAction( KIcon( QLatin1String("view-calendar-tasks") ), i18n( "&To-do List" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-tasks") ), i18n( "&To-do List" ), this );
   mACollection->addAction( QLatin1String("view_todo"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(showTodoView()) );
 
-  action = new KAction( KIcon( QLatin1String("view-calendar-journal" )), i18n( "&Journal" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-journal" )), i18n( "&Journal" ), this );
   mACollection->addAction( QLatin1String("view_journal"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(showJournalView()) );
 
-  action = new KAction( KIcon( QLatin1String("view-calendar-timeline") ), i18n( "Time&line" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-timeline") ), i18n( "Time&line" ), this );
   mACollection->addAction( QLatin1String("view_timeline"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(showTimeLineView()) );
 
-  action = new KAction( KIcon( QLatin1String("view-calendar-time-spent") ), i18n( "Time&spent" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-time-spent") ), i18n( "Time&spent" ), this );
   mACollection->addAction( QLatin1String("view_timespent"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(showTimeSpentView()) );
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~ REFRESH ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  action = new KAction( i18n( "&Refresh" ), this );
+  action = new QAction( i18n( "&Refresh" ), this );
   mACollection->addAction( QLatin1String("update"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(updateView()) );
 
@@ -429,25 +433,25 @@ void ActionManager::initActions()
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ZOOM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // TODO: try to find / create better icons for the following 4 actions
-  action = new KAction( KIcon( QLatin1String("zoom-in") ), i18n( "In Horizontally" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("zoom-in") ), i18n( "In Horizontally" ), this );
   action->setEnabled( mCalendarView->currentView()->supportsZoom() );
   mACollection->addAction( QLatin1String("zoom_in_horizontally"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(zoomInHorizontally()) );
 
-  action = new KAction( KIcon( QLatin1String("zoom-out") ), i18n( "Out Horizontally" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("zoom-out") ), i18n( "Out Horizontally" ), this );
   action->setEnabled( mCalendarView->currentView()->supportsZoom() );
   mACollection->addAction( QLatin1String("zoom_out_horizontally"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(zoomOutHorizontally()) );
 
-  action = new KAction( KIcon( QLatin1String("zoom-in") ), i18n( "In Vertically" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("zoom-in") ), i18n( "In Vertically" ), this );
   action->setEnabled( mCalendarView->currentView()->supportsZoom() );
   mACollection->addAction( QLatin1String("zoom_in_vertically"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(zoomInVertically()) );
 
-  action = new KAction( KIcon( QLatin1String("zoom-out") ), i18n( "Out Vertically" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("zoom-out") ), i18n( "Out Vertically" ), this );
   action->setEnabled( mCalendarView->currentView()->supportsZoom() );
   mACollection->addAction( QLatin1String("zoom_out_vertically"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
@@ -456,17 +460,17 @@ void ActionManager::initActions()
   /************************** Actions MENU *********************************/
   bool isRTL = QApplication::isRightToLeft();
 
-  action = new KAction( KIcon( QLatin1String("go-jump-today") ),
+  action = new QAction( QIcon::fromTheme( QLatin1String("go-jump-today") ),
                         i18nc( "@action Jump to today", "To &Today" ), this );
   action->setIconText( i18n( "Today" ) );
-  action->setHelpText( i18n( "Scroll to Today" ) );
+  //QT5 action->setHelpText( i18n( "Scroll to Today" ) );
   mACollection->addAction( QLatin1String("go_today"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(goToday()) );
 
-  action = new KAction( KIcon( isRTL ? QLatin1String("go-next") : QLatin1String("go-previous") ),
+  action = new QAction( QIcon::fromTheme( isRTL ? QLatin1String("go-next") : QLatin1String("go-previous") ),
                         i18nc( "scroll backward", "&Backward" ), this );
   action->setIconText( i18nc( "scroll backward", "Back" ) );
-  action->setHelpText( i18n( "Scroll Backward" ) );
+  //QT5 action->setHelpText( i18n( "Scroll Backward" ) );
   mACollection->addAction( QLatin1String("go_previous"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(goPrevious()) );
 
@@ -478,10 +482,10 @@ void ActionManager::initActions()
   connect( mCalendarView, SIGNAL(changeNavStringPrev(QString)),
            this, SLOT(dumpText(QString)) );*/
 
-  action = new KAction( KIcon( isRTL ? QLatin1String("go-previous") : QLatin1String("go-next") ),
+  action = new QAction( QIcon::fromTheme( isRTL ? QLatin1String("go-previous") : QLatin1String("go-next") ),
                         i18nc( "scroll forward", "&Forward" ), this );
   action->setIconText( i18nc( "scoll forward", "Forward" ) );
-  action->setHelpText( i18n( "Scroll Forward" ) );
+  //QT5 action->setHelpText( i18n( "Scroll Forward" ) );
   mACollection->addAction( QLatin1String("go_next"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(goNext()) );
   /*
@@ -489,48 +493,48 @@ void ActionManager::initActions()
            action,SLOT(setText(QString)) );
   */
 
-  action = new KAction( KIcon( QLatin1String("view-calendar-day") ), i18n( "&Day" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-day") ), i18n( "&Day" ), this );
   mACollection->addAction( QLatin1String("select_day"), action );
   action->setEnabled( mCalendarView->currentView()->supportsDateRangeSelection() );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(selectDay()) );
 
-  mNextXDays = new KAction( KIcon( QLatin1String("view-calendar-upcoming-days") ), QString(), this );
+  mNextXDays = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-upcoming-days") ), QString(), this );
   mNextXDays->setEnabled( mCalendarView->currentView()->supportsDateRangeSelection() );
   mACollection->addAction( QLatin1String("select_nextx"), mNextXDays );
   connect( mNextXDays, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(selectNextX()) );
   mNextXDays->setText( i18np( "&Next Day", "&Next %1 Days", KOPrefs::instance()->mNextXDays ) );
 
-  action = new KAction( KIcon( QLatin1String("view-calendar-workweek") ), i18n( "W&ork Week" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-workweek") ), i18n( "W&ork Week" ), this );
   action->setEnabled( mCalendarView->currentView()->supportsDateRangeSelection() );
   mACollection->addAction( QLatin1String("select_workweek"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(selectWorkWeek()) );
 
-  action = new KAction( KIcon( QLatin1String("view-calendar-week") ), i18n( "&Week" ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-calendar-week") ), i18n( "&Week" ), this );
   action->setEnabled( mCalendarView->currentView()->supportsDateRangeSelection() );
   mACollection->addAction( QLatin1String("select_week"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->viewManager(),
            SLOT(selectWeek()) );
 
   /************************** Actions MENU *********************************/
-  mNewEventAction = new KAction( KIcon( QLatin1String("appointment-new") ), i18n( "New E&vent..." ), this );
+  mNewEventAction = new QAction( QIcon::fromTheme( QLatin1String("appointment-new") ), i18n( "New E&vent..." ), this );
   //mNewEventAction->setIconText( i18nc( "@action:intoolbar create a new event", "Event" ) );
-  mNewEventAction->setHelpText( i18n( "Create a new Event" ) );
+  //QT5 mNewEventAction->setHelpText( i18n( "Create a new Event" ) );
 
   mACollection->addAction( QLatin1String("new_event"), mNewEventAction );
   connect( mNewEventAction, SIGNAL(triggered(bool)), this,
            SLOT(slotNewEvent()) );
 
-  mNewTodoAction = new KAction( KIcon( QLatin1String("task-new") ), i18n( "New &To-do..." ), this );
+  mNewTodoAction = new QAction( QIcon::fromTheme( QLatin1String("task-new") ), i18n( "New &To-do..." ), this );
   //mNewTodoAction->setIconText( i18n( "To-do" ) );
-  mNewTodoAction->setHelpText( i18n( "Create a new To-do" ) );
+  //QT5 mNewTodoAction->setHelpText( i18n( "Create a new To-do" ) );
   mACollection->addAction( QLatin1String("new_todo"), mNewTodoAction );
   connect( mNewTodoAction, SIGNAL(triggered(bool)), this,
            SLOT(slotNewTodo()) );
 
-  mNewSubtodoAction = new KAction( i18n( "New Su&b-to-do..." ), this );
+  mNewSubtodoAction = new QAction( i18n( "New Su&b-to-do..." ), this );
   mACollection->addAction( QLatin1String("new_subtodo"), mNewSubtodoAction );
   connect( mNewSubtodoAction, SIGNAL(triggered(bool)), this,
            SLOT(slotNewSubTodo()));
@@ -538,39 +542,39 @@ void ActionManager::initActions()
   connect( mCalendarView,SIGNAL(todoSelected(bool)), mNewSubtodoAction,
            SLOT(setEnabled(bool)) );
 
-  mNewJournalAction = new KAction( KIcon( QLatin1String("journal-new") ), i18n( "New &Journal..." ), this );
+  mNewJournalAction = new QAction( QIcon::fromTheme( QLatin1String("journal-new") ), i18n( "New &Journal..." ), this );
   //mNewJournalAction->setIconText( i18n( "Journal" ) );
-  mNewJournalAction->setHelpText( i18n( "Create a new Journal" ) );
+  //QT5 mNewJournalAction->setHelpText( i18n( "Create a new Journal" ) );
   mACollection->addAction( QLatin1String("new_journal"), mNewJournalAction );
   connect( mNewJournalAction, SIGNAL(triggered(bool)), this,
            SLOT(slotNewJournal()) );
 
-  mConfigureViewAction = new KAction( KIcon( QLatin1String("configure") ), i18n( "Configure View..." ), this );
+  mConfigureViewAction = new QAction( QIcon::fromTheme( QLatin1String("configure") ), i18n( "Configure View..." ), this );
   mConfigureViewAction->setIconText( i18n( "Configure" ) );
-  mConfigureViewAction->setHelpText( i18n( "Configure the view" ) );
+  //QT5 mConfigureViewAction->setHelpText( i18n( "Configure the view" ) );
   mConfigureViewAction->setEnabled( mCalendarView->currentView() &&
                                     mCalendarView->currentView()->hasConfigurationDialog() );
   mACollection->addAction( QLatin1String("configure_view"), mConfigureViewAction );
   connect( mConfigureViewAction, SIGNAL(triggered(bool)), mCalendarView,
            SLOT(configureCurrentView()) );
 
-  mShowIncidenceAction = new KAction( i18n( "&Show" ), this );
+  mShowIncidenceAction = new QAction( i18n( "&Show" ), this );
   mACollection->addAction( QLatin1String("show_incidence"), mShowIncidenceAction );
   connect( mShowIncidenceAction, SIGNAL(triggered(bool)), mCalendarView,
            SLOT(showIncidence()) );
 
-  mEditIncidenceAction = new KAction( i18n( "&Edit..." ), this );
+  mEditIncidenceAction = new QAction( i18n( "&Edit..." ), this );
   mACollection->addAction( QLatin1String("edit_incidence"), mEditIncidenceAction );
   connect( mEditIncidenceAction, SIGNAL(triggered(bool)), mCalendarView,
            SLOT(editIncidence()) );
 
-  mDeleteIncidenceAction = new KAction( i18n( "&Delete" ), this );
+  mDeleteIncidenceAction = new QAction( i18n( "&Delete" ), this );
   mACollection->addAction( QLatin1String("delete_incidence"), mDeleteIncidenceAction );
   connect( mDeleteIncidenceAction, SIGNAL(triggered(bool)), mCalendarView,
            SLOT(deleteIncidence()) );
-  mDeleteIncidenceAction->setShortcut( QKeySequence( Qt::Key_Delete ) );
+  mACollection->setDefaultShortcut(mDeleteIncidenceAction, QKeySequence( Qt::Key_Delete ) );
 
-  action = new KAction( i18n( "&Make Sub-to-do Independent" ), this );
+  action = new QAction( i18n( "&Make Sub-to-do Independent" ), this );
   mACollection->addAction( QLatin1String("unsub_todo"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView,
            SLOT(todo_unsub()) );
@@ -584,27 +588,27 @@ void ActionManager::initActions()
 //                                         mACollection, "activate_alarm" );
 
   /************************** SCHEDULE MENU ********************************/
-  mPublishEvent = new KAction( KIcon( QLatin1String("mail-send") ), i18n( "&Publish Item Information..." ), this );
+  mPublishEvent = new QAction( QIcon::fromTheme( QLatin1String("mail-send") ), i18n( "&Publish Item Information..." ), this );
   mACollection->addAction( QLatin1String("schedule_publish"), mPublishEvent );
   connect( mPublishEvent, SIGNAL(triggered(bool)), mCalendarView, SLOT(schedule_publish()) );
   mPublishEvent->setEnabled( false );
 
   mSendInvitation =
-    new KAction( KIcon( QLatin1String("mail-send") ), i18n( "Send &Invitation to Attendees" ), this );
+    new QAction( QIcon::fromTheme( QLatin1String("mail-send") ), i18n( "Send &Invitation to Attendees" ), this );
   mACollection->addAction( QLatin1String("schedule_request"), mSendInvitation );
   connect( mSendInvitation, SIGNAL(triggered(bool)), mCalendarView, SLOT(schedule_request()) );
   mSendInvitation->setEnabled( false );
   connect( mCalendarView, SIGNAL(organizerEventsSelected(bool)),
            mSendInvitation, SLOT(setEnabled(bool)) );
 
-  mRequestUpdate = new KAction( i18n( "Re&quest Update" ), this );
+  mRequestUpdate = new QAction( i18n( "Re&quest Update" ), this );
   mACollection->addAction( QLatin1String("schedule_refresh"), mRequestUpdate );
   connect( mRequestUpdate, SIGNAL(triggered(bool)), mCalendarView, SLOT(schedule_refresh()) );
   mRequestUpdate->setEnabled( false );
   connect( mCalendarView, SIGNAL(groupEventsSelected(bool)),
            mRequestUpdate, SLOT(setEnabled(bool)) );
 
-  mSendCancel = new KAction( i18n( "Send &Cancellation to Attendees" ), this );
+  mSendCancel = new QAction( i18n( "Send &Cancellation to Attendees" ), this );
   mACollection->addAction( QLatin1String("schedule_cancel"), mSendCancel );
   connect( mSendCancel, SIGNAL(triggered(bool)), mCalendarView, SLOT(schedule_cancel()) );
   mSendCancel->setEnabled( false );
@@ -612,37 +616,37 @@ void ActionManager::initActions()
            mSendCancel, SLOT(setEnabled(bool)) );
 
   mSendStatusUpdate =
-    new KAction( KIcon(QLatin1String( "mail-reply-sender") ), i18n( "Send Status &Update" ), this );
+    new QAction( QIcon::fromTheme(QLatin1String( "mail-reply-sender") ), i18n( "Send Status &Update" ), this );
   mACollection->addAction( QLatin1String("schedule_reply"), mSendStatusUpdate );
   connect( mSendStatusUpdate, SIGNAL(triggered(bool)), mCalendarView, SLOT(schedule_reply()) );
   mSendStatusUpdate->setEnabled( false );
   connect( mCalendarView, SIGNAL(groupEventsSelected(bool)),
            mSendStatusUpdate, SLOT(setEnabled(bool)) );
 
-  mRequestChange = new KAction( i18nc( "counter proposal", "Request Chan&ge" ), this );
+  mRequestChange = new QAction( i18nc( "counter proposal", "Request Chan&ge" ), this );
   mACollection->addAction( QLatin1String("schedule_counter"), mRequestChange );
   connect( mRequestChange, SIGNAL(triggered(bool)), mCalendarView, SLOT(schedule_counter()) );
   mRequestChange->setEnabled( false );
   connect( mCalendarView, SIGNAL(groupEventsSelected(bool)),
            mRequestChange, SLOT(setEnabled(bool)) );
 
-  action = new KAction( i18n( "&Mail Free Busy Information..." ), this );
+  action = new QAction( i18n( "&Mail Free Busy Information..." ), this );
   mACollection->addAction( QLatin1String("mail_freebusy"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(mailFreeBusy()) );
   action->setEnabled( true );
 
-  mForwardEvent = new KAction( KIcon( QLatin1String("mail-forward") ), i18n( "&Send as iCalendar..." ), this );
+  mForwardEvent = new QAction( QIcon::fromTheme( QLatin1String("mail-forward") ), i18n( "&Send as iCalendar..." ), this );
   mACollection->addAction( QLatin1String("schedule_forward"), mForwardEvent );
   connect( mForwardEvent, SIGNAL(triggered(bool)), mCalendarView, SLOT(schedule_forward()) );
   mForwardEvent->setEnabled( false );
 
-  action = new KAction( i18n( "&Upload Free Busy Information" ), this );
+  action = new QAction( i18n( "&Upload Free Busy Information" ), this );
   mACollection->addAction( QLatin1String("upload_freebusy"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(uploadFreeBusy()) );
   action->setEnabled( true );
 
   if ( !mIsPart ) {
-    action = new KAction( KIcon( QLatin1String("help-contents") ), i18n( "&Address Book" ), this );
+    action = new QAction( QIcon::fromTheme( QLatin1String("help-contents") ), i18n( "&Address Book" ), this );
     mACollection->addAction( QLatin1String("addressbook"), action );
     connect( action, SIGNAL(triggered(bool)), mCalendarView, SLOT(openAddressbook()) );
   }
@@ -687,27 +691,27 @@ void ActionManager::initActions()
   mHideMenuBarAction->setChecked( KOPrefs::instance()->showMenuBar() );
   toggleMenubar( true );
 
-  action = new KAction( i18n( "Configure &Date && Time..." ), this );
+  action = new QAction( i18n( "Configure &Date && Time..." ), this );
   mACollection->addAction( QLatin1String("conf_datetime"), action );
   connect( action, SIGNAL(triggered(bool)),
            SLOT(configureDateTime()) );
 // TODO: Add an item to show the resource management dlg
-//   new KAction( i18n( "Manage &Calendars..." ), 0,
+//   new QAction( i18n( "Manage &Calendars..." ), 0,
 //                     this, SLOT(manageResources()),
 //                     mACollection, "conf_resources" );
 
-  action = new KAction( KIcon( QLatin1String("view-filter") ), i18n( "Manage View &Filters..." ), this );
+  action = new QAction( QIcon::fromTheme( QLatin1String("view-filter") ), i18n( "Manage View &Filters..." ), this );
   mACollection->addAction( QLatin1String("edit_filters"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView,
            SLOT(editFilters()) );
 
-  action = new KAction( i18n( "Manage C&ategories..." ), this );
+  action = new QAction( i18n( "Manage C&ategories..." ), this );
   mACollection->addAction( QLatin1String("edit_categories"), action );
   connect( action, SIGNAL(triggered(bool)), mCalendarView->dialogManager(),
            SLOT(showCategoryEditDialog()) );
 
   if ( mIsPart ) {
-    action = new KAction( KIcon( QLatin1String("configure") ), i18n( "&Configure KOrganizer..." ), this );
+    action = new QAction( QIcon::fromTheme( QLatin1String("configure") ), i18n( "&Configure KOrganizer..." ), this );
     mACollection->addAction( QLatin1String("korganizer_configure"), action );
     connect( action, SIGNAL(triggered(bool)), mCalendarView,
              SLOT(edit_options()) );
@@ -842,7 +846,7 @@ void ActionManager::file_new()
 
 void ActionManager::file_open()
 {
-  const QString defaultPath = KStandardDirs::locateLocal( "data",QLatin1String("korganizer/") );
+  const QString defaultPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/") ;
   const KUrl url = KFileDialog::getOpenUrl( defaultPath, QLatin1String("text/calendar"), dialogParent() );
 
   file_open( url );
@@ -857,13 +861,13 @@ void ActionManager::file_open( const KUrl &url )
   // is that URL already opened somewhere else? Activate that window
   KOrg::MainWindow *korg = ActionManager::findInstance( url );
   if ( ( 0 != korg )&&( korg != mMainWindow ) ) {
-#ifdef Q_WS_X11
+#if KDEPIM_HAVE_X11
     KWindowSystem::activateWindow( korg->topLevelWidget()->winId() );
 #endif
     return;
   }
 
-  kDebug() << url.prettyUrl();
+  qDebug() << url.prettyUrl();
 
   importCalendar( url );
 }
@@ -874,7 +878,7 @@ void ActionManager::file_icalimport()
   // for now, hard-coded to ical file, $HOME/.calendar.
   int retVal = -1;
   QString progPath;
-  KTemporaryFile tmpfn;
+  QTemporaryFile tmpfn;
   tmpfn.open();
 
   QString homeDir = QDir::homePath() + QLatin1String( "/.calendar" );
@@ -891,11 +895,11 @@ void ActionManager::file_icalimport()
   retVal = proc.execute();
 
   if ( retVal < 0 ) {
-    kDebug() << "Error executing ical2vcal.";
+    qDebug() << "Error executing ical2vcal.";
     return;
   }
 
-  kDebug() << "ical2vcal return value:" << retVal;
+  qDebug() << "ical2vcal return value:" << retVal;
 
   if ( retVal >= 0 && retVal <= 2 ) {
     // now we need to MERGE what is in the iCal to the current calendar.
@@ -920,7 +924,7 @@ void ActionManager::file_icalimport()
 
 void ActionManager::file_import()
 {
-  const KUrl url = KFileDialog::getOpenUrl( KStandardDirs::locateLocal( "data",QLatin1String("korganizer/") ),
+  const KUrl url = KFileDialog::getOpenUrl( QString(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/")) ,
                                       QLatin1String("text/calendar"),
                                       dialogParent() );
   if ( !url.isEmpty() ) { // isEmpty if user canceled the dialog
@@ -988,7 +992,7 @@ bool ActionManager::saveURL()
   }
 
   if ( !mCalendarView->saveCalendar( mFile ) ) {
-    kDebug() << "calendar view save failed.";
+    qDebug() << "calendar view save failed.";
     return false;
   }
 
@@ -1012,7 +1016,7 @@ void ActionManager::exportHTML()
   mSettingsToFree.insert( settings );
   // Manually read in the config, because parametrized kconfigxt objects don't
   // seem to load the config theirselves
-  settings->readConfig();
+  settings->load();
 
   const QDate qd1 = QDate::currentDate();
   QDate qd2 = qd1;
@@ -1031,7 +1035,7 @@ void ActionManager::exportHTML()
 void ActionManager::exportHTML( KOrg::HTMLExportSettings *settings, bool autoMode )
 {
   if ( !settings ) {
-    kWarning() << "Settings is null" << settings;
+    qWarning() << "Settings is null" << settings;
     return;
   }
 
@@ -1051,12 +1055,12 @@ void ActionManager::exportHTML( KOrg::HTMLExportSettings *settings, bool autoMod
 
     const QString fileName =
       KFileDialog::getSaveFileName(
-        KGlobalSettings::documentPath(),
+        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
         i18n( "*.html|HTML Files" ),
         dialogParent(),
         i18n( "Select path for HTML calendar export" ) );
     settings->setOutputFile( fileName );
-    settings->writeConfig();
+    settings->save();
   }
 
   if ( !autoMode && QFileInfo( settings->outputFile() ).exists() ) {
@@ -1095,25 +1099,25 @@ void ActionManager::exportHTML( KOrg::HTMLExportSettings *settings, bool autoMod
 
 bool ActionManager::saveAsURL( const KUrl &url )
 {
-  kDebug() << url.prettyUrl();
+  qDebug() << url.prettyUrl();
 
   if ( url.isEmpty() ) {
-    kDebug() << "Empty URL.";
+    qDebug() << "Empty URL.";
     return false;
   }
   if ( !url.isValid() ) {
-    kDebug() << "Malformed URL.";
+    qDebug() << "Malformed URL.";
     return false;
   }
 
   QString fileOrig = mFile;
   KUrl URLOrig = mURL;
 
-  KTemporaryFile *tempFile = 0;
+  QTemporaryFile *tempFile = 0;
   if ( url.isLocalFile() ) {
     mFile = url.toLocalFile();
   } else {
-    tempFile = new KTemporaryFile;
+    tempFile = new QTemporaryFile;
     tempFile->setAutoRemove(false);
     tempFile->open();
     mFile = tempFile->fileName();
@@ -1130,7 +1134,7 @@ bool ActionManager::saveAsURL( const KUrl &url )
     KMessageBox::sorry( dialogParent(),
                         i18n( "Unable to save calendar to the file %1.", mFile ),
                         i18n( "Error" ) );
-    kDebug() << "failed";
+    qDebug() << "failed";
     mURL = URLOrig;
     mFile = fileOrig;
     delete tempFile;
@@ -1142,7 +1146,7 @@ bool ActionManager::saveAsURL( const KUrl &url )
 #ifdef AKONADI_PORT_DISABLED // can go away, kept for reference
 bool ActionManager::saveModifiedURL()
 {
-  kDebug();
+  qDebug();
 
   // If calendar isn't modified do nothing.
   if ( !mCalendarView->isModified() ) {
@@ -1183,7 +1187,7 @@ bool ActionManager::saveModifiedURL()
 KUrl ActionManager::getSaveURL()
 {
   KUrl url =
-    KFileDialog::getSaveUrl( KStandardDirs::locateLocal( "data",QLatin1String("korganizer/") ),
+    KFileDialog::getSaveUrl( QString(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/")) ,
                              i18n( "*.ics *.vcs|Calendar Files" ),
                              dialogParent() );
 
@@ -1201,14 +1205,14 @@ KUrl ActionManager::getSaveURL()
 
   url.setFileName( filename );
 
-  kDebug() << "url:" << url.url();
+  qDebug() << "url:" << url.url();
 
   return url;
 }
 
 void ActionManager::saveProperties( KConfigGroup &config )
 {
-  kDebug();
+  qDebug();
 
   config.writeEntry( "UseResourceCalendar", !mMainWindow->hasDocument() );
   if ( mMainWindow->hasDocument() ) {
@@ -1224,7 +1228,7 @@ void ActionManager::readProperties( const KConfigGroup & )
 // Configuration changed as a result of the options dialog.
 void ActionManager::updateConfig()
 {
-  kDebug();
+  qDebug();
   mNextXDays->setText( i18np( "&Next Day", "&Next %1 Days",
                               KOPrefs::instance()->mNextXDays ) );
 
@@ -1264,7 +1268,7 @@ void ActionManager::showTip()
 
 void ActionManager::showTipOnStart()
 {
-  KConfigGroup config( KGlobal::config(), "TipOfDay" );
+  KConfigGroup config( KSharedConfig::openConfig(), "TipOfDay" );
   KTipDialog::setShowOnStart( config.readEntry( "RunOnStart", false ) );
   KTipDialog::showTip( dialogParent() );
 }
@@ -1290,7 +1294,7 @@ bool ActionManager::openURL(const QString &url)
 
 void ActionManager::dumpText( const QString &str )
 {
-  kDebug() << str;
+  qDebug() << str;
 }
 
 void ActionManager::toggleDateNavigator()
@@ -1367,7 +1371,7 @@ bool ActionManager::handleCommandLine()
   bool ret = true;
 
   if ( !mainWindow ) {
-    kError() << "Unable to find default calendar resources view.";
+    qCritical() << "Unable to find default calendar resources view.";
     ret = false;
   } else if ( args->count() <= 0 ) {
     // No filenames given => all other args are meaningless, show main Window
@@ -1406,18 +1410,18 @@ bool ActionManager::addIncidence( const QString &ical )
 
 void ActionManager::downloadNewStuff()
 {
-  kDebug();
+  qDebug();
   KNS3::DownloadDialog dialog(mCalendarView);
   dialog.exec();
   foreach ( const KNS3::Entry &e, dialog.installedEntries() ) {
-    kDebug() << " downloadNewStuff :";
+    qDebug() << " downloadNewStuff :";
     const QStringList lstFile = e.installedFiles();
     if ( lstFile.count() != 1 ) {
       continue;
     }
     const QString file = lstFile.at( 0 );
     const KUrl filename( file );
-    kDebug() << "filename :" << filename;
+    qDebug() << "filename :" << filename;
     if( ! filename.isValid() ) {
       continue;
     }
@@ -1527,7 +1531,7 @@ class ActionManager::ActionStringsVisitor : public KCalCore::Visitor
 
 void ActionManager::processIncidenceSelection( const Akonadi::Item &item, const QDate &date )
 {
-  //kDebug(5850) << "ActionManager::processIncidenceSelection()";
+  //qDebug() << "ActionManager::processIncidenceSelection()";
   Q_UNUSED( date );
 
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
@@ -1637,12 +1641,12 @@ void ActionManager::openEventEditor( const QString &summary,
     action = IncidenceEditorNG::GlobalSettings::Link;
   } else if ( IncidenceEditorNG::GlobalSettings::self()->defaultEmailAttachMethod() ==
               IncidenceEditorNG::GlobalSettings::Ask ) {
-    KMenu *menu = new KMenu( 0 );
+    QMenu *menu = new QMenu( 0 );
     QAction *attachLink = menu->addAction( i18n( "Attach as &link" ) );
     QAction *attachInline = menu->addAction( i18n( "Attach &inline" ) );
     QAction *attachBody = menu->addAction( i18n( "Attach inline &without attachments" ) );
     menu->addSeparator();
-    menu->addAction( KIcon( QLatin1String("dialog-cancel") ), i18n( "C&ancel" ) );
+    menu->addAction( QIcon::fromTheme( QLatin1String("dialog-cancel") ), i18n( "C&ancel" ) );
 
     QAction *ret = menu->exec( QCursor::pos() );
     delete menu;
@@ -1659,7 +1663,7 @@ void ActionManager::openEventEditor( const QString &summary,
   }
 
   QString attData;
-  KTemporaryFile tf;
+  QTemporaryFile tf;
   tf.setAutoRemove( true );
   switch ( action ) {
   case IncidenceEditorNG::GlobalSettings::Link:
@@ -1742,11 +1746,11 @@ void ActionManager::openTodoEditor( const QString &summary,
   if ( attachmentMimetype != QLatin1String("message/rfc822") ) {
     action = KOPrefs::TodoAttachLink;
   } else if ( KOPrefs::instance()->defaultTodoAttachMethod() == KOPrefs::TodoAttachAsk ) {
-    KMenu *menu = new KMenu( 0 );
+    QMenu *menu = new QMenu( 0 );
     QAction *attachLink = menu->addAction( i18n( "Attach as &link" ) );
     QAction *attachInline = menu->addAction( i18n( "Attach &inline" ) );
     menu->addSeparator();
-    menu->addAction( KIcon( QLatin1String("dialog-cancel") ), i18n( "C&ancel" ) );
+    menu->addAction( QIcon::fromTheme( QLatin1String("dialog-cancel") ), i18n( "C&ancel" ) );
 
     QAction *ret = menu->exec( QCursor::pos() );
     delete menu;
@@ -1814,7 +1818,7 @@ void ActionManager::goDate( const QDate &date )
 
 void ActionManager::goDate( const QString &date )
 {
-  goDate( KGlobal::locale()->readDate( date ) );
+  goDate( KLocale::global()->readDate( date ) );
 }
 
 void ActionManager::showDate( const QDate &date )
@@ -1941,7 +1945,7 @@ void ActionManager::openTodoEditor( const QString &summary,
   Q_UNUSED( attendees );
   Q_UNUSED( attachmentMimetypes );
   Q_UNUSED( attachmentIsInline );
-  kWarning() << "Not implemented in korg-desktop";
+  qWarning() << "Not implemented in korg-desktop";
 }
 
 void ActionManager::openEventEditor( const QString &summary,
@@ -1957,7 +1961,7 @@ void ActionManager::openEventEditor( const QString &summary,
   Q_UNUSED( attendees );
   Q_UNUSED( attachmentMimetypes );
   Q_UNUSED( attachmentIsInline );
-  kWarning() << "Not implemented in korg-desktop";
+  qWarning() << "Not implemented in korg-desktop";
 }
 
 void ActionManager::handleExportJobResult( KJob *job )

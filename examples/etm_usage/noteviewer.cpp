@@ -28,10 +28,10 @@
 #include <QTextEdit>
 #include <QEvent>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/item.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemmodifyjob.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/itemcreatejob.h>
+#include <AkonadiCore/itemmodifyjob.h>
 
 #include <KMime/Message>
 
@@ -134,7 +134,7 @@ bool NoteViewer::eventFilter(QObject* watched, QEvent* event)
     item.setPayload( msg );
 
     ItemModifyJob *modifyJob = new ItemModifyJob(item, this);
-    connect(modifyJob, SIGNAL(result(KJob*)), SLOT(modifyDone(KJob*)) );
+    connect(modifyJob, &ItemModifyJob::result, this, &NoteViewer::modifyDone);
 
     m_contentEdit->document()->setModified( false );
     m_titleEdit->setModified( false );
@@ -146,7 +146,7 @@ void NoteViewer::modifyDone( KJob *job )
 {
   if ( job->error() )
   {
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
   }
 }
 

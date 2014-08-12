@@ -22,7 +22,7 @@
 #include "widgets/selectheadertypecombobox.h"
 #include "editor/sieveeditorutil.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 
 #include <QHBoxLayout>
@@ -71,10 +71,10 @@ QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("address:"));
     grid->addWidget(lab, 1, 0);
 
-    KLineEdit *edit = new KLineEdit;
+    QLineEdit *edit = new QLineEdit;
     connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
-    edit->setClearButtonShown(true);
-    edit->setClickMessage(i18n("Use ; to separate emails"));
+    edit->setClearButtonEnabled(true);
+    edit->setPlaceholderText(i18n("Use ; to separate emails"));
     grid->addWidget(edit, 1, 1);
     edit->setObjectName(QLatin1String("editaddress"));
     return w;
@@ -92,7 +92,7 @@ QString SieveConditionAddress::code(QWidget *w) const
     const SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
     const QString selectHeaderTypeStr = selectHeaderType->code();
 
-    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
+    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("editaddress") );
     const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed(), false);
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("address %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
@@ -126,7 +126,7 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
                     selectHeaderType->setCode(e.text());
                 } else if (indexStr == 1) {
-                    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
+                    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("editaddress") );
                     edit->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     tooManyArgument(tagName, indexStr, 2, error);
@@ -138,7 +138,7 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
                     selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
                 } else if (indexStr == 1) {
-                    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
+                    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("editaddress") );
                     edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 } else {
                     tooManyArgument(tagName, indexStr, 2, error);

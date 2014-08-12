@@ -27,14 +27,14 @@
 
 #include <kglobal.h>
 #include <ktexteditor/editor.h>
-#include <ktexteditor/editorchooser.h>
+//#include <ktexteditor/editorchooser.h>
 #include <ktexteditor/view.h>
 #include <ktexteditor/configpage.h>
 #include <ktexteditor/configinterface.h>
 #include <kaction.h>
 #include <klocalizedstring.h>
 
-
+#include <QDebug>
 #include <QMenu>
 
 class HtmlEditorPrivate
@@ -43,7 +43,7 @@ public:
     HtmlEditor instance;
 };
 
-K_GLOBAL_STATIC( HtmlEditorPrivate, instancePrivate )
+Q_GLOBAL_STATIC( HtmlEditorPrivate, instancePrivate )
 
 HtmlEditor* HtmlEditor::self()
 {
@@ -52,15 +52,14 @@ HtmlEditor* HtmlEditor::self()
 
 HtmlEditor::HtmlEditor() : QObject()
 {
-    mEditor = KTextEditor::EditorChooser::editor();
+    mEditor = KTextEditor::Editor::instance();
 }
 
 HtmlEditor::~HtmlEditor()
 {
-    kDebug();
+    qDebug();
     if ( !instancePrivate.isDestroyed() ) {
-        delete mEditor;
-        kDebug() << "editor deleted";
+        qDebug() << "editor deleted";
     }
 }
 
@@ -69,7 +68,7 @@ KTextEditor::View* HtmlEditor::createView( QWidget* parent )
     KTextEditor::Document *document = mEditor->createDocument( parent );
     bool result = document->setHighlightingMode( QLatin1String("html") );
     if ( result ) {
-        kDebug() << "Syntax highlighting enabled";
+        qDebug() << "Syntax highlighting enabled";
     }
     KTextEditor::View *view = document->createView( parent );
     QMenu *menu = view->defaultContextMenu();
@@ -77,11 +76,11 @@ KTextEditor::View* HtmlEditor::createView( QWidget* parent )
     KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface* >( view );
 
     if ( interface ) {
-        KAction *actWordWrap = new KAction( i18n( "Dynamic Word Wrap" ), view );
+        QAction *actWordWrap = new QAction( i18n( "Dynamic Word Wrap" ), view );
         actWordWrap->setCheckable( true );
         connect( actWordWrap, SIGNAL(triggered(bool)), this, SLOT(toggleWordWrap()) );
 
-        KAction *actLineNumber = new KAction( i18n("Show line numbers"), view );
+        QAction *actLineNumber = new QAction( i18n("Show line numbers"), view );
         actLineNumber->setCheckable( true );
         connect( actLineNumber, SIGNAL(triggered(bool)), this, SLOT(toggleLineNumber()) );
 

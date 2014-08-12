@@ -23,15 +23,16 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include <KTextEdit>
-#include <KPushButton>
+#include <QPushButton>
 #include <KLocalizedString>
 #include <kio/job.h>
-#include <KDebug>
 #include <KConfigGroup>
 #include <KSeparator>
 #include <KMessageBox>
 #include <KToggleAction>
-#include <kpimutils/progressindicatorwidget.h>
+#include <KPIMUtils/kpimutils/progressindicatorwidget.h>
+#include <QIcon>
+#include <QMimeData> 
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -41,6 +42,7 @@
 #include <QShortcut>
 #include <QPainter>
 #include <QSplitter>
+#include <KSharedConfig>
 
 using namespace PimCommon;
 
@@ -71,10 +73,10 @@ public:
     TranslatorResultTextEdit *translatorResultTextEdit;
     MinimumComboBox *from;
     MinimumComboBox *to;
-    KPushButton *translate;
+    QPushButton *translate;
     PimCommon::AbstractTranslator *abstractTranslator;
     KPIMUtils::ProgressIndicatorWidget *progressIndictor;
-    KPushButton *invert;
+    QPushButton *invert;
     QSplitter *splitter;
     KToggleAction *action;
     bool languageSettingsChanged;
@@ -180,7 +182,7 @@ TranslatorWidget::~TranslatorWidget()
 
 void TranslatorWidget::writeConfig()
 {
-    KConfigGroup myGroup( KGlobal::config(), "TranslatorWidget" );
+    KConfigGroup myGroup( KSharedConfig::openConfig(), "TranslatorWidget" );
     if (d->languageSettingsChanged) {
         myGroup.writeEntry( QLatin1String( "FromLanguage" ), d->from->itemData(d->from->currentIndex()).toString() );
         myGroup.writeEntry( "ToLanguage", d->to->itemData(d->to->currentIndex()).toString() );
@@ -191,7 +193,7 @@ void TranslatorWidget::writeConfig()
 
 void TranslatorWidget::readConfig()
 {
-    KConfigGroup myGroup( KGlobal::config(), "TranslatorWidget" );
+    KConfigGroup myGroup( KSharedConfig::openConfig(), "TranslatorWidget" );
     const QString from = myGroup.readEntry( QLatin1String( "FromLanguage" ) );
     const QString to = myGroup.readEntry( QLatin1String( "ToLanguage" ) );
     if ( from.isEmpty() )
@@ -220,7 +222,7 @@ void TranslatorWidget::init()
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     QToolButton * closeBtn = new QToolButton( this );
     closeBtn->setObjectName(QLatin1String("close-button"));
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 
@@ -249,13 +251,13 @@ void TranslatorWidget::init()
     separator->setOrientation(Qt::Vertical);
     hboxLayout->addWidget( separator );
 
-    d->invert = new KPushButton(
+    d->invert = new QPushButton(
                 i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"),this);
     d->invert->setObjectName(QLatin1String("invert-button"));
     connect(d->invert, SIGNAL(clicked()), this, SLOT(slotInvertLanguage()));
     hboxLayout->addWidget(d->invert);
 
-    KPushButton *clear = new KPushButton(i18n("Clear"),this);
+    QPushButton *clear = new QPushButton(i18n("Clear"),this);
     clear->setObjectName(QLatin1String("clear-button"));
 #ifndef QT_NO_ACCESSIBILITY
     clear->setAccessibleName( i18n("Clear") );
@@ -263,7 +265,7 @@ void TranslatorWidget::init()
     connect(clear, SIGNAL(clicked()), this, SLOT(slotClear()));
     hboxLayout->addWidget(clear);
 
-    d->translate = new KPushButton( i18n( "Translate" ) );
+    d->translate = new QPushButton( i18n( "Translate" ) );
     d->translate->setObjectName(QLatin1String("translate-button"));
 #ifndef QT_NO_ACCESSIBILITY
     d->translate->setAccessibleName( i18n("Translate") );
@@ -292,7 +294,7 @@ void TranslatorWidget::init()
     d->inputText->setObjectName(QLatin1String("inputtext"));
     d->inputText->enableFindReplace(false);
     d->inputText->setAcceptRichText(false);
-    d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
+    d->inputText->setPlaceholderText(i18n("Drag text that you want to translate."));
     connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
     connect( d->inputText, SIGNAL(translateText()), SLOT(slotTranslate()));
 

@@ -32,12 +32,13 @@
 
 #include <mailcommon/kernel/mailkernel.h>
 #include <messageviewer/utils/autoqpointer.h>
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 
 #include <KDebug>
 #include <KMessageBox>
 #include <QMenu>
+#include <KLocalizedString>
 
 using namespace KMail;
 
@@ -46,8 +47,8 @@ QString IdentityPage::helpAnchor() const
     return QString::fromLatin1( "configure-identity" );
 }
 
-IdentityPage::IdentityPage( const KComponentData &instance, QWidget *parent )
-    : ConfigModule( instance, parent ),
+IdentityPage::IdentityPage( QWidget *parent )
+    : ConfigModule( parent ),
       mIdentityDialog( 0 ),
       mOldNumberOfIdentities( 0 ),
       mIdentityManager( 0 )

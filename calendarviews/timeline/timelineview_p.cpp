@@ -34,9 +34,9 @@
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <KCalCore/OccurrenceIterator>
 
+#include <QDebug>
+
 #include <QStandardItemModel>
-#include <QResizeEvent>
-#include <QSplitter>
 #include <QTreeWidget>
 
 using namespace KCalCore;
@@ -117,10 +117,10 @@ TimelineItem *TimelineView::Private::calendarItemForIncidence( const Akonadi::It
 void TimelineView::Private::insertIncidence( const Akonadi::Item &aitem, const QDate &day )
 {
   const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  //kDebug() << "Item " << aitem.id() << " parentcollection: " << aitem.parentCollection().id();
+  //qDebug() << "Item " << aitem.id() << " parentcollection: " << aitem.parentCollection().id();
   TimelineItem *item = calendarItemForIncidence( aitem );
   if ( !item ) {
-    kWarning() << "Help! Something is really wrong here!";
+    qWarning() << "Help! Something is really wrong here!";
     return;
   }
 

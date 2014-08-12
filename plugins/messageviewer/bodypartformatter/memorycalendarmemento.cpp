@@ -22,6 +22,7 @@
 #include <Akonadi/Calendar/FetchJobCalendar>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <KSystemTimeZones>
+#include <QDebug>
 
 using namespace MessageViewer;
 using namespace Akonadi;
@@ -45,9 +46,9 @@ MemoryCalendarMemento::MemoryCalendarMemento()
 
 void MemoryCalendarMemento::slotCalendarLoaded( bool success, const QString &errorMessage )
 {
-  kDebug();
+  qDebug();
   if ( !success ) {
-    kWarning() << "Unable to fetch incidences:" << errorMessage;
+    qWarning() << "Unable to fetch incidences:" << errorMessage;
   }
 
   finalize();

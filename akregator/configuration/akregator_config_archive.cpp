@@ -25,11 +25,8 @@
 #include "akregatorconfig.h"
 #include "ui_settings_archive.h"
 #include <KAboutData>
-#include <KConfigDialogManager>
-#include <KDebug>
 #include <KGenericFactory>
 #include <KLocalizedString>
-#include <kdemacros.h>
 
 #include <QButtonGroup>
 #include <QVBoxLayout>
@@ -37,10 +34,9 @@
 using namespace Akregator;
 
 K_PLUGIN_FACTORY(KCMAkregatorArchiveConfigFactory, registerPlugin<KCMAkregatorArchiveConfig>();)
-K_EXPORT_PLUGIN(KCMAkregatorArchiveConfigFactory( "kcmakrarchiveconfig" ))
 
 KCMAkregatorArchiveConfig::KCMAkregatorArchiveConfig( QWidget* parent, const QVariantList& args )
-    : KCModule( KCMAkregatorArchiveConfigFactory::componentData(), parent, args ), m_widget( new QWidget )
+    : KCModule( parent, args ), m_widget( new QWidget )
 {
     Ui::SettingsArchive m_ui;
     m_ui.setupUi( m_widget );
@@ -60,13 +56,14 @@ KCMAkregatorArchiveConfig::KCMAkregatorArchiveConfig( QWidget* parent, const QVa
     m_archiveModeGroup->addButton( m_ui.rb_LimitArticleAge, Settings::EnumArchiveMode::limitArticleAge );
     m_archiveModeGroup->addButton( m_ui.rb_DisableArchiving, Settings::EnumArchiveMode::disableArchiving );
     connect( m_archiveModeGroup, SIGNAL(buttonClicked(int)), this, SLOT(changed()) );
-    KAboutData *about = new KAboutData( I18N_NOOP( "kcmakrarchiveconfig" ), 0,
-                                        ki18n( "Configure Feed Reader Archive" ),
-                                        0, KLocalizedString(), KAboutData::License_GPL,
-                                        ki18n( "(c), 2004 - 2008 Frank Osterfeld" ) );
 
-    about->addAuthor( ki18n( "Frank Osterfeld" ), KLocalizedString(), "osterfeld@kde.org" );
-    setAboutData( about );
+    KAboutData *about = new KAboutData( QLatin1String( "kcmakrarchiveconfig" ),
+                                        i18n( "Configure Feed Reader Archive" ),
+                                        QString(), QString(), KAboutLicense::GPL,
+                                        i18n( "(c), 2004 - 2008 Frank Osterfeld" ) );
+
+    about->addAuthor( i18n( "Frank Osterfeld" ), QString(), QStringLiteral("osterfeld@kde.org") );
+    setAboutData(about);
 
     addConfig( Settings::self(), m_widget );
 }
@@ -99,4 +96,4 @@ int KCMAkregatorArchiveConfig::archiveMode() const {
         return Settings::EnumArchiveMode::keepAllArticles;
     return id;
 }
-
+#include "akregator_config_archive.moc"

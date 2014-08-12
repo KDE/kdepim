@@ -20,16 +20,13 @@
 #include "guistatemanager.h"
 #include "stylesheetloader.h"
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancemodel.h>
-#include <akonadi/etmviewstatesaver.h>
+#include <AkonadiCore/agentinstance.h>
+#include <AkonadiCore/agentinstancemodel.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
 
-#include <KDE/KCmdLineArgs>
-#include <KDE/KConfigGroup>
-#include <KDE/KGlobal>
-#include <KDE/KLineEdit>
-#include <KDE/KSharedConfig>
-#include <KDE/KProcess>
+#include <KConfigGroup>
+#include <KLineEdit>
+#include <KSharedConfig>
 
 #include <QtDBus/QDBusInterface>
 #include <qplatformdefs.h>
@@ -57,7 +54,7 @@ void KDeclarativeMainViewPrivate::restoreState()
 {
   Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
   saver->setSelectionModel( mBnf->selectionModel() );
-  KConfigGroup cfg( KGlobal::config(), "SelectionState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "SelectionState" );
   saver->restoreState( cfg );
 }
 
@@ -66,7 +63,7 @@ void KDeclarativeMainViewPrivate::saveState()
   Akonadi::ETMViewStateSaver saver;
   saver.setSelectionModel( mBnf->selectionModel() );
 
-  KConfigGroup cfg( KGlobal::config(), "SelectionState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "SelectionState" );
   saver.saveState( cfg );
   cfg.sync();
 }

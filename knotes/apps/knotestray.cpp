@@ -24,6 +24,7 @@
 
 #include <QPainter>
 #include <QWidget>
+#include <QFontDatabase>
 
 KNotesTray::KNotesTray(QWidget *parent)
     : KStatusNotifierItem(parent)
@@ -33,7 +34,7 @@ KNotesTray::KNotesTray(QWidget *parent)
     setStatus( KStatusNotifierItem::Active );
     setCategory( KStatusNotifierItem::ApplicationStatus );
     setStandardActionsEnabled(false);
-    mIcon = KIcon( QLatin1String("knotes") );
+    mIcon = QIcon::fromTheme( QLatin1String("knotes") );
 }
 
 KNotesTray::~KNotesTray()
@@ -45,7 +46,7 @@ void KNotesTray::updateNumberOfNotes(int value)
     const int overlaySize = KIconLoader::SizeSmallMedium;
 
     const QString countString = QString::number( value );
-    QFont countFont = KGlobalSettings::generalFont();
+    QFont countFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     countFont.setBold(true);
 
     // decrease the size of the font for the number of unread messages if the

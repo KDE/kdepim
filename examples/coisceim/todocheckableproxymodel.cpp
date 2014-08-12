@@ -21,7 +21,7 @@
 
 #include "todocheckableproxymodel.h"
 
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/EntityTreeModel>
 
 #include <KCalCore/Todo>
 

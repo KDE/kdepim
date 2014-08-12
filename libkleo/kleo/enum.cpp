@@ -31,8 +31,7 @@
 */
 
 #include "enum.h"
-
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QString>
 #include <QStringList>
@@ -149,7 +148,7 @@ QString Kleo::encryptionPreferenceToLabel( EncryptionPreference pref )
   case AskWheneverPossible:
     return i18n( "Ask Whenever Possible" );
   default:
-    return i18nc( "no specific preference", "<placeholder>none</placeholder>" );
+    return xi18nc( "no specific preference", "<placeholder>none</placeholder>" );
   }
 }
 

@@ -19,18 +19,15 @@
 
 #include "localresourcecreator.h"
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include "maildirsettings.h"
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
+//QT5 #include "maildirsettings.h"
 
 #include "akonadi_next/note.h"
 
-#include <KDebug>
-#include <KGlobal>
+#include <QDebug>
 #include <KLocalizedString>
-#include <KRandom>
-#include <KStandardDirs>
-#include <akonadi/resourcesynchronizationjob.h>
+#include <AkonadiCore/resourcesynchronizationjob.h>
 
 using namespace NoteShared;
 
@@ -76,7 +73,7 @@ void LocalResourceCreator::createInstance()
 void LocalResourceCreator::slotInstanceCreated( KJob *job )
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         deleteLater();
         return;
     }
@@ -85,20 +82,20 @@ void LocalResourceCreator::slotInstanceCreated( KJob *job )
     Akonadi::AgentInstance instance = createJob->instance();
 
     instance.setName( i18nc( "Default name for resource holding notes", "Local Notes" ) );
-
+#if 0 //QT5
     OrgKdeAkonadiMaildirSettingsInterface *iface = new OrgKdeAkonadiMaildirSettingsInterface(
                 QLatin1String("org.freedesktop.Akonadi.Resource.") + instance.identifier(),
                 QLatin1String("/Settings"), QDBusConnection::sessionBus(), this );
 
     // TODO: Make errors user-visible.
     if (!iface->isValid() ) {
-        kWarning() << "Failed to obtain D-Bus interface for remote configuration.";
+        qWarning() << "Failed to obtain D-Bus interface for remote configuration.";
         delete iface;
         deleteLater();
         return;
     }
     delete iface;
-
+#endif
     instance.reconfigure();
 
     Akonadi::ResourceSynchronizationJob *syncJob = new Akonadi::ResourceSynchronizationJob(instance, this);
@@ -109,12 +106,12 @@ void LocalResourceCreator::slotInstanceCreated( KJob *job )
 void LocalResourceCreator::slotSyncDone(KJob* job)
 {
     if ( job->error() ) {
-        kWarning() << "Synchronizing the resource failed:" << job->errorString();
+        qWarning() << "Synchronizing the resource failed:" << job->errorString();
         deleteLater();
         return;
     }
 
-    kWarning() << "Instance synchronized";
+    qWarning() << "Instance synchronized";
 
 }
 

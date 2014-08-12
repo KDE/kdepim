@@ -20,8 +20,8 @@
 #ifndef MAILCOMMON_FOLDERTREEWIDGETPROXYMODEL_H
 #define MAILCOMMON_FOLDERTREEWIDGETPROXYMODEL_H
 
-#include <Akonadi/Collection>
-#include <Akonadi/EntityRightsFilterModel>
+#include <Collection>
+#include <EntityRightsFilterModel>
 
 namespace MailCommon {
 

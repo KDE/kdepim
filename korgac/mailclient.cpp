@@ -27,7 +27,7 @@
 #include "mailclient.h"
 #include "kdepim-version.h"
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 #include <KCalCore/Attendee>
 #include <KCalCore/Incidence>
@@ -41,11 +41,11 @@
 
 #include <KPIMUtils/Email>
 
-#include <Mailtransport/MessageQueueJob>
-#include <Mailtransport/Transport>
-#include <Mailtransport/TransportManager>
+#include <MailTransport/MessageQueueJob>
+#include <MailTransport/Transport>
+#include <MailTransport/TransportManager>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KProtocolManager>
 #include <KSystemTimeZone>
@@ -67,7 +67,7 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
 {
   KCalCore::Attendee::List attendees = incidence->attendees();
   if ( attendees.isEmpty() ) {
-    kWarning() << "There are no attendees to e-mail";
+    qWarning() << "There are no attendees to e-mail";
     return false;
   }
 
@@ -110,7 +110,7 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
   }
   if( toList.isEmpty() && ccList.isEmpty() ) {
     // Not really to be called a groupware meeting, eh
-    kWarning() << "There are really no attendees to e-mail";
+    qWarning() << "There are really no attendees to e-mail";
     return false;
   }
   QString to;
@@ -213,7 +213,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   if ( to.isEmpty() ) {
     to = from;
   }
-  kDebug() << "\nFrom:" << from
+  qDebug() << "\nFrom:" << from
            << "\nTo:" << to
            << "\nCC:" << cc
            << "\nSubject:" << subject << "\nBody: \n" << body
@@ -235,7 +235,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   if ( !transport ) {
     // TODO: we need better error handling. Currently korganizer says "Error sending invitation".
     // Using a boolean for errors isn't granular enough.
-    kError() << "Error fetching transport; mailTransport"
+    qCritical() << "Error fetching transport; mailTransport"
              << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
     return false;
   }
@@ -270,7 +270,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   if( bccMe ) {
     message->bcc()->fromUnicodeString( from, "utf-8" ); //from==me, right?
   }
-  message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+  message->date()->setDateTime( QDateTime::currentDateTime() );
   message->subject()->fromUnicodeString( subject, "utf-8" );
 
   if ( outlookConformInvitation ) {
@@ -367,11 +367,11 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   }
   qjob->setMessage( message );
   if ( !qjob->exec() ) {
-    kWarning() << "Error queuing message in outbox:" << qjob->errorText();
+    qWarning() << "Error queuing message in outbox:" << qjob->errorText();
     return false;
   }
 
   // Everything done successful now.
-  kDebug() << "Send mail finished. Time elapsed in ms:" << timer.elapsed();
+  qDebug() << "Send mail finished. Time elapsed in ms:" << timer.elapsed();
   return true;
 }

@@ -18,11 +18,12 @@
 #include "scamdetection_gui.h"
 #include "scamdetection/scamdetectionwarningwidget.h"
 #include "scamdetection/scamdetection.h"
-#include <kdebug.h>
-#include <kapplication.h>
+#include <qdebug.h>
+
 #include <KFileDialog>
-#include <KCmdLineArgs>
+
 #include <KLocalizedString>
+#include <KUrl>
 
 #include <QDebug>
 #include <QPointer>
@@ -30,6 +31,11 @@
 #include <QWebView>
 #include <QWebPage>
 #include <QPushButton>
+#include <QFileDialog>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidget *parent)
     : QWidget(parent)
@@ -73,7 +79,7 @@ void ScamDetectionTestWidget::slotLoadFinished()
 
 void ScamDetectionTestWidget::slotOpenHtml()
 {
-    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.html"));
+    const QString fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.html"));
     if (!fileName.isEmpty()) {
         mScamWarningWidget->setVisible(false);
         mWebView->load(QUrl(fileName));
@@ -82,23 +88,24 @@ void ScamDetectionTestWidget::slotOpenHtml()
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "scamdetection_gui", 0, ki18n("ScamDetectionTest_Gui"),
-                       "1.0", ki18n("Test for scamdetection widget"));
+    KAboutData aboutData( QLatin1String("scamdetection_gui"), i18n("ScamDetectionTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for scamdetection widget"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("+[url]"), i18n("URL of an html file to be opened")));
 
-    KCmdLineOptions option;
-    option.add("+[url]", ki18n("URL of an html file to be opened"));
-    KCmdLineArgs::addCmdLineOptions(option);
-
-
-    KApplication app;
-
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     QString fileName;
-    if (args->count()) {
-        fileName = args->url(0).path();
+    if (parser.positionalArguments().count()) {
+        fileName = parser.positionalArguments().at(0);
     } else {
-        fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.html"));
+        fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.html"));
     }
     if (fileName.isEmpty()) {
         return 0;

@@ -37,7 +37,7 @@
 #include <klocale.h>
 #include <kprocess.h>
 #include <kmessagebox.h>
-#include <kpushbutton.h>
+#include <QPushButton>
 #include <KStandardGuiItem>
 #include <kglobalsettings.h>
 
@@ -48,6 +48,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QCloseEvent>
+#include <QFontDatabase>
+#include <KGuiItem>
 
 CRLView::CRLView( QWidget* parent )
   : QDialog( parent ), _process(0)
@@ -59,15 +61,16 @@ CRLView::CRLView( QWidget* parent )
   topLayout->addWidget( new QLabel( i18n("CRL cache dump:"), this ) );
 
   _textView = new QTextEdit( this );
-  _textView->setFont( KGlobalSettings::fixedFont() );
+  _textView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
   _textView->setReadOnly(true);
   topLayout->addWidget( _textView );
 
   QHBoxLayout* hbLayout = new QHBoxLayout();
   topLayout->addItem( hbLayout );
 
-  _updateButton = new KPushButton( i18n("&Update"), this );
-  _closeButton = new KPushButton( KStandardGuiItem::close(), this );
+  _updateButton = new QPushButton( i18n("&Update"), this );
+  _closeButton = new QPushButton(this );
+  KGuiItem::assign(_closeButton, KStandardGuiItem::close());
 
   hbLayout->addWidget( _updateButton );
   hbLayout->addStretch();

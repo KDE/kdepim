@@ -27,16 +27,14 @@
 #include <grantlee/engine.h>
 #include <grantlee/templateloader.h>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
 #include <KColorScheme>
-#include <KGlobal>
-#include <KLocale>
-#include <KStringHandler>
+
 
 using namespace KAddressBookGrantlee;
 
@@ -121,7 +119,7 @@ static QVariantHash memberHash( const KABC::ContactGroup::Data &data )
     contact.insertEmail( data.email() );
 
     const QString emailLink = QLatin1String( "<a href=\"mailto:" ) +
-            QString::fromLatin1( KUrl::toPercentEncoding( contact.fullEmail() ) ) +
+            QString::fromLatin1( QUrl::toPercentEncoding( contact.fullEmail() ) ) +
             QString::fromLatin1( "\">%1</a>" ).arg( contact.preferredEmail() );
 
     setHashField( memberObject, QLatin1String( "emailLink" ), emailLink );

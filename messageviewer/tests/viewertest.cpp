@@ -16,12 +16,12 @@
 */
 
 #include "viewertest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include "messageviewer/viewer/viewer.h"
 #include <qtestmouse.h>
 #include <KActionCollection>
-#include <KAction>
 #include <KToggleAction>
+#include <KUrl>
 
 ViewerTest::ViewerTest()
 {
@@ -101,4 +101,4 @@ void ViewerTest::shouldShowCreateEventWidgetWhenActivateItAndWeHaveAMessage()
     QCOMPARE(createeventwidget->isVisible(), true);
 }
 
-QTEST_KDEMAIN( ViewerTest, GUI )
+QTEST_MAIN( ViewerTest )

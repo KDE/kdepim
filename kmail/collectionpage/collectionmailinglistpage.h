@@ -24,8 +24,8 @@
 #include "messagecore/misc/mailinglist.h"
 #include "foldercollection.h"
 
-#include <akonadi/collectionpropertiespage.h>
-#include <akonadi/collection.h>
+#include <AkonadiWidgets/collectionpropertiespage.h>
+#include <AkonadiCore/collection.h>
 
 
 class QCheckBox;

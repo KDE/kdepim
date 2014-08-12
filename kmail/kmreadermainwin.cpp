@@ -26,7 +26,6 @@
 #include "kmreadermainwin.h"
 #include "kmreaderwin.h"
 
-#include <kicon.h>
 #include <kactionmenu.h>
 #include <kedittoolbar.h>
 #include <klocale.h>
@@ -37,15 +36,15 @@
 #include <kstandardaction.h>
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KFontAction>
 #include <KFontSizeAction>
 #include <kstatusbar.h>
 #include <KMessageBox>
 #include <KAcceleratorManager>
 #include "kmcommands.h"
-#include "kmenubar.h"
-#include "kmenu.h"
+#include <QMenuBar>
+#include <qmenu.h>
 #include "kmmainwidget.h"
 #include "messageviewer/viewer/csshelper.h"
 #include "customtemplatesmenu.h"
@@ -55,13 +54,14 @@
 #include "foldercollection.h"
 
 #include <KActionCollection>
-#include <akonadi/contact/contactsearchjob.h>
-#include <kpimutils/email.h>
+#include <Akonadi/Contact/ContactSearchJob>
+#include <KPIMUtils/kpimutils/email.h>
 #include <kmime/kmime_message.h>
 
-#include <akonadi/item.h>
-#include <akonadi/itemcopyjob.h>
-#include <akonadi/itemcreatejob.h>
+#include <messageviewer/viewer/viewer.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/itemcopyjob.h>
+#include <AkonadiCore/itemcreatejob.h>
 
 #include "messagecore/helpers/messagehelpers.h"
 #include <util/mailutil.h>
@@ -122,7 +122,8 @@ void KMReaderMainWin::initKMReaderMainWin()
 //-----------------------------------------------------------------------------
 KMReaderMainWin::~KMReaderMainWin()
 {
-    saveMainWindowSettings( KMKernel::self()->config()->group( "Separate Reader Window" ) );
+    KConfigGroup grp( KMKernel::self()->config()->group( "Separate Reader Window" ) );
+    saveMainWindowSettings( grp );
 }
 
 //-----------------------------------------------------------------------------
@@ -313,9 +314,10 @@ void KMReaderMainWin::slotConfigChanged()
 
 void KMReaderMainWin::setupAccel()
 {
+#if 0 //QT5
     if ( kmkernel->xmlGuiInstance().isValid() )
         setComponentData( kmkernel->xmlGuiInstance() );
-
+#endif
     mMsgActions = new KMail::MessageActions( actionCollection(), this );
     mMsgActions->setMessageView( mReaderWin );
     connect( mMsgActions, SIGNAL(replyActionFinished()),
@@ -323,20 +325,19 @@ void KMReaderMainWin::setupAccel()
 
     //----- File Menu
 
-    mSaveAtmAction  = new KAction(KIcon(QLatin1String("mail-attachment")), i18n("Save A&ttachments..."), actionCollection() );
+    mSaveAtmAction  = new QAction(QIcon::fromTheme(QLatin1String("mail-attachment")), i18n("Save A&ttachments..."), actionCollection() );
     connect( mSaveAtmAction, SIGNAL(triggered(bool)), mReaderWin->viewer(), SLOT(slotAttachmentSaveAll()) );
 
-    mTrashAction = new KAction( KIcon( QLatin1String("user-trash") ), i18n("&Move to Trash"), this );
+    mTrashAction = new QAction( QIcon::fromTheme( QLatin1String("user-trash") ), i18n("&Move to Trash"), this );
     mTrashAction->setIconText( i18nc( "@action:intoolbar Move to Trash", "Trash" ) );
-    mTrashAction->setHelpText( i18n( "Move message to trashcan" ) );
+    KMail::Util::addQActionHelpText(mTrashAction, i18n( "Move message to trashcan" ));
     mTrashAction->setShortcut( QKeySequence( Qt::Key_Delete ) );
     actionCollection()->addAction( QLatin1String("move_to_trash"), mTrashAction );
     connect( mTrashAction, SIGNAL(triggered()), this, SLOT(slotTrashMsg()) );
 
-    KAction *closeAction = KStandardAction::close( this, SLOT(close()), actionCollection() );
-    KShortcut closeShortcut = KShortcut(closeAction->shortcuts());
-    closeShortcut.setAlternate( QKeySequence(Qt::Key_Escape));
-    closeAction->setShortcuts(closeShortcut);
+    QAction *closeAction = KStandardAction::close( this, SLOT(close()), actionCollection() );
+    QList<QKeySequence> closeShortcut = closeAction->shortcuts();
+    closeAction->setShortcuts( closeShortcut << QKeySequence(Qt::Key_Escape));
 
     //----- Message Menu
 
@@ -364,13 +365,13 @@ void KMReaderMainWin::setupAccel()
 }
 
 //-----------------------------------------------------------------------------
-KAction *KMReaderMainWin::copyActionMenu(QMenu *menu)
+QAction *KMReaderMainWin::copyActionMenu(QMenu *menu)
 {
     KMMainWidget* mainwin = kmkernel->getKMMainWidget();
     if ( mainwin )
     {
         KActionMenu *action = new KActionMenu( menu );
-        action->setIcon( KIcon( QLatin1String("edit-copy")) );
+        action->setIcon( QIcon::fromTheme( QLatin1String("edit-copy")) );
         action->setText( i18n("Copy Item To...") );
         mainwin->standardMailActionManager()->standardActionManager()->createActionFolderMenu( action->menu(), Akonadi::StandardActionManager::CopyItemToMenu );
         connect( action->menu(), SIGNAL(triggered(QAction*)), SLOT(slotCopyItem(QAction*)) );
@@ -449,7 +450,7 @@ void KMReaderMainWin::slotContactSearchJobForMessagePopupDone( KJob *job )
 
 void KMReaderMainWin::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,const KUrl &imageUrl,const QPoint& aPoint, bool contactAlreadyExists, bool uniqueContactFound)
 {
-    KMenu *menu = 0;
+    QMenu *menu = 0;
 
     bool urlMenuAdded = false;
     bool copyAdded = false;
@@ -457,7 +458,7 @@ void KMReaderMainWin::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,c
     if ( !url.isEmpty() ) {
         if ( url.protocol() == QLatin1String( "mailto" ) ) {
             // popup on a mailto URL
-            menu = new KMenu;
+            menu = new QMenu;
             menu->addAction( mReaderWin->mailToComposeAction() );
             if ( messageHasPayload ) {
                 menu->addAction( mReaderWin->mailToReplyAction() );
@@ -484,7 +485,7 @@ void KMReaderMainWin::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,c
         } else if( url.protocol() != QLatin1String( "attachment" ) ){
             // popup on a not-mailto URL
             if(!menu)
-                menu = new KMenu;
+                menu = new QMenu;
             menu->addAction( mReaderWin->urlOpenAction() );
             menu->addAction( mReaderWin->addBookmarksAction() );
             menu->addAction( mReaderWin->urlSaveAsAction() );
@@ -509,7 +510,7 @@ void KMReaderMainWin::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,c
     const QString selectedText(mReaderWin->copyText());
     if ( !selectedText.isEmpty() ) {
         if(!menu)
-            menu = new KMenu;
+            menu = new QMenu;
         if ( urlMenuAdded ) {
             menu->addSeparator();
         }
@@ -528,7 +529,7 @@ void KMReaderMainWin::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,c
         menu->addAction( mReaderWin->speakTextAction());
     } else if ( !urlMenuAdded ) {
         if(!menu)
-            menu = new KMenu;
+            menu = new QMenu;
 
         // popup somewhere else (i.e., not a URL) on the message
         if (messageHasPayload) {
@@ -617,7 +618,8 @@ void KMReaderMainWin::slotSizeAction( int size )
 
 void KMReaderMainWin::slotEditToolbars()
 {
-    saveMainWindowSettings( KConfigGroup(KMKernel::self()->config(), "ReaderWindow") );
+    KConfigGroup grp(KMKernel::self()->config(), "ReaderWindow");
+    saveMainWindowSettings( grp);
     KEditToolBar dlg( guiFactory(), this );
     connect( &dlg, SIGNAL(newToolBarConfig()), SLOT(slotUpdateToolbars()) );
     dlg.exec();

@@ -21,22 +21,25 @@
 #include "ui_sendlaterwidget.h"
 
 #include <KLocale>
-#include <KPushButton>
 #include <KSeparator>
+#include <QIcon>
 
 #include <QVBoxLayout>
 #include <QCheckBox>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 using namespace SendLater;
 
 SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mAction(Unknown),
       mDelay(0),
       mInfo(info)
 {
-    setCaption( i18nc("@title:window", "Send Later") );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setWindowTitle( i18nc("@title:window", "Send Later") );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
 
     QWidget *sendLaterWidget = new QWidget;
     mSendLaterWidget = new Ui::SendLaterWidget;
@@ -46,18 +49,27 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
 
-    setButtons( Ok|Cancel );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SendLaterDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SendLaterDialog::reject);
 
     if (!info) {
-        setButtonText( Ok, i18n("Send Later"));
+        okButton->setText(i18n("SendLater"));
         mDelay = new QCheckBox(i18n("Delay"));
         mDelay->setChecked(false);
         slotDelay(false);
-        connect(mDelay, SIGNAL(clicked(bool)), this, SLOT(slotDelay(bool)));
+        connect(mDelay, &QCheckBox::clicked, this, &SendLaterDialog::slotDelay);
         lay->addWidget(mDelay);
     }
 
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    connect(okButton, &QPushButton::clicked, this, &SendLaterDialog::slotOkClicked);
 
     lay->addWidget(sendLaterWidget);
 
@@ -65,7 +77,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     t = t.addSecs(60*60);
 
     mSendLaterWidget->mDateTime->setDateTime(t);
-    connect(mSendLaterWidget->mRecurrence, SIGNAL(clicked(bool)), this, SLOT(slotRecurrenceClicked(bool)));
+    connect(mSendLaterWidget->mRecurrence, &QCheckBox::clicked, this, &SendLaterDialog::slotRecurrenceClicked);
     QStringList unitsList;
     unitsList<<i18n("Days");
     unitsList<<i18n("Weeks");
@@ -75,7 +87,8 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 
     lay->addWidget(new KSeparator);
 
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     slotRecurrenceClicked(false);
     if (info)
         load(info);

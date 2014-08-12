@@ -23,17 +23,16 @@
 
 #include "pimcommon/util/pimutil.h"
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/KMime/SpecialMailCollections>
+#include <AgentInstance>
+#include <AgentManager>
+#include <entitymimetypefiltermodel.h>
 #include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
 #include <Akonadi/KMime/SpecialMailCollectionsDiscoveryJob>
 
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KMessageBox>
 
@@ -48,13 +47,13 @@ public:
 
     ~KernelPrivate()
     {
-        kDebug();
+        qDebug();
         delete kernel;
     }
     Kernel *kernel;
 };
 
-K_GLOBAL_STATIC( KernelPrivate, sInstance )
+Q_GLOBAL_STATIC( KernelPrivate, sInstance )
 
 Kernel::Kernel( QObject *parent ) : QObject( parent )
 {
@@ -65,7 +64,7 @@ Kernel::Kernel( QObject *parent ) : QObject( parent )
 
 Kernel::~Kernel()
 {
-    kDebug();
+    qDebug();
 }
 
 Kernel *Kernel::self()
@@ -142,7 +141,7 @@ bool Kernel::isMainFolderCollection( const Akonadi::Collection &col )
 //-----------------------------------------------------------------------------
 void Kernel::initFolders()
 {
-    kDebug() << "Initialized and looking for specialcollection folders.";
+    qDebug() << "Initialized and looking for specialcollection folders.";
     findCreateDefaultCollection( Akonadi::SpecialMailCollections::Inbox );
     findCreateDefaultCollection( Akonadi::SpecialMailCollections::Outbox );
     findCreateDefaultCollection( Akonadi::SpecialMailCollections::SentMail );
@@ -218,7 +217,7 @@ void Kernel::emergencyExit( const QString &reason )
                      "The error was:\n%1", reason );
     }
 
-    kWarning() << mesg;
+    qWarning() << mesg;
 
     // Show error box for the first error that caused emergencyExit.
     static bool s_showingErrorBox = false;
@@ -267,7 +266,6 @@ bool Kernel::folderIsTemplates( const Akonadi::Collection &col )
     if ( col == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates ) ) {
         return true;
     }
-
     const QString idString = QString::number( col.id() );
     if ( idString.isEmpty() ) {
         return false;
@@ -315,7 +313,6 @@ bool Kernel::folderIsSentMailFolder( const Akonadi::Collection &col )
     if ( col == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::SentMail ) ) {
         return true;
     }
-
     const QString idString = QString::number( col.id() );
     if ( idString.isEmpty() ) {
         return false;

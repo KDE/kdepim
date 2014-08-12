@@ -23,12 +23,14 @@
 
 #include "settings/globalsettings.h"
 
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/kmime/messageflags.h>
+#include <AkonadiCore/itemmodifyjob.h>
+#include <Akonadi/KMime/MessageFlags>
+
+#include <KGlobal>
 
 #include <QtCore/QTimer>
 using namespace MessageViewer;
-K_GLOBAL_STATIC( Akonadi::Item::List, sListItem )
+Q_GLOBAL_STATIC( Akonadi::Item::List, sListItem )
 
 class MarkMessageReadHandler::Private
 {

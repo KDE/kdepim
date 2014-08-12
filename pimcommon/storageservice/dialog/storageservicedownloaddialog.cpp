@@ -25,17 +25,15 @@
 #include "storageservice/storageserviceprogressmanager.h"
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KSharedConfig>
 #include <KMessageBox>
 #include <KFileDialog>
-#include <KMenu>
-
-#include <QGridLayout>
+#include <QMenu>
+#include <KUrl>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QTreeWidget>
 #include <QFileInfo>
-#include <QDebug>
 #include <QHeaderView>
 #include <QCloseEvent>
 
@@ -47,13 +45,13 @@ StorageServiceDownloadTreeWidget::StorageServiceDownloadTreeWidget(PimCommon::St
 {
 }
 
-void StorageServiceDownloadTreeWidget::createMenuActions(KMenu *menu)
+void StorageServiceDownloadTreeWidget::createMenuActions(QMenu *menu)
 {
     createUpAction(menu);
     menu->addSeparator();
     const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
     if (type == StorageServiceTreeWidget::File)
-        menu->addAction(KIcon(QLatin1String("download")), i18n("Download File"), this, SIGNAL(downloadFile()));
+        menu->addAction(QIcon::fromTheme(QLatin1String("download")), i18n("Download File"), this, SIGNAL(downloadFile()));
     if ((type == StorageServiceTreeWidget::File) || (type == StorageServiceTreeWidget::Folder)) {
         menu->addSeparator();
         createPropertiesAction(menu);
@@ -171,7 +169,7 @@ void StorageServiceDownloadDialog::setDefaultDownloadPath(const QString &path)
 
 void StorageServiceDownloadDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "StorageServiceDownloadDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "StorageServiceDownloadDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     mTreeWidget->header()->restoreState( group.readEntry( mStorage->storageServiceName(), QByteArray() ) );
     if ( size.isValid() ) {
@@ -181,7 +179,7 @@ void StorageServiceDownloadDialog::readConfig()
 
 void StorageServiceDownloadDialog::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceDownloadDialog") );
     group.writeEntry( "Size", size() );
@@ -233,7 +231,7 @@ void StorageServiceDownloadDialog::downloadItem(StorageServiceTreeWidgetItem *it
     if (!filename.isEmpty()) {
         QString destination = mDefaultDownloadPath;
         if (destination.isEmpty() || !QFileInfo(mDefaultDownloadPath).isDir())
-            destination = KFileDialog::getExistingDirectory(KUrl(), this);
+            destination = KFileDialog::getExistingDirectory(QUrl(), this);
         if (destination.isEmpty())
             return;
         QFileInfo fileInfo(destination + QLatin1Char('/') + filename);

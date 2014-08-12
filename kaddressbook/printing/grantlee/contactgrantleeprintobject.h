@@ -109,11 +109,11 @@ private:
     KABC::Addressee mAddress;
 };
 }
-Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintObject*)
-Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintAddressObject*)
-Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintPhoneObject*)
-Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintImObject*)
-Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintGeoObject*)
-Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintCryptoObject*)
+//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintObject*)
+//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintAddressObject*)
+//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintPhoneObject*)
+//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintImObject*)
+//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintGeoObject*)
+//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintCryptoObject*)
 Q_DECLARE_METATYPE(QList<QObject*>)
 #endif // CONTACTGRANTLEEPRINTOBJECT_H

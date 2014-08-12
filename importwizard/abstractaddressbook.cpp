@@ -21,9 +21,10 @@
 #include <KABC/Addressee>
 #include <kabc/contactgroup.h>
 #include <KLocale>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/Item>
-#include <Akonadi/CollectionDialog>
+#include <QDebug>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/Item>
+#include <AkonadiWidgets/CollectionDialog>
 
 #include <QPointer>
 
@@ -69,7 +70,7 @@ void AbstractAddressBook::createGroup(const KABC::ContactGroup& group)
         item.setMimeType( KABC::ContactGroup::mimeType() );
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollection );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotStoreDone(KJob*)) );
+        connect(job, &Akonadi::ItemCreateJob::result, this, &AbstractAddressBook::slotStoreDone);
     }
 }
 
@@ -89,14 +90,14 @@ void AbstractAddressBook::createContact( const KABC::Addressee& address )
         item.setPayload<KABC::Addressee>( address );
         item.setMimeType( KABC::Addressee::mimeType() );
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollection );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotStoreDone(KJob*)) );
+        connect(job, &Akonadi::ItemCreateJob::result, this, &AbstractAddressBook::slotStoreDone);
     }
 }
 
 void AbstractAddressBook::slotStoreDone(KJob*job)
 {
     if ( job->error() ) {
-        kDebug()<<" job->errorString() : "<<job->errorString();
+        qDebug()<<" job->errorString() : "<<job->errorString();
         addAddressBookImportError( i18n( "Error during contact creation: %1", job->errorString() ) );
         return;
     }

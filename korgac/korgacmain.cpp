@@ -25,14 +25,13 @@
 #include "koalarmclient.h"
 #include "kdepim-version.h"
 
-#include <KAboutData>
+#include <k4aboutdata.h>
 #include <KCmdLineArgs>
 #include <KUniqueApplication>
 
 #include <stdlib.h>
 
 #ifdef SERIALIZER_PLUGIN_STATIC
-#include <QtPlugin>
 
 Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
 #endif
@@ -66,9 +65,9 @@ static const char korgacVersion[] = KDEPIM_VERSION;
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "korgac", QByteArray(), ki18n( "KOrganizer Reminder Daemon" ),
+  K4AboutData aboutData( "korgac", QByteArray(), ki18n( "KOrganizer Reminder Daemon" ),
                         korgacVersion, ki18n( "KOrganizer Reminder Daemon" ),
-                        KAboutData::License_GPL,
+                        K4AboutData::License_GPL,
                         ki18n( "(c) 2003 Cornelius Schumacher" ),
                         KLocalizedString(), "http://pim.kde.org" );
   aboutData.addAuthor( ki18n( "Cornelius Schumacher" ), ki18n( "Former Maintainer" ),

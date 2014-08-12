@@ -18,31 +18,45 @@
 #include "showarchivestructuredialog.h"
 #include "pimsettingexporter/utils.h"
 #include "pimcommon/util/pimutil.h"
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
 #include <KZip>
 #include <KMessageBox>
 
 #include <QTreeWidget>
 #include <QHeaderView>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mFileName(filename)
 {
-    setCaption( i18n( "Show Archive Content on file \"%1\"", filename ) );
-    setButtons( User1 | Close );
+    setWindowTitle( i18n( "Show Archive Content on file \"%1\"", filename ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setModal( true );
     mTreeWidget = new QTreeWidget;
     mTreeWidget->header()->hide();
     mTreeWidget->setAlternatingRowColors(true);
-    setMainWidget(mTreeWidget);
+    mainLayout->addWidget(mTreeWidget);
+    mainLayout->addWidget(buttonBox);
     const bool result = fillTree();
     mTreeWidget->expandAll();
     readConfig();
-    setButtonText(User1, i18n("Save As Text..."));
-    enableButton(User1, result);
-    connect(this, SIGNAL(user1Clicked()), SLOT(slotExportAsLogFile()));
+    user1Button->setText(i18n("SaveAsText..."));
+    user1Button->setEnabled(result);
+    connect(user1Button, SIGNAL(clicked()), SLOT(slotExportAsLogFile()));
 }
 
 ShowArchiveStructureDialog::~ShowArchiveStructureDialog()
@@ -145,13 +159,13 @@ QTreeWidgetItem *ShowArchiveStructureDialog::addTopItem(const QString &name)
 
 void ShowArchiveStructureDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ShowArchiveStructureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ShowArchiveStructureDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void ShowArchiveStructureDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ShowArchiveStructureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ShowArchiveStructureDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

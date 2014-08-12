@@ -22,7 +22,7 @@
 #include "mailcommon_export.h"
 #include "interfaces/mailinterfaces.h"
 
-#include <Akonadi/Collection>
+#include <Collection>
 #include <Akonadi/KMime/SpecialMailCollections>
 
 #include <KSharedConfig>

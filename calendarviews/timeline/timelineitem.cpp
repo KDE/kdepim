@@ -29,6 +29,7 @@
 #include <KCalCore/Incidence>
 #include <KCalUtils/IncidenceFormatter>
 
+
 using namespace KCalCore;
 using namespace KCalUtils;
 using namespace EventViews;

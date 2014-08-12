@@ -18,7 +18,7 @@
 #ifndef CONTACTCONFIGUREDIALOG_H
 #define CONTACTCONFIGUREDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 namespace GrantleeThemeEditor {
 class ConfigureWidget;
@@ -32,7 +32,7 @@ class ContactEditor;
 namespace PimCommon {
 class RichTextEditorWidget;
 }
-class ContactConfigureDialog : public KDialog
+class ContactConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:

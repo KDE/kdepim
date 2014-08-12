@@ -20,7 +20,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "editor/sieveeditorutil.h"
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
@@ -45,9 +45,9 @@ QWidget *SieveConditionMailboxExists::createParamWidget( QWidget *parent ) const
     lay->setMargin(0);
     w->setLayout(lay);
 
-    KLineEdit *edit = new KLineEdit;
+    QLineEdit *edit = new QLineEdit;
     connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
-    edit->setClearButtonShown(true);
+    edit->setClearButtonEnabled(true);
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("edit"));
 
@@ -56,7 +56,7 @@ QWidget *SieveConditionMailboxExists::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionMailboxExists::code(QWidget *w) const
 {
-    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
     const QString editValue = edit->text();
     return QString::fromLatin1("mailboxexists \"%1\"").arg(editValue);
 }
@@ -90,7 +90,7 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+                QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
                 edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing

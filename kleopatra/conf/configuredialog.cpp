@@ -34,15 +34,15 @@
 #include <config-kleopatra.h>
 
 #include "configuredialog.h"
-
 #include <kwindowsystem.h>
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <kcmultidialog.h>
 #include <klocale.h>
 #include <kconfiggroup.h>
-
 #include <QApplication>
+#include <KSharedConfig>
+#include <QIcon>
 
 #ifdef KLEO_STATIC_KCMODULES
 # include <KDesktopFile>
@@ -69,12 +69,12 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
   : KCMultiDialog( parent )
 {
   setFaceType( KPageDialog::List );
-  setCaption( i18n( "Configure" ) );
+  setWindowTitle( i18n( "Configure" ) );
 #ifdef Q_OS_UNIX
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ), IconSize( KIconLoader::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ), IconSize( KIconLoader::Small ) ) );
 #endif
-  showButton( User1, true );
+  //QT5 showButton( User1, true );
 
   addMyModule( kleopatra_config_dirserv );
 #ifndef KDEPIM_MOBILE_UI
@@ -92,7 +92,7 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
   // the KCMultiDialog starts with the size of the first kcm, not
   // the largest one. This way at least after the first showing of
   // the largest kcm the size is kept.
-  const KConfigGroup geometry( KGlobal::config(), "Geometry" );
+  const KConfigGroup geometry( KSharedConfig::openConfig(), "Geometry" );
   const int width = geometry.readEntry( "ConfigureDialogWidth", 0);
   const int height = geometry.readEntry( "ConfigureDialogHeight", 0 );
   if ( width != 0 && height != 0 ) {
@@ -102,7 +102,7 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
 
 void ConfigureDialog::hideEvent( QHideEvent * e ) {
   const QSize minSize = minimumSizeHint();
-  KConfigGroup geometry( KGlobal::config(), "Geometry" );
+  KConfigGroup geometry( KSharedConfig::openConfig(), "Geometry" );
   geometry.writeEntry( "ConfigureDialogWidth", minSize.width() );
   geometry.writeEntry( "ConfigureDialogHeight",minSize.height() );
   KCMultiDialog::hideEvent( e );

@@ -61,7 +61,7 @@ private Q_SLOTS:
     void slotUpdateViewer();
     void slotCloseTab(int);
     void slotChanged();
-    void slotCurrentWidgetChanged(QWidget*);
+    void slotCurrentWidgetChanged(int);
 
 private:
     void setChanged(bool b);

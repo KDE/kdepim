@@ -10,6 +10,7 @@ project(calendarView)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libeventviews\")
 
 if(KDEPIM_BUILD_EXAMPLES)
   add_subdirectory(viewerapp)
@@ -22,6 +23,7 @@ if(EVENTVIEWS_NODECOS)
 endif()
 
 include_directories(
+  ${CMAKE_CURRENT_BINARY_DIR}
   ${Boost_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/akonadi_next
   ${CMAKE_SOURCE_DIR}/calendarsupport
@@ -85,37 +87,32 @@ set(eventviews_LIB_SRCS
   whatsnext/whatsnextview.cpp
 )
 
-kde4_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc)
+kconfig_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc)
 
-kde4_add_ui_files(eventviews_LIB_SRCS
+ki18n_wrap_ui(eventviews_LIB_SRCS
   agenda/timescaleedit_base.ui
 )
 
-kde4_add_library(eventviews ${LIBRARY_TYPE} ${eventviews_LIB_SRCS})
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+add_library(eventviews ${LIBRARY_TYPE} ${eventviews_LIB_SRCS})
+generate_export_header(eventviews BASE_NAME eventviews)
 
 target_link_libraries(eventviews
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${QT_QTUITOOLS_LIBRARY}
-  ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDE4_KCMUTILS_LIBS}
+  KF5::Mime
+  KF5::KCMUtils
   ${ZLIB_LIBRARIES}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KHOLIDAYS_LIBS}
+  KF5::PimIdentities
+  KF5::KIOCore
+  KF5::AkonadiCore
+  KF5::Holidays
   kdepim
   kdgantt2
   calendarsupport
   akonadi_next
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${KDEPIMLIBS_KCALUTILS_LIBS}
-  akonadi-calendar
+  KF5::CalendarCore
+  KF5::CalendarUtils
+  KF5::AkonadiCalendar
 )
 
-set_target_properties(eventviews PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(eventviews PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS eventviews ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES agenda/calendardecoration.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})

@@ -34,8 +34,8 @@
 
 #include "ui_directoryserviceswidget.h"
 
-#include <KIcon>
 #include <KDebug>
+#include <KLocalizedString>
 
 #include <QItemDelegate>
 #include <QAbstractTableModel>
@@ -140,8 +140,8 @@ namespace {
                 && lhs.user() == rhs.user()
                 // ... ignore password...
                 && ( !is_ldap_scheme( lhs )
-                     || KUrl::fromPercentEncoding( lhs.query().mid( 1 ).toLatin1() )
-                     == KUrl::fromPercentEncoding( rhs.query().mid( 1 ).toLatin1() ) ) ;
+                     || QUrl::fromPercentEncoding( lhs.query().mid( 1 ).toLatin1() )
+                     == QUrl::fromPercentEncoding( rhs.query().mid( 1 ).toLatin1() ) ) ;
         }
     };
 
@@ -666,7 +666,7 @@ QVariant Model::data( const QModelIndex & index, int role ) const {
                 return display_port( m_items[row].url );
             case BaseDN:
                 if ( isLdapRow( row ) )
-                    return KUrl::fromPercentEncoding( m_items[row].url.query().mid( 1 ).toLatin1() );  // decode query and skip leading '?'
+                    return QUrl::fromPercentEncoding( m_items[row].url.query().mid( 1 ).toLatin1() );  // decode query and skip leading '?'
                 else
                     return QVariant();
             case UserName:

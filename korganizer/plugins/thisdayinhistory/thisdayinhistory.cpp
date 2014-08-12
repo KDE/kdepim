@@ -23,17 +23,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-
-class ThisDayInHistoryFactory : public DecorationFactory
-{
-  public:
-    Decoration *createPluginFactory()
-    {
-      return new ThisDayInHistory;
-    }
-};
-
-K_EXPORT_PLUGIN( ThisDayInHistoryFactory )
+#include <KLocalizedString>
 
 ThisDayInHistory::ThisDayInHistory()
 {

@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "config-kdepim.h"
 #include "knotesimpleconfigdialog.h"
 #include "knoteconfigdialog.h"
 #include "knotedisplayconfigwidget.h"
@@ -24,9 +25,11 @@
 
 #include <KLocalizedString>
 #include <KWindowSystem>
+#include <KIconLoader>
 
 #include <QTabWidget>
 #include <QApplication>
+#include <KSharedConfig>
 
 KNoteSimpleConfigDialog::KNoteSimpleConfigDialog( const QString &title,
                                                   QWidget *parent )
@@ -36,7 +39,7 @@ KNoteSimpleConfigDialog::KNoteSimpleConfigDialog( const QString &title,
     setDefaultButton( Ok );
 
     setCaption( title );
-#ifdef Q_WS_X11
+#if KDEPIM_HAVE_X11
     KWindowSystem::setIcons( winId(),
                              qApp->windowIcon().pixmap(
                                  IconSize( KIconLoader::Desktop ),
@@ -84,7 +87,7 @@ void KNoteSimpleConfigDialog::save(Akonadi::Item &item, bool &isRichText)
 
 void KNoteSimpleConfigDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "KNoteSimpleConfigDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "KNoteSimpleConfigDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -93,7 +96,7 @@ void KNoteSimpleConfigDialog::readConfig()
 
 void KNoteSimpleConfigDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "KNoteSimpleConfigDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "KNoteSimpleConfigDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

@@ -23,10 +23,11 @@
 #include "foldercollection.h"
 #include "templateparser/templatesconfiguration.h"
 #include "templateparser/templatesconfiguration_kfg.h"
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
+#include <KDialog>
 #include <QCheckBox>
 
 using namespace Akonadi;
@@ -60,11 +61,11 @@ void CollectionTemplatesPage::init()
     topLayout->addLayout( topItems );
 
     mCustom = new QCheckBox( i18n("&Use custom message templates in this folder"), this );
-    connect(mCustom, SIGNAL(clicked(bool)), this, SLOT(slotChanged()));
+    connect(mCustom, &QCheckBox::clicked, this, &CollectionTemplatesPage::slotChanged);
     topItems->addWidget( mCustom, Qt::AlignLeft );
 
     mWidget = new TemplateParser::TemplatesConfiguration( this, QLatin1String("folder-templates") );
-    connect(mWidget, SIGNAL(changed()), this, SLOT(slotChanged()));
+    connect(mWidget, &TemplateParser::TemplatesConfiguration::changed, this, &CollectionTemplatesPage::slotChanged);
     mWidget->setEnabled( false );
 
     // Move the help label outside of the templates configuration widget,
@@ -76,7 +77,7 @@ void CollectionTemplatesPage::init()
 
     QHBoxLayout *btns = new QHBoxLayout();
     btns->setSpacing( KDialog::spacingHint() );
-    KPushButton *copyGlobal = new KPushButton( i18n("&Copy Global Templates"), this );
+    QPushButton *copyGlobal = new QPushButton( i18n("&Copy Global Templates"), this );
     copyGlobal->setEnabled( false );
     btns->addWidget( copyGlobal );
     topLayout->addLayout( btns );
@@ -113,9 +114,9 @@ void CollectionTemplatesPage::save(Collection &)
 {
     if ( mChanged && !mCollectionId.isEmpty() ) {
         TemplateParser::Templates t(mCollectionId);
-        //kDebug() << "use custom templates for folder" << fid <<":" << mCustom->isChecked();
+        //qDebug() << "use custom templates for folder" << fid <<":" << mCustom->isChecked();
         t.setUseCustomTemplates(mCustom->isChecked());
-        t.writeConfig();
+        t.save();
 
         mWidget->saveToFolder(mCollectionId);
     }

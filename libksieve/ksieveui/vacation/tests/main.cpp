@@ -15,19 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <KApplication>
 #include <KLocalizedString>
-#include <KCmdLineArgs>
+#include <qapplication.h>
+#include <QCommandLineParser>
+#include <kaboutdata.h>
 
 #include "vacation/multiimapvacationdialog.h"
 
-#include <QDebug>
 
 int main( int argc, char** argv )
 {
-    KCmdLineArgs::init(argc, argv, "vacationmultiscripttest", 0, ki18n("VacationMultiScriptTest_Gui"),
-                       "1.0", ki18n("Test for dialog when server has multiscript"));
-    KApplication app;
+    QApplication app(argc, argv);
+    KAboutData aboutData( QStringLiteral("vacationmultiscripttest"), 
+                          i18n("VacationMultiScriptTest_Gui"), 
+                          QLatin1String("1.0"));
+
+    KAboutData::setApplicationData(aboutData);
+
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
     app.setQuitOnLastWindowClosed( false );
 
     KSieveUi::MultiImapVacationDialog dlg;

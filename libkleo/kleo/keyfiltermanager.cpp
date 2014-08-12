@@ -38,9 +38,9 @@
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <klocale.h>
-#include <KIcon>
-#include <KDebug>
+#include <KLocalizedString>
+#include <QIcon>
+#include <QDebug>
 
 #include <QCoreApplication>
 #include <QRegExp>
@@ -221,7 +221,7 @@ void KeyFilterManager::reload() {
       }
   }
   std::stable_sort( d->filters.begin(), d->filters.end(), ByDecreasingSpecificity() );
-  kDebug(5150) << "final filter count is" << d->filters.size();
+  qDebug() << "final filter count is" << d->filters.size();
 }
 
 QAbstractItemModel * KeyFilterManager::model() const {
@@ -326,6 +326,6 @@ QColor KeyFilterManager::fgColor( const Key & key ) const {
 
 QIcon KeyFilterManager::icon( const Key & key ) const {
     const QString icon = get_string( d->filters, key, &KeyFilter::icon );
-    return icon.isEmpty() ? QIcon() : QIcon( KIcon( icon ) ) ;
+    return icon.isEmpty() ? QIcon() : QIcon::fromTheme( icon ) ;
 }
 

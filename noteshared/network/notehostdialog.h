@@ -33,18 +33,19 @@
 #ifndef KNOTEHOSTDIALOG_H
 #define KNOTEHOSTDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
 #include "noteshared_export.h"
 class KHistoryComboBox;
 class QTreeView;
 class QModelIndex;
+class QPushButton;
 
 
 /**
  * A dialog that allows to select network service or request a hostname or IP address.
  */
 namespace NoteShared {
-class NOTESHARED_EXPORT NoteHostDialog : public KDialog
+class NOTESHARED_EXPORT NoteHostDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -66,6 +67,7 @@ private:
     void readConfig();
     KHistoryComboBox *m_hostCombo;
     QTreeView *m_servicesView;
+    QPushButton *mOkButton;
 };
 }
 

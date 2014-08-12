@@ -48,7 +48,7 @@
 
 #include "pimcommon/widgets/renamefiledialog.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 
 #include <kmbox/mbox.h>
@@ -61,11 +61,12 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KMimeType>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <ktoolinvocation.h>
-#include <KAction>
+#include <QAction>
+#include <QIcon>
 
 #include <QTextCodec>
 #include <QWidget>
@@ -115,7 +116,7 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
     } else {
         fileName = QLatin1String( "unknown" );
         if ( !tMimeType.isEmpty() ) {
-            kWarning() << "unknown mimetype" << tMimeType;
+            qWarning() << "unknown mimetype" << tMimeType;
         }
     }
     //WorkAround for #199083
@@ -135,13 +136,13 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
     return IconNameCache::instance()->iconPath( fileName, iconSize );
 }
 
-#if defined Q_WS_WIN || defined Q_WS_MACX
+#if defined Q_OS_WIN || defined Q_OS_MACX
 #include <QDesktopServices>
 #endif
 
 bool Util::handleUrlWithQDesktopServices( const KUrl& url )
 {
-#if defined Q_WS_WIN || defined Q_WS_MACX
+#if defined Q_OS_WIN || defined Q_OS_MACX
     QDesktopServices::openUrl( url );
     return true;
 #else
@@ -368,11 +369,11 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
     }
 #else
     const QByteArray data = content->decodedContent();
-    kWarning() << "Port the encryption/signature handling when saving a KMime::Content.";
+    qWarning() << "Port the encryption/signature handling when saving a KMime::Content.";
 #endif
     QDataStream ds;
     QFile file;
-    KTemporaryFile tf;
+    QTemporaryFile tf;
     if ( url.isLocalFile() )
     {
         // save directly
@@ -380,7 +381,7 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
         if ( !file.open( QIODevice::WriteOnly ) )
         {
             KMessageBox::error( parent,
-                                i18nc( "1 = file name, 2 = error string",
+                                xi18nc( "1 = file name, 2 = error string",
                                        "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
                                        file.fileName(),
                                        file.errorString() ),
@@ -404,7 +405,7 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
     if ( bytesWritten != data.size() ) {
         QFile *f = static_cast<QFile *>( ds.device() );
         KMessageBox::error( parent,
-                            i18nc( "1 = file name, 2 = error string",
+                            xi18nc( "1 = file name, 2 = error string",
                                    "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
                                    f->fileName(),
                                    f->errorString() ),
@@ -422,7 +423,7 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
         if ( !KIO::NetAccess::upload( tfName, url, parent ) )
         {
             KMessageBox::error( parent,
-                                i18nc( "1 = file name, 2 = error string",
+                                xi18nc( "1 = file name, 2 = error string",
                                        "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
                                        url.prettyUrl(),
                                        KIO::NetAccess::lastErrorString() ),
@@ -478,8 +479,8 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
         fileName += QLatin1String(".mbox");
 
     const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
-    QPointer<KFileDialog> dlg = new KFileDialog(KUrl::fromPath( fileName ), filter, parent);
-    dlg->setCaption(i18np("Save Message", "Save Messages", retrievedMsgs.count()));
+    QPointer<KFileDialog> dlg = new KFileDialog(QUrl::fromLocalFile( fileName ), filter, parent);
+    dlg->setWindowTitle(i18np("Save Message", "Save Messages", retrievedMsgs.count()));
     dlg->setMode(KFile::File|KFile::LocalOnly);
     dlg->setOperationMode(KFileDialog::Saving);
     if( !appendMessages )
@@ -548,7 +549,7 @@ bool Util::speakSelectedText( const QString& text, QWidget *parent)
     return true;
 }
 
-KAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent )
+QAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent )
 {
     QString actionName(service->name().replace(QLatin1Char('&'), QLatin1String("&&")));
     if (singleOffer) {
@@ -557,8 +558,8 @@ KAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, Q
         actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
     }
 
-    KAction *act = new KAction(parent);
-    act->setIcon(KIcon(service->icon()));
+    QAction *act = new QAction(parent);
+    act->setIcon(QIcon::fromTheme(service->icon()));
     act->setText(actionName);
     actionGroup->addAction( act );
     act->setData(QVariant::fromValue(service));

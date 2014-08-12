@@ -25,6 +25,7 @@
 #define SUMMARYVIEW_PART_H
 
 #include <KParts/ReadOnlyPart>
+#include <kparts/readonlypart.h>
 
 class DropWidget;
 
@@ -34,7 +35,7 @@ namespace KontactInterface {
 }
 
 class KAboutData;
-class KAction;
+class QAction;
 
 class QFrame;
 class QLabel;
@@ -86,7 +87,7 @@ class SummaryViewPart : public KParts::ReadOnlyPart
     QVBoxLayout *mRightColumn;
     QLabel *mUsernameLabel;
     QLabel *mDateLabel;
-    KAction *mConfigAction;
+    QAction *mConfigAction;
 
     QStringList mLeftColumnSummaries;
     QStringList mRightColumnSummaries;

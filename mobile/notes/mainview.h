@@ -24,7 +24,7 @@
 
 #include "kdeclarativemainview.h"
 
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 class MainView : public KDeclarativeMainView
 {

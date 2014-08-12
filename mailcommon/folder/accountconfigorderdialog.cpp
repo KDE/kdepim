@@ -21,11 +21,12 @@
 #include "mailcommon/util/mailutil.h"
 
 #include <KLocalizedString>
-#include <KPushButton>
-#include <KVBox>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QIcon>
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
+#include <AkonadiCore/AgentInstance>
+#include <AkonadiCore/AgentManager>
 
 #include <KMime/KMimeMessage>
 
@@ -65,23 +66,28 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     mListAccount->setDragDropMode( QAbstractItemView::InternalMove );
     vlay->addWidget(mListAccount);
 
-    KVBox* upDownBox = new KVBox( page );
-    mUpButton = new KPushButton( upDownBox );
-    mUpButton->setIcon( KIcon(QLatin1String("go-up")) );
+    QWidget* upDownBox = new QWidget( page );
+    QVBoxLayout *upDownBoxVBoxLayout = new QVBoxLayout(upDownBox);
+    upDownBoxVBoxLayout->setMargin(0);
+    mUpButton = new QPushButton( upDownBox );
+    upDownBoxVBoxLayout->addWidget(mUpButton);
+    mUpButton->setIcon( QIcon::fromTheme(QLatin1String("go-up")) );
     mUpButton->setToolTip( i18nc( "Move selected account up.", "Up" ) );
     mUpButton->setEnabled( false ); // b/c no item is selected yet
     mUpButton->setFocusPolicy( Qt::StrongFocus );
     mUpButton->setAutoRepeat(true);
 
-    mDownButton = new KPushButton( upDownBox );
-    mDownButton->setIcon( KIcon(QLatin1String("go-down")) );
+    mDownButton = new QPushButton( upDownBox );
+    upDownBoxVBoxLayout->addWidget(mDownButton);
+    mDownButton->setIcon( QIcon::fromTheme(QLatin1String("go-down")) );
     mDownButton->setToolTip( i18nc( "Move selected account down.", "Down" ) );
     mDownButton->setEnabled( false ); // b/c no item is selected yet
     mDownButton->setFocusPolicy( Qt::StrongFocus );
     mDownButton->setAutoRepeat(true);
 
     QWidget* spacer = new QWidget( upDownBox );
-    upDownBox->setStretchFactor( spacer, 100 );
+    upDownBoxVBoxLayout->addWidget(spacer);
+    upDownBoxVBoxLayout->setStretchFactor( spacer, 100 );
     vlay->addWidget( upDownBox );
 
 
@@ -213,7 +219,7 @@ void AccountConfigOrderDialog::slotOk()
 
     MailCommon::MailCommonSettings::self()->setOrder(order);
     MailCommon::MailCommonSettings::self()->setEnableAccountOrder(mEnableAccountOrder->isChecked());
-    MailCommon::MailCommonSettings::self()->writeConfig();
+    MailCommon::MailCommonSettings::self()->save();
     KDialog::accept();
 }
 

@@ -21,8 +21,8 @@
 
 #include <messagelist/core/storagemodelbase.h>
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include <collection.h>
+#include <item.h>
 
 #include <QColor>
 #include <QFont>

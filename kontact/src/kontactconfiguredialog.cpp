@@ -17,18 +17,19 @@
 */
 #include "kontactconfiguredialog.h"
 
-#include <KDebug>
 
 #include <QDBusReply>
 #include <QDBusInterface>
+#include <QDebug>
+#include <QPushButton>
 
 using namespace Kontact;
 
 KontactConfigureDialog::KontactConfigureDialog( QWidget *parent )
     : KSettings::Dialog( parent )
 {
-    connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
-    connect( this, SIGNAL(applyClicked()), SLOT(slotApply()) );
+    connect( button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(slotOk()) );
+    connect( button(QDialogButtonBox::Apply), SIGNAL(clicked()), SLOT(slotApply()) );
 }
 
 KontactConfigureDialog::~KontactConfigureDialog()
@@ -44,7 +45,7 @@ void KontactConfigureDialog::emitConfigChanged()
         QDBusReply<void> reply;
         if ( !( reply = kmailIface.call( QLatin1String("updateConfig") ) ).isValid() ) {
             QDBusError err = kmailIface.lastError();
-            kError() << "Communication problem with KMail. "
+            qCritical() << "Communication problem with KMail. "
                      << "Error message was:" << err.name() << ": \"" << err.message() << "\"";
         }
     }
@@ -54,7 +55,7 @@ void KontactConfigureDialog::emitConfigChanged()
         QDBusReply<void> reply;
         if ( !( reply = knotesIface.call( QLatin1String("updateConfig") ) ).isValid() ) {
             const QDBusError err = knotesIface.lastError();
-            kError() << "Communication problem with KNotes. "
+            qCritical() << "Communication problem with KNotes. "
                      << "Error message was:" << err.name() << ": \"" << err.message() << "\"";
         }
 

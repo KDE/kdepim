@@ -19,7 +19,7 @@
 
 #include "emailsfilterproxymodel.h"
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <KMime/Message>
 
 static bool emailMatchesFilter( const KMime::Message::Ptr &message, const QString &filterString );

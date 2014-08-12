@@ -22,31 +22,40 @@
 #include "kdepim-version.h"
 #include "storageservicemanagermainwindow.h"
 #include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <KDebug>
-#include <KUniqueApplication>
+
+#include <QDebug>
+#include <qcommandlineparser.h>
+#include <qcommandlineoption.h>
+#include <KDBusService>
+#include <KLocalizedString>
+#include <QApplication>
 
 int main( int argc, char **argv )
 {
-    KAboutData aboutData( "storageservicemanager", 0, ki18n("Storage Service Manager"),
-      KDEPIM_VERSION, ki18n("Storage Service Manager"), KAboutData::License_GPL_V2,
-      ki18n("Copyright © 2013, 2014 storageservicemanager authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
+    QApplication app(argc, argv);
+
+    KAboutData aboutData(QStringLiteral("storageservicemanager"),
+                       i18n("Storage Service Manager"),
+                       QStringLiteral(KDEPIM_VERSION),
+                       i18n("Storage Service Manager"),
+                      KAboutLicense::GPL_V2,
+                       i18n("Copyright © 2013, 2014 storageservicemanager authors"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QLatin1String("montel@kde.org"));
+
     aboutData.setProgramIconName(QLatin1String("kmail"));
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    KAboutData::setApplicationData(aboutData);
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+ 
 
-    KUniqueApplication::addCmdLineOptions();
-    if (!KUniqueApplication::start()) {
-        kDebug() << "storageservicemanager is already running!";
-        return (0);
-    }
-    KUniqueApplication a;
+    KDBusService service(KDBusService::Unique);
+
     StorageServiceManagerMainWindow *mw = new StorageServiceManagerMainWindow();
-    KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
-    KGlobal::locale()->insertCatalog( QLatin1String("libkgapi") );
     mw->show();
-    a.exec();
+    return app.exec();
 }

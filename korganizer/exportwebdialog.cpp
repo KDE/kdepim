@@ -28,10 +28,12 @@
 
 #include <KDateComboBox>
 #include <KFileDialog>
-#include <KHBox>
+#include <QHBoxLayout>
 #include <KMessageBox>
 #include <KUrlRequester>
-#include <KVBox>
+#include <QVBoxLayout>
+#include <KLocalizedString>
+#include <QDebug>
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -49,13 +51,13 @@ ExportWebDialog::ExportWebDialog( KOrg::HTMLExportSettings *settings, QWidget *p
 {
   setAttribute(Qt::WA_DeleteOnClose);
   setFaceType( Tabbed );
-  setCaption( i18n( "Export Calendar as Web Page" ) );
-  setButtons( /*Help|*/Default|User1|Cancel );
-  /*enableButton( KDialog::Help, false );*/
-  setDefaultButton( User1 );
+  setWindowTitle( i18n( "Export Calendar as Web Page" ) );
+  setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
   setModal( false );
-  showButtonSeparator( false );
-  setButtonText( User1, i18n( "Export" ) );
+  mExportButton = new QPushButton(i18n( "Export" ));
+  mExportButton->setDefault(true);
+  addActionButton(mExportButton);
+
 
   setupGeneralPage();
   setupEventPage();
@@ -65,10 +67,9 @@ ExportWebDialog::ExportWebDialog( KOrg::HTMLExportSettings *settings, QWidget *p
 //  setupFreeBusyPage();
 //  setupAdvancedPage();
 
-  connect( this, SIGNAL(user1Clicked()), SLOT(slotOk()) );
-  connect( this, SIGNAL(cancelClicked()), SLOT(reject()) );
-  connect( this, SIGNAL(defaultClicked()), this, SLOT(slotDefault()) );
-  connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
+  connect( mExportButton, SIGNAL(clicked()), SLOT(slotOk()) );
+  connect( button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(reject()) );
+  connect( button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(slotDefault()) );
   readConfig();
   updateState();
 }
@@ -110,7 +111,7 @@ void ExportWebDialog::slotOk()
 
 void ExportWebDialog::slotDefault()
 {
-  kDebug();
+  qDebug();
 
   if ( KMessageBox::warningContinueCancel(
          this,
@@ -167,7 +168,7 @@ void ExportWebDialog::setupGeneralPage()
 
   KPIM::KPrefsWidPath *pathWid = addWidPath( mSettings->outputFileItem(),
                                              destGroup, QLatin1String("text/html"), KFile::File );
-  pathWid->urlRequester()->fileDialog()->setOperationMode( KFileDialog::Saving );
+  //QT5 pathWid->urlRequester()->fileDialog()->setOperationMode( KFileDialog::Saving );
   connect( pathWid->urlRequester(), SIGNAL(textChanged(QString)),
            SLOT(slotTextChanged(QString)) );
   destLayout->addWidget( pathWid->label() );
@@ -178,7 +179,7 @@ void ExportWebDialog::setupGeneralPage()
 
 void ExportWebDialog::slotTextChanged( const QString &_text )
 {
-    enableButton( User1, !_text.isEmpty() );
+    mExportButton->setEnabled( !_text.isEmpty() );
 }
 
 void ExportWebDialog::setupTodoPage()
@@ -188,11 +189,15 @@ void ExportWebDialog::setupTodoPage()
   QVBoxLayout *topLayout = new QVBoxLayout( mTodoPage );
   topLayout->setSpacing( 10 );
 
-  KHBox *hbox = new KHBox( mTodoPage );
+  QWidget *hbox = new QWidget( mTodoPage );
+  QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+  hboxHBoxLayout->setMargin(0);
   topLayout->addWidget( hbox );
   addWidString( mSettings->todoListTitleItem(), hbox );
 
-  KVBox *vbox = new KVBox( mTodoPage );
+  QWidget *vbox = new QWidget( mTodoPage );
+  QVBoxLayout *vboxVBoxLayout = new QVBoxLayout(vbox);
+  vboxVBoxLayout->setMargin(0);
   topLayout->addWidget( vbox );
   addWidBool( mSettings->taskDueDateItem(), vbox );
   addWidBool( mSettings->taskLocationItem(), vbox );
@@ -211,11 +216,15 @@ void ExportWebDialog::setupEventPage()
   QVBoxLayout *topLayout = new QVBoxLayout( mEventPage );
   topLayout->setSpacing( 10 );
 
-  KHBox *hbox = new KHBox( mEventPage );
+  QWidget *hbox = new QWidget( mEventPage );
+  QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+  hboxHBoxLayout->setMargin(0);
   topLayout->addWidget( hbox );
   addWidString( mSettings->eventTitleItem(), hbox );
 
-  KVBox *vbox = new KVBox( mEventPage );
+  QWidget *vbox = new QWidget( mEventPage );
+  QVBoxLayout *vboxVBoxLayout = new QVBoxLayout(vbox);
+  vboxVBoxLayout->setMargin(0);
   topLayout->addWidget( vbox );
   addWidBool( mSettings->eventLocationItem(), vbox );
   addWidBool( mSettings->eventCategoriesItem(), vbox );

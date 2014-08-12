@@ -23,21 +23,24 @@
 #include "recipientspicker.h"
 #include "settings/messagecomposersettings.h"
 
-#include <akonadi/contact/emailaddressselectionwidget.h>
+#include <Akonadi/Contact/EmailAddressSelectionWidget>
 #include <kabc/contactgroup.h>
 #include <libkdepim/ldap/ldapsearchdialog.h>
-#include <kpimutils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 
 #include <kconfiggroup.h>
 #include <khbox.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <KLineEdit>
-#include <KPushButton>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QDebug>
+#include <KGlobal>
 
 #include <QKeyEvent>
 #include <QTreeView>
 #include <QVBoxLayout>
+#include <KSharedConfig>
 
 using namespace MessageComposer;
 
@@ -139,7 +142,7 @@ void RecipientsPicker::slotPicked()
 
 void RecipientsPicker::pick( Recipient::Type type )
 {
-    kDebug() << int( type );
+    qDebug() << int( type );
 
     const Akonadi::EmailAddressSelection::List selections = mView->selectedAddresses();
 
@@ -179,7 +182,7 @@ void RecipientsPicker::keyPressEvent( QKeyEvent *event )
 
 void RecipientsPicker::readConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "RecipientsPicker" );
     QSize size = group.readEntry( "Size", QSize() );
     if ( !size.isEmpty() ) {
@@ -189,7 +192,7 @@ void RecipientsPicker::readConfig()
 
 void RecipientsPicker::writeConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "RecipientsPicker" );
     group.writeEntry( "Size", size() );
 }

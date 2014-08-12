@@ -83,7 +83,7 @@ public:
     virtual QWidget* tabOut() const;
     
     virtual void moveCompletionPopup();
-    virtual void setCompletionMode( KGlobalSettings::Completion mode );
+    virtual void setCompletionMode( KCompletion::CompletionMode mode );
     
     virtual int setColumnWidth( int w );
 

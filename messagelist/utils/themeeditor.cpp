@@ -26,7 +26,7 @@
 #include "core/manager.h"
 #include "utils/comboboxutils.h"
 
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 
 #include <QActionGroup>
 #include <QCheckBox>
@@ -44,15 +44,16 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QStringList>
+#include <QMimeData>
 
-#include <KColorDialog>
+#include <QColorDialog>
 #include <KComboBox>
 #include <KLineEdit>
 #include <KLocalizedString>
-#include <KFontDialog>
-#include <KMenu>
+#include <QFontDialog>
+#include <QMenu>
 #include <KIconLoader>
-#include <KNumInput>
+#include <KPluralHandlingSpinBox>
 #include <KTextEdit>
 
 #include <time.h> // for time_t
@@ -872,12 +873,12 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
 
     if ( e->button() == Qt::RightButton )
     {
-        KMenu menu;
+        QMenu menu;
 
         if ( mSelectedThemeContentItem )
         {
 
-            menu.addTitle( Theme::ContentItem::description( mSelectedThemeContentItem->type() ) );
+            menu.addSection( Theme::ContentItem::description( mSelectedThemeContentItem->type() ) );
 
             if ( mSelectedThemeContentItem->displaysText() )
             {
@@ -888,7 +889,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
                 connect( act, SIGNAL(triggered(bool)),
                          SLOT(slotSoftenActionTriggered(bool)) );
 
-                KMenu * childmenu = new KMenu( &menu );
+                QMenu * childmenu = new QMenu( &menu );
 
                 QActionGroup * grp = new QActionGroup( childmenu );
 
@@ -912,7 +913,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
 
             if ( mSelectedThemeContentItem->canUseCustomColor() )
             {
-                KMenu * childmenu = new KMenu( &menu );
+                QMenu * childmenu = new QMenu( &menu );
 
                 QActionGroup * grp = new QActionGroup( childmenu );
 
@@ -937,7 +938,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
 
             if ( mSelectedThemeContentItem->canBeDisabled() )
             {
-                KMenu * childmenu = new KMenu( &menu );
+                QMenu * childmenu = new QMenu( &menu );
 
                 QActionGroup * grp = new QActionGroup( childmenu );
 
@@ -970,10 +971,10 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         {
             if ( mDelegate->hitItem()->type() == Item::GroupHeader )
             {
-                menu.addTitle( i18n( "Group Header" ) );
+                menu.addSection( i18n( "Group Header" ) );
 
                 // Background color (mode) submenu
-                KMenu * childmenu = new KMenu( &menu );
+                QMenu * childmenu = new QMenu( &menu );
 
                 QActionGroup * grp = new QActionGroup( childmenu );
 
@@ -1001,7 +1002,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
                 menu.addMenu( childmenu )->setText( i18n( "Background Color" ) );
 
                 // Background style submenu
-                childmenu = new KMenu( &menu );
+                childmenu = new QMenu( &menu );
 
                 grp = new QActionGroup( childmenu );
                 QList< QPair< QString, int > > styles = Theme::enumerateGroupHeaderBackgroundStyles();
@@ -1070,8 +1071,8 @@ void ThemePreviewWidget::slotForegroundColorMenuTriggered( QAction * act )
     }
 
     QColor clr;
-    const int result = KColorDialog::getColor( clr, mSelectedThemeContentItem->customColor(), this );
-    if ( result != KColorDialog::Accepted )
+    clr = QColorDialog::getColor(mSelectedThemeContentItem->customColor(), this );
+    if ( !clr.isValid() ) 
         return;
 
     mSelectedThemeContentItem->setCustomColor( clr );
@@ -1106,8 +1107,8 @@ void ThemePreviewWidget::slotFontMenuTriggered( QAction * act )
         return;
     }
 
-    QFont f = mSelectedThemeContentItem->font();
-    if ( KFontDialog::getFont( f ) != KFontDialog::Accepted )
+    QFont f = QFontDialog::getFont( &ok, mSelectedThemeContentItem->font(), this );
+    if (!ok)
         return;
 
     mSelectedThemeContentItem->setFont( f );
@@ -1134,8 +1135,8 @@ void ThemePreviewWidget::slotGroupHeaderBackgroundModeMenuTriggered( QAction * a
     case Theme::CustomColor:
     {
         QColor clr;
-        int result = KColorDialog::getColor( clr, mTheme->groupHeaderBackgroundColor(), this );
-        if ( result != KColorDialog::Accepted )
+        clr = QColorDialog::getColor(mTheme->groupHeaderBackgroundColor(), this );
+        if ( clr.isValid() ) 
             return;
 
         mTheme->setGroupHeaderBackgroundMode( Theme::CustomColor );
@@ -1207,9 +1208,9 @@ void ThemePreviewWidget::slotHeaderContextMenuRequested( const QPoint &pos )
     if ( !mSelectedThemeColumn )
         return;
 
-    KMenu menu;
+    QMenu menu;
 
-    menu.addTitle( mSelectedThemeColumn->label() );
+    menu.setTitle( mSelectedThemeColumn->label() );
 
     QAction * act;
 
@@ -1524,7 +1525,7 @@ ThemeEditor::ThemeEditor( QWidget *parent )
     l = new QLabel( i18n( "Icon size:" ), tab );
     tabg->addWidget( l, 1, 0 );
 
-    mIconSizeSpinBox = new KIntSpinBox( tab );
+    mIconSizeSpinBox = new KPluralHandlingSpinBox( tab );
     mIconSizeSpinBox->setMinimum( 8 );
     mIconSizeSpinBox->setMaximum( 64 );
     mIconSizeSpinBox->setSuffix( ki18ncp( "suffix in a spinbox", " pixel", " pixels" ) );

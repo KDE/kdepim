@@ -19,6 +19,7 @@
 #include "kpgpui.h"
 #include "kpgp.h"
 #include "kpgpkey.h"
+#include "kpgp_debug.h"
 
 #include <QLabel>
 #include <QApplication>
@@ -43,23 +44,29 @@
 #include <QScrollBar>
 #include <QAbstractTextDocumentLayout>
 
-#include <kvbox.h>
+#include <QVBoxLayout>
 #include <kconfiggroup.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kpassworddialog.h>
 #include <kcharsets.h>
 #include <kseparator.h>
 #include <kiconloader.h>
 #include <kconfigbase.h>
 #include <kconfig.h>
-#include <kprogressdialog.h>
+#include <QProgressDialog>
 #include <kwindowsystem.h>
-#include <kpushbutton.h>
-#include <kglobalsettings.h>
+//#include <kglobalsettings.h>
 #include <klineedit.h>
+#include <QIcon>
 
 #include <assert.h>
 #include <string.h> // for memcpy(3)
+#include <KCharsets>
+#include <QDesktopWidget>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <KGuiItem>
 
 #ifndef QT_NO_TREEWIDGET
 const int Kpgp::KeySelectionDialog::sCheckSelectionDelay = 250;
@@ -72,8 +79,9 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
                                     const QString &keyID )
   :KPasswordDialog( parent )
 {
-  setCaption( caption );
-  setButtons( Ok|Cancel );
+  setWindowTitle( caption );
+  //QT5
+  //setButtons( Ok|Cancel );
 
   setPixmap( BarIcon(QLatin1String("dialog-password")) );
 
@@ -106,12 +114,12 @@ Config::Config( QWidget *parent, bool encrypt )
 
 
   QVBoxLayout *topLayout = new QVBoxLayout( this );
-  topLayout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   topLayout->setSpacing( QDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
   group = new QGroupBox( i18n("Warning"), this );
   QVBoxLayout *lay = new QVBoxLayout(group);
-  lay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   lay->setSpacing( QDialog::spacingHint() );
   // (mmutz) work around Qt label bug in 3.0.0 (and possibly later):
   // 1. Don't use rich text: No <qt><b>...</b></qt>
   label = new QLabel( i18n("Please check if encryption really "
@@ -129,12 +137,16 @@ Config::Config( QWidget *parent, bool encrypt )
   topLayout->addWidget( group );
   group = new QGroupBox( i18n("Encryption Tool"), this );
   lay = new QVBoxLayout(group);
-  lay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   lay->setSpacing( QDialog::spacingHint() );
 
-  KHBox * hbox = new KHBox( group );
+  QWidget * hbox = new QWidget( group );
+  QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+  hboxHBoxLayout->setMargin(0);
   lay->addWidget( hbox );
   label = new QLabel( i18n("Select encryption tool to &use:"), hbox );
+  hboxHBoxLayout->addWidget(label);
   toolCombo = new QComboBox( hbox );
+  hboxHBoxLayout->addWidget(toolCombo);
   toolCombo->setEditable( false );
   toolCombo->addItems( QStringList()
                                << i18n("Autodetect")
@@ -144,7 +156,7 @@ Config::Config( QWidget *parent, bool encrypt )
                                << i18n("PGP Version 6.x")
                                << i18n("Do not use any encryption tool") );
   label->setBuddy( toolCombo );
-  hbox->setStretchFactor( toolCombo, 1 );
+  hboxHBoxLayout->setStretchFactor( toolCombo, 1 );
   connect( toolCombo, SIGNAL(activated(int)),
            this, SIGNAL(changed()) );
   // This is the place to add a KUrlRequester to be used for asking
@@ -153,7 +165,7 @@ Config::Config( QWidget *parent, bool encrypt )
 
   mpOptionsGroupBox = new QGroupBox( i18n("Options"), this );
   lay = new QVBoxLayout( mpOptionsGroupBox );
-  lay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   lay->setSpacing( QDialog::spacingHint() );
   storePass = new QCheckBox( i18n("&Keep passphrase in memory"),
                              mpOptionsGroupBox );
   lay->addWidget( storePass );
@@ -289,13 +301,22 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
                                         const unsigned int allowedKeys,
                                         const bool extendedSelection,
                                         QWidget *parent )
-  : KDialog( parent ),
+  : QDialog( parent ),
     mRememberCB( 0 ),
     mAllowedKeys( allowedKeys ),
     mCurrentContextMenuItem( 0 )
 {
-  setCaption( title );
-  setButtons( Default|Ok|Cancel );
+  setWindowTitle( title );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+  QWidget *mainWidget = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(mainWidget);
+  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+  mOkButton->setDefault(true);
+  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
   if ( qApp ) {
     KWindowSystem::setIcons( winId(),
                              qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
@@ -323,9 +344,9 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   mKeyValidPix   = new QPixmap( UserIcon(QLatin1String("key")) );
 
   QFrame *page = new QFrame( this );
-  setMainWidget( page );
+  mainLayout->addWidget(page);
   QVBoxLayout *topLayout = new QVBoxLayout( page );
-  topLayout->setSpacing( spacingHint() );
+  //QT5 topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
   if( !text.isEmpty() ) {
@@ -404,11 +425,12 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   connect( mListView, SIGNAL(customContextMenuRequested(QPoint)),
            this,      SLOT(slotRMB(QPoint)) );
 
-  setButtonGuiItem( KDialog::Default, KGuiItem(i18n("&Reread Keys")) );
-  connect( this, SIGNAL(defaultClicked()),
+  KGuiItem::assign(buttonBox->button(QDialogButtonBox::RestoreDefaults), KGuiItem(i18n("&RereadKeys")));
+  connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()),
            this, SLOT(slotRereadKeys()) );
-  connect(this, SIGNAL(okClicked()),SLOT(slotOk()));
-  connect(this,SIGNAL(cancelClicked()),SLOT(slotCancel()));
+  connect(mOkButton, SIGNAL(clicked()),SLOT(slotOk()));
+  connect(buttonBox->button(QDialogButtonBox::Cancel),SIGNAL(clicked()),SLOT(slotCancel()));
+  mainLayout->addWidget(buttonBox);
 }
 
 
@@ -563,13 +585,13 @@ QString KeySelectionDialog::keyInfo( const Kpgp::Key *key ) const
   if( remark.isEmpty() ) {
     return QLatin1Char(' ') + i18nc("creation date and status of an OpenPGP key",
                       "Creation date: %1, Status: %2",
-                       KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate ) ,
+                       QLocale().toString(dt.date(), QLocale::ShortFormat),
                        status );
   }
   else {
     return QLatin1Char(' ') + i18nc("creation date, status and remark of an OpenPGP key",
                       "Creation date: %1, Status: %2 (%3)",
-                       KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate ) ,
+                       QLocale().toString(dt.date(), QLocale::ShortFormat),
                        status ,
                        remark );
   }
@@ -697,10 +719,10 @@ void KeySelectionDialog::updateKeyInfo( const Kpgp::Key* key,
   if( 0 == key ) {
     // the key doesn't exist anymore -> delete it from the list view
     while( lvi->childCount() ) {
-      kDebug( 5326 ) <<"Deleting '" << lvi->child( 0 )->text( 1 ) <<"'";
+      qCDebug(KPGP_LOG) <<"Deleting '" << lvi->child( 0 )->text( 1 ) <<"'";
       delete lvi->takeChild( 0 );
     }
-    kDebug( 5326 ) <<"Deleting key 0x" << lvi->text( 0 ) <<" ("
+    qCDebug(KPGP_LOG) <<"Deleting key 0x" << lvi->text( 0 ) <<" ("
                   << lvi->text( 1 ) << ")\n";
     delete lvi;
     lvi = 0;
@@ -797,7 +819,7 @@ KeySelectionDialog::keyAdmissibility( QTreeWidgetItem* lvi,
     return 1;
     break;
   default:
-    kDebug( 5326 ) <<"Error: Invalid key status value.";
+    qCDebug(KPGP_LOG) <<"Error: Invalid key status value.";
   }
 
   return 0;
@@ -861,7 +883,7 @@ void KeySelectionDialog::slotRereadKeys()
 
 void KeySelectionDialog::slotSelectionChanged()
 {
-  kDebug( 5326 ) <<"KeySelectionDialog::slotSelectionChanged()";
+  qCDebug(KPGP_LOG) <<"KeySelectionDialog::slotSelectionChanged()";
 
   if ( mListView->selectionMode() == QTreeWidget::ExtendedSelection ) {
     // (re)start the check selection timer. Checking the selection is delayed
@@ -877,17 +899,17 @@ void KeySelectionDialog::slotSelectionChanged()
 
 void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
 {
-  kDebug( 5326 ) <<"KeySelectionDialog::slotCheckSelection()";
+  qCDebug(KPGP_LOG) <<"KeySelectionDialog::slotCheckSelection()";
 
   if( mListView->selectionMode() != QTreeWidget::ExtendedSelection ) {
     mKeyIds.clear();
     KeyID keyId = getKeyId( plvi );
     if( !keyId.isEmpty() ) {
       mKeyIds.append( keyId );
-      enableButton( Ok, 1 == keyAdmissibility( plvi, AllowExpensiveTrustCheck ) );
+      mOkButton->setEnabled(1==keyAdmissibility(plvi));
     }
     else {
-      enableButton( Ok, false );
+      mOkButton->setEnabled(false);
     }
   }
   else {
@@ -930,7 +952,7 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
           if( -1 == mKeyIds.indexOf( lvi->text(0).toLocal8Bit() ) ) {
             // some items of this key are selected and the key wasn't selected
             // before => the user selected something
-            kDebug( 5326 ) <<"selectedCount:"<<selectedCount<<"/"<<itemCount
+            qCDebug(KPGP_LOG) <<"selectedCount:"<<selectedCount<<"/"<<itemCount
                           <<"--- User selected key"<<lvi->text(0);
             userAction = SELECTED;
           }
@@ -938,7 +960,7 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
                    ( -1 != mKeyIds.indexOf( lvi->text(0).toLocal8Bit() ) ) ) {
             // some items of this key are unselected and the key was selected
             // before => the user deselected something
-            kDebug( 5326 ) <<"selectedCount:"<<selectedCount<<"/"<<itemCount
+            qCDebug(KPGP_LOG) <<"selectedCount:"<<selectedCount<<"/"<<itemCount
                           <<"--- User deselected key"<<lvi->text(0);
             userAction = DESELECTED;
           }
@@ -987,12 +1009,12 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
         }
       }
     }
-    kDebug( 5326 ) <<"Selected keys:" << newKeyIdList.toStringList().join(QLatin1String(","));
+    qCDebug(KPGP_LOG) <<"Selected keys:" << newKeyIdList.toStringList().join(QLatin1String(","));
     mKeyIds = newKeyIdList;
     if( !keysToBeChecked.isEmpty() ) {
       keysAllowed = keysAllowed && checkKeys( keysToBeChecked );
     }
-    enableButton( Ok, keysAllowed );
+    mOkButton->setEnabled(keysAllowed);
 
     connect( mListView, SIGNAL(selectionChanged()),
              this,      SLOT(slotSelectionChanged()) );
@@ -1002,27 +1024,28 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
 
 bool KeySelectionDialog::checkKeys( const QList<QTreeWidgetItem*>& keys ) const
 {
-  KProgressDialog* pProgressDlg = 0;
+  QProgressDialog* pProgressDlg = 0;
   bool keysAllowed = true;
-  kDebug( 5326 ) <<"Checking keys...";
+  qCDebug(KPGP_LOG) <<"Checking keys...";
 
-  pProgressDlg = new KProgressDialog( 0, i18n("Checking Keys"),
-                                      i18n("Checking key 0xMMMMMMMM..."));
+  pProgressDlg = new QProgressDialog( 0);
+  pProgressDlg->setWindowTitle(i18n("Checking Keys"));
+  pProgressDlg->setLabelText(i18n("Checking key 0xMMMMMMMM..."));
   pProgressDlg->setModal(true );
-  pProgressDlg->setAllowCancel( false );
-  pProgressDlg->progressBar()->setMaximum( keys.count() );
+  pProgressDlg->setCancelButton(0);
+  pProgressDlg->setMaximum( keys.count() );
   pProgressDlg->setMinimumDuration( 1000 );
   pProgressDlg->show();
 
   for( QList<QTreeWidgetItem*>::ConstIterator it = keys.begin();
        it != keys.end();
        ++it ) {
-    kDebug( 5326 ) <<"Checking key 0x" << getKeyId( *it ) <<"...";
+    qCDebug(KPGP_LOG) <<"Checking key 0x" << getKeyId( *it ) <<"...";
     pProgressDlg->setLabelText( i18n("Checking key 0x%1...",
                               QString::fromLatin1( getKeyId( *it ) ) ) );
     qApp->processEvents();
     keysAllowed = keysAllowed && ( -1 != keyAdmissibility( *it, AllowExpensiveTrustCheck ) );
-    pProgressDlg->progressBar()->setValue( pProgressDlg->progressBar()->value() + 1 );
+    pProgressDlg->setValue( pProgressDlg->value() + 1 );
     qApp->processEvents();
   }
 
@@ -1184,7 +1207,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
 {
   setObjectName( QLatin1String(name) );
   QHBoxLayout * hlay = new QHBoxLayout( this );
-  hlay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   hlay->setSpacing( QDialog::spacingHint() );
   hlay->setMargin( 0 );
 
   // the label where the key id is to be displayed:
@@ -1196,7 +1219,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
                                             QSizePolicy::Minimum ) );
-  mEraseButton->setIcon( KIcon( QLatin1String("edit-clear-locationbar-rtl") ) );
+  mEraseButton->setIcon( QIcon::fromTheme( QLatin1String("edit-clear-locationbar-rtl") ) );
   mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
@@ -1241,7 +1264,7 @@ void KeyRequester::slotDialogButtonClicked() {
   Module * pgp = Module::getKpgp();
 
   if ( !pgp ) {
-    kWarning(5326) <<"Kpgp::KeyRequester::slotDialogButtonClicked(): No pgp module found!";
+    qCWarning(KPGP_LOG) <<"Kpgp::KeyRequester::slotDialogButtonClicked(): No pgp module found!";
     return;
   }
 
@@ -1331,13 +1354,18 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
                                       const QVector<KeyIDList>& keyIDs,
                                       const int allowedKeys,
                                       QWidget *parent )
-  : KDialog( parent ),
+  : QDialog( parent ),
     mKeys( keyIDs ),
     mAllowedKeys( allowedKeys ),
     mPrefsChanged( false )
 {
-  setCaption( i18n("Encryption Key Approval") );
-  setButtons( Ok|Cancel );
+  setWindowTitle( i18n("Encryption Key Approval") );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
 
@@ -1348,11 +1376,16 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   // if( addresses.isEmpty() || keyList.isEmpty() ||
   //     addresses.count()+1 != keyList.count() )
   //   do something;
+  QWidget *mainWidget = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(mainWidget);
 
   QFrame *page = new QFrame( this );
-  setMainWidget( page );
+  mainLayout->addWidget(page);
+  mainLayout->addWidget(buttonBox); 
   QVBoxLayout *topLayout = new QVBoxLayout( page );
-  topLayout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   topLayout->setSpacing( QDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
   QLabel *label = new QLabel( i18n("The following keys will be used for "
@@ -1363,10 +1396,12 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   QScrollArea* sv = new QScrollArea( page );
   sv->setWidgetResizable( true );
   topLayout->addWidget( sv );
-  KVBox* bigvbox = new KVBox;
+  QWidget* bigvbox = new QWidget;
+  QVBoxLayout *bigvboxVBoxLayout = new QVBoxLayout(bigvbox);
+  bigvboxVBoxLayout->setMargin(0);
   sv->setWidget( bigvbox );
-  //bigvbox->setMargin( KDialog::marginHint() );
-  bigvbox->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   //bigvboxVBoxLayout->setMargin( QDialog::marginHint() );
+//TODO PORT QT5   bigvboxVBoxLayout->setSpacing( QDialog::spacingHint() );
 
   QButtonGroup *mChangeButtonGroup = new QButtonGroup;
   mAddressLabels.resize( addresses.count() );
@@ -1377,11 +1412,15 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   // the sender's key
   if( pgp->encryptToSelf() ) {
     mEncryptToSelf = 1;
-    KHBox* hbox = new KHBox( bigvbox );
+    QWidget* hbox = new QWidget( bigvbox );
+    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
+    bigvboxVBoxLayout->addWidget(hbox);
     new QLabel( i18n("Your keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
+    hboxHBoxLayout->addWidget(keyidsL);
     if( keyIDs[0].isEmpty() ) {
-      keyidsL->setText( i18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
+      keyidsL->setText( xi18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
     }
     else {
       keyidsL->setText( QLatin1String("0x") + keyIDs[0].toStringList().join( QLatin1String("\n0x") ) );
@@ -1389,6 +1428,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     keyidsL->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     /*
     QListBox* keyidLB = new QListBox( hbox );
+    hboxHBoxLayout->addWidget(keyidLB);
     if( keyIDs[0].isEmpty() ) {
       keyidLB->insertItem( i18n("<none>") );
     }
@@ -1399,11 +1439,12 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     keyidLB->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     */
     QPushButton *button = new QPushButton( i18n("Change..."), hbox );
+    hboxHBoxLayout->addWidget(button);
     mChangeButtonGroup->addButton( button );
     button->setAutoDefault( false );
-    hbox->setStretchFactor( keyidsL, 10 );
+    hboxHBoxLayout->setStretchFactor( keyidsL, 10 );
     mKeyIdsLabels.insert( 0, keyidsL );
-    //hbox->setStretchFactor( keyidLB, 10 );
+    //hboxHBoxLayout->setStretchFactor( keyidLB, 10 );
     //mKeyIdListBoxes.insert( 0, keyidLB );
 
     new KSeparator( Qt::Horizontal, bigvbox );
@@ -1428,17 +1469,25 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
       new KSeparator( Qt::Horizontal, bigvbox );
     }
 
-    KHBox *hbox = new KHBox( bigvbox );
+    QWidget *hbox = new QWidget( bigvbox );
+    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
+    bigvboxVBoxLayout->addWidget(hbox);
     new QLabel( i18n("Recipient:"), hbox );
     QLabel *addressL = new QLabel( *ait, hbox );
-    hbox->setStretchFactor( addressL, 10 );
+    hboxHBoxLayout->addWidget(addressL);
+    hboxHBoxLayout->setStretchFactor( addressL, 10 );
     mAddressLabels.insert( i, addressL  );
 
-    hbox = new KHBox( bigvbox );
+    hbox = new QWidget( bigvbox );
+    hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
+    bigvboxVBoxLayout->addWidget(hbox);
     new QLabel( i18n("Encryption keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
+    hboxHBoxLayout->addWidget(keyidsL);
     if( (*kit).isEmpty() ) {
-      keyidsL->setText( i18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
+      keyidsL->setText( xi18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
     }
     else {
       keyidsL->setText( QLatin1String("0x") + (*kit).toStringList().join( QLatin1String("\n0x") ) );
@@ -1446,6 +1495,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     keyidsL->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     /*
     QListBox* keyidLB = new QListBox( hbox );
+    hboxHBoxLayout->addWidget(keyidLB);
     if( (*kit).isEmpty() ) {
       keyidLB->insertItem( i18n("<none>") );
     }
@@ -1456,17 +1506,22 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     keyidLB->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     */
     QPushButton *button = new QPushButton( i18n("Change..."), hbox );
+    hboxHBoxLayout->addWidget(button);
     mChangeButtonGroup->addButton( button );
     button->setAutoDefault( false );
-    hbox->setStretchFactor( keyidsL, 10 );
+    hboxHBoxLayout->setStretchFactor( keyidsL, 10 );
     mKeyIdsLabels.insert( i + 1, keyidsL );
-    //hbox->setStretchFactor( keyidLB, 10 );
+    //hboxHBoxLayout->setStretchFactor( keyidLB, 10 );
     //mKeyIdListBoxes.insert( i + 1, keyidLB );
 
-    hbox = new KHBox( bigvbox );
+    hbox = new QWidget( bigvbox );
+    hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
+    bigvboxVBoxLayout->addWidget(hbox);
     new QLabel( i18n("Encryption preference:"), hbox );
     QComboBox *encrPrefCombo = new QComboBox( hbox );
-    encrPrefCombo->addItem( i18nc( "@item:inlistbox", "<placeholder>none</placeholder>") );
+    hboxHBoxLayout->addWidget(encrPrefCombo);
+    encrPrefCombo->addItem( xi18nc( "@item:inlistbox", "<placeholder>none</placeholder>") );
     encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Never Encrypt with This Key") );
     encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Always Encrypt with This Key") );
     encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Encrypt Whenever Encryption is Possible") );
@@ -1503,16 +1558,16 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   QSize size = sizeHint();
 
   // don't make the dialog too large
-  QRect desk = KGlobalSettings::desktopGeometry(this);
+  QRect desk = QApplication::desktop()->screenGeometry(this);
   int screenWidth = desk.width();
   if( size.width() > 3*screenWidth/4 )
     size.setWidth( 3*screenWidth/4 );
   int screenHeight = desk.height();
   if( size.height() > 7*screenHeight/8 )
     size.setHeight( 7*screenHeight/8 );
-  connect(this,SIGNAL(okClicked()),SLOT(slotOk()));
-  connect(this,SIGNAL(cancelClicked()),SLOT(slotCancel()));
-  setInitialSize( size );
+  connect(okButton,SIGNAL(clicked()),SLOT(slotOk()));
+  connect(buttonBox->button(QDialogButtonBox::Cancel),SIGNAL(clicked()),SLOT(slotCancel()));
+  resize( size );
 }
 
 void
@@ -1520,7 +1575,7 @@ KeyApprovalDialog::slotChangeEncryptionKey( int nr )
 {
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
 
-  kDebug( 5326 )<<"Key approval dialog size is"
+  qCDebug(KPGP_LOG)<<"Key approval dialog size is"
                <<width()<<"x"<<height();
 
   if( pgp == 0 )
@@ -1621,16 +1676,28 @@ KeyApprovalDialog::slotCancel()
 // ------------------------------------------------------------------------
 CipherTextDialog::CipherTextDialog( const QByteArray & text,
                                     const QByteArray & charset, QWidget *parent )
-  :KDialog( parent )
+  :QDialog( parent )
 {
-  setCaption( i18n("OpenPGP Information") );
-  setButtons( Ok|Cancel );
+  setWindowTitle( i18n("OpenPGP Information") );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+  QWidget *mainWidget = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(mainWidget);
+
 
   // FIXME (post KDE2.2): show some more info, e.g. the output of GnuPG/PGP
   QFrame *page = new QFrame( this );
-  setMainWidget( page );
+  mainLayout->addWidget(page);
+  mainLayout->addWidget(buttonBox);
   QVBoxLayout *topLayout = new QVBoxLayout( page );
-  topLayout->setSpacing( spacingHint() );
+  //QT5 topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
   QLabel *label = new QLabel( page );
@@ -1646,7 +1713,7 @@ CipherTextDialog::CipherTextDialog( const QByteArray & text,
     unicodeText = QString::fromLocal8Bit(text.data());
   else {
     bool ok=true;
-    QTextCodec *codec = KGlobal::charsets()->codecForName(QLatin1String(charset), ok);
+    QTextCodec *codec = KCharsets::charsets()->codecForName(QLatin1String(charset), ok);
     if(!ok)
       unicodeText = QString::fromLocal8Bit(text.data());
     else
@@ -1654,7 +1721,6 @@ CipherTextDialog::CipherTextDialog( const QByteArray & text,
   }
 
   mEditBox->setText(unicodeText);
-
   setMinimumSize();
 }
 
@@ -1669,7 +1735,7 @@ void CipherTextDialog::setMinimumSize()
   int textWidth = mEditBox->viewport()->width() + 30;
 
 
-  int maxWidth = KGlobalSettings::desktopGeometry(parentWidget()).width()-100;
+  int maxWidth = QApplication::desktop()->screenGeometry(parentWidget()).width()-100;
 
   mEditBox->setMinimumWidth( qMin( textWidth, maxWidth ) );
 }

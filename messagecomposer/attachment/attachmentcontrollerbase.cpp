@@ -32,27 +32,28 @@
 #include "messageviewer/viewer/nodehelper.h"
 #include "messageviewer/utils/util.h"
 
-#include <akonadi/itemfetchjob.h>
+#include <AkonadiCore/itemfetchjob.h>
 #include <kio/jobuidelegate.h>
+#include <QIcon>
 
 #include <QMenu>
 #include <QPointer>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
-#include <KDebug>
+#include <QDebug>
 #include <KEncodingFileDialog>
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KMimeTypeTrader>
-#include <KPushButton>
+#include <QPushButton>
 #include <KRun>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KFileItemActions>
 #include <KActionMenu>
 
-#include <kpimutils/kfileio.h>
+#include <KPIMUtils/kpimutils/kfileio.h>
 
 #include <libkleo/kleo/cryptobackendfactory.h>
 #include <libkleo/ui/keyselectiondialog.h>
@@ -66,6 +67,7 @@
 #include <KIO/Job>
 
 #include <KMime/Content>
+#include <QFileDialog>
 
 using namespace MessageComposer;
 using namespace MessageCore;
@@ -99,7 +101,7 @@ public:
     MessageComposer::AttachmentModel *model;
     QWidget *wParent;
     QHash<MessageViewer::EditorWatcher*,AttachmentPart::Ptr> editorPart;
-    QHash<MessageViewer::EditorWatcher*,KTemporaryFile*> editorTempFile;
+    QHash<MessageViewer::EditorWatcher*,QTemporaryFile*> editorTempFile;
 
     AttachmentPart::List selectedParts;
     KActionCollection *mActionCollection;
@@ -207,12 +209,12 @@ void AttachmentControllerBase::Private::compressJobResult( KJob *job )
         }
     }
 
-    kDebug() << "Replacing uncompressed part in model.";
+    qDebug() << "Replacing uncompressed part in model.";
     uncompressedParts[ compressedPart ] = originalPart;
     bool ok = model->replaceAttachment( originalPart, compressedPart );
     if( !ok ) {
         // The attachment was removed from the model while we were compressing.
-        kDebug() << "Compressed a zombie.";
+        qDebug() << "Compressed a zombie.";
     }
 }
 
@@ -282,11 +284,11 @@ void AttachmentControllerBase::Private::editDone( MessageViewer::EditorWatcher *
 {
     AttachmentPart::Ptr part = editorPart.take( watcher );
     Q_ASSERT( part );
-    KTemporaryFile *tempFile = editorTempFile.take( watcher );
+    QTemporaryFile *tempFile = editorTempFile.take( watcher );
     Q_ASSERT( tempFile );
 
     if( watcher->fileChanged() ) {
-        kDebug() << "File has changed.";
+        qDebug() << "File has changed.";
 
         // Read the new data and update the part in the model.
         tempFile->reset();
@@ -314,12 +316,12 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
             menu->menuAction()->setObjectName(QLatin1String("openWith_submenu")); // for the unittest
             topMenu->addMenu(menu);
         }
-        //kDebug() << offers.count() << "offers" << topMenu << menu;
+        //qDebug() << offers.count() << "offers" << topMenu << menu;
 
         KService::List::ConstIterator it = offers.constBegin();
         KService::List::ConstIterator end = offers.constEnd();
         for(; it != end; ++it) {
-            KAction* act = MessageViewer::Util::createAppAction(*it,
+            QAction* act = MessageViewer::Util::createAppAction(*it,
                                                                 // no submenu -> prefix single offer
                                                                 menu == topMenu, actionGroup,menu);
             menu->addAction(act);
@@ -332,13 +334,13 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
         } else {
             openWithActionName = i18nc("@title:menu", "&Open With...");
         }
-        KAction *openWithAct = new KAction(menu);
+        QAction *openWithAct = new QAction(menu);
         openWithAct->setText(openWithActionName);
         QObject::connect(openWithAct, SIGNAL(triggered()), q, SLOT(slotOpenWithDialog()));
         menu->addAction(openWithAct);
     }
     else { // no app offers -> Open With...
-        KAction *act = new KAction(topMenu);
+        QAction *act = new QAction(topMenu);
         act->setText(i18nc("@title:menu", "&Open With..."));
         QObject::connect(act, SIGNAL(triggered()), q, SLOT(slotOpenWithDialog()));
         topMenu->addAction(act);
@@ -350,7 +352,7 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
 void AttachmentControllerBase::exportPublicKey( const QString &fingerprint )
 {
     if( fingerprint.isEmpty() || !Kleo::CryptoBackendFactory::instance()->openpgp() ) {
-        kWarning() << "Tried to export key with empty fingerprint, or no OpenPGP.";
+        qWarning() << "Tried to export key with empty fingerprint, or no OpenPGP.";
         Q_ASSERT( false ); // Can this happen?
         return;
     }
@@ -377,16 +379,16 @@ void AttachmentControllerBase::Private::attachPublicKeyJobResult( KJob *job )
 }
 
 
-static KTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part ) // local
+static QTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part ) // local
 {
-    KTemporaryFile *file = new KTemporaryFile;
+    QTemporaryFile *file = new QTemporaryFile;
     if( !file->open() ) {
-        kError() << "Could not open tempfile" << file->fileName();
+        qCritical() << "Could not open tempfile" << file->fileName();
         delete file;
         return 0;
     }
     if( file->write( part->data() ) == -1 ) {
-        kError() << "Could not dump attachment to tempfile.";
+        qCritical() << "Could not dump attachment to tempfile.";
         delete file;
         return 0;
     }
@@ -421,26 +423,26 @@ AttachmentControllerBase::~AttachmentControllerBase()
 void AttachmentControllerBase::createActions()
 {
     // Create the actions.
-    d->attachPublicKeyAction = new KAction( i18n( "Attach &Public Key..." ), this );
+    d->attachPublicKeyAction = new QAction( i18n( "Attach &Public Key..." ), this );
     connect( d->attachPublicKeyAction, SIGNAL(triggered(bool)),
              this, SLOT(showAttachPublicKeyDialog()) );
 
-    d->attachMyPublicKeyAction = new KAction( i18n( "Attach &My Public Key" ), this );
+    d->attachMyPublicKeyAction = new QAction( i18n( "Attach &My Public Key" ), this );
     connect( d->attachMyPublicKeyAction, SIGNAL(triggered(bool)), this, SLOT(attachMyPublicKey()) );
 
-    d->attachmentMenu = new KActionMenu( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
+    d->attachmentMenu = new KActionMenu( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
     connect( d->attachmentMenu, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
 
     d->attachmentMenu->setDelayed(true);
 
-    d->addAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
+    d->addAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
     d->addAction->setIconText( i18n( "Attach" ) );
-    d->addContextAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ),
+    d->addContextAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ),
                                        i18n( "Add Attachment..." ), this );
     connect( d->addAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
     connect( d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
 
-    d->addOwnVcardAction = new KAction( i18n("Attach Own vCard"),this );
+    d->addOwnVcardAction = new QAction( i18n("Attach Own vCard"),this );
     d->addOwnVcardAction->setIconText( i18n( "Own vCard" ) );
     d->addOwnVcardAction->setCheckable(true);
     connect(d->addOwnVcardAction, SIGNAL(triggered(bool)), this, SIGNAL(addOwnVcard(bool)));
@@ -449,40 +451,40 @@ void AttachmentControllerBase::createActions()
     d->attachmentMenu->addSeparator();
     d->attachmentMenu->addAction(d->addOwnVcardAction);
 
-    d->removeAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "&Remove Attachment" ), this );
-    d->removeContextAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
+    d->removeAction = new QAction( QIcon::fromTheme(QLatin1String("edit-delete")), i18n( "&Remove Attachment" ), this );
+    d->removeContextAction = new QAction( QIcon::fromTheme(QLatin1String("edit-delete")), i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
     connect( d->removeAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()) );
     connect( d->removeContextAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()) );
 
-    d->openContextAction = new KAction( i18nc( "to open", "Open" ), this );
+    d->openContextAction = new QAction( i18nc( "to open", "Open" ), this );
     connect( d->openContextAction, SIGNAL(triggered(bool)), this, SLOT(openSelectedAttachments()) );
 
-    d->viewContextAction = new KAction( i18nc( "to view", "View" ), this );
+    d->viewContextAction = new QAction( i18nc( "to view", "View" ), this );
     connect( d->viewContextAction, SIGNAL(triggered(bool)), this, SLOT(viewSelectedAttachments()) );
 
-    d->editContextAction = new KAction( i18nc( "to edit", "Edit" ), this );
+    d->editContextAction = new QAction( i18nc( "to edit", "Edit" ), this );
     connect( d->editContextAction, SIGNAL(triggered(bool)), this, SLOT(editSelectedAttachment()) );
 
-    d->editWithContextAction = new KAction( i18n( "Edit With..." ), this );
+    d->editWithContextAction = new QAction( i18n( "Edit With..." ), this );
     connect( d->editWithContextAction, SIGNAL(triggered(bool)), this, SLOT(editSelectedAttachmentWith()) );
 
-    d->saveAsAction = new KAction( KIcon( QLatin1String( "document-save-as" ) ),
+    d->saveAsAction = new QAction( QIcon::fromTheme( QLatin1String( "document-save-as" ) ),
                                    i18n( "&Save Attachment As..." ), this );
-    d->saveAsContextAction = new KAction( KIcon( QLatin1String( "document-save-as" ) ),
+    d->saveAsContextAction = new QAction( QIcon::fromTheme( QLatin1String( "document-save-as" ) ),
                                           i18n( "Save As..." ), this );
     connect( d->saveAsAction, SIGNAL(triggered(bool)),
              this, SLOT(saveSelectedAttachmentAs()) );
     connect( d->saveAsContextAction, SIGNAL(triggered(bool)),
              this, SLOT(saveSelectedAttachmentAs()) );
 
-    d->propertiesAction = new KAction( i18n( "Attachment Pr&operties..." ), this );
-    d->propertiesContextAction = new KAction( i18n( "Properties" ), this );
+    d->propertiesAction = new QAction( i18n( "Attachment Pr&operties..." ), this );
+    d->propertiesContextAction = new QAction( i18n( "Properties" ), this );
     connect( d->propertiesAction, SIGNAL(triggered(bool)),
              this, SLOT(selectedAttachmentProperties()) );
     connect( d->propertiesContextAction, SIGNAL(triggered(bool)),
              this, SLOT(selectedAttachmentProperties()) );
 
-    d->selectAllAction = new KAction( i18n("Select All"), this);
+    d->selectAllAction = new QAction( i18n("Select All"), this);
     connect( d->selectAllAction, SIGNAL(triggered(bool)),
              this, SIGNAL(selectedAllAttachment()) );
 
@@ -515,13 +517,13 @@ void AttachmentControllerBase::setSignEnabled( bool enabled )
 void AttachmentControllerBase::compressAttachment( AttachmentPart::Ptr part, bool compress )
 {
     if( compress ) {
-        kDebug() << "Compressing part.";
+        qDebug() << "Compressing part.";
 
         AttachmentCompressJob *ajob = new AttachmentCompressJob( part, this );
         connect( ajob, SIGNAL(result(KJob*)), this, SLOT(compressJobResult(KJob*)) );
         ajob->start();
     } else {
-        kDebug() << "Uncompressing part.";
+        qDebug() << "Uncompressing part.";
 
         // Replace the compressed part with the original uncompressed part, and delete
         // the compressed part.
@@ -587,7 +589,7 @@ void AttachmentControllerBase::slotOpenWithAction(QAction*act)
 
 void AttachmentControllerBase::openWith(KService::Ptr offer)
 {
-    KTemporaryFile *tempFile = dumpAttachmentToTempFile( d->selectedParts.first() );
+    QTemporaryFile *tempFile = dumpAttachmentToTempFile( d->selectedParts.first() );
     if( !tempFile ) {
         KMessageBox::sorry( d->wParent,
                             i18n( "KMail was unable to write the attachment to a temporary file." ),
@@ -595,7 +597,7 @@ void AttachmentControllerBase::openWith(KService::Ptr offer)
         return;
     }
     KUrl::List lst;
-    KUrl url = KUrl::fromPath(tempFile->fileName());
+    KUrl url = QUrl::fromLocalFile(tempFile->fileName());
     lst.append( url );
     bool result = false;
     if(offer) {
@@ -615,7 +617,7 @@ void AttachmentControllerBase::openWith(KService::Ptr offer)
 
 void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
 {
-    KTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
+    QTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
     if( !tempFile ) {
         KMessageBox::sorry( d->wParent,
                             i18n( "KMail was unable to write the attachment to a temporary file." ),
@@ -623,13 +625,13 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
         return;
     }
 
-    bool success = KRun::runUrl( KUrl::fromPath( tempFile->fileName() ),
+    bool success = KRun::runUrl( QUrl::fromLocalFile( tempFile->fileName() ),
                                  QString::fromLatin1( part->mimeType() ),
                                  d->wParent,
                                  true /*tempFile*/,
                                  false /*runExecutables*/ );
     if( !success ) {
-        if( KMimeTypeTrader::self()->preferredService( QString::fromLatin1( part->mimeType() ) ).isNull() ) {
+        if( !KMimeTypeTrader::self()->preferredService( QString::fromLatin1( part->mimeType() ) ).data() ) {
             // KRun showed an Open-With dialog, and it was canceled.
         } else {
             // KRun failed.
@@ -664,13 +666,13 @@ void AttachmentControllerBase::Private::slotAttachmentContentCreated( KJob *job 
         emit q->showAttachment( attachmentJob->content(), QByteArray() );
     } else {
         // TODO: show warning to the user
-        kWarning() << "Error creating KMime::Content for attachment:" << job->errorText();
+        qWarning() << "Error creating KMime::Content for attachment:" << job->errorText();
     }
 }
 
 void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool openWith )
 {
-    KTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
+    QTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
     if( !tempFile ) {
         KMessageBox::sorry( d->wParent,
                             i18n( "KMail was unable to write the attachment to a temporary file." ),
@@ -679,7 +681,7 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool op
     }
 
     MessageViewer::EditorWatcher *watcher = new MessageViewer::EditorWatcher(
-                KUrl::fromPath( tempFile->fileName() ),
+                QUrl::fromLocalFile( tempFile->fileName() ),
                 QString::fromLatin1( part->mimeType() ), openWith,
                 this, d->wParent );
     connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)),
@@ -694,7 +696,7 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool op
         // Delete the temp file if the composer is closed (and this object is destroyed).
         tempFile->setParent( this ); // Manages lifetime.
     } else {
-        kWarning() << "Could not start EditorWatcher.";
+        qWarning() << "Could not start EditorWatcher.";
         delete watcher;
         delete tempFile;
     }
@@ -717,7 +719,7 @@ void AttachmentControllerBase::saveAttachmentAs( AttachmentPart::Ptr part )
                                         i18n( "Save Attachment As" ) );
 
     if( url.isEmpty() ) {
-        kDebug() << "Save Attachment As dialog canceled.";
+        qDebug() << "Save Attachment As dialog canceled.";
         return;
     }
 
@@ -744,7 +746,7 @@ void AttachmentControllerBase::slotPutResult(KJob *job)
                 byteArrayToRemoteFile(_job->data(), _job->url(), true);
         }
         else {
-            KIO::JobUiDelegate *ui = static_cast<KIO::Job*>( job )->ui();
+            KJobUiDelegate *ui = static_cast<KIO::Job*>( job )->ui();
             ui->showErrorMessage();
         }
     }
@@ -767,6 +769,7 @@ void AttachmentControllerBase::attachmentProperties( AttachmentPart::Ptr part )
 void AttachmentControllerBase::showAddAttachmentDialog()
 {
 #ifndef KDEPIM_MOBILE_UI
+#if 0 //QT5
     QPointer<KEncodingFileDialog> dialog = new KEncodingFileDialog(
                 QString( /*startDir*/ ), QString( /*encoding*/ ), QString( /*filter*/ ),
                 i18n( "Attach File" ), KFileDialog::Other, d->wParent );
@@ -792,9 +795,10 @@ void AttachmentControllerBase::showAddAttachmentDialog()
         }
     }
     delete dialog;
+#endif
 #else
     // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
-    const QString fileName = KFileDialog::getOpenFileName( KUrl(), QString(), d->wParent, i18n("Attach File" ) );
+    const QString fileName = QFileDialog::getOpenFileName(d->wParent, i18n("Attach File" ) ,  KUrl(), QString());
     if ( !fileName.isEmpty() ) {
         addAttachment( KUrl::fromLocalFile( fileName ) );
     }
@@ -817,11 +821,11 @@ MessageCore::AttachmentFromUrlBaseJob * AttachmentControllerBase::createAttachme
 {
     MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
     if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
-        kDebug() << "Creating attachment from folder";
+        qDebug() << "Creating attachment from folder";
         ajob = new AttachmentFromFolderJob ( url, this );
     } else {
         ajob = new AttachmentFromUrlJob( url, this );
-        kDebug() << "Creating attachment from file";
+        qDebug() << "Creating attachment from file";
     }
     if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
         ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() );

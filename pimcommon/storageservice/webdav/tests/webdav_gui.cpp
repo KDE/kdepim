@@ -19,10 +19,13 @@
 #include "pimcommon/storageservice/webdav/webdavstorageservice.h"
 #include <QWidget>
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+#include <qdebug.h>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 
 WebDavTestWidget::WebDavTestWidget(QWidget *parent)
@@ -34,10 +37,18 @@ WebDavTestWidget::WebDavTestWidget(QWidget *parent)
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "webdav_gui", 0, ki18n("webdav_Gui"),
-                       "1.0", ki18n("Test for webdav"));
+    KAboutData aboutData( QLatin1String("webdav_gui"), i18n("webdav_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for webdav"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     WebDavTestWidget *w = new WebDavTestWidget;
     w->show();

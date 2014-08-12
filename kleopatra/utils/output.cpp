@@ -44,7 +44,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QFileInfo>
 #include <QTemporaryFile>
@@ -184,7 +184,7 @@ namespace {
 
         /* reimp */ bool isFinalized() const { return m_isFinalized; }
         /* reimp */ void finalize() {
-            kDebug() << this;
+            qDebug() << this;
             if ( m_isFinalized || m_isFinalizing )
                 return;
             m_isFinalizing = true;
@@ -196,7 +196,7 @@ namespace {
         }
 
         /* reimp */ void cancel() {
-            kDebug() << this;
+            qDebug() << this;
             if ( m_isFinalizing ) {
                 m_cancelPending = true;
             } else if ( !m_canceled ) {
@@ -254,7 +254,7 @@ namespace {
               This delay is mainly noticabe on Windows where it can
               take ~30 seconds to write out a 10MB file in the 512 byte
               chunks gpgme serves. */
-            kDebug(5151) << "Waiting for " << m_proc->bytesToWrite()
+            qDebug() << "Waiting for " << m_proc->bytesToWrite()
                          << " Bytes to be written";
             while ( m_proc->waitForBytesWritten( PROCESS_MAX_RUNTIME_TIMEOUT ) );
 
@@ -282,12 +282,12 @@ namespace {
     class FileOutput : public OutputImplBase {
     public:
         explicit FileOutput( const QString & fileName, const shared_ptr<OverwritePolicy> & policy );
-        ~FileOutput() { kDebug() << this; }
+        ~FileOutput() { qDebug() << this; }
 
         /* reimp */ QString label() const { return QFileInfo( m_fileName ).fileName(); }
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_tmpFile; }
         /* reimp */ void doFinalize();
-        /* reimp */ void doCancel() { kDebug() << this; }
+        /* reimp */ void doCancel() { qDebug() << this; }
     private:
         bool obtainOverwritePermission();
 
@@ -342,7 +342,7 @@ shared_ptr<Output> Output::createFromFile( const QString & fileName, bool forceO
 }
 shared_ptr<Output> Output::createFromFile( const QString & fileName, const shared_ptr<OverwritePolicy> & policy ) {
     shared_ptr<FileOutput> fo( new FileOutput( fileName, policy ) );
-    kDebug() << fo.get();
+    qDebug() << fo.get();
     return fo;
 }
 
@@ -374,7 +374,7 @@ bool FileOutput::obtainOverwritePermission() {
 }
 
 void FileOutput::doFinalize() {
-    kDebug() << this;
+    qDebug() << this;
 
     struct Remover {
         QString file;
@@ -393,33 +393,33 @@ void FileOutput::doFinalize() {
     m_tmpFile.reset(); // really close the file - needed on Windows for renaming :/
     kleo_assert( !guard ); // if this triggers, we need to audit for holder of shared_ptr<QIODevice>s.
 
-    kDebug() << this << " renaming " << tmpFileName << "->" << m_fileName ;
+    qDebug() << this << " renaming " << tmpFileName << "->" << m_fileName ;
 
     if ( QFile::rename( tmpFileName, m_fileName ) ) {
-        kDebug() << this << "succeeded";
+        qDebug() << this << "succeeded";
         return;
     }
 
-    kDebug() << this << "failed";
+    qDebug() << this << "failed";
 
     if ( !obtainOverwritePermission() )
         throw Exception( gpg_error( GPG_ERR_CANCELED ),
                          i18n( "Overwriting declined" ) );
 
-    kDebug() << this << "going to overwrite" << m_fileName ;
+    qDebug() << this << "going to overwrite" << m_fileName ;
 
     if ( !QFile::remove( m_fileName ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                          i18n("Could not remove file \"%1\" for overwriting.", m_fileName ) );
 
-    kDebug() << this << "succeeded, renaming " << tmpFileName << "->" << m_fileName;
+    qDebug() << this << "succeeded, renaming " << tmpFileName << "->" << m_fileName;
 
     if ( QFile::rename( tmpFileName, m_fileName ) ) {
-        kDebug() << this << "succeeded";
+        qDebug() << this << "succeeded";
         return;
     }
 
-    kDebug() << this << "failed";
+    qDebug() << this << "failed";
 
     throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                      i18n( "Could not rename file \"%1\" to \"%2\"",
@@ -445,7 +445,7 @@ ProcessStdInOutput::ProcessStdInOutput( const QString & cmd, const QStringList &
       m_arguments( args ),
       m_proc( new redirect_close<QProcess> )
 {
-    kDebug() << "cd" << wd.absolutePath() << endl << cmd << args;
+    qDebug() << "cd" << wd.absolutePath() << endl << cmd << args;
     if ( cmd.isEmpty() )
         throw Exception( gpg_error( GPG_ERR_INV_ARG ),
                          i18n("Command not specified") );

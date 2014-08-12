@@ -25,16 +25,13 @@
 
 #include <KJob>
 
-#include <Akonadi/Item>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
-#include <KToolInvocation>
 
 #include <QDebug>
-#include <QItemSelectionModel>
 using namespace KABMailSender;
 
 MailSenderJob::MailSenderJob(const Akonadi::Item::List &listItem, QObject *parent)
@@ -109,7 +106,7 @@ void MailSenderJob::fetchItem(const Akonadi::Item &item)
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
     job->fetchScope().fetchFullPayload();
 
-    connect( job, SIGNAL(result(KJob*)), SLOT(fetchJobFinished(KJob*)) );
+    connect(job, &Akonadi::ItemFetchJob::result, this, &MailSenderJob::fetchJobFinished);
 }
 
 void MailSenderJob::fetchJobFinished(KJob *job)

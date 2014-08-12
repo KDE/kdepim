@@ -34,13 +34,14 @@
 #include "catcheckbox.h"
 #include "settings.h"
 
-#include <KMenu>
-#include <KAction>
+#include <QMenu>
+#include <QIcon>
+#include <QAction>
 #include <KToolInvocation>
 #include <QClipboard>
 #include <QTimer>
 #include <kstatusbar.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kxmlguiwindow.h>
 #include <kmessagebox.h>
 #include <kdatetime.h>
@@ -51,7 +52,7 @@ class Toolbox::Private
 public:
     QList<CatCheckBox*> listCategoryCheckBoxes;
     int mCurrentBlogId;
-    KStatusBar *statusbar;
+    QStatusBar *statusbar;
 };
 Toolbox::Toolbox( QWidget *parent )
     : QWidget( parent ), d(new Private)
@@ -60,7 +61,7 @@ Toolbox::Toolbox( QWidget *parent )
     if ( parent )
         d->statusbar = qobject_cast<KXmlGuiWindow*>( parent )->statusBar();
     else
-        d->statusbar = new KStatusBar( this );
+        d->statusbar = new QStatusBar( this );
     setupUi( this );
     setButtonsIcon();
     frameCat->layout()->setAlignment( Qt::AlignTop );
@@ -119,7 +120,7 @@ void Toolbox::slotReloadCategoryList()
     }
 
     Backend *b = new Backend( d->mCurrentBlogId );
-    connect( b, SIGNAL(sigCategoryListFetched(int)), this, SLOT(slotLoadCategoryListFromDB(int)) );
+    connect(b, &Backend::sigCategoryListFetched, this, &Toolbox::slotLoadCategoryListFromDB);
     connect( b, SIGNAL(sigError(QString)), this, SIGNAL(sigError(QString)) );
     emit sigBusy( true );
     d->statusbar->showMessage( i18n( "Requesting list of categories..." ) );
@@ -146,7 +147,7 @@ void Toolbox::slotUpdateEntries(int count)
     }
     Backend *entryB = new Backend( d->mCurrentBlogId, this);
     entryB->getEntriesListFromServer( count );
-    connect( entryB, SIGNAL(sigEntriesListFetched(int)), this, SLOT(slotLoadEntriesFromDB(int)) );
+    connect(entryB, &Backend::sigEntriesListFetched, this, &Toolbox::slotLoadEntriesFromDB);
     connect( entryB, SIGNAL(sigError(QString)), this, SIGNAL(sigError(QString)) );
     d->statusbar->showMessage( i18n( "Requesting list of entries..." ) );
     setCursor( Qt::BusyCursor );
@@ -156,7 +157,7 @@ void Toolbox::slotUpdateEntries(int count)
 void Toolbox::slotLoadEntriesFromDB( int blog_id )
 {
     if ( blog_id == -1 ) {
-        kDebug() << "Blog Id doesn't set correctly";
+        qDebug() << "Blog Id doesn't set correctly";
         return;
     }
     lstEntriesList->clear();
@@ -180,7 +181,7 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
 void Toolbox::slotLoadCategoryListFromDB( int blog_id )
 {
     if ( blog_id == -1 ) {
-        kDebug() << "Blog Id do not sets correctly";
+        qDebug() << "Blog Id do not sets correctly";
         return;
     }
     clearCatList();
@@ -210,7 +211,7 @@ void Toolbox::slotRemoveSelectedEntryFromServer()
                                                                      data(BlogEntryID).toInt() ) );
         Backend *b = new Backend( d->mCurrentBlogId, this);
         connect(b, SIGNAL(sigPostRemoved(int,BilboPost)), this, SLOT(slotPostRemoved(int,BilboPost)) );
-        connect(b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)));
+        connect(b, &Backend::sigError, this, &Toolbox::slotError);
         b->removePost(post);
         d->statusbar->showMessage( i18n( "Removing post..." ) );
     }
@@ -289,7 +290,7 @@ void Toolbox::getFieldsValue( BilboPost* currentPost )
         currentPost->setModificationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
     }
     if ( currentPost->creationDateTime().isUtc() || currentPost->modificationDateTime().isUtc() ){
-        kDebug()<<"creationDateTime was UTC!";
+        qDebug()<<"creationDateTime was UTC!";
         currentPost->setCreationDateTime( KDateTime( currentPost->creationDateTime().dateTime(),
                                                     KDateTime::LocalZone ) );
         currentPost->setModificationDateTime( KDateTime( currentPost->modificationDateTime().dateTime(),
@@ -306,13 +307,13 @@ void Toolbox::setFieldsValue( BilboPost* post )
 {
     if ( post == 0 ) {
         resetFields();
-        kDebug()<<"post is NULL";
+        qDebug()<<"post is NULL";
         return;
     }
 
     setSelectedCategories( post->categories() );
     txtCatTags->setText( post->tags().join( QLatin1String(", ") ) );
-//     kDebug() << "Post status is: " << post->status();
+//     qDebug() << "Post status is: " << post->status();
     if ( post->status() == KBlog::BlogPost::New )
         comboOptionsStatus->setCurrentIndex( 2 );
     else if ( post->isPrivate() )
@@ -323,13 +324,13 @@ void Toolbox::setFieldsValue( BilboPost* post )
     chkOptionsTrackback->setChecked( post->isTrackBackAllowed() );
     chkOptionsTime->setChecked( post->isModifyTimeStamp() );
     if ( post->creationDateTime().isUtc() || post->modificationDateTime().isUtc() ){
-        kDebug()<<"creationDateTime was UTC!";
+        qDebug()<<"creationDateTime was UTC!";
         post->setCreationDateTime(KDateTime(post->creationDateTime().dateTime(), KDateTime::LocalZone));
         post->setModificationDateTime(KDateTime(post->modificationDateTime().dateTime(), KDateTime::LocalZone));
     }
     optionsTime->setTime( post->creationDateTime().time() );
     optionsDate->setDate( post->creationDateTime().date() );
-    txtSlug->setText( KUrl::fromPercentEncoding( post->slug().toLatin1() ) );
+    txtSlug->setText( QUrl::fromPercentEncoding( post->slug().toLatin1() ) );
     txtSummary->setPlainText( post->summary() );
 }
 
@@ -377,7 +378,7 @@ QStringList Toolbox::currentTags()
 void Toolbox::slotEntrySelected( QListWidgetItem * item )
 {
     BilboPost post = DBMan::self()->getPostInfo( item->data( BlogEntryID ).toInt() );
-    kDebug() << "Emiting sigEntrySelected...";
+    qDebug() << "Emiting sigEntrySelected...";
     Q_EMIT sigEntrySelected( post, d->mCurrentBlogId );
 }
 
@@ -393,9 +394,9 @@ void Toolbox::slotEntriesCopyUrl()
     }
     BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( BlogEntryID ).toInt() );
     if ( !post.permaLink().isEmpty() )
-        QApplication::clipboard()->setText( post.permaLink().prettyUrl() );
+        QApplication::clipboard()->setText( post.permaLink().toDisplayString() );
     else if ( !post.link().isEmpty() )
-        QApplication::clipboard()->setText( post.link().prettyUrl() );
+        QApplication::clipboard()->setText( post.link().toDisplayString() );
     else
         KMessageBox::sorry(this, i18n( "No link field is available in the database for this entry." ) );
 }
@@ -410,18 +411,18 @@ void Toolbox::unCheckCatList()
 
 void Toolbox::setButtonsIcon()
 {
-    btnEntriesUpdate->setIcon( KIcon( QLatin1String("view-refresh") ) );
-    btnEntriesRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
-    btnEntriesClear->setIcon( KIcon( QLatin1String("edit-clear") ) );
-    btnCatReload->setIcon( KIcon( QLatin1String("view-refresh") ) );
-    btnCatAdd->setIcon( KIcon( QLatin1String("list-add") ) );
-    btnLocalRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    btnEntriesUpdate->setIcon( QIcon::fromTheme( QLatin1String("view-refresh") ) );
+    btnEntriesRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
+    btnEntriesClear->setIcon( QIcon::fromTheme( QLatin1String("edit-clear") ) );
+    btnCatReload->setIcon( QIcon::fromTheme( QLatin1String("view-refresh") ) );
+    btnCatAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
+    btnLocalRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     ///TODO Add option for selecting only text or only Icon for Toolbox buttons!
 }
 
 void Toolbox::reloadLocalPosts()
 {
-    kDebug();
+    qDebug();
 
     localEntries->clear();
 
@@ -440,7 +441,7 @@ void Toolbox::reloadLocalPosts()
 
 void Toolbox::slotLocalEntrySelected( QTreeWidgetItem* item,int column )
 {
-    kDebug()<<"Emitting sigEntrySelected...";
+    qDebug()<<"Emitting sigEntrySelected...";
     Q_UNUSED(column);
     BilboPost post = DBMan::self()->localPost(item->data(0, LocalEntryID).toInt());
     emit sigEntrySelected( post, item->data(1, LocalEntryID).toInt() );
@@ -488,16 +489,16 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
     if ( lstEntriesList->selectedItems().isEmpty() )
         return;
     Q_UNUSED(pos);
-    KMenu *entriesContextMenu = new KMenu;
-    KAction *actEntriesOpenInBrowser = new KAction( KIcon(QLatin1String("applications-internet")),
+    QMenu *entriesContextMenu = new QMenu;
+    QAction *actEntriesOpenInBrowser = new QAction( QIcon::fromTheme(QLatin1String("applications-internet")),
                                                     i18n("Open in browser"), entriesContextMenu );
-    connect( actEntriesOpenInBrowser, SIGNAL(triggered()), this, SLOT(openPostInBrowser()) );
-    KAction *actEntriesCopyUrl = new KAction( KIcon(QLatin1String("edit-copy")),
+    connect(actEntriesOpenInBrowser, &QAction::triggered, this, &Toolbox::openPostInBrowser);
+    QAction *actEntriesCopyUrl = new QAction( QIcon::fromTheme(QLatin1String("edit-copy")),
                                               i18n("Copy URL"), entriesContextMenu );
-    connect( actEntriesCopyUrl, SIGNAL(triggered(bool)), this, SLOT(slotEntriesCopyUrl()) );
-    KAction *actEntriesCopyTitle = new KAction( KIcon(QLatin1String("edit-copy")),
+    connect(actEntriesCopyUrl, &QAction::triggered, this, &Toolbox::slotEntriesCopyUrl);
+    QAction *actEntriesCopyTitle = new QAction( QIcon::fromTheme(QLatin1String("edit-copy")),
                                                 i18n("Copy title"), entriesContextMenu );
-    connect( actEntriesCopyTitle, SIGNAL(triggered(bool)), this, SLOT(copyPostTitle()) );
+    connect(actEntriesCopyTitle, &QAction::triggered, this, &Toolbox::copyPostTitle);
     entriesContextMenu->addAction( actEntriesOpenInBrowser );
     entriesContextMenu->addAction( actEntriesCopyUrl );
     entriesContextMenu->addAction( actEntriesCopyTitle );
@@ -512,9 +513,9 @@ void Toolbox::openPostInBrowser()
     BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( BlogEntryID ).toInt() );
     QString url;
     if ( !post.permaLink().isEmpty() )
-        url = post.permaLink().pathOrUrl();
+        url = post.permaLink().toDisplayString(QUrl::PreferLocalFile);
     else if ( !post.link().isEmpty() )
-        url = post.link().pathOrUrl();
+        url = post.link().toDisplayString(QUrl::PreferLocalFile);
     else
         url = DBMan::self()->blogList().value( d->mCurrentBlogId )->blogUrl();
     KToolInvocation::invokeBrowser ( url );

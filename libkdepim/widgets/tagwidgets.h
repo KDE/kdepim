@@ -19,10 +19,9 @@
 #define KDEPIM_TAGWIDGETS_H
 
 #include "kdepim_export.h"
-#include <Akonadi/Tag>
-#include <Akonadi/TagSelectionDialog>
+#include <Tag>
+#include <TagSelectionDialog>
 #include <QWidget>
-#include <KDialog>
 #include <KComboBox>
 #include "kcheckcombobox.h"
 

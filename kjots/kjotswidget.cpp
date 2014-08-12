@@ -40,22 +40,23 @@
 #include <QPrinter>
 #include <QAbstractTextDocumentLayout>
 #include <QDBusConnection>
+#include <QMenu>
 
 // Akonadi
-#include <akonadi/control.h>
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/entitytreeview.h>
-#include <akonadi/etmviewstatesaver.h>
-#include <akonadi/item.h>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemDeleteJob>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/control.h>
+#include <AkonadiCore/collectiondeletejob.h>
+#include <AkonadiCore/collectioncreatejob.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/entitydisplayattribute.h>
+#include <AkonadiWidgets/entitytreeview.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/ItemDeleteJob>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 
-#include "akonadi/entityorderproxymodel.h"
+#include "AkonadiCore/entityorderproxymodel.h"
 #include "akonadi_next/note.h"
 #include "akonadi_next/notecreatorandselector.h"
 
@@ -65,7 +66,7 @@
 #include <grantlee/context.h>
 
 // KDE
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KBookmarkMenu>
 #include <KFileDialog>
@@ -80,7 +81,10 @@
 #include <KXMLGUIClient>
 #include <KProcess>
 #include <KPrintPreview>
-
+#include <KGlobal>
+#include <KActionMenu>
+#include <QAction>
+#include <QIcon>
 // KMime
 #include <KMime/KMimeMessage>
 
@@ -95,12 +99,13 @@
 #include "KJotsSettings.h"
 #include "kjotslockjob.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <memory>
 #include "noteshared/attributes/notelockattribute.h"
 #include "localresourcecreator.h"
 #include <krandom.h>
+#include <KSharedConfig>
 #include "kjotsbrowser.h"
 
 #ifndef KDE_USE_FINAL
@@ -115,7 +120,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 {
   Akonadi::Control::widgetNeedsAkonadi( this );
 
-  KConfigGroup migrationCfg( KGlobal::config(), "General" );
+  KConfigGroup migrationCfg( KSharedConfig::openConfig(), "General" );
   const bool autoCreate = migrationCfg.readEntry( "AutoCreateResourceOnStart", true );
   migrationCfg.writeEntry("AutoCreateResourceOnStart", autoCreate);
   migrationCfg.sync();
@@ -163,7 +168,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   m_orderProxy = new EntityOrderProxyModel( this );
   m_orderProxy->setSourceModel( m_sortProxyModel );
 
-  KConfigGroup cfg( KGlobal::config(), "KJotsEntityOrder" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "KJotsEntityOrder" );
 
   m_orderProxy->setOrderConfig( cfg );
 
@@ -187,7 +192,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   KActionCollection *actionCollection = xmlGuiClient->actionCollection();
 
   editor = new KJotsEdit( treeview->selectionModel(), stackedWidget );
-  editor->createActions( actionCollection );
+  actionCollection->addActions(editor->createActions());
   stackedWidget->addWidget( editor );
 
   layout->addWidget( m_splitter );
@@ -197,101 +202,101 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   stackedWidget->setCurrentWidget( browser );
 
 
-  KAction *action;
+  QAction *action;
 
   action = actionCollection->addAction( QLatin1String("go_next_book") );
   action->setText( i18n( "Next Book" ) );
-  action->setIcon( KIcon( QLatin1String("go-down") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_D ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_D ) );
   connect( action, SIGNAL(triggered()), SLOT(nextBook()) );
   connect( this, SIGNAL(canGoNextBookChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("go_prev_book") );
   action->setText( i18n( "Previous Book" ) );
-  action->setIcon( KIcon( QLatin1String("go-up") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_D ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_D ) );
   connect( action, SIGNAL(triggered()), SLOT(prevBook()) );
   connect( this, SIGNAL(canGoPreviousBookChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("go_next_page") );
   action->setText( i18n( "Next Page" ) );
-  action->setIcon( KIcon( QLatin1String("go-next") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageDown ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("go-next") ) );
+  actionCollection->setDefaultShortcut(action,QKeySequence( Qt::CTRL + Qt::Key_PageDown ) );
   connect( action, SIGNAL(triggered()), SLOT(nextPage()));
   connect( this, SIGNAL(canGoNextPageChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("go_prev_page") );
   action->setText( i18n( "Previous Page" ) );
-  action->setIcon( KIcon( QLatin1String("go-previous") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageUp ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("go-previous") ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_PageUp ) );
   connect( action, SIGNAL(triggered()), SLOT(prevPage()) );
   connect( this, SIGNAL(canGoPreviousPageChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("new_page") );
   action->setText( i18n( "&New Page" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
-  action->setIcon( KIcon( QLatin1String("document-new") ) );
+  actionCollection->setDefaultShortcut(action,QKeySequence( Qt::CTRL + Qt::Key_N ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("document-new") ) );
   connect( action, SIGNAL(triggered()), SLOT(newPage()) );
 
   action = actionCollection->addAction(QLatin1String("new_book"));
   action->setText( i18n( "New &Book..." ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_N ) );
-  action->setIcon( KIcon( QLatin1String("address-book-new") ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_N ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("address-book-new") ) );
   connect( action, SIGNAL(triggered()), SLOT(newBook()) );
 
   action = actionCollection->addAction( QLatin1String("del_page") );
   action->setText( i18n( "&Delete Page" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Delete ) );
-  action->setIcon( KIcon( QLatin1String("edit-delete-page") ) );
+  actionCollection->setDefaultShortcut(action,QKeySequence( Qt::CTRL + Qt::Key_Delete ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-delete-page") ) );
   connect( action, SIGNAL(triggered()), SLOT(deletePage()) );
 
   action = actionCollection->addAction( QLatin1String("del_folder") );
   action->setText( i18n( "Delete Boo&k" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_Delete ) );
-  action->setIcon( KIcon( QLatin1String("edit-delete") ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_Delete ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
   connect( action, SIGNAL(triggered()), SLOT(deleteBook()) );
 
   action = actionCollection->addAction( QLatin1String("del_mult") );
   action->setText( i18n( "Delete Selected" ) );
-  action->setIcon( KIcon( QLatin1String("edit-delete") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
   connect( action, SIGNAL(triggered()), SLOT(deleteMultiple()) );
 
   action = actionCollection->addAction( QLatin1String("manual_save") );
   action->setText( i18n( "Manual Save" ) );
-  action->setIcon( KIcon( QLatin1String("document-save") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("document-save") ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_S ) );
 
   action = actionCollection->addAction( QLatin1String("auto_bullet") );
   action->setText( i18n( "Auto Bullets" ) );
-  action->setIcon( KIcon( QLatin1String("format-list-unordered") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("format-list-unordered") ) );
   action->setCheckable( true );
 
   action = actionCollection->addAction( QLatin1String("auto_decimal") );
   action->setText( i18n( "Auto Decimal List" ) );
-  action->setIcon( KIcon( QLatin1String("format-list-ordered") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("format-list-ordered") ) );
   action->setCheckable( true );
 
   action = actionCollection->addAction( QLatin1String("manage_link") );
   action->setText( i18n( "Link" ) );
-  action->setIcon( KIcon( QLatin1String("insert-link") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("insert-link") ) );
 
   action = actionCollection->addAction( QLatin1String("insert_checkmark") );
   action->setText( i18n( "Insert Checkmark" ) );
-  action->setIcon( KIcon( QLatin1String("checkmark") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("checkmark") ) );
   action->setEnabled( false );
 
   action = actionCollection->addAction( QLatin1String("rename_entry") );
   action->setText( i18n( "Rename..." ) );
-  action->setIcon( KIcon( QLatin1String("edit-rename") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-rename") ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_M ) );
 
   action = actionCollection->addAction( QLatin1String("insert_date") );
   action->setText( i18n( "Insert Date" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_I ) );
-  action->setIcon( KIcon( QLatin1String("view-calendar-time-spent") ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_I ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("view-calendar-time-spent") ) );
 
   action = actionCollection->addAction( QLatin1String("change_color") );
-  action->setIcon( KIcon( QLatin1String("format-fill-color") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("format-fill-color") ) );
   action->setText( i18n( "Change Color..." ) );
 
   action = actionCollection->addAction( QLatin1String("copy_link_address") );
@@ -299,12 +304,12 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   action = actionCollection->addAction( QLatin1String("lock") );
   action->setText(i18n( "Lock Selected" ) );
-  action->setIcon( KIcon( QLatin1String("emblem-locked") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("emblem-locked") ) );
   connect( action, SIGNAL(triggered()), SLOT(actionLock()) );
 
   action = actionCollection->addAction( QLatin1String("unlock") );
   action->setText( i18n( "Unlock Selected" ) );
-  action->setIcon( KIcon( QLatin1String("emblem-unlocked") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("emblem-unlocked") ) );
   connect( action, SIGNAL(triggered()), SLOT(actionUnlock()) );
 
   action = actionCollection->addAction( QLatin1String("sort_children_alpha") );
@@ -332,8 +337,8 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   action = actionCollection->addAction( QLatin1String("copyIntoTitle") );
   action->setText( i18n( "Copy &into Page Title" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ) );
-  action->setIcon( KIcon( QLatin1String("edit-copy") ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_T ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-copy") ) );
   connect( action, SIGNAL(triggered()), SLOT(copySelectionToTitle()) );
   connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
   action->setEnabled( false );
@@ -353,7 +358,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   // "Add bookmark" and "make text bold" actions have conflicting shortcuts (ctrl + b)
   // Make add_bookmark use ctrl+shift+b to resolve that.
-  KAction *bm_action = qobject_cast<KAction *>(actionCollection->action(QLatin1String("add_bookmark")));
+  QAction *bm_action = qobject_cast<QAction *>(actionCollection->action(QLatin1String("add_bookmark")));
   Q_ASSERT(bm_action);
   bm_action->setShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_B );
 
@@ -364,28 +369,28 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   action = actionCollection->addAction( QLatin1String("save_to") );
   action->setText( i18n( "Rename..." ) );
-  action->setIcon( KIcon( QLatin1String("edit-rename") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-rename") ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_M ) );
 
   KActionMenu *exportMenu = actionCollection->add<KActionMenu>( QLatin1String("save_to") );
   exportMenu->setText( i18n( "Export" ) );
-  exportMenu->setIcon( KIcon( QLatin1String("document-export") ) );
+  exportMenu->setIcon( QIcon::fromTheme( QLatin1String("document-export") ) );
 
   action = actionCollection->addAction( QLatin1String("save_to_ascii") );
   action->setText( i18n( "To Text File..." ) );
-  action->setIcon( KIcon( QLatin1String("text-plain") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("text-plain") ) );
   connect( action, SIGNAL(triggered()), SLOT(exportSelectionToPlainText()) );
   exportMenu->menu()->addAction( action );
 
   action = actionCollection->addAction( QLatin1String("save_to_html") );
   action->setText( i18n( "To HTML File..." ) );
-  action->setIcon( KIcon( QLatin1String("text-html") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("text-html") ) );
   connect( action, SIGNAL(triggered()), SLOT(exportSelectionToHtml()) );
   exportMenu->menu()->addAction( action );
 
   action = actionCollection->addAction( QLatin1String("save_to_book") );
   action->setText( i18n( "To Book File..." ) );
-  action->setIcon( KIcon( QLatin1String("x-office-address-book") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("x-office-address-book") ) );
   connect( action, SIGNAL(triggered()), SLOT(exportSelectionToXml()) );
   exportMenu->menu()->addAction( action );
 
@@ -419,7 +424,7 @@ void KJotsWidget::restoreState()
 {
   ETMViewStateSaver *saver = new ETMViewStateSaver;
   saver->setView( treeview );
-  KConfigGroup cfg( KGlobal::config(), "TreeState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "TreeState" );
   saver->restoreState( cfg );
 }
 
@@ -427,7 +432,7 @@ void KJotsWidget::saveState()
 {
   ETMViewStateSaver saver;
   saver.setView( treeview );
-  KConfigGroup cfg( KGlobal::config(), "TreeState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "TreeState" );
   saver.saveState( cfg );
   cfg.sync();
 }
@@ -563,13 +568,13 @@ void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type 
   const int currentVersion = migrationCfg.readEntry( "Version", 0 );
   const int targetVersion = migrationCfg.readEntry( "TargetVersion", 1 );
   if ( enabled && !completed && currentVersion < targetVersion ) {
-    kDebug() << "Performing Akonadi migration. Good luck!";
+    qDebug() << "Performing Akonadi migration. Good luck!";
     KProcess proc;
     QStringList args = QStringList() << QLatin1String("--interactive-on-change");
     if ( !type.isEmpty() )
       args << QLatin1String("--type") << type;
 
-    const QString path = KStandardDirs::findExe( migrator );
+    const QString path = QStandardPaths::findExecutable( migrator );
     proc.setProgram( path, args );
     proc.start();
     bool result = proc.waitForStarted();
@@ -577,14 +582,14 @@ void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type 
       result = proc.waitForFinished();
     }
     if ( result && proc.exitCode() == 0 ) {
-      kDebug() << "Akonadi migration has been successful";
+      qDebug() << "Akonadi migration has been successful";
     } else {
       // exit code 1 means it is already running, so we are probably called by a migrator instance
-      kError() << "Akonadi migration failed!";
-      kError() << "command was: " << proc.program();
-      kError() << "exit code: " << proc.exitCode();
-      kError() << "stdout: " << proc.readAllStandardOutput();
-      kError() << "stderr: " << proc.readAllStandardError();
+      qCritical() << "Akonadi migration failed!";
+      qCritical() << "command was: " << proc.program();
+      qCritical() << "exit code: " << proc.exitCode();
+      qCritical() << "stdout: " << proc.readAllStandardOutput();
+      qCritical() << "stderr: " << proc.readAllStandardError();
     }
     migrationCfg.writeEntry( "Version", targetVersion );
     migrationCfg.writeEntry( "Completed", true );
@@ -853,13 +858,13 @@ void KJotsWidget::doCreateNewPage(const Collection &collection)
 void KJotsWidget::newPageResult( KJob* job )
 {
   if ( job->error() )
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
 }
 
 void KJotsWidget::newBookResult( KJob* job )
 {
   if ( job->error() ) {
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
     return;
   }
   Akonadi::CollectionCreateJob *createJob = qobject_cast<Akonadi::CollectionCreateJob*>(job);
@@ -1238,7 +1243,7 @@ void KJotsWidget::selectNext( int role, int step )
     }
     sibling = sibling.sibling( sibling.row() + step, column );
   }
-  kWarning() << "No valid selection";
+  qWarning() << "No valid selection";
 }
 
 void KJotsWidget::nextBook()
@@ -1575,7 +1580,7 @@ void KJotsWidget::onRepeatReplace()
       QRegExp regExp ( searchPattern, ( replaceOptions & Qt::CaseSensitive ) ?
                                         Qt::CaseSensitive : Qt::CaseInsensitive, QRegExp::RegExp2 );
       regExp.indexIn(cursor.selectedText());
-      int capCount = regExp.numCaptures();
+      int capCount = regExp.captureCount();
       for ( int i=0; i <= capCount; ++i ) {
         QString c = QString::fromLatin1( "\\%1" ).arg( i );
         replacementText.replace( c, regExp.cap( i ) );
@@ -1765,7 +1770,7 @@ bool KJotsWidget::queryClose()
 {
   KJotsSettings::setSplitterSizes(m_splitter->sizes());
 
-  KJotsSettings::self()->writeConfig();
+  KJotsSettings::self()->save();
   m_orderProxy->saveOrder();
 
   return true;

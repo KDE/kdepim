@@ -28,7 +28,7 @@
 #include <KLocalizedString>
 
 #include <QBoxLayout>
-#include <KDebug>
+#include <QDebug>
 #include <QFrame>
 #include <QLabel>
 
@@ -68,7 +68,7 @@ FreeBusyUrlWidget::FreeBusyUrlWidget( AttendeeData::Ptr attendee, QWidget *paren
   topLayout->setSpacing( KDialog::spacingHint() );
 
   QLabel *label =
-    new QLabel( i18n( "Location of Free/Busy information for %1 <placeholder>%2</placeholder>:",
+    new QLabel( xi18n( "Location of Free/Busy information for %1 <placeholder>%2</placeholder>:",
                      mAttendee->name(), mAttendee->email() ), this );
   topLayout->addWidget( label );
 
@@ -83,7 +83,7 @@ FreeBusyUrlWidget::~FreeBusyUrlWidget()
 
 void FreeBusyUrlWidget::loadConfig()
 {
-  kDebug();
+  qDebug();
 
   const QString url = KCalCore::FreeBusyUrlStore::self()->readUrl( mAttendee->email() );
   mUrlEdit->setText( url );
@@ -91,7 +91,7 @@ void FreeBusyUrlWidget::loadConfig()
 
 void FreeBusyUrlWidget::saveConfig()
 {
-  kDebug();
+  qDebug();
 
   const QString url = mUrlEdit->text();
   KCalCore::FreeBusyUrlStore::self()->writeUrl( mAttendee->email(), url );

@@ -16,14 +16,13 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include <kdemacros.h>
+
 #include "kjotsconfigdlg.h"
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kjots_config_misc( QWidget *parent )
+  Q_DECL_EXPORT KCModule *create_kjots_config_misc( QWidget *parent )
   {
-      KComponentData instance( "kjots_config_misc" );
-      return new KJotsConfigMisc( instance, parent );
+      return new KJotsConfigMisc(parent );
   }
 }

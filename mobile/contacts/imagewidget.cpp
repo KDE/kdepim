@@ -30,12 +30,14 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kpixmapregionselectordialog.h>
+#include <KUrl>
 
 #include <QtCore/QMimeData>
 #include <QDrag>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMenu>
+#include <QApplication>
 
 /**
  * @short Small helper class to load image from network
@@ -190,9 +192,9 @@ void ImageWidget::updateView()
     setIcon( QPixmap::fromImage( mImage ) );
   } else {
     if ( mType == Photo )
-      setIcon( KIcon( QLatin1String( "user-identity" ) ) );
+      setIcon( QIcon::fromTheme( QLatin1String( "user-identity" ) ) );
     else
-      setIcon( KIcon( QLatin1String( "image-x-generic" ) ) );
+      setIcon( QIcon::fromTheme( QLatin1String( "image-x-generic" ) ) );
   }
 }
 
@@ -240,7 +242,7 @@ void ImageWidget::mouseMoveEvent( QMouseEvent *event )
 {
 #ifndef QT_NO_DRAGANDDROP
   if ( (event->buttons() & Qt::LeftButton) &&
-       (event->pos() - mDragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
+       (event->pos() - mDragStartPos).manhattanLength() > QApplication::startDragDistance() ) {
 
     if ( mHasImage ) {
       QDrag *drag = new QDrag( this );
@@ -302,7 +304,7 @@ void ImageWidget::changeImage()
 
 void ImageWidget::saveImage()
 {
-  const QString fileName = KFileDialog::getSaveFileName( KUrl(), KImageIO::pattern(), 0 );
+  const QString fileName = KFileDialog::getSaveFileName( QUrl(), KImageIO::pattern(), 0 );
   if ( !fileName.isEmpty() )
     mImage.save( fileName );
 }

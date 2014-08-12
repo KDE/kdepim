@@ -20,7 +20,7 @@
 
 #include <KDialog>
 
-class KLineEdit;
+class QLineEdit;
 
 namespace PimCommon {
 class PlainTextEditFindBar;
@@ -51,7 +51,7 @@ private:
     void writeConfig();
     SieveTextEdit *mTextEdit;
     PimCommon::PlainTextEditFindBar *mFindBar;
-    KLineEdit *mTemplateNameEdit;
+    QLineEdit *mTemplateNameEdit;
 };
 }
 

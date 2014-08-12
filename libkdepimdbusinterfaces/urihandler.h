@@ -25,7 +25,7 @@
 #define URIHANDLER_H
 
 #include "kdepimdbusinterfaces_export.h"
-#include <akonadi/item.h>
+#include <item.h>
 class QString;
 
 class KDEPIMDBUSINTERFACES_EXPORT UriHandler

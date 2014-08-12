@@ -27,19 +27,20 @@
 
 #include <KAboutData>
 #include <KAcceleratorManager>
-#include <KComponentData>
+#include <KConfigGroup>
+#include <KLocalizedString>
+#include <KConfig>
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_sdsummary( QWidget *parent, const char * )
+  Q_DECL_EXPORT KCModule *create_sdsummary( QWidget *parent, const char * )
   {
-    KComponentData inst( "kcmsdsummary" );
-    return new KCMSDSummary( inst, parent );
+    return new KCMSDSummary( parent );
   }
 }
 
-KCMSDSummary::KCMSDSummary( const KComponentData &inst, QWidget *parent )
-  : KCModule( inst, parent )
+KCMSDSummary::KCMSDSummary(QWidget *parent )
+  : KCModule( parent )
 {
   setupUi( this );
 
@@ -172,14 +173,17 @@ void KCMSDSummary::defaults()
 const KAboutData *KCMSDSummary::aboutData() const
 {
   KAboutData *about = new KAboutData(
-    I18N_NOOP( "kcmsdsummary" ), 0,
-    ki18n( "Upcoming Special Dates Configuration Dialog" ),
-    0, KLocalizedString(), KAboutData::License_GPL,
-    ki18n( "Copyright © 2004 Tobias Koenig\n"
+    QLatin1String( "kcmsdsummary" ),
+    i18n( "Upcoming Special Dates Configuration Dialog" ),
+    QString(), QString(), KAboutLicense::GPL,
+    i18n( "Copyright © 2004 Tobias Koenig\n"
            "Copyright © 2004–2010 Allen Winter" ) );
 
-  about->addAuthor( ki18n( "Allen Winter" ), KLocalizedString(), "winter@kde.org" );
-  about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
+
+  about->addAuthor( i18n( "Tobias Koenig" ),
+                    QString(), QLatin1String("tokoe@kde.org") );
+  about->addAuthor( i18n( "Allen Winter" ),
+                    QString(), QLatin1String("winter@kde.org") );
 
   return about;
 }

@@ -21,7 +21,7 @@
 #define CATEGORYSELECTWIDGET_H
 
 #include <qwidget.h>
-#include <akonadi/tag.h>
+#include <AkonadiCore/tag.h>
 
 class CategorySelectWidgetPrivate;
 

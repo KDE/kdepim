@@ -23,7 +23,7 @@
 
 class KNoteEdit;
 class KToolBar;
-class KLineEdit;
+class QLineEdit;
 
 class KNoteEditDialog : public KDialog, virtual public KXMLGUIClient
 {
@@ -63,7 +63,7 @@ private:
     void init(bool readOnly);
     void readConfig();
     void writeConfig();
-    KLineEdit *mTitleEdit;
+    QLineEdit *mTitleEdit;
     KNoteEdit *mNoteEdit;
     KToolBar *mTool;
 };

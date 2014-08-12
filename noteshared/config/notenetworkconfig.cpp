@@ -20,11 +20,10 @@
 
 #include "notesharedglobalconfig.h"
 
-#include <KLineEdit>
-#include <KComponentData>
+#include <QLineEdit>
 #include <KLocalizedString>
-#include <KDialog>
-#include <KIntNumInput>
+#include <QDialog>
+#include <QSpinBox>
 
 #include <QLabel>
 #include <QCheckBox>
@@ -41,7 +40,7 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
     QWidget * w =  new QWidget( this );
     lay->addWidget( w );
     QVBoxLayout *layout = new QVBoxLayout( w );
-    layout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
     layout->setMargin( 0 );
 
     QGroupBox *incoming = new QGroupBox( i18n( "Incoming Notes" ) );
@@ -57,8 +56,8 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
     tmpLayout = new QHBoxLayout;
 
     QLabel *label_SenderID = new QLabel( i18n( "&Sender ID:" ) );
-    kcfg_SenderID = new KLineEdit;
-    kcfg_SenderID->setClearButtonShown(true);
+    kcfg_SenderID = new QLineEdit;
+    kcfg_SenderID->setClearButtonEnabled(true);
     kcfg_SenderID->setObjectName( QLatin1String("kcfg_SenderID") );
     label_SenderID->setBuddy( kcfg_SenderID );
     tmpLayout->addWidget( label_SenderID );
@@ -72,10 +71,9 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
 
     tmpLayout->addWidget( label_Port );
 
-    kcfg_Port = new KIntNumInput;
+    kcfg_Port = new QSpinBox;
     kcfg_Port->setObjectName( QLatin1String("kcfg_Port") );
     kcfg_Port->setRange( 0, 65535 );
-    kcfg_Port->setSliderEnabled( false );
     label_Port->setBuddy( kcfg_Port );
     tmpLayout->addWidget( kcfg_Port );
     layout->addLayout( tmpLayout );
@@ -92,7 +90,7 @@ void NoteNetworkConfigWidget::save()
     NoteShared::NoteSharedGlobalConfig::self()->setReceiveNotes(mTmpChkB->isChecked());
     NoteShared::NoteSharedGlobalConfig::self()->setSenderID(kcfg_SenderID->text());
     NoteShared::NoteSharedGlobalConfig::self()->setPort(kcfg_Port->value());
-    NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+    NoteShared::NoteSharedGlobalConfig::self()->save();
 }
 
 void NoteNetworkConfigWidget::load()
@@ -103,8 +101,8 @@ void NoteNetworkConfigWidget::load()
 }
 
 
-NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+NoteNetworkConfig::NoteNetworkConfig( QWidget *parent )
+    :KCModule( parent )
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     lay->setMargin(0);

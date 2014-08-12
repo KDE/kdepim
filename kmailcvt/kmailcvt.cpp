@@ -28,27 +28,25 @@
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KHelpMenu>
-#include <KMenu>
-#include <KComponentData>
-
+#include <KConfigGroup>
+#include <KAboutData>
 // Qt includes
 #include <QPushButton>
 
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
+#include <KSharedConfig>
 using namespace MailImporter;
 
 KMailCVT::KMailCVT(QWidget *parent)
     : KAssistantDialog(parent) {
     setModal(true);
     setWindowTitle( i18n( "KMailCVT Import Tool" ) );
-    KGlobal::locale()->insertCatalog( QLatin1String("libmailimporter") );
-    KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
     KMailCVTKernel *kernel = new KMailCVTKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
-
+    setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Help);
 
     selfilterpage = new KSelFilterPage;
     page1 = new KPageWidgetItem( selfilterpage, i18n( "Step 1: Select Filter" ) );
@@ -66,9 +64,16 @@ KMailCVT::KMailCVT(QWidget *parent)
              this, SLOT(collectionChanged(Akonadi::Collection)) );
     Akonadi::Control::widgetNeedsAkonadi(this);
     readConfig();
-    KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData(), true);
-    setButtonMenu( Help, helpMenu->menu() );
+
+    KHelpMenu *helpMenu = new KHelpMenu(this, KAboutData::applicationData(), true);
+    //Initialize menu
+    QMenu *menu = helpMenu->menu();
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    button(QDialogButtonBox::Help)->setMenu(menu);
+
+#if 0 //QT5
     setHelp(QString(), QLatin1String("kmailcvt"));
+#endif
 }
 
 KMailCVT::~KMailCVT()
@@ -78,7 +83,7 @@ KMailCVT::~KMailCVT()
 
 void KMailCVT::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FolderSelectionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FolderSelectionDialog" );
     if ( group.hasKey( "LastSelectedFolder" ) ) {
         selfilterpage->widget()->mCollectionRequestor->setCollection( CommonKernel->collectionFromId(group.readEntry("LastSelectedFolder", -1 )));
     }
@@ -86,7 +91,7 @@ void KMailCVT::readConfig()
 
 void KMailCVT::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FolderSelectionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FolderSelectionDialog" );
     group.writeEntry( "LastSelectedFolder", selfilterpage->widget()->mCollectionRequestor->collection().id() );
     group.sync();
 }
@@ -107,7 +112,7 @@ void KMailCVT::next()
         KAssistantDialog::next();
         // Disable back & finish
         setValid( currentPage(), false );
-        enableButton(KDialog::User3,false);
+        backButton()->setEnabled(false);
         // Start import
         FilterInfo *info = new FilterInfo();
         KMailCvtFilterInfoGui *infoGui = new KMailCvtFilterInfoGui(importpage, this);
@@ -123,7 +128,7 @@ void KMailCVT::next()
         delete info;
         // Enable finish & back buttons
         setValid( currentPage(), true );
-        enableButton(KDialog::User3,true);
+        backButton()->setEnabled(true);
 
     }
     else

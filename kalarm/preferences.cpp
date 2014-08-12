@@ -27,19 +27,20 @@
 
 #include <kalarmcal/identities.h>
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
-#include <kholidays/holidays.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KHolidays/kholidays/holidays.h>
 
 #include <kglobal.h>
 #include <kconfiggroup.h>
 #include <kmessagebox.h>
 #include <ksystemtimezone.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 
 #include <time.h>
 #include <unistd.h>
+#include <KSharedConfig>
 
 using namespace KHolidays;
 using namespace KAlarmCal;
@@ -98,7 +99,7 @@ Preferences::Preferences()
     QObject::connect(this, SIGNAL(base_HolidayRegionChanged(QString)), SLOT(holidaysChange(QString)));
     QObject::connect(this, SIGNAL(base_WorkTimeChanged(QDateTime,QDateTime,int)), SLOT(workTimeChange(QDateTime,QDateTime,int)));
 
-    readConfig();
+    load();
     // Fetch the KAlarm version and backend which wrote the previous config file
     mPreviousVersion = version();
     mPreviousBackend = backend();
@@ -359,7 +360,7 @@ QString translateXTermPath(const QString& cmdline, bool write)
     }
     // Translate any home directory specification at the start of the
     // executable's path.
-    KConfigGroup group(KGlobal::config(), GENERAL_SECTION);
+    KConfigGroup group(KSharedConfig::openConfig(), GENERAL_SECTION);
     if (write)
     {
         group.writePathEntry(TEMP, cmd);

@@ -96,13 +96,13 @@ void AntiSpamConfig::readConfig()
             const QString threshold   = tool.readEntryUntranslated( "ScoreThresholdRegexp" );
             const QString confidence  = tool.readEntryUntranslated( "ScoreConfidenceRegexp" );
             SpamAgentTypes typeE = SpamAgentNone;
-            if ( kasciistricmp( type.data(), "bool" ) == 0 )
+            if ( qstricmp( type.data(), "bool" ) == 0 )
                 typeE = SpamAgentBool;
-            else if ( kasciistricmp( type.data(), "decimal" ) == 0 )
+            else if ( qstricmp( type.data(), "decimal" ) == 0 )
                 typeE = SpamAgentFloat;
-            else if ( kasciistricmp( type.data(), "percentage" ) == 0 )
+            else if ( qstricmp( type.data(), "percentage" ) == 0 )
                 typeE = SpamAgentFloatLarge;
-            else if ( kasciistricmp( type.data(), "adjusted" ) == 0 )
+            else if ( qstricmp( type.data(), "adjusted" ) == 0 )
                 typeE = SpamAgentAdjustedFloat;
             mAgents.append( SpamAgent( name, typeE, header, cheader, QRegExp( score ),
                                        QRegExp( threshold ), QRegExp( confidence ) ) );

@@ -23,7 +23,7 @@
 
 #include "listproxy.h"
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <QDeclarativeImageProvider>
 
 class ContactImageProvider : public QDeclarativeImageProvider

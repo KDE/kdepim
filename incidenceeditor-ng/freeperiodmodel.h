@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_FREEPERIODMODEL_H
 #define INCIDENCEEDITOR_FREEPERIODMODEL_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 
 #include <KCalCore/Period>
 

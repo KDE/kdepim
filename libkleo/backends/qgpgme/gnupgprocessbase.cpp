@@ -36,7 +36,6 @@
 #include <kurl.h>
 
 #include <QSocketNotifier>
-#include <QTextCodec>
 #include <QStringList>
 #include <QByteArray>
 #include <QList>
@@ -154,7 +153,7 @@ int Kleo::GnuPGProcessBase::childStatus( int fd ) {
 }
 
 static QString fromHexEscapedUtf8( const QByteArray & str ) {
-  return KUrl::fromPercentEncoding( str.data() /* utf-8 */ );
+  return QUrl::fromPercentEncoding( str.data() /* utf-8 */ );
 }
 
 void Kleo::GnuPGProcessBase::parseStatusOutput() {

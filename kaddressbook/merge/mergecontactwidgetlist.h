@@ -19,9 +19,8 @@
 #define MERGECONTACTWIDGETLIST_H
 
 #include <QListWidget>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <KABC/Addressee>
-
 
 namespace KABMergeContacts {
 

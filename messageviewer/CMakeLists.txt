@@ -1,11 +1,12 @@
-KDE4_NO_ENABLE_FINAL(messageviewer)
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-include_directories(${Grantlee_INCLUDE_DIRS} ${QJSON_INCLUDE_DIR})
+
+include_directories(${Grantlee_INCLUDE_DIRS})
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+
+add_definitions(-DTRANSLATION_DOMAIN=\"libmessageviewer\")
 
 # KCFG files:
 # The main messageviewer.kcfg is configured by CMake and put in the build directory.
@@ -60,8 +61,9 @@ else()
                        adblock/adblockcreatefilterdialog.cpp
                        adblock/adblockblockableitemswidget.cpp
                        )
-  set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
-  add_subdirectory(a11y)
+  set(_mailwebview_lib KF5::WebKit ${QT_QTWEBKIT_LIBRARY})
+  #reactivate
+  #add_subdirectory(a11y)
 endif()
 
 set(libmessageviewer_viewer_SRCS
@@ -173,11 +175,11 @@ set(libmessageviewer_SRCS
   ${_mailwebview_cpp}
 )
 
-kde4_add_kcfg_files(libmessageviewer_SRCS
+kconfig_add_kcfg_files(libmessageviewer_SRCS
   settings/globalsettings_base.kcfgc
 )
 
-kde4_add_ui_files(libmessageviewer_SRCS
+ki18n_wrap_ui(libmessageviewer_SRCS
   ui/settings.ui
   ui/invitationsettings.ui
   ui/printingsettings.ui
@@ -186,24 +188,23 @@ kde4_add_ui_files(libmessageviewer_SRCS
 )
 
 
-kde4_add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
+add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
+generate_export_header(messageviewer BASE_NAME messageviewer)
 
 target_link_libraries(messageviewer messagecore kdepim kpgp kleo
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KMBOX_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${KDE4_KDEUI_LIBS}
-  ${KDE4_KPRINTUTILS_LIBS}
-  ${QGPGME_LIBRARIES}
+  KF5::Mime
+  KF5::Mbox
+  KF5::AkonadiCore
+  KF5::AkonadiMime
+  KF5::PimUtils
+  KF5::Abc
+  KF5::MailTransport
+  KF5::Gpgmepp
+  Qt5::WebKitWidgets
+  KF5::KDELibs4Support
   ${_mailwebview_lib}
-  ${Grantlee_CORE_LIBRARIES} 
-  ${KDE4_KNEWSTUFF3_LIBS}
-  ${QJSON_LIBRARIES}
-  ${KDE4_SOLID_LIBS}
+  Grantlee::Templates
+  KF5::NewStuff
   pimcommon
   grantleetheme
   kaddressbookgrantlee
@@ -217,11 +218,9 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee
-    ${Boost_INCLUDE_DIR}
-    ${GPGME_INCLUDES}
 )
 
-set_target_properties( messageviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties( messageviewer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 #install( FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
@@ -231,8 +230,9 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
 
 install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
 
-add_subdirectory(grantleefilters)
+# REACTIVATE add_subdirectory(grantleefilters)
+add_subdirectory(scamdetection/autotests)
 add_subdirectory(scamdetection/tests)
 add_subdirectory(adblock/tests/)
-install(FILES notify/messageviewer.notifyrc DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
+install(FILES notify/messageviewer.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
 install(FILES scamdetection/data/longurlServices.json DESTINATION ${DATA_INSTALL_DIR}/messageviewer )

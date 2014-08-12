@@ -64,8 +64,10 @@ QString _detail::audit_log_as_html( Context * ctx, GpgME::Error & err ) {
 
 static QList<QByteArray> from_sl( const QStringList & sl ) {
   QList<QByteArray> result;
+#if 0 //QT5
   std::transform( sl.begin(), sl.end(), std::back_inserter( result ),
                   mem_fn( &QString::toUtf8 ) );
+#endif
   return result;
 }
 

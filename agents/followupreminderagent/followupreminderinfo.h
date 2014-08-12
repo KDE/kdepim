@@ -18,7 +18,7 @@
 #ifndef FOLLOWUPREMINDERINFO_H
 #define FOLLOWUPREMINDERINFO_H
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <QDateTime>
 #include "followupreminder_export.h"
 class KConfigGroup;

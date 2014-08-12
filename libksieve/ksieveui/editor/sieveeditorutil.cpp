@@ -17,7 +17,6 @@
 
 #include "sieveeditorutil.h"
 
-#include <QDebug>
 
 QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariableName type)
 {

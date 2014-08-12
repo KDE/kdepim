@@ -40,35 +40,37 @@
 
 #include "kdepim-version.h"
 
-#include <kpimutils/kfileio.h>
+#include <KPIMUtils/kpimutils/kfileio.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
 #include <kfiledialog.h>
 #include <khtmlview.h>
-#include <kicon.h>
 #include <kiconloader.h>
 #include <klocale.h>
-#include <kmenu.h>
+#include <QMenu>
 #include <kmessagebox.h>
 #include <krun.h>
 #include <kshell.h>
-#include <kstandarddirs.h>
+
 #include <kstandardaction.h>
 #include <ktoolinvocation.h>
 #include <kurl.h>
 #include <kglobalsettings.h>
 #include <kparts/browserextension.h>
 #include <kparts/browserrun.h>
+#include <KGlobal>
+#include <KUrl>
 
 #include <QClipboard>
 #include <QGridLayout>
-
+#include <QKeyEvent>
 #include <boost/bind.hpp>
 
 #include <memory>
 #include <cassert>
+#include <QStandardPaths>
 
 using namespace boost;
 using namespace Akregator;
@@ -81,7 +83,7 @@ ArticleViewer::ArticleViewer(QWidget *parent)
       m_url(0),
       m_htmlFooter(),
       m_currentText(),
-      m_imageDir( KUrl::fromPath( KGlobal::dirs()->saveLocation("cache", "akregator/Media/" ) ) ),
+      m_imageDir( QUrl::fromLocalFile( QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1Char('/') + "akregator/Media/" )),
       m_node(0),
       m_viewMode(NormalView),
       m_part( new ArticleViewerPart( this ) ),
@@ -113,24 +115,24 @@ ArticleViewer::ArticleViewer(QWidget *parent)
              this, SLOT(slotCompleted()));
 
     KParts::BrowserExtension* ext = m_part->browserExtension();
-    connect(ext, SIGNAL(popupMenu(QPoint,KUrl,mode_t,KParts::OpenUrlArguments,KParts::BrowserArguments,KParts::BrowserExtension::PopupFlags,KParts::BrowserExtension::ActionGroupMap)),
-             this, SLOT(slotPopupMenu(QPoint,KUrl,mode_t,KParts::OpenUrlArguments,KParts::BrowserArguments,KParts::BrowserExtension::PopupFlags))); // ActionGroupMap argument removed, unused by slot
+    connect(ext, SIGNAL(popupMenu(QPoint,QUrl,mode_t,KParts::OpenUrlArguments,KParts::BrowserArguments,KParts::BrowserExtension::PopupFlags,KParts::BrowserExtension::ActionGroupMap)),
+             this, SLOT(slotPopupMenu(QPoint,QUrl,mode_t,KParts::OpenUrlArguments,KParts::BrowserArguments,KParts::BrowserExtension::PopupFlags))); // ActionGroupMap argument removed, unused by slot
 
-    connect( ext, SIGNAL(openUrlRequestDelayed(KUrl,KParts::OpenUrlArguments,KParts::BrowserArguments)),
-             this, SLOT(slotOpenUrlRequestDelayed(KUrl,KParts::OpenUrlArguments,KParts::BrowserArguments)) );
+    connect( ext, SIGNAL(openUrlRequestDelayed(QUrl,KParts::OpenUrlArguments,KParts::BrowserArguments)),
+             this, SLOT(slotOpenUrlRequestDelayed(QUrl,KParts::OpenUrlArguments,KParts::BrowserArguments)) );
 
-    connect(ext, SIGNAL(createNewWindow(KUrl,
+    connect(ext, SIGNAL(createNewWindow(QUrl,
             KParts::OpenUrlArguments,
             KParts::BrowserArguments,
             KParts::WindowArgs,
             KParts::ReadOnlyPart**)),
-            this, SLOT(slotCreateNewWindow(KUrl,
+            this, SLOT(slotCreateNewWindow(QUrl,
                          KParts::OpenUrlArguments,
                          KParts::BrowserArguments,
                          KParts::WindowArgs,
                          KParts::ReadOnlyPart**)));
 
-    KAction* action = 0;
+    QAction * action = 0;
 
     action = m_part->actionCollection()->addAction("copylinkaddress");
     action->setText(i18n("Copy &Link Address"));
@@ -164,7 +166,7 @@ int ArticleViewer::pointsToPixel(int pointSize) const
     return ( pointSize * m_part->view()->logicalDpiY() + 36 ) / 72 ;
 }
 
-void ArticleViewer::slotOpenUrlRequestDelayed(const KUrl& url, const KParts::OpenUrlArguments& args, const KParts::BrowserArguments& browserArgs)
+void ArticleViewer::slotOpenUrlRequestDelayed(const QUrl& url, const KParts::OpenUrlArguments& args, const KParts::BrowserArguments& browserArgs)
 {
     OpenUrlRequest req(url);
     req.setArgs(args);
@@ -204,7 +206,7 @@ void ArticleViewer::slotOpenUrlRequestDelayed(const KUrl& url, const KParts::Ope
     emit signalOpenUrlRequest(req);
 }
 
-void ArticleViewer::slotCreateNewWindow(const KUrl& url,
+void ArticleViewer::slotCreateNewWindow(const QUrl& url,
                                        const KParts::OpenUrlArguments& args,
                                        const KParts::BrowserArguments& browserArgs,
                                        const KParts::WindowArgs& /*windowArgs*/,
@@ -221,7 +223,7 @@ void ArticleViewer::slotCreateNewWindow(const KUrl& url,
         *part = req.part();
 }
 
-void ArticleViewer::slotPopupMenu(const QPoint& p, const KUrl& kurl, mode_t, const KParts::OpenUrlArguments&, const KParts::BrowserArguments&, KParts::BrowserExtension::PopupFlags kpf)
+void ArticleViewer::slotPopupMenu(const QPoint& p, const QUrl& kurl, mode_t, const KParts::OpenUrlArguments&, const KParts::BrowserArguments&, KParts::BrowserExtension::PopupFlags kpf)
 {
     const bool isLink = (kpf & KParts::BrowserExtension::ShowNavigationItems) == 0; // ## why not use kpf & IsLink ?
     const bool isSelection = (kpf & KParts::BrowserExtension::ShowTextSelectionItems) != 0;
@@ -229,7 +231,7 @@ void ArticleViewer::slotPopupMenu(const QPoint& p, const KUrl& kurl, mode_t, con
     QString url = kurl.url();
 
     m_url = url;
-    KMenu popup;
+    QMenu popup;
 
     if (isLink && !isSelection)
     {
@@ -247,7 +249,7 @@ void ArticleViewer::slotPopupMenu(const QPoint& p, const KUrl& kurl, mode_t, con
             popup.addSeparator();
         }
         popup.addAction( ActionManager::getInstance()->action("viewer_print") );
-       //KAction *ac = action("setEncoding");
+       //QAction *ac = action("setEncoding");
        //if (ac)
        //     ac->plug(&popup);
         popup.addSeparator();
@@ -409,7 +411,7 @@ void ArticleViewer::renderContent(const QString& text)
     m_part->closeUrl();
     m_currentText = text;
     beginWriting();
-    //kDebug() << text;
+    //qDebug() << text;
     m_part->write(text);
     endWriting();
 }
@@ -440,7 +442,7 @@ void ArticleViewer::beginWriting()
 void ArticleViewer::endWriting()
 {
     m_part->write(m_htmlFooter);
-    //kDebug() << m_htmlFooter;
+    //qDebug() << m_htmlFooter;
     m_part->end();
 }
 
@@ -546,9 +548,9 @@ void ArticleViewer::slotUpdateCombinedView()
        ++num;
    }
 
-   kDebug() <<"Combined view rendering: (" << num <<" articles):" <<"generating HTML:" << spent.elapsed() <<"ms";
+   qDebug() <<"Combined view rendering: (" << num <<" articles):" <<"generating HTML:" << spent.elapsed() <<"ms";
    renderContent(text);
-   kDebug() <<"HTML rendering:" << spent.elapsed() <<"ms";
+   qDebug() <<"HTML rendering:" << spent.elapsed() <<"ms";
 }
 
 void ArticleViewer::slotArticlesUpdated(TreeNode* /*node*/, const QList<Article>& /*list*/)
@@ -621,9 +623,9 @@ void ArticleViewer::slotArticlesListed( KJob* job ) {
 
     if ( job->error() || !node ) {
         if ( !node )
-            kWarning() << "Node to be listed is already deleted";
+            qWarning() << "Node to be listed is already deleted";
         else
-            kWarning() << job->errorText();
+            qWarning() << job->errorText();
         slotUpdateCombinedView();
         return;
     }
@@ -667,9 +669,9 @@ QSize ArticleViewer::sizeHint() const
 
 void ArticleViewer::displayAboutPage()
 {
-    QString location = KStandardDirs::locate("data", "akregator/about/main.html");
+    QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "akregator/about/main.html");
 
-    m_part->begin(KUrl::fromPath( location ));
+    m_part->begin(QUrl::fromLocalFile( location ));
     QString info =
             i18nc("%1: Akregator version; %2: homepage URL; "
             "--- end of comment ---",
@@ -695,8 +697,8 @@ void ArticleViewer::displayAboutPage()
 
     QString content = KPIMUtils::kFileToByteArray(location);
 
-    QString infocss = KStandardDirs::locate( "data", "kdeui/about/kde_infopage.css" );
-    QString rtl = kapp->isRightToLeft() ? QString("@import \"%1\";" ).arg( KStandardDirs::locate( "data", "kdeui/about/kde_infopage_rtl.css" )) : QString();
+    QString infocss = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kdeui/about/kde_infopage.css" );
+    QString rtl = kapp->isRightToLeft() ? QString("@import \"%1\";" ).arg( QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kdeui/about/kde_infopage_rtl.css" )) : QString();
 
     m_part->write( content.arg( infocss, rtl, fontSize, appTitle, catchPhrase, quickDescription, info ) );
     m_part->end();
@@ -705,7 +707,7 @@ void ArticleViewer::displayAboutPage()
 ArticleViewerPart::ArticleViewerPart(QWidget* parent) : KHTMLPart(parent),
      m_button(-1)
 {
-    setXMLFile(KStandardDirs::locate("data", "akregator/articleviewer.rc"), true);
+    setXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "akregator/articleviewer.rc"), true);
 }
 
 int ArticleViewerPart::button() const

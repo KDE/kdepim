@@ -25,14 +25,14 @@
 #include "sendlaterremovemessagejob.h"
 
 #include <Akonadi/KMime/SpecialMailCollections>
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
-#include <akonadi/dbusconnectionpool.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/session.h>
-#include <Akonadi/AttributeFactory>
-#include <Akonadi/CollectionFetchScope>
+#include <AgentInstance>
+#include <AgentManager>
+#include <dbusconnectionpool.h>
+#include <changerecorder.h>
+#include <itemfetchscope.h>
+#include <AkonadiCore/session.h>
+#include <AttributeFactory>
+#include <CollectionFetchScope>
 #include <KMime/Message>
 
 #include <KWindowSystem>
@@ -47,7 +47,7 @@ SendLaterAgent::SendLaterAgent(const QString &id)
 {
     mManager = new SendLaterManager(this);
     connect(mManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
-    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_sendlater_agent") );
+    //QT5 KLocale::global()->insertCatalog( QLatin1String("akonadi_sendlater_agent") );
     new SendLaterAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/SendLaterAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.SendLaterAgent" ) );
@@ -93,7 +93,7 @@ void SendLaterAgent::setEnableAgent(bool enabled)
         return;
 
     SendLaterAgentSettings::setEnabled(enabled);
-    SendLaterAgentSettings::self()->writeConfig();
+    SendLaterAgentSettings::self()->save();
     if (enabled) {
         mManager->load();
     } else {
@@ -120,7 +120,7 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
 {
     QPointer<SendLaterConfigureDialog> dialog = new SendLaterConfigureDialog();
     if (windowId) {
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
         KWindowSystem::setMainWindow( dialog, windowId );
 #else
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );

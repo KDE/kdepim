@@ -30,14 +30,14 @@
 #include "ui_ds_appearance.h"
 
 #include <KConfig>
-#include <KDebug>
 #include <KDialog>
-#include <KGlobal>
 #include <KLocalizedString>
 
 #include <QCheckBox>
 #include <QPrinter>
 #include <QTextDocument>
+#include <KSharedConfig>
+#include <KLocale>
 
 using namespace KABPrinting;
 
@@ -86,7 +86,7 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
             name += QString::fromLatin1( " (%1)" ).arg( content.join( QLatin1String( ", " ) ) );
         }
 
-        const QString birthday = KGlobal::locale()->formatDate( contact.birthday().date(),
+        const QString birthday = KLocale::global()->formatDate( contact.birthday().date(),
                                                                 KLocale::ShortDate );
 
         ContactBlock::List blocks;
@@ -128,7 +128,7 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
         if ( contact.url().isValid() ) {
             ContactBlock block;
             block.header = i18n( "Web page:" );
-            block.entries.append( contact.url().prettyUrl() );
+            block.entries.append( contact.url().toDisplayString() );
 
             blocks.append( block );
         }
@@ -260,7 +260,7 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
 
     addPage( mPageAppearance, i18n( "Detailed Print Style - Appearance" ) );
 
-    KConfigGroup config( KGlobal::config(), ConfigSectionName );
+    KConfigGroup config( KSharedConfig::openConfig(), ConfigSectionName );
 
     mPageAppearance->kcbHeaderBGColor->
             setColor( config.readEntry( ContactHeaderBGColor, QColor( Qt::black ) ) );
@@ -284,7 +284,7 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
     const QColor headerBackgroundColor = mPageAppearance->kcbHeaderBGColor->color();
     const QColor headerForegroundColor = mPageAppearance->kcbHeaderTextColor->color();
 
-    KConfigGroup config( KGlobal::config(), ConfigSectionName );
+    KConfigGroup config( KSharedConfig::openConfig(), ConfigSectionName );
     config.writeEntry( ContactHeaderForeColor, headerForegroundColor );
     config.writeEntry( ContactHeaderBGColor, headerBackgroundColor );
     config.sync();

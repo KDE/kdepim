@@ -26,35 +26,35 @@
 #include "akonadibrowsermodel.h"
 #include "tagpropertiesdialog.h"
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/control.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/item.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/job.h>
-#include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/collectionpropertiesdialog.h>
-#include <akonadi/selectionproxymodel.h>
-#include <akonadi/session.h>
-#include <akonadi/standardactionmanager.h>
-#include <akonadi/entitylistview.h>
-#include <akonadi/entitytreeview.h>
-#include <akonadi/etmviewstatesaver.h>
-#include <akonadi/favoritecollectionsmodel.h>
+#include <AkonadiCore/attributefactory.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/control.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/itemmodifyjob.h>
+#include <AkonadiCore/job.h>
+#include <AkonadiCore/collectionfilterproxymodel.h>
+#include <AkonadiWidgets/collectionpropertiesdialog.h>
+#include <AkonadiCore/selectionproxymodel.h>
+#include <AkonadiCore/session.h>
+#include <AkonadiWidgets/standardactionmanager.h>
+#include <AkonadiWidgets/entitylistview.h>
+#include <AkonadiWidgets/entitytreeview.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
+#include <AkonadiCore/favoritecollectionsmodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
-#include <akonadi/tagdeletejob.h>
-#include <akonadi/tagmodel.h>
-#include <libkdepim/misc/statisticsproxymodel.h>
+#include <AkonadiCore/tagmodel.h>
+#include <AkonadiCore/statisticsproxymodel.h>
+#include <AkonadiCore/tagdeletejob.h>
 #include <kviewstatemaintainer.h>
 
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
-#include <kcalcore/incidence.h>
+#include <KCalCore/Incidence>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kfiledialog.h>
@@ -62,8 +62,10 @@
 #include <kxmlguiwindow.h>
 #include <KToggleAction>
 #include <KActionCollection>
-#include <akonadi/tagmodifyjob.h>
-#include <akonadi/tagcreatejob.h>
+#include <AkonadiCore/tagmodifyjob.h>
+#include <AkonadiCore/tagcreatejob.h>
+
+#include <KLocalizedString>
 
 #include <QSplitter>
 #include <QVBoxLayout>
@@ -71,6 +73,7 @@
 #include <QSqlQuery>
 #include <QTimer>
 #include <QSqlError>
+#include <KSharedConfig>
 #include <QMenu>
 
 using namespace Akonadi;
@@ -148,7 +151,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   collectionFilter->setDynamicSortFilter( true );
   collectionFilter->setSortCaseSensitivity( Qt::CaseInsensitive );
 
-  statisticsProxyModel = new KPIM::StatisticsProxyModel( this );
+  statisticsProxyModel = new Akonadi::StatisticsProxyModel( this );
   statisticsProxyModel->setToolTipEnabled( true );
   statisticsProxyModel->setSourceModel( collectionFilter );
 
@@ -167,11 +170,10 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemFilter->addMimeTypeExclusionFilter( Collection::mimeType() );
   itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
+  const KConfigGroup group = KSharedConfig::openConfig()->group( "FavoriteCollectionsModel" );
   AkonadiBrowserSortModel *sortModel = new AkonadiBrowserSortModel( mBrowserModel, this );
   sortModel->setDynamicSortFilter( true );
   sortModel->setSourceModel( itemFilter );
-
-  const KConfigGroup group = KGlobal::config()->group( "FavoriteCollectionsModel" );
   FavoriteCollectionsModel *favoritesModel = new FavoriteCollectionsModel( mBrowserModel, group, this );
   favoritesView->setModel( favoritesModel );
 
@@ -226,9 +228,9 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   mCacheOnlyAction = new KToggleAction( i18n("Cache only retrieval"), xmlGuiWindow );
   mCacheOnlyAction->setChecked( true );
   xmlGuiWindow->actionCollection()->addAction( "akonadiconsole_cacheonly", mCacheOnlyAction );
-  connect( mCacheOnlyAction, SIGNAL(toggled(bool)), SLOT(updateItemFetchScope()) );
+  connect(mCacheOnlyAction, &KToggleAction::toggled, this, &BrowserWidget::updateItemFetchScope);
 
-  m_stateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group("CollectionViewState"), this );
+  m_stateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KSharedConfig::openConfig()->group("CollectionViewState"), this );
   m_stateMaintainer->setView( mCollectionView );
 
   m_stateMaintainer->restoreState();
@@ -266,16 +268,16 @@ void BrowserWidget::itemActivated(const QModelIndex & index)
   job->fetchScope().fetchFullPayload();
   job->fetchScope().fetchAllAttributes();
   job->fetchScope().setFetchTags( true );
-  connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchDone(KJob*)), Qt::QueuedConnection );
+  connect(job, &ItemFetchJob::result, this, &BrowserWidget::itemFetchDone);
 }
 
 void BrowserWidget::itemFetchDone(KJob * job)
 {
   ItemFetchJob *fetch = static_cast<ItemFetchJob*>( job );
   if ( job->error() ) {
-    kWarning( 5265 ) << "Item fetch failed: " << job->errorString();
+    qWarning() << "Item fetch failed: " << job->errorString();
   } else if ( fetch->items().isEmpty() ) {
-    kWarning( 5265 ) << "No item found!";
+    qWarning() << "No item found!";
   } else {
     const Item item = fetch->items().first();
     setItem( item );
@@ -408,7 +410,7 @@ void BrowserWidget::save()
   }
 
   ItemModifyJob *store = new ItemModifyJob( item, this );
-  connect( store, SIGNAL(result(KJob*)), SLOT(saveResult(KJob*)) );
+  connect(store, &ItemModifyJob::result, this, &BrowserWidget::saveResult);
 }
 
 void BrowserWidget::saveResult(KJob * job)
@@ -451,12 +453,12 @@ void BrowserWidget::dumpToXml()
   const Collection root = currentCollection();
   if ( !root.isValid() )
     return;
-  const QString fileName = KFileDialog::getSaveFileName( KUrl(), "*.xml", this, i18n( "Select XML file" ) );
+  const QString fileName = KFileDialog::getSaveFileName( QUrl(), "*.xml", this, i18n( "Select XML file" ) );
   if ( fileName.isEmpty() )
     return;
 #if 0 // TODO: port me, can't use XmlWriteJob here, it's in runtime, call the akonadi2xml cli tool instead
   XmlWriteJob *job = new XmlWriteJob( root, fileName, this );
-  connect( job, SIGNAL(result(KJob*)), SLOT(dumpToXmlResult(KJob*)) );
+  connect(job, &XmlWriteJob::result, this, &BrowserWidget::dumpToXmlResult);
 #endif
 }
 
@@ -496,12 +498,12 @@ void BrowserWidget::tagViewContextMenuRequested(const QPoint &pos)
 {
   const QModelIndex index = mTagView->indexAt(pos);
   QMenu *menu = new QMenu( this );
-  connect(menu, SIGNAL(aboutToHide()), menu, SLOT(deleteLater()));
-  menu->addAction(KIcon(QLatin1String("list-add")), i18n("&Add tag..."), this, SLOT(addTagRequested()));
+  connect(menu, &QMenu::aboutToHide, menu, &QMenu::deleteLater);
+  menu->addAction(QIcon::fromTheme(QLatin1String("list-add")), i18n("&Add tag..."), this, SLOT(addTagRequested()));
   if (index.isValid()) {
       menu->addAction(i18n("Add &subtag..."), this, SLOT(addSubTagRequested()));
-      menu->addAction(KIcon(QLatin1String("document-edit")), i18n("&Edit tag..."), this, SLOT(editTagRequested()), QKeySequence(Qt::Key_Return));
-      menu->addAction(KIcon(QLatin1String("edit-delete")), i18n("&Delete tag..."), this, SLOT(removeTagRequested()), QKeySequence::Delete);
+      menu->addAction(QIcon::fromTheme(QLatin1String("document-edit")), i18n("&Edit tag..."), this, SLOT(editTagRequested()), QKeySequence(Qt::Key_Return));
+      menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("&Delete tag..."), this, SLOT(removeTagRequested()), QKeySequence::Delete);
       menu->setProperty("Tag", index.data(TagModel::TagRole));
   }
 
@@ -511,8 +513,8 @@ void BrowserWidget::tagViewContextMenuRequested(const QPoint &pos)
 void BrowserWidget::addTagRequested()
 {
   TagPropertiesDialog *dlg = new TagPropertiesDialog(this);
-  connect(dlg, SIGNAL(accepted()), this, SLOT(createTag()));
-  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  connect(dlg, &TagPropertiesDialog::accepted, this, &BrowserWidget::createTag);
+  connect(dlg, &TagPropertiesDialog::rejected, dlg, &TagPropertiesDialog::deleteLater);
   dlg->show();
 }
 
@@ -525,8 +527,8 @@ void BrowserWidget::addSubTagRequested()
   tag.setParent(parentTag);
 
   TagPropertiesDialog *dlg = new TagPropertiesDialog(tag, this);
-  connect(dlg, SIGNAL(accepted()), this, SLOT(createTag()));
-  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  connect(dlg, &TagPropertiesDialog::accepted, this, &BrowserWidget::createTag);
+  connect(dlg, &TagPropertiesDialog::rejected, dlg, &TagPropertiesDialog::deleteLater);
   dlg->show();
 }
 
@@ -535,8 +537,8 @@ void BrowserWidget::editTagRequested()
   QAction *action = qobject_cast<QAction*>(sender());
   const Akonadi::Tag tag = action->parent()->property("Tag").value<Akonadi::Tag>();
   TagPropertiesDialog *dlg = new TagPropertiesDialog(tag, this);
-  connect(dlg, SIGNAL(accepted()), this, SLOT(modifyTag()));
-  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  connect(dlg, &TagPropertiesDialog::accepted, this, &BrowserWidget::modifyTag);
+  connect(dlg, &TagPropertiesDialog::rejected, dlg, &TagPropertiesDialog::deleteLater);
   dlg->show();
 }
 
@@ -551,8 +553,8 @@ void BrowserWidget::tagViewDoubleClicked(const QModelIndex &index)
   Q_ASSERT(tag.isValid());
 
   TagPropertiesDialog *dlg = new TagPropertiesDialog(tag, this);
-  connect(dlg, SIGNAL(accepted()), this, SLOT(modifyTag()));
-  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  connect(dlg, &TagPropertiesDialog::accepted, this, &BrowserWidget::modifyTag);
+  connect(dlg, &TagPropertiesDialog::rejected, dlg, &TagPropertiesDialog::deleteLater);
   dlg->show();
 }
 

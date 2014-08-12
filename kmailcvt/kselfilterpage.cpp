@@ -40,7 +40,7 @@
 #include <filter_evolution_v3.h>
 
 // KDE includes
-#include <kstandarddirs.h>
+
 #include <klocale.h>
 #include <kmessagebox.h>
 
@@ -48,8 +48,9 @@
 #include <QCheckBox>
 
 // Akonadi includes
-#include <akonadi/collectionrequester.h>
-#include <akonadi/control.h>
+#include <AkonadiWidgets/collectionrequester.h>
+#include <AkonadiCore/control.h>
+#include <QStandardPaths>
 
 using namespace MailImporter;
 
@@ -58,7 +59,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
 {
     mWidget = new Ui::KSelFilterPageDlg;
     mWidget->setupUi( this );
-    mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", QLatin1String("kmailcvt/pics/step1.png")));
+    mWidget->mIntroSidebar->setPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kmailcvt/pics/step1.png")));
     connect(mWidget->mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
     // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.

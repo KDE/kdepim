@@ -27,9 +27,12 @@
 #include "attachmenteditdialog.h"
 #include "attachmenticonview.h"
 #include "ui_attachmenteditdialog.h"
+#include <KLocalizedString>
+
 
 #include <KMimeType>
 #include <KIO/NetAccess>
+#include <KLocale>
 
 using namespace IncidenceEditorNG;
 
@@ -72,14 +75,14 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
     mUi->mStackedWidget->setCurrentIndex( 1 );
     mUi->mSizeLabel->setText( QString::fromLatin1( "%1 (%2)" ).
                                  arg( KIO::convertSize( item->attachment()->size() ) ).
-                                 arg( KGlobal::locale()->formatNumber(
+                                 arg( KLocale::global()->formatNumber(
                                         item->attachment()->size(), 0 ) ) );
   }
 
   connect( mUi->mInlineCheck, SIGNAL(stateChanged(int)),
            SLOT(inlineChanged(int)) );
-  connect( mUi->mURLRequester, SIGNAL(urlSelected(KUrl)),
-           SLOT(urlChanged(KUrl)) );
+  connect( mUi->mURLRequester, SIGNAL(urlSelected(QUrl)),
+           SLOT(urlChanged(QUrl)) );
   connect( mUi->mURLRequester, SIGNAL(textChanged(QString)),
            SLOT(urlChanged(QString)) );
 }
@@ -170,7 +173,7 @@ void AttachmentEditDialog::urlChanged( const QString &url )
                                  mUi->mStackedWidget->currentIndex() == 1 );
 }
 
-void AttachmentEditDialog::urlChanged( const KUrl &url )
+void AttachmentEditDialog::urlChanged( const QUrl &url )
 {
   mMimeType = KMimeType::findByUrl( url );
   mUi->mTypeLabel->setText( mMimeType->comment() );

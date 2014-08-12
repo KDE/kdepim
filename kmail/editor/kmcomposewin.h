@@ -47,6 +47,8 @@
 #include "kleo/enum.h"
 #include <composer/composerviewbase.h>
 
+class QUrl;
+
 class QByteArray;
 class QCheckBox;
 class QGridLayout;
@@ -58,7 +60,7 @@ class CodecAction;
 class KMComposeWin;
 class KMComposerEditor;
 class KSelectAction;
-class KAction;
+class QAction;
 class KJob;
 class KToggleAction;
 class KUrl;
@@ -84,7 +86,7 @@ class Identity;
 }
 
 namespace KPIMTextEdit {
-class SelectSpecialChar;
+class SelectSpecialCharDialog;
 }
 
 namespace KIO {
@@ -306,7 +308,7 @@ private slots:
     void slotPrint();
     void slotPrintPreview();
 
-    void slotInsertRecentFile( const KUrl & );
+    void slotInsertRecentFile( const QUrl & );
     void slotRecentListFileClear();
 
     void slotSendNowVia( QAction * );
@@ -409,7 +411,7 @@ private slots:
     void setMaximumHeaderSize();
     void slotDoDelayedSend( KJob* );
 
-    void slotCompletionModeChanged( KGlobalSettings::Completion );
+    void slotCompletionModeChanged( KCompletion::CompletionMode );
     void slotConfigChanged();
 
     void slotPrintComposeResult( KJob *job );
@@ -640,9 +642,9 @@ private:
     KToggleAction *mIdentityAction, *mTransportAction, *mFccAction;
     KToggleAction *mWordWrapAction, *mFixedFontAction, *mAutoSpellCheckingAction;
     KToggleAction *mDictionaryAction, *mSnippetAction, *mTranslateAction;
-    KAction *mAppendSignature;
-    KAction *mPrependSignature;
-    KAction *mInsertSignatureAtCursorPosition;
+    QAction *mAppendSignature;
+    QAction *mPrependSignature;
+    QAction *mInsertSignatureAtCursorPosition;
     KToggleAction *mGenerateShortenUrl;
 
     KToggleAction *markupAction;
@@ -650,7 +652,7 @@ private:
     CodecAction *mCodecAction;
     KSelectAction *mCryptoModuleAction;
 
-    KAction *mFindText, *mFindNextText, *mReplaceText, *mSelectAll;
+    QAction *mFindText, *mFindNextText, *mReplaceText, *mSelectAll;
 
     QSplitter *mHeadersToEditorSplitter;
     QWidget* mHeadersArea;
@@ -678,7 +680,7 @@ private:
 
     SnippetWidget *mSnippetWidget;
     PimCommon::CustomToolsWidget *mCustomToolsWidget;
-    QPointer<KPIMTextEdit::SelectSpecialChar> mSelectSpecialChar;
+    QPointer<KPIMTextEdit::SelectSpecialCharDialog> mSelectSpecialChar;
     AttachmentMissingWarning *mAttachmentMissing;
     ExternalEditorWarning *mExternalEditorWarning;
     QTimer *m_verifyMissingAttachment;

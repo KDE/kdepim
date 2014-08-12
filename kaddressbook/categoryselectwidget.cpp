@@ -19,9 +19,8 @@
 
 #include "categoryselectwidget.h"
 
-#include <kicon.h>
 #include <klocale.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kdialog.h>
 
 #include <qtoolbutton.h>
@@ -29,8 +28,8 @@
 #include <qstandarditemmodel.h>
 #include <qtimer.h>
 
-#include <akonadi/monitor.h>
-#include <akonadi/tagmodel.h>
+#include <AkonadiCore/monitor.h>
+#include <AkonadiCore/tagmodel.h>
 
 #include <widgets/kcheckcombobox.h>
 
@@ -119,14 +118,14 @@ void CategorySelectWidgetPrivate::init()
 
     QToolButton *but = new QToolButton(q);
     but ->setAutoRaise(true);
-    but->setIcon(KIcon(QLatin1String("edit-undo")));
+    but->setIcon(QIcon::fromTheme(QLatin1String("edit-undo")));
     but->setToolTip(i18nc("@action:button", "Reset category filter"));
     connect(but, SIGNAL(clicked(bool)), SLOT(slotSelectAll()));
     hbox->addWidget(but);
 
     but = new QToolButton(q);
     but->setAutoRaise(true);
-    but->setIcon(KIcon(QLatin1String("edit-clear")));
+    but->setIcon(QIcon::fromTheme(QLatin1String("edit-clear")));
     but->setToolTip(i18nc("@action:button", "Clear category filter"));
     connect(but, SIGNAL(clicked(bool)), SLOT(slotSelectNone()));
     hbox->addWidget(but);
@@ -178,7 +177,7 @@ void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, in
     for (int row = start; row<=end; ++row) {
         QModelIndex idx = tagModel->index(row, 0, parent);
 #if 0
-	kDebug() << "idx" << idx << "=" << tagModel->data(idx, Qt::DisplayRole).toString()
+        qDebug() << "idx" << idx << "=" << tagModel->data(idx, Qt::DisplayRole).toString()
             << "name" << tagModel->data(idx, TagModel::NameRole).toString()
             << "tag" << tagModel->data(idx, TagModel::TagRole)
             << "id" << tagModel->data(idx, TagModel::IdRole).toInt();
@@ -202,7 +201,7 @@ void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, in
                 QModelIndex parentIndex = matchList.first();
                 itemModel()->itemFromIndex(parentIndex)->appendRow(it);
             } else {
-                kWarning() << "Cannot find parent with ID" << parentId;
+                qWarning() << "Cannot find parent with ID" << parentId;
                 itemModel()->insertRow(row+rowOffset, it);
             }
         } else {
@@ -292,7 +291,7 @@ QList<Akonadi::Tag::Id> CategorySelectWidgetPrivate::filterTags() const
         filter.append(CategorySelectWidget::FilterAll);
     }
 
-    //kDebug() << "filter" << filter;
+    //qDebug() << "filter" << filter;
     return filter;
 }
 

@@ -21,14 +21,15 @@
 #include "foldercollection.h"
 #include "kernel/mailkernel.h"
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/EntityMimeTypeFilterModel>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/EntityDisplayAttribute>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/EntityMimeTypeFilterModel>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KLocalizedString>
+#include <QIcon>
 
 using namespace KMail;
 using namespace MailCommon;
@@ -122,29 +123,29 @@ void FolderShortcutActionManager::shortcutChanged( const Akonadi::Collection &co
     // remove the old one, no autodelete in Qt4
     slotCollectionRemoved( col );
     const QSharedPointer<FolderCollection> folderCollection( FolderCollection::forCollection( col, false ) );
-    const KShortcut shortcut( folderCollection->shortcut() );
+    const QKeySequence shortcut( folderCollection->shortcut() );
     if ( shortcut.isEmpty() )
         return;
 
     FolderShortcutCommand *command = new FolderShortcutCommand( mParent, col );
     mFolderShortcutCommands.insert( col.id(), command );
 
-    KIcon icon( QLatin1String("folder") );
+    QIcon icon( QLatin1String("folder") );
     if ( col.hasAttribute<Akonadi::EntityDisplayAttribute>() &&
          !col.attribute<Akonadi::EntityDisplayAttribute>()->iconName().isEmpty() ) {
-        icon = KIcon( col.attribute<Akonadi::EntityDisplayAttribute>()->iconName() );
+        icon = QIcon( col.attribute<Akonadi::EntityDisplayAttribute>()->iconName() );
     }
 
     const QString actionLabel = i18n( "Folder Shortcut %1", col.name() );
     QString actionName = i18n( "Folder Shortcut %1", QString::number( col.id() ) );
     actionName.replace( QLatin1Char(' '), QLatin1Char('_') );
-    KAction *action = mActionCollection->addAction( actionName );
+    QAction *action = mActionCollection->addAction( actionName );
     // The folder shortcut is set in the folder shortcut dialog.
     // The shortcut set in the shortcut dialog would not be saved back to
     // the folder settings correctly.
-    action->setShortcutConfigurable( false );
+    mActionCollection->setShortcutsConfigurable( action, false );
     action->setText( actionLabel );
-    action->setShortcuts( shortcut );
+    action->setShortcut( shortcut );
     action->setIcon( icon );
 
     connect( action, SIGNAL(triggered(bool)), command, SLOT(start()) );

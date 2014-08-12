@@ -21,7 +21,7 @@
 #include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QWidget>
 #include <QLabel>
@@ -56,7 +56,7 @@ QWidget *SieveActionDeleteHeader::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("header:"));
     grid->addWidget(lab, 0, 1);
 
-    KLineEdit *headerEdit = new KLineEdit;
+    QLineEdit *headerEdit = new QLineEdit;
     headerEdit->setObjectName(QLatin1String("headeredit"));
     connect(headerEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(headerEdit, 0, 2);
@@ -64,7 +64,7 @@ QWidget *SieveActionDeleteHeader::createParamWidget( QWidget *parent ) const
     lab = new QLabel(i18n("value:"));
     grid->addWidget(lab, 1, 1);
 
-    KLineEdit *valueEdit = new KLineEdit;
+    QLineEdit *valueEdit = new QLineEdit;
     valueEdit->setObjectName(QLatin1String("valueedit"));
     connect(valueEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(valueEdit, 1, 2);
@@ -87,10 +87,10 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
                 combo->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
-                    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
+                    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("headeredit") );
                     edit->setText(e.text());
                 } else if (index == 1) {
-                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
+                    QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("valueedit") );
                     value->setText(e.text());
                 } else {
                     tooManyArgument(tagName, index, 2, error);
@@ -117,10 +117,10 @@ QString SieveActionDeleteHeader::code(QWidget *w) const
     bool isNegative = false;
     const QString matchTypeStr = combo->code(isNegative);
 
-    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
+    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("headeredit") );
     const QString headerStr = edit->text();
 
-    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
+    const QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("valueedit") );
     const QString valueStr = value->text();
 
     return QString::fromLatin1("deleteheader %1 \"%2\" \"%3\";").arg((isNegative ? QLatin1String("not ") + matchTypeStr : matchTypeStr )).arg(headerStr).arg(valueStr);

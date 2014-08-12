@@ -33,15 +33,16 @@
 #include <KCalUtils/IncidenceFormatter>
 
 #include <KCalendarSystem>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KIO/NetAccess>
 
 #include <QApplication>
 #include <QFile>
 #include <QTextStream>
+#include <KLocale>
 
 using namespace KOrg;
 
@@ -82,7 +83,7 @@ HtmlExportJob::HtmlExportJob( const Akonadi::ETMCalendar::Ptr &calendar,
 
 HtmlExportJob::~HtmlExportJob()
 {
-  //kDebug()<<"HtmlExportJob::~HtmlExportJob()";
+  //qDebug()<<"HtmlExportJob::~HtmlExportJob()";
   delete d;
 }
 
@@ -155,7 +156,7 @@ void HtmlExportJob::finishExport()
     saveStatus = save( dest.toLocalFile() );
     errorMessage = i18n( "Unable to write the output file." );
   } else {
-    KTemporaryFile tf;
+    QTemporaryFile tf;
     tf.open();
     QString tfile = tf.fileName();
     saveStatus = save( tfile );
@@ -300,7 +301,7 @@ void HtmlExportJob::createMonthView( QTextStream *ts )
     *ts << "<h2>"
         << i18nc( "@title month and year", "%1 %2", hMon, hYear )
         << "</h2>" << endl;
-    if ( KGlobal::locale()->weekStartDay() == 1 ) {
+    if ( KLocale::global()->weekStartDay() == 1 ) {
       start = start.addDays( 1 - start.dayOfWeek() );
     } else {
       if ( start.dayOfWeek() != 7 ) {
@@ -312,7 +313,7 @@ void HtmlExportJob::createMonthView( QTextStream *ts )
     // Write table header
     *ts << "  <tr>";
     for ( int i=0; i < 7; ++i ) {
-      *ts << "<th>" << KGlobal::locale()->calendar()->weekDayName( start.addDays(i) ) << "</th>";
+      *ts << "<th>" << KLocale::global()->calendar()->weekDayName( start.addDays(i) ) << "</th>";
     }
     *ts << "</tr>" << endl;
 
@@ -401,14 +402,14 @@ void HtmlExportJob::createEventList( QTextStream *ts )
   *ts << "  </tr>" << endl;
 
   for ( QDate dt = fromDate(); dt <= toDate(); dt = dt.addDays(1) ) {
-    kDebug() << "Getting events for" << dt.toString();
+    qDebug() << "Getting events for" << dt.toString();
     KCalCore::Event::List events = d->mCalendar->events( dt, d->mCalendar->timeSpec(),
                                                          KCalCore::EventSortStartDate,
                                                          KCalCore::SortDirectionAscending );
     if ( !events.isEmpty() ) {
       *ts << "  <tr><td colspan=\"" << QString::number( columns )
           << "\" class=\"datehead\"><i>"
-          << KGlobal::locale()->formatDate( dt )
+          << KLocale::global()->formatDate( dt )
           << "</i></td></tr>" << endl;
 
       foreach ( const KCalCore::Event::Ptr &event, events ) {
@@ -426,7 +427,7 @@ void HtmlExportJob::createEventList( QTextStream *ts )
 void HtmlExportJob::createEvent ( QTextStream *ts, const KCalCore::Event::Ptr &event,
                                   QDate date, bool withDescription )
 {
-  kDebug() << event->summary();
+  qDebug() << event->summary();
   *ts << "  <tr>" << endl;
 
   if ( !event->allDay() ) {
@@ -594,7 +595,7 @@ void HtmlExportJob::createTodoList ( QTextStream *ts )
 
 void HtmlExportJob::createTodo( QTextStream *ts, const KCalCore::Todo::Ptr &todo )
 {
-  kDebug();
+  qDebug();
 
   const bool completed = todo->isCompleted();
 
@@ -794,11 +795,11 @@ void HtmlExportJob::createFooter( QTextStream *ts )
   QString mail, name, credit, creditURL;*/
   if ( !d->mSettings->eMail().isEmpty() ) {
     if ( !d->mSettings->name().isEmpty() ) {
-      trailer += i18nc( "@info/plain page creator email link with name",
+      trailer += xi18nc( "@info/plain page creator email link with name",
                         "by <link url='mailto:%1'>%2</link> ",
                         d->mSettings->eMail(), d->mSettings->name() );
     } else {
-      trailer += i18nc( "@info/plain page creator email link",
+      trailer += xi18nc( "@info/plain page creator email link",
                         "by <link url='mailto:%1'>%2</link> ",
                         d->mSettings->eMail(), d->mSettings->eMail() );
     }
@@ -810,7 +811,7 @@ void HtmlExportJob::createFooter( QTextStream *ts )
   }
   if ( !d->mSettings->creditName().isEmpty() ) {
     if ( !d->mSettings->creditURL().isEmpty() ) {
-      trailer += i18nc( "@info/plain page credit with name and link",
+      trailer += xi18nc( "@info/plain page credit with name and link",
                         "with <link url='%1'>%2</link>",
                         d->mSettings->creditURL(), d->mSettings->creditName() );
     } else {

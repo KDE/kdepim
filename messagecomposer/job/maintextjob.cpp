@@ -29,7 +29,7 @@
 #include <QTextCodec>
 
 #include <KCharsets>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -132,7 +132,7 @@ bool MainTextJobPrivate::chooseCharsetAndEncode()
             }
         } else if( textPart->warnBadCharset() ) {
             // Should warn user but no Gui available.
-            kDebug() << "warnBadCharset but Gui is disabled.";
+            qDebug() << "warnBadCharset but Gui is disabled.";
             q->setError( JobBase::UserError );
             q->setErrorText( i18n( "The selected encoding (%1) cannot fully encode the message.",
                                    QString::fromLatin1( charsets.first() ) ) );
@@ -156,9 +156,9 @@ bool MainTextJobPrivate::chooseCharsetAndEncode()
 bool MainTextJobPrivate::encodeTexts()
 {
     Q_Q( MainTextJob );
-    QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( chosenCharset ) );
+    QTextCodec *codec = KCharsets::charsets()->codecForName( QString::fromLatin1( chosenCharset ) );
     if( !codec ) {
-        kError() << "Could not get text codec for charset" << chosenCharset;
+        qCritical() << "Could not get text codec for charset" << chosenCharset;
         q->setError( JobBase::BugError );
         q->setErrorText( i18n( "Could not get text codec for charset \"%1\".", QString::fromLatin1( chosenCharset ) ) );
         return false;
@@ -166,7 +166,7 @@ bool MainTextJobPrivate::encodeTexts()
     encodedPlainText = codec->fromUnicode( sourcePlainText );
     if( !textPart->cleanHtml().isEmpty() )
         encodedHtml = codec->fromUnicode( textPart->cleanHtml() );
-    kDebug() << "Done.";
+    qDebug() << "Done.";
     return true;
 }
 
@@ -205,7 +205,7 @@ SinglepartJob *MainTextJobPrivate::createImageJob( const QSharedPointer<KPIMText
     cjob->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
     cjob->contentTransferEncoding()->setDecoded( false ); // It is already encoded.
     cjob->contentID()->setIdentifier( image->contentID.toLatin1() );
-    kDebug() << "cid" << cjob->contentID()->identifier();
+    qDebug() << "cid" << cjob->contentID()->identifier();
     cjob->setData( image->image );
     return cjob;
 }
@@ -257,7 +257,7 @@ void MainTextJob::doStart()
     // Assemble the Content.
     SinglepartJob *plainJob = d->createPlainTextJob();
     if( d->encodedHtml.isEmpty() ) {
-        kDebug() << "Making text/plain";
+        qDebug() << "Making text/plain";
         // Content is text/plain.
         appendSubjob( plainJob );
     } else {
@@ -266,11 +266,11 @@ void MainTextJob::doStart()
         alternativeJob->appendSubjob( plainJob ); // text/plain first.
         alternativeJob->appendSubjob( d->createHtmlJob() ); // text/html second.
         if( !d->textPart->hasEmbeddedImages() ) {
-            kDebug() << "Have no images.  Making multipart/alternative.";
+            qDebug() << "Have no images.  Making multipart/alternative.";
             // Content is multipart/alternative.
             appendSubjob( alternativeJob );
         } else {
-            kDebug() << "Have related images.  Making multipart/related.";
+            qDebug() << "Have related images.  Making multipart/related.";
             // Content is multipart/related with a multipart/alternative sub-Content.
             MultipartJob *multipartJob = new MultipartJob;
             multipartJob->setMultipartSubtype( "related" );

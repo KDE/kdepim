@@ -23,7 +23,9 @@
 #include "yearprint.h"
 
 #include <KCalendarSystem>
-
+#include <KDebug>
+#include <KConfigGroup>
+#include <KLocale>
 using namespace CalendarSupport;
 
 
@@ -87,7 +89,7 @@ void CalPrintYear::loadConfig()
 
 void CalPrintYear::saveConfig()
 {
-  kDebug();
+  qDebug();
 
   readSettingsWidget();
   if ( mConfig ) {
@@ -117,7 +119,7 @@ void CalPrintYear::setDateRange( const QDate &from, const QDate &to )
 void CalPrintYear::print( QPainter &p, int width, int height )
 {
   const KCalendarSystem *calsys = calendarSystem();
-  KLocale *locale = KGlobal::locale();
+  KLocale *locale = KLocale::global();
   if ( !calsys || !locale ) {
     return;
   }

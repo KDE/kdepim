@@ -21,10 +21,11 @@
 #ifndef SERVERSIEVESETTINGSDIALOG_H
 #define SERVERSIEVESETTINGSDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include "sieveeditorutil.h"
 class ServerSieveSettings;
-class ServerSieveSettingsDialog : public KDialog
+class QPushButton;
+class ServerSieveSettingsDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -46,8 +47,12 @@ public:
     void setServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf);
     SieveEditorUtil::SieveServerConfig serverSieveConfig() const;
 
+private Q_SLOTS:
+    void slotEnableButtonOk(bool);
+
 private:
     ServerSieveSettings *mServerSieveSettings;
+    QPushButton *mOkButton;
 };
 
 #endif // SERVERSIEVESETTINGSDIALOG_H

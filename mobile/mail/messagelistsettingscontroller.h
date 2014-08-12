@@ -24,7 +24,7 @@
 
 #include "messagelistsettings.h"
 
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 #include <QtCore/QObject>
 

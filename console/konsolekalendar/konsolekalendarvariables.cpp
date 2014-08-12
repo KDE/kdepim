@@ -33,10 +33,10 @@
 #include "konsolekalendarvariables.h"
 
 #include <klocale.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <kconfig.h>
-#include <kstandarddirs.h>
+
 
 #include <QtCore/QDateTime>
 #include <QtCore/QString>

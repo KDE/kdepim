@@ -32,28 +32,26 @@
 #include "aboutdata.h"
 
 #include <QVBoxLayout>
-#include <QLabel>
 
 #include <kparts/statusbarextension.h>
 #include <kparts/mainwindow.h>
 #include <kpluginfactory.h>
 #include <kpluginloader.h>
 #include <kiconloader.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <ksettings/dispatcher.h>
 #include <kmailpartadaptor.h>
-#include <kicon.h>
-#include <akonadi/collection.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/changerecorder.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/entitydisplayattribute.h>
+#include <AkonadiCore/changerecorder.h>
 #include "foldertreeview.h"
 #include "tag/tagactionmanager.h"
 #include "foldershortcutactionmanager.h"
 
 #include <kglobal.h>
+#include <KSharedConfig>
 
 K_PLUGIN_FACTORY( KMailFactory, registerPlugin<KMailPart>(); )
-K_EXPORT_PLUGIN( KMailFactory( KMail::AboutData() ) )
 
 using namespace KMail;
 
@@ -61,9 +59,9 @@ KMailPart::KMailPart(QWidget *parentWidget, QObject *parent, const QVariantList 
     KParts::ReadOnlyPart( parent ),
     mParentWidget( parentWidget )
 {
-    kDebug() << "InstanceName:" << KGlobal::mainComponent().componentName();
-    setComponentData(KMailFactory::componentData());
-    kDebug() << "InstanceName:" << KGlobal::mainComponent().componentName();
+    qDebug() << "InstanceName:" << KComponentData::mainComponent().componentName();
+    //QT5 setComponentData(KMailFactory::componentData());
+    qDebug() << "InstanceName:" << KComponentData::mainComponent().componentName();
 
     // import i18n data and icons from libraries:
     KMail::insertLibraryCataloguesAndIcons();
@@ -72,7 +70,7 @@ KMailPart::KMailPart(QWidget *parentWidget, QObject *parent, const QVariantList 
     //local, do the init
     KMKernel *mKMailKernel = new KMKernel();
     mKMailKernel->init();
-    mKMailKernel->setXmlGuiInstance( KMailFactory::componentData() );
+    //QT5 mKMailKernel->setXmlGuiInstance( KMailFactory::componentData() );
 
     // and session management
     mKMailKernel->doSessionManagement();
@@ -91,7 +89,7 @@ KMailPart::KMailPart(QWidget *parentWidget, QObject *parent, const QVariantList 
     setWidget(canvas);
     KIconLoader::global()->addAppDir( QLatin1String("libkdepim") );
     mainWidget = new KMMainWidget( canvas, this, actionCollection(),
-                                   KGlobal::config() );
+                                   KSharedConfig::openConfig() );
     mainWidget->setObjectName( QLatin1String("partmainwidget") );
     QVBoxLayout *topLayout = new QVBoxLayout(canvas);
     topLayout->addWidget(mainWidget);
@@ -107,12 +105,12 @@ KMailPart::KMailPart(QWidget *parentWidget, QObject *parent, const QVariantList 
              this, SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
     setXMLFile( QLatin1String("kmail_part.rc"), true );
 
-    KSettings::Dispatcher::registerComponent( KMailFactory::componentData(), mKMailKernel, "slotConfigChanged" );
+    //QT5 KSettings::Dispatcher::registerComponent( KMailFactory::componentData(), mKMailKernel, "slotConfigChanged" );
 }
 
 KMailPart::~KMailPart()
 {
-    kDebug() << "Closing last KMMainWin: stopping mail check";
+    qDebug() << "Closing last KMMainWin: stopping mail check";
     // Running KIO jobs prevent kapp from exiting, so we need to kill them
     // if they are only about checking mail (not important stuff like moving messages)
     mainWidget->destruct();
@@ -127,7 +125,7 @@ void KMailPart::updateQuickSearchText()
 
 bool KMailPart::openFile()
 {
-    kDebug();
+    qDebug();
 
     mainWidget->show();
     return true;
@@ -154,7 +152,7 @@ void KMailPart::slotCollectionChanged( const Akonadi::Collection &collection, co
 
 void KMailPart::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
-    kDebug();
+    qDebug();
     KParts::ReadOnlyPart::guiActivateEvent(e);
     mainWidget->initializeFilterActions();
     mainWidget->tagActionManager()->createActions();
@@ -172,4 +170,4 @@ QWidget* KMailPart::parentWidget() const
 {
     return mParentWidget;
 }
-
+#include "kmail_part.moc"

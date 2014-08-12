@@ -20,7 +20,7 @@
 
 #include <KConfigDialog>
 #include "bilboblog.h"
-
+class KConfigSkeleton;
 namespace PimCommon {
 class StorageServiceManager;
 }

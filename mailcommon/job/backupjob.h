@@ -24,14 +24,14 @@
 #include "mailcommon_export.h"
 #include "progresswidget/progressmanager.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <Collection>
+#include <Item>
 
 #include <KUrl>
 
-#include <QList>
 #include <QObject>
 #include <QPointer>
+#include <QDateTime>
 
 class KArchive;
 class KJob;
@@ -106,7 +106,7 @@ private:
 
     QString mRealPath;
     KUrl mMailArchivePath;
-    time_t mArchiveTime;
+    QDateTime mArchiveTime;
     ArchiveType mArchiveType;
     Akonadi::Collection mRootFolder;
     KArchive *mArchive;

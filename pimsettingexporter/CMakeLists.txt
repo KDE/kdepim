@@ -29,11 +29,6 @@ set(pimsettingexporter_mail_SRCS
   mail/importmailjob.cpp
 )
 
-set(pimsettingexporter_knode_SRCS
-  knode/exportknodejob.cpp
-  knode/importknodejob.cpp
-)
-
 set(pimsettingexporter_alarm_SRCS
   alarm/exportalarmjob.cpp
   alarm/importalarmjob.cpp
@@ -79,7 +74,6 @@ set(pimsettingexporter_SRCS
   ${pimsettingexporter_xml_SRCS}
   ${pimsettingexporter_notes_SRCS}
   ${pimsettingexporter_alarm_SRCS}
-  ${pimsettingexporter_knode_SRCS}
   ${pimsettingexporter_mail_SRCS}
   ${pimsettingexporter_calendar_SRCS}
   ${pimsettingexporter_addressbook_SRCS}
@@ -98,21 +92,18 @@ set(pimsettingexporter_SRCS
   pimsettingsbackuprestore.cpp
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
+
+add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
 target_link_libraries(pimsettingexporter
-  ${KDE4_KFILE_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${AKONADI_COMMON_LIBRARIES}
-  ${KDEPIMLIBS_KALARMCAL_LIBS}
-  ${QT_QTXML_LIBRARY}
+  KF5::KIOCore
+  KF5::AkonadiCore
+  KF5::AkonadiMime
+  KF5::Mime
+  KF5::PimUtils
+  KF5::MailTransport
+  KF5::AlarmCalendar
   mailimporter
   mailcommon
   pimcommon
@@ -124,12 +115,11 @@ install(TARGETS pimsettingexporter ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES
     pimsettingexporter.rc
-    DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter
+    DESTINATION ${KXMLGUI_INSTALL_DIR}/pimsettingexporter
 )
 
 install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter)
 
 ########### install files ###############
 
-kde4_install_icons( ${ICON_INSTALL_DIR} )
 add_subdirectory(tests)

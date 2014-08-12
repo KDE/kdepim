@@ -29,7 +29,7 @@
 #include <QGroupBox>
 
 class KComboBox;
-class KPushButton;
+class QPushButton;
 
 class QAbstractButton;
 class QRadioButton;
@@ -277,8 +277,8 @@ private:
     KComboBox *mRuleField;
     QStackedWidget *mFunctionStack;
     QStackedWidget *mValueStack;
-    KPushButton *mAdd;
-    KPushButton *mRemove;
+    QPushButton *mAdd;
+    QPushButton *mRemove;
 };
 
 

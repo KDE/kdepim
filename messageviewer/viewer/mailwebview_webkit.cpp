@@ -25,9 +25,9 @@
 #include "adblock/adblockblockableitemsdialog.h"
 #include "adblock/webpage.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KActionCollection>
-#include <KAction>
+#include <QAction>
 
 #include <QCoreApplication>
 #include <QContextMenuEvent>
@@ -109,9 +109,9 @@ static void handleDuplicateLinkElements(const QWebElement& element, QHash<QStrin
 {
     if (element.tagName().compare(QLatin1String("A"), Qt::CaseInsensitive) == 0) {
         const QString linkKey (linkElementKey(element));
-        // kDebug() << "LINK KEY:" << linkKey;
+        // qDebug() << "LINK KEY:" << linkKey;
         if (dupLinkList->contains(linkKey)) {
-            // kDebug() << "***** Found duplicate link element:" << linkKey << endl;
+            // qDebug() << "***** Found duplicate link element:" << linkKey << endl;
             *accessKey = dupLinkList->value(linkKey);
         } else if (!linkKey.isEmpty()) {
             dupLinkList->insert(linkKey, *accessKey);
@@ -153,7 +153,7 @@ bool MailWebView::event( QEvent *event )
         QContextMenuEvent const *contextMenuEvent = static_cast<QContextMenuEvent*>( event );
         const QWebFrame * const frame = page()->currentFrame();
         const QWebHitTestResult hit = frame->hitTestContent( contextMenuEvent->pos() );
-        kDebug() << "Right-clicked URL:" << hit.linkUrl();
+        qDebug() << "Right-clicked URL:" << hit.linkUrl();
 
         emit popupMenu( hit.linkUrl(), ((hit.pixmap().isNull()) ? QUrl() : hit.imageUrl()), mapToGlobal( contextMenuEvent->pos() ) );
         event->accept();
@@ -188,7 +188,7 @@ void MailWebView::scrollPageDown( int percent )
     // do arithmetic in higher precision, and check for overflow:
     const qint64 newPosition = current + height * percent / 100;
     if ( newPosition > std::numeric_limits<int>::max() )
-        kWarning() << "new position" << newPosition << "exceeds range of 'int'!";
+        qWarning() << "new position" << newPosition << "exceeds range of 'int'!";
     page()->mainFrame()->setScrollBarValue( Qt::Vertical, newPosition );
 }
 
@@ -497,8 +497,9 @@ void MailWebView::showAccessKeys()
     }
     if (mActionCollection) {
         Q_FOREACH(QAction*act, mActionCollection->actions()) {
-            KAction *a = qobject_cast<KAction*>(act);
+            QAction *a = qobject_cast<QAction*>(act);
             if(a) {
+#if 0 //QT5
                 const KShortcut shortCut = a->shortcut();
                 if(!shortCut.isEmpty()) {
                     Q_FOREACH(const QChar& c, unusedKeys) {
@@ -507,6 +508,7 @@ void MailWebView::showAccessKeys()
                         }
                     }
                 }
+#endif
             }
         }
     }

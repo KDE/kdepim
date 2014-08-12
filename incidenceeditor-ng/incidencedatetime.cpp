@@ -37,7 +37,7 @@
 #include <KCalCore/ICalTimeZones>
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KDebug>
+#include <QDebug>
 #include <KSystemTimeZone>
 
 using namespace IncidenceEditorNG;
@@ -112,9 +112,8 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   lineEdits << mUi->mStartDateEdit->lineEdit() << mUi->mEndDateEdit->lineEdit()
             << mUi->mStartTimeEdit->lineEdit() << mUi->mEndTimeEdit->lineEdit();
   foreach ( QLineEdit *lineEdit, lineEdits ) {
-    KLineEdit *klineEdit = qobject_cast<KLineEdit*>( lineEdit );
-    if ( klineEdit ) {
-      klineEdit->setClearButtonShown( false );
+    if ( lineEdit ) {
+      lineEdit->setClearButtonEnabled( false );
     }
   }
 
@@ -141,16 +140,16 @@ bool IncidenceDateTime::eventFilter( QObject *obj, QEvent *event )
 {
   if ( event->type() == QEvent::FocusIn ) {
     if ( obj == mUi->mStartDateEdit ) {
-      kDebug() << "emiting startDateTime: " << mUi->mStartDateEdit;
+      qDebug() << "emiting startDateTime: " << mUi->mStartDateEdit;
       emit startDateFocus( obj );
     } else if ( obj == mUi->mEndDateEdit ) {
-      kDebug() << "emiting endDateTime: " << mUi->mEndDateEdit;
+      qDebug() << "emiting endDateTime: " << mUi->mEndDateEdit;
       emit endDateFocus( obj );
     } else if ( obj == mUi->mStartTimeEdit ) {
-      kDebug() << "emiting startTimeTime: " << mUi->mStartTimeEdit;
+      qDebug() << "emiting startTimeTime: " << mUi->mStartTimeEdit;
       emit startTimeFocus( obj );
     } else if ( obj == mUi->mEndTimeEdit ) {
-      kDebug() << "emiting endTimeTime: " << mUi->mEndTimeEdit;
+      qDebug() << "emiting endTimeTime: " << mUi->mEndTimeEdit;
       emit endTimeFocus( obj );
     }
 
@@ -181,7 +180,7 @@ void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
   } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<KCalCore::Journal>() ) {
     load( journal, isTemplate, templateOverridesTimes );
   } else {
-    kDebug() << "Not an Incidence.";
+    qDebug() << "Not an Incidence.";
   }
 
   // Set the initial times before calling enableTimeEdits, as enableTimeEdits
@@ -954,7 +953,7 @@ bool IncidenceDateTime::isValid() const
       return true;
     }
 
-    kDebug() << mLastErrorString;
+    qDebug() << mLastErrorString;
     return false;
   } else {
     mLastErrorString.clear();

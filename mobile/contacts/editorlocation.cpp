@@ -22,8 +22,11 @@
 #include "locationmodel.h"
 #include "ui_editorlocation.h"
 
-#include <KDE/KABC/Addressee>
-#include <KDE/KMessageBox>
+#include <KABC/Addressee>
+#include <KMessageBox>
+
+#include <KLocalizedString>
+#include <KDialog>
 
 #include <QCheckBox>
 #include <QDataWidgetMapper>
@@ -35,7 +38,7 @@ class AddressTypeDialog : public KDialog
     AddressTypeDialog( QWidget *parent = 0 )
       : KDialog( parent)
     {
-      setCaption( i18nc( "street/postal", "New Address" ) );
+      setWindowTitle( i18nc( "street/postal", "New Address" ) );
 
       QWidget *page = new QWidget(this);
       setMainWidget( page );

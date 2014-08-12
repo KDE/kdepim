@@ -51,7 +51,7 @@
 #include <string>
 #include <sstream>
 
-using namespace KLEOPATRACLIENT_NAMESPACE;
+using namespace KleopatraClientCopy;
 using namespace boost;
 
 // copied from kleopatra/utils/hex.cpp

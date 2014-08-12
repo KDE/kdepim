@@ -33,16 +33,17 @@
 #include "monitorswidget.h"
 #include "querydebugger.h"
 
-#include <akonadi/agentinstancewidget.h>
-#include <akonadi/agentfilterproxymodel.h>
-#include <akonadi/control.h>
-#include <akonadi/searchcreatejob.h>
-#include <akonadi/servermanager.h>
+#include <AkonadiWidgets/agentinstancewidget.h>
+#include <AkonadiCore/agentfilterproxymodel.h>
+#include <AkonadiCore/control.h>
+#include <AkonadiCore/searchcreatejob.h>
+#include <AkonadiCore/servermanager.h>
 
-#include <KAction>
+#include <QIcon>
+#include <QAction>
 #include <KActionCollection>
 #include <KCMultiDialog>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KXmlGuiWindow>
 
 #include <QVBoxLayout>
@@ -52,7 +53,7 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  KTabWidget *tabWidget = new KTabWidget( this );
+  QTabWidget *tabWidget = new QTabWidget( this );
   tabWidget->setObjectName( "mainTab" );
   layout->addWidget( tabWidget );
 
@@ -70,34 +71,34 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   tabWidget->addTab( new SearchWidget( tabWidget ), "Item Search" );
   tabWidget->addTab( new MonitorsWidget( tabWidget ), "Monitors" );
 
-  KAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
+  QAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
   action->setText( "Create Search..." );
-  connect( action, SIGNAL(triggered()), this, SLOT(createSearch()) );
+  connect(action, &QAction::triggered, this, &MainWidget::createSearch);
 
   action = parent->actionCollection()->addAction( "akonadiconsole_akonadi2xml" );
   action->setText( "Dump to XML..." );
-  connect( action, SIGNAL(triggered()), mBrowser, SLOT(dumpToXml()) );
+  connect(action, &QAction::triggered, mBrowser, &BrowserWidget::dumpToXml);
 
   action = parent->actionCollection()->addAction( "akonadiconsole_clearcache" );
   action->setText( "Clear Akonadi Cache" );
-  connect( action, SIGNAL(triggered()), mBrowser, SLOT(clearCache()) );
+  connect(action, &QAction::triggered, mBrowser, &BrowserWidget::clearCache);
 
   action = parent->actionCollection()->addAction( "akonadiserver_start" );
   action->setText( "Start Server" );
-  connect( action, SIGNAL(triggered()), SLOT(startServer()) );
+  connect(action, &QAction::triggered, this, &MainWidget::startServer);
 
   action = parent->actionCollection()->addAction( "akonadiserver_stop" );
   action->setText( "Stop Server" );
-  connect( action, SIGNAL(triggered()), SLOT(stopServer()) );
+  connect(action, &QAction::triggered, this, &MainWidget::stopServer);
 
   action = parent->actionCollection()->addAction( "akonadiserver_restart" );
   action->setText( "Restart Server" );
-  connect( action, SIGNAL(triggered()), SLOT(restartServer()) );
+  connect(action, &QAction::triggered, this, &MainWidget::restartServer);
 
   action = parent->actionCollection()->addAction( "akonadiserver_configure" );
   action->setText( "Configure Server..." );
-  action->setIcon( KIcon("configure") );
-  connect( action, SIGNAL(triggered()), SLOT(configureServer()) );
+  action->setIcon( QIcon::fromTheme("configure") );
+  connect(action, &QAction::triggered, this, &MainWidget::configureServer);
 }
 
 MainWidget::~MainWidget()
@@ -107,6 +108,8 @@ MainWidget::~MainWidget()
 
 void MainWidget::createSearch()
 {
+//QT5
+#if 0
   SearchDialog dlg;
   if ( !dlg.exec() )
     return;
@@ -120,6 +123,7 @@ void MainWidget::createSearch()
     name = "My Search";
 
   new Akonadi::SearchCreateJob( name, query );
+#endif
 }
 
 void MainWidget::startServer()

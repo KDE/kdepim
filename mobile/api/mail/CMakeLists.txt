@@ -1,7 +1,5 @@
 project(mail)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
-
 set(mail_SRCS
     mailplugin.cpp
     message.cpp
@@ -15,24 +13,19 @@ set(mail_SRCS
 INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
-    ${KDE4_INCLUDES}
     ${CMAKE_SOURCE_DIR}/messagecomposer
     ${CMAKE_BINARY_DIR}/messagecomposer
     ${CMAKE_SOURCE_DIR}/messagecore
     ${CMAKE_SOURCE_DIR}/libkdepim/
 )
 
-qt4_automoc(${mail_SRCS})
-
-kde4_add_library(mailplugin SHARED ${mail_SRCS})
+add_library(mailplugin SHARED ${mail_SRCS})
 
 target_link_libraries(mailplugin
-
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTDECLARATIVE_LIBRARY}
-    ${KDEPIMLIBS_AKONADI_LIBS}
-    ${KDEPIMLIBS_KMIME_LIBS}
-    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+    Qt5::Declarative
+    KF5::AkonadiCore
+    KF5::AkonadiMime
+    KF5::Mime
     messagecomposer
     kdepim
 )

@@ -25,7 +25,7 @@
 #include "calendarsupport_export.h"
 #include "kcalprefs_base.h"
 
-#include <Akonadi/Entity>
+#include <Entity>
 
 #include <KDateTime>
 
@@ -47,10 +47,10 @@ class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
     void usrSetDefaults();
 
     /** Read preferences from config file */
-    void usrReadConfig();
+    void usrRead();
 
     /** Write preferences to config file */
-    void usrWriteConfig();
+    bool usrSave();
 
   protected:
     void setTimeZoneDefault();

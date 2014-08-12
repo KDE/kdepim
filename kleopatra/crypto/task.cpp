@@ -44,7 +44,7 @@
 
 #include <gpg-error.h>
 
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 #include <KLocalizedString>
 

@@ -20,13 +20,13 @@
 #ifndef MAILCOMMON_MAILFILTER_H
 #define MAILCOMMON_MAILFILTER_H
 
-#include "../mailcommon_export.h"
+#include "mailcommon_export.h"
 
 #include "filteraction.h"
 #include "../search/searchpattern.h"
 
-#include <kshortcut.h>
-#include <akonadi/collection.h>
+#include <QKeySequence>
+#include <AkonadiCore/collection.h>
 
 #include <kmime/kmime_message.h>
 
@@ -261,12 +261,12 @@ public:
       or toolbar. Default is no shortcut.
       @see setConfigureShortcut setConfigureToolbar
   */
-    void setShortcut( const KShortcut &shortcut );
+    void setShortcut( const QKeySequence &shortcut );
 
     /** @return The shortcut assigned to the filter.
       @see setShortcut
   */
-    const KShortcut & shortcut() const;
+    const QKeySequence & shortcut() const;
 
     /** Set the icon to be used if plugged into the filter menu
       or toolbar. Default is the gear icon.
@@ -319,7 +319,7 @@ private:
     QStringList mAccounts;
     QString mIcon;
     QString mToolbarName;
-    KShortcut mShortcut;
+    QKeySequence mShortcut;
     bool bApplyOnInbound : 1;
     bool bApplyBeforeOutbound : 1;
     bool bApplyOnOutbound : 1;

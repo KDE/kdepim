@@ -22,7 +22,7 @@
 class QContextMenuEvent;
 class QTreeWidgetItem;
 class KRecentFilesAction;
-class KUrl;
+class QUrl;
 
 namespace KTnef {
   class KTNEFParser;
@@ -65,13 +65,13 @@ class KTNEFMain : public KXmlGuiWindow
     void viewDoubleClicked( QTreeWidgetItem * );
     void viewDragRequested( const QList<KTNEFAttach *> &list );
     void slotConfigureKeys();
-    void openRecentFile(const KUrl&);
+    void openRecentFile(const QUrl&);
 
 //  protected:
 //    void closeEvent( QCloseEvent *e );
 
   private:
-    void addRecentFile(const KUrl &url);
+    void addRecentFile(const QUrl &url);
     void setupStatusbar();
     void setupActions();
     void setupTNEF();

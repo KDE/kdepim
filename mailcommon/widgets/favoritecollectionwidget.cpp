@@ -22,13 +22,14 @@
 
 #include <messagecore/settings/globalsettings.h>
 
-#include <KDE/KGlobalSettings>
-#include <KDE/KLocale>
-#include <KDE/KXMLGUIClient>
+#include <KGlobalSettings>
+#include <KLocale>
+#include <KXMLGUIClient>
 #include <KActionMenu>
 #include <KActionCollection>
 
 #include <QPainter>
+#include <QFontDatabase>
 
 using namespace MailCommon;
 
@@ -154,7 +155,7 @@ void FavoriteCollectionWidget::slotChangeMode(bool)
     }
 
     MailCommon::MailCommonSettings::self()->setFavoriteCollectionViewMode(mode);
-    MailCommon::MailCommonSettings::self()->writeConfig();
+    MailCommon::MailCommonSettings::self()->save();
 }
 
 void FavoriteCollectionWidget::changeViewMode(QListView::ViewMode mode)
@@ -185,7 +186,7 @@ void FavoriteCollectionWidget::slotChangeIconSize(bool )
     }
     setIconSize( newIconSize );
     MailCommon::MailCommonSettings::self()->setIconSize(iconSize().width());
-    MailCommon::MailCommonSettings::self()->writeConfig();
+    MailCommon::MailCommonSettings::self()->save();
 }
 
 void FavoriteCollectionWidget::slotGeneralPaletteChanged()
@@ -200,7 +201,7 @@ void FavoriteCollectionWidget::slotGeneralFontChanged()
 {
     // Custom/System font support
     if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-        setFont( KGlobalSettings::generalFont() );
+        setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
     }
 }
 
@@ -209,9 +210,9 @@ void FavoriteCollectionWidget::readConfig()
     // Custom/System font support
     if (!MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
         KConfigGroup fontConfig( KernelIf->config(), "Fonts" );
-        setFont( fontConfig.readEntry( "folder-font", KGlobalSettings::generalFont() ) );
+        setFont( fontConfig.readEntry( "folder-font", QFontDatabase::systemFont(QFontDatabase::GeneralFont) ) );
     } else {
-        setFont( KGlobalSettings::generalFont() );
+        setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
     }
 
     int iIconSize = MailCommon::MailCommonSettings::self()->iconSize();

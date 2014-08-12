@@ -26,21 +26,20 @@
 
 #include "kdepim_export.h"
 
-#include <kguiitem.h>
-#include <KStandardGuiItem>
-#include <kmessagebox.h>
+#include <KMessageBox>
 #include <QMessageBox>
 #include <QString>
+#include <QDialogButtonBox>
 
 class KDEPIM_EXPORT PIMMessageBox
 {
 public:
-    static int fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
+    static QDialogButtonBox::StandardButton fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
                               const QString &text,
                               const QString &caption = QString(),
-                              const KGuiItem &button1 = KStandardGuiItem::yes(),
-                              const KGuiItem &button2 = KStandardGuiItem::no(),
-                              const KGuiItem &button3 = KStandardGuiItem::cont(),
+                              const QString &button1Text = QString(),
+                              const QString &button2Text = QString(),
+                              const QString &button3Text = QString(),
                               KMessageBox::Options options = KMessageBox::Notify );
 };
 

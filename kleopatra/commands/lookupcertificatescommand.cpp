@@ -55,7 +55,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QRegExp>
 
@@ -140,7 +140,7 @@ LookupCertificatesCommand::Private::Private( LookupCertificatesCommand * qq, Key
 }
 
 LookupCertificatesCommand::Private::~Private() {
-    kDebug();
+    qDebug();
     delete dialog;
 }
 
@@ -167,7 +167,7 @@ void LookupCertificatesCommand::Private::init() {
 
 }
 
-LookupCertificatesCommand::~LookupCertificatesCommand() { kDebug(); }
+LookupCertificatesCommand::~LookupCertificatesCommand() { qDebug(); }
 
 
 void LookupCertificatesCommand::doStart() {
@@ -264,7 +264,7 @@ void LookupCertificatesCommand::Private::slotKeyListResult( const KeyListResult 
     else if ( q->sender() == keyListing.openpgp )
         keyListing.openpgp = 0;
     else
-        kDebug() << "unknown sender()" << q->sender();
+        qDebug() << "unknown sender()" << q->sender();
 
     keyListing.result.mergeWith( r );
     if ( keyListing.cms || keyListing.openpgp ) // still waiting for jobs to complete
@@ -318,7 +318,7 @@ void LookupCertificatesCommand::Private::slotImportRequested( const std::vector<
 
 void LookupCertificatesCommand::Private::slotSaveAsRequested( const std::vector<Key> & keys ) {
     Q_UNUSED( keys );
-    kDebug() << "not implemented";
+    qDebug() << "not implemented";
 }
 
 void LookupCertificatesCommand::Private::slotDetailsRequested( const Key & key ) {
@@ -346,7 +346,7 @@ void LookupCertificatesCommand::Private::showError( QWidget * parent, const KeyL
 void LookupCertificatesCommand::Private::showResult( QWidget * parent, const KeyListResult & result ) {
     if ( result.isTruncated() )
         KMessageBox::information( parent,
-                                  i18nc("@info",
+                                  xi18nc("@info",
                                         "<para>The query result has been truncated.</para>"
                                         "<para>Either the local or a remote limit on "
                                         "the maximum number of returned hits has "
@@ -383,7 +383,7 @@ static bool haveX509DirectoryServerConfigured() {
 bool LookupCertificatesCommand::Private::checkConfig() const {
     const bool ok = haveOpenPGPKeyserverConfigured() || haveX509DirectoryServerConfigured();
     if ( !ok )
-        information( i18nc("@info",
+        information( xi18nc("@info",
                            "<para>You do not have any directory servers configured.</para>"
                            "<para>You need to configure at least one directory server to "
                            "search on one.</para>"

@@ -1,7 +1,8 @@
-KDE4_NO_ENABLE_FINAL(incidenceeditor-ng)
 if(KDEPIM_MOBILE_UI)
   remove_definitions(-DKDEPIM_MOBILE_UI)
 endif()
+
+add_definitions(-DTRANSLATION_DOMAIN=\"libincidenceeditors\")
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
@@ -63,7 +64,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   categorydialog.cpp
 )
 
-kde4_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc)
+kconfig_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc)
 
 ### Build the desktop version
 
@@ -75,7 +76,7 @@ set(incidenceeditors_ng_desktop_LIB_SRCS
   visualfreebusywidget.cpp
 )
 
-kde4_add_ui_files(incidenceeditors_ng_desktop_LIB_SRCS
+ki18n_wrap_ui(incidenceeditors_ng_desktop_LIB_SRCS
   categoryeditdialog_base.ui
   categoryselectdialog_base.ui
   categorydialog_base.ui
@@ -86,15 +87,13 @@ kde4_add_ui_files(incidenceeditors_ng_desktop_LIB_SRCS
   schedulingdialog.ui
 )
 
-kde4_add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
+add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
+generate_export_header(incidenceeditorsng BASE_NAME incidenceeditors_ng)
 
 target_link_libraries(incidenceeditorsng
-  akonadi-calendar
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${KDEPIMLIBS_KCALUTILS_LIBS}
+  KF5::AkonadiCalendar
+  KF5::CalendarCore
+  KF5::CalendarUtils
   kdepim
   kdepimdbusinterfaces # For UriHandler
   calendarsupport      # For KCalPrefs
@@ -102,8 +101,8 @@ target_link_libraries(incidenceeditorsng
 )
 
 set_target_properties(incidenceeditorsng
-  PROPERTIES VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -116,7 +115,7 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
     ${incidenceeditors_ng_shared_LIB_SRCS}
   )
 
-  kde4_add_ui_files(incidenceeditors_ng_mobile_LIB_SRCS
+  ki18n_wrap_ui(incidenceeditors_ng_mobile_LIB_SRCS
     categoryeditdialog_base.ui
     categoryselectdialog_base.ui
     categorydialog_base.ui
@@ -129,25 +128,22 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
     mobileschedulingdialog.ui
   )
 
-  kde4_add_library(incidenceeditorsngmobile ${LIBRARY_TYPE} ${incidenceeditors_ng_mobile_LIB_SRCS})
+  add_library(incidenceeditorsngmobile ${LIBRARY_TYPE} ${incidenceeditors_ng_mobile_LIB_SRCS})
 
   target_link_libraries(incidenceeditorsngmobile
-    akonadi-calendar
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${KDE4_KDEUI_LIBS}
+    KF5::AkonadiCalendar
     kdepim               # For KPIM::K{Date|Time}Edit
     calendarsupport      # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
     kdgantt2
-    ${KDEPIMLIBS_KCALUTILS_LIBS}
-    ${KDEPIMLIBS_KCALCORE_LIBS}
+    KF5::CalendarUtils
+    KF5::CalendarCore
   )
 
   set_target_properties(incidenceeditorsngmobile PROPERTIES
     COMPILE_FLAGS -DKDEPIM_MOBILE_UI
-    VERSION ${GENERIC_LIB_VERSION}
-    SOVERSION ${GENERIC_LIB_SOVERSION}
+    VERSION ${KDEPIM_LIB_VERSION}
+    SOVERSION ${KDEPIM_LIB_SOVERSION}
   )
 
   install(TARGETS incidenceeditorsngmobile ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -157,14 +153,13 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set(testincidenceeditor_SRCS main.cpp)
 
-kde4_add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
+add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
 
 target_link_libraries(kincidenceeditor
-  akonadi-calendar
-  ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${KDEPIMLIBS_KCALUTILS_LIBS}
+  KF5::AkonadiCalendar
+  KF5::AkonadiCore
+  KF5::CalendarCore
+  KF5::CalendarUtils
   incidenceeditorsng
   calendarsupport
   kdepimdbusinterfaces
@@ -172,4 +167,4 @@ target_link_libraries(kincidenceeditor
 
 install(TARGETS kincidenceeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory(tests)
+add_subdirectory(autotests)

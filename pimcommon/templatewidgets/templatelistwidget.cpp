@@ -22,15 +22,16 @@
 #include <KSharedConfig>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 #include <KFileDialog>
 #include <KNS3/DownloadDialog>
-
+#include <QIcon>
 
 #include <QListWidgetItem>
 #include <QPointer>
 #include <QMimeData>
 #include <QDropEvent>
+#include <QFileDialog>
 
 namespace PimCommon {
 
@@ -137,7 +138,7 @@ public:
 
     void slotImportTemplates()
     {
-        const QString templateFile = KFileDialog::getOpenFileName();
+        const QString templateFile = QFileDialog::getOpenFileName(); 
         if (!templateFile.isEmpty()) {
             KConfig conf(templateFile);
             loadTemplates(&conf);
@@ -157,7 +158,7 @@ public:
     {
         const QList<QListWidgetItem *> lstSelectedItems = q->selectedItems();
         const bool listSelectedIsEmpty = lstSelectedItems.isEmpty();
-        KMenu *menu = new KMenu( q );
+        QMenu *menu = new QMenu( q );
 
         if (!listSelectedIsEmpty) {
             menu->addAction( i18n("Insert template"), q, SLOT(slotInsertTemplate()));
@@ -174,7 +175,7 @@ public:
             }
             if (lstSelectedItems.count() == 1 && !defaultTemplate) {
                 menu->addSeparator();
-                menu->addAction( KIcon(QLatin1String("edit-delete")), i18n("Remove"), q, SLOT(slotRemove()));
+                menu->addAction( QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Remove"), q, SLOT(slotRemove()));
             }
         }
         menu->addSeparator();
@@ -185,7 +186,7 @@ public:
         if (!knewstuffConfigName.isEmpty()) {
             menu->addSeparator();
             QAction *act = menu->addAction( i18n("Download new Templates..."), q, SLOT(slotDownloadTemplates()));
-            act->setIcon(KIcon(QLatin1String("get-hot-new-stuff")));
+            act->setIcon(QIcon::fromTheme(QLatin1String("get-hot-new-stuff")));
         }
 
         menu->exec( q->mapToGlobal( pos ) );

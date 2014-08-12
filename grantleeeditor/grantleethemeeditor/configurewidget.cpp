@@ -21,6 +21,7 @@
 #include "globalsettings_base.h"
 
 #include <KSharedConfig>
+#include <QUrl>
 
 using namespace GrantleeThemeEditor;
 ConfigureWidget::ConfigureWidget(QWidget *parent)
@@ -40,19 +41,19 @@ void ConfigureWidget::writeConfig()
     GrantleeThemeEditor::GrantleeThemeEditorSettings::setAuthorEmail(ui->authorEmail->text());
     GrantleeThemeEditor::GrantleeThemeEditorSettings::setAuthor(ui->author->text());
     GrantleeThemeEditor::GrantleeThemeEditorSettings::setPath(ui->defaultPath->url().path());
-    GrantleeThemeEditor::GrantleeThemeEditorSettings::self()->writeConfig();
+    GrantleeThemeEditor::GrantleeThemeEditorSettings::self()->save();
 }
 
 void ConfigureWidget::readConfig()
 {
     ui->authorEmail->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::authorEmail());
     ui->author->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::author());
-    ui->defaultPath->setUrl(KUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
+    ui->defaultPath->setUrl(QUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
 }
 
 void ConfigureWidget::setDefault()
 {
-    ui->defaultPath->setUrl(KUrl());
+    ui->defaultPath->setUrl(QUrl());
     ui->authorEmail->clear();
     ui->author->clear();
 }

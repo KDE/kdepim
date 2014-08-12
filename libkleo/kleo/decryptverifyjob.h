@@ -73,7 +73,7 @@ namespace Kleo {
        Starts the combined decryption and verification operation.
        \a cipherText is the data to decrypt and later verify.
     */
-    virtual KDE_DEPRECATED GpgME::Error start( const QByteArray & cipherText ) = 0;
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const QByteArray & cipherText ) = 0;
 
     /*!
       \overload

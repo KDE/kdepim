@@ -31,25 +31,27 @@
 #include <KActionCollection>
 #include <KIconLoader>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 #include <QtDBus/QtDBus>
+#include <QAction>
+#include <QIcon>
 
 EXPORT_KONTACT_PLUGIN( JournalPlugin, journal )
 
 JournalPlugin::JournalPlugin( KontactInterface::Core *core, const QVariantList & )
   : KontactInterface::Plugin( core, core, "korganizer", "journal" ), mIface( 0 )
 {
-  setComponentData( KontactPluginFactory::componentData() );
+  //QT5 setComponentData( KontactPluginFactory::componentData() );
   KIconLoader::global()->addAppDir( QLatin1String("korganizer") );
   KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
 
-  KAction *action =
-    new KAction( KIcon( QLatin1String("journal-new") ),
+  QAction *action =
+    new QAction( QIcon::fromTheme( QLatin1String("journal-new") ),
                  i18nc( "@action:inmenu", "New Journal..." ), this );
   actionCollection()->addAction( QLatin1String("new_journal"), action );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_J ) );
-  action->setHelpText(
-    i18nc( "@info:status", "Create a new journal" ) );
+  //QT5 action->setHelpText(
+    //i18nc( "@info:status", "Create a new journal" ) );
   action->setWhatsThis(
     i18nc( "@info:whatsthis",
            "You will be presented with a dialog where you can create "
@@ -57,12 +59,12 @@ JournalPlugin::JournalPlugin( KontactInterface::Core *core, const QVariantList &
   connect( action, SIGNAL(triggered(bool)), SLOT(slotNewJournal()) );
   insertNewAction( action );
 
-  KAction *syncAction =
-    new KAction( KIcon( QLatin1String("view-refresh") ),
+  QAction *syncAction =
+    new QAction( QIcon::fromTheme( QLatin1String("view-refresh") ),
                  i18nc( "@action:inmenu", "Sync Journal" ), this );
   actionCollection()->addAction( QLatin1String("journal_sync"), syncAction );
-  syncAction->setHelpText(
-    i18nc( "@info:status", "Synchronize groupware journal" ) );
+  //QT5 syncAction->setHelpText(
+    //i18nc( "@info:status", "Synchronize groupware journal" ) );
   syncAction->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Choose this option to synchronize your groupware journal entries." ) );
@@ -142,7 +144,7 @@ void JournalPlugin::slotSyncJournal()
   message << QString( "Journal" );
   QDBusConnection::sessionBus().send( message );
 #else
-  kWarning() << " JournalPlugin::slotSyncJournal : need to port to Akonadi";
+  qWarning() << " JournalPlugin::slotSyncJournal : need to port to Akonadi";
 #endif
 }
 
@@ -160,4 +162,4 @@ bool JournalPlugin::isRunningStandalone() const
 {
   return mUniqueAppWatcher->isRunningStandalone();
 }
-
+#include "journalplugin.moc"

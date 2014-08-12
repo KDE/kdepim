@@ -26,7 +26,6 @@
 #include <Akonadi/Calendar/ETMCalendar>
 #include <KCalCore/Person>
 
-#include <QCoreApplication>
 
 /**
  * Singleton is implemented through qApp parenting because we can't rely on K_GLOBAL_STATIC.

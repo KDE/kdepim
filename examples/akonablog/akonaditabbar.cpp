@@ -18,12 +18,12 @@
 */
 
 #include "akonaditabbar.h"
-#include <kdebug.h>
+#include <qdebug.h>
 
-#include <KTabBar>
-#include <akonadi/collection.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
+#include <QTabBar>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
 
 using namespace Akonadi;
 
@@ -48,7 +48,7 @@ void AkonadiTabBar::Private::slotCurrentChanged( int index )
 }
 
 AkonadiTabBar::AkonadiTabBar( QWidget* parent )
-        :  KTabBar( parent ), d( new Private( this ) )
+        :  QTabBar( parent ), d( new Private( this ) )
 {
     connect( this, SIGNAL(currentChanged(int)),
              SLOT(slotCurrentChanged(int)) );

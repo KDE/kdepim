@@ -26,15 +26,14 @@
 #include <QWidget>
 
 #include <kapplication.h>
-#include <ksessionmanager.h>
 #include <kxmlguiclient.h>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <QPointer>
 
 class KNoteFindDialog;
 class KNotesAkonadiTray;
-class KMenu;
+class QMenu;
 class KNote;
 class KXMLGUIBuilder;
 class KXMLGUIFactory;
@@ -43,20 +42,18 @@ class NotesChangeRecorder;
 class NotesAkonadiTreeModel;
 }
 
-namespace DNSSD {
+namespace KDNSSD {
 class PublicService;
 }
 class KJob;
 class QModelIndex;
 class KNotesApp
-        : public QWidget, public KSessionManager, virtual public KXMLGUIClient
+        : public QWidget, virtual public KXMLGUIClient
 {
     Q_OBJECT
 public:
     KNotesApp();
     ~KNotesApp();
-
-    bool commitData( QSessionManager & );
 
 public slots:
     void newNote( const QString &name = QString(),
@@ -76,6 +73,7 @@ private:
 
 
 private Q_SLOTS:
+    void slotCommitData( QSessionManager & );
     void slotPreferences();
     void slotConfigUpdated();
     void slotNoteDeleteFinished(KJob*);
@@ -109,9 +107,9 @@ private:
     KXMLGUIBuilder  *m_guiBuilder;
     QDomDocument    m_noteGUI;
     KNotesAkonadiTray *mTray;
-    KMenu           *m_noteMenu;
+    QMenu           *m_noteMenu;
     QList<QAction *>       m_noteActions;
-    DNSSD::PublicService   *m_publisher;
+    KDNSSD::PublicService   *m_publisher;
     QHash<Akonadi::Item::Id, KNote*> mNotes;
     NoteShared::NotesChangeRecorder *mNoteRecorder;
     NoteShared::NotesAkonadiTreeModel *mNoteTreeModel;

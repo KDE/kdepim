@@ -25,9 +25,10 @@
 
 #include <KDebug>
 #include <KLocale>
-#include <KGlobal>
 
-#include <Akonadi/ServerManager>
+#include <QDebug> 
+#include "akonadiconsole_debug.h"
+#include <AkonadiCore/ServerManager>
 
 #include <akonadi/private/imapparser_p.h>
 #include <boost/concept_check.hpp>
@@ -147,7 +148,7 @@ NotificationModel::NotificationModel( QObject* parent ) :
                                                           QLatin1String( "/notifications" ),
                                                           QDBusConnection::sessionBus(), this );
   if ( !m_manager ) {
-    kWarning( 5250 ) << "Unable to connect to notification manager";
+    qCWarning(AKONADICONSOLE_LOG) << "Unable to connect to notification manager";
     return;
   }
 }
@@ -244,7 +245,7 @@ QVariant NotificationModel::data( const QModelIndex &index, int role ) const
     if ( role == Qt::DisplayRole ) {
       switch ( index.column() ) {
         case 0:
-          return QString( KGlobal::locale()->formatTime( block->timestamp.time(), true ) +
+          return QString( KLocale::global()->formatTime( block->timestamp.time(), true ) +
                 QString::fromLatin1( ".%1" ).arg( block->timestamp.time().msec(), 3, 10, QLatin1Char('0') ) );
         case 1:
           return block->nodes.count();
@@ -364,7 +365,7 @@ void NotificationModel::setEnabled( bool enable )
                                                       QLatin1String( "/subscriber/" ) + identifier,
                                                       QDBusConnection::sessionBus(), this );
     if ( !m_source ) {
-      kWarning( 5250 ) << "Unable to connect to notification source";
+      qCWarning(AKONADICONSOLE_LOG) << "Unable to connect to notification source";
       return;
     }
 

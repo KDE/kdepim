@@ -21,7 +21,6 @@
 #include <KLocalizedString>
 #include <KDialog>
 #include <KUrlRequester>
-#include <KIntSpinBox>
 
 #include <QWidget>
 #include <QLineEdit>

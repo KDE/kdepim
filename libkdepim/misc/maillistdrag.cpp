@@ -24,10 +24,10 @@
 
 #include "maillistdrag.h"
 
-#include <KDateTime>
+#include <QDateTime>
 #include <KLocale>
-#include <KProgressDialog>
-#include <KUrl>
+#include <QProgressDialog>
+#include <QUrl>
 
 #include <QBuffer>
 #include <QDataStream>
@@ -44,9 +44,9 @@ QDataStream& operator<< ( QDataStream &s, const MailSummary &d )
     s << d.subject();
     s << d.from();
     s << d.to();
-    KDateTime tempTime;
+    QDateTime tempTime;
     tempTime.setTime_t( d.date() );
-    s << tempTime.dateTime();
+    s << tempTime;
     return s;
 }
 
@@ -62,7 +62,7 @@ QDataStream& operator>> ( QDataStream &s, MailSummary &d )
     s >> to;
     QDateTime tempTime;
     s >> tempTime;
-    date = KDateTime( tempTime ).toTime_t();
+    date = QDateTime( tempTime ).toTime_t();
     d.set( serialNumber, messageId, subject, from, to, date );
     return s;
 }
@@ -138,7 +138,7 @@ void MailSummary::set( quint32 serialNumber, const QString &messageId,
 }
 
 #ifdef Q_CC_MSVC
-MailSummary::operator KUrl() const { return KUrl(); }
+MailSummary::operator KUrl() const { return QUrl(); }
 #endif
 
 QString MailList::mimeDataType()
@@ -243,13 +243,13 @@ QVariant MailListMimeData::retrieveData( const QString & mimeType,
 
         if ( mMails.isEmpty() ) {
             MailList list = MailList::fromMimeData( this );
-            KProgressDialog *dlg = new KProgressDialog( 0, QString(),
-                                                        i18n("Retrieving and storing messages...") );
+            QProgressDialog *dlg = new QProgressDialog( 0);
+            dlg->setWindowTitle(QString());
+            dlg->setLabelText(i18n("Retrieving and storing messages...") );
             dlg->setWindowModality( Qt::WindowModal );
-            dlg->setAllowCancel( true );
-            dlg->progressBar()->setMaximum( list.size() );
+            dlg->setMaximum( list.size() );
             int i = 0;
-            dlg->progressBar()->setValue( i );
+            dlg->setValue( i );
             dlg->show();
             MailList::ConstIterator end( list.constEnd() );
             for ( MailList::ConstIterator it = list.constBegin(); it != end; ++it ) {
@@ -258,10 +258,10 @@ QVariant MailListMimeData::retrieveData( const QString & mimeType,
                 // to get the actual text of the mail.
                 MailSummary mailSummary = *it;
                 mMails.append( mMailTextSource->text( mailSummary.serialNumber() ) );
-                if ( dlg->wasCancelled() ) {
+                if ( dlg->wasCanceled() ) {
                     break;
                 }
-                dlg->progressBar()->setValue(++i);
+                dlg->setValue(++i);
 #ifdef __GNUC__
 #warning Port me!
 #endif

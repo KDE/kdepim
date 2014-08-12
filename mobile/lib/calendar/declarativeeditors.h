@@ -23,7 +23,7 @@
 #include "declarativewidgetbase.h"
 #include "incidenceview.h"
 
-#include <Akonadi/CollectionComboBox>
+#include <AkonadiWidgets/CollectionComboBox>
 
 #include <QStackedWidget>
 

@@ -23,7 +23,7 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include <QList>
 
 class Options

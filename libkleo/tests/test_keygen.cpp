@@ -38,21 +38,25 @@
 
 #include <gpgme++/keygenerationresult.h>
 
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+
+#include <KAboutData>
+
 #include <kmessagebox.h>
 #include <kdebug.h>
 
-#include <QMessageBox>
-#include <QStringList>
-#include <QTimer>
-#include <QLayout>
 #include <QLineEdit>
 #include <QLabel>
 #include <QGridLayout>
 
 #include <assert.h>
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <KGuiItem>
+#include <QVBoxLayout>
 
 static const char * const keyParams[] = {
   "Key-Type", "Key-Length",
@@ -66,21 +70,29 @@ static const int numKeyParams = sizeof keyParams / sizeof *keyParams;
 static const char * protocol = 0;
 
 KeyGenerator::KeyGenerator( QWidget * parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
   setModal( true );
-  setCaption( "KeyGenerationJob test" );
-  setButtons( Close|User1 );
-  setDefaultButton( User1 );
-  showButtonSeparator( true );
-  setButtonGuiItem( User1, KGuiItem( "Create" ) );
+  setWindowTitle( "KeyGenerationJob test" );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+  QWidget *mainWidget = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(mainWidget);
+  QPushButton *user1Button = new QPushButton;
+  buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  user1Button->setDefault(true);
+  KGuiItem::assign(user1Button, KGuiItem("Create"));
 
   QWidget * w = new QWidget( this );
-  setMainWidget( w );
+  mainLayout->addWidget(w);
+  mainLayout->addWidget(buttonBox);
 
   QGridLayout *glay = new QGridLayout( w );
-  glay->setMargin( marginHint() );
-  glay->setSpacing( spacingHint() );
+  //PORT to QT5 glay->setMargin( marginHint() );
+  //PORT to QT5 glay->setSpacing( spacingHint() );
 
   int row = -1;
 
@@ -99,7 +111,7 @@ KeyGenerator::KeyGenerator( QWidget * parent )
   glay->setRowStretch( row, 1 );
   glay->setColumnStretch( 1, 1 );
 
-  connect( this, SIGNAL(user1Clicked()), SLOT(slotStartKeyGeneration()) );
+  connect(user1Button, SIGNAL(clicked()), SLOT(slotStartKeyGeneration()) );
 }
 
 KeyGenerator::~KeyGenerator() {}
@@ -155,12 +167,18 @@ int main( int argc, char** argv ) {
     protocol = argv[1];
     argc = 1; // hide from KDE
   }
-  KAboutData aboutData( "test_keygen", 0, ki18n("KeyGenerationJob Test"), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+  KAboutData aboutData( QLatin1String("test_keygen"), i18n("KeyGenerationJob Test"), QLatin1String("0.1") );
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  KAboutData::setApplicationData(aboutData);
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
   KeyGenerator * keygen = new KeyGenerator( 0 );
-  keygen->setObjectName( "KeyGenerator top-level" );
+  keygen->setObjectName( QLatin1String("KeyGenerator top-level") );
   keygen->show();
 
   return app.exec();

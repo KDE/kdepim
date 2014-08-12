@@ -17,11 +17,13 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/util
 )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libmailcommon\")
+
 #add_definitions( -DQT_NO_CAST_FROM_ASCII )
 #add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
 
 set(libmailcommon_filter_SRCS
   filter/filterselectiondialog.cpp
@@ -158,7 +160,7 @@ set(libmailcommon_SRCS
   ${libmailcommon_filter_SRCS}
 )
 
-kde4_add_kcfg_files(libmailcommon_SRCS
+kconfig_add_kcfg_files(libmailcommon_SRCS
     settings/mailcommonsettings_base.kcfgc
 )
 
@@ -166,11 +168,11 @@ kde4_add_kcfg_files(libmailcommon_SRCS
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "dbusoperators.h")
 
-qt4_add_dbus_interfaces(libmailcommon_SRCS
+qt5_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
-kde4_add_ui_files(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)
+ki18n_wrap_ui(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)
 
 set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
 
@@ -178,54 +180,61 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
   kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
   string(TOLOWER ${_className} _codeFile)
   set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
-  qt4_add_dbus_interface(libmailcommon_SRCS
+  qt5_add_dbus_interface(libmailcommon_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
   )
 endmacro()
 
 add_resource_iface(settings.kcfg org.kde.Akonadi.POP3.Settings Pop3Settings)
 
-qt4_add_dbus_interfaces(libmailcommon_SRCS
+qt5_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
 )
 
-kde4_add_library(mailcommon ${LIBRARY_TYPE} ${libmailcommon_SRCS})
+add_library(mailcommon ${LIBRARY_TYPE} ${libmailcommon_SRCS})
+generate_export_header(mailcommon BASE_NAME mailcommon)
 
 target_link_libraries(mailcommon messageviewer messagecore messagecomposer mailimporter
   templateparser
   kdepim
   akonadi_next
   pimcommon
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_KIMAP_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${KDE4_KDEUI_LIBS}
+  KF5::Mime
+  KF5::AkonadiCore
+  KF5::AkonadiMime
+  KF5::PimUtils
+  KF5::Imap
+  KF5::MailTransport
+  Phonon::phonon4qt5 
 )
 
-target_link_libraries(mailcommon
-  incidenceeditorsng
-)
-
-set_target_properties(mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(mailcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory(filter/filterimporter/tests)
+add_subdirectory(filter/filterimporter/autotests)
 
 #install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
-if (QT_QTDESIGNER_FOUND)
-  set(mailcommonwidgets_PART_SRCS)
-  kde4_add_widget_files(mailcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
 
-  kde4_add_plugin(mailcommonwidgets ${mailcommonwidgets_PART_SRCS})
+if (Qt5Designer_FOUND)
+    kf5designerplugin_add_plugin(mailcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
+ 
+    target_link_libraries(mailcommonwidgets
+        mailcommon
+    )
+    if(NOT WIN32)
+        # Since there are no libraries provided by this module,
+        # there is no point including the build tree in RPath,
+        # and then having to edit it at install time.
+        set_target_properties(mailcommonwidgets PROPERTIES
+            SKIP_BUILD_RPATH TRUE
+            BUILD_WITH_INSTALL_RPATH TRUE
+        )
+    endif()
 
-
-  target_link_libraries(mailcommonwidgets  ${KDE4_KIO_LIBS} mailcommon)
-
-  install(TARGETS mailcommonwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
-endif ()
-
+    install(TARGETS
+        mailcommonwidgets
+        DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
+    )
+endif()
 

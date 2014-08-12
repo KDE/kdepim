@@ -18,34 +18,37 @@
 
 #include "mainwindow.h"
 
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+
+#include <KAboutData>
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 static const char description[] = I18N_NOOP( "A test app for embedding calendarviews" );
 
-static const char version[] = "0.1";
-#include <KDebug>
 int main( int argc, char **argv )
 {
-    KAboutData about( "viewerapp", 0, ki18n( "ViewerApp" ), version, ki18n( description ),
-                     KAboutData::License_GPL,
-                     ki18n( "Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net" ), KLocalizedString(), 0, "info@kdab.net");
-    about.addAuthor( ki18n( "Kevin Krammer" ), KLocalizedString(), "krake@kdab.com" );
-    KCmdLineArgs::init( argc, argv, &about );
+    KAboutData about( QStringLiteral("viewerapp"), i18n( "ViewerApp" ), QLatin1String("0.1"), i18n( description ),
+                     KAboutLicense::GPL,
+                     i18n( "Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net" ));
+    about.addAuthor( i18n( "Kevin Krammer" ), QString(), QStringLiteral("krake@kdab.com") );
 
-    KCmdLineOptions options;
-    options.add("+[viewname]", ki18n("Optional list of view names to instantiate"));
+    QCommandLineParser parser;
+    QApplication app(argc, argv);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    about.setupCommandLine(&parser);
+    parser.process(app);
+    about.processCommandLine(&parser);
+    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("+[viewname]"), i18n("Optional list of view names to instantiate")));
 
-    KCmdLineArgs::addCmdLineOptions( options );
 
-    KApplication app;
 
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     QStringList viewNames;
-    for ( int i = 0; i < args->count(); ++i ) {
-      viewNames << args->arg( i ).toLower();
+    for ( int i = 0; i < parser.positionalArguments().count(); ++i ) {
+      viewNames << parser.positionalArguments().at(i).toLower();
     }
 
     MainWindow *widget = new MainWindow( viewNames ) ;

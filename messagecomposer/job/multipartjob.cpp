@@ -20,7 +20,7 @@
 #include "multipartjob.h"
 #include "contentjobbase_p.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <kmime/kmime_content.h>
 
@@ -76,7 +76,7 @@ void MultipartJob::process()
             break;
         }
     }
-    kDebug() << "Created" << d->resultContent->contentType()->mimeType() << "content with"
+    qDebug() << "Created" << d->resultContent->contentType()->mimeType() << "content with"
              << d->resultContent->contents().count() << "subjobContents.";
     emitResult();
 }

@@ -19,7 +19,7 @@
 #include "editor/sieveeditorutil.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QCheckBox>
 #include <QHBoxLayout>
@@ -42,7 +42,7 @@ SieveAction* SieveActionFileInto::newAction()
 QString SieveActionFileInto::code(QWidget *w) const
 {
     QString result = QString::fromLatin1("fileinto ");
-    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("fileintolineedit") );
+    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("fileintolineedit") );
     const QString text = edit->text();
     if (mHasCopySupport) {
         const QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
@@ -85,7 +85,7 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                 }
             } else if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("fileintolineedit") );
+                QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("fileintolineedit") );
                 edit->setText(tagValue);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -123,7 +123,7 @@ QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
 
     //TODO improve it.
     //Use widgets/selectfileintowidget
-    KLineEdit *edit = new KLineEdit;
+    QLineEdit *edit = new QLineEdit;
     connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("fileintolineedit"));

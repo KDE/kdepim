@@ -22,33 +22,35 @@
 #include "messagecore/helpers/messagehelpers.h"
 #include "messagecore/utils/stringutil.h"
 
-#include <mailtransport/transportattribute.h>
-#include <mailtransport/sentbehaviourattribute.h>
-#include <mailtransport/messagequeuejob.h>
-#include <mailtransport/transport.h>
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportattribute.h>
+#include <MailTransport/mailtransport/sentbehaviourattribute.h>
+#include <MailTransport/mailtransport/messagequeuejob.h>
+#include <MailTransport/mailtransport/transport.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemDeleteJob>
+#include <ItemFetchJob>
+#include <ItemDeleteJob>
 
+#include <KComponentData>
 #include <KNotification>
 #include <KLocale>
 #include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
+#include <QDebug>
 
 SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *info, QObject *parent)
     : QObject(parent),
       mManager(manager),
       mInfo(info)
 {
-    kDebug()<<" SendLaterJob::SendLaterJob"<<this;
+    qDebug()<<" SendLaterJob::SendLaterJob"<<this;
 }
 
 SendLaterJob::~SendLaterJob()
 {
-    kDebug()<<" SendLaterJob::~SendLaterJob()"<<this;
+    qDebug()<<" SendLaterJob::~SendLaterJob()"<<this;
 }
 
 void SendLaterJob::start()
@@ -62,8 +64,8 @@ void SendLaterJob::start()
             mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
             mFetchScope.fetchFullPayload( true );
             fetch->setFetchScope( mFetchScope );
-            connect( fetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(slotMessageTransfered(Akonadi::Item::List)) );
-            connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished(KJob*)) );
+            connect(fetch, &Akonadi::ItemFetchJob::itemsReceived, this, &SendLaterJob::slotMessageTransfered);
+            connect(fetch, &Akonadi::ItemFetchJob::result, this, &SendLaterJob::slotJobFinished);
             fetch->start();
         }
     }
@@ -79,7 +81,7 @@ void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
         mItem = items.first();
         return;
     }
-    kDebug()<<"Error during fetching message.";
+    qDebug()<<"Error during fetching message.";
     sendError(i18n("Error during fetching message."), SendLaterManager::TooManyItemFound);
 }
 
@@ -90,7 +92,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
         return;
     }
     if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) ) {
-        kDebug()<<" we can't create transport ";
+        qDebug()<<" we can't create transport ";
         sendError(i18n("We can't create transport"), SendLaterManager::CanNotCreateTransport);
         return;
     }
@@ -108,7 +110,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
         } else {
             if (!mInfo->isRecurrence()) {
                 Akonadi::ItemDeleteJob *fetch = new Akonadi::ItemDeleteJob( mItem, this );
-                connect( fetch, SIGNAL(result(KJob*)), SLOT(slotDeleteItem(KJob*)) );
+                connect(fetch, &Akonadi::ItemDeleteJob::result, this, &SendLaterJob::slotDeleteItem);
             } else {
                 sendDone();
             }
@@ -118,7 +120,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
 
 void SendLaterJob::updateAndCleanMessageBeforeSending(const KMime::Message::Ptr &msg)
 {
-    msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
+    msg->date()->setDateTime( QDateTime::currentDateTime() );
     MessageCore::StringUtil::removePrivateHeaderFields(msg, true);
     msg->removeHeader( "X-KMail-SignatureActionEnabled" );
     msg->removeHeader( "X-KMail-EncryptActionEnabled" );
@@ -129,7 +131,7 @@ void SendLaterJob::updateAndCleanMessageBeforeSending(const KMime::Message::Ptr 
 void SendLaterJob::slotDeleteItem( KJob *job )
 {
     if ( job->error() ) {
-        kDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
+        qDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
     }
     sendDone();
 }
@@ -137,27 +139,27 @@ void SendLaterJob::slotDeleteItem( KJob *job )
 
 void SendLaterJob::sendDone()
 {
-    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
     KNotification::event( QLatin1String("mailsend"),
                           i18n("Message sent"),
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
+                          KComponentData::mainComponent().componentName());
     mManager->sendDone(mInfo);
     deleteLater();
 }
 
 void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType type)
 {
-    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     KNotification::event( QLatin1String("mailsendfailed"),
                           error,
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
+                          KComponentData::mainComponent().componentName());
     mManager->sendError(mInfo, type);
     deleteLater();
 }

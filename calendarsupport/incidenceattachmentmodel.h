@@ -23,8 +23,8 @@
 
 #include "calendarsupport_export.h"
 
-#include <Akonadi/Attribute>
-#include <Akonadi/Item>
+#include <Attribute>
+#include <Item>
 
 #include <KCalCore/Incidence>
 

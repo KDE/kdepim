@@ -21,8 +21,8 @@
 
 #include "orderedchildcollectionsmodel.h"
 #include <Akonadi/KMime/SpecialMailCollections>
-#include <Akonadi/Entity>
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/Entity>
+#include <AkonadiCore/EntityTreeModel>
 
 OrderedChildCollectionsModel::OrderedChildCollectionsModel( QObject* parent )
   : QSortFilterProxyModel( parent )

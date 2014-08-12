@@ -18,7 +18,7 @@
 #ifndef SHOWFOLDERNOTESATTRIBUTE_H
 #define SHOWFOLDERNOTESATTRIBUTE_H
 
-#include <akonadi/attribute.h>
+#include <AkonadiCore/attribute.h>
 #include "noteshared_export.h"
 
 namespace NoteShared {

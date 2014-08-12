@@ -26,23 +26,33 @@
 #include <mailcommon/kernel/mailkernel.h>
 
 #include <KLocale>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mFileName(filename)
 {
-    setCaption( i18n( "Import mbox file" ) );
-    setButtons( Close );
+    setWindowTitle( i18n( "Import mbox file" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &MBoxMainWindow::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &MBoxMainWindow::reject);
 
-    setDefaultButton( Close );
+    buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
 
     MBoxImporterKernel *kernel = new MBoxImporterKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
     mImportWidget = new MBoxImportWidget;
-    connect(mImportWidget, SIGNAL(importMailsClicked()), this, SLOT(slotImportMBox()));
-    setMainWidget( mImportWidget );
+    mainLayout->addWidget(mImportWidget);
+    mainLayout->addWidget(buttonBox);
+
+    connect(mImportWidget, &MBoxImportWidget::importMailsClicked, this, &MBoxMainWindow::slotImportMBox);
     resize( 800, 600 );
 }
 

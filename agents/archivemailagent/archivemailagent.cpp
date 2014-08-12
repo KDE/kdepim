@@ -22,10 +22,10 @@
 #include "archivemailagentsettings.h"
 
 #include <mailcommon/kernel/mailkernel.h>
-#include <akonadi/dbusconnectionpool.h>
-#include <Akonadi/Monitor>
-#include <Akonadi/Session>
-#include <Akonadi/CollectionFetchScope>
+#include <AkonadiCore/dbusconnectionpool.h>
+#include <Monitor>
+#include <Session>
+#include <CollectionFetchScope>
 #include <KMime/Message>
 #include <KWindowSystem>
 
@@ -39,8 +39,6 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
 {
     mArchiveManager = new ArchiveMailManager(this);
     connect(mArchiveManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
-    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_archivemail_agent") );
-    KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
 
     Akonadi::Monitor *collectionMonitor = new Akonadi::Monitor( this );
     collectionMonitor->fetchCollection( true );
@@ -76,7 +74,7 @@ void ArchiveMailAgent::setEnableAgent(bool enabled)
 {
     if (enabled != ArchiveMailAgentSettings::enabled()) {
         ArchiveMailAgentSettings::setEnabled(enabled);
-        ArchiveMailAgentSettings::self()->writeConfig();
+        ArchiveMailAgentSettings::self()->save();
         if (!enabled) {
             mTimer->stop();
             pause();
@@ -100,7 +98,7 @@ void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
 {
     QPointer<ArchiveMailDialog> dialog = new ArchiveMailDialog();
     if (windowId) {
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
         KWindowSystem::setMainWindow( dialog, windowId );
 #else
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );

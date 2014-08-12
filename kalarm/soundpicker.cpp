@@ -33,9 +33,9 @@
 #include <kfiledialog.h>
 #include <kstandarddirs.h>
 #include <kiconloader.h>
-#include <khbox.h>
+#include <QHBoxLayout>
 #include <phonon/backendcapabilities.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QTimer>
 #include <QLabel>
@@ -62,11 +62,14 @@ SoundPicker::SoundPicker(QWidget* parent)
     QHBoxLayout* soundLayout = new QHBoxLayout(this);
     soundLayout->setMargin(0);
     soundLayout->setSpacing(KDialog::spacingHint());
-    mTypeBox = new KHBox(this);    // this is to control the QWhatsThis text display area
-    mTypeBox->setMargin(0);
-    mTypeBox->setSpacing(KDialog::spacingHint());
+    mTypeBox = new QWidget(this);    // this is to control the QWhatsThis text display area
+    QHBoxLayout *mTypeBoxHBoxLayout = new QHBoxLayout(mTypeBox);
+    mTypeBoxHBoxLayout->setMargin(0);
+    mTypeBoxHBoxLayout->setMargin(0);
+    mTypeBoxHBoxLayout->setSpacing(KDialog::spacingHint());
 
     QLabel* label = new QLabel(i18n_label_Sound(), mTypeBox);
+    mTypeBoxHBoxLayout->addWidget(label);
     label->setFixedSize(label->sizeHint());
 
     // Sound type combo box
@@ -80,6 +83,7 @@ SoundPicker::SoundPicker(QWidget* parent)
     }
 
     mTypeCombo = new ComboBox(mTypeBox);
+    mTypeBoxHBoxLayout->addWidget(mTypeCombo);
     mTypeCombo->addItem(i18n_combo_None());     // index None
     mTypeCombo->addItem(i18n_combo_Beep());     // index Beep
     mTypeCombo->addItem(i18n_combo_File());     // index PlayFile
@@ -130,14 +134,14 @@ void SoundPicker::showSpeak(bool show)
     if (mTypeCombo->count() == indexes[Preferences::Sound_Speak]+1)
         mTypeCombo->removeItem(indexes[Preferences::Sound_Speak]);    // precaution in case of mix-ups
     QString whatsThis;
-    QString opt1 = i18nc("@info:whatsthis", "<interface>%1</interface>: the message is displayed silently.", i18n_combo_None());
-    QString opt2 = i18nc("@info:whatsthis", "<interface>%1</interface>: a simple beep is sounded.", i18n_combo_Beep());
-    QString opt3 = i18nc("@info:whatsthis", "<interface>%1</interface>: an audio file is played. You will be prompted to choose the file and set play options.", i18n_combo_File());
+    QString opt1 = xi18nc("@info:whatsthis", "<interface>%1</interface>: the message is displayed silently.", i18n_combo_None());
+    QString opt2 = xi18nc("@info:whatsthis", "<interface>%1</interface>: a simple beep is sounded.", i18n_combo_Beep());
+    QString opt3 = xi18nc("@info:whatsthis", "<interface>%1</interface>: an audio file is played. You will be prompted to choose the file and set play options.", i18n_combo_File());
     if (show)
     {
         mTypeCombo->addItem(i18n_combo_Speak());
-        QString opt4 = i18nc("@info:whatsthis", "<interface>%1</interface>: the message text is spoken.", i18n_combo_Speak());
-        whatsThis = i18nc("@info:whatsthis Combination of multiple whatsthis items",
+        QString opt4 = xi18nc("@info:whatsthis", "<interface>%1</interface>: the message text is spoken.", i18n_combo_Speak());
+        whatsThis = xi18nc("@info:whatsthis Combination of multiple whatsthis items",
                           "<para>Choose a sound to play when the message is displayed:"
                           "<list><item>%1</item>"
                           "<item>%2</item>"
@@ -145,7 +149,7 @@ void SoundPicker::showSpeak(bool show)
                           "<item>%4</item></list></para>", opt1, opt2, opt3, opt4);
     }
     else
-        whatsThis = i18nc("@info:whatsthis Combination of multiple whatsthis items",
+        whatsThis = xi18nc("@info:whatsthis Combination of multiple whatsthis items",
                           "<para>Choose a sound to play when the message is displayed:"
                           "<list><item>%1</item>"
                           "<item>%2</item>"

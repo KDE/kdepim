@@ -21,8 +21,14 @@
 #include <KLocalizedString>
 #include <KStandardGuiItem>
 
+
 #include <QHBoxLayout>
 #include <QLabel>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 KNotesSelectDeleteNotesListWidget::KNotesSelectDeleteNotesListWidget(QWidget *parent)
     : QListWidget(parent)
@@ -49,13 +55,19 @@ void KNotesSelectDeleteNotesListWidget::setItems(const QList<KNotesIconViewItem*
 }
 
 KNotesSelectDeleteNotesDialog::KNotesSelectDeleteNotesDialog(const QList<KNotesIconViewItem *> &items, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18nc( "@title:window", "Confirm Delete" ) );
-    setButtons( Ok | Cancel );
-    setDefaultButton( Cancel );
+    setWindowTitle( i18nc( "@title:window", "Confirm Delete" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &KNotesSelectDeleteNotesDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &KNotesSelectDeleteNotesDialog::reject);
+    buttonBox->button(QDialogButtonBox::Cancel)->setDefault(true);
     setModal( true );
-    showButtonSeparator( true );
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
@@ -63,9 +75,11 @@ KNotesSelectDeleteNotesDialog::KNotesSelectDeleteNotesDialog(const QList<KNotesI
     lay->addWidget(lab);
     mSelectedListWidget = new KNotesSelectDeleteNotesListWidget;
     lay->addWidget(mSelectedListWidget);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
     mSelectedListWidget->setItems(items);
-    setButtonText(Ok, KStandardGuiItem::del().text() );
+    okButton->setText(KStandardGuiItem::del().text());
+    
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 
@@ -76,7 +90,7 @@ KNotesSelectDeleteNotesDialog::~KNotesSelectDeleteNotesDialog()
 
 void KNotesSelectDeleteNotesDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "KNotesSelectDeleteNotesDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "KNotesSelectDeleteNotesDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -85,7 +99,7 @@ void KNotesSelectDeleteNotesDialog::readConfig()
 
 void KNotesSelectDeleteNotesDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "KNotesSelectDeleteNotesDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "KNotesSelectDeleteNotesDialog" );
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

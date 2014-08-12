@@ -22,7 +22,7 @@
 
 #include "mdnstateattribute.h"
 
-#include <akonadi/attributefactory.h>
+#include <attributefactory.h>
 
 #include <QtCore/QByteArray>
 

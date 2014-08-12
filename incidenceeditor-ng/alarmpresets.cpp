@@ -26,6 +26,8 @@
 
 #include <KLocalizedString>
 
+#include <QDebug>
+
 using namespace CalendarSupport;
 using namespace KCalCore;
 
@@ -34,10 +36,10 @@ namespace IncidenceEditorNG {
 namespace AlarmPresets {
 
 // Don't use a map, because order matters
-K_GLOBAL_STATIC( QStringList, sBeforeStartPresetNames )
-K_GLOBAL_STATIC( QStringList, sBeforeEndPresetNames )
-K_GLOBAL_STATIC( QList<KCalCore::Alarm::Ptr>, sBeforeStartPresets )
-K_GLOBAL_STATIC( QList<KCalCore::Alarm::Ptr>, sBeforeEndPresets )
+Q_GLOBAL_STATIC( QStringList, sBeforeStartPresetNames )
+Q_GLOBAL_STATIC( QStringList, sBeforeEndPresetNames )
+Q_GLOBAL_STATIC( QList<KCalCore::Alarm::Ptr>, sBeforeStartPresets )
+Q_GLOBAL_STATIC( QList<KCalCore::Alarm::Ptr>, sBeforeEndPresets )
 
 static int sDefaultPresetIndex = 0;
 static int sDefaultAlarmOffset = 0; // We must save it, so we can detect that config changed.
@@ -195,7 +197,7 @@ KCalCore::Alarm::Ptr preset( When when, const QString &name )
     // The name should exists and only once
     if ( sBeforeStartPresetNames->count( name ) != 1 ) {
       // print some debug info before crashing
-      kDebug() << " name = " << name << "; when = " << when
+      qDebug() << " name = " << name << "; when = " << when
                << "; count for name = " << sBeforeStartPresetNames->count( name )
                <<  "; global count = " << sBeforeStartPresetNames->count();
       Q_ASSERT_X( false, "preset", "Number of presets should be one" );

@@ -23,11 +23,7 @@
 
 #include <libkdepim/misc/maillistdrag.h>
 #include <kabc/vcarddrag.h>
-#ifdef USE_AKONADI
-#include <kcalutils/icaldrag.h>
-#else
-#include <kcal/icaldrag.h>
-#endif
+#include <KCalUtils/kcalutils/icaldrag.h>
 
 #include <kurl.h>
 #include <kurlcompletion.h>
@@ -68,14 +64,14 @@ void LineEdit::init()
 {
     if (mType == Url)
     {
-        setCompletionMode(KGlobalSettings::CompletionShell);
+        setCompletionMode(KCompletion::CompletionShell);
         KUrlCompletion* comp = new KUrlCompletion(KUrlCompletion::FileCompletion);
         comp->setReplaceHome(true);
         setCompletionObject(comp);
         setAutoDeleteCompletionObject(true);
     }
-    else
-        setCompletionMode(KGlobalSettings::CompletionNone);
+    else 
+        setCompletionMode(KCompletion::CompletionNone);
 }
 
 /******************************************************************************
@@ -106,11 +102,7 @@ void LineEdit::dragEnterEvent(QDragEnterEvent* e)
 {
     const QMimeData* data = e->mimeData();
     bool ok;
-#ifdef USE_AKONADI
     if (KCalUtils::ICalDrag::canDecode(data))
-#else
-    if (KCal::ICalDrag::canDecode(data))
-#endif
         ok = false;   // don't accept "text/calendar" objects
     else
         ok = (data->hasText()

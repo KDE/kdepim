@@ -35,16 +35,16 @@
 #include <QToolButton>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDrag>
 
-#include <KDebug>
 #include <KConfigGroup>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
 
 #include <messagecore/attachment/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
+#include <KFormat>
 using MessageCore::AttachmentPart;
 
 using namespace KMail;
@@ -61,7 +61,7 @@ public:
         widget->setLayout(lay);
         toolButton = new QToolButton;
         connect(toolButton,SIGNAL(toggled(bool)),q,SLOT(slotShowHideAttchementList(bool)));
-        toolButton->setIcon(KIcon(QLatin1String( "mail-attachment" )));
+        toolButton->setIcon(QIcon::fromTheme(QLatin1String( "mail-attachment" )));
         toolButton->setAutoRaise(true);
         toolButton->setCheckable(true);
         lay->addWidget(toolButton);
@@ -190,7 +190,7 @@ void AttachmentView::updateAttachmentLabel()
     Q_FOREACH(MessageCore::AttachmentPart::Ptr part, list) {
         size += part->size();
     }
-    d->infoAttachment->setText(i18np("1 attachment (%2)", "%1 attachments (%2)",model()->rowCount(), KGlobal::locale()->formatByteSize(qMax( 0LL, size ))));
+    d->infoAttachment->setText(i18np("1 attachment (%2)", "%1 attachments (%2)",model()->rowCount(), KFormat().formatByteSize(qMax( 0LL, size ))));
 }
 
 void AttachmentView::selectNewAttachment()

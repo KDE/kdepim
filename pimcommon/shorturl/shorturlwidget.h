@@ -27,6 +27,7 @@ class KLineEdit;
 class KToggleAction;
 class QPushButton;
 class QLabel;
+class QLineEdit;
 namespace KPIMUtils {
 class ProgressIndicatorLabel;
 }
@@ -68,7 +69,7 @@ private:
     void loadEngine();
     QLabel *mShorturlServiceName;
     KLineEdit *mOriginalUrl;
-    KLineEdit *mShortUrl;
+    QLineEdit *mShortUrl;
     QPushButton *mConvertButton;
     QPushButton *mCopyToClipboard;
     QPushButton *mInsertShortUrl;

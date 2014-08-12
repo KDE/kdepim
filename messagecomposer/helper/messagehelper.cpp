@@ -34,6 +34,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
 #include <KPIMUtils/Email>
+#include <QDebug>
 
 using namespace MessageCore;
 
@@ -44,7 +45,7 @@ void initHeader( const KMime::Message::Ptr &message, const KPIMIdentities::Ident
     applyIdentity( message, identMan, id );
     message->to()->clear();
     message->subject()->clear();
-    message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+    message->date()->setDateTime( QDateTime::currentDateTime() );
 
     // user agent, e.g. KMail/1.9.50 (Windows/5.0; KDE/3.97.1; i686; svn-762186; 2008-01-15)
     QStringList extraInfo;
@@ -135,7 +136,7 @@ void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::Id
         message->setHeader( header );
     }
 
-    if (ident.fcc().isEmpty())
+    if (ident.fcc().isEmpty() )
         message->removeHeader("X-KMail-Fcc");
     else {
         KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", message.get(), ident.fcc(), "utf-8" );
@@ -226,7 +227,7 @@ QString replacePrefixes( const QString& str, const QStringList &prefixRegExps,
                 return tmp.replace( 0, rx.matchedLength(), newPrefix + QString::fromLatin1( " " ) );
         }
     } else {
-        kWarning() << "bigRegExp = \""
+        qWarning() << "bigRegExp = \""
                    << bigRegExp << "\"\n"
                    << "prefix regexp is invalid!";
         // try good ole Re/Fwd:

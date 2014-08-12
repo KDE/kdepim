@@ -18,7 +18,7 @@
 #ifndef NOTESAKONADITREEMODEL_H
 #define NOTESAKONADITREEMODEL_H
 
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/EntityTreeModel>
 #include "noteshared_export.h"
 namespace NoteShared {
 class NOTESHARED_EXPORT NotesAkonadiTreeModel : public Akonadi::EntityTreeModel

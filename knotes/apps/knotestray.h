@@ -19,7 +19,7 @@
 #define KNOTESTRAY_H
 
 #include <KStatusNotifierItem>
-#include <KIcon>
+#include <QIcon>
 class KNotesTray : public KStatusNotifierItem
 {
     Q_OBJECT
@@ -30,7 +30,7 @@ public:
     void updateNumberOfNotes(int value);
 
 private:
-    KIcon mIcon;
+    QIcon mIcon;
 };
 
 #endif // KNOTESTRAY_H

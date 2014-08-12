@@ -20,7 +20,7 @@
 #ifndef AGENTSTATUSMONITOR_H
 #define AGENTSTATUSMONITOR_H
 
-#include <akonadi/mimetypechecker.h>
+#include <AkonadiCore/mimetypechecker.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>

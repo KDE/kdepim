@@ -37,7 +37,9 @@
 
 #include <utils/formatting.h>
 
-#include <kpushbutton.h>
+#include <KLocalizedString>
+
+#include <QPushButton>
 
 #include <cassert>
 

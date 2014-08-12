@@ -19,7 +19,7 @@
 #define HEADERSTYLE_UTIL_H
 
 #include <QString>
-#include <kpimutils/linklocator.h>
+#include <KPIMUtils/kpimutils/linklocator.h>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
@@ -51,9 +51,9 @@ QString imgToDataUrl( const QImage &image );
 
 QString spamStatus(KMime::Message *message);
 
-QString dateStr(const KDateTime &dateTime);
+QString dateStr(const QDateTime &dateTime);
 
-QString dateShortStr(const KDateTime &dateTime);
+QString dateShortStr(const QDateTime &dateTime);
 
 QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message);
 QList<KMime::Types::Mailbox> resentToList(KMime::Message *message);

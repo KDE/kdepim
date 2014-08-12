@@ -25,14 +25,14 @@
     </spacer>
    </item>
    <item row="1" column="1">
-    <widget class="KPushButton" name="saveButton">
+    <widget class="QPushButton" name="saveButton">
      <property name="text">
       <string>&amp;Save</string>
      </property>
     </widget>
    </item>
    <item row="0" column="0" colspan="2">
-    <widget class="KTabWidget" name="mainTabWidget">
+    <widget class="QTabWidget" name="mainTabWidget">
      <property name="currentIndex">
       <number>3</number>
      </property>
@@ -127,21 +127,21 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="KLineEdit" name="attrName">
-         <property name="clickMessage">
+        <widget class="QLineEdit" name="attrName">
+         <property name="placeholderText">
           <string>New Attribute</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="KPushButton" name="attrAddButton">
+        <widget class="QPushButton" name="attrAddButton">
          <property name="text">
           <string>&amp;Add</string>
          </property>
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="KPushButton" name="attrDeleteButton">
+        <widget class="QPushButton" name="attrDeleteButton">
          <property name="text">
           <string>&amp;Delete</string>
          </property>
@@ -211,7 +211,7 @@
           </widget>
          </item>
          <item>
-          <widget class="KLineEdit" name="remoteId"/>
+          <widget class="QLineEdit" name="remoteId"/>
          </item>
         </layout>
        </item>
@@ -375,30 +375,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KTextBrowser</class>
-   <extends>QTextBrowser</extends>
-   <header>ktextbrowser.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
    <class>KTextEdit</class>
    <extends>QTextEdit</extends>
    <header>ktextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>ktabwidget.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>CalendarSupport::IncidenceViewer</class>
@@ -407,19 +386,19 @@
   </customwidget>
   <customwidget>
    <class>MessageViewer::Viewer</class>
-   <extends>KTextBrowser</extends>
+   <extends>QTextBrowser</extends>
    <header location="global">messageviewer/viewer/viewer.h</header>
   </customwidget>
   <customwidget>
    <class>Akonadi::ContactViewer</class>
    <extends>QWidget</extends>
-   <header location="global">akonadi/contact/contactviewer.h</header>
+   <header location="global">Akonadi/Contact/ContactViewer</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Akonadi::ContactGroupViewer</class>
    <extends>QWidget</extends>
-   <header location="global">akonadi/contact/contactgroupviewer.h</header>
+   <header location="global">Akonadi/Contact/ContactGroupViewer</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

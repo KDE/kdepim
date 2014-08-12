@@ -24,7 +24,7 @@
 #ifndef MIXEDTREEMODEL_H
 #define MIXEDTREEMODEL_H
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 
 namespace Akonadi
 {

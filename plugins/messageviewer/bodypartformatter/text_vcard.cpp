@@ -36,6 +36,7 @@
 #include <messageviewer/viewer/nodehelper.h>
 #include "updatecontactjob.h"
 #include "vcardmemento.h"
+#define TRANSLATION_DOMAIN "messageviewer_text_vcard_plugin"
 
 using MessageViewer::Interface::BodyPart;
 #include "messageviewer/htmlwriter/webkitparthtmlwriter.h"
@@ -49,14 +50,14 @@ using MessageViewer::Interface::BodyPart;
 #include <KABC/Addressee>
 
 #include <KLocale>
-#include <kdemacros.h>
 #include <KFileDialog>
 #include <KGlobal>
-#include <KIcon>
+#include <KUrl>
+#include <QIcon>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KIO/NetAccess>
 #include <QDebug>
 
@@ -146,7 +147,7 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
           const QString filename = dir + QDir::separator() + a.uid();
           img.save(filename,"PNG");
           bodyPart->nodeHelper()->addTempFile( filename );
-          const QString href = QLatin1String("file:") + QLatin1String(KUrl::toPercentEncoding( filename ));
+          const QString href = QLatin1String("file:") + QLatin1String(QUrl::toPercentEncoding( filename ));
           htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(href));
         }
         writer->queue( htmlStr );
@@ -244,11 +245,11 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         return true;
       }
 
-      KMenu *menu = new KMenu();
+      QMenu *menu = new QMenu();
       QAction *open =
-        menu->addAction( KIcon( QLatin1String("document-open") ), i18n( "View Business Card" ) );
+        menu->addAction( QIcon::fromTheme( QLatin1String("document-open") ), i18n( "View Business Card" ) );
       QAction *saveas =
-        menu->addAction( KIcon( QLatin1String("document-save-as") ), i18n( "Save Business Card As..." ) );
+        menu->addAction( QIcon::fromTheme( QLatin1String("document-save-as") ), i18n( "Save Business Card As..." ) );
 
       QAction *action = menu->exec( point, 0 );
       if ( action == open ) {
@@ -305,7 +306,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
 
       // put the attachment in a temporary file and save it
-      KTemporaryFile tmpFile;
+      QTemporaryFile tmpFile;
       tmpFile.open();
 
       QByteArray data = vCard.toUtf8();
@@ -356,10 +357,9 @@ class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
 }
 
 extern "C"
-KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
+Q_DECL_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_vcard_create_bodypart_formatter_plugin()
 {
-  KGlobal::locale()->insertCatalog( QLatin1String("messageviewer_text_vcard_plugin") );
   return new Plugin();
 }
 

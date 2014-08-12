@@ -36,7 +36,7 @@
 
 #include "ui_listwidget.h"
 
-#include <KIcon>
+#include <QIcon>
 
 #include <QItemSelectionModel>
 #include <QStringListModel>
@@ -174,10 +174,10 @@ private:
         {
             setupUi( q );
 
-            addTB->setIcon( KIcon( QLatin1String("list-add") ) );
-            removeTB->setIcon( KIcon( QLatin1String("list-remove") ) );
-            upTB->setIcon( KIcon( QLatin1String("go-up") ) );
-            downTB->setIcon( KIcon( QLatin1String("go-down") ) );
+            addTB->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
+            removeTB->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
+            upTB->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
+            downTB->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
         }
     } ui;
 

@@ -28,6 +28,7 @@
 
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 
 static const QString storeAddressbook = QLatin1String("backupaddressbook/");
@@ -192,7 +193,7 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                kDebug()<<" Problem in archive. number of file "<<lst.count();
+                qDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }
     }
@@ -204,7 +205,7 @@ void ImportAddressbookJob::restoreConfig()
     const KArchiveEntry* kaddressbookrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kaddressbookStr);
     if (kaddressbookrcentry && kaddressbookrcentry->isFile()) {
         const KArchiveFile* kaddressbookrcFile = static_cast<const KArchiveFile*>(kaddressbookrcentry);
-        const QString kaddressbookrc = KStandardDirs::locateLocal( "config",  kaddressbookStr);
+        const QString kaddressbookrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kaddressbookStr;
         if (QFile(kaddressbookrc).exists()) {
             if (overwriteConfigMessageBox(kaddressbookStr)) {
                 importkaddressBookConfig(kaddressbookrcFile, kaddressbookrc, kaddressbookStr, Utils::configsPath());

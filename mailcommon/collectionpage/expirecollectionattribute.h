@@ -21,8 +21,8 @@
 
 #include "mailcommon_export.h"
 
-#include <Akonadi/Attribute>
-#include <Akonadi/Collection>
+#include <Attribute>
+#include <Collection>
 
 namespace MailCommon {
 

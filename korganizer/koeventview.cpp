@@ -34,6 +34,7 @@
 #include <libkdepim/widgets/pimmessagebox.h>
 
 #include <KXMLGUIFactory>
+#include <QDebug>
 
 #include <QApplication>
 #include <QMenu>
@@ -100,11 +101,11 @@ QMenu *KOEventView::newEventPopup()
 {
   KXMLGUIClient *client = KOCore::self()->xmlguiClient( this );
   if ( !client ) {
-    kError() << "no xmlGuiClient.";
+    qCritical() << "no xmlGuiClient.";
     return 0;
   }
   if ( !client->factory() ) {
-    kError() << "no factory";
+    qCritical() << "no factory";
     return 0; // can happen if called too early
   }
 
@@ -152,7 +153,7 @@ void KOEventView::showNewEventPopup()
 {
   QMenu *popup = newEventPopup();
   if ( !popup ) {
-    kError() << "popup creation failed";
+    qCritical() << "popup creation failed";
     return;
   }
 
@@ -163,10 +164,10 @@ void KOEventView::showNewEventPopup()
 
 void KOEventView::defaultAction( const Akonadi::Item &aitem )
 {
-  kDebug();
+  qDebug();
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   if ( !incidence ) {
-    kDebug() << "Ouch, null incidence";
+    qDebug() << "Ouch, null incidence";
     return;
   }
 
@@ -175,45 +176,6 @@ void KOEventView::defaultAction( const Akonadi::Item &aitem )
   } else {
     emit editIncidenceSignal( aitem );
   }
-}
-
-//---------------------------------------------------------------------------
-int KOEventView::showMoveRecurDialog( const Akonadi::Item &aitem, const QDate &date )
-{
-  const KCalCore::Incidence::Ptr inc = CalendarSupport::incidence( aitem );
-  int answer = KMessageBox::Ok;
-  KGuiItem itemFuture( i18n( "Also &Future Items" ) );
-
-  KDateTime dateTime( date, CalendarSupport::KCalPrefs::instance()->timeSpec() );
-  bool isFirst = !inc->recurrence()->getPreviousDateTime( dateTime ).isValid();
-  bool isLast  = !inc->recurrence()->getNextDateTime( dateTime ).isValid();
-
-  QString message;
-
-  if ( !isFirst && !isLast ) {
-    itemFuture.setEnabled( true );
-    message = i18n( "The item you are trying to change is a recurring item. "
-                    "Should the changes be applied only to this single occurrence, "
-                    "also to future items, or to all items in the recurrence?" );
-  } else {
-    itemFuture.setEnabled( false );
-    message = i18n( "The item you are trying to change is a recurring item. "
-                    "Should the changes be applied only to this single occurrence "
-                    "or to all items in the recurrence?" );
-  }
-
-  if ( !( isFirst && isLast ) ) {
-    answer = PIMMessageBox::fourBtnMsgBox(
-      this,
-      QMessageBox::Question,
-      message,
-      i18n( "Changing Recurring Item" ),
-      KGuiItem( i18n( "Only &This Item" ) ),
-      itemFuture,
-      KGuiItem( i18n( "&All Occurrences" ) ) );
-  }
-
-  return answer;
 }
 
 void KOEventView::setTypeAheadReceiver( QObject *o )

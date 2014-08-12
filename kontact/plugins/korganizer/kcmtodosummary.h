@@ -31,7 +31,7 @@
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_todosummary( QWidget *parent, const char * );
+  Q_DECL_EXPORT KCModule *create_todosummary( QWidget *parent, const char * );
 }
 
 class KCMTodoSummary : public KCModule, public Ui::TodoSummaryConfig_Base
@@ -39,7 +39,7 @@ class KCMTodoSummary : public KCModule, public Ui::TodoSummaryConfig_Base
   Q_OBJECT
 
   public:
-    explicit KCMTodoSummary( const KComponentData &inst, QWidget *parent = 0 );
+    explicit KCMTodoSummary( QWidget *parent = 0 );
     virtual ~KCMTodoSummary();
 
     void load();

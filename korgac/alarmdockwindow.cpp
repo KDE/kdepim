@@ -26,23 +26,25 @@
 
 #include "alarmdockwindow.h"
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KIconEffect>
 #include <KIconLoader>
 #include <KLocale>
 #include <KMessageBox>
-#include <KMenu>
 #include <KStandardAction>
 #include <KToolInvocation>
+#include <KSharedConfig>
+
+#include <QMenu>
 
 AlarmDockWindow::AlarmDockWindow()
   : KStatusNotifierItem( 0 )
 {
   // Read the autostart status from the config file
-  KConfigGroup config( KGlobal::config(), "General" );
+  KConfigGroup config( KSharedConfig::openConfig(), "General" );
   bool autostartSet = config.hasKey( "Autostart" );
   bool autostart = config.readEntry( "Autostart", true );
   bool alarmsEnabled = config.readEntry( "Enabled", true );
@@ -82,12 +84,12 @@ AlarmDockWindow::AlarmDockWindow()
   contextMenu()->addSeparator();
   mAlarmsEnabled =
     contextMenu()->addAction( i18nc( "@action:inmenu", "Enable Reminders" ) );
-  connect( mAlarmsEnabled, SIGNAL(toggled(bool)), SLOT(toggleAlarmsEnabled(bool)) );
+  connect(mAlarmsEnabled, &QAction::toggled, this, &AlarmDockWindow::toggleAlarmsEnabled);
   mAlarmsEnabled->setCheckable( true );
 
   mAutostart =
     contextMenu()->addAction( i18nc( "@action:inmenu", "Start Reminder Daemon at Login" ) );
-  connect( mAutostart, SIGNAL(toggled(bool)), SLOT(toggleAutostart(bool)) );
+  connect(mAutostart, &QAction::toggled, this, &AlarmDockWindow::toggleAutostart);
   mAutostart->setCheckable( true );
 
   mAlarmsEnabled->setChecked( alarmsEnabled );
@@ -95,16 +97,17 @@ AlarmDockWindow::AlarmDockWindow()
 
   // Disable standard quit behaviour. We have to intercept the quit even,
   // if the main window is hidden.
+#if 0 //QT5
   KActionCollection *ac = actionCollection();
   const char *quitName = KStandardAction::name( KStandardAction::Quit );
   QAction *quit = ac->action( QLatin1String(quitName) );
   if ( !quit ) {
-    kDebug() << "No Quit standard action.";
+    qDebug() << "No Quit standard action.";
   } else {
     quit->disconnect( SIGNAL(triggered(bool)), this, SLOT(maybeQuit()) );
     connect( quit, SIGNAL(activated()), SLOT(slotQuit()) );
   }
-
+#endif
   mAutostartSet = autostartSet;
 }
 
@@ -130,14 +133,14 @@ void AlarmDockWindow::toggleAlarmsEnabled( bool checked )
 {
   changeSystrayIcon( checked );
 
-  KConfigGroup config( KGlobal::config(), "General" );
+  KConfigGroup config( KSharedConfig::openConfig(), "General" );
   config.writeEntry( "Enabled", checked );
   config.sync();
 }
 
 void AlarmDockWindow::toggleAutostart( bool checked )
 {
-  kDebug();
+  qDebug();
   mAutostartSet = true;
   enableAutostart( checked );
 }
@@ -154,7 +157,7 @@ void AlarmDockWindow::slotDismissAll()
 
 void AlarmDockWindow::enableAutostart( bool enable )
 {
-  KConfigGroup config( KGlobal::config(), "General" );
+  KConfigGroup config( KSharedConfig::openConfig(), "General" );
   config.writeEntry( "Autostart", enable );
   config.sync();
 }
@@ -170,7 +173,7 @@ void AlarmDockWindow::slotQuit()
   if ( mAutostartSet == true ) {
     int result = KMessageBox::warningContinueCancel(
       associatedWidget(),
-      i18nc( "@info",
+      xi18nc( "@info",
              "Do you want to quit the KOrganizer reminder daemon?<nl/>"
              "<note> you will not get calendar reminders unless the daemon is running.</note>" ),
       i18nc( "@title:window", "Close KOrganizer Reminder Daemon" ),
@@ -182,7 +185,7 @@ void AlarmDockWindow::slotQuit()
   } else {
     int result = KMessageBox::questionYesNoCancel(
       associatedWidget(),
-      i18nc( "@info",
+      xi18nc( "@info",
              "Do you want to start the KOrganizer reminder daemon at login?<nl/>"
              "<note> you will not get calendar reminders unless the daemon is running.</note>" ),
       i18nc( "@title:window", "Close KOrganizer Reminder Daemon" ),

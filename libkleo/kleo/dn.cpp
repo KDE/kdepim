@@ -41,7 +41,7 @@
 #include "libkleo/ui/dnattributeorderconfigwidget.h"
 
 #include <kconfig.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QStringList>
 
@@ -53,8 +53,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <kglobal.h>
 #include <kconfiggroup.h>
+#include <KSharedConfig>
 
 class Kleo::DN::Private {
 public:
@@ -490,7 +490,7 @@ Kleo::DNAttributeMapper::Private::Private()
 
 Kleo::DNAttributeMapper::DNAttributeMapper() {
   d = new Private();
-  const KConfigGroup config( KGlobal::config(), "DN" );
+  const KConfigGroup config( KSharedConfig::openConfig(), "DN" );
   d->attributeOrder = config.readEntry( "AttributeOrder" , QStringList() );
   if ( d->attributeOrder.empty() )
     std::copy( defaultOrder, defaultOrder + sizeof defaultOrder / sizeof *defaultOrder,
@@ -535,7 +535,7 @@ void Kleo::DNAttributeMapper::setAttributeOrder( const QStringList & order ) {
   if ( order.empty() )
     std::copy( defaultOrder, defaultOrder + sizeof defaultOrder / sizeof *defaultOrder,
                std::back_inserter( d->attributeOrder ) );
-  KConfigGroup config( KGlobal::config(), "DN" );
+  KConfigGroup config( KSharedConfig::openConfig(), "DN" );
   config.writeEntry( "AttributeOrder", order );
 }
 

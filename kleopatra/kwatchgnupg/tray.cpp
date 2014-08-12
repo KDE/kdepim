@@ -35,7 +35,7 @@
 #include "tray.h"
 #include "kwatchgnupgmainwin.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kiconloader.h>
@@ -44,7 +44,7 @@
 KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
   : KSystemTrayIcon( mainwin )
 {
-  kDebug() <<"KWatchGnuPGTray::KWatchGnuPGTray";
+  qDebug() <<"KWatchGnuPGTray::KWatchGnuPGTray";
 
   setObjectName( QLatin1String("KWatchGnuPG Tray Window") );
   KIconLoader::global()->addAppDir( QLatin1String("kwatchgnupg") );

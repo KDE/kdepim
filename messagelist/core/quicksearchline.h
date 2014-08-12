@@ -23,14 +23,14 @@
 
 #include <QWidget>
 #include "messagelist_export.h"
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 
 class KLineEdit;
 class KComboBox;
 class QToolButton;
 class QPushButton;
 class QSignalMapper;
-class KPushButton;
+class QPushButton;
 namespace MessageList {
 namespace Core {
 class MESSAGELIST_EXPORT QuickSearchLine : public QWidget
@@ -94,7 +94,7 @@ private:
     KLineEdit *mSearchEdit;
     KComboBox *mTagFilterCombo;
     QToolButton *mLockSearch;
-    KPushButton *mMoreOptions;
+    QPushButton *mMoreOptions;
     QPushButton *mSearchEveryWhere;
     QPushButton *mSearchAgainstBody;
     QPushButton *mSearchAgainstSubject;

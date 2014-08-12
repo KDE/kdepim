@@ -19,10 +19,10 @@
 
 #include "eventsexporthandler.h"
 
-#include <kcalcore/event.h>
-#include <kcalcore/filestorage.h>
-#include <kcalcore/icalformat.h>
-#include <kcalcore/memorycalendar.h>
+#include <KCalCore/Event>
+#include <KCalCore/FileStorage>
+#include <KCalCore/ICalFormat>
+#include <KCalCore/MemoryCalendar>
 #include <kfiledialog.h>
 #include <klocale.h>
 
@@ -48,7 +48,7 @@ QStringList EventsExportHandler::mimeTypes() const
 
 bool EventsExportHandler::exportItems( const Akonadi::Item::List &items )
 {
-  const QString fileName = KFileDialog::getSaveFileName( KUrl( "calendar.ics" ), QLatin1String( "*.ics" ) );
+  const QString fileName = KFileDialog::getSaveFileName( QUrl( QLatin1String("calendar.ics") ), QLatin1String( "*.ics" ) );
   if ( fileName.isEmpty() )
     return true;
 

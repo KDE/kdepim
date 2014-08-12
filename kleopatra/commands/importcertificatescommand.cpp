@@ -53,7 +53,6 @@
 #include <KDebug>
 
 #include <QByteArray>
-#include <QFile>
 #include <QString>
 #include <QWidget>
 #include <QTreeView>
@@ -202,7 +201,7 @@ static QString make_tooltip( const QStringList & ids ) {
         else
             return i18nc( "@info:tooltip",
                           "Imported Certificates from %1",
-                          Qt::escape( ids.front() ) );
+                          ids.front().toHtmlEscaped() );
     else
         return i18nc( "@info:tooltip",
                       "Imported certificates from these sources:<br/>%1",

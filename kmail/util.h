@@ -39,8 +39,8 @@
 #define KMAILUTIL_H
 
 #include <QWidget>
-#include <akonadi/item.h>
-#include <Akonadi/Collection>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/Collection>
 #include "mailcommon/folder/foldercollection.h"
 class KUrl;
 
@@ -104,6 +104,7 @@ QColor quoteL2Color();
 QColor quoteL3Color();
 void reduceQuery(QString &query);
 void migrateFromKMail1();
+void addQActionHelpText(QAction *action, const QString &text);
 }
 }
 

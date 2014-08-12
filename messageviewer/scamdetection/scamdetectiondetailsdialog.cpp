@@ -21,27 +21,43 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 #include <KLocalizedString>
+#include <QDebug>
+#include <KUrl>
 
 #include <KTextEdit>
 #include <KFileDialog>
 #include <KStandardGuiItem>
 
 #include <QTextStream>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <KGuiItem>
+#include <QVBoxLayout>
 
 using namespace MessageViewer;
 
 ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n("Details") );
+    setWindowTitle( i18n("Details") );
     setAttribute( Qt::WA_DeleteOnClose );
-    setButtons( User1|Close );
-    setButtonGuiItem( User1, KStandardGuiItem::saveAs() );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    KGuiItem::assign(user1Button, KStandardGuiItem::saveAs());
     setModal( false );
     mDetails = new PimCommon::RichTextEditorWidget;
+    mainLayout->addWidget(buttonBox);
     mDetails->setReadOnly(true);
-    setMainWidget(mDetails);
-    connect(this, SIGNAL(user1Clicked()), SLOT(slotSaveAs()));
+    mainLayout->addWidget(mDetails);
+    connect(user1Button, SIGNAL(clicked()), SLOT(slotSaveAs()));
     readConfig();
 }
 
@@ -64,7 +80,7 @@ void ScamDetectionDetailsDialog::slotSaveAs()
         if ( !fileName.isEmpty() ) {
             QFile file(fileName);
             if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-                kDebug()<<"We can't save in file :"<<fileName;
+                qDebug()<<"We can't save in file :"<<fileName;
                 return;
             }
             QTextStream ts( &file );

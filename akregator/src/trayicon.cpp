@@ -27,15 +27,15 @@
 
 #include <kapplication.h>
 #include <kwindowsystem.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <kglobalsettings.h>
-#include <kmenu.h>
-#include <kicon.h>
+#include <QMenu>
 #include <kiconloader.h>
 #include <KColorScheme>
 
 #include <QPainter>
+#include <QFontDatabase>
 
 
 namespace Akregator {
@@ -54,12 +54,11 @@ void TrayIcon::setInstance(TrayIcon* trayIcon)
 
 
 TrayIcon::TrayIcon(QObject* parent)
-        : KStatusNotifierItem(parent), m_unread(0)
+        : KStatusNotifierItem(parent), m_defaultIcon(QLatin1String("akregator") ), m_unread(0)
 {
     setToolTipTitle( i18n("Akregator") );
     setToolTipIconByName( i18n("Akregator") );
     setIconByName( QLatin1String("akregator") );
-    m_defaultIcon = KIcon( QLatin1String("akregator") );
 }
 
 
@@ -83,7 +82,7 @@ void TrayIcon::slotSetUnread(int unread)
         int oldWidth = KIconLoader::SizeSmallMedium;
 
         QString countStr = QString::number( unread );
-        QFont f = KGlobalSettings::generalFont();
+        QFont f = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
         f.setBold(true);
 
         float pointSize = f.pointSizeF();

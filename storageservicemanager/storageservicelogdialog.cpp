@@ -27,7 +27,6 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-#include <QHBoxLayout>
 
 StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     : KDialog(parent)
@@ -41,8 +40,8 @@ StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     mLog->setReadOnly(true);
     readConfig();
     setMainWidget(mLog);
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotClearLog()));
-    connect(this, SIGNAL(user2Clicked()), this, SLOT(slotSaveAs()));
+    connect(this, &StorageServiceLogDialog::user1Clicked, this, &StorageServiceLogDialog::slotClearLog);
+    connect(this, &StorageServiceLogDialog::user2Clicked, this, &StorageServiceLogDialog::slotSaveAs);
     connect(mLog->editor(), SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
 }
 
@@ -78,7 +77,7 @@ void StorageServiceLogDialog::setLog(const QString &log)
 
 void StorageServiceLogDialog::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceLogDialog") );
     group.writeEntry( "Size", size() );
@@ -86,7 +85,7 @@ void StorageServiceLogDialog::writeConfig()
 
 void StorageServiceLogDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "StorageServiceLogDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "StorageServiceLogDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );

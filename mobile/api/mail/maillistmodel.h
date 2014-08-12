@@ -22,7 +22,7 @@
 #ifndef MAILLISTMODEL_H
 #define MAILLISTMODEL_H
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include <QAbstractListModel>
 

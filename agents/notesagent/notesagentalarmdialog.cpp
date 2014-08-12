@@ -23,37 +23,48 @@
 
 #include <KMime/KMimeMessage>
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemModifyJob>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
+#include <ItemModifyJob>
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
 #include <KDateTime>
-#include <KMenu>
-#include <KAction>
+#include <QMenu>
+#include <QAction>
 #include <KMessageBox>
+#include <QIcon>
 
 #include <QListWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QPointer>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Alarm" ) );
-    setWindowIcon( KIcon( QLatin1String("knotes") ) );
-    setButtons( Close );
+    setWindowTitle( i18n( "Alarm" ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setAttribute(Qt::WA_DeleteOnClose);
-    setDefaultButton( Close );
+    buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
+    
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
 
     mCurrentDateTime = new QLabel;
-    mCurrentDateTime->setText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
+    mCurrentDateTime->setText(KLocale::global()->formatDateTime(QDateTime::currentDateTime()));
     vbox->addWidget(mCurrentDateTime);
 
     QLabel *lab = new QLabel(i18n("The following notes triggered alarms:"));
@@ -65,7 +76,8 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
              this, SLOT(slotCustomContextMenuRequested(QPoint)) );
 
     vbox->addWidget(mListWidget);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 
@@ -87,12 +99,12 @@ void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
     if ( mListWidget->selectedItems().isEmpty() )
         return;
     Q_UNUSED(pos);
-    KMenu *entriesContextMenu = new KMenu;
-    KAction *removeAlarm = new KAction(KIcon(QLatin1String("edit-delete")), i18n("Remove Alarm"), entriesContextMenu);
+    QMenu *entriesContextMenu = new QMenu;
+    QAction *removeAlarm = new QAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Remove Alarm"), entriesContextMenu);
     connect(removeAlarm, SIGNAL(triggered()), this, SLOT(slotRemoveAlarm()));
-    KAction *showNote = new KAction(i18n("Show Note..."), entriesContextMenu);
+    QAction *showNote = new QAction(i18n("Show Note..."), entriesContextMenu);
     connect(showNote, SIGNAL(triggered()), this, SLOT(slotShowNote()));
-    KAction *modifyAlarm = new KAction(i18n("Modify Alarm..."), entriesContextMenu);
+    QAction *modifyAlarm = new QAction(i18n("Modify Alarm..."), entriesContextMenu);
     connect(modifyAlarm, SIGNAL(triggered()), this, SLOT(slotModifyAlarm()));
     entriesContextMenu->addAction( showNote );
     entriesContextMenu->addAction( modifyAlarm );
@@ -105,7 +117,7 @@ void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
 
 void NotesAgentAlarmDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "NotesAgentAlarmDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "NotesAgentAlarmDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -114,7 +126,7 @@ void NotesAgentAlarmDialog::readConfig()
 
 void NotesAgentAlarmDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "NotesAgentAlarmDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "NotesAgentAlarmDialog" );
     grp.writeEntry( "Size", size() );
     grp.sync();
 }
@@ -122,7 +134,7 @@ void NotesAgentAlarmDialog::writeConfig()
 void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
 {
     mListWidget->setNotes(lstAlarm);
-    mCurrentDateTime->setText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
+    mCurrentDateTime->setText(KLocale::global()->formatDateTime(QDateTime::currentDateTime()));
 }
 
 void NotesAgentAlarmDialog::slotItemDoubleClicked(QListWidgetItem *item)

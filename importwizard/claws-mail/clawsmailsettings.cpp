@@ -18,13 +18,13 @@
 #include "clawsmailsettings.h"
 #include "importwizardutil.h"
 
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 #include "mailcommon/util/mailutil.h"
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/signature.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/signature.h>
 
-
+#include <QDebug>
 #include <KConfig>
 #include <KConfigGroup>
 #include <QFile>
@@ -68,7 +68,7 @@ void ClawsMailSettings::importSettings(const QString& filename, const QString& p
     QFile customHeaderFile(customheaderrc);
     if (customHeaderFile.exists()) {
         if ( !customHeaderFile.open( QIODevice::ReadOnly ) ) {
-            kDebug()<<" We can't open file"<<customheaderrc;
+            qDebug()<<" We can't open file"<<customheaderrc;
         } else {
             readCustomHeader(&customHeaderFile);
         }

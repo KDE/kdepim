@@ -29,14 +29,16 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <KCModuleProxy>
 #include <KCModuleInfo>
 #include <KLocalizedString>
+#include <KDialog>
+
 using namespace MailCommon;
 QString MiscPage::helpAnchor() const
 {
     return QString::fromLatin1("configure-misc");
 }
 
-MiscPage::MiscPage( const KComponentData &instance, QWidget *parent )
-    : ConfigModuleWithTabs( instance, parent )
+MiscPage::MiscPage( QWidget *parent )
+    : ConfigModuleWithTabs( parent )
 {
     mFolderTab = new FolderTab();
     addTab( mFolderTab, i18n("Folders") );

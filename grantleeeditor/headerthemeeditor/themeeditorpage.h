@@ -63,7 +63,7 @@ private Q_SLOTS:
     void slotCloseTab(int);
     void slotChanged();
     void slotExtraHeaderDisplayChanged(const QStringList &extraHeaders);
-    void slotCurrentWidgetChanged(QWidget*);
+    void slotCurrentWidgetChanged(int);
 
 private:
     void setChanged(bool b);

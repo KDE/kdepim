@@ -6,14 +6,11 @@ include_directories(
 )
 
 set(imagescaling_gui_SRCS imagescaling_gui.cpp)
-kde4_add_executable(imagescaling_gui TEST ${imagescaling_gui_SRCS})
+add_executable(imagescaling_gui ${imagescaling_gui_SRCS})
 target_link_libraries(imagescaling_gui
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${KDE4_KDEUI_LIBS}
-  ${QT_QTWEBKIT_LIBRARY}
-  ${KDE4_KIO_LIBS}
+  Qt5::Test
+  Qt5::WebKitWidgets
+  KF5::KIOCore
   messagecomposer
 )
 

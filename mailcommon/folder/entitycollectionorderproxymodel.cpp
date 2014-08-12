@@ -20,10 +20,10 @@
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/EntityTreeModel>
+#include <Collection>
+#include <EntityTreeModel>
 #include <Akonadi/KMime/SpecialMailCollections>
-#include <Akonadi/AgentManager>
+#include <AgentManager>
 
 namespace MailCommon {
 

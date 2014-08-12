@@ -23,15 +23,20 @@
 #include "kcmdesignerfields.h"
 
 #include <KAboutData>
-#include <KDebug>
+#include <QDebug>
 #include <KDirWatch>
-#include <KFileDialog>
+#include <QFileDialog>
 #include <KMessageBox>
 #include <KRun>
 #include <KShell>
 #include <KStandardDirs>
 #include <KIO/Job>
 #include <KIO/NetAccess>
+#include <KLocalizedString>
+#include <KDialog>
+#include <KUrl>
+#include <KGlobal>
+#include <KFileDialog>
 
 #include <QGroupBox>
 #include <QHBoxLayout>
@@ -41,6 +46,8 @@
 #include <QTreeWidget>
 #include <QUiLoader>
 #include <QWhatsThis>
+#include <QStandardPaths>
+#include <QDir>
 
 class PageItem : public QTreeWidgetItem
 {
@@ -133,9 +140,9 @@ class PageItem : public QTreeWidgetItem
     bool mIsActive;
 };
 
-KCMDesignerFields::KCMDesignerFields( const KComponentData &instance, QWidget *parent,
+KCMDesignerFields::KCMDesignerFields( QWidget *parent,
                                       const QVariantList &args )
-  : KCModule( instance, parent, args ),
+  : KCModule( parent, args ),
     mPageView( 0 ),
     mPagePreview( 0 ),
     mPageDetails( 0 ),
@@ -143,19 +150,20 @@ KCMDesignerFields::KCMDesignerFields( const KComponentData &instance, QWidget *p
     mImportButton( 0 ),
     mDesignerButton( 0 )
 {
-  KAboutData *about = new KAboutData( I18N_NOOP( "KCMDesignerfields" ), 0,
-                                      ki18n( "Qt Designer Fields Dialog" ),
-                                      0, KLocalizedString(), KAboutData::License_LGPL,
-                                      ki18n( "(c), 2004 Tobias Koenig" ) );
-
-  about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
-  about->addAuthor( ki18n( "Cornelius Schumacher" ), KLocalizedString(), "schumacher@kde.org" );
-  setAboutData( about );
+   KAboutData *about = new KAboutData(QStringLiteral("KCMDesignerfields"),
+                                     i18n("KCMDesignerfields"),
+                                     QString(),
+                                     i18n("Qt Designer Fields Dialog"),
+                                     KAboutLicense::LGPL,
+                                     i18n("(c) 2004 Tobias Koenig"));
+   about->addAuthor( ki18n( "Tobias Koenig" ).toString(), QString(), QStringLiteral("tokoe@kde.org") );
+   about->addAuthor( ki18n( "Cornelius Schumacher" ).toString(), QString(), QStringLiteral("schumacher@kde.org") );
+   setAboutData(about);
 }
 
 void KCMDesignerFields::delayedInit()
 {
-  kDebug() << "KCMDesignerFields::delayedInit()";
+  qDebug() << "KCMDesignerFields::delayedInit()";
 
   initGUI();
 
@@ -175,7 +183,7 @@ void KCMDesignerFields::delayedInit()
 
   // Install a dirwatcher that will detect newly created or removed designer files
   KDirWatch *dw = new KDirWatch( this );
-  KStandardDirs::makeDir( localUiDir() );
+  QDir().mkpath( localUiDir() );
   dw->addDir( localUiDir(), KDirWatch::WatchFiles );
   connect( dw, SIGNAL(created(QString)), SLOT(rebuildList()) );
   connect( dw, SIGNAL(deleted(QString)), SLOT(rebuildList()) );
@@ -215,6 +223,7 @@ void KCMDesignerFields::loadUiFiles()
   const QStringList list = KGlobal::dirs()->findAllResources( "data", uiPath() + QLatin1String("/*.ui"),
                                                         KStandardDirs::Recursive |
                                                         KStandardDirs::NoDuplicates );
+
   for ( QStringList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it ) {
     new PageItem( mPageView, *it );
   }
@@ -290,7 +299,7 @@ void KCMDesignerFields::initGUI()
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( KDialog::marginHint() );
 
-  bool noDesigner = KStandardDirs::findExe( QLatin1String("designer") ).isEmpty();
+  bool noDesigner = QStandardPaths::findExecutable( QLatin1String("designer") ).isEmpty();
 
   if ( noDesigner ) {
     QString txt =

@@ -84,7 +84,7 @@ namespace {
             return i18n( "Encryption canceled." );
 
         if ( err )
-            return i18n( "Encryption failed: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+            return i18n( "Encryption failed: %1", QString::fromLocal8Bit( err.asString() ).toHtmlEscaped() );
 
         return i18n( "Encryption succeeded." );
     }

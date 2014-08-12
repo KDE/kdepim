@@ -24,7 +24,7 @@
 
 #include <QtCore/QList>
 
-#include <KDE/KCompositeJob>
+#include <KCompositeJob>
 
 namespace MessageComposer {
 

@@ -22,12 +22,11 @@
 #include "followupreminderinfodialog.h"
 #include "followupreminderagentsettings.h"
 #include <KWindowSystem>
-#include <KLocale>
 #include <KMime/Message>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
-#include <akonadi/dbusconnectionpool.h>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/dbusconnectionpool.h>
 
 #include <QPointer>
 #include <QDebug>
@@ -36,7 +35,6 @@
 FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
-    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_followupreminder_agent") );
     new FollowUpReminderAgentAdaptor(this);
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FollowUpReminder" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FollowUpReminder" ) );
@@ -63,7 +61,7 @@ void FollowUpReminderAgent::setEnableAgent(bool enabled)
         return;
 
     FollowUpReminderAgentSettings::self()->setEnabled(enabled);
-    FollowUpReminderAgentSettings::self()->writeConfig();
+    FollowUpReminderAgentSettings::self()->save();
     if (enabled) {
         mManager->load();
         mTimer->start();
@@ -81,7 +79,7 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
 {
     QPointer<FollowUpReminderInfoDialog> dialog = new FollowUpReminderInfoDialog();
     if (windowId) {
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
         KWindowSystem::setMainWindow( dialog, windowId );
 #else
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );
@@ -104,7 +102,7 @@ void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi:
         return;
 
     if ( item.mimeType() != KMime::Message::mimeType() ) {
-        kDebug() << "FollowUpReminderAgent::itemAdded called for a non-message item!";
+        qDebug() << "FollowUpReminderAgent::itemAdded called for a non-message item!";
         return;
     }
     mManager->checkFollowUp(item, collection);

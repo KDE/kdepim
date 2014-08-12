@@ -32,7 +32,7 @@ public:
 
 private:
     KABC::Addressee::List parseVCard( const QByteArray &data ) const;
-    bool doExport( const KUrl &url, const QByteArray &data ) const;
+    bool doExport( const QUrl &url, const QByteArray &data ) const;
 
     void addKey( KABC::Addressee &addr, KABC::Key::Type type ) const;
 

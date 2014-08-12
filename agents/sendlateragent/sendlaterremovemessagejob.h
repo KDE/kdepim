@@ -19,7 +19,7 @@
 #define SENDLATERREMOVEMESSAGEJOB_H
 
 #include <QObject>
-#include <Akonadi/Item>
+#include <Item>
 
 class KJob;
 

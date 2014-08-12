@@ -24,23 +24,22 @@
 */
 
 #include "urihandler.h"
-#include <knodeinterface.h>
 #include <kmailinterface.h>
 #include <korganizerinterface.h>
-#include <akonadi/contact/contacteditordialog.h>
+#include <Akonadi/Contact/ContactEditorDialog>
 
 #include <kiconloader.h>
 #include <krun.h>
 #include <kapplication.h>
 #include <kshell.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <ktoolinvocation.h>
 
 #include <QObject>
 
 bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
 {
-    kDebug() << uri;
+    qDebug() << uri;
 
     if ( uri.startsWith( QLatin1String( "kmail:" ) ) ) {
         // make sure kmail is running or the part is shown
@@ -67,7 +66,7 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
             dlg->show();
             return true;
         } else {
-            kDebug()<<"Item is not valid.";
+            qDebug()<<"Item is not valid.";
             return false;
         }
     } else if ( uri.startsWith( QLatin1String( "urn:x-ical" ) ) ) {
@@ -75,16 +74,11 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
         KToolInvocation::startServiceByDesktopPath( QLatin1String("korganizer") );
 
         // we must work around KUrl breakage (it doesn't know about URNs)
-        const QString uid = KUrl::fromPercentEncoding( uri.toLatin1() ).mid( 11 );
+        const QString uid = QUrl::fromPercentEncoding( uri.toLatin1() ).mid( 11 );
         OrgKdeKorganizerKorganizerInterface korganizerIface(
                     QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus() );
 
         return korganizerIface.showIncidence( uid );
-    } else if ( uri.startsWith( QLatin1String( "news:" ) ) ) {
-        KToolInvocation::startServiceByDesktopPath( QLatin1String("knode") );
-        org::kde::knode knode(
-                    QLatin1String("org.kde.knode"), QLatin1String("/KNode"), QDBusConnection::sessionBus() );
-        knode.openURL( uri );
     } else if ( uri.startsWith( QLatin1String( "akonadi:" ) ) ) {
         const KUrl url( uri );
         const QString mimeType = url.queryItem( QLatin1String( "type" ) );
@@ -98,7 +92,7 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
             return true;
         }
     } else {  // no special URI, let KDE handle it
-        new KRun( KUrl( uri ), 0 );
+        new KRun( QUrl( uri ), 0 );
     }
 
     return false;

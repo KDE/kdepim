@@ -21,14 +21,14 @@
 #include "sieveeditortabwidget.h"
 
 #include <KLocalizedString>
-#include <KMenu>
-#include <KIcon>
+#include <QMenu>
+#include <QIcon>
 
 #include <QTabBar>
 #include <QAction>
 
 SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
-    : KTabWidget(parent)
+    : QTabWidget(parent)
 {
     setMovable(true);
     setTabsClosable(true);
@@ -53,13 +53,13 @@ void SieveEditorTabWidget::slotTabContextMenuRequest(const QPoint &pos)
     if ( indexBar == -1 )
         return;
 
-    KMenu menu( this );
+    QMenu menu( this );
     QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-    closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
+    closeTab->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
 
     QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
     allOther->setEnabled( count() > 1 );
-    allOther->setIcon( KIcon( QLatin1String( "tab-close-other" ) ) );
+    allOther->setIcon( QIcon::fromTheme( QLatin1String( "tab-close-other" ) ) );
 
     QAction *action = menu.exec( mapToGlobal( pos ) );
 

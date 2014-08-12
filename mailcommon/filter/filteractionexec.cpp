@@ -19,7 +19,7 @@
 
 #include "filteractionexec.h"
 
-#include <KDE/KLocale>
+#include <KLocale>
 
 using namespace MailCommon;
 

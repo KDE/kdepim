@@ -20,10 +20,9 @@
 #define NOTENETWORKCONFIG_H
 #include "noteshared_export.h"
 #include <KCModule>
-class KLineEdit;
+class QLineEdit;
 class QCheckBox;
-class KComponentData;
-class KIntNumInput;
+class QSpinBox;
 namespace NoteShared {
 
 class NOTESHARED_EXPORT NoteNetworkConfigWidget : public QWidget
@@ -37,8 +36,8 @@ public:
     void load();
 private:
     QCheckBox *mTmpChkB;
-    KLineEdit *kcfg_SenderID;
-    KIntNumInput *kcfg_Port;
+    QLineEdit *kcfg_SenderID;
+    QSpinBox *kcfg_Port;
 };
 
 
@@ -46,7 +45,7 @@ class NOTESHARED_EXPORT NoteNetworkConfig : public KCModule
 {
     Q_OBJECT
 public:
-    NoteNetworkConfig( const KComponentData &inst, QWidget *parent );
+    NoteNetworkConfig( QWidget *parent );
     /** Reimplemented from KCModule. */
     virtual void load();
     virtual void save();

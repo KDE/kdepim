@@ -25,9 +25,9 @@
 #include "imapresourcesettings.h"
 #include "pimutil.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionModifyJob>
+#include <Collection>
+#include <CollectionFetchJob>
+#include <CollectionModifyJob>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
 

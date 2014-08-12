@@ -264,13 +264,13 @@ QGpgMENewCryptoConfigEntry* QGpgMENewCryptoConfigGroup::entry( const QString& na
 static QString gpgconf_unescape( const QString& str )
 {
   // Looks like it's the same rules as KUrl.
-  return KUrl::fromPercentEncoding( str.toLatin1() );
+  return QUrl::fromPercentEncoding( str.toLatin1() );
 }
 
 static QString gpgconf_escape( const QString& str )
 {
   // Escape special chars (including ':' and '%')
-  QString enc = KUrl::toPercentEncoding( str ); // and convert to utf8 first (to get %12%34 for one special char)
+  QString enc = QUrl::toPercentEncoding( str ); // and convert to utf8 first (to get %12%34 for one special char)
   // Also encode commas, for lists.
   enc.replace( ',', "%2c" );
   return enc;
@@ -288,7 +288,7 @@ static QString urlpart_encode( const QString& str )
 
 static QString urlpart_decode( const QString& str )
 {
-  return KUrl::fromPercentEncoding( str.toLatin1() );
+  return QUrl::fromPercentEncoding( str.toLatin1() );
 }
 
 // gpgconf arg type number -> NewCryptoConfigEntry arg type enum mapping
@@ -504,7 +504,7 @@ static QString splitURL( int mRealArgType, const KUrl& url )
       urlpart_encode( url.pass() ) + QLatin1Char(':') +
       // KUrl automatically encoded the query (e.g. for spaces inside it),
       // so decode it before writing it out to gpgconf (issue119)
-      urlpart_encode( KUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );
+      urlpart_encode( QUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );
   }
   return url.path();
 }

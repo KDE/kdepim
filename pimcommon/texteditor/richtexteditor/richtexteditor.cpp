@@ -19,11 +19,13 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KToolInvocation>
-#include <KAction>
 #include <KStandardAction>
 #include <KGlobalSettings>
 #include <KCursor>
+#include <KConfigGroup>
+#include <KDialog>
+#include <QIcon>
+#include <KIconTheme>
 
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
@@ -100,7 +102,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
             if ( idx < actionList.count() )
                 separatorAction = actionList.at( idx );
             if ( separatorAction ) {
-                KAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
+                QAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
                 if ( emptyDocument )
                     clearAllAction->setEnabled( false );
                 popup->insertAction( separatorAction, clearAllAction );
@@ -127,7 +129,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         }
 
         if( !isReadOnly() && d->hasSpellCheckingSupport) {
-            QAction *spellCheckAction = popup->addAction( KIcon( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
+            QAction *spellCheckAction = popup->addAction( QIcon::fromTheme( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
             if (emptyDocument)
                 spellCheckAction->setEnabled(false);
             popup->addSeparator();
@@ -162,7 +164,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         }
 
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
-        speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
+        speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
         connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
         addExtraMenuEntry(popup, pos);
@@ -175,10 +177,11 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
 void RichTextEditor::slotSpeakText()
 {
     // If KTTSD not running, start it.
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
-        QString error;
-        if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error)) {
-            KMessageBox::error(this, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
+    QDBusConnectionInterface *bus = QDBusConnection::sessionBus().interface();
+    if (!bus->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
+        QDBusReply<void> reply = bus->startService(QLatin1String("org.kde.kttsd"));
+        if (!reply.isValid()) {
+            KMessageBox::error(this, i18n("Starting Jovie Text-to-Speech Service Failed"), reply.error().message());
             return;
         }
     }
@@ -486,7 +489,7 @@ void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
     if (!wordIsMisspelled || selectedWordClicked) {
         defaultPopupMenu(event->globalPos());
     } else {
-        QMenu menu; //don't use KMenu here we don't want auto management accelerator
+        QMenu menu; 
 
         //Add the suggestions to the menu
         const QStringList reps = d->highLighter->suggestionsForWord(selectedWord);

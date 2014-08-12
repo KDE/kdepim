@@ -38,8 +38,8 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/CollectionComboBox>
-#include <Akonadi/Item>
+#include <CollectionComboBox>
+#include <Item>
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KCalCore/ICalFormat>
@@ -50,7 +50,12 @@
 #include <KStandardDirs>
 #include <KSystemTimeZones>
 
+#include <KIconLoader>
+#include <QIcon>
+#include <QDebug>
+
 #include <QCloseEvent>
+#include <KSharedConfig>
 
 using namespace IncidenceEditorNG;
 
@@ -381,7 +386,7 @@ void IncidenceDialogPrivate::storeTemplatesInConfig( const QStringList &template
   // I find this somewhat broken. templates() returns a reference, maybe it should
   // be changed by adding a setTemplates method.
   IncidenceEditorNG::EditorConfig::instance()->templates( mEditor->type() ) = templateNames;
-  IncidenceEditorNG::EditorConfig::instance()->config()->writeConfig();
+  IncidenceEditorNG::EditorConfig::instance()->config()->save();
 }
 
 void IncidenceDialogPrivate::updateAttachmentCount( int newCount )
@@ -498,7 +503,7 @@ bool IncidenceDialogPrivate::isValid() const
     if ( mCalSelector->currentCollection().isValid() ) {
       return true;
     } else {
-      kWarning() << "Select a collection first";
+      qWarning() << "Select a collection first";
     }
   }
 
@@ -535,7 +540,7 @@ void IncidenceDialogPrivate::load( const Akonadi::Item &item )
     mUi->mInvitationBar->hide();
   }
 
-  kDebug() << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
+  qDebug() << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
            << "; storage " << item.storageCollectionId();
 
   if ( item.parentCollection().isValid() ) {
@@ -609,7 +614,7 @@ void IncidenceDialogPrivate::reject( RejectReason reason, const QString &errorMe
   Q_UNUSED( reason );
 
   Q_Q( IncidenceDialog );
-  kError() << "Rejecting:" << errorMessage;
+  qCritical() << "Rejecting:" << errorMessage;
   q->deleteLater();
 }
 
@@ -637,7 +642,7 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
   enableButton( Apply, false );
 
   setButtonText( Default, i18nc( "@action:button", "&Templates..." ) );
-  setButtonIcon( Default, KIcon( "project-development-new-template" ) );
+  setButtonIcon( Default, QIcon::fromTheme( "project-development-new-template" ) );
   setButtonToolTip( Default,
                     i18nc( "@info:tooltip",
                            "Manage templates for this item" ) );
@@ -660,7 +665,7 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
            d->mIeAttendee, SLOT(declineForMe()) );
   connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
            d->mUi->mInvitationBar, SLOT(hide()) );
-  KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
+  KConfigGroup group( KSharedConfig::openConfig(), "IncidenceDialog" );
   const QSize size = group.readEntry( "Size", QSize() );
   if ( size.isValid() ) {
       resize( size );
@@ -673,7 +678,7 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
 
 IncidenceDialog::~IncidenceDialog()
 {
-  KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
+  KConfigGroup group( KSharedConfig::openConfig(), "IncidenceDialog" );
   group.writeEntry( "Size", size() );
   delete d_ptr;
 }

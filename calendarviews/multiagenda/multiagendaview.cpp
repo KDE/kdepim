@@ -25,12 +25,12 @@
 #include "agenda/agendaview.h"
 #include "agenda/timelabelszone.h"
 
-#include <Akonadi/EntityTreeModel>
+#include <entitytreemodel.h>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/ETMViewStateSaver>
+#include <ETMViewStateSaver>
 
 #include <akonadi_next/kcolumnfilterproxymodel.h>
 using namespace Future;
@@ -40,8 +40,9 @@ using namespace Future;
 #include <KCheckableProxyModel>
 #include <KGlobalSettings>
 #include <KLocalizedString>
-#include <KVBox>
+#include <QVBoxLayout>
 #include <KViewStateMaintainer>
+#include <QDebug>
 
 #include <QHBoxLayout>
 #include <QItemSelectionModel>
@@ -122,7 +123,7 @@ class MultiAgendaView::Private
     MultiAgendaView *q;
     QList<AgendaView*> mAgendaViews;
     QList<QWidget*> mAgendaWidgets;
-    KHBox *mTopBox;
+    QWidget *mTopBox;
     QScrollArea *mScrollArea;
     TimeLabelsZone *mTimeLabelsZone;
     QSplitter *mLeftSplitter, *mRightSplitter;
@@ -151,28 +152,37 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   QFontMetrics fm( font() );
   int topLabelHeight = 2 * fm.height() + fm.lineSpacing();
 
-  KVBox *topSideBox = new KVBox( this );
+  QWidget *topSideBox = new QWidget( this );
+  QVBoxLayout *topSideBoxVBoxLayout = new QVBoxLayout(topSideBox);
+  topSideBoxVBoxLayout->setMargin(0);
 
   QWidget *topSideSpacer = new QWidget( topSideBox );
+  topSideBoxVBoxLayout->addWidget(topSideSpacer);
   topSideSpacer->setFixedHeight( topLabelHeight );
 
   d->mLeftSplitter = new QSplitter( Qt::Vertical, topSideBox );
+  topSideBoxVBoxLayout->addWidget(d->mLeftSplitter);
   d->mLeftSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
   d->mLabel = new QLabel( i18n( "All Day" ), d->mLeftSplitter );
   d->mLabel->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   d->mLabel->setWordWrap( true );
 
-  KVBox *sideBox = new KVBox( d->mLeftSplitter );
+  QWidget *sideBox = new QWidget( d->mLeftSplitter );
+  QVBoxLayout *sideBoxVBoxLayout = new QVBoxLayout(sideBox);
+  sideBoxVBoxLayout->setMargin(0);
 
   // compensate for the frame the agenda views but not the timelabels have
   QWidget *timeLabelTopAlignmentSpacer = new QWidget( sideBox );
+  sideBoxVBoxLayout->addWidget(timeLabelTopAlignmentSpacer);
 
   d->mTimeLabelsZone = new TimeLabelsZone( sideBox, PrefsPtr( new Prefs() ) );
 
   QWidget *timeLabelBotAlignmentSpacer = new QWidget( sideBox );
+  sideBoxVBoxLayout->addWidget(timeLabelBotAlignmentSpacer);
 
   d->mLeftBottomSpacer = new QWidget( topSideBox );
+  topSideBoxVBoxLayout->addWidget(d->mLeftBottomSpacer);
 
   topLevelLayout->addWidget( topSideBox );
 
@@ -189,15 +199,21 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
 
   d->mScrollArea->setFrameShape( QFrame::NoFrame );
   topLevelLayout->addWidget( d->mScrollArea, 100 );
-  d->mTopBox = new KHBox( d->mScrollArea->viewport() );
+  d->mTopBox = new QWidget( d->mScrollArea->viewport() );
+  QHBoxLayout *mTopBoxHBoxLayout = new QHBoxLayout(d->mTopBox);
+  mTopBoxHBoxLayout->setMargin(0);
   d->mScrollArea->setWidget( d->mTopBox );
 
-  topSideBox = new KVBox( this );
+  topSideBox = new QWidget( this );
+  topSideBoxVBoxLayout = new QVBoxLayout(topSideBox);
+  topSideBoxVBoxLayout->setMargin(0);
 
   topSideSpacer = new QWidget( topSideBox );
+  topSideBoxVBoxLayout->addWidget(topSideSpacer);
   topSideSpacer->setFixedHeight( topLabelHeight );
 
   d->mRightSplitter = new QSplitter( Qt::Vertical, topSideBox );
+  topSideBoxVBoxLayout->addWidget(d->mRightSplitter);
   d->mRightSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
   connect( d->mLeftSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
@@ -208,6 +224,7 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   d->mScrollBar = new QScrollBar( Qt::Vertical, d->mRightSplitter );
 
   d->mRightBottomSpacer = new QWidget( topSideBox );
+  topSideBoxVBoxLayout->addWidget(d->mRightBottomSpacer);
   topLevelLayout->addWidget( topSideBox );
 }
 
@@ -463,6 +480,7 @@ void MultiAgendaView::slotClearTimeSpanSelection()
 AgendaView *MultiAgendaView::Private::createView( const QString &title )
 {
   QWidget *box = new QWidget( mTopBox );
+  mTopBox->layout()->addWidget(box);
   QVBoxLayout *layout = new QVBoxLayout( box );
   layout->setMargin( 0 );
   QLabel *l = new QLabel( title );
@@ -650,7 +668,7 @@ void MultiAgendaView::setupScrollBar()
 
 void MultiAgendaView::collectionSelectionChanged()
 {
-  kDebug();
+  qDebug();
   d->mPendingChanges = true;
   recreateViews();
 }
@@ -667,7 +685,7 @@ bool MultiAgendaView::hasConfigurationDialog() const
 void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
 {
   if ( !calendar() ) {
-    kError() << "Calendar is not set.";
+    qCritical() << "Calendar is not set.";
     Q_ASSERT( false );
     return;
   }

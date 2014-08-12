@@ -32,16 +32,18 @@
 
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
 
 #include <KCalendarSystem>
-#include <KIcon>
-#include <KMenu>
+#include <QIcon>
+#include <QMenu>
 
 #include <QMouseEvent>
 #include <QPainter>
 #include <QToolTip>
+#include <QMimeData>
+#include <KLocale>
 
 // ============================================================================
 //  K O D A Y M A T R I X
@@ -233,7 +235,7 @@ void KODayMatrix::updateView( const QDate &actdate )
     QString holiStr;
 
     if ( ( KOGlobals::self()->calendarSystem()->dayOfWeek( mDays[i] ) ==
-           KGlobal::locale()->weekDayOfPray() ) ||
+           KLocale::global()->weekDayOfPray() ) ||
          !holidays.isEmpty() ) {
       if ( !holidays.isEmpty() ) {
         holiStr = holidays.join( i18nc( "delimiter for joining holiday names", "," ) );
@@ -512,14 +514,14 @@ void KODayMatrix::mousePressEvent( QMouseEvent *e )
 
 void KODayMatrix::popupMenu( const QDate &date )
 {
-  KMenu popup( this );
-  popup.addTitle( date.toString() );
+  QMenu popup( this );
+  popup.setTitle( date.toString() );
   QAction *newEventAction = popup.addAction(
-    KIcon( QLatin1String("appointment-new") ), i18n( "New E&vent..." ) );
+    QIcon::fromTheme( QLatin1String("appointment-new") ), i18n( "New E&vent..." ) );
   QAction *newTodoAction = popup.addAction(
-    KIcon( QLatin1String("task-new") ), i18n( "New &To-do..." ) );
+    QIcon::fromTheme( QLatin1String("task-new") ), i18n( "New &To-do..." ) );
   QAction *newJournalAction = popup.addAction(
-    KIcon( QLatin1String("journal-new") ), i18n( "New &Journal..." ) );
+    QIcon::fromTheme( QLatin1String("journal-new") ), i18n( "New &Journal..." ) );
   QAction *ret = popup.exec( QCursor::pos() );
   if ( ret == newEventAction ) {
     emit newEventSignal( date );
@@ -643,7 +645,7 @@ void KODayMatrix::dropEvent( QDropEvent *e )
     return;
   }
   QList<QUrl> urls = ( e->mimeData()->urls() );
-  //kDebug()<<" urls :"<<urls;
+  //qDebug()<<" urls :"<<urls;
   if ( urls.isEmpty() ) {
     e->ignore();
     return;
@@ -671,7 +673,7 @@ void KODayMatrix::dropEvent( QDropEvent *e )
       action = DRAG_MOVE;
     } else {
       QAction *copy = 0, *move = 0;
-      KMenu *menu = new KMenu( this );
+      QMenu *menu = new QMenu( this );
       if ( exist ) {
         move = menu->addAction( KOGlobals::self()->smallIcon( QLatin1String("edit-paste") ), i18n( "&Move" ) );
         if ( /*existingEvent*/1 ) {
@@ -890,7 +892,7 @@ QPair<QDate,QDate> KODayMatrix::matrixLimits( const QDate &month )
   calSys->setDate( d, calSys->year( month ), calSys->month( month ), 1 );
 
   const int dayOfWeek = calSys->dayOfWeek( d );
-  const int weekstart = KGlobal::locale()->weekStartDay();
+  const int weekstart = KLocale::global()->weekStartDay();
 
   d = d.addDays( -( 7 + dayOfWeek - weekstart ) % 7 );
 

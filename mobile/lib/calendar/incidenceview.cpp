@@ -27,14 +27,11 @@
 #include <calendarsupport/kcalprefs.h>
 
 #include <QMessageBox>
-#include <QDateEdit>
-#include <QTimeEdit>
 
-#include <KDebug>
-#include <KDialog>
+#include <QDebug>
 #include <KLocalizedString>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/ItemCreateJob>
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include "declarativeeditors.h"
@@ -305,7 +302,7 @@ void IncidenceView::load( const Akonadi::Item &item )
 Akonadi::Item IncidenceView::save( const Akonadi::Item &item )
 {
   if ( !hasSupportedPayload( mItem ) ) {
-    kWarning() << "Item id=" << mItem.id() << "remoteId=" << mItem.remoteId()
+    qWarning() << "Item id=" << mItem.id() << "remoteId=" << mItem.remoteId()
                << "mime=" << mItem.mimeType() << "does not have a supported MIME type";
     return item;
   }
@@ -332,7 +329,7 @@ Akonadi::Collection IncidenceView::selectedCollection() const
 
 void IncidenceView::reject( RejectReason /*reason*/, const QString &errorMessage )
 {
-  kDebug() << "Rejecting:" << errorMessage;
+  qDebug() << "Rejecting:" << errorMessage;
   deleteLater();
 }
 
@@ -346,10 +343,10 @@ void IncidenceView::save()
       mItemManager->save();
     } else {
       KMessageBox::sorry( this, i18n( "Please select an account" ) );
-      kDebug() << "No collection selected";
+      qDebug() << "No collection selected";
     }
   } else {
-    kDebug() << "Editor content isn't valid because: " << mEditor->lastErrorString();
+    qDebug() << "Editor content isn't valid because: " << mEditor->lastErrorString();
   }
 }
 

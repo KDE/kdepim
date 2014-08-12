@@ -20,7 +20,7 @@
 
 #ifndef MESSAGEVIEWER_VCARDVIEWER_H
 #define MESSAGEVIEWER_VCARDVIEWER_H
-#include <kdialog.h>
+#include <QDialog>
 #include <kabc/addressee.h>
 
 namespace Akonadi {
@@ -30,10 +30,10 @@ class ContactViewer;
 namespace KAddressBookGrantlee {
 class GrantleeContactViewer;
 }
-
+class QPushButton;
 namespace MessageViewer {
 
-class VCardViewer : public KDialog
+class VCardViewer : public QDialog
 {
     Q_OBJECT
 public:
@@ -52,6 +52,8 @@ private:
 
     KABC::Addressee::List mAddresseeList;
     KABC::Addressee::List::ConstIterator itAddresseeList;
+    QPushButton *mUser2Button;
+    QPushButton *mUser3Button;
 };
 
 }

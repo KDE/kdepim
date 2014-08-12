@@ -27,13 +27,14 @@
 #include <KCalCore/Incidence>
 #include <KCalCore/FileStorage>
 
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/CollectionFetchJob>
+#include <AkonadiCore/CollectionFetchScope>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
 
 #include <KLocale>
 #include <KJob>
+#include <QDebug>
 
 #include <QCoreApplication>
 
@@ -104,7 +105,7 @@ void Backuper::onCollectionsFetched(KJob *job)
             emitFinished(false, i18n("No data to backup."));
         }
     } else {
-        kError() << job->errorString();
+        qCritical() << job->errorString();
         m_backupInProgress = false;
         emitFinished(false, job->errorString());
     }

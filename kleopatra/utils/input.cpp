@@ -282,7 +282,7 @@ ProcessStdOutInput::ProcessStdOutInput( const QString & cmd, const QStringList &
 {
     const QIODevice::OpenMode openMode =
         stdin_.isEmpty() ? QIODevice::ReadOnly : QIODevice::ReadWrite ;
-    kDebug() << "cd" << wd.absolutePath() << endl << cmd << args << Outputter( stdin_ );
+    qDebug() << "cd" << wd.absolutePath() << endl << cmd << args << Outputter( stdin_ );
     if ( cmd.isEmpty() )
         throw Exception( gpg_error( GPG_ERR_INV_ARG ),
                          i18n("Command not specified") );

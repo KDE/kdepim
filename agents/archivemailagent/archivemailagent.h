@@ -18,9 +18,9 @@
 #ifndef ARCHIVEMAILAGENT_H
 #define ARCHIVEMAILAGENT_H
 
-#include <akonadi/agentbase.h>
+#include <AkonadiAgentBase/agentbase.h>
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 class QTimer;
 
 

@@ -30,19 +30,20 @@
 #include <QTextEdit>
 
 #include <KCharsets>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
 
+
 #include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_content.h>
-#include <kmime/kmime_util.h>
-#include <mailtransport/messagequeuejob.h>
-#include <akonadi/item.h>
-#include <akonadi/kmime/messagestatus.h>
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
+#include <kmime/kmime_headers.h>
+#include <MailTransport/mailtransport/messagequeuejob.h>
+#include <AkonadiCore/item.h>
+#include <Akonadi/KMime/MessageStatus>
+#include <AkonadiCore/agentinstance.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
+#include <AkonadiCore/agentmanager.h>
 #include <messagecore/helpers/messagehelpers.h>
 
 KMime::Content* setBodyAndCTE( QByteArray &encodedBody, KMime::Headers::ContentType* contentType, KMime::Content* ret ){
@@ -69,7 +70,7 @@ KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* or
     Q_ASSERT( !encodedBody.isEmpty() );
 
     if( !( format & Kleo::InlineOpenPGPFormat ) ) { // make a MIME message
-        kDebug() << "making MIME message, format:" << format;
+        qDebug() << "making MIME message, format:" << format;
         makeToplevelContentType( result, format, sign, hashAlgo );
 
         if( makeMultiMime( format, sign ) ) {   // sign/enc PGPMime, sign SMIME
@@ -78,7 +79,7 @@ KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* or
             result->contentType()->setBoundary( boundary );
 
             result->assemble();
-            //kDebug() << "processed header:" << result->head();
+            //qDebug() << "processed header:" << result->head();
 
             // Build the encapsulated MIME parts.
             // Build a MIME part holding the code information
@@ -118,7 +119,7 @@ KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* or
             result->contentDisposition()->setFilename( QString::fromLatin1( "smime.p7m" ) );
 
             result->assemble();
-            //kDebug() << "processed header:" << result->head();
+            //qDebug() << "processed header:" << result->head();
 
             result->setBody( encodedBody );
         }
@@ -151,7 +152,7 @@ void MessageComposer::Util::makeToplevelContentType( KMime::Content* content, Kl
         return;
     case Kleo::SMIMEFormat:
         if ( sign ) {
-            kDebug() << "setting headers for SMIME";
+            qDebug() << "setting headers for SMIME";
             content->contentType()->setMimeType( QByteArray( "multipart/signed" ) );
             content->contentType()->setParameter( QString::fromLatin1( "protocol" ), QString::fromAscii( "application/pkcs7-signature" ) );
             content->contentType()->setParameter( QString::fromLatin1( "micalg" ), QString::fromAscii( hashAlgo ).toLower() );
@@ -162,7 +163,7 @@ void MessageComposer::Util::makeToplevelContentType( KMime::Content* content, Kl
         // S/MIME)
     case Kleo::SMIMEOpaqueFormat:
 
-        kDebug() << "setting headers for SMIME/opaque";
+        qDebug() << "setting headers for SMIME/opaque";
         content->contentType()->setMimeType( QByteArray( "application/pkcs7-mime" ) );
 
         if( sign ) {
@@ -235,9 +236,9 @@ QByteArray MessageComposer::Util::selectCharset( const QList<QByteArray> &charse
     foreach( const QByteArray &name, charsets ) {
         // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because
         // the former knows us-ascii is latin1.
-        QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( name ) );
+        QTextCodec *codec = KCharsets::charsets()->codecForName( QString::fromLatin1( name ) );
         if( !codec ) {
-            kWarning() << "Could not get text codec for charset" << name;
+            qWarning() << "Could not get text codec for charset" << name;
             continue;
         }
         if( codec->canEncode( text ) ) {
@@ -245,11 +246,11 @@ QByteArray MessageComposer::Util::selectCharset( const QList<QByteArray> &charse
             if( name == "us-ascii" && !KMime::isUsAscii( text ) ) {
                 continue;
             }
-            kDebug() << "Chosen charset" << name;
+            qDebug() << "Chosen charset" << name;
             return name;
         }
     }
-    kDebug() << "No appropriate charset found.";
+    qDebug() << "No appropriate charset found.";
     return QByteArray();
 }
 

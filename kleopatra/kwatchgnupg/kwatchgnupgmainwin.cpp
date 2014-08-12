@@ -54,12 +54,13 @@
 #include <kedittoolbar.h>
 #include <kshortcutsdialog.h>
 #include <kglobal.h>
-#include <kicon.h>
+#include <QIcon>
 
 #include <QEventLoop>
 #include <QTextStream>
 #include <QDateTime>
 #include <QFileDialog>
+#include <KSharedConfig>
 
 KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent )
   : KXmlGuiWindow( parent, Qt::Window ), mConfig(0)
@@ -101,8 +102,8 @@ void KWatchGnuPGMainWindow::slotClear()
 
 void KWatchGnuPGMainWindow::createActions()
 {
-  KAction *action = actionCollection()->addAction( QLatin1String("clear_log") );
-  action->setIcon( KIcon(QLatin1String("edit-clear-history")) );
+  QAction *action = actionCollection()->addAction( QLatin1String("clear_log") );
+  action->setIcon( QIcon::fromTheme(QLatin1String("edit-clear-history")) );
   action->setText( i18n("C&lear History") );
   connect(action, SIGNAL(triggered()), SLOT(slotClear()));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
@@ -139,7 +140,7 @@ void KWatchGnuPGMainWindow::startWatcher()
   mWatcher->clearProgram();
 
   {
-    const KConfigGroup config(KGlobal::config(), "WatchGnuPG");
+    const KConfigGroup config(KSharedConfig::openConfig(), "WatchGnuPG");
     *mWatcher << config.readEntry("Executable", WATCHGNUPGBINARY);
     *mWatcher << QLatin1String("--force");
     *mWatcher << config.readEntry("Socket", WATCHGNUPGSOCKET);
@@ -165,7 +166,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
   if ( !cconfig )
     return;
   //Q_ASSERT( cconfig );
-  KConfigGroup config(KGlobal::config(), "WatchGnuPG");
+  KConfigGroup config(KSharedConfig::openConfig(), "WatchGnuPG");
   const QStringList comps = cconfig->componentList();
   for( QStringList::const_iterator it = comps.constBegin(); it != comps.constEnd(); ++it ) {
         Kleo::CryptoConfigComponent* comp = cconfig->component( *it );
@@ -268,7 +269,7 @@ void KWatchGnuPGMainWindow::slotConfigure()
 
 void KWatchGnuPGMainWindow::slotReadConfig()
 {
-  const KConfigGroup config(KGlobal::config(), "LogWindow");
+  const KConfigGroup config(KSharedConfig::openConfig(), "LogWindow");
   const int maxLogLen = config.readEntry( "MaxLogLen", 10000 );
   mCentralWidget->setHistorySize( maxLogLen < 1 ? -1 : maxLogLen );
   setGnuPGConfig();

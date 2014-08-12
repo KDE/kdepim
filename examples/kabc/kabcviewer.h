@@ -22,7 +22,7 @@
 #ifndef KABCVIEWER_H
 #define KABCVIEWER_H
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 #include "kdialog.h"
 
@@ -30,7 +30,7 @@ namespace Akonadi {
   class ContactViewer;
 }
 
-class Dialog : public KDialog
+class Dialog : public QDialog
 {
   Q_OBJECT
 

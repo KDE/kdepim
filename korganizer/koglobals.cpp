@@ -25,12 +25,12 @@
 #include "koglobals.h"
 #include "koprefs.h"
 
-#include <KHolidays/HolidayRegion>
+#include <KHolidays/kholidays/HolidayRegion>
 
-#include <KGlobal>
 #include <KIconLoader>
 
 #include <QApplication>
+#include <KLocale>
 
 class KOGlobalsSingletonPrivate
 {
@@ -38,7 +38,7 @@ class KOGlobalsSingletonPrivate
     KOGlobals instance;
 };
 
-K_GLOBAL_STATIC( KOGlobalsSingletonPrivate, sKOGlobalsSingletonPrivate )
+Q_GLOBAL_STATIC( KOGlobalsSingletonPrivate, sKOGlobalsSingletonPrivate )
 
 KOGlobals *KOGlobals::self()
 {
@@ -64,7 +64,7 @@ KOGlobals::~KOGlobals()
 
 const KCalendarSystem *KOGlobals::calendarSystem() const
 {
-  return KGlobal::locale()->calendar();
+  return KLocale::global()->calendar();
 }
 
 bool KOGlobals::reverseLayout()

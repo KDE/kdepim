@@ -23,9 +23,9 @@
 
 #include <QSortFilterProxyModel>
 
-#include <Akonadi/ChangeRecorder>
+#include <AkonadiCore/ChangeRecorder>
 
-#include <kcalcore/incidence.h>
+#include <KCalCore/Incidence>
 
 #include "tripcomponentfactory.h"
 #include "tripmodel.h"

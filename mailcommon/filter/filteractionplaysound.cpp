@@ -23,7 +23,7 @@
 
 #include <phonon/mediaobject.h>
 
-#include <KDE/KLocale>
+#include <KLocale>
 
 #include <QtCore/QFile>
 #include <QPointer>
@@ -50,13 +50,11 @@ FilterAction::ReturnCode FilterActionPlaySound::process(ItemContext& , bool) con
 {
     if ( mParameter.isEmpty() )
         return ErrorButGoOn;
-
     if ( !mPlayer )
         mPlayer = Phonon::createPlayer( Phonon::NotificationCategory );
 
     mPlayer->setCurrentSource( mParameter );
     mPlayer->play();
-
     return GoOn;
 }
 

@@ -22,9 +22,8 @@
 #include "korgacagent.h"
 #include "koalarmclient.h"
 
-#include <Akonadi/AgentFactory>
+#include <AkonadiAgentBase/AgentFactory>
 
-#include <KLocale>
 
 using namespace Akonadi;
 
@@ -39,5 +38,4 @@ KorgacAgent::~KorgacAgent()
   delete m_alarmClient;
 }
 
-AKONADI_AGENT_FACTORY( KorgacAgent, korgac )
 

@@ -55,9 +55,9 @@
 #include <kfiledialog.h>
 #include <kglobalsettings.h>
 #include <kmessagebox.h>
-#include <kstandarddirs.h>
+
 #include <ktemporaryfile.h>
-#include <KSaveFile>
+#include <QSaveFile>
 #include <kservice.h>
 #include <kxmlguifactory.h>
 #include <kio/netaccess.h>
@@ -76,6 +76,8 @@
 #include "partadaptor.h"
 
 #include <memory>
+#include <QFontDatabase>
+#include <QStandardPaths>
 
 using namespace boost;
 
@@ -183,7 +185,6 @@ static const KAboutData &createAboutData()
 }
 
 K_PLUGIN_FACTORY(AkregatorFactory, registerPlugin<Part>();)
-K_EXPORT_PLUGIN(AkregatorFactory(createAboutData()))
 
 BrowserExtension::BrowserExtension(Part *p, const char *name)
             : KParts::BrowserExtension( p)
@@ -213,7 +214,7 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
     setPluginLoadingMode( LoadPluginsIfEnabled );
     setPluginInterfaceVersion( AKREGATOR_PLUGIN_INTERFACE_VERSION );
 
-    setComponentData( AkregatorFactory::componentData() );
+    //QT5 setComponentData( AkregatorFactory::componentData() );
     setXMLFile("akregator_part.rc", true);
 
     new PartAdaptor( this );
@@ -222,7 +223,7 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
     FeedIconManager::self(); // FIXME: registering the icon manager dbus iface here,
                                // because otherwise we get a deadlock later
 
-    m_standardFeedList = KGlobal::dirs()->saveLocation("data", "akregator/data") + "/feeds.opml";
+    m_standardFeedList = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + '/' + "akregator/data" + "/feeds.opml";
 
     Backend::StorageFactoryDummyImpl* dummyFactory = new Backend::StorageFactoryDummyImpl();
     if (!Backend::StorageFactoryRegistry::self()->registerFactory(dummyFactory, dummyFactory->key())) {
@@ -272,7 +273,7 @@ Part::Part( QWidget *parentWidget, QObject *parent, const QVariantList& )
             trayIcon->setStatus( KStatusNotifierItem::Active );
 
         QWidget* const notificationParent = isTrayIconEnabled() ? m_mainWidget->window() : 0;
-        NotificationManager::self()->setWidget(notificationParent, componentData());
+        //QT5 NotificationManager::self()->setWidget(notificationParent, componentData());
 
         connect( m_mainWidget, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
         connect( m_mainWidget, SIGNAL(signalArticlesSelected(QList<Akregator::Article>)),
@@ -334,7 +335,7 @@ void Part::slotOnShutdown()
 
 void Part::slotSettingsChanged()
 {
-    NotificationManager::self()->setWidget(isTrayIconEnabled() ? m_mainWidget->window() : 0, componentData());
+    //QT5 NotificationManager::self()->setWidget(isTrayIconEnabled() ? m_mainWidget->window() : 0, componentData());
 
     if ( Settings::showTrayIcon() && !TrayIcon::getInstance() )
     {
@@ -389,11 +390,11 @@ void Part::saveSettings()
 
 Part::~Part()
 {
-    kDebug() <<"Part::~Part() enter";
+    qDebug() <<"Part::~Part() enter";
     if (!m_shuttingDown)
         slotOnShutdown();
     delete m_dialog;
-    kDebug() <<"Part::~Part(): leaving";
+    qDebug() <<"Part::~Part(): leaving";
 }
 
 void Part::readProperties(const KConfigGroup & config)
@@ -423,7 +424,7 @@ bool Part::openUrl(const KUrl& url)
 void Part::openStandardFeedList()
 {
     if ( !m_standardFeedList.isEmpty() )
-        openUrl( KUrl::fromPath( m_standardFeedList ) );
+        openUrl( QUrl::fromLocalFile( m_standardFeedList ) );
 }
 
 bool Part::openFile() {
@@ -442,13 +443,13 @@ bool Part::openFile() {
 }
 
 bool Part::writeToTextFile( const QString& data, const QString& filename ) const {
-    KSaveFile file( filename );
+    QSaveFile file( filename );
     if ( !file.open( QIODevice::WriteOnly ) )
         return false;
     QTextStream stream( &file );
     stream.setCodec( "UTF-8" );
     stream << data << endl;
-    return file.finalize();
+    return file.commit();
 }
 
 void Part::feedListLoaded( const shared_ptr<FeedList>& list ) {
@@ -561,7 +562,7 @@ void Part::exportFile(const KUrl& url)
     }
     else
     {
-        KTemporaryFile tmpfile;
+        QTemporaryFile tmpfile;
         tmpfile.open();
 
         QTextStream stream(&tmpfile);
@@ -602,7 +603,7 @@ void Part::fetchAllFeeds()
 
 void Part::fetchFeedUrl(const QString&s)
 {
-    kDebug() <<"fetchFeedURL==" << s;
+    qDebug() <<"fetchFeedURL==" << s;
 }
 
 void Part::addFeedsToGroup(const QStringList& urls, const QString& group)
@@ -681,10 +682,10 @@ void Part::initFonts()
     QStringList fonts = Settings::fonts();
     if (fonts.isEmpty())
     {
-        fonts.append(KGlobalSettings::generalFont().family());
-        fonts.append(KGlobalSettings::fixedFont().family());
-        fonts.append(KGlobalSettings::generalFont().family());
-        fonts.append(KGlobalSettings::generalFont().family());
+        fonts.append(QFontDatabase::systemFont(QFontDatabase::GeneralFont).family());
+        fonts.append(QFontDatabase::systemFont(QFontDatabase::FixedFont).family());
+        fonts.append(QFontDatabase::systemFont(QFontDatabase::GeneralFont).family());
+        fonts.append(QFontDatabase::systemFont(QFontDatabase::GeneralFont).family());
         fonts.append("0");
     }
     Settings::setFonts(fonts);
@@ -708,7 +709,7 @@ void Part::initFonts()
         if (konq.hasKey("MinimumFontSize"))
             minfs = konq.readEntry("MinimumFontSize", 8);
         else
-            minfs = std::max( KGlobalSettings::generalFont().pointSize() - 2, 4 );
+            minfs = std::max( QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize() - 2, 4 );
         Settings::setMinimumFontSize(minfs);
     }
 
@@ -718,7 +719,7 @@ void Part::initFonts()
         if (konq.hasKey("MediumFontSize"))
             medfs = konq.readEntry("MediumFontSize", 12);
         else
-            medfs = KGlobalSettings::generalFont().pointSize();
+            medfs = QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize();
         Settings::setMediumFontSize(medfs);
     }
 
@@ -755,7 +756,7 @@ void Part::clearCrashProperties()
     if (!m_doCrashSave)
         return;
     KConfig config("crashed", KConfig::SimpleConfig,
-        "appdata");
+        QStandardPaths::ApplicationsLocation);
     KConfigGroup configGroup(&config, "Part");
     configGroup.writeEntry("crashed", false);
 }
@@ -766,7 +767,7 @@ void Part::saveCrashProperties()
     if (!m_doCrashSave)
         return;
     KConfig config("crashed", KConfig::SimpleConfig,
-        "appdata");
+        QStandardPaths::ApplicationsLocation);
     KConfigGroup configGroup(&config, "Part");
     configGroup.deleteGroup();
 
@@ -778,7 +779,7 @@ void Part::saveCrashProperties()
 bool Part::readCrashProperties()
 {
     KConfig config("crashed", KConfig::SimpleConfig,
-        "appdata");
+        QStandardPaths::ApplicationsLocation);
     KConfigGroup configGroup(&config, "Part");
 
     if (!configGroup.readEntry("crashed", false))
@@ -813,7 +814,7 @@ void Part::slotAutoSave()
 
 void Part::autoSaveProperties()
 {
-    KConfig config("autosaved", KConfig::SimpleConfig, "appdata");
+    KConfig config("autosaved", KConfig::SimpleConfig, QStandardPaths::ApplicationsLocation);
     KConfigGroup configGroup(&config, "Part");
     configGroup.deleteGroup();
 
@@ -826,12 +827,11 @@ void Part::autoReadProperties()
 {
     if(kapp->isSessionRestored())
         return;
-
-    KConfig config("autosaved", KConfig::SimpleConfig, "appdata");
+    KConfig config("autosaved", KConfig::SimpleConfig, QStandardPaths::ApplicationsLocation);
     KConfigGroup configGroup(&config, "Part");
 
     readProperties(configGroup);
 }
 
 } // namespace Akregator
-
+#include "akregator_part.moc" 

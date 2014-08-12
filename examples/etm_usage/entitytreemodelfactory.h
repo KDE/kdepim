@@ -24,7 +24,7 @@
 #ifndef ENTITYTREEMODELFACTORY_H
 #define ENTITYTREEMODELFACTORY_H
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 
 class EntityTreeModelFactory : public QObject
 {

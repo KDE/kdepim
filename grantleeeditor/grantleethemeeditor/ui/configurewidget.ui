@@ -22,7 +22,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="KLineEdit" name="authorEmail">
+    <widget class="QLineEdit" name="authorEmail">
      <property name="showClearButton" stdset="0">
       <bool>true</bool>
      </property>
@@ -43,8 +43,8 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="KLineEdit" name="author">
-     <property name="showClearButton" stdset="0">
+    <widget class="QLineEdit" name="author">
+     <property name="clearButtonEnabled">
       <bool>true</bool>
      </property>
     </widget>
@@ -59,11 +59,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
   <customwidget>
    <class>KUrlRequester</class>
    <extends>QFrame</extends>

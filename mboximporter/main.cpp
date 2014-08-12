@@ -15,45 +15,61 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <kcmdlineargs.h>
+
 #include <kaboutdata.h>
 #include <klocale.h>
-#include <KApplication>
+#include <QApplication>
 #include <KFileDialog>
 #include "mboxmainwindow.h"
 
+#include <KLocalizedString>
+#include <QFileDialog>
+#include <qcommandlineparser.h>
+#include <qcommandlineoption.h>
 #include "kdepim-version.h"
 
 int main(int argc, char *argv[])
 {
-    KLocale::setMainCatalog("mboximporter");
+    KLocalizedString::setApplicationDomain("mboximporter");
 
-    KAboutData aboutData( "mboximporter", 0, ki18n("mbox importer"),
-                          KDEPIM_VERSION, ki18n("MBox importer tool"), KAboutData::License_GPL_V2,
-                          ki18n("Copyright © 2013 MBoxImporter authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
+    QApplication app(argc, argv);
+    KAboutData aboutData( QStringLiteral("mboximporter"),
+                          i18n("MBox importer tool"),
+                          QLatin1String(KDEPIM_VERSION),
+                          i18n("Messageviewer Header Theme Editor"),
+                          KAboutLicense::GPL_V2,
+                          i18n("Copyright © 2013 MBoxImporter authors"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
 
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    aboutData.setProgramIconName(QLatin1String("kmail"));
+    aboutData.setOrganizationDomain(QByteArray("kde.org"));
+    aboutData.setProductName(QByteArray("mboximporter"));
+
+    KAboutData::setApplicationData(aboutData);
 
     QString fileName;
-    KCmdLineOptions option;
-    option.add("+[url]", ki18n("URL of mbox to be imported"));
-    KCmdLineArgs::addCmdLineOptions(option);
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
 
-    KApplication a;
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    if (args->count()) {
-        fileName = args->url(0).path();
-        args->clear();
+    parser.addPositionalArgument(QStringLiteral("url"), i18n("URL of mbox to be imported"), QStringLiteral("[url]"));
+
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
+    const QStringList &args = parser.positionalArguments();
+    if (!args.isEmpty()) {
+        fileName = args.first();
     } else {
-        fileName = KFileDialog::getOpenFileName();
+        fileName = QFileDialog::getOpenFileName(); 
     }
     if (fileName.isEmpty()) {
         return 0;
     }
     MBoxMainWindow *w = new MBoxMainWindow(fileName);
     w->show();
-    int ret = a.exec();
+    int ret = app.exec();
     delete w;
     return ret;
 }

@@ -85,7 +85,7 @@ namespace Kleo {
        \em recipient keys will not be performed, but full validity
        assumed for all \em recipient keys without further checks.
     */
-    virtual KDE_DEPRECATED GpgME::Error start( const std::vector<GpgME::Key> & signers,
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const std::vector<GpgME::Key> & signers,
                                                const std::vector<GpgME::Key> & recipients,
                                                const QByteArray & plainText,
                                                bool alwaysTrust=false ) = 0;

@@ -18,10 +18,10 @@
 #ifndef MBOXMAINWINDOW_H
 #define MBOXMAINWINDOW_H
 
-#include <KDialog>
+#include <QDialog>
 
 class MBoxImportWidget;
-class MBoxMainWindow : public KDialog
+class MBoxMainWindow : public QDialog
 {
     Q_OBJECT
 public:

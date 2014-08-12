@@ -23,7 +23,7 @@
 #define CREATEFOLDERCONTENTSWIDGET_H
 
 #include <QStackedWidget>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 class FolderContentsWidget;
 class QAbstractItemModel;

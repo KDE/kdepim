@@ -25,11 +25,7 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KUrlRequester>
 
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLabel>
 
 using namespace PimCommon;
 
@@ -71,7 +67,7 @@ void StorageServiceConfigureDialog::setListService(const QMap<QString, PimCommon
 
 void StorageServiceConfigureDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "StorageServiceConfigureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "StorageServiceConfigureDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -80,7 +76,7 @@ void StorageServiceConfigureDialog::readConfig()
 
 void StorageServiceConfigureDialog::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceConfigureDialog") );
     group.writeEntry( "Size", size() );

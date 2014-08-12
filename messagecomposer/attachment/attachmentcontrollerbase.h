@@ -25,11 +25,11 @@
 
 #include <QtCore/QObject>
 
-#include <KDE/KUrl>
+#include <KUrl>
 
 #include <KPIMIdentities/Identity>
 #include <messagecore/attachment/attachmentpart.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 #include <KJob>
 #include <KService>
 #include "messagecomposer_export.h"

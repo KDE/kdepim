@@ -28,22 +28,23 @@
 
 
 #include <KLocalizedString>
-#include <KAction>
+#include <QAction>
 #include <KToggleAction>
 #include <KFontAction>
 #include <KSelectAction>
 #include <KActionCollection>
 #include <KMessageBox>
-#include <KStandardDirs>
-#include <KDebug>
-#include <KMenu>
+#include <QDebug>
+#include <QMenu>
 #include <KToolBar>
+#include <QIcon>
 
 #include <QAction>
 #include <QFileInfo>
 #include <QWebElement>
 #include <QContextMenuEvent>
 #include <QDebug>
+#include <QStandardPaths>
 
 namespace ComposerEditorNG {
 
@@ -52,7 +53,7 @@ ComposerView::ComposerView(QWidget *parent)
       d(new ComposerViewPrivate(this))
 {
     QFile file ( initialHtml() );
-    kDebug() <<file.fileName();
+    qDebug() <<file.fileName();
 
     if ( !file.open ( QIODevice::ReadOnly ) )
         KMessageBox::error(this, i18n ( "Cannot open template file %1.", QFileInfo(file).absoluteFilePath() ), i18n ( "composer editor" ));
@@ -74,7 +75,7 @@ ComposerView::~ComposerView()
 
 QString ComposerView::initialHtml()
 {
-    return KStandardDirs::locate ( "data", QLatin1String("composereditor/composereditorinitialhtml") );
+    return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("composereditor/composereditorinitialhtml") );
 }
 
 void ComposerView::createActions(const QList<ComposerViewAction>& lstActions)
@@ -196,9 +197,9 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
 
     const bool anchorSelected = (elm.tagName().toLower() == QLatin1String("a"));
 
-    kDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
+    qDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
-    KMenu *menu = new KMenu;
+    QMenu *menu = new QMenu;
     const QString selectedText = page()->mainFrame()->toPlainText().simplified();
     const bool emptyDocument = selectedText.isEmpty();
 
@@ -249,7 +250,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
     connect( autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)) );
 #endif
     QAction *speakAction = menu->addAction(i18n("Speak Text"));
-    speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
+    speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
     speakAction->setEnabled(!emptyDocument );
     connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotSpeakText()) );
     addExtraAction(menu);

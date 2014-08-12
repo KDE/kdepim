@@ -21,24 +21,33 @@
 
 #include "searchdialog.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KTextEdit>
 
 #include <QLabel>
 #include <QGridLayout>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 SearchDialog::SearchDialog( QWidget *parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setCaption( "Create Search" );
-  setButtons( Ok | Cancel );
+  setWindowTitle( "Create Search" );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &SearchDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &SearchDialog::reject);
 
-  QWidget *widget = new QWidget( this );
-  setMainWidget( widget );
-
-  QGridLayout *layout = new QGridLayout( widget );
-
-  mName = new KLineEdit;
+  QGridLayout *layout = new QGridLayout;
+  mainLayout->addLayout(layout);
+  mainLayout->addWidget(buttonBox);
+  mName = new QLineEdit;
   mName->setText( "My Search" );
   mEdit = new KTextEdit;
   mEdit->setAcceptRichText( false );

@@ -22,13 +22,15 @@
 #include "mainwidget.h"
 #include "xxportmanager.h"
 
-#include <KAction>
+#include <KConfigGroup>
+#include <KToolBar>
+#include <QAction>
 #include <KActionCollection>
 #include <KEditToolBar>
 #include <KShortcutsDialog>
 #include <KStandardAction>
 #include <KLocalizedString>
-#include <KToolBar>
+#include <KSharedConfig>
 
 MainWindow::MainWindow()
     : KXmlGuiWindow( 0 )
@@ -61,12 +63,12 @@ void MainWindow::initActions()
 {
     KStandardAction::quit( this, SLOT(close()), actionCollection() );
 
-    KAction *action =
-            KStandardAction::keyBindings( this, SLOT(configureKeyBindings()), actionCollection() );
+    QAction *action =
+       KStandardAction::keyBindings( this, SLOT(configureKeyBindings()), actionCollection() );
     action->setWhatsThis(
-                i18nc( "@info:whatsthis",
-                       "You will be presented with a dialog where you can configure "
-                       "the application-wide shortcuts." ) );
+       i18nc( "@info:whatsthis",
+             "You will be presented with a dialog where you can configure "
+             "the application-wide shortcuts." ) );
     KStandardAction::configureToolbars( this, SLOT(configureToolbars()), actionCollection() );
     KStandardAction::preferences( this, SLOT(configure()), actionCollection() );
 }
@@ -85,7 +87,8 @@ void MainWindow::configureKeyBindings()
 
 void MainWindow::configureToolbars()
 {
-    saveMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+    KConfigGroup grp = KSharedConfig::openConfig()->group( "MainWindow");
+    saveMainWindowSettings( grp );
 
     KEditToolBar dlg( factory() );
     connect( &dlg, SIGNAL(newToolBarConfig()), this, SLOT(newToolbarConfig()) );
@@ -96,6 +99,6 @@ void MainWindow::newToolbarConfig()
 {
     createGUI( QLatin1String("kaddressbookui.rc") );
 
-    applyMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+    applyMainWindowSettings( KSharedConfig::openConfig()->group( "MainWindow" ) );
 }
 

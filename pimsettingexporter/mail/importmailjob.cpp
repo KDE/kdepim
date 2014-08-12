@@ -27,23 +27,25 @@
 #include "messageviewer/utils/kcursorsaver.h"
 
 
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
 #include <KStandardDirs>
 #include <KLocalizedString>
 #include <KProcess>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KMessageBox>
 #include <KArchiveFile>
 #include <KZip>
+#include <QDebug>
+#include <KGlobal>
 
-#include <akonadi/agenttype.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstancecreatejob.h>
+#include <AkonadiCore/agenttype.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
 
 #include <QMetaMethod>
 #include <QDir>
@@ -141,7 +143,7 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir, const 
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                kDebug()<<" Problem in archive. number of file "<<lst.count();
+                qDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }
     }
@@ -224,7 +226,7 @@ void ImportMailJob::restoreTransports()
                 }
 
                 mt->forceUniqueName();
-                mt->writeConfig();
+                mt->save();
                 MailTransport::TransportManager::self()->addTransport( mt );
                 if ( transportId == defaultTransport )
                     MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
@@ -394,7 +396,7 @@ void ImportMailJob::restoreResources()
                         if (collection != -1) {
                             settings.insert(QLatin1String("TrashCollection"),collection);
                         } else {
-                            kDebug()<<" Use default trash folder";
+                            qDebug()<<" Use default trash folder";
                         }
                     }
 
@@ -429,7 +431,7 @@ void ImportMailJob::restoreResources()
                         infoAboutNewResource(newResource);
                     }
                 } else {
-                    kDebug()<<" problem with resource";
+                    qDebug()<<" problem with resource";
                 }
             }
         }
@@ -555,7 +557,7 @@ void ImportMailJob::restoreMails()
                 }
                 listResourceToSync << newResource;
             } else {
-                kDebug()<<" resource name not supported "<<resourceName;
+                qDebug()<<" resource name not supported "<<resourceName;
             }
             //qDebug()<<"url "<<url;
         }
@@ -938,7 +940,7 @@ void ImportMailJob::restoreAkonadiDb()
 
             const KArchiveFile *akonadiDataBaseFile = static_cast<const KArchiveFile*>(akonadiDataBaseEntry);
 
-            KTemporaryFile tmp;
+            QTemporaryFile tmp;
             tmp.open();
 
             akonadiDataBaseFile->copyTo(tmp.fileName());
@@ -968,7 +970,7 @@ void ImportMailJob::restoreAkonadiDb()
                 return;
             }
 
-            const QString dbRestoreApp = KStandardDirs::findExe( dbRestoreAppName );
+            const QString dbRestoreApp = QStandardPaths::findExecutable( dbRestoreAppName );
 
             if (dbRestoreApp.isEmpty()) {
                 Q_EMIT error(i18n("Could not find \"%1\" necessary to restore database.",dbRestoreAppName));
@@ -976,7 +978,7 @@ void ImportMailJob::restoreAkonadiDb()
                 return;
             }
             KProcess *proc = new KProcess( this );
-            proc->setProgram( KStandardDirs::findExe( dbRestoreApp ), params );
+            proc->setProgram( QStandardPaths::findExecutable( dbRestoreApp ), params );
             proc->setStandardInputFile(tmp.fileName());
             const int result = proc->execute();
             delete proc;
@@ -1034,9 +1036,9 @@ void ImportMailJob::copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveCo
                 KConfigGroup newGroup( archiveConfigDestination, archiveGroupPattern + QString::number(id));
                 oldGroup.copyTo( &newGroup );
                 newGroup.writeEntry(QLatin1String("saveCollectionId"),id);
-                KUrl path = newGroup.readEntry("storePath",KUrl());
+                QUrl path = newGroup.readEntry("storePath",QUrl());
                 if (!QDir(path.path()).exists()) {
-                    newGroup.writeEntry(QLatin1String("storePath"),KUrl(QDir::homePath()));
+                    newGroup.writeEntry(QLatin1String("storePath"),QUrl(QDir::homePath()));
                 }
             }
             oldGroup.deleteGroup();

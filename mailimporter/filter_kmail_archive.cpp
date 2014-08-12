@@ -23,7 +23,9 @@
 #include <KFileDialog>
 #include <KZip>
 #include <KTar>
-
+#include <KUrl>
+#include <KMimeType>
+#include <QDebug>
 #include <QApplication>
 
 #include <QSharedPointer>
@@ -98,7 +100,7 @@ bool FilterKMailArchive::importMessage( const KArchiveFile *file, const QString 
 
 bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QString &folderPath )
 {
-    kDebug() << "Importing folder" << folder->name();
+    qDebug() << "Importing folder" << folder->name();
     filterInfo()->addInfoLogEntry( i18n( "Importing folder '%1'...", folderPath ) );
     filterInfo()->setTo( filterInfo()->rootCollection().name() + folderPath );
     const KArchiveDirectory * const messageDir =
@@ -137,7 +139,7 @@ bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QS
 
 bool FilterKMailArchive::importDirectory( const KArchiveDirectory *directory, const QString &folderPath )
 {
-    kDebug() << "Importing directory" << directory->name();
+    qDebug() << "Importing directory" << directory->name();
     foreach( const QString &entryName, directory->entries() ) {
         const KArchiveEntry * const entry = directory->entry( entryName );
 
@@ -188,7 +190,7 @@ void FilterKMailArchive::import()
 
     KFileDialog fileDialog( KUrl(), QString(), filterInfo()->parent() );
     fileDialog.setMode( KFile::File | KFile::LocalOnly );
-    fileDialog.setCaption( i18n( "Select KMail Archive File to Import" ) );
+    fileDialog.setWindowTitle( i18n( "Select KMail Archive File to Import" ) );
     fileDialog.setFilter( "*.tar.bz2 *.tar.gz *.tar *.zip|" +
                           i18n( "KMail Archive Files (*.tar, *.tar.gz, *.tar.bz2, *.zip)" ) );
     if ( !fileDialog.exec() ) {

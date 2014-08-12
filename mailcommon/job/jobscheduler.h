@@ -36,7 +36,7 @@
 #include <QTimer>
 
 #include "folderjob.h"
-#include <akonadi/collection.h>
+#include <collection.h>
 // If this define is set, JobScheduler will show debug output, and related kmkernel timers will be shortened
 // This is for debugging purposes only, don't commit with it.
 //#define DEBUG_SCHEDULER

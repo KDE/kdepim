@@ -19,24 +19,24 @@
 
 #include "stylesheetloader.h"
 
-#include <KDebug>
-#include <KGlobal>
+#include <QDebug>
 #include <KStandardDirs>
 #include <QFile>
 #include <QWidget>
 #include <QApplication>
+#include <QStandardPaths>
 
 class StyleSheetLoaderPrivate
 {
   public:
     StyleSheetLoaderPrivate() : appliedGlobally(false)
     {
-      QFile f( KStandardDirs::locate( "data", QLatin1String("mobileui/stylesheet.css") ) );
+      QFile f( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("mobileui/stylesheet.css") ) );
       if ( f.open( QFile::ReadOnly ) ) {
         styleSheet = QString::fromUtf8( f.readAll() );
-        kDebug() << "loaded stylesheet" << f.fileName();
+        qDebug() << "loaded stylesheet" << f.fileName();
       } else {
-        kError() << "failed to read stylesheet: " << f.fileName();
+        qCritical() << "failed to read stylesheet: " << f.fileName();
       }
     }
 
@@ -44,7 +44,7 @@ class StyleSheetLoaderPrivate
     bool appliedGlobally;
 };
 
-K_GLOBAL_STATIC( StyleSheetLoaderPrivate, s_styleSheetLoader )
+Q_GLOBAL_STATIC( StyleSheetLoaderPrivate, s_styleSheetLoader )
 
 void StyleSheetLoader::applyStyle(QWidget* widget)
 {

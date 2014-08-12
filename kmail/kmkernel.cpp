@@ -10,7 +10,7 @@ using KPIM::BroadcastStatus;
 #include "editor/composer.h"
 #include "kmreadermainwin.h"
 #include "undostack.h"
-#include <kpimutils/kfileio.h>
+#include <KPIMUtils/kpimutils/kfileio.h>
 #include "kmreaderwin.h"
 #include "kmmainwidget.h"
 #include "addressline/recentaddresses.h"
@@ -34,12 +34,12 @@ using KPIM::RecentAddresses;
 #include "kdepim-version.h"
 
 // kdepimlibs includes
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
-#include <mailtransport/transport.h>
-#include <mailtransport/transportmanager.h>
-#include <mailtransport/dispatcherinterface.h>
-#include <akonadi/servermanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <MailTransport/mailtransport/transport.h>
+#include <MailTransport/mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/dispatcherinterface.h>
+#include <AkonadiCore/servermanager.h>
 
 #include <kde_file.h>
 #include <kwindowsystem.h>
@@ -69,30 +69,30 @@ using KMail::MailServiceImpl;
 #include <kmessagebox.h>
 #include <knotification.h>
 #include <progresswidget/progressmanager.h>
-#include <kstandarddirs.h>
+
 #include <kconfig.h>
 #include <kpassivepopup.h>
 #include <kapplication.h>
 #include <ksystemtrayicon.h>
 #include <kconfiggroup.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kio/jobuidelegate.h>
 #include <kprocess.h>
 #include <KCrash>
 
 #include <kmime/kmime_message.h>
-#include <kmime/kmime_util.h>
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/AgentManager>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/AttributeFactory>
-#include <Akonadi/Session>
-#include <Akonadi/EntityTreeModel>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <Akonadi/CollectionStatisticsJob>
+#include <kmime/kmime_headers.h>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/CollectionFetchJob>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/AgentManager>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/AttributeFactory>
+#include <AkonadiCore/Session>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/CollectionStatisticsJob>
 
 #include <QDir>
 #include <QWidget>
@@ -110,6 +110,8 @@ using KMail::MailServiceImpl;
 #include <kcmdlineargs.h>
 #include <kstartupinfo.h>
 #include <kmailadaptor.h>
+#include <KLocale>
+#include <QStandardPaths>
 #include "kmailinterface.h"
 #include "foldercollectionmonitor.h"
 #include "imapresourcesettings.h"
@@ -137,7 +139,7 @@ KMKernel::KMKernel (QObject *parent) :
     Akonadi::AttributeFactory::registerAttribute<Akonadi::SearchDescriptionAttribute>();
     QDBusConnection::sessionBus().registerService(QLatin1String("org.kde.kmail"));
     KMail::Util::migrateFromKMail1();
-    kDebug() << "Starting up...";
+    qDebug() << "Starting up...";
 
     mySelf = this;
     the_startingUp = true;
@@ -163,7 +165,7 @@ KMKernel::KMKernel (QObject *parent) :
     KMime::setUseOutlookAttachmentEncoding( MessageComposer::MessageComposerSettings::self()->outlookCompatibleAttachments() );
 
     // cberzan: this crap moved to CodecManager ======================
-    netCodec = QTextCodec::codecForName( KGlobal::locale()->encoding() );
+    netCodec = QTextCodec::codecForName( KLocale::global()->encoding() );
 
     // In the case of Japan. Japanese locale name is "eucjp" but
     // The Japanese mail systems normally used "iso-2022-jp" of locale name.
@@ -174,7 +176,7 @@ KMKernel::KMKernel (QObject *parent) :
     // is the standard for Internet, and Shift-JIS is the encoding
     // for Windows and Macintosh.
     if ( netCodec->name().toLower() == "eucjp"
-     #if defined Q_WS_WIN || defined Q_WS_MACX
+     #if defined Q_OS_WIN || defined Q_OS_MACX
          || netCodec->name().toLower() == "shift-jis" // OK?
      #endif
          )
@@ -182,7 +184,7 @@ KMKernel::KMKernel (QObject *parent) :
         netCodec = QTextCodec::codecForName("jis7");
         // QTextCodec *cdc = QTextCodec::codecForName("jis7");
         // QTextCodec::setCodecForLocale(cdc);
-        // KGlobal::locale()->setEncoding(cdc->mibEnum());
+        // KLocale::global()->setEncoding(cdc->mibEnum());
     }
     // until here ================================================
 
@@ -257,7 +259,7 @@ KMKernel::~KMKernel ()
 
     delete mAutoCorrection;
     mySelf = 0;
-    kDebug();
+    qDebug();
 }
 
 Akonadi::ChangeRecorder * KMKernel::folderCollectionMonitor() const
@@ -460,7 +462,7 @@ void KMKernel::checkMail () //might create a new reader but won't show!!
             if ( !type.isOnline() )
                 type.setIsOnline( true );
             if ( mResourcesBeingChecked.isEmpty() ) {
-                kDebug() << "Starting manual mail check";
+                qDebug() << "Starting manual mail check";
                 emit startCheckMail();
             }
 
@@ -494,7 +496,7 @@ QStringList KMKernel::accounts()
 
 void KMKernel::checkAccount( const QString &account ) //might create a new reader but won't show!!
 {
-    kDebug();
+    qDebug();
     if ( account.isEmpty() )
         checkMail();
     else {
@@ -502,7 +504,7 @@ void KMKernel::checkAccount( const QString &account ) //might create a new reade
         if ( agent.isValid() )
             agent.synchronize();
         else
-            kDebug() << "- account with name '" << account <<"' not found";
+            qDebug() << "- account with name '" << account <<"' not found";
     }
 }
 
@@ -510,7 +512,7 @@ void KMKernel::openReader( bool onlyCheck )
 {
     mWin = 0;
     KMainWindow *ktmw = 0;
-    kDebug();
+    qDebug();
 
     foreach ( KMainWindow *window, KMainWindow::memberList() )
     {
@@ -537,7 +539,7 @@ void KMKernel::openReader( bool onlyCheck )
     if ( activate ) {
         // Activate window - doing this instead of KWindowSystem::activateWindow(mWin->winId());
         // so that it also works when called from KMailApplication::newInstance()
-#if defined Q_WS_X11 && ! defined K_WS_QTONLY
+#if defined Q_OS_X11 && ! defined K_WS_QTONLY
         KStartupInfo::setNewStartupId( mWin, kapp->startupId() );
 #endif
     }
@@ -551,7 +553,7 @@ int KMKernel::openComposer(const QString &to, const QString &cc,
                            const QStringList &customHeaders,
                            const QString &replyTo, const QString &inReplyTo)
 {
-    kDebug();
+    qDebug();
     KMail::Composer::TemplateContext context = KMail::Composer::New;
     KMime::Message::Ptr msg( new KMime::Message );
     MessageHelper::initHeader( msg, identityManager() );
@@ -636,7 +638,7 @@ int KMKernel::openComposer(const QString &to, const QString &cc,
         cWin->show();
         // Activate window - doing this instead of KWindowSystem::activateWindow(cWin->winId());
         // so that it also works when called from KMailApplication::newInstance()
-#if defined Q_WS_X11 && ! defined K_WS_QTONLY
+#if defined Q_OS_X11 && ! defined K_WS_QTONLY
         KStartupInfo::setNewStartupId( cWin, kapp->startupId() );
 #endif
     }
@@ -657,7 +659,7 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
                             const QByteArray &attachCharset,
                             unsigned int identity )
 {
-    kDebug();
+    qDebug();
     KMail::Composer::TemplateContext context = KMail::Composer::New;
     KMime::Message::Ptr msg( new KMime::Message );
     KMime::Content *msgPart = 0;
@@ -714,7 +716,7 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
                 msgPart->contentDisposition()->fromUnicodeString(QLatin1String(attachContDisp), "utf-8" );
             }
             if( !attachCharset.isEmpty() ) {
-                // kDebug() << "Set attachCharset to" << attachCharset;
+                // qDebug() << "Set attachCharset to" << attachCharset;
                 msgPart->contentType()->setCharset( attachCharset );
             }
 
@@ -744,7 +746,7 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
         cWin->show();
         // Activate window - doing this instead of KWin::activateWindow(cWin->winId());
         // so that it also works when called from KMailApplication::newInstance()
-#if defined Q_WS_X11 && ! defined K_WS_QTONLY
+#if defined Q_OS_X11 && ! defined K_WS_QTONLY
         KStartupInfo::setNewStartupId( cWin, kapp->startupId() );
 #endif
     } else {
@@ -786,7 +788,7 @@ QDBusObjectPath KMKernel::openComposer( const QString &to, const QString &cc,
         cWin->show();
         // Activate window - doing this instead of KWindowSystem::activateWindow(cWin->winId());
         // so that it also works when called from KMailApplication::newInstance()
-#if defined Q_WS_X11 && ! defined K_WS_QTONLY
+#if defined Q_OS_X11 && ! defined K_WS_QTONLY
         KStartupInfo::setNewStartupId( cWin, kapp->startupId() );
 #endif
     } else {
@@ -862,7 +864,7 @@ void KMKernel::raise()
     if ( !iface.isValid() || !( reply = iface.call( QLatin1String("newInstance") ) ).isValid() )
     {
         QDBusError err = iface.lastError();
-        kError() << "Communication problem with KMail. "
+        qCritical() << "Communication problem with KMail. "
                  << "Error message was:" << err.name() << ": \"" << err.message() << "\"";
     }
 
@@ -1139,7 +1141,7 @@ void KMKernel::recoverDeadLetters()
                 filename == QLatin1String( ".." )
                 || file.isDir() )
             continue;
-        kDebug() << "Opening autosave file:" << file.absoluteFilePath();
+        qDebug() << "Opening autosave file:" << file.absoluteFilePath();
         QFile autoSaveFile( file.absoluteFilePath() );
         if( autoSaveFile.open( QIODevice::ReadOnly ) ) {
             const KMime::Message::Ptr autoSaveMessage( new KMime::Message() );
@@ -1164,7 +1166,7 @@ void KMKernel::recoverDeadLetters()
 
 void  KMKernel::akonadiStateChanged( Akonadi::ServerManager::State state )
 {
-    kDebug() << "KMKernel has akonadi state changed to:" << int( state );
+    qDebug() << "KMKernel has akonadi state changed to:" << int( state );
 
     if( state == Akonadi::ServerManager::Running ) {
         CommonKernel->initFolders();
@@ -1209,7 +1211,7 @@ void KMKernel::init()
 
     KCrash::setEmergencySaveFunction( kmCrashHandler );
 
-    kDebug() << "KMail init with akonadi server state:" << int( Akonadi::ServerManager::state() );
+    qDebug() << "KMail init with akonadi server state:" << int( Akonadi::ServerManager::state() );
     if( Akonadi::ServerManager::state() == Akonadi::ServerManager::Running ) {
         CommonKernel->initFolders();
     }
@@ -1336,7 +1338,7 @@ void KMKernel::dumpDeadLetters()
             win->autoSaveMessage(true);
 
             while ( win->isComposing() ) {
-                kWarning() << "Danger, using an event loop, this should no longer be happening!";
+                qWarning() << "Danger, using an event loop, this should no longer be happening!";
                 qApp->processEvents();
             }
         }
@@ -1375,14 +1377,14 @@ void KMKernel::slotRequestConfigSync()
 
 void KMKernel::slotSyncConfig()
 {
-    PimCommon::PimCommonSettings::self()->writeConfig();
-    MessageCore::GlobalSettings::self()->writeConfig();
-    MessageViewer::GlobalSettings::self()->writeConfig();
-    MessageComposer::MessageComposerSettings::self()->writeConfig();
-    TemplateParser::GlobalSettings::self()->writeConfig();
-    MessageList::Core::Settings::self()->writeConfig();
-    MailCommon::MailCommonSettings::self()->writeConfig();
-    GlobalSettings::self()->writeConfig();
+    PimCommon::PimCommonSettings::self()->save();
+    MessageCore::GlobalSettings::self()->save();
+    MessageViewer::GlobalSettings::self()->save();
+    MessageComposer::MessageComposerSettings::self()->save();
+    TemplateParser::GlobalSettings::self()->save();
+    MessageList::Core::Settings::self()->save();
+    MailCommon::MailCommonSettings::self()->save();
+    GlobalSettings::self()->save();
     KMKernel::config()->sync();
 }
 
@@ -1431,7 +1433,7 @@ void KMKernel::slotConfigChanged()
 //static
 QString KMKernel::localDataPath()
 {
-    return KStandardDirs::locateLocal( "data", QLatin1String("kmail2/") );
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/") ;
 }
 
 //-------------------------------------------------------------------------------
@@ -1450,7 +1452,7 @@ void KMKernel::updateSystemTray()
 
 KPIMIdentities::IdentityManager * KMKernel::identityManager() {
     if ( !mIdentityManager ) {
-        kDebug();
+        qDebug();
         mIdentityManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
     }
     return mIdentityManager;
@@ -1495,19 +1497,19 @@ KSharedConfig::Ptr KMKernel::config()
         // Check that all updates have been run on the config file:
         KMail::checkConfigUpdates();
         MessageList::Core::Settings::self()->setSharedConfig( mySelf->mConfig );
-        MessageList::Core::Settings::self()->readConfig();
+        MessageList::Core::Settings::self()->load();
         TemplateParser::GlobalSettings::self()->setSharedConfig( mySelf->mConfig );
-        TemplateParser::GlobalSettings::self()->readConfig();
+        TemplateParser::GlobalSettings::self()->load();
         MessageComposer::MessageComposerSettings::self()->setSharedConfig( mySelf->mConfig );
-        MessageComposer::MessageComposerSettings::self()->readConfig();
+        MessageComposer::MessageComposerSettings::self()->load();
         MessageCore::GlobalSettings::self()->setSharedConfig( mySelf->mConfig );
-        MessageCore::GlobalSettings::self()->readConfig();
+        MessageCore::GlobalSettings::self()->load();
         MessageViewer::GlobalSettings::self()->setSharedConfig( mySelf->mConfig );
-        MessageViewer::GlobalSettings::self()->readConfig();
+        MessageViewer::GlobalSettings::self()->load();
         MailCommon::MailCommonSettings::self()->setSharedConfig( mySelf->mConfig );
-        MailCommon::MailCommonSettings::self()->readConfig();
+        MailCommon::MailCommonSettings::self()->load();
         PimCommon::PimCommonSettings::self()->setSharedConfig( mySelf->mConfig );
-        PimCommon::PimCommonSettings::self()->readConfig();
+        PimCommon::PimCommonSettings::self()->load();
     }
     return mySelf->mConfig;
 }
@@ -1721,7 +1723,7 @@ void KMKernel::instanceStatusChanged( const Akonadi::AgentInstance &instance )
         if ( instance.status() == Akonadi::AgentInstance::Running ) {
 
             if ( mResourcesBeingChecked.isEmpty() ) {
-                kDebug() << "A Resource started to synchronize, starting a mail check.";
+                qDebug() << "A Resource started to synchronize, starting a mail check.";
                 emit startCheckMail();
             }
 
@@ -1770,6 +1772,7 @@ void KMKernel::instanceStatusChanged( const Akonadi::AgentInstance &instance )
 
 void KMKernel::agentInstanceBroken( const Akonadi::AgentInstance &instance )
 {
+#if 0 //QT5
     const QString summary = i18n( "Resource %1 is broken.",  instance.name() );
     if( xmlGuiInstance().isValid() ) {
         KNotification::event( QLatin1String("akonadi-resource-broken"),
@@ -1785,7 +1788,7 @@ void KMKernel::agentInstanceBroken( const Akonadi::AgentInstance &instance )
                               0,
                               KNotification::CloseOnTimeout );
     }
-
+#endif
 }
 
 void KMKernel::slotProgressItemCompletedOrCanceled( KPIM::ProgressItem *item )
@@ -1795,7 +1798,7 @@ void KMKernel::slotProgressItemCompletedOrCanceled( KPIM::ProgressItem *item )
     if ( agent.isValid() ) {
         mResourcesBeingChecked.removeAll( identifier );
         if ( mResourcesBeingChecked.isEmpty() ) {
-            kDebug() << "Last resource finished syncing, mail check done";
+            qDebug() << "Last resource finished syncing, mail check done";
             emit endCheckMail();
         }
     }
@@ -1908,7 +1911,7 @@ void KMKernel::checkFolderFromResources( const Akonadi::Collection::List &collec
                     if ( iface->trashCollection() == collectionId ) {
                         //Use default trash
                         iface->setTrashCollection( CommonKernel->trashCollectionFolder().id() );
-                        iface->writeConfig();
+                        iface->save();
                         break;
                     }
                 }
@@ -1923,7 +1926,7 @@ void KMKernel::checkFolderFromResources( const Akonadi::Collection::List &collec
                     if ( iface->targetCollection() == collectionId ) {
                         //Use default inbox
                         iface->setTargetCollection( CommonKernel->inboxCollectionFolder().id() );
-                        iface->writeConfig();
+                        iface->save();
                         break;
                     }
                 }
@@ -1943,6 +1946,7 @@ const QAbstractItemModel* KMKernel::treeviewModelSelection()
 
 void KMKernel::slotInstanceWarning(const Akonadi::AgentInstance &instance , const QString &message)
 {
+#if 0 //QT5
     const QString summary = i18nc( "<source>: <error message>", "%1: %2", instance.name(), message );
     if( xmlGuiInstance().isValid() ) {
         KNotification::event( QLatin1String("akonadi-instance-warning"),
@@ -1958,10 +1962,12 @@ void KMKernel::slotInstanceWarning(const Akonadi::AgentInstance &instance , cons
                               0,
                               KNotification::CloseOnTimeout );
     }
+#endif
 }
 
 void KMKernel::slotInstanceError(const Akonadi::AgentInstance &instance, const QString &message)
 {
+#if 0 //QT5
     const QString summary = i18nc( "<source>: <error message>", "%1: %2", instance.name(), message );
     if( xmlGuiInstance().isValid() ) {
         KNotification::event( QLatin1String("akonadi-instance-error"),
@@ -1977,6 +1983,7 @@ void KMKernel::slotInstanceError(const Akonadi::AgentInstance &instance, const Q
                               0,
                               KNotification::CloseOnTimeout );
     }
+#endif
 }
 
 
@@ -2049,7 +2056,7 @@ void KMKernel::toggleSystemTray()
             mSystemTray = new KMail::KMSystemTray(widget);
         } else if ( mSystemTray && !GlobalSettings::self()->systemTrayEnabled() ) {
             // Get rid of system tray on user's request
-            kDebug() << "deleting systray";
+            qDebug() << "deleting systray";
             delete mSystemTray;
             mSystemTray = 0;
         }

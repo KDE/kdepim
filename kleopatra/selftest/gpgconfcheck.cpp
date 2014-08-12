@@ -84,7 +84,7 @@ namespace {
             gpgconf.start( gpgConfPath(), QStringList() << QLatin1String("--list-dirs"), QIODevice::ReadOnly );
             gpgconf.waitForFinished();
             if ( gpgconf.exitStatus() != QProcess::NormalExit || gpgconf.exitCode() != 0 ) {
-                kDebug() << "GpgConfCheck: \"gpgconf --list-dirs\" gives error, disabling";
+                qDebug() << "GpgConfCheck: \"gpgconf --list-dirs\" gives error, disabling";
                 return false;
             }
             const QList<QByteArray> lines = gpgconf.readAll().split( '\n' );
@@ -93,7 +93,7 @@ namespace {
                     try {
                         return QDir( QFile::decodeName( hexdecode( line.mid( strlen( "sysconfdir:" ) ) ) ) ).exists( QLatin1String("gpgconf.conf") );
                     } catch ( ... ) { return false; }
-            kDebug() << "GpgConfCheck: \"gpgconf --list-dirs\" has no sysconfdir entry";
+            qDebug() << "GpgConfCheck: \"gpgconf --list-dirs\" has no sysconfdir entry";
             return false;
         }
 

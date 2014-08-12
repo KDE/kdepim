@@ -26,11 +26,9 @@
 #include <KLocalizedString>
 
 #include <QAuthenticator>
-#include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
 #include <QPointer>
-#include <QBuffer>
 #include <QFile>
 #include <QDomDocument>
 #include <QDomNodeList>

@@ -19,7 +19,7 @@
 
 #include "mailcommon/job/backupjob.h"
 #include <KConfigGroup>
-#include <Akonadi/Collection>
+#include <Collection>
 #include <KUrl>
 #include <QDate>
 
@@ -84,7 +84,7 @@ private:
     MailCommon::BackupJob::ArchiveType mArchiveType;
     ArchiveUnit mArchiveUnit;
     Akonadi::Collection::Id mSaveCollectionId;
-    KUrl mPath;
+    QUrl mPath;
     int mMaximumArchiveCount;
     bool mSaveSubCollection;
     bool mIsEnabled;

@@ -24,6 +24,7 @@
 
 #include <KLocalizedString>
 #include <KSeparator>
+#include <QUrl>
 
 #include <QVBoxLayout>
 #include <QWebElement>
@@ -91,7 +92,7 @@ void PageColorBackgroundDialogPrivate::updateSettings()
             pageColorWidget->setUseDefaultColor(true);
         }
         if (webElement.hasAttribute(QLatin1String("background"))) {
-            pageColorWidget->setBackgroundImageUrl(KUrl(webElement.attribute(QLatin1String("background"))));
+            pageColorWidget->setBackgroundImageUrl(QUrl(webElement.attribute(QLatin1String("background"))));
         }
     }
 }

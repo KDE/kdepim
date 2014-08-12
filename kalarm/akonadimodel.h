@@ -26,8 +26,8 @@
 #include <kalarmcal/kacalendar.h>
 #include <kalarmcal/kaevent.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/servermanager.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/servermanager.h>
 
 #include <QSize>
 #include <QColor>

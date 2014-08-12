@@ -22,6 +22,8 @@
 
 #include <QSqlTableModel>
 
+#include <QIcon>
+
 DbBrowser::DbBrowser(QWidget* parent) :
   QWidget( parent ),
   mTableModel( 0 )
@@ -37,7 +39,7 @@ DbBrowser::DbBrowser(QWidget* parent) :
     ui.tableBox->addItems( QStringList() << userTables << systemTables );
   }
 
-  ui.refreshButton->setIcon( KIcon( "view-refresh" ) );
+  ui.refreshButton->setIcon( QIcon::fromTheme( "view-refresh" ) );
   connect( ui.refreshButton, SIGNAL(clicked()), SLOT(refreshClicked()) );
 }
 

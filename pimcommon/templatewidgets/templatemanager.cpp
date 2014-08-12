@@ -22,8 +22,10 @@
 #include <KStandardDirs>
 #include <KConfigGroup>
 #include <KConfig>
+#include <KGlobal>
 
 #include <QDirIterator>
+#include <QStandardPaths>
 
 using namespace PimCommon;
 
@@ -34,7 +36,7 @@ TemplateManager::TemplateManager(const QString &relativeTemplateDir, PimCommon::
     mDirWatch = new KDirWatch( this );
     initTemplatesDirectories(relativeTemplateDir);
 
-    connect( mDirWatch, SIGNAL(dirty(QString)), SLOT(slotDirectoryChanged()) );
+    connect(mDirWatch, &KDirWatch::dirty, this, &TemplateManager::slotDirectoryChanged);
     loadTemplates();
 }
 
@@ -51,10 +53,10 @@ void TemplateManager::slotDirectoryChanged()
 void TemplateManager::initTemplatesDirectories(const QString &templatesRelativePath)
 {
     if (!templatesRelativePath.isEmpty()) {
-        mTemplatesDirectories = KGlobal::dirs()->findDirs("data", templatesRelativePath);
+        mTemplatesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, templatesRelativePath,QStandardPaths::LocateDirectory);
         if (mTemplatesDirectories.count() < 2) {
             //Make sure to add local directory
-            const QString localDirectory = KStandardDirs::locateLocal("data", templatesRelativePath);
+            const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + templatesRelativePath;
             if (!mTemplatesDirectories.contains(localDirectory)) {
                 mTemplatesDirectories.append(localDirectory);
             }

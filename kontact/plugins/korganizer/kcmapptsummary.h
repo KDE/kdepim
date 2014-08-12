@@ -28,9 +28,10 @@
 #include "ui_apptsummaryconfig_base.h"
 #include <KCModule>
 
+#include <KComponentData>
 extern "C"
 {
-  KDE_EXPORT KCModule *create_apptsummary( QWidget *parent, const char * );
+  Q_DECL_EXPORT KCModule *create_apptsummary( QWidget *parent, const char * );
 }
 
 class KCMApptSummary : public KCModule, public Ui::ApptSummaryConfig_Base

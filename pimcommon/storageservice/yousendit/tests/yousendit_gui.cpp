@@ -19,10 +19,13 @@
 #include "pimcommon/storageservice/yousendit/yousenditstorageservice.h"
 #include <QWidget>
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+#include <qdebug.h>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 YouSendItTestWidget::YouSendItTestWidget(QWidget *parent)
     : ServiceTestWidget(parent)
@@ -32,10 +35,18 @@ YouSendItTestWidget::YouSendItTestWidget(QWidget *parent)
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "yousendit_gui", 0, ki18n("yousendit_Gui"),
-                       "1.0", ki18n("Test for short yousendit"));
+    KAboutData aboutData( QLatin1String("yousendit_gui"), i18n("yousendit_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for short yousendit"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     YouSendItTestWidget *w = new YouSendItTestWidget;
     w->show();

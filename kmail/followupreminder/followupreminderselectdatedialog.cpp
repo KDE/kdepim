@@ -22,6 +22,7 @@
 #include <KSharedConfig>
 #include <KDatePicker>
 #include <KMessageBox>
+#include <KGlobal>
 
 #include <QVBoxLayout>
 
@@ -54,7 +55,7 @@ FollowUpReminderSelectDateDialog::~FollowUpReminderSelectDateDialog()
 
 void FollowUpReminderSelectDateDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FollowUpReminderSelectDateDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FollowUpReminderSelectDateDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -63,7 +64,7 @@ void FollowUpReminderSelectDateDialog::readConfig()
 
 void FollowUpReminderSelectDateDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FollowUpReminderSelectDateDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FollowUpReminderSelectDateDialog" );
     group.writeEntry( "Size", size() );
 }
 

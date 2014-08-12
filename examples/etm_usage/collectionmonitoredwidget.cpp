@@ -28,10 +28,10 @@
 #include <QHBoxLayout>
 #include <QItemSelection>
 
-#include <Akonadi/EntityTreeView>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/CollectionFetchScope>
+#include <AkonadiWidgets/EntityTreeView>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/CollectionFetchScope>
 
 CollectionMonitoredWidget::CollectionMonitoredWidget(QWidget* parent, Qt::WindowFlags f)
   : QWidget(parent, f)

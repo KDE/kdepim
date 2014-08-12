@@ -25,9 +25,9 @@
 
 #include <KNotification>
 #include <KLocale>
-#include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
+#include <KComponentData>
 
 
 ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
@@ -35,7 +35,7 @@ ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const
     ,mInfo(info)
     ,mManager(manager)
 {
-    mPixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    mPixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 }
 
 ArchiveJob::~ArchiveJob()
@@ -71,7 +71,7 @@ void ArchiveJob::execute()
                                   mPixmap,
                                   0,
                                   KNotification::CloseOnTimeout,
-                                  KGlobal::mainComponent());
+                                  KComponentData::mainComponent().componentName());
             deleteLater();
             return;
         }
@@ -91,7 +91,7 @@ void ArchiveJob::execute()
                               mPixmap,
                               0,
                               KNotification::CloseOnTimeout,
-                              KGlobal::mainComponent());
+                              KComponentData::mainComponent().componentName());
         connect(backupJob, SIGNAL(backupDone(QString)), this, SLOT(slotBackupDone(QString)));
         connect(backupJob, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
         backupJob->start();
@@ -105,7 +105,7 @@ void ArchiveJob::slotError(const QString &error)
                           mPixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
+                          KComponentData::mainComponent().componentName());
     mManager->backupDone(mInfo);
     deleteLater();
 }
@@ -117,7 +117,7 @@ void ArchiveJob::slotBackupDone(const QString &info)
                           mPixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
+                          KComponentData::mainComponent().componentName());
     mManager->backupDone(mInfo);
     deleteLater();
 }

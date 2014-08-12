@@ -41,13 +41,8 @@
 #include <kalarmcal/kaevent.h>
 #include <kalarmcal/karecurrence.h>
 
-#ifdef USE_AKONADI
-#include <kcalcore/event.h>
+#include <KCalCore/Event>
 using namespace KCalCore;
-#else
-#include <kcal/event.h>
-using namespace KCal;
-#endif
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -55,7 +50,7 @@ using namespace KCal;
 #include <kiconloader.h>
 #include <kdialog.h>
 #include <kmessagebox.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kdatecombobox.h>
 
 #include <QPushButton>
@@ -67,6 +62,7 @@ using namespace KCal;
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QtAlgorithms>
+#include <KLocale>
 
 
 class ListWidget : public QListWidget
@@ -98,7 +94,7 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
       mNoEmitTypeChanged(true),
       mReadOnly(readOnly)
 {
-    kDebug();
+    qDebug();
     QVBoxLayout* topLayout = new QVBoxLayout(this);
     topLayout->setMargin(0);
     topLayout->setSpacing(KDialog::spacingHint());
@@ -135,7 +131,7 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
     mAtLoginButton = new RadioButton(i18n_combo_AtLogin(), recurGroup);
     mAtLoginButton->setFixedSize(mAtLoginButton->sizeHint());
     mAtLoginButton->setReadOnly(mReadOnly);
-    mAtLoginButton->setWhatsThis(i18nc("@info:whatsthis",
+    mAtLoginButton->setWhatsThis(xi18nc("@info:whatsthis",
                                       "<para>Trigger the alarm at the specified date/time and at every login until then.</para>"
                                       "<para>Note that it will also be triggered any time <application>KAlarm</application> is restarted.</para>"));
     mRuleButtonGroup->addButton(mAtLoginButton);
@@ -278,20 +274,20 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
     mEndDateButton = new RadioButton(i18nc("@option:radio", "End by:"), mRangeButtonBox);
     mEndDateButton->setReadOnly(mReadOnly);
     mEndDateButton->setWhatsThis(
-          i18nc("@info:whatsthis", "<para>Repeat the alarm until the date/time specified.</para>"
+          xi18nc("@info:whatsthis", "<para>Repeat the alarm until the date/time specified.</para>"
                 "<para><note>This applies to the main recurrence only. It does not limit any sub-repetition which will occur regardless after the last main recurrence.</note></para>"));
     mRangeButtonGroup->addButton(mEndDateButton);
     mEndDateEdit = new KDateComboBox(mRangeButtonBox);
     mEndDateEdit->setOptions(mReadOnly ? KDateComboBox::Options(0) : KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker);
     static const QString tzText = i18nc("@info/plain", "This uses the same time zone as the start time.");
-    mEndDateEdit->setWhatsThis(i18nc("@info:whatsthis",
+    mEndDateEdit->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Enter the last date to repeat the alarm.</para><para>%1</para>", tzText));
     connect(mEndDateEdit, SIGNAL(dateEdited(QDate)), SIGNAL(contentsChanged()));
     mEndDateButton->setFocusWidget(mEndDateEdit);
     mEndTimeEdit = new TimeEdit(mRangeButtonBox);
     mEndTimeEdit->setFixedSize(mEndTimeEdit->sizeHint());
     mEndTimeEdit->setReadOnly(mReadOnly);
-    mEndTimeEdit->setWhatsThis(i18nc("@info:whatsthis",
+    mEndTimeEdit->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Enter the last time to repeat the alarm.</para><para>%1</para><para>%2</para>", tzText, TimeSpinBox::shiftWhatsThis()));
     connect(mEndTimeEdit, SIGNAL(valueChanged(int)), SIGNAL(contentsChanged()));
     mEndAnyTimeCheckBox = new CheckBox(i18nc("@option:check", "Any time"), mRangeButtonBox);
@@ -373,7 +369,7 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
 
     mExcludeHolidays = new CheckBox(i18nc("@option:check", "Exclude holidays"), mExceptionGroup);
     mExcludeHolidays->setReadOnly(mReadOnly);
-    mExcludeHolidays->setWhatsThis(i18nc("@info:whatsthis",
+    mExcludeHolidays->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Do not trigger the alarm on holidays.</para>"
           "<para>You can specify your holiday region in the Configuration dialog.</para>"));
     connect(mExcludeHolidays, SIGNAL(toggled(bool)), SIGNAL(contentsChanged()));
@@ -381,7 +377,7 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent)
 
     mWorkTimeOnly = new CheckBox(i18nc("@option:check", "Only during working time"), mExceptionGroup);
     mWorkTimeOnly->setReadOnly(mReadOnly);
-    mWorkTimeOnly->setWhatsThis(i18nc("@info:whatsthis",
+    mWorkTimeOnly->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Only execute the alarm during working hours, on working days.</para>"
           "<para>You can specify working days and hours in the Configuration dialog.</para>"));
     connect(mWorkTimeOnly, SIGNAL(toggled(bool)), SIGNAL(contentsChanged()));
@@ -616,7 +612,7 @@ void RecurrenceEdit::addException()
     if (insert)
     {
         mExceptionDates.insert(it, date);
-        mExceptionDateList->insertItem(index, new QListWidgetItem(KGlobal::locale()->formatDate(date)));
+        mExceptionDateList->insertItem(index, new QListWidgetItem(KLocale::global()->formatDate(date)));
         emit contentsChanged();
     }
     mExceptionDateList->setCurrentItem(mExceptionDateList->item(index));
@@ -923,7 +919,7 @@ void RecurrenceEdit::set(const KAEvent& event)
     qSort(mExceptionDates);
     mExceptionDateList->clear();
     for (int i = 0, iend = mExceptionDates.count();  i < iend;  ++i)
-        new QListWidgetItem(KGlobal::locale()->formatDate(mExceptionDates[i]), mExceptionDateList);
+        new QListWidgetItem(KLocale::global()->formatDate(mExceptionDates[i]), mExceptionDateList);
     enableExceptionButtons();
     mExcludeHolidays->setChecked(event.holidaysExcluded());
     mWorkTimeOnly->setChecked(event.workTimeOnly());
@@ -1212,7 +1208,7 @@ DayWeekRule::DayWeekRule(const QString& freqText, const QString& freqWhatsThis, 
     QGridLayout* dgrid = new QGridLayout(box);
     dgrid->setMargin(0);
     dgrid->setSpacing(KDialog::spacingHint());
-    const KCalendarSystem* calendar = KGlobal::locale()->calendar();
+    const KCalendarSystem* calendar = KLocale::global()->calendar();
     for (int i = 0;  i < 7;  ++i)
     {
         int day = KAlarm::localeDayInWeek_to_weekDay(i);
@@ -1408,7 +1404,7 @@ MonthYearRule::MonthYearRule(const QString& freqText, const QString& freqWhatsTh
 
     mDayOfWeekCombo = new ComboBox(box);
     mDayOfWeekCombo->setEditable(false);
-    const KCalendarSystem* calendar = KGlobal::locale()->calendar();
+    const KCalendarSystem* calendar = KLocale::global()->calendar();
     for (int i = 0;  i < 7;  ++i)
     {
         int day = KAlarm::localeDayInWeek_to_weekDay(i);
@@ -1568,7 +1564,7 @@ YearlyRule::YearlyRule(bool readOnly, QWidget* parent)
     QGridLayout* grid = new QGridLayout(w);
     grid->setMargin(0);
     grid->setSpacing(KDialog::spacingHint());
-    const KCalendarSystem* calendar = KGlobal::locale()->calendar();
+    const KCalendarSystem* calendar = KLocale::global()->calendar();
     int year = KDateTime::currentLocalDate().year();
     for (int i = 0;  i < 12;  ++i)
     {

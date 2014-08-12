@@ -24,8 +24,9 @@
 #include "freebusyitemmodel.h"
 
 #include <KCalendarSystem>
-#include <KDebug>
-#include <KGlobal>
+#include <QDebug>
+
+#include <KLocale>
 
 static const int DEFAULT_RESOLUTION_SECONDS = 15 * 60; // 15 minutes, 1 slot = 15 minutes
 
@@ -256,15 +257,17 @@ void ConflictResolver::findAllFreeSlots()
   //          So, the array would have a length of 672
   const int range = begin.secsTo( end ) / mSlotResolutionSeconds;
   if ( range <= 0 ) {
-    kWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end )
+    qWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end )
                << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
     return;
   }
 
-  kDebug() << "from " << begin << " to " << end
+//QT5
+#if 0
+  qDebug() << "from " << begin << " to " << end
            << "; mSlotResolutionSeconds = " << mSlotResolutionSeconds
            << "; range = " << range;
-
+#endif
   // filter out attendees for which we don't have FB data
   // and which don't match the mandatory role contrstaint
   QList<KCalCore::FreeBusy::Ptr> filteredFBItems;
@@ -285,10 +288,10 @@ void ConflictResolver::findAllFreeSlots()
   // now we know the number of attendees we are calculating for
   const int number_attendees = filteredFBItems.size();
   if ( number_attendees <= 0 ) {
-    kDebug() << "no attendees match search criteria";
+    qDebug() << "no attendees match search criteria";
     return;
   }
-  kDebug() << "num attendees: " << number_attendees;
+  qDebug() << "num attendees: " << number_attendees;
   // this is a 2 dimensional array where the rows are attendees
   // and the columns are 0 or 1 denoting freee or busy respectively.
   QVector< QVector<int> > fbTable;
@@ -333,9 +336,10 @@ void ConflictResolver::findAllFreeSlots()
           start_index = 0;
           duration = range - 1;
         } else {
-          kFatal() << "impossible condition reached" << it->start() << it->end();
+          //QT5
+          //qFatal() << "impossible condition reached" << it->start() << it->end();
         }
-        //      kDebug() << start_index << "+" << duration << "="
+        //      qDebug() << start_index << "+" << duration << "="
         //               << start_index + duration << "<=" << range;
         Q_ASSERT( ( start_index + duration ) < range ); // sanity check
         for ( int i = start_index; i <= start_index + duration; ++i ) {
@@ -351,7 +355,7 @@ void ConflictResolver::findAllFreeSlots()
 
   // Now, create another array to represent the allowed weekdays constraints
   // All days which are not allowed, will be marked as busy
-  const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+  const KCalendarSystem *calSys = KLocale::global()->calendar();
   QVector<int> fbArray( range );
   fbArray.fill( 0 ); // initialize to zero
   for ( int slot = 0; slot < fbArray.size(); ++slot ) {

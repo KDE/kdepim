@@ -25,17 +25,18 @@
 #include "messagecore/widgets/annotationdialog.h"
 #include "theme.h"
 
-#include <akonadi/item.h>
-#include <akonadi/entityannotationsattribute.h>
-#include <akonadi/tagattribute.h>
-#include <akonadi/tagfetchjob.h>
-#include <akonadi/tagfetchscope.h>
+#include <item.h>
+#include <entityannotationsattribute.h>
+#include <tagattribute.h>
+#include <tagfetchjob.h>
+#include <tagfetchscope.h>
 #include <KIconLoader>
 #include <KLocalizedString>
 
+#include <QDebug>
 using namespace MessageList::Core;
 
-K_GLOBAL_STATIC( TagCache, s_tagCache )
+Q_GLOBAL_STATIC( TagCache, s_tagCache )
 
 class MessageItem::Tag::Private
 {
@@ -139,7 +140,7 @@ public:
     QString mFontToDoMessageKey;
 };
 
-K_GLOBAL_STATIC(MessageItemPrivateSettings, s_settings)
+Q_GLOBAL_STATIC(MessageItemPrivateSettings, s_settings)
 
 MessageItemPrivate::MessageItemPrivate( MessageItem* qq )
     : ItemPrivate( qq ),
@@ -756,7 +757,7 @@ void TagCache::cancelRequest(MessageItemPrivate *m)
 void TagCache::onTagsFetched(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Failed to fetch tags: " << job->errorString();
+        qWarning() << "Failed to fetch tags: " << job->errorString();
         return;
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);

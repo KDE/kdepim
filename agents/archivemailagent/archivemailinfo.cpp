@@ -17,6 +17,7 @@
 #include "archivemailinfo.h"
 
 #include <KLocale>
+#include <QDebug>
 #include <QDir>
 
 ArchiveMailInfo::ArchiveMailInfo()
@@ -90,7 +91,7 @@ QString ArchiveMailInfo::dirArchive(bool &dirExit) const
     if (!dir.exists()) {
         dirExit = false;
         dirPath = QDir::homePath();
-        kDebug()<<" Path doesn't exist"<<dir.path();
+        qDebug()<<" Path doesn't exist"<<dir.path();
     } else {
         dirExit = true;
     }
@@ -175,7 +176,7 @@ QDate ArchiveMailInfo::lastDateSaved() const
 
 void ArchiveMailInfo::readConfig(const KConfigGroup &config)
 {
-    mPath = config.readEntry("storePath", KUrl());
+    mPath = config.readEntry("storePath", QUrl());
 
     if (config.hasKey(QLatin1String("lastDateSaved"))) {
         mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"),Qt::ISODate);

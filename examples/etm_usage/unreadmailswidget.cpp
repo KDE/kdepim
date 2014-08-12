@@ -29,10 +29,10 @@
 
 #include <kselectionproxymodel.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionstatistics.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/collectionstatistics.h>
 
 #include "entitytreewidget.h"
 #include "itemviewerwidget.h"
@@ -49,7 +49,7 @@ bool UnreadMailsTree::acceptRow(int sourceRow, const QModelIndex& sourceParent) 
 {
   QModelIndex idx = sourceModel()->index(sourceRow, 0, sourceParent);
     Collection col = idx.data(EntityTreeModel::CollectionRole).value<Collection>();
-  kDebug() << sourceRow << sourceParent << col.statistics().unreadCount() << idx.data().toString();
+  qDebug() << sourceRow << sourceParent << col.statistics().unreadCount() << idx.data().toString();
     return col.statistics().unreadCount() > 0;
 }
 

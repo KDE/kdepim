@@ -1,5 +1,6 @@
 project(mboximporter)
 
+
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 set(mboximporter_SRCS
@@ -10,19 +11,18 @@ set(mboximporter_SRCS
   mboximportkernel.cpp
 )
 
-kde4_add_ui_files(mboximporter_SRCS 
+ki18n_wrap_ui(mboximporter_SRCS 
                   ui/mboximportwidget.ui
 )
 
 include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon ${CMAKE_SOURCE_DIR}/messagecomposer)
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_executable(mboximporter ${mboximporter_SRCS})
+add_executable(mboximporter ${mboximporter_SRCS})
 
 target_link_libraries(mboximporter
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+  KF5::KIOCore
+  KF5::AkonadiCore
+  KF5::PimIdentities
   mailimporter
   mailcommon
 )

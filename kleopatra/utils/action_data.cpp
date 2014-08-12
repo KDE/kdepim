@@ -36,16 +36,18 @@
 
 #include <KToggleAction>
 #include <KActionCollection>
+#include <QAction>
+#include <QIcon>
+#include <QKeySequence>
+QAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {
 
-KAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {
-
-    KAction * const a = ad.toggle ? new KToggleAction( parent ) : new KAction( parent ) ;
+    QAction * const a = ad.toggle ? new KToggleAction( parent ) : new QAction( parent ) ;
     a->setObjectName( QLatin1String(ad.name) );
     a->setText( ad.text );
     if ( !ad.tooltip.isEmpty() )
         a->setToolTip( ad.tooltip );
     if ( ad.icon )
-        a->setIcon( KIcon( QLatin1String(ad.icon) ) );
+        a->setIcon( QIcon::fromTheme( QLatin1String(ad.icon) ) );
     if ( ad.receiver && ad.slot ) {
         if ( ad.toggle )
             QObject::connect( a, SIGNAL(toggled(bool)), ad.receiver, ad.slot );
@@ -53,7 +55,7 @@ KAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent 
             QObject::connect( a, SIGNAL(triggered()), ad.receiver, ad.slot );
     }
     if ( !ad.shortcut.isEmpty() )
-        a->setShortcuts( KShortcut( ad.shortcut ) );
+        a->setShortcut( QKeySequence( ad.shortcut ) );
     a->setEnabled( ad.enabled );
     return a;
 }

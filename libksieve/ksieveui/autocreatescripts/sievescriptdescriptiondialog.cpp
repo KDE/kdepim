@@ -20,17 +20,30 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace KSieveUi;
 
 SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Description" ) );
-    setButtons( Ok|Cancel );
+    setWindowTitle( i18n( "Description" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mEdit = new PimCommon::RichTextEditorWidget;
     mEdit->setAcceptRichText(false);
-    setMainWidget(mEdit);
+    mainLayout->addWidget(mEdit);
+    mainLayout->addWidget(buttonBox);
+    
     readConfig();
     mEdit->setFocus();
 }
@@ -52,7 +65,7 @@ QString SieveScriptDescriptionDialog::description() const
 
 void SieveScriptDescriptionDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveScriptDescriptionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveScriptDescriptionDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -61,7 +74,7 @@ void SieveScriptDescriptionDialog::readConfig()
 
 void SieveScriptDescriptionDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveScriptDescriptionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveScriptDescriptionDialog" );
     group.writeEntry( "Size", size() );
 }
 

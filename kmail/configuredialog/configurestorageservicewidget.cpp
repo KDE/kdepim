@@ -23,15 +23,14 @@
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 #include <KLocalizedString>
-#include <KStandardDirs>
 #include <KMessageBox>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QCheckBox>
-#include <QSpinBox>
 #include <QProcess>
 #include <QPushButton>
+#include <QStandardPaths>
 
 ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(QWidget *parent)
     : QWidget(parent)
@@ -46,7 +45,7 @@ ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(QWidget *parent)
     hbox->addWidget(mManageStorageService);
     hbox->addStretch();
     lay->addLayout(hbox);
-    if (KStandardDirs::findExe(QLatin1String("storageservicemanager")).isEmpty()) {
+    if (QStandardPaths::findExecutable(QLatin1String("storageservicemanager")).isEmpty()) {
         mManageStorageService->setEnabled(false);
     } else {
         connect(mManageStorageService, SIGNAL(clicked(bool)), this, SLOT(slotManageStorageService()));

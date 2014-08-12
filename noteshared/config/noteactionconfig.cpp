@@ -18,36 +18,35 @@
 #include "noteactionconfig.h"
 #include "notesharedglobalconfig.h"
 
-#include <KLineEdit>
-#include <KComponentData>
+#include <QLineEdit>
 #include <KLocalizedString>
-#include <KDialog>
+#include <QDialog>
 
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QWhatsThis>
 using namespace NoteShared;
 
-NoteActionConfig::NoteActionConfig(const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+NoteActionConfig::NoteActionConfig( QWidget *parent )
+    :KCModule( parent )
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     QWidget * w =  new QWidget( this );
     lay->addWidget( w );
     QGridLayout *layout = new QGridLayout( w );
-    layout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
     layout->setMargin( 0 );
 
     QLabel *label_MailAction = new QLabel( i18n( "&Mail action:" ), this );
     layout->addWidget( label_MailAction, 0, 0 );
 
-    KLineEdit *kcfg_MailAction = new KLineEdit( this );
+    QLineEdit *kcfg_MailAction = new QLineEdit( this );
     kcfg_MailAction->setObjectName( QLatin1String("kcfg_MailAction") );
     label_MailAction->setBuddy( kcfg_MailAction );
     layout->addWidget( kcfg_MailAction, 0, 1 );
 
     QLabel *howItWorks = new QLabel(i18n( "<a href=\"whatsthis\">How does this work?</a>" ));
-    connect( howItWorks, SIGNAL(linkActivated(QString)),SLOT(slotHelpLinkClicked(QString)) );
+    connect(howItWorks, &QLabel::linkActivated, this, &NoteActionConfig::slotHelpLinkClicked);
     layout->addWidget( howItWorks, 1, 0 );
 
     addConfig( NoteShared::NoteSharedGlobalConfig::self(), w );

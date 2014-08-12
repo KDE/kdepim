@@ -18,9 +18,9 @@
 #ifndef SELECTFLAGSWIDGET_H
 #define SELECTFLAGSWIDGET_H
 
-#include <KDialog>
+#include <QDialog>
 #include <QListWidget>
-class KLineEdit;
+class QLineEdit;
 
 namespace KSieveUi {
 
@@ -42,7 +42,7 @@ private:
 };
 
 
-class SelectFlagsListDialog : public KDialog
+class SelectFlagsListDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -75,7 +75,7 @@ private Q_SLOTS:
     void slotSelectFlags();
 
 private:
-    KLineEdit *mEdit;
+    QLineEdit *mEdit;
 };
 }
 

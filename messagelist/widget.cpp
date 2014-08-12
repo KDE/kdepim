@@ -18,10 +18,10 @@
 
 #include "widget.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-#include <akonadi/itemcopyjob.h>
-#include <akonadi/itemmovejob.h>
+#include <collection.h>
+#include <item.h>
+#include <itemcopyjob.h>
+#include <itemmovejob.h>
 
 #include "storagemodel.h"
 #include "core/messageitem.h"
@@ -34,25 +34,26 @@
 #include <QDrag>
 #include <QDragMoveEvent>
 #include <QDropEvent>
+#include <QMimeData>
 
-#include <KDE/KActionCollection>
-#include <KDE/KComboBox>
-#include <KDE/KDebug>
-#include <KDE/KIcon>
-#include <KDE/KIconLoader>
-#include <KDE/KLocale>
-#include <KDE/KMenu>
-#include <KDE/KToggleAction>
-#include <KDE/KXMLGUIClient>
-#include <KDE/KXMLGUIFactory>
+#include <KActionCollection>
+#include <KComboBox>
+#include <QDebug>
+#include <QIcon>
+#include <KIconLoader>
+#include <KLocale>
+#include <QMenu>
+#include <KToggleAction>
+#include <KXMLGUIClient>
+#include <KXMLGUIFactory>
 
 #include "core/groupheaderitem.h"
 
-#include <Akonadi/Monitor>
-#include <Akonadi/Tag>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/TagFetchScope>
-#include <Akonadi/TagAttribute>
+#include <Monitor>
+#include <Tag>
+#include <TagFetchJob>
+#include <TagFetchScope>
+#include <TagAttribute>
 
 
 namespace MessageList
@@ -215,7 +216,7 @@ void Widget::fillMessageTagCombo()
 void Widget::slotTagsFetched(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Failed to load tags " << job->errorString();
+        qWarning() << "Failed to load tags " << job->errorString();
         return;
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
@@ -345,7 +346,7 @@ void Widget::viewGroupHeaderContextPopupRequest( MessageList::Core::GroupHeaderI
 {
     Q_UNUSED( ghi );
 
-    KMenu menu( this );
+    QMenu menu( this );
 
     QAction *act;
 
@@ -411,7 +412,7 @@ void Widget::viewDropEvent( QDropEvent *e )
 
     KUrl::List urls = KUrl::List::fromMimeData( e->mimeData() );
     if ( urls.isEmpty() ) {
-        kWarning() << "Could not decode drag data!";
+        qWarning() << "Could not decode drag data!";
         e->ignore();
         return;
     }
@@ -431,11 +432,11 @@ void Widget::viewDropEvent( QDropEvent *e )
             action = DragMove;
 
         } else {
-            KMenu menu;
-            QAction *moveAction = menu.addAction( KIcon( QLatin1String( "go-jump" )), i18n( "&Move Here" ) );
-            QAction *copyAction = menu.addAction( KIcon( QLatin1String( "edit-copy" ) ), i18n( "&Copy Here" ) );
+            QMenu menu;
+            QAction *moveAction = menu.addAction( QIcon::fromTheme( QLatin1String( "go-jump" )), i18n( "&Move Here" ) );
+            QAction *copyAction = menu.addAction( QIcon::fromTheme( QLatin1String( "edit-copy" ) ), i18n( "&Copy Here" ) );
             menu.addSeparator();
-            menu.addAction( KIcon( QLatin1String( "dialog-cancel" ) ), i18n( "C&ancel" ) );
+            menu.addAction( QIcon::fromTheme( QLatin1String( "dialog-cancel" ) ), i18n( "C&ancel" ) );
 
             QAction *menuChoice = menu.exec( QCursor::pos() );
             if ( menuChoice == moveAction ) {

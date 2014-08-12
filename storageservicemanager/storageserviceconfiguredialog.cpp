@@ -24,11 +24,10 @@
 #include "storageservicemanagerglobalconfig.h"
 
 #include <KLocalizedString>
-#include <KConfigGroup>
 #include <KSharedConfig>
 
-#include <QHBoxLayout>
 #include <QCheckBox>
+#include <QLayout>
 
 StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     : PimCommon::StorageServiceConfigureDialog(parent)
@@ -53,6 +52,6 @@ void StorageServiceConfigureDialog::writeSettings()
     PimCommon::ConfigureImmutableWidgetUtils::saveUrlRequester(mStorageServiceConfigureWidget->downloadFolder(), StorageServiceManagerGlobalConfig::self()->downloadDirectoryItem());
     PimCommon::ConfigureImmutableWidgetUtils::saveCheckBox(mCloseWallet, StorageServiceManagerGlobalConfig::self()->closeWalletItem());
 
-    StorageServiceManagerGlobalConfig::self()->writeConfig();
+    StorageServiceManagerGlobalConfig::self()->save();
 }
 

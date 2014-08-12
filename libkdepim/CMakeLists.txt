@@ -1,19 +1,13 @@
-KDE4_NO_ENABLE_FINAL(libkdepim)
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-
 add_subdirectory(tests)
 add_subdirectory(pics)
 
-add_definitions(${QT_QTDBUS_DEFINITIONS})
 
-include_directories( ${Boost_INCLUDE_DIR} )
-include_directories( ${BALOO_INCLUDE_DIR} )
+add_definitions(-DTRANSLATION_DOMAIN=\"libkdepim\")
 
 option(KDEPIM_INPROCESS_LDAP "Use in-process rather than KIO slave LDAP" FALSE)
 if (KDEPIM_INPROCESS_LDAP)
@@ -63,7 +57,6 @@ set(kdepim_misc_LIB_SRCS
    misc/broadcaststatus.cpp
    misc/maillistdrag.cpp
    misc/uistatesaver.cpp
-   misc/statisticsproxymodel.cpp
 )
 
 set(kdepim_addressline_LIB_SRCS
@@ -93,57 +86,71 @@ if (KDEPIM_INPROCESS_LDAP)
   )
 endif ()
 
-kde4_add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
+add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
+generate_export_header(kdepim BASE_NAME kdepim)
 
 target_link_libraries(kdepim
-  ${KDEPIMLIBS_KRESOURCES_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_KLDAP_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDE4_KCMUTILS_LIBS}
-  ${KDE4_SOLID_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
-  ${BALOO_LIBRARIES}
+  KF5::Abc
+  KF5::PimUtils
+  KF5::Ldap
+  KF5::PimIdentities
+  KF5::KCMUtils
+  KF5::Mime
+  KF5::PimTextEdit
+  KF5::Mime
+  KF5::AkonadiCore
+  KF5::AkonadiContact
+  KF5::AkonadiAgentBase
+  KF5::AkonadiWidgets
+  KF5::SonnetCore
+  KF5::KCMUtils
+  KF5::Wallet
+  KF5::BalooPim
 )
 
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
-  ${KDEPIMLIBS_KRESOURCES_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_KLDAP_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+  KF5::Abc
+  KF5::PimUtils
+  KF5::Ldap
+  KF5::PimIdentities
+  KF5::PimTextEdit
+  KF5::AkonadiCore
+  KF5::AkonadiContact
 )
 
 if(MINGW)
    target_link_libraries(kdepim oleaut32)
 endif()
 
-set_target_properties(kdepim PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(kdepim PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS kdepim ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
 
-if (QT_QTDESIGNER_FOUND)
-  set(kdepimwidgets_PART_SRCS)
-  kde4_add_widget_files(kdepimwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/kdepim.widgets)
+if (Qt5Designer_FOUND)
+    kf5designerplugin_add_plugin(kdepimwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/kdepim.widgets)
 
-  kde4_add_plugin(kdepimwidgets ${kdepimwidgets_PART_SRCS})
+    target_link_libraries(kdepimwidgets
+        kdepim
+    )
+    if(NOT WIN32)
+        # Since there are no libraries provided by this module,
+        # there is no point including the build tree in RPath,
+        # and then having to edit it at install time.
+        set_target_properties(kdepimwidgets PROPERTIES
+            SKIP_BUILD_RPATH TRUE
+            BUILD_WITH_INSTALL_RPATH TRUE
+        )
+    endif()
 
+    install(TARGETS
+        kdepimwidgets
+        DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
+    )
+endif()
 
-  target_link_libraries(kdepimwidgets  ${KDE4_KIO_LIBS} kdepim)
-
-  install(TARGETS kdepimwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
-endif ()
 
 ########### next target ###############
 
@@ -152,9 +159,9 @@ set( kcm_ldap_SRCS
      ldap/kcmldap.cpp
 )
 
-kde4_add_plugin(kcm_ldap ${kcm_ldap_SRCS})
+add_library(kcm_ldap MODULE ${kcm_ldap_SRCS})
 
-target_link_libraries(kcm_ldap ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} kdepim)
+target_link_libraries(kcm_ldap   kdepim)
 
 install(TARGETS kcm_ldap DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})

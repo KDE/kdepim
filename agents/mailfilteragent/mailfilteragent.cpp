@@ -26,25 +26,30 @@
 #include "mailfilteragentadaptor.h"
 #include "pop3resourceattribute.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/dbusconnectionpool.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/kmime/messageparts.h>
-#include <akonadi/kmime/messagestatus.h>
-#include <akonadi/session.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
+#include <AkonadiCore/dbusconnectionpool.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <Akonadi/KMime/MessageParts>
+#include <Akonadi/KMime/MessageStatus>
+#include <AkonadiCore/session.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <KLocalizedString>
+#include <QIcon>
+#include <QDebug>
+#include <KIconLoader>
 #include <KMime/Message>
 #include <KNotification>
 #include <KWindowSystem>
-#include <Akonadi/AgentManager>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/AttributeFactory>
+#include <AgentManager>
+#include <ItemFetchJob>
+#include <AttributeFactory>
+#include <KConfigGroup>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
+#include <KSharedConfig>
 
 static bool isFilterableCollection( const Akonadi::Collection &collection )
 {
@@ -57,7 +62,6 @@ MailFilterAgent::MailFilterAgent( const QString &id )
     : Akonadi::AgentBase( id ),
       m_filterLogDialog( 0 )
 {
-    KGlobal::locale()->insertCatalog(QLatin1String("libmailcommon"));
     Akonadi::AttributeFactory::registerAttribute<Pop3ResourceAttribute>();
     DummyKernel *kernel = new DummyKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
@@ -91,15 +95,15 @@ MailFilterAgent::MailFilterAgent( const QString &id )
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/MailFilterAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ) );
     //Enabled or not filterlogdialog
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     if ( config->hasGroup( "FilterLog" ) ) {
         KConfigGroup group( config, "FilterLog" );
         if ( group.hasKey( "Enabled" ) ) {
             if ( group.readEntry( "Enabled", false ) ) {
                 m_filterLogDialog = new FilterLogDialog( 0 );
-                const QPixmap pixmap = KIcon( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+                const QPixmap pixmap = QIcon::fromTheme( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
                 KNotification *notify = new KNotification( QLatin1String("mailfilterlogenabled") );
-                notify->setComponentData( componentData() );
+                notify->setComponentName( componentData().componentName() );
                 notify->setPixmap( pixmap );
                 notify->setText( i18nc("Notification when the filter log was enabled", "Mail Filter Log Enabled" ) );
                 notify->sendEvent();
@@ -160,7 +164,7 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
    * for the mimetype of the item here.
    */
     if ( item.mimeType() != KMime::Message::mimeType() ) {
-        kDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
+        qDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
         return;
     }
 
@@ -186,7 +190,7 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
 void MailFilterAgent::itemsReceiviedForFiltering (const Akonadi::Item::List& items)
 {
     if (items.isEmpty()) {
-        kDebug() << "MailFilterAgent::itemsReceiviedForFiltering items is empty!";
+        qDebug() << "MailFilterAgent::itemsReceiviedForFiltering items is empty!";
         return;
     }
 
@@ -195,7 +199,7 @@ void MailFilterAgent::itemsReceiviedForFiltering (const Akonadi::Item::List& ite
    * happens when item no longer exists etc, and queue compression didn't happen yet
    */
     if ( !item.hasPayload() ) {
-        kDebug() << "MailFilterAgent::itemsReceiviedForFiltering item has no payload!";
+        qDebug() << "MailFilterAgent::itemsReceiviedForFiltering item has no payload!";
         return;
     }
 
@@ -286,7 +290,7 @@ void MailFilterAgent::showFilterLogDialog(qlonglong windowId)
     if ( !m_filterLogDialog ) {
         m_filterLogDialog = new FilterLogDialog( 0 );
     }
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
     KWindowSystem::setMainWindow(m_filterLogDialog,windowId);
 #else
     KWindowSystem::setMainWindow(m_filterLogDialog,(HWND)windowId);

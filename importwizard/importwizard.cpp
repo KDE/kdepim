@@ -44,11 +44,10 @@
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KMessageBox>
 #include <KHelpMenu>
-#include <KMenu>
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 #include <mailcommon/kernel/mailkernel.h>
 
 ImportWizard::ImportWizard(QWidget *parent)
@@ -56,9 +55,6 @@ ImportWizard::ImportWizard(QWidget *parent)
 {
     setModal(true);
     setWindowTitle( i18n( "PIM Import Tool" ) );
-    KGlobal::locale()->insertCatalog( QLatin1String("libmailimporter") );
-    KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
-    KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
 
     ImportWizardKernel *kernel = new ImportWizardKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
@@ -125,24 +121,24 @@ ImportWizard::ImportWizard(QWidget *parent)
     // Disable the 'next button to begin with.
     setValid( currentPage(), false );
 
-    connect(mSelectProgramPage,SIGNAL(programSelected(QString)),this,SLOT(slotProgramSelected(QString)));
-    connect(mSelectProgramPage, SIGNAL(doubleClicked()), this, SLOT(slotProgramDoubleClicked()) );
-    connect(mImportMailPage,SIGNAL(importMailsClicked()),this,SLOT(slotImportMailsClicked()));
-    connect(mImportFilterPage, SIGNAL(importFiltersClicked()), this, SLOT(slotImportFiltersClicked()) );
-    connect(mImportSettingPage, SIGNAL(importSettingsClicked()), this, SLOT(slotImportSettingsClicked()) );
-    connect(mImportAddressbookPage, SIGNAL(importAddressbookClicked()), this, SLOT(slotImportAddressbookClicked()) );
-    connect(mImportCalendarPage, SIGNAL(importCalendarClicked()), this, SLOT(slotImportCalendarClicked()) );
+    connect(mSelectProgramPage, &SelectProgramPage::programSelected, this, &ImportWizard::slotProgramSelected);
+    connect(mSelectProgramPage, &SelectProgramPage::doubleClicked, this, &ImportWizard::slotProgramDoubleClicked);
+    connect(mImportMailPage, &ImportMailPage::importMailsClicked, this, &ImportWizard::slotImportMailsClicked);
+    connect(mImportFilterPage, &ImportFilterPage::importFiltersClicked, this, &ImportWizard::slotImportFiltersClicked);
+    connect(mImportSettingPage, &ImportSettingPage::importSettingsClicked, this, &ImportWizard::slotImportSettingsClicked);
+    connect(mImportAddressbookPage, &ImportAddressbookPage::importAddressbookClicked, this, &ImportWizard::slotImportAddressbookClicked);
+    connect(mImportCalendarPage, &ImportCalendarPage::importCalendarClicked, this, &ImportWizard::slotImportCalendarClicked);
 
 
-    connect(mSelectComponentPage, SIGNAL(atLeastOneComponentSelected(bool)), this, SLOT(slotAtLeastOneComponentSelected(bool)) );
+    connect(mSelectComponentPage, &SelectComponentPage::atLeastOneComponentSelected, this, &ImportWizard::slotAtLeastOneComponentSelected);
 
     resize( 640, 480 );
     Akonadi::Control::widgetNeedsAkonadi(this);
 
     checkModules();
     KMessageBox::information(this,i18n("Close KMail before importing data. Some plugins will modify KMail config file."));
-    KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData(), true);
-    setButtonMenu( Help, helpMenu->menu() );
+    //QT5 KHelpMenu *helpMenu = new KHelpMenu(this, KComponentData::mainComponent().aboutData(), true);
+    //setButtonMenu( Help, helpMenu->menu() );
 }
 
 ImportWizard::~ImportWizard()

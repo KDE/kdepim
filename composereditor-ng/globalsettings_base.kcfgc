@@ -6,5 +6,5 @@ Mutators=true
 Singleton=true
 ItemAccessors=true
 SetUserTexts=true
-IncludeFiles=qapplication.h,composereditor_export.h
+IncludeFiles=qapplication.h,composereditorng_export.h
 

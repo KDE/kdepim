@@ -140,7 +140,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="KLineEdit" name="mSummaryEdit">
+      <widget class="QLineEdit" name="mSummaryEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -178,7 +178,7 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="KLineEdit" name="mLocationEdit">
+      <widget class="QLineEdit" name="mLocationEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -603,7 +603,7 @@
       </widget>
      </item>
      <item row="12" column="0" colspan="2">
-      <widget class="KTabWidget" name="mTabWidget">
+      <widget class="QTabWidget" name="mTabWidget">
        <property name="currentIndex">
         <number>0</number>
        </property>
@@ -1604,11 +1604,6 @@
    <header>kcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>KSeparator</class>
    <extends>QFrame</extends>
    <header>kseparator.h</header>
@@ -1620,10 +1615,14 @@
    <header>ktextedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>ktabwidget.h</header>
-   <container>1</container>
+   <class>KRichTextWidget</class>
+   <extends>KRichTextEdit</extends>
+   <header>krichtextwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::KWeekdayCheckCombo</class>
+   <extends>KPIM::KCheckComboBox</extends>
+   <header>libkdepim/widgets/kweekdaycheckcombo.h</header>
   </customwidget>
   <customwidget>
    <class>IncidenceEditorNG::KTimeZoneComboBox</class>

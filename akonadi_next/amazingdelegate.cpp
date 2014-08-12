@@ -21,11 +21,11 @@
 
 #include <QPainter>
 
-#include <kdebug.h>
-#include <akonadi/entitytreemodel.h>
+#include <qdebug.h>
+#include <entitytreemodel.h>
 #include <kabc/addressee.h>
 #include <klocalizedstring.h>
-#include <akonadi/entitydisplayattribute.h>
+#include <entitydisplayattribute.h>
 
 using namespace Akonadi;
 
@@ -44,7 +44,7 @@ void AmazingContactItemDelegate::paint(QPainter* painter, const QStyleOptionView
 
   if (!item.hasPayload<KABC::Addressee>())
   {
-    kWarning() << "Not a KABC::Addressee" << item.id() << item.remoteId();
+    qWarning() << "Not a KABC::Addressee" << item.id() << item.remoteId();
     return;
   }
 
@@ -76,7 +76,7 @@ void AmazingContactItemDelegate::paint(QPainter* painter, const QStyleOptionView
   QString email = addressee.preferredEmail();
   if (email.isEmpty())
     email =
-      i18nc( "An email address is not known for a contact. This is the default text provided",
+      xi18nc( "An email address is not known for a contact. This is the default text provided",
              "<placeholder>no email</placeholder>" );
 
   painter->drawText(50, 0, name);

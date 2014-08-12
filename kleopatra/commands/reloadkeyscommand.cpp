@@ -83,7 +83,7 @@ ReloadKeysCommand::Private::~Private() {}
 
 void ReloadKeysCommand::Private::keyListingDone( const KeyListResult & result ) {
     if ( result.error() ) // ### Show error message here? 
-        kError() << "Error occurred during key listing: " << result.error().asString();
+        qCritical() << "Error occurred during key listing: " << result.error().asString();
     finished();
 }
 

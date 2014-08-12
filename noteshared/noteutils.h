@@ -19,7 +19,7 @@
 #define NOTEUTILS_H
 
 #include "noteshared_export.h"
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <QString>
 class QWidget;
 namespace NoteShared

@@ -37,9 +37,7 @@
 #include <KStandardAction>
 #include <KLocalizedString>
 #include <KActionCollection>
-#include <KApplication>
 #include <KConfigGroup>
-#include <KAction>
 #include <KStatusBar>
 #include <KMessageBox>
 #include <knotifyconfigwidget.h>
@@ -48,7 +46,8 @@
 #include <QCloseEvent>
 #include <QLabel>
 #include <QDebug>
-
+#include <KSharedConfig>
+#include <QAction>
 
 
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
@@ -63,7 +62,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     connect(mStorageManager, SIGNAL(servicesChanged()), this, SLOT(slotServicesChanged()));
     mStorageServiceMainWidget = new StorageServiceManagerMainWidget;
     connect(mStorageServiceMainWidget, SIGNAL(configureClicked()), SLOT(slotConfigure()));
-    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(currentChanged(QWidget*)), this, SLOT(slotUpdateActions()));
+    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(currentChanged(int)), this, SLOT(slotUpdateActions()));
     connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(updateStatusBarMessage(QString)), this, SLOT(slotSetStatusBarMessage(QString)));
     connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(listFileWasInitialized()), this, SLOT(slotUpdateActions()));
     connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(selectionChanged()), this, SLOT(slotUpdateActions()));
@@ -85,7 +84,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
 StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 {
     delete mStorageServiceMainWidget;
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
     group.writeEntry( "Size", size() );
@@ -165,11 +164,11 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mCreateFolder = ac->addAction(QLatin1String("create_folder"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotCreateFolder()));
     mCreateFolder->setText(i18n("Create Folder..."));
-    mCreateFolder->setIcon(KIcon(QLatin1String("folder-new")));
+    mCreateFolder->setIcon(QIcon::fromTheme(QLatin1String("folder-new")));
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
-    mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
+    ac->setDefaultShortcut(mRefreshList, QKeySequence( Qt::Key_F5 ));
 
     mAccountInfo = ac->addAction(QLatin1String("account_info"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAccountInfo()));
     mAccountInfo->setText(i18n("Account Info..."));
@@ -178,13 +177,13 @@ void StorageServiceManagerMainWindow::setupActions()
     mUploadFile->setText(i18n("Upload File..."));
 
     mDelete = ac->addAction(QLatin1String("delete"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDelete()));
-    mDelete->setShortcut(QKeySequence(Qt::Key_Delete));
+    ac->setDefaultShortcut(mDelete, QKeySequence(Qt::Key_Delete));
     mDelete->setText(i18n("Delete..."));
-    mDelete->setIcon(KIcon(QLatin1String("edit-delete")));
+    mDelete->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
 
     mDownloadFile = ac->addAction(QLatin1String("download_file"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDownloadFile()));
     mDownloadFile->setText(i18n("Download File..."));
-    mDownloadFile->setIcon(KIcon(QLatin1String("download")));
+    mDownloadFile->setIcon(QIcon::fromTheme(QLatin1String("download")));
 
     mShowLog = ac->addAction(QLatin1String("show_log"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotShowLog()));
     mShowLog->setText(i18n("Show Log..."));
@@ -197,11 +196,11 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mRefreshAll = ac->addAction(QLatin1String("refresh_all"), this, SLOT(slotRefreshAll()));
     mRefreshAll->setText(i18n("Refresh All"));
-    mRefreshAll->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_F5 ));
+    ac->setDefaultShortcut(mRefreshAll,QKeySequence( Qt::CTRL + Qt::Key_F5 ));
 
     mRenameItem = ac->addAction(QLatin1String("rename"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRename()));
     mRenameItem->setText(i18n("Rename..."));
-    mRenameItem->setShortcut(QKeySequence( Qt::Key_F2 ));
+    ac->setDefaultShortcut(mRenameItem,QKeySequence( Qt::Key_F2 ));
 
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
     KStandardAction::configureNotifications(this, SLOT(slotShowNotificationOptions()), ac); // options_configure_notifications
@@ -250,7 +249,7 @@ void StorageServiceManagerMainWindow::slotServiceRemoved(const QString &serviceN
 
 void StorageServiceManagerMainWindow::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = KConfigGroup( config, "StorageServiceManagerMainWindow" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {

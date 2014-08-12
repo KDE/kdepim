@@ -23,9 +23,10 @@
 
 #include <KLocalizedString>
 #include <KTreeWidgetSearchLine>
-#include <KMenu>
+#include <QMenu>
 #include <KConfigGroup>
 #include <KStandardDirs>
+#include <KUrl>
 #include <KRun>
 
 #include <QHeaderView>
@@ -216,7 +217,7 @@ void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
     if (!item)
         return;
 
-    KMenu menu;
+    QMenu menu;
     menu.addAction(i18n("Copy url"),this,SLOT(slotCopyItem()));
     if (!item->text(FilterValue).isEmpty())
         menu.addAction(i18n("Copy filter"),this,SLOT(slotCopyFilterItem()));
@@ -295,7 +296,7 @@ void AdBlockBlockableItemsWidget::saveFilters()
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {
-        kDebug() << "Unable to open rule file" << localRulesFilePath;
+        qDebug() << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 

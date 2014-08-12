@@ -27,20 +27,17 @@
 #include "ui_settings_browser.h"
 
 #include <KAboutData>
-#include <KConfigDialogManager>
 #include <KGenericFactory>
 #include <KLocalizedString>
-#include <kdemacros.h>
 
 #include <QVBoxLayout>
 
 using namespace Akregator;
 
 K_PLUGIN_FACTORY(KCMAkregatorBrowserConfigFactory, registerPlugin<KCMAkregatorBrowserConfig>();)
-K_EXPORT_PLUGIN(KCMAkregatorBrowserConfigFactory( "kcmakrbrowserconfig" ))
 
 KCMAkregatorBrowserConfig::KCMAkregatorBrowserConfig( QWidget* parent, const QVariantList& args )
-    : KCModule( KCMAkregatorBrowserConfigFactory::componentData(), parent, args ), m_widget( new QWidget )
+    : KCModule( parent, args ), m_widget( new QWidget )
 {  
     Ui::SettingsBrowser ui;
     ui.setupUi( m_widget );
@@ -50,15 +47,15 @@ KCMAkregatorBrowserConfig::KCMAkregatorBrowserConfig( QWidget* parent, const QVa
     
     connect( ui.kcfg_ExternalBrowserUseCustomCommand, SIGNAL(toggled(bool)), 
              ui.kcfg_ExternalBrowserCustomCommand, SLOT(setEnabled(bool)) );
+    KAboutData *about = new KAboutData( QLatin1String( "kcmakrbrowserconfig" ),
+                                        i18n( "Configure Feed Reader Browser" ),
+                                        QString(), QString(), KAboutLicense::GPL,
+                                        i18n( "(c), 2004 - 2008 Frank Osterfeld" ) );
 
-    KAboutData *about = new KAboutData( I18N_NOOP( "kcmakrbrowserconfig" ), 0,
-                                        ki18n( "Configure Feed Reader Browser" ),
-                                        0, KLocalizedString(), KAboutData::License_GPL,
-                                        ki18n( "(c), 2004 - 2008 Frank Osterfeld" ) );
+    about->addAuthor( i18n( "Frank Osterfeld" ), QString(), QStringLiteral("osterfeld@kde.org") );
 
-    about->addAuthor( ki18n( "Frank Osterfeld" ), KLocalizedString(), "osterfeld@kde.org" );
     setAboutData( about );
-
     addConfig( Settings::self(), m_widget );
 }
+#include "akregator_config_browser.moc"
 

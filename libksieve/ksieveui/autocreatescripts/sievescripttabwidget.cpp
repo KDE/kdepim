@@ -18,16 +18,16 @@
 #include "sievescripttabwidget.h"
 #include "sievewidgetpageabstract.h"
 
-#include <KMenu>
+#include <QMenu>
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 
 #include <QTabBar>
 
 namespace KSieveUi {
 
 SieveScriptTabWidget::SieveScriptTabWidget(QWidget *parent)
-    : KTabWidget(parent)
+    : QTabWidget(parent)
 {
     setElideMode( Qt::ElideRight );
     tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
@@ -53,9 +53,9 @@ void SieveScriptTabWidget::slotTabContextMenuRequest( const QPoint &pos )
     if (!page)
         return;
     if ((page->pageType() == SieveWidgetPageAbstract::BlockElsIf) || page->pageType() == SieveWidgetPageAbstract::BlockElse) {
-        KMenu menu( this );
+        QMenu menu( this );
         QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-        closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
+        closeTab->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
 
         QAction *action = menu.exec( mapToGlobal( pos ) );
 

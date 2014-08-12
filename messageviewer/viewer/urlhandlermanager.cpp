@@ -50,17 +50,19 @@
 #include <libkdepim/misc/broadcaststatus.h>
 #include <libkdepim/job/openemailaddressjob.h>
 
-#include <akonadi/contact/contactsearchjob.h>
+#include <Akonadi/Contact/ContactSearchJob>
 
 #include <kmime/kmime_content.h>
 #include <KPIMUtils/Email>
 #include <KPIMUtils/KFileIO>
 
-#include <KMenu>
+#include <QMenu>
 #include <KMimeType>
 #include <KRun>
 #include <KStandardDirs>
 #include <KUrl>
+#include <QIcon>
+#include <QDebug>
 
 #include <QApplication>
 #include <QClipboard>
@@ -261,7 +263,7 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
 
     // urlPath format is: /bodypart/<random number>/<part id>/<path>
 
-    kDebug() << "BodyPartURLHandler: urlPath ==" << urlPath;
+    qDebug() << "BodyPartURLHandler: urlPath ==" << urlPath;
     if ( !urlPath.startsWith( QLatin1String("/bodypart/") ) )
         return 0;
 
@@ -269,7 +271,7 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
     if ( urlParts.size() != 3 )
         return 0;
     //KMime::ContentIndex index( urlParts[1] );
-    *path = KUrl::fromPercentEncoding( urlParts[2].toLatin1() );
+    *path = QUrl::fromPercentEncoding( urlParts[2].toLatin1() );
     return w->nodeFromUrl( urlParts[1] );
 }
 
@@ -433,6 +435,7 @@ QString URLHandlerManager::statusBarMessage( const KUrl & url, ViewerPrivate * w
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <QStandardPaths>
 
 namespace {
 bool KMailProtocolURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
@@ -716,12 +719,12 @@ bool ContactUidURLHandler::handleContextMenuRequest( const KUrl &url, const QPoi
         return false;
     }
 
-    KMenu *menu = new KMenu();
+    QMenu *menu = new QMenu();
     QAction *open =
-            menu->addAction( KIcon( QLatin1String("view-pim-contacts") ), i18n( "&Open in Address Book" ) );
+            menu->addAction( QIcon::fromTheme( QLatin1String("view-pim-contacts") ), i18n( "&Open in Address Book" ) );
 #ifndef QT_NO_CLIPBOARD
     QAction *copy =
-            menu->addAction( KIcon( QLatin1String("edit-copy") ), i18n( "&Copy Email Address" ) );
+            menu->addAction( QIcon::fromTheme( QLatin1String("edit-copy") ), i18n( "&Copy Email Address" ) );
 #endif
 
     QAction *a = menu->exec( p );
@@ -919,7 +922,7 @@ bool InternalImageURLHandler::willHandleDrag( const KUrl &url, ViewerPrivate *wi
     if ( url.protocol() == QLatin1String( "data" ) && url.path().startsWith( QLatin1String("image") ) )
         return true;
 
-    const QString imagePath = KStandardDirs::locate( "data", QLatin1String("libmessageviewer/pics/") );
+    const QString imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/") );
     return url.path().contains( imagePath );
 }
 }
@@ -944,7 +947,7 @@ bool KRunURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const
                 mime->name() == QLatin1String("application/x-ms-dos-executable") ||
                 mime->name() == QLatin1String("application/x-shellscript") )
         {
-            if ( KMessageBox::warningYesNo( 0, i18nc( "@info", "Do you really want to execute <filename>%1</filename>?",
+            if ( KMessageBox::warningYesNo( 0, xi18nc( "@info", "Do you really want to execute <filename>%1</filename>?",
                                                       url.pathOrUrl() ), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel() ) != KMessageBox::Yes)
                 return true;
         }

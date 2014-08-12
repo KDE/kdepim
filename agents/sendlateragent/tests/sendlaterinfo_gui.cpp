@@ -15,18 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <kdebug.h>
-#include <kcmdlineargs.h>
-#include <kapplication.h>
-#include <KDebug>
+#include <qdebug.h>
+
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+
 
 #include "../sendlaterdialog.h"
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "sendlaterdialog_gui", 0, ki18n("SendLaterDialog_Gui"),
-                       "1.0", ki18n("Test for autocreate sendlater dialog"));
-    KApplication app;
+    KAboutData aboutData( QLatin1String("sendlaterdialog_gui"), i18n("SendLaterDialog_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for autocreate sendlater dialog"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
     SendLater::SendLaterDialog *dialog = new SendLater::SendLaterDialog(0);
     dialog->exec();
     delete dialog;

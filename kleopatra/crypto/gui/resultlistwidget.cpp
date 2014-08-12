@@ -44,7 +44,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
 #include <KStandardGuiItem>
 
 #include <QLabel>
@@ -54,6 +54,7 @@
 #include <boost/mem_fn.hpp>
 
 #include <cassert>
+#include <KGuiItem>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
@@ -79,7 +80,7 @@ public:
     bool m_standaloneMode;
     int m_lastErrorItemIndex;
     ScrollArea * m_scrollArea;
-    KPushButton * m_closeButton;
+    QPushButton * m_closeButton;
     QVBoxLayout * m_layout;
     QLabel * m_progressLabel;
 };
@@ -102,8 +103,8 @@ ResultListWidget::Private::Private( ResultListWidget* qq )
     m_layout->addWidget( m_progressLabel );
     m_progressLabel->setVisible( false );
     
-    m_closeButton = new KPushButton;
-    m_closeButton->setGuiItem( KStandardGuiItem::close() );
+    m_closeButton = new QPushButton;
+    KGuiItem::assign(m_closeButton, KStandardGuiItem::close() );
     q->connect( m_closeButton, SIGNAL(clicked()), q, SLOT(close()) );
     m_layout->addWidget( m_closeButton );
     m_closeButton->setVisible( false );
@@ -119,7 +120,7 @@ ResultListWidget::~ResultListWidget()
         return;
     EMailOperationsPreferences prefs;
     prefs.setDecryptVerifyPopupGeometry( geometry() );
-    prefs.writeConfig();
+    prefs.save();
 }
 
 void ResultListWidget::Private::setupSingle()

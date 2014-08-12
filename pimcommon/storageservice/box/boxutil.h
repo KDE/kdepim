@@ -18,11 +18,11 @@
 #ifndef BOXUTIL_H
 #define BOXUTIL_H
 
-#include <KDateTime>
+#include <QDateTime>
 namespace PimCommon {
 namespace BoxUtil
 {
-KDateTime convertToDateTime(QString dateTime);
+QDateTime convertToDateTime(QString dateTime);
 }
 }
 

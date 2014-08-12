@@ -132,11 +132,11 @@ void CryptoOperationsConfigWidget::save() {
     EMailOperationsPreferences emailPrefs;
     emailPrefs.setQuickSignEMail   ( d->ui.quickSignCB   ->isChecked() );
     emailPrefs.setQuickEncryptEMail( d->ui.quickEncryptCB->isChecked() );
-    emailPrefs.writeConfig();
+    emailPrefs.save();
 
     FileOperationsPreferences filePrefs;
     filePrefs.setUsePGPFileExt( d->ui.pgpFileExtCB->isChecked() );
-    filePrefs.writeConfig();
+    filePrefs.save();
 
     const int idx = d->ui.checksumDefinitionCB->currentIndex();
     if ( idx < 0 )

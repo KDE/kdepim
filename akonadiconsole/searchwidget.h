@@ -26,7 +26,7 @@
 
 class KComboBox;
 class KJob;
-class KTextBrowser;
+class QTextBrowser;
 class KTextEdit;
 
 class QListView;
@@ -50,7 +50,7 @@ class SearchWidget : public QWidget
 
   private:
     KComboBox *mQueryCombo;
-    KTextBrowser *mItemView;
+    QTextBrowser *mItemView;
     KTextEdit *mQueryWidget;
     QListView *mResultView;
     QStringListModel *mResultModel;

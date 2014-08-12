@@ -48,7 +48,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <KSaveFile>
+#include <QSaveFile>
 
 #include <QMap>
 #include <QPointer>
@@ -300,11 +300,11 @@ void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, c
         finishedIfLastJob();
         return;
     }
-    KSaveFile savefile( outFile );
+    QSaveFile savefile( outFile );
     //TODO: use KIO
     const QString writeErrorMsg = i18n( "Could not write to file %1.",  outFile );
     const QString errorCaption = i18n( "Certificate Export Failed" );
-    if ( !savefile.open() )
+    if ( !savefile.open(QIODevice::WriteOnly) )
     {
         error( writeErrorMsg, errorCaption );
         finishedIfLastJob();
@@ -312,7 +312,7 @@ void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, c
     }
 
     if ( !write_complete( savefile, data ) ||
-         !savefile.finalize() )
+         !savefile.commit() )
         error( writeErrorMsg, errorCaption );
     finishedIfLastJob();
 }

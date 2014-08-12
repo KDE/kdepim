@@ -20,10 +20,10 @@
 #include "util/mailutil.h"
 #include "kmkernel.h"
 
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/collection.h>
-#include <Akonadi/AgentManager>
-#include <Akonadi/ChangeRecorder>
+#include <AkonadiCore/collectionstatistics.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/AgentManager>
+#include <AkonadiCore/ChangeRecorder>
 
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
@@ -31,14 +31,16 @@
 #include <KDialog>
 #include <KLocalizedString>
 #include <KLocale>
-#include <KPushButton>
+#include <QPushButton>
 #include <kio/global.h>
-
+#include <KLocale>
+#include <QDebug>
 #include <QGroupBox>
 #include <QLabel>
 #include <QFormLayout>
 #include <QCheckBox>
-#include <akonadi/indexpolicyattribute.h>
+#include <AkonadiCore/indexpolicyattribute.h>
+#include <KFormat>
 
 using namespace Akonadi;
 
@@ -99,9 +101,9 @@ void CollectionMaintenancePage::init(const Akonadi::Collection & col)
 
     indexingLayout->addWidget( mLastIndexed );
 #if 0
-    KPushButton *forceReindex = new KPushButton(i18n("Force reindexing"));
+    QPushButton *forceReindex = new QPushButton(i18n("Force reindexing"));
     indexingLayout->addWidget( forceReindex );
-    connect(forceReindex,SIGNAL(clicked()),SLOT(slotReindexing()));
+    connect(forceReindex, &QPushButton::clicked, this, &CollectionMaintenancePage::slotReindexing);
 #endif
     topLayout->addWidget( indexingGroup );
     topLayout->addStretch( 100 );
@@ -121,7 +123,7 @@ void CollectionMaintenancePage::load(const Collection & col)
             QDBusInterface interfaceBalooIndexer( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_baloo_indexer"), QLatin1String("/") );
             if(interfaceBalooIndexer.isValid()) {
                 if (!interfaceBalooIndexer.callWithCallback(QLatin1String("indexedItems"), QList<QVariant>() << (qlonglong)mCurrentCollection.id(), this, SLOT(onIndexedItemsReceived(qint64)))) {
-                    kWarning() << "Failed to request indexed items";
+                    qWarning() << "Failed to request indexed items";
                 }
             }
         }
@@ -130,7 +132,7 @@ void CollectionMaintenancePage::load(const Collection & col)
 
 void CollectionMaintenancePage::onIndexedItemsReceived(qint64 num)
 {
-    kDebug() << num;
+    qDebug() << num;
     mLastIndexed->setText(i18np("Indexed %1 item of this collection", "Indexed %1 items of this collection", num));
 }
 
@@ -138,7 +140,7 @@ void CollectionMaintenancePage::updateLabel( qint64 nbMail, qint64 nbUnreadMail,
 {
     mCollectionCount->setText( QString::number( qMax( 0LL, nbMail ) ) );
     mCollectionUnread->setText( QString::number( qMax( 0LL, nbUnreadMail ) ) );
-    mFolderSizeLabel->setText( KGlobal::locale()->formatByteSize( qMax( 0LL, size ) ) );
+    mFolderSizeLabel->setText( KFormat().formatByteSize( qMax( 0LL, size ) ) );
 }
 
 void CollectionMaintenancePage::save(Collection &collection)

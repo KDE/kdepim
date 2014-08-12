@@ -44,30 +44,26 @@
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 
-#include <akonadi/agentactionmanager.h>
-#include <akonadi/calendar/standardcalendaractionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
+#include <Akonadi/Calendar/StandardCalendarActionManager>
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <akonadi/calendar/freebusymanager.h>
+#include <Akonadi/Calendar/FreeBusyManager>
 #include <akonadi/calendar/calendarsettings.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemmodifyjob.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kcalcore/todo.h>
-#include <KDebug>
-#include <KGlobal>
+#include <KCalCore/Todo>
+#include <QDebug>
 #include <klocale.h>
-#include <KStandardDirs>
-#include <KSystemTimeZones>
 #include <KMessageBox>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
 #include <QtCore/QPointer>
-#include <QDeclarativeEngine>
 
 using namespace Akonadi;
 
@@ -146,7 +142,7 @@ void MainView::doDelayedInit()
   connect( actionCollection()->action( QLatin1String( "archive_old_entries" ) ),
            SIGNAL(triggered(bool)), SLOT(archiveOldEntries()) );
 
-  KAction *action = new KAction( i18n( "Configure Categories" ), this );
+  QAction *action = new QAction( i18n( "Configure Categories" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(configureCategories()) );
   actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
 
@@ -447,7 +443,7 @@ void MainView::saveAllAttachments()
 void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
 {
   if ( job->error() ) {
-      kDebug() << "Error trying to fetch item";
+      qDebug() << "Error trying to fetch item";
       //###: review error string
       KMessageBox::sorry( this,
                           i18n( "Cannot fetch calendar item." ),

@@ -45,13 +45,13 @@ public:
 CustomTextEdit::CustomTextEdit(QWidget *parent)
     : KTextEdit(parent), d(new Private(QString()))
 {
-    connect(this, SIGNAL(aboutToShowContextMenu(QMenu*)), this, SLOT(insertLanguageMenu(QMenu*)));
+    connect(this, &CustomTextEdit::aboutToShowContextMenu, this, &CustomTextEdit::insertLanguageMenu);
 }
 
 CustomTextEdit::CustomTextEdit(const QString &configName, QWidget *parent)
     : KTextEdit(parent), d(new Private(configName))
 {
-    connect(this, SIGNAL(aboutToShowContextMenu(QMenu*)), this, SLOT(insertLanguageMenu(QMenu*)));
+    connect(this, &CustomTextEdit::aboutToShowContextMenu, this, &CustomTextEdit::insertLanguageMenu);
 }
 
 CustomTextEdit::~CustomTextEdit()
@@ -81,7 +81,7 @@ void CustomTextEdit::createHighlighter()
     }
 }
 
-static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString(QLatin1String("kdelibs4")); }
+static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString(("kdelibs4")); }
 
 void CustomTextEdit::insertLanguageMenu(QMenu* contextMenu)
 {
@@ -115,7 +115,7 @@ void CustomTextEdit::insertLanguageMenu(QMenu* contextMenu)
                 && d->speller->defaultLanguage() == i.value()));
             languageAction->setData(i.value());
             languageAction->setActionGroup(languagesGroup);
-            connect(languageAction, SIGNAL(triggered(bool)), this, SLOT(languageSelected()));
+            connect(languageAction, &QAction::triggered, this, &CustomTextEdit::languageSelected);
         }
 
         contextMenu->insertMenu(spellCheckAction, languagesMenu);

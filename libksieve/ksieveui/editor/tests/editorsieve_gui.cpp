@@ -16,21 +16,34 @@
 */
 
 #include "editorsieve_gui.h"
-#include <kdebug.h>
-#include <kcmdlineargs.h>
-#include <kapplication.h>
+#include <qdebug.h>
 #include <QDebug>
 #include "ksieveui/editor/sieveeditor.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
 
-
+#include <qapplication.h>
+#include <QCommandLineParser>
+#include <kaboutdata.h>
+#include <KLocalizedString>
 
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "editorsieve_gui", 0, ki18n("EditorSievetest_Gui"),
-                       "1.0", ki18n("Test for editor sieve dialog"));
-    KApplication app;
+    QApplication app(argc, argv);
+    KAboutData aboutData( QStringLiteral("editorsieve_gui"), 
+                          i18n("EditorSievetest_Gui"), 
+                          QLatin1String("1.0"));
+    KAboutData::setApplicationData(aboutData);
+
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
+
     SieveEditorTestWidget *dialog = new SieveEditorTestWidget;
     const QStringList capabilities = PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities();
     //Add all capabilities for testing
@@ -59,3 +72,4 @@ void SieveEditorTestWidget::slotValueChanged(bool changed)
 {
     qDebug()<<" value changed :"<<changed;
 }
+

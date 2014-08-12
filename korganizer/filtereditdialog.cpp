@@ -33,6 +33,7 @@
 #include <KCalCore/CalFilter>
 
 #include <KMessageBox>
+#include <QDebug>
 
 FilterEditDialog::FilterEditDialog( QList<KCalCore::CalFilter*> *filters, QWidget *parent )
   : KDialog( parent )
@@ -194,7 +195,7 @@ void FilterEdit::filterSelected( KCalCore::CalFilter *filter )
   if( !filter || filter == mCurrent ) {
     return;
   }
-  kDebug() << "Selected filter" << filter->name();
+  qDebug() << "Selected filter" << filter->name();
   saveChanges();
 
   mCurrent = filter;
@@ -287,8 +288,8 @@ void FilterEdit::editCategorySelection()
 
   if ( !mCategorySelectDialog ) {
     mCategorySelectDialog = new KPIM::TagSelectionDialog( this );
-    mCategorySelectDialog->setHelp( QLatin1String("categories-view"), QLatin1String("korganizer") );
-    mCategorySelectDialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Help );
+    //QT5 mCategorySelectDialog->setHelp( QLatin1String("categories-view"), QLatin1String("korganizer") );
+    mCategorySelectDialog->buttons()->setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help );
     connect(mCategorySelectDialog, SIGNAL(accepted()), this, SLOT(updateCategorySelection()));
   }
   mCategorySelectDialog->setSelection( mCurrent->categoryList() );

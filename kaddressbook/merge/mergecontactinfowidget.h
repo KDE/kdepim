@@ -22,7 +22,7 @@
 
 #include "kaddressbook_export.h"
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 class QLabel;
 namespace KAddressBookGrantlee {
 class GrantleeContactViewer;

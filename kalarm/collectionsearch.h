@@ -21,15 +21,13 @@
 #ifndef COLLECTIONSEARCH_H
 #define COLLECTIONSEARCH_H
 
-#ifdef USE_AKONADI
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/item.h>
 
 #include <QObject>
 #include <QMap>
 #include <QList>
-#include <QStringList>
 
 class KJob;
 namespace Akonadi
@@ -80,7 +78,6 @@ class CollectionSearch : public QObject
         bool                                   mDelete;
 };
 
-#endif
 #endif // COLLECTIONSEARCH_H
 
 // vim: et sw=4:

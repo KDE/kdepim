@@ -22,7 +22,7 @@
 #include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -58,7 +58,7 @@ QWidget *SieveConditionDate::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("header:"));
     grid->addWidget(lab, 0, 0);
 
-    KLineEdit *header = new KLineEdit;
+    QLineEdit *header = new QLineEdit;
     connect(header, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     header->setObjectName(QLatin1String("header"));
     grid->addWidget(header, 0, 1);
@@ -77,7 +77,7 @@ QString SieveConditionDate::code(QWidget *w) const
     bool isNegative = false;
     const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
-    const KLineEdit *header = w->findChild<KLineEdit*>(QLatin1String("header"));
+    const QLineEdit *header = w->findChild<QLineEdit*>(QLatin1String("header"));
     const QString headerStr = header->text();
 
     const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
@@ -145,7 +145,7 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
     }
     SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
     dateWidget->setCode(type, value);
-    KLineEdit *header = w->findChild<KLineEdit*>(QLatin1String("header"));
+    QLineEdit *header = w->findChild<QLineEdit*>(QLatin1String("header"));
     header->setText(headerStr);
     return true;
 }

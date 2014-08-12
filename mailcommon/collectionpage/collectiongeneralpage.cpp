@@ -24,18 +24,18 @@
 #include "util/mailutil.h"
 
 #include "pimcommon/util/pimutil.h"
-#include <Akonadi/AgentManager>
-#include <Akonadi/AttributeFactory>
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionModifyJob>
-#include <Akonadi/EntityDisplayAttribute>
+#include <AgentManager>
+#include <AttributeFactory>
+#include <Collection>
+#include <CollectionModifyJob>
+#include <EntityDisplayAttribute>
 
 #include <KPIMIdentities/IdentityCombo>
 
 #include <KColorScheme>
 #include <KComboBox>
-#include <KDialog>
-#include <KLineEdit>
+#include <QDialog>
+#include <QLineEdit>
 #include <KLocale>
 #include <KMessageBox>
 
@@ -254,7 +254,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     QLabel *label;
 
     QVBoxLayout *topLayout = new QVBoxLayout( this );
-    topLayout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
     topLayout->setMargin( 0 );
 
     // Musn't be able to edit details for a non-resource, system folder.
@@ -263,13 +263,13 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
 
         QHBoxLayout *hl = new QHBoxLayout();
         topLayout->addItem( hl );
-        hl->setSpacing( KDialog::spacingHint() );
-        hl->setMargin( KDialog::marginHint() );
+//TODO PORT QT5         hl->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5         hl->setMargin( QDialog::marginHint() );
         label = new QLabel( i18nc( "@label:textbox Name of the folder.", "&Name:" ), this );
         hl->addWidget( label );
 
-        mNameEdit = new KLineEdit( this );
-        connect( mNameEdit, SIGNAL(textChanged(QString)), SLOT(slotNameChanged(QString)) );
+        mNameEdit = new QLineEdit( this );
+        connect(mNameEdit, &QLineEdit::textChanged, this, &CollectionGeneralPage::slotNameChanged);
         label->setBuddy( mNameEdit );
         hl->addWidget( mNameEdit );
     }
@@ -277,8 +277,8 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     // should new mail in this folder be ignored?
     QHBoxLayout *hbl = new QHBoxLayout();
     topLayout->addItem( hbl );
-    hbl->setSpacing( KDialog::spacingHint() );
-    hbl->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     hbl->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     hbl->setMargin( QDialog::marginHint() );
     mNotifyOnNewMailCheckBox =
             new QCheckBox( i18n( "Act on new/unread mail in this folder" ), this );
     mNotifyOnNewMailCheckBox->setWhatsThis(
@@ -295,8 +295,8 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     // should replies to mails in this folder be kept in this same folder?
     hbl = new QHBoxLayout();
     topLayout->addItem( hbl );
-    hbl->setSpacing( KDialog::spacingHint() );
-    hbl->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     hbl->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     hbl->setMargin( QDialog::marginHint() );
     mKeepRepliesInSameFolderCheckBox =
             new QCheckBox( i18n( "Keep replies in this folder" ), this );
     mKeepRepliesInSameFolderCheckBox->setWhatsThis(
@@ -308,12 +308,12 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     // should this folder be shown in the folder selection dialog?
     hbl = new QHBoxLayout();
     topLayout->addItem( hbl );
-    hbl->setSpacing( KDialog::spacingHint() );
-    hbl->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     hbl->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     hbl->setMargin( QDialog::marginHint() );
     mHideInSelectionDialogCheckBox =
             new QCheckBox( i18n( "Hide this folder in the folder selection dialog" ), this );
     mHideInSelectionDialogCheckBox->setWhatsThis(
-                i18nc( "@info:whatsthis",
+                xi18nc( "@info:whatsthis",
                        "Check this option if you do not want this folder "
                        "to be shown in folder selection dialogs, such as the <interface>"
                        "Jump to Folder</interface> dialog." ) );
@@ -323,9 +323,9 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     addLine( this, topLayout );
     // use grid layout for the following combobox settings
     QGridLayout *gl = new QGridLayout();
-    gl->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     gl->setMargin( QDialog::marginHint() );
     topLayout->addItem( gl );
-    gl->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     gl->setSpacing( QDialog::spacingHint() );
     gl->setColumnStretch( 1, 100 ); // make the second column use all available space
     int row = -1;
 

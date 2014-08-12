@@ -28,6 +28,8 @@
 
 #include <KCalendarSystem>
 
+#include <KIconLoader>
+#include <KLocale>
 using namespace IncidenceEditorNG;
 
 SchedulingDialog::SchedulingDialog( const QDate &startDate, const QTime &startTime, int duration,
@@ -197,7 +199,7 @@ void SchedulingDialog::slotRowSelectionChanged( const QModelIndex &current,
   KCalCore::Period period = current.data( FreePeriodModel::PeriodRole ).value<KCalCore::Period>();
   const QDate startDate = period.start().date();
 
-  const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+  const KCalendarSystem *calSys = KLocale::global()->calendar();
   const int dayOfWeek = calSys->dayOfWeek( startDate );
   const QString dayLabel =
     ki18nc( "@label Day of week followed by day of the month, then the month. "
@@ -223,7 +225,7 @@ void SchedulingDialog::slotSetEndTimeLabel( const QTime &startTime )
   const QString endTimeLabel =
     ki18nc( "@label This is a suffix following a time selecting widget. "
             "Example: [timeedit] to 10:00am",
-            "to %1" ).subs( KGlobal::locale()->formatTime( endTime ) ).toString();
+            "to %1" ).subs( KLocale::global()->formatTime( endTime ) ).toString();
 
   mMoveEndTimeLabel->setText( endTimeLabel );
   mSelectedTime = startTime;

@@ -19,7 +19,7 @@
 #define PARSEUSERSCRIPTJOB_H
 
 #include <QObject>
-#include <KUrl>
+#include <QUrl>
 #include "ksieveui_export.h"
 class QDomDocument;
 class QDomElement;
@@ -37,7 +37,7 @@ public:
 
     void start();
 
-    void scriptUrl(const KUrl &url);
+    void scriptUrl(const QUrl &url);
     static QStringList parsescript(const QString &script, bool &result);
 
 
@@ -51,7 +51,7 @@ Q_SIGNALS:
 private:
     static QString loadInclude(const QDomElement &element);
     static QStringList extractActiveScript(const QDomDocument &doc);
-    KUrl mCurrentUrl;
+    QUrl mCurrentUrl;
     KManageSieve::SieveJob *mSieveJob;
 };
 }

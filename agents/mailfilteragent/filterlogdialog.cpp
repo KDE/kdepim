@@ -33,11 +33,13 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kvbox.h>
+#include <QVBoxLayout>
+#include <QIcon>
+#include <KUrl>
 
 #include <QCheckBox>
 #include <QLabel>
@@ -47,23 +49,41 @@
 #include <QVBoxLayout>
 
 #include <errno.h>
+#include <KSharedConfig>
+#include <KLocale>
+#include <QHBoxLayout>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <KGuiItem>
 
 using namespace MailCommon;
 
 FilterLogDialog::FilterLogDialog( QWidget * parent )
-    : KDialog( parent ), mIsInitialized( false )
+    : QDialog( parent ), mIsInitialized( false )
 {
-    KGlobal::locale()->insertCatalog(QLatin1String("akonadi_mailfilter_agent"));
-    KGlobal::locale()->insertCatalog(QLatin1String("libpimcommon"));
-    setCaption( i18n( "Filter Log Viewer" ) );
-    setButtons( User1|User2|Close );
-    setWindowIcon( KIcon( QLatin1String("view-filter") ) );
+    //QT5 KLocale::global()->insertCatalog(QLatin1String("akonadi_mailfilter_agent"));
+    setWindowTitle( i18n( "Filter Log Viewer" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    mUser1Button = new QPushButton;
+    buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+    mUser2Button = new QPushButton;
+    buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterLogDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterLogDialog::reject);
+    setWindowIcon( QIcon::fromTheme( QLatin1String("view-filter") ) );
     setModal( false );
-    setDefaultButton( Close );
-    setButtonGuiItem( User1, KStandardGuiItem::clear() );
-    setButtonGuiItem( User2, KStandardGuiItem::saveAs() );
-    QFrame *page = new KVBox( this );
-    setMainWidget( page );
+    buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
+    KGuiItem::assign(mUser1Button, KStandardGuiItem::clear());
+    KGuiItem::assign(mUser2Button, KStandardGuiItem::saveAs());
+    QFrame *page = new QFrame( this );
+    QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
+    pageVBoxLayout->setMargin(0);
+    mainLayout->addWidget(page);
 
     mTextEdit = new PimCommon::PlainTextEditorWidget( page );
     mTextEdit->setReadOnly( true );
@@ -76,6 +96,7 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
     }
 
     mLogActiveBox = new QCheckBox( i18n("&Log filter activities"), page );
+    pageVBoxLayout->addWidget(mLogActiveBox);
     mLogActiveBox->setChecked( FilterLog::instance()->isLogging() );
     connect( mLogActiveBox, SIGNAL(clicked()),
              this, SLOT(slotSwitchLogState()) );
@@ -85,6 +106,7 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
                       "is turned on. " ) );
 
     mLogDetailsBox = new QGroupBox(i18n( "Logging Details" ), page );
+    pageVBoxLayout->addWidget(mLogDetailsBox);
     QVBoxLayout *layout = new QVBoxLayout;
     mLogDetailsBox->setLayout( layout );
     mLogDetailsBox->setEnabled( mLogActiveBox->isChecked() );
@@ -135,9 +157,13 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
     //QWhatsThis::add( mLogFilterActionBox,
     //    i18n( "" ) );
 
-    KHBox * hbox = new KHBox( page );
+    QWidget * hbox = new QWidget( page );
+    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
+    pageVBoxLayout->addWidget(hbox);
     new QLabel( i18n("Log size limit:"), hbox );
     mLogMemLimitSpin = new QSpinBox( hbox );
+    hboxHBoxLayout->addWidget(mLogMemLimitSpin);
     mLogMemLimitSpin->setMinimum( 1 );
     mLogMemLimitSpin->setMaximum( 1024 * 256 ); // 256 MB
     // value in the QSpinBox is in KB while it's in Byte in the FilterLog
@@ -161,9 +187,11 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
     connect(FilterLog::instance(), SIGNAL(logStateChanged()),
             this, SLOT(slotLogStateChanged()));
 
-    setInitialSize( QSize( 500, 500 ) );
-    connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
-    connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
+    mainLayout->addWidget(buttonBox);
+
+    resize( QSize( 500, 500 ) );
+    connect(mUser1Button, &QPushButton::clicked, this, &FilterLogDialog::slotUser1);
+    connect(mUser2Button, &QPushButton::clicked, this, &FilterLogDialog::slotUser2);
     connect(mTextEdit->editor(), SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
     slotTextChanged();
     readConfig();
@@ -173,13 +201,13 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
 void FilterLogDialog::slotTextChanged()
 {
     const bool hasText = !mTextEdit->toPlainText().isEmpty();
-    enableButton(User2, hasText);
-    enableButton(User1, hasText);
+    mUser2Button->setEnabled(hasText);
+    mUser1Button->setEnabled(hasText);
 }
 
 void FilterLogDialog::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group( config, "FilterLog" );
     const bool isEnabled = group.readEntry( "Enabled", false );
     const bool isLogPatternDescription = group.readEntry( "LogPatternDescription", false );
@@ -212,7 +240,7 @@ void FilterLogDialog::readConfig()
 
 FilterLogDialog::~FilterLogDialog()
 {
-    KConfigGroup myGroup( KGlobal::config(), "Geometry" );
+    KConfigGroup myGroup( KSharedConfig::openConfig(), "Geometry" );
     myGroup.writeEntry( "filterLogSize", size() );
     myGroup.sync();
 }
@@ -222,7 +250,7 @@ void FilterLogDialog::writeConfig()
     if ( !mIsInitialized )
         return;
 
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group( config, "FilterLog" );
     group.writeEntry( "Enabled", FilterLog::instance()->isLogging() );
     group.writeEntry( "LogPatternDescription", FilterLog::instance()->isContentTypeEnabled( FilterLog::PatternDescription ) );

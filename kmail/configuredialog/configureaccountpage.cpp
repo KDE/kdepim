@@ -25,29 +25,28 @@
 #include "mailcommon/folder/accountconfigorderdialog.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
-#include <mailtransport/transportmanagementwidget.h>
+#include <MailTransport/mailtransport/transportmanagementwidget.h>
 using MailTransport::TransportManagementWidget;
 #include "ui_accountspagereceivingtab.h"
 #include "mailcommon/util/mailutil.h"
 
-#include <akonadi/agentfilterproxymodel.h>
-#include <akonadi/agentinstancemodel.h>
-#include <akonadi/agenttype.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agenttypedialog.h>
-#include <akonadi/agentinstancecreatejob.h>
+#include <AkonadiCore/agentfilterproxymodel.h>
+#include <AkonadiCore/agentinstancemodel.h>
+#include <AkonadiCore/agenttype.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiWidgets/agenttypedialog.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
 
 
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KComboBox>
 #include <KWindowSystem>
-#include <KLineEdit>
+#include <QDebug>
 
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QGroupBox>
-#include <QHostInfo>
 #include <QMenu>
 
 QString AccountsPage::helpAnchor() const
@@ -55,8 +54,8 @@ QString AccountsPage::helpAnchor() const
     return QString::fromLatin1("configure-accounts");
 }
 
-AccountsPage::AccountsPage( const KComponentData &instance, QWidget *parent )
-    : ConfigModuleWithTabs( instance, parent )
+AccountsPage::AccountsPage( QWidget *parent )
+    : ConfigModuleWithTabs( parent )
 {
     //
     // "Receiving" tab:
@@ -181,7 +180,7 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
 {
     mNewMailNotifierInterface = new OrgFreedesktopAkonadiNewMailNotifierInterface(QLatin1String("org.freedesktop.Akonadi.NewMailNotifierAgent"), QLatin1String("/NewMailNotifierAgent"), QDBusConnection::sessionBus(), this);
     if (!mNewMailNotifierInterface->isValid()) {
-        kDebug()<<" org.freedesktop.Akonadi.NewMailNotifierAgent not found. Please verify your installation";
+        qDebug()<<" org.freedesktop.Akonadi.NewMailNotifierAgent not found. Please verify your installation";
     }
     mAccountsReceiving.setupUi( this );
 
@@ -199,7 +198,7 @@ AccountsPageReceivingTab::AccountsPageReceivingTab( QWidget * parent )
     mAccountsReceiving.mAccountList->view()->setSelectionMode( QAbstractItemView::SingleSelection );
 
     mAccountsReceiving.mFilterAccount->setProxy( mAccountsReceiving.mAccountList->agentFilterProxyModel() );
-    mAccountsReceiving.mFilterAccount->lineEdit()->setTrapReturnKey( true );
+    //QT5 mAccountsReceiving.mFilterAccount->lineEdit()->setTrapReturnKey( true );
 
     KConfig specialMailCollection(QLatin1String("specialmailcollectionsrc"));
     if(specialMailCollection.hasGroup(QLatin1String("SpecialCollections"))) {

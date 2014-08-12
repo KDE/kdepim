@@ -19,7 +19,7 @@
 #define EVOLUTIONSETTINGS_H
 
 #include "abstractsettings.h"
-#include <kpimidentities/signature.h>
+#include <KPIMIdentities/kpimidentities/signature.h>
 #include <QString>
 
 

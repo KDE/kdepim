@@ -39,10 +39,11 @@
 #include <QTcpSocket>
 #include <QTimer>
 #include <QTextCodec>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
-
+#include <QDebug>
+#include <KLocale>
 
 // Maximum note size in chars we are going to accept,
 // to prevent "note floods".
@@ -62,7 +63,7 @@ NotesNetworkReceiver::NotesNetworkReceiver( QTcpSocket *s )
       m_sock( s )
 {
     const QString date =
-            KGlobal::locale()->formatDateTime( QDateTime::currentDateTime(),
+            KLocale::global()->formatDateTime( QDateTime::currentDateTime(),
                                                KLocale::ShortDate, false );
 
     // Add the remote IP or hostname and the date to the title, to help the
@@ -145,6 +146,6 @@ void NotesNetworkReceiver::slotConnectionClosed()
 
 void NotesNetworkReceiver::slotError( QAbstractSocket::SocketError error )
 {
-    kWarning( 5500 ) <<"error type :"<< ( int ) error <<" error string : "<<m_sock->errorString();
+    qWarning() <<"error type :"<< ( int ) error <<" error string : "<<m_sock->errorString();
 }
 

@@ -20,17 +20,18 @@
 #include "kdeclarativefullscreenview.h"
 #include "stylesheetloader.h"
 
-#include <akonadi/control.h>
-#include <akonadi/servermanager.h>
+#include <AkonadiCore/control.h>
+#include <AkonadiCore/servermanager.h>
 
-#include <KDebug>
-#include <KGlobalSettings>
+#include <QDeclarativeEngine>
+#include <QDebug>
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <klocalizedstring.h>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
+#include <KGlobal>
 
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
@@ -40,7 +41,6 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QDeclarativeContext>
-#include <QDeclarativeEngine>
 #include <QDeclarativeError>
 #include <qplatformdefs.h>
 
@@ -51,6 +51,7 @@
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
 #include <QDeclarativeContext>
+#include <QStandardPaths>
 #endif
 
 KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileName, QWidget* parent) :
@@ -93,7 +94,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 
   m_splashScreen = new QLabel( this );
   QPixmap splashBackground;
-  splashBackground.load( KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
+  splashBackground.load( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
   m_splashScreen->setPixmap( splashBackground );
 
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
@@ -101,7 +102,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 
 void KDeclarativeFullScreenView::delayedInit()
 {
-  kDebug();
+  qDebug();
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
   QTime t;
 
@@ -110,31 +111,31 @@ void KDeclarativeFullScreenView::delayedInit()
   engine()->rootContext()->setContextProperty( QLatin1String("window"), QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
   if ( debugTiming ) {
-    kWarning() << "Adding QML import paths" << t.elapsed() << &t;
+    qWarning() << "Adding QML import paths" << t.elapsed() << &t;
   }
   foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", QLatin1String("imports") ) )
     engine()->addImportPath( importPath );
-  QString qmlPath = KStandardDirs::locate( "appdata", m_qmlFileName + QLatin1String(".qml") );
+  QString qmlPath = QStandardPaths::locate(QStandardPaths::DataLocation, m_qmlFileName + QLatin1String(".qml") );
 
   if ( debugTiming ) {
-    kWarning() << "Adding QML import paths done" << t.elapsed() << &t;
+    qWarning() << "Adding QML import paths done" << t.elapsed() << &t;
   }
 
   if ( qmlPath.isEmpty() ) // Try harder
-    qmlPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + m_qmlFileName + QLatin1String(".qml") );
+    qmlPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "mobileui" ) + QDir::separator() + m_qmlFileName + QLatin1String(".qml") );
 
   // TODO: Get this from a KXMLGUIClient?
   mActionCollection = new KActionCollection( this );
 
-  KAction *action = KStandardAction::close( this, SLOT(close()), this );
+  QAction *action = KStandardAction::close( this, SLOT(close()), this );
   mActionCollection->addAction( QLatin1String( "close" ), action );
 
-  action = new KAction( i18n( "Full Shutdown" ), this );
+  action = new QAction( i18n( "Full Shutdown" ), this );
   connect( action, SIGNAL(triggered()), SLOT(closeAkonadi()) );
   mActionCollection->addAction( QLatin1String( "quit_akonadi" ), action );
 
   if ( debugTiming ) {
-    kWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
+    qWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
   }
 
   doDelayedInitInternal();
@@ -157,12 +158,12 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
   QTime t;
   if ( debugTiming ) {
     t.start();
-    kWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
+    qWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
   }
   qDebug() << QLatin1String("trying to load \"") +  source << QLatin1String("\"");
   setSource( QUrl::fromLocalFile(source) );
   if ( debugTiming ) {
-    kWarning() << "setSourceDone" << t.elapsed() << &t;
+    qWarning() << "setSourceDone" << t.elapsed() << &t;
   }
 }
 

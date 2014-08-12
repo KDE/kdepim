@@ -18,17 +18,16 @@
 #include "importwizard.h"
 #include "importsettingpage.h"
 
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
-#include <mailtransport/transportmanager.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 
 #include <KLocale>
-#include <KDebug>
 #include <KSharedConfig>
 
-#include <akonadi/agenttype.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstancecreatejob.h>
+#include <AkonadiCore/agenttype.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
 
 #include <QMetaMethod>
 
@@ -83,7 +82,7 @@ MailTransport::Transport *AbstractSettings::createTransport()
 void AbstractSettings::storeTransport(MailTransport::Transport *mt, bool isDefault )
 {
     mt->forceUniqueName();
-    mt->writeConfig();
+    mt->save();
     MailTransport::TransportManager::self()->addTransport( mt );
     if ( isDefault )
         MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );

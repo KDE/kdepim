@@ -1,9 +1,9 @@
 project(kaddressbook)
 
+
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
   ${CMAKE_CURRENT_SOURCE_DIR}/printing/
-  ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${Grantlee_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/pimcommon/
@@ -13,21 +13,18 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo
 )
 
+
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
-
-
 if(Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
-  include_directories(${PRISON_INCLUDE_DIR})
 endif()
 
 add_subdirectory(icons)
 add_subdirectory(printing)
-add_subdirectory(tests)
+add_subdirectory(autotests)
 if(QGPGME_FOUND)
   add_definitions(-DQGPGME_FOUND)
 endif()
@@ -54,7 +51,7 @@ set(kaddressbook_printing_SRCS
   printing/stylepage.cpp
 )
 
-kde4_add_ui_files(kaddressbook_printing_SRCS
+ki18n_wrap_ui(kaddressbook_printing_SRCS
   printing/ringbinder/rbs_appearance.ui
   printing/detailled/ds_appearance.ui
   printing/compact/compactstyle.ui
@@ -91,7 +88,6 @@ set(kaddressbook_merge_SRCS
 )
 
 set(kaddressbook_LIB_SRCS
-  startup.cpp
   aboutdata.cpp
   categoryfilterproxymodel.cpp
   categoryselectwidget.cpp
@@ -112,27 +108,26 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_sendmail_SRCS}
 )
 
-qt4_add_dbus_adaptor( kaddressbook_LIB_SRCS org.kde.kaddressbook.xml mainwidget.h MainWidget)
+qt5_add_dbus_adaptor( kaddressbook_LIB_SRCS org.kde.kaddressbook.xml mainwidget.h MainWidget)
 
-kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings/settings.kcfgc)
-kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
+kconfig_add_kcfg_files(kaddressbook_LIB_SRCS settings/settings.kcfgc)
+add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
+generate_export_header(kaddressbookprivate BASE_NAME kaddressbook)
 target_link_libraries(kaddressbookprivate
   kdepim
   pimcommon
   kaddressbookgrantlee
-  ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
-  ${KDEPIMLIBS_KLDAP_LIBS}
-  ${KDE4_KCMUTILS_LIBS}
-  ${KDE4_KPRINTUTILS_LIBS}
-  ${Grantlee_CORE_LIBRARIES}
+  KF5::AkonadiCore
+  KF5::Abc
+  KF5::AkonadiContact
+  KF5::Ldap
+  KF5::KCMUtils
+  KF5::KontactInterface
   grantleetheme
   kleo
 )
-add_subdirectory(merge/tests)
-add_subdirectory(sendmail/tests)
+add_subdirectory(merge/autotests)
+add_subdirectory(sendmail/autotests)
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
@@ -142,7 +137,7 @@ if(PRISON_FOUND)
   target_link_libraries(kaddressbookprivate ${PRISON_LIBRARIES})
 endif()
 
-set_target_properties(kaddressbookprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(kaddressbookprivate PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS kaddressbookprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 ########### next target ###############
@@ -154,16 +149,14 @@ set(kaddressbook_SRCS
 
 kde4_add_app_icon(kaddressbook_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-kaddressbook.png")
 
-kde4_add_executable(kaddressbook ${kaddressbook_SRCS})
+add_executable(kaddressbook ${kaddressbook_SRCS})
 
 target_link_libraries(kaddressbook
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_SYNDICATION_LIBS}
-  ${KDE4_KDEUI_LIBS}
-  ${KDE4_KCMUTILS_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDE4_PHONON_LIBS}
-  ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
+  KF5::AkonadiCore
+  KF5::Syndication
+  KF5::KCMUtils
+  KF5::KIOCore
+  KF5::KontactInterface
   kaddressbookprivate
   grantleetheme
 )
@@ -174,11 +167,11 @@ endif()
 
 install(TARGETS kaddressbook ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS data/kaddressbook.desktop data/kaddressbook-importer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES kaddressbookui.rc DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
+install(FILES kaddressbookui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kaddressbook)
 
 set(kaddressbook_PART_SRCS kaddressbookpart.cpp)
-kde4_add_plugin(kaddressbookpart ${kaddressbook_PART_SRCS})
-target_link_libraries(kaddressbookpart ${KDE4_KPARTS_LIBS} kaddressbookprivate)
+add_library(kaddressbookpart MODULE ${kaddressbook_PART_SRCS})
+target_link_libraries(kaddressbookpart  kaddressbookprivate)
 install(TARGETS kaddressbookpart DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES data/kaddressbookpart.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 

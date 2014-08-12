@@ -20,11 +20,12 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <KSharedConfig>
 
 
 using namespace PimCommon;
@@ -46,7 +47,7 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     QLabel *label = new QLabel(i18n("Name:"));
     hbox->addWidget(label);
 
-    mTemplateNameEdit = new KLineEdit;
+    mTemplateNameEdit = new QLineEdit;
     mTemplateNameEdit->setEnabled(!defaultTemplate);
     hbox->addWidget(mTemplateNameEdit);
 
@@ -61,7 +62,7 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     setMainWidget(w);
     if (!defaultTemplate) {
         enableButtonOk(false);
-        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateChanged()));
+        connect(mTemplateNameEdit, &QLineEdit::textChanged, this, &TemplateEditDialog::slotTemplateChanged);
         connect(mTextEdit->editor(), SIGNAL(textChanged()),SLOT(slotTemplateChanged()));
         mTemplateNameEdit->setFocus();
     }
@@ -76,13 +77,13 @@ TemplateEditDialog::~TemplateEditDialog()
 
 void TemplateEditDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "TemplateEditDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "TemplateEditDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void TemplateEditDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "TemplateEditDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "TemplateEditDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

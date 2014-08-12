@@ -33,9 +33,8 @@
 #include "konsolekalendarexports.h"
 
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
-#include <KGlobal>
 
 #include <KCalCore/Event>
 
@@ -43,6 +42,7 @@
 
 #include <stdlib.h>
 #include <iostream>
+#include <KLocale>
 
 using namespace KCalCore;
 using namespace std;
@@ -78,15 +78,15 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
   // Print Event Date (in user's preferred format)
   *ts << i18n( "Date:" )
       << "\t"
-      << KGlobal::locale()->formatDate( date )
+      << KLocale::global()->formatDate( date )
       << endl;
 
   // Print Event Starttime - Endtime, for Non-All-Day Events Only
   if ( !event->allDay() ) {
     *ts << "\t"
-        << KGlobal::locale()->formatTime( event->dtStart().time() )
+        << KLocale::global()->formatTime( event->dtStart().time() )
         << " - "
-        << KGlobal::locale()->formatTime( event->dtEnd().time() );
+        << KLocale::global()->formatTime( event->dtEnd().time() );
   }
   *ts << endl;
 
@@ -158,15 +158,15 @@ bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
 
   if ( !sameday ) {
     // If a new date, then Print the Event Date (in user's preferred format)
-    *ts << KGlobal::locale()->formatDate( date ) << ":"
+    *ts << KLocale::global()->formatDate( date ) << ":"
         << endl;
   }
 
   // Print Event Starttime - Endtime
   if ( !event->allDay() ) {
-    *ts << KGlobal::locale()->formatTime( event->dtStart().time() )
+    *ts << KLocale::global()->formatTime( event->dtStart().time() )
         << " - "
-        << KGlobal::locale()->formatTime( event->dtEnd().time() );
+        << KLocale::global()->formatTime( event->dtEnd().time() );
   } else {
     *ts << i18n( "[all day]\t" );
   }
@@ -228,14 +228,14 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
   QString dquote = i18n( "\"" ); // character to use to quote CSV fields
 
   if ( !event->allDay() ) {
-    *ts <<          pF( KGlobal::locale()->formatDate( date ) )
-        << delim << pF( KGlobal::locale()->formatTime( event->dtStart().time() ) )
-        << delim << pF( KGlobal::locale()->formatDate( date ) )
-        << delim << pF( KGlobal::locale()->formatTime( event->dtEnd().time() ) );
+    *ts <<          pF( KLocale::global()->formatDate( date ) )
+        << delim << pF( KLocale::global()->formatTime( event->dtStart().time() ) )
+        << delim << pF( KLocale::global()->formatDate( date ) )
+        << delim << pF( KLocale::global()->formatTime( event->dtEnd().time() ) );
   } else {
-    *ts <<          pF( KGlobal::locale()->formatDate( date ) )
+    *ts <<          pF( KLocale::global()->formatDate( date ) )
         << delim << pF( QLatin1String("") )
-        << delim << pF( KGlobal::locale()->formatDate( date ) )
+        << delim << pF( KLocale::global()->formatDate( date ) )
         << delim << pF( QLatin1String("") );
   }
 

@@ -16,26 +16,27 @@
 */
 
 #include "thunderbirdsettings.h"
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 #include "mailcommon/util/mailutil.h"
 #include "importwizardutil.h"
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/signature.h>
-#include <KStandardDirs>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/signature.h>
 
+#include <KUrl>
 #include <KABC/VCardConverter>
 #include <QTextStream>
 #include <QStringList>
 #include <QFile>
-#include <KDebug>
+#include <QDebug>
+#include <QStandardPaths>
 
 ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard *parent )
     :AbstractSettings( parent )
 {
     QFile file(filename);
     if ( !file.open( QIODevice::ReadOnly ) ) {
-        kDebug()<<" We can't open file"<<filename;
+        qDebug()<<" We can't open file"<<filename;
         return;
     }
     QTextStream stream(&file);
@@ -61,7 +62,7 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
                 insertIntoMap( line );
             }
         } else {
-            kDebug()<<" unstored line :"<<line;
+            qDebug()<<" unstored line :"<<line;
         }
     }
     const QString mailAccountPreference = mHashConfig.value( QLatin1String( "mail.accountmanager.accounts" ) ).toString();
@@ -460,7 +461,7 @@ void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QStri
                 break;
             case 4: //Encrypted password ???
                 settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::LOGIN ); //????
-                kDebug()<<" authmethod == encrypt password";
+                qDebug()<<" authmethod == encrypt password";
                 break;
             case 5: //GSSAPI
                 settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::GSSAPI );
@@ -469,10 +470,10 @@ void ThunderbirdSettings::addAuth(QMap<QString, QVariant>& settings, const QStri
                 settings.insert( argument, MailTransport::Transport::EnumAuthenticationType::NTLM );
                 break;
             case 7: //TLS
-                kDebug()<<" authmethod method == TLS"; //????
+                qDebug()<<" authmethod method == TLS"; //????
                 break;
             default:
-                kDebug()<<" ThunderbirdSettings::addAuth unknown :"<<authMethod;
+                qDebug()<<" ThunderbirdSettings::addAuth unknown :"<<authMethod;
                 break;
             }
         }
@@ -536,7 +537,7 @@ void ThunderbirdSettings::readAccount()
                     settings.insert( QLatin1String( "Safety" ), QLatin1String("SSL") );
                     break;
                 default:
-                    kDebug()<<" socketType "<<socketType;
+                    qDebug()<<" socketType "<<socketType;
                 }
             }
             const QString checkNewMailStr = accountName + QLatin1String( ".check_new_mail" );
@@ -604,7 +605,7 @@ void ThunderbirdSettings::readAccount()
                     settings.insert( QLatin1String( "UseSSL" ), true );
                     break;
                 default:
-                    kDebug()<<" socketType "<<socketType;
+                    qDebug()<<" socketType "<<socketType;
                 }
             }
             addAuth( settings, QLatin1String( "AuthenticationMethod" ),accountName );
@@ -631,21 +632,21 @@ void ThunderbirdSettings::readAccount()
             addToManualCheck(agentIdentifyName,true);
         } else if ( type == QLatin1String( "none" ) ) {
             //FIXME look at if we can implement it
-            kDebug()<<" account type none!";
+            qDebug()<<" account type none!";
         } else if (type == QLatin1String("movemail")) {
-            kDebug()<<" movemail accound found and not implemented in importthunderbird";
+            qDebug()<<" movemail accound found and not implemented in importthunderbird";
             //TODO
         } else if (type == QLatin1String("rss")) {
             //TODO when akregator2 will merge in kdepim
-            kDebug()<<" rss resource needs to be implemented";
+            qDebug()<<" rss resource needs to be implemented";
             continue;
         } else if (type == QLatin1String("nntp")) {
             //TODO add config directly to knode
             //TODO when knode will merge in kdepim
-            kDebug()<<" nntp resource need to be implemented";
+            qDebug()<<" nntp resource need to be implemented";
             continue;
         } else {
-            kDebug()<<" type unknown : "<<type;
+            qDebug()<<" type unknown : "<<type;
             continue;
         }
 
@@ -706,7 +707,7 @@ void ThunderbirdSettings::readTransport()
             mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::NTLM);
             break;
         default:
-            kDebug()<<" authMethod unknown :"<<authMethod;
+            qDebug()<<" authMethod unknown :"<<authMethod;
         }
 
         const int trySsl = mHashConfig.value( smtpName + QLatin1String( ".try_ssl" ) ).toInt();
@@ -721,7 +722,7 @@ void ThunderbirdSettings::readTransport()
             mt->setEncryption( MailTransport::Transport::EnumEncryption::SSL );
             break;
         default:
-            kDebug()<<" trySsl unknown :"<<trySsl;
+            qDebug()<<" trySsl unknown :"<<trySsl;
         }
 
         const QString userName = mHashConfig.value( smtpName + QLatin1String( ".username" ) ).toString();
@@ -847,7 +848,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
         KABC::VCardConverter converter;
         KABC::Addressee addr = converter.parseVCard( vcard );
 
-        const QString filename = KStandardDirs::locateLocal("appdata",newIdentity->identityName() + QLatin1String(".vcf"));
+        const QString filename = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + newIdentity->identityName() + QLatin1String("/.vcf");
         QFile file(filename);
         if ( file.open( QIODevice::WriteOnly |QIODevice::Text ) ) {
             const QByteArray data = converter.exportVCard( addr, KABC::VCardConverter::v3_0 );
@@ -919,7 +920,7 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
             tag.name = mHashConfig.value(key).toString();
         }
         mHashTag.insert(name,tag);
-        kDebug()<<" tag :"<<name<<" tag.name"<<tag.name<<" color :"<<tag.color;
+        qDebug()<<" tag :"<<name<<" tag.name"<<tag.name<<" color :"<<tag.color;
     }
 }
 

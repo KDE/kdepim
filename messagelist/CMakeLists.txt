@@ -1,7 +1,6 @@
-kde4_no_enable_final(messagelist)
 project(messagelist)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 option(KDEPIM_FOLDEROPEN_PROFILE "Enable debug output for timing folder loading" FALSE)
@@ -15,8 +14,10 @@ include_directories(
   )
 
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libmessagelist\")
+
 add_subdirectory(pics)
-add_subdirectory(tests)
+add_subdirectory(autotests)
 
 set(libmessagelist_SRCS
   core/aggregation.cpp
@@ -84,24 +85,25 @@ set(libmessagelist_HEADERS
   widget.h
 )
 
-kde4_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
+kconfig_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
   core/settings.kcfgc
 )
 
-kde4_add_library(messagelist ${LIBRARY_TYPE} ${libmessagelist_SRCS})
+add_library(messagelist ${LIBRARY_TYPE} ${libmessagelist_SRCS})
+generate_export_header(messagelist BASE_NAME messagelist)
 target_link_libraries(messagelist
-  ${KDE4_KDEUI_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${BALOO_LIBRARIES}
+  
+  KF5::KIOCore
+  KF5::AkonadiCore
+  KF5::AkonadiMime
+  KF5::Mime
+  KF5::BalooPim
   messagecore
 )
 
 set_target_properties(messagelist PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS messagelist ${INSTALL_TARGETS_DEFAULT_ARGS})

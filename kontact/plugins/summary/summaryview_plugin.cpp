@@ -30,7 +30,7 @@
 
 #include <KAboutData>
 #include <KActionCollection>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KSelectAction>
 
@@ -41,9 +41,9 @@ EXPORT_KONTACT_PLUGIN( SummaryView, summary )
 SummaryView::SummaryView( KontactInterface::Core *core, const QVariantList & )
   : KontactInterface::Plugin( core, core, 0 ), mAboutData( 0 ), mPart( 0 )
 {
-  setComponentData( KontactPluginFactory::componentData() );
+  //QT5 setComponentData( KontactPluginFactory::componentData() );
 
-  mSyncAction = new KSelectAction( KIcon( QLatin1String("view-refresh") ), i18n( "Sync All" ), this );
+  mSyncAction = new KSelectAction( QIcon::fromTheme( QLatin1String("view-refresh") ), i18n( "Sync All" ), this );
   actionCollection()->addAction( QLatin1String("kontact_summary_sync"), mSyncAction );
   connect( mSyncAction, SIGNAL(triggered(QString)), SLOT(syncAccount(QString)) );
   connect( mSyncAction->menu(), SIGNAL(aboutToShow()), this, SLOT(fillSyncActionSubEntries()) );
@@ -96,7 +96,7 @@ void SummaryView::doSync()
   const QList<KontactInterface::Plugin *> pluginList = core()->pluginList();
   Q_FOREACH ( const KontactInterface::Plugin *i, pluginList ) {
     // execute all sync actions but our own
-    Q_FOREACH ( KAction *j, i->syncActions() ) {
+    Q_FOREACH ( QAction *j, i->syncActions() ) {
       if ( j != mSyncAction ) {
         j->trigger();
       }
@@ -107,7 +107,7 @@ void SummaryView::doSync()
 
 KParts::ReadOnlyPart *SummaryView::createPart()
 {
-  mPart = new SummaryViewPart( core(), "summarypartframe", aboutData(), this );
+  //QT5 mPart = new SummaryViewPart( core(), "summarypartframe", aboutData(), this );
   mPart->setObjectName( QLatin1String("summaryPart") );
   return mPart;
 }
@@ -116,21 +116,23 @@ const KAboutData *SummaryView::aboutData() const
 {
   if ( !mAboutData ) {
     mAboutData = new KAboutData(
-      "kontactsummary", 0, ki18n( "Kontact Summary" ),
-      KDEPIM_VERSION,
-      ki18n( "Kontact Summary View" ),
-      KAboutData::License_LGPL,
-      ki18n( "(c) 2003-2014 The Kontact developers" ) );
+      QLatin1String("kontactsummary"), 
+      i18n( "Kontact Summary" ),
+      QLatin1String(KDEPIM_VERSION),
+      i18n( "Kontact Summary View" ),
+      KAboutLicense::LGPL,
+      i18n( "(c) 2003-2014 The Kontact developers" ) );
 
-    mAboutData->addAuthor( ki18n( "Sven Lueppken" ),
-                           KLocalizedString(), "sven@kde.org" );
-    mAboutData->addAuthor( ki18n( "Cornelius Schumacher" ),
-                           KLocalizedString(), "schumacher@kde.org" );
-    mAboutData->addAuthor( ki18n( "Tobias Koenig" ),
-                           KLocalizedString(), "tokoe@kde.org" );
+    mAboutData->addAuthor( i18n( "Sven Lueppken" ),
+                           QString(), QLatin1String("sven@kde.org") );
+    mAboutData->addAuthor( i18n( "Cornelius Schumacher" ),
+                           QString(), QLatin1String("schumacher@kde.org") );
+    mAboutData->addAuthor( i18n( "Tobias Koenig" ),
+                           QString(), QLatin1String("tokoe@kde.org") );
     mAboutData->setProductName( "kontact/summary" );
   }
 
   return mAboutData;
 }
 
+#include "summaryview_plugin.moc"

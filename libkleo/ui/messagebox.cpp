@@ -47,7 +47,7 @@
 
 #include <kdialog.h>
 #include <klocale.h>
-#include <ksavefile.h>
+#include <QSaveFile>
 #include <kguiitem.h>
 #include <kdebug.h>
 #include <ktextedit.h>
@@ -55,6 +55,7 @@
 #include <qtextstream.h>
 
 #include <gpg-error.h>
+#include <KSharedConfig>
 
 using namespace Kleo;
 using namespace Kleo::Private;
@@ -140,21 +141,21 @@ void AuditLogViewer::slotUser1() {
     if ( fileName.isEmpty() )
         return;
 
-    KSaveFile file( fileName );
+    QSaveFile file( fileName );
 
-    if ( file.open() ) {
+    if ( file.open(QIODevice::WriteOnly) ) {
         QTextStream s( &file );
         s << "<html><head>";
         if ( !windowTitle().isEmpty() ) {
           s << "\n<title>"
-            << Qt::escape( windowTitle() )
+            << windowTitle().toHtmlEscaped()
             << "</title>\n";
         }
         s << "</head><body>\n"
           << m_log
           << "\n</body></html>" << endl;
         s.flush();
-        file.finalize();
+        file.commit();
     }
 
     if ( const int err = file.error() )
@@ -174,7 +175,7 @@ void AuditLogViewer::slotUser2() {
 
 void AuditLogViewer::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AuditLogViewer" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AuditLogViewer" );
     const QSize size = group.readEntry( "Size", QSize() );
     if ( size.isValid() ) {
         resize( size );
@@ -185,7 +186,7 @@ void AuditLogViewer::readConfig()
 
 void AuditLogViewer::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AuditLogViewer" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AuditLogViewer" );
     group.writeEntry( "Size", size() );
     group.sync();
 }
@@ -372,9 +373,10 @@ void MessageBox::make( QWidget * parent, QMessageBox::Icon icon, const QString &
 
     if ( options & KMessageBox::PlainCaption )
         dialog->setPlainCaption( caption );
-
+#if 0 //QT5
     if ( KDialog::No == KMessageBox::createKMessageBox( dialog, icon, text, QStringList(), QString::null, 0, options ) )
         auditLog( 0, job );
+#endif
 }
 
 #include "moc_messagebox_p.cpp"

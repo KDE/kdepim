@@ -39,21 +39,24 @@
 #include <ktoggleaction.h>
 #include <kapplication.h>
 #include <klocale.h>
-#include <kaboutdata.h>
-#include <kmenu.h>
+#include <K4AboutData>
+#include <QMenu>
 #include <kmessagebox.h>
-#include <kstandarddirs.h>
+
 #include <kstandardaction.h>
 #include <kstandardguiitem.h>
 #include <kiconeffect.h>
 #include <kconfig.h>
-#include <kdebug.h>
+#include <qdebug.h>
+#include <KGlobal>
+#include <KIconLoader>
 
 #include <QList>
 #include <QTimer>
 
 #include <stdlib.h>
 #include <limits.h>
+#include <KLocale>
 
 using namespace KAlarmCal;
 
@@ -72,25 +75,23 @@ struct TipItem
 TrayWindow::TrayWindow(MainWindow* parent)
     : KStatusNotifierItem(parent),
       mAssocMainWindow(parent),
-#ifdef USE_AKONADI
       mAlarmsModel(0),
-#endif
       mStatusUpdateTimer(new QTimer(this)),
       mHaveDisabledAlarms(false)
 {
-    kDebug();
+    qDebug();
     setToolTipIconByName(QLatin1String("kalarm"));
-    setToolTipTitle(KGlobal::mainComponent().aboutData()->programName());
+    setToolTipTitle(KComponentData::mainComponent().aboutData()->programName());
     setIconByName(QLatin1String("kalarm"));
     // Load the disabled icon for use by setIconByPixmap()
     // - setIconByName() doesn't work for this one!
     mIconDisabled.addPixmap(KIconLoader::global()->loadIcon(QLatin1String("kalarm-disabled"), KIconLoader::Panel));
     setStatus(KStatusNotifierItem::Active);
-
+#if 0 //QT5
     // Set up the context menu
-    KActionCollection* actions = actionCollection();
+    QList<QAction *> actions = actionCollection();
     mActionEnabled = KAlarm::createAlarmEnableAction(this);
-    actions->addAction(QLatin1String("tAlarmsEnable"), mActionEnabled);
+    actions.addAction(QLatin1String("tAlarmsEnable"), mActionEnabled);
     contextMenu()->addAction(mActionEnabled);
     connect(theApp(), SIGNAL(alarmEnabledToggled(bool)), SLOT(setEnabledStatus(bool)));
     contextMenu()->addSeparator();
@@ -102,7 +103,7 @@ TrayWindow::TrayWindow(MainWindow* parent)
     connect(mActionNew->fromTemplateAlarmAction(), SIGNAL(selected(const KAEvent*)), SLOT(slotNewFromTemplate(const KAEvent*)));
     contextMenu()->addSeparator();
 
-    KAction* a = KAlarm::createStopPlayAction(this);
+    QAction * a = KAlarm::createStopPlayAction(this);
     actions->addAction(QLatin1String("tStopPlay"), a);
     contextMenu()->addAction(a);
     QObject::connect(theApp(), SIGNAL(audioPlaying(bool)), a, SLOT(setVisible(bool)));
@@ -141,7 +142,6 @@ TrayWindow::TrayWindow(MainWindow* parent)
     MinuteTimer::connect(mToolTipUpdateTimer, SLOT(start()));
 
     // Update when alarms are modified
-#ifdef USE_AKONADI
     connect(AlarmListModel::all(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             mToolTipUpdateTimer, SLOT(start()));
     connect(AlarmListModel::all(), SIGNAL(rowsInserted(QModelIndex,int,int)),
@@ -152,18 +152,6 @@ TrayWindow::TrayWindow(MainWindow* parent)
             mToolTipUpdateTimer, SLOT(start()));
     connect(AlarmListModel::all(), SIGNAL(modelReset()),
             mToolTipUpdateTimer, SLOT(start()));
-#else
-    connect(EventListModel::alarms(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            mToolTipUpdateTimer, SLOT(start()));
-    connect(EventListModel::alarms(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-            mToolTipUpdateTimer, SLOT(start()));
-    connect(EventListModel::alarms(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-            mToolTipUpdateTimer, SLOT(start()));
-    connect(EventListModel::alarms(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            mToolTipUpdateTimer, SLOT(start()));
-    connect(EventListModel::alarms(), SIGNAL(modelReset()),
-            mToolTipUpdateTimer, SLOT(start()));
-#endif
 
     // Set auto-hide status when next alarm or preferences change
     mStatusUpdateTimer->setSingleShot(true);
@@ -174,11 +162,12 @@ TrayWindow::TrayWindow(MainWindow* parent)
 
     // Update when tooltip preferences are modified
     Preferences::connect(SIGNAL(tooltipPreferencesChanged()), mToolTipUpdateTimer, SLOT(start()));
+#endif
 }
 
 TrayWindow::~TrayWindow()
 {
-    kDebug();
+    qDebug();
     theApp()->removeWindow(this);
     emit deleted();
 }
@@ -232,7 +221,7 @@ void TrayWindow::slotQuitAfter()
 */
 void TrayWindow::setEnabledStatus(bool status)
 {
-    kDebug() << (int)status;
+    qDebug() << (int)status;
     updateIcon();
     updateStatus();
     updateToolTip();
@@ -244,7 +233,7 @@ void TrayWindow::setEnabledStatus(bool status)
 */
 void TrayWindow::slotHaveDisabledAlarms(bool haveDisabled)
 {
-    kDebug() << haveDisabled;
+    qDebug() << haveDisabled;
     mHaveDisabledAlarms = haveDisabled;
     updateIcon();
     updateToolTip();
@@ -364,34 +353,22 @@ QString TrayWindow::tooltipAlarmText() const
     // Get today's and tomorrow's alarms, sorted in time order
     int i, iend;
     QList<TipItem> items;
-#ifdef USE_AKONADI
     QVector<KAEvent> events = KAlarm::getSortedActiveEvents(const_cast<TrayWindow*>(this), &mAlarmsModel);
-#else
-    KAEvent::List events = KAlarm::getSortedActiveEvents(KDateTime(now.date(), QTime(0,0,0), KDateTime::LocalZone), tomorrow);
-#endif
     for (i = 0, iend = events.count();  i < iend;  ++i)
     {
-#ifdef USE_AKONADI
         KAEvent* event = &events[i];
-#else
-        KAEvent* event = events[i];
-#endif
         if (event->actionSubType() == KAEvent::MESSAGE)
         {
             TipItem item;
             QDateTime dateTime = event->nextTrigger(KAEvent::DISPLAY_TRIGGER).effectiveKDateTime().toLocalZone().dateTime();
             if (dateTime > tomorrow.dateTime())
-#ifdef USE_AKONADI
                 break;   // ignore alarms after tomorrow at the current clock time
-#else
-                continue;   // ignore alarms after tomorrow at the current clock time
-#endif
             item.dateTime = dateTime;
 
             // The alarm is due today, or early tomorrow
             if (Preferences::showTooltipAlarmTime())
             {
-                item.text += KGlobal::locale()->formatTime(item.dateTime.time());
+                item.text += KLocale::global()->formatTime(item.dateTime.time());
                 item.text += QLatin1Char(' ');
             }
             if (Preferences::showTooltipTimeToAlarm())
@@ -420,12 +397,12 @@ QString TrayWindow::tooltipAlarmText() const
             items.insert(it, item);
         }
     }
-    kDebug();
+    qDebug();
     QString text;
     int count = 0;
     for (i = 0, iend = items.count();  i < iend;  ++i)
     {
-        kDebug() << "--" << (count+1) << ")" << items[i].text;
+        qDebug() << "--" << (count+1) << ")" << items[i].text;
         if (i > 0)
             text += QLatin1String("<br />");
         text += items[i].text;

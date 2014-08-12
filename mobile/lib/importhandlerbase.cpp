@@ -19,11 +19,11 @@
 
 #include "importhandlerbase.h"
 
-#include <akonadi/collectiondialog.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemcreatejob.h>
+#include <AkonadiWidgets/collectiondialog.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemcreatejob.h>
 #include <kfiledialog.h>
-#include <kprogressdialog.h>
+#include <QProgressDialog>
 
 #include <QtCore/QPointer>
 
@@ -87,11 +87,12 @@ void ImportHandlerBase::exec()
   delete dlg;
 
   if ( !mImportProgressDialog ) {
-    mImportProgressDialog = new KProgressDialog( 0, importDialogTitle() );
+    mImportProgressDialog = new QProgressDialog( 0);
+    mImportProgressDialog->setWindowTitle(importDialogTitle() );
     mImportProgressDialog->setLabelText( importDialogText( items.count(), collection.name() ) );
-    mImportProgressDialog->setAllowCancel( false );
+    mImportProgressDialog->setCancelButton(0);
     mImportProgressDialog->setAutoClose( true );
-    mImportProgressDialog->progressBar()->setRange( 1, items.count() );
+    mImportProgressDialog->setRange( 1, items.count() );
   }
 
   mImportProgressDialog->show();
@@ -107,12 +108,11 @@ void ImportHandlerBase::slotImportJobDone( KJob* )
   if ( !mImportProgressDialog )
     return;
 
-  QProgressBar *progressBar = mImportProgressDialog->progressBar();
 
-  progressBar->setValue( progressBar->value() + 1 );
+  mImportProgressDialog->setValue( mImportProgressDialog->value() + 1 );
 
   // cleanup on last step
-  if ( progressBar->value() == progressBar->maximum() ) {
+  if ( mImportProgressDialog->value() == mImportProgressDialog->maximum() ) {
     mImportProgressDialog->deleteLater();
     mImportProgressDialog = 0;
     deleteLater();

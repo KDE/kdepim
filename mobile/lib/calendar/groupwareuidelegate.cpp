@@ -21,13 +21,14 @@
 
 #include "incidenceview.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/session.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/session.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 #include <klocale.h>
 #include <ksystemtimezone.h>
+#include <QDebug>
 
 GroupwareUiDelegate::GroupwareUiDelegate()
 {
@@ -52,7 +53,7 @@ void GroupwareUiDelegate::requestIncidenceEditor( const Akonadi::Item &item )
 {
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( !incidence ) {
-    kWarning() << "Incidence is null, won't open the editor";
+    qWarning() << "Incidence is null, won't open the editor";
     return;
   }
 

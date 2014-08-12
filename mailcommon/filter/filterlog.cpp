@@ -30,12 +30,11 @@
 
 #include "messageviewer/utils/util.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QFile>
 #include <QTime>
 #include <QTextDocument>
-#include <QDir>
 
 #include <sys/stat.h>
 
@@ -72,7 +71,7 @@ public:
 void FilterLog::Private::checkLogSize()
 {
     if ( mCurrentLogSize > mMaxLogSize && mMaxLogSize > -1 ) {
-        kDebug() << "Filter log: memory limit reached, starting to discard old items, size ="
+        qDebug() << "Filter log: memory limit reached, starting to discard old items, size ="
                  << QString::number( mCurrentLogSize );
 
         // avoid some kind of hysteresis, shrink the log to 90% of its maximum
@@ -81,9 +80,9 @@ void FilterLog::Private::checkLogSize()
             if ( it != mLogEntries.end() ) {
                 mCurrentLogSize -= (*it).length();
                 mLogEntries.erase( it );
-                kDebug() << "Filter log: new size =" << QString::number( mCurrentLogSize );
+                qDebug() << "Filter log: new size =" << QString::number( mCurrentLogSize );
             } else {
-                kDebug() << "Filter log: size reduction disaster!";
+                qDebug() << "Filter log: size reduction disaster!";
                 q->clear();
             }
         }
@@ -197,11 +196,11 @@ QStringList FilterLog::logEntries() const
 void FilterLog::dump()
 {
 #ifndef NDEBUG
-    kDebug() << "----- starting filter log -----";
+    qDebug() << "----- starting filter log -----";
     foreach ( const QString &entry, d->mLogEntries ) {
-        kDebug() << entry;
+        qDebug() << entry;
     }
-    kDebug() << "------ end of filter log ------";
+    qDebug() << "------ end of filter log ------";
 #endif
 }
 
@@ -227,6 +226,6 @@ bool FilterLog::saveToFile( const QString &fileName ) const
 
 QString FilterLog::recode( const QString &plain )
 {
-    return Qt::escape( plain );
+    return plain.toHtmlEscaped();
 }
 

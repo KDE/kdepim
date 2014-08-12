@@ -485,7 +485,7 @@
            </widget>
           </item>
           <item>
-           <widget class="KLineEdit" name="mAppArguments">
+           <widget class="QLineEdit" name="mAppArguments">
             <property name="toolTip">
              <string>Specify arguments to pass to the application when the reminder triggers</string>
             </property>
@@ -680,11 +680,6 @@ default email configured in Kmail (Settings menu/Configure Kmail/Identities).</s
    <class>KUrlRequester</class>
    <extends>QFrame</extends>
    <header>kurlrequester.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
   </customwidget>
   <customwidget>
    <class>KComboBox</class>

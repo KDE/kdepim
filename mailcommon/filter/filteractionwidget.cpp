@@ -26,7 +26,9 @@
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
+#include <QIcon>
+#include <QDebug>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -62,8 +64,8 @@ public:
     FilterActionWidget *q;
     QList<MailCommon::FilterAction*> mActionList;
     KComboBox *mComboBox;
-    KPushButton *mAdd;
-    KPushButton *mRemove;
+    QPushButton *mAdd;
+    QPushButton *mRemove;
 
     QGridLayout *mLayout;
 };
@@ -112,12 +114,12 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
     d->mComboBox->setEditable( false );
     Q_ASSERT( d->mComboBox );
     d->mLayout->addWidget( d->mComboBox, 1, 1 );
-    d->mAdd = new KPushButton( widget );
-    d->mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    d->mAdd = new QPushButton( widget );
+    d->mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
     d->mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
-    d->mRemove = new KPushButton( widget );
-    d->mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    d->mRemove = new QPushButton( widget );
+    d->mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     d->mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
     setSpacing( 4 );
@@ -312,7 +314,7 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
 
     int superfluousItems = (int)d->mActionList->count() - widgetsMaximum();
     if ( superfluousItems > 0 ) {
-        kDebug() << "FilterActionWidgetLister: Clipping action list to"
+        qDebug() << "FilterActionWidgetLister: Clipping action list to"
                  << widgetsMaximum() << "items!";
 
         for ( ; superfluousItems ; superfluousItems-- ) {

@@ -22,7 +22,7 @@
 #ifndef KJOTSMODEL_H
 #define KJOTSMODEL_H
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 
 class QTextDocument;
 

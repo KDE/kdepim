@@ -19,7 +19,7 @@
 #include "vacationcheckjob.h"
 #include "util/util.h"
 
-#include <Akonadi/AgentInstance>
+#include <AgentInstance>
 
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -51,7 +51,7 @@ void MultiImapVacationManager::checkVacation()
         if ( instance.status() == Akonadi::AgentInstance::Broken )
             continue;
 
-        const KUrl url = KSieveUi::Util::findSieveUrlForAccount( instance.identifier() );
+        const QUrl url = KSieveUi::Util::findSieveUrlForAccount( instance.identifier() );
         if ( !url.isEmpty() ) {
             const QString serverName = instance.name();
             ++mNumberOfJobs;

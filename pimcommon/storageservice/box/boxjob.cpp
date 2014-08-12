@@ -20,7 +20,7 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "storageservice/authdialog/storageauthviewdialog.h"
 
-#include <qjson/parser.h>
+//#include <qjson/parser.h>
 
 #include <KLocalizedString>
 
@@ -149,6 +149,7 @@ void BoxJob::getTokenAccess(const QString &authorizeCode)
 
 void BoxJob::slotSendDataFinished(QNetworkReply *reply)
 {
+#if 0 //QT5
     const QString data = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
     if (mError) {
@@ -270,11 +271,13 @@ void BoxJob::slotSendDataFinished(QNetworkReply *reply)
         parseDownloadFile(data);
         break;
     }
+#endif
 }
 
 
 void BoxJob::parseAccountInfo(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -288,6 +291,7 @@ void BoxJob::parseAccountInfo(const QString &data)
         accountInfo.quota = info.value(QLatin1String("space_amount")).toLongLong();
     }
     Q_EMIT accountInfoDone(accountInfo);
+#endif
     deleteLater();
 }
 
@@ -618,6 +622,8 @@ void BoxJob::parseMoveFile(const QString &data)
 
 QString BoxJob::parseNameInfo(const QString &data)
 {
+    QString filename;
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -626,11 +632,13 @@ QString BoxJob::parseNameInfo(const QString &data)
     if (info.contains(QLatin1String("name"))) {
         filename = info.value(QLatin1String("name")).toString();
     }
+#endif
     return filename;
 }
 
 void BoxJob::parseShareLink(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -643,6 +651,7 @@ void BoxJob::parseShareLink(const QString &data)
         }
     }
     Q_EMIT shareLinkDone(url);
+#endif
     deleteLater();
 }
 
@@ -684,6 +693,7 @@ QNetworkReply * BoxJob::downloadFile(const QString &name, const QString &fileId,
 
 void BoxJob::parseAccessToken(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -701,5 +711,6 @@ void BoxJob::parseAccessToken(const QString &data)
     }
     //qDebug()<<" parseAccessToken";
     Q_EMIT authorizationDone(mRefreshToken, mToken, expireInTime);
+#endif
     deleteLater();
 }

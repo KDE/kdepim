@@ -24,9 +24,9 @@
 #include "messageitem.h"
 #include "item_p.h"
 #include "messagecore/widgets/annotationdialog.h"
-#include <Akonadi/Item>
-#include <Akonadi/Monitor>
-#include <Akonadi/Tag>
+#include <Item>
+#include <Monitor>
+#include <Tag>
 #include <KJob>
 #include <QWeakPointer>
 #include <QCache>

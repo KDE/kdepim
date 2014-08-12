@@ -30,7 +30,7 @@
 #ifndef MAILCOMMON_FILTERIMPORTEREXPORTER_H
 #define MAILCOMMON_FILTERIMPORTEREXPORTER_H
 
-#include "../mailcommon_export.h"
+#include "mailcommon_export.h"
 
 #include <KSharedConfig>
 #include <KUrl>

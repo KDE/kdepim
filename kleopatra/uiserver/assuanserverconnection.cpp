@@ -36,6 +36,7 @@
 # define QT_NO_CAST_FROM_ASCII
 #endif
 
+#include "config-kdepim.h"
 #include <config-kleopatra.h>
 #include <version-kleopatra.h>
 
@@ -104,12 +105,12 @@
 # include <sys/types.h>
 # include <unistd.h>
 #endif
-
-#ifdef Q_WS_X11
+#if 0 //QT5
+#if KDEPIM_HAVE_X11
 # include <qx11info_x11.h>
 # include <X11/Xlib.h>
 #endif
-
+#endif
 using namespace Kleo;
 using namespace boost;
 
@@ -225,7 +226,7 @@ static void apply_window_id( QWidget * widget, const QString & winIdStr ) {
     bool ok = false;
     const WId wid = wid_from_string( winIdStr, &ok );
     if ( !ok ) {
-        kDebug() << "window-id value" << wid << "doesn't look like a number";
+        qDebug() << "window-id value" << wid << "doesn't look like a number";
         return;
     }
     if ( QWidget * pw = QWidget::find( wid ) )
@@ -377,7 +378,7 @@ private:
         }
         if ( !rx.cap( 2 ).isEmpty() )
             conn.sessionTitle = rx.cap( 2 );
-        kDebug() << "session_handler: "
+        qDebug() << "session_handler: "
                  << "id=" << static_cast<unsigned long>( conn.sessionId )
                  << ", title=" << qPrintable( conn.sessionTitle );
         return assuan_process_done( ctx_, 0 );
@@ -554,10 +555,10 @@ private:
             if ( binOpt && !in ) {
                 Output* out = reinterpret_cast <Output*>( io.get() );
                 out->setBinaryOpt( true );
-                kDebug() << "Configured output for binary data";
+                qDebug() << "Configured output for binary data";
             }
 
-            kDebug() << "AssuanServerConnection: added" << io->label();
+            qDebug() << "AssuanServerConnection: added" << io->label();
 
             return assuan_process_done( conn.ctx.get(), 0 );
         } catch ( const GpgME::Exception & e ) {
@@ -1289,7 +1290,7 @@ int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char
 
 void AssuanCommand::done( const GpgME::Error& err, const QString & details ) {
     if ( d->ctx && !d->done && !details.isEmpty() ) {
-        kDebug() << "Error: " << details;
+        qDebug() << "Error: " << details;
         d->utf8ErrorKeepAlive = details.toUtf8();
         if ( !d->nohup )
             assuan_set_error( d->ctx.get(), err.encodedError(), d->utf8ErrorKeepAlive.constData() );
@@ -1299,11 +1300,11 @@ void AssuanCommand::done( const GpgME::Error& err, const QString & details ) {
 
 void AssuanCommand::done( const GpgME::Error& err ) {
     if ( !d->ctx ) {
-        kDebug() << err.asString() << ": called with NULL ctx.";
+        qDebug() << err.asString() << ": called with NULL ctx.";
         return;
     }
     if ( d->done ) {
-        kDebug() << err.asString() << ": called twice!";
+        qDebug() << err.asString() << ": called twice!";
         return;
     }
 

@@ -1,1 +1,1 @@
-kde4_install_icons(${ICON_INSTALL_DIR})
+ecm_install_icons( ICONS hi128-apps-akonadiconsole.png  hi16-apps-akonadiconsole.png  hi22-apps-akonadiconsole.png  hi256-apps-akonadiconsole.png  hi32-apps-akonadiconsole.png  hi48-apps-akonadiconsole.png  hi64-apps-akonadiconsole.png DESTINATION ${ICON_INSTALL_DIR} )

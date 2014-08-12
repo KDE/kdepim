@@ -28,7 +28,7 @@
 #include <messagelist/core/enums.h>
 #include <messagelist/messagelist_export.h>
 
-class KMenu;
+class QMenu;
 
 class QTimer;
 
@@ -366,11 +366,11 @@ public:
    */
     virtual void setRowHidden( int row, const QModelIndex & parent, bool hide );
 
-    void sortOrderMenuAboutToShow(KMenu *menu);
+    void sortOrderMenuAboutToShow(QMenu *menu);
 
-    void aggregationMenuAboutToShow(KMenu *menu);
+    void aggregationMenuAboutToShow(QMenu *menu);
 
-    void themeMenuAboutToShow(KMenu *menu);
+    void themeMenuAboutToShow(QMenu *menu);
 
     void setCollapseItem(const QModelIndex& index);
     void setExpandItem(const QModelIndex& index);

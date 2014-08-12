@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include <KSharedConfig>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <QPointer>
 namespace FollowUpReminder {
 class FollowUpReminderInfo;

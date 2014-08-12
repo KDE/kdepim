@@ -25,9 +25,9 @@
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KMessageBox>
 #include <KLocale>
+#include <QDebug>
 
 #include <QStringList>
 #include <QTimer>
@@ -38,9 +38,9 @@ SendLaterManager::SendLaterManager(QObject *parent)
       mCurrentJob(0),
       mSender(new MessageComposer::AkonadiSender)
 {
-    mConfig = KGlobal::config();
+    mConfig = KSharedConfig::openConfig();
     mTimer = new QTimer(this);
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(slotCreateJob()));
+    connect(mTimer, &QTimer::timeout, this, &SendLaterManager::slotCreateJob);
 }
 
 SendLaterManager::~SendLaterManager()
@@ -132,7 +132,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
             mCurrentInfo = info;
             slotCreateJob();
         } else {
-            kDebug()<<" can't find info about current id: "<<id;
+            qDebug()<<" can't find info about current id: "<<id;
             itemRemoved(id);
         }
     } else {
@@ -144,7 +144,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
 void SendLaterManager::slotCreateJob()
 {
     if (mCurrentJob) {
-        kDebug()<<" Problem we have already a job"<<mCurrentJob;
+        qDebug()<<" Problem we have already a job"<<mCurrentJob;
         return;
     }
     mCurrentJob = new SendLaterJob(this, mCurrentInfo);

@@ -3,7 +3,7 @@ project( contactthemeeditor )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon/
@@ -29,14 +29,14 @@ set(contactthemeeditor_SRCS
 )
 
 
-kde4_add_executable(contactthemeeditor ${contactthemeeditor_SRCS} )
+add_executable(contactthemeeditor ${contactthemeeditor_SRCS} )
 TARGET_LINK_LIBRARIES(contactthemeeditor 
-                       ${KDEPIMLIBS_KMIME_LIBS} 
-                       ${KDE4_KDEUI_LIBS} 
-                       ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} 
-                       ${KDE4_KIO_LIBS} 
-                       ${KDE4_KNEWSTUFF3_LIBS} 
-                       ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+                       KF5::Mime 
+                       KF5::DBusAddons                        
+                       KF5::PimTextEdit 
+                       KF5::KIOCore 
+                       KF5::NewStuff 
+                       KF5::AkonadiContact
                        pimcommon 
                        grantleethemeeditor 
                        kaddressbookgrantlee
@@ -46,6 +46,6 @@ install(TARGETS contactthemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
   contactthemeeditorui.rc
-  DESTINATION  ${DATA_INSTALL_DIR}/contactthemeeditor)
+  DESTINATION  ${KXMLGUI_INSTALL_DIR}/contactthemeeditor)
 
 install(PROGRAMS contactthemeeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

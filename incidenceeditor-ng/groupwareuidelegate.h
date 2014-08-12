@@ -16,9 +16,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 
-#include <akonadi/calendar/itiphandler.h>
+#include <Akonadi/Calendar/ITIPHandler>
 
 // Class to edit counter proposals through incidence editors
 namespace IncidenceEditorNG {

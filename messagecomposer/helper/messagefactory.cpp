@@ -22,14 +22,14 @@
 #include "settings/messagecomposersettings.h"
 #include "messagecomposer/utils/util.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 #ifndef QT_NO_CURSOR
 #include <messageviewer/utils/kcursorsaver.h>
 #endif
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
 
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include <kmime/kmime_dateformatter.h>
 #include <KPIMUtils/Email>
 #include <messagecore/misc/mailinglist.h>
@@ -38,8 +38,12 @@
 #include "helper/messagehelper.h"
 #include "templateparser/templateparser.h"
 #include <KLocalizedString>
+#include <QDebug>
+#include <KGlobal>
 #include <kcharsets.h>
 #include <QTextCodec>
+#include <KCharsets>
+#include <KDateTime>
 
 using namespace MessageComposer;
 
@@ -190,7 +194,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
                 // The sender didn't set a Reply-to address, so we add the From
                 // address to the list of CC recipients.
                 ccRecipients += m_origMsg->from()->mailboxes();
-                kDebug() << "Added" << m_origMsg->from()->asUnicodeString() << "to the list of CC recipients";
+                qDebug() << "Added" << m_origMsg->from()->asUnicodeString() << "to the list of CC recipients";
             }
 
             // if it is a mailing list, add the posting address
@@ -201,7 +205,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
                 // in case of replying to a normal message only then add the From
                 // address to the list of recipients if there was no Reply-to address
                 recipients += m_origMsg->from()->mailboxes();
-                kDebug() << "Added" << m_origMsg->from()->asUnicodeString() << "to the list of recipients";
+                qDebug() << "Added" << m_origMsg->from()->asUnicodeString() << "to the list of recipients";
             }
         }
 
@@ -220,7 +224,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
                 if ( !recipients.contains( mailbox ) &&
                      !ccRecipients.contains( mailbox ) ) {
                     ccRecipients += mailbox;
-                    kDebug() << "Added" << mailbox.prettyAddress() <<"to the list of CC recipients";
+                    qDebug() << "Added" << mailbox.prettyAddress() <<"to the list of CC recipients";
                 }
             }
         }
@@ -458,7 +462,7 @@ KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Mess
     // THIS HAS TO BE AFTER setCte()!!!!
     msgPart->setCharset( "" );
 #else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+    qDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
     MessageCore::Util::addLinkInformation( fwdMsg, m_origId, Akonadi::MessageStatus::statusForwarded() );
     return msgPart;
@@ -701,7 +705,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
     receipt->assemble();
 
 
-    kDebug() << "final message:" + receipt->encodedContent();
+    qDebug() << "final message:" + receipt->encodedContent();
 
     receipt->assemble();
     return receipt;
@@ -747,7 +751,7 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
     id = m_folderId;
     MessageHelper::initHeader( msg, m_identityManager, id );
 
-    //   kDebug() << "digest:" << digest->contents().size() << digest->encodedContent();
+    //   qDebug() << "digest:" << digest->contents().size() << digest->encodedContent();
 
     return QPair< KMime::Message::Ptr, KMime::Content* >( msg, digest );
 }
@@ -823,7 +827,7 @@ bool MessageFactory::MDNConfirmMultipleRecipients( const KMime::Message::Ptr& ms
     // RFC 2298: [ Confirmation from the user SHOULD be obtained (or no
     // MDN sent) ] if there is more than one distinct address in the
     // Disposition-Notification-To header.
-    kDebug() << "KPIMUtils::splitAddressList(receiptTo):" // krazy:exclude=kdebug
+    qDebug() << "KPIMUtils::splitAddressList(receiptTo):" // krazy:exclude=kdebug
              << KPIMUtils::splitAddressList(receiptTo).join(QString::fromLatin1("\n"));
 
     return KPIMUtils::splitAddressList(receiptTo).count() > 1;
@@ -844,7 +848,7 @@ bool MessageFactory::MDNReturnPathEmpty( const KMime::Message::Ptr& msg )
     KMime::Types::AddrSpecList returnPathList = MessageHelper::extractAddrSpecs( msg, "Return-Path");
     QString returnPath = returnPathList.isEmpty() ? QString()
                                                   : returnPathList.front().localPart + QChar::fromLatin1('@') + returnPathList.front().domain;
-    kDebug() << "clean return path:" << returnPath;
+    qDebug() << "clean return path:" << returnPath;
     return returnPath.isEmpty();
 }
 
@@ -863,7 +867,7 @@ bool MessageFactory::MDNReturnPathNotInRecieptTo( const  KMime::Message::Ptr& ms
     KMime::Types::AddrSpecList returnPathList = MessageHelper::extractAddrSpecs( msg, QString::fromLatin1("Return-Path").toLatin1());
     QString returnPath = returnPathList.isEmpty() ? QString()
                                                   : returnPathList.front().localPart + QChar::fromLatin1('@') + returnPathList.front().domain;
-    kDebug() << "clean return path:" << returnPath;
+    qDebug() << "clean return path:" << returnPath;
     return !receiptTo.contains( returnPath, Qt::CaseSensitive );
 }
 
@@ -914,10 +918,10 @@ QString MessageFactory::replaceHeadersInString( const KMime::Message::Ptr &msg, 
     QRegExp rxDate( QString::fromLatin1("\\$\\{date\\}") );
     Q_ASSERT( rxDate.isValid() );
 
-    kDebug() << "creating mdn date:" << msg->date()->dateTime().dateTime().toTime_t() << KMime::DateFormatter::formatDate(
-                    KMime::DateFormatter::Localized, msg->date()->dateTime().dateTime().toTime_t() );
+    qDebug() << "creating mdn date:" << msg->date()->dateTime().toTime_t() << KMime::DateFormatter::formatDate(
+                    KMime::DateFormatter::Localized, msg->date()->dateTime().toTime_t() );
     QString sDate = KMime::DateFormatter::formatDate(
-                KMime::DateFormatter::Localized, msg->date()->dateTime().dateTime().toTime_t() );
+                KMime::DateFormatter::Localized, msg->date()->dateTime().toTime_t() );
 
     int idx = 0;
     if( ( idx = rxDate.indexIn( result, idx ) ) != -1  ) {
@@ -937,18 +941,18 @@ void MessageFactory::applyCharset( const KMime::Message::Ptr msg )
 {
     if ( MessageComposer::MessageComposerSettings::forceReplyCharset() ) {
         // first convert the body from its current encoding to unicode representation
-        QTextCodec *bodyCodec = KGlobal::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
+        QTextCodec *bodyCodec = KCharsets::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
         if ( !bodyCodec )
-            bodyCodec = KGlobal::charsets()->codecForName( QLatin1String( "UTF-8" ) );
+            bodyCodec = KCharsets::charsets()->codecForName( QLatin1String( "UTF-8" ) );
 
         const QString body = bodyCodec->toUnicode( msg->body() );
 
         // then apply the encoding of the original message
         msg->contentType()->setCharset( m_origMsg->contentType()->charset() );
 
-        QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
+        QTextCodec *codec = KCharsets::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
         if ( !codec ) {
-            kError() << "Could not get text codec for charset" << msg->contentType()->charset();
+            qCritical() << "Could not get text codec for charset" << msg->contentType()->charset();
         } else if ( !codec->canEncode( body ) ) { // charset can't encode body, fall back to preferred
             const QStringList charsets = MessageComposer::MessageComposerSettings::preferredCharsets();
 
@@ -960,7 +964,7 @@ void MessageFactory::applyCharset( const KMime::Message::Ptr msg )
             if ( fallbackCharset.isEmpty() ) // UTF-8 as fall-through
                 fallbackCharset = "UTF-8";
 
-            codec = KGlobal::charsets()->codecForName( QString::fromLatin1( fallbackCharset ) );
+            codec = KCharsets::charsets()->codecForName( QString::fromLatin1( fallbackCharset ) );
             msg->setBody( codec->fromUnicode( body ) );
         } else {
             msg->setBody( codec->fromUnicode( body ) );

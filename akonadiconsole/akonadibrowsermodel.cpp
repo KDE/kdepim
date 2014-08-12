@@ -25,8 +25,8 @@
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 
-#include <kcalcore/incidence.h>
-#include <kcalcore/event.h>
+#include <KCalCore/Incidence>
+#include <KCalCore/Event>
 
 #include <boost/shared_ptr.hpp>
 

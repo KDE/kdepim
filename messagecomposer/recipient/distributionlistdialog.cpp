@@ -22,17 +22,17 @@
 
 #include "distributionlistdialog.h"
 
-#include <akonadi/collectiondialog.h>
-#include <akonadi/contact/contactgroupsearchjob.h>
-#include <akonadi/contact/contactsearchjob.h>
-#include <akonadi/itemcreatejob.h>
-#include <kpimutils/email.h>
+#include <AkonadiWidgets/collectiondialog.h>
+#include <Akonadi/Contact/ContactGroupSearchJob>
+#include <Akonadi/Contact/ContactSearchJob>
+#include <AkonadiCore/itemcreatejob.h>
+#include <KPIMUtils/kpimutils/email.h>
 
 #include <KLocalizedString>
-#include <KDebug>
-#include <KLineEdit>
+#include <QDebug>
+#include <QLineEdit>
 #include <KMessageBox>
-#include <KInputDialog>
+#include <QInputDialog>
 
 #include <QLabel>
 #include <QTreeWidget>
@@ -40,6 +40,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <KSharedConfig>
 
 using namespace MessageComposer;
 
@@ -123,10 +124,10 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
                 i18nc("@label:textbox Name of the distribution list.", "&Name:"), topFrame );
     titleLayout->addWidget( label );
 
-    mTitleEdit = new KLineEdit( topFrame );
+    mTitleEdit = new QLineEdit( topFrame );
     titleLayout->addWidget( mTitleEdit );
     mTitleEdit->setFocus();
-    mTitleEdit->setClearButtonShown( true );
+    mTitleEdit->setClearButtonEnabled( true );
     label->setBuddy( mTitleEdit );
 
     mRecipientsList = new QTreeWidget( topFrame );
@@ -252,8 +253,8 @@ void DistributionListDialog::slotUser1()
 
     if ( name.isEmpty() ) {
         bool ok = false;
-        name = KInputDialog::getText( i18nc("@title:window","New Distribution List"),
-                                      i18nc("@label:textbox","Please enter name:"), QString(), &ok, this );
+        name = QInputDialog::getText( this, i18nc("@title:window","New Distribution List"),
+                                      i18nc("@label:textbox","Please enter name:"), QLineEdit::Normal, QString(), &ok );
         if ( !ok || name.isEmpty() )
             return;
     }
@@ -271,7 +272,7 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
 
     if ( !searchJob->contactGroups().isEmpty() ) {
         KMessageBox::information( this,
-                                  i18nc( "@info", "<para>Distribution list with the given name <resource>%1</resource> "
+                                  xi18nc( "@info", "<para>Distribution list with the given name <resource>%1</resource> "
                                          "already exists. Please select a different name.</para>", name ) );
         return;
     }
@@ -292,7 +293,7 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
         for ( int i = 0; i < numberOfTopLevel; ++i ) {
             DistributionListItem *item = static_cast<DistributionListItem *>( mRecipientsList->topLevelItem( i ) );
             if ( item && item->checkState( 0 ) == Qt::Checked ) {
-                kDebug() << item->addressee().fullEmail() << item->addressee().uid();
+                qDebug() << item->addressee().fullEmail() << item->addressee().uid();
                 if ( item->isTransient() ) {
                     group.append( KABC::ContactGroup::Data( item->addressee().realName(), item->email() ) );
                 } else {
@@ -319,7 +320,7 @@ void DistributionListDialog::slotContactGroupCreateJobResult( KJob *job )
 {
     if ( job->error() ) {
         KMessageBox::information( this, i18n("Unable to create distribution list: %1", job->errorString() ));
-        kWarning() << "Unable to create distribution list:" << job->errorText();
+        qWarning() << "Unable to create distribution list:" << job->errorText();
     } else {
         accept();
     }
@@ -332,7 +333,7 @@ void DistributionListDialog::slotTitleChanged( const QString& text )
 
 void DistributionListDialog::readConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "DistributionListDialog" );
     const QSize size = group.readEntry( "Size", QSize() );
     if ( !size.isEmpty() ) {
@@ -343,7 +344,7 @@ void DistributionListDialog::readConfig()
 
 void DistributionListDialog::writeConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "DistributionListDialog" );
     group.writeEntry( "Size", size() );
     group.writeEntry( "Header", mRecipientsList->header()->saveState() );

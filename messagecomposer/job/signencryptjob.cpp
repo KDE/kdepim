@@ -27,10 +27,10 @@
 #include "kleo/signencryptjob.h"
 #include "util.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
-#include <kmime/kmime_util.h>
+#include <kmime/kmime_headers.h>
 #include <QBuffer>
 
 #include <gpgme++/global.h>
@@ -168,7 +168,7 @@ void SignEncryptJob::process()
 
     //d->resultContent = new KMime::Content;
 
-    kDebug() << "creating signencrypt from:" << proto->name() << proto->displayName();
+    qDebug() << "creating signencrypt from:" << proto->name() << proto->displayName();
     std::auto_ptr<Kleo::SignEncryptJob> job( proto->signEncryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat ) );
     QByteArray encBody;
     d->content->assemble();
@@ -195,14 +195,14 @@ void SignEncryptJob::process()
     job->deleteLater();
 
     if ( res.first.error() ) {
-        kDebug() << "signing failed:" << res.first.error().asString();
+        qDebug() << "signing failed:" << res.first.error().asString();
         setError( res.first.error().code() );
         setErrorText( QString::fromLocal8Bit( res.first.error().asString() ) );
         emitResult();
         return;
     }
     if ( res.second.error() ) {
-        kDebug() << "encrypyting failed:" << res.second.error().asString();
+        qDebug() << "encrypyting failed:" << res.second.error().asString();
         setError( res.second.error().code() );
         setErrorText( QString::fromLocal8Bit( res.second.error().asString() ) );
         emitResult();

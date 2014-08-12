@@ -25,17 +25,22 @@
 #include "ui_attachmentpropertiesdialog.h"
 #include "ui_attachmentpropertiesdialog_readonly.h"
 
-#include <KAboutData>
+#include <k4aboutdata.h>
 #include <KComponentData>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
-#include <KMimeType>
+#include <KIconLoader>
+
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
-#include <kmime/kmime_util.h>
+#include <kmime/kmime_headers.h>
 
 #include <boost/shared_ptr.hpp>
+#include <KLocale>
+#include <KFormat>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace MessageCore;
 
@@ -115,10 +120,11 @@ void AttachmentPropertiesDialog::Private::polishUi()
 
 void AttachmentPropertiesDialog::Private::mimeTypeChanged( const QString &type )
 {
-    const KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
+    QMimeDatabase db;
+    const QMimeType mimeType = db.mimeTypeForName( type );
     QPixmap pix;
-    if ( !mimeType.isNull() ) {
-        pix = KIconLoader::global()->loadMimeTypeIcon( mimeType->iconName(), KIconLoader::Desktop );
+    if (mimeType.isValid()) {
+        pix = KIconLoader::global()->loadMimeTypeIcon( mimeType.iconName(), KIconLoader::Desktop );
     } else {
         pix = DesktopIcon( QLatin1String("unknown") );
     }
@@ -137,7 +143,7 @@ void AttachmentPropertiesDialog::Private::populateWhatsThis()
                                       "<p>Normally, you do not need to touch this setting, since the "
                                       "type of the file is automatically checked; but, sometimes, %1 "
                                       "may not detect the type correctly -- here is where you can fix "
-                                      "that.</p>", KGlobal::mainComponent().aboutData()->programName() );
+                                      "that.</p>", KComponentData::mainComponent().aboutData()->programName() );
 
     const QString msgSize = i18n( "<p>The estimated size of the attachment:</p>"
                                   "<p>Note that, in an email message, a binary file encoded with "
@@ -163,7 +169,7 @@ void AttachmentPropertiesDialog::Private::populateWhatsThis()
                                       "binary data, but consists of pure text -- in this case, choosing "
                                       "\"quoted-printable\" over the default \"base64\" will save up "
                                       "to 25% in resulting message size.</p>",
-                                      KGlobal::mainComponent().aboutData()->programName() );
+                                      KComponentData::mainComponent().aboutData()->programName() );
 
     const QString msgAutoDisplay = i18n( "<p>Check this option if you want to suggest to the "
                                          "recipient the automatic (inline) display of this part in the "
@@ -241,13 +247,13 @@ void AttachmentPropertiesDialog::Private::loadFromPart()
     if(mReadOnly) {
         uiReadOnly->mimeType->setText( QString::fromLatin1(mPart->mimeType()) );
         mimeTypeChanged( QString::fromLatin1(mPart->mimeType()) );
-        uiReadOnly->size->setText( KGlobal::locale()->formatByteSize( mPart->size() ) );
+        uiReadOnly->size->setText( KFormat().formatByteSize( mPart->size() ) );
         uiReadOnly->name->setText( mPart->name().isEmpty() ? mPart->fileName() : mPart->name()  );
         uiReadOnly->description->setText( mPart->description() );
         uiReadOnly->encoding->setText( KMime::nameForEncoding( mPart->encoding() ) );
     } else {
         ui->mimeType->setCurrentItem( QString::fromLatin1(mPart->mimeType()), true );
-        ui->size->setText( KGlobal::locale()->formatByteSize( mPart->size() ) );
+        ui->size->setText( KFormat().formatByteSize( mPart->size() ) );
         ui->name->setText( mPart->name().isEmpty() ? mPart->fileName() : mPart->name()  );
         ui->description->setText( mPart->description() );
         ui->encoding->setCurrentIndex( int( mPart->encoding() ) );
@@ -283,7 +289,7 @@ void AttachmentPropertiesDialog::Private::saveToPart()
     if ( ui->mimeType->currentText().startsWith( QLatin1String( "message" ) ) &&
          ui->encoding->itemData( ui->encoding->currentIndex() ) != KMime::Headers::CE7Bit &&
          ui->encoding->itemData( ui->encoding->currentIndex() ) != KMime::Headers::CE8Bit ) {
-        kWarning() << "Encoding on message/rfc822 must be \"7bit\" or \"8bit\".";
+        qWarning() << "Encoding on message/rfc822 must be \"7bit\" or \"8bit\".";
     }
 
     mPart->setEncoding( KMime::Headers::contentEncoding(
@@ -307,7 +313,7 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *co
     AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob( content, this );
     job->exec();
     if ( job->error() ) {
-        kError() << "AttachmentFromMimeContentJob failed."<<job->errorString();
+        qCritical() << "AttachmentFromMimeContentJob failed."<<job->errorString();
     }
 
     const AttachmentPart::Ptr part = job->attachmentPart();

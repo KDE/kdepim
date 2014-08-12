@@ -19,10 +19,13 @@
 #include "pimcommon/storageservice/gdrive/gdrivestorageservice.h"
 #include <QWidget>
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+#include <qdebug.h>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 
 GdriveTestWidget::GdriveTestWidget(QWidget *parent)
@@ -34,10 +37,18 @@ GdriveTestWidget::GdriveTestWidget(QWidget *parent)
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "gdrive_gui", 0, ki18n("gdrive_Gui"),
-                       "1.0", ki18n("Test for gdrive"));
+    KAboutData aboutData( QLatin1String("gdrive_gui"), i18n("gdrive_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for gdrive"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     GdriveTestWidget *w = new GdriveTestWidget;
     w->show();

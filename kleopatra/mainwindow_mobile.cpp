@@ -68,8 +68,8 @@
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KStandardAction>
-#include <KAction>
-#include <KAboutData>
+#include <QAction>
+#include <K4AboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KLineEdit>
@@ -77,7 +77,7 @@
 #include <KShortcutsDialog>
 #endif
 #include <KAboutApplicationDialog>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QTreeView>
 #include <QApplication>
@@ -111,7 +111,7 @@ using namespace GpgME;
 
 namespace {
 
-    static const KAboutData * aboutGpg4WinData() {
+    static const K4AboutData * aboutGpg4WinData() {
         static const AboutGpg4WinData data;
         return &data;
     }
@@ -135,7 +135,7 @@ public:
 };
 
 static KGuiItem KStandardGuiItem_quit() {
-    static const QString app = KGlobal::mainComponent().aboutData()->programName();
+    static const QString app = KComponentData::mainComponent().aboutData()->programName();
     KGuiItem item = KStandardGuiItem::quit();
     item.setText( i18nc( "Quit [ApplicationName]", "&Quit %1", app ) );
     return item;
@@ -328,7 +328,7 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
 
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
-    kDebug();
+    qDebug();
     if ( d->controller.hasRunningCommands() ) {
         if ( d->controller.shutdownWarningRequired() ) {
             const int ret = KMessageBox::warningContinueCancel( this, i18n("There are still some background operations ongoing. "

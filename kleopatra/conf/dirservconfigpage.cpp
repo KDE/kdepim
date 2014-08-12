@@ -37,7 +37,7 @@
 #include "libkleo/ui/cryptoconfigmodule.h"
 #include "libkleo/kleo/cryptobackendfactory.h"
 
-#include <kdemacros.h>
+
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -150,7 +150,7 @@ static const char s_addnewservers_groupName[] = "LDAP";
 static const char s_addnewservers_entryName[] = "add-servers";
 
 DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
-    : KCModule( instance, parent, args )
+    : KCModule( /*instance,*/ parent, args )
 {
   mConfig = Kleo::CryptoBackendFactory::instance()->config();
   QGridLayout * glay = new QGridLayout( this );
@@ -179,7 +179,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
   // Max number of items returned by queries
   ++row;
   mMaxItemsLabel = new QLabel( i18n( "&Maximum number of items returned by query:" ), this );
-  mMaxItems = new KIntNumInput( this );
+  mMaxItems = new QSpinBox( this );
   mMaxItems->setMinimum( 0 );
   mMaxItemsLabel->setBuddy( mMaxItems );
   connect( mMaxItems, SIGNAL(valueChanged(int)), this, SLOT(changed()) );
@@ -361,7 +361,7 @@ void DirectoryServicesConfigurationPage::defaults()
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kleopatra_config_dirserv( QWidget *parent=0, const QVariantList &args=QVariantList() )
+  Q_DECL_EXPORT KCModule *create_kleopatra_config_dirserv( QWidget *parent=0, const QVariantList &args=QVariantList() )
   {
     DirectoryServicesConfigurationPage *page =
       new DirectoryServicesConfigurationPage( KComponentData( "kleopatra" ), parent, args );

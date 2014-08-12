@@ -29,13 +29,13 @@
 
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <Akonadi/Calendar/ETMCalendar>
-#include <Akonadi/Item>
+#include <Item>
 #include <KVBox>
 
 #include <QDate>
 #include <QFrame>
 
-class KTextBrowser;
+class QTextBrowser;
 class QPushButton;
 
 namespace EventViews {
@@ -87,7 +87,7 @@ class JournalFrame : public QFrame
     QDate mDate;
     bool mReadOnly;
 
-    KTextBrowser *mBrowser;
+    QTextBrowser *mBrowser;
     QPushButton *mEditButton;
     QPushButton *mDeleteButton;
     QPushButton *mPrintButton;

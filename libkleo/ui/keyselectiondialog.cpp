@@ -56,20 +56,16 @@
 #include <kwindowsystem.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
-#include <kpushbutton.h>
+#include <qpushbutton.h>
 #include <kconfiggroup.h>
-#include <kmenu.h>
+#include <qmenu.h>
 #include <klineedit.h>
 #include <kurl.h>
 
 // Qt
 #include <QCheckBox>
-#include <QToolButton>
 #include <QLabel>
-#include <QPixmap>
 #include <QTimer>
-#include <QLayout>
-#include <QLineEdit>
 #include <QDateTime>
 #include <QProcess>
 
@@ -86,6 +82,7 @@
 #include <string.h>
 #include <assert.h>
 #include <qscrollbar.h>
+#include <KSharedConfig>
 
 static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
@@ -180,10 +177,10 @@ namespace {
 
     QString text( const GpgME::Key & key, int col ) const;
     QString toolTip( const GpgME::Key & key, int col ) const;
-    KIcon icon( const GpgME::Key & key, int col ) const;
+    QIcon icon( const GpgME::Key & key, int col ) const;
 
   private:
-    const KIcon mKeyGoodPix, mKeyBadPix, mKeyUnknownPix, mKeyValidPix;
+    const QIcon mKeyGoodPix, mKeyBadPix, mKeyUnknownPix, mKeyValidPix;
     const unsigned int mKeyUsage;
   };
 
@@ -225,7 +222,7 @@ namespace {
         if ( key.shortKeyID() )
           return QString::fromUtf8( key.shortKeyID() );
         else
-          return i18n("<placeholder>unknown</placeholder>");
+          return xi18n("<placeholder>unknown</placeholder>");
       }
       break;
     case 1:
@@ -268,9 +265,9 @@ namespace {
               issuer ? Kleo::DN( issuer ).prettyDN() : i18n("unknown") );
   }
 
-  KIcon ColumnStrategy::icon( const GpgME::Key & key, int col ) const {
+  QIcon ColumnStrategy::icon( const GpgME::Key & key, int col ) const {
     if ( col != 0 )
-      return KIcon();
+      return QIcon();
     // this key did not undergo a validating keylisting yet:
     if ( !( key.keyListMode() & GpgME::Validate ) )
       return mKeyUnknownPix;
@@ -480,7 +477,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(iconSize, iconSize),
                              qApp->windowIcon().pixmap(miniSize, miniSize) );
 
-    KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
+    KConfigGroup dialogConfig( KSharedConfig::openConfig(), "Key Selection Dialog" );
     dialogSize = dialogConfig.readEntry( "Dialog size", dialogSize );
     const QByteArray headerState = dialogConfig.readEntry( "header", QByteArray());
     if (!headerState.isEmpty())
@@ -490,7 +487,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 }
 
 Kleo::KeySelectionDialog::~KeySelectionDialog() {
-  KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
+  KConfigGroup dialogConfig( KSharedConfig::openConfig(), "Key Selection Dialog" );
   dialogConfig.writeEntry( "Dialog size", size() );
   dialogConfig.writeEntry( "header", mKeyListView->header()->saveState());
   dialogConfig.sync();
@@ -777,7 +774,7 @@ void Kleo::KeySelectionDialog::slotRMB( Kleo::KeyListViewItem * item, const QPoi
 
   mCurrentContextMenuItem = item;
 
-  KMenu menu;
+  QMenu menu;
   menu.addAction( i18n( "Recheck Key" ), this, SLOT(slotRecheckKey()) );
   menu.exec( p );
 }

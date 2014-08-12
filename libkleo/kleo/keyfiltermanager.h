@@ -33,7 +33,7 @@
 #ifndef __KLEO_KEYFILTERMANAGER_H__
 #define __KLEO_KEYFILTERMANAGER_H__
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 #include <QtCore/QObject>
 
 #include <boost/shared_ptr.hpp>

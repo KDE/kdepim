@@ -24,19 +24,22 @@
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kwindowsystem.h>
-#include <kpushbutton.h>
+#include <QPushButton>
+#include <QPushButton>
 #include <kmessagebox.h>
 
-#include <akonadi/agentinstance.h>
+#include <agentinstance.h>
 #include <kmanagesieve/sievejob.h>
 #include <ksieveui/util/util.h>
 
 #include <QApplication>
-#include <QMenu>
 #include <QTreeWidget>
 #include <QVBoxLayout>
 
 #include <errno.h>
+#include <KSharedConfig>
+#include <KGuiItem>
+#include <KStandardGuiItem>
 
 using namespace KSieveUi;
 
@@ -64,7 +67,7 @@ bool CustomManageSieveWidget::refreshList()
         last = new SieveTreeWidgetItem( treeView(), last );
         last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
 
-        const KUrl u = KSieveUi::Util::findSieveUrlForAccount( type.identifier() );
+        const QUrl u = KSieveUi::Util::findSieveUrlForAccount( type.identifier() );
         if ( u.isEmpty() ) {
             QTreeWidgetItem *item = new QTreeWidgetItem( last );
             item->setText( 0, i18n( "No Sieve URL configured" ) );
@@ -105,35 +108,36 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     vlay->setMargin( 0 );
 
     mTreeView = new CustomManageSieveWidget( frame);
-    connect(mTreeView, SIGNAL(editScript(KUrl,QStringList)), SLOT(slotEditScript(KUrl,QStringList)));
-    connect(mTreeView, SIGNAL(newScript(KUrl,QStringList)), SLOT(slotNewScript(KUrl,QStringList)));
+    connect(mTreeView, SIGNAL(editScript(QUrl,QStringList)), SLOT(slotEditScript(QUrl,QStringList)));
+    connect(mTreeView, SIGNAL(newScript(QUrl,QStringList)), SLOT(slotNewScript(QUrl,QStringList)));
     connect(mTreeView, SIGNAL(updateButtons(QTreeWidgetItem*)), SLOT(slotUpdateButtons(QTreeWidgetItem*)));
     vlay->addWidget( mTreeView );
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     vlay->addLayout( buttonLayout );
 
-    mNewScript = new KPushButton( i18nc( "create a new sieve script", "New..." ) );
+    mNewScript = new QPushButton( i18nc( "create a new sieve script", "New..." ) );
     connect( mNewScript, SIGNAL(clicked()), mTreeView, SLOT(slotNewScript()) );
     buttonLayout->addWidget( mNewScript );
 
-    mEditScript = new KPushButton( i18n( "Edit..." ) );
+    mEditScript = new QPushButton( i18n( "Edit..." ) );
     connect( mEditScript, SIGNAL(clicked()), mTreeView, SLOT(slotEditScript()) );
     buttonLayout->addWidget( mEditScript );
 
-    mDeleteScript = new KPushButton( i18n( "Delete" ) );
+    mDeleteScript = new QPushButton( i18n( "Delete" ) );
     connect( mDeleteScript, SIGNAL(clicked()), mTreeView, SLOT(slotDeleteScript()) );
     buttonLayout->addWidget( mDeleteScript );
 
-    mDeactivateScript = new KPushButton( i18n( "Deactivate" ) );
+    mDeactivateScript = new QPushButton( i18n( "Deactivate" ) );
     connect( mDeactivateScript, SIGNAL(clicked()), mTreeView, SLOT(slotDeactivateScript()) );
     buttonLayout->addWidget( mDeactivateScript );
 
-    KPushButton *close = new KPushButton( KStandardGuiItem::close() );
+    QPushButton *close = new QPushButton;
+    KGuiItem::assign(close, KStandardGuiItem::close() );
     connect( close, SIGNAL(clicked()), this, SLOT(accept()) );
     buttonLayout->addWidget( close );
 
-    KConfigGroup group( KGlobal::config(), "ManageSieveScriptsDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ManageSieveScriptsDialog" );
     const QSize size = group.readEntry( "Size", QSize() );
     if ( size.isValid() ) {
         resize( size );
@@ -146,7 +150,7 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
 
 ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 {
-    KConfigGroup group( KGlobal::config(), "ManageSieveScriptsDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ManageSieveScriptsDialog" );
     group.writeEntry( "Size", size() );
 }
 
@@ -166,7 +170,7 @@ void ManageSieveScriptsDialog::slotUpdateButtons(QTreeWidgetItem *item)
 }
 
 
-void ManageSieveScriptsDialog::slotEditScript(const KUrl &url, const QStringList &capabilities)
+void ManageSieveScriptsDialog::slotEditScript(const QUrl &url, const QStringList &capabilities)
 {
     mCurrentURL = url;
     mCurrentCapabilities = capabilities;
@@ -176,7 +180,7 @@ void ManageSieveScriptsDialog::slotEditScript(const KUrl &url, const QStringList
              this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
-void ManageSieveScriptsDialog::slotNewScript(const KUrl &url, const QStringList &capabilities)
+void ManageSieveScriptsDialog::slotNewScript(const QUrl &url, const QStringList &capabilities)
 {
     mCurrentCapabilities = capabilities;
     mCurrentURL = url;
@@ -229,7 +233,7 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
     disableManagerScriptsDialog(false);
     mSieveEditor->deleteLater();
     mSieveEditor = 0;
-    mCurrentURL = KUrl();
+    mCurrentURL = QUrl();
     if ( mIsNewScript ) {
         mTreeView->slotRefresh();
     }
@@ -258,7 +262,7 @@ void ManageSieveScriptsDialog::slotPutResult( KManageSieve::SieveJob *, bool suc
                                   i18n( "Sieve Script Upload" ) );
         mSieveEditor->deleteLater();
         mSieveEditor = 0;
-        mCurrentURL = KUrl();
+        mCurrentURL = QUrl();
     } else {
         mSieveEditor->show();
     }

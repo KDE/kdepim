@@ -24,22 +24,35 @@
 
 #include <KLocalizedString>
 #include <KIO/Job>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KSharedConfig>
+#include <KUrl>
 
 #include <QHBoxLayout>
-#include <KDebug>
+#include <QDebug>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace MessageViewer;
 AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mTemporaryFile(0)
 {
-    setCaption( i18n("Show adblock list") );
-    setButtons( User1|Close );
-    setButtonText(User1, i18n("Delete list"));
-    enableButton(User1, false);
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDeleteBrokenList()));
+    setWindowTitle( i18n("Show adblock list") );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    mUser1Button = new QPushButton;
+    buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mUser1Button->setText(i18n("Deletelist"));
+    mUser1Button->setEnabled(false);
+    connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotDeleteBrokenList()));
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     mTextEdit = new PimCommon::PlainTextEditorWidget;
@@ -50,7 +63,8 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     mProgress = new KPIMUtils::ProgressIndicatorLabel(i18n("Download..."));
     lay->addWidget(mProgress);
     w->setLayout(lay);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 
@@ -62,13 +76,13 @@ AdBlockShowListDialog::~AdBlockShowListDialog()
 
 void AdBlockShowListDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AdBlockShowListDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockShowListDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void AdBlockShowListDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AdBlockShowListDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockShowListDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -92,9 +106,9 @@ void AdBlockShowListDialog::setAdBlockListPath(const QString &localPath, const Q
 void AdBlockShowListDialog::downLoadList(const QString &url)
 {
     delete mTemporaryFile;
-    mTemporaryFile = new KTemporaryFile;
+    mTemporaryFile = new QTemporaryFile;
     if (!mTemporaryFile->open()) {
-        kDebug()<<"can not open temporary file";
+        qDebug()<<"can not open temporary file";
         delete mTemporaryFile;
         mTemporaryFile = 0;
         return;
@@ -119,7 +133,7 @@ void AdBlockShowListDialog::slotFinished(KJob *job)
     mProgress->stop();
     if (job->error()) {
         mTextEdit->editor()->setPlainText(i18n("An error occurs during download list: \"%1\"", job->errorString()));
-        enableButton(User1, true);
+        mUser1Button->setEnabled(true);
     } else {
         QFile f(mTemporaryFile->fileName());
         if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {

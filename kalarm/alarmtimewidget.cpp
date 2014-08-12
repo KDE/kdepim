@@ -33,7 +33,7 @@
 #include "alarmtimewidget.h"
 
 #include <kalarmcal/datetime.h>
-
+#include <KTimeZone>
 #include <kdatecombobox.h>
 #include <kdialog.h>
 #include <klocale.h>
@@ -41,6 +41,7 @@
 #include <QGroupBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QHBoxLayout>
 
 static const QTime time_23_59(23, 59);
 
@@ -115,18 +116,21 @@ void AlarmTimeWidget::init(Mode mode, const QString& title)
     mDateEdit = new KDateComboBox(topWidget);
     mDateEdit->setOptions(KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker);
     connect(mDateEdit, SIGNAL(dateEntered(QDate)), SLOT(dateTimeChanged()));
-    mDateEdit->setWhatsThis(i18nc("@info:whatsthis",
+    mDateEdit->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Enter the date to schedule the alarm.</para>"
           "<para>%1</para>", (mDeferring ? tzText : recurText)));
     mAtTimeRadio->setFocusWidget(mDateEdit);
 
     // Time edit box and Any time checkbox
-    KHBox* timeBox = new KHBox(topWidget);
-    timeBox->setSpacing(2*KDialog::spacingHint());
+    QWidget* timeBox = new QWidget(topWidget);
+    QHBoxLayout *timeBoxHBoxLayout = new QHBoxLayout(timeBox);
+    timeBoxHBoxLayout->setMargin(0);
+    timeBoxHBoxLayout->setSpacing(2*KDialog::spacingHint());
     mTimeEdit = new TimeEdit(timeBox);
+    timeBoxHBoxLayout->addWidget(mTimeEdit);
     mTimeEdit->setFixedSize(mTimeEdit->sizeHint());
     connect(mTimeEdit, SIGNAL(valueChanged(int)), SLOT(dateTimeChanged()));
-    mTimeEdit->setWhatsThis(i18nc("@info:whatsthis",
+    mTimeEdit->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Enter the time to schedule the alarm.</para>"
           "<para>%1</para>"
           "<para>%2</para>", (mDeferring ? tzText : recurText), TimeSpinBox::shiftWhatsThis()));
@@ -141,6 +145,7 @@ void AlarmTimeWidget::init(Mode mode, const QString& title)
     {
         mAnyTimeAllowed = true;
         mAnyTimeCheckBox = new CheckBox(i18nc("@option:check", "Any time"), timeBox);
+        timeBoxHBoxLayout->addWidget(mAnyTimeCheckBox);
         mAnyTimeCheckBox->setFixedSize(mAnyTimeCheckBox->sizeHint());
         connect(mAnyTimeCheckBox, SIGNAL(toggled(bool)), SLOT(slotAnyTimeToggled(bool)));
         mAnyTimeCheckBox->setWhatsThis(i18nc("@info:whatsthis",
@@ -159,8 +164,8 @@ void AlarmTimeWidget::init(Mode mode, const QString& title)
     mDelayTimeEdit->setValue(1439);
     mDelayTimeEdit->setFixedSize(mDelayTimeEdit->sizeHint());
     connect(mDelayTimeEdit, SIGNAL(valueChanged(int)), SLOT(delayTimeChanged(int)));
-    mDelayTimeEdit->setWhatsThis(mDeferring ? i18nc("@info:whatsthis", "<para>%1</para><para>%2</para>", i18n_TimeAfterPeriod(), TimeSpinBox::shiftWhatsThis())
-                                            : i18nc("@info:whatsthis", "<para>%1</para><para>%2</para><para>%3</para>", i18n_TimeAfterPeriod(), recurText, TimeSpinBox::shiftWhatsThis()));
+    mDelayTimeEdit->setWhatsThis(mDeferring ? xi18nc("@info:whatsthis", "<para>%1</para><para>%2</para>", i18n_TimeAfterPeriod(), TimeSpinBox::shiftWhatsThis())
+                                            : xi18nc("@info:whatsthis", "<para>%1</para><para>%2</para><para>%3</para>", i18n_TimeAfterPeriod(), recurText, TimeSpinBox::shiftWhatsThis()));
     mAfterTimeRadio->setFocusWidget(mDelayTimeEdit);
 
     // Set up the layout, either narrow or wide
@@ -204,11 +209,15 @@ void AlarmTimeWidget::init(Mode mode, const QString& title)
         layout->setSpacing(2*KDialog::spacingHint());
 
         // Time zone selector
-        mTimeZoneBox = new KHBox(topWidget);   // this is to control the QWhatsThis text display area
-        mTimeZoneBox->setMargin(0);
-        mTimeZoneBox->setSpacing(KDialog::spacingHint());
+        mTimeZoneBox = new QWidget(topWidget);   // this is to control the QWhatsThis text display area
+        QHBoxLayout *mTimeZoneBoxHBoxLayout = new QHBoxLayout(mTimeZoneBox);
+        mTimeZoneBoxHBoxLayout->setMargin(0);
+        mTimeZoneBoxHBoxLayout->setMargin(0);
+        mTimeZoneBoxHBoxLayout->setSpacing(KDialog::spacingHint());
         QLabel* label = new QLabel(i18nc("@label:listbox", "Time zone:"), mTimeZoneBox);
+        mTimeZoneBoxHBoxLayout->addWidget(label);
         mTimeZone = new TimeZoneCombo(mTimeZoneBox);
+        mTimeZoneBoxHBoxLayout->addWidget(mTimeZone);
         mTimeZone->setMaxVisibleItems(15);
         connect(mTimeZone, SIGNAL(activated(int)), SLOT(slotTimeZoneChanged()));
         mTimeZoneBox->setWhatsThis(i18nc("@info:whatsthis", "Select the time zone to use for this alarm."));
@@ -218,7 +227,7 @@ void AlarmTimeWidget::init(Mode mode, const QString& title)
         // Time zone checkbox
         mNoTimeZone = new CheckBox(i18nc("@option:check", "Ignore time zone"), topWidget);
         connect(mNoTimeZone, SIGNAL(toggled(bool)), SLOT(slotTimeZoneToggled(bool)));
-        mNoTimeZone->setWhatsThis(i18nc("@info:whatsthis",
+        mNoTimeZone->setWhatsThis(xi18nc("@info:whatsthis",
                                         "<para>Check to use the local computer time, ignoring time zones.</para>"
                                         "<para>You are recommended not to use this option if the alarm has a "
                                         "recurrence specified in hours/minutes. If you do, the alarm may "

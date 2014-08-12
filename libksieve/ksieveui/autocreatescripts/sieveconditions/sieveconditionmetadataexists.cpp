@@ -19,7 +19,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "editor/sieveeditorutil.h"
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QLabel>
 #include <QDebug>
@@ -47,7 +47,7 @@ QWidget *SieveConditionMetaDataExists::createParamWidget( QWidget *parent ) cons
     QLabel *lab = new QLabel(i18n("Mailbox:"));
     grid->addWidget(lab, 0, 0);
 
-    KLineEdit *mailbox = new KLineEdit;
+    QLineEdit *mailbox = new QLineEdit;
     connect(mailbox, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mailbox->setObjectName(QLatin1String("mailbox"));
     grid->addWidget(mailbox, 0, 1);
@@ -55,7 +55,7 @@ QWidget *SieveConditionMetaDataExists::createParamWidget( QWidget *parent ) cons
     lab = new QLabel(i18n("Annotation:"));
     grid->addWidget(lab, 1, 0);
 
-    KLineEdit *value = new KLineEdit;
+    QLineEdit *value = new QLineEdit;
     connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
     grid->addWidget(value, 1, 1);
@@ -65,10 +65,10 @@ QWidget *SieveConditionMetaDataExists::createParamWidget( QWidget *parent ) cons
 
 QString SieveConditionMetaDataExists::code(QWidget *w) const
 {
-    const KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox") );
+    const QLineEdit *mailbox = w->findChild<QLineEdit*>( QLatin1String("mailbox") );
     const QString mailboxStr = mailbox->text();
 
-    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+    const QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
     const QString valueStr = value->text();
     return QString::fromLatin1("metadataexists \"%1\" \"%2\"").arg(mailboxStr).arg(valueStr);
 }
@@ -104,10 +104,10 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
                 if (index == 0) {
-                    KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox") );
+                    QLineEdit *mailbox = w->findChild<QLineEdit*>( QLatin1String("mailbox") );
                     mailbox->setText(tagValue);
                 } else if (index == 1) {
-                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+                    QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
                     value->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                 } else {
                     tooManyArgument(tagName, index, 2, error);

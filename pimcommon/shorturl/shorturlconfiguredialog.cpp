@@ -38,8 +38,8 @@ ShortUrlConfigureDialog::ShortUrlConfigureDialog(QWidget *parent)
     mConfigureWidget->loadConfig();
     lay->addWidget(mConfigureWidget);
     lay->addWidget(new KSeparator);
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
-    connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
+    connect(this, &ShortUrlConfigureDialog::okClicked, this, &ShortUrlConfigureDialog::slotOkClicked);
+    connect(this, &ShortUrlConfigureDialog::defaultClicked, this, &ShortUrlConfigureDialog::slotDefaultClicked);
 }
 
 

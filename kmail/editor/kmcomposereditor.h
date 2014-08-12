@@ -24,7 +24,7 @@
 
 #include <messagecomposer/composer/kmeditor.h>
 
-class KAction;
+class QAction;
 class KMComposeWin;
 
 class KMComposerEditor : public MessageComposer::KMeditor
@@ -48,7 +48,7 @@ public:
      * - tools_quote
      * - tools_unquote
      */
-    void createActions( KActionCollection *actionCollection );
+    virtual QList<QAction *> createActions();
 
     /**
      * This replaces all characters not known to the specified codec with

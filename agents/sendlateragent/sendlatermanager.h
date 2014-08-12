@@ -21,7 +21,7 @@
 #include <QObject>
 #include <QQueue>
 
-#include <Akonadi/Item>
+#include <Item>
 
 #include <KSharedConfig>
 

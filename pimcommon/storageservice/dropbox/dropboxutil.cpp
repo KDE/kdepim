@@ -16,12 +16,14 @@
 */
 
 #include "dropboxutil.h"
-#include <qjson/parser.h>
 #include <QVariant>
 #include <QLocale>
+#include <QDateTime>
 
 QStringList PimCommon::DropBoxUtil::getListFolder(const QString &data)
 {
+QStringList listFolder;
+#if 0
     QJson::Parser parser;
     bool ok;
 
@@ -40,13 +42,14 @@ QStringList PimCommon::DropBoxUtil::getListFolder(const QString &data)
             }
         }
     }
+#endif
     return listFolder;
 }
 
-KDateTime PimCommon::DropBoxUtil::convertToDateTime(QString dateTime)
+QDateTime PimCommon::DropBoxUtil::convertToDateTime(QString dateTime)
 {
     dateTime.chop(6);     // chop() removes the time zone
     QLocale locale(QLocale::C);
-    const KDateTime t = KDateTime(locale.toDateTime(dateTime, QLatin1String("ddd, dd MMM yyyy hh:mm:ss")));
+    const QDateTime t = QDateTime(locale.toDateTime(dateTime, QLatin1String("ddd, dd MMM yyyy hh:mm:ss")));
     return t;
 }

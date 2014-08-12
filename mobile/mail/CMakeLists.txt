@@ -1,6 +1,6 @@
 project(kmail-mobile)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
 
 add_subdirectory(docs)
 add_subdirectory(tests)
@@ -55,7 +55,7 @@ set(kmail_mobile_srcs
   vacationmanager.cpp
 )
 
-qt4_wrap_ui(kmail_mobile_srcs configwidget.ui messagelistsettingseditor.ui searchwidget.ui)
+ki18n_wrap_ui(kmail_mobile_srcs configwidget.ui messagelistsettingseditor.ui searchwidget.ui)
 
 if(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
@@ -64,7 +64,7 @@ else()
 endif()
 
 configure_file(settings.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/settings.kcfg)
-kde4_add_kcfg_files(kmail_mobile_srcs settings.kcfgc)
+kconfig_add_kcfg_files(kmail_mobile_srcs settings.kcfgc)
 
 if(RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
@@ -72,17 +72,17 @@ endif()
 
 kde4_add_app_icon(kmail_mobile_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kmail-mobile.png")
 
-kde4_add_executable(kmail-mobile ${kmail_mobile_srcs})
+add_executable(kmail-mobile ${kmail_mobile_srcs})
 
 target_link_libraries(kmail-mobile
-  ${QT_QTDECLARATIVE_LIBRARY}
-  ${KDE4_KCMUTILS_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${KDEPIMLIBS_KMBOX_LIBS}
-  akonadi-calendar
+  Qt5::Declarative
+  KF5::KCMUtils
+  KF5::AkonadiMime
+  KF5::Mime
+  KF5::AkonadiCore
+  KF5::MailTransport
+  KF5::Mbox
+  KF5::AkonadiCalendar
   akonadi_next
   kdepim
   kdepimmobileui
@@ -136,5 +136,5 @@ install(FILES
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
 
-kde4_install_icons(${ICON_INSTALL_DIR})
+ecm_install_icons(ICONS hi48-apps-kmail-mobile.png  hi64-apps-kmail-mobile.png  hi80-apps-kmail-mobile-harmattan.png DESTINATION ${ICON_INSTALL_DIR})
 

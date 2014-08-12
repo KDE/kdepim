@@ -19,14 +19,14 @@
 
 #include <iostream>
 
-#include <KAboutData>
+#include <k4aboutdata.h>
 #include <KApplication>
 #include <KCmdLineArgs>
 
 #include <calendarsupport/kcalprefs.h>
 #include <akonadi/calendar/calendarsettings.h>
 
-#include <Akonadi/Item>
+#include <Item>
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <KCalCore/Journal>
@@ -39,12 +39,12 @@ using namespace IncidenceEditorNG;
 
 int main( int argc, char **argv )
 {
-  KAboutData about( "IncidenceEditorNGApp",
+  K4AboutData about( "IncidenceEditorNGApp",
                     "korganizer",
                     ki18n( "KOrganizer" ),
                     "0.1",
                     ki18n( "KDE application to run the KOrganizer incidenceeditor." ),
-                    KAboutData::License_LGPL,
+                    K4AboutData::License_LGPL,
                     ki18n( "(C) 2010 Bertjan Broeksema" ),
                     ki18n( "Run the KOrganizer incidenceeditor ng." ),
                     "http://kdepim.kde.org",

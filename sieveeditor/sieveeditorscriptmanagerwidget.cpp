@@ -22,6 +22,7 @@
 #include "sieveeditormanagesievewidget.h"
 
 #include <QHBoxLayout>
+#include <QTreeWidget>
 
 SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     : QWidget(parent)
@@ -29,10 +30,10 @@ SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
     mTreeView = new SieveEditorManageSieveWidget;
-    connect(mTreeView, SIGNAL(newScript(KUrl,QStringList)), this, SLOT(slotNewScript(KUrl,QStringList)));
-    connect(mTreeView, SIGNAL(editScript(KUrl,QStringList)), this, SLOT(slotEditScript(KUrl,QStringList)));
-    connect(mTreeView, SIGNAL(updateButtons(QTreeWidgetItem*)), this, SLOT(slotUpdateButtons(QTreeWidgetItem*)));
-    connect(mTreeView, SIGNAL(scriptDeleted(KUrl)), this, SIGNAL(scriptDeleted(KUrl)));
+    connect(mTreeView, SIGNAL(newScript(QUrl,QStringList)), this, SLOT(slotNewScript(QUrl,QStringList)));
+    connect(mTreeView, SIGNAL(editScript(QUrl,QStringList)), this, SLOT(slotEditScript(QUrl,QStringList)));
+    connect(mTreeView, &SieveEditorManageSieveWidget::updateButtons, this, &SieveEditorScriptManagerWidget::slotUpdateButtons);
+    connect(mTreeView, SIGNAL(scriptDeleted(QUrl)), this, SIGNAL(scriptDeleted(QUrl)));
     connect(mTreeView, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));
     hbox->addWidget(mTreeView);
 }
@@ -53,12 +54,12 @@ void SieveEditorScriptManagerWidget::slotUpdateButtons(QTreeWidgetItem *item)
     Q_EMIT updateButtons(newScriptAction, editScriptAction, deleteScriptAction, desactivateScriptAction);
 }
 
-void SieveEditorScriptManagerWidget::slotEditScript(const KUrl &url, const QStringList &capabilities)
+void SieveEditorScriptManagerWidget::slotEditScript(const QUrl &url, const QStringList &capabilities)
 {
     Q_EMIT createScriptPage(url, capabilities, false);
 }
 
-void SieveEditorScriptManagerWidget::slotNewScript(const KUrl &url, const QStringList &capabilities)
+void SieveEditorScriptManagerWidget::slotNewScript(const QUrl &url, const QStringList &capabilities)
 {
     Q_EMIT createScriptPage(url, capabilities, true);
 }

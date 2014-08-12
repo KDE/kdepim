@@ -27,16 +27,15 @@
 #include "timelabelszone.h"
 #include "timescaleconfigdialog.h"
 
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
-#include <KGlobal>
+#include <KTimeZone>
 
 #include <QFrame>
 #include <QMenu>
 #include <QPainter>
 #include <QPointer>
-
-static const KCatalogLoader loader( QLatin1String("timezones4") );
+#include <KLocale>
 
 using namespace EventViews;
 
@@ -126,11 +125,11 @@ void TimeLabels::updateConfig()
   setFont( mTimeLabelsZone->preferences()->agendaTimeLabelsFont() );
 
   QString test = QLatin1String("20");
-  if ( KGlobal::locale()->use12Clock() ) {
+  if ( KLocale::global()->use12Clock() ) {
     test = QLatin1String("12");
   }
   mMiniWidth = fontMetrics().width( test );
-  if ( KGlobal::locale()->use12Clock() ) {
+  if ( KLocale::global()->use12Clock() ) {
     test = QLatin1String("pm");
   } else {
     test = QLatin1String("00");
@@ -210,7 +209,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
   //TODO: rewrite this using KLocale's time formats. "am/pm" doesn't make sense
   // in some locale's
   QString suffix;
-  if ( !KGlobal::locale()->use12Clock() ) {
+  if ( !KLocale::global()->use12Clock() ) {
     suffix = QLatin1String("00");
   } else {
     suffix = QLatin1String("am");
@@ -262,7 +261,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
       hour.setNum( cell + 24 );
     }
     // handle 24h and am/pm time formats
-    if ( KGlobal::locale()->use12Clock() ) {
+    if ( KLocale::global()->use12Clock() ) {
       if ( cell == 12 ) {
         suffix =QLatin1String( "pm");
       }
@@ -301,9 +300,9 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
 
   QMenu popup( this );
   QAction *editTimeZones =
-    popup.addAction( KIcon( QLatin1String("document-properties") ), i18n( "&Add Timezones..." ) );
+    popup.addAction( QIcon::fromTheme( QLatin1String("document-properties") ), i18n( "&Add Timezones..." ) );
   QAction *removeTimeZone =
-    popup.addAction( KIcon( QLatin1String("edit-delete") ),
+    popup.addAction( QIcon::fromTheme( QLatin1String("edit-delete") ),
                      i18n( "&Remove Timezone %1", i18n( mSpec.timeZone().name().toUtf8() ) ) );
   if ( !mSpec.isValid() ||
        !mTimeLabelsZone->preferences()->timeScaleTimezones().count() ||

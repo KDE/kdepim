@@ -22,12 +22,12 @@
 #include "agentwidget.h"
 #include "agentconfigdialog.h"
 
-#include <akonadi/agenttypedialog.h>
-#include <akonadi/agentinstancewidget.h>
-#include <akonadi/agentmanager.h>
-#include <Akonadi/AgentFilterProxyModel>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/control.h>
+#include <AkonadiWidgets/agenttypedialog.h>
+#include <AkonadiWidgets/agentinstancewidget.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/AgentFilterProxyModel>
+#include <AkonadiCore/agentinstancecreatejob.h>
+#include <AkonadiCore/control.h>
 #include <akonadi/private/notificationmessage_p.h>
 
 #include <KDebug>
@@ -35,7 +35,8 @@
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KTextEdit>
-#include <KLineEdit>
+#include <QLineEdit>
+#include <QIcon>
 
 #include <QtCore/QFile>
 #include <QtCore/QPointer>
@@ -46,19 +47,33 @@
 #include <QDBusReply>
 #include <QMetaMethod>
 #include <QResizeEvent>
+#include <KGuiItem>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QVBoxLayout>
 
-class TextDialog : public KDialog
+class TextDialog : public QDialog
 {
   public:
     TextDialog( QWidget *parent = 0 )
-      : KDialog( parent )
+      : QDialog( parent )
     {
-      setButtons( Ok );
+      QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+      QVBoxLayout *mainLayout = new QVBoxLayout;
+      setLayout(mainLayout);
+      QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+      okButton->setDefault(true);
+      okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+      connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+      connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+      mainLayout->addWidget(buttonBox);
 
       mText = new KTextEdit;
+      mainLayout->addWidget(mText);
+      mainLayout->addWidget(buttonBox);
       mText->setReadOnly(true);
-      setMainWidget( mText );
-      setInitialSize( QSize( 400, 600 ) );
+      resize( QSize( 400, 600 ) );
     }
 
     void setText( const QString &text )
@@ -87,35 +102,35 @@ AgentWidget::AgentWidget( QWidget *parent )
 
   currentChanged();
 
-  ui.addButton->setGuiItem( KStandardGuiItem::add() );
-  connect( ui.addButton, SIGNAL(clicked()), this, SLOT(addAgent()) );
+  KGuiItem::assign(ui.addButton, KStandardGuiItem::add() );
+  connect(ui.addButton, &QPushButton::clicked, this, &AgentWidget::addAgent);
 
-  ui.removeButton->setGuiItem( KStandardGuiItem::remove() );
-  connect( ui.removeButton, SIGNAL(clicked()), this, SLOT(removeAgent()) );
+  KGuiItem::assign(ui.removeButton, KStandardGuiItem::remove() );
+  connect(ui.removeButton, &QPushButton::clicked, this, &AgentWidget::removeAgent);
 
   mConfigMenu = new QMenu( i18n("Configure"), this );
   mConfigMenu->addAction( i18n("Configure Natively..."), this, SLOT(configureAgent()) );
   mConfigMenu->addAction( i18n("Configure Remotely..."), this, SLOT(configureAgentRemote()) );
   mConfigMenu->setIcon( KStandardGuiItem::configure().icon() );
-  ui.configButton->setGuiItem( KStandardGuiItem::configure() );
+  KGuiItem::assign(ui.configButton, KStandardGuiItem::configure() );
   ui.configButton->setMenu( mConfigMenu );
-  connect( ui.configButton, SIGNAL(clicked()), this, SLOT(configureAgent()) );
+  connect(ui.configButton, &QPushButton::clicked, this, &AgentWidget::configureAgent);
 
   mSyncMenu = new QMenu( i18n("Synchronize"), this );
   mSyncMenu->addAction( i18n("Synchronize All"), this, SLOT(synchronizeAgent()) );
   mSyncMenu->addAction( i18n("Synchronize Collection Tree"), this, SLOT(synchronizeTree()) );
-  mSyncMenu->setIcon( KIcon("view-refresh" ) );
+  mSyncMenu->setIcon( QIcon::fromTheme("view-refresh" ) );
   ui.syncButton->setMenu( mSyncMenu );
-  ui.syncButton->setIcon( KIcon( "view-refresh" ) );
-  connect( ui.syncButton, SIGNAL(clicked()), this, SLOT(synchronizeAgent()) );
+  ui.syncButton->setIcon( QIcon::fromTheme( "view-refresh" ) );
+  connect(ui.syncButton, &QPushButton::clicked, this, &AgentWidget::synchronizeAgent);
 
-  ui.abortButton->setIcon( KIcon("dialog-cancel") );
-  connect( ui.abortButton, SIGNAL(clicked()), this, SLOT(abortAgent()) );
-  ui.restartButton->setIcon( KIcon( "system-reboot" ) ); //FIXME: Is using system-reboot icon here a good idea?
+  ui.abortButton->setIcon( QIcon::fromTheme("dialog-cancel") );
+  connect(ui.abortButton, &QPushButton::clicked, this, &AgentWidget::abortAgent);
+  ui.restartButton->setIcon( QIcon::fromTheme( "system-reboot" ) ); //FIXME: Is using system-reboot icon here a good idea?
   connect( ui.restartButton, SIGNAL(clicked()), SLOT(restartAgent()) );
 
   ui.mFilterAccount->setProxy( ui.instanceWidget->agentFilterProxyModel() );
-  ui.mFilterAccount->lineEdit()->setTrapReturnKey( true );
+  //QT5 ui.mFilterAccount->lineEdit()->setTrapReturnKey( true );
 
   Control::widgetNeedsAkonadi( this );
 }
@@ -237,7 +252,7 @@ void AgentWidget::showTaskList()
   }
 
   QPointer<TextDialog> dlg = new TextDialog( this );
-  dlg->setCaption( QLatin1String( "Resource Task List" ) );
+  dlg->setWindowTitle( QLatin1String( "Resource Task List" ) );
   dlg->setText( txt );
   dlg->exec();
   delete dlg;
@@ -261,7 +276,7 @@ void AgentWidget::showChangeNotifications()
   }
 
   QPointer<TextDialog> dlg = new TextDialog( this );
-  dlg->setCaption( QLatin1String( "Change Notification Log" ) );
+  dlg->setWindowTitle( QLatin1String( "Change Notification Log" ) );
   dlg->setText( txt );
 
   dlg->exec();
@@ -302,7 +317,7 @@ void AgentWidget::cloneAgent()
     connect( job, SIGNAL(result(KJob*)), SLOT(cloneAgent(KJob*)) );
     job->start();
   } else {
-    kWarning() << "WTF?";
+    qWarning() << "WTF?";
   }
 }
 
@@ -320,14 +335,14 @@ void AgentWidget::cloneAgent( KJob* job )
   QDBusInterface sourceIface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( mCloneSource.identifier() ),
                               "/Settings" );
   if ( !sourceIface.isValid() ) {
-    kError() << "Unable to obtain KConfigXT D-Bus interface of source agent" << mCloneSource.identifier();
+    qCritical() << "Unable to obtain KConfigXT D-Bus interface of source agent" << mCloneSource.identifier();
     return;
   }
 
   QDBusInterface targetIface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( cloneTarget.identifier() ),
                               "/Settings" );
   if ( !targetIface.isValid() ) {
-    kError() << "Unable to obtain KConfigXT D-Bus interface of target agent" << cloneTarget.identifier();
+    qCritical() << "Unable to obtain KConfigXT D-Bus interface of target agent" << cloneTarget.identifier();
     return;
   }
 
@@ -339,7 +354,7 @@ void AgentWidget::cloneAgent( KJob* job )
     const QMetaMethod method = sourceIface.metaObject()->method( i );
     if ( QByteArray( method.typeName() ).isEmpty() ) // returns void
       continue;
-    const QByteArray signature( method.signature() );
+    const QByteArray signature( method.methodSignature() );
     if ( signature.isEmpty() )
       continue;
     if ( signature.startsWith( "set" ) || !signature.contains( "()" ) ) // setter or takes parameters // krazy:exclude=strings
@@ -349,7 +364,7 @@ void AgentWidget::cloneAgent( KJob* job )
     const QString methodName = QString::fromLatin1( signature.left( signature.indexOf( '(' ) ) );
     const QDBusMessage reply = sourceIface.call( methodName );
     if ( reply.arguments().count() != 1 ) {
-      kError() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
+      qCritical() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
       continue;
     }
     const QString setterName = QLatin1String("set") + methodName.at( 0 ).toUpper() + methodName.mid( 1 );
@@ -404,17 +419,17 @@ void AgentWidget::currentChanged()
 void AgentWidget::showContextMenu(const QPoint& pos)
 {
   QMenu menu( this );
-  menu.addAction( KIcon("list-add"), i18n("Add Agent..."), this, SLOT(addAgent()) );
-  menu.addAction( KIcon("edit-copy"), i18n("Clone Agent"), this, SLOT(cloneAgent()) );
+  menu.addAction( QIcon::fromTheme("list-add"), i18n("Add Agent..."), this, SLOT(addAgent()) );
+  menu.addAction( QIcon::fromTheme("edit-copy"), i18n("Clone Agent"), this, SLOT(cloneAgent()) );
   menu.addSeparator();
   menu.addMenu( mSyncMenu );
-  menu.addAction( KIcon("dialog-cancel"), i18n("Abort Activity"), this, SLOT(abortAgent()) );
-  menu.addAction( KIcon("system-reboot"), i18n("Restart Agent"), this, SLOT(restartAgent()) );  //FIXME: Is using system-reboot icon here a good idea?
-  menu.addAction( KIcon("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
-  menu.addAction( KIcon(""), i18n("Show task list"), this, SLOT(showTaskList()) );
-  menu.addAction( KIcon(""), i18n("Show change-notification log"), this, SLOT(showChangeNotifications()) );
+  menu.addAction( QIcon::fromTheme("dialog-cancel"), i18n("Abort Activity"), this, SLOT(abortAgent()) );
+  menu.addAction( QIcon::fromTheme("system-reboot"), i18n("Restart Agent"), this, SLOT(restartAgent()) );  //FIXME: Is using system-reboot icon here a good idea?
+  menu.addAction( QIcon::fromTheme("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
+  menu.addAction( QIcon::fromTheme(""), i18n("Show task list"), this, SLOT(showTaskList()) );
+  menu.addAction( QIcon::fromTheme(""), i18n("Show change-notification log"), this, SLOT(showChangeNotifications()) );
   menu.addMenu( mConfigMenu );
-  menu.addAction( KIcon("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
+  menu.addAction( QIcon::fromTheme("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
   menu.exec( ui.instanceWidget->mapToGlobal( pos ) );
 }
 

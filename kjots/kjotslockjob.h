@@ -22,9 +22,9 @@
 #ifndef KJOTS_LOCK_JOB_H
 #define KJOTS_LOCK_JOB_H
 
-#include <Akonadi/Job>
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <AkonadiCore/Job>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Item>
 
 class KJotsLockJob : Akonadi::Job
 {

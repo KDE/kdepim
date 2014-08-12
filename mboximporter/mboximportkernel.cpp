@@ -18,12 +18,13 @@
 #include "mboximportkernel.h"
 
 #include <kglobal.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
-#include <akonadi/session.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/changerecorder.h>
+#include <AkonadiCore/session.h>
+#include <entitytreemodel.h>
+#include <entitymimetypefiltermodel.h>
+#include <changerecorder.h>
+#include <KSharedConfig>
 
 MBoxImporterKernel::MBoxImporterKernel( QObject *parent )
     : QObject( parent )
@@ -61,7 +62,7 @@ Akonadi::EntityMimeTypeFilterModel *MBoxImporterKernel::collectionModel() const
 
 KSharedConfig::Ptr MBoxImporterKernel::config()
 {
-    return KGlobal::config();
+    return KSharedConfig::openConfig();
 }
 
 void MBoxImporterKernel::syncConfig()

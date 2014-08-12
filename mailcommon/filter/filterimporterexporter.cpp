@@ -44,11 +44,11 @@
 #include <messageviewer/utils/util.h>
 
 #include <KConfig>
-#include <KDebug>
+#include <QDebug>
 #include <KFileDialog>
 #include <KListWidgetSearchLine>
 #include <KMessageBox>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <QRegExp>
 
@@ -75,7 +75,7 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig(
         }
         if ( filter->isEmpty() ) {
 #ifndef NDEBUG
-            kDebug() << "Filter" << filter->asString() << "is empty!";
+            qDebug() << "Filter" << filter->asString() << "is empty!";
 #endif
             emptyFilters << filter->name();
             delete filter;

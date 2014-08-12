@@ -70,7 +70,7 @@ QString Kleo::heuristicBaseDirectory( const QStringList & fileNames ) {
     QStringList dirs;
     Q_FOREACH( const QString & fileName, fileNames )
         dirs.push_back( QFileInfo( fileName ).path() + QLatin1Char( '/' ) );
-    kDebug() << "dirs" << dirs;
+    qDebug() << "dirs" << dirs;
     const QString candidate = longestCommonPrefix( dirs );
     const int idx = candidate.lastIndexOf( QLatin1Char( '/' ) );
     return candidate.left( idx );

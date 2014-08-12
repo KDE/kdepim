@@ -23,9 +23,8 @@
 
 #include "progressmanager.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
-#include <KGlobal>
 
 namespace KPIM {
 
@@ -57,7 +56,7 @@ ProgressItem::~ProgressItem()
 
 void ProgressItem::setComplete()
 {
-    //   kDebug() << label();
+    //   qDebug() << label();
     if ( mChildren.isEmpty() ) {
         if ( mCompletedCalled )
             return;
@@ -120,7 +119,7 @@ void ProgressItem::cancel()
         return;
     }
 
-    kDebug() << label();
+    qDebug() << label();
     mCanceled = true;
     // Cancel all children.
     QList<ProgressItem* > kids = mChildren.keys();
@@ -144,7 +143,7 @@ void ProgressItem::updateProgress()
 void ProgressItem::setProgress( unsigned int v )
 {
     mProgress = v;
-    // kDebug() << label() << " :" << v;
+    // qDebug() << label() << " :" << v;
     emit progressItemProgress( this, mProgress );
 }
 
@@ -183,7 +182,7 @@ struct ProgressManagerPrivate {
     ProgressManager instance;
 };
 
-K_GLOBAL_STATIC( ProgressManagerPrivate, progressManagerPrivate )
+Q_GLOBAL_STATIC( ProgressManagerPrivate, progressManagerPrivate )
 
 ProgressManager::ProgressManager()
     : QObject()

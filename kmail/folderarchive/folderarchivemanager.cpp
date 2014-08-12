@@ -21,17 +21,19 @@
 #include "folderarchivecache.h"
 #include "folderarchiveutil.h"
 
-#include <Akonadi/AgentManager>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/CollectionFetchJob>
+#include <AkonadiCore/AgentManager>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/CollectionFetchJob>
 
 #include <KSharedConfig>
 #include <KGlobal>
 #include <KNotification>
-#include <KIcon>
+#include <QIcon>
 #include <KLocale>
 #include <KIconLoader>
+#include <KComponentData>
+#include <QDebug>
 
 FolderArchiveManager::FolderArchiveManager(QObject *parent)
     : QObject(parent),
@@ -78,25 +80,25 @@ void FolderArchiveManager::setArchiveItem(qlonglong itemId)
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item(itemId), this );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     job->fetchScope().setFetchRemoteIdentification(true);
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchParentCollection(KJob*)) );
+    connect(job, &Akonadi::ItemFetchJob::result, this, &FolderArchiveManager::slotFetchParentCollection);
 }
 
 void FolderArchiveManager::slotFetchParentCollection(KJob *job)
 {
     if ( job->error() ) {
         moveFailed(i18n("Unable to fetch folder. Error reported: %1",job->errorString()));
-        kDebug()<<"Unable to fetch folder:"<<job->errorString();
+        qDebug()<<"Unable to fetch folder:"<<job->errorString();
         return;
     }
     const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
     const Akonadi::Item::List items = fetchJob->items();
     if (items.isEmpty()) {
         moveFailed(i18n("No folder returned."));
-        kDebug()<<"Fetch list is empty";
+        qDebug()<<"Fetch list is empty";
     } else {
         Akonadi::CollectionFetchJob* jobCol = new Akonadi::CollectionFetchJob( Akonadi::Collection(items.first().parentCollection().id()), Akonadi::CollectionFetchJob::Base, this );
         jobCol->setProperty("itemId", items.first().id());
-        connect( jobCol, SIGNAL(result(KJob*)), SLOT(slotFetchCollection(KJob*)) );
+        connect(jobCol, &Akonadi::CollectionFetchJob::result, this, &FolderArchiveManager::slotFetchCollection);
     }
 }
 
@@ -104,13 +106,13 @@ void FolderArchiveManager::slotFetchCollection(KJob *job)
 {
     if ( job->error() ) {
         moveFailed(i18n("Unable to fetch parent folder. Error reported: %1", job->errorString()));
-        kDebug()<<"cannot fetch collection "<<job->errorString();
+        qDebug()<<"cannot fetch collection "<<job->errorString();
         return;
     }
     Akonadi::CollectionFetchJob* jobCol = qobject_cast<Akonadi::CollectionFetchJob*>(job);
     if (jobCol->collections().isEmpty()) {
         moveFailed(i18n("Unable to return list of folders."));
-        kDebug()<<"List of folder is empty";
+        qDebug()<<"List of folder is empty";
         return;
     }
 
@@ -175,27 +177,27 @@ void FolderArchiveManager::load()
 
 void FolderArchiveManager::moveDone()
 {
-    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
     KNotification::event( QLatin1String("folderarchivedone"),
                           i18n("Messages archived"),
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
+                          KComponentData::mainComponent().componentName());
     nextJob();
 }
 
 void FolderArchiveManager::moveFailed(const QString &msg)
 {
-    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
     KNotification::event( QLatin1String("folderarchiveerror"),
                           msg,
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
+                          KComponentData::mainComponent().componentName());
     nextJob();
 }
 

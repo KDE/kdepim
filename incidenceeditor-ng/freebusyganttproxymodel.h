@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_FREEBUSYGANTTPROXYMODEL_H
 #define INCIDENCEEDITOR_FREEBUSYGANTTPROXYMODEL_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 
 #include <KDateTime>
 

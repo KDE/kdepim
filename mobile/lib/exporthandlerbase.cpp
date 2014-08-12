@@ -19,12 +19,12 @@
 
 #include "exporthandlerbase.h"
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/recursiveitemfetchjob.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/recursiveitemfetchjob.h>
 #include <kmessagebox.h>
-
+#include <QDebug>
 #include <QItemSelectionModel>
 
 ExportHandlerBase::ExportHandlerBase( QObject *parent )
@@ -103,7 +103,7 @@ void ExportHandlerBase::exec()
         if ( item.isValid() ) {
           items << item;
         } else {
-          kDebug() << "Invalid item encountered during export!";
+          qDebug() << "Invalid item encountered during export!";
         }
       }
     }

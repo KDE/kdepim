@@ -1,4 +1,6 @@
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
+
+add_definitions(-DTRANSLATION_DOMAIN=\"libmessagecomposer\")
 
 include_directories(
     ${Boost_INCLUDE_DIR}
@@ -18,6 +20,7 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory( tests )
+add_subdirectory( autotests )
 include_directories(${Grantlee_INCLUDE_DIRS})
 
 
@@ -90,7 +93,7 @@ set( messagecomposer_src
      settings/messagecomposersettings.cpp
 )
 
-kde4_add_ui_files(messagecomposer_src
+ki18n_wrap_ui(messagecomposer_src
      imagescaling/ui/imagescalingwidget.ui
 )
 
@@ -105,15 +108,16 @@ endif()
 
 configure_file(settings/messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer.kcfg)
 
-kde4_add_kcfg_files(messagecomposer_src
+kconfig_add_kcfg_files(messagecomposer_src
   settings/messagecomposersettings_base.kcfgc 
 )
 
-kde4_add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
-target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
- messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} ${Grantlee_GUI_LIBRARIES} sendlater pimcommon)
+add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
+generate_export_header(messagecomposer BASE_NAME messagecomposer)
+target_link_libraries( messagecomposer KF5::KIOCore KF5::Mime KF5::AkonadiMime KF5::AkonadiCore KF5::MailTransport KF5::PimTextEdit KF5::PimIdentities 
+ messagecore messageviewer templateparser kleo kdepim Grantlee::TextDocument sendlater pimcommon KF5::AkonadiWidgets)
 
-set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties( messagecomposer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
 install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

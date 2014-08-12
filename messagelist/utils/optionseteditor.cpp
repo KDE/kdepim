@@ -33,7 +33,7 @@ using namespace MessageList::Utils;
 using namespace MessageList::Core;
 
 OptionSetEditor::OptionSetEditor( QWidget *parent )
-    : KTabWidget( parent )
+    : QTabWidget( parent )
 {
     // General tab
     QWidget * tab = new QWidget( this );

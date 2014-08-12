@@ -36,8 +36,6 @@
 #include <kdebug.h>
 #include <kshell.h>
 
-#include <QTimer>
-#include <QFile>
 #include <QStringList>
 
 #include <cstring>
@@ -64,7 +62,7 @@ bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, bool block 
   connect( this, SIGNAL(readyReadStandardError()),
            this, SLOT(slotReadyReadStandardError()) );
   if ( block ) {
-    KTemporaryFile tempfile;
+    QTemporaryFile tempfile;
     if ( tempfile.open() )
       tempfile.write( input );
     else

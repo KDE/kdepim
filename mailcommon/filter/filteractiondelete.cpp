@@ -19,8 +19,8 @@
 
 #include "filteractiondelete.h"
 
-#include <KDE/KLocale>
-#include <KDE/KColorScheme>
+#include <KLocale>
+#include <KColorScheme>
 
 #include <QLabel>
 

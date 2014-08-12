@@ -17,8 +17,8 @@
 
 #include "followupreminderjob.h"
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
 #include <Akonadi/KMime/MessageParts>
 
 #include <KMime/Message>

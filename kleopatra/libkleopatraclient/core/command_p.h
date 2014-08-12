@@ -34,10 +34,10 @@
 #include <map>
 #include <string>
 
-class KLEOPATRACLIENT_NAMESPACE::Command::Private : public QThread {
+class KleopatraClientCopy::Command::Private : public QThread {
     Q_OBJECT
 private:
-    friend class ::KLEOPATRACLIENT_NAMESPACE::Command;
+    friend class ::KleopatraClientCopy::Command;
     Command * const q;
 public:
     explicit Private( Command * qq )

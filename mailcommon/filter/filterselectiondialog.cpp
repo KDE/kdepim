@@ -19,12 +19,12 @@
 #include "filterselectiondialog.h"
 #include "mailfilter.h"
 
-#include <KDebug>
 #include <KListWidgetSearchLine>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <QListWidget>
 #include <QVBoxLayout>
+#include <KSharedConfig>
 
 
 using namespace MailCommon;
@@ -43,7 +43,7 @@ FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
 
     filtersListWidget = new QListWidget();
     KListWidgetSearchLine *searchLine = new KListWidgetSearchLine( this, filtersListWidget );
-    searchLine->setClickMessage(
+    searchLine->setPlaceholderText(
                 i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
                        "Search" ) );
 
@@ -55,9 +55,9 @@ FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
 
     QHBoxLayout *const buttonLayout = new QHBoxLayout();
     top->addLayout( buttonLayout );
-    selectAllButton = new KPushButton( i18n( "Select All" ) );
+    selectAllButton = new QPushButton( i18n( "Select All" ) );
     buttonLayout->addWidget( selectAllButton );
-    unselectAllButton = new KPushButton( i18n( "Unselect All" ) );
+    unselectAllButton = new QPushButton( i18n( "Unselect All" ) );
     buttonLayout->addWidget( unselectAllButton );
 
     connect( selectAllButton, SIGNAL(clicked()), this, SLOT(slotSelectAllButton()) );
@@ -79,13 +79,13 @@ void FilterSelectionDialog::reject()
 
 void FilterSelectionDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FilterSelectionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FilterSelectionDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void FilterSelectionDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FilterSelectionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FilterSelectionDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(300, 350) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

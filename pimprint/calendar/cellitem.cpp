@@ -23,14 +23,14 @@
 
 #include "cellitem.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
 using namespace PimPrint::Calendar;
 
 QString CellItem::label() const
 {
-    return i18n("<placeholder>undefined</placeholder>");
+    return xi18n("<placeholder>undefined</placeholder>");
 }
 
 QList<CellItem *> CellItem::placeItem(QList<CellItem *> cells, CellItem *placeItem)

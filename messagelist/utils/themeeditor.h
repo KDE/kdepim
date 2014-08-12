@@ -35,7 +35,7 @@ class QPaintDevice;
 class QCheckBox;
 
 class KComboBox;
-class KIntSpinBox;
+class KPluralHandlingSpinBox;
 class KLineEdit;
 
 namespace MessageList
@@ -237,7 +237,7 @@ private:
 
     // Advanced tab
     KComboBox * mViewHeaderPolicyCombo;
-    KIntSpinBox * mIconSizeSpinBox;
+    KPluralHandlingSpinBox * mIconSizeSpinBox;
 };
 
 } // namespace Utils

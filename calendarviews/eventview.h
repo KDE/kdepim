@@ -28,8 +28,8 @@
 
 #include "eventviews_export.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <Collection>
+#include <Item>
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KCalCore/Incidence>
@@ -38,6 +38,7 @@
 #include <QWidget>
 #include <QSet>
 #include <QByteArray>
+#include <QDate>
 
 namespace boost {
   template <typename T> class shared_ptr;

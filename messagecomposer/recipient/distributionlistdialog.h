@@ -25,7 +25,7 @@
 #include <kdialog.h>
 
 class KJob;
-class KLineEdit;
+class QLineEdit;
 class QTreeWidget;
 
 namespace MessageComposer {
@@ -52,7 +52,7 @@ private:
     void writeConfig();
 
 private:
-    KLineEdit *mTitleEdit;
+    QLineEdit *mTitleEdit;
     QTreeWidget *mRecipientsList;
 };
 

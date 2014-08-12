@@ -24,15 +24,15 @@
 #include "kalarmdirsettings.h"
 #include "controlinterface.h"
 
-#include <akonadi/agentfilterproxymodel.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agenttypedialog.h>
-#include <akonadi/dbusconnectionpool.h>
+#include <AkonadiCore/agentfilterproxymodel.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiWidgets/agenttypedialog.h>
+#include <AkonadiCore/dbusconnectionpool.h>
 
 #include <kmessagebox.h>
 #include <klocale.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QTimer>
 
@@ -57,7 +57,7 @@ void AkonadiResourceCreator::createResource()
 
 void AkonadiResourceCreator::getAgentType()
 {
-    kDebug() << "Type:" << mDefaultType;
+    qDebug() << "Type:" << mDefaultType;
     // Use AutoQPointer to guard against crash on application exit while
     // the dialogue is still open. It prevents double deletion (both on
     // deletion of parent, and on return from this function).
@@ -105,8 +105,8 @@ void AkonadiResourceCreator::agentInstanceCreated(KJob* j)
     AgentInstanceCreateJob* job = static_cast<AgentInstanceCreateJob*>(j);
     if (j->error())
     {
-        kError() << "Failed to create new calendar resource:" << j->errorString();
-        KMessageBox::error(0, i18nc("@info", "%1<nl/>(%2)", i18nc("@info/plain", "Failed to create new calendar resource"), j->errorString()));
+        qCritical() << "Failed to create new calendar resource:" << j->errorString();
+        KMessageBox::error(0, xi18nc("@info", "%1<nl/>(%2)", i18nc("@info/plain", "Failed to create new calendar resource"), j->errorString()));
         exitWithError();
     }
     else
@@ -128,7 +128,7 @@ void AkonadiResourceCreator::agentInstanceCreated(KJob* j)
         if (!controlOk)
         {
             delete agentControlIface;
-            kWarning() << "Unable to access D-Bus interface of created agent.";
+            qWarning() << "Unable to access D-Bus interface of created agent.";
         }
         else
         {
@@ -151,11 +151,11 @@ void AkonadiResourceCreator::setResourceAlarmType()
     Settings iface(QLatin1String("org.freedesktop.Akonadi.Resource.") + mAgentInstance.identifier(),
                    QLatin1String("/Settings"), QDBusConnection::sessionBus(), this);
     if (!iface.isValid())
-        kError() << "Error creating D-Bus interface for" << mAgentInstance.identifier() << "resource configuration.";
+        qCritical() << "Error creating D-Bus interface for" << mAgentInstance.identifier() << "resource configuration.";
     else
     {
         iface.setAlarmTypes(CalEvent::mimeTypes(mDefaultType));
-        iface.writeConfig();
+        iface.save();
         mAgentInstance.reconfigure();   // notify the agent that its configuration has changed
     }
 }

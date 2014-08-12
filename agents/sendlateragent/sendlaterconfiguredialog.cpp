@@ -25,11 +25,13 @@
 #include <KConfigGroup>
 #include <KLocale>
 #include <KHelpMenu>
-#include <KMenu>
-#include <KAboutData>
+#include <QMenu>
+#include <kaboutdata.h>
 #include <KMessageBox>
+#include <QIcon>
 
 #include <QPointer>
+#include <KSharedConfig>
 
 static QString sendLaterItemPattern = QLatin1String( "SendLaterItem \\d+" );
 
@@ -37,7 +39,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Configure") );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
     setButtons( Help|Ok|Cancel );
 
     QWidget *mainWidget = new QWidget( this );
@@ -51,34 +53,32 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
 
     readConfig();
-    mAboutData = new KAboutData(
-                QByteArray( "sendlateragent" ),
-                QByteArray(),
-                ki18n( "Send Later Agent" ),
-                QByteArray( KDEPIM_VERSION ),
-                ki18n( "Send emails later agent." ),
-                KAboutData::License_GPL_V2,
-                ki18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
-    mAboutData->addAuthor( ki18n( "Laurent Montel" ),
-                         ki18n( "Maintainer" ), "montel@kde.org" );
+    KAboutData aboutData = KAboutData(
+                QLatin1String( "sendlateragent" ),
+                i18n( "Send Later Agent" ),
+                QLatin1String( KDEPIM_VERSION ),
+                i18n( "Send emails later agent." ),
+                KAboutLicense::GPL_V2,
+                i18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
-    mAboutData->setProgramIconName( QLatin1String("kmail") );
-    mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
-                             ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+    aboutData.addAuthor( i18n( "Laurent Montel" ),
+                         i18n( "Maintainer" ), QLatin1String("montel@kde.org") );
 
+    aboutData.setProgramIconName( QLatin1String("kmail") );
+    aboutData.setTranslator( i18nc( "NAME OF TRANSLATORS", "Your names" ),
+                             i18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
-    KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
+    KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
-    KMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
+    QMenu *menu = helpMenu->menu();
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
     setButtonMenu( Help, menu );
 }
 
 SendLaterConfigureDialog::~SendLaterConfigureDialog()
 {
     writeConfig();
-    delete mAboutData;
 }
 
 QList<Akonadi::Item::Id> SendLaterConfigureDialog::messagesToRemove() const
@@ -99,7 +99,7 @@ void SendLaterConfigureDialog::slotNeedToReloadConfig()
 
 void SendLaterConfigureDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SendLaterConfigureDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -109,7 +109,7 @@ void SendLaterConfigureDialog::readConfig()
 
 void SendLaterConfigureDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SendLaterConfigureDialog" );
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
 }
@@ -175,12 +175,12 @@ void SendLaterWidget::customContextMenuRequested(const QPoint &)
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
     if ( !listItems.isEmpty() ) {
-        KMenu menu;
+        QMenu menu;
         if ( listItems.count() == 1) {
             menu.addAction(i18n("Send now"), this, SLOT(slotSendNow()));
         }
         menu.addSeparator();
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
 }
@@ -221,7 +221,7 @@ void SendLaterWidget::updateButtons()
 
 void SendLaterWidget::load()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     const QStringList filterGroups = config->groupList().filter( QRegExp( sendLaterItemPattern ) );
     const int numberOfItem = filterGroups.count();
     for (int i = 0 ; i < numberOfItem; ++i) {
@@ -250,7 +250,7 @@ void SendLaterWidget::save()
 {
     if (!mChanged)
         return;
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
     const QStringList filterGroups =config->groupList().filter( QRegExp( sendLaterItemPattern ) );
@@ -319,7 +319,7 @@ void SendLaterWidget::slotModifyItem()
 void SendLaterWidget::needToReload()
 {
     mWidget->treeWidget->clear();
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     config->reparseConfiguration();
     load();
 }

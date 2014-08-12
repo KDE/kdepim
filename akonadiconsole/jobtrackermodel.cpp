@@ -23,7 +23,7 @@
 #include "jobtrackermodel.h"
 #include "jobtracker.h"
 
-#include <KGlobal>
+
 #include <KLocale>
 #include <QtCore/QStringList>
 #include <QtCore/QModelIndex>
@@ -31,6 +31,7 @@
 #include <QtCore/QDateTime>
 #include <QFont>
 #include <QPair>
+#include <QColor>
 
 #include <cassert>
 
@@ -132,7 +133,7 @@ int JobTrackerModel::columnCount(const QModelIndex & parent) const
 
 static QString formatTimeWithMsec( const QTime &time )
 {
-  return QString(KGlobal::locale()->formatTime( time, true )
+  return QString(KLocale::global()->formatTime( time, true )
                  + QString::fromLatin1( ".%1" ).arg( time.msec(), 3, 10, QLatin1Char('0') ) );
 }
 
@@ -185,7 +186,7 @@ QVariant JobTrackerModel::data(const QModelIndex & idx, int role) const
     }
     else if ( role == Qt::ForegroundRole ) {
       if ( info.state == JobInfo::Failed )
-        return Qt::red;
+        return QColor(Qt::red);
     }
     else if ( role == Qt::FontRole ) {
       if ( info.state == JobInfo::Running ) {

@@ -35,24 +35,26 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/AgentFilterProxyModel>
-#include <Akonadi/AgentInstanceCreateJob>
-#include <Akonadi/AgentManager>
-#include <Akonadi/AgentTypeDialog>
-#include <Akonadi/CollectionDeleteJob>
-#include <Akonadi/CollectionFilterProxyModel>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/EntityTreeView>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/ETMViewStateSaver>
+#include <AkonadiCore/AgentFilterProxyModel>
+#include <AkonadiCore/AgentInstanceCreateJob>
+#include <AkonadiCore/AgentManager>
+#include <AkonadiWidgets/AgentTypeDialog>
+#include <AkonadiCore/CollectionDeleteJob>
+#include <AkonadiCore/CollectionFilterProxyModel>
+#include <AkonadiCore/EntityDisplayAttribute>
+#include <AkonadiWidgets/EntityTreeView>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiWidgets/ETMViewStateSaver>
 #include <Akonadi/Calendar/StandardCalendarActionManager>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KCheckableProxyModel>
-#include <KColorDialog>
+#include <QColorDialog>
 #include <KMessageBox>
 #include <KRecursiveFilterProxyModel>
+#include <QDebug>
+#include <KDialog>
 
 #include <QHeaderView>
 #include <QPainter>
@@ -211,7 +213,7 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView *view, bool hasContex
 
   //KLineEdit *searchCol = new KLineEdit( this );
   //searchCol->setClearButtonShown( true );
-  //searchCol->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
+  //searchCol->setPlaceholderText( i18nc( "@info/plain Displayed grayed-out inside the "
   //                                                   "textbox, verb to search", "Search" ) );
   //topLayout->addWidget( searchCol );
 
@@ -313,20 +315,20 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView *view, bool hasContex
 
     mActionManager->setCollectionPropertiesPageNames( pages );
 
-    mDisableColor = new KAction( mCollectionView );
+    mDisableColor = new QAction( mCollectionView );
     mDisableColor->setText( i18n( "&Disable Color" ) );
     mDisableColor->setEnabled( false );
     xmlclient->actionCollection()->addAction( QString::fromLatin1( "disable_color" ),
                                               mDisableColor );
     connect( mDisableColor, SIGNAL(triggered(bool)), this, SLOT(disableColor()) );
 
-    mAssignColor = new KAction( mCollectionView );
+    mAssignColor = new QAction( mCollectionView );
     mAssignColor->setText( i18n( "&Assign Color..." ) );
     mAssignColor->setEnabled( false );
     xmlclient->actionCollection()->addAction( QString::fromLatin1( "assign_color" ), mAssignColor );
     connect( mAssignColor, SIGNAL(triggered(bool)), this, SLOT(assignColor()) );
 
-    mDefaultCalendar = new KAction( mCollectionView );
+    mDefaultCalendar = new QAction( mCollectionView );
     mDefaultCalendar->setText( i18n( "Use as &Default Calendar" ) );
     mDefaultCalendar->setEnabled( false );
     xmlclient->actionCollection()->addAction( QString::fromLatin1( "set_standard_calendar" ),
@@ -363,7 +365,7 @@ void AkonadiCollectionView::setDefaultCalendar()
   Q_ASSERT( index.isValid() );
   const Akonadi::Collection collection = CalendarSupport::collectionFromIndex( index );
   CalendarSupport::KCalPrefs::instance()->setDefaultCalendarId( collection.id() );
-  CalendarSupport::KCalPrefs::instance()->usrWriteConfig();
+  CalendarSupport::KCalPrefs::instance()->usrSave();
   updateMenu();
   updateView();
 
@@ -380,8 +382,8 @@ void AkonadiCollectionView::assignColor()
   const QString identifier = QString::number( collection.id() );
   const QColor defaultColor = KOPrefs::instance()->resourceColor( identifier );
   QColor myColor;
-  const int result = KColorDialog::getColor( myColor, defaultColor );
-  if ( result == KColorDialog::Accepted && myColor != defaultColor ) {
+  myColor = QColorDialog::getColor(defaultColor);
+  if ( myColor.isValid() && myColor != defaultColor) {
     KOPrefs::instance()->setResourceColor( identifier, myColor );
     emit colorsChanged();
     updateMenu();
@@ -496,7 +498,7 @@ void AkonadiCollectionView::newCalendarDone( KJob *job )
     //TODO(AKONADI_PORT)
     // this should show an error dialog and should be merged
     // with the identical code in ActionManager
-    kWarning() << "Create calendar failed:" << createjob->errorString();
+    qWarning() << "Create calendar failed:" << createjob->errorString();
     mNotSendAddRemoveSignal = false;
     return;
   }
@@ -547,7 +549,7 @@ void AkonadiCollectionView::deleteCalendarDone( KJob *job )
 {
   Akonadi::CollectionDeleteJob *deletejob = static_cast<Akonadi::CollectionDeleteJob*>( job );
   if ( deletejob->error() ) {
-    kWarning() << "Delete calendar failed:" << deletejob->errorString();
+    qWarning() << "Delete calendar failed:" << deletejob->errorString();
     mNotSendAddRemoveSignal = false;
     return;
   }
@@ -631,7 +633,7 @@ Akonadi::EntityTreeModel *AkonadiCollectionView::entityTreeModel() const
     proxy = qobject_cast<QAbstractProxyModel*>( proxy->sourceModel() );
   }
 
-  kWarning() << "Couldn't find EntityTreeModel";
+  qWarning() << "Couldn't find EntityTreeModel";
   return 0;
 }
 

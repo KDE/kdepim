@@ -54,7 +54,7 @@
 #include <kmime/kmime_header_parsing.h>
 
 #include <KLocalizedString>
-
+#include <KDebug>
 #include <QPointer>
 #include <QTimer>
 
@@ -273,7 +273,7 @@ void EncryptEMailController::cancel() {
             d->wizard->close();
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        kDebug() << "Caught exception: " << e.what();
+        qDebug() << "Caught exception: " << e.what();
     }
 }
 

@@ -30,8 +30,8 @@
 #include <calendarsupport/utils.h>
 #include <calendarsupport/calendarsingleton.h>
 
-#include <Akonadi/Collection>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/ItemFetchScope>
 #include <Akonadi/Calendar/IncidenceChanger>
 
 #include <KCalUtils/IncidenceFormatter>
@@ -42,9 +42,10 @@
 #include <KConfigGroup>
 #include <KIconLoader>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 #include <KSystemTimeZones>
 #include <KUrlLabel>
+
 
 #include <QGridLayout>
 #include <QLabel>
@@ -210,7 +211,7 @@ TODO: calhelper is deprecated, remove this?
         } else if ( daysTo == 1 ) {
           str = i18nc( "the to-do is due tomorrow", "Tomorrow" );
         } else {
-          str = KGlobal::locale()->formatDate( todo->dtDue().date(), KLocale::FancyLongDate );
+          str = KLocale::global()->formatDate( todo->dtDue().date(), KLocale::FancyLongDate );
         }
       }
 
@@ -256,7 +257,7 @@ TODO: calhelper is deprecated, remove this?
         }
       }
       if ( !Qt::mightBeRichText( str ) ) {
-        str = Qt::escape( str );
+        str = str.toHtmlEscaped();
       }
 
       KUrlLabel *urlLabel = new KUrlLabel( this );
@@ -350,7 +351,7 @@ void TodoSummaryWidget::popupMenu( const QString &uid )
   if( !todo )
     return;
   Akonadi::Item item = mCalendar->item( uid );
-  KMenu popup( this );
+  QMenu popup( this );
   QAction *editIt = popup.addAction( i18n( "&Edit To-do..." ) );
   QAction *delIt = popup.addAction( i18n( "&Delete To-do" ) );
   delIt->setIcon( KIconLoader::global()->loadIcon( QLatin1String("edit-delete"), KIconLoader::Small ) );

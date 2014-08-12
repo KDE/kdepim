@@ -26,6 +26,7 @@
 #include "messagecomposer_export.h"
 
 #include <KPIMTextEdit/TextEdit>
+#include <KUrl>
 
 namespace KPIMIdentities {
 class Signature;

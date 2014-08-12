@@ -19,7 +19,7 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 
 #include "composer.h"
 
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchScope>
 
 Composer::Composer( QObject *parent )
     : QObject( parent )
@@ -149,7 +149,7 @@ void Composer::send()
     m_msg->to()->fromUnicodeString( m_receiverModel->recipientString(MessageComposer::Recipient::To), "utf-8" );
     m_msg->cc()->fromUnicodeString( m_receiverModel->recipientString(MessageComposer::Recipient::Cc), "utf-8" );
     m_msg->bcc()->fromUnicodeString( m_receiverModel->recipientString(MessageComposer::Recipient::Bcc), "utf-8" );
-    m_msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
+    m_msg->date()->setDateTime( QDateTime::currentDateTime() );
     m_msg->subject()->fromUnicodeString( m_subject, "utf-8" );
 
     // Set the first multipart, the body message.

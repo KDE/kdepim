@@ -1,16 +1,15 @@
 project(korgac)
 
-option(KORGAC_AKONADI_AGENT FALSE "Build Korgac as Akonadi agent instead of a stand-alone process")
+option(KORGAC_AKONADI_AGENT "Build Korgac as Akonadi agent instead of a stand-alone process" FALSE)
 if(KORGAC_AKONADI_AGENT)
   add_definitions(-DKORGAC_AKONADI_AGENT)
 endif()
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5890)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 # enable exception handling
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/calendarsupport
@@ -24,10 +23,11 @@ add_subdirectory(tests)
 
 set(korgac_SRCS
   koalarmclient.cpp
+  koalarmclient_debug.cpp
 )
 
 if(KORGAC_AKONADI_AGENT)
-  set(korgac_SRCS ${korgac_SRCS} korgacagent.cpp)
+  set(korgac_SRCS ${korgac_SRCS} korgacagent.cpp korgacresourcefactory.cpp)
 else()
   set(korgac_SRCS ${korgac_SRCS} korgacmain.cpp)
 endif()
@@ -41,11 +41,11 @@ set(korgac_SRCS
 
 set(korganizer_xml ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.xml)
 
-qt4_add_dbus_interface(korgac_SRCS ${korganizer_xml}
+qt5_add_dbus_interface(korgac_SRCS ${korganizer_xml}
   korganizer_interface
 )
 
-qt4_add_dbus_adaptor(korgac_SRCS org.kde.korganizer.KOrgac.xml koalarmclient.h
+qt5_add_dbus_adaptor(korgac_SRCS org.kde.korganizer.KOrgac.xml koalarmclient.h
   KOAlarmClient
 )
 
@@ -56,9 +56,9 @@ endif()
 kde4_add_app_icon(korgac_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pixmap/hi*-apps-korganizer.png")
 
 if(KORGAC_AKONADI_AGENT)
-  kde4_add_plugin(korgac ${korgac_SRCS})
+  add_library(korgac MODULE ${korgac_SRCS})
 else()
-  kde4_add_executable(korgac ${korgac_SRCS})
+  add_executable(korgac ${korgac_SRCS})
   if(Q_WS_MAC)
     set_target_properties(korgac PROPERTIES
       MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist.template
@@ -73,19 +73,18 @@ else()
 endif()
 
 target_link_libraries(korgac
-  akonadi-calendar
-  akonadi-kmime
+  KF5::AkonadiCalendar
+  KF5::AkonadiMime
   calendarsupport
   incidenceeditorsng
   kdepim
   kdepimdbusinterfaces
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${KDEPIMLIBS_KCALUTILS_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${KDE4_KDEUI_LIBS}
-  ${KDE4_PHONON_LIBS}
+  KF5::AkonadiCore
+  KF5::CalendarCore
+  KF5::CalendarUtils
+  KF5::PimIdentities
+  KF5::MailTransport
+  Phonon::phonon4qt5
 )
 
 if(RUNTIME_PLUGINS_STATIC)

@@ -58,7 +58,7 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
 
     mConfigStorageService = new ConfigureStorageServiceWidget(storageManager);
     mConfigStorageService->setAttribute( Qt::WA_DeleteOnClose );
-    connect(mConfigStorageService, SIGNAL(changed()), this, SLOT(slotStorageServiceChanged()));
+    connect(mConfigStorageService, &ConfigureStorageServiceWidget::changed, this, &ConfigureDialog::slotStorageServiceChanged);
 
     addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), QLatin1String("configure") );
     addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), QLatin1String("document-properties"));
@@ -68,9 +68,9 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
 
     connect( this, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
     connect( this, SIGNAL(destroyed(QObject*)), this, SIGNAL(dialogDestroyed(QObject*)));
-    connect( this, SIGNAL(okClicked()), this, SLOT(slotApplySettingsClicked()));
-    connect( this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
-    connect( this, SIGNAL(applyClicked()), this, SLOT(slotApplySettingsClicked()));
+    connect( button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(slotApplySettingsClicked()));
+    connect( button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(slotDefaultClicked()));
+    connect( button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(slotApplySettingsClicked()));
     setAttribute( Qt::WA_DeleteOnClose );
     resize( Settings::configWindowSize() );
     show();

@@ -25,8 +25,8 @@
 #include "storagefactoryregistry.h"
 #include "plugin.h"
 
-#include <syndication/atom/constants.h>
-#include <syndication/constants.h>
+#include <Syndication/Constants>
+#include <Syndication/Atom/Atom>
 
 #include <QDateTime>
 #include <QFile>
@@ -37,7 +37,6 @@
 #include <QDebug>
 
 #include <KComponentData>
-#include <KGlobal>
 #include <KPluginLoader>
 #include <KService>
 #include <KServiceTypeTrader>
@@ -332,7 +331,7 @@ namespace {
 
 
 int main( int argc, char** argv ) {
-    KGlobal::setActiveComponent( KComponentData( "akregatorstorageexporter" ) );
+    KComponentData::setActiveComponent( KComponentData( "akregatorstorageexporter" ) );
     const QString backend = QString::fromLatin1( "metakit" );
 
     if ( argc < 2 ) {

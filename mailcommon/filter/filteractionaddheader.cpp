@@ -21,7 +21,7 @@
 
 #include <pimcommon/widgets/minimumcombobox.h>
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocale>
 
 #include <QComboBox>
@@ -81,7 +81,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
     KCompletion *comp = comboBox->completionObject();
     comp->setIgnoreCase(true);
     comp->insertItems(mParameterList);
-    comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+    comp->setCompletionMode(KCompletion::CompletionPopupAuto);
 
 
     layout->addWidget( comboBox, 0 /* stretch */ );
@@ -90,10 +90,10 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
     label->setFixedWidth( label->sizeHint().width() );
     layout->addWidget( label, 0 );
 
-    KLineEdit *lineEdit = new KLineEdit( widget );
+    QLineEdit *lineEdit = new QLineEdit( widget );
     lineEdit->setObjectName( QLatin1String("ledit") );
-    lineEdit->setTrapReturnKey(true);
-    lineEdit->setClearButtonShown( true );
+    //QT5 lineEdit->setTrapReturnKey(true);
+    lineEdit->setClearButtonEnabled( true );
     layout->addWidget( lineEdit, 1 );
 
     setParamWidgetValue( widget );
@@ -124,7 +124,7 @@ void FilterActionAddHeader::setParamWidgetValue( QWidget *paramWidget ) const
         comboBox->setCurrentIndex( index );
     }
 
-    KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("ledit") );
+    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("ledit") );
     Q_ASSERT( lineEdit );
 
     lineEdit->setText( mValue );
@@ -136,7 +136,7 @@ void FilterActionAddHeader::applyParamWidgetValue( QWidget *paramWidget )
     Q_ASSERT( comboBox );
     mParameter = comboBox->currentText();
 
-    const KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("ledit") );
+    const QLineEdit *lineEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("ledit") );
     Q_ASSERT( lineEdit );
     mValue = lineEdit->text();
 }
@@ -147,7 +147,7 @@ void FilterActionAddHeader::clearParamWidget( QWidget *paramWidget ) const
     Q_ASSERT( comboBox );
     comboBox->setCurrentIndex( 0 );
 
-    KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("ledit") );
+    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("ledit") );
     Q_ASSERT( lineEdit );
     lineEdit->clear();
 }
@@ -169,7 +169,7 @@ QString FilterActionAddHeader::argsAsString() const
 
 QString FilterActionAddHeader::displayString() const
 {
-    return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + argsAsString().toHtmlEscaped() + QLatin1String( "\"" );
 }
 
 void FilterActionAddHeader::argsFromString( const QString &argsStr )

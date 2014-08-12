@@ -27,24 +27,22 @@
 #include <grantlee/engine.h>
 #include <grantlee/templateloader.h>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include <KABC/Addressee>
 
 #include <KColorScheme>
-#include <KGlobal>
+
 #include <KIconLoader>
 #include <KLocale>
 #include <KStringHandler>
 #include <KConfigGroup>
 
-#include "akonadi/contact/improtocols.h"
+#include <akonadi/contact/improtocols.h>
 
 #include <QSet>
 #include <QRegExp>
 #include <QTextDocument>
-
-static const KCatalogLoader loader( QLatin1String("libkaddressbookgrantlee") );
 
 using namespace KAddressBookGrantlee;
 
@@ -161,7 +159,7 @@ static QVariantHash imAddressHash( const QString &typeKey, const QString &imAddr
     setHashField( addressObject, QLatin1String( "type" ), dispLabel );
     setHashField( addressObject, QLatin1String( "imAddress" ), imAddress );
 
-    const QString iconUrl = KUrl::fromPath( KIconLoader::global()->iconPath( IMProtocols::self()->icon( typeKey ),
+    const QString iconUrl = QUrl::fromLocalFile( KIconLoader::global()->iconPath( IMProtocols::self()->icon( typeKey ),
                                                                              -KIconLoader::SizeSmall) ).url();
     const QString url = QString::fromLatin1( "<img src=\"%1\" align=\"top\"/>" ).arg( iconUrl );
     addressObject.insert( QLatin1String( "imIcon" ), url );
@@ -260,7 +258,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     if ( birthday.isValid() ) {
         GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String( "birthdayi18n" ));
 
-        const QString formattedBirthday = KGlobal::locale()->formatDate( birthday );
+        const QString formattedBirthday = KLocale::global()->formatDate( birthday );
         contactObject.insert( QLatin1String( "birthday" ), formattedBirthday );
 
         const int years = contactAge( birthday );
@@ -275,14 +273,14 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
                                                   QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
     if ( anniversary.isValid() ) {
         contactObject.insert( QLatin1String( "anniversary" ),
-                              KGlobal::locale()->formatDate( anniversary ) );
+                              KLocale::global()->formatDate( anniversary ) );
         GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("anniversaryi18n") );
     }
 
     // Emails
     QStringList emails;
     foreach ( const QString &email, rawContact.emails() ) {
-        const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( rawContact.fullEmail( email ) ) );
+        const QString fullEmail = QString::fromLatin1( QUrl::toPercentEncoding( rawContact.fullEmail( email ) ) );
 
         const QString url = QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
                 .arg( fullEmail, email );
@@ -468,17 +466,17 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
                         } else if ( descriptionType  == QLatin1String( "date" ) ) {
                             const QDate date = QDate::fromString( value, Qt::ISODate );
-                            value = KGlobal::locale()->formatDate( date, KLocale::ShortDate );
+                            value = KLocale::global()->formatDate( date, KLocale::ShortDate );
 
                         } else if ( descriptionType == QLatin1String( "time" ) ) {
                             const QTime time = QTime::fromString( value, Qt::ISODate );
-                            value = KGlobal::locale()->formatTime( time );
+                            value = KLocale::global()->formatTime( time );
 
                         } else if ( descriptionType == QLatin1String( "datetime" ) ) {
                             const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
-                            value = KGlobal::locale()->formatDateTime( dateTime, KLocale::ShortDate );
+                            value = KLocale::global()->formatDateTime( dateTime, KLocale::ShortDate );
                         } else if ( descriptionType == QLatin1String("url") ) {
-                            value = KStringHandler::tagUrls( Qt::escape(value) );
+                            value = KStringHandler::tagUrls( value.toHtmlEscaped() );
                             addUrl = true;
                         }
                         break;

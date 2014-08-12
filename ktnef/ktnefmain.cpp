@@ -24,32 +24,30 @@
 #include <KTNEF/KTNEFParser>
 #include <KTNEF/KTNEFProperty>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
-#include <KApplication>
-#include <KDebug>
-#include <KDialog>
+#include <QDebug>
 #include <KEditToolBar>
 #include <KFileDialog>
 #include <KGlobal>
-#include <KIconLoader>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
-#include <KProcess>
 #include <KRun>
 #include <KShortcutsDialog>
 #include <KStandardAction>
 #include <KStandardDirs>
-#include <KStatusBar>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
+#include <KUrl>
+#include <QIcon>
+#include <KMimeType>
 #include <KRecentFilesAction>
 
 #include <QContextMenuEvent>
 #include <QDir>
 #include <QDrag>
 #include <QMimeData>
-#include <QPixmap>
+#include <KSharedConfig>
 
 KTNEFMain::KTNEFMain( QWidget *parent )
   : KXmlGuiWindow( parent )
@@ -59,16 +57,16 @@ KTNEFMain::KTNEFMain( QWidget *parent )
 
   setupTNEF();
 
-  KConfigGroup config( KGlobal::config(), "Settings" );
+  KConfigGroup config( KSharedConfig::openConfig(), "Settings" );
   mDefaultDir = config.readPathEntry( "defaultdir", QLatin1String("/tmp/") );
 
-  config = KConfigGroup( KGlobal::config(), "Recent Files" );
+  config = KConfigGroup( KSharedConfig::openConfig(), "Recent Files" );
   mOpenRecentFileAction->loadEntries(config);
 
   mLastDir = mDefaultDir;
 
   // create personal temp extract dir
-  KStandardDirs::makeDir( KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp") );
+  QDir().mkpath( KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp") );
 
   resize( 430, 350 );
 
@@ -91,7 +89,7 @@ void KTNEFMain::setupActions()
 {
   KStandardAction::quit( this, SLOT(close()), actionCollection() );
 
-  KAction *action =
+  QAction *action =
     KStandardAction::keyBindings( this, SLOT(slotConfigureKeys()), actionCollection() );
   action->setWhatsThis(
     i18nc( "@info:whatsthis",
@@ -103,50 +101,50 @@ void KTNEFMain::setupActions()
   // File menu
   KStandardAction::open( this, SLOT(openFile()), actionCollection() );
 
-  mOpenRecentFileAction = KStandardAction::openRecent(this, SLOT(openRecentFile(KUrl)), actionCollection());
+  mOpenRecentFileAction = KStandardAction::openRecent(this, SLOT(openRecentFile(QUrl)), actionCollection());
 
   // Action menu
-  KAction *openAction = actionCollection()->addAction( QLatin1String("view_file") );
+  QAction *openAction = actionCollection()->addAction( QLatin1String("view_file") );
   openAction->setText( i18nc( "@action:inmenu", "View" ) );
-  openAction->setIcon( KIcon( QLatin1String("document-open") ) );
-  connect( openAction, SIGNAL(triggered()), this, SLOT(viewFile()) );
+  openAction->setIcon( QIcon::fromTheme( QLatin1String("document-open") ) );
+  connect(openAction, &QAction::triggered, this, &KTNEFMain::viewFile);
 
-  KAction *openAsAction = actionCollection()->addAction( QLatin1String("view_file_as") );
+  QAction *openAsAction = actionCollection()->addAction( QLatin1String("view_file_as") );
   openAsAction->setText( i18nc( "@action:inmenu", "View With..." ) );
-  connect( openAsAction, SIGNAL(triggered()), this, SLOT(viewFileAs()) );
+  connect(openAsAction, &QAction::triggered, this, &KTNEFMain::viewFileAs);
 
-  KAction *extractAction = actionCollection()->addAction( QLatin1String("extract_file") );
+  QAction *extractAction = actionCollection()->addAction( QLatin1String("extract_file") );
   extractAction->setText( i18nc( "@action:inmenu", "Extract" ) );
-  connect( extractAction, SIGNAL(triggered()), this, SLOT(extractFile()) );
+  connect(extractAction, &QAction::triggered, this, &KTNEFMain::extractFile);
 
-  KAction *extractToAction = actionCollection()->addAction( QLatin1String("extract_file_to") );
+  QAction *extractToAction = actionCollection()->addAction( QLatin1String("extract_file_to") );
   extractToAction->setText( i18nc( "@action:inmenu", "Extract To..." ) );
-  extractToAction->setIcon( KIcon( QLatin1String("archive-extract") ) );
-  connect( extractToAction, SIGNAL(triggered()), this, SLOT(extractFileTo()) );
+  extractToAction->setIcon( QIcon::fromTheme( QLatin1String("archive-extract") ) );
+  connect(extractToAction, &QAction::triggered, this, &KTNEFMain::extractFileTo);
 
-  KAction *extractAllToAction = actionCollection()->addAction( QLatin1String("extract_all_files") );
+  QAction *extractAllToAction = actionCollection()->addAction( QLatin1String("extract_all_files") );
   extractAllToAction->setText( i18nc( "@action:inmenu", "Extract All To..." ) );
-  extractAllToAction->setIcon( KIcon( QLatin1String("archive-extract") ) );
-  connect( extractAllToAction, SIGNAL(triggered()), this, SLOT(extractAllFiles()) );
+  extractAllToAction->setIcon( QIcon::fromTheme( QLatin1String("archive-extract") ) );
+  connect(extractAllToAction, &QAction::triggered, this, &KTNEFMain::extractAllFiles);
 
-  KAction *filePropsAction = actionCollection()->addAction( QLatin1String("properties_file") );
+  QAction *filePropsAction = actionCollection()->addAction( QLatin1String("properties_file") );
   filePropsAction->setText( i18nc( "@action:inmenu", "Properties" ) );
-  filePropsAction->setIcon( KIcon( QLatin1String("document-properties") ) );
-  connect( filePropsAction, SIGNAL(triggered()), this, SLOT(propertiesFile()));
+  filePropsAction->setIcon( QIcon::fromTheme( QLatin1String("document-properties") ) );
+  connect(filePropsAction, &QAction::triggered, this, &KTNEFMain::propertiesFile);
 
-  KAction *messPropsAction = actionCollection()->addAction( QLatin1String("msg_properties") );
+  QAction *messPropsAction = actionCollection()->addAction( QLatin1String("msg_properties") );
   messPropsAction->setText( i18nc( "@action:inmenu", "Message Properties" ) );
-  connect( messPropsAction, SIGNAL(triggered()), this, SLOT(slotShowMessageProperties()) );
+  connect(messPropsAction, &QAction::triggered, this, &KTNEFMain::slotShowMessageProperties);
 
-  KAction *messShowAction = actionCollection()->addAction( QLatin1String("msg_text") );
+  QAction *messShowAction = actionCollection()->addAction( QLatin1String("msg_text") );
   messShowAction->setText( i18nc( "@action:inmenu", "Show Message Text" ) );
-  messShowAction->setIcon( KIcon( QLatin1String("document-preview-archive") ) );
-  connect( messShowAction, SIGNAL(triggered()), this, SLOT(slotShowMessageText()) );
+  messShowAction->setIcon( QIcon::fromTheme( QLatin1String("document-preview-archive") ) );
+  connect(messShowAction, &QAction::triggered, this, &KTNEFMain::slotShowMessageText);
 
-  KAction *messSaveAction = actionCollection()->addAction( QLatin1String("msg_save") );
+  QAction *messSaveAction = actionCollection()->addAction( QLatin1String("msg_save") );
   messSaveAction->setText( i18nc( "@action:inmenu", "Save Message Text As..." ) );
-  messSaveAction->setIcon( KIcon( QLatin1String("document-save") ) );
-  connect( messSaveAction, SIGNAL(triggered()), this, SLOT(slotSaveMessageText()) );
+  messSaveAction->setIcon( QIcon::fromTheme( QLatin1String("document-save") ) );
+  connect(messSaveAction, &QAction::triggered, this, &KTNEFMain::slotSaveMessageText);
 
   actionCollection()->action( QLatin1String("view_file") )->setEnabled( false );
   actionCollection()->action( QLatin1String("view_file_as") )->setEnabled( false );
@@ -156,10 +154,10 @@ void KTNEFMain::setupActions()
   actionCollection()->action( QLatin1String("properties_file") )->setEnabled( false );
 
   // Options menu
-  KAction *defFolderAction = actionCollection()->addAction( QLatin1String("options_default_dir") );
+  QAction *defFolderAction = actionCollection()->addAction( QLatin1String("options_default_dir") );
   defFolderAction->setText( i18nc( "@action:inmenu", "Default Folder..." ) );
-  defFolderAction->setIcon( KIcon( QLatin1String("folder-open") ) );
-  connect( defFolderAction, SIGNAL(triggered()), this, SLOT(optionDefaultDir()) );
+  defFolderAction->setIcon( QIcon::fromTheme( QLatin1String("folder-open") ) );
+  connect(defFolderAction, &QAction::triggered, this, &KTNEFMain::optionDefaultDir);
 
 }
 
@@ -170,8 +168,11 @@ void KTNEFMain::slotConfigureKeys()
 
 void KTNEFMain::setupStatusbar()
 {
+//QT5
+#if 0
   statusBar()->insertItem( i18nc( "@info:status", "100 attachments found" ), 0 );
   statusBar()->changeItem( i18nc( "@info:status", "No file loaded" ), 0 );
+#endif
 }
 
 void KTNEFMain::setupTNEF()
@@ -204,12 +205,13 @@ void KTNEFMain::loadFile( const QString &filename )
     mView->setAttachments( QList<KTNEFAttach *>() );
     enableExtractAll( false );
   } else {
-    addRecentFile(KUrl(filename));
+    addRecentFile(QUrl(filename));
     QList<KTNEFAttach *> list = mParser->message()->attachmentList();
     QString msg;
     msg = i18ncp( "@info:status",
                   "%1 attachment found", "%1 attachments found", list.count() );
-    statusBar()->changeItem( msg, 0 );
+    //QT5
+    //statusBar()->changeItem( msg, 0 );
     mView->setAttachments( list );
     enableExtractAll( ( list.count() > 0 ) );
     enableSingleAction( false );
@@ -229,15 +231,15 @@ void KTNEFMain::openFile()
   }
 }
 
-void KTNEFMain::openRecentFile(const KUrl &url)
+void KTNEFMain::openRecentFile(const QUrl &url)
 {
     loadFile(url.path());
 }
 
-void KTNEFMain::addRecentFile(const KUrl &url)
+void KTNEFMain::addRecentFile(const QUrl &url)
 {
     mOpenRecentFileAction->addUrl(url);
-    KConfigGroup config( KGlobal::config(), "Recent Files" );
+    KConfigGroup config( KSharedConfig::openConfig(), "Recent Files" );
     mOpenRecentFileAction->saveEntries(config);
     config.sync();
 }
@@ -246,15 +248,15 @@ void KTNEFMain::viewFile()
 {
   if ( !mView->getSelection().isEmpty() ) {
     KTNEFAttach *attach = mView->getSelection().first();
-    KUrl url( QLatin1String("file:") + extractTemp( attach ) );
+    QUrl url( QLatin1String("file:") + extractTemp( attach ) );
     QString mimename( attach->mimeTag() );
 
     if ( mimename.isEmpty() || mimename == QLatin1String("application/octet-stream") ) {
-      kDebug() << "No mime type found in attachment object, trying to guess...";
+      qDebug() << "No mime type found in attachment object, trying to guess...";
       mimename = KMimeType::findByUrl( url, 0, true )->name();
-      kDebug() << "Detected mime type: " << mimename;
+      qDebug() << "Detected mime type: " << mimename;
     } else {
-      kDebug() << "Mime type from attachment object: " << mimename;
+      qDebug() << "Mime type from attachment object: " << mimename;
     }
 
     KRun::runUrl( url, mimename, this, true );
@@ -341,7 +343,7 @@ void KTNEFMain::optionDefaultDir()
   if ( !dirname.isEmpty() ) {
     mDefaultDir = dirname;
 
-    KConfigGroup config( KGlobal::config(), "Settings" );
+    KConfigGroup config( KSharedConfig::openConfig(), "Settings" );
     config.writePathEntry( "defaultdir", mDefaultDir );
   }
 }
@@ -425,19 +427,19 @@ void KTNEFMain::contextMenuEvent( QContextMenuEvent *event )
   QAction *view = 0;
   QAction *viewWith = 0;
   QAction *prop = 0;
-  KMenu *menu = new KMenu();
+  QMenu *menu = new QMenu();
   if ( list.count() == 1 ) {
-    view = menu->addAction( KIcon( QLatin1String("document-open") ),
+    view = menu->addAction( QIcon::fromTheme( QLatin1String("document-open") ),
                             i18nc( "@action:inmenu", "View" ) );
     viewWith = menu->addAction( i18nc( "@action:inmenu", "View With..." ) );
     menu->addSeparator();
   }
   QAction *extract = menu->addAction( i18nc( "@action:inmenu", "Extract" ) );
-  QAction *extractTo = menu->addAction( KIcon( QLatin1String("archive-extract") ),
+  QAction *extractTo = menu->addAction( QIcon::fromTheme( QLatin1String("archive-extract") ),
                                         i18nc( "@action:inmenu", "Extract To..." ) );
   if ( list.count() == 1 ) {
     menu->addSeparator();
-   prop = menu->addAction( KIcon( QLatin1String("document-properties") ),
+   prop = menu->addAction( QIcon::fromTheme( QLatin1String("document-properties") ),
                            i18nc( "@action:inmenu", "Properties" ) );
   }
 
@@ -485,7 +487,8 @@ void KTNEFMain::viewDragRequested( const QList<KTNEFAttach *>& list )
 
 void KTNEFMain::slotEditToolbars()
 {
-  saveMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+  KConfigGroup grp = KSharedConfig::openConfig()->group( "MainWindow" );
+  saveMainWindowSettings( grp );
 
   KEditToolBar dlg( factory() );
   connect( &dlg, SIGNAL(newToolBarConfig()), this, SLOT(slotNewToolbarConfig()) );
@@ -495,7 +498,7 @@ void KTNEFMain::slotEditToolbars()
 void KTNEFMain::slotNewToolbarConfig()
 {
   createGUI( QLatin1String("ktnefui.rc") );
-  applyMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+  applyMainWindowSettings( KSharedConfig::openConfig()->group( "MainWindow" ) );
 }
 
 void KTNEFMain::slotShowMessageProperties()
@@ -512,15 +515,13 @@ void KTNEFMain::slotShowMessageText()
 
   QString rtf = mParser->message()->rtfString();
   if ( !rtf.isEmpty() ) {
-    KTemporaryFile *tmpFile = new KTemporaryFile();
-    tmpFile->setPrefix( KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp/") );
-    tmpFile->setSuffix( QLatin1String( ".rtf" ) );
+    QTemporaryFile *tmpFile = new QTemporaryFile(KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp/") + QLatin1String( "ktnef_XXXXXX.rtf" ) );
     tmpFile->open();
     tmpFile->setPermissions( QFile::ReadUser );
     tmpFile->write( rtf.toLocal8Bit() );
     tmpFile->close();
 
-    KRun::runUrl( KUrl( tmpFile->fileName() ), QLatin1String("text/rtf"), this, true );
+    KRun::runUrl( QUrl( tmpFile->fileName() ), QLatin1String("text/rtf"), this, true );
     delete tmpFile;
   } else {
       KMessageBox::error(

@@ -23,6 +23,8 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KMessageBox>
+#include <KLocalizedString>
+#include <QDebug>
 
 #include <QWhatsThis>
 
@@ -114,7 +116,7 @@ void TemplatesConfiguration::resetToDefault()
         } else if( toolBox1->widget( toolboxCurrentIndex ) == page_forward ) {
             textEdit_forward->setPlainText( DefaultTemplates::defaultForward() );
         } else {
-            kDebug() << "Unknown current page in TemplatesConfiguration!";
+            qDebug() << "Unknown current page in TemplatesConfiguration!";
         }
     } else {
         textEdit_new->setPlainText( DefaultTemplates::defaultNewMessage() );
@@ -167,7 +169,7 @@ void TemplatesConfiguration::saveToGlobal()
     GlobalSettings::self()->setTemplateReplyAll( strOrBlank( textEdit_reply_all->toPlainText() ) );
     GlobalSettings::self()->setTemplateForward( strOrBlank( textEdit_forward->toPlainText() ) );
     GlobalSettings::self()->setQuoteString( lineEdit_quote->text() );
-    GlobalSettings::self()->writeConfig();
+    GlobalSettings::self()->save();
 }
 
 void TemplatesConfiguration::loadFromIdentity( uint id )
@@ -230,7 +232,7 @@ void TemplatesConfiguration::saveToIdentity( uint id )
     t.setTemplateReplyAll( strOrBlank( textEdit_reply_all->toPlainText() ) );
     t.setTemplateForward( strOrBlank( textEdit_forward->toPlainText() ) );
     t.setQuoteString( lineEdit_quote->text() );
-    t.writeConfig();
+    t.save();
 }
 
 void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
@@ -316,7 +318,7 @@ void TemplatesConfiguration::saveToFolder( const QString &id )
     t.setTemplateReplyAll( strOrBlank( textEdit_reply_all->toPlainText() ) );
     t.setTemplateForward( strOrBlank( textEdit_forward->toPlainText() ) );
     t.setQuoteString( lineEdit_quote->text() );
-    t.writeConfig();
+    t.save();
 }
 
 QTextEdit *TemplatesConfiguration::currentTextEdit() const
@@ -333,7 +335,7 @@ QTextEdit *TemplatesConfiguration::currentTextEdit() const
     } else if( toolBox1->widget( toolboxCurrentIndex ) == page_forward ) {
         edit = textEdit_forward->editor();
     } else {
-        kDebug() << "Unknown current page in TemplatesConfiguration!";
+        qDebug() << "Unknown current page in TemplatesConfiguration!";
         edit = 0;
     }
     return edit;
@@ -346,7 +348,7 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
         return;
     }
 
-    // kDebug() << "Insert command:" << cmd;
+    // qDebug() << "Insert command:" << cmd;
     const QString editText( edit->toPlainText() );
     if ( ( editText.contains( QLatin1String("%FORCEDPLAIN") ) && ( cmd == QLatin1String( "%FORCEDHTML" ) ) ) ||
          ( editText.contains( QLatin1String("%FORCEDHTML") ) && ( cmd == QLatin1String( "%FORCEDPLAIN" ) ) ) ) {

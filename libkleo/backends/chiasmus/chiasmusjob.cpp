@@ -44,7 +44,6 @@
 #include <kmessagebox.h>
 
 #include <QTimer>
-#include <QFileInfo>
 #include <QVariant>
 
 #include <memory>

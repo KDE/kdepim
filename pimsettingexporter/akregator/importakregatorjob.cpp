@@ -23,8 +23,9 @@
 #include <KArchive>
 #include <KLocalizedString>
 #include <KZip>
-#include <KGlobal>
+
 #include <KStandardDirs>
+#include <QStandardPaths>
 
 ImportAkregatorJob::ImportAkregatorJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -58,7 +59,7 @@ void ImportAkregatorJob::restoreData()
 {
     const KArchiveEntry *akregatorEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "akregator/" ) );
     if (akregatorEntry && akregatorEntry->isDirectory()) {
-        const QString akregatorPath = KGlobal::dirs()->saveLocation("data", QLatin1String("akregator/"));
+        const QString akregatorPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("akregator/");
         overwriteDirectory(akregatorPath, akregatorEntry);
     }
     Q_EMIT info(i18n("Data restored."));

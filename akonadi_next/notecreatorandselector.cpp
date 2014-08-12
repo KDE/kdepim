@@ -25,12 +25,13 @@
 
 #include <KMime/Message>
 
-#include <akonadi/item.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/itemcreatejob.h>
+#include <item.h>
+#include <entitydisplayattribute.h>
+#include <itemcreatejob.h>
 
 #include "note.h"
-#include <Akonadi/EntityTreeModel>
+#include <EntityTreeModel>
+#include <QDebug>
 
 using namespace Akonadi;
 
@@ -94,7 +95,7 @@ void NoteCreatorAndSelector::doCreateNote()
   newPage->contentType( true )->setMimeType( "text/plain" );
   newPage->contentType()->setCharset("utf-8");
   newPage->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
-  newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+  newPage->date( true )->setDateTime( QDateTime::currentDateTime() );
   newPage->from( true )->fromUnicodeString( QString::fromLatin1( "Kjots@kde4" ), encoding );
   // Need a non-empty body part so that the serializer regards this as a valid message.
   newPage->mainBodyPart()->fromUnicodeString( QString::fromLatin1( " " ) );
@@ -116,7 +117,7 @@ void NoteCreatorAndSelector::noteCreationFinished(KJob* job)
 {
   if (job->error())
   {
-    kWarning() << job->errorString();
+    qWarning() << job->errorString();
     return;
   }
   Akonadi::ItemCreateJob *createJob = qobject_cast<Akonadi::ItemCreateJob*>(job);

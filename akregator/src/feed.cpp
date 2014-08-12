@@ -36,11 +36,12 @@
 #include "treenodevisitor.h"
 #include "types.h"
 #include "utils.h"
-#include <syndication/syndication.h>
 
-#include <kdebug.h>
+#include <Syndication/Syndication>
+
+#include <qdebug.h>
 #include <kglobal.h>
-#include <KIcon>
+#include <QIcon>
 #include <kstandarddirs.h>
 #include <kurl.h>
 #include <KRandom>
@@ -690,9 +691,9 @@ void Akregator::Feed::markAsFetchedNow()
 QIcon Akregator::Feed::icon() const
 {
     if ( fetchErrorOccurred() )
-        return KIcon(QLatin1String("dialog-error"));
+        return QIcon::fromTheme(QLatin1String("dialog-error"));
 
-    return !d->favicon.isNull() ? d->favicon : KIcon(QLatin1String("text-html"));
+    return !d->favicon.isNull() ? d->favicon : QIcon::fromTheme(QLatin1String("text-html"));
 }
 
 void Akregator::Feed::deleteExpiredArticles( ArticleDeleteJob* deleteJob )

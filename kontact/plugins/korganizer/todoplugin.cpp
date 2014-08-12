@@ -37,15 +37,15 @@
 
 #include <KontactInterface/Core>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
-#include <KDebug>
-#include <KIcon>
+#include <QDebug>
+#include <QIcon>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KSystemTimeZone>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 
 #include <QDropEvent>
 
@@ -54,28 +54,28 @@ EXPORT_KONTACT_PLUGIN( TodoPlugin, todo )
 TodoPlugin::TodoPlugin( KontactInterface::Core *core, const QVariantList & )
   : KontactInterface::Plugin( core, core, "korganizer", "todo" ), mIface( 0 )
 {
-  setComponentData( KontactPluginFactory::componentData() );
+  //QT5 setComponentData( KontactPluginFactory::componentData() );
   KIconLoader::global()->addAppDir( QLatin1String("korganizer") );
   KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
 
-  KAction *action =
-    new KAction( KIcon( QLatin1String("task-new") ),
+  QAction *action =
+    new QAction( QIcon::fromTheme( QLatin1String("task-new") ),
                  i18nc( "@action:inmenu", "New To-do..." ), this );
   actionCollection()->addAction( QLatin1String("new_todo"), action );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_T ) );
-  action->setHelpText(
-    i18nc( "@info:status", "Create a new to-do" ) );
+  //QT5 action->setHelpText(
+    //i18nc( "@info:status", "Create a new to-do" ) );
   action->setWhatsThis(
     i18nc( "@info:whatsthis",
            "You will be presented with a dialog where you can create a new to-do item." ) );
   connect( action, SIGNAL(triggered(bool)), SLOT(slotNewTodo()) );
   insertNewAction( action );
 
-  KAction *syncAction =
-    new KAction( KIcon( QLatin1String("view-refresh") ),
+  QAction *syncAction =
+    new QAction( QIcon::fromTheme( QLatin1String("view-refresh") ),
                  i18nc( "@action:inmenu", "Sync To-do List" ), this );
-  syncAction->setHelpText(
-    i18nc( "@info:status", "Synchronize groupware to-do list" ) );
+  //QT5 syncAction->setHelpText(
+    //i18nc( "@info:status", "Synchronize groupware to-do list" ) );
   syncAction->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Choose this option to synchronize your groupware to-do list." ) );
@@ -160,7 +160,7 @@ void TodoPlugin::slotSyncTodos()
   message << QString( "Todo" );
   QDBusConnection::sessionBus().send( message );
 #else
-  kWarning() << "TodoPlugin::slotSyncTodos : need to port to Akonadi";
+  qWarning() << "TodoPlugin::slotSyncTodos : need to port to Akonadi";
 #endif
 }
 
@@ -256,9 +256,9 @@ void TodoPlugin::processDropEvent( QDropEvent *event )
       QString uri = QLatin1String( "kmail:" ) +
                     QString::number( mail.serialNumber() ) + QLatin1Char('/') +
                     mail.messageId();
-      KTemporaryFile tf;
+      QTemporaryFile tf;
       tf.setAutoRemove( true );
-      tf.write( event->encodedData( "message/rfc822" ) );
+      //QT5 tf.write( event->encodedData( "message/rfc822" ) );
       interface()->openTodoEditor(
         i18nc( "@item", "Mail: %1", mail.subject() ),
         txt, uri, tf.fileName(), QStringList(), QLatin1String("message/rfc822") );
@@ -267,6 +267,6 @@ void TodoPlugin::processDropEvent( QDropEvent *event )
     return;
   }
 
-  kWarning() << QString::fromLatin1("Cannot handle drop events of type '%1'." ).arg( QLatin1String(event->format()) );
+  //QT5 qWarning() << QString::fromLatin1("Cannot handle drop events of type '%1'." ).arg( QLatin1String(event->format()) );
 }
-
+#include "todoplugin.moc"

@@ -41,9 +41,9 @@
 
 #include <KCalUtils/RecurrenceActions>
 
-#include <KGlobal>
 #include <KMessageBox>
 #include <KLocale>
+#include <QDebug>
 
 #include <QApplication>
 #include <QLabel>
@@ -176,7 +176,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   QPalette pal1 = d->mTimeBox->palette();
   pal1.setColor( QPalette::WindowText, color );
   d->mTimeBox->setPalette( pal1 );
-  d->mTimeBox->setText( KGlobal::locale()->formatTime( time, showSeconds ) );
+  d->mTimeBox->setText( KLocale::global()->formatTime( time, showSeconds ) );
   d->mTimeBox->adjustSize();
   if ( y - d->mTimeBox->height() >= 0 ) {
     y -= d->mTimeBox->height();
@@ -465,7 +465,7 @@ void Agenda::marcus_bains()
 void Agenda::changeColumns( int columns )
 {
   if ( columns == 0 ) {
-    kDebug() << "called with argument 0";
+    qDebug() << "called with argument 0";
     return;
   }
 
@@ -624,7 +624,7 @@ bool Agenda::eventFilter_wheel ( QObject *object, QWheelEvent *e )
     } else {
       viewportPos = e->pos();
     }
-    //kDebug() << type:" << e->type() << "delta:" << e->delta();
+    //qDebug() << type:" << e->type() << "delta:" << e->delta();
     emit zoomView( -e->delta(),
                    contentsToGrid( viewportPos ), Qt::Horizontal );
     accepted = true;
@@ -1159,7 +1159,7 @@ void Agenda::endItemAction()
 #endif
 
   if ( !d->mChanger ) {
-    kError() << "No IncidenceChanger set";
+    qCritical() << "No IncidenceChanger set";
     return;
   }
 
@@ -1394,18 +1394,18 @@ void Agenda::placeAgendaItem( AgendaItem::QPtr item, double subCellWidth )
 void Agenda::placeSubCells( AgendaItem::QPtr placeItem )
 {
 #if 0
-  kDebug();
+  qDebug();
   if ( placeItem ) {
     KCalCore::Incidence::Ptr event = placeItem->incidence();
     if ( !event ) {
-      kDebug() << "  event is 0";
+      qDebug() << "  event is 0";
     } else {
-      kDebug() << "  event:" << event->summary();
+      qDebug() << "  event:" << event->summary();
     }
   } else {
-    kDebug() << "  placeItem is 0";
+    qDebug() << "  placeItem is 0";
   }
-  kDebug() << "Agenda::placeSubCells()...";
+  qDebug() << "Agenda::placeSubCells()...";
 #endif
 
   QList<CalendarSupport::CellItem*> cells;
@@ -1702,7 +1702,7 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const KDate
                                      bool isSelected )
 {
   if ( d->mAllDayMode ) {
-    kDebug() << "using this in all-day mode is illegal.";
+    qDebug() << "using this in all-day mode is illegal.";
     return 0;
   }
 
@@ -1714,7 +1714,7 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const KDate
   }
 
   if ( YBottom <= YTop ) {
-    kDebug() << "Text:" << agendaItem->text() << " YSize<0";
+    qDebug() << "Text:" << agendaItem->text() << " YSize<0";
     YBottom = YTop;
   }
 
@@ -1748,7 +1748,7 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
                                            int XBegin, int XEnd, bool isSelected )
 {
   if ( !d->mAllDayMode ) {
-    kError() << "using this in non all-day mode is illegal.";
+    qCritical() << "using this in non all-day mode is illegal.";
     return 0;
   }
 
@@ -1785,7 +1785,7 @@ AgendaItem::QPtr Agenda::createAgendaItem( const Akonadi::Item &item, int itemPo
                                            int itemCount, const KDateTime &qd, bool isSelected )
 {
   if ( !item.isValid() ) {
-    kWarning() << "Agenda::createAgendaItem() item is invalid.";
+    qWarning() << "Agenda::createAgendaItem() item is invalid.";
     return AgendaItem::QPtr();
   }
 
@@ -1806,7 +1806,7 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const KDateTime &occur
   KCalCore::Event::Ptr ev = CalendarSupport::event( event );
   Q_ASSERT( ev );
   if ( d->mAllDayMode ) {
-    kDebug() << "using this in all-day mode is illegal.";
+    qDebug() << "using this in all-day mode is illegal.";
     return;
   }
 
@@ -1869,7 +1869,7 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const KDateTime &occur
 void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( !incidence ) {
-    kWarning() << "Agenda::removeIncidence() incidence is invalid";
+    qWarning() << "Agenda::removeIncidence() incidence is invalid";
     return;
   }
 
@@ -1882,7 +1882,7 @@ void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
 
     if ( id == -1 ) {
       // Ok, we really don't know the ID, give up.
-      kWarning() << "Agenda::removeIncidence() Item to remove is invalid. uid = "
+      qWarning() << "Agenda::removeIncidence() Item to remove is invalid. uid = "
                  << incidence->instanceIdentifier();
       return;
     }
@@ -1895,12 +1895,12 @@ void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
   AgendaItem::List agendaItems = d->mAgendaItemsById.values( id );
   if ( agendaItems.isEmpty() ) {
     // We're not displaying such item
-    // kDebug() << "Ignoring";
+    // qDebug() << "Ignoring";
     return;
   }
   foreach ( const AgendaItem::QPtr &agendaItem, agendaItems ) {
     if ( agendaItem && !removeAgendaItem( agendaItem ) ) {
-      kWarning() << "Agenda::removeIncidence() Failed to remove " << incidence->uid();
+      qWarning() << "Agenda::removeIncidence() Failed to remove " << incidence->uid();
     }
   }
 }
@@ -1908,7 +1908,7 @@ void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
 void Agenda::showAgendaItem( AgendaItem::QPtr agendaItem )
 {
   if ( !agendaItem ) {
-    kError() << "Show what?";
+    qCritical() << "Show what?";
     return;
   }
 

@@ -18,12 +18,15 @@
 #include "templateeditor_gui.h"
 #include "templateparser/templatestextedit.h"
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+#include <qdebug.h>
+
+
 #include <KLocalizedString>
 
 #include <QHBoxLayout>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 
 TemplateEditorTestWidget::TemplateEditorTestWidget(QWidget *parent)
@@ -41,9 +44,16 @@ TemplateEditorTestWidget::~TemplateEditorTestWidget()
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "templateeditortest_gui", 0, ki18n("TemplateEditorTest_Gui"),
-                       "1.0", ki18n("Test for template editor widget"));
-    KApplication app;
+    KAboutData aboutData( QLatin1String("templateeditortest_gui"), i18n("TemplateEditorTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for template editor widget"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     TemplateEditorTestWidget *w = new TemplateEditorTestWidget();
     w->resize(800,600);

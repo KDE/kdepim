@@ -17,19 +17,34 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kapplication.h>
-#include <kcmdlineargs.h>
 
 #include <messagecomposer/composer/kmeditor.h>
+#include <KAboutData>
+#include <KLocalizedString>
 
 #include <QtCore/QFile>
-
+#include <QCommandLineParser>
+#include <QApplication>
 using namespace MessageComposer;
 
 int main( int argc, char **argv )
 {
-    KCmdLineArgs::init( argc, argv, "testkmeditor", 0, ki18n("KMeditorTest"), "1.0" , ki18n("kmeditor test app"));
-    KApplication app;
+    KAboutData aboutData( QStringLiteral("testkmeditor"),
+                          i18n("KMeditorTest"),
+                          QLatin1String("1.0"));
+
+    KAboutData::setApplicationData(aboutData);
+
+    QApplication app(argc, argv);
+
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
+
     KMeditor *edit = new KMeditor();
     edit->setAcceptRichText(false);
     edit->resize( 600, 600 );

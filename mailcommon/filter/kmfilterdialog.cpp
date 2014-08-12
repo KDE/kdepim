@@ -34,12 +34,12 @@ using MailCommon::FilterImporterExporter;
 #include "search/searchpatternedit.h"
 #include "filterconverter/filterconverttosieve.h"
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentType>
-#include <Akonadi/ItemFetchJob>
+#include <AgentInstance>
+#include <AgentType>
+#include <ItemFetchJob>
 
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KIconLoader>
 #include <KInputDialog>
 #include <KJob>
@@ -47,10 +47,11 @@ using MailCommon::FilterImporterExporter;
 #include <KListWidgetSearchLine>
 #include <KLocale>
 #include <KMessageBox>
-#include <KPushButton>
-#include <KTabWidget>
+#include <QPushButton>
+#include <QTabWidget>
 #include <KWindowSystem>
 #include <KIconButton>
+#include <QIcon>
 
 #include <QApplication>
 #include <QHeaderView>
@@ -67,6 +68,7 @@ using MailCommon::FilterImporterExporter;
 #include <QSplitter>
 #include <QPointer>
 #include <QKeyEvent>
+#include <QHBoxLayout>
 
 Q_DECLARE_METATYPE(MailCommon::FilterImporterExporter::FilterType)
 using namespace MailCommon;
@@ -377,7 +379,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
 
     mFilterList = new KMFilterListBox( i18n( "Available Filters" ) );
     splitter->addWidget(mFilterList);
-    KTabWidget *tabWidget = new KTabWidget;
+    QTabWidget *tabWidget = new QTabWidget;
     splitter->addWidget(tabWidget);
 
     QWidget *page1 = new QWidget( tabWidget );
@@ -490,11 +492,15 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
         gl->addWidget( mConfigureToolbar, 9, 0, 1, 4 );
         mConfigureToolbar->setEnabled( false );
 
-        KHBox *hbox = new KHBox( mAdvOptsGroup );
+        QWidget *hbox = new QWidget( mAdvOptsGroup );
+        QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+        hboxHBoxLayout->setMargin(0);
         mFilterActionLabel = new QLabel( i18n( "Icon for this filter:" ), hbox );
+        hboxHBoxLayout->addWidget(mFilterActionLabel);
         mFilterActionLabel->setEnabled( false );
 
         mFilterActionIconButton = new KIconButton( hbox );
+        hboxHBoxLayout->addWidget(mFilterActionIconButton);
         mFilterActionLabel->setBuddy( mFilterActionIconButton );
         mFilterActionIconButton->setIconType( KIconLoader::NoGroup, KIconLoader::Action, false );
         mFilterActionIconButton->setIconSize( 16 );
@@ -515,7 +521,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
     applySpecificFiltersLayout->addWidget( mFolderRequester );
     connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)),
              this, SLOT(slotFolderChanged(Akonadi::Collection)) );
-    mRunNow = new KPushButton( i18n( "Run Now" ) );
+    mRunNow = new QPushButton( i18n( "Run Now" ) );
     mRunNow->setEnabled( false );
     applySpecificFiltersLayout->addWidget( mRunNow );
     connect( mRunNow, SIGNAL(clicked()), this, SLOT(slotRunFilters()) );
@@ -736,10 +742,10 @@ void KMFilterDialog::slotFilterSelected( MailFilter *aFilter )
     mPatternEdit->setSearchPattern( aFilter->pattern() );
     mFilter = aFilter;
 
-    kDebug() << "apply on inbound ==" << aFilter->applyOnInbound();
-    kDebug() << "apply on outbound ==" << aFilter->applyOnOutbound();
-    kDebug() << "apply before outbound == " << aFilter->applyBeforeOutbound();
-    kDebug() << "apply on explicit ==" << aFilter->applyOnExplicit();
+    qDebug() << "apply on inbound ==" << aFilter->applyOnInbound();
+    qDebug() << "apply on outbound ==" << aFilter->applyOnOutbound();
+    qDebug() << "apply before outbound == " << aFilter->applyBeforeOutbound();
+    qDebug() << "apply on explicit ==" << aFilter->applyOnExplicit();
 
     // NOTE: setting these values activates the slot that sets them in
     // the filter! So make sure we have the correct values _before_ we
@@ -754,7 +760,7 @@ void KMFilterDialog::slotFilterSelected( MailFilter *aFilter )
     const bool configureShortcut = aFilter->configureShortcut();
     const bool configureToolbar = aFilter->configureToolbar();
     const QString icon = aFilter->icon();
-    const KShortcut shortcut( aFilter->shortcut() );
+    const QKeySequence shortcut( aFilter->shortcut() );
 
     mApplyOnIn->setChecked( applyOnIn );
     mApplyOnForAll->setEnabled( applyOnIn );
@@ -770,7 +776,7 @@ void KMFilterDialog::slotFilterSelected( MailFilter *aFilter )
     mApplyOnCtrlJ->setChecked( applyOnExplicit );
     mStopProcessingHere->setChecked( stopHere );
     mConfigureShortcut->setChecked( configureShortcut );
-    mKeySeqWidget->setKeySequence( shortcut.primary(),
+    mKeySeqWidget->setKeySequence( shortcut,
                                    KKeySequenceWidget::NoValidate );
     mConfigureToolbar->setChecked( configureToolbar );
     mFilterActionIconButton->setIcon( icon );
@@ -819,7 +825,7 @@ void KMFilterDialog::slotApplicabilityChanged()
         // Enable the apply button
         slotDialogUpdated();
 
-        kDebug() << "Setting filter to be applied at"
+        qDebug() << "Setting filter to be applied at"
                  << ( mFilter->applyOnInbound() ? "incoming " : "" )
                  << ( mFilter->applyOnOutbound() ? "outgoing " : "" )
                  << ( mFilter->applyBeforeOutbound() ? "before_outgoing " : "" )
@@ -873,7 +879,7 @@ void KMFilterDialog::slotShortcutChanged( const QKeySequence &newSeq )
 {
     if ( mFilter ) {
         mKeySeqWidget->applyStealShortcut();
-        mFilter->setShortcut( KShortcut( newSeq ) );
+        mFilter->setShortcut( newSeq );
 
         // Enable the apply button
         slotDialogUpdated();
@@ -925,8 +931,8 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
              SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
 
     KListWidgetSearchLine *mSearchListWidget = new KListWidgetSearchLine( this, mListWidget );
-    mSearchListWidget->setTrapReturnKey( true );
-    mSearchListWidget->setClickMessage(
+    //QT5 mSearchListWidget->setTrapReturnKey( true );
+    mSearchListWidget->setPlaceholderText(
                 i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
                        "Search" ) );
 
@@ -934,27 +940,33 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
     layout->addWidget( mListWidget );
 
     //----------- the first row of buttons
-    KHBox *hb = new KHBox( this );
-    hb->setSpacing( 4 );
+    QWidget *hb = new QWidget( this );
+    QHBoxLayout *hbHBoxLayout = new QHBoxLayout(hb);
+    hbHBoxLayout->setMargin(0);
+    hbHBoxLayout->setSpacing( 4 );
 
-    mBtnTop = new KPushButton( QString(), hb );
-    mBtnTop->setIcon( KIcon( QLatin1String("go-top") ) );
+    mBtnTop = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnTop);
+    mBtnTop->setIcon( QIcon::fromTheme( QLatin1String("go-top") ) );
     mBtnTop->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnTop->setMinimumSize( mBtnTop->sizeHint() * 1.2 );
 
-    mBtnUp = new KPushButton( QString(), hb );
+    mBtnUp = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnUp);
     mBtnUp->setAutoRepeat( true );
-    mBtnUp->setIcon( KIcon( QLatin1String("go-up") ) );
+    mBtnUp->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
     mBtnUp->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnUp->setMinimumSize( mBtnUp->sizeHint() * 1.2 );
-    mBtnDown = new KPushButton( QString(), hb );
+    mBtnDown = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnDown);
     mBtnDown->setAutoRepeat( true );
-    mBtnDown->setIcon( KIcon( QLatin1String("go-down") ) );
+    mBtnDown->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
     mBtnDown->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDown->setMinimumSize( mBtnDown->sizeHint() * 1.2 );
 
-    mBtnBottom = new KPushButton( QString(), hb );
-    mBtnBottom->setIcon( KIcon( QLatin1String("go-bottom") ) );
+    mBtnBottom = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnBottom);
+    mBtnBottom->setIcon( QIcon::fromTheme( QLatin1String("go-bottom") ) );
     mBtnBottom->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnBottom->setMinimumSize( mBtnBottom->sizeHint() * 1.2 );
 
@@ -970,21 +982,27 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
     layout->addWidget( hb );
 
     //----------- the second row of buttons
-    hb = new KHBox( this );
-    hb->setSpacing( 4 );
+    hb = new QWidget( this );
+    hbHBoxLayout = new QHBoxLayout(hb);
+    hbHBoxLayout->setMargin(0);
+    hbHBoxLayout->setSpacing( 4 );
     mBtnNew = new QPushButton( QString(), hb );
-    mBtnNew->setIcon( KIcon( QLatin1String("document-new") ) );
+    hbHBoxLayout->addWidget(mBtnNew);
+    mBtnNew->setIcon( QIcon::fromTheme( QLatin1String("document-new") ) );
     mBtnNew->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnNew->setMinimumSize( mBtnNew->sizeHint() * 1.2 );
     mBtnCopy = new QPushButton( QString(), hb );
-    mBtnCopy->setIcon( KIcon( QLatin1String("edit-copy") ) );
+    hbHBoxLayout->addWidget(mBtnCopy);
+    mBtnCopy->setIcon( QIcon::fromTheme( QLatin1String("edit-copy") ) );
     mBtnCopy->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnCopy->setMinimumSize( mBtnCopy->sizeHint() * 1.2 );
     mBtnDelete = new QPushButton( QString(), hb );
-    mBtnDelete->setIcon( KIcon( QLatin1String("edit-delete") ) );
+    hbHBoxLayout->addWidget(mBtnDelete);
+    mBtnDelete->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
     mBtnDelete->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDelete->setMinimumSize( mBtnDelete->sizeHint() * 1.2 );
     mBtnRename = new QPushButton( i18n( "Rename..." ), hb );
+    hbHBoxLayout->addWidget(mBtnRename);
     mBtnNew->setToolTip( i18nc( "@action:button in filter list manipulator", "New" ) );
     mBtnCopy->setToolTip( i18n( "Copy" ) );
     mBtnDelete->setToolTip( i18n( "Delete" ) );
@@ -1041,7 +1059,7 @@ KMFilterListBox::~KMFilterListBox()
 bool KMFilterListBox::itemIsValid( QListWidgetItem *item ) const
 {
     if ( !item ) {
-        kDebug() << "Called while no filter is selected, ignoring.";
+        qDebug() << "Called while no filter is selected, ignoring.";
         return false;
     }
     if ( item->isHidden() ) {
@@ -1053,7 +1071,7 @@ bool KMFilterListBox::itemIsValid( QListWidgetItem *item ) const
 void KMFilterListBox::slotFilterEnabledChanged( QListWidgetItem *item )
 {
     if ( !item ) {
-        kDebug() << "Called while no filter is selected, ignoring.";
+        qDebug() << "Called while no filter is selected, ignoring.";
         return;
     }
     QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
@@ -1097,7 +1115,7 @@ void KMFilterListBox::slotUpdateFilterName()
 {
     QListWidgetItem *item = mListWidget->currentItem();
     if ( !item ) {
-        kDebug() << "Called while no filter is selected, ignoring.";
+        qDebug() << "Called while no filter is selected, ignoring.";
         return;
     }
     QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem*>( item );
@@ -1271,7 +1289,7 @@ void KMFilterListBox::slotCopy()
 
     // inserts a copy of the current filter.
     MailFilter *copyFilter = new MailFilter( *filter );
-    copyFilter->setShortcut( KShortcut() );
+    copyFilter->setShortcut( QKeySequence() );
 
     insertFilter( copyFilter );
     enableControls();
@@ -1352,7 +1370,7 @@ void KMFilterListBox::slotTop()
 
     const int numberOfItem( listWidgetItem.count() );
     if ( ( numberOfItem == 1 ) && ( mListWidget->currentRow() == 0 ) ) {
-        kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
+        qDebug() << "Called while the _topmost_ filter is selected, ignoring.";
         return;
     }
 
@@ -1413,7 +1431,7 @@ void KMFilterListBox::slotBottom()
     const int numberOfElement( mListWidget->count() );
     const int numberOfItem( listWidgetItem.count() );
     if ( ( numberOfItem == 1 ) && ( mListWidget->currentRow() == numberOfElement - 1 ) ) {
-        kDebug() << "Called while the _last_ filter is selected, ignoring.";
+        qDebug() << "Called while the _last_ filter is selected, ignoring.";
         return;
     }
 
@@ -1445,7 +1463,7 @@ void KMFilterListBox::slotUp()
 
     const int numberOfItem( listWidgetItem.count() );
     if ( ( numberOfItem == 1 ) && ( mListWidget->currentRow() == 0 ) ) {
-        kDebug() << "Called while the _topmost_ filter is selected, ignoring.";
+        qDebug() << "Called while the _topmost_ filter is selected, ignoring.";
         return;
     }
     bool wasMoved = false;
@@ -1474,7 +1492,7 @@ void KMFilterListBox::slotDown()
     const int numberOfElement( mListWidget->count() );
     const int numberOfItem( listWidgetItem.count() );
     if ( ( numberOfItem == 1 ) && ( mListWidget->currentRow() == numberOfElement - 1 ) ) {
-        kDebug() << "Called while the _last_ filter is selected, ignoring.";
+        qDebug() << "Called while the _last_ filter is selected, ignoring.";
         return;
     }
 
@@ -1707,7 +1725,7 @@ void KMFilterDialog::slotDisableAccept()
 
 void KMFilterDialog::slotDialogUpdated()
 {
-    kDebug() << "Detected a change in data bound to the dialog!";
+    qDebug() << "Detected a change in data bound to the dialog!";
     if ( !mIgnoreFilterUpdates ) {
         enableButtonApply( true );
     }

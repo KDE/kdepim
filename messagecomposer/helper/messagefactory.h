@@ -24,11 +24,11 @@
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_mdn.h>
-#include <akonadi/entity.h>
-#include <akonadi/item.h>
-#include <Akonadi/Collection>
+#include <entity.h>
+#include <item.h>
+#include <Collection>
 
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include <messagecore/misc/mdnstateattribute.h>
 
 namespace KPIMIdentities {

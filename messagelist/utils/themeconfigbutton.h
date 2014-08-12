@@ -20,7 +20,7 @@
 #define __MESSAGELIST_UTILS_THEMECONFIGBUTTON_H__
 
 #include <messagelist/messagelist_export.h>
-#include <KPushButton>
+#include <QPushButton>
 
 namespace MessageList
 {
@@ -32,10 +32,10 @@ class ThemeComboBox;
 class ThemeConfigButtonPrivate;
 
 /**
- * A specialized KPushButton that displays the theme
+ * A specialized QPushButton that displays the theme
  * configure dialog when pressed.
  */
-class MESSAGELIST_EXPORT ThemeConfigButton : public KPushButton
+class MESSAGELIST_EXPORT ThemeConfigButton : public QPushButton
 {
     Q_OBJECT
 

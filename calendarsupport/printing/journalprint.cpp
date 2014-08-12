@@ -22,6 +22,8 @@
 
 #include "journalprint.h"
 #include "utils.h"
+#include <KConfigGroup>
+#include <KDebug>
 
 using namespace CalendarSupport;
 
@@ -80,7 +82,7 @@ void CalPrintJournal::loadConfig()
 
 void CalPrintJournal::saveConfig()
 {
-  kDebug();
+  qDebug();
 
   readSettingsWidget();
   if ( mConfig ) {

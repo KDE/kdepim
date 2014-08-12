@@ -19,10 +19,10 @@
 
 #include "eventsimporthandler.h"
 
-#include <kcalcore/event.h>
-#include <kcalcore/filestorage.h>
-#include <kcalcore/icalformat.h>
-#include <kcalcore/memorycalendar.h>
+#include <KCalCore/Event>
+#include <KCalCore/FileStorage>
+#include <KCalCore/ICalFormat>
+#include <KCalCore/MemoryCalendar>
 #include <klocale.h>
 #include <kmessagebox.h>
 
@@ -77,7 +77,7 @@ Akonadi::Item::List EventsImportHandler::createItems( const QStringList &fileNam
       events << calendar->events();
     } else {
       const QString caption( i18n( "iCal Import Failed" ) );
-      const QString msg = i18nc( "@info",
+      const QString msg = xi18nc( "@info",
                                  "<para>Error when trying to read the iCal <filename>%1</filename>:</para>",
                                  fileName );
       KMessageBox::error( 0, msg, caption );

@@ -18,7 +18,7 @@
 
 #include "attachmentfromfolderjob.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 
@@ -44,20 +44,20 @@ public:
     KZip::Compression mCompression;
     AttachmentPart::Ptr mCompressedFolder;
     QScopedPointer<KZip> mZip;
-    time_t mArchiveTime;
+    QDateTime mArchiveTime;
 };
 
 AttachmentFromFolderJob::Private::Private( AttachmentFromFolderJob* qq ) :
     q( qq ),
     mCompression( KZip::DeflateCompression ),
     mZip(0),
-    mArchiveTime(QDateTime::currentDateTime().toTime_t())
+    mArchiveTime(QDateTime::currentDateTime())
 {
 }
 
 void AttachmentFromFolderJob::Private::compressFolder()
 {
-    kDebug() << "starting compression";
+    qDebug() << "starting compression";
     QString fileName = mUrl.fileName();
     QByteArray array;
     QBuffer dev( &array );
@@ -70,7 +70,7 @@ void AttachmentFromFolderJob::Private::compressFolder()
     }
     mZip->setCompression( mCompression );
     mZip->writeDir( mUrl.fileName(),QString(),QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime );
-    kDebug() << "writing root directory : " << mUrl.fileName();
+    qDebug() << "writing root directory : " << mUrl.fileName();
     addEntity(  QDir( mUrl.path() ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot |
                                                    QDir::NoSymLinks | QDir::Files, QDir::DirsFirst ), fileName + QLatin1Char('/') );
     mZip->close();
@@ -95,7 +95,7 @@ void AttachmentFromFolderJob::Private::compressFolder()
 void AttachmentFromFolderJob::Private::addEntity( const QFileInfoList &f, const QString &path )
 {
     foreach( const QFileInfo &info, f ){
-        kDebug() << q->maximumAllowedSize() << "Attachment size : " << mZip->device()->size();
+        qDebug() << q->maximumAllowedSize() << "Attachment size : " << mZip->device()->size();
 
         if ( q->maximumAllowedSize() !=-1 && mZip->device()->size() > q->maximumAllowedSize() ) {
             q->setError( KJob::UserDefinedError );
@@ -106,7 +106,7 @@ void AttachmentFromFolderJob::Private::addEntity( const QFileInfoList &f, const 
         }
 
         if ( info.isDir() ) {
-            kDebug() << "adding directory " << info.fileName() << "to zip";
+            qDebug() << "adding directory " << info.fileName() << "to zip";
             if ( !mZip->writeDir( path+info.fileName(), QString(), QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime ) ) {
                 q->setError( KJob::UserDefinedError );
                 q->setErrorText( i18n( "Could not add %1 to the archive", info.fileName() ) );
@@ -117,7 +117,7 @@ void AttachmentFromFolderJob::Private::addEntity( const QFileInfoList &f, const 
         }
 
         if ( info.isFile() ){
-            kDebug() << "Adding file " << path+info.fileName() << "to zip";
+            qDebug() << "Adding file " << path+info.fileName() << "to zip";
             QFile file( info.filePath() );
             if ( !file.open( QIODevice::ReadOnly ) ) {
                 q->setError( KJob::UserDefinedError );

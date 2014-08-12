@@ -26,7 +26,7 @@
 
 #include "calendarsupport_export.h"
 
-#include <Akonadi/Item>
+#include <Item>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <KCalCore/Event>
 #include <KCalCore/Todo>

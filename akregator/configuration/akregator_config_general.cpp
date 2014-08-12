@@ -27,20 +27,17 @@
 #include "ui_settings_general.h"
 
 #include <KAboutData>
-#include <KConfigDialogManager>
 #include <KGenericFactory>
 #include <KLocalizedString>
-#include <kdemacros.h>
 
 #include <QVBoxLayout>
 
 using namespace Akregator;
 
 K_PLUGIN_FACTORY(KCMAkregatorGeneralConfigFactory, registerPlugin<KCMAkregatorGeneralConfig>();)
-K_EXPORT_PLUGIN(KCMAkregatorGeneralConfigFactory( "kcmakrgeneralconfig" ))
 
 KCMAkregatorGeneralConfig::KCMAkregatorGeneralConfig( QWidget* parent, const QVariantList& args )
-    : KCModule( KCMAkregatorGeneralConfigFactory::componentData(), parent, args ), m_widget( new QWidget )
+    : KCModule( parent, args ), m_widget( new QWidget )
 {  
     Ui::SettingsGeneral ui;
     ui.setupUi( m_widget );
@@ -54,15 +51,14 @@ KCMAkregatorGeneralConfig::KCMAkregatorGeneralConfig( QWidget* parent, const QVa
              ui.kcfg_AutoFetchInterval, SLOT(setEnabled(bool)) );
     connect( ui.kcfg_UseIntervalFetch, SIGNAL(toggled(bool)),
              ui.autoFetchIntervalLabel, SLOT(setEnabled(bool)) );
+    KAboutData *about = new KAboutData( QLatin1String( "kcmakrgeneralconfig" ),
+                                        i18n( "Configure Feeds" ),
+                                        QString(), QString(), KAboutLicense::GPL,
+                                        i18n( "(c), 2004 - 2008 Frank Osterfeld" ) );
 
-    KAboutData *about = new KAboutData( I18N_NOOP( "kcmakrgeneralconfig" ), 0,
-                                        ki18n( "Configure Feeds" ),
-                                        0, KLocalizedString(), KAboutData::License_GPL,
-                                        ki18n( "(c), 2004 - 2008 Frank Osterfeld" ) );
+    about->addAuthor( i18n( "Frank Osterfeld" ), QString(), QStringLiteral("osterfeld@kde.org") );
 
-    about->addAuthor( ki18n( "Frank Osterfeld" ), KLocalizedString(), "osterfeld@kde.org" );
     setAboutData( about );
-
     addConfig( Settings::self(), m_widget );
 }
-
+#include "akregator_config_general.moc"

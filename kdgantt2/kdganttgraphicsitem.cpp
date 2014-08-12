@@ -68,15 +68,42 @@ namespace {
 }
 
 GraphicsItem::GraphicsItem( QGraphicsItem* parent, GraphicsScene* scene )
-    : BASE( parent, scene ),  m_isupdating( false )
+    : BASE( parent ),  m_isupdating( false )
 {
+  if (scene && !parent)
+  {
+    scene->addItem(this);
+  }
+
+  if (scene && parent)
+  {
+    if (scene != parent->scene())
+    {
+      qDebug("%s: parent scene is different than given scene", Q_FUNC_INFO);
+    }
+  }
+
+
   init();
 }
 
 GraphicsItem::GraphicsItem( const QModelIndex& idx, QGraphicsItem* parent,
                                             GraphicsScene* scene )
-    : BASE( parent, scene ),  m_index( idx ), m_isupdating( false )
+    : BASE( parent ),  m_index( idx ), m_isupdating( false )
 {
+  if (scene && !parent)
+  {
+    scene->addItem(this);
+  }
+
+  if (scene && parent)
+  {
+    if (scene != parent->scene())
+    {
+      qDebug("%s: parent scene is different than given scene", Q_FUNC_INFO);
+    }
+  }
+
   init();
 }
 

@@ -31,16 +31,18 @@
 #include "attachmenthandler.h"
 #include "calendarsupport/utils.h"
 
-#include <Akonadi/ItemFetchJob>
+#include <ItemFetchJob>
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KMimeType>
 #include <KRun>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KToolInvocation>
 #include <KIO/NetAccess>
 #include <KJob>
+#include <KDebug>
+
 
 #include <QFile>
 #include <QPointer>
@@ -110,7 +112,7 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
       KMessageBox::sorry(
         d->mParent,
         i18n( "The attachment \"%1\" is a web link that is inaccessible from this computer. ",
-              KUrl::fromPercentEncoding( a->uri().toLatin1() ) ) );
+              QUrl::fromPercentEncoding( a->uri().toLatin1() ) ) );
       return Attachment::Ptr();
     }
   }
@@ -136,18 +138,19 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
   return find( attachmentName, incidence );
 }
 
-static KTemporaryFile *s_tempFile = 0;
+static QTemporaryFile *s_tempFile = 0;
 
 static KUrl tempFileForAttachment( const Attachment::Ptr &attachment )
 {
   KUrl url;
 
-  s_tempFile = new KTemporaryFile();
-  s_tempFile->setAutoRemove( false );
   QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
   if ( !patterns.empty() ) {
-    s_tempFile->setSuffix( QString( patterns.first() ).remove( QLatin1Char('*') ) );
+       s_tempFile = new QTemporaryFile(QDir::tempPath() + QLatin1String("/attachementview_XXXXXX") + patterns.first().remove( QLatin1Char('*')));
+  } else {
+     s_tempFile = new QTemporaryFile();
   }
+  s_tempFile->setAutoRemove( false );
   s_tempFile->open();
   s_tempFile->setPermissions( QFile::ReadUser );
   s_tempFile->write( QByteArray::fromBase64( attachment->data() ) );
@@ -201,7 +204,7 @@ void AttachmentHandler::view( const QString &attachmentName, const QString &uid 
   Item item;
   item.setGid(uid);
   ItemFetchJob *job = new ItemFetchJob(item);
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFinishView(KJob*)) );
+  connect(job, &ItemFetchJob::result, this, &AttachmentHandler::slotFinishView);
   ReceivedInfo info;
   info.attachmentName = attachmentName;
   info.uid = uid;
@@ -263,7 +266,7 @@ void AttachmentHandler::saveAs( const QString &attachmentName, const QString &ui
   Item item;
   item.setGid(uid);
   ItemFetchJob *job = new ItemFetchJob(item);
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFinishView(KJob*)) );
+  connect(job, &ItemFetchJob::result, this, &AttachmentHandler::slotFinishView);
 
   ReceivedInfo info;
   info.attachmentName = attachmentName;
@@ -289,10 +292,10 @@ void AttachmentHandler::slotFinishSaveAs( KJob *job )
       Incidence::Ptr incidence = CalendarSupport::incidence( items.first() );
       success = incidence && saveAs( info.attachmentName, incidence );
     } else {
-      kWarning() << Q_FUNC_INFO << "No item found";
+      qWarning() << Q_FUNC_INFO << "No item found";
     }
   } else {
-    kWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
+    qWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
   }
 
   emit saveAsFinished( info.uid, info.attachmentName, success );
@@ -311,10 +314,10 @@ void AttachmentHandler::slotFinishView( KJob *job )
       Incidence::Ptr incidence = CalendarSupport::incidence( items.first() );
       success = incidence && view( info.attachmentName, incidence );
     } else {
-      kWarning() << Q_FUNC_INFO << "No item found";
+      qWarning() << Q_FUNC_INFO << "No item found";
     }
   } else {
-    kWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
+    qWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
   }
 
   emit viewFinished( info.uid, info.attachmentName, success );

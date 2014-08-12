@@ -35,8 +35,8 @@
 #include "soundpicker.h"
 #include "specialactions.h"
 
-#include <akonadi/control.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <AkonadiCore/control.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
 
 #include <klocale.h>
 #include <kglobal.h>
@@ -46,7 +46,7 @@
 #include <kactioncollection.h>
 #include <kdescendantsproxymodel.h>
 #include <khbox.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QAction>
 #include <QGroupBox>
@@ -55,6 +55,7 @@
 #include <QHeaderView>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <KSharedConfig>
 
 using namespace KCal;
 
@@ -78,7 +79,7 @@ BirthdayDlg::BirthdayDlg(QWidget* parent)
 
     // Prefix and suffix to the name in the alarm text
     // Get default prefix and suffix texts from config file
-    KConfigGroup config(KGlobal::config(), "General");
+    KConfigGroup config(KSharedConfig::openConfig(), "General");
     mPrefixText = config.readEntry("BirthdayPrefix", i18nc("@info/plain", "Birthday: "));
     mSuffixText = config.readEntry("BirthdaySuffix");
 
@@ -147,7 +148,7 @@ BirthdayDlg::BirthdayDlg(QWidget* parent)
     mListView->header()->setResizeMode(BirthdayModel::NameColumn, QHeaderView::Stretch);
     mListView->header()->setResizeMode(BirthdayModel::DateColumn, QHeaderView::ResizeToContents);
     connect(mListView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(slotSelectionChanged()));
-    mListView->setWhatsThis(i18nc("@info:whatsthis",
+    mListView->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Select birthdays to set alarms for.<nl/>"
           "This list shows all birthdays in <application>KAddressBook</application> except those for which alarms already exist.</para>"
           "<para>You can select multiple birthdays at one time by dragging the mouse over the list, "
@@ -309,7 +310,7 @@ QVector<KAEvent> BirthdayDlg::events() const
 void BirthdayDlg::slotOk()
 {
     // Save prefix and suffix texts to use as future defaults
-    KConfigGroup config(KGlobal::config(), "General");
+    KConfigGroup config(KSharedConfig::openConfig(), "General");
     config.writeEntry("BirthdayPrefix", mPrefix->text());
     config.writeEntry("BirthdaySuffix", mSuffix->text());
     config.sync();

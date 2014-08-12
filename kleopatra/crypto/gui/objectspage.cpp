@@ -36,7 +36,7 @@
 
 #include <utils/filedialog.h>
 
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 
 #include <QFileInfo>
@@ -139,7 +139,7 @@ void ObjectsPage::Private::addFile( const QFileInfo& info )
 {
     QListWidgetItem* const item = new QListWidgetItem;
     if ( info.isDir() )
-        item->setIcon( KIcon( QLatin1String("folder") ) );
+        item->setIcon( QIcon::fromTheme( QLatin1String("folder") ) );
     item->setText( info.fileName() );
     item->setData( AbsoluteFilePathRole, info.absoluteFilePath() ); 
     fileListWidget->addItem( item );

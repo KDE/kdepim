@@ -19,15 +19,28 @@
     USA.
 */
 
-#include <kapplication.h>
-#include <kcmdlineargs.h>
+
+
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 #include "mainwindow.h"
 
 int main(  int argc,  char **argv )
 {
-    KCmdLineArgs::init( argc,  argv,  "akonalendar", 0, ki18n( "Akonalendar" ), "0.1", ki18n( "A calendar demo application" ) );
-    KApplication app;
+    KAboutData aboutData( QLatin1String("akonalendar"), i18n( "Akonalendar" ), QLatin1String("0.1"));
+    aboutData.setShortDescription( i18n( "A calendar demo application" ) );
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     MainWindow window;
     window.show();

@@ -24,11 +24,12 @@
 
 #include <incidenceeditor-ng/editoritemmanager.h>
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Item>
 
 #include <KABC/ContactGroup>
 #include <KLocalizedString>
+#include <QDebug>
 
 #include <QDeclarativeItem>
 
@@ -94,13 +95,13 @@ class ContactGroupEditorView::Private : public IncidenceEditorNG::ItemEditorUi
 
 void ContactGroupEditorView::Private::saveFinished()
 {
-  kDebug();
+  qDebug();
   q->deleteLater();
 }
 
 void ContactGroupEditorView::Private::saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, const QString &errorMessage )
 {
-  kError() << errorMessage;
+  qCritical() << errorMessage;
 }
 
 void ContactGroupEditorView::Private::load( const Item &item )
@@ -148,11 +149,11 @@ void ContactGroupEditorView::Private::reject( RejectReason reason, const QString
 {
   switch ( reason ) {
     case ItemFetchFailed:
-      kWarning() << "Item Fetch Failed:" << errorMessage;
+      qWarning() << "Item Fetch Failed:" << errorMessage;
       break;
 
     case ItemHasInvalidPayload:
-      kWarning() << "Item has Invalid Payload:" << errorMessage;
+      qWarning() << "Item has Invalid Payload:" << errorMessage;
       break;
   }
 

@@ -32,8 +32,8 @@
 #include "attachmenticonview.h"
 
 #include <KIconLoader>
-#include <KTemporaryFile>
-#include <KDebug>
+#include <QTemporaryFile>
+#include <QDir>
 
 #include <QDrag>
 #include <QKeyEvent>
@@ -134,6 +134,8 @@ QPixmap AttachmentIconItem::icon( KMimeType::Ptr mimeType,
                                   const QString &uri,
                                   bool binary )
 {
+//QT5
+#if 0
   QString iconStr = mimeType->iconName( uri );
   QStringList overlays;
   if ( !uri.isEmpty() && !binary ) {
@@ -143,6 +145,9 @@ QPixmap AttachmentIconItem::icon( KMimeType::Ptr mimeType,
   return KIconLoader::global()->loadIcon( iconStr, KIconLoader::Desktop, 0,
                                           KIconLoader::DefaultState,
                                           overlays );
+#else
+return QPixmap();
+#endif
 }
 
 void AttachmentIconItem::readAttachment()
@@ -186,14 +191,17 @@ KUrl AttachmentIconView::tempFileForAttachment( const KCalCore::Attachment::Ptr 
   if ( mTempFiles.contains( attachment ) ) {
     return mTempFiles.value( attachment );
   }
-  KTemporaryFile *file = new KTemporaryFile();
-  file->setParent( const_cast<AttachmentIconView*>( this ) );
+  QTemporaryFile *file;
 
   QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
 
   if ( !patterns.empty() ) {
-    file->setSuffix( QString( patterns.first() ).remove( '*' ) );
+      file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/attachementview_XXXXX") + patterns.first().remove('*')); 
+  } else {
+      file = new QTemporaryFile();
   }
+  file->setParent( const_cast<AttachmentIconView*>( this ) );
+
   file->setAutoRemove( true );
   file->open();
   // read-only not to give the idea that it could be written to
@@ -217,14 +225,14 @@ QMimeData *AttachmentIconView::mimeData( const QList< QListWidgetItem*> items ) 
       } else {
         urls.append( item->uri() );
       }
-      labels.append( KUrl::toPercentEncoding( item->label() ) );
+      labels.append( QUrl::toPercentEncoding( item->label() ) );
     }
   }
   if ( selectionMode() == NoSelection ) {
     AttachmentIconItem *item = static_cast<AttachmentIconItem *>( currentItem() );
     if ( item ) {
       urls.append( item->uri() );
-      labels.append( KUrl::toPercentEncoding( item->label() ) );
+      labels.append( QUrl::toPercentEncoding( item->label() ) );
     }
   }
 

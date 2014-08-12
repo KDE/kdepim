@@ -26,15 +26,15 @@
 #include <KLocalizedString>
 #include <KNS3/DownloadDialog>
 #include <KActionMenu>
-#include <KStandardDirs>
-#include <KDebug>
+#include <QDebug>
+#include <QAction>
+#include <QIcon>
 
 #include <QDir>
 #include <QAction>
 #include <QDirIterator>
 #include <QActionGroup>
-
-static const KCatalogLoader loader( QLatin1String("libgrantleetheme") );
+#include <QStandardPaths>
 
 using namespace GrantleeTheme;
 
@@ -51,8 +51,8 @@ public:
     {
         watch = new KDirWatch( q );
         initThemesDirectories(relativePath);
-        downloadThemesAction = new KAction(i18n("Download New Themes..."), q);
-        downloadThemesAction->setIcon(KIcon(QLatin1String("get-hot-new-stuff")));
+        downloadThemesAction = new QAction(i18n("Download New Themes..."), q);
+        downloadThemesAction->setIcon(QIcon::fromTheme(QLatin1String("get-hot-new-stuff")));
         if (actionCollection)
             actionCollection->addAction( QLatin1String("download_header_themes"), downloadThemesAction );
         separatorAction = new QAction(q);
@@ -126,7 +126,7 @@ public:
                     }
                     alreadyLoadedThemeName << themeName;
                     themes.insert( dirName, theme );
-                    //kDebug()<<" theme.name()"<<theme.name();
+                    //qDebug()<<" theme.name()"<<theme.name();
                 }
             }
             watch->addDir( directory );
@@ -197,7 +197,7 @@ public:
                 GrantleeSettings::self()->setGrantleeAddressBookThemeName( act->data().toString() );
                 break;
             }
-            GrantleeSettings::self()->writeConfig();
+            GrantleeSettings::self()->save();
         }
     }
 
@@ -234,10 +234,11 @@ public:
     void initThemesDirectories(const QString &themesRelativePath)
     {
         if (!themesRelativePath.isEmpty()) {
-            themesDirectories = KGlobal::dirs()->findDirs("data", themesRelativePath);
+        
+            themesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, themesRelativePath, QStandardPaths::LocateDirectory);
             if (themesDirectories.count() < 2) {
                 //Make sure to add local directory
-                const QString localDirectory = KStandardDirs::locateLocal("data", themesRelativePath);
+                const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + themesRelativePath;
                 if (!themesDirectories.contains(localDirectory)) {
                     themesDirectories.append(localDirectory);
                 }
@@ -256,7 +257,7 @@ public:
     KActionCollection *actionCollection;
     QAction *separatorAction;
 
-    KAction *downloadThemesAction;
+    QAction *downloadThemesAction;
     QWeakPointer<KNS3::DownloadDialog> downloadThemesDialog;
     GrantleeThemeManager *q;
 };
@@ -326,10 +327,10 @@ QString GrantleeThemeManager::pathFromThemes(const QString &themesRelativePath, 
 {
     QStringList themesDirectories;
     if (!themesRelativePath.isEmpty()) {
-        themesDirectories = KGlobal::dirs()->findDirs("data", themesRelativePath);
+        themesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, themesRelativePath, QStandardPaths::LocateDirectory);
         if (themesDirectories.count() < 2) {
             //Make sure to add local directory
-            const QString localDirectory = KStandardDirs::locateLocal("data", themesRelativePath);
+            const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + themesRelativePath;
             if (!themesDirectories.contains(localDirectory)) {
                 themesDirectories.append(localDirectory);
             }

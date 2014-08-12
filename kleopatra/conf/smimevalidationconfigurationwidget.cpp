@@ -41,7 +41,10 @@
 #include <kleo/cryptoconfig.h>
 #include <kleo/cryptobackendfactory.h>
 
-#include <kdebug.h>
+
+#include <KLocalizedString>
+#include <qdebug.h>
+#include <KDebug>
 
 #include <QDBusConnection>
 
@@ -199,7 +202,7 @@ struct SMIMECryptoConfigEntries {
 };
 
 void SMimeValidationConfigurationWidget::defaults() {
-    kDebug() << "not implemented";
+    qDebug() << "not implemented";
 }
 
 void SMimeValidationConfigurationWidget::load() {
@@ -303,7 +306,7 @@ void SMimeValidationConfigurationWidget::save() const {
     {
         SMimeValidationPreferences preferences;
         preferences.setRefreshInterval( d->ui.intervalRefreshCB->isChecked() ? d->ui.intervalRefreshSB->value() : 0 );
-        preferences.writeConfig();
+        preferences.save();
     }
 
     // Create config entries

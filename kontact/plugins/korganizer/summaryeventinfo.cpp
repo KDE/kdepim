@@ -33,7 +33,7 @@ using namespace KCalCore;
 #include <KCalUtils/IncidenceFormatter>
 using namespace KCalUtils;
 
-#include <KGlobal>
+
 #include <KLocalizedString>
 #include <KSystemTimeZones>
 #include <KLocale>
@@ -203,7 +203,7 @@ SummaryEventInfo::List SummaryEventInfo::eventsForRange( const QDate &start, con
     } else if ( sD == currentDate.addDays(1) ) {
       str = i18nc( "the appointment is tomorrow", "Tomorrow" );
     } else {
-      str = KGlobal::locale()->formatDate( sD, KLocale::FancyLongDate );
+      str = KLocale::global()->formatDate( sD, KLocale::FancyLongDate );
     }
     summaryEvent->startDate = str;
 
@@ -292,8 +292,8 @@ SummaryEventInfo::List SummaryEventInfo::eventsForRange( const QDate &start, con
         }
       }
       str = i18nc( "Time from - to", "%1 - %2",
-                    KGlobal::locale()->formatTime( sST ),
-                    KGlobal::locale()->formatTime( sET ) );
+                    KLocale::global()->formatTime( sST ),
+                    KLocale::global()->formatTime( sET ) );
       summaryEvent->timeRange = str;
     }
 

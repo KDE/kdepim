@@ -23,11 +23,11 @@
 
 #include <libkdepim/misc/broadcaststatus.h>
 
-#include <Akonadi/CollectionDeleteJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <CollectionDeleteJob>
+#include <CollectionFetchJob>
+#include <CollectionFetchScope>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
 
 #include <KMime/Message>
 
@@ -36,6 +36,7 @@
 #include <KTar>
 #include <KZip>
 #include <kio/global.h> //krazy:exclude=camelcase as there is no such
+#include <QDebug>
 
 #include <QFileInfo>
 #include <QTimer>
@@ -45,7 +46,7 @@ static const mode_t archivePerms = S_IFREG | 0644;
 
 BackupJob::BackupJob( QWidget *parent )
     : QObject( parent ),
-      mArchiveTime(QDateTime::currentDateTime().toTime_t()),
+      mArchiveTime(QDateTime::currentDateTime()),
       mArchiveType( Zip ),
       mRootFolder( 0 ),
       mArchive( 0 ),
@@ -115,7 +116,7 @@ bool BackupJob::queueFolders( const Akonadi::Collection &root )
         job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
         job->exec();
         if ( job->error() ) {
-            kWarning() << job->errorString();
+            qWarning() << job->errorString();
             abort( i18n( "Unable to retrieve folder list." ) );
             return false;
         }
@@ -230,14 +231,14 @@ void BackupJob::archiveNextMessage()
     }
 
     if ( mPendingMessages.isEmpty() ) {
-        kDebug() << "===> All messages done in folder " << mCurrentFolder.name();
+        qDebug() << "===> All messages done in folder " << mCurrentFolder.name();
         archiveNextFolder();
         return;
     }
 
     Akonadi::Item item = mPendingMessages.front();
     mPendingMessages.pop_front();
-    kDebug() << "Fetching item with ID" << item.id() << "for folder" << mCurrentFolder.name();
+    qDebug() << "Fetching item with ID" << item.id() << "for folder" << mCurrentFolder.name();
 
     mCurrentJob = new Akonadi::ItemFetchJob( item );
     mCurrentJob->fetchScope().fetchFullPayload( true );
@@ -252,14 +253,14 @@ void BackupJob::processMessage( const Akonadi::Item &item )
     }
 
     const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-    kDebug() << "Processing message with subject " << message->subject( false );
+    qDebug() << "Processing message with subject " << message->subject( false );
     const QByteArray messageData = message->encodedContent();
     const qint64 messageSize = messageData.size();
     const QString messageName = QString::number( item.id() );
     const QString fileName = pathForCollection( mCurrentFolder ) + QLatin1String("/cur/") + messageName;
 
     // PORT ME: user and group!
-    kDebug() << "AKONDI PORT: disabled code here!";
+    qDebug() << "AKONDI PORT: disabled code here!";
     if ( !mArchive->writeFile( fileName, QLatin1String("user"), QLatin1String("group"), messageData, messageSize, archivePerms, mArchiveTime, mArchiveTime, mArchiveTime) ) {
         abort( i18n( "Failed to write a message into the archive folder '%1'.",
                      mCurrentFolder.name() ) );
@@ -285,7 +286,7 @@ void BackupJob::itemFetchJobResult( KJob *job )
 
     if ( job->error() ) {
         Q_ASSERT( mCurrentFolder.isValid() );
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         abort( i18n( "Downloading a message in folder '%1' failed.", mCurrentFolder.name() ) );
     } else {
         Akonadi::ItemFetchJob *fetchJob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
@@ -298,7 +299,7 @@ void BackupJob::itemFetchJobResult( KJob *job )
 bool BackupJob::writeDirHelper( const QString &directoryPath )
 {
     // PORT ME: Correct user/group
-    kDebug() << "AKONDI PORT: Disabled code here!";
+    qDebug() << "AKONDI PORT: Disabled code here!";
     return mArchive->writeDir( directoryPath, QLatin1String("user"), QLatin1String("group"), 040755, mArchiveTime, mArchiveTime, mArchiveTime );
 }
 
@@ -351,7 +352,7 @@ void BackupJob::archiveNextFolder()
     }
 
     mCurrentFolder = mPendingFolders.takeAt( 0 );
-    kDebug() << "===> Archiving next folder: " << mCurrentFolder.name();
+    qDebug() << "===> Archiving next folder: " << mCurrentFolder.name();
     const QString archivingStr( i18n( "Archiving folder %1", mCurrentFolder.name() ) );
     if ( mProgressItem ) {
         mProgressItem->setStatus( archivingStr );
@@ -389,7 +390,7 @@ void BackupJob::archiveNextFolder()
 void BackupJob::onArchiveNextFolderDone( KJob *job )
 {
     if ( job->error() ) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         abort( i18n( "Unable to get message list for folder %1.",
                      job->property( "folderName" ).toString() ) );
         return;
@@ -434,7 +435,7 @@ void BackupJob::start()
     }
     }
 
-    kDebug() << "Starting backup.";
+    qDebug() << "Starting backup.";
     if ( !mArchive->open( QIODevice::WriteOnly ) ) {
         abort( i18n( "Unable to open archive for writing." ) );
         return;

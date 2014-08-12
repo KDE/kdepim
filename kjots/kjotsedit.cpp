@@ -41,12 +41,12 @@
 
 #include "kjotslinkdialog.h"
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/item.h>
 
 #include <KMime/Message>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include "kjotsmodel.h"
 #include "noteshared/attributes/notelockattribute.h"
 #include "noteshared/editor/noteeditorutils.h"
@@ -258,7 +258,7 @@ void KJotsEdit::onAutoDecimal( void )
         actionCollection->action(QLatin1String("auto_decimal"))->setChecked( false );
     } else {
         allowAutoDecimal = true;
-        connect(this, SIGNAL(textChanged()), this, SLOT(DecimalList()));
+        connect(this, &KJotsEdit::textChanged, this, &KJotsEdit::DecimalList);
         actionCollection->action(QLatin1String("auto_decimal"))->setChecked( true );
     }
 }
@@ -311,7 +311,7 @@ void KJotsEdit::insertFromMimeData ( const QMimeData *source )
      } else if( source->hasHtml() ) {
         // Don't have an action to set top and bottom margins on paragraphs yet.
         // Remove the margins for all inserted html.
-//         kDebug() << source->html();
+//         qDebug() << source->html();
         QString str = source->html();
         int styleBegin = 0;
         while ((styleBegin = str.indexOf(QLatin1String("style=\""), styleBegin, Qt::CaseInsensitive) + 7) != (-1 + 7)) {
@@ -337,7 +337,7 @@ void KJotsEdit::insertFromMimeData ( const QMimeData *source )
             }
             styleBegin = styleEnd;
         }
-//         kDebug() << str;
+//         qDebug() << str;
         insertHtml(str);
     } else {
         KTextEdit::insertFromMimeData(source);

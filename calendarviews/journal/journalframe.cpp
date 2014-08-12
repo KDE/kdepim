@@ -36,13 +36,16 @@
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KDialog>
-#include <KTextBrowser>
+#include <QTextBrowser>
 #include <KLocalizedString>
+#include <KIconLoader>
 #include <KGlobalSettings>
+#include <QDebug>
 
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QFontDatabase>
 
 using namespace EventViews;
 
@@ -155,7 +158,7 @@ JournalFrame::JournalFrame( const Akonadi::Item &j,
   verticalLayout->setSpacing( KDialog::spacingHint() );
   verticalLayout->setMargin( KDialog::marginHint() );
 
-  mBrowser = new KTextBrowser( this );
+  mBrowser = new QTextBrowser( this );
   mBrowser->viewport()->installEventFilter( this );
   mBrowser->setFrameStyle( QFrame::NoFrame );
   verticalLayout->addWidget( mBrowser );
@@ -211,7 +214,7 @@ bool JournalFrame::eventFilter ( QObject *object, QEvent *event )
 {
   Q_UNUSED( object );
 
-  // object is our KTextBrowser
+  // object is our QTextBrowser
   if ( !mJournal.isValid() ) {
     return false;
   }
@@ -269,7 +272,7 @@ void JournalFrame::setJournal( const Akonadi::Item &journal )
 void JournalFrame::setDirty()
 {
   mDirty = true;
-  kDebug();
+  qDebug();
 }
 
 void JournalFrame::printJournal()
@@ -279,7 +282,7 @@ void JournalFrame::printJournal()
 
 void JournalFrame::readJournal( const Akonadi::Item &j )
 {
-  int baseFontSize = KGlobalSettings::generalFont().pointSize();
+  int baseFontSize = QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize();
   mJournal = j;
   const KCalCore::Journal::Ptr journal = CalendarSupport::journal( j );
   mBrowser->clear();

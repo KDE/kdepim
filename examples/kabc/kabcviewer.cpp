@@ -23,27 +23,33 @@
 
 #include <QVBoxLayout>
 
-#include <kapplication.h>
-#include <kcmdlineargs.h>
+
+
 #include <klocale.h>
 
-#include <akonadi/contact/contactviewer.h>
+#include <Akonadi/Contact/ContactViewer>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 Dialog::Dialog( QWidget *parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setCaption( i18n("Contact Viewer") );
-  setButtons( Close );
-  showButtonSeparator( true );
+  setWindowTitle( i18n("Contact Viewer") );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &Dialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &Dialog::reject);
 
-  QWidget *wdg = new QWidget( this );
-  QVBoxLayout *layout = new QVBoxLayout( wdg );
-
-  mBrowser = new Akonadi::ContactViewer( wdg );
-  layout->addWidget( mBrowser );
-
-  setMainWidget( wdg );
-
+  mBrowser = new Akonadi::ContactViewer( this );
+  mainLayout->addWidget(mBrowser);
+  mainLayout->addWidget(buttonBox);
   resize( 520, 580 );
 }
 
@@ -58,22 +64,28 @@ void Dialog::loadUid( Akonadi::Item::Id uid )
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "kabcviewer", 0, ki18n("KABC Viewer"), "1.0" , ki18n("A contact viewer for Akonadi"));
+  KAboutData aboutData( QLatin1String("kabcviewer"), i18n("KABC Viewer"), QLatin1String("1.0" ));
+  aboutData.setShortDescription( i18n("A contact viewer for Akonadi"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  KCmdLineOptions options;
-  options.add("uid <uid>", ki18n( "Uid of the Akonadi contact" ));
-  KCmdLineArgs::addCmdLineOptions( options );
-  KApplication app;
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("uid"), i18n( "Uid of the Akonadi contact" ), QLatin1String("uid")));
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   Dialog dlg;
-  if ( !args->isSet( "uid" ) ) {
-    KCmdLineArgs::usage();
+  if ( !parser.isSet( QLatin1String("uid") ) ) {
+    parser.showHelp();
     return 1;
   }
 
-  dlg.loadUid( args->getOption( "uid" ).toLongLong() );
+  dlg.loadUid( parser.value( QLatin1String("uid") ).toLongLong() );
   dlg.exec();
 
   return 0;

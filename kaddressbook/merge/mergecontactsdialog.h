@@ -20,7 +20,7 @@
 #define MERGECONTACTSDIALOG_H
 
 #include <KDialog>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 class QItemSelectionModel;
 namespace KABMergeContacts {
 class MergeContactWidget;

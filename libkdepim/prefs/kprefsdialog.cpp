@@ -28,28 +28,27 @@
 #include <KComboBox>
 #include <KConfigSkeleton>
 #include <KDateComboBox>
-#include <KDebug>
-#include <KFontDialog>
+#include <QDebug>
+#include <QFontDialog>
 #include <KLineEdit>
 #include <KLocale>
 #include <KMessageBox>
-#include <KPageWidget>
 #include <KTimeComboBox>
 #include <KUrlRequester>
+#include <QUrl>
 
 #include <QFont>
 #include <QFrame>
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QSpinBox>
 #include <QTimeEdit>
 #include <QButtonGroup>
 #include <QGroupBox>
-#include <KHBox>
+#include <QHBoxLayout>
 
 
 using namespace KPIM;
@@ -74,7 +73,7 @@ KPrefsWid *create( KConfigSkeletonItem *item, QWidget *parent )
     if ( enumItem ) {
         QList<KConfigSkeleton::ItemEnum::Choice> choices = enumItem->choices();
         if ( choices.isEmpty() ) {
-            kError() << "Enum has no choices.";
+            qCritical() << "Enum has no choices.";
             return 0;
         } else {
             KPrefsWidRadios *radios = new KPrefsWidRadios( enumItem, parent );
@@ -244,7 +243,7 @@ KPrefsWidFont::KPrefsWidFont( KConfigSkeleton::ItemFont *item,
     mPreview->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
 
     mButton = new QPushButton( i18n( "Choose..." ), parent );
-    connect( mButton, SIGNAL(clicked()), SLOT(selectFont()) );
+    connect(mButton, &QPushButton::clicked, this, &KPIM::KPrefsWidFont::selectFont);
     QString toolTip = mItem->toolTip();
     if ( !toolTip.isEmpty() ) {
         mPreview->setToolTip( toolTip );
@@ -289,9 +288,9 @@ QPushButton *KPrefsWidFont::button()
 void KPrefsWidFont::selectFont()
 {
 #ifndef QT_NO_FONTDIALOG
-    QFont myFont( mPreview->font() );
-    int result = KFontDialog::getFont( myFont );
-    if ( result == KFontDialog::Accepted ) {
+    bool ok;
+    QFont myFont = QFontDialog::getFont( &ok, mPreview->font() );
+    if ( ok ) {
         mPreview->setFont( myFont );
         emit changed();
     }
@@ -487,9 +486,12 @@ QList<QWidget *> KPrefsWidRadios::widgets() const
 KPrefsWidCombo::KPrefsWidCombo( KConfigSkeleton::ItemEnum *item, QWidget *parent )
     : mItem( item )
 {
-    KHBox *hbox = new KHBox( parent );
+    QWidget *hbox = new QWidget( parent );
+    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
     new QLabel( mItem->label(), hbox );
     mCombo = new KComboBox( hbox );
+    hboxHBoxLayout->addWidget(mCombo);
     connect( mCombo, SIGNAL(activated(int)), SIGNAL(changed()) );
 }
 
@@ -596,7 +598,7 @@ KPrefsWidPath::~KPrefsWidPath()
 
 void KPrefsWidPath::readConfig()
 {
-    mURLRequester->setUrl( KUrl( mItem->value() ) );
+    mURLRequester->setUrl( QUrl( mItem->value() ) );
 }
 
 void KPrefsWidPath::writeConfig()
@@ -773,7 +775,7 @@ void KPrefsWidManager::writeWidConfig()
         (*it)->writeConfig();
     }
 
-    mPrefs->writeConfig();
+    mPrefs->save();
 }
 
 KPrefsDialog::KPrefsDialog( KConfigSkeleton *prefs, QWidget *parent, bool modal )
@@ -781,11 +783,10 @@ KPrefsDialog::KPrefsDialog( KConfigSkeleton *prefs, QWidget *parent, bool modal 
       KPrefsWidManager( prefs )
 {
     setFaceType( List );
-    setCaption( i18n( "Preferences" ) );
-    setButtons( Ok|Apply|Cancel|Default );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n( "Preferences" ) );
+    setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Apply |QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
+    button ( QDialogButtonBox::Ok )->setDefault(true);    
     setModal( modal );
-    showButtonSeparator( true );
     connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
     connect( this, SIGNAL(applyClicked()), SLOT(slotApply()) );
     connect( this, SIGNAL(defaultClicked()), SLOT(slotDefault()) );
@@ -808,7 +809,6 @@ void KPrefsDialog::autoCreate()
     KConfigSkeletonItem::List::ConstIterator it;
     for ( it = items.constBegin(); it != items.constEnd(); ++it ) {
         QString group = (*it)->group();
-        //QString name = (*it)->name();
 
         QWidget *page;
         QGridLayout *layout;
@@ -837,7 +837,7 @@ void KPrefsDialog::autoCreate()
                 layout->addWidget( widgets[ 0 ], currentRow, 0 );
                 layout->addWidget( widgets[ 1 ], currentRow, 1 );
             } else {
-                kError() <<"More widgets than expected:" << widgets.count();
+                qCritical() <<"More widgets than expected:" << widgets.count();
             }
 
             if ( (*it)->isImmutable() ) {
@@ -897,9 +897,9 @@ void KPrefsDialog::slotDefault()
     }
 }
 
-KPrefsModule::KPrefsModule( KConfigSkeleton *prefs, const KComponentData &instance,
+KPrefsModule::KPrefsModule( KConfigSkeleton *prefs, 
                             QWidget *parent, const QVariantList &args )
-    : KCModule( instance, parent, args ),
+    : KCModule( parent, args ),
       KPrefsWidManager( prefs )
 {
     emit changed( false );

@@ -23,12 +23,12 @@
 
 #include <KontactInterface/Core>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
-#include <KIcon>
+#include <QIcon>
 #include <KLocale>
-#include <kdebug.h>
+#include <qdebug.h>
 
 EXPORT_KONTACT_PLUGIN( CoisceimPlugin, coisceim )
 
@@ -37,12 +37,12 @@ CoisceimPlugin::CoisceimPlugin( KontactInterface::Core *core, const QVariantList
 {
   setComponentData( KontactPluginFactory::componentData() );
 
-  KAction *action =
-    new KAction( KIcon( "byobu" ),
+  QAction *action =
+    new QAction( QIcon::fromTheme( "byobu" ),
                  i18nc( "@action:inmenu", "New Trip" ), this );
   actionCollection()->addAction( "new_trip", action );
-  action->setHelpText(
-    i18nc( "@info:status", "Create a new trip" ) );
+  //action->setHelpText(
+  //  i18nc( "@info:status", "Create a new trip" ) );
   connect( action, SIGNAL(triggered(bool)), SLOT(createTrip()) );
   insertNewAction( action );
 
@@ -85,7 +85,7 @@ org::kde::coisceim::CoisceimWidget *CoisceimPlugin::interface()
 
 void CoisceimPlugin::createTrip()
 {
-  kDebug() << "CALL CREATE";
+  qDebug() << "CALL CREATE";
   core()->selectPlugin( this );
   interface()->createTrip();
 }

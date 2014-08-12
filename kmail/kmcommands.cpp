@@ -48,15 +48,15 @@
 #include "util/mailutil.h"
 
 #include <unistd.h> // link()
-#include <kprogressdialog.h>
-#include <kpimutils/email.h>
+#include <QProgressDialog>
+#include <KPIMUtils/kpimutils/email.h>
 #include <kdbusservicestarter.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kbookmarkmanager.h>
-#include <kstandarddirs.h>
+
 #include <ktemporaryfile.h>
 // KIO headers
 #include <kio/job.h>
@@ -65,9 +65,9 @@
 
 #include <kmime/kmime_message.h>
 
-#include <kpimidentities/identitymanager.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/itemfetchjob.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <AkonadiCore/itemmodifyjob.h>
+#include <AkonadiCore/itemfetchjob.h>
 
 
 #include "foldercollection.h"
@@ -100,19 +100,19 @@ using KMail::SecondaryWindow;
 #include "messageviewer/settings/globalsettings.h"
 #include "messagecore/settings/globalsettings.h"
 
-#include <kpimutils/kfileio.h>
+#include <KPIMUtils/kpimutils/kfileio.h>
 
-#include <akonadi/itemmovejob.h>
-#include <akonadi/itemcopyjob.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/tag.h>
-#include <akonadi/tagcreatejob.h>
-#include <mailtransport/transportattribute.h>
-#include <mailtransport/sentbehaviourattribute.h>
+#include <AkonadiCore/itemmovejob.h>
+#include <AkonadiCore/itemcopyjob.h>
+#include <AkonadiCore/itemdeletejob.h>
+#include <AkonadiCore/tag.h>
+#include <AkonadiCore/tagcreatejob.h>
+#include <MailTransport/mailtransport/transportattribute.h>
+#include <MailTransport/mailtransport/sentbehaviourattribute.h>
 
 #include <messagelist/pane.h>
 
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 using MailTransport::TransportManager;
 
 
@@ -147,6 +147,8 @@ using namespace KMime;
 #include <boost/bind.hpp>
 #include <algorithm>
 #include <memory>
+#include <QStandardPaths>
+#include <QFontDatabase>
 
 
 using namespace MailCommon;
@@ -170,7 +172,7 @@ static void showJobError( KJob* job )
     if( kiojob && kiojob->ui() )
         kiojob->ui()->showErrorMessage();
     else
-        kWarning() << "There is no GUI delegate set for a kjob, and it failed with error:" << job->errorString();
+        qWarning() << "There is no GUI delegate set for a kjob, and it failed with error:" << job->errorString();
 }
 
 KMCommand::KMCommand( QWidget *parent )
@@ -204,7 +206,7 @@ KMCommand::~KMCommand()
 KMCommand::Result KMCommand::result() const
 {
     if ( mResult == Undefined ) {
-        kDebug() << "mResult is Undefined";
+        qDebug() << "mResult is Undefined";
     }
     return mResult;
 }
@@ -286,15 +288,15 @@ void KMCommand::transferSelectedMsgs()
     mRetrievedMsgs.clear();
     mCountMsgs = mMsgList.count();
     uint totalSize = 0;
-    // the KProgressDialog for the user-feedback. Only enable it if it's needed.
+    // the QProgressDialog for the user-feedback. Only enable it if it's needed.
     // For some commands like KMSetStatusCommand it's not needed. Note, that
-    // for some reason the KProgressDialog eats the MouseReleaseEvent (if a
+    // for some reason the QProgressDialog eats the MouseReleaseEvent (if a
     // command is executed after the MousePressEvent), cf. bug #71761.
     if ( mCountMsgs > 0 ) {
-        mProgressDialog = new KProgressDialog(mParent,
-                                              i18n("Please wait"),
-                                              i18np("Please wait while the message is transferred",
-                                                    "Please wait while the %1 messages are transferred", mMsgList.count()));
+        mProgressDialog = new QProgressDialog(mParent);
+        mProgressDialog.data()->setWindowTitle( i18n("Please wait"));
+
+        mProgressDialog.data()->setLabelText(i18np("Please wait while the message is transferred","Please wait while the %1 messages are transferred", mMsgList.count()));
         mProgressDialog.data()->setModal(true);
         mProgressDialog.data()->setMinimumDuration(1000);
     }
@@ -323,14 +325,14 @@ void KMCommand::transferSelectedMsgs()
         if ( mProgressDialog.data() ) {
             connect(mProgressDialog.data(), SIGNAL(cancelClicked()),
                     this, SLOT(slotTransferCancelled()));
-            mProgressDialog.data()->progressBar()->setMaximum(totalSize);
+            mProgressDialog.data()->setMaximum(totalSize);
         }
     }
 }
 
 void KMCommand::slotMsgTransfered(const Akonadi::Item::List& msgs)
 {
-    if ( mProgressDialog.data() && mProgressDialog.data()->wasCancelled() ) {
+    if ( mProgressDialog.data() && mProgressDialog.data()->wasCanceled() ) {
         emit messagesTransfered( Canceled );
         return;
     }
@@ -343,7 +345,7 @@ void KMCommand::slotJobFinished()
     // the job is finished (with / without error)
     KMCommand::mCountJobs--;
 
-    if ( mProgressDialog.data() && mProgressDialog.data()->wasCancelled() ) return;
+    if ( mProgressDialog.data() && mProgressDialog.data()->wasCanceled() ) return;
 
     if ( mCountMsgs > mRetrievedMsgs.count() )
     {
@@ -476,10 +478,10 @@ KMAddBookmarksCommand::KMAddBookmarksCommand( const KUrl &url, QWidget *parent )
 
 KMCommand::Result KMAddBookmarksCommand::execute()
 {
-    const QString filename = KStandardDirs::locateLocal( "data", QString::fromLatin1("konqueror/bookmarks.xml") );
+    const QString filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("konqueror/bookmarks.xml") ;
     KBookmarkManager *bookManager = KBookmarkManager::managerForFile( filename, QLatin1String("konqueror") );
     KBookmarkGroup group = bookManager->root();
-    group.addBookmark( mUrl.path(), KUrl( mUrl ) );
+    group.addBookmark( mUrl.path(), QUrl( mUrl ), QString() );
     if( bookManager->save() ) {
         bookManager->emitChanged( group );
     }
@@ -503,7 +505,7 @@ KMCommand::Result KMUrlSaveCommand::execute()
     if ( KIO::NetAccess::exists( saveUrl, KIO::NetAccess::DestinationSide, parentWidget() ) )
     {
         if (KMessageBox::warningContinueCancel(0,
-                                               i18nc("@info", "File <filename>%1</filename> exists.<nl/>Do you want to replace it?",
+                                               xi18nc("@info", "File <filename>%1</filename> exists.<nl/>Do you want to replace it?",
                                                      saveUrl.pathOrUrl()), i18n("Save to File"), KGuiItem(i18n("&Replace")))
                 != KMessageBox::Continue)
             return Canceled;
@@ -873,7 +875,7 @@ KMCommand::Result KMForwardCommand::createComposer(const Akonadi::Item& item)
     KMime::Message::Ptr fwdMsg = factory.createForward();
 
     uint id = msg->headerByType( "X-KMail-Identity" ) ?  msg->headerByType("X-KMail-Identity")->asUnicodeString().trimmed().toUInt() : 0;
-    kDebug() << "mail" << msg->encodedContent();
+    qDebug() << "mail" << msg->encodedContent();
     bool lastEncrypt = false;
     bool lastSign = false;
     KMail::Util::lastEncryptAndSignState(lastEncrypt, lastSign, msg);
@@ -1055,7 +1057,7 @@ KMCommand::Result KMRedirectCommand::execute()
 
 
         if ( !kmkernel->msgSender()->send( newMsg, method ) ) {
-            kDebug() << "KMRedirectCommand: could not redirect message (sending failed)";
+            qDebug() << "KMRedirectCommand: could not redirect message (sending failed)";
             return Failed; // error: couldn't send
         }
     }
@@ -1080,7 +1082,7 @@ KMPrintCommand::KMPrintCommand(QWidget *parent, const Akonadi::Item &msg,
 {
     fetchScope().fetchFullPayload( true );
     if ( MessageCore::GlobalSettings::useDefaultFonts() )
-        mOverrideFont = KGlobalSettings::generalFont();
+        mOverrideFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     else {
         mOverrideFont = MessageCore::GlobalSettings::self()->printFont();
     }
@@ -1151,7 +1153,7 @@ KMCommand::Result KMSetStatusCommand::execute()
     Akonadi::Item::List itemsToModify;
     foreach( const Akonadi::Item &it, retrievedMsgs() ) {
         if ( mInvertMark ) {
-            //kDebug()<<" item ::"<<tmpItem;
+            //qDebug()<<" item ::"<<tmpItem;
             if ( it.isValid() ) {
                 bool myStatus;
                 MessageStatus itemStatus;
@@ -1196,7 +1198,7 @@ KMCommand::Result KMSetStatusCommand::execute()
 void KMSetStatusCommand::slotModifyItemDone( KJob * job )
 {
     if ( job && job->error() ) {
-        kWarning() << " Error trying to set item status:" << job->errorText();
+        qWarning() << " Error trying to set item status:" << job->errorText();
     }
     deleteLater();
 }
@@ -1233,7 +1235,7 @@ KMCommand::Result KMSetTagCommand::execute()
 void KMSetTagCommand::slotTagCreateDone(KJob* job)
 {
     if ( job && job->error() ) {
-        kWarning() << " Error trying to create tag:" << job->errorText();
+        qWarning() << " Error trying to create tag:" << job->errorText();
         deleteLater();
         return;
     }
@@ -1291,7 +1293,7 @@ void KMSetTagCommand::setTags()
 void KMSetTagCommand::slotModifyItemDone( KJob * job )
 {
     if ( job && job->error() ) {
-        kWarning() << " Error trying to set item status:" << job->errorText();
+        qWarning() << " Error trying to set item status:" << job->errorText();
     }
     deleteLater();
 }
@@ -1543,7 +1545,7 @@ KMCommand::Result KMSaveAttachmentsCommand::execute()
         if ( item.hasPayload<KMime::Message::Ptr>() ) {
             contentsToSave += MessageViewer::Util::extractAttachments( item.payload<KMime::Message::Ptr>().get() );
         } else {
-            kWarning() << "Retrieved item has no payload? Ignoring for saving the attachments";
+            qWarning() << "Retrieved item has no payload? Ignoring for saving the attachments";
         }
     }
     KUrl currentUrl;

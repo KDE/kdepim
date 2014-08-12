@@ -22,7 +22,7 @@
 #include <QWidget>
 
 class QSpinBox;
-class KPushButton;
+class QPushButton;
 namespace PimCommon {
 class PIMCOMMON_EXPORT TextGoToLineWidget : public QWidget
 {
@@ -47,7 +47,7 @@ private slots:
 
 private:
     QSpinBox *mSpinbox;
-    KPushButton *mGoToLine;
+    QPushButton *mGoToLine;
 };
 }
 #endif // TEXTGOTOLINEWIDGET_H

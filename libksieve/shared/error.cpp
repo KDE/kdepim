@@ -32,7 +32,7 @@
 
 #include <ksieve/error.h>
 
-#include <klocale.h> // i18n
+#include <KLocalizedString> // i18n
 
 #include <climits> // UINT_MAX
 

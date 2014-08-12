@@ -27,11 +27,11 @@
 #include "kleo/signjob.h"
 #include "util.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
-#include <kmime/kmime_util.h>
+#include <kmime/kmime_headers.h>
 #include <QBuffer>
 
 #include <gpgme++/global.h>
@@ -153,7 +153,7 @@ void SignJob::process()
     Q_ASSERT( proto );
 
 
-    kDebug() << "creating signJob from:" << proto->name() << proto->displayName();
+    qDebug() << "creating signJob from:" << proto->name() << proto->displayName();
     std::auto_ptr<Kleo::SignJob> job( proto->signJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat ) );
     // for now just do the main recipients
     QByteArray signature;
@@ -188,7 +188,7 @@ void SignJob::process()
 
             if ( d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit ) {
                 for ( int i = 0; i < search.size(); ++i ) {
-                    QByteArray start = "\n"  % search[i];
+                    QByteArray start = "\n"  + search[i];
                     if ( body.indexOf( start ) > -1 ||
                          body.startsWith( search[i] ) ){
                         changed = true;
@@ -204,8 +204,8 @@ void SignJob::process()
 
 
             for ( int i = 0; i < search.size(); ++i ) {
-                QByteArray start = "\n"  % search[i];
-                QByteArray replace = "\n" % replacements[i];
+                QByteArray start = "\n"  + search[i];
+                QByteArray replace = "\n" + replacements[i];
                 if ( body.indexOf( start ) > -1 ){
                     changed = true;
                     body.replace( start, replace );
@@ -218,7 +218,7 @@ void SignJob::process()
             }
 
             if ( changed ) {
-                kDebug() << "Content changed";
+                qDebug() << "Content changed";
                 d->content->setBody( body );
                 d->content->contentTransferEncoding()->setDecoded( false );
             }
@@ -239,7 +239,7 @@ void SignJob::process()
     job->deleteLater();
 
     if ( res.error() ) {
-        kDebug() << "signing failed:" << res.error().asString();
+        qDebug() << "signing failed:" << res.error().asString();
         //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
         setError( res.error().code() );
         setErrorText( QString::fromLocal8Bit( res.error().asString() ) );

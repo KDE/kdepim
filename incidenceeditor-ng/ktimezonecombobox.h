@@ -24,7 +24,7 @@
 #ifndef INCIDENCEEDITOR_KTIMEZONECOMBOBOX_H
 #define INCIDENCEEDITOR_KTIMEZONECOMBOBOX_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 
 #include <KComboBox>
 #include <KDateTime>

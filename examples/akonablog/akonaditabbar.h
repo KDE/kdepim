@@ -20,8 +20,8 @@
 #ifndef __AKONADITABBAR_H__
 #define __AKONADITABBAR_H__
 
-#include <KTabBar>
-#include <akonadi/collection.h>
+#include <QTabBar>
+#include <AkonadiCore/collection.h>
 
 /**
     This class is a KTabBar which you can use to show your top level folders of
@@ -45,7 +45,7 @@
     @author Tom Albers
     @since 4.3
 */
-class AkonadiTabBar : public KTabBar
+class AkonadiTabBar : public QTabBar
 {
     Q_OBJECT
 

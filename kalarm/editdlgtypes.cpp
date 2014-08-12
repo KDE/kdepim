@@ -49,23 +49,17 @@
 
 #include <kalarmcal/identities.h>
 
-#include <akonadi/contact/emailaddressselectiondialog.h>
-#ifdef USE_AKONADI
-#include <kcalcore/person.h>
-#include <kcalutils/icaldrag.h>
+#include <Akonadi/Contact/EmailAddressSelectionDialog>
+#include <KCalCore/Person>
+#include <KCalUtils/kcalutils/icaldrag.h>
 using namespace KCalCore;
-#else
-#include <kcal/person.h>
-#include <kcal/icaldrag.h>
-using namespace KCal;
-#endif
 
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kio/netaccess.h>
 #include <kfileitem.h>
-#include <khbox.h>
-#include <kdebug.h>
+#include <QHBoxLayout>
+#include <qdebug.h>
 
 #include <QLabel>
 #include <QDir>
@@ -121,7 +115,7 @@ EditDisplayAlarmDlg::EditDisplayAlarmDlg(bool Template, QWidget* parent, GetReso
       mReminderDeferral(false),
       mReminderArchived(false)
 {
-    kDebug() << "New";
+    qDebug() << "New";
     init(0);
 }
 
@@ -132,7 +126,7 @@ EditDisplayAlarmDlg::EditDisplayAlarmDlg(bool Template, const KAEvent* event, bo
       mReminderDeferral(false),
       mReminderArchived(false)
 {
-    kDebug() << "Event.id()";
+    qDebug() << "Event.id()";
     init(event);
 }
 
@@ -151,12 +145,16 @@ QString EditDisplayAlarmDlg::type_caption() const
 void EditDisplayAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
 {
     // Display type combo box
-    KHBox* box = new KHBox(parent);    // to group widgets for QWhatsThis text
-    box->setMargin(0);
-    box->setSpacing(KDialog::spacingHint());
+    QWidget* box = new QWidget(parent);    // to group widgets for QWhatsThis text
+    QHBoxLayout *boxHBoxLayout = new QHBoxLayout(box);
+    boxHBoxLayout->setMargin(0);
+    boxHBoxLayout->setMargin(0);
+    boxHBoxLayout->setSpacing(KDialog::spacingHint());
     QLabel* label = new QLabel(i18nc("@label:listbox", "Display type:"), box);
+    boxHBoxLayout->addWidget(label);
     label->setFixedSize(label->sizeHint());
     mTypeCombo = new ComboBox(box);
+    boxHBoxLayout->addWidget(mTypeCombo);
     QString textItem    = i18nc("@item:inlistbox", "Text message");
     QString fileItem    = i18nc("@item:inlistbox", "File contents");
     QString commandItem = i18nc("@item:inlistbox", "Command output");
@@ -180,12 +178,12 @@ void EditDisplayAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     connect(mTypeCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotAlarmTypeChanged(int)));
     connect(mTypeCombo, SIGNAL(currentIndexChanged(int)), SLOT(contentsChanged()));
     label->setBuddy(mTypeCombo);
-    box->setWhatsThis(i18nc("@info:whatsthis", "<para>Select what the alarm should display:"
+    box->setWhatsThis(xi18nc("@info:whatsthis", "<para>Select what the alarm should display:"
           "<list><item><interface>%1</interface>: the alarm will display the text message you type in.</item>"
           "<item><interface>%2</interface>: the alarm will display the contents of a text or image file.</item>"
           "<item><interface>%3</interface>: the alarm will display the output from a command.</item></list></para>",
           textItem, fileItem, commandItem));
-    box->setStretchFactor(new QWidget(box), 1);    // left adjust the control
+    boxHBoxLayout->setStretchFactor(new QWidget(box), 1);    // left adjust the control
     frameLayout->addWidget(box);
 
     // Text message edit box
@@ -196,16 +194,20 @@ void EditDisplayAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     frameLayout->addWidget(mTextMessageEdit);
 
     // File name edit box
-    mFileBox = new KHBox(parent);
-    mFileBox->setMargin(0);
+    mFileBox = new QWidget(parent);
+    QHBoxLayout *mFileBoxHBoxLayout = new QHBoxLayout(mFileBox);
+    mFileBoxHBoxLayout->setMargin(0);
+    mFileBoxHBoxLayout->setMargin(0);
     frameLayout->addWidget(mFileBox);
     mFileMessageEdit = new LineEdit(LineEdit::Url, mFileBox);
+    mFileBoxHBoxLayout->addWidget(mFileMessageEdit);
     mFileMessageEdit->setAcceptDrops(true);
     mFileMessageEdit->setWhatsThis(i18nc("@info:whatsthis", "Enter the name or URL of a text or image file to display."));
     connect(mFileMessageEdit, SIGNAL(textChanged(QString)), SLOT(contentsChanged()));
 
     // File browse button
     mFileBrowseButton = new QPushButton(mFileBox);
+    mFileBoxHBoxLayout->addWidget(mFileBrowseButton);
     mFileBrowseButton->setIcon(SmallIcon(QLatin1String("document-open")));
     int size = mFileBrowseButton->sizeHint().height();
     mFileBrowseButton->setFixedSize(size, size);
@@ -247,8 +249,10 @@ void EditDisplayAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     }
 
     // Top-adjust the controls
-    mFilePadding = new KHBox(parent);
-    mFilePadding->setMargin(0);
+    mFilePadding = new QWidget(parent);
+    QHBoxLayout *mFilePaddingHBoxLayout = new QHBoxLayout(mFilePadding);
+    mFilePaddingHBoxLayout->setMargin(0);
+    mFilePaddingHBoxLayout->setMargin(0);
     frameLayout->addWidget(mFilePadding);
     frameLayout->setStretchFactor(mFilePadding, 1);
 }
@@ -260,7 +264,7 @@ Reminder* EditDisplayAlarmDlg::createReminder(QWidget* parent)
 {
     static const QString reminderText = i18nc("@info:whatsthis", "Enter how long in advance of or after the main alarm to display a reminder alarm.");
     return new Reminder(i18nc("@info:whatsthis", "Check to additionally display a reminder in advance of or after the main alarm time(s)."),
-                        i18nc("@info:whatsthis", "<para>Enter how long in advance of or after the main alarm to display a reminder alarm.</para><para>%1</para>", TimeSpinBox::shiftWhatsThis()),
+                        xi18nc("@info:whatsthis", "<para>Enter how long in advance of or after the main alarm to display a reminder alarm.</para><para>%1</para>", TimeSpinBox::shiftWhatsThis()),
                         i18nc("@info:whatsthis", "Select whether the reminder should be triggered before or after the main alarm"),
                         true, true, parent);
 }
@@ -685,7 +689,8 @@ bool EditDisplayAlarmDlg::checkText(QString& result, bool showErrorMessage) cons
             KAlarm::FileErr err = KAlarm::checkFileExists(alarmtext, url);
             if (err == KAlarm::FileErr_None)
             {
-                switch (KAlarm::fileType(KFileItem(KFileItem::Unknown, KFileItem::Unknown, url).mimeTypePtr()))
+#if 0 //QT5
+                switch (KAlarm::fileType(KFileItem(KFileItem::Unknown, KFileItem::Unknown, url).currentMimeType()))
                 {
                     case KAlarm::TextFormatted:
                     case KAlarm::TextPlain:
@@ -696,6 +701,7 @@ bool EditDisplayAlarmDlg::checkText(QString& result, bool showErrorMessage) cons
                         err = KAlarm::FileErr_NotTextImage;
                         break;
                 }
+#endif
             }
             if (err != KAlarm::FileErr_None  &&  showErrorMessage)
             {
@@ -736,7 +742,7 @@ QString EditCommandAlarmDlg::i18n_chk_ExecInTermWindow()   { return i18nc("@opti
 EditCommandAlarmDlg::EditCommandAlarmDlg(bool Template, QWidget* parent, GetResourceType getResource)
     : EditAlarmDlg(Template, KAEvent::COMMAND, parent, getResource)
 {
-    kDebug() << "New";
+    qDebug() << "New";
     init(0);
 }
 
@@ -744,7 +750,7 @@ EditCommandAlarmDlg::EditCommandAlarmDlg(bool Template, const KAEvent* event, bo
                                          GetResourceType getResource, bool readOnly)
     : EditAlarmDlg(Template, event, newAlarm, parent, getResource, readOnly)
 {
-    kDebug() << "Event.id()";
+    qDebug() << "Event.id()";
     init(event);
 }
 
@@ -787,10 +793,13 @@ void EditCommandAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     vlayout->addWidget(mCmdExecInTerm, 0, Qt::AlignLeft);
 
     // Log file name edit box
-    KHBox* box = new KHBox(mCmdOutputBox);
-    box->setMargin(0);
+    QWidget* box = new QWidget(mCmdOutputBox);
+    QHBoxLayout *boxHBoxLayout = new QHBoxLayout(box);
+    boxHBoxLayout->setMargin(0);
+    boxHBoxLayout->setMargin(0);
     (new QWidget(box))->setFixedWidth(mCmdExecInTerm->style()->pixelMetric(QStyle::PM_ExclusiveIndicatorWidth));   // indent the edit box
     mCmdLogFileEdit = new LineEdit(LineEdit::Url, box);
+    boxHBoxLayout->addWidget(mCmdLogFileEdit);
     mCmdLogFileEdit->setAcceptDrops(true);
     mCmdLogFileEdit->setWhatsThis(i18nc("@info:whatsthis", "Enter the name or path of the log file."));
     connect(mCmdLogFileEdit, SIGNAL(textChanged(QString)), SLOT(contentsChanged()));
@@ -798,6 +807,7 @@ void EditCommandAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     // Log file browse button.
     // The file browser dialog is activated by the PickLogFileRadio class.
     QPushButton* browseButton = new QPushButton(box);
+    boxHBoxLayout->addWidget(browseButton);
     browseButton->setIcon(SmallIcon(QLatin1String("document-open")));
     int size = browseButton->sizeHint().height();
     browseButton->setFixedSize(size, size);
@@ -821,8 +831,10 @@ void EditCommandAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     vlayout->addWidget(mCmdDiscardOutput, 0, Qt::AlignLeft);
 
     // Top-adjust the controls
-    mCmdPadding = new KHBox(parent);
-    mCmdPadding->setMargin(0);
+    mCmdPadding = new QWidget(parent);
+    QHBoxLayout *mCmdPaddingHBoxLayout = new QHBoxLayout(mCmdPadding);
+    mCmdPaddingHBoxLayout->setMargin(0);
+    mCmdPaddingHBoxLayout->setMargin(0);
     frameLayout->addWidget(mCmdPadding);
     frameLayout->setStretchFactor(mCmdPadding, 1);
 }
@@ -990,7 +1002,7 @@ void EditCommandAlarmDlg::type_executedTry(const QString& text, void* result)
     &&  mCmdOutputGroup->checkedButton() != mCmdExecInTerm)
     {
         theApp()->commandMessage(proc, this);
-        KAMessageBox::information(this, i18nc("@info", "Command executed: <icode>%1</icode>", text));
+        KAMessageBox::information(this, xi18nc("@info", "Command executed: <icode>%1</icode>", text));
         theApp()->commandMessage(proc, 0);
     }
 }
@@ -1038,7 +1050,7 @@ EditEmailAlarmDlg::EditEmailAlarmDlg(bool Template, QWidget* parent, GetResource
     : EditAlarmDlg(Template, KAEvent::EMAIL, parent, getResource),
       mEmailRemoveButton(0)
 {
-    kDebug() << "New";
+    qDebug() << "New";
     init(0);
 }
 
@@ -1047,7 +1059,7 @@ EditEmailAlarmDlg::EditEmailAlarmDlg(bool Template, const KAEvent* event, bool n
     : EditAlarmDlg(Template, event, newAlarm, parent, getResource, readOnly),
       mEmailRemoveButton(0)
 {
-    kDebug() << "Event.id()";
+    qDebug() << "Event.id()";
     init(event);
 }
 
@@ -1217,13 +1229,8 @@ void EditEmailAlarmDlg::setAction(KAEvent::SubAction action, const AlarmText& al
 /******************************************************************************
 * Initialise various values in the New Alarm dialogue.
 */
-#ifdef USE_AKONADI
 void EditEmailAlarmDlg::setEmailFields(uint fromID, const KCalCore::Person::List& addresses,
                                        const QString& subject, const QStringList& attachments)
-#else
-void EditEmailAlarmDlg::setEmailFields(uint fromID, const QList<KCal::Person>& addresses,
-                                       const QString& subject, const QStringList& attachments)
-#endif
 {
     if (fromID)
         mEmailFromList->setCurrentIdentity(fromID);
@@ -1341,7 +1348,7 @@ bool EditEmailAlarmDlg::type_validate(bool trial)
         if (!bad.isEmpty())
         {
             mEmailToEdit->setFocus();
-            KAMessageBox::error(this, i18nc("@info", "Invalid email address: <email>%1</email>", bad));
+            KAMessageBox::error(this, xi18nc("@info", "Invalid email address: <email>%1</email>", bad));
             return false;
         }
     }
@@ -1365,7 +1372,7 @@ bool EditEmailAlarmDlg::type_validate(bool trial)
                 break;      // empty
             case -1:
                 mEmailAttachList->setFocus();
-                KAMessageBox::error(this, i18nc("@info", "Invalid email attachment: <filename>%1</filename>", att));
+                KAMessageBox::error(this, xi18nc("@info", "Invalid email attachment: <filename>%1</filename>", att));
                 return false;
         }
     }
@@ -1396,10 +1403,10 @@ void EditEmailAlarmDlg::slotTrySuccess()
     to.replace(QLatin1Char('<'), QLatin1String("&lt;"));
     to.replace(QLatin1Char('>'), QLatin1String("&gt;"));
     if (mEmailBcc->isChecked())
-        msg = QLatin1String("<qt>") + i18nc("@info", "Email sent to:<nl/>%1<nl/>Bcc: <email>%2</email>",
+        msg = QLatin1String("<qt>") + xi18nc("@info", "Email sent to:<nl/>%1<nl/>Bcc: <email>%2</email>",
                     to, Preferences::emailBccAddress()) + QLatin1String("</qt>");
     else
-        msg = QLatin1String("<qt>") + i18nc("@info", "Email sent to:<nl/>%1", to) + QLatin1String("</qt>");
+        msg = QLatin1String("<qt>") + xi18nc("@info", "Email sent to:<nl/>%1", to) + QLatin1String("</qt>");
     KAMessageBox::information(this, msg);
 }
 
@@ -1488,7 +1495,7 @@ EditAudioAlarmDlg::EditAudioAlarmDlg(bool Template, QWidget* parent, GetResource
     : EditAlarmDlg(Template, KAEvent::AUDIO, parent, getResource),
       mMessageWin(0)
 {
-    kDebug() << "New";
+    qDebug() << "New";
     init(0);
 }
 
@@ -1497,9 +1504,9 @@ EditAudioAlarmDlg::EditAudioAlarmDlg(bool Template, const KAEvent* event, bool n
     : EditAlarmDlg(Template, event, newAlarm, parent, getResource, readOnly),
       mMessageWin(0)
 {
-    kDebug() << "Event.id()";
+    qDebug() << "Event.id()";
     init(event);
-    KPushButton* tryButton = button(Try);
+    QPushButton* tryButton = button(Try);
     tryButton->setEnabled(!MessageWin::isAudioPlaying());
     connect(theApp(), SIGNAL(audioPlaying(bool)), SLOT(slotAudioPlaying(bool)));
 }
@@ -1526,8 +1533,10 @@ void EditAudioAlarmDlg::type_init(QWidget* parent, QVBoxLayout* frameLayout)
     frameLayout->addWidget(mSoundConfig);
 
     // Top-adjust the controls
-    mPadding = new KHBox(parent);
-    mPadding->setMargin(0);
+    mPadding = new QWidget(parent);
+    QHBoxLayout *mPaddingHBoxLayout = new QHBoxLayout(mPadding);
+    mPaddingHBoxLayout->setMargin(0);
+    mPaddingHBoxLayout->setMargin(0);
     frameLayout->addWidget(mPadding);
     frameLayout->setStretchFactor(mPadding, 1);
 }
@@ -1689,7 +1698,7 @@ void EditAudioAlarmDlg::type_executedTry(const QString&, void* result)
 */
 void EditAudioAlarmDlg::slotAudioPlaying(bool playing)
 {
-    KPushButton* tryButton = button(Try);
+    QPushButton* tryButton = button(Try);
     if (!playing)
     {
         // Nothing is playing, so enable the Try button
@@ -1858,11 +1867,7 @@ TextEdit::TextEdit(QWidget* parent)
 
 void TextEdit::dragEnterEvent(QDragEnterEvent* e)
 {
-#ifdef USE_AKONADI
     if (KCalUtils::ICalDrag::canDecode(e->mimeData()))
-#else
-    if (KCal::ICalDrag::canDecode(e->mimeData()))
-#endif
         e->ignore();   // don't accept "text/calendar" objects
     KTextEdit::dragEnterEvent(e);
 }

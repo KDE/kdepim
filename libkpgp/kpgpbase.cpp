@@ -17,13 +17,13 @@
  */
 
 #include <config-libkpgp.h> /* HAVE_SYS_POLL_H */
-
+#include "kpgp_debug.h"
 #include "kpgpbase.h"
 #include "kpgp.h"
 #include "kpgpblock.h"
 
-#include <kdebug.h>
-#include <kdefakes.h> /* setenv, unsetenv */
+#include <qdebug.h>
+//#include <kdefakes.h> /* setenv, unsetenv */
 
 #include <QApplication>
 #include <QByteArray>
@@ -96,15 +96,15 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
     ::setenv("PGPPASSFD",tmp.toUtf8()/*.data()*/,1);
 
     //Uncomment these lines for testing only! Doing so will decrease security!
-    //kDebug( 5326 ) <<"pgp PGPPASSFD =" << tmp;
-    //kDebug( 5326 ) <<"pgp pass =" << passphrase;
+    //qCDebug(KPGP_LOG) <<"pgp PGPPASSFD =" << tmp;
+    //qCDebug(KPGP_LOG) <<"pgp pass =" << passphrase;
   }
   else
     ::unsetenv("PGPPASSFD");
 
   //Uncomment these lines for testing only! Doing so will decrease security!
-  kDebug( 5326 ) <<"pgp cmd =" << cmd;
-  //kDebug( 5326 ) <<"pgp input =" << QString(input)
+  qCDebug(KPGP_LOG) <<"pgp cmd =" << cmd;
+  //qCDebug(KPGP_LOG) <<"pgp input =" << QString(input)
   //          << "input length =" << input.length();
 
   error = "";
@@ -160,12 +160,12 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
         len2 = 0;
 
         // check if writing now to pin[1] will not block (5 ms timeout)
-        //kDebug( 5326 ) <<"Polling pin[1]...";
+        //qCDebug(KPGP_LOG) <<"Polling pin[1]...";
         pollstatus = poll(&pollin, 1, 5);
         if (pollstatus == 1) {
-          //kDebug( 5326 ) <<"Status for polling pin[1]:" << pollin.revents;
+          //qCDebug(KPGP_LOG) <<"Status for polling pin[1]:" << pollin.revents;
           if (pollin.revents & POLLERR) {
-            kDebug( 5326 ) <<"PGP seems to have hung up";
+            qCDebug(KPGP_LOG) <<"PGP seems to have hung up";
             break;
           }
           else if (pollin.revents & POLLOUT) {
@@ -175,31 +175,31 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
             else
               len2 = len2 - i + 1;
 
-            //kDebug( 5326 ) <<"Trying to write" << len2 <<" bytes to pin[1] ...";
+            //qCDebug(KPGP_LOG) <<"Trying to write" << len2 <<" bytes to pin[1] ...";
             len2 = write(pin[1], input.data() + i, len2);
-            //kDebug( 5326 ) <<"Wrote" << len2 <<" bytes to pin[1] ...";
+            //qCDebug(KPGP_LOG) <<"Wrote" << len2 <<" bytes to pin[1] ...";
           }
         }
         else if (!pollstatus) {
-          //kDebug( 5326 ) <<"Timeout while polling pin[1]:"
+          //qCDebug(KPGP_LOG) <<"Timeout while polling pin[1]:"
           //              << pollin.revents;
         }
         else if (pollstatus == -1) {
-          kDebug( 5326 ) <<"Error while polling pin[1]:"
+          qCDebug(KPGP_LOG) <<"Error while polling pin[1]:"
                         << pollin.revents;
         }
 
         if (pout[0] >= 0) {
           do {
             // check if there is data to read from pout[0]
-            //kDebug( 5326 ) <<"Polling pout[0]...";
+            //qCDebug(KPGP_LOG) <<"Polling pout[0]...";
             pollstatus = poll(&pollout, 1, 0);
             if (pollstatus == 1) {
-              //kDebug( 5326 ) <<"Status for polling pout[0]:" << pollout.revents;
+              //qCDebug(KPGP_LOG) <<"Status for polling pout[0]:" << pollout.revents;
               if (pollout.revents & POLLIN) {
-                //kDebug( 5326 ) <<"Trying to read" << 1024 <<" bytes from pout[0]";
+                //qCDebug(KPGP_LOG) <<"Trying to read" << 1024 <<" bytes from pout[0]";
                 if ((len = read(pout[0],str,1024))>0) {
-                  //kDebug( 5326 ) <<"Read" << len <<" bytes from pout[0]";
+                  //qCDebug(KPGP_LOG) <<"Read" << len <<" bytes from pout[0]";
                   str[len] ='\0';
                   output += str;
                 }
@@ -208,7 +208,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
               }
             }
             else if (pollstatus == -1) {
-              kDebug( 5326 ) <<"Error while polling pout[0]:"
+              qCDebug(KPGP_LOG) <<"Error while polling pout[0]:"
                             << pollout.revents;
             }
           } while ((pollstatus == 1) && (pollout.revents & POLLIN));
@@ -217,14 +217,14 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
         if (perr[0] >= 0) {
           do {
             // check if there is data to read from perr[0]
-            //kDebug( 5326 ) <<"Polling perr[0]...";
+            //qCDebug(KPGP_LOG) <<"Polling perr[0]...";
             pollstatus = poll(&pollerr, 1, 0);
             if (pollstatus == 1) {
-              //kDebug( 5326 ) <<"Status for polling perr[0]:" << pollerr.revents;
+              //qCDebug(KPGP_LOG) <<"Status for polling perr[0]:" << pollerr.revents;
               if (pollerr.revents & POLLIN) {
-                //kDebug( 5326 ) <<"Trying to read" << 1024 <<" bytes from perr[0]";
+                //qCDebug(KPGP_LOG) <<"Trying to read" << 1024 <<" bytes from perr[0]";
                 if ((len = read(perr[0],str,1024))>0) {
-                  //kDebug( 5326 ) <<"Read" << len <<" bytes from perr[0]";
+                  //qCDebug(KPGP_LOG) <<"Read" << len <<" bytes from perr[0]";
                   str[len] ='\0';
                   error += str;
                 }
@@ -233,7 +233,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
               }
             }
             else if (pollstatus == -1) {
-              kDebug( 5326 ) <<"Error while polling perr[0]:"
+              qCDebug(KPGP_LOG) <<"Error while polling perr[0]:"
                             << pollerr.revents;
             }
           } while ((pollstatus == 1) && (pollerr.revents & POLLIN));
@@ -242,35 +242,35 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
         // abort writing to PGP if PGP hung up
         if ((pollstatus == 1) &&
             ((pollout.revents & POLLHUP) || (pollerr.revents & POLLHUP))) {
-          kDebug( 5326 ) <<"PGP hung up";
+          qCDebug(KPGP_LOG) <<"PGP hung up";
           break;
         }
       }
     }
     else // if input.isEmpty()
       write(pin[1], "\n", 1);
-    //kDebug( 5326 ) <<"All input was written to pin[1]";
+    //qCDebug(KPGP_LOG) <<"All input was written to pin[1]";
   }
   close(pin[1]);
 
   pid_t waitpidRetVal;
 
   do {
-    //kDebug( 5326 ) <<"Checking if PGP is still running...";
+    //qCDebug(KPGP_LOG) <<"Checking if PGP is still running...";
     childExitStatus = 0;
     waitpidRetVal = waitpid(child_pid, &childExitStatus, WNOHANG);
-    //kDebug( 5326 ) <<"waitpid returned" << waitpidRetVal;
+    //qCDebug(KPGP_LOG) <<"waitpid returned" << waitpidRetVal;
     if (pout[0] >= 0) {
       do {
         // check if there is data to read from pout[0]
-        //kDebug( 5326 ) <<"Polling pout[0]...";
+        //qCDebug(KPGP_LOG) <<"Polling pout[0]...";
         pollstatus = poll(&pollout, 1, 0);
         if (pollstatus == 1) {
-          //kDebug( 5326 ) <<"Status for polling pout[0]:" << pollout.revents;
+          //qCDebug(KPGP_LOG) <<"Status for polling pout[0]:" << pollout.revents;
           if (pollout.revents & POLLIN) {
-            //kDebug( 5326 ) <<"Trying to read" << 1024 <<" bytes from pout[0]";
+            //qCDebug(KPGP_LOG) <<"Trying to read" << 1024 <<" bytes from pout[0]";
             if ((len = read(pout[0],str,1024))>0) {
-              //kDebug( 5326 ) <<"Read" << len <<" bytes from pout[0]";
+              //qCDebug(KPGP_LOG) <<"Read" << len <<" bytes from pout[0]";
               str[len] ='\0';
               output += str;
             } else {
@@ -298,7 +298,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
           }
         }
         else if (pollstatus == -1) {
-          kDebug( 5326 ) <<"Error while polling pout[0]:"
+          qCDebug(KPGP_LOG) <<"Error while polling pout[0]:"
                         << pollout.revents;
         }
       } while ((pollstatus == 1) && (pollout.revents & POLLIN));
@@ -307,14 +307,14 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
     if (perr[0] >= 0) {
       do {
         // check if there is data to read from perr[0]
-        //kDebug( 5326 ) <<"Polling perr[0]...";
+        //qCDebug(KPGP_LOG) <<"Polling perr[0]...";
         pollstatus = poll(&pollerr, 1, 0);
         if (pollstatus == 1) {
-          //kDebug( 5326 ) <<"Status for polling perr[0]:" << pollerr.revents;
+          //qCDebug(KPGP_LOG) <<"Status for polling perr[0]:" << pollerr.revents;
           if (pollerr.revents & POLLIN) {
-            //kDebug( 5326 ) <<"Trying to read" << 1024 <<" bytes from perr[0]";
+            //qCDebug(KPGP_LOG) <<"Trying to read" << 1024 <<" bytes from perr[0]";
             if ((len = read(perr[0],str,1024))>0) {
-              //kDebug( 5326 ) <<"Read" << len <<" bytes from perr[0]";
+              //qCDebug(KPGP_LOG) <<"Read" << len <<" bytes from perr[0]";
               str[len] ='\0';
               error += str;
             } else {
@@ -342,7 +342,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
           }
         }
         else if (pollstatus == -1) {
-          kDebug( 5326 ) <<"Error while polling perr[0]:"
+          qCDebug(KPGP_LOG) <<"Error while polling perr[0]:"
                         << pollerr.revents;
         }
       } while ((pollstatus == 1) && (pollerr.revents & POLLIN));
@@ -360,21 +360,21 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
   if (WIFEXITED(childExitStatus) != 0) {
     // Get the return code of the child
     childExitStatus = WEXITSTATUS(childExitStatus);
-    kDebug( 5326 ) <<"PGP exited with exit status" << childExitStatus;
+    qCDebug(KPGP_LOG) <<"PGP exited with exit status" << childExitStatus;
   }
   else {
     childExitStatus = -1;
-    kDebug( 5326 ) <<"PGP exited abnormally!";
+    qCDebug(KPGP_LOG) <<"PGP exited abnormally!";
   }
 
   //Uncomment these lines for testing only! Doing so will decrease security!
-  //kDebug( 5326 ) <<"pgp output =" << QString(output);
-  //kDebug( 5326 ) <<"pgp error =" << error;
+  //qCDebug(KPGP_LOG) <<"pgp output =" << QString(output);
+  //qCDebug(KPGP_LOG) <<"pgp error =" << error;
 
   /* Make the information visible, so that a user can
    * get to know what's going on during the pgp calls.
    */
-  kDebug( 5326 ) << error;
+  qCDebug(KPGP_LOG) << error;
 
   return childExitStatus;
 #else // HAVE_SYS_POLL_H
@@ -419,12 +419,12 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
     close(ppass[1]);
 
     //Uncomment these lines for testing only! Doing so will decrease security!
-    //kDebug( 5326 ) <<"pass =" << passphrase;
+    //qCDebug(KPGP_LOG) <<"pass =" << passphrase;
   }
 
   //Uncomment these lines for testing only! Doing so will decrease security!
-  //kDebug( 5326 ) <<"pgp cmd =" << cmd;
-  //kDebug( 5326 ) <<"pgp input =" << QString(input)
+  //qCDebug(KPGP_LOG) <<"pgp cmd =" << cmd;
+  //qCDebug(KPGP_LOG) <<"pgp input =" << QString(input)
   //          << "input length =" << input.length();
 
   error = "";
@@ -506,7 +506,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
       snprintf(gpgcmd, 1023, "LANGUAGE=C gpg %s",cmd);
     }
 
-    kDebug( 5326 ) <<"pgp cmd =" << gpgcmd;
+    qCDebug(KPGP_LOG) <<"pgp cmd =" << gpgcmd;
 
     execl("/bin/sh", "sh", "-c", gpgcmd,  (void *)0);
     _exit(127);
@@ -540,19 +540,19 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   int input_length = input.length();
 
   do {
-    //kDebug( 5326 ) <<"Checking if GnuPG is still running...";
+    //qCDebug(KPGP_LOG) <<"Checking if GnuPG is still running...";
     childExitStatus = 0;
     waitpidRetVal = waitpid(child_pid, &childExitStatus, WNOHANG);
-    //kDebug( 5326 ) <<"waitpid returned" << waitpidRetVal;
+    //qCDebug(KPGP_LOG) <<"waitpid returned" << waitpidRetVal;
     do {
       // poll the pipes
       pollstatus = poll(poller, num_pollers, 10);
       if( 0 < pollstatus ) {
         // Check stdout.
         if (poller[STD_OUT].revents & POLLIN) {
-          //kDebug( 5326 ) <<"Trying to read" << 1024 <<" bytes from pout[0]";
+          //qCDebug(KPGP_LOG) <<"Trying to read" << 1024 <<" bytes from pout[0]";
           if ((len = read(pout[0],str,1024))>0) {
-            //kDebug( 5326 ) <<"Read" << len <<" bytes from pout[0]";
+            //qCDebug(KPGP_LOG) <<"Read" << len <<" bytes from pout[0]";
             str[len] ='\0';
             output += str;
           }
@@ -584,9 +584,9 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
 
         // Check stderr.
         if (poller[STD_ERR].revents & POLLIN) {
-          //kDebug( 5326 ) <<"Trying to read" << 1024 <<" bytes from perr[0]";
+          //qCDebug(KPGP_LOG) <<"Trying to read" << 1024 <<" bytes from perr[0]";
           if ((len = read(poller[STD_ERR].fd,str,1024))>0) {
-            //kDebug( 5326 ) <<"Read" << len <<" bytes from perr[0]";
+            //qCDebug(KPGP_LOG) <<"Read" << len <<" bytes from perr[0]";
             str[len] ='\0';
             error += str;
           }
@@ -602,7 +602,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
 
         if (num_pollers > 2) {
           if (poller[STD_IN].revents & ( POLLERR | POLLHUP ) ) {
-            kDebug( 5326 ) <<"GnuPG seems to have hung up";
+            qCDebug(KPGP_LOG) <<"GnuPG seems to have hung up";
             close (pin[1]);
             pin[1] = -1;
             --num_pollers;
@@ -615,14 +615,14 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
               else
                 len2 = len2 - input_pos + 1;
 
-              //kDebug( 5326 ) <<"Trying to write" << len2 <<" bytes to pin[1] ...";
+              //qCDebug(KPGP_LOG) <<"Trying to write" << len2 <<" bytes to pin[1] ...";
               len2 = write(pin[1], input.data() + input_pos, len2 );
-              //kDebug( 5326 ) <<"Wrote" << len2 <<" bytes to pin[1] ...";
+              //qCDebug(KPGP_LOG) <<"Wrote" << len2 <<" bytes to pin[1] ...";
               input_pos += len2;
 
               // We are done.
               if (input_pos >= input_length) {
-                //kDebug( 5326 ) <<"All input was written to pin[1]";
+                //qCDebug(KPGP_LOG) <<"All input was written to pin[1]";
                 close (pin[1]);
                 pin[1] = -1;
                 --num_pollers;
@@ -630,7 +630,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
             }
             else { // if input.isEmpty()
               write(pin[1], "\n", 1);
-              //kDebug( 5326 ) <<"All input was written to pin[1]";
+              //qCDebug(KPGP_LOG) <<"All input was written to pin[1]";
               close (pin[1]);
               pin[1] = -1;
               --num_pollers;
@@ -643,7 +643,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
                                     || (poller[STD_ERR].events != 0) ) );
 
     if (pollstatus == -1) {
-      kDebug( 5326 ) <<"GnuPG poll failed, errno:" << errno;
+      qCDebug(KPGP_LOG) <<"GnuPG poll failed, errno:" << errno;
     }
 
   } while(waitpidRetVal == 0);
@@ -660,19 +660,19 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   if (WIFEXITED(childExitStatus) != 0) {
     // Get the return code of the child
     childExitStatus = WEXITSTATUS(childExitStatus);
-    kDebug( 5326 ) <<"GnuPG exited with exit status" << childExitStatus;
+    qCDebug(KPGP_LOG) <<"GnuPG exited with exit status" << childExitStatus;
   }
   else {
     childExitStatus = -1;
-    kDebug( 5326 ) <<"GnuPG exited abnormally!";
+    qCDebug(KPGP_LOG) <<"GnuPG exited abnormally!";
   }
 
   //Uncomment these lines for testing only! Doing so will decrease security!
-  //kDebug( 5326 ) <<"gpg stdout:" << QString(output);
+  //qCDebug(KPGP_LOG) <<"gpg stdout:" << QString(output);
 
   // Make the information visible, so that a user can
   // get to know what's going on during the gpg calls.
-  kDebug( 5326 ) <<"gpg stderr:" << error;
+  qCDebug(KPGP_LOG) <<"gpg stderr:" << error;
 
   return childExitStatus;
 #else // HAVE_SYS_POLL_H

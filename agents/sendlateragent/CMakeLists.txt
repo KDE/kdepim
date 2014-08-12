@@ -1,5 +1,6 @@
 project(sendlateragent)
 
+
 include_directories(
    ${CMAKE_SOURCE_DIR}/pimcommon/
    ${CMAKE_SOURCE_DIR}/messagecomposer/
@@ -7,6 +8,8 @@ include_directories(
    ${CMAKE_SOURCE_DIR}/libkleo
 )
 
+
+add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_sendlater_agent\")
 
 add_subdirectory(tests)
 
@@ -17,17 +20,18 @@ set(sendlaterlib_SRCS
     sendlatertimedatewidget.cpp
 )
 
-kde4_add_kcfg_files(sendlaterlib_SRCS
+kconfig_add_kcfg_files(sendlaterlib_SRCS
     settings/sendlateragentsettings.kcfgc 
   )
 
-kde4_add_ui_files(sendlaterlib_SRCS ui/sendlaterwidget.ui)
+ki18n_wrap_ui(sendlaterlib_SRCS ui/sendlaterwidget.ui)
 
 
-kde4_add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
-target_link_libraries( sendlater ${KDE4_KDEUI_LIBS} )
+add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
+generate_export_header(sendlater BASE_NAME sendlater)
+target_link_libraries( sendlater KF5::AkonadiCore )
 
-set_target_properties( sendlater PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties( sendlater PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
 install( TARGETS sendlater ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
@@ -40,26 +44,22 @@ set(sendlateragent_SRCS
    sendlaterremovemessagejob.cpp
 )
 
+qt5_add_dbus_adaptor(sendlateragent_SRCS org.freedesktop.Akonadi.SendLaterAgent.xml sendlateragent.h SendLaterAgent)
 
- 
+ki18n_wrap_ui(sendlateragent_SRCS ui/sendlaterconfigurewidget.ui)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-
-qt4_add_dbus_adaptor(sendlateragent_SRCS org.freedesktop.Akonadi.SendLaterAgent.xml sendlateragent.h SendLaterAgent)
-
-kde4_add_ui_files(sendlateragent_SRCS ui/sendlaterconfigurewidget.ui)
-
-kde4_add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
+add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
 
 target_link_libraries(akonadi_sendlater_agent
   sendlater
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
+  KF5::AkonadiCore
+  KF5::AkonadiMime
+  KF5::MailTransport
+  KF5::Mime
   messagecomposer
   messagecore
   pimcommon
+  KF5::AkonadiAgentBase
 )
 
 if (Q_WS_MAC)
@@ -71,5 +71,5 @@ endif ()
 install(TARGETS akonadi_sendlater_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES sendlateragent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
-install(FILES akonadi_sendlater_agent.notifyrc DESTINATION "${DATA_INSTALL_DIR}/akonadi_sendlater_agent" )
+install(FILES akonadi_sendlater_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
 

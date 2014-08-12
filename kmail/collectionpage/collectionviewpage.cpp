@@ -21,9 +21,9 @@
 #include "kmkernel.h"
 #include "kernel/mailkernel.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/kmime/messagefolderattribute.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/entitydisplayattribute.h>
+#include <Akonadi/KMime/MessageFolderAttribute>
 
 #include <QGroupBox>
 #include <QHBoxLayout>
@@ -33,7 +33,7 @@
 #include <QVBoxLayout>
 #include <KLocalizedString>
 #include <KDialog>
-
+#include <KIconButton>
 
 #include "messagelist/utils/aggregationcombobox.h"
 #include "messagelist/utils/aggregationconfigbutton.h"

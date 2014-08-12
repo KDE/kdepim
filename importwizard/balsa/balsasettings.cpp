@@ -18,12 +18,12 @@
 #include "balsasettings.h"
 
 
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 #include "mailcommon/util/mailutil.h"
 #include "messageviewer/header/kxface.h"
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/signature.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/signature.h>
 
 
 #include <KConfig>
@@ -98,7 +98,7 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
     QString name = grp.readEntry(QLatin1String("FullName"));
     KPIMIdentities::Identity* newIdentity = createIdentity(name);
     newIdentity->setFullName(name);
-    newIdentity->setEmailAddr(grp.readEntry(QLatin1String("Address")));
+    newIdentity->setPrimaryEmailAddress(grp.readEntry(QLatin1String("Address")));
     newIdentity->setReplyToAddr(grp.readEntry(QLatin1String("ReplyTo")));
     newIdentity->setBcc(grp.readEntry(QLatin1String("Bcc")));
     const QString smtp = grp.readEntry(QLatin1String("SmtpServer"));

@@ -18,11 +18,11 @@
 #ifndef CUSTOMHEADERSETTINGDIALOG_H
 #define CUSTOMHEADERSETTINGDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 namespace MessageViewer {
 class CustomHeaderSettingWidget;
-class CustomHeaderSettingDialog : public KDialog
+class CustomHeaderSettingDialog : public QDialog
 {
     Q_OBJECT
 public:

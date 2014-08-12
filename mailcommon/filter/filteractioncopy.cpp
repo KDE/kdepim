@@ -23,8 +23,9 @@
 #include "mailcommon/util/mailutil.h"
 
 
-#include <KDE/Akonadi/ItemCopyJob>
-#include <KDE/KLocale>
+#include <ItemCopyJob>
+#include <KLocale>
+#include <QDebug>
 
 using namespace MailCommon;
 
@@ -45,7 +46,7 @@ FilterAction::ReturnCode FilterActionCopy::process(ItemContext &context , bool) 
 void FilterActionCopy::jobFinished(KJob* job)
 {
     if (job->error()) {
-        kError() << "Error while moving mail: " << job->errorString();
+        qCritical() << "Error while moving mail: " << job->errorString();
     }
 }
 

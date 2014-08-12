@@ -33,7 +33,7 @@
 #ifndef __KLEO_MULTIDELETEJOB_H__
 #define __KLEO_MULTIDELETEJOB_H__
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 #include "kleo/job.h"
 #include "kleo/cryptobackend.h"
 

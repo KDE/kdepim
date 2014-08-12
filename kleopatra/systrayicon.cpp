@@ -51,12 +51,12 @@
 #include <commands/setinitialpincommand.h>
 #include <commands/learncardkeyscommand.h>
 
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KAboutApplicationDialog>
-#include <KAboutData>
+#include <k4aboutdata.h>
+#include <KGlobal>
 #include <KActionMenu>
-#include <KMenu>
 
 #include <QMenu>
 #include <QAction>
@@ -84,7 +84,7 @@ public:
 private:
     void slotAbout() {
         if ( !aboutDialog ) {
-            aboutDialog = new KAboutApplicationDialog( KGlobal::mainComponent().aboutData() );
+            //QT5 aboutDialog = new KAboutApplicationDialog( KComponentData::mainComponent().aboutData() );
             aboutDialog->setAttribute( Qt::WA_DeleteOnClose );
         }
 
@@ -148,8 +148,8 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       anyCardCanLearnKeys( false ),
       menu(),
       openCertificateManagerAction( i18n("&Open Certificate Manager..."), q ),
-      configureAction( i18n("&Configure %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
-      aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
+      configureAction( i18n("&Configure %1...", KComponentData::mainComponent().aboutData()->programName() ), q ),
+      aboutAction( i18n("&About %1...", KComponentData::mainComponent().aboutData()->programName() ), q ),
       quitAction( i18n("&Shutdown Kleopatra"), q ),
       clipboardMenu( q ),
       cardMenu( i18n("SmartCard") ),
@@ -158,8 +158,8 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       learnCertificatesAction( i18n("Learn NetKey v3 Card Certificates"), q ),
       aboutDialog()
 {
-    q->setNormalIcon( KIcon( QLatin1String("kleopatra") ) );
-    q->setAttentionIcon( KIcon( QLatin1String("secure-card") ) );
+    q->setNormalIcon( QIcon::fromTheme( QLatin1String("kleopatra") ) );
+    q->setAttentionIcon( QIcon::fromTheme( QLatin1String("secure-card") ) );
 
     KDAB_SET_OBJECT_NAME( menu );
     KDAB_SET_OBJECT_NAME( openCertificateManagerAction );

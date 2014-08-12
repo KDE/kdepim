@@ -29,9 +29,11 @@
 
 #include <KontactInterface/Core>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KLocalizedString>
+#include <QIcon>
+#include <QStandardPaths>
 
 EXPORT_KONTACT_PLUGIN( AkregatorPlugin, akregator )
 
@@ -39,15 +41,15 @@ AkregatorPlugin::AkregatorPlugin( KontactInterface::Core *core, const QVariantLi
   : KontactInterface::Plugin( core, core, "akregator" ), m_interface( 0 )
 {
 
-  setComponentData( KontactPluginFactory::componentData() );
+  //QT5 setComponentData( KontactPluginFactory::componentData() );
 
-  KAction *action =
-    new KAction( KIcon( QLatin1String("bookmark-new") ),
+  QAction *action =
+    new QAction( QIcon::fromTheme( QLatin1String("bookmark-new") ),
                  i18nc( "@action:inmenu", "New Feed..." ), this );
   actionCollection()->addAction( QLatin1String("feed_new"), action );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_F ) );
-  action->setHelpText(
-    i18nc( "@info:status", "Create a new feed" ) );
+  // QT5 action->setHelpText(
+  //  i18nc( "@info:status", "Create a new feed" ) );
   action->setWhatsThis(
     i18nc( "@info:whatsthis",
            "You will be presented with a dialog where you can add a new feed." ) );
@@ -87,7 +89,7 @@ OrgKdeAkregatorPartInterface *AkregatorPlugin::interface()
 QString AkregatorPlugin::tipFile() const
 {
   // TODO: tips file
-  //QString file = KStandardDirs::locate("data", "akregator/tips");
+  //QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "akregator/tips");
   QString file;
   return file;
 }
@@ -156,4 +158,4 @@ int AkregatorUniqueAppHandler::newInstance()
 
   return KontactInterface::UniqueAppHandler::newInstance();
 }
-
+#include "akregator_plugin.moc"

@@ -26,7 +26,7 @@
 
 #include "attachmentpart.h"
 
-#include <KDE/KDialog>
+#include <KDialog>
 
 namespace MessageCore {
 

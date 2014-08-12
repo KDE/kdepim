@@ -40,7 +40,7 @@
 
 #include <kmime/kmime_content.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kascii.h>
 
 using namespace MessageViewer;
@@ -52,7 +52,7 @@ class AnyTypeBodyPartFormatter
     static const AnyTypeBodyPartFormatter * self;
 public:
     Result format( Interface::BodyPart *, HtmlWriter * ) const {
-        kDebug() << "Acting as a Interface::BodyPartFormatter!";
+        qDebug() << "Acting as a Interface::BodyPartFormatter!";
         return AsIcon;
     }
 
@@ -211,20 +211,20 @@ static const BodyPartFormatter * createForText( const char * subtype ) {
         switch ( subtype[0] ) {
         case 'h':
         case 'H':
-            if ( kasciistricmp( subtype, "html" ) == 0 )
+            if ( qstricmp( subtype, "html" ) == 0 )
                 return TextHtmlBodyPartFormatter::create();
             break;
         case 'r':
         case 'R':
-            if ( kasciistricmp( subtype, "rtf" ) == 0 )
+            if ( qstricmp( subtype, "rtf" ) == 0 )
                 return AnyTypeBodyPartFormatter::create();
             break;
         case 'x':
         case 'X':
         case 'v':
         case 'V':
-            if ( kasciistricmp( subtype, "x-vcard" ) == 0 ||
-                 kasciistricmp( subtype, "vcard" ) == 0 )
+            if ( qstricmp( subtype, "x-vcard" ) == 0 ||
+                 qstricmp( subtype, "vcard" ) == 0 )
                 return AnyTypeBodyPartFormatter::create();
             break;
         }
@@ -237,7 +237,7 @@ static const BodyPartFormatter * createForImage( const char * ) {
 }
 
 static const BodyPartFormatter * createForMessage( const char * subtype ) {
-    if ( kasciistricmp( subtype, "rfc822" ) == 0 )
+    if ( qstricmp( subtype, "rfc822" ) == 0 )
         return MessageRfc822BodyPartFormatter::create();
     return AnyTypeBodyPartFormatter::create();
 }
@@ -247,17 +247,17 @@ static const BodyPartFormatter * createForMultiPart( const char * subtype ) {
         switch ( subtype[0] ) {
         case 'a':
         case 'A':
-            if ( kasciistricmp( subtype, "alternative" ) == 0 )
+            if ( qstricmp( subtype, "alternative" ) == 0 )
                 return MultiPartAlternativeBodyPartFormatter::create();
             break;
         case 'e':
         case 'E':
-            if ( kasciistricmp( subtype, "encrypted" ) == 0 )
+            if ( qstricmp( subtype, "encrypted" ) == 0 )
                 return MultiPartEncryptedBodyPartFormatter::create();
             break;
         case 's':
         case 'S':
-            if ( kasciistricmp( subtype, "signed" ) == 0 )
+            if ( qstricmp( subtype, "signed" ) == 0 )
                 return MultiPartSignedBodyPartFormatter::create();
             break;
         }
@@ -270,18 +270,18 @@ static const BodyPartFormatter * createForApplication( const char * subtype ) {
         switch ( subtype[0] ) {
         case 'p':
         case 'P':
-            if ( kasciistricmp( subtype, "pgp" ) == 0 )
+            if ( qstricmp( subtype, "pgp" ) == 0 )
                 return ApplicationPgpBodyPartFormatter::create();
             // fall through
         case 'x':
         case 'X':
-            if ( kasciistricmp( subtype, "pkcs7-mime" ) == 0 ||
-                 kasciistricmp( subtype, "x-pkcs7-mime" ) == 0 )
+            if ( qstricmp( subtype, "pkcs7-mime" ) == 0 ||
+                 qstricmp( subtype, "x-pkcs7-mime" ) == 0 )
                 return ApplicationPkcs7MimeBodyPartFormatter::create();
             break;
         case 'v':
         case 'V':
-            if ( kasciistricmp( subtype, "vnd.de.bund.bsi.chiasmus-text") == 0)
+            if ( qstricmp( subtype, "vnd.de.bund.bsi.chiasmus-text") == 0)
                 return ApplicationChiasmusTextBodyPartFormatter::create();
             break;
         }
@@ -295,24 +295,24 @@ const BodyPartFormatter * BodyPartFormatter::createFor( const char * type, const
         switch ( type[0] ) {
         case 'a': // application
         case 'A':
-            if ( kasciistricmp( type, "application" ) == 0 )
+            if ( qstricmp( type, "application" ) == 0 )
                 return createForApplication( subtype );
             break;
         case 'i': // image
         case 'I':
-            if ( kasciistricmp( type, "image" ) == 0 )
+            if ( qstricmp( type, "image" ) == 0 )
                 return createForImage( subtype );
             break;
         case 'm': // multipart / message
         case 'M':
-            if ( kasciistricmp( type, "multipart" ) == 0 )
+            if ( qstricmp( type, "multipart" ) == 0 )
                 return createForMultiPart( subtype );
-            else if ( kasciistricmp( type, "message" ) == 0 )
+            else if ( qstricmp( type, "message" ) == 0 )
                 return createForMessage( subtype );
             break;
         case 't': // text
         case 'T':
-            if ( kasciistricmp( type, "text" ) == 0 )
+            if ( qstricmp( type, "text" ) == 0 )
                 return createForText( subtype );
             break;
         }

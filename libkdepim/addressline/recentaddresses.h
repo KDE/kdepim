@@ -32,16 +32,16 @@
 
 #include "kdepim_export.h"
 #include <kabc/addressee.h>
-#include <KDialog>
+#include <QDialog>
 #include <QStringList>
 class KConfig;
-class KPushButton;
+class QPushButton;
 class QListWidget;
 class KLineEdit;
 
 namespace KPIM {
 
-class KDEPIM_EXPORT RecentAddressDialog : public KDialog
+class KDEPIM_EXPORT RecentAddressDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -65,7 +65,7 @@ protected:
 private:
     void readConfig();
     void writeConfig();
-    KPushButton* mNewButton, *mRemoveButton;
+    QPushButton* mNewButton, *mRemoveButton;
     QListWidget *mListView;
     KLineEdit *mLineEdit;
 };

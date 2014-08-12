@@ -79,8 +79,8 @@ void ConfigWidget::saveToExternalSettings()
   mViewPrefs->setTodoDueTodayColor( Settings::self()->todoDueColor() );
   mViewPrefs->setTodoOverdueColor( Settings::self()->todoOverdueColor() );
 
-  Settings::self()->writeConfig();
-  KCalPrefs::instance()->writeConfig();
+  Settings::self()->save();
+  KCalPrefs::instance()->save();
   mViewPrefs->writeConfig();
 }
 

@@ -30,19 +30,20 @@
 #include <KontactInterface/Core>
 #include <KontactInterface/Plugin>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/CollectionStatistics>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/ETMViewStateSaver>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/CollectionFetchScope>
+#include <AkonadiCore/collectionstatistics.h>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiWidgets/ETMViewStateSaver>
 
 #include <KMime/KMimeMessage>
 
 #include <KCheckableProxyModel>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KUrlLabel>
+#include <KSharedConfig>
 
 #include <QEvent>
 #include <QIcon>
@@ -201,7 +202,7 @@ void SummaryWidget::slotUpdateFolderList()
     mLabels.clear();
     mModelState->restoreState();
     int counter = 0;
-    kDebug() << QLatin1String("Iterating over") << mModel->rowCount() << QLatin1String("collections.");
+    qDebug() << QLatin1String("Iterating over") << mModel->rowCount() << QLatin1String("collections.");
     KConfig _config( QLatin1String("kcmkmailsummaryrc") );
     KConfigGroup config( &_config, "General" );
     const bool showFolderPaths = config.readEntry( "showFolderPaths", false );

@@ -22,7 +22,7 @@
 
 #include "progressmanager.h" // ProgressItem
 
-#include <Akonadi/AgentInstance>
+#include <AgentInstance>
 
 namespace KPIM {
 

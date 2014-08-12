@@ -30,8 +30,10 @@
 #include <KLocale>
 #include <KConfig>
 #include <KSharedConfigPtr>
+#include <KGlobal>
 
-#include <Akonadi/ChangeRecorder>
+#include <AkonadiCore/ChangeRecorder>
+#include <KSharedConfig>
 
 #include "createfoldercontentswidget.h"
 #include "eventselectorwidget.h"
@@ -45,7 +47,7 @@ CreateTripWidget::CreateTripWidget(Trip *trip, Akonadi::ChangeRecorder* monitor,
   QVBoxLayout *layout = new QVBoxLayout(this);
 
   m_eventSelector = new EventSelectorWidget;
-  connect(m_eventSelector, SIGNAL(selected(Akonadi::Item)), SLOT(tripSelected(Akonadi::Item)));
+  connect(m_eventSelector, &EventSelectorWidget::selected, this, &CreateTripWidget::tripSelected);
 
   layout->addWidget(m_eventSelector);
 
@@ -62,7 +64,7 @@ CreateTripWidget::CreateTripWidget(Trip *trip, Akonadi::ChangeRecorder* monitor,
   configureLayout->addWidget(m_notesWidget);
 
   QPushButton *goButton = new QPushButton(i18n("Go!"));
-  connect(goButton, SIGNAL(clicked(bool)), SLOT(create()));
+  connect(goButton, &QPushButton::clicked, this, &CreateTripWidget::create);
 
   layout->addWidget(goButton);
 }
@@ -95,7 +97,7 @@ void CreateTripWidget::create()
     KMessageBox::error(this, i18n("You need to select an event first"));
     return;
   }
-  KSharedConfigPtr config = KGlobal::config();
+  KSharedConfigPtr config = KSharedConfig::openConfig();
 
   KConfigGroup generalGroup( config, "General" );
 

@@ -29,6 +29,7 @@
 #include <kmacroexpander.h>
 #include <KShell>
 
+#include <KPIMIdentities/Signature>
 
 #include <grantlee/plaintextmarkupbuilder.h>
 
@@ -36,9 +37,10 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KProcess>
-#include <KPushButton>
-#include <KTemporaryFile>
+#include <QPushButton>
+#include <QTemporaryFile>
 #include <KColorScheme>
+#include <KFileDialog>
 
 #include <QApplication>
 #include <QClipboard>
@@ -114,7 +116,7 @@ public:
     QString quotePrefix;
 
     KProcess *mExtEditorProcess;
-    KTemporaryFile *mExtEditorTempFile;
+    QTemporaryFile *mExtEditorTempFile;
     PimCommon::AutoCorrection *mAutoCorrection;
 };
 
@@ -137,7 +139,7 @@ void KMeditorPrivate::startExternalEditor()
         return;
     }
 
-    mExtEditorTempFile = new KTemporaryFile();
+    mExtEditorTempFile = new QTemporaryFile();
     if ( !mExtEditorTempFile->open() ) {
         delete mExtEditorTempFile;
         mExtEditorTempFile = 0;
@@ -343,18 +345,16 @@ void KMeditor::setFontForWholeText( const QFont &font )
 
 KUrl KMeditor::insertFile()
 {
-    QPointer<KEncodingFileDialog> fdlg =
-            new KEncodingFileDialog( QString(), QString(),  QString(), QString(),
-                                     KFileDialog::Opening, this );
-    fdlg->okButton()->setText( i18nc( "@action:button", "&Insert" ) );
-    fdlg->setCaption( i18nc( "@title:window", "Insert File" ) );
-
+    const KEncodingFileDialog::Result result = KEncodingFileDialog::getOpenUrlAndEncoding(QString(),
+            QUrl(),
+            QString(),
+            this,
+            i18nc( "@title:window", "Insert File" ));
     KUrl url;
-    if ( fdlg->exec() && fdlg ) {
-        url = fdlg->selectedUrl();
-        url.setFileEncoding( MessageViewer::NodeHelper::fixEncoding( fdlg->selectedEncoding() ) );
+    if (!result.URLs.isEmpty()) {
+       url = result.URLs.first();
+       url.setFileEncoding( MessageViewer::NodeHelper::fixEncoding( result.encoding ) );
     }
-    delete fdlg;
     return url;
 }
 
@@ -493,7 +493,7 @@ bool KMeditor::checkExternalEditorFinished()
 
     int ret = KMessageBox::warningYesNoCancel(
                 topLevelWidget(),
-                i18nc( "@info",
+                xi18nc( "@info",
                        "The external editor is still running.<nl/>"
                        "Do you want to stop the editor or keep it running?<nl/>"
                        "<warning>Stopping the editor will cause all your "

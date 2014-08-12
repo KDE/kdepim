@@ -23,7 +23,8 @@
 #include <KDialog>
 #include <KLocalizedString>
 #include <KToolBar>
-#include <KLineEdit>
+#include <QLineEdit>
+
 
 #include <KXMLGUIBuilder>
 #include <KXMLGUIFactory>
@@ -33,6 +34,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QDebug>
+#include <KSharedConfig>
 
 
 KNoteEditDialog::KNoteEditDialog(bool readOnly, QWidget *parent)
@@ -51,7 +53,7 @@ void KNoteEditDialog::init(bool readOnly)
     // this dialog is modal to prevent one from editing the same note twice
     // in two different windows
 
-    setComponentData( KComponentData( "knotes" ) ); // TODO: memleak
+    //QT5 setComponentData( KComponentData( "knotes" ) ); // TODO: memleak
     setXMLFile( QLatin1String("knotesui.rc") );
 
     QWidget *page = new QWidget( this );
@@ -64,11 +66,11 @@ void KNoteEditDialog::init(bool readOnly)
     QLabel *label = new QLabel( page );
     label->setText( i18nc( "@label popup note name", "Name:" ) );
     hbl->addWidget( label, 0 );
-    mTitleEdit= new KLineEdit( page );
-    mTitleEdit->setClearButtonShown(true);
+    mTitleEdit= new QLineEdit( page );
+    mTitleEdit->setClearButtonEnabled(true);
     mTitleEdit->setObjectName( QLatin1String("name") );
     if (!readOnly)
-        connect(mTitleEdit, SIGNAL(textChanged(QString)), this, SLOT(slotTextChanged(QString)));
+        connect(mTitleEdit, &QLineEdit::textChanged, this, &KNoteEditDialog::slotTextChanged);
     hbl->addWidget( mTitleEdit, 1, Qt::AlignVCenter );
 
     //TODO customize it
@@ -116,7 +118,7 @@ void KNoteEditDialog::setReadOnly(bool b)
 
 void KNoteEditDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "KNoteEditDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "KNoteEditDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -125,7 +127,7 @@ void KNoteEditDialog::readConfig()
 
 void KNoteEditDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "KNoteEditDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "KNoteEditDialog" );
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

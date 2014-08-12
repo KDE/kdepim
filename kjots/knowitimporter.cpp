@@ -28,10 +28,11 @@
 
 #include <KStandardDirs>
 #include <KUrl>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KLocalizedString>
 
-#include <kdebug.h>
+#include <qdebug.h>
+#include <QStandardPaths>
 
 KnowItImporter::KnowItImporter()
 {
@@ -45,20 +46,22 @@ void KnowItImporter::importFromUrl( const KUrl& url )
   buildNoteTree(url);
 
 //   foreach ()
-//   kDebug();
+//   qDebug();
   buildDomDocument();
 
 
-  KTemporaryFile file;
-  file.setPrefix( KStandardDirs::locateLocal( "data", "kjots/" ) );
-  file.setSuffix( ".book" );
+  QTemporaryFile file;
+//code was   file.setPrefix( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kjots/" ) ;
+//Add to constructor and adapt if necessay:  QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kjots/" QLatin1String("/myapp_XXXXXX.txt") 
+//code was   file.setSuffix( ".book" );
+//Add to constructor and adapt if necessay: QDir::tempPath() + QLatin1String("/myapp_XXXXXX") + QLatin1String( ".book" ) 
   file.setAutoRemove( false );
 
   if ( file.open() ) {
     file.write( "<?xml version='1.0' encoding='UTF-8' ?>\n<!DOCTYPE KJots>\n<KJots>\n" );
     file.write( m_domDoc.toByteArray() );
     file.write( "</KJots>\n" );
-    kDebug() << file.fileName();
+    qDebug() << file.fileName();
     QString newFileName = file.fileName();
     file.close();
     book->openBook( newFileName );
@@ -74,7 +77,7 @@ QDomElement KnowItImporter::addNote( const KnowItNote& note)
   QDomElement newElement;
   int childNotesCount = m_childNotes[ note.id ].size();
 //   int childNotesCount = note.childNotes.size();
-  kDebug() << note.title << childNotesCount;
+  qDebug() << note.title << childNotesCount;
   if (childNotesCount > 0)
   {
     newElement = m_domDoc.createElement(QLatin1String("KJotsBook"));
@@ -121,7 +124,7 @@ QDomElement KnowItImporter::addNote( const KnowItNote& note)
         }
         contents.append( QLatin1String("<br /><br /><p><b>Links:</b></p>\n<ul>\n") );
         for ( int i = 0; i < note.links.size(); ++i ) {
-          kDebug() << "link" << note.links[i].first << note.links[i].second;
+          qDebug() << "link" << note.links[i].first << note.links[i].second;
           contents.append( QString::fromLatin1( "<li><a href=\"%1\">%2</a></li>\n" )
               .arg( note.links[i].first )
               .arg( note.links[i].second ) );
@@ -158,9 +161,9 @@ void KnowItImporter::buildDomDocument()
   {
     QDomElement e = addNote( n );
     parent.appendChild(e);
-    kDebug() << n.title;
+    qDebug() << n.title;
   }
-  kDebug() << m_domDoc.toString();
+  qDebug() << m_domDoc.toString();
 }
 
 void KnowItImporter::buildNoteTree( const KUrl& url )
@@ -177,7 +180,7 @@ void KnowItImporter::buildNoteTree( const KUrl& url )
     while ( !in.atEnd() ) {
       QString line = in.readLine();
 
-      kDebug() << "got line: " << line;
+      qDebug() << "got line: " << line;
 
       if ( line.trimmed().isEmpty() ) {
         continue;
@@ -185,18 +188,18 @@ void KnowItImporter::buildNoteTree( const KUrl& url )
 
       foreach( const QByteArray &header, entryHeaders ) {
         if ( line.startsWith( QLatin1String(header) ) ) {
-          kDebug() << "init" << line << header;
+          qDebug() << "init" << line << header;
           line = line.right( line.size() - header.size() ).trimmed();
-          kDebug() << "header tag removed: " << line;
+          qDebug() << "header tag removed: " << line;
 
           QStringList list = line.split( QLatin1Char(' ') );
           int startOfTitle = line.indexOf( QLatin1Char(' ') );
           bool ok = false;
 
-          kDebug() << "depth" << list.at( 0 ).trimmed();
+          qDebug() << "depth" << list.at( 0 ).trimmed();
 
           int depth = list.at( 0 ).trimmed().toInt( &ok );
-          kDebug() << ok << "valid depth";
+          qDebug() << ok << "valid depth";
           if ( ok ) {
             QString title = line.right( line.size() - startOfTitle ).trimmed();
             KnowItNote n;
@@ -216,7 +219,7 @@ void KnowItImporter::buildNoteTree( const KUrl& url )
             QString url;
             QString target;
             while (( !in.atEnd() ) && ( !contentLine.trimmed().isEmpty() ) ) {
-              kDebug() << contentLine;
+              qDebug() << contentLine;
               if ( contentLine.startsWith( QLatin1String("\\Link") ) ) {
                 url = contentLine.right( contentLine.size() - 5 ).trimmed();
                 contentLine = in.readLine();

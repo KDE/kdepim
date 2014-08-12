@@ -28,7 +28,7 @@
        <property name="whatsThis">
         <string comment="@info:whatsthis">Type any string you desire here for the name of the attachment</string>
        </property>
-       <property name="clickMessage">
+       <property name="placeholderText">
         <string comment="@label">Attachment name</string>
        </property>
       </widget>

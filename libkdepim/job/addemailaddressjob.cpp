@@ -23,18 +23,18 @@
 #include "widgets/selectedcollectiondialog.h"
 
 
-#include <Akonadi/CollectionDialog>
+#include <CollectionDialog>
 #include <Akonadi/Contact/ContactSearchJob>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/Collection>
+#include <Item>
+#include <ItemCreateJob>
+#include <CollectionFetchJob>
+#include <CollectionFetchScope>
+#include <Collection>
 #include <Akonadi/Contact/ContactEditorDialog>
-#include <Akonadi/AgentTypeDialog>
-#include <Akonadi/AgentType>
-#include <Akonadi/AgentFilterProxyModel>
-#include <Akonadi/AgentInstanceCreateJob>
+#include <AgentTypeDialog>
+#include <AgentType>
+#include <AgentFilterProxyModel>
+#include <AgentInstanceCreateJob>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
@@ -82,9 +82,9 @@ public:
         const KABC::Addressee::List contacts = searchJob->contacts();
         if ( !contacts.isEmpty() ) {
             const QString text =
-                    i18nc( "@info",
+                    xi18nc( "@info",
                            "A contact with the email address <email>%1</email> "
-                           "is already in your address book.", Qt::escape(mCompleteAddress) );
+                           "is already in your address book.", mCompleteAddress.toHtmlEscaped() );
 
             KMessageBox::information(
                         mParentWidget,
@@ -140,7 +140,7 @@ public:
                                "You must create an address book before adding a contact. Do you want to create an address book?" ),
                         i18nc( "@title:window", "No Address Book Available" ) ) == KMessageBox::Yes) {
                 Akonadi::AgentTypeDialog dlg( mParentWidget );
-                dlg.setCaption( i18n("Add Address Book") );
+                dlg.setWindowTitle( i18n("Add Address Book") );
                 dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::Addressee::mimeType());
                 dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::ContactGroup::mimeType());
                 dlg.agentFilterProxyModel()->addCapabilityFilter( QLatin1String( "Resource" ) );
@@ -221,11 +221,11 @@ public:
         mItem = createJob->item();
 
         const QString text =
-                i18nc( "@info",
+                xi18nc( "@info",
                        "<para>A contact for <email>%1</email> was successfully added "
                        "to your address book.</para>"
                        "<para>Do you want to edit this new contact now?</para>",
-                       Qt::escape(mCompleteAddress) );
+                       mCompleteAddress.toHtmlEscaped() );
 
         if ( KMessageBox::questionYesNo(
                  mParentWidget,

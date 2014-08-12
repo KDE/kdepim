@@ -17,18 +17,20 @@
 */
 
 #include "kjotsconfigdlg.h"
+#include <QPushButton>
+#include <KConfig>
+#include <KConfigGroup>
+
 KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
   : KCMultiDialog( parent )
 {
-    setCaption( title );
+    setWindowTitle( title );
     setFaceType( KPageDialog::List );
-    setButtons( Default | Ok | Cancel );
-    setDefaultButton( Ok );
-
-    showButtonSeparator( true );
+    setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    button(QDialogButtonBox::Ok)->setDefault(true);
 
     addModule( QLatin1String("kjots_config_misc") );
-    connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+    connect( button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(slotOk()) );
 }
 
 KJotsConfigDlg::~KJotsConfigDlg()
@@ -39,8 +41,8 @@ void KJotsConfigDlg::slotOk()
 {
 }
 
-KJotsConfigMisc::KJotsConfigMisc( const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+KJotsConfigMisc::KJotsConfigMisc( QWidget *parent )
+    :KCModule( parent )
 {
     QHBoxLayout *lay = new QHBoxLayout( this );
     miscPage = new confPageMisc( 0 );

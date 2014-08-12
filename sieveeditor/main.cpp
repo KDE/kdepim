@@ -21,32 +21,41 @@
 
 #include "kdepim-version.h"
 #include "sieveeditormainwindow.h"
-#include "sieveeditor_options.h"
 #include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <KDebug>
-#include <KUniqueApplication>
+#include <QDebug>
+#include <KLocalizedString>
+#include <QApplication>
+#include <KDBusService>
+#include <QCommandLineParser>
 
 int main( int argc, char **argv )
 {
-    KAboutData aboutData( "sieveeditor", 0, ki18n("Sieve Editor"),
-                          KDEPIM_VERSION, ki18n("Sieve Editor"), KAboutData::License_GPL_V2,
-                          ki18n("Copyright © 2013, 2014 sieveeditor authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
-    aboutData.setProgramIconName(QLatin1String("kmail"));
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    KLocalizedString::setApplicationDomain("sieveeditor");
+    QApplication app(argc, argv);
 
-    KCmdLineOptions options = sieveeditor_options();
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
-    KUniqueApplication::addCmdLineOptions();
-    if (!KUniqueApplication::start()) {
-        kDebug() << "sieveeditor is already running!";
-        return (0);
-    }
-    KUniqueApplication a;
-    KGlobal::locale()->insertCatalog( QLatin1String("libksieve") );
-    KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
+    KAboutData aboutData(QStringLiteral("sieveeditor"),
+                       i18n("KSieve Editor"),
+                       QStringLiteral(KDEPIM_VERSION),
+                       i18n("Sieve Editor"),
+                      KAboutLicense::GPL_V2,
+                       i18n("Copyright © 2013, 2014 sieveeditor authors"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QLatin1String("montel@kde.org"));
+
+    aboutData.setProgramIconName(QLatin1String("kmail"));
+    KAboutData::setApplicationData(aboutData);
+
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
+
+    KDBusService service(KDBusService::Unique);
+
+
     SieveEditorMainWindow *mw = new SieveEditorMainWindow();
     mw->show();
-    a.exec();
+    return app.exec();
 }

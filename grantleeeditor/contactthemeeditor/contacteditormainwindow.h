@@ -21,9 +21,9 @@
 #include <KXmlGuiWindow>
 
 class ContactEditorPage;
-class KAction;
+class QAction;
 class KRecentFilesAction;
-class KUrl;
+class QUrl;
 
 class ContactEditorMainWindow : public KXmlGuiWindow
 {
@@ -49,7 +49,7 @@ private Q_SLOTS:
     void slotUpdateView();
     void slotConfigure();
     void slotCanInsertFile(bool b);
-    void slotThemeSelected(const KUrl &);
+    void slotThemeSelected(const QUrl &);
     void slotSaveAsTheme();
 
 private:
@@ -66,18 +66,18 @@ private:
     void setupActions();
     void closeThemeEditor();
     ContactEditorPage *mContactEditor;
-    KAction *mNewThemeAction;
-    KAction *mCloseThemeAction;
-    KAction *mAddExtraPage;
-    KAction *mCloseAction;
-    KAction *mOpenAction;
-    KAction *mUploadTheme;
-    KAction *mSaveAction;
-    KAction *mInstallTheme;
-    KAction *mInsertFile;
-    KAction *mManageTheme;
-    KAction *mUpdateView;
-    KAction *mSaveAsAction;
+    QAction *mNewThemeAction;
+    QAction *mCloseThemeAction;
+    QAction *mAddExtraPage;
+    QAction *mCloseAction;
+    QAction *mOpenAction;
+    QAction *mUploadTheme;
+    QAction *mSaveAction;
+    QAction *mInstallTheme;
+    QAction *mInsertFile;
+    QAction *mManageTheme;
+    QAction *mUpdateView;
+    QAction *mSaveAsAction;
     KRecentFilesAction *mRecentFileAction;
 };
 

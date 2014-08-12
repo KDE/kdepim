@@ -24,7 +24,7 @@
 
 #include <QPersistentModelIndex>
 
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 #include "itemselection.h"
 #include <QItemSelectionModel>
 

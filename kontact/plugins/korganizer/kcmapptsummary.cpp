@@ -27,6 +27,8 @@
 #include <KAboutData>
 #include <KAcceleratorManager>
 #include <KComponentData>
+#include <KConfigGroup>
+#include <KLocalizedString>
 
 KCModule *create_apptsummary( QWidget *parent, const char * )
 {
@@ -35,7 +37,7 @@ KCModule *create_apptsummary( QWidget *parent, const char * )
 }
 
 KCMApptSummary::KCMApptSummary( const KComponentData &inst, QWidget *parent )
-  : KCModule( inst, parent )
+  : KCModule( /*inst,*/ parent )
 {
   setupUi( this );
 
@@ -159,14 +161,14 @@ void KCMApptSummary::defaults()
 const KAboutData *KCMApptSummary::aboutData() const
 {
   KAboutData *about = new KAboutData(
-    I18N_NOOP( "kcmapptsummary" ), 0,
-    ki18n( "Upcoming Events Configuration Dialog" ),
-    0, KLocalizedString(), KAboutData::License_GPL,
-    ki18n( "Copyright © 2003–2004 Tobias Koenig\n"
+    QStringLiteral( "kcmapptsummary" ),
+    i18n( "Upcoming Events Configuration Dialog" ),
+    QString(), QString(), KAboutLicense::GPL,
+    i18n( "Copyright © 2003–2004 Tobias Koenig\n"
            "Copyright © 2005–2010 Allen Winter" ) );
 
-  about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
-  about->addAuthor( ki18n( "Allen Winter" ), KLocalizedString(), "winter@kde.org" );
+  about->addAuthor( i18n( "Tobias Koenig" ), QString(), QLatin1String("tokoe@kde.org") );
+  about->addAuthor( i18n( "Allen Winter" ), QString(), QLatin1String("winter@kde.org") );
 
   return about;
 }

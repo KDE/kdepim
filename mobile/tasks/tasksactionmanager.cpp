@@ -19,12 +19,12 @@
 #include "tasksactionmanager.h"
 
 
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Item>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/Item>
 
 #include <KCalCore/Todo>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KLocalizedString>
 
@@ -88,7 +88,7 @@ void TasksActionManager::updateActions()
 
 void TasksActionManager::initActions()
 {
-  KAction *action = mActionCollection->addAction( QLatin1String( "import_tasks" ) );
+  QAction *action = mActionCollection->addAction( QLatin1String( "import_tasks" ) );
   action->setText( i18n( "Import Tasks" ) );
 
   action = mActionCollection->addAction( QLatin1String( "export_account_tasks" ) );

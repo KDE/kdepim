@@ -40,12 +40,12 @@
 
 
 
-#include <KAction>
 #include <KActionCollection>
-#include <KDebug>
+#include <QDebug>
 #include <KShortcutsDialog>
 #include <KStandardAction>
 #include <KStatusBar>
+#include <KGlobal>
 
 KOrganizer::KOrganizer() : KParts::MainWindow(), KOrg::MainWindow()
 {
@@ -53,7 +53,7 @@ KOrganizer::KOrganizer() : KParts::MainWindow(), KOrg::MainWindow()
   // modal subdialogs will only affect this dialog, not the other windows
   setAttribute( Qt::WA_GroupLeader );
 
-  kDebug();
+  qDebug();
   KOCore::self()->addXMLGUIClient( this, this );
 //  setMinimumSize(600,400);  // make sure we don't get resized too small...
 
@@ -76,7 +76,7 @@ void KOrganizer::init( bool document )
 {
   setHasDocument( document );
 
-  setComponentData( KGlobal::mainComponent() );
+  setComponentData( KComponentData::mainComponent() );
 
   // Create calendar object, which manages all calendar information associated
   // with this calendar view window.
@@ -91,9 +91,9 @@ void KOrganizer::init( bool document )
   initActions();
   readSettings();
 
-  KStatusBar *bar = statusBar();
+  QStatusBar *bar = statusBar();
 
-  bar->insertItem( QString(), ID_GENERAL, 10 );
+  //QT5 bar->insertItem( QString(), ID_GENERAL, 10 );
   connect( bar, SIGNAL(pressed(int)), SLOT(statusBarPressed(int)) );
 
   KPIM::ProgressStatusBarWidget *progressBar = new KPIM::ProgressStatusBarWidget( statusBar(), this);
@@ -137,7 +137,7 @@ void KOrganizer::readSettings()
 
 void KOrganizer::writeSettings()
 {
-  kDebug();
+  qDebug();
 
   KConfig *config = KOGlobals::self()->config();
 
@@ -168,7 +168,7 @@ void KOrganizer::slotEditKeys()
 
 bool KOrganizer::queryClose()
 {
-  kDebug();
+  qDebug();
 
   bool close = mActionManager->queryClose();
 

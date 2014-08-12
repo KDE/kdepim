@@ -25,7 +25,7 @@ class AbstractImportExportJob;
 class KRecentFilesAction;
 class KUrl;
 class ArchiveStorage;
-class KAction;
+class QAction;
 
 class PimSettingExporterWindow: public KXmlGuiWindow
 {
@@ -45,7 +45,7 @@ private Q_SLOTS:
     void slotAddEndLine();
     void slotSaveLog();
     void slotShowStructureInfos();
-    void slotRestoreFile(const KUrl &url);
+    void slotRestoreFile(const QUrl &url);
     void slotShowArchiveInformations();
 
 private:
@@ -73,11 +73,11 @@ private:
     AbstractImportExportJob *mImportExportData;
     KRecentFilesAction *mRecentFilesAction;
     ArchiveStorage *mArchiveStorage;
-    KAction *mBackupAction;
-    KAction *mRestoreAction;
-    KAction *mSaveLogAction;
-    KAction *mArchiveStructureInfo;
-    KAction *mShowArchiveInformationsAction;
+    QAction *mBackupAction;
+    QAction *mRestoreAction;
+    QAction *mSaveLogAction;
+    QAction *mArchiveStructureInfo;
+    QAction *mShowArchiveInformationsAction;
 };
 
 

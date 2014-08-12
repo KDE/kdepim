@@ -27,16 +27,17 @@
 
 #include <KAboutData>
 #include <KAcceleratorManager>
-#include <KComponentData>
+#include <KConfigGroup>
+#include <KLocalizedString>
+#include <KConfig>
 
 KCModule *create_todosummary( QWidget *parent, const char * )
 {
-  KComponentData inst( "kcmtodosummary" );
-  return new KCMTodoSummary( inst, parent );
+  return new KCMTodoSummary( parent );
 }
 
-KCMTodoSummary::KCMTodoSummary( const KComponentData &inst, QWidget *parent )
-  : KCModule( inst, parent )
+KCMTodoSummary::KCMTodoSummary( QWidget *parent )
+  : KCModule( parent )
 {
   setupUi( this );
 
@@ -154,17 +155,17 @@ void KCMTodoSummary::defaults()
 const KAboutData *KCMTodoSummary::aboutData() const
 {
   KAboutData *about = new KAboutData(
-    I18N_NOOP( "kcmtodosummary" ), 0,
-    ki18n( "Pending To-dos Configuration Dialog" ),
-    0, KLocalizedString(), KAboutData::License_GPL,
-    ki18n( "Copyright © 2003–2004 Tobias Koenig\n"
+    QLatin1String( "kcmtodosummary" ),
+    i18n( "Pending To-dos Configuration Dialog" ),
+    QString(), QString(), KAboutLicense::GPL,
+    i18n( "Copyright © 2003–2004 Tobias Koenig\n"
            "Copyright © 2005–2010 Allen Winter" ) );
 
-  about->addAuthor( ki18n( "Tobias Koenig" ),
-                    KLocalizedString(), "tokoe@kde.org" );
-  about->addAuthor( ki18n( "Allen Winter" ),
-                    KLocalizedString(), "winter@kde.org" );
+
+  about->addAuthor( i18n( "Tobias Koenig" ),
+                    QString(), QLatin1String("tokoe@kde.org") );
+  about->addAuthor( i18n( "Allen Winter" ),
+                    QString(), QLatin1String("winter@kde.org") );
 
   return about;
 }
-

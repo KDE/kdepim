@@ -40,20 +40,20 @@ using namespace KCalCore;
 
 #include <KontactInterface/Core>
 
-#include <KAboutData>
 #include <KCmdLineArgs>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
-#include <KDebug>
-#include <KIcon>
+#include <QDebug>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KSystemTimeZones>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDropEvent>
+#include <QStandardPaths>
 
 EXPORT_KONTACT_PLUGIN( KNotesPlugin, knotes )
 
@@ -62,16 +62,16 @@ KNotesPlugin::KNotesPlugin( KontactInterface::Core *core, const QVariantList & )
       mAboutData( 0 )
 {
     KNoteUtils::migrateToAkonadi();
-    setComponentData( KontactPluginFactory::componentData() );
+    //QT5 setComponentData( KontactPluginFactory::componentData() );
 
-    KAction *action =
-            new KAction( KIcon( QLatin1String("knotes") ),
+    QAction *action =
+            new QAction( QIcon::fromTheme( QLatin1String("knotes") ),
                          i18nc( "@action:inmenu", "New Popup Note..." ), this );
     actionCollection()->addAction( QLatin1String("new_note"), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotNewNote()) );
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_N ) );
-    action->setHelpText(
-                i18nc( "@info:status", "Create new popup note" ) );
+    //action->setHelpText(
+    //            i18nc( "@info:status", "Create new popup note" ) );
     action->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "You will be presented with a dialog where you can create a new popup note." ) );
@@ -94,7 +94,7 @@ bool KNotesPlugin::isRunningStandalone() const
 QString KNotesPlugin::tipFile() const
 {
     // TODO: tips file
-    //QString file = KStandardDirs::locate("data", "knotes/tips");
+    //QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "knotes/tips");
     QString file;
     return file;
 }
@@ -113,23 +113,23 @@ const KAboutData *KNotesPlugin::aboutData() const
 {
     if ( !mAboutData ) {
         mAboutData =
-                new KAboutData( "knotes", 0,
-                                ki18nc( "@title", "KNotes" ),
-                                KDEPIM_VERSION,
-                                ki18nc( "@title", "Popup Notes" ),
-                                KAboutData::License_GPL_V2,
-                                ki18nc( "@info:credit", "Copyright © 2003–2014 Kontact authors" ) );
+                new KAboutData( QLatin1String("knotes"),
+                                xi18nc( "@title", "KNotes" ),
+                                QLatin1String(KDEPIM_VERSION),
+                                xi18nc( "@title", "Popup Notes" ),
+                                KAboutLicense::GPL_V2,
+                                xi18nc( "@info:credit", "Copyright © 2003–2014 Kontact authors" ) );
 
-        mAboutData->addAuthor( ki18nc( "@info:credit", "Laurent Montel" ),
-                               ki18nc( "@info:credit", "Current Maintainer" ),
-                               "montel@kde.org" );
+        mAboutData->addAuthor( xi18nc( "@info:credit", "Laurent Montel" ),
+                               xi18nc( "@info:credit", "Current Maintainer" ),
+                               QStringLiteral("montel@kde.org") );
  
-        mAboutData->addAuthor( ki18nc( "@info:credit", "Michael Brade" ),
-                               ki18nc( "@info:credit", "Previous Maintainer" ),
-                               "brade@kde.org" );
-        mAboutData->addAuthor( ki18nc( "@info:credit", "Tobias Koenig" ),
-                               ki18nc( "@info:credit", "Developer" ),
-                               "tokoe@kde.org" );
+        mAboutData->addAuthor( xi18nc( "@info:credit", "Michael Brade" ),
+                               xi18nc( "@info:credit", "Previous Maintainer" ),
+                               QStringLiteral("brade@kde.org") );
+        mAboutData->addAuthor( xi18nc( "@info:credit", "Tobias Koenig" ),
+                               xi18nc( "@info:credit", "Developer" ),
+                               QStringLiteral("tokoe@kde.org") );
     }
 
     return mAboutData;
@@ -214,7 +214,7 @@ void KNotesPlugin::processDropEvent( QDropEvent *event )
         return;
     }
 
-    kWarning() << QString::fromLatin1( "Cannot handle drop events of type '%1'." ).arg( QLatin1String(event->format()) );
+    //QT5 qWarning() << QString::fromLatin1( "Cannot handle drop events of type '%1'." ).arg( QLatin1String(event->format()) );
 }
 
 void KNotesPlugin::shortcutChanged()
@@ -241,8 +241,11 @@ void KNotesUniqueAppHandler::loadCommandLineOptions()
 
 int KNotesUniqueAppHandler::newInstance()
 {
-    kDebug() ;
+    qDebug() ;
     // Ensure part is loaded
     (void)plugin()->part();
     return KontactInterface::UniqueAppHandler::newInstance();
 }
+
+#include "knotes_plugin.moc"
+

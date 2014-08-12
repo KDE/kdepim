@@ -22,9 +22,8 @@
 
 #include <KLocalizedString>
 #include <KDesktopFile>
-#include <KDebug>
+#include <QDebug>
 #include <KTextEdit>
-#include <KGlobal>
 #include <KConfigGroup>
 
 #include <QVBoxLayout>
@@ -36,6 +35,7 @@
 #include <QPushButton>
 #include <QFile>
 #include <QDir>
+#include <KSharedConfig>
 
 
 ConfigureAgentsWidget::ConfigureAgentsWidget(QWidget *parent)
@@ -84,7 +84,7 @@ ConfigureAgentsWidget::~ConfigureAgentsWidget()
 
 void ConfigureAgentsWidget::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ConfigureAgentsWidget" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ConfigureAgentsWidget" );
     QList<int> size;
     size << 400 << 100;
     mSplitter->setSizes(group.readEntry( "splitter", size));
@@ -92,7 +92,7 @@ void ConfigureAgentsWidget::readConfig()
 
 void ConfigureAgentsWidget::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ConfigureAgentsWidget" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ConfigureAgentsWidget" );
     group.writeEntry( "splitter", mSplitter->sizes());
 }
 
@@ -148,13 +148,13 @@ bool ConfigureAgentsWidget::agentActivateState(const QString &interfaceName, con
         if (enabled.isValid()) {
             return enabled;
         } else {
-            kDebug()<<interfaceName << "doesn't have enabledAgent function";
+            qDebug()<<interfaceName << "doesn't have enabledAgent function";
             failed = true;
             return false;
         }
     } else {
         failed = true;
-        kDebug()<<interfaceName << "does not exist ";
+        qDebug()<<interfaceName << "does not exist ";
     }
     return false;
 }
@@ -165,7 +165,7 @@ void ConfigureAgentsWidget::changeAgentActiveState(bool enable, const QString &i
     if (interface.isValid()) {
         interface.call(QLatin1String("setEnableAgent"), enable);
     } else {
-        kDebug()<<interfaceName << "does not exist ";
+        qDebug()<<interfaceName << "does not exist ";
     }
 }
 
@@ -177,7 +177,7 @@ void ConfigureAgentsWidget::slotConfigureAgent()
         if (interface.isValid()) {
             interface.call(QLatin1String("showConfigureDialog"), (qlonglong)winId());
         } else {
-            kDebug()<<" interface does not exist ";
+            qDebug()<<" interface does not exist ";
         }
     }
 }

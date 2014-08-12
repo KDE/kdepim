@@ -30,13 +30,14 @@
 
 #include <KAboutData>
 #include <KLocalizedString>
+#include <KIconLoader>
 
 EXPORT_KONTACT_PLUGIN( SpecialdatesPlugin, specialdates )
 
 SpecialdatesPlugin::SpecialdatesPlugin( KontactInterface::Core *core, const QVariantList & )
   : KontactInterface::Plugin( core, core, 0 ), mAboutData( 0 )
 {
-  setComponentData( KontactPluginFactory::componentData() );
+  //QT5 setComponentData( KontactPluginFactory::componentData() );
   KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
 }
 
@@ -52,19 +53,19 @@ KontactInterface::Summary *SpecialdatesPlugin::createSummaryWidget( QWidget *par
 const KAboutData *SpecialdatesPlugin::aboutData() const
 {
   if ( !mAboutData ) {
-    mAboutData = new KAboutData( "specialdates", 0,
-                                 ki18n( "Special Dates Summary" ),
-                                 "1.0",
-                                 ki18n( "Kontact Special Dates Summary" ),
-                                 KAboutData::License_LGPL,
-                                 ki18n( "Copyright © 2003 Tobias Koenig\n"
+    mAboutData = new KAboutData( QLatin1String("specialdates"),
+                                 i18n( "Special Dates Summary" ),
+                                 QLatin1String("1.0"),
+                                 i18n( "Kontact Special Dates Summary" ),
+                                 KAboutLicense::LGPL,
+                                 i18n( "Copyright © 2003 Tobias Koenig\n"
                                         "Copyright © 2004–2010 Allen Winter" ) );
-    mAboutData->addAuthor( ki18n( "Allen Winter" ),
-                           ki18n( "Current Maintainer" ), "winter@kde.org" );
-    mAboutData->addAuthor( ki18n( "Tobias Koenig" ),
-                           KLocalizedString(), "tokoe@kde.org" );
-    mAboutData->setProductName( "kontact/specialdates" );
+    mAboutData->addAuthor( i18n( "Allen Winter" ),
+                           i18n( "Current Maintainer" ), QLatin1String("winter@kde.org") );
+    mAboutData->addAuthor( i18n( "Tobias Koenig" ),
+                           QString(), QLatin1String("tokoe@kde.org") );
+    mAboutData->setProductName( "kontact/specialdates");
   }
-
   return mAboutData;
 }
+#include "specialdates_plugin.moc"

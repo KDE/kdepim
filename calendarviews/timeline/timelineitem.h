@@ -24,7 +24,7 @@
 #include <KCalCore/Incidence>
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include <KDateTime>
 

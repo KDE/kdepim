@@ -22,12 +22,12 @@
 
 #include "akonadi_next/note.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/Item>
-#include <Akonadi/CollectionModifyJob>
-#include <Akonadi/CollectionFetchJob>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/EntityDisplayAttribute>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/CollectionModifyJob>
+#include <AkonadiCore/CollectionFetchJob>
 
 #include <KMime/KMimeMessage>
 
@@ -44,7 +44,7 @@ CreateNewNoteJob::CreateNewNoteJob(QObject *parent, QWidget *widget)
       mRichText(false),
       mWidget(widget)
 {
-    connect(this, SIGNAL(selectNewCollection()), this, SLOT(slotSelectNewCollection()));
+    connect(this, &CreateNewNoteJob::selectNewCollection, this, &CreateNewNoteJob::slotSelectNewCollection);
 }
 
 CreateNewNoteJob::~CreateNewNoteJob()
@@ -92,14 +92,14 @@ void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
         }
         if (dlg->useFolderByDefault()) {
             NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(col.id());
-            NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+            NoteShared::NoteSharedGlobalConfig::self()->save();
         }
         delete dlg;
     } else {
         col = Akonadi::Collection(id);
     }
     Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( col, Akonadi::CollectionFetchJob::Base );
-    connect(fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
+    connect(fetchCollection, &Akonadi::CollectionFetchJob::result, this, &CreateNewNoteJob::slotFetchCollection);
 }
 
 void CreateNewNoteJob::slotFetchCollection(KJob* job)
@@ -129,7 +129,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
             if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("Collection is hidden. New note will stored but not displaying. Do you want to show collection?"))) {
                 col.addAttribute(new NoteShared::ShowFolderNotesAttribute());
                 Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( col );
-                connect( job, SIGNAL(result(KJob*)), SLOT(slotCollectionModifyFinished(KJob*)) );
+                connect(job, &Akonadi::CollectionModifyJob::result, this, &CreateNewNoteJob::slotCollectionModifyFinished);
             }
         }
         Akonadi::Item newItem;
@@ -141,9 +141,9 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
         if (mTitle.isEmpty()) {
             const QDateTime currentDateTime = QDateTime::currentDateTime();
             title = NoteShared::NoteSharedGlobalConfig::self()->defaultTitle();
-            title.replace(QLatin1String("%t"), KGlobal::locale()->formatTime( currentDateTime.time()));
-            title.replace(QLatin1String("%d"), KGlobal::locale()->formatDate( currentDateTime.date(), KLocale::ShortDate));
-            title.replace(QLatin1String("%l"), KGlobal::locale()->formatDate( currentDateTime.date(), KLocale::LongDate));
+            title.replace(QLatin1String("%t"), KLocale::global()->formatTime( currentDateTime.time()));
+            title.replace(QLatin1String("%d"), KLocale::global()->formatDate( currentDateTime.date(), KLocale::ShortDate));
+            title.replace(QLatin1String("%l"), KLocale::global()->formatDate( currentDateTime.date(), KLocale::LongDate));
         } else {
             title = mTitle;
         }
@@ -153,7 +153,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
         newPage->contentType( true )->setMimeType( mRichText ? "text/html" : "text/plain" );
         newPage->contentType()->setCharset("utf-8");
         newPage->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
-        newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+        newPage->date( true )->setDateTime( QDateTime::currentDateTime() );
         newPage->from( true )->fromUnicodeString( QString::fromLatin1( "knotes@kde4" ), encoding );
         // Need a non-empty body part so that the serializer regards this as a valid message.
         newPage->mainBodyPart()->fromUnicodeString( mText.isEmpty() ? QString::fromLatin1( " " ) : mText);
@@ -169,7 +169,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
         newItem.addAttribute(eda);
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
+        connect(job, &Akonadi::ItemCreateJob::result, this, &CreateNewNoteJob::slotNoteCreationFinished);
     } else {
         deleteLater();
     }
@@ -178,9 +178,9 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
 void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(-1);
-        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        NoteShared::NoteSharedGlobalConfig::self()->save();
         KMessageBox::error(mWidget, i18n("Note was not created."), i18n("Create new note"));
     }
     deleteLater();
@@ -189,6 +189,6 @@ void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
 void CreateNewNoteJob::slotCollectionModifyFinished(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
     }
 }

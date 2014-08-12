@@ -2,7 +2,10 @@ project(templateparser)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
+
+add_definitions(-DTRANSLATION_DOMAIN=\"libtemplateparser\")
+
 
 set(templateparser_LIB_SRCS
   templateparser.cpp
@@ -25,26 +28,27 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon
 )
 
-kde4_add_kcfg_files(templateparser_LIB_SRCS settings/templatesconfiguration_kfg.kcfgc)
+kconfig_add_kcfg_files(templateparser_LIB_SRCS settings/templatesconfiguration_kfg.kcfgc)
 
-kde4_add_kcfg_files(templateparser_LIB_SRCS
+kconfig_add_kcfg_files(templateparser_LIB_SRCS
   settings/customtemplates_kfg.kcfgc
   settings/globalsettings_base.kcfgc
 )
 
-kde4_add_ui_files(templateparser_LIB_SRCS
+ki18n_wrap_ui(templateparser_LIB_SRCS
   ui/templatesconfiguration_base.ui
   ui/customtemplates_base.ui
 )
 
-kde4_add_library(templateparser ${LIBRARY_TYPE} ${templateparser_LIB_SRCS})
+add_library(templateparser ${LIBRARY_TYPE} ${templateparser_LIB_SRCS})
+generate_export_header(templateparser BASE_NAME templateparser)
 target_link_libraries(templateparser
   messageviewer
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+  KF5::KIOCore
+  KF5::Mime
+  KF5::AkonadiCore
+  KF5::PimTextEdit
+  KF5::PimIdentities
   messagecore
   kleo
   kpgp
@@ -53,8 +57,8 @@ target_link_libraries(templateparser
   ${QT_QTWEBKIT_LIBRARY}
 )
 set_target_properties(templateparser PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS templateparser ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -66,3 +70,4 @@ install(FILES
 )
 
 add_subdirectory(tests)
+add_subdirectory(autotests)

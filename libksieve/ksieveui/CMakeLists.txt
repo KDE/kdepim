@@ -20,7 +20,7 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 
 add_subdirectory(tests)
 add_subdirectory(editor/tests)
-add_subdirectory(managescriptsjob/tests)
+add_subdirectory(managescriptsjob/autotests)
 set(ksieveui_vacation_LIB_SRCS
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
@@ -166,29 +166,28 @@ set(ksieveui_LIB_SRCS
 )
 
 
-kde4_add_kcfg_files(ksieveui_LIB_SRCS settings/sieve-vacation.kcfgc settings/sieve-editor.kcfgc)
+kconfig_add_kcfg_files(ksieveui_LIB_SRCS settings/sieve-vacation.kcfgc settings/sieve-editor.kcfgc)
 
-kde4_add_library(ksieveui ${LIBRARY_TYPE} ${ksieveui_LIB_SRCS})
+add_library(ksieveui ${LIBRARY_TYPE} ${ksieveui_LIB_SRCS})
+generate_export_header(ksieveui BASE_NAME ksieveui)
 
 target_link_libraries(ksieveui
   kmanagesieve
   ksieve
   pimcommon
   kdepim
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDE4_KDECORE_LIBS}
-  ${QT_QTWEBKIT_LIBRARY}
-  ${KDE4_SOLID_LIBS}
-  ${KDE4_KNEWSTUFF3_LIBS}
+  KF5::AkonadiCore
+  KF5::Mime
+  KF5::PimIdentities
+  KF5::KIOCore
+  KF5::MailTransport
+  KF5::NewStuff
 )
 
 set_target_properties(
   ksieveui PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS ksieveui ${INSTALL_TARGETS_DEFAULT_ARGS})

@@ -34,7 +34,7 @@ class KLineEdit;
 class QTimer;
 class QActionGroup;
 class KComboBox;
-class KMenu;
+class QMenu;
 
 namespace Akonadi
 {
@@ -136,9 +136,9 @@ public:
     bool searchEditHasFocus() const;
 
 
-    void sortOrderMenuAboutToShow(KMenu *menu);
-    void themeMenuAboutToShow(KMenu *menu);
-    void aggregationMenuAboutToShow(KMenu *menu);
+    void sortOrderMenuAboutToShow(QMenu *menu);
+    void themeMenuAboutToShow(QMenu *menu);
+    void aggregationMenuAboutToShow(QMenu *menu);
 
 public slots:
 

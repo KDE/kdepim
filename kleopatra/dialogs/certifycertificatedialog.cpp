@@ -253,7 +253,7 @@ void SummaryPage::setSummary( const SummaryPage::Summary & sum ) {
     const Key key = sum.certificateToCertify;
     QStringList ids;
     Q_FOREACH ( const unsigned int i, sum.selectedUserIDs )
-        ids += Qt::escape( Formatting::prettyUserID( key.userID( i ) ) );
+        ids += Formatting::prettyUserID( key.userID( i ) ).toHtmlEscaped();
     m_userIDsLabel->setText( QLatin1String("<qt>") + ids.join( QLatin1String("<br/>") ) + QLatin1String("</qt>") );
     m_secretKeyLabel->setText( sum.secretKey.isNull() ? i18n( "Default certificate" ) : Formatting::prettyNameAndEMail( sum.secretKey ) );
 #ifdef KLEO_SIGN_KEY_CERTLEVEL_SUPPORT
@@ -285,7 +285,7 @@ void SummaryPage::setResult( const Error & err ) {
         if ( err.code() == GPG_ERR_USER_1 )
             m_resultLabel->setText( i18n( "The certificate was not certified because it was already certified by the same certificate." ) );
         else
-            m_resultLabel->setText( i18n( "The certificate could not be certified. <b>Error</b>: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) ) );
+            m_resultLabel->setText( i18n( "The certificate could not be certified. <b>Error</b>: %1", QString::fromLocal8Bit( err.asString() ).toHtmlEscaped() ) );
     else if ( err.isCanceled() )
         m_resultLabel->setText( i18n("Certification canceled.") );
     else

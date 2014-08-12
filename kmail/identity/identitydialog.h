@@ -33,7 +33,7 @@
 #define __KMAIL_IDENTITYDIALOG_H__
 
 #include <kdialog.h>
-
+#include <AkonadiCore/Item>
 class QCheckBox;
 
 namespace PimCommon {
@@ -43,8 +43,8 @@ class SimpleStringListEditor;
 class KComboBox;
 class KJob;
 class KLineEdit;
-class KPushButton;
-class KTabWidget;
+class QPushButton;
+class QTabWidget;
 
 namespace Kleo {
 class EncryptionKeyRequester;
@@ -138,19 +138,19 @@ private:
     MailTransport::TransportComboBox *mTransportCombo;
     QCheckBox                        *mAttachMyVCard;
     QString                          mVcardFilename;
-    KPushButton                      *mEditVCard;
+    QPushButton                      *mEditVCard;
     PimCommon::AutoCorrectionLanguage *mAutoCorrectionLanguage;
     KLineEdit                        *mDefaultDomainEdit;
 
     // "templates" tab:
     TemplateParser::TemplatesConfiguration *mWidget;
     QCheckBox                    *mCustom;
-    KPushButton                  *mCopyGlobal;
+    QPushButton                  *mCopyGlobal;
     // "signature" tab:
     KPIMIdentities::SignatureConfigurator *mSignatureConfigurator;
     // "X-Face" tab:
     KMail::XFaceConfigurator *mXFaceConfigurator;
-    KTabWidget *mTabWidget;
+    QTabWidget *mTabWidget;
 };
 
 } // namespace KMail

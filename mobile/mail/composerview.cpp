@@ -28,12 +28,12 @@
 #include "settings.h"
 #include "snippetseditor.h"
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitycombo.h>
-#include <kpimidentities/identitymanager.h>
-#include <mailtransport/messagequeuejob.h>
-#include <mailtransport/transportcombobox.h>
-#include <mailtransport/transportmanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitycombo.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <MailTransport/mailtransport/messagequeuejob.h>
+#include <MailTransport/mailtransport/transportcombobox.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 #include <messageviewer/settings/globalsettings.h>
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/objecttreeparser.h>
@@ -50,12 +50,12 @@
 #include <messagecomposer/settings/messagecomposersettings.h>
 #include <messagecomposer/recipient/recipientseditor.h>
 #include <messagecomposer/utils/util.h>
-#include <akonadi/collectioncombobox.h>
+#include <AkonadiWidgets/collectioncombobox.h>
 
 #include <klocalizedstring.h>
-#include <KDebug>
-#include <KIcon>
-#include <KAction>
+#include <QDebug>
+#include <QIcon>
+#include <QAction>
 #include <KMessageBox>
 #include <KCMultiDialog>
 #include <KNotification>
@@ -64,6 +64,7 @@
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
 #include <qplatformdefs.h>
+#include <QFontDatabase>
 
 class DeclarativeEditor : public DeclarativeWidgetBase<MessageComposer::KMeditor, ComposerView, &ComposerView::setEditor>
 {
@@ -100,7 +101,7 @@ ComposerView::ComposerView(QWidget* parent) :
 
 void ComposerView::doDelayedInit()
 {
-  kDebug();
+  qDebug();
   qmlRegisterType<DeclarativeEditor>( "org.kde.messagecomposer", 4, 5, "Editor" );
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
   qmlRegisterType<DeclarativeRecipientsEditor>( "org.kde.messagecomposer", 4, 5, "RecipientsEditor" );
@@ -149,15 +150,15 @@ void ComposerView::doDelayedInit()
   AttachmentEditor *attachmentEditor = new AttachmentEditor( actionCollection(), attachmentModel, attachmentController, this );
   engine()->rootContext()->setContextProperty( QLatin1String("attachmentEditor"), attachmentEditor );
 
-  KAction *action = actionCollection()->addAction(QLatin1String("sign_email"));
+  QAction *action = actionCollection()->addAction(QLatin1String("sign_email"));
   action->setText( i18n( "Sign" ) );
-  action->setIcon( KIcon( QLatin1String("document-sign") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("document-sign") ) );
   action->setCheckable(true);
   connect(action, SIGNAL(triggered(bool)), SLOT(signEmail(bool)));
 
   action = actionCollection()->addAction(QLatin1String("encrypt_email"));
   action->setText( i18n( "Encrypt" ) );
-  action->setIcon( KIcon( QLatin1String("mail-encrypt") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("mail-encrypt") ) );
   action->setCheckable(true);
   connect(action, SIGNAL(triggered(bool)), SLOT(encryptEmail(bool)));
 
@@ -167,7 +168,7 @@ void ComposerView::doDelayedInit()
 
   action = actionCollection()->addAction(QLatin1String("save_in_drafts"));
   action->setText( i18n( "Save As Draft" ) );
-  action->setIcon( KIcon( QLatin1String("document-save" )) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("document-save" )) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveDraft()));
 
   action = actionCollection()->addAction(QLatin1String("save_as_template"));
@@ -262,8 +263,8 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   Q_ASSERT( m_composerBase->attachmentModel() );
   Q_ASSERT( m_composerBase->attachmentController() );
 
-//   kDebug() << m_identityCombo;
-//   kDebug() << m_editor;
+//   qDebug() << m_identityCombo;
+//   qDebug() << m_editor;
 
   MessageComposer::SignatureController *signatureController = new MessageComposer::SignatureController( this );
   signatureController->setEditor( m_composerBase->editor() );
@@ -321,7 +322,7 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg, bool mayAutoSign)
 
 void ComposerView::send( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn )
 {
-  kDebug();
+  qDebug();
 
   if ( !m_composerBase->editor()->checkExternalEditorFinished() )
     return;
@@ -354,7 +355,6 @@ void ComposerView::send( MessageComposer::MessageSender::SendMethod method, Mess
   const KPIMIdentities::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
   m_composerBase->setFrom( identity.fullEmailAddr() );
   m_composerBase->setReplyTo( identity.replyToAddr() );
-
   if ( !identity.fcc().isEmpty() ) {
     const Akonadi::Collection customSentFolder( identity.fcc().toLongLong() );
     m_composerBase->setFcc( customSentFolder );
@@ -401,7 +401,7 @@ void ComposerView::setBusy(bool busy)
 
 QObject* ComposerView::getAction( const QString &name ) const
 {
-  kDebug() << actionCollection() << actionCollection()->action( name );
+  qDebug() << actionCollection() << actionCollection()->action( name );
   return actionCollection()->action( name );
 }
 
@@ -410,7 +410,7 @@ void ComposerView::configureIdentity()
   KCMultiDialog dlg;
   dlg.addModule( QLatin1String("kcm_kpimidentities") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
-  dlg.setButtons( KDialog::Ok | KDialog::Cancel );
+  dlg.setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
   dlg.exec();
 }
 
@@ -426,7 +426,7 @@ void ComposerView::configureTransport()
   KCMultiDialog dlg;
   dlg.addModule( QLatin1String("kcm_mailtransport") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
-  dlg.setButtons( KDialog::Ok | KDialog::Cancel );
+  dlg.setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
   dlg.exec();
 }
 
@@ -447,9 +447,9 @@ void ComposerView::success()
 
 void ComposerView::failed( const QString &errorMessage )
 {
-  QPixmap pix = KIcon(QLatin1String("kmail-mobile")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
+  QPixmap pix = QIcon::fromTheme(QLatin1String("kmail-mobile")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
   KNotification *notify = new KNotification(QLatin1String("sendfailed"));
-  notify->setComponentData(KComponentData("kmail-mobile"));
+  notify->setComponentName(QLatin1String("kmail-mobile"));
   notify->setPixmap(pix);
   notify->setText(i18nc("Notification when there was an error while trying to send an email",
                         "Error while trying to send email. %1", errorMessage));
@@ -481,7 +481,7 @@ void ComposerView::setEditor( MessageComposer::KMeditor* editor )
 {
     new ComposerAutoResizer(editor);
     m_composerBase->setEditor( editor );
-    m_composerBase->editor()->createActions( actionCollection() );
+    //QT5 m_composerBase->editor()->createActions( actionCollection() );
     m_composerBase->editor()->setAutocorrection(MobileKernel::self()->composerAutoCorrection());
     connect( actionCollection()->action( QLatin1String("composer_add_quote_char") ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotAddQuotes()) );
     connect( actionCollection()->action( QLatin1String("composer_remove_quote_char") ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotRemoveQuotes()) );
@@ -598,7 +598,7 @@ void ComposerView::encryptEmail( bool encrypt )
 
 void ComposerView::toggleUseFixedFont( bool use )
 {
-  m_composerBase->editor()->setFontForWholeText( use ? KGlobalSettings::fixedFont() : KGlobalSettings::generalFont() );
+  m_composerBase->editor()->setFontForWholeText( use ? QFontDatabase::systemFont(QFontDatabase::FixedFont) : QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
 }
 
 void ComposerView::toggleAutomaticWordWrap( bool use )

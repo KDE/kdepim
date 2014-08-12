@@ -18,7 +18,10 @@
 #include "adblockcreatefilterdialog.h"
 #include "ui_adblockcreatefilterwidget.h"
 
+#include <KLocalizedString>
+
 #include <QDebug>
+#include <KSharedConfig>
 
 using namespace MessageViewer;
 AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
@@ -55,13 +58,13 @@ AdBlockCreateFilterDialog::~AdBlockCreateFilterDialog()
 
 void AdBlockCreateFilterDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AdBlockCreateFilterDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockCreateFilterDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void AdBlockCreateFilterDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AdBlockCreateFilterDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockCreateFilterDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

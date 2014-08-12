@@ -24,7 +24,7 @@
 #ifndef CRYPTOPAGEPLUGIN_H
 #define CRYPTOPAGEPLUGIN_H
 
-#include <akonadi/contact/contacteditorpageplugin.h>
+#include <Akonadi/Contact/ContactEditorPagePlugin>
 
 namespace Kleo {
 class KeyRequester;
@@ -39,7 +39,7 @@ class CryptoPagePlugin : public Akonadi::ContactEditorPagePlugin
 {
   Q_OBJECT
   Q_INTERFACES( Akonadi::ContactEditorPagePlugin )
-
+  Q_PLUGIN_METADATA(IID "org.kde.kaddressbook.CryptoPagePlugin");
   public:
     CryptoPagePlugin();
     ~CryptoPagePlugin();

@@ -19,15 +19,14 @@
 
 #include "eventlistproxy.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KGlobal>
+
 #include <KLocale>
-#include <KSystemTimeZones>
 
 #include <QItemSelection>
 
@@ -49,7 +48,7 @@ QVariant EventListProxy::data(const QModelIndex& index, int role) const
       case SummaryRole:
         return incidence->summary();
       case BeginRole:
-        return KGlobal::locale()->formatDateTime( incidence->dtStart(), KLocale::FancyShortDate );
+        return KLocale::global()->formatDateTime( incidence->dtStart(), KLocale::FancyShortDate );
       case DurationRole:
         return KCalUtils::IncidenceFormatter::durationString( incidence );
     }

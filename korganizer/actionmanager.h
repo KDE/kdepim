@@ -29,10 +29,10 @@
 #ifndef KORG_ACTIONMANAGER_H
 #define KORG_ACTIONMANAGER_H
 
-#include "korganizer_export.h"
+#include "korganizerprivate_export.h"
 #include "korganizer/part.h"
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KUrl>
@@ -51,10 +51,10 @@ namespace Akonadi {
   class ETMViewStateSaver;
 }
 
-class KAction;
-class KMenuBar;
+class QAction;
+class QMenuBar;
 class KSelectAction;
-class KTemporaryFile;
+class QTemporaryFile;
 class KToggleAction;
 
 /**
@@ -69,7 +69,7 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
   public:
     ActionManager( KXMLGUIClient *client, CalendarView *widget,
                    QObject *parent, KOrg::MainWindow *mainWindow,
-                   bool isPart, KMenuBar *menuBar = 0 );
+                   bool isPart, QMenuBar *menuBar = 0 );
     virtual ~ActionManager();
 
     /** Peform initialization that requires this* to be full constructed */
@@ -353,7 +353,7 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
     QString mFile;           // Local name of calendar file
     QString mLastUrl;        // URL of last loaded calendar.
 
-    KTemporaryFile *mTempFile;
+    QTemporaryFile *mTempFile;
     QTimer *mAutoExportTimer;    // used if calendar is to be autoexported
     QTimer *mAutoArchiveTimer; // used for the auto-archiving feature
 
@@ -367,35 +367,35 @@ class KORGANIZERPRIVATE_EXPORT ActionManager : public QObject
 
     KToggleAction *mHideMenuBarAction;
 
-    KAction *mImportAction;
+    QAction *mImportAction;
 
-    KAction *mNewEventAction;
-    KAction *mNewTodoAction;
-    KAction *mNewSubtodoAction;
-    KAction *mNewJournalAction;
-    KAction *mConfigureViewAction;
+    QAction *mNewEventAction;
+    QAction *mNewTodoAction;
+    QAction *mNewSubtodoAction;
+    QAction *mNewJournalAction;
+    QAction *mConfigureViewAction;
 
-    KAction *mShowIncidenceAction;
-    KAction *mEditIncidenceAction;
-    KAction *mDeleteIncidenceAction;
+    QAction *mShowIncidenceAction;
+    QAction *mEditIncidenceAction;
+    QAction *mDeleteIncidenceAction;
 
-    KAction *mCutAction;
-    KAction *mCopyAction;
-    KAction *mDeleteAction;
-    KAction *mNextXDays;
-    KAction *mPublishEvent;
-    KAction *mForwardEvent;
+    QAction *mCutAction;
+    QAction *mCopyAction;
+    QAction *mDeleteAction;
+    QAction *mNextXDays;
+    QAction *mPublishEvent;
+    QAction *mForwardEvent;
 
-    KAction *mSendInvitation;
-    KAction *mSendCancel;
-    KAction *mSendStatusUpdate;
+    QAction *mSendInvitation;
+    QAction *mSendCancel;
+    QAction *mSendStatusUpdate;
 
-    KAction *mRequestChange;
-    KAction *mRequestUpdate;
+    QAction *mRequestChange;
+    QAction *mRequestUpdate;
 
-    KAction *mUndoAction;
-    KAction *mRedoAction;
-    KMenuBar *mMenuBar;
+    QAction *mUndoAction;
+    QAction *mRedoAction;
+    QMenuBar *mMenuBar;
 
     KSelectAction *mFilterAction;
 

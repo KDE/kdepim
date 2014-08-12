@@ -28,8 +28,8 @@
 #include <QListView>
 #include <QTreeView>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/ItemFetchScope>
 
 #include "tripmodel.h"
 #include "stackedwidgetview.h"
@@ -68,6 +68,6 @@ CoisceimWidget::CoisceimWidget(QWidget *parent)
 
 void CoisceimWidget::createTrip()
 {
-  kDebug() << "CREATE";
+  qDebug() << "CREATE";
 }
 

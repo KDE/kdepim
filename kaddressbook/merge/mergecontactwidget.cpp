@@ -22,11 +22,10 @@
 
 #include <KABC/Addressee>
 
-#include <Akonadi/CollectionComboBox>
+#include <AkonadiWidgets/CollectionComboBox>
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QDebug>
 #include <QLabel>
 
 namespace KABMergeContacts {
@@ -47,8 +46,8 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     mListWidget->setObjectName(QLatin1String("listcontact"));
     mListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     lay->addWidget(mListWidget);
-    connect(mListWidget, SIGNAL(itemSelectionChanged()), SLOT(slotUpdateMergeButton()));
-    connect(mListWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(slotUpdateMergeButton()));
+    connect(mListWidget, &MergeContactWidgetList::itemSelectionChanged, this, &MergeContactWidget::slotUpdateMergeButton);
+    connect(mListWidget, &MergeContactWidgetList::itemChanged, this, &MergeContactWidget::slotUpdateMergeButton);
 
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addStretch();
@@ -73,7 +72,7 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     mMergeButton->setEnabled(false);
     lay->addLayout(hbox);
 
-    connect(mMergeButton, SIGNAL(clicked()), this, SLOT(slotMergeContacts()));
+    connect(mMergeButton, &QPushButton::clicked, this, &MergeContactWidget::slotMergeContacts);
 
     setLayout(lay);
     fillListContact();

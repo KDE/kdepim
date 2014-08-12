@@ -30,7 +30,7 @@
 #ifndef MAILCOMMON_FOLDERJOB_H
 #define MAILCOMMON_FOLDERJOB_H
 
-#include <Akonadi/Collection>
+#include <Collection>
 #include "mailcommon_export.h"
 
 namespace MailCommon {

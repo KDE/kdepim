@@ -25,17 +25,16 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include <QPointer>
 
 SieveEditorConfigureServerWidget::SieveEditorConfigureServerWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SieveEditorConfigureServerWidget)
 {
     ui->setupUi(this);
-    connect(ui->modifyServer, SIGNAL(clicked()), this, SLOT(slotModifyServer()));
-    connect(ui->addServer, SIGNAL(clicked()), this, SLOT(slotAddServer()));
-    connect(ui->removeServer, SIGNAL(clicked()), this, SLOT(slotDeleteServer()));
-    connect(ui->serverSieveListWidget, SIGNAL(itemSelectionChanged()), this, SLOT(slotItemSelectionChanged()));
+    connect(ui->modifyServer, &QPushButton::clicked, this, &SieveEditorConfigureServerWidget::slotModifyServer);
+    connect(ui->addServer, &QPushButton::clicked, this, &SieveEditorConfigureServerWidget::slotAddServer);
+    connect(ui->removeServer, &QPushButton::clicked, this, &SieveEditorConfigureServerWidget::slotDeleteServer);
+    connect(ui->serverSieveListWidget, &ServerSieveListWidget::itemSelectionChanged, this, &SieveEditorConfigureServerWidget::slotItemSelectionChanged);
     slotItemSelectionChanged();
 }
 

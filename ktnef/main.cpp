@@ -17,48 +17,55 @@
 #include "ktnefmain.h"
 #include "kdepim-version.h"
 
-#include <KAboutData>
-#include <KApplication>
+#include <kaboutdata.h>
 #include <KCmdLineArgs>
 #include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QApplication>
 
 int main( int argc, char *argv[] )
 {
+    KLocalizedString::setApplicationDomain("ktnef");
+    QApplication app(argc, argv);
 
-  KAboutData aboutData(
-    "ktnef", 0,
-    ki18n( "KTnef" ),
-    KDEPIM_VERSION,
-    ki18n( "Viewer for mail attachments using TNEF format" ),
-    KAboutData::License_GPL,
-    ki18n( "Copyright 2000 Michael Goffioul\nCopyright 2012  Allen Winter" ) );
+    KAboutData aboutData(QStringLiteral("ktnef"),
+                         i18n("KTnef"),
+                         QStringLiteral(KDEPIM_VERSION),
+                         i18n("Viewer for mail attachments using TNEF format"),
+                         KAboutLicense::GPL,
+                         i18n("Copyright 2000 Michael Goffioul\nCopyright 2012  Allen Winter"));
 
-  aboutData.addAuthor(
-    ki18n( "Michael Goffioul" ),
-    ki18n( "Author" ),
-    "kdeprint@swing.be",
-    0 );
 
-  aboutData.addAuthor(
-    ki18n( "Allen Winter" ),
-    ki18n( "Author, Ported to Qt4/KDE4" ),
-    "winter@kde.org",
-    0 );
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    aboutData.addAuthor(
+                i18n( "Michael Goffioul" ),
+                i18n( "Author" ),
+                QLatin1String("kdeprint@swing.be"));
 
-  KCmdLineOptions options;
-  options.add( "+[file]", ki18n( "An optional argument 'file' " ) );
-  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    aboutData.addAuthor(
+                i18n( "Allen Winter" ),
+                i18n( "Author, Ported to Qt4/KDE4" ),
+                QLatin1String("winter@kde.org"));
 
-  KApplication a;
-  KTNEFMain *tnef = new KTNEFMain();
-  tnef->show();
+    KAboutData::setApplicationData(aboutData);
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  if ( args->count() > 0 ) {
-    tnef->loadFile( args->arg( 0 ) );
-  }
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QApplication::applicationDisplayName());
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addPositionalArgument(QStringLiteral("file"), i18n("An optional argument 'file' "), QStringLiteral("[file]"));
 
-  return a.exec();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
+    KTNEFMain *tnef = new KTNEFMain();
+    tnef->show();
+    const QStringList &args = parser.positionalArguments();
+
+    if ( !args.isEmpty() ) {
+        tnef->loadFile( args.first() );
+    }
+
+    return app.exec();
 }

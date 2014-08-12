@@ -18,10 +18,10 @@
 #include "kmail1settings.h"
 #include "importwizardutil.h"
 
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/signature.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/signature.h>
 
 
 KMail1Settings::KMail1Settings(const QString& filename,ImportWizard *parent)

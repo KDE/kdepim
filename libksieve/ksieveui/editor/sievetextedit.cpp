@@ -22,18 +22,19 @@
 #include "sievesyntaxhighlighter.h"
 
 
-#include <KGlobalSettings>
 #include <KLocalizedString>
-#include <KAction>
+#include <QAction>
+#include <QIcon>
 
+#include <QAbstractItemView>
 #include <QCompleter>
 #include <QStringListModel>
 #include <QKeyEvent>
 #include <QPainter>
 #include <QScrollBar>
-#include <QDebug>
 #include <QAction>
 #include <QMenu>
+#include <QFontDatabase>
 
 using namespace KSieveUi;
 
@@ -42,7 +43,7 @@ SieveTextEdit::SieveTextEdit( QWidget *parent )
       mShowHelpMenu(true)
 {
     setWordWrapMode ( QTextOption::NoWrap );
-    setFont( KGlobalSettings::fixedFont() );
+    setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
     m_syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter( document() );
     m_sieveLineNumberArea = new SieveLineNumberArea(this);
 
@@ -256,9 +257,9 @@ void SieveTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
             separator->setSeparator(true);
             menu->insertAction(menu->actions().at(0), separator);
 
-            KAction *searchAction = new KAction(i18n("Help about: \'%1\'",word), menu);
+            QAction *searchAction = new QAction(i18n("Help about: \'%1\'",word), menu);
             searchAction->setShortcut(Qt::Key_F1);
-            searchAction->setIcon(KIcon(QLatin1String("help-hint")));
+            searchAction->setIcon(QIcon::fromTheme(QLatin1String("help-hint")));
             searchAction->setData(word);
             connect(searchAction, SIGNAL(triggered()), SLOT(slotHelp()));
             menu->insertAction(menu->actions().at(0), searchAction);

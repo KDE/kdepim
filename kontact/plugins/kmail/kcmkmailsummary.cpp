@@ -26,18 +26,17 @@
 #include "kcmkmailsummary.h"
 
 #include "pimcommon/folderdialog/checkedcollectionwidget.h"
-
-#include <Akonadi/ETMViewStateSaver>
+#include <AkonadiWidgets/ETMViewStateSaver>
 #include <KMime/KMimeMessage>
 
 #include <KAboutData>
 #include <KAcceleratorManager>
 #include <KCheckableProxyModel>
 #include <KComponentData>
-#include <KDebug>
-#include <KDialog>
+#include <QDebug>
+#include <QDialog>
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QCheckBox>
 #include <QTreeView>
@@ -45,7 +44,7 @@
 
 extern "C"
 {
-KDE_EXPORT KCModule *create_kmailsummary( QWidget *parent, const char * )
+Q_DECL_EXPORT KCModule *create_kmailsummary( QWidget *parent, const char * )
 {
     KComponentData inst( "kcmkmailsummary" );
     return new KCMKMailSummary( inst, parent );
@@ -53,27 +52,25 @@ KDE_EXPORT KCModule *create_kmailsummary( QWidget *parent, const char * )
 }
 
 KCMKMailSummary::KCMKMailSummary( const KComponentData &inst, QWidget *parent )
-    : KCModule( inst, parent )
+    : KCModule( /*inst,*/ parent )
 {
     initGUI();
 
     connect( mCheckedCollectionWidget->folderTreeView(), SIGNAL(clicked(QModelIndex)),
              SLOT(modified()) );
-    connect( mFullPath, SIGNAL(toggled(bool)), SLOT(modified()) );
+    connect(mFullPath, &QCheckBox::toggled, this, &KCMKMailSummary::modified);
 
     KAcceleratorManager::manage( this );
 
     load();
-
-    KAboutData *about =
-            new KAboutData( I18N_NOOP( "kcmkmailsummary" ), 0,
-                            ki18n( "Mail Summary Configuration Dialog" ),
-                            0, KLocalizedString(), KAboutData::License_GPL,
-                            ki18n( "Copyright © 2004–2010 Tobias Koenig" ) );
-
-    about->addAuthor( ki18n( "Tobias Koenig" ),
-                      KLocalizedString(), "tokoe@kde.org" );
-    setAboutData( about );
+    KAboutData *about = new KAboutData(QStringLiteral("kcmkmailsummary"),
+                                      i18n("kcmkmailsummary"),
+                                      QString(),
+                                      i18n("Mail Summary Configuration Dialog"),
+                                      KAboutLicense::GPL,
+                                      i18n("Copyright © 2004–2010 Tobias Koenig"));
+    about->addAuthor( ki18n( "Tobias Koenig" ).toString(), QString(), QStringLiteral("tokoe@kde.org") );
+    setAboutData(about);
 }
 
 void KCMKMailSummary::modified()
@@ -84,7 +81,7 @@ void KCMKMailSummary::modified()
 void KCMKMailSummary::initGUI()
 {
     QVBoxLayout *layout = new QVBoxLayout( this );
-    layout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
     layout->setMargin( 0 );
 
     mCheckedCollectionWidget = new PimCommon::CheckedCollectionWidget(KMime::Message::mimeType());

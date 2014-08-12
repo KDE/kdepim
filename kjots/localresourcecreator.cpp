@@ -23,17 +23,17 @@
 
 #include "akonadi_next/note.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KRandom>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
-#include <Akonadi/CollectionCreateJob>
-#include <Akonadi/ItemCreateJob>
-#include <akonadi/item.h>
+#include <AkonadiCore/CollectionFetchJob>
+#include <AkonadiCore/AgentInstance>
+#include <AkonadiCore/AgentManager>
+#include <AkonadiCore/CollectionCreateJob>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/item.h>
 #include <KMime/KMimeMessage>
-#include <Akonadi/EntityDisplayAttribute>
+#include <AkonadiCore/EntityDisplayAttribute>
 
 LocalResourceCreator::LocalResourceCreator(QObject* parent)
   : NoteShared::LocalResourceCreator(parent)
@@ -44,13 +44,13 @@ LocalResourceCreator::LocalResourceCreator(QObject* parent)
 void LocalResourceCreator::finishCreateResource()
 {
     Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::FirstLevel, this );
-    connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(rootFetchFinished(KJob*)) );
+    connect(collectionFetchJob, &Akonadi::CollectionFetchJob::result, this, &LocalResourceCreator::rootFetchFinished);
 }
 
 void LocalResourceCreator::rootFetchFinished(KJob* job)
 {
   if (job->error()) {
-    kWarning() << job->errorString();
+    qWarning() << job->errorString();
     deleteLater();
     return;
   }
@@ -65,7 +65,7 @@ void LocalResourceCreator::rootFetchFinished(KJob* job)
 
   if (list.isEmpty())
   {
-    kWarning() << "Couldn't find new collection in resource";
+    qWarning() << "Couldn't find new collection in resource";
     deleteLater();
     return;
   }
@@ -77,7 +77,7 @@ void LocalResourceCreator::rootFetchFinished(KJob* job)
     {
       Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( col, Akonadi::CollectionFetchJob::FirstLevel, this );
       collectionFetchJob->setProperty("FetchedCollection", col.id());
-      connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(topLevelFetchFinished(KJob*)) );
+      connect(collectionFetchJob, &Akonadi::CollectionFetchJob::result, this, &LocalResourceCreator::topLevelFetchFinished);
       return;
     }
   }
@@ -88,7 +88,7 @@ void LocalResourceCreator::rootFetchFinished(KJob* job)
 void LocalResourceCreator::topLevelFetchFinished(KJob* job)
 {
   if (job->error()) {
-    kWarning() << job->errorString();
+    qWarning() << job->errorString();
     deleteLater();
     return;
   }
@@ -121,14 +121,14 @@ void LocalResourceCreator::topLevelFetchFinished(KJob* job)
   collection.addAttribute(eda);
 
   Akonadi::CollectionCreateJob *createJob = new Akonadi::CollectionCreateJob( collection, this );
-  connect( createJob, SIGNAL(result(KJob*)), this, SLOT(createFinished(KJob*)) );
+  connect(createJob, &Akonadi::CollectionCreateJob::result, this, &LocalResourceCreator::createFinished);
 
 }
 
 void LocalResourceCreator::createFinished(KJob* job)
 {
   if (job->error()) {
-    kWarning() << job->errorString();
+    qWarning() << job->errorString();
     deleteLater();
     return;
   }
@@ -151,7 +151,7 @@ void LocalResourceCreator::createFinished(KJob* job)
 
   note->subject( true )->fromUnicodeString( title, encoding );
   note->contentType( true )->setMimeType( "text/plain" );
-  note->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+  note->date( true )->setDateTime( QDateTime::currentDateTime() );
   note->from( true )->fromUnicodeString( QLatin1String("Kjots@kde4"), encoding );
   // Need a non-empty body part so that the serializer regards this as a valid message.
   note->mainBodyPart()->fromUnicodeString( QLatin1String(" ") );
@@ -164,13 +164,13 @@ void LocalResourceCreator::createFinished(KJob* job)
   item.addAttribute(eda);
 
   Akonadi::ItemCreateJob *itemCreateJob = new Akonadi::ItemCreateJob( item,  collectionCreateJob->collection(), this);
-  connect( itemCreateJob, SIGNAL(result(KJob*)), SLOT(itemCreateFinished(KJob*)) );
+  connect(itemCreateJob, &Akonadi::ItemCreateJob::result, this, &LocalResourceCreator::itemCreateFinished);
 }
 
 void LocalResourceCreator::itemCreateFinished(KJob* job)
 {
   if (job->error()) {
-    kWarning() << job->errorString();
+    qWarning() << job->errorString();
   }
   deleteLater();
 }

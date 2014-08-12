@@ -42,7 +42,7 @@ public:
 };
 
 AggregationConfigButton::AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox )
-    : KPushButton( i18n( "Configure..." ), parent ), d( new AggregationConfigButtonPrivate( this ) )
+    : QPushButton( i18n( "Configure..." ), parent ), d( new AggregationConfigButtonPrivate( this ) )
 {
     d->mAggregationComboBox = aggregationComboBox;
     connect( this, SIGNAL(pressed()),

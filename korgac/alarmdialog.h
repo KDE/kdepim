@@ -25,7 +25,7 @@
 #define KORGAC_ALARMDIALOG_H
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <Akonadi/Item>
+#include <Item>
 #include <KDialog>
 #include <KCalCore/Incidence>
 #include <KDateTime>

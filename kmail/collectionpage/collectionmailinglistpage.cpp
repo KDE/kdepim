@@ -25,9 +25,9 @@
 #include "util/mailutil.h"
 #include "util.h"
 
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/kmime/messageparts.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <Akonadi/KMime/MessageParts>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -37,12 +37,13 @@
 #include <QVBoxLayout>
 
 #include <KComboBox>
-#include <KDialog>
+#include <QDialog>
 #include <KLineEdit>
 #include <KEditListWidget>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KSqueezedTextLabel>
+#include <QDebug>
 
 using namespace MailCommon;
 
@@ -77,17 +78,17 @@ void CollectionMailingListPage::init(const Akonadi::Collection & col)
     mFolder = FolderCollection::forCollection( col, false );
 
     QVBoxLayout *topLayout = new QVBoxLayout( this );
-    topLayout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
 
     mHoldsMailingList = new QCheckBox( i18n("Folder holds a mailing list"), this );
     connect( mHoldsMailingList, SIGNAL(toggled(bool)),
              SLOT(slotHoldsML(bool)) );
-    connect( mHoldsMailingList, SIGNAL(toggled(bool)), SLOT(slotConfigChanged()) );
+    connect(mHoldsMailingList, &QCheckBox::toggled, this, &CollectionMailingListPage::slotConfigChanged);
     topLayout->addWidget( mHoldsMailingList );
 
     mGroupWidget = new QWidget( this );
     QGridLayout *groupLayout = new QGridLayout( mGroupWidget );
-    groupLayout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     groupLayout->setSpacing( QDialog::spacingHint() );
 
     mDetectButton = new QPushButton( i18n("Detect Automatically"), mGroupWidget );
     connect( mDetectButton, SIGNAL(pressed()),
@@ -133,8 +134,8 @@ void CollectionMailingListPage::init(const Akonadi::Collection & col)
     groupLayout->addWidget( handleButton, 6, 2 );
 
     mEditList = new KEditListWidget( mGroupWidget );
-    mEditList->lineEdit()->setClearButtonShown(true);
-    connect(mEditList, SIGNAL(changed()),SLOT(slotConfigChanged()));
+    mEditList->lineEdit()->setClearButtonEnabled(true);
+    connect(mEditList, &KEditListWidget::changed, this, &CollectionMailingListPage::slotConfigChanged);
     groupLayout->addWidget( mEditList, 7, 0, 1, 4 );
 
     QStringList el;
@@ -197,14 +198,14 @@ void CollectionMailingListPage::slotDetectMailingList()
     if ( !mFolder )
         return; // in case the folder was just created
 
-    kDebug()<< "Detecting mailing list";
+    qDebug()<< "Detecting mailing list";
 
     // next try the 5 most recently added messages
     if ( !( mMailingList.features() & MailingList::Post ) ) {
         //FIXME not load all folder
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolder->collection(), this );
         job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
-        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
+        connect(job, &Akonadi::ItemFetchJob::result, this, &CollectionMailingListPage::slotFetchDone);
         //Don't allow to reactive it
         mDetectButton->setEnabled( false );
     } else {
@@ -310,7 +311,7 @@ void CollectionMailingListPage::fillMLFromWidgets()
         mMailingList.setHelpUrls( mEditList->items() );
         break;
     default:
-        kWarning()<<"Wrong entry in the mailing list entry combo!";
+        qWarning()<<"Wrong entry in the mailing list entry combo!";
     }
 }
 
@@ -334,7 +335,7 @@ void CollectionMailingListPage::fillEditBox()
         mEditList->insertStringList( mMailingList.helpUrls().toStringList() );
         break;
     default:
-        kWarning()<<"Wrong entry in the mailing list entry combo!";
+        qWarning()<<"Wrong entry in the mailing list entry combo!";
     }
 }
 
@@ -358,7 +359,7 @@ void CollectionMailingListPage::slotInvokeHandler()
         KMail::Util::mailingListHelp( mFolder );
         break;
     default:
-        kWarning()<<"Wrong entry in the mailing list entry combo!";
+        qWarning()<<"Wrong entry in the mailing list entry combo!";
     }
 }
 

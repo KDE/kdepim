@@ -32,9 +32,9 @@
 #include <QStringList>
 #include <QTimer>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kstandarddirs.h>
-
+#include <KGlobal>
 
 class Akregator::Backend::StorageMK4Impl::StorageMK4ImplPrivate
 {

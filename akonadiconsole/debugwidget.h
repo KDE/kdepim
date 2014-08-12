@@ -27,7 +27,7 @@
 #include <QtCore/QHash>
 #include <QWidget>
 
-class KTabWidget;
+class QTabWidget;
 class KTextEdit;
 
 class ConnectionPage;
@@ -56,7 +56,7 @@ class DebugWidget : public QWidget
 
   private:
     KTextEdit *mGeneralView;
-    KTabWidget *mConnectionPages;
+    QTabWidget *mConnectionPages;
     QHash<QString, ConnectionPage*> mPageHash;
     org::freedesktop::Akonadi::DebugInterface *mDebugInterface;
 };

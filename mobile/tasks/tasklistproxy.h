@@ -24,7 +24,7 @@
 #include "calendarviews/eventview.h"
 #include "calendarviews/prefs.h"
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 
 class TaskListProxy : public ListProxy
 {

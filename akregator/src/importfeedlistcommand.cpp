@@ -28,8 +28,8 @@
 #include "folder.h"
 #include "kernel.h"
 
-#include <KDebug>
-#include <KInputDialog>
+#include <QDebug>
+#include <QInputDialog>
 #include <KLocalizedString>
 
 #include <QDomDocument>
@@ -73,7 +73,7 @@ void ImportFeedListCommand::Private::doImport()
     if ( !target )
     {
         if ( !target )
-            kWarning() << "Target list was deleted, could not import feed list";
+            qWarning() << "Target list was deleted, could not import feed list";
         q->done();
         return;
     }
@@ -93,11 +93,10 @@ void ImportFeedListCommand::Private::doImport()
     bool ok=false;
 
     if ( rootFolderOption == ImportFeedListCommand::Ask )
-        importedRootFolderName = KInputDialog::getText( i18n("Add Imported Folder"),
-                i18n("Imported folder name:"),
+        importedRootFolderName = QInputDialog::getText( q->parentWidget(), i18n("Add Imported Folder"),
+                i18n("Imported folder name:"), QLineEdit::Normal,
                 importedRootFolderName,
-                &ok,
-                q->parentWidget() );
+                &ok);
 
 
     if ( !ok || !that ) {

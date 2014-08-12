@@ -22,12 +22,12 @@ SelectComponentPage::SelectComponentPage(QWidget *parent) :
     ui(new Ui::SelectComponentPage)
 {
     ui->setupUi(this);
-    connect( ui->everything, SIGNAL(clicked(bool)), this, SLOT(slotEverythingClicked(bool)) );
-    connect( ui->addressbooks, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
-    connect( ui->filters, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
-    connect( ui->mails, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
-    connect( ui->settings, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
-    connect( ui->calendars, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
+    connect(ui->everything, &QCheckBox::clicked, this, &SelectComponentPage::slotEverythingClicked);
+    connect(ui->addressbooks, &QCheckBox::clicked, this, &SelectComponentPage::slotComponentClicked);
+    connect(ui->filters, &QCheckBox::clicked, this, &SelectComponentPage::slotComponentClicked);
+    connect(ui->mails, &QCheckBox::clicked, this, &SelectComponentPage::slotComponentClicked);
+    connect(ui->settings, &QCheckBox::clicked, this, &SelectComponentPage::slotComponentClicked);
+    connect(ui->calendars, &QCheckBox::clicked, this, &SelectComponentPage::slotComponentClicked);
 }
 
 SelectComponentPage::~SelectComponentPage()

@@ -22,12 +22,12 @@
 
 #include "mobileui_export.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 #include <QtCore/QObject>
 
 class KJob;
-class KProgressDialog;
+class QProgressDialog;
 class QItemSelectionModel;
 
 class MOBILEUI_EXPORT ImportHandlerBase : public QObject
@@ -58,7 +58,7 @@ class MOBILEUI_EXPORT ImportHandlerBase : public QObject
     void slotImportJobDone( KJob* );
 
   private:
-    KProgressDialog *mImportProgressDialog;
+    QProgressDialog *mImportProgressDialog;
     QItemSelectionModel *mSelectionModel;
 };
 

@@ -19,7 +19,7 @@
 #ifndef MAILCOMMON_MAILINTERFACES_H
 #define MAILCOMMON_MAILINTERFACES_H
 
-#include <Akonadi/Collection>
+#include <Collection>
 
 #include <KSharedConfig>
 

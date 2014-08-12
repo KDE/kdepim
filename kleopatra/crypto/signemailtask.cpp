@@ -85,7 +85,7 @@ namespace {
             return i18n( "Signing canceled." );
 
         if ( err )
-            return i18n( "Signing failed: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+            return i18n( "Signing failed: %1", QString::fromLocal8Bit( err.asString() ).toHtmlEscaped() );
 
         return i18n( "Signing succeeded." );
     }

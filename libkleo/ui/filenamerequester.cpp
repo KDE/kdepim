@@ -32,16 +32,12 @@
 
 #include "filenamerequester.h"
 
-#include <KIcon>
-#include <KLocalizedString>
 #include <KLineEdit>
 
-#include <QLayout>
+#include <QHBoxLayout>
 #include <QToolButton>
-#include <QLineEdit>
 #include <QCompleter>
 #include <QDirModel>
-#include <QVariant>
 #include <QString>
 #include <QFileDialog>
 
@@ -95,7 +91,7 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
     button.setObjectName( QLatin1String("button") );
     hlay.setObjectName( QLatin1String("hlay") );
 
-    button.setIcon( KIcon(QLatin1String("document-open")) );
+    button.setIcon( QIcon::fromTheme(QLatin1String("document-open")) );
 #ifndef QT_NO_DIRMODEL
     lineedit.setCompleter( &completer );
 #endif

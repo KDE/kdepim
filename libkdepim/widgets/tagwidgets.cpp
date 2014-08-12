@@ -17,18 +17,18 @@
 
 #include "tagwidgets.h"
 #include <KJob>
-#include <QLayout>
 #include <QItemSelectionModel>
 
-#include <Akonadi/Tag>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/TagFetchScope>
-#include <Akonadi/TagCreateJob>
-#include <Akonadi/TagWidget>
-#include <Akonadi/TagModel>
-#include <Akonadi/Monitor>
+#include <Tag>
+#include <TagFetchJob>
+#include <TagFetchScope>
+#include <TagCreateJob>
+#include <TagWidget>
+#include <TagModel>
+#include <Monitor>
 #include <KCheckableProxyModel>
-#include <KLineEdit>
+#include <QDebug>
+#include <QHBoxLayout>
 
 using namespace KPIM;
 
@@ -67,7 +67,7 @@ void TagWidget::setSelection(const QStringList &tagNames)
 void TagWidget::onTagCreated(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Failed to create tag " << job->errorString();
+        qWarning() << "Failed to create tag " << job->errorString();
         return;
     }
     Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob*>(job);
@@ -101,7 +101,7 @@ void TagSelectionDialog::setSelection(const QStringList &tagNames)
 void TagSelectionDialog::onTagCreated(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Failed to create tag " << job->errorString();
+        qWarning() << "Failed to create tag " << job->errorString();
         return;
     }
     Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob*>(job);

@@ -36,7 +36,7 @@
 
 #include "messagecomposer/settings/messagecomposersettings.h"
 
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 
 // other KMail headers:
 #ifndef KDEPIM_MOBILE_UI
@@ -59,8 +59,8 @@
 #endif
 #include "templatesconfiguration_kfg.h"
 // other kdepim headers:
-#include <kpimidentities/identity.h>
-#include <kpimidentities/signatureconfigurator.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/signatureconfigurator.h>
 
 #include "pimcommon/autocorrection/autocorrectionlanguage.h"
 
@@ -69,24 +69,23 @@
 #include "libkleo/ui/keyrequester.h"
 #include "kleo/cryptobackendfactory.h"
 
-#include <kpimutils/email.h>
-#include <kpimutils/emailvalidator.h>
-#include <mailtransport/transport.h>
-#include <mailtransport/transportmanager.h>
-#include <mailtransport/transportcombobox.h>
+#include <KPIMUtils/kpimutils/email.h>
+#include <KPIMUtils/kpimutils/emailvalidator.h>
+#include <MailTransport/mailtransport/transport.h>
+#include <MailTransport/mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportcombobox.h>
 using MailTransport::TransportManager;
 
 // other KDE headers:
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kfileitem.h>
-#include <kurl.h>
-#include <kdebug.h>
-#include <kpushbutton.h>
+#include <qurl.h>
+#include <qdebug.h>
+#include <QPushButton>
 #include <kcombobox.h>
-#include <ktabwidget.h>
-#include <KStandardDirs>
-#include <KIcon>
+#include <QTabWidget>
+#include <QIcon>
 #include <sonnet/dictionarycombobox.h>
 
 // Qt headers:
@@ -103,8 +102,9 @@ using MailTransport::TransportManager;
 #include <iterator>
 #include <algorithm>
 
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/collectionmodifyjob.h>
+#include <AkonadiCore/entitydisplayattribute.h>
+#include <AkonadiCore/collectionmodifyjob.h>
+#include <QStandardPaths>
 
 
 using namespace KPIM;
@@ -140,7 +140,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     QVBoxLayout * vlay = new QVBoxLayout( page );
     vlay->setSpacing( spacingHint() );
     vlay->setMargin( 0 );
-    mTabWidget = new KTabWidget( page );
+    mTabWidget = new QTabWidget( page );
     mTabWidget->setObjectName( QLatin1String("config-identity-tab") );
     vlay->addWidget( mTabWidget );
 
@@ -490,7 +490,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     ++row;
     mAttachMyVCard = new QCheckBox(i18n("Attach my vCard to message"), tab);
     glay->addWidget( mAttachMyVCard, row, 0 );
-    mEditVCard = new KPushButton(i18n("Create..."),tab);
+    mEditVCard = new QPushButton(i18n("Create..."),tab);
     connect(mEditVCard,SIGNAL(clicked()),SLOT(slotEditVcard()));
     glay->addWidget( mEditVCard, row, 1 );
 
@@ -509,7 +509,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     mDefaultDomainEdit->setClearButtonShown(true);
     hbox->addWidget(mDefaultDomainEdit);
     QToolButton *restoreDefaultDomainName = new QToolButton;
-    restoreDefaultDomainName->setIcon(KIcon(QLatin1String("view-refresh")));
+    restoreDefaultDomainName->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
     restoreDefaultDomainName->setToolTip(i18n("Restore default domain name"));
     hbox->addWidget(restoreDefaultDomainName);
     connect(restoreDefaultDomainName, SIGNAL(clicked()), this, SLOT(slotRefreshDefaultDomainName()));
@@ -559,7 +559,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
 
     QHBoxLayout *btns = new QHBoxLayout();
     btns->setSpacing( spacingHint() );
-    mCopyGlobal = new KPushButton( i18n("&Copy Global Templates"), tab );
+    mCopyGlobal = new QPushButton( i18n("&Copy Global Templates"), tab );
     mCopyGlobal->setEnabled( false );
     btns->addWidget( mCopyGlobal );
     vlay->addLayout( btns );
@@ -769,7 +769,7 @@ void IdentityDialog::slotDelayedButtonClicked( KJob *job )
 
     if ( mSignatureConfigurator->isSignatureEnabled() &&
          mSignatureConfigurator->signatureType()==Signature::FromFile ) {
-        KUrl url( mSignatureConfigurator->fileURL() );
+        QUrl url( mSignatureConfigurator->fileURL() );
         KFileItem signatureFile( KFileItem::Unknown, KFileItem::Unknown, url );
         if ( !signatureFile.isFile() || !signatureFile.isReadable() || !signatureFile.isLocalFile() ) {
             KMessageBox::error( this, i18n( "The signature file is not valid" ) );
@@ -867,7 +867,7 @@ void IdentityDialog::setIdentity( KPIMIdentities::Identity & ident ) {
     mAutoCorrectionLanguage->setLanguage(ident.autocorrectionLanguage());
     updateVcardButton();
     if(mVcardFilename.isEmpty()) {
-        mVcardFilename = KStandardDirs::locateLocal("appdata",ident.identityName() + QLatin1String(".vcf"));
+        mVcardFilename = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + ident.identityName() + QLatin1String("/.vcf");
     }
     mAttachMyVCard->setChecked(ident.attachVcard());
     QString defaultDomainName = ident.defaultDomainName();
@@ -919,7 +919,7 @@ void IdentityDialog::updateIdentity( KPIMIdentities::Identity & ident ) {
     ident.setDisabledFcc( !mSentMailFolderCheck->isChecked() );
     Akonadi::Collection collection = mFccCombo->collection();
     if ( collection.isValid() ) {
-        ident.setFcc( QString::number( collection.id() ) );
+        ident.setFcc( QString::number(collection.id()) );
         Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Entity::AddIfMissing );
         attribute->setIconName( QLatin1String( "mail-folder-sent" ) );
         new Akonadi::CollectionModifyJob( collection );
@@ -929,7 +929,7 @@ void IdentityDialog::updateIdentity( KPIMIdentities::Identity & ident ) {
 
     collection = mDraftsCombo->collection();
     if ( collection.isValid() ) {
-        ident.setDrafts( QString::number( collection.id() ) );
+        ident.setDrafts( QString::number(collection.id())  );
         Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Entity::AddIfMissing );
         attribute->setIconName( QLatin1String( "document-properties" ) );
         new Akonadi::CollectionModifyJob( collection );
@@ -939,7 +939,7 @@ void IdentityDialog::updateIdentity( KPIMIdentities::Identity & ident ) {
 
     collection = mTemplatesCombo->collection();
     if ( collection.isValid() ) {
-        ident.setTemplates( QString::number( collection.id() ) );
+        ident.setTemplates( QString::number(collection.id()) );
         Akonadi::EntityDisplayAttribute *attribute =  collection.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Entity::AddIfMissing );
         attribute->setIconName( QLatin1String( "document-new" ) );
         new Akonadi::CollectionModifyJob( collection );
@@ -958,9 +958,9 @@ void IdentityDialog::updateIdentity( KPIMIdentities::Identity & ident ) {
     uint identity = ident.uoid();
     QString iid = TemplateParser::TemplatesConfiguration::configIdString( identity );
     TemplateParser::Templates t( iid );
-    kDebug() << "use custom templates for identity" << identity <<":" << mCustom->isChecked();
+    qDebug() << "use custom templates for identity" << identity <<":" << mCustom->isChecked();
     t.setUseCustomTemplates(mCustom->isChecked());
-    t.writeConfig();
+    t.save();
     mWidget->saveToIdentity( identity );
 #endif
 

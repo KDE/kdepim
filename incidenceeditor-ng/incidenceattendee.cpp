@@ -41,10 +41,11 @@
 
 #include <KPIMUtils/Email>
 
-#include <KDebug>
-#include <KMessageBox>
-
+#include <QDebug>
 #include <QTreeView>
+#include <KMessageBox>
+#include <KLocalizedString>
+
 
 using namespace IncidenceEditorNG;
 
@@ -86,7 +87,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
   layout->setSpacing( 0 );
   layout->addWidget( mAttendeeEditor );
 
-  mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
+  //QT5 mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
 #ifdef KDEPIM_MOBILE_UI
@@ -235,7 +236,7 @@ bool IncidenceAttendee::isDirty() const
     tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
 
     if ( mLoadedIncidence->organizer()->email() != tmp.organizer()->email() ) {
-      kDebug() << "Organizer changed. Old was " << mLoadedIncidence->organizer()->name()
+      qDebug() << "Organizer changed. Old was " << mLoadedIncidence->organizer()->name()
                << mLoadedIncidence->organizer()->email() << "; new is " << tmp.organizer()->name()
                << tmp.organizer()->email();
       return true;
@@ -317,7 +318,7 @@ void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 {
   AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>( line->data() );
   if ( !data ) {
-    kDebug() << "dynamic cast failed";
+    qDebug() << "dynamic cast failed";
     return;
   }
 
@@ -406,7 +407,7 @@ void IncidenceAttendee::slotSelectAddresses()
         }
       }
     } else {
-      kDebug() << "dialog was already deleted";
+      qDebug() << "dialog was already deleted";
     }
   }
 
@@ -425,7 +426,7 @@ void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
   dialog->slotUpdateIncidenceStartEnd( mDateTime->currentStartDateTime(),
                                        mDateTime->currentEndDateTime() );
   if ( dialog->exec() == KDialog::Accepted ) {
-    kDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
+    qDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
     mDateTime->setStartDate( dialog->selectedStartDate() );
     mDateTime->setStartTime( dialog->selectedStartTime() );
   }
@@ -519,7 +520,7 @@ void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )
   bool success = KPIMUtils::extractEmailAddressAndName( newOrganizer, email, name );
 
   if ( !success ) {
-    kWarning() << "Could not extract email address and name";
+    qWarning() << "Could not extract email address and name";
     return;
   }
 
@@ -569,18 +570,18 @@ void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )
 
 void IncidenceAttendee::printDebugInfo() const
 {
-  kDebug() << "I'm organizer   : " << iAmOrganizer();
-  kDebug() << "Loaded organizer: "<< mLoadedIncidence->organizer()->email();
+  qDebug() << "I'm organizer   : " << iAmOrganizer();
+  qDebug() << "Loaded organizer: "<< mLoadedIncidence->organizer()->email();
 
   if ( iAmOrganizer() ) {
     KCalCore::Event tmp;
     tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
-    kDebug() << "Organizer combo: " << tmp.organizer()->email();
+    qDebug() << "Organizer combo: " << tmp.organizer()->email();
   }
 
   const KCalCore::Attendee::List originalList = mLoadedIncidence->attendees();
   AttendeeData::List newList = mAttendeeEditor->attendees();
-  kDebug() << "List sizes: " << originalList.count() << newList.count();
+  qDebug() << "List sizes: " << originalList.count() << newList.count();
 
   if ( originalList.count() != newList.count() ) {
     return;
@@ -599,7 +600,7 @@ void IncidenceAttendee::printDebugInfo() const
     }
 
     if ( !found ) {
-      kDebug() << "Attendee not found: " << attendee->email()
+      qDebug() << "Attendee not found: " << attendee->email()
                << attendee->name()
                << attendee->status()
                << attendee->RSVP()
@@ -610,7 +611,7 @@ void IncidenceAttendee::printDebugInfo() const
                << "; we have:";
       for ( int i = 0; i < newList.count(); ++i ) {
         KCalCore::Attendee::Ptr attendee = newList.at( i )->attendee();
-        kDebug() << "Attendee: " << attendee->email()
+        qDebug() << "Attendee: " << attendee->email()
                  << attendee->name()
                  << attendee->status()
                  << attendee->RSVP()

@@ -24,12 +24,14 @@
 
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <Akonadi/ItemModifyJob>
+#include <ItemModifyJob>
 #include <KSharedConfig>
-#include <akonadi/item.h>
-#include <akonadi/entityannotationsattribute.h>
+#include <item.h>
+#include <entityannotationsattribute.h>
 
 #include <KComboBox>
+#include <KGlobal>
+#include <QIcon>
 
 #include <QLabel>
 #include <QGridLayout>
@@ -62,7 +64,7 @@ AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *
         setCaption( i18n( "Edit Note" ) );
         setButtons( Ok | Cancel | User1 );
         setButtonText( User1, i18n( "Delete Note" ) );
-        setButtonIcon( User1, KIcon( QLatin1String("edit-delete") ) );
+        setButtonIcon( User1, QIcon::fromTheme( QLatin1String("edit-delete") ) );
     } else {
         setCaption( i18n( "Add Note" ) );
         setButtons( Ok | Cancel );
@@ -139,7 +141,7 @@ void AnnotationEditDialog::slotButtonClicked( int button )
 
 void AnnotationEditDialog::readConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "AnnotationEditDialog" );
     QSize size = group.readEntry( "Size", QSize() );
     if ( !size.isEmpty() ) {
@@ -149,7 +151,7 @@ void AnnotationEditDialog::readConfig()
 
 void AnnotationEditDialog::writeConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "AnnotationEditDialog" );
     group.writeEntry( "Size", size() );
 }

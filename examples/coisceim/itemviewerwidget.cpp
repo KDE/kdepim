@@ -28,11 +28,11 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 
 #include <KCalCore/Todo>
 
-#include "akonadi/contact/contactviewer.h"
+#include "Akonadi/Contact/ContactViewer"
 #include "messageviewer/viewer/viewer.h"
 #include <calendarsupport/next/incidenceviewer.h>
 
@@ -62,7 +62,7 @@ ItemViewerWidget::ItemViewerWidget( ItemSelection *itemSelection, QWidget* paren
 
 void ItemViewerWidget::selectionChanged( const QModelIndex &selectedIndex )
 {
-  kDebug() << selectedIndex;
+  qDebug() << selectedIndex;
   if(!selectedIndex.isValid())
     return; // No meaningful selection.
 

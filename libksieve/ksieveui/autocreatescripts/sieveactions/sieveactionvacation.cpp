@@ -25,7 +25,7 @@
 
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QLabel>
 #include <QSpinBox>
@@ -76,7 +76,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     lab = new QLabel(i18n("Message subject:"));
     grid->addWidget(lab, 1 ,0);
 
-    KLineEdit *subject = new KLineEdit;
+    QLineEdit *subject = new QLineEdit;
     subject->setObjectName(QLatin1String("subject"));
     connect(subject, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(subject, 1 ,1);
@@ -84,7 +84,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     lab = new QLabel(i18n("Additional email:"));
     grid->addWidget(lab, 2 ,0);
 
-    KLineEdit *addresses = new KLineEdit;
+    QLineEdit *addresses = new QLineEdit;
     addresses->setObjectName(QLatin1String("addresses"));
     connect(addresses, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(addresses, 2 ,1);
@@ -120,10 +120,10 @@ bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
                 } else if (tagValue == QLatin1String("days")) {
                     //Nothing wait num tag for it.
                 } else if (tagValue == QLatin1String("addresses")) {
-                    KLineEdit *addresses = w->findChild<KLineEdit*>( QLatin1String("addresses") );
+                    QLineEdit *addresses = w->findChild<QLineEdit*>( QLatin1String("addresses") );
                     addresses->setText(AutoCreateScriptUtil::strValue(e));
                 } else if (tagValue == QLatin1String("subject")) {
-                    KLineEdit *subject = w->findChild<KLineEdit*>( QLatin1String("subject") );
+                    QLineEdit *subject = w->findChild<QLineEdit*>( QLatin1String("subject") );
                     subject->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
                     unknowTagValue(tagValue, error);
@@ -136,7 +136,7 @@ bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
                 MultiLineEdit *text = w->findChild<MultiLineEdit*>( QLatin1String("text") );
                 text->setText(e.text());
             } else if (tagName == QLatin1String("list")) {
-                KLineEdit *addresses = w->findChild<KLineEdit*>( QLatin1String("addresses") );
+                QLineEdit *addresses = w->findChild<QLineEdit*>( QLatin1String("addresses") );
                 addresses->setText(AutoCreateScriptUtil::listValueToStr(e));
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -166,10 +166,10 @@ QString SieveActionVacation::code(QWidget *w) const
     const MultiLineEdit *text = w->findChild<MultiLineEdit*>( QLatin1String("text") );
     const QString textStr = text->toPlainText();
 
-    const KLineEdit *subject = w->findChild<KLineEdit*>( QLatin1String("subject") );
+    const QLineEdit *subject = w->findChild<QLineEdit*>( QLatin1String("subject") );
     const QString subjectStr = subject->text();
 
-    const KLineEdit *addresses = w->findChild<KLineEdit*>( QLatin1String("addresses") );
+    const QLineEdit *addresses = w->findChild<QLineEdit*>( QLatin1String("addresses") );
     const QString addressesStr = addresses->text();
     QString result = QString::fromLatin1("vacation");
     if (!dayStr.isEmpty())

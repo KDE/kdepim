@@ -32,10 +32,10 @@
 #include <kselectionproxymodel.h>
 #include <kcheckableproxymodel.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
 
 using namespace Akonadi;
 

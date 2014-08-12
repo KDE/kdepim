@@ -19,20 +19,23 @@
 #include "messageviewer/globalsettings_base.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
-#include <KIcon>
-#include <KPushButton>
+#include <QLineEdit>
+#include <QIcon>
+#include <QDebug>
 #include <KMessageWidget>
-
+#include <QPushButton>
+#include <QPushButton>
 #include <QHBoxLayout>
 #include <QEvent>
 #include <QKeyEvent>
 #include <QLabel>
 
-#include <Akonadi/CollectionComboBox>
+#include <AkonadiWidgets/CollectionComboBox>
 
 #include <incidenceeditor-ng/incidencedialog.h>
 #include <incidenceeditor-ng/incidencedialogfactory.h>
+#include <KGuiItem>
+#include <KStandardGuiItem>
 
 
 namespace MessageViewer {
@@ -64,8 +67,8 @@ TodoEdit::TodoEdit(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Todo:"));
     hbox->addWidget(lab);
 
-    mNoteEdit = new KLineEdit;
-    mNoteEdit->setClearButtonShown(true);
+    mNoteEdit = new QLineEdit;
+    mNoteEdit->setClearButtonEnabled(true);
     mNoteEdit->setObjectName(QLatin1String("noteedit"));
     mNoteEdit->setFocus();
     connect(mNoteEdit, SIGNAL(textChanged(QString)), SLOT(slotTextEdited(QString)));
@@ -93,7 +96,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     vbox->addLayout(hbox);
 
     hbox->addStretch(1);
-    mSaveButton = new KPushButton(KIcon(QLatin1String("task-new")), i18n("&Save"));
+    mSaveButton = new QPushButton(QIcon::fromTheme(QLatin1String("task-new")), i18n("&Save"));
     mSaveButton->setObjectName(QLatin1String("save-button"));
     mSaveButton->setEnabled(false);
 #ifndef QT_NO_ACCESSIBILITY
@@ -102,7 +105,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     connect(mSaveButton, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
     hbox->addWidget(mSaveButton);
 
-    mOpenEditorButton = new KPushButton(i18n("Open &editor..."));
+    mOpenEditorButton = new QPushButton(i18n("Open &editor..."));
     mOpenEditorButton->setObjectName(QLatin1String("open-editor-button"));
 #ifndef QT_NO_ACCESSIBILITY
     mOpenEditorButton->setAccessibleDescription(i18n("Open todo editor, where more details can be changed."));
@@ -111,7 +114,8 @@ TodoEdit::TodoEdit(QWidget *parent)
     connect(mOpenEditorButton, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
     hbox->addWidget(mOpenEditorButton);
 
-    KPushButton *btn = new KPushButton(KStandardGuiItem::cancel());
+    QPushButton *btn = new QPushButton;
+    KGuiItem::assign(btn,KStandardGuiItem::cancel());
     btn->setObjectName(QLatin1String("close-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new todos."));
@@ -148,7 +152,7 @@ void TodoEdit::writeConfig()
 {
     if (MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder() != mCollectionCombobox->currentCollection().id()) {
         MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(mCollectionCombobox->currentCollection().id());
-        MessageViewer::GlobalSettingsBase::self()->writeConfig();
+        MessageViewer::GlobalSettingsBase::self()->save();
     }
 }
 
@@ -211,12 +215,12 @@ void TodoEdit::slotCloseWidget()
 void TodoEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        kDebug()<<" Message is null";
+        qDebug()<<" Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        kDebug()<<" Collection is not valid";
+        qDebug()<<" Collection is not valid";
         return;
     }
 

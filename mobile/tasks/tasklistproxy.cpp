@@ -23,7 +23,7 @@
 
 #include <calendarsupport/kcalprefs.h>
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <KCalCore/Todo>
 
 using namespace Akonadi;
@@ -54,7 +54,7 @@ QVariant TaskListProxy::data( const QModelIndex &index, int role ) const
             return mViewPrefs->todoOverdueColor();
           }
         }
-        return Qt::transparent;
+        return QColor(Qt::transparent);
       case IsSubTaskRole:
         return !incidence->relatedTo( KCalCore::Todo::RelTypeParent ).isEmpty();
       case SingleLineDescriptionRole:

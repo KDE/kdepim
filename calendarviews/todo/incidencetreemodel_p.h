@@ -25,7 +25,7 @@
 
 #include "incidencetreemodel.h"
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include <QHash>
 #include <QObject>

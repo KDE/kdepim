@@ -25,7 +25,7 @@ AbstractShortUrl::AbstractShortUrl(QObject *parent)
       mErrorFound(false),
       mNetworkAccessManager(new QNetworkAccessManager(this))
 {
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotShortUrlFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &AbstractShortUrl::slotShortUrlFinished);
 }
 
 AbstractShortUrl::~AbstractShortUrl()

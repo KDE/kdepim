@@ -27,7 +27,7 @@
 #include "eventview_p.h"
 #include "prefs.h"
 
-#include <Akonadi/EntityTreeModel>
+#include <EntityTreeModel>
 
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
@@ -36,8 +36,8 @@
 #include <akonadi_next/kcolumnfilterproxymodel.h>
 using namespace Future;
 
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/ETMViewStateSaver>
+#include <EntityDisplayAttribute>
+#include <ETMViewStateSaver>
 
 #include <KCalCore/Todo>
 #include <KCalCore/CalFilter>
@@ -51,6 +51,7 @@ using namespace Future;
 #include <KLocalizedString>
 #include <KRandom>
 #include <KViewStateMaintainer>
+#include <QDebug>
 
 #include <QApplication>
 #include <QKeyEvent>
@@ -59,8 +60,6 @@ using namespace Future;
 using namespace KCalCore;
 using namespace EventViews;
 using namespace Akonadi;
-
-static const KCatalogLoader loaderCatalog( QLatin1String("libeventviews") );
 
 CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
 
@@ -97,13 +96,13 @@ EventView::~EventView()
 
 void EventView::defaultAction( const Akonadi::Item &aitem )
 {
-  kDebug();
+  qDebug();
   const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   if ( !incidence ) {
     return;
   }
 
-  kDebug() << "  type:" << int( incidence->type() );
+  qDebug() << "  type:" << int( incidence->type() );
 
   if ( incidence->isReadOnly() ) {
     emit showIncidenceSignal(aitem);
@@ -491,7 +490,7 @@ void EventView::incidencesChanged( const Akonadi::Item::List & )
 
 void EventView::handleBackendError( const QString &errorString )
 {
-  kError() << errorString;
+  qCritical() << errorString;
 }
 
 void EventView::calendarReset()

@@ -25,7 +25,7 @@ class NOTESHARED_EXPORT NoteActionConfig : public KCModule
 {
     Q_OBJECT
 public:
-    NoteActionConfig( const KComponentData &inst, QWidget *parent );
+    NoteActionConfig( QWidget *parent );
     /** Reimplemented from KCModule. */
     virtual void load();
     virtual void save();

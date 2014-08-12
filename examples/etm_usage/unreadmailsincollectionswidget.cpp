@@ -34,19 +34,20 @@
 #include <ksharedconfig.h>
 #include <kcheckableproxymodel.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitytreeview.h>
-#include <akonadi/etmviewstatesaver.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiWidgets/entitytreeview.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
 
 #include "mailmodel.h"
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/selectionproxymodel.h>
-#include <akonadi/kmime/messagestatus.h>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/selectionproxymodel.h>
+#include <Akonadi/KMime/MessageStatus>
 
 #include <KMime/Message>
+#include <KSharedConfig>
 
 #include "itemviewerwidget.h"
 
@@ -152,7 +153,7 @@ void UnreadMailsInCollectionsWidget::saveCheckState()
   ETMViewStateSaver saver;
   saver.setSelectionModel(m_checkedItemModel);
 
-  KConfigGroup cfg( KGlobal::config(), "CheckState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "CheckState" );
   saver.saveState(cfg);
   cfg.sync();
 }
@@ -162,7 +163,7 @@ void UnreadMailsInCollectionsWidget::restoreCheckState()
   ETMViewStateSaver *restorer = new ETMViewStateSaver;
   restorer->setSelectionModel(m_checkedItemModel);
 
-  KConfigGroup cfg( KGlobal::config(), "CheckState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "CheckState" );
   restorer->restoreState(cfg);
 }
 

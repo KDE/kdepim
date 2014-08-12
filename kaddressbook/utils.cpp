@@ -21,8 +21,8 @@
 #include <QItemSelectionModel>
 
 #include <KABC/Addressee>
+#include <AkonadiCore/EntityTreeModel>
 #include <KABC/ContactGroup>
-#include <Akonadi/EntityTreeModel>
 
 Akonadi::Item::List Utils::collectSelectedContactsItem(QItemSelectionModel *model)
 {

@@ -41,7 +41,7 @@
 
 #include <kmime/kmime_content.h>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QTextCodec>
 
@@ -59,7 +59,7 @@ QString PartNodeBodyPart::makeLink( const QString & path ) const {
     // FIXME: use a PRNG for the first arg, instead of a serial number
     return QString::fromLatin1( "x-kmail:/bodypart/%1/%2/%3" )
             .arg( serial++ ).arg( mContent->index().toString() )
-            .arg( QString::fromLatin1( KUrl::toPercentEncoding( path, "/" ) ) );
+            .arg( QString::fromLatin1( QUrl::toPercentEncoding( path, "/" ) ) );
 }
 
 QString PartNodeBodyPart::asText() const {
@@ -85,7 +85,7 @@ QString PartNodeBodyPart::contentDispositionParameter( const char * param ) cons
 }
 
 bool PartNodeBodyPart::hasCompleteBody() const {
-    kWarning() << "Sorry, not yet implemented.";
+    qWarning() << "Sorry, not yet implemented.";
     return true;
 }
 

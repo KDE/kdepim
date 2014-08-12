@@ -20,8 +20,8 @@
 #ifndef MONITORSWIDGET_H
 #define MONITORSWIDGET_H
 
-#include <QtGui/QWidget>
-#include <QtGui/QTreeView>
+#include <QWidget>
+#include <QTreeView>
 
 class MonitorsModel;
 

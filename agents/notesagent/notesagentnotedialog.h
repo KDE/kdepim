@@ -19,15 +19,15 @@
 #ifndef NOTESAGENTNOTEDIALOG_H
 #define NOTESAGENTNOTEDIALOG_H
 
-#include <KDialog>
-#include <Akonadi/Item>
+#include <QDialog>
+#include <Item>
 class QTextEdit;
 class QLineEdit;
 class KJob;
 namespace PimCommon {
 class RichTextEditorWidget;
 }
-class NotesAgentNoteDialog : public KDialog
+class NotesAgentNoteDialog : public QDialog
 {
     Q_OBJECT
 public:

@@ -28,27 +28,23 @@
 #include "notesimporthandler.h"
 #include "searchwidget.h"
 
-#include <akonadi/agentactionmanager.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/standardactionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiWidgets/standardactionmanager.h>
 #include <akonadi_next/note.h>
 #include <akonadi_next/notecreatorandselector.h>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
-#include <KDebug>
-#include <KGlobal>
 #include <KLocale>
 #include <KMessageBox>
 #include <KMime/KMimeMessage>
-#include <KStandardDirs>
 
 #include <QDeclarativeContext>
 #include <QDeclarativeEngine>
-#include <QDeclarativeItem>
-
 #include <QGraphicsObject>
+#include <QDeclarativeItem>
 
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
@@ -76,19 +72,19 @@ void MainView::doDelayedInit()
   addMimeType( QLatin1String("text/x-vnd.akonadi.note") );
   itemFetchScope().fetchFullPayload();
 
-  KAction *action = new KAction( i18n( "New Note" ), this );
+  QAction *action = new QAction( i18n( "New Note" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(startComposer()) );
   actionCollection()->addAction( QLatin1String( "add_new_note" ), action );
 
-  action = new KAction( i18n( "Import Notes" ), this );
+  action = new QAction( i18n( "Import Notes" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
   actionCollection()->addAction( QLatin1String( "import_notes" ), action );
 
-  action = new KAction( i18n( "Export Notes From This Account" ), this );
+  action = new QAction( i18n( "Export Notes From This Account" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_account_notes" ), action );
 
-  action = new KAction( i18n( "Export Displayed Notes" ), this );
+  action = new QAction( i18n( "Export Displayed Notes" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_selected_notes" ), action );
 }

@@ -26,9 +26,9 @@
 #include "libkdepimdbusinterfaces/urihandler.h"
 #include "incidenceattachmentmodel.h"
 
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <akonadi/calendar/calendarbase.h>
+#include <CollectionFetchJob>
+#include <ItemFetchScope>
+#include <Akonadi/Calendar/CalendarBase>
 
 #include <KCalUtils/IncidenceFormatter>
 

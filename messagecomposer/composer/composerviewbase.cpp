@@ -53,29 +53,31 @@
 #include <messagecore/attachment/attachmentcollector.h>
 #include <messagecore/helpers/nodehelper.h>
 
-#include <mailtransport/transportcombobox.h>
-#include <mailtransport/messagequeuejob.h>
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportcombobox.h>
+#include <MailTransport/mailtransport/messagequeuejob.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 
-#include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectioncombobox.h>
+#include <Akonadi/KMime/SpecialMailCollections>
+#include <AkonadiCore/itemcreatejob.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiWidgets/collectioncombobox.h>
 
-#include <kpimidentities/identitycombo.h>
-#include <kpimidentities/identitymanager.h>
-#include <kpimutils/email.h>
+#include <KPIMIdentities/kpimidentities/identitycombo.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KPIMUtils/kpimutils/email.h>
 
-#include <KSaveFile>
+#include <QSaveFile>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <krichtextwidget.h>
 #include <KStandardDirs>
+#include <QDebug>
 
 #include <QDir>
 #include <QTimer>
 #include <QUuid>
 #include <QtCore/QTextCodec>
+#include <QStandardPaths>
 
 static QStringList encodeIdn( const QStringList &emails )
 {
@@ -255,11 +257,11 @@ void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::S
         m_msg->setHeader( new KMime::Headers::Generic("X-KMail-QuotePrefix", m_msg.get(), m_editor->quotePrefixName(), "utf-8" ) );
 
     if ( m_editor->isFormattingUsed() ) {
-        kDebug() << "Html mode";
+        qDebug() << "Html mode";
         m_msg->setHeader( new KMime::Headers::Generic("X-KMail-Markup", m_msg.get(), QLatin1String( "true" ), "utf-8" ) );
     } else {
         m_msg->removeHeader( "X-KMail-Markup" );
-        kDebug() << "Plain text";
+        qDebug() << "Plain text";
     }
 
     if ( m_editor->isFormattingUsed() && inlineSigningEncryptionSelected() ) {
@@ -315,15 +317,15 @@ void MessageComposer::ComposerViewBase::setCustomHeader( const QMap<QByteArray, 
 
 void MessageComposer::ComposerViewBase::readyForSending()
 {
-    kDebug() << "Entering readyForSending";
+    qDebug() << "Entering readyForSending";
     if( !m_msg ) {
-        kDebug() << "m_msg == 0!";
+        qDebug() << "m_msg == 0!";
         return;
     }
 
     if( !m_composers.isEmpty() ) {
         // This may happen if e.g. the autosave timer calls applyChanges.
-        kDebug() << "Called while composer active; ignoring.";
+        qDebug() << "Called while composer active; ignoring.";
         return;
     }
 
@@ -440,7 +442,7 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 
         connect( composer, SIGNAL(result(KJob*)), this, SLOT(slotSendComposeResult(KJob*)) );
         composer->start();
-        kDebug() << "Started a composer for sending!";
+        qDebug() << "Started a composer for sending!";
 
     }
 }
@@ -523,7 +525,7 @@ inline bool showKeyApprovalDialog()
 QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateCryptoMessages ()
 {
 
-    kDebug() << "filling crypto info";
+    qDebug() << "filling crypto info";
     Kleo::KeyResolver* keyResolver = new Kleo::KeyResolver(  encryptToSelf(),
                                                              showKeyApprovalDialog(),
                                                              MessageComposer::MessageComposerSettings::self()->pgpAutoEncrypt(),
@@ -546,13 +548,13 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
     bool doEncryptCompletely = m_encrypt;
 
     //Add encryptionkeys from id to keyResolver
-    kDebug() << id.pgpEncryptionKey().isEmpty() << id.smimeEncryptionKey().isEmpty();
+    qDebug() << id.pgpEncryptionKey().isEmpty() << id.smimeEncryptionKey().isEmpty();
     if ( !id.pgpEncryptionKey().isEmpty() )
         encryptToSelfKeys.push_back( QLatin1String( id.pgpEncryptionKey() ) );
     if ( !id.smimeEncryptionKey().isEmpty() )
         encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
     if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
-        kDebug() << "Failed to set encryptoToSelf keys!";
+        qDebug() << "Failed to set encryptoToSelf keys!";
         return QList< MessageComposer::Composer* >();
     }
 
@@ -562,7 +564,7 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
     if ( !id.smimeSigningKey().isEmpty() )
         signKeys.push_back( QLatin1String( id.smimeSigningKey() ) );
     if ( keyResolver->setSigningKeys( signKeys ) != Kpgp::Ok ) {
-        kDebug() << "Failed to set signing keys!";
+        qDebug() << "Failed to set signing keys!";
         return QList< MessageComposer::Composer* >();
     }
 
@@ -589,7 +591,7 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
     signSomething = determineWhetherToSign( doSignCompletely, keyResolver,signSomething, result );
     if(!result) {
         /// TODO handle failure
-        kDebug() << "determineWhetherToSign: failed to resolve keys! oh noes";
+        qDebug() << "determineWhetherToSign: failed to resolve keys! oh noes";
         emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
         return QList< MessageComposer::Composer*>();
     }
@@ -597,7 +599,7 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
     encryptSomething = determineWhetherToEncrypt( doEncryptCompletely,keyResolver,encryptSomething, signSomething, result );
     if(!result) {
         /// TODO handle failure
-        kDebug() << "determineWhetherToEncrypt: failed to resolve keys! oh noes";
+        qDebug() << "determineWhetherToEncrypt: failed to resolve keys! oh noes";
         emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
         return QList< MessageComposer::Composer*>();
     }
@@ -609,15 +611,15 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
 
     const Kpgp::Result kpgpResult = keyResolver->resolveAllKeys( signSomething, encryptSomething );
     if ( kpgpResult == Kpgp::Canceled ) {
-        kDebug() << "resolveAllKeys: one key resolution canceled by user";
+        qDebug() << "resolveAllKeys: one key resolution canceled by user";
         return QList< MessageComposer::Composer*>();
     } else if ( kpgpResult != Kpgp::Ok ) {
         // TODO handle failure
-        kDebug() << "resolveAllKeys: failed to resolve keys! oh noes";
+        qDebug() << "resolveAllKeys: failed to resolve keys! oh noes";
         emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
         return QList< MessageComposer::Composer*>();
     }
-    kDebug() << "done resolving keys:";
+    qDebug() << "done resolving keys:";
 
     QList< MessageComposer::Composer* > composers;
 
@@ -641,7 +643,7 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
                 for( it = encData.begin(); it != end; ++it ) {
                     QPair<QStringList, std::vector<GpgME::Key> > p( it->recipients, it->keys );
                     data.append( p );
-                    kDebug() << "got resolved keys for:" << it->recipients;
+                    qDebug() << "got resolved keys for:" << it->recipients;
                 }
                 composer->setEncryptionKeys( data );
             }
@@ -755,14 +757,14 @@ void MessageComposer::ComposerViewBase::fillInfoPart ( MessageComposer::InfoPart
 
 void MessageComposer::ComposerViewBase::slotSendComposeResult( KJob* job )
 {
-    kDebug() << "compose job might have error error" << job->error() << "errorString" << job->errorString();
+    qDebug() << "compose job might have error error" << job->error() << "errorString" << job->errorString();
     Q_ASSERT( dynamic_cast< MessageComposer::Composer* >( job ) );
     MessageComposer::Composer* composer = static_cast< MessageComposer::Composer* >( job );
 
     if( composer->error() == MessageComposer::Composer::NoError ) {
         Q_ASSERT( m_composers.contains( composer ) );
         // The messages were composed successfully.
-        kDebug() << "NoError.";
+        qDebug() << "NoError.";
         const int numberOfMessage( composer->resultMessages().size() );
         for( int i = 0; i < numberOfMessage; ++i ) {
             if ( mSaveIn == MessageComposer::MessageSender::SaveInNone ) {
@@ -775,10 +777,10 @@ void MessageComposer::ComposerViewBase::slotSendComposeResult( KJob* job )
     } else if( composer->error() == MessageComposer::Composer::UserCancelledError ) {
         // The job warned the user about something, and the user chose to return
         // to the message.  Nothing to do.
-        kDebug() << "UserCancelledError.";
+        qDebug() << "UserCancelledError.";
         emit failed( i18n( "Job cancelled by the user" ) );
     } else {
-        kDebug() << "other Error.";
+        qDebug() << "other Error.";
         QString msg;
         if( composer->error() == MessageComposer::Composer::BugError ) {
             msg = i18n( "Could not compose message: %1 \n Please report this bug.", job->errorString() );
@@ -839,18 +841,18 @@ void MessageComposer::ComposerViewBase::queueMessage( KMime::Message::Ptr messag
     m_pendingQueueJobs++;
     qjob->start();
 
-    kDebug() << "Queued a message.";
+    qDebug() << "Queued a message.";
 }
 
 
 void MessageComposer::ComposerViewBase::slotQueueResult( KJob *job )
 {
     m_pendingQueueJobs--;
-    kDebug() << "mPendingQueueJobs" << m_pendingQueueJobs;
+    qDebug() << "mPendingQueueJobs" << m_pendingQueueJobs;
     Q_ASSERT( m_pendingQueueJobs >= 0 );
 
     if( job->error() ) {
-        kDebug() << "Failed to queue a message:" << job->errorString();
+        qDebug() << "Failed to queue a message:" << job->errorString();
         // There is not much we can do now, since all the MessageQueueJobs have been
         // started.  So just wait for them to finish.
         // TODO show a message box or something
@@ -882,7 +884,7 @@ void MessageComposer::ComposerViewBase::fillQueueJobHeaders( MailTransport::Mess
         qjob->addressAttribute().setTo( cleanEmailList( encodeIdn( realTo->asUnicodeString().split( QLatin1Char( '%' ) ) ) ) );
         message->removeHeader( "X-KMail-EncBccRecipients" );
         message->assemble();
-        kDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
+        qDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
     } else {
         qjob->addressAttribute().setTo( cleanEmailList( encodeIdn( infoPart->to() ) ) );
         qjob->addressAttribute().setCc( cleanEmailList( encodeIdn( infoPart->cc() ) ) );
@@ -892,12 +894,12 @@ void MessageComposer::ComposerViewBase::fillQueueJobHeaders( MailTransport::Mess
 
 void MessageComposer::ComposerViewBase::initAutoSave()
 {
-    kDebug() << "initalising autosave";
+    qDebug() << "initalising autosave";
 
     // Ensure that the autosave directory exists.
-    QDir dataDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) );
+    QDir dataDirectory( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/kmail2/" ) ) ;
     if( !dataDirectory.exists( QLatin1String( "autosave" ) ) ) {
-        kDebug() << "Creating autosave directory.";
+        qDebug() << "Creating autosave directory.";
         dataDirectory.mkdir( QLatin1String( "autosave" ) );
     }
 
@@ -934,10 +936,10 @@ void MessageComposer::ComposerViewBase::cleanupAutoSave()
     delete m_autoSaveTimer; m_autoSaveTimer = 0;
     if ( !m_autoSaveUUID.isEmpty() ) {
 
-        kDebug() << "deleting autosave files" << m_autoSaveUUID;
+        qDebug() << "deleting autosave files" << m_autoSaveUUID;
 
         // Delete the autosave files
-        QDir autoSaveDir( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave" ) );
+        QDir autoSaveDir( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/kmail2/autosave") );
 
         // Filter out only this composer window's autosave files
         QStringList autoSaveFilter;
@@ -946,7 +948,7 @@ void MessageComposer::ComposerViewBase::cleanupAutoSave()
 
         // Return the files to be removed
         QStringList autoSaveFiles = autoSaveDir.entryList();
-        kDebug() << "There are" << autoSaveFiles.count() << "to be deleted.";
+        qDebug() << "There are" << autoSaveFiles.count() << "to be deleted.";
 
         // Delete each file
         foreach( const QString &file, autoSaveFiles ) {
@@ -959,7 +961,7 @@ void MessageComposer::ComposerViewBase::cleanupAutoSave()
 //-----------------------------------------------------------------------------
 void MessageComposer::ComposerViewBase::autoSaveMessage()
 {
-    kDebug() << "Autosaving message";
+    qDebug() << "Autosaving message";
 
     if ( m_autoSaveTimer ) {
         m_autoSaveTimer->stop();
@@ -967,7 +969,7 @@ void MessageComposer::ComposerViewBase::autoSaveMessage()
 
     if( !m_composers.isEmpty() ) {
         // This may happen if e.g. the autosave timer calls applyChanges.
-        kDebug() << "Called while composer active; ignoring.";
+        qDebug() << "Called while composer active; ignoring.";
         return;
     }
 
@@ -997,7 +999,7 @@ void MessageComposer::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
 
         // The messages were composed successfully. Only save the first message, there should
         // only be one anyway, since crypto is disabled.
-        kDebug() << "NoError.";
+        qDebug() << "NoError.";
         writeAutoSaveToDisk( composer->resultMessages().first() );
         Q_ASSERT( composer->resultMessages().size() == 1 );
 
@@ -1007,10 +1009,10 @@ void MessageComposer::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
     } else if( composer->error() == MessageComposer::Composer::UserCancelledError ) {
         // The job warned the user about something, and the user chose to return
         // to the message.  Nothing to do.
-        kDebug() << "UserCancelledError.";
+        qDebug() << "UserCancelledError.";
         emit failed( i18n( "Job cancelled by the user" ), AutoSave );
     } else {
-        kDebug() << "other Error.";
+        qDebug() << "other Error.";
         emit failed( i18n( "Could not autosave message: %1", job->errorString() ), AutoSave );
     }
 
@@ -1019,13 +1021,14 @@ void MessageComposer::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
 
 void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Message::Ptr& message )
 {
-    const QString filename = KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave/" ) +
-            m_autoSaveUUID;
-    KSaveFile file( filename );
+    const QString autosavePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/kmail2/autosave/" );
+    QDir().mkpath(autosavePath);
+    const QString filename = autosavePath + m_autoSaveUUID;
+    QSaveFile file( filename );
     QString errorMessage;
-    kDebug() << "Writing message to disk as" << filename;
+    qDebug() << "Writing message to disk as" << filename;
 
-    if( file.open() ) {
+    if( file.open(QIODevice::WriteOnly) ) {
         file.setPermissions( QFile::ReadUser | QFile::WriteUser );
 
         if( file.write( message->encodedContent() ) !=
@@ -1033,7 +1036,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Messag
             errorMessage = i18n( "Could not write all data to file." );
         }
         else {
-            if( !file.finalize() ) {
+            if( !file.commit() ) {
                 errorMessage = i18n( "Could not finalize the file." );
             }
         }
@@ -1043,7 +1046,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Messag
     }
 
     if ( !errorMessage.isEmpty() ) {
-        kWarning() << "Auto saving failed:" << errorMessage << file.errorString();
+        qWarning() << "Auto saving failed:" << errorMessage << file.errorString();
         if ( !m_autoSaveErrorShown ) {
             KMessageBox::sorry( m_parentWidget, i18n( "Autosaving the message as %1 failed.\n"
                                                       "%2\n"
@@ -1061,13 +1064,14 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Messag
         // No error occurred, the next error should be shown again
         m_autoSaveErrorShown = false;
     }
+    file.commit();
 }
 
 void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message, MessageComposer::MessageSender::SaveIn saveIn )
 {
     Akonadi::Collection target;
     const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
-    message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+    message->date()->setDateTime( QDateTime::currentDateTime() );
     message->assemble();
 
     Akonadi::Item item;
@@ -1080,7 +1084,7 @@ void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message
             }
         } else {
             if ( !identity.drafts().isEmpty() ) { // the user has specified a custom drafts collection
-                target = Akonadi::Collection( identity.drafts().toLongLong() );
+                target = Akonadi::Collection( identity.drafts().toLongLong() );            
             }
         }
         Akonadi::CollectionFetchJob *saveMessageJob = new Akonadi::CollectionFetchJob( target, Akonadi::CollectionFetchJob::Base );
@@ -1131,11 +1135,11 @@ Akonadi::Collection MessageComposer::ComposerViewBase::defaultSpecialTarget() co
 void MessageComposer::ComposerViewBase::slotCreateItemResult( KJob *job )
 {
     m_pendingQueueJobs--;
-    kDebug() << "mPendingCreateItemJobs" << m_pendingQueueJobs;
+    qDebug() << "mPendingCreateItemJobs" << m_pendingQueueJobs;
     Q_ASSERT( m_pendingQueueJobs >= 0 );
 
     if( job->error() ) {
-        kWarning() << "Failed to save a message:" << job->errorString();
+        qWarning() << "Failed to save a message:" << job->errorString();
         emit failed( i18n( "Failed to save the message: %1", job->errorString() ) );
         return;
     }
@@ -1159,14 +1163,14 @@ void MessageComposer::ComposerViewBase::slotCreateItemResult( KJob *job )
 void MessageComposer::ComposerViewBase::addAttachment ( const KUrl& url, const QString& comment )
 {
     Q_UNUSED( comment );
-    kDebug() << "adding attachment with url:" << url;
+    qDebug() << "adding attachment with url:" << url;
     m_attachmentController->addAttachment( url );
 }
 
 void MessageComposer::ComposerViewBase::addAttachmentUrlSync ( const KUrl& url, const QString& comment )
 {
     Q_UNUSED( comment );
-    kDebug() << "adding attachment with url:" << url;
+    qDebug() << "adding attachment with url:" << url;
     m_attachmentController->addAttachmentUrlSync( url );
 }
 
@@ -1525,7 +1529,7 @@ void MessageComposer::ComposerViewBase::collectImages( KMime::Content *root )
             KMime::Content *node = MessageCore::NodeHelper::nextSibling( n );
             while ( node ) {
                 if ( node->contentType()->isImage() ) {
-                    kDebug() << "found image in multipart/related : " << node->contentType()->name();
+                    qDebug() << "found image in multipart/related : " << node->contentType()->name();
                     QImage img;
                     img.loadFromData( node->decodedContent() );
                     m_editor->loadImage( img, QString::fromLatin1( QByteArray(QByteArray("cid:") + node->contentID()->identifier()) ),

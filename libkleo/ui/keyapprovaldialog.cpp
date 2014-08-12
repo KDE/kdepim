@@ -40,13 +40,12 @@
 #include "keyrequester.h"
 
 #include "kleo/cryptobackend.h"
-#include <kpushbutton.h>
+#include <qpushbutton.h>
 #include <klocale.h>
 #include <kglobalsettings.h>
 #include <kseparator.h>
 
 #include <QStringList>
-#include <QLayout>
 #include <QLabel>
 #include <QComboBox>
 #include <QScrollArea>
@@ -57,6 +56,10 @@
 #include <gpgme++/key.h>
 
 #include <assert.h>
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
 
 static Kleo::EncryptionPreference cb2pref( int i ) {
   switch ( i ) {
@@ -82,7 +85,7 @@ static int pref2cb( Kleo::EncryptionPreference p ) {
 }
 
 static QStringList preferencesStrings() {
-  return QStringList() << i18n("<placeholder>none</placeholder>")
+  return QStringList() << xi18n("<placeholder>none</placeholder>")
                        << i18n("Never Encrypt with This Key")
                        << i18n("Always Encrypt with This Key")
                        << i18n("Encrypt Whenever Encryption is Possible")
@@ -105,20 +108,27 @@ public:
 Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients,
                                             const std::vector<GpgME::Key> & sender,
                                             QWidget * parent )
-  : KDialog( parent ),
+  : QDialog( parent ),
     d( new Private() )
 {
-  setCaption( i18n("Encryption Key Approval") );
-  setButtons(  Ok|Cancel );
-  setDefaultButton(  Ok );
+  setWindowTitle( i18n("Encryption Key Approval") );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  okButton->setDefault(true);
   assert( !recipients.empty() );
 
 
   QFrame *page = new QFrame( this );
-  setMainWidget( page );
+  mainLayout->addWidget(page);
+  mainLayout->addWidget(buttonBox);
   QVBoxLayout * vlay = new QVBoxLayout( page );
   vlay->setMargin( 0 );
-  vlay->setSpacing( spacingHint() );
 
   vlay->addWidget( new QLabel( i18n("The following keys will be used for encryption:"), page ) );
 
@@ -131,8 +141,6 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
   QWidget * view = new QWidget( sv->viewport() );
 
   QGridLayout * glay = new QGridLayout( view );
-  glay->setMargin( marginHint() );
-  glay->setSpacing( spacingHint() );
   glay->setColumnStretch( 1, 1 );
   sv->setWidget( view );
 
@@ -177,8 +185,8 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
   QSize size = sizeHint();
 
   // don't make the dialog too large
-  const QRect desk = KGlobalSettings::desktopGeometry( this );
-  setInitialSize( QSize( qMin( size.width(), 3 * desk.width() / 4 ),
+  const QRect desk = QApplication::desktop()->screenGeometry( this );
+  resize( QSize( qMin( size.width(), 3 * desk.width() / 4 ),
                          qMin( size.height(), 7 * desk.height() / 8 ) ) );
 }
 

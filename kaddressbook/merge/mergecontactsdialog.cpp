@@ -23,17 +23,16 @@
 #include "mergecontactsjob.h"
 #include "mergecontactshowresultdialog.h"
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include <QItemSelectionModel>
+
 #include <QLabel>
 #include <QSplitter>
-#include <QHBoxLayout>
 #include <QPointer>
 
 using namespace KABMergeContacts;
@@ -57,7 +56,7 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
             mainWidget->addWidget(mContactWidget);
             MergeContactInfoWidget *contactInfo = new MergeContactInfoWidget;
             mainWidget->addWidget(contactInfo);
-            connect(mContactWidget, SIGNAL(contactSelected(Akonadi::Item)), contactInfo, SLOT(setContact(Akonadi::Item)));
+            connect(mContactWidget, &MergeContactWidget::contactSelected, contactInfo, &MergeContactInfoWidget::setContact);
             connect(mContactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
             setMainWidget(mainWidget);
         }
@@ -76,7 +75,7 @@ void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const
     }
     enableButton(Close, false);
     MergeContactsJob *job = new MergeContactsJob(this);
-    connect(job,SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeContactFinished(Akonadi::Item)));
+    connect(job, &MergeContactsJob::finished, this, &MergeContactsDialog::slotMergeContactFinished);
     job->setDestination(col);
     job->setListItem(lst);
     job->start();
@@ -100,7 +99,7 @@ void MergeContactsDialog::slotMergeContactFinished(const Akonadi::Item &item)
 
 void MergeContactsDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "MergeContactsDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactsDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -109,7 +108,7 @@ void MergeContactsDialog::readConfig()
 
 void MergeContactsDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "MergeContactsDialog");
+    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactsDialog");
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

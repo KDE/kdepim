@@ -21,7 +21,6 @@
 
 #include <KLocalizedString>
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KSharedConfig>
 
 TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
@@ -53,7 +52,7 @@ void TranslatorDebugDialog::setDebug(const QString &debugStr)
 
 void TranslatorDebugDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "TranslatorDebugDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "TranslatorDebugDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -62,7 +61,7 @@ void TranslatorDebugDialog::readConfig()
 
 void TranslatorDebugDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "TranslatorDebugDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "TranslatorDebugDialog" );
     group.writeEntry( "Size", size() );
 }
 

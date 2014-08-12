@@ -28,7 +28,7 @@ namespace PimCommon {
 class StorageServiceManager;
 }
 
-class KAction;
+class QAction;
 class QLabel;
 class StorageServiceManagerMainWidget;
 class StorageServiceManagerMainWindow : public KXmlGuiWindow
@@ -60,18 +60,18 @@ private:
     void initStatusBar();
     StorageServiceManagerMainWidget *mStorageServiceMainWidget;
     PimCommon::StorageServiceManager *mStorageManager;
-    KAction *mDownloadFile;
-    KAction *mCreateFolder;
-    KAction *mAccountInfo;
-    KAction *mUploadFile;
-    KAction *mDelete;
-    KAction *mAuthenticate;
-    KAction *mRefreshList;
-    KAction *mShowLog;
-    KAction *mLogout;
-    KAction *mShutdownAllServices;
-    KAction *mRefreshAll;
-    KAction *mRenameItem;
+    QAction *mDownloadFile;
+    QAction *mCreateFolder;
+    QAction *mAccountInfo;
+    QAction *mUploadFile;
+    QAction *mDelete;
+    QAction *mAuthenticate;
+    QAction *mRefreshList;
+    QAction *mShowLog;
+    QAction *mLogout;
+    QAction *mShutdownAllServices;
+    QAction *mRefreshAll;
+    QAction *mRenameItem;
     QLabel *mStatusBarInfo;
     bool mNetworkIsDown;
 };

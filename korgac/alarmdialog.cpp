@@ -24,6 +24,7 @@
   without including the source code for Qt in the source distribution.
 */
 
+#include "config-kdepim.h"
 #include "alarmdialog.h"
 #include "korganizer_interface.h"
 #include "mailclient.h"
@@ -43,13 +44,13 @@
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
-#include <Mailtransport/TransportManager>
+#include <MailTransport/TransportManager>
 
 #include <KComboBox>
-#include <KDebug>
-#include <KHBox>
+#include <QDebug>
+#include <QHBoxLayout>
 #include <KLocale>
 #include <KMessageBox>
 #include <KNotification>
@@ -57,7 +58,8 @@
 #include <KSystemTimeZone>
 #include <KToolInvocation>
 #include <KWindowSystem>
-
+#include <KIconLoader>
+#include <QIcon>
 #include <phonon/mediaobject.h>
 #include <QLabel>
 #include <QKeyEvent>
@@ -115,7 +117,7 @@ class ReminderTreeItem : public QTreeWidgetItem
 
 struct ConfItem {
   QString uid;
-  KUrl akonadiUrl;
+  QUrl akonadiUrl;
   QDateTime remindAt;
 };
 
@@ -152,7 +154,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
 
   KIconLoader::global()->addAppDir( QLatin1String("korgac") );
 
-  KSharedConfig::Ptr config = KGlobal::config();
+  KSharedConfig::Ptr config = KSharedConfig::openConfig();
   KConfigGroup generalConfig( config, "General" );
   QPoint pos = generalConfig.readEntry( "Position", QPoint( 0, 0 ) );
 
@@ -163,7 +165,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
   }
   setMainWidget( topBox );
   setCaption( i18nc( "@title:window", "Reminders" ) );
-  setWindowIcon( KIcon( QLatin1String("korgac") ) );
+  setWindowIcon( QIcon::fromTheme( QLatin1String("korgac") ) );
   setButtons( Ok | User1 | User2 | User3 );
   setDefaultButton( NoDefault );
   setButtonText( User3, i18nc( "@action:button", "Dismiss Reminder" ) );
@@ -222,11 +224,11 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
            SLOT(update()) );
   connect( mIncidenceTree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            SLOT(edit()) );
-  connect( mIncidenceTree, SIGNAL(customContextMenuRequested(QPoint)), SLOT(popupItemMenu(QPoint)) );
+  connect(mIncidenceTree, &ReminderTree::customContextMenuRequested, this, &AlarmDialog::popupItemMenu);
 
   mDetailView = new CalendarSupport::IncidenceViewer( mCalendar.data(), topBox );
   QString s;
-  s = i18nc( "@info default incidence details string",
+  s = xi18nc( "@info default incidence details string",
              "<emphasis>Select an event or to-do from the list above "
              "to view its details here.</emphasis>" );
   mDetailView->setDefaultMessage( s );
@@ -234,13 +236,17 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
   mDetailView->hide();
   mLastItem = 0;
 
-  KHBox *suspendBox = new KHBox( topBox );
-  suspendBox->setSpacing( spacingHint() );
+  QWidget *suspendBox = new QWidget( topBox );
+  QHBoxLayout *suspendBoxHBoxLayout = new QHBoxLayout(suspendBox);
+  suspendBoxHBoxLayout->setMargin(0);
+  suspendBoxHBoxLayout->setSpacing( spacingHint() );
   mTopLayout->addWidget( suspendBox );
 
   QLabel *l = new QLabel( i18nc( "@label:spinbox", "Suspend &duration:" ), suspendBox );
+  suspendBoxHBoxLayout->addWidget(l);
 
   mSuspendSpin = new QSpinBox( suspendBox );
+  suspendBoxHBoxLayout->addWidget(mSuspendSpin);
   mSuspendSpin->setRange( 1, 9999 );
   mSuspendSpin->setValue( defSuspendVal );  // default suspend duration
   mSuspendSpin->setToolTip(
@@ -255,6 +261,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
   l->setBuddy( mSuspendSpin );
 
   mSuspendUnit = new KComboBox( suspendBox );
+  suspendBoxHBoxLayout->addWidget(mSuspendUnit);
   mSuspendUnit->addItem( i18nc( "@item:inlistbox suspend in terms of minutes", "minute(s)" ) );
   mSuspendUnit->addItem( i18nc( "@item:inlistbox suspend in terms of hours", "hour(s)" ) );
   mSuspendUnit->addItem( i18nc( "@item:inlistbox suspend in terms of days", "day(s)" ) );
@@ -272,10 +279,10 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
 
   connect( &mSuspendTimer, SIGNAL(timeout()), SLOT(wakeUp()) );
 
-  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()) );
-  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
-  connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
-  connect( this, SIGNAL(user3Clicked()), this, SLOT(slotUser3()) );
+  connect(this, &AlarmDialog::okClicked, this, &AlarmDialog::slotOk);
+  connect(this, &AlarmDialog::user1Clicked, this, &AlarmDialog::slotUser1);
+  connect(this, &AlarmDialog::user2Clicked, this, &AlarmDialog::slotUser2);
+  connect(this, &AlarmDialog::user3Clicked, this, &AlarmDialog::slotUser3);
 
   mIdentityManager = new CalendarSupport::IdentityManager;
 }
@@ -422,7 +429,7 @@ void AlarmDialog::dismiss( ReminderList selections )
 {
   QList<Akonadi::Item::Id> ids;
   for ( ReminderList::Iterator it = selections.begin(); it != selections.end(); ++it ) {
-    kDebug() << "removing " << CalendarSupport::incidence( (*it)->mIncidence )->summary();
+    qDebug() << "removing " << CalendarSupport::incidence( (*it)->mIncidence )->summary();
     if ( mIncidenceTree->itemBelow( *it ) ) {
       mIncidenceTree->setCurrentItem( mIncidenceTree->itemBelow( *it ) );
     } else if ( mIncidenceTree->itemAbove( *it ) ) {
@@ -489,7 +496,7 @@ void AlarmDialog::suspend()
       item->mRemindAt = QDateTime::currentDateTime().addSecs( unit * mSuspendSpin->value() );
       item->mHappening = KDateTime( item->mRemindAt, KDateTime::Spec::LocalZone() );
       item->mNotified = false;
-      (*it)->setText( 1, KGlobal::locale()->formatDateTime( item->mHappening ) );
+      (*it)->setText( 1, KLocale::global()->formatDateTime( item->mHappening ) );
       selitem = item;
     }
     ++it;
@@ -615,7 +622,7 @@ void AlarmDialog::eventNotification()
       // FIXME: Check whether this should be done for all multiple alarms
       if ( alarm->type() == Alarm::Procedure ) {
         // FIXME: Add a message box asking whether the procedure should really be executed
-        kDebug() << "Starting program: '" << alarm->programFile() << "'";
+        qDebug() << "Starting program: '" << alarm->programFile() << "'";
 
         QString program = alarm->programFile();
 
@@ -720,7 +727,7 @@ void AlarmDialog::wakeUp()
 
 void AlarmDialog::slotSave()
 {
-  KSharedConfig::Ptr config = KGlobal::config();
+  KSharedConfig::Ptr config = KSharedConfig::openConfig();
   KConfigGroup generalConfig( config, "General" );
   int numReminders = 0;
 
@@ -731,7 +738,7 @@ void AlarmDialog::slotSave()
                                   QString::fromLatin1( "Incidence-%1" ).arg( numReminders + 1 ) );
 
     Incidence::Ptr incidence = CalendarSupport::incidence( item->mIncidence );
-    incidenceConfig.writeEntry( "AkonadiUrl", item->mIncidence.url() );
+    //QT5 port to QUrl incidenceConfig.writeEntry( "AkonadiUrl", item->mIncidence.url() );
     incidenceConfig.writeEntry( "RemindAt", item->mRemindAt );
     ++numReminders;
     ++it;
@@ -766,7 +773,7 @@ int AlarmDialog::activeCount()
     }
     ++it;
   }
-  kDebug() << "computed " << count << " active reminders";
+  qDebug() << "computed " << count << " active reminders";
   return count;
 }
 
@@ -779,7 +786,7 @@ void AlarmDialog::closeEvent( QCloseEvent * )
 void AlarmDialog::updateButtons()
 {
   const int count = selectedItems().count();
-  kDebug() << "selected items=" << count;
+  qDebug() << "selected items=" << count;
   enableButton( User3, count > 0 );  // enable Dismiss, if >1 selected
   enableButton( User1, count == 1 ); // enable Edit, if only 1 selected
   enableButton( Ok, count > 0 );     // enable Suspend, if >1 selected
@@ -876,7 +883,7 @@ KDateTime AlarmDialog::triggerDateForIncidence( const Incidence::Ptr &incidence,
     result = incidence->recurrence()->getNextDateTime(
       KDateTime( reminderAt, KDateTime::Spec::LocalZone( ) ) );
 
-      displayStr = KGlobal::locale()->formatDateTime( result.toLocalZone() );
+      displayStr = KLocale::global()->formatDateTime( result.toLocalZone() );
   }
 
   if ( !result.isValid() ) {
@@ -944,7 +951,7 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer( const Incidence::Ptr &in
   org::kde::korganizer::Korganizer korganizer(
     QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus() );
 
-  kDebug() << "editing incidence " << incidence->summary();
+  qDebug() << "editing incidence " << incidence->summary();
   if ( !korganizer.editIncidence( incidence->uid() ) ) {
     KMessageBox::error(
       this,
@@ -958,7 +965,7 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer( const Incidence::Ptr &in
     QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.kontact") ) ?
     QLatin1String("kontact/MainWindow_1") : QLatin1String("korganizer/MainWindow_1");
   QDBusInterface korganizerObj( QLatin1String("org.kde.korganizer"), QLatin1Char('/') + object );
-#ifdef Q_WS_X11
+#if KDEPIM_HAVE_X11
   QDBusReply<int> reply = korganizerObj.call( QLatin1String("winId") );
   if ( reply.isValid() ) {
     int window = reply;
@@ -970,7 +977,7 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer( const Incidence::Ptr &in
     }
     KWindowSystem::activateWindow( KWindowSystem::transientFor( window ) );
   }
-#elif defined(Q_WS_WIN)
+#elif defined(Q_OS_WIN)
   // WId is a typedef to a void* on windows
   QDBusReply<qlonglong> reply = korganizerObj.call( QLatin1String("winId") );
   if ( reply.isValid() ) {
@@ -998,7 +1005,7 @@ bool AlarmDialog::openIncidenceEditorNG( const Akonadi::Item &item )
 
 void AlarmDialog::removeFromConfig( const QList<Akonadi::Item::Id> &ids )
 {
-  KSharedConfig::Ptr config = KGlobal::config();
+  KSharedConfig::Ptr config = KSharedConfig::openConfig();
   KConfigGroup genGroup( config, "General" );
 
   const int oldNumReminders = genGroup.readEntry( "Reminders", 0 );
@@ -1030,7 +1037,7 @@ void AlarmDialog::removeFromConfig( const QList<Akonadi::Item::Id> &ids )
     KConfigGroup incGroup( config, group );
     incGroup.writeEntry( "UID", newReminders[i].uid );
     incGroup.writeEntry( "RemindAt", newReminders[i].remindAt );
-    incGroup.writeEntry( "AkonadiUrl", newReminders[i].akonadiUrl );
+    //QT5 port to QUrl incGroup.writeEntry( "AkonadiUrl", newReminders[i].akonadiUrl );
     incGroup.sync();
   }
   genGroup.sync();

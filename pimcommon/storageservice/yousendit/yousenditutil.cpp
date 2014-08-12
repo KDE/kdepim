@@ -16,12 +16,13 @@
 */
 
 #include "yousenditutil.h"
-#include <qjson/parser.h>
 #include <QVariant>
-#include <QDebug>
+#include <QDateTime>
 
 QStringList PimCommon::YouSendItUtil::getListFolder(const QString &data)
 {
+    QStringList listFolder;
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     QStringList listFolder;
@@ -36,13 +37,14 @@ QStringList PimCommon::YouSendItUtil::getListFolder(const QString &data)
             }
         }
     }
+#endif
     return listFolder;
 }
 
-KDateTime PimCommon::YouSendItUtil::convertToDateTime(QString dateTime, bool removeTimeZone)
+QDateTime PimCommon::YouSendItUtil::convertToDateTime(QString dateTime, bool removeTimeZone)
 {
     if (removeTimeZone)
         dateTime.chop(6);     // chop() removes the time zone
-    const KDateTime t = KDateTime(QDateTime::fromString(dateTime, QLatin1String("yyyy-MM-ddThh:mm:ss")));
+    const QDateTime t = QDateTime(QDateTime::fromString(dateTime, QLatin1String("yyyy-MM-ddThh:mm:ss")));
     return t;
 }

@@ -130,14 +130,14 @@ QString ExportSecretKeyCommand::successCaption() const {
 }
 
 QString ExportSecretKeyCommand::crashExitMessage( const QStringList & args ) const {
-    return i18nc("@info",
+    return xi18nc("@info",
                  "<para>The GPG or GpgSM process that tried to export the secret key "
                  "ended prematurely because of an unexpected error.</para>"
                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( QLatin1String(" ") ) ) ;
 }
 
 QString ExportSecretKeyCommand::errorExitMessage( const QStringList & args ) const {
-    return i18nc("@info",
+    return xi18nc("@info",
                  "<para>An error occurred while trying to export the secret key.</para> "
                  "<para>The output from <command>%1</command> was: <message>%2</message></para>",
                  args[0], errorString() );

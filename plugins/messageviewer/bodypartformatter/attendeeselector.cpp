@@ -23,8 +23,10 @@
 #include <KPIMUtils/Email>
 
 #include <klocale.h>
-#include <kpushbutton.h>
+#include <QPushButton>
 #include <kguiitem.h>
+#include <KGuiItem>
+#include <KStandardGuiItem>
 
 AttendeeSelector::AttendeeSelector(QWidget * parent)
   : KDialog( parent )
@@ -34,12 +36,12 @@ AttendeeSelector::AttendeeSelector(QWidget * parent)
 
   ui.setupUi( mainWidget() );
 
-  ui.addButton->setGuiItem( KStandardGuiItem::add() );
+  KGuiItem::assign(ui.addButton, KStandardGuiItem::add() );
   connect( ui.addButton, SIGNAL(clicked()), SLOT(addClicked()) );
-  ui.removeButton->setGuiItem( KStandardGuiItem::remove() );
+  KGuiItem::assign(ui.removeButton, KStandardGuiItem::remove() );
   connect( ui.removeButton, SIGNAL(clicked()), SLOT(removeClicked()) );
 
-  ui.attendeeEdit->setClickMessage( i18n("Click to add a new attendee") );
+  ui.attendeeEdit->setPlaceholderText( i18n("Click to add a new attendee") );
   connect( ui.attendeeEdit, SIGNAL(textChanged(QString)), SLOT(textChanged(QString)) );
   connect( ui.attendeeEdit, SIGNAL(returnPressed(QString)), SLOT(addClicked()) );
 

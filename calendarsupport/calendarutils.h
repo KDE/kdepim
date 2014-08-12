@@ -24,7 +24,7 @@
 
 #include "calendarsupport_export.h"
 
-#include <Akonadi/Collection>
+#include <Collection>
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <QtCore/QObject>

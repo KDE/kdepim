@@ -21,10 +21,10 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 
-#include <kicon.h>
+#include <QIcon>
+#include <QMenu>
 #include <KGlobal>
 #include <KLocale>
-#include <kmenu.h>
 #include <KLocalizedString>
 
 static QString followUpItemPattern = QLatin1String("FollowupReminderItem \\d+");
@@ -122,8 +122,8 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
 {
     const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
     if ( !listItems.isEmpty() ) {
-        KMenu menu;
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        QMenu menu;
+        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
 }

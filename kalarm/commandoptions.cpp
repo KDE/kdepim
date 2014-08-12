@@ -23,7 +23,7 @@
 #include "alarmtime.h"
 #include "kalarmapp.h"
 #include "kamail.h"
-
+#include <KDebug>
 #include <kalarmcal/identities.h>
 
 #include <kcmdlineargs.h>
@@ -74,13 +74,9 @@ CommandOptions::CommandOptions()
     ||  checkCommand("cancelEvent", CANCEL_EVENT)
     ||  checkCommand("edit", EDIT))
     {
-#ifdef USE_AKONADI
         // Fetch the event ID. This can optionally include a prefix of the
         // resource ID followed by a colon delimiter.
         mEventId = EventId(mArgs->getOption(mCommandName));
-#else
-        mEventId = mArgs->getOption(mCommandName);
-#endif
     }
     if (checkCommand("edit-new-preset", EDIT_NEW_PRESET))
     {
@@ -168,7 +164,7 @@ CommandOptions::CommandOptions()
         }
         else
         {
-            kDebug() << "Message";
+            qDebug() << "Message";
             mCommand       = NEW;
             mCommandName   = "message";
             mEditType      = EditAlarmDlg::DISPLAY;
@@ -188,13 +184,9 @@ CommandOptions::CommandOptions()
         {
             QString addr = params[i];
             if (!KAMail::checkAddress(addr))
-                setError(i18nc("@info:shell", "<icode>%1</icode>: invalid email address", QLatin1String("--mail")));
-#ifdef USE_AKONADI
+                setError(xi18nc("@info:shell", "<icode>%1</icode>: invalid email address", QLatin1String("--mail")));
             KCalCore::Person::Ptr person(new KCalCore::Person(QString(), addr));
             mAddressees += person;
-#else
-            mAddressees += KCal::Person(QString(), addr);
-#endif
         }
         params = mArgs->getOptionList("attach");
         for (int i = 0, count = params.count();  i < count;  ++i)
@@ -305,11 +297,11 @@ CommandOptions::CommandOptions()
                     if (!ok)
                         setErrorParameter("--until");
                     else if (mAlarmTime.isDateOnly()  &&  !endTime.isDateOnly())
-                        setError(i18nc("@info:shell", "Invalid <icode>%1</icode> parameter for date-only alarm", QLatin1String("--until")));
+                        setError(xi18nc("@info:shell", "Invalid <icode>%1</icode> parameter for date-only alarm", QLatin1String("--until")));
                     if (!mAlarmTime.isDateOnly()  &&  endTime.isDateOnly())
                         endTime.setTime(QTime(23,59,59));
                     if (endTime < mAlarmTime)
-                        setError(i18nc("@info:shell", "<icode>%1</icode> earlier than <icode>%2</icode>", QLatin1String("--until"), QLatin1String("--time")));
+                        setError(xi18nc("@info:shell", "<icode>%1</icode> earlier than <icode>%2</icode>", QLatin1String("--until"), QLatin1String("--time")));
                 }
                 else
                     count = -1;
@@ -320,7 +312,7 @@ CommandOptions::CommandOptions()
                 if (!convInterval(mArgs->getOption("interval").toLocal8Bit(), recurType, interval, !haveRecurrence))
                     setErrorParameter("--interval");
                 else if (mAlarmTime.isDateOnly()  &&  recurType == KARecurrence::MINUTELY)
-                    setError(i18nc("@info:shell", "Invalid <icode>%1</icode> parameter for date-only alarm", QLatin1String("--interval")));
+                    setError(xi18nc("@info:shell", "Invalid <icode>%1</icode> parameter for date-only alarm", QLatin1String("--interval")));
 
                 if (haveRecurrence)
                 {
@@ -329,7 +321,7 @@ CommandOptions::CommandOptions()
                         // There is a also a recurrence specified, so set up a sub-repetition
                         int longestInterval = mRecurrence->longestInterval();
                         if (count * interval > longestInterval)
-                            setError(i18nc("@info:shell", "Invalid <icode>%1</icode> and <icode>%2</icode> parameters: repetition is longer than <icode>%3</icode> interval",
+                            setError(xi18nc("@info:shell", "Invalid <icode>%1</icode> and <icode>%2</icode> parameters: repetition is longer than <icode>%3</icode> interval",
                                            QLatin1String("--interval"), QLatin1String("--repeat"), QLatin1String("--recurrence")));
                         mRepeatCount    = count;
                         mRepeatInterval = interval;
@@ -379,7 +371,7 @@ CommandOptions::CommandOptions()
                 if (mArgs->isSet("beep"))
                     setErrorIncompatible("--beep", "--speak");
                 else if (!theApp()->speechEnabled())
-                    setError(i18nc("@info:shell", "<icode>%1</icode> requires speech synthesis to be configured using Jovie", QLatin1String("--speak")));
+                    setError(xi18nc("@info:shell", "<icode>%1</icode> requires speech synthesis to be configured using Jovie", QLatin1String("--speak")));
             }
             bool onceOnly = mArgs->isSet("reminder-once");
             if (mArgs->isSet("reminder")  ||  onceOnly)
@@ -396,7 +388,7 @@ CommandOptions::CommandOptions()
                 if (!convInterval(optval, recurType, mReminderMinutes))
                     setErrorParameter(opt);
                 else if (recurType == KARecurrence::MINUTELY  &&  mAlarmTime.isDateOnly())
-                    setError(i18nc("@info:shell", "Invalid <icode>%1</icode> parameter for date-only alarm", QLatin1String(opt)));
+                    setError(xi18nc("@info:shell", "Invalid <icode>%1</icode> parameter for date-only alarm", QLatin1String(opt)));
                 if (after)
                     mReminderMinutes = -mReminderMinutes;
                 if (onceOnly)
@@ -439,7 +431,7 @@ CommandOptions::CommandOptions()
             // No arguments - run interactively & display the main window
             if (!mError.isEmpty())
                 break;
-            kDebug() << "Interactive";
+            qDebug() << "Interactive";
             if (mArgs->isSet("ack-confirm"))
                 mError += QLatin1String("--ack-confirm ");
             if (mArgs->isSet("attach"))
@@ -520,7 +512,7 @@ bool CommandOptions::checkCommand(const QByteArray& command, Command code, EditA
     &&  (allowedEditType == EditAlarmDlg::NO_TYPE
       || (allowedEditType != EditAlarmDlg::NO_TYPE  &&  (mCommand != NEW || mEditType != allowedEditType))))
         setErrorIncompatible(mCommandName, "--" + command);
-    kDebug().nospace() << " --" << command;
+    qDebug().nospace() << " --" << command;
     mCommand = code;
     mCommandName = command;
     return true;
@@ -530,14 +522,14 @@ bool CommandOptions::checkCommand(const QByteArray& command, Command code, EditA
 void CommandOptions::setErrorRequires(const char* opt, const char* opt2, const char* opt3)
 {
     if (!opt3)
-        setError(i18nc("@info:shell", "<icode>%1</icode> requires <icode>%2</icode>", QLatin1String(opt), QLatin1String(opt2)));
+        setError(xi18nc("@info:shell", "<icode>%1</icode> requires <icode>%2</icode>", QLatin1String(opt), QLatin1String(opt2)));
     else
-        setError(i18nc("@info:shell", "<icode>%1</icode> requires <icode>%2</icode> or <icode>%3</icode>", QLatin1String(opt), QLatin1String(opt2), QLatin1String(opt3)));
+        setError(xi18nc("@info:shell", "<icode>%1</icode> requires <icode>%2</icode> or <icode>%3</icode>", QLatin1String(opt), QLatin1String(opt2), QLatin1String(opt3)));
 }
 
 void CommandOptions::setErrorParameter(const char* opt)
 {
-    setError(i18nc("@info:shell", "Invalid <icode>%1</icode> parameter", QLatin1String(opt)));
+    setError(xi18nc("@info:shell", "Invalid <icode>%1</icode> parameter", QLatin1String(opt)));
 }
 
 void CommandOptions::setErrorIncompatible(const QByteArray& opt1, const QByteArray& opt2)
@@ -548,7 +540,7 @@ void CommandOptions::setErrorIncompatible(const QByteArray& opt1, const QByteArr
     QByteArray o2 = opt2;
     if (!opt2.startsWith("--")  &&  opt2 != "message")    //krazy:exclude=strings (it's a QByteArray)
         o2.prepend("--");
-    setError(i18nc("@info:shell", "<icode>%1</icode> incompatible with <icode>%2</icode>", QString::fromLatin1(o1), QString::fromLatin1(o2)));
+    setError(xi18nc("@info:shell", "<icode>%1</icode> incompatible with <icode>%2</icode>", QString::fromLatin1(o1), QString::fromLatin1(o2)));
 }
 
 void CommandOptions::checkEditType(EditAlarmDlg::Type type1, EditAlarmDlg::Type type2, const QByteArray& optName)

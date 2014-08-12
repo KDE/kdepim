@@ -16,7 +16,6 @@
 */
 
 #include "contactgrantleeprintaddressobject.h"
-#include <QDebug>
 
 using namespace KABPrinting;
 ContactGrantleePrintAddressObject::ContactGrantleePrintAddressObject(const KABC::Address &address, QObject *parent)

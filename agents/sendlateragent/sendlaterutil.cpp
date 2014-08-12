@@ -93,7 +93,7 @@ bool SendLater::SendLaterUtil::sentLaterAgentWasRegistered()
 
 void SendLater::SendLaterUtil::forceReparseConfiguration()
 {
-    SendLaterAgentSettings::self()->writeConfig();
+    SendLaterAgentSettings::self()->save();
     SendLaterAgentSettings::self()->config()->reparseConfiguration();
 }
 

@@ -64,11 +64,11 @@
 #include <gpgme.h>
 
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KDebug>
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <KMessageBox>
+#include <QIcon>
 
 #include <QRegExpValidator>
 #include <QLineEdit>
@@ -81,6 +81,8 @@
 #include <boost/range.hpp>
 
 #include <algorithm>
+#include <KSharedConfig>
+#include <KLocale>
 
 using namespace Kleo;
 using namespace Kleo::NewCertificateUi;
@@ -147,7 +149,7 @@ static void set_keysize( QComboBox * cb, unsigned int strength ) {
         return;
     const int idx = cb->findData( static_cast<int>( strength ) );
     if ( idx < 0 )
-        kWarning() << "keysize " << strength << " not allowed";
+        qWarning() << "keysize " << strength << " not allowed";
     cb->setCurrentIndex( idx );
 }
 
@@ -623,7 +625,7 @@ namespace {
               ui()
         {
             ui.setupUi( this );
-            ui.dragQueen->setPixmap( KIcon( QLatin1String("kleopatra") ).pixmap( 64, 64 ) );
+            ui.dragQueen->setPixmap( QIcon::fromTheme( QLatin1String("kleopatra") ).pixmap( 64, 64 ) );
             registerField( QLatin1String("error"),  ui.errorTB,   "plainText" );
             registerField( QLatin1String("result"), ui.resultTB,  "plainText" );
             registerField( QLatin1String("url"),    ui.dragQueen, "url" );
@@ -711,14 +713,14 @@ namespace {
             QFile src( QUrl( url() ).toLocalFile() );
             if ( !src.copy( fileName ) )
                 KMessageBox::error( this,
-                                    i18nc("@info",
+                                    xi18nc("@info",
                                           "Could not copy temporary file <filename>%1</filename> "
                                           "to file <filename>%2</filename>: <message>%3</message>",
                                           src.fileName(), fileName, src.errorString() ),
                                     i18nc("@title", "Error Saving Request") );
             else
                 KMessageBox::information( this,
-                                          i18nc("@info",
+                                          xi18nc("@info",
                                                 "<para>Successfully wrote request to <filename>%1</filename>.</para>"
                                                 "<para>You should now send the request to the Certification Authority (CA).</para>",
                                                 fileName ),
@@ -728,7 +730,7 @@ namespace {
         void slotSendRequestByEMail() {
             if ( pgp() )
                 return;
-            const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+            const KConfigGroup config( KSharedConfig::openConfig(), "CertificateCreationWizard" );
             invokeMailer( config.readEntry( "CAEmailAddress" ), // to
                           i18n("Please process this certificate."), // subject
                           i18n("Please process this certificate and inform the sender about the location to fetch the resulting certificate.\n\nThanks,\n"), // body
@@ -750,7 +752,7 @@ namespace {
                 return;
             // ### better error handling?
             const QString fileName = exportCertificateCommand->openPGPFileName();
-            kDebug() << "fileName" << fileName;
+            qDebug() << "fileName" << fileName;
             exportCertificateCommand = 0;
             if ( fileName.isEmpty() )
                 return;
@@ -770,7 +772,7 @@ namespace {
         }
 
         void invokeMailer( const QString & to, const QString & subject, QString body, const QString & attachment ) {
-            kDebug() << "to:" << to << "subject:" << subject
+            qDebug() << "to:" << to << "subject:" << subject
                      << "body:" << body << "attachment:" << attachment;
             // KToolInvocation::invokeMailer is broken on Windows, and openUrl works fine on Unix, too.
 
@@ -783,10 +785,10 @@ namespace {
                 + "&body=" + QUrl::toPercentEncoding( body ) ;
             if ( !attachment.isEmpty() )
                 encoded += "&attach=" + ol_quote( QUrl::toPercentEncoding( QFileInfo( attachment ).absoluteFilePath() ) );
-            kDebug() << "openUrl" << QUrl::fromEncoded( encoded );
+            qDebug() << "openUrl" << QUrl::fromEncoded( encoded );
             QDesktopServices::openUrl( QUrl::fromEncoded( encoded ) );
             KMessageBox::information( this,
-                                      i18nc("@info",
+                                      xi18nc("@info",
                                             "<para><application>Kleopatra</application> tried to send a mail via your default mail client.</para>"
                                             "<para>Some mail clients are known not to support attachments when invoked this way.</para>"
                                             "<para>If your mail client does not have an attachment, then drag the <application>Kleopatra</application> icon and drop it on the message compose window of your mail client.</para>"
@@ -865,7 +867,7 @@ public:
     }
 
 private:
-    KTempDir tmp;
+    QTemporaryDir tmp;
     struct Ui {
         ChooseProtocolPage chooseProtocolPage;
         EnterDetailsPage enterDetailsPage;
@@ -966,7 +968,7 @@ static const char * oidForAttributeName( const QString & attr ) {
 }
 
 QDir WizardPage::tmpDir() const {
-    return wizard() ? QDir( wizard()->d->tmp.name() ) : QDir::home() ;
+    return wizard() ? QDir( wizard()->d->tmp.path() ) : QDir::home() ;
 }
 
 void EnterDetailsPage::registerDialogPropertiesAsFields() {
@@ -1065,7 +1067,7 @@ void EnterDetailsPage::updateForm() {
 
     clearForm();
 
-    const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+    const KConfigGroup config( KSharedConfig::openConfig(), "CertificateCreationWizard" );
 
     QStringList attrOrder = config.readEntry( pgp() ? "OpenPGPAttributeOrder" : "DNAttributeOrder", QStringList() );
     if ( attrOrder.empty() ) {
@@ -1182,32 +1184,32 @@ static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
     if ( !le )
       continue;
     const QString key = line.attr;
-    kDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
+    qDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
     if ( le->text().trimmed().isEmpty() ) {
         if ( key.endsWith(QLatin1Char('!')) ) {
             if ( line.regex.isEmpty() )
-                error = i18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
+                error = xi18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
             else
-                error = i18nc("@info","<interface>%1</interface> is required, but empty.<nl/>"
+                error = xi18nc("@info","<interface>%1</interface> is required, but empty.<nl/>"
                               "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
             return false;
         }
     } else if ( has_intermediate_input( le ) ) {
         if ( line.regex.isEmpty() )
-            error = i18nc("@info","<interface>%1</interface> is incomplete.", line.label );
+            error = xi18nc("@info","<interface>%1</interface> is incomplete.", line.label );
         else
-            error = i18nc("@info","<interface>%1</interface> is incomplete.<nl/>"
+            error = xi18nc("@info","<interface>%1</interface> is incomplete.<nl/>"
                           "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
         return false;
     } else if ( !le->hasAcceptableInput() ) {
         if ( line.regex.isEmpty() )
-            error = i18nc("@info","<interface>%1</interface> is invalid.", line.label );
+            error = xi18nc("@info","<interface>%1</interface> is invalid.", line.label );
         else
-            error = i18nc("@info","<interface>%1</interface> is invalid.<nl/>"
+            error = xi18nc("@info","<interface>%1</interface> is invalid.<nl/>"
                           "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
         return false;
     }
-    kDebug() << "ok" << endl;
+    qDebug() << "ok" << endl;
   }
   return true;
 }
@@ -1322,7 +1324,7 @@ QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
         }
     }
     if ( pgp() && details && expiryDate().isValid() )
-        s         << Row<        >( i18n("Valid Until:"),       KGlobal::locale()->formatDate( expiryDate() ) );
+        s         << Row<        >( i18n("Valid Until:"),       KLocale::global()->formatDate( expiryDate() ) );
     if ( !pgp() && details ) {
         Q_FOREACH( const QString & email, additionalEMailAddresses() )
             s     << Row<        >( i18n("Add. Email Address:"),email );
@@ -1378,7 +1380,7 @@ QString KeyCreationPage::createGnupgKeyParms() const {
             s << "name-uri:      " << uri                  << endl;
     }
     s     << "</GnupgKeyParms>"                            << endl;
-    kDebug() << '\n' << result;
+    qDebug() << '\n' << result;
     return result;
 }
 
@@ -1400,7 +1402,7 @@ static void fill_combobox( QComboBox & cb, const QList<int> & sizes, const QStri
 
 void AdvancedSettingsDialog::fillKeySizeComboBoxen() {
 
-    const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+    const KConfigGroup config( KSharedConfig::openConfig(), "CertificateCreationWizard" );
 
     const QList<int> rsaKeySizes = config.readEntry( RSA_KEYSIZES_ENTRY, QList<int>() << 1536 << -2048 << 3072 << 4096 );
     const QList<int> dsaKeySizes = config.readEntry( DSA_KEYSIZES_ENTRY, QList<int>() << -2048 );
@@ -1421,7 +1423,7 @@ void AdvancedSettingsDialog::loadDefaultKeyType() {
     if ( protocol != CMS && protocol != OpenPGP )
         return;
 
-    const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+    const KConfigGroup config( KSharedConfig::openConfig(), "CertificateCreationWizard" );
 
     const QString entry = protocol == CMS ? QLatin1String(CMS_KEY_TYPE_ENTRY) : QLatin1String(PGP_KEY_TYPE_ENTRY) ;
     const QString keyType = config.readEntry( entry ).trimmed().toUpper();
@@ -1434,7 +1436,7 @@ void AdvancedSettingsDialog::loadDefaultKeyType() {
         setSubkeyType( GPGME_PK_ELG_E );
     } else {
         if ( !keyType.isEmpty() && keyType != QLatin1String("RSA") )
-            kWarning() << "invalid value \"" << qPrintable( keyType )
+            qWarning() << "invalid value \"" << qPrintable( keyType )
                        << "\" for entry \"[CertificateCreationWizard]"
                        << qPrintable( entry ) << "\"";
         setKeyType( GPGME_PK_RSA );

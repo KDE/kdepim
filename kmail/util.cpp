@@ -47,11 +47,13 @@
 #include <kmessagebox.h>
 #include <KLocalizedString>
 #include <KProcess>
-
+#include <QDebug>
 #include <KStandardDirs>
 
 #include <QProcess>
 #include <QFileInfo>
+#include <QAction>
+#include <QStandardPaths>
 
 #include "foldercollection.h"
 
@@ -91,7 +93,7 @@ void KMail::Util::launchAccountWizard( QWidget *w )
     lst.append( QLatin1String("--type") );
     lst.append( QLatin1String("message/rfc822") );
 
-    const QString path = KStandardDirs::findExe( QLatin1String("accountwizard" ) );
+    const QString path = QStandardPaths::findExecutable( QLatin1String("accountwizard" ) );
     if( !QProcess::startDetached( path, lst ) )
         KMessageBox::error( w, i18n( "Could not start the account wizard. "
                                      "Please check your installation." ),
@@ -131,7 +133,7 @@ bool KMail::Util::handleClickedURL( const KUrl &url, const QSharedPointer<MailCo
         win->show();
         return true;
     } else {
-        kWarning() << "Can't handle URL:" << url;
+        qWarning() << "Can't handle URL:" << url;
         return false;
     }
 }
@@ -156,7 +158,7 @@ bool KMail::Util::mailingListsHandleURL( const KUrl::List& lst,const QSharedPoin
     if ( !urlToHandle.isEmpty() ) {
         return KMail::Util::handleClickedURL( urlToHandle, folder );
     } else {
-        kWarning()<< "Can't handle url";
+        qWarning()<< "Can't handle url";
         return false;
     }
 }
@@ -242,7 +244,7 @@ void KMail::Util::migrateFromKMail1()
     if ( oldKMailConfig.hasGroup("General") ||
          ( oldKMailConfig.groupList().count() == 1 &&
            oldKMailConfig.groupList().first() == QLatin1String("$Version") ) ) {
-        const QFileInfo oldDataDirFileInfo( KStandardDirs::locateLocal( "data", QLatin1String("kmail") ) );
+        const QFileInfo oldDataDirFileInfo( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail") ) ;
         if ( !oldDataDirFileInfo.exists() || !oldDataDirFileInfo.isDir() ) {
             // neither config or data, the migrator cannot do anything useful anyways
             needMigration = false;
@@ -281,10 +283,10 @@ void KMail::Util::migrateFromKMail1()
                 return;
             }
 
-            kDebug() << "Performing Akonadi migration. Good luck!";
+            qDebug() << "Performing Akonadi migration. Good luck!";
             KProcess proc;
             QStringList args = QStringList() << QLatin1String("--interactive-on-change");
-            const QString path = KStandardDirs::findExe( QLatin1String("kmail-migrator" ) );
+            const QString path = QStandardPaths::findExecutable( QLatin1String("kmail-migrator" ) );
             proc.setProgram( path, args );
             proc.start();
             bool result = proc.waitForStarted();
@@ -292,14 +294,14 @@ void KMail::Util::migrateFromKMail1()
                 result = proc.waitForFinished( -1 );
             }
             if ( result && proc.exitCode() == 0 ) {
-                kDebug() << "Akonadi migration has been successful";
+                qDebug() << "Akonadi migration has been successful";
             } else {
                 // exit code 1 means it is already running, so we are probably called by a migrator instance
-                kError() << "Akonadi migration failed!";
-                kError() << "command was: " << proc.program();
-                kError() << "exit code: " << proc.exitCode();
-                kError() << "stdout: " << proc.readAllStandardOutput();
-                kError() << "stderr: " << proc.readAllStandardError();
+                qCritical() << "Akonadi migration failed!";
+                qCritical() << "command was: " << proc.program();
+                qCritical() << "exit code: " << proc.exitCode();
+                qCritical() << "stdout: " << proc.readAllStandardOutput();
+                qCritical() << "stderr: " << proc.readAllStandardError();
 
                 KMessageBox::error( 0, i18n("Migration to KMail 2 failed. In case you want to try again, run 'kmail-migrator --interactive' manually."),
                                     i18n( "Migration Failed" ) );
@@ -312,5 +314,14 @@ void KMail::Util::migrateFromKMail1()
         }
         migrationCfg.writeEntry( "Enabled", false );
         migrationCfg.sync();
+    }
+}
+
+void KMail::Util::addQActionHelpText(QAction *action, const QString &text)
+{
+    action->setStatusTip(text);
+    action->setToolTip(text);
+    if (action->whatsThis().isEmpty()) {
+        action->setWhatsThis(text);
     }
 }

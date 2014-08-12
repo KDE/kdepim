@@ -21,7 +21,7 @@
 #define TAGPROPERTIESDIALOG_H
 
 #include <KDialog>
-#include <akonadi/tag.h>
+#include <AkonadiCore/tag.h>
 
 #include <QStandardItemModel>
 

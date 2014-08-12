@@ -43,7 +43,7 @@ set(blogilo_SRCS
 )
 
 
-kde4_add_ui_files(
+ki18n_wrap_ui(
    blogilo_SRCS
   ui/toolboxbase.ui
   ui/addeditblogbase.ui
@@ -57,11 +57,11 @@ kde4_add_ui_files(
   ui/uploadmediabase.ui
 )
 
-kde4_add_kcfg_files( blogilo_SRCS settings.kcfgc)
+kconfig_add_kcfg_files( blogilo_SRCS settings.kcfgc)
 kde4_add_app_icon(blogilo_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/hi*-app-blogilo.png")
-kde4_add_executable( blogilo ${blogilo_SRCS})
+add_executable( blogilo ${blogilo_SRCS})
 
-target_link_libraries( blogilo kdepim ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${QT_QTWEBKIT_LIBRARY} ${KDE4_KDEWEBKIT_LIBRARY} ${KDEPIMLIBS_KBLOG_LIBS} ${LibKGAPI2_LIBRARY} composereditorng  pimcommon)
+target_link_libraries( blogilo kdepim  KF5::TextEditor  KF5::WebKit KF5::Blog composereditorng  pimcommon KF5::Wallet Qt5::Sql KF5::GAPICore KF5::XmlRpcClient KF5::GAPIBlogger)
 
 
 install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )
@@ -71,4 +71,4 @@ install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( PROGRAMS ../blogilo.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
 install( FILES blogilo.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
-install( FILES blogiloui.rc DESTINATION  ${DATA_INSTALL_DIR}/blogilo )
+install( FILES blogiloui.rc DESTINATION  ${KXMLGUI_INSTALL_DIR}/blogilo )

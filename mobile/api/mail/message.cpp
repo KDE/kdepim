@@ -21,9 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "message.h"
 
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/ItemFetchJob>
 #include <KMime/Message>
 
+#include <KUrl>
 #include <KMimeType>
 
 Message::Message(QObject *parent) : QObject(parent), m_error(new Error())
@@ -99,7 +101,7 @@ void Message::slotItemReceived(const Akonadi::Item::List &itemList)
     m_cc = msg.cc()->asUnicodeString();
     m_bcc = msg.bcc()->asUnicodeString();
     m_textContent = msg.textContent()->decodedText(true,true);
-    m_date = msg.date()->dateTime().dateTime();
+    m_date = msg.date()->dateTime();
     emit messageChanged();
 }
 

@@ -26,12 +26,12 @@
 
 #include <kalarmcal/kaevent.h>
 
-#include <kmenu.h>
+#include <QMenu>
 #include <kactionmenu.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 
-TemplateMenuAction::TemplateMenuAction(const KIcon& icon, const QString& label, QObject* parent)
+TemplateMenuAction::TemplateMenuAction(const QIcon& icon, const QString& label, QObject* parent)
     : KActionMenu(icon, label, parent)
 {
     setDelayed(false);
@@ -45,7 +45,7 @@ TemplateMenuAction::TemplateMenuAction(const KIcon& icon, const QString& label, 
 */
 void TemplateMenuAction::slotInitMenu()
 {
-    KMenu* m = menu();
+    QMenu* m = menu();
     m->clear();
     mOriginalTexts.clear();
 

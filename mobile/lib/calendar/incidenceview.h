@@ -20,9 +20,9 @@
 #ifndef INCIDENCEVIEW_H
 #define INCIDENCEVIEW_H
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
-#include <kcalcore/incidence.h>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Item>
+#include <KCalCore/Incidence>
 
 #include <incidenceeditor-ng/combinedincidenceeditor.h>
 #include <incidenceeditor-ng/editoritemmanager.h>

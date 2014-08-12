@@ -24,8 +24,8 @@
 #include "viewer/nodehelper.h"
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 
-#include <akonadi/item.h>
-#include <akonadi/monitor.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/monitor.h>
 #include <kio/job.h>
 #include <kmime/kmime_message.h>
 #include <kservice.h>
@@ -48,12 +48,11 @@ namespace Kleo
 class SpecialJob;
 }
 
-class KAction;
+class QAction;
 class KActionCollection;
 class KSelectAction;
 class KToggleAction;
-class KHBox;
-class KMenu;
+class QMenu;
 
 class QPoint;
 class QSplitter;
@@ -285,7 +284,7 @@ public:
 private:
     /** HTML initialization. */
     void initHtmlWidget();
-    void createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent );
+    void createOpenWithMenu( QMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent );
 public:
     /** Event filter */
     bool eventFilter( QObject *obj, QEvent *ev );
@@ -634,6 +633,7 @@ private:
     QString recipientsQuickListLinkHtml( bool, const QString & ) const;
     void initGrantleeThemeName();
 
+    void addHelpTextAction(QAction *act, const QString &text);
 public:
     NodeHelper* mNodeHelper;
     bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlLoadExtOverride;
@@ -641,7 +641,7 @@ public:
     Akonadi::Item mMessageItem; //the message item from Akonadi
     // widgets:
     QSplitter * mSplitter;
-    KHBox *mBox;
+    QWidget *mBox;
     HtmlStatusBar *mColorBar;
 #ifndef QT_NO_TREEVIEW
     MimePartTreeView* mMimePartTree;
@@ -669,7 +669,7 @@ public:
     QString mIdOfLastViewedMessage;
     QWidget *mMainWindow;
     KActionCollection *mActionCollection;
-    KAction *mCopyAction, *mCopyURLAction,
+    QAction *mCopyAction, *mCopyURLAction,
     *mUrlOpenAction, *mSelectAllAction,
     *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
     *mViewSourceAction, *mSaveMessageAction, *mFindInMessageAction, *mSaveMessageDisplayFormat, *mResetMessageDisplayFormat;
@@ -681,16 +681,17 @@ public:
     KToggleAction *mCaretBrowsing;
 #endif
 #endif
-    KAction *mZoomTextOnlyAction, *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
+    KToggleAction *mZoomTextOnlyAction;
+    QAction *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
     KToggleAction *mToggleMimePartTreeAction;
-    KAction *mSpeakTextAction;
-    KAction *mCopyImageLocation;
-    KAction *mTranslateAction;
-    KAction *mBlockImage;
-    KAction *mBlockableItems;
-    KAction *mExpandUrlAction;
-    KAction *mCreateTodoAction;
-    KAction *mCreateEventAction;
+    QAction *mSpeakTextAction;
+    QAction *mCopyImageLocation;
+    QAction *mTranslateAction;
+    QAction *mBlockImage;
+    QAction *mBlockableItems;
+    QAction *mExpandUrlAction;
+    QAction *mCreateTodoAction;
+    QAction *mCreateEventAction;
     KUrl mHoveredUrl;
     KUrl mClickedUrl;
     KUrl mImageUrl;

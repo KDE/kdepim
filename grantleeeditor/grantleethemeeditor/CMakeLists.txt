@@ -3,6 +3,8 @@ project(grantleethemeeditor)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libgrantleethemeeditor\")
+
 include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon/
 )
@@ -21,19 +23,20 @@ set(libgrantleethemeeditor_SRCS
     grantleeplaintexteditor.cpp
 )
 
-kde4_add_kcfg_files(libgrantleethemeeditor_SRCS
+kconfig_add_kcfg_files(libgrantleethemeeditor_SRCS
   settings/globalsettings_base.kcfgc
 )
 
-kde4_add_ui_files(libgrantleethemeeditor_SRCS
+ki18n_wrap_ui(libgrantleethemeeditor_SRCS
     ui/configurewidget.ui
 )
 
 
-kde4_add_library(grantleethemeeditor ${LIBRARY_TYPE} ${libgrantleethemeeditor_SRCS})
+add_library(grantleethemeeditor ${LIBRARY_TYPE} ${libgrantleethemeeditor_SRCS})
+generate_export_header(grantleethemeeditor BASE_NAME grantleethemeeditor)
 
-target_link_libraries(grantleethemeeditor  ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} pimcommon
+target_link_libraries(grantleethemeeditor    KF5::KIOCore KF5::PimTextEdit pimcommon
 )
 
-set_target_properties(grantleethemeeditor PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(grantleethemeeditor PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS grantleethemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})

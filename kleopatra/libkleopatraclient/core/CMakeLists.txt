@@ -16,9 +16,9 @@ else()
 endif()
 
 set_source_files_properties(command.cpp PROPERTIES SKIP_AUTOMOC TRUE)
-qt4_generate_moc(command_p.h "${CMAKE_CURRENT_BINARY_DIR}/moc_command_p.cpp")
-qt4_generate_moc(command.h "${CMAKE_CURRENT_BINARY_DIR}/moc_command.cpp")
-kde4_add_library(kleopatraclientcore ${LIBRARY_TYPE}
+qt5_generate_moc(command_p.h "${CMAKE_CURRENT_BINARY_DIR}/moc_command_p.cpp")
+qt5_generate_moc(command.h "${CMAKE_CURRENT_BINARY_DIR}/moc_command.cpp")
+add_library(kleopatraclientcore ${LIBRARY_TYPE}
   ${_kleopatraclientcore_extra_SRCS}
   initialization.cpp
   command.cpp
@@ -28,6 +28,7 @@ kde4_add_library(kleopatraclientcore ${LIBRARY_TYPE}
   "${CMAKE_CURRENT_BINARY_DIR}/moc_command_p.cpp"
   "${CMAKE_CURRENT_BINARY_DIR}/moc_command.cpp"
 )
+generate_export_header(kleopatraclientcore BASE_NAME kleopatraclientcore)
 
 set_target_properties(kleopatraclientcore PROPERTIES
   VERSION ${libkleopatraclient_version}
@@ -37,13 +38,13 @@ set_target_properties(kleopatraclientcore PROPERTIES
 if(WIN32)
   if(ASSUAN2_FOUND)
     target_link_libraries(kleopatraclientcore
-      ${QT_QTCORE_LIBRARY}
+      
       ${ASSUAN2_LIBRARIES}
       ws2_32
     )
   else()
     target_link_libraries(kleopatraclientcore
-      ${QT_QTCORE_LIBRARY}
+      
       ${ASSUAN_VANILLA_LIBRARIES}
       ws2_32
     )
@@ -51,15 +52,17 @@ if(WIN32)
 else()
   if(ASSUAN2_FOUND)
     target_link_libraries(kleopatraclientcore
-      ${QT_QTCORE_LIBRARY}
+      
       ${ASSUAN2_LIBRARIES}
     )
   else()
     target_link_libraries(kleopatraclientcore
-      ${QT_QTCORE_LIBRARY}
+      
       ${ASSUAN_PTHREAD_LIBRARIES}
     )
   endif()
 endif()
+
+target_link_libraries(kleopatraclientcore KF5::KDELibs4Support)
 
 install(TARGETS kleopatraclientcore ${INSTALL_TARGETS_DEFAULT_ARGS})

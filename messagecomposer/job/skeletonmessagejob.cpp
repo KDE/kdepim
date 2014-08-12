@@ -31,12 +31,12 @@
 #include <QUrl>
 
 #include <KCharsets>
-#include <KDebug>
-#include <KGlobal>
+#include <QDebug>
+
 #include <KProtocolManager>
 
 #include <kmime/kmime_message.h>
-#include <kpimutils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 
 using namespace MessageComposer;
 
@@ -131,7 +131,7 @@ void SkeletonMessageJobPrivate::doStart()
     // Date:
     {
         KMime::Headers::Date *date = new KMime::Headers::Date( message );
-        date->setDateTime( KDateTime::currentLocalDateTime() );
+        date->setDateTime( QDateTime::currentDateTime() );
         message->setHeader( date );
     }
 
@@ -158,7 +158,7 @@ void SkeletonMessageJobPrivate::doStart()
             fqdn = QUrl::toAce( QHostInfo::localHostName() );
         }
         if( fqdn.isEmpty() ) {
-            kWarning() << "Unable to generate a Message-ID, falling back to 'localhost.localdomain'.";
+            qWarning() << "Unable to generate a Message-ID, falling back to 'localhost.localdomain'.";
             fqdn = "local.domain";
         }
         messageId->generate( fqdn );

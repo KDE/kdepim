@@ -24,12 +24,9 @@
 
 #include <KABC/Address>
 #include <KABC/PhoneNumber>
-#include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
 
 #include <QBuffer>
-#include <QDebug>
 
 #include <grantlee/metatype.h>
 
@@ -40,7 +37,6 @@ ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &ad
     : QObject(parent),
       mAddress(address)
 {
-    Grantlee::registerSequentialContainer<QList<QObject*> >();
     Q_FOREACH ( const KABC::Address &addr, address.addresses() ) {
         mListAddress<<new ContactGrantleePrintAddressObject(addr);
     }
@@ -121,7 +117,7 @@ QStringList ContactGrantleePrintObject::emails() const
 {
     QStringList emails;
     Q_FOREACH ( const QString &email, mAddress.emails() ) {
-        const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( mAddress.fullEmail( email ) ) );
+        const QString fullEmail = QString::fromLatin1( QUrl::toPercentEncoding( mAddress.fullEmail( email ) ) );
 
         const QString url = QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
                 .arg( fullEmail, email );
@@ -142,7 +138,7 @@ QString ContactGrantleePrintObject::note() const
 
 QString ContactGrantleePrintObject::webPage() const
 {
-    return mAddress.url().prettyUrl();
+    return mAddress.url().toDisplayString();
 }
 
 QString ContactGrantleePrintObject::title() const
@@ -162,7 +158,7 @@ QString ContactGrantleePrintObject::role() const
 
 QString ContactGrantleePrintObject::birthday() const
 {
-    return KGlobal::locale()->formatDate( mAddress.birthday().date(), KLocale::LongDate );
+    return KLocale::global()->formatDate( mAddress.birthday().date(), KLocale::LongDate );
 }
 
 QString ContactGrantleePrintObject::department() const
@@ -237,7 +233,7 @@ QString ContactGrantleePrintObject::anniversary() const
     const QDate anniversary = QDate::fromString( mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
                                                   QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
     if ( anniversary.isValid() ) {
-        return (KGlobal::locale()->formatDate( anniversary ) );
+        return (KLocale::global()->formatDate( anniversary ) );
     }
     return QString();
 }

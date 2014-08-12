@@ -25,8 +25,10 @@
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KCalCore/Incidence>
+#include <KConfig>
 
 #include <QPrinter>
+#include <QDate>
 
 namespace CalendarSupport {
 

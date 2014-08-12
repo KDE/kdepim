@@ -27,7 +27,7 @@
 #include <QVBoxLayout>
 
 #include <KDialog>
-#include <KHBox>
+#include <QHBoxLayout>
 #include <KLocalizedString>
 #include <KKeySequenceWidget>
 
@@ -60,10 +60,13 @@ void CollectionShortcutPage::init(const Akonadi::Collection & col)
     label->setWordWrap(true);
     topLayout->addWidget(label);
 
-    KHBox *hb = new KHBox( this );
+    QWidget *hb = new QWidget( this );
+    QHBoxLayout *hbHBoxLayout = new QHBoxLayout(hb);
+    hbHBoxLayout->setMargin(0);
 
     new QWidget(hb);
     mKeySeqWidget = new KKeySequenceWidget( hb );
+    hbHBoxLayout->addWidget(mKeySeqWidget);
     mKeySeqWidget->setObjectName( QLatin1String("FolderShortcutSelector") );
     connect( mKeySeqWidget, SIGNAL(keySequenceChanged(QKeySequence)),
              SLOT(slotShortcutChanged()) );
@@ -80,7 +83,7 @@ void CollectionShortcutPage::load( const Akonadi::Collection & col )
 {
     init( col );
     if ( mFolder ) {
-        mKeySeqWidget->setKeySequence( mFolder->shortcut().primary(),
+        mKeySeqWidget->setKeySequence( mFolder->shortcut(),
                                        KKeySequenceWidget::NoValidate );
         mShortcutChanged = false;
     }
@@ -91,7 +94,7 @@ void CollectionShortcutPage::save( Akonadi::Collection & col )
     if ( mFolder ) {
         if ( mShortcutChanged ) {
             mKeySeqWidget->applyStealShortcut();
-            mFolder->setShortcut( KShortcut( mKeySeqWidget->keySequence(), QKeySequence() ) );
+            mFolder->setShortcut( mKeySeqWidget->keySequence() );
             KMKernel::self()->getKMMainWidget()->folderShortcutActionManager()->shortcutChanged( mFolder->collection() );
         }
     }

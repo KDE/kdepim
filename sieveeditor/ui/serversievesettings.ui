@@ -22,7 +22,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="KLineEdit" name="password">
+    <widget class="QLineEdit" name="password">
      <property name="echoMode">
       <enum>QLineEdit::Password</enum>
      </property>
@@ -39,8 +39,8 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="KLineEdit" name="serverName">
-     <property name="showClearButton" stdset="0">
+    <widget class="QLineEdit" name="serverName">
+     <property name="clearButtonEnabled">
       <bool>true</bool>
      </property>
     </widget>
@@ -56,8 +56,8 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="KLineEdit" name="userName">
-     <property name="showClearButton" stdset="0">
+    <widget class="QLineEdit" name="userName">
+     <property name="clearButtonEnabled">
       <bool>true</bool>
      </property>
     </widget>
@@ -104,13 +104,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>serverName</tabstop>
   <tabstop>userName</tabstop>

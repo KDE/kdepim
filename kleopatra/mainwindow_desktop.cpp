@@ -58,23 +58,25 @@
 // from libkdepim
 #include "progresswidget/statusbarprogresswidget.h"
 #include "progresswidget/progressdialog.h"
-
 #include <KStatusBar>
 #include <KXMLGUIFactory>
 #include <KApplication>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KStandardAction>
-#include <KAction>
-#include <KAboutData>
+#include <QAction>
+#include <K4AboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KShortcutsDialog>
 #include <KEditToolBar>
 #include <KAboutApplicationDialog>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KLineEdit>
+#include <KGlobal>
+#include <KDebug>
 #include <KActionMenu>
+#include <KConfigGroup>
 
 #include <QAbstractItemView>
 #include <QApplication>
@@ -83,6 +85,7 @@
 #include <QTimer>
 #include <QProcess>
 #include <QVBoxLayout>
+#include <QMimeData>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -93,6 +96,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <vector>
+#include <KSharedConfig>
 
 #ifdef Q_OS_WIN32
 static const bool OS_WIN = true;
@@ -107,7 +111,7 @@ using namespace GpgME;
 
 namespace {
 
-    static const KAboutData * aboutGpg4WinData() {
+    static const K4AboutData * aboutGpg4WinData() {
         static const AboutGpg4WinData data;
         return &data;
     }
@@ -115,7 +119,7 @@ namespace {
 }
 
 static KGuiItem KStandardGuiItem_quit() {
-    static const QString app = KGlobal::mainComponent().aboutData()->programName();
+    static const QString app = KComponentData::mainComponent().aboutData()->programName();
     KGuiItem item = KStandardGuiItem::quit();
     item.setText( i18nc( "Quit [ApplicationName]", "&Quit %1", app ) );
     return item;
@@ -155,7 +159,7 @@ public:
     }
 
     void closeAndQuit() {
-        const QString app = KGlobal::mainComponent().aboutData()->programName();
+        const QString app = KComponentData::mainComponent().aboutData()->programName();
         const int rc = KMessageBox::questionYesNoCancel( q,
                                                          i18n("%1 may be used by other applications as a service.\n"
                                                               "You may instead want to close this window without exiting %1.", app ),
@@ -210,11 +214,11 @@ public:
         if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( QLatin1String("listview_popup"), q ) ) )
             menu->exec( p );
         else
-            kDebug() << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
+            qDebug() << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
     }
 
     void aboutGpg4Win() {
-        ( new KAboutApplicationDialog( aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion|KAboutApplicationDialog::HideTranslators, q ) )->show();
+        //QT5 ( new KAboutApplicationDialog( aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion|KAboutApplicationDialog::HideTranslators, q ) )->show();
     }
     void slotFocusQuickSearch() {
         ui.searchBar->lineEdit()->setFocus();
@@ -236,7 +240,7 @@ private:
         SearchBar * searchBar;
         explicit UI( MainWindow * q );
     } ui;
-    KAction *focusToClickSearchAction;
+    QAction *focusToClickSearchAction;
     ClipboardMenu *clipboadMenu;
 };
 
@@ -336,7 +340,7 @@ void MainWindow::Private::setupActions() {
         { "settings_self_test", i18n("Perform Self-Test"), QString(),
           0, q, SLOT(selfTest()), QString(), false, true },
         // Help menu
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
         { "help_about_gpg4win", i18n("About Gpg4win"), QString(),
           "gpg4win-compact", q, SLOT(aboutGpg4Win()), QString(), false, true },
 #endif
@@ -354,13 +358,13 @@ void MainWindow::Private::setupActions() {
     KStandardAction::keyBindings( q, SLOT(editKeybindings()), coll );
     KStandardAction::preferences( qApp, SLOT(openOrRaiseConfigDialog()), coll );
 
-    focusToClickSearchAction = new KAction(i18n("Set Focus to Quick Search"), q);
+    focusToClickSearchAction = new QAction(i18n("Set Focus to Quick Search"), q);
     focusToClickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
     coll->addAction( QLatin1String("focus_to_quickseach"), focusToClickSearchAction );
     connect( focusToClickSearchAction, SIGNAL(triggered(bool)), q, SLOT(slotFocusQuickSearch()) );
     clipboadMenu = new ClipboardMenu(q);
     clipboadMenu->setMainWindow(q);
-    clipboadMenu->clipboardMenu()->setIcon(KIcon(QLatin1String("edit-paste")));
+    clipboadMenu->clipboardMenu()->setIcon(QIcon::fromTheme(QLatin1String("edit-paste")));
     clipboadMenu->clipboardMenu()->setDelayed(false);
     coll->addAction( QLatin1String("clipboard_menu"), clipboadMenu->clipboardMenu());
 
@@ -404,7 +408,7 @@ void MainWindow::Private::slotConfigCommitted() {
 void MainWindow::closeEvent( QCloseEvent * e ) {
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
-    kDebug();
+    qDebug();
     if ( d->controller.hasRunningCommands() ) {
         if ( d->controller.shutdownWarningRequired() ) {
             const int ret = KMessageBox::warningContinueCancel( this, i18n("There are still some background operations ongoing. "
@@ -430,8 +434,9 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
         }
     }
     if ( isQuitting || kapp->sessionSaving() ) {
-        d->ui.tabWidget.saveViews( KGlobal::config().data() );
-        saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
+        d->ui.tabWidget.saveViews( KSharedConfig::openConfig().data() );
+        KConfigGroup grp( KConfigGroup( KSharedConfig::openConfig(), autoSaveGroup() ) );
+        saveMainWindowSettings( grp );
         e->accept();
     } else {
         e->ignore();
@@ -442,7 +447,7 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
 void MainWindow::showEvent( QShowEvent * e ) {
     KXmlGuiWindow::showEvent( e );
     if ( d->firstShow ) {
-        d->ui.tabWidget.loadViews( KGlobal::config().data() );
+        d->ui.tabWidget.loadViews( KSharedConfig::openConfig().data() );
         d->firstShow = false;
     }
 
@@ -488,14 +493,14 @@ static bool can_decode_local_files( const QMimeData * data ) {
 }
 
 void MainWindow::dragEnterEvent( QDragEnterEvent * e ) {
-    kDebug();
+    qDebug();
 
     if ( can_decode_local_files( e->mimeData() ) )
         e->acceptProposedAction();
 }
 
 void MainWindow::dropEvent( QDropEvent * e ) {
-    kDebug();
+    qDebug();
 
     if ( !can_decode_local_files( e->mimeData() ) )
         return;
@@ -542,7 +547,7 @@ void MainWindow::dropEvent( QDropEvent * e ) {
 
 void MainWindow::readProperties( const KConfigGroup & cg )
 {
-    kDebug();
+    qDebug();
     KXmlGuiWindow::readProperties(cg);
     savedGeometry = cg.readEntry("savedGeometry", QByteArray() );
     if ( !savedGeometry.isEmpty() ) {
@@ -555,7 +560,7 @@ void MainWindow::readProperties( const KConfigGroup & cg )
 
 void MainWindow::saveProperties( KConfigGroup & cg )
 {
-    kDebug();
+    qDebug();
     KXmlGuiWindow::saveProperties( cg );
     cg.writeEntry( "hidden", isHidden() );
     if ( isHidden() ) {

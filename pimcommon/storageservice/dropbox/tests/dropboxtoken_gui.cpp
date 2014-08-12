@@ -20,10 +20,13 @@
 
 #include <QWidget>
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+#include <qdebug.h>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 
 DropboxTestWidget::DropboxTestWidget(QWidget *parent)
@@ -34,10 +37,18 @@ DropboxTestWidget::DropboxTestWidget(QWidget *parent)
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "dropboxToken_gui", 0, ki18n("dropboxToken_Gui"),
-                       "1.0", ki18n("Test for short dropboxtoken"));
+    KAboutData aboutData( QLatin1String("dropboxToken_gui"), i18n("dropboxToken_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for short dropboxtoken"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     DropboxTestWidget *w = new DropboxTestWidget;
     w->show();

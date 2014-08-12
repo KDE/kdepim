@@ -36,7 +36,7 @@
 #include <QWidget>
 
 class KDialog;
-class KLineEdit;
+class QLineEdit;
 
 class QPushButton;
 class QString;
@@ -68,7 +68,7 @@ protected slots:
 private:
     void initWidget( const QString & = QString() );
 
-    KLineEdit *mLineEdit;
+    QLineEdit *mLineEdit;
     QPushButton *mRegExpEditButton;
     KDialog *mRegExpEditDialog;
 };

@@ -38,7 +38,7 @@
 
 #include "grantleetheme/grantleetheme.h"
 
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include <KMime/Message>
 
 class QString;

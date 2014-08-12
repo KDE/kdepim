@@ -18,7 +18,7 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KFilterDev>
 
 #include "filter_mailmangzip.h"
@@ -60,7 +60,7 @@ void FilterMailmanGzip::importMails(const QStringList &filenames)
     for ( QStringList::ConstIterator filename = filenames.constBegin(); filename != end; ++filename, ++currentFile) {
         QIODevice *device = KFilterDev::deviceForFile(*filename, QLatin1String( "application/x-gzip" ), false);
         if (!device) {
-            kDebug() << "Could not create KFilterDev";
+            qDebug() << "Could not create KFilterDev";
             filterInfo()->alert( i18n( "Unable to open archive file '%1', skipping", *filename ) );
             continue;
         }
@@ -79,7 +79,7 @@ void FilterMailmanGzip::importMails(const QStringList &filenames)
         long l = 0;
 
         while ( ! device->atEnd() ) {
-            KTemporaryFile tmp;
+            QTemporaryFile tmp;
             tmp.open();
             qint64 filepos = 0;
             /* comment by Danny:
@@ -127,7 +127,7 @@ void FilterMailmanGzip::importMails(const QStringList &filenames)
                     addMessage_fastImport( folderName, tmp.fileName() );
             }
             else
-                kWarning() << "Message size is 0 bytes, not importing it.";
+                qWarning() << "Message size is 0 bytes, not importing it.";
 
             int currentPercentage = (int) ( ( (float) device->pos() / filenameInfo.size() ) * 100 );
             filterInfo()->setCurrent( currentPercentage );

@@ -32,11 +32,11 @@
 #include "noteshared/attributes/showfoldernotesattribute.h"
 #include "noteshared/attributes/notedisplayattribute.h"
 
-#include <Akonadi/Item>
-#include <Akonadi/Session>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ETMViewStateSaver>
-#include <Akonadi/CollectionStatistics>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/Session>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiWidgets/ETMViewStateSaver>
+#include <AkonadiCore/collectionstatistics.h>
 #include <KCheckableProxyModel>
 
 #include <KMime/KMimeMessage>
@@ -47,9 +47,9 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KUrlLabel>
-#include <KMenu>
+#include <QMenu>
 #include <KIconEffect>
-
+#include <KSharedConfig>
 
 #include <QEvent>
 #include <QGridLayout>
@@ -152,7 +152,7 @@ void KNotesSummaryWidget::displayNotes( const QModelIndex &parent, int &counter)
 
 void KNotesSummaryWidget::slotPopupMenu(const QString &note)
 {
-    KMenu popup( this );
+    QMenu popup( this );
     const QAction *modifyNoteAction = popup.addAction(
                 KIconLoader::global()->loadIcon( QLatin1String("document-edit"), KIconLoader::Small ),
                 i18n( "Modify Note..." ) );

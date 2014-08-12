@@ -33,7 +33,7 @@
 
 #include "filehtmlwriter.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QTextStream>
 
@@ -49,7 +49,7 @@ FileHtmlWriter::FileHtmlWriter( const QString & filename )
 
 FileHtmlWriter::~FileHtmlWriter() {
     if ( mFile.isOpen() ) {
-        kWarning() << "FileHtmlWriter: file still open!";
+        qWarning() << "FileHtmlWriter: file still open!";
         mStream.setDevice(0);
         mFile.close();
     }
@@ -90,12 +90,12 @@ void FileHtmlWriter::flush() {
 
 void FileHtmlWriter::openOrWarn() {
     if ( mFile.isOpen() ) {
-        kWarning() << "FileHtmlWriter: file still open!";
+        qWarning() << "FileHtmlWriter: file still open!";
         mStream.setDevice( 0 );
         mFile.close();
     }
     if ( !mFile.open( QIODevice::WriteOnly ) )
-        kWarning() << "FileHtmlWriter: Cannot open file" << mFile.fileName();
+        qWarning() << "FileHtmlWriter: Cannot open file" << mFile.fileName();
     else
         mStream.setDevice( &mFile );
 }

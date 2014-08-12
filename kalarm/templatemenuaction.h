@@ -23,6 +23,7 @@
 
 #include <kactionmenu.h>
 #include <QMap>
+#include <KIcon>
 class QAction;
 namespace KAlarmCal { class KAEvent; }
 
@@ -30,7 +31,7 @@ class TemplateMenuAction : public KActionMenu
 {
         Q_OBJECT
     public:
-        TemplateMenuAction(const KIcon& icon, const QString& label, QObject* parent);
+        TemplateMenuAction(const QIcon& icon, const QString& label, QObject* parent);
         virtual ~TemplateMenuAction() {}
     signals:
         void   selected(const KAEvent*);

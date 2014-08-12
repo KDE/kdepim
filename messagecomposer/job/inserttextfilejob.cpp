@@ -21,8 +21,9 @@
 #include "composer/kmeditor.h"
 
 #include <KCharsets>
-#include <KDebug>
+#include <QDebug>
 #include <KIO/Job>
+#include <KGlobal>
 
 #include <QTextCodec>
 
@@ -46,7 +47,7 @@ void InsertTextFileJob::slotFileData ( KIO::Job* job, const QByteArray& data )
 void InsertTextFileJob::slotGetJobFinished( KJob* job )
 {
     if ( job->error() ) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         setError( job->error() );
         setErrorText( job->errorText() );
         emitResult();
@@ -55,7 +56,7 @@ void InsertTextFileJob::slotGetJobFinished( KJob* job )
 
     if ( mEditor ) {
         if ( !mEncoding.isEmpty() ) {
-            const QTextCodec *fileCodec = KGlobal::charsets()->codecForName( mEncoding );
+            const QTextCodec *fileCodec = KCharsets::charsets()->codecForName( mEncoding );
             if ( fileCodec ) {
                 mEditor->textCursor().insertText( fileCodec->toUnicode( mFileData.data() ) );
             } else {

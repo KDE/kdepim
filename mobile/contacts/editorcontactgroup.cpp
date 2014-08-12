@@ -23,16 +23,18 @@
 
 #include "contactcompletionmodel_p.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
-#include <QCompleter>
-#include <QSortFilterProxyModel>
+#include <KLocalizedString>
+#include <QDebug>
+#include <KIconLoader>
+
 
 class Recipient
 {
@@ -135,9 +137,9 @@ void EditorContactGroup::Private::fetchResult( KJob *job )
 
   const Akonadi::Item item = fetchJob->items().isEmpty() ? recipient->mItem : fetchJob->items().first();
   if ( fetchJob->error() != 0 ) {
-    kError() << "Fetching contact item" << item.id() << "failed:" << fetchJob->errorString();
+    qCritical() << "Fetching contact item" << item.id() << "failed:" << fetchJob->errorString();
   } else if ( !item.hasPayload<KABC::Addressee>() ) {
-    kError() << "Fetching contact item" << item.id() << "worked but it is not a contact";
+    qCritical() << "Fetching contact item" << item.id() << "worked but it is not a contact";
   } else {
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
 

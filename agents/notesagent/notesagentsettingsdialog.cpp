@@ -20,33 +20,45 @@
 #include "noteshared/config/notenetworkconfig.h"
 
 #include "kdepim-version.h"
-#include <KMenu>
+#include <QMenu>
 #include <KHelpMenu>
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 #include <KAboutData>
 #include <KNotifyConfigWidget>
 
 #include <QHBoxLayout>
 #include <QTabWidget>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Configure Notes Agent" ) );
-    setWindowIcon( KIcon( QLatin1String("knotes") ) );
-    setButtons( Help | Ok|Cancel );
-    setDefaultButton( Ok );
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    setWindowTitle( i18n( "Configure Notes Agent" ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
+    connect(okButton, SIGNAL(clicked()), this, SLOT(slotOkClicked()));
 
     setModal( true );
     QWidget *mainWidget = new QWidget( this );
-    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
-    mainLayout->setSpacing( KDialog::spacingHint() );
-    mainLayout->setMargin( KDialog::marginHint() );
+    QHBoxLayout *lay = new QHBoxLayout( mainWidget );
+//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
 
     QTabWidget *tab = new QTabWidget;
-    mainLayout->addWidget(tab);
+    lay->addWidget(tab);
 
     mNotify = new KNotifyConfigWidget(this);
     mNotify->setApplication(QLatin1String("akonadi_notes_agent"));
@@ -57,42 +69,41 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     mNetworkConfig->load();
 
 
-    setMainWidget(mainWidget);
+    mainLayout->addWidget(mainWidget);
+    mainLayout->addWidget(buttonBox);
     readConfig();
-    mAboutData = new KAboutData(
-                QByteArray( "notesagent" ),
-                QByteArray(),
-                ki18n( "Notes Agent" ),
-                QByteArray( KDEPIM_VERSION ),
-                ki18n( "Notes Agent." ),
-                KAboutData::License_GPL_V2,
-                ki18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
-    mAboutData->addAuthor( ki18n( "Laurent Montel" ),
-                         ki18n( "Maintainer" ), "montel@kde.org" );
+    KAboutData aboutData = KAboutData(
+                QLatin1String( "notesagent" ),
+                i18n( "Notes Agent" ),
+                QLatin1String( KDEPIM_VERSION ),
+                i18n( "Notes Agent." ),
+                KAboutLicense::GPL_V2,
+                i18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
-    mAboutData->setProgramIconName( QLatin1String("knotes") );
-    mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
-                             ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+    aboutData.addAuthor( i18n( "Laurent Montel" ),
+                         i18n( "Maintainer" ), QLatin1String("montel@kde.org") );
 
+    aboutData.setProgramIconName( QLatin1String("knotes") );
+    aboutData.setTranslator( i18nc( "NAME OF TRANSLATORS", "Your names" ),
+                             i18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
-    KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
+    KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
-    KMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("knotes")));
-    setButtonMenu( Help, menu );
+    QMenu *menu = helpMenu->menu();
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("knotes")));
+    buttonBox->button(QDialogButtonBox::Help)->setMenu(menu);
 }
 
 NotesAgentSettingsDialog::~NotesAgentSettingsDialog()
 {
     writeConfig();
-    delete mAboutData;
 }
 
 static const char *myConfigGroupName = "NotesAgentSettingsDialog";
 void NotesAgentSettingsDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
 
     const QSize size = group.readEntry( "Size", QSize(500, 300) );
     if ( size.isValid() ) {
@@ -102,7 +113,7 @@ void NotesAgentSettingsDialog::writeConfig()
 
 void NotesAgentSettingsDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
     group.writeEntry( "Size", size() );
     group.sync();
 }

@@ -19,7 +19,7 @@
 #define NEWMAILNOTIFIERATTRIBUTE_H
 
 #include "mailcommon_export.h"
-#include <akonadi/attribute.h>
+#include <attribute.h>
 
 namespace MailCommon {
 

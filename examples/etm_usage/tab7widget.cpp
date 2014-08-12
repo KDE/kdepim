@@ -38,8 +38,8 @@
 #include <kcategorizedview.h>
 #include <kcategorydrawer.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
 
 class CategorisedEntityModelFactory : public EntityTreeModelFactory
 {
@@ -101,7 +101,7 @@ Tab7Widget::Tab7Widget(QWidget* parent, Qt::WindowFlags f)
 {
   EntityTreeModelFactory *modelFactory = new CategorisedEntityModelFactory(this);
   modelFactory->createFromRemoteId(QLatin1String("nepomuktags"));
-  connect(modelFactory, SIGNAL(modelCreated(Akonadi::EntityTreeModel*)), SLOT(initModel(Akonadi::EntityTreeModel*)));
+  connect(modelFactory, &CategorisedEntityModelFactory::modelCreated, this, &Tab7Widget::initModel);
 }
 
 void Tab7Widget::initModel(Akonadi::EntityTreeModel *model)
@@ -133,7 +133,7 @@ void Tab7Widget::initModel(Akonadi::EntityTreeModel *model)
   categorizedModel->setCategorizedModel(true);
 
   m_itemView->setModel(categorizedModel);
-  m_itemView->setCategoryDrawer(new KCategoryDrawerV2());
+  m_itemView->setCategoryDrawer(new KCategoryDrawer(m_itemView));
 
   ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
 }

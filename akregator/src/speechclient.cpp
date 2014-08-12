@@ -24,19 +24,20 @@
 */
 
 #include "speechclient.h"
-#include <kstandarddirs.h>
+
 #include "article.h"
 #include "utils.h"
 
 #include <kcharsets.h>
 #include <klocale.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <ktoolinvocation.h>
 #include <kservicetypetrader.h>
 
 #include "kspeechinterface.h"
 #include <QString>
 #include <kspeech.h>
+#include <QStandardPaths>
 namespace Akregator
 {
 
@@ -155,9 +156,9 @@ bool SpeechClient::isTextToSpeechInstalled() const
 
 void SpeechClient::setupSpeechSystem()
 {
-  if ( KStandardDirs::findExe( "kttsd" ).isEmpty() )
+  if ( QStandardPaths::findExecutable( "kttsd" ).isEmpty() )
   {
-    kDebug() <<"KTTSD not installed, disable support";
+    qDebug() <<"KTTSD not installed, disable support";
     d->isTextSpeechInstalled = false;
   }
   else
@@ -172,7 +173,7 @@ void SpeechClient::setupSpeechSystem()
 
       if (KToolInvocation::startServiceByDesktopName("kttsd", QString(), &error) != 0)
       {
-        kDebug() <<"Starting KTTSD failed with message" << error;
+        qDebug() <<"Starting KTTSD failed with message" << error;
         d->isTextSpeechInstalled = false;
       }
       else

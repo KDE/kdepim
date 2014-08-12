@@ -21,7 +21,7 @@
 
 #include <messagelist/messagelist_export.h>
 #include <KComboBox>
-#include <akonadi/collection.h>
+#include <collection.h>
 namespace MessageList
 {
 

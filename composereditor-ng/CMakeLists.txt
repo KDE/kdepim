@@ -1,4 +1,4 @@
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
@@ -7,8 +7,12 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 # Laurent install it if you want to debug it
 #add_subdirectory(tests)
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libcomposereditorng\")
+
 add_definitions(-DQT_STATICPLUGIN)
-qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
+qt5_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
+
+#generate_export_header(COMPOSEREDITORNG BASE_NAME composereditor)
 
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp
@@ -41,27 +45,28 @@ set(libcomposereditor_ng_SRCS
     ${wk_HEADERS_MOC}
 )
 
-kde4_add_kcfg_files(libcomposereditor_ng_SRCS
+kconfig_add_kcfg_files(libcomposereditor_ng_SRCS
    globalsettings_base.kcfgc 
 )
 
 
-kde4_add_ui_files(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
+ki18n_wrap_ui(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
 
 
-kde4_add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
+add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
+generate_export_header(composereditorng BASE_NAME composereditorng)
 
 target_link_libraries(composereditorng 
-   ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDE4_KPRINTUTILS_LIBS}
+   KF5::WebKit KF5::WebKit Qt5::WebKitWidgets KF5::PimTextEdit KF5::KDELibs4Support KF5::SonnetCore
 )
 
 
-set_target_properties( composereditorng PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties( composereditorng PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 install(TARGETS composereditorng ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install( FILES data/composereditorinitialhtml DESTINATION  ${DATA_INSTALL_DIR}/composereditor )
 
 #install( FILES
-#         composereditor_export.h
+#         composereditorng_export.h
 #         composereditor.h
 #         DESTINATION ${INCLUDE_INSTALL_DIR}/composereditorng COMPONENT Devel )
 

@@ -20,8 +20,8 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 #ifndef COMPOSER_H
 #define COMPOSER_H
 
-#include <KDE/KDateTime>
-#include <KDE/KMime/Message>
+#include <KDateTime>
+#include <KMime/Message>
 #include <QObject>
 #include <QTextCodec>
 #include <QTextEncoder>
@@ -29,7 +29,7 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 #include "sender/akonadisender.h"
 #include "messagecomposer/helper/messagefactory.h"
 
-#include <Akonadi/ItemFetchJob>
+#include <AkonadiCore/ItemFetchJob>
 #include <kpimidentities/identitymanager.h>
 
 #include "receivermodel.h"

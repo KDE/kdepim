@@ -25,11 +25,13 @@
 #ifndef KORG_KOPREFSDIALOG_H
 #define KORG_KOPREFSDIALOG_H
 
-#include "korganizer_export.h"
+#include "kcm_korganizer_export.h"
 #include "kcmdesignerfields.h"
 #include "ui_accountscalendarwidget.h"
 
 #include <libkdepim/prefs/kprefsdialog.h>
+
+class QPushButton;
 
 namespace Ui {
   class KOGroupwarePrefsPage;
@@ -45,7 +47,7 @@ class KCM_KORGANIZER_EXPORT KOPrefsDialogMain : public KPIM::KPrefsModule
 {
   Q_OBJECT
   public:
-    KOPrefsDialogMain( const KComponentData &inst, QWidget *parent );
+    KOPrefsDialogMain( QWidget *parent );
 
   protected slots:
     void toggleEmailSettings( bool on );
@@ -63,11 +65,11 @@ class KCM_KORGANIZER_EXPORT KOPrefsDialogColorsAndFonts : public KPIM::KPrefsMod
 {
   Q_OBJECT
   public:
-    KOPrefsDialogColorsAndFonts( const KComponentData &inst, QWidget *parent );
+    KOPrefsDialogColorsAndFonts( QWidget *parent );
 
   protected:
-    void usrWriteConfig();
-    void usrReadConfig();
+    void usrSave();
+    void usrRead();
 
   protected slots:
     void updateCategories();
@@ -92,11 +94,11 @@ class KCM_KORGANIZER_EXPORT KOPrefsDialogGroupScheduling : public KPIM::KPrefsMo
 {
   Q_OBJECT
   public:
-    KOPrefsDialogGroupScheduling( const KComponentData &inst, QWidget *parent );
+    KOPrefsDialogGroupScheduling( QWidget *parent );
 
   protected:
-    void usrReadConfig();
-    void usrWriteConfig();
+    void usrRead();
+    void usrSave();
 };
 
 class KOGroupwarePrefsPage;
@@ -105,12 +107,12 @@ class KCM_KORGANIZER_EXPORT KOPrefsDialogGroupwareScheduling : public KPIM::KPre
 {
   Q_OBJECT
   public:
-    KOPrefsDialogGroupwareScheduling( const KComponentData &inst, QWidget *parent );
+    KOPrefsDialogGroupwareScheduling( QWidget *parent );
     ~KOPrefsDialogGroupwareScheduling();
 
   protected:
-    void usrReadConfig();
-    void usrWriteConfig();
+    void usrRead();
+    void usrSave();
 
   private:
     Ui::KOGroupwarePrefsPage *mGroupwarePage;
@@ -120,11 +122,11 @@ class KCM_KORGANIZER_EXPORT KOPrefsDialogPlugins : public KPIM::KPrefsModule
 {
   Q_OBJECT
   public:
-    KOPrefsDialogPlugins( const KComponentData &inst, QWidget *parent );
+    KOPrefsDialogPlugins( QWidget *parent );
 
   protected slots:
-    void usrReadConfig();
-    void usrWriteConfig();
+    void usrRead();
+    void usrSave();
     void configure();
     void selectionChanged();
     void positioningChanged();
@@ -133,7 +135,7 @@ class KCM_KORGANIZER_EXPORT KOPrefsDialogPlugins : public KPIM::KPrefsModule
     void buildList();
     QTreeWidget *mTreeWidget;
     QLabel *mDescription;
-    KPushButton *mConfigureButton;
+    QPushButton *mConfigureButton;
     QGroupBox *mPositioningGroupBox;
 
     //Decorations are not implemented in month view yet
@@ -149,7 +151,7 @@ class KCM_KORGANIZER_EXPORT KOPrefsDialogPlugins : public KPIM::KPrefsModule
 class KCM_KORGANIZER_EXPORT KOPrefsDesignerFields : public KCMDesignerFields
 {
   public:
-    explicit KOPrefsDesignerFields( const KComponentData &inst, QWidget *parent = 0 );
+    explicit KOPrefsDesignerFields( QWidget *parent = 0 );
 
   protected:
     QString localUiDir();
@@ -166,8 +168,8 @@ class KCM_KORGANIZER_EXPORT KOPrefsDesignerFields : public KCMDesignerFields
     KOPrefsDialogThemes( const KComponentData &inst, QWidget *parent );
 
   protected slots:
-    void usrReadConfig();
-    void usrWriteConfig();
+    void usrRead();
+    void usrSave();
     void importTheme();
     void exportTheme();
 };*/

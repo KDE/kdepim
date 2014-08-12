@@ -21,7 +21,7 @@
 #define CONTACTSELECTIONDIALOG_H
 
 #include <KABC/Addressee>
-#include <KDialog>
+#include <QDialog>
 
 class ContactSelectionWidget;
 
@@ -37,7 +37,7 @@ class Collection;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class ContactSelectionDialog : public KDialog
+class ContactSelectionDialog : public QDialog
 {
     Q_OBJECT
 

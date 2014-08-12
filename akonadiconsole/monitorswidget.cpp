@@ -20,12 +20,12 @@
 #include "monitorswidget.h"
 #include "monitorsmodel.h"
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/qheaderview.h>
+#include <QVBoxLayout>
+#include <qheaderview.h>
 
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 
-#include <KGlobal>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -43,14 +43,14 @@ MonitorsWidget::MonitorsWidget( QWidget* parent ):
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 
-  KConfigGroup config( KGlobal::config(), "MonitorsWidget" );
+  KConfigGroup config( KSharedConfig::openConfig(), "MonitorsWidget" );
 
   mTreeView->header()->restoreState( config.readEntry<QByteArray>( "state", QByteArray() ) );
 }
 
 MonitorsWidget::~MonitorsWidget()
 {
-  KConfigGroup config( KGlobal::config(), "MonitorsWidget" );
+  KConfigGroup config( KSharedConfig::openConfig(), "MonitorsWidget" );
   config.writeEntry( "state", mTreeView->header()->saveState() );
 }
 

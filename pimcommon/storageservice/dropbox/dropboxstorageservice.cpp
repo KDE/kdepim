@@ -27,14 +27,12 @@
 
 #include <kwallet.h>
 
-#include <qjson/parser.h>
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
-#include <KMessageBox>
 
 #include <QDebug>
+#include <KFormat>
 
 
 using namespace PimCommon;
@@ -453,6 +451,8 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();
+    QString parentFolder;
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     QString parentFolder;
@@ -512,6 +512,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             }
         }
     }
+#endif
     return parentFolder;
 }
 
@@ -529,16 +530,16 @@ QMap<QString, QString> DropBoxStorageService::itemInformation(const QVariantMap 
     if (variantMap.contains(QLatin1String("bytes"))) {
         const qulonglong size = variantMap.value(QLatin1String("bytes")).toULongLong();
         if (!(isDir && size == 0)) {
-            information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KGlobal::locale()->formatByteSize(size));
+            information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(size));
         }
     }
     if (variantMap.contains(QLatin1String("client_mtime"))) {
         const QString tmp = variantMap.value(QLatin1String("client_mtime")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KGlobal::locale()->formatDateTime(PimCommon::DropBoxUtil::convertToDateTime( tmp )));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KLocale::global()->formatDateTime(PimCommon::DropBoxUtil::convertToDateTime( tmp )));
     }
     if (variantMap.contains(QLatin1String("modified"))) {
         const QString tmp = variantMap.value(QLatin1String("modified")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(PimCommon::DropBoxUtil::convertToDateTime( tmp )));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KLocale::global()->formatDateTime(PimCommon::DropBoxUtil::convertToDateTime( tmp )));
     }
     if (variantMap.contains(QLatin1String("root"))) {
         information.insert(i18n("Storage path:"), variantMap.value(QLatin1String("root")).toString());

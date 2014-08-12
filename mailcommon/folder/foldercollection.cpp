@@ -23,16 +23,16 @@
 #include "pimcommon/util/pimutil.h"
 #include "mailcommon/collectionpage/newmailnotifierattribute.h"
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/CollectionModifyJob>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
+#include <CollectionModifyJob>
 
 using namespace Akonadi;
 
 #include <KPIMIdentities/IdentityManager>
 #include <KPIMIdentities/Identity>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QMutex>
 #include <QMutexLocker>
@@ -79,7 +79,7 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writec
 
 FolderCollection::~FolderCollection()
 {
-    //kDebug()<<" FolderCollection::~FolderCollection"<<this;
+    //qDebug()<<" FolderCollection::~FolderCollection"<<this;
     if ( mWriteConfig ) {
         writeConfig();
     }
@@ -203,7 +203,7 @@ void FolderCollection::readConfig()
 
     const QString shortcut( configGroup.readEntry( "Shortcut" ) );
     if ( !shortcut.isEmpty() ) {
-        KShortcut sc( shortcut );
+        QKeySequence sc( shortcut );
         setShortcut( sc );
     }
 }
@@ -262,7 +262,7 @@ void FolderCollection::writeConfig() const
     }
 }
 
-void FolderCollection::setShortcut( const KShortcut &sc )
+void FolderCollection::setShortcut( const QKeySequence &sc )
 {
     if ( mShortcut != sc ) {
         mShortcut = sc;

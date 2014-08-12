@@ -28,7 +28,7 @@
 #include <calendarsupport/cellitem.h>
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <Akonadi/Item>
+#include <Item>
 
 #include <KDateTime>
 

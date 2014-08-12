@@ -17,9 +17,9 @@
 
 #include "noteschangerecorder.h"
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/CollectionFetchScope>
+#include <AkonadiCore/ItemFetchScope>
 #include "akonadi_next/note.h"
 
 #include "noteshared/attributes/notealarmattribute.h"

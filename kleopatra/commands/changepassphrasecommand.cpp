@@ -45,7 +45,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <gpg-error.h>
 
@@ -93,7 +93,7 @@ ChangePassphraseCommand::Private::Private( ChangePassphraseCommand * qq, KeyList
 
 }
 
-ChangePassphraseCommand::Private::~Private() { kDebug(); }
+ChangePassphraseCommand::Private::~Private() { qDebug(); }
 
 ChangePassphraseCommand::ChangePassphraseCommand( KeyListController * c )
     : Command( new Private( this, c ) )
@@ -117,7 +117,7 @@ void ChangePassphraseCommand::Private::init() {
 
 }
 
-ChangePassphraseCommand::~ChangePassphraseCommand() { kDebug(); }
+ChangePassphraseCommand::~ChangePassphraseCommand() { qDebug(); }
 
 void ChangePassphraseCommand::doStart() {
 
@@ -156,7 +156,7 @@ void ChangePassphraseCommand::Private::slotResult( const Error & err ) {
 }
 
 void ChangePassphraseCommand::doCancel() {
-    kDebug();
+    qDebug();
     if ( d->job )
         d->job->slotCancel();
 }

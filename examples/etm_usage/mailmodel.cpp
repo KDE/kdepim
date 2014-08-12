@@ -25,7 +25,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <KDebug>
+#include <QDebug>
 
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
@@ -63,7 +63,7 @@ QVariant MailModel::entityData(const Item &item, int column, int role) const
 {
   if (!item.hasPayload<MessagePtr>())
   {
-    kWarning() << "Not a message" << item.id() << item.remoteId() << item.mimeType();
+    qWarning() << "Not a message" << item.id() << item.remoteId() << item.mimeType();
     return QVariant();
   }
   const MessagePtr mail = item.payload<MessagePtr>();

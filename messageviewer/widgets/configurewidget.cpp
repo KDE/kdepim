@@ -29,6 +29,8 @@
 
 #include <KConfigDialogManager>
 #include <KDialog>
+#include <KLocalizedString>
+#include <QDebug>
 
 using namespace MessageViewer;
 
@@ -137,7 +139,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
     }
     if ( i == encodings.size() ) {
         // the current value of overrideCharacterEncoding is an unknown encoding => reset to Auto
-        kWarning() << "Unknown override character encoding" << currentOverrideEncoding
+        qWarning() << "Unknown override character encoding" << currentOverrideEncoding
                    << ". Resetting to Auto.";
         mSettingsUi->overrideCharacterEncoding->setCurrentIndex( 0 );
         MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding( QString() );

@@ -37,14 +37,15 @@
 #include <KIO/FileCopyJob>
 #include <KStandardDirs>
 #include <KNotification>
-
+#include <KLocalizedString>
+#include <KComponentData>
 // Qt Includes
 #include <QUrl>
 #include <QTimer>
 #include <QWebElement>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QtConcurrentRun>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QFile>
 #include <QDateTime>
 #include <QWebFrame>
@@ -234,7 +235,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
     // check white rules before :)
     if (_hostWhiteList.match(host))
     {
-        kDebug() << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
+        qDebug() << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
         return false;
     }
 
@@ -242,7 +243,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
     {
         if (filter.match(request, urlString, urlStringLowerCase))
         {
-            kDebug() << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
+            qDebug() << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
             return false;
         }
     }
@@ -250,7 +251,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
     // then check the black ones :(
     if (_hostBlackList.match(host))
     {
-        kDebug() << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
+        qDebug() << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
         return true;
     }
 
@@ -258,7 +259,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
     {
         if (filter.match(request, urlString, urlStringLowerCase))
         {
-            kDebug() << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
+            qDebug() << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
             return true;
         }
     }
@@ -291,14 +292,14 @@ void AdBlockManager::slotFinished(KJob *job)
 {
     if (job->error()) {
         KNotification *notify = new KNotification( QLatin1String("adblock-list-download-failed") );
-        notify->setComponentData( KComponentData("messageviewer") );
+        notify->setComponentName( QLatin1String("messageviewer") );
         notify->setText( i18n("Download new ad-block list was failed." ) );
         notify->sendEvent();
         return;
     }
 
     KNotification *notify = new KNotification( QLatin1String("adblock-list-download-done") );
-    notify->setComponentData( KComponentData("messageviewer") );
+    notify->setComponentName( QLatin1String("messageviewer") );
     notify->setText( i18n("Download new ad-block list was done." ) );
     notify->sendEvent();
     const QString itemName = job->property("itemname").toString();
@@ -332,7 +333,7 @@ void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::ReadOnly)) {
-        kDebug() << "Unable to open rule file" << localRulesFilePath;
+        qDebug() << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 
@@ -346,7 +347,7 @@ void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
     }
     ruleFile.close();
     if (!ruleFile.open(QFile::WriteOnly | QFile::Append)) {
-        kDebug() << "Unable to open rule file" << localRulesFilePath;
+        qDebug() << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 

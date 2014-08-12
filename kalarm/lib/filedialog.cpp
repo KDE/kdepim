@@ -21,11 +21,12 @@
 #include "kalarm.h"   //krazy:exclude=includes (kalarm.h must be first)
 #include "filedialog.h"
 #include "autoqpointer.h"
+#include <KFileWidget>
 
-#include <kabstractfilewidget.h>
 #include <klocale.h>
 #include <krecentdocument.h>
-#include <kdebug.h>
+#include <qdebug.h>
+#include <KUrl>
 
 #include <QCheckBox>
 
@@ -44,14 +45,16 @@ QString FileDialog::getSaveFileName(const KUrl& dir, const QString& filter, QWid
     if (!specialDir && !defaultDir)
     {
         if (!dir.isLocalFile())
-            kWarning() << "FileDialog::getSaveFileName called with non-local start dir " << dir;
+            qWarning() << "FileDialog::getSaveFileName called with non-local start dir " << dir;
         dlg->setSelection(dir.isLocalFile() ? dir.toLocalFile() : dir.path());  // may also be a filename
     }
     dlg->setOperationMode(Saving);
     dlg->setMode(KFile::File | KFile::LocalOnly);
     dlg->setConfirmOverwrite(true);
+#if 0 //QT5
     if (!caption.isEmpty())
         dlg->setCaption(caption);
+#endif
     mAppendCheck = 0;
     if (append)
     {

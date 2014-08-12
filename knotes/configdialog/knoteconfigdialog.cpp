@@ -18,7 +18,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 *******************************************************************/
 
-
+#include "config-kdepim.h"
 #include "knoteconfigdialog.h"
 #include "notes/knote.h"
 #include "print/knoteprintselectthemecombobox.h"
@@ -33,6 +33,7 @@
 
 #include "kdepim-version.h"
 
+
 #include <kapplication.h>
 #include <kcolorbutton.h>
 #include <kconfig.h>
@@ -42,8 +43,9 @@
 #include <klocale.h>
 #include <knuminput.h>
 #include <kwindowsystem.h>
-#include <KIcon>
+#include <QIcon>
 #include <KNS3/DownloadDialog>
+#include <QDialog>
 
 #include <QCheckBox>
 #include <QGridLayout>
@@ -58,11 +60,11 @@ KNoteConfigDialog::KNoteConfigDialog( const QString &title,
     : KCMultiDialog( parent )
 {
     setFaceType( KPageDialog::List );
-    setButtons( Default | Ok | Cancel );
-    setDefaultButton( Ok );
+    setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
+    button( QDialogButtonBox::Ok )->setDefault(true);
 
-    setCaption( title );
-#ifdef Q_WS_X11
+    setWindowTitle( title );
+#if KDEPIM_HAVE_X11
     KWindowSystem::setIcons( winId(),
                              qApp->windowIcon().pixmap(
                                  IconSize( KIconLoader::Desktop ),
@@ -71,8 +73,6 @@ KNoteConfigDialog::KNoteConfigDialog( const QString &title,
                                  IconSize( KIconLoader::Small ),
                                  IconSize( KIconLoader::Small ) ) );
 #endif
-    showButtonSeparator( true );
-
     addModule( QLatin1String("knote_config_display") );
     addModule( QLatin1String("knote_config_editor") );
     addModule( QLatin1String("knote_config_action") );
@@ -80,7 +80,7 @@ KNoteConfigDialog::KNoteConfigDialog( const QString &title,
     addModule( QLatin1String("knote_config_print") );
     addModule( QLatin1String("knote_config_collection") );
     addModule( QLatin1String("knote_config_misc") );
-    connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+    connect( button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(slotOk()) );
 }
 
 KNoteConfigDialog::~KNoteConfigDialog()
@@ -88,78 +88,71 @@ KNoteConfigDialog::~KNoteConfigDialog()
 }
 
 void KNoteConfigDialog::slotOk() {
-    KNotesGlobalConfig::self()->writeConfig();
-    NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+    KNotesGlobalConfig::self()->save();
+    NoteShared::NoteSharedGlobalConfig::self()->save();
     emit configWrote();
 }
 
 
 extern "C"
 {
-KDE_EXPORT KCModule *create_knote_config_display( QWidget *parent )
+Q_DECL_EXPORT KCModule *create_knote_config_display( QWidget *parent )
 {
-    KComponentData instance( "kcmnote_config_display" );
-    return new KNoteDisplayConfig( instance, parent );
+    return new KNoteDisplayConfig( parent );
 }
 }
 
 extern "C"
 {
-KDE_EXPORT KCModule *create_knote_config_collection( QWidget *parent )
+Q_DECL_EXPORT KCModule *create_knote_config_collection( QWidget *parent )
 {
-    KComponentData instance( "kcmnote_config_collection" );
-    return new KNoteCollectionConfig( instance, parent );
+    return new KNoteCollectionConfig( parent );
 }
 }
 
 extern "C"
 {
-KDE_EXPORT KCModule *create_knote_config_editor( QWidget *parent )
+Q_DECL_EXPORT KCModule *create_knote_config_editor( QWidget *parent )
 {
-    KComponentData instance( "kcmnote_config_editor" );
-    return new KNoteEditorConfig( instance, parent );
+    return new KNoteEditorConfig( parent );
 }
 }
 
 extern "C"
 {
-KDE_EXPORT KCModule *create_knote_config_action( QWidget *parent )
+Q_DECL_EXPORT KCModule *create_knote_config_action( QWidget *parent )
 {
-    KComponentData instance( "kcmnote_config_action" );
-    return new NoteShared::NoteActionConfig( instance, parent );
+    return new NoteShared::NoteActionConfig( parent );
 }
 }
 
 extern "C"
 {
-KDE_EXPORT KCModule *create_knote_config_network( QWidget *parent )
+Q_DECL_EXPORT KCModule *create_knote_config_network( QWidget *parent )
 {
-    KComponentData instance( "kcmnote_config_network" );
-    return new NoteShared::NoteNetworkConfig( instance, parent );
+    return new NoteShared::NoteNetworkConfig( parent );
 }
 }
 
 extern "C"
 {
-KDE_EXPORT KCModule *create_knote_config_print( QWidget *parent )
+Q_DECL_EXPORT KCModule *create_knote_config_print( QWidget *parent )
 {
-    KComponentData instance( "kcmnote_config_print" );
-    return new KNotePrintConfig( instance, parent );
+    return new KNotePrintConfig( parent );
 }
 }
 
 extern "C"
 {
-KDE_EXPORT KCModule *create_knote_config_misc( QWidget *parent )
+Q_DECL_EXPORT KCModule *create_knote_config_misc( QWidget *parent )
 {
-    KComponentData instance( "kcmnote_config_misc" );
-    return new KNoteMiscConfig( instance, parent );
+    return new KNoteMiscConfig( parent );
 }
 }
 
 
-KNoteDisplayConfig::KNoteDisplayConfig( const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+KNoteDisplayConfig::KNoteDisplayConfig( QWidget *parent )
+    :KCModule( parent )
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     QWidget * w =  new KNoteDisplayConfigWidget( true );
@@ -179,8 +172,8 @@ void KNoteDisplayConfig::save()
     KCModule::save();
 }
 
-KNoteEditorConfig::KNoteEditorConfig( const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+KNoteEditorConfig::KNoteEditorConfig( QWidget *parent )
+    :KCModule( parent )
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     QWidget * w =  new KNoteEditorConfigWidget( true );
@@ -201,8 +194,8 @@ void KNoteEditorConfig::load()
 }
 
 
-KNoteMiscConfig::KNoteMiscConfig(const KComponentData &inst, QWidget *parent )
-    : KCModule(inst, parent)
+KNoteMiscConfig::KNoteMiscConfig(QWidget *parent )
+    : KCModule(parent)
 {
     QWidget *w = new QWidget(this);
 
@@ -219,7 +212,7 @@ KNoteMiscConfig::KNoteMiscConfig(const KComponentData &inst, QWidget *parent )
     QLabel *label_DefaultTitle = new QLabel( i18n( "Default Title:" ), this );
     hbox->addWidget( label_DefaultTitle );
 
-    mDefaultTitle = new KLineEdit( this );
+    mDefaultTitle = new QLineEdit( this );
     label_DefaultTitle->setBuddy( mDefaultTitle );
     hbox->addWidget( mDefaultTitle );
 
@@ -242,7 +235,7 @@ void KNoteMiscConfig::save()
 {
     KCModule::save();
     NoteShared::NoteSharedGlobalConfig::self()->setDefaultTitle(mDefaultTitle->text());
-    NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+    NoteShared::NoteSharedGlobalConfig::self()->save();
 }
 
 void KNoteMiscConfig::defaults()
@@ -270,14 +263,14 @@ void KNoteMiscConfig::slotHelpLinkClicked(const QString &)
 }
 
 
-KNotePrintConfig::KNotePrintConfig(const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+KNotePrintConfig::KNotePrintConfig(QWidget *parent )
+    :KCModule( parent )
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     QWidget * w =  new QWidget( this );
     lay->addWidget( w );
     QGridLayout *layout = new QGridLayout( w );
-    layout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
     layout->setMargin( 0 );
 
     QLabel *label_PrintAction = new QLabel( i18n( "Theme:" ), this );
@@ -289,7 +282,7 @@ KNotePrintConfig::KNotePrintConfig(const KComponentData &inst, QWidget *parent )
     layout->addWidget( mSelectTheme, 0, 1 );
 
     QToolButton *getNewTheme = new QToolButton;
-    getNewTheme->setIcon(KIcon(QLatin1String("get-hot-new-stuff")));
+    getNewTheme->setIcon(QIcon::fromTheme(QLatin1String("get-hot-new-stuff")));
     getNewTheme->setToolTip(i18n("Download new printing themes"));
     connect(getNewTheme, SIGNAL(clicked()), SLOT(slotDownloadNewThemes()));
     layout->addWidget( getNewTheme, 0, 2 );
@@ -329,8 +322,8 @@ void KNotePrintConfig::defaults()
     Q_EMIT changed(true);
 }
 
-KNoteCollectionConfig::KNoteCollectionConfig(const KComponentData &inst, QWidget *parent )
-    : KCModule( inst, parent )
+KNoteCollectionConfig::KNoteCollectionConfig(QWidget *parent )
+    : KCModule( parent )
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mCollectionConfigWidget = new KNoteCollectionConfigWidget;

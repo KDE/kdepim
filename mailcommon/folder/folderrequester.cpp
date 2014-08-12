@@ -34,12 +34,13 @@
 
 #include <messageviewer/utils/autoqpointer.h>
 
-#include <Akonadi/CollectionFetchJob>
+#include <CollectionFetchJob>
 
 #include <KDialog>
 #include <KIconLoader>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocale>
+#include <QIcon>
 
 #include <QHBoxLayout>
 #include <QKeyEvent>
@@ -51,25 +52,25 @@ FolderRequester::FolderRequester( QWidget *parent )
     : QWidget( parent ),
       mMustBeReadWrite( true ), mShowOutbox( true ), mNotCreateNewFolder( false )
 {
-    QHBoxLayout *hlay = new QHBoxLayout( this );
-    hlay->setSpacing( KDialog::spacingHint() );
-    hlay->setContentsMargins( 0, 0, 0, 0 );
+  QHBoxLayout *hlay = new QHBoxLayout( this );
+  hlay->setSpacing( KDialog::spacingHint() );
+  hlay->setContentsMargins( 0, 0, 0, 0 );
 
-    mEdit = new KLineEdit( this );
-    mEdit->setClickMessage( i18n( "Select Folder" ) );
-    mEdit->setTrapReturnKey(true);
-    mEdit->setReadOnly( true );
-    hlay->addWidget( mEdit );
+  mEdit = new QLineEdit( this );
+  mEdit->setPlaceholderText( i18n( "Select Folder" ) );
+  //QT5 mEdit->setTrapReturnKey(true);
+  mEdit->setReadOnly( true );
+  hlay->addWidget( mEdit );
 
-    QToolButton *button = new QToolButton( this );
-    button->setIcon( KIcon( QLatin1String("folder") ) );
-    button->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    hlay->addWidget( button );
-    connect( button, SIGNAL(clicked()), this, SLOT(slotOpenDialog()) );
+  QToolButton *button = new QToolButton( this );
+  button->setIcon( QIcon::fromTheme( QLatin1String("folder") ) );
+  button->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  hlay->addWidget( button );
+  connect( button, SIGNAL(clicked()), this, SLOT(slotOpenDialog()) );
 
-    setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
-                                QSizePolicy::Fixed ) );
-    setFocusPolicy( Qt::StrongFocus );
+  setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
+        QSizePolicy::Fixed ) );
+  setFocusPolicy( Qt::StrongFocus );
 }
 
 //-----------------------------------------------------------------------------

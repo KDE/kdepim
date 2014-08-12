@@ -9,18 +9,20 @@ set(kmanagesieve_LIB_SRCS
   sievejob.cpp
 )
 
-kde4_add_library(kmanagesieve ${LIBRARY_TYPE} ${kmanagesieve_LIB_SRCS})
+add_library(kmanagesieve ${LIBRARY_TYPE} ${kmanagesieve_LIB_SRCS})
+generate_export_header(kmanagesieve BASE_NAME kmanagesieve)
 
 target_link_libraries(kmanagesieve
-  ${KDE4_KDECORE_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${SASL2_LIBRARIES}
+  KF5::I18n 
+  KF5::KIOCore
+  KF5::KIOWidgets
+  ${Sasl2_LIBRARIES}
 )
 
 set_target_properties(
   kmanagesieve PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS kmanagesieve ${INSTALL_TARGETS_DEFAULT_ARGS})

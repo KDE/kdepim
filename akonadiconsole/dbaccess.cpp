@@ -19,7 +19,7 @@
 
 #include "dbaccess.h"
 
-#include <akonadi/servermanager.h>
+#include <AkonadiCore/servermanager.h>
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QSettings>
@@ -29,6 +29,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
+
 
 using namespace Akonadi;
 
@@ -71,7 +72,7 @@ class DbAccessPrivate
     QSqlDatabase database;
 };
 
-K_GLOBAL_STATIC( DbAccessPrivate, sInstance )
+Q_GLOBAL_STATIC( DbAccessPrivate, sInstance )
 QSqlDatabase DbAccess::database()
 {
   // hack to detect database gone away error

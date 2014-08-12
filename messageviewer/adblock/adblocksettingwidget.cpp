@@ -41,9 +41,10 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 // KDE Includes
 #include <KSharedConfig>
 #include <KStandardDirs>
-#include <KIcon>
-#include <KDebug>
+#include <QIcon>
+#include <QDebug>
 #include <KMessageBox>
+#include <KLocalizedString>
 
 // Qt Includes
 #include <QWhatsThis>
@@ -51,6 +52,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <QFile>
 #include <QPointer>
 #include <QTextStream>
+#include <QStandardPaths>
 
 using namespace MessageViewer;
 AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
@@ -66,10 +68,10 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
     searchLine->setListWidget(manualFiltersListWidget);
 
-    insertButton->setIcon(KIcon(QLatin1String("list-add")));
+    insertButton->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
     connect(insertButton, SIGNAL(clicked()), this, SLOT(insertRule()));
 
-    removeButton->setIcon(KIcon(QLatin1String("list-remove")));
+    removeButton->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removeRule()));
     connect(removeSubscription, SIGNAL(clicked()), SLOT(slotRemoveSubscription()));
     connect(manualFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateManualButtons()));
@@ -231,7 +233,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::ReadOnly | QFile::Text)) {
-        kDebug() << "Unable to open rule file" << localRulesFilePath;
+        qDebug() << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 
@@ -271,7 +273,7 @@ void AdBlockSettingWidget::save()
            grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
         QString path = subItem->data(PathList).toString();
         if (path.isEmpty()) {
-            path = KStandardDirs::locateLocal("data", QString::fromLatin1("kmail2/adblockrules-%1").arg(i));
+            path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("kmail2/adblockrules-%1").arg(i);
         }
         grp.writeEntry(QLatin1String("path"), path);
     }
@@ -282,7 +284,7 @@ void AdBlockSettingWidget::save()
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {
-        kDebug() << "Unable to open rule file" << localRulesFilePath;
+        qDebug() << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 

@@ -27,15 +27,14 @@
 #include "sieveeditorglobalconfig.h"
 
 #include <KSharedConfig>
-#include <KGlobal>
+
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KStandardAction>
-#include <KApplication>
 #include <KActionCollection>
-#include <KAction>
+#include <QAction>
 #include <KStatusBar>
-#include <KTabWidget>
+#include <QIcon>
 
 #include <QPointer>
 #include <QLabel>
@@ -46,7 +45,7 @@ SieveEditorMainWindow::SieveEditorMainWindow()
       mNetworkIsDown(false)
 {    
     mMainWidget = new SieveEditorCentralWidget;
-    connect(mMainWidget, SIGNAL(configureClicked()), SLOT(slotConfigure()));
+    connect(mMainWidget, &SieveEditorCentralWidget::configureClicked, this, &SieveEditorMainWindow::slotConfigure);
     connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(updateButtons(bool,bool,bool,bool)), this, SLOT(slotUpdateButtons(bool,bool,bool,bool)));
     setCentralWidget(mMainWidget);
     setupActions();
@@ -64,7 +63,7 @@ SieveEditorMainWindow::SieveEditorMainWindow()
 
 SieveEditorMainWindow::~SieveEditorMainWindow()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("SieveEditorMainWindow") );
     group.writeEntry( "Size", size() );
@@ -101,7 +100,7 @@ void SieveEditorMainWindow::slotUpdateButtons(bool newScriptAction, bool editScr
 
 void SieveEditorMainWindow::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = KConfigGroup( config, "SieveEditorMainWindow" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
@@ -118,16 +117,16 @@ void SieveEditorMainWindow::setupActions()
     mSaveScript = KStandardAction::save( this, SLOT(slotSaveScript()), ac );
     mSaveScript->setEnabled(false);
 
-    KAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
+    QAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
     act->setText(i18n("Add Server Sieve..."));
 
     mDeleteScript = ac->addAction(QLatin1String("delete_script"), this, SLOT(slotDeleteScript()));
     mDeleteScript->setText(i18n("Delete Script"));
-    mDeleteScript->setShortcut(QKeySequence( Qt::Key_Delete ));
+    ac->setDefaultShortcut(mDeleteScript, QKeySequence( Qt::Key_Delete ));
     mDeleteScript->setEnabled(false);
 
     mNewScript = ac->addAction(QLatin1String("create_new_script"), this, SLOT(slotCreateNewScript()));
-    mNewScript->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_N ));
+    ac->setDefaultShortcut(mNewScript,QKeySequence( Qt::CTRL + Qt::Key_N ));
     mNewScript->setText(i18n("Create New Script..."));
     mNewScript->setEnabled(false);
 
@@ -141,13 +140,13 @@ void SieveEditorMainWindow::setupActions()
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), this, SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
-    mRefreshList->setIcon(KIcon(QLatin1String("view-refresh")));
-    mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
+    mRefreshList->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
+    ac->setDefaultShortcut(mRefreshList,QKeySequence( Qt::Key_F5 ));
 
     mGoToLine = ac->addAction(QLatin1String("gotoline"), mMainWidget->sieveEditorMainWidget(), SLOT(slotGoToLine()));
     mGoToLine->setText(i18n("Go to Line"));
-    mGoToLine->setIcon(KIcon(QLatin1String("go-jump")));
-    mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
+    mGoToLine->setIcon(QIcon::fromTheme(QLatin1String("go-jump")));
+    ac->setDefaultShortcut(mGoToLine,QKeySequence( Qt::CTRL + Qt::Key_G ));
     mGoToLine->setEnabled(false);
 }
 

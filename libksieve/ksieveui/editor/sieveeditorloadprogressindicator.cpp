@@ -17,16 +17,18 @@
 
 #include "sieveeditorloadprogressindicator.h"
 
-#include <QTimer>
+#include <KIconLoader>
 
+#include <QTimer>
+#include <QPixmap>
 using namespace KSieveUi;
 SieveEditorLoadProgressIndicator::SieveEditorLoadProgressIndicator(QObject *parent)
     : QObject(parent),
       mProgressCount(0)
 {
-    mProgressPix = KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
+    mProgressPix = KIconLoader::global()->loadPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
     mProgressTimer = new QTimer(this);
-    connect(mProgressTimer, SIGNAL(timeout()), this, SLOT(slotTimerDone()));
+    connect(mProgressTimer, &QTimer::timeout, this, &SieveEditorLoadProgressIndicator::slotTimerDone);
 }
 
 SieveEditorLoadProgressIndicator::~SieveEditorLoadProgressIndicator()

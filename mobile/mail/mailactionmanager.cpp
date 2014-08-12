@@ -22,13 +22,13 @@
 
 #include "mailactionmanager.h"
 
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 
 #include <KLocale>
-#include <KIcon>
-#include <KAction>
+#include <QIcon>
+#include <QAction>
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <KMime/KMimeMessage>
 
 MailActionManager::MailActionManager( KActionCollection *actionCollection, QObject *parent )
@@ -37,15 +37,15 @@ MailActionManager::MailActionManager( KActionCollection *actionCollection, QObje
     m_itemSelectionModel( 0 ),
     m_itemActionSelectionModel( 0 )
 {
-  KAction *action;
+  QAction *action;
   action = actionCollection->addAction( QLatin1String("mark_message_important") );
   action->setText( i18n( "Important" ) );
-  action->setIcon( KIcon( QLatin1String("emblem-important") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("emblem-important") ) );
   action->setCheckable(true);
 
   action = actionCollection->addAction( QLatin1String("mark_message_action_item") );
   action->setText( i18n( "Action Item" ) );
-  action->setIcon( KIcon( QLatin1String("mail-mark-task") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("mail-mark-task") ) );
   action->setCheckable( true );
 
   action = actionCollection->addAction( QLatin1String("write_new_email") );

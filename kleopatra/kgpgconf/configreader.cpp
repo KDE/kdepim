@@ -50,6 +50,7 @@
 
 #include <cassert>
 #include <memory>
+#include <QStandardPaths>
 
 namespace {
 
@@ -293,7 +294,7 @@ GpgConfResult ConfigReader::Private::runGpgConf( const QString& arg ) const
 
 static QString gpgConfPath() {
     const GpgME::EngineInfo ei = GpgME::engineInfo( GpgME::GpgConfEngine );
-    return ei.fileName() ? QFile::decodeName( ei.fileName() ) : KStandardDirs::findExe( QLatin1String("gpgconf") ) ;
+    return ei.fileName() ? QFile::decodeName( ei.fileName() ) : QStandardPaths::findExecutable( QLatin1String("gpgconf") ) ;
 }
 
 GpgConfResult ConfigReader::Private::runGpgConf( const QStringList& args ) const

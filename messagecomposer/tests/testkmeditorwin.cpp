@@ -18,12 +18,15 @@
 */
 
 #include <messagecomposer/composer/kmeditor.h>
-#include <KApplication>
-#include <kcmdlineargs.h>
 #include <QAction>
 #include <QMenu>
 #include <QMenuBar>
 #include <testkmeditorwin.h>
+#include <QCommandLineParser>
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+
 
 testKMeditorWindow::testKMeditorWindow()
 {
@@ -55,8 +58,22 @@ testKMeditorWindow::~testKMeditorWindow()
 
 int main( int argc, char **argv )
 {
-    KCmdLineArgs::init( argc, argv, "testkmeditorwin", 0, ki18n("KMeditorTestWin"), "1.0" , ki18n("kmeditor test win app"));
-    KApplication app;
+    KAboutData aboutData( QStringLiteral("testkmeditorwin"),
+                          i18n("KMeditorTestWin"),
+                          QLatin1String("1.0"));
+
+    KAboutData::setApplicationData(aboutData);
+
+    QApplication app(argc, argv);
+
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
+
     testKMeditorWindow *edit = new testKMeditorWindow();
     edit->show();
     return app.exec();

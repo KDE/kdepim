@@ -22,7 +22,7 @@
 #include <KLocalizedString>
 
 using namespace KSieveUi;
-GenerateGlobalScriptJob::GenerateGlobalScriptJob(const KUrl &url, QObject *parent)
+GenerateGlobalScriptJob::GenerateGlobalScriptJob(const QUrl &url, QObject *parent)
     : QObject(parent),
       mCurrentUrl(url),
       mMasterjob(0),
@@ -77,8 +77,9 @@ void GenerateGlobalScriptJob::writeMasterScript()
                                                "# The script(s) maintained by one or more editors available to the user\n"
                                                "include :personal :optional \"USER\";\n");
 
-    KUrl url(mCurrentUrl);
-    url.setFileName(QLatin1String("MASTER"));
+    QUrl url(mCurrentUrl);
+    url = url.adjusted(QUrl::RemoveFilename);
+    url.setPath(url.path() + QLatin1String("MASTER"));
     mMasterjob = KManageSieve::SieveJob::put(url, masterScript, true, true );
     connect( mMasterjob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotPutMasterResult(KManageSieve::SieveJob*,bool)) );
@@ -110,8 +111,9 @@ void GenerateGlobalScriptJob::writeUserScript()
         userScript += QString::fromLatin1("\ninclude :personal \"%1\"").arg(activeScript);
     }
 
-    KUrl url(mCurrentUrl);
-    url.setFileName(QLatin1String("USER"));
+    QUrl url(mCurrentUrl);
+    url = url.adjusted(QUrl::RemoveFilename);
+    url.setPath(url.path() + QLatin1String("USER"));
     mUserJob = KManageSieve::SieveJob::put(url, userScript, false, false );
     connect( mUserJob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotPutUserResult(KManageSieve::SieveJob*,bool)) );

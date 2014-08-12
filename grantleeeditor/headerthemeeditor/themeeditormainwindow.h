@@ -21,10 +21,10 @@
 #include <KXmlGuiWindow>
 
 class ThemeEditorPage;
-class KAction;
+class QAction;
 class KToggleAction;
 class KRecentFilesAction;
-class KUrl;
+class QUrl;
 
 class ThemeEditorMainWindow : public KXmlGuiWindow
 {
@@ -52,7 +52,7 @@ private Q_SLOTS:
     void slotManageTheme();
     void slotUpdateView();
     void slotCanInsertFile(bool b);
-    void slotThemeSelected(const KUrl &);
+    void slotThemeSelected(const QUrl &);
     void slotSaveAsTheme();
 
 private:
@@ -69,18 +69,18 @@ private:
     void setupActions();
     void closeThemeEditor();
     ThemeEditorPage *mThemeEditor;
-    KAction *mNewThemeAction;
-    KAction *mCloseThemeAction;
-    KAction *mAddExtraPage;
-    KAction *mCloseAction;
-    KAction *mOpenAction;
-    KAction *mUploadTheme;
-    KAction *mSaveAction;
-    KAction *mInstallTheme;
-    KAction *mInsertFile;
-    KAction *mManageTheme;
-    KAction *mUpdateView;
-    KAction *mSaveAsAction;
+    QAction *mNewThemeAction;
+    QAction *mCloseThemeAction;
+    QAction *mAddExtraPage;
+    QAction *mCloseAction;
+    QAction *mOpenAction;
+    QAction *mUploadTheme;
+    QAction *mSaveAction;
+    QAction *mInstallTheme;
+    QAction *mInsertFile;
+    QAction *mManageTheme;
+    QAction *mUpdateView;
+    QAction *mSaveAsAction;
     KToggleAction *mPrintingMode;
     KToggleAction *mNormalMode;
     KRecentFilesAction *mRecentFileAction;

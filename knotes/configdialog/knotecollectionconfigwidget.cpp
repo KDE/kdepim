@@ -22,31 +22,31 @@
 #include "akonadi_next/note.h"
 #include "notesharedglobalconfig.h"
 
-#include <Akonadi/CollectionModifyJob>
-#include <Akonadi/CollectionFilterProxyModel>
+#include <AkonadiCore/CollectionModifyJob>
+#include <AkonadiCore/CollectionFilterProxyModel>
 #include <KRecursiveFilterProxyModel>
-#include <KInputDialog>
+#include <QInputDialog>
 
-#include <Akonadi/EntityTreeView>
-#include <Akonadi/CollectionRequester>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Collection>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/CollectionModifyJob>
+#include <AkonadiWidgets/CollectionRequester>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/Collection>
+#include <AkonadiWidgets/EntityTreeView>
+#include <AkonadiCore/EntityDisplayAttribute>
+#include <AkonadiCore/CollectionModifyJob>
+
 #include <KMime/Message>
 
 #include <KCheckableProxyModel>
 
 #include <KLocalizedString>
-#include <KPushButton>
-#include <KLineEdit>
-#include <KDebug>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QDebug>
 #include <KMessageBox>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QTreeView>
 #include <QLabel>
 #include <QTimer>
 
@@ -90,9 +90,9 @@ KNoteCollectionConfigWidget::KNoteCollectionConfigWidget(QWidget *parent)
     mCollectionFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
 
-    KLineEdit *searchLine = new KLineEdit(this);
+    QLineEdit *searchLine = new QLineEdit(this);
     searchLine->setPlaceholderText(i18n("Search..."));
-    searchLine->setClearButtonShown(true);
+    searchLine->setClearButtonEnabled(true);
     connect(searchLine, SIGNAL(textChanged(QString)),
             this, SLOT(slotSetCollectionFilter(QString)));
 
@@ -110,16 +110,16 @@ KNoteCollectionConfigWidget::KNoteCollectionConfigWidget(QWidget *parent)
     QHBoxLayout *hbox = new QHBoxLayout;
     vbox->addLayout(hbox);
 
-    KPushButton *button = new KPushButton(i18n("&Select All"), this);
+    QPushButton *button = new QPushButton(i18n("&Select All"), this);
     connect(button, SIGNAL(clicked(bool)), this, SLOT(slotSelectAllCollections()));
     hbox->addWidget(button);
 
-    button = new KPushButton(i18n("&Unselect All"), this);
+    button = new QPushButton(i18n("&Unselect All"), this);
     connect(button, SIGNAL(clicked(bool)), this, SLOT(slotUnselectAllCollections()));
     hbox->addWidget(button);
     hbox->addStretch(1);
 
-    mRenameCollection = new KPushButton(i18n("Rename notes..."), this);
+    mRenameCollection = new QPushButton(i18n("Rename notes..."), this);
     connect(mRenameCollection, SIGNAL(clicked(bool)), this, SLOT(slotRenameCollection()));
     hbox->addWidget(mRenameCollection);
 
@@ -162,8 +162,8 @@ void KNoteCollectionConfigWidget::slotRenameCollection()
       return;
 
     bool ok;
-    const QString name = KInputDialog::getText( i18n( "Rename Notes" ),
-        i18n( "Name:" ), title, &ok, this );
+    const QString name = QInputDialog::getText( this, i18n( "Rename Notes" ),
+        i18n( "Name:" ), QLineEdit::Normal, title, &ok );
 
     if ( ok ) {
         if ( col.hasAttribute<Akonadi::EntityDisplayAttribute>() &&
@@ -256,7 +256,7 @@ void KNoteCollectionConfigWidget::save()
     Akonadi::Collection col = mDefaultSaveFolder->collection();
     if (col.isValid()) {
         NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(col.id());
-        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        NoteShared::NoteSharedGlobalConfig::self()->save();
     }
 }
 
@@ -294,11 +294,11 @@ void KNoteCollectionConfigWidget::slotModifyJobDone(KJob* job)
     Akonadi::CollectionModifyJob *modifyJob = qobject_cast<Akonadi::CollectionModifyJob*>(job);
     if (modifyJob && job->error()) {
         if (job->property("AttributeAdded").toBool()) {
-            kWarning() << "Failed to append NewMailNotifierAttribute to collection"
+            qWarning() << "Failed to append NewMailNotifierAttribute to collection"
                        << modifyJob->collection().id() << ":"
                        << job->errorString();
         } else {
-            kWarning() << "Failed to remove NewMailNotifierAttribute from collection"
+            qWarning() << "Failed to remove NewMailNotifierAttribute from collection"
                        << modifyJob->collection().id() << ":"
                        << job->errorString();
         }

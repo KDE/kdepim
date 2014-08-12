@@ -24,7 +24,7 @@
 
 #include <QWidget>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 namespace Akonadi
 {

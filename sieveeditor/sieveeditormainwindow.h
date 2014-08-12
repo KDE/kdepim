@@ -24,7 +24,7 @@
 #include <KXmlGuiWindow>
 #include <Solid/Networking>
 
-class KAction;
+class QAction;
 class SieveEditorCentralWidget;
 class QLabel;
 class SieveEditorMainWindow : public KXmlGuiWindow
@@ -54,13 +54,13 @@ private:
     void readConfig();
     void setupActions();
     SieveEditorCentralWidget *mMainWidget;
-    KAction *mDeleteScript;
-    KAction *mNewScript;
-    KAction *mEditScript;
-    KAction *mDesactivateScript;
-    KAction *mRefreshList;
-    KAction *mSaveScript;
-    KAction *mGoToLine;
+    QAction *mDeleteScript;
+    QAction *mNewScript;
+    QAction *mEditScript;
+    QAction *mDesactivateScript;
+    QAction *mRefreshList;
+    QAction *mSaveScript;
+    QAction *mGoToLine;
     QLabel *mStatusBarInfo;
     bool mNetworkIsDown;
 };

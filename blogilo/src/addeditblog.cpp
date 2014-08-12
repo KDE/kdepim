@@ -34,9 +34,10 @@
 #include "blogger.h"
 #include <kurl.h>
 #include <kmessagebox.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
+#include <KLocalizedString>
 
 #include <QTableWidget>
 #include <QTimer>
@@ -56,7 +57,7 @@ public:
           wait(0)
     {}
     Ui::AddEditBlogBase ui;
-    KTabWidget *mainW;
+    QTabWidget *mainW;
     bool isNewBlog;
     BilboBlog *bBlog;
     KBlog::Blog *mBlog;
@@ -70,8 +71,8 @@ public:
 AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
     : KDialog( parent, flags ), d(new Private)
 {
-    kDebug();
-    d->mainW = new KTabWidget( this );
+    qDebug();
+    d->mainW = new QTabWidget( this );
     d->ui.setupUi( d->mainW );
     setMainWidget( d->mainW );
 
@@ -132,9 +133,9 @@ void AddEditBlog::enableAutoConfBtn()
 
 void AddEditBlog::autoConfigure()
 {
-    kDebug();
+    qDebug();
     if ( d->ui.txtUrl->text().isEmpty() || d->ui.txtUser->text().isEmpty() || d->ui.txtPass->text().isEmpty() ) {
-        kDebug() << "Username, Password or Url doesn't set!";
+        qDebug() << "Username, Password or Url doesn't set!";
         KMessageBox::sorry( this, i18n( "You have to set the username, password and URL of your blog or website." ),
                             i18n( "Incomplete fields" ) );
         return;
@@ -172,7 +173,7 @@ void AddEditBlog::autoConfigure()
         hideWaitWidget();
         return;
     }
-    kDebug() << "Trying to guess API type by Homepage contents";
+    qDebug() << "Trying to guess API type by Homepage contents";
     KIO::StoredTransferJob *httpGetJob = KIO::storedGet( d->ui.txtUrl->text() , KIO::NoReload, KIO::HideProgressInfo );
     connect( httpGetJob, SIGNAL(result(KJob*)), this, SLOT(gotHtml(KJob*)) );
     d->mFetchAPITimer = new QTimer( this );
@@ -186,7 +187,7 @@ void AddEditBlog::gotHtml( KJob *job )
     if ( !job )
         return;
     if ( job->error() ) {
-        kDebug() << "Auto configuration failed! Error: " << job->errorString();
+        qDebug() << "Auto configuration failed! Error: " << job->errorString();
         hideWaitWidget();
         KMessageBox::sorry(this, i18n("Auto configuration failed. You have to set Blog API on Advanced tab manually."));
         return;
@@ -196,7 +197,7 @@ void AddEditBlog::gotHtml( KJob *job )
 
     QRegExp rxGData( QString::fromLatin1( "content='blogger' name='generator'" ) );
     if ( rxGData.indexIn( httpData ) != -1 ) {
-        kDebug() << "content='blogger' name='generator' matched";
+        qDebug() << "content='blogger' name='generator' matched";
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex( 4 );
         QRegExp rxBlogId( QString::fromLatin1("BlogID=(\\d+)" ) );
@@ -207,7 +208,7 @@ void AddEditBlog::gotHtml( KJob *job )
 
     QRegExp rxLiveJournal( QString::fromLatin1( "rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\"" ) );
     if ( rxLiveJournal.indexIn( httpData ) != -1 ) {
-        kDebug() << " rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\" matched";
+        qDebug() << " rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\" matched";
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex( 0 );
         d->ui.txtUrl->setText( QLatin1String("http://www.liverjournal.com/interface/blogger/") );
@@ -219,7 +220,7 @@ void AddEditBlog::gotHtml( KJob *job )
     QString textUrl;
     QRegExp rxWordpress( QString::fromLatin1( "name=\"generator\" content=\"WordPress" ) );
     if ( rxWordpress.indexIn( httpData ) != -1 ) {
-        kDebug() << "name=\"generator\" content=\"WordPress matched";
+        qDebug() << "name=\"generator\" content=\"WordPress matched";
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex( 3 );
 
@@ -245,12 +246,12 @@ void AddEditBlog::gotHtml( KJob *job )
 
 void AddEditBlog::gotXmlRpcTest( KJob *job )
 {
-    kDebug();
+    qDebug();
     d->mFetchAPITimer->deleteLater();
     if ( !job )
         return;
     if ( job->error() ) {
-        kDebug() << "Auto configuration failed! Error: " << job->errorString();
+        qDebug() << "Auto configuration failed! Error: " << job->errorString();
         hideWaitWidget();
         KMessageBox::sorry(this, i18n("Auto configuration failed. You have to set Blog API on Advanced tab manually."));
         return;
@@ -302,7 +303,7 @@ void AddEditBlog::fetchBlogId()
         break;
     }
     default:
-        kDebug()<<"Unknown API";
+        qDebug()<<"Unknown API";
         return;
     }
 
@@ -315,7 +316,7 @@ void AddEditBlog::fetchBlogId()
 
 void AddEditBlog::handleFetchIDTimeout()
 {
-    kDebug();
+    qDebug();
     if ( d->mFetchBlogIdTimer ) {
         d->mFetchBlogIdTimer->stop();
     }
@@ -332,7 +333,7 @@ void AddEditBlog::handleFetchIDTimeout()
 
 void AddEditBlog::handleFetchAPITimeout()
 {
-    kDebug();
+    qDebug();
     d->mFetchAPITimer->deleteLater();
     d->mFetchAPITimer = 0;
     hideWaitWidget();
@@ -345,7 +346,7 @@ void AddEditBlog::handleFetchAPITimeout()
 
 void AddEditBlog::handleFetchError( KBlog::Blog::ErrorType type, const QString & errorMsg )
 {
-    kDebug() << " ErrorType: " << type;
+    qDebug() << " ErrorType: " << type;
     d->ui.txtId->setEnabled( true );
     d->ui.txtId->setText( QString() );
     hideWaitWidget();
@@ -362,7 +363,7 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
     QString blogId, blogName, blogUrl, apiUrl;
     const int listCount(list.count());
     if ( listCount > 1 ) {
-        kDebug() << "User has more than ONE blog!";
+        qDebug() << "User has more than ONE blog!";
         KDialog *blogsDialog = new KDialog(this);
         QTableWidget *blogsList = new QTableWidget(blogsDialog);
         blogsList->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -377,7 +378,7 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
         blogsList->setColumnHidden(2, true);
         blogsList->setColumnHidden(3, true);
         for(;it != endIt; ++it){
-            kDebug()<<it->value(QLatin1String("title"));
+            qDebug()<<it->value(QLatin1String("title"));
             blogsList->insertRow(i);
             blogsList->setCellWidget(i, 0, new QLabel( it->value(QLatin1String("title"))) );
             blogsList->setCellWidget(i, 1, new QLabel( it->value(QLatin1String("url"))) );
@@ -463,7 +464,7 @@ void AddEditBlog::slotReturnPressed()
 
 AddEditBlog::~AddEditBlog()
 {
-    kDebug();
+    qDebug();
     delete d;
 }
 
@@ -551,7 +552,7 @@ void AddEditBlog::slotComboApiChanged( int index )
 
 void AddEditBlog::slotButtonClicked( int button )
 {
-    kDebug();
+    qDebug();
     if ( button == KDialog::Ok ) {
         if ( d->bBlog->blogid().isEmpty() && d->ui.txtId->text().isEmpty() ) {
             KMessageBox::sorry( this, i18n( "Blog ID has not yet been retrieved.\n"
@@ -574,17 +575,17 @@ void AddEditBlog::slotButtonClicked( int button )
             int blog_id = DBMan::self()->addBlog( *d->bBlog );
             d->bBlog->setId( blog_id );
             if ( blog_id != -1 ) {
-                kDebug() << "Emitting sigBlogAdded() ...";
+                qDebug() << "Emitting sigBlogAdded() ...";
                 Q_EMIT sigBlogAdded( *d->bBlog );
             } else {
-                kDebug() << "Cannot add blog";
+                qDebug() << "Cannot add blog";
             }
         } else {
             if ( DBMan::self()->editBlog( *d->bBlog ) ) {
-                kDebug() << "Emitting sigBlogEdited() ...";
+                qDebug() << "Emitting sigBlogEdited() ...";
                 Q_EMIT sigBlogEdited( *d->bBlog );
             } else {
-                kDebug() << "Cannot edit blog with id " << d->bBlog->id();
+                qDebug() << "Cannot edit blog with id " << d->bBlog->id();
             }
         }
         accept();

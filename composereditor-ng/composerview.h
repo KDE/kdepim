@@ -20,7 +20,7 @@
 
 #ifndef COMPOSERVIEW_H
 #define COMPOSERVIEW_H
-#include "composereditor_export.h"
+#include "composereditorng_export.h"
 #include <KWebView>
 
 class KActionCollection;

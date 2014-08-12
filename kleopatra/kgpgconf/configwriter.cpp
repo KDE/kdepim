@@ -37,7 +37,6 @@
 #include <QDateTime>
 #include <QIODevice>
 #include <QString>
-#include <QStringList>
 #include <QTextStream>
 #include <QVector>
 

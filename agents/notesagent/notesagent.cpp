@@ -22,18 +22,16 @@
 #include "notesagentsettings.h"
 #include "notesagentsettingsdialog.h"
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
-#include <akonadi/dbusconnectionpool.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/session.h>
-#include <Akonadi/AttributeFactory>
-#include <Akonadi/CollectionFetchScope>
+#include <AgentInstance>
+#include <AgentManager>
+#include <AkonadiCore/dbusconnectionpool.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/session.h>
+#include <AttributeFactory>
+#include <CollectionFetchScope>
 
 #include <KWindowSystem>
-#include <KLocalizedString>
-#include <KLocale>
 
 #include <QPointer>
 
@@ -41,7 +39,6 @@ NotesAgent::NotesAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
     mNotesManager = new NotesManager(this);
-    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_notes_agent") );
     new NotesAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/NotesAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.NotesAgent" ) );
@@ -78,7 +75,7 @@ void NotesAgent::setEnableAgent(bool enabled)
         return;
 
     NotesAgentSettings::setEnabled(enabled);
-    NotesAgentSettings::self()->writeConfig();
+    NotesAgentSettings::self()->save();
     if (enabled) {
         mNotesManager->load();
     } else {
@@ -100,7 +97,7 @@ void NotesAgent::showConfigureDialog(qlonglong windowId)
 {
     QPointer<NotesAgentSettingsDialog> dialog = new NotesAgentSettingsDialog;
     if (windowId) {
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
         KWindowSystem::setMainWindow( dialog, windowId );
 #else
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );
@@ -121,7 +118,7 @@ void NotesAgent::setReceiveNotes(bool b)
 {
     if (NoteShared::NoteSharedGlobalConfig::receiveNotes() != b ) {
         NoteShared::NoteSharedGlobalConfig::setReceiveNotes(b);
-        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        NoteShared::NoteSharedGlobalConfig::self()->save();
         mNotesManager->updateNetworkListener();
     }
 }
@@ -138,7 +135,7 @@ void NotesAgent::setPort(int value)
 
     if (NoteShared::NoteSharedGlobalConfig::port() != static_cast<uint>(value) ) {
         NoteShared::NoteSharedGlobalConfig::setPort(value);
-        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        NoteShared::NoteSharedGlobalConfig::self()->save();
         if (NotesAgentSettings::enabled())
             mNotesManager->updateNetworkListener();
     }
@@ -151,7 +148,7 @@ void NotesAgent::setAlarmCheckInterval(int value)
 
     if (NoteShared::NoteSharedGlobalConfig::checkInterval() != static_cast<uint>(value) ) {
         NoteShared::NoteSharedGlobalConfig::setCheckInterval(value);
-        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        NoteShared::NoteSharedGlobalConfig::self()->save();
         reload();
     }
 }

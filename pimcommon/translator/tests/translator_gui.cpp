@@ -17,17 +17,28 @@
 
 #include "translator/translatorwidget.h"
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+#include <qdebug.h>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "translator_gui", 0, ki18n("TranslatorTest_Gui"),
-                       "1.0", ki18n("Test for translator widget"));
+    KAboutData aboutData( QLatin1String("translator_gui"), i18n("TranslatorTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for translator widget"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     PimCommon::TranslatorWidget *w = new PimCommon::TranslatorWidget();
     w->show();

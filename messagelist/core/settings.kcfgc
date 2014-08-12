@@ -7,5 +7,5 @@ Mutators=true
 Singleton=true
 ItemAccessors=true
 SetUserTexts=true
-IncludeFiles=qapplication.h, kglobalsettings.h, messagelist/messagelist_export.h, messagelist/messagelistutil.h
+IncludeFiles=qapplication.h, messagelist/messagelist_export.h, messagelist/messagelistutil.h
 

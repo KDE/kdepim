@@ -29,7 +29,7 @@
 
 #include <QTimer>
 
-#include <KMenuBar>
+#include <QMenuBar>
 #include <KToggleAction>
 #include <kapplication.h>
 #include <klocale.h>
@@ -39,9 +39,8 @@
 #include <kxmlguifactory.h>
 #include <kstringhandler.h>
 #include <kstandardaction.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <ktip.h>
-#include <kicon.h>
 #include <kaction.h>
 
 #include <QLabel>
@@ -58,7 +57,7 @@ KMMainWin::KMMainWin(QWidget *)
     // modal subdialogs will only affect this dialog, not the other windows
     setAttribute( Qt::WA_GroupLeader );
 
-    KAction *action  = new KAction( KIcon(QLatin1String("window-new")), i18n("New &Window"), this );
+    QAction *action  = new QAction( QIcon::fromTheme(QLatin1String("window-new")), i18n("New &Window"), this );
     actionCollection()->addAction( QLatin1String("new_mail_client"), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotNewMailReader()) );
 
@@ -68,9 +67,10 @@ KMMainWin::KMMainWin(QWidget *)
     connect(mKMMainWidget,SIGNAL(recreateGui()),this,SLOT(slotUpdateGui()));
     setCentralWidget( mKMMainWidget );
     setupStatusBar();
+#if 0 //QT5
     if ( kmkernel->xmlGuiInstance().isValid() )
         setComponentData( kmkernel->xmlGuiInstance() );
-
+#endif
     setStandardToolBarMenuEnabled( true );
 
     KStandardAction::configureToolbars( this, SLOT(slotEditToolbars()),
@@ -104,7 +104,8 @@ KMMainWin::KMMainWin(QWidget *)
 
 KMMainWin::~KMMainWin()
 {
-    saveMainWindowSettings( KMKernel::self()->config()->group( "Main Window") );
+    KConfigGroup grp (KMKernel::self()->config()->group( "Main Window"));
+    saveMainWindowSettings( grp );
     KMKernel::self()->config()->sync();
 }
 
@@ -124,8 +125,9 @@ void KMMainWin::displayStatusMsg( const QString& aText )
     //  text.replace("&", "&amp;");
     //  text.replace("<", "&lt;");
     //  text.replace(">", "&gt;");
-
+#if 0 //QT5
     statusBar()->changeItem( text, 1 );
+#endif
 }
 
 void KMMainWin::slotToggleMenubar(bool dontShowWarning)
@@ -161,7 +163,8 @@ void KMMainWin::slotNewMailReader()
 
 void KMMainWin::slotEditToolbars()
 {
-    saveMainWindowSettings(KMKernel::self()->config()->group( "Main Window") );
+    KConfigGroup grp = KMKernel::self()->config()->group( "Main Window");
+    saveMainWindowSettings(grp);
     KEditToolBar dlg(guiFactory(), this);
     connect( &dlg, SIGNAL(newToolBarConfig()), SLOT(slotUpdateGui()) );
 
@@ -186,12 +189,13 @@ void KMMainWin::setupStatusBar()
 {
     /* Create a progress dialog and hide it. */
     mProgressBar = new KPIM::ProgressStatusBarWidget( statusBar(), this);
-
+#if 0 //QT5
     statusBar()->insertItem( i18n("Starting..."), 1, 4 );
     QTimer::singleShot( 2000, KPIM::BroadcastStatus::instance(), SLOT(reset()) );
     statusBar()->setItemAlignment( 1, Qt::AlignLeft | Qt::AlignVCenter );
     statusBar()->addPermanentWidget( mKMMainWidget->vacationScriptIndicator() );
     statusBar()->addPermanentWidget( mProgressBar->littleProgress() );
+#endif
 }
 
 void KMMainWin::slotQuit()

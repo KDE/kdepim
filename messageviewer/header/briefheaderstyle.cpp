@@ -36,14 +36,14 @@
 #include "header/headerstyle_util.h"
 
 #include "header/headerstrategy.h"
-#include <kpimutils/linklocator.h>
+#include <KPIMUtils/kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
 
-#include <kpimutils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
-#include <kglobal.h>
+
 
 #include <KDateTime>
 #include <QRegExp>

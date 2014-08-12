@@ -33,8 +33,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QRect>
 #include <QtCore/QUrl>
-#include <QtGui/QColor>
-#include <QtGui/QFont>
+#include <QColor>
+#include <QFont>
 
 class QWebSelectData
 {

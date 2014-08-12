@@ -36,11 +36,11 @@
 #include <KCalUtils/Stringify>
 
 #include <KDebug>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KIO/NetAccess>
+#include <KLocale>
 
 using namespace KCalCore;
 using namespace KCalUtils;
@@ -135,13 +135,13 @@ void EventArchiver::run( const Akonadi::ETMCalendar::Ptr &calendar,
 
   const KCalCore::Incidence::List incidences = calendar->mergeIncidenceList( events, todos, journals );
 
-  kDebug() << "archiving incidences before" << limitDate
+  qDebug() << "archiving incidences before" << limitDate
            << " ->" << incidences.count() <<" incidences found.";
   if ( incidences.isEmpty() ) {
     if ( withGUI && errorIfNone ) {
       KMessageBox::information( widget,
                                 i18n( "There are no items before %1",
-                                      KGlobal::locale()->formatDate( limitDate ) ),
+                                      KLocale::global()->formatDate( limitDate ) ),
                                 QLatin1String("ArchiverNoIncidences") );
     }
     return;
@@ -173,7 +173,7 @@ void EventArchiver::deleteIncidences( Akonadi::IncidenceChanger *changer,
                                               widget,
                                               i18n( "Delete all items before %1 without saving?\n"
                                                     "The following items will be deleted:",
-                                                    KGlobal::locale()->formatDate( limitDate ) ),
+                                                    KLocale::global()->formatDate( limitDate ) ),
                                               incidenceStrs,
                                               i18n( "Delete Old Items" ), KStandardGuiItem::del() );
     if ( result != KMessageBox::Continue ) {
@@ -199,18 +199,18 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
 
   QString tmpFileName;
   // KSaveFile cannot be called with an open File Handle on Windows.
-  // So we use KTemporaryFile only to generate a unique filename
+  // So we use QTemporaryFile only to generate a unique filename
   // and then close/delete the file again. This file must be deleted
   // here.
   {
-    KTemporaryFile tmpFile;
+    QTemporaryFile tmpFile;
     tmpFile.open();
     tmpFileName = tmpFile.fileName();
   }
   // Save current calendar to disk
   storage.setFileName( tmpFileName );
   if ( !storage.save() ) {
-    kDebug() << "Can't save calendar to temp file";
+    qDebug() << "Can't save calendar to temp file";
     return;
   }
 
@@ -223,7 +223,7 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
   ICalFormat *format = new ICalFormat();
   archiveStore.setSaveFormat( format );
   if ( !archiveStore.load() ) {
-    kDebug() << "Can't load calendar from temp file";
+    qDebug() << "Can't load calendar from temp file";
     QFile::remove( tmpFileName );
     return;
   }
@@ -248,14 +248,14 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
   // There is no KIO::NetAccess availabe for Windows CE
   if ( KIO::NetAccess::exists( archiveURL, KIO::NetAccess::SourceSide, widget ) ) {
     if( !KIO::NetAccess::download( archiveURL, archiveFile, widget ) ) {
-      kDebug() << "Can't download archive file";
+      qDebug() << "Can't download archive file";
       QFile::remove( tmpFileName );
       return;
     }
     // Merge with events to be archived.
     archiveStore.setFileName( archiveFile );
     if ( !archiveStore.load() ) {
-      kDebug() << "Can't merge with archive file";
+      qDebug() << "Can't merge with archive file";
       QFile::remove( tmpFileName );
       return;
     }
@@ -317,7 +317,7 @@ bool EventArchiver::isSubTreeComplete( const Akonadi::ETMCalendar::Ptr &calendar
   // This QList is only to prevent infinit recursion
   if ( checkedUids.contains( todo->uid() ) ) {
     // Probably will never happen, calendar.cpp checks for this
-    kWarning() << "To-do hierarchy loop detected!";
+    qWarning() << "To-do hierarchy loop detected!";
     return false;
   }
 

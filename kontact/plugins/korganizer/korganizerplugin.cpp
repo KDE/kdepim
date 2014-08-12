@@ -38,47 +38,48 @@
 
 #include <KontactInterface/Core>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
-#include <KDebug>
-#include <KIcon>
+#include <QDebug>
+#include <QIcon>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KSystemTimeZone>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 
 #include <QDropEvent>
+#include <QStandardPaths>
 
 EXPORT_KONTACT_PLUGIN( KOrganizerPlugin, korganizer )
 
 KOrganizerPlugin::KOrganizerPlugin( KontactInterface::Core *core, const QVariantList & )
   : KontactInterface::Plugin( core, core, "korganizer", "calendar" ), mIface( 0 )
 {
-  setComponentData( KontactPluginFactory::componentData() );
+  //QT5 setComponentData( KontactPluginFactory::componentData() );
   KIconLoader::global()->addAppDir( QLatin1String("korganizer") );
   KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
 
-  KAction *action  =
-    new KAction( KIcon( QLatin1String("appointment-new") ),
+  QAction *action  =
+    new QAction( QIcon::fromTheme( QLatin1String("appointment-new") ),
                  i18nc( "@action:inmenu", "New Event..." ), this );
   actionCollection()->addAction( QLatin1String("new_event"), action );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT+Qt::Key_E ) );
-  action->setHelpText(
-    i18nc( "@info:status", "Create a new event" ) );
+  //QT5 action->setHelpText(
+    //i18nc( "@info:status", "Create a new event" ) );
   action->setWhatsThis(
     i18nc( "@info:whatsthis",
            "You will be presented with a dialog where you can create a new event item." ) );
   connect( action, SIGNAL(triggered(bool)), SLOT(slotNewEvent()) );
   insertNewAction( action );
 
-  KAction *syncAction =
-    new KAction( KIcon( QLatin1String("view-refresh") ),
+  QAction *syncAction =
+    new QAction( QIcon::fromTheme( QLatin1String("view-refresh") ),
                  i18nc( "@action:inmenu", "Sync Calendar" ), this );
   actionCollection()->addAction( QLatin1String("korganizer_sync"), syncAction );
-  syncAction->setHelpText(
-    i18nc( "@info:status", "Synchronize groupware calendar" ) );
+  //QT5 syncAction->setHelpText(
+    //i18nc( "@info:status", "Synchronize groupware calendar" ) );
   syncAction->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Choose this option to synchronize your groupware events." ) );
@@ -114,7 +115,7 @@ KParts::ReadOnlyPart *KOrganizerPlugin::createPart()
 
 QString KOrganizerPlugin::tipFile() const
 {
-  QString file = KStandardDirs::locate( "data", QLatin1String("korganizer/tips") );
+  QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("korganizer/tips") );
   return file;
 }
 
@@ -159,7 +160,7 @@ void KOrganizerPlugin::slotSyncEvents()
   message << QString( "Calendar" );
   QDBusConnection::sessionBus().send( message );
 #else
-  kWarning() << " KOrganizerPlugin::slotSyncEvents : need to port to Akonadi";
+  qWarning() << " KOrganizerPlugin::slotSyncEvents : need to port to Akonadi";
 #endif
 }
 
@@ -235,7 +236,7 @@ void KOrganizerPlugin::processDropEvent( QDropEvent *event )
 
   if ( md->hasText() ) {
     const QString text = md->text();
-    kDebug() << "DROP:" << text;
+    qDebug() << "DROP:" << text;
     interface()->openEventEditor( text );
     return;
   }
@@ -252,11 +253,11 @@ void KOrganizerPlugin::processDropEvent( QDropEvent *event )
       QString txt = i18nc( "@item", "From: %1\nTo: %2\nSubject: %3",
                           mail.from(), mail.to(), mail.subject() );
 
-      KTemporaryFile tf;
+      QTemporaryFile tf;
       tf.setAutoRemove( true );
       tf.open();
       QString uri = QLatin1String( "kmail:" ) + QString::number( mail.serialNumber() );
-      tf.write( event->encodedData( "message/rfc822" ) );
+      //QT5 tf.write( event->encodedData( "message/rfc822" ) );
       interface()->openEventEditor(
         i18nc( "@item", "Mail: %1", mail.subject() ), txt,
         uri, tf.fileName(), QStringList(), QLatin1String("message/rfc822") );
@@ -265,6 +266,6 @@ void KOrganizerPlugin::processDropEvent( QDropEvent *event )
     return;
   }
 
-  kWarning() << QString::fromLatin1( "Cannot handle drop events of type '%1'." ).arg( QLatin1String(event->format()) );
+  //QT5 qWarning() << QString::fromLatin1( "Cannot handle drop events of type '%1'." ).arg( QLatin1String(event->format()) );
 }
-
+#include "korganizerplugin.moc"

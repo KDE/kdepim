@@ -3,7 +3,8 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
-
+  <include>QFontDatabase</include>
+ 
   <group name="MessageListView">
     <entry name="MessageToolTipEnabled" type="Bool">
       <default>true</default>
@@ -40,16 +41,16 @@
 
   <group name="MessageListView::Fonts">
     <entry name="MessageListFont" type="Font">
-      <default>KGlobalSettings::generalFont()</default>
+      <default>QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
     </entry>
     <entry name="UnreadMessageFont" type="Font">
-      <default>KGlobalSettings::generalFont()</default>
+      <default>QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
     </entry>
     <entry name="ImportantMessageFont" type="Font">
-      <default>KGlobalSettings::generalFont()</default>
+      <default>QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
     </entry>
     <entry name="TodoMessageFont" type="Font">
-      <default>KGlobalSettings::generalFont()</default>
+      <default>QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
     </entry>
   </group>
 </kcfg>

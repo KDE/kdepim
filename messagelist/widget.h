@@ -21,7 +21,7 @@
 
 #include <messagelist/core/widgetbase.h>
 #include <messagelist/core/view.h>
-#include <akonadi/item.h>
+#include <item.h>
 
 #include <kmime/kmime_message.h>
 #include <KJob>

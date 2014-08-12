@@ -20,13 +20,13 @@
 
 #include "ksieveui_export.h"
 
-#include <KDialog>
+#include <QDialog>
 
 class QDomDocument;
 
 namespace KSieveUi {
 class SieveEditorGraphicalModeWidget;
-class KSIEVEUI_EXPORT AutoCreateScriptDialog : public KDialog
+class KSIEVEUI_EXPORT AutoCreateScriptDialog : public QDialog
 {
     Q_OBJECT
 public:

@@ -19,10 +19,8 @@
 #include "storageauthviewwidget.h"
 #include "storageauthwebview.h"
 
-#include <QWebView>
 #include <QVBoxLayout>
 #include <QProgressBar>
-#include <QDebug>
 
 using namespace PimCommon;
 

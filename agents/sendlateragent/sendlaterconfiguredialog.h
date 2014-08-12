@@ -22,11 +22,10 @@
 #include "ui_sendlaterconfigurewidget.h"
 
 
-#include <Akonadi/Item>
+#include <Item>
 
 #include <QTreeWidgetItem>
 
-class KAboutData;
 namespace SendLater {
 class SendLaterInfo;
 }
@@ -106,7 +105,6 @@ Q_SIGNALS:
 private:
     void readConfig();
     void writeConfig();
-    KAboutData *mAboutData;
     SendLaterWidget *mWidget;
 };
 

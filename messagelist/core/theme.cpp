@@ -23,7 +23,7 @@
 #include <QDataStream>
 
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 
 using namespace MessageList::Core;
 
@@ -212,7 +212,7 @@ bool Theme::ContentItem::load( QDataStream &stream, int /*themeVersion*/ )
         // ok
         break;
     default:
-        kDebug() << "Invalid content item type";
+        qDebug() << "Invalid content item type";
         return false; // b0rken
         break;
     }
@@ -337,7 +337,7 @@ bool Theme::Row::LoadContentItem(int val, QDataStream &stream, int themeVersion,
         ContentItem * ci = new ContentItem( ContentItem::Subject ); // dummy type
         if ( !ci->load( stream, themeVersion ) )
         {
-            kDebug() << "Left content item loading failed";
+            qDebug() << "Left content item loading failed";
             delete ci;
             return false;
         }
@@ -352,7 +352,7 @@ bool Theme::Row::LoadContentItem(int val, QDataStream &stream, int themeVersion,
         if ( ci->type() == ContentItem::AttachmentStateIcon &&
              themeVersion < gThemeMinimumVersionWithAnnotationIcon &&
              val > 1 ) {
-            kDebug() << "Old theme version detected, adding annotation item next to attachment icon.";
+            qDebug() << "Old theme version detected, adding annotation item next to attachment icon.";
             ContentItem *annotationItem = new ContentItem( ContentItem::AnnotationIcon ) ;
             annotationItem->setHideWhenDisabled( true );
             if (leftItem)
@@ -365,7 +365,7 @@ bool Theme::Row::LoadContentItem(int val, QDataStream &stream, int themeVersion,
         if ( ci->type() == ContentItem::AttachmentStateIcon &&
              themeVersion < gThemeMinimumVersionWithInvitationIcon &&
              val > 1 ) {
-            kDebug() << "Old theme version detected, adding invitation item next to attachment icon.";
+            qDebug() << "Old theme version detected, adding invitation item next to attachment icon.";
             ContentItem *invitationItem = new ContentItem( ContentItem::InvitationIcon ) ;
             invitationItem->setHideWhenDisabled( true );
             if (leftItem)
@@ -434,7 +434,7 @@ bool Theme::Column::SharedRuntimeData::load( QDataStream &stream, int /* themeVe
     stream >> mCurrentWidth;
     if ( mCurrentWidth > 10000 )
     {
-        kDebug() << "Theme has insane column width " << mCurrentWidth << " chopping to 100";
+        qDebug() << "Theme has insane column width " << mCurrentWidth << " chopping to 100";
         mCurrentWidth = 100; // avoid really insane values
     }
     return (mCurrentWidth >= -1);
@@ -588,7 +588,7 @@ bool Theme::Column::load( QDataStream &stream, int themeVersion )
     mMessageSorting = static_cast< SortOrder::MessageSorting >( val );
     if ( !SortOrder::isValidMessageSorting( mMessageSorting ) )
     {
-        kDebug() << "Invalid message sorting";
+        qDebug() << "Invalid message sorting";
         return false;
     }
 
@@ -608,7 +608,7 @@ bool Theme::Column::load( QDataStream &stream, int themeVersion )
 
     if ( ( val < 0 ) || ( val > 50 ) )
     {
-        kDebug() << "Invalid group header row count";
+        qDebug() << "Invalid group header row count";
         return false; // senseless
     }
 
@@ -617,7 +617,7 @@ bool Theme::Column::load( QDataStream &stream, int themeVersion )
         Row * row = new Row();
         if ( !row->load( stream, themeVersion ) )
         {
-            kDebug() << "Group header row loading failed";
+            qDebug() << "Group header row loading failed";
             delete row;
             return false;
         }
@@ -629,7 +629,7 @@ bool Theme::Column::load( QDataStream &stream, int themeVersion )
 
     if ( ( val < 0 ) || ( val > 50 ) )
     {
-        kDebug() << "Invalid message row count";
+        qDebug() << "Invalid message row count";
         return false; // senseless
     }
 
@@ -638,7 +638,7 @@ bool Theme::Column::load( QDataStream &stream, int themeVersion )
         Row * row = new Row();
         if ( !row->load( stream, themeVersion ) )
         {
-            kDebug() << "Message row loading failed";
+            qDebug() << "Message row loading failed";
             delete row;
             return false;
         }
@@ -650,7 +650,7 @@ bool Theme::Column::load( QDataStream &stream, int themeVersion )
         // starting with version 0x1014 we have runtime data too
         if( !mSharedRuntimeData->load( stream, themeVersion ) )
         {
-            kDebug() << "Shared runtime data loading failed";
+            qDebug() << "Shared runtime data loading failed";
             return false;
         }
     } else {
@@ -802,7 +802,7 @@ bool Theme::load( QDataStream &stream )
             ( themeVersion < gThemeMinimumSupportedVersion )
             )
     {
-        kDebug() << "Invalid theme version";
+        qDebug() << "Invalid theme version";
         return false; // b0rken (invalid version)
     }
 
@@ -818,7 +818,7 @@ bool Theme::load( QDataStream &stream )
         // ok
         break;
     default:
-        kDebug() << "Invalid theme group header background mode";
+        qDebug() << "Invalid theme group header background mode";
         return false; // b0rken
         break;
     }
@@ -840,7 +840,7 @@ bool Theme::load( QDataStream &stream )
         // ok
         break;
     default:
-        kDebug() << "Invalid theme group header background style";
+        qDebug() << "Invalid theme group header background style";
         return false; // b0rken
         break;
     }
@@ -854,7 +854,7 @@ bool Theme::load( QDataStream &stream )
         // ok
         break;
     default:
-        kDebug() << "Invalid theme view header policy";
+        qDebug() << "Invalid theme view header policy";
         return false; // b0rken
         break;
     }
@@ -879,7 +879,7 @@ bool Theme::load( QDataStream &stream )
         Column * col = new Column();
         if ( !col->load( stream, themeVersion ) )
         {
-            kDebug() << "Column loading failed";
+            qDebug() << "Column loading failed";
             delete col;
             return false;
         }

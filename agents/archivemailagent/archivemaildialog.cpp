@@ -23,66 +23,79 @@
 
 #include <mailcommon/util/mailutil.h>
 
-#include <KGlobal>
 #include <KLocale>
 #include <KMessageBox>
-#include <KMenu>
+#include <QMenu>
 #include <KRun>
 #include <KHelpMenu>
-#include <KAboutData>
+#include <kaboutdata.h>
+#include <QIcon>
 
 #include <QHBoxLayout>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 
 static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
 
 ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Configure Archive Mail Agent" ) );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
-    setButtons( Help | Ok|Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n( "Configure Archive Mail Agent" ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
     setModal( true );
     QWidget *mainWidget = new QWidget( this );
+    QVBoxLayout *vlay = new QVBoxLayout;
+    vlay->addWidget(mainWidget);
+    setLayout(vlay);
+   
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
-    mainLayout->setSpacing( KDialog::spacingHint() );
-    mainLayout->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mWidget = new ArchiveMailWidget(this);
     connect(mWidget, SIGNAL(archiveNow(ArchiveMailInfo*)), this, SIGNAL(archiveNow(ArchiveMailInfo*)));
     mainLayout->addWidget(mWidget);
-    setMainWidget( mainWidget );
-    connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ArchiveMailDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ArchiveMailDialog::reject);
+    connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(slotSave()));
+
+    vlay->addWidget(buttonBox);
+    okButton->setDefault(true);
+
     readConfig();
 
-    mAboutData = new KAboutData(
-                QByteArray( "archivemailagent" ),
-                QByteArray(),
-                ki18n( "Archive Mail Agent" ),
-                QByteArray( KDEPIM_VERSION ),
-                ki18n( "Archive emails automatically." ),
-                KAboutData::License_GPL_V2,
-                ki18n( "Copyright (C) 2012, 2013, 2014 Laurent Montel" ) );
+    KAboutData aboutData = KAboutData(
+                QLatin1String( "archivemailagent" ),
+                i18n( "Archive Mail Agent" ),
+                QLatin1String( KDEPIM_VERSION ),
+                i18n( "Archive emails automatically." ),
+                KAboutLicense::GPL_V2,
+                i18n( "Copyright (C) 2012, 2013, 2014 Laurent Montel" ) );
 
-    mAboutData->addAuthor( ki18n( "Laurent Montel" ),
-                         ki18n( "Maintainer" ), "montel@kde.org" );
+    aboutData.addAuthor( i18n( "Laurent Montel" ),
+                         i18n( "Maintainer" ), QLatin1String("montel@kde.org") );
 
-    mAboutData->setProgramIconName( QLatin1String("kmail") );
-    mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
-                             ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+    aboutData.setProgramIconName( QLatin1String("kmail") );
+    aboutData.setTranslator( i18nc( "NAME OF TRANSLATORS", "Your names" ),
+                             i18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
-
-    KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
+    KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
-    KMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
-    setButtonMenu( Help, menu );
+    QMenu *menu = helpMenu->menu();
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    buttonBox->button(QDialogButtonBox::Help)->setMenu(menu);
 }
 
 ArchiveMailDialog::~ArchiveMailDialog()
 {
     writeConfig();
-    delete mAboutData;
 }
 
 void ArchiveMailDialog::slotNeedReloadConfig()
@@ -94,7 +107,7 @@ static const char *myConfigGroupName = "ArchiveMailDialog";
 
 void ArchiveMailDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
 
     const QSize size = group.readEntry( "Size", QSize(500, 300) );
     if ( size.isValid() ) {
@@ -106,7 +119,7 @@ void ArchiveMailDialog::readConfig()
 
 void ArchiveMailDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
     group.sync();
@@ -174,7 +187,7 @@ ArchiveMailWidget::~ArchiveMailWidget()
 void ArchiveMailWidget::customContextMenuRequested(const QPoint &)
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
-    KMenu menu;
+    QMenu menu;
     menu.addAction(i18n("Add..."),this,SLOT(slotAddItem()));
     if ( !listItems.isEmpty() ) {
         if ( listItems.count() == 1) {
@@ -183,7 +196,7 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint &)
             menu.addAction(i18n("Archive now"), this, SLOT(slotArchiveNow()));
         }
         menu.addSeparator();
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
     }
     menu.exec(QCursor::pos());
 }
@@ -222,7 +235,7 @@ void ArchiveMailWidget::needReloadConfig()
 
 void ArchiveMailWidget::load()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     const QStringList collectionList = config->groupList().filter( QRegExp( archiveMailCollectionPattern ) );
     const int numberOfCollection = collectionList.count();
     for (int i = 0 ; i < numberOfCollection; ++i) {
@@ -241,7 +254,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
     item->setCheckState(ArchiveMailWidget::Name, info->isEnabled() ? Qt::Checked : Qt::Unchecked);
     item->setText(ArchiveMailWidget::StorageDirectory, info->url().toLocalFile());
     if (info->lastDateSaved().isValid()) {
-        item->setText(ArchiveMailWidget::LastArchiveDate,KGlobal::locale()->formatDate(info->lastDateSaved()));
+        item->setText(ArchiveMailWidget::LastArchiveDate,KLocale::global()->formatDate(info->lastDateSaved()));
         updateDiffDate(item, info);
     } else {
         item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::green);
@@ -260,7 +273,7 @@ void ArchiveMailWidget::updateDiffDate(ArchiveMailItem *item, ArchiveMailInfo *i
         else
             item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::lightGray);
     } else {
-        item->setToolTip(ArchiveMailWidget::NextArchive,i18n("Archive will be done %1",KGlobal::locale()->formatDate(diffDate)));
+        item->setToolTip(ArchiveMailWidget::NextArchive,i18n("Archive will be done %1",KLocale::global()->formatDate(diffDate)));
     }
 }
 
@@ -268,7 +281,7 @@ void ArchiveMailWidget::save()
 {
     if (!mChanged)
         return;
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
     const QStringList filterGroups =config->groupList().filter( QRegExp( archiveMailCollectionPattern ) );

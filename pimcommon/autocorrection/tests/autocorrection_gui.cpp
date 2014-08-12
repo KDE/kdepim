@@ -21,9 +21,9 @@
 #include "pimcommon/autocorrection/widgets/lineeditwithautocorrection.h"
 #include "pimcommon/settings/pimcommonsettings.h"
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+#include <qdebug.h>
+
+
 #include <KLocalizedString>
 #include <KSharedConfig>
 
@@ -33,6 +33,9 @@
 #include <QKeyEvent>
 #include <QToolBar>
 #include <QAction>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 
 ConfigureTestDialog::ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent)
@@ -95,7 +98,7 @@ AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
 {
     mConfig = KSharedConfig::openConfig( QLatin1String("autocorrectionguirc") );
     PimCommon::PimCommonSettings::self()->setSharedConfig( mConfig );
-    PimCommon::PimCommonSettings::self()->readConfig();
+    PimCommon::PimCommonSettings::self()->load();
 
     mAutoCorrection = new PimCommon::AutoCorrection;
     QVBoxLayout *lay = new QVBoxLayout;
@@ -133,15 +136,23 @@ void AutocorrectionTestWidget::slotConfigure()
 {
     QPointer<ConfigureTestDialog> dlg = new ConfigureTestDialog(mAutoCorrection, this);
     if(dlg->exec())
-        PimCommon::PimCommonSettings::self()->writeConfig();
+        PimCommon::PimCommonSettings::self()->save();
     delete dlg;
 }
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "autocorrectiontest_gui", 0, ki18n("AutoCorrectionTest_Gui"),
-                       "1.0", ki18n("Test for autocorrection widget"));
-    KApplication app;
+    KAboutData aboutData( QLatin1String("autocorrectiontest_gui"), i18n("AutoCorrectionTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for autocorrection widget"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     AutocorrectionTestWidget *w = new AutocorrectionTestWidget();
     w->resize(800,600);

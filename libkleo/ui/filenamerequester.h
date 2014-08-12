@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_UI_FILENAMEREQUESTER_H__
 #define __KLEOPATRA_UI_FILENAMEREQUESTER_H__
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 
 #include <QWidget>
 

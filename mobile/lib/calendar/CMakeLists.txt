@@ -16,25 +16,26 @@ set(mobileui_calendar_SRCS
     kcalitembrowseritem.cpp
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_ui_files(mobileui_calendar_SRCS
+
+ki18n_wrap_ui(mobileui_calendar_SRCS
   ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/dialogmobile.ui
   ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/dialogmoremobile.ui
 )
 
 add_definitions( -DKDEPIMMOBILEUICALENDAR_STATIC_LIB )
-kde4_add_library(kdepimmobileuicalendar STATIC ${mobileui_calendar_SRCS})
+add_library(kdepimmobileuicalendar STATIC ${mobileui_calendar_SRCS})
+generate_export_header(kdepimmobileuicalendar BASE_NAME mobileuicalendar)
 
 target_link_libraries(kdepimmobileuicalendar
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  akonadi-calendar
+  KF5::AkonadiCore
+  KF5::CalendarCore
+  KF5::AkonadiCalendar
   akonadi_next
   incidenceeditorsngmobile
   calendarsupport
   kdepimmobileui
-  ${QT_QTDECLARATIVE_LIBRARY}
+  Qt5::Declarative
 )
 
 install(FILES incidence-editor.qml DESTINATION ${DATA_INSTALL_DIR}/mobileui)

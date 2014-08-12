@@ -40,8 +40,8 @@
 
 #include "mailcommon_export.h"
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/Collection>
+#include <AgentInstance>
+#include <Collection>
 
 class OrgKdeAkonadiPOP3SettingsInterface;
 

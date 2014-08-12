@@ -21,12 +21,13 @@
 
 #include "attachmentcompressjob.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KZip>
 
 #include <QtCore/QBuffer>
 #include <QtCore/QTimer>
+#include <QDateTime>
 
 #include <boost/shared_ptr.hpp>
 
@@ -69,7 +70,7 @@ void AttachmentCompressJob::Private::doStart()
 
     // Compress.
     zip.setCompression( KZip::DeflateCompression );
-    time_t zipTime = QDateTime::currentDateTime().toTime_t();
+    QDateTime zipTime = QDateTime::currentDateTime();
     if( !zip.writeFile( mOriginalPart->name(), QString( /*user*/ ), QString( /*group*/ ),
                         decoded.data(), decoded.size(), archivePerms, zipTime, zipTime, zipTime ) ) {
         q->setError( KJob::UserDefinedError );

@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_FREEBUSYITEMMODEL_H
 #define INCIDENCEEDITOR_FREEBUSYITEMMODEL_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 #include "freebusyitem.h"
 
 #include <QAbstractItemModel>

@@ -545,14 +545,14 @@
    <item row="3" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="KPushButton" name="exportAutoCorrection">
+      <widget class="QPushButton" name="exportAutoCorrection">
        <property name="text">
         <string>Export...</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="importAutoCorrection">
+      <widget class="QPushButton" name="importAutoCorrection">
        <property name="text">
         <string>Import...</string>
        </property>
@@ -585,11 +585,6 @@
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
    <class>PimCommon::AutoCorrectionListWidget</class>

@@ -19,7 +19,7 @@
 #include "settings/globalsettings.h"
 
 #include <KLocalizedString>
-#include <KAction>
+#include <QAction>
 
 #include <QDebug>
 
@@ -37,19 +37,19 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
 
     connect(this, SIGNAL(linkActivated(QString)), SLOT(slotShowDetails(QString)));
 
-    KAction *action = new KAction( i18n( "Move to Trash" ), this );
+    QAction *action = new QAction( i18n( "Move to Trash" ), this );
     connect( action, SIGNAL(triggered(bool)), SIGNAL(moveMessageToTrash()) );
     addAction( action );
 
-    action = new KAction( i18n( "I confirm it's not a scam" ), this );
+    action = new QAction( i18n( "I confirm it's not a scam" ), this );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotMessageIsNotAScam()) );
     addAction( action );
 
-    action = new KAction( i18n( "Add email to whitelist" ), this );
+    action = new QAction( i18n( "Add email to whitelist" ), this );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotAddToWhiteList()) );
     addAction( action );
 
-    action = new KAction( i18n( "Disable scam detection for all messages" ), this );
+    action = new QAction( i18n( "Disable scam detection for all messages" ), this );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotDisableScamDetection()) );
     addAction( action );
 }
@@ -85,7 +85,7 @@ void ScamDetectionWarningWidget::slotDisableScamDetection()
 {
     if (!mUseInTestApps) {
         MessageViewer::GlobalSettings::self()->setScamDetectionEnabled( false );
-        MessageViewer::GlobalSettings::self()->writeConfig();
+        MessageViewer::GlobalSettings::self()->save();
     }
     setVisible(false);
 }

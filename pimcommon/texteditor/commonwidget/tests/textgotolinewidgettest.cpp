@@ -18,12 +18,13 @@
 
 #include "textgotolinewidgettest.h"
 #include "pimcommon/texteditor/commonwidget/textgotolinewidget.h"
-#include <qtest_kde.h>
+#include <qtest.h>
+#include <QSignalSpy>
 #include <qtestmouse.h>
 #include <qtestkeyboard.h>
 #include <QSpinBox>
 #include <QToolButton>
-#include <KPushButton>
+#include <QPushButton>
 
 TextGoToLineWidgetTest::TextGoToLineWidgetTest()
 {
@@ -37,7 +38,7 @@ void TextGoToLineWidgetTest::shouldHaveDefaultValuesOnCreation()
     QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
     QVERIFY(line);
     QCOMPARE(line->minimum(), 1);
-    KPushButton *gotolinebutton = qFindChild<KPushButton *>(&edit, QLatin1String("gotoline"));
+    QPushButton *gotolinebutton = qFindChild<QPushButton *>(&edit, QLatin1String("gotoline"));
     QVERIFY(gotolinebutton);
     QToolButton *closebutton = qFindChild<QToolButton *>(&edit, QLatin1String("closebutton"));
     QVERIFY(closebutton);
@@ -47,7 +48,7 @@ void TextGoToLineWidgetTest::shouldHaveDefaultValuesOnCreation()
 void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenPressOnButton()
 {
     PimCommon::TextGoToLineWidget edit;
-    KPushButton *gotolinebutton = qFindChild<KPushButton *>(&edit, QLatin1String("gotoline"));
+    QPushButton *gotolinebutton = qFindChild<QPushButton *>(&edit, QLatin1String("gotoline"));
     QSignalSpy spy(&edit, SIGNAL(goToLine(int)));
     QTest::mouseClick(gotolinebutton, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
@@ -56,7 +57,7 @@ void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenPressOnButton()
 void TextGoToLineWidgetTest::shouldEmitGoToLineSignalCorrectValueWhenPressOnButton()
 {
     PimCommon::TextGoToLineWidget edit;
-    KPushButton *gotolinebutton = qFindChild<KPushButton *>(&edit, QLatin1String("gotoline"));
+    QPushButton *gotolinebutton = qFindChild<QPushButton *>(&edit, QLatin1String("gotoline"));
     QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
     line->setValue(5);
     QCOMPARE(line->value(), 5);
@@ -130,4 +131,4 @@ void TextGoToLineWidgetTest::shouldSetFocusWhenWeRecallGotToLine()
 }
 
 
-QTEST_KDEMAIN( TextGoToLineWidgetTest, GUI )
+QTEST_MAIN( TextGoToLineWidgetTest )

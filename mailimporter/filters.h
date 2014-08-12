@@ -27,9 +27,9 @@
 #include "filters.h"
 #include "mailimporter_export.h"
 
-#include <Akonadi/Collection>
+#include <Collection>
 #include <KMime/KMimeMessage>
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 
 
 

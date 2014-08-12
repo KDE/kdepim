@@ -25,7 +25,7 @@
 
 #include <messageviewer/viewer/objecttreeemptysource.h>
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include <KMime/KMimeMessage>
 
 #include <QObject>

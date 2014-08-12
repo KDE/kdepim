@@ -24,12 +24,12 @@
 #include "sieveconditions/sievecondition.h"
 #include "pimcommon/widgets/minimumcombobox.h"
 
-#include <KPushButton>
+#include <QPushButton>
 #include <KLocalizedString>
+#include <QIcon>
 
 #include <QGridLayout>
 #include <QLabel>
-#include <QToolButton>
 #include <QWhatsThis>
 #include <QDebug>
 #include <QDomElement>
@@ -128,12 +128,12 @@ void SieveConditionWidget::initWidget()
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     mComboBox->adjustSize();
 
-    mAdd = new KPushButton( this );
-    mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    mAdd = new QPushButton( this );
+    mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
-    mRemove = new KPushButton( this );
-    mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    mRemove = new QPushButton( this );
+    mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
     mLayout->addWidget( mAdd, 1, 3 );

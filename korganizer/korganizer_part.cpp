@@ -36,17 +36,17 @@
 
 #include <KStatusBar>
 #include <KParts/StatusBarExtension>
+#include <QDebug>
 
 #include <QVBoxLayout>
 
-static const KAboutData &createAboutData()
+static const K4AboutData &createAboutData()
 {
   static KOrg::AboutData about;
   return about;
 }
 
 K_PLUGIN_FACTORY( KOrganizerFactory, registerPlugin<KOrganizerPart>(); )
-K_EXPORT_PLUGIN( KOrganizerFactory( createAboutData() ) )
 
 KOrganizerPart::KOrganizerPart( QWidget *parentWidget, QObject *parent, const QVariantList & )
   : KParts::ReadOnlyPart( parent )
@@ -56,17 +56,8 @@ KOrganizerPart::KOrganizerPart( QWidget *parentWidget, QObject *parent, const QV
   } else if ( parent && parent->isWidgetType() ) {
     mTopLevelWidget = (QWidget *)parent;
   } else {
-    kError() << "Cannot initialize the part without a top level widget.";
+    qCritical() << "Cannot initialize the part without a top level widget.";
   }
-
-  KGlobal::locale()->insertCatalog( QLatin1String("libkcalutils") );
-  KGlobal::locale()->insertCatalog( QLatin1String("calendarsupport") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libkdepim") );
-  KGlobal::locale()->insertCatalog( QLatin1String("kdgantt2") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libakonadi") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libincidenceeditors") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libkpimutils") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
 
   KOCore::self()->addXMLGUIClient( mTopLevelWidget, this );
 
@@ -84,7 +75,7 @@ KOrganizerPart::KOrganizerPart( QWidget *parentWidget, QObject *parent, const QV
 
   mStatusBarExtension = new KParts::StatusBarExtension( this );
 
-  setComponentData( KOrganizerFactory::componentData() );
+  //QT5 setComponentData( KOrganizerFactory::componentData() );
 
   QVBoxLayout *topLayout = new QVBoxLayout( canvas );
   topLayout->addWidget( mView );
@@ -135,7 +126,7 @@ ActionManager *KOrganizerPart::actionManager()
 
 void KOrganizerPart::showStatusMessage( const QString &message )
 {
-  KStatusBar *statusBar = mStatusBarExtension->statusBar();
+  QStatusBar *statusBar = mStatusBarExtension->statusBar();
   if ( statusBar ) {
     statusBar->showMessage( message );
   }
@@ -175,7 +166,7 @@ bool KOrganizerPart::openFile()
 // FIXME: This is copied verbatim from the KOrganizer class. Move it to the common base class!
 void KOrganizerPart::setTitle()
 {
-//  kDebug(5850) <<"KOrganizer::setTitle";
+//  qDebug() <<"KOrganizer::setTitle";
 // FIXME: Inside kontact we want to have different titles depending on the
 //        type of view (calendar, to-do, journal). How can I add the filter
 //        name in that case?
@@ -203,3 +194,4 @@ void KOrganizerPart::setTitle()
   emit setWindowCaption( title );*/
 }
 
+#include "korganizer_part.moc"

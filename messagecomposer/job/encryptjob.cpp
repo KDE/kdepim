@@ -27,7 +27,7 @@
 #include "kleo/enum.h"
 #include "util.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
@@ -143,7 +143,7 @@ void EncryptJob::process()
     Q_ASSERT( d->resultContent == 0 ); // Not processed before.
 
     if( d->keys.size() == 0 ) { // should not happen---resolver should have dealt with it earlier
-        kDebug() << "HELP! Encrypt job but have no keys to encrypt with.";
+        qDebug() << "HELP! Encrypt job but have no keys to encrypt with.";
         return;
     }
 
@@ -162,13 +162,13 @@ void EncryptJob::process()
     } else if( d->format & Kleo::AnySMIME ) {
         proto = Kleo::CryptoBackendFactory::instance()->smime();
     } else {
-        kDebug() << "HELP! Encrypt job but have protocol to encrypt with.";
+        qDebug() << "HELP! Encrypt job but have protocol to encrypt with.";
         return;
     }
 
     Q_ASSERT( proto );
 
-    kDebug() << "got backend, starting job";
+    qDebug() << "got backend, starting job";
     Kleo::EncryptJob* seJob = proto->encryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat );
 
     // for now just do the main recipients

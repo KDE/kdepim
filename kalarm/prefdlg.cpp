@@ -21,11 +21,7 @@
 #include "kalarm.h"
 
 #include "alarmcalendar.h"
-#ifdef USE_AKONADI
 #include "collectionmodel.h"
-#else
-#include "alarmresources.h"
-#endif
 #include "alarmtimewidget.h"
 #include "buttongroup.h"
 #include "colourbutton.h"
@@ -57,29 +53,29 @@
 
 #include <kalarmcal/identities.h>
 
-#include <kholidays/holidays.h>
+#include <KHolidays/kholidays/holidays.h>
 using namespace KHolidays;
 
 #include <kvbox.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
+
 #include <kshell.h>
 #include <klineedit.h>
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kapplication.h>
 #include <kiconloader.h>
 #include <kcombobox.h>
-#include <ktabwidget.h>
+#include <QTabWidget>
 #include <kstandardguiitem.h>
 #include <ksystemtimezone.h>
 #include <kicon.h>
-#ifdef Q_WS_X11
+#if KDEPIM_HAVE_X11
 #include <kwindowinfo.h>
 #include <kwindowsystem.h>
 #endif
 #include <ktoolinvocation.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QLabel>
 #include <QCheckBox>
@@ -92,12 +88,11 @@ using namespace KHolidays;
 #include <QVBoxLayout>
 #include <QStyle>
 #include <QResizeEvent>
+#include <KHelpClient>
+#include <KLocale>
+#include <QStandardPaths>
 
-#ifdef USE_AKONADI
 using namespace KCalCore;
-#else
-using namespace KCal;
-#endif
 using namespace KAlarmCal;
 
 static const char PREF_DIALOG_NAME[] = "PrefDialog";
@@ -137,7 +132,7 @@ void KAlarmPrefDlg::display()
     }
     else
     {
-#ifdef Q_WS_X11
+#if KDEPIM_HAVE_X11
         KWindowInfo info = KWindowSystem::windowInfo(mInstance->winId(), NET::WMGeometry | NET::WMDesktop);
         KWindowSystem::setCurrentDesktop(info.desktop());
 #endif
@@ -153,11 +148,10 @@ KAlarmPrefDlg::KAlarmPrefDlg()
 {
     setAttribute(Qt::WA_DeleteOnClose);
     setObjectName(QLatin1String("PrefDlg"));    // used by LikeBack
-    setCaption(i18nc("@title:window", "Configure"));
-    setButtons(Help | Default | Ok | Apply | Cancel);
-    setDefaultButton(Ok);
+    setWindowTitle(i18nc("@title:window", "Configure"));
+    setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help | QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Apply );
+    button(QDialogButtonBox::Ok)->setDefault(true); 
     setFaceType(List);
-    showButtonSeparator(true);
     mTabScrollGroup = new StackedScrollGroup(this, this);
 
     mMiscPage = new MiscPrefTab(mTabScrollGroup);
@@ -195,12 +189,11 @@ KAlarmPrefDlg::KAlarmPrefDlg()
     mEditPageItem->setHeader(i18nc("@title", "Default Alarm Edit Settings"));
     mEditPageItem->setIcon(KIcon(DesktopIcon(QLatin1String("document-properties"))));
     addPage(mEditPageItem);
-
-    connect(this, SIGNAL(okClicked()), SLOT(slotOk()));
-    connect(this, SIGNAL(cancelClicked()), SLOT(slotCancel()));
-    connect(this, SIGNAL(applyClicked()), SLOT(slotApply()));
-    connect(this, SIGNAL(defaultClicked()), SLOT(slotDefault()));
-    connect(this, SIGNAL(helpClicked()), SLOT(slotHelp()));
+    connect(button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(slotOk()));
+    connect(button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(slotCancel()));
+    connect(button(QDialogButtonBox::Apply), SIGNAL(clicked()), SLOT(slotApply()));
+    connect(button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), SLOT(slotDefault()));
+    connect(button(QDialogButtonBox::Help), SIGNAL(clicked()), SLOT(slotHelp()));
     restore(false);
     adjustSize();
 }
@@ -212,13 +205,13 @@ KAlarmPrefDlg::~KAlarmPrefDlg()
 
 void KAlarmPrefDlg::slotHelp()
 {
-    KToolInvocation::invokeHelp(QLatin1String("preferences"));
+    KHelpClient::invokeHelp(QLatin1String("preferences"));
 }
 
 // Apply the preferences that are currently selected
 void KAlarmPrefDlg::slotApply()
 {
-    kDebug();
+    qDebug();
     QString errmsg = mEmailPage->validate();
     if (!errmsg.isEmpty())
     {
@@ -244,25 +237,25 @@ void KAlarmPrefDlg::slotApply()
     mStorePage->apply(false);
     mTimePage->apply(false);
     mMiscPage->apply(false);
-    Preferences::self()->writeConfig();
+    Preferences::self()->save();
 }
 
 // Apply the preferences that are currently selected
 void KAlarmPrefDlg::slotOk()
 {
-    kDebug();
+    qDebug();
     mValid = true;
     slotApply();
     if (mValid)
-        KDialog::accept();
+        QDialog::accept();
 }
 
 // Discard the current preferences and close the dialog
 void KAlarmPrefDlg::slotCancel()
 {
-    kDebug();
+    qDebug();
     restore(false);
-    KDialog::reject();
+    KPageDialog::reject();
 }
 
 // Reset all controls to the application defaults
@@ -289,7 +282,7 @@ void KAlarmPrefDlg::slotDefault()
 // Discard the current preferences and use the present ones
 void KAlarmPrefDlg::restore(bool defaults)
 {
-    kDebug() << (defaults ? "defaults" : "");
+    qDebug() << (defaults ? "defaults" : "");
     if (defaults)
         Preferences::self()->useDefaults(true);
     mEmailPage->restore(defaults, true);
@@ -322,12 +315,12 @@ QSize KAlarmPrefDlg::minimumSizeHint() const
             return s;
         }
     }
-    return KDialog::minimumSizeHint();
+    return KPageDialog::minimumSizeHint();
 }
 
 void KAlarmPrefDlg::showEvent(QShowEvent* e)
 {
-    KDialog::showEvent(e);
+    KPageDialog::showEvent(e);
     if (!mShown)
     {
         mTabScrollGroup->adjustSize(true);
@@ -374,7 +367,7 @@ PrefsTabBase::PrefsTabBase(StackedScrollGroup* scrollGroup)
 void PrefsTabBase::apply(bool syncToDisc)
 {
     if (syncToDisc)
-        Preferences::self()->writeConfig();
+        Preferences::self()->save();
 }
 
 void PrefsTabBase::addAlignedLabel(QLabel* label)
@@ -423,13 +416,13 @@ MiscPrefTab::MiscPrefTab(StackedScrollGroup* scrollGroup)
     // Start at login
     mAutoStart = new QCheckBox(i18nc("@option:check", "Start at login"), group);
     connect(mAutoStart, SIGNAL(clicked()), SLOT(slotAutostartClicked()));
-    mAutoStart->setWhatsThis(i18nc("@info:whatsthis",
+    mAutoStart->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Automatically start <application>KAlarm</application> whenever you start KDE.</para>"
           "<para>This option should always be checked unless you intend to discontinue use of <application>KAlarm</application>.</para>"));
     vlayout->addWidget(mAutoStart, 0, Qt::AlignLeft);
 
     mQuitWarn = new QCheckBox(i18nc("@option:check", "Warn before quitting"), group);
-    mQuitWarn->setWhatsThis(i18nc("@info:whatsthis", "Check to display a warning prompt before quitting <application>KAlarm</application>."));
+    mQuitWarn->setWhatsThis(xi18nc("@info:whatsthis", "Check to display a warning prompt before quitting <application>KAlarm</application>."));
     vlayout->addWidget(mQuitWarn, 0, Qt::AlignLeft);
 
     group->setFixedHeight(group->sizeHint().height());
@@ -471,25 +464,25 @@ MiscPrefTab::MiscPrefTab(StackedScrollGroup* scrollGroup)
     {
         QString cmd = xtermCommands[mXtermCount];
         QStringList args = KShell::splitArgs(cmd);
-        if (args.isEmpty()  ||  KStandardDirs::findExe(args[0]).isEmpty())
+        if (args.isEmpty()  ||  QStandardPaths::findExecutable(args[0]).isEmpty())
             continue;
         QRadioButton* radio = new QRadioButton(args[0], group);
         radio->setMinimumSize(radio->sizeHint());
         mXtermType->addButton(radio, mXtermCount);
         if (mXtermFirst < 0)
             mXtermFirst = mXtermCount;   // note the id of the first button
-        cmd.replace(QLatin1String("%t"), KGlobal::mainComponent().aboutData()->programName());
+        cmd.replace(QLatin1String("%t"), KComponentData::mainComponent().aboutData()->programName());
         cmd.replace(QLatin1String("%c"), QLatin1String("<command>"));
         cmd.replace(QLatin1String("%w"), QLatin1String("<command; sleep>"));
         cmd.replace(QLatin1String("%C"), QLatin1String("[command]"));
         cmd.replace(QLatin1String("%W"), QLatin1String("[command; sleep]"));
         radio->setWhatsThis(
-                i18nc("@info:whatsthis", "Check to execute command alarms in a terminal window by <icode>%1</icode>", cmd));
+                xi18nc("@info:whatsthis", "Check to execute command alarms in a terminal window by <icode>%1</icode>", cmd));
         grid->addWidget(radio, (row = index/3), index % 3, Qt::AlignLeft);
         ++index;
     }
 
-    // QHBox used here doesn't allow the KLineEdit to expand!?
+    // QHBox used here doesn't allow the QLineEdit to expand!?
     QHBoxLayout* hlayout = new QHBoxLayout();
     hlayout->setSpacing(KDialog::spacingHint());
     grid->addLayout(hlayout, row + 1, 0, 1, 3, Qt::AlignLeft);
@@ -499,11 +492,11 @@ MiscPrefTab::MiscPrefTab(StackedScrollGroup* scrollGroup)
     mXtermType->addButton(radio, mXtermCount);
     if (mXtermFirst < 0)
         mXtermFirst = mXtermCount;   // note the id of the first button
-    mXtermCommand = new KLineEdit(group);
+    mXtermCommand = new QLineEdit(group);
     mXtermCommand->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
     hlayout->addWidget(mXtermCommand);
     QString wt = 
-          i18nc("@info:whatsthis", "Enter the full command line needed to execute a command in your chosen terminal window. "
+          xi18nc("@info:whatsthis", "Enter the full command line needed to execute a command in your chosen terminal window. "
                "By default the alarm's command string will be appended to what you enter here. "
                "See the <application>KAlarm</application> Handbook for details of special codes to tailor the command line.");
     radio->setWhatsThis(wt);
@@ -546,10 +539,10 @@ void MiscPrefTab::apply(bool syncToDisc)
         {
             QStringList args = KShell::splitArgs(cmd);
             cmd = args.isEmpty() ? QString() : args[0];
-            if (KStandardDirs::findExe(cmd).isEmpty())
+            if (QStandardPaths::findExecutable(cmd).isEmpty())
             {
                 mXtermCommand->setFocus();
-                if (KAMessageBox::warningContinueCancel(topWidget(), i18nc("@info", "Command to invoke terminal window not found: <command>%1</command>", cmd))
+                if (KAMessageBox::warningContinueCancel(topWidget(), xi18nc("@info", "Command to invoke terminal window not found: <command>%1</command>", cmd))
                                 != KMessageBox::Continue)
                     return;
             }
@@ -592,7 +585,7 @@ void MiscPrefTab::slotAutostartClicked()
 {
     if (!mAutoStart->isChecked()
     &&  KAMessageBox::warningYesNo(topWidget(),
-                                   i18nc("@info", "You should not uncheck this option unless you intend to discontinue use of <application>KAlarm</application>"),
+                                   xi18nc("@info", "You should not uncheck this option unless you intend to discontinue use of <application>KAlarm</application>"),
                                    QString(), KStandardGuiItem::cont(), KStandardGuiItem::cancel()
                                   ) != KMessageBox::Yes)
         mAutoStart->setChecked(true);
@@ -629,7 +622,7 @@ TimePrefTab::TimePrefTab(StackedScrollGroup* scrollGroup)
     for (KTimeZones::ZoneMap::ConstIterator it = zones.constBegin();  it != zones.constEnd();  ++it)
         mTimeZone->addItem(it.key());
 #endif
-    box->setWhatsThis(i18nc("@info:whatsthis",
+    box->setWhatsThis(xi18nc("@info:whatsthis",
                             "Select the time zone which <application>KAlarm</application> should use "
                             "as its default for displaying and entering dates and times."));
     label->setBuddy(mTimeZone);
@@ -656,7 +649,7 @@ TimePrefTab::TimePrefTab(StackedScrollGroup* scrollGroup)
     foreach (const QString& regionCode, regions)
     {
         QString name = HolidayRegion::name(regionCode);
-        QString languageName = KGlobal::locale()->languageCodeToName(HolidayRegion::languageCode(regionCode));
+        QString languageName = KLocale::global()->languageCodeToName(HolidayRegion::languageCode(regionCode));
         QString label = languageName.isEmpty() ? name : i18nc("Holiday region, region language", "%1 (%2)", name, languageName);
         regionsMap.insert(label, regionCode);
     }
@@ -678,7 +671,7 @@ TimePrefTab::TimePrefTab(StackedScrollGroup* scrollGroup)
     addAlignedLabel(label);
     mStartOfDay = new TimeEdit(box);
     label->setBuddy(mStartOfDay);
-    box->setWhatsThis(i18nc("@info:whatsthis",
+    box->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>The earliest time of day at which a date-only alarm will be triggered.</para>"
           "<para>%1</para>", TimeSpinBox::shiftWhatsThis()));
     itemBox->leftAlign();
@@ -694,7 +687,7 @@ TimePrefTab::TimePrefTab(StackedScrollGroup* scrollGroup)
     layout->addWidget(daybox);
     QGridLayout* wgrid = new QGridLayout(daybox);
     wgrid->setSpacing(KDialog::spacingHint());
-    const KLocale* locale = KGlobal::locale();
+    const KLocale* locale = KLocale::global();
     for (int i = 0;  i < 7;  ++i)
     {
         int day = KAlarm::localeDayInWeek_to_weekDay(i);
@@ -714,7 +707,7 @@ TimePrefTab::TimePrefTab(StackedScrollGroup* scrollGroup)
     addAlignedLabel(label);
     mWorkStart = new TimeEdit(box);
     label->setBuddy(mWorkStart);
-    box->setWhatsThis(i18nc("@info:whatsthis",
+    box->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Enter the start time of the working day.</para>"
           "<para>%1</para>", TimeSpinBox::shiftWhatsThis()));
     itemBox->leftAlign();
@@ -729,7 +722,7 @@ TimePrefTab::TimePrefTab(StackedScrollGroup* scrollGroup)
     addAlignedLabel(label);
     mWorkEnd = new TimeEdit(box);
     label->setBuddy(mWorkEnd);
-    box->setWhatsThis(i18nc("@info:whatsthis",
+    box->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Enter the end time of the working day.</para>"
           "<para>%1</para>", TimeSpinBox::shiftWhatsThis()));
     itemBox->leftAlign();
@@ -751,7 +744,7 @@ TimePrefTab::TimePrefTab(StackedScrollGroup* scrollGroup)
     addAlignedLabel(label);
     mKOrgEventDuration = new TimeSpinBox(0, 5999, box);
     mKOrgEventDuration->setMinimumSize(mKOrgEventDuration->sizeHint());
-    box->setWhatsThis(i18nc("@info:whatsthis",
+    box->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Enter the event duration in hours and minutes, for alarms which are copied to KOrganizer.</para>"
           "<para>%1</para>", TimeSpinBox::shiftWhatsThis()));
     label->setBuddy(mKOrgEventDuration);
@@ -849,7 +842,7 @@ StorePrefTab::StorePrefTab(StackedScrollGroup* scrollGroup)
     layout->addWidget(mDefaultResource, 0, Qt::AlignLeft);
     mAskResource = new QRadioButton(i18nc("@option:radio", "Prompt for which calendar to store in"), group);
     bgroup->addButton(mAskResource);
-    mAskResource->setWhatsThis(i18nc("@info:whatsthis",
+    mAskResource->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>When saving a new alarm or alarm template, prompt for which calendar to store it in, if there is more than one active calendar.</para>"
           "<para>Note that archived alarms are always stored in the default archived alarm calendar.</para>"));
     layout->addWidget(mAskResource, 0, Qt::AlignLeft);
@@ -886,11 +879,7 @@ StorePrefTab::StorePrefTab(StackedScrollGroup* scrollGroup)
     mClearArchived = new QPushButton(i18nc("@action:button", "Clear Archived Alarms"), group);
     mClearArchived->setFixedSize(mClearArchived->sizeHint());
     connect(mClearArchived, SIGNAL(clicked()), SLOT(slotClearArchived()));
-#ifdef USE_AKONADI
     mClearArchived->setWhatsThis((CollectionControlModel::enabledCollections(CalEvent::ARCHIVED, false).count() <= 1)
-#else
-    mClearArchived->setWhatsThis((AlarmResources::instance()->activeCount(CalEvent::ARCHIVED, false) <= 1)
-#endif
             ? i18nc("@info:whatsthis", "Delete all existing archived alarms.")
             : i18nc("@info:whatsthis", "Delete all existing archived alarms (from the default archived alarm calendar only)."));
     grid->addWidget(mClearArchived, 2, 1, Qt::AlignLeft);
@@ -936,14 +925,10 @@ void StorePrefTab::slotArchivedToggled(bool)
 {
     bool keep = mKeepArchived->isChecked();
     if (keep  &&  !mOldKeepArchived  &&  mCheckKeepChanges
-#ifdef USE_AKONADI
     &&  !CollectionControlModel::getStandard(CalEvent::ARCHIVED).isValid())
-#else
-    &&  !AlarmResources::instance()->getStandardResource(CalEvent::ARCHIVED))
-#endif
     {
         KAMessageBox::sorry(topWidget(),
-             i18nc("@info", "<para>A default calendar is required in order to archive alarms, but none is currently enabled.</para>"
+             xi18nc("@info", "<para>A default calendar is required in order to archive alarms, but none is currently enabled.</para>"
                   "<para>If you wish to keep expired alarms, please first use the calendars view to select a default "
                   "archived alarms calendar.</para>"));
         mKeepArchived->setChecked(false);
@@ -958,11 +943,7 @@ void StorePrefTab::slotArchivedToggled(bool)
 
 void StorePrefTab::slotClearArchived()
 {
-#ifdef USE_AKONADI
     bool single = CollectionControlModel::enabledCollections(CalEvent::ARCHIVED, false).count() <= 1;
-#else
-    bool single = AlarmResources::instance()->activeCount(CalEvent::ARCHIVED, false) <= 1;
-#endif
     if (KAMessageBox::warningContinueCancel(topWidget(), single ? i18nc("@info", "Do you really want to delete all archived alarms?")
                                                                 : i18nc("@info", "Do you really want to delete all alarms in the default archived alarm calendar?"))
             != KMessageBox::Continue)
@@ -995,7 +976,7 @@ EmailPrefTab::EmailPrefTab(StackedScrollGroup* scrollGroup)
     mEmailClient->addButton(mSendmailButton, Preferences::sendmail);
     connect(mEmailClient, SIGNAL(buttonSet(QAbstractButton*)), SLOT(slotEmailClientChanged(QAbstractButton*)));
     box->setFixedHeight(box->sizeHint().height());
-    box->setWhatsThis(i18nc("@info:whatsthis",
+    box->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Choose how to send email when an email alarm is triggered."
           "<list><item><interface>%1</interface>: The email is sent automatically via <application>KMail</application>. <application>KMail</application> is started first if necessary.</item>"
           "<item><interface>%2</interface>: The email is sent automatically. This option will only work if "
@@ -1004,8 +985,8 @@ EmailPrefTab::EmailPrefTab(StackedScrollGroup* scrollGroup)
 
     box = new KHBox(topWidget());   // this is to allow left adjustment
     box->setMargin(0);
-    mEmailCopyToKMail = new QCheckBox(i18nc("@option:check", "Copy sent emails into <application>KMail</application>'s <resource>%1</resource> folder", KAMail::i18n_sent_mail()), box);
-    mEmailCopyToKMail->setWhatsThis(i18nc("@info:whatsthis", "After sending an email, store a copy in <application>KMail</application>'s <resource>%1</resource> folder", KAMail::i18n_sent_mail()));
+    mEmailCopyToKMail = new QCheckBox(xi18nc("@option:check", "Copy sent emails into <application>KMail</application>'s <resource>%1</resource> folder", KAMail::i18n_sent_mail()), box);
+    mEmailCopyToKMail->setWhatsThis(xi18nc("@info:whatsthis", "After sending an email, store a copy in <application>KMail</application>'s <resource>%1</resource> folder", KAMail::i18n_sent_mail()));
     box->setStretchFactor(new QWidget(box), 1);    // left adjust the controls
     box->setFixedHeight(box->sizeHint().height());
 
@@ -1036,7 +1017,7 @@ EmailPrefTab::EmailPrefTab(StackedScrollGroup* scrollGroup)
     mFromAddressGroup->addButton(mFromAddrButton, Preferences::MAIL_FROM_ADDR);
     label->setBuddy(mFromAddrButton);
     grid->addWidget(mFromAddrButton, 1, 1);
-    mEmailAddress = new KLineEdit(group);
+    mEmailAddress = new QLineEdit(group);
     connect(mEmailAddress, SIGNAL(textChanged(QString)), SLOT(slotAddressChanged()));
     QString whatsThis = i18nc("@info:whatsthis", "Your email address, used to identify you as the sender when sending email alarms.");
     mFromAddrButton->setWhatsThis(whatsThis);
@@ -1052,10 +1033,10 @@ EmailPrefTab::EmailPrefTab(StackedScrollGroup* scrollGroup)
     grid->addWidget(mFromCCentreButton, 2, 1, 1, 2, Qt::AlignLeft);
 
     // 'From' email address to be picked from KMail's identities when the email alarm is configured
-    mFromKMailButton = new RadioButton(i18nc("@option:radio", "Use <application>KMail</application> identities"), group);
+    mFromKMailButton = new RadioButton(xi18nc("@option:radio", "Use <application>KMail</application> identities"), group);
     mFromAddressGroup->addButton(mFromKMailButton, Preferences::MAIL_FROM_KMAIL);
     mFromKMailButton->setWhatsThis(
-          i18nc("@info:whatsthis", "Check to use <application>KMail</application>'s email identities to identify you as the sender when sending email alarms. "
+          xi18nc("@info:whatsthis", "Check to use <application>KMail</application>'s email identities to identify you as the sender when sending email alarms. "
                "For existing email alarms, <application>KMail</application>'s default identity will be used. "
                "For new email alarms, you will be able to pick which of <application>KMail</application>'s identities to use."));
     grid->addWidget(mFromKMailButton, 3, 1, 1, 2, Qt::AlignLeft);
@@ -1072,8 +1053,8 @@ EmailPrefTab::EmailPrefTab(StackedScrollGroup* scrollGroup)
     mBccAddressGroup->addButton(mBccAddrButton, Preferences::MAIL_FROM_ADDR);
     label->setBuddy(mBccAddrButton);
     grid->addWidget(mBccAddrButton, 5, 1);
-    mEmailBccAddress = new KLineEdit(group);
-    whatsThis = i18nc("@info:whatsthis", "Your email address, used for blind copying email alarms to yourself. "
+    mEmailBccAddress = new QLineEdit(group);
+    whatsThis = xi18nc("@info:whatsthis", "Your email address, used for blind copying email alarms to yourself. "
                      "If you want blind copies to be sent to your account on the computer which <application>KAlarm</application> runs on, you can simply enter your user login name.");
     mBccAddrButton->setWhatsThis(whatsThis);
     mEmailBccAddress->setWhatsThis(whatsThis);
@@ -1173,9 +1154,9 @@ QString EmailPrefTab::validate()
     return QString();
 }
 
-QString EmailPrefTab::validateAddr(ButtonGroup* group, KLineEdit* addr, const QString& msg)
+QString EmailPrefTab::validateAddr(ButtonGroup* group, QLineEdit* addr, const QString& msg)
 {
-    QString errmsg = i18nc("@info", "<para>%1</para><para>Are you sure you want to save your changes?</para>", msg);
+    QString errmsg = xi18nc("@info", "<para>%1</para><para>Are you sure you want to save your changes?</para>", msg);
     switch (group->selectedId())
     {
         case Preferences::MAIL_FROM_SYS_SETTINGS:
@@ -1186,7 +1167,7 @@ QString EmailPrefTab::validateAddr(ButtonGroup* group, KLineEdit* addr, const QS
         case Preferences::MAIL_FROM_KMAIL:
             if (Identities::identitiesExist())
                 return QString();
-            errmsg = i18nc("@info", "No <application>KMail</application> identities currently exist. %1", errmsg);
+            errmsg = xi18nc("@info", "No <application>KMail</application> identities currently exist. %1", errmsg);
             break;
         case Preferences::MAIL_FROM_ADDR:
             if (!addr->text().trimmed().isEmpty())
@@ -1204,9 +1185,9 @@ QString EmailPrefTab::validateAddr(ButtonGroup* group, KLineEdit* addr, const QS
 EditPrefTab::EditPrefTab(StackedScrollGroup* scrollGroup)
     : PrefsTabBase(scrollGroup)
 {
-    KLocalizedString defsetting = ki18nc("@info:whatsthis", "The default setting for <interface>%1</interface> in the alarm edit dialog.");
+    KLocalizedString defsetting = kxi18nc("@info:whatsthis", "The default setting for <interface>%1</interface> in the alarm edit dialog.");
 
-    mTabs = new KTabWidget(topWidget());
+    mTabs = new QTabWidget(topWidget());
     StackedGroupT<KVBox>* tabgroup = new StackedGroupT<KVBox>(mTabs);
     StackedWidgetT<KVBox>* topGeneral = new StackedWidgetT<KVBox>(tabgroup);
     topGeneral->setMargin(KDialog::marginHint()/2);
@@ -1279,7 +1260,7 @@ EditPrefTab::EditPrefTab(StackedScrollGroup* scrollGroup)
     radio->setMinimumSize(radio->sizeHint());
     mFeb29->addButton(radio, Preferences::Feb29_None);
     itemBox->setFixedHeight(itemBox->sizeHint().height());
-    vbox->setWhatsThis(i18nc("@info:whatsthis",
+    vbox->setWhatsThis(xi18nc("@info:whatsthis",
           "For yearly recurrences, choose what date, if any, alarms due on February 29th should occur in non-leap years."
           "<note>The next scheduled occurrence of existing alarms is not re-evaluated when you change this setting.</note>"));
 
@@ -1342,14 +1323,14 @@ EditPrefTab::EditPrefTab(StackedScrollGroup* scrollGroup)
     mSoundRepeat = new QCheckBox(i18nc("@option:check", "Repeat sound file"), bbox);
     mSoundRepeat->setMinimumSize(mSoundRepeat->sizeHint());
     mSoundRepeat->setWhatsThis(
-          i18nc("@info:whatsthis sound file 'Repeat' checkbox", "The default setting for sound file <interface>%1</interface> in the alarm edit dialog.", SoundWidget::i18n_chk_Repeat()));
+          xi18nc("@info:whatsthis sound file 'Repeat' checkbox", "The default setting for sound file <interface>%1</interface> in the alarm edit dialog.", SoundWidget::i18n_chk_Repeat()));
     hlayout->addWidget(mSoundRepeat);
 
     box = new KHBox(bbox);   // this is to control the QWhatsThis text display area
     box->setMargin(0);
     box->setSpacing(KDialog::spacingHint());
     mSoundFileLabel = new QLabel(i18nc("@label:textbox", "Sound file:"), box);
-    mSoundFile = new KLineEdit(box);
+    mSoundFile = new QLineEdit(box);
     mSoundFileLabel->setBuddy(mSoundFile);
     mSoundFileBrowse = new QPushButton(box);
     mSoundFileBrowse->setIcon(KIcon(SmallIcon(QLatin1String("document-open"))));
@@ -1580,7 +1561,7 @@ QString EditPrefTab::validate()
     if (mSound->currentIndex() == soundIndex(Preferences::Sound_File)  &&  mSoundFile->text().isEmpty())
     {
         mSoundFile->setFocus();
-        return i18nc("@info", "You must enter a sound file when <interface>%1</interface> is selected as the default sound type", SoundPicker::i18n_combo_File());;
+        return xi18nc("@info", "You must enter a sound file when <interface>%1</interface> is selected as the default sound type", SoundPicker::i18n_combo_File());;
     }
     return QString();
 }
@@ -1593,7 +1574,7 @@ QString EditPrefTab::validate()
 ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
     : PrefsTabBase(scrollGroup)
 {
-    mTabs = new KTabWidget(topWidget());
+    mTabs = new QTabWidget(topWidget());
     KVBox* topGeneral = new KVBox();
     topGeneral->setMargin(KDialog::marginHint()/2);
     topGeneral->setSpacing(KDialog::spacingHint());
@@ -1607,7 +1588,7 @@ ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
     mShowInSystemTray = new QGroupBox(i18nc("@option:check", "Show in system tray"), topGeneral);
     mShowInSystemTray->setCheckable(true);
     mShowInSystemTray->setWhatsThis(
-          i18nc("@info:whatsthis", "<para>Check to show <application>KAlarm</application>'s icon in the system tray."
+          xi18nc("@info:whatsthis", "<para>Check to show <application>KAlarm</application>'s icon in the system tray."
                " Showing it in the system tray provides easy access and a status indication.</para>"));
     QGridLayout* grid = new QGridLayout(mShowInSystemTray);
     grid->setMargin(KDialog::marginHint());
@@ -1621,7 +1602,7 @@ ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
     QRadioButton* radio = new QRadioButton(i18nc("@option:radio Always show KAlarm icon", "Always show"), mShowInSystemTray);
     mAutoHideSystemTray->addButton(radio, 0);
     radio->setWhatsThis(
-          i18nc("@info:whatsthis",
+          xi18nc("@info:whatsthis",
                 "Check to show <application>KAlarm</application>'s icon in the system tray "
                 "regardless of whether alarms are due."));
     grid->addWidget(radio, 0, 0, 1, 2, Qt::AlignLeft);
@@ -1629,13 +1610,13 @@ ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
     radio = new QRadioButton(i18nc("@option:radio", "Automatically hide if no active alarms"), mShowInSystemTray);
     mAutoHideSystemTray->addButton(radio, 1);
     radio->setWhatsThis(
-          i18nc("@info:whatsthis",
+          xi18nc("@info:whatsthis",
                 "Check to automatically hide <application>KAlarm</application>'s icon in "
                 "the system tray if there are no active alarms. When hidden, the icon can "
                 "always be made visible by use of the system tray option to show hidden icons."));
     grid->addWidget(radio, 1, 0, 1, 2, Qt::AlignLeft);
 
-    QString text = i18nc("@info:whatsthis",
+    QString text = xi18nc("@info:whatsthis",
                          "Check to automatically hide <application>KAlarm</application>'s icon in the "
                          "system tray if no alarms are due within the specified time period. When hidden, "
                          "the icon can always be made visible by use of the system tray option to show hidden icons.");
@@ -1695,7 +1676,7 @@ ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
     box->setMargin(0);
     box->setSpacing(KDialog::spacingHint());
     mTooltipTimeToPrefixLabel = new QLabel(i18nc("@label:textbox", "Prefix:"), box);
-    mTooltipTimeToPrefix = new KLineEdit(box);
+    mTooltipTimeToPrefix = new QLineEdit(box);
     mTooltipTimeToPrefixLabel->setBuddy(mTooltipTimeToPrefix);
     box->setWhatsThis(i18nc("@info:whatsthis", "Enter the text to be displayed in front of the time until the alarm, in the system tray tooltip."));
     box->setFixedHeight(box->sizeHint().height());
@@ -1743,7 +1724,7 @@ ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
     mWindowPosition = new ButtonGroup(group);
     connect(mWindowPosition, SIGNAL(buttonSet(QAbstractButton*)), SLOT(slotWindowPosChanged(QAbstractButton*)));
 
-    QString whatsthis = i18nc("@info:whatsthis",
+    QString whatsthis = xi18nc("@info:whatsthis",
           "<para>Choose how to reduce the chance of alarm messages being accidentally acknowledged:"
           "<list><item>Position alarm message windows as far as possible from the current mouse cursor location, or</item>"
           "<item>Position alarm message windows in the center of the screen, but disable buttons for a short time after the window is displayed.</item></list></para>");
@@ -1774,7 +1755,7 @@ ViewPrefTab::ViewPrefTab(StackedScrollGroup* scrollGroup)
 
     mModalMessages = new QCheckBox(i18nc("@option:check", "Message windows have a title bar and take keyboard focus"), group);
     mModalMessages->setMinimumSize(mModalMessages->sizeHint());
-    mModalMessages->setWhatsThis(i18nc("@info:whatsthis",
+    mModalMessages->setWhatsThis(xi18nc("@info:whatsthis",
           "<para>Specify the characteristics of alarm message windows:"
           "<list><item>If checked, the window is a normal window with a title bar, which grabs keyboard input when it is displayed.</item>"
           "<item>If unchecked, the window does not interfere with your typing when "

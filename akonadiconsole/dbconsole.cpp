@@ -20,15 +20,17 @@
 #include "dbconsole.h"
 #include "dbaccess.h"
 
-#include <KAction>
+#include <QAction>
 #include <KDebug>
 #include <KGlobalSettings>
 #include <KStandardAction>
+#include <QIcon>
 
 #include <QApplication>
 #include <QClipboard>
 #include <QSqlQueryModel>
 #include <QSqlError>
+#include <QFontDatabase>
 
 DbConsole::DbConsole(QWidget* parent) :
   QWidget( parent ),
@@ -36,14 +38,14 @@ DbConsole::DbConsole(QWidget* parent) :
 {
   ui.setupUi( this );
 
-  KAction *copyAction = KStandardAction::copy( this, SLOT(copyCell()), this );
+  QAction *copyAction = KStandardAction::copy( this, SLOT(copyCell()), this );
   ui.resultView->addAction( copyAction );
 
-  ui.execButton->setIcon( KIcon( "application-x-executable" ) );
+  ui.execButton->setIcon( QIcon::fromTheme( "application-x-executable" ) );
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
 
-  ui.queryEdit->setFont( KGlobalSettings::fixedFont() );
-  ui.errorView->setFont( KGlobalSettings::fixedFont() );
+  ui.queryEdit->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
+  ui.errorView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
 }
 
 void DbConsole::execClicked()

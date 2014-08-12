@@ -21,11 +21,12 @@
 #include "stylesheetloader.h"
 
 #include <kglobalsettings.h>
-#include <KDebug>
+#include <QDebug>
 #include <QFont>
 #include <KCmdLineArgs>
 #include <QThread>
 #include <qplatformdefs.h>
+#include <QFontDatabase>
 
 #ifdef KDELIBS_STATIC_LIBS
 int staticInitKConfigGroupGui();
@@ -59,18 +60,14 @@ void KDeclarativeApplicationBase::postApplicationSetup()
   static bool run = false;
 
   if ( run ) {
-    kDebug() << "called twice";
+    qDebug() << "called twice";
     return;
   }
 
   run = true;
 
-  setFont(KGlobalSettings::generalFont());
+  setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
 
-  KGlobal::locale()->insertCatalog( QLatin1String("libakonadi") );
-  KGlobal::locale()->insertCatalog( QLatin1String("accountwizard") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libkdepimmobileui") );
-  KGlobal::locale()->insertCatalog( QLatin1String("akonadi_serializer_plugins") ); // for conflict handling
 }
 
 // static
@@ -86,7 +83,7 @@ void KDeclarativeApplicationBase::preApplicationSetup( const KCmdLineOptions & a
   static bool run = false;
 
   if ( run ) {
-    kDebug() << "called twice";
+    qDebug() << "called twice";
     return;
   }
 

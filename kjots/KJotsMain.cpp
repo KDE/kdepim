@@ -26,13 +26,10 @@
 #include "KJotsMain.h"
 
 
-#include <kicon.h>
-
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobalsettings.h>
-#include <kinputdialog.h>
 #include <kstandardaction.h>
 #include <kstatusbar.h>
 
@@ -58,14 +55,14 @@ KJotsMain::KJotsMain()
     component = new KJotsWidget(this, this );
 
     setCentralWidget(component);
-    statusBar()->insertItem(QString(), 0, 1);
-    statusBar()->setItemAlignment(0, Qt::AlignLeft | Qt::AlignVCenter);
+    //QT5 statusBar()->insertItem(QString(), 0, 1);
+    //QT5 statusBar()->setItemAlignment(0, Qt::AlignLeft | Qt::AlignVCenter);
 
     connect(component, SIGNAL(activeAnchorChanged(QString,QString)),
             SLOT(activeAnchorChanged(QString,QString)));
 
     setupGUI();
-    connect(component, SIGNAL(captionChanged(QString)), SLOT(updateCaption(QString)));
+    connect(component, &KJotsWidget::captionChanged, this, &KJotsMain::updateCaption);
 
 }
 
@@ -81,9 +78,9 @@ void KJotsMain::activeAnchorChanged(const QString &anchorTarget, const QString &
 {
     if (!anchorTarget.isEmpty())
     {
-        statusBar()->changeItem(anchorText + QLatin1String(" -> ") + anchorTarget, 0);
+        //QT5 statusBar()->changeItem(anchorText + QLatin1String(" -> ") + anchorTarget, 0);
     } else {
-        statusBar()->changeItem(QString(), 0);
+        //QT5 statusBar()->changeItem(QString(), 0);
     }
 }
 

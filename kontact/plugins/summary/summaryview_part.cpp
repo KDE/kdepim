@@ -35,16 +35,17 @@ using KPIM::BroadcastStatus;
 #include <KontactInterface/Plugin>
 #include <KontactInterface/Summary>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KCMultiDialog>
 #include <KComponentData>
 #include <KConfigGroup>
 #include <KDialog>
 #include <KGlobalSettings>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KParts/PartActivateEvent>
+
 
 #include <QApplication>
 #include <QDate>
@@ -53,24 +54,25 @@ using KPIM::BroadcastStatus;
 #include <QScrollArea>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <KLocale>
 
 SummaryViewPart::SummaryViewPart( KontactInterface::Core *core, const char *,
                                   const KAboutData *aboutData, QObject *parent )
   : KParts::ReadOnlyPart( parent ), mCore( core ), mFrame( 0 ), mConfigAction( 0 )
 {
-  setComponentData( KComponentData( aboutData ) );
+  //QT5 setComponentData( KComponentData( aboutData ) );
 
   loadLayout();
 
   initGUI( core );
 
   setDate( QDate::currentDate() );
-  connect( mCore, SIGNAL(dayChanged(QDate)), SLOT(setDate(QDate)) );
+  connect(mCore, &KontactInterface::Core::dayChanged, this, &SummaryViewPart::setDate);
 
-  mConfigAction = new KAction( KIcon( QLatin1String("configure") ), i18n( "&Configure Summary View..." ), this );
+  mConfigAction = new QAction( QIcon::fromTheme( QLatin1String("configure") ), i18n( "&Configure Summary View..." ), this );
   actionCollection()->addAction( QLatin1String("summaryview_configure"), mConfigAction );
-  connect( mConfigAction, SIGNAL(triggered(bool)), SLOT(slotConfigure()) );
-  mConfigAction->setHelpText( i18n( "Configure the summary view" ) );
+  connect(mConfigAction, &QAction::triggered, this, &SummaryViewPart::slotConfigure);
+  //QT5 mConfigAction->setHelpText( i18n( "Configure the summary view" ) );
   mConfigAction->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Choosing this will show a dialog where you can select which "
@@ -425,7 +427,7 @@ void SummaryViewPart::slotAdjustPalette()
 void SummaryViewPart::setDate( const QDate &newDate )
 {
   QString date( QLatin1String("<b>%1</b>") );
-  date = date.arg( KGlobal::locale()->formatDate( newDate ) );
+  date = date.arg( KLocale::global()->formatDate( newDate ) );
   mDateLabel->setText( date );
 }
 

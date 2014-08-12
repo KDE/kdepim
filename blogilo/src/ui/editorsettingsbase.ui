@@ -25,7 +25,7 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="KIntSpinBox" name="kcfg_autosaveInterval">
+    <widget class="QSpinBox" name="kcfg_autosaveInterval">
      <property name="specialValueText">
       <string comment="Auto save interval disabled">Disabled</string>
      </property><!-- TODO: Make the string plural/singular aware -->
@@ -86,13 +86,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

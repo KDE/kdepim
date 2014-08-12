@@ -21,7 +21,7 @@
 #include "mailcommon_export.h"
 #include "tag.h"
 #include <KDialog>
-#include <akonadi/tag.h>
+#include <AkonadiCore/tag.h>
 class KActionCollection;
 
 namespace MailCommon {

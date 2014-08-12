@@ -23,11 +23,11 @@
 #include <messagecore/misc/mailinglist.h>
 using MessageCore::MailingList;
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionStatistics>
+#include <Collection>
+#include <CollectionStatistics>
 
 #include <KSharedConfig>
-#include <KShortcut>
+#include <QKeySequence>
 #include <KIO/Job>
 
 namespace MailCommon {
@@ -74,8 +74,8 @@ public:
 
     Akonadi::CollectionStatistics statistics() const;
 
-    void setShortcut( const KShortcut & );
-    const KShortcut &shortcut() const
+    void setShortcut( const QKeySequence & );
+    const QKeySequence &shortcut() const
     {
         return mShortcut;
     }
@@ -158,7 +158,7 @@ private:
     bool mHideInSelectionDialog;
 
     /** shortcut associated with this folder or null, if none is configured. */
-    KShortcut mShortcut;
+    QKeySequence mShortcut;
     bool mWriteConfig;
 };
 

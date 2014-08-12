@@ -22,18 +22,17 @@
 using MailCommon::RuleWidgetHandlerManager;
 
 #include <pimcommon/widgets/minimumcombobox.h>
-#include <KComboBox>
-#include <KDebug>
+#include <QDebug>
 #include <KDialog>
 #include <KLocale>
-#include <KPushButton>
-#include <KLineEdit>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QIcon>
 
 #include <QButtonGroup>
 #include <QByteArray>
 #include <QHBoxLayout>
 #include <QRadioButton>
-#include <QResizeEvent>
 #include <QStackedWidget>
 
 // Definition of special rule field strings
@@ -166,10 +165,10 @@ void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
     mRuleField = new PimCommon::MinimumComboBox( this );
     mRuleField->setObjectName( QLatin1String("mRuleField") );
     mRuleField->setEditable( true );
-    KLineEdit *edit = new KLineEdit;
-    edit->setClickMessage( i18n("Choose or type your own criteria"));
+    QLineEdit *edit = new QLineEdit;
+    edit->setPlaceholderText( i18n("Choose or type your own criteria"));
     mRuleField->setToolTip(i18n("Choose or type your own criteria"));
-    edit->setClearButtonShown(true);
+    edit->setClearButtonEnabled(true);
     mRuleField->setLineEdit(edit);
     mRuleField->setTrapReturnKey(true);
 
@@ -177,7 +176,7 @@ void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
     KCompletion *comp = mRuleField->completionObject();
     comp->setIgnoreCase(true);
     comp->insertItems(mFilterFieldList);
-    comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+    comp->setCompletionMode(KCompletion::CompletionPopupAuto);
 
     // don't show sliders when popping up this menu
     mRuleField->setMaxCount( mRuleField->count() );
@@ -195,13 +194,13 @@ void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
     hlay->addWidget( mValueStack );
     hlay->setStretchFactor( mValueStack, 10 );
 
-    mAdd = new KPushButton( this );
-    mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    mAdd = new QPushButton( this );
+    mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     hlay->addWidget( mAdd );
 
-    mRemove = new KPushButton( this );
-    mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    mRemove = new QPushButton( this );
+    mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     hlay->addWidget( mRemove );
 
@@ -245,7 +244,7 @@ void SearchRuleWidget::setRule( SearchRule::Ptr aRule )
 {
     Q_ASSERT( aRule );
 
-    kDebug() << "(" << aRule->asString() << ")";
+    qDebug() << "(" << aRule->asString() << ")";
 
     //--------------set the field
     int i = indexOfRuleField( aRule->field() );
@@ -461,7 +460,7 @@ void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
 
     int superfluousItems = (int)mRuleList->count() - widgetsMaximum();
     if ( superfluousItems > 0 ) {
-        kDebug() << "Clipping rule list to" << widgetsMaximum() << "items!";
+        qDebug() << "Clipping rule list to" << widgetsMaximum() << "items!";
 
         for ( ; superfluousItems ; superfluousItems-- ) {
             mRuleList->removeLast();
@@ -666,7 +665,7 @@ void SearchPatternEdit::initLayout( SearchPatternEditOptions options, SearchMode
                      this, SIGNAL(returnPressed()) );
         }
     } else {
-        kDebug() << "No first SearchRuleWidget, though slotClear() has been called!";
+        qDebug() << "No first SearchRuleWidget, though slotClear() has been called!";
     }
 
     connect( mRuleLister, SIGNAL(widgetAdded(QWidget*)),

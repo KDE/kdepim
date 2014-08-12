@@ -21,12 +21,13 @@
 
 #include "createtaskjob.h"
 #include "attributes/taskattribute.h"
-#include <akonadi/kmime/messagestatus.h>
-#include <KLocalizedString>
+#include <Akonadi/KMime/MessageStatus>
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemModifyJob>
+
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
+
+#include <AkonadiCore/ItemModifyJob>
 
 #include <QDebug>
 
@@ -86,7 +87,7 @@ void CreateTaskJob::itemFetchJobDone(KJob *job)
 
     Akonadi::Item::List itemsToModify;
     foreach( const Akonadi::Item &it, lst ) {
-        //kDebug()<<" item ::"<<tmpItem;
+        //qDebug()<<" item ::"<<tmpItem;
         if ( it.isValid() ) {
             bool myStatus;
             Akonadi::MessageStatus itemStatus;

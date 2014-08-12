@@ -37,14 +37,15 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <KMessageBox>
 #include <QWhatsThis>
 #include <QDBusConnection>
+#include <QDebug>
 
 QString SecurityPage::helpAnchor() const
 {
     return QString::fromLatin1("configure-security");
 }
 
-SecurityPage::SecurityPage( const KComponentData &instance, QWidget *parent )
-    : ConfigModuleWithTabs( instance, parent )
+SecurityPage::SecurityPage( QWidget *parent )
+    : ConfigModuleWithTabs( parent )
 {
     //
     // "Reading" tab:
@@ -442,12 +443,12 @@ void SecurityPage::WarningTab::slotConfigureChiasmus()
                     delete dlg;
                     break;
                 } else {
-                    kWarning() << "Found Chiasmus backend, but there doesn't seem to be a config object available from it.";
+                    qWarning() << "Found Chiasmus backend, but there doesn't seem to be a config object available from it.";
                 }
             else
-                kDebug() << "Skipping" << b->name() << "backend (not \"Chiasmus\")";
+                qDebug() << "Skipping" << b->name() << "backend (not \"Chiasmus\")";
     else
-        kDebug() << "Kleo::CryptoBackendFactory::instance() returned NULL!";
+        qDebug() << "Kleo::CryptoBackendFactory::instance() returned NULL!";
 }
 #endif
 ////
@@ -734,11 +735,11 @@ Kleo::CryptoConfigEntry* SMIMECryptoConfigEntries::configEntry( const QString &c
 {
     Kleo::CryptoConfigEntry* entry = mConfig->entry( componentName, groupName, entryName );
     if ( !entry ) {
-        kWarning() << QString::fromLatin1("Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName );
+        qWarning() << QString::fromLatin1("Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName );
         return 0;
     }
     if( entry->argType() != argType || entry->isList() != isList ) {
-        kWarning() << QString::fromLatin1("Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( componentName, groupName, entryName ).arg( entry->argType() ).arg( entry->isList() );
+        qWarning() << QString::fromLatin1("Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( componentName, groupName, entryName ).arg( entry->argType() ).arg( entry->isList() );
         return 0;
     }
     return entry;

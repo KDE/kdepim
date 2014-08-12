@@ -27,8 +27,7 @@
 
 #include "kdepim_export.h"
 
-#include <KGlobalSettings>
-
+#include <KCompletion>
 #include <QWidget>
 #include <QSharedPointer>
 
@@ -153,7 +152,7 @@ public:
       Sets the type of completion to be used for KLineEdits in this line
       @param mode the completion mode
       */
-    virtual void setCompletionMode( KGlobalSettings::Completion mode ) = 0;
+    virtual void setCompletionMode( KCompletion::CompletionMode mode ) = 0;
 
     /**
       If the view is resized while the completion popup is open, things might start
@@ -202,7 +201,7 @@ signals:
     /**
       Emitted when the completion mode changes
     */
-    void completionModeChanged( KGlobalSettings::Completion );
+    void completionModeChanged( KCompletion::CompletionMode );
 public slots:
     void slotPropagateDeletion();
 

@@ -22,17 +22,18 @@
 #include <messagecore/settings/globalsettings.h>
 #include <messagecore/helpers/nodehelper.h>
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/item.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/kmime/messagefolderattribute.h>
-#include <akonadi/selectionproxymodel.h>
+#include <attributefactory.h>
+#include <collection.h>
+#include <collectionstatistics.h>
+#include <entitymimetypefiltermodel.h>
+#include <entitytreemodel.h>
+#include <item.h>
+#include <itemmodifyjob.h>
+#include <Akonadi/KMime/MessageFolderAttribute>
+#include <selectionproxymodel.h>
 
-#include <KDE/KLocale>
+#include <QDebug>
+#include <KLocale>
 #include "core/messageitem.h"
 #include "core/settings.h"
 #include "messagelistutil.h"
@@ -44,6 +45,7 @@
 #include <QItemSelectionModel>
 #include <QtCore/QMimeData>
 #include <QtCore/QCryptographicHash>
+#include <QFontDatabase>
 
 namespace MessageList
 {
@@ -78,7 +80,7 @@ namespace {
 KMime::Message::Ptr messageForItem( const Akonadi::Item &item )
 {
     if ( !item.hasPayload<KMime::Message::Ptr>() ) {
-        kWarning() << "Not a message" << item.id() << item.remoteId() << item.mimeType();
+        qWarning() << "Not a message" << item.id() << item.remoteId() << item.mimeType();
         return KMime::Message::Ptr();
     }
     return item.payload<KMime::Message::Ptr>();
@@ -109,7 +111,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
 
     d->mModel = itemFilter;
 
-    kDebug() << "Using model:" << model->metaObject()->className();
+    qDebug() << "Using model:" << model->metaObject()->className();
 
     connect( d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
              this, SLOT(onSourceDataChanged(QModelIndex,QModelIndex)) );
@@ -371,8 +373,7 @@ int StorageModel::columnCount( const QModelIndex &parent ) const
 QModelIndex StorageModel::index( int row, int column, const QModelIndex &parent ) const
 {
     if ( !parent.isValid() )
-        return createIndex( row, column, 0 );
-
+        return createIndex( row, column, (void*)0 );
     return QModelIndex(); // this model is flat.
 }
 
@@ -436,10 +437,10 @@ void StorageModel::Private::loadSettings()
     }
 
     if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-        Core::MessageItem::setGeneralFont( KGlobalSettings::generalFont() );
-        Core::MessageItem::setUnreadMessageFont( KGlobalSettings::generalFont() );
-        Core::MessageItem::setImportantMessageFont( KGlobalSettings::generalFont() );
-        Core::MessageItem::setToDoMessageFont( KGlobalSettings::generalFont() );
+        Core::MessageItem::setGeneralFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
+        Core::MessageItem::setUnreadMessageFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
+        Core::MessageItem::setImportantMessageFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
+        Core::MessageItem::setToDoMessageFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
     } else {
         Core::MessageItem::setGeneralFont( settings->messageListFont() );
         Core::MessageItem::setUnreadMessageFont( settings->unreadMessageFont() );

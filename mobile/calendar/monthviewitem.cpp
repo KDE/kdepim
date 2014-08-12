@@ -23,8 +23,10 @@
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarviews/month/monthview.h>
 
-#include <KGlobal>
-#include <KGlobalSettings>
+
+#include <QDebug>
+#include <KSharedConfig>
+#include <KColorScheme>
 
 using namespace EventViews;
 
@@ -33,7 +35,7 @@ MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
   , mView( new MonthView( MonthView::Hidden ) )
 {
   // start with the oxygen palette (which is not necessarily the default on all platforms)
-  QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
+  QPalette pal = KColorScheme::createApplicationPalette( KSharedConfig::openConfig() );
   mView->setPalette( pal );
   setWidget( mView );
 
@@ -73,7 +75,7 @@ QObject* MonthViewItem::calendar() const
 void MonthViewItem::setCalendar( QObject* calendarObj )
 {
   Akonadi::ETMCalendar* cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
-  kDebug() << calendarObj << cal;
+  qDebug() << calendarObj << cal;
   if ( cal ) {
     mView->setCalendar( cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>() );
     mView->updateConfig();

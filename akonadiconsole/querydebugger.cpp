@@ -19,9 +19,9 @@
 
 #include "querydebugger.h"
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QCheckBox>
-#include <QtGui/QMenu>
+#include <QVBoxLayout>
+#include <QCheckBox>
+#include <QMenu>
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusArgument>
@@ -29,13 +29,14 @@
 #include <boost/concept_check.hpp>
 #include <QtCore/QDateTime>
 
-#include <akonadi/servermanager.h>
-#include <akonadi/control.h>
+#include <AkonadiCore/servermanager.h>
+#include <AkonadiCore/control.h>
 
 #include <KTextEdit>
 #include <KGlobalSettings>
 #include <KLocalizedString>
 #include <KDebug>
+#include <QFontDatabase>
 
 Q_DECLARE_METATYPE(QList< QList<QVariant> >)
 
@@ -59,16 +60,16 @@ QueryDebugger::QueryDebugger( QWidget* parent ):
   QCheckBox* enableCB = new QCheckBox( this );
   enableCB->setText( "Enable query debugger (slows down server!)");
   enableCB->setChecked( mDebugger->isSQLDebuggingEnabled() );
-  connect( enableCB, SIGNAL(toggled(bool)), mDebugger, SLOT(enableSQLDebugging(bool)) );
+  connect(enableCB, &QCheckBox::toggled, mDebugger, &org::freedesktop::Akonadi::StorageDebugger::enableSQLDebugging);
   layout->addWidget(enableCB);
 
   mView = new KTextEdit( this );
   mView->setReadOnly( true );
   mView->setContextMenuPolicy( Qt::CustomContextMenu );
-  mView->setFont( KGlobalSettings::fixedFont() );
+  mView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
   layout->addWidget( mView );
 
-  connect( mView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)) );
+  connect(mView, &KTextEdit::customContextMenuRequested, this, &QueryDebugger::contextMenu);
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 }

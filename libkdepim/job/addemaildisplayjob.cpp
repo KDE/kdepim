@@ -22,19 +22,19 @@
 #include "widgets/selectedcollectiondialog.h"
 
 
-#include <Akonadi/CollectionDialog>
+#include <CollectionDialog>
 #include <Akonadi/Contact/ContactSearchJob>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/Collection>
+#include <Item>
+#include <ItemCreateJob>
+#include <ItemModifyJob>
+#include <CollectionFetchJob>
+#include <CollectionFetchScope>
+#include <Collection>
 #include <Akonadi/Contact/ContactEditorDialog>
-#include <Akonadi/AgentTypeDialog>
-#include <Akonadi/AgentType>
-#include <Akonadi/AgentFilterProxyModel>
-#include <Akonadi/AgentInstanceCreateJob>
+#include <AgentTypeDialog>
+#include <AgentType>
+#include <AgentFilterProxyModel>
+#include <AgentInstanceCreateJob>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
@@ -43,7 +43,6 @@
 #include <KMessageBox>
 
 #include <QPointer>
-#include <QTextDocument>
 
 using namespace KPIM;
 
@@ -164,7 +163,7 @@ public:
                                "You must create an address book before adding a contact. Do you want to create an address book?" ),
                         i18nc( "@title:window", "No Address Book Available" ) ) == KMessageBox::Yes) {
                 Akonadi::AgentTypeDialog dlg( mParentWidget );
-                dlg.setCaption( i18n("Add Address Book") );
+                dlg.setWindowTitle( i18n("Add Address Book") );
                 dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::Addressee::mimeType());
                 dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::ContactGroup::mimeType());
                 dlg.agentFilterProxyModel()->addCapabilityFilter( QLatin1String( "Resource" ) );

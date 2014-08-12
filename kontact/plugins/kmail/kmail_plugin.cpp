@@ -34,15 +34,16 @@
 
 #include <KontactInterface/Core>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
-#include <KDebug>
-#include <KIcon>
+#include <QDebug>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KStandardDirs>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 
 #include <QDropEvent>
+#include <QStandardPaths>
 
 using namespace KCalUtils;
 using namespace KCalCore;
@@ -52,15 +53,15 @@ EXPORT_KONTACT_PLUGIN( KMailPlugin, kmail )
 KMailPlugin::KMailPlugin( KontactInterface::Core *core, const QVariantList & )
     : KontactInterface::Plugin( core, core, "kmail2" ), m_instance( 0 )
 {
-    setComponentData( KontactPluginFactory::componentData() );
+    //QT5 setComponentData( KontactPluginFactory::componentData() );
 
-    KAction *action =
-            new KAction( KIcon( QLatin1String("mail-message-new") ),
+    QAction *action =
+            new QAction( QIcon::fromTheme( QLatin1String("mail-message-new") ),
                          i18nc( "@action:inmenu", "New Message..." ), this );
     actionCollection()->addAction( QLatin1String("new_mail"), action );
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_M ) );
-    action->setHelpText(
-                i18nc( "@info:status", "Create a new mail message" ) );
+    //action->setHelpText(
+    //            i18nc( "@info:status", "Create a new mail message" ) );
     action->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "You will be presented with a dialog where you can create "
@@ -68,11 +69,11 @@ KMailPlugin::KMailPlugin( KontactInterface::Core *core, const QVariantList & )
     connect( action, SIGNAL(triggered(bool)), SLOT(slotNewMail()) );
     insertNewAction( action );
 
-    KAction *syncAction =
-            new KAction( KIcon( QLatin1String("view-refresh") ),
+    QAction *syncAction =
+            new QAction( QIcon::fromTheme( QLatin1String("view-refresh") ),
                          i18nc( "@action:inmenu", "Sync Mail" ), this );
-    syncAction->setHelpText(
-                i18nc( "@info:status", "Synchronize groupware mail" ) );
+    //syncAction->setHelpText(
+    //            i18nc( "@info:status", "Synchronize groupware mail" ) );
     syncAction->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "Choose this option to synchronize your groupware email." ) );
@@ -97,7 +98,7 @@ void KMailPlugin::shortcutChanged()
     KParts::ReadOnlyPart *localPart = part();
     if ( localPart ) {
         if ( localPart->metaObject()->indexOfMethod( "updateQuickSearchText()" ) == -1 ) {
-            kWarning() << "KMailPart part is missing slot updateQuickSearchText()";
+            qWarning() << "KMailPart part is missing slot updateQuickSearchText()";
             return;
         }
         QMetaObject::invokeMethod( localPart, "updateQuickSearchText" );
@@ -112,9 +113,7 @@ void KMailPlugin::processDropEvent( QDropEvent *de )
     const QMimeData *md = de->mimeData();
 
     if ( VCalDrag::fromMimeData( md, cal ) || ICalDrag::fromMimeData( md, cal ) ) {
-        KTemporaryFile tmp;
-        tmp.setPrefix( QLatin1String("incidences-") );
-        tmp.setSuffix( QLatin1String(".ics") );
+        QTemporaryFile tmp(QLatin1String("incidences-kmail_XXXXXX.ics"));
         tmp.setAutoRemove( false );
         tmp.open();
         FileStorage storage( cal, tmp.fileName() );
@@ -130,7 +129,7 @@ void KMailPlugin::processDropEvent( QDropEvent *de )
         openComposer( to.join( QLatin1String(", ") ) );
     }
 
-    kWarning() << QString::fromLatin1( "Cannot handle drop events of type '%1'." ).arg( QLatin1String(de->format()) );
+    //QT5 qWarning() << QString::fromLatin1( "Cannot handle drop events of type '%1'." ).arg( QLatin1String(de->format()) );
 }
 
 void KMailPlugin::openComposer( const KUrl &attach )
@@ -188,7 +187,7 @@ bool KMailPlugin::createDBUSInterface( const QString &serviceType )
 
 QString KMailPlugin::tipFile() const
 {
-    const QString file = KStandardDirs::locate( "data", QLatin1String("kmail2/tips") );
+    const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kmail2/tips") );
     return file;
 }
 
@@ -250,4 +249,4 @@ bool KMailPlugin::queryClose() const
     QDBusReply<bool> canClose = kmail.canQueryClose();
     return canClose;
 }
-
+#include "kmail_plugin.moc"

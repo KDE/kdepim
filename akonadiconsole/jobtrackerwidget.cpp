@@ -24,10 +24,11 @@
 
 #include "jobtrackermodel.h"
 
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 
 #include <KLocalizedString>
 #include <KFileDialog>
+#include <KUrl>
 
 #include <QTreeView>
 #include <QHeaderView>
@@ -64,7 +65,7 @@ JobTrackerWidget::JobTrackerWidget( const char *name, QWidget *parent, const QSt
   // too slow with many jobs:
   // tv->header()->setResizeMode( QHeaderView::ResizeToContents );
   connect( d->model, SIGNAL(modelReset()), tv, SLOT(expandAll()) );
-  connect( tv, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)) );
+  connect(tv, &QTreeView::customContextMenuRequested, this, &JobTrackerWidget::contextMenu);
   layout->addWidget( tv );
   d->model->setEnabled( false ); // since it can be slow, default to off
 
@@ -94,7 +95,7 @@ void JobTrackerWidget::contextMenu( const QPoint &pos )
 
 void JobTrackerWidget::slotSaveToFile()
 {
-  const QString fileName = KFileDialog::getSaveFileName( KUrl(), QString(), 0, QString(), KFileDialog::ConfirmOverwrite );
+  const QString fileName = KFileDialog::getSaveFileName( QUrl(), QString(), 0, QString(), KFileDialog::ConfirmOverwrite );
   if ( fileName.isEmpty() ) {
     return;
   }

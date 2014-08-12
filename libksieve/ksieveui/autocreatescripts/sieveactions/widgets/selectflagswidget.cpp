@@ -18,23 +18,35 @@
 #include "selectflagswidget.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 
 #include <QPushButton>
 #include <QHBoxLayout>
-
+#include <QPointer>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QVBoxLayout>
 
 using namespace KSieveUi;
 
 SelectFlagsListDialog::SelectFlagsListDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Flags" ) );
-    setButtons( Ok|Cancel );
-    setButtonFocus( Ok );
+    setWindowTitle( i18n( "Flags" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
     mListWidget = new SelectFlagsListWidget;
-    setMainWidget(mListWidget);
+    mainLayout->addWidget(mListWidget);
+
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    okButton->setFocus();
 }
 
 SelectFlagsListDialog::~SelectFlagsListDialog()
@@ -111,7 +123,7 @@ SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
-    mEdit = new KLineEdit;
+    mEdit = new QLineEdit;
     mEdit->setReadOnly(true);
     connect(mEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mEdit);

@@ -26,26 +26,27 @@
 #include "addeditblog.h"
 #include "dbman.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KMessageBox>
-
+#include <QIcon>
+#include <KLocalizedString>
 
 BlogSettings::BlogSettings( QWidget *parent )
     : QWidget( parent )
 {
     setupUi( this );
 
-    connect( btnAdd, SIGNAL(clicked()), this, SLOT(addBlog()) );
-    connect( btnEdit, SIGNAL(clicked()), this, SLOT(editBlog()) );
-    connect( btnRemove, SIGNAL(clicked()), this, SLOT(removeBlog()) );
+    connect(btnAdd, &QPushButton::clicked, this, &BlogSettings::addBlog);
+    connect(btnEdit, &QPushButton::clicked, this, &BlogSettings::editBlog);
+    connect(btnRemove, &QPushButton::clicked, this, &BlogSettings::removeBlog);
     connect( blogsTable, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
              this, SLOT(blogsTablestateChanged()) );
     connect (blogsTable, SIGNAL(doubleClicked(QModelIndex)), SLOT(editBlog()));
 
     blogsTable->setHeaderLabels(QStringList()<<i18n("Title")<<i18n("URL"));
-    btnAdd->setIcon( KIcon( QLatin1String("list-add") ) );
-    btnEdit->setIcon( KIcon( QLatin1String("edit-rename") ) );
-    btnRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    btnAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
+    btnEdit->setIcon( QIcon::fromTheme( QLatin1String("edit-rename") ) );
+    btnRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     loadBlogsList();
 }
 
@@ -108,7 +109,7 @@ void BlogSettings::removeBlog()
             emit blogRemoved( blog_id );
         } else {
             ///cannot remove
-            kError()<<"Cannot remove blog with id "<<blog_id;
+            qCritical()<<"Cannot remove blog with id "<<blog_id;
         }
     }
 }

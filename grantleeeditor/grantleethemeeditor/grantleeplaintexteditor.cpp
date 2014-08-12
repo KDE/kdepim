@@ -22,6 +22,7 @@
 #include <QCompleter>
 #include <QKeyEvent>
 #include <QScrollBar>
+#include <QAbstractItemView>
 
 using namespace GrantleeThemeEditor;
 

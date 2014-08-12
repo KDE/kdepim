@@ -21,7 +21,7 @@
 #define AKONADICONSOLE_AGENTCONFIGDIALOG_H
 
 #include "ui_agentconfigdialog.h"
-#include <Akonadi/AgentInstance>
+#include <AkonadiCore/AgentInstance>
 #include <kdialog.h>
 
 class AgentConfigModel;

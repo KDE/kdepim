@@ -28,7 +28,7 @@
 #include <kdgantt2/kdganttabstractrowcontroller.h>
 
 #include <KComboBox>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QHeaderView>
@@ -166,7 +166,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
   mScaleCombo->setToolTip(
     i18nc( "@info:tooltip", "Set the Gantt chart zoom level" ) );
   mScaleCombo->setWhatsThis(
-    i18nc( "@info:whatsthis",
+    xi18nc( "@info:whatsthis",
            "Select the Gantt chart zoom level from one of the following:<nl/>"
            "'Hour' shows a range of several hours,<nl/>"
            "'Day' shows a range of a few days,<nl/>"
@@ -299,7 +299,7 @@ VisualFreeBusyWidget::~VisualFreeBusyWidget()
 
 void VisualFreeBusyWidget::showAttendeeStatusMenu()
 {
-//   KMenu *menu = new KMenu( 0 );
+//   QMenu *menu = new QMenu( 0 );
 //
 //   QAction *needsaction =
 //     menu->addAction( SmallIcon( "help-about" ),
@@ -424,7 +424,7 @@ void VisualFreeBusyWidget::slotZoomToTime()
 #if 0
   mGanttGraphicsView->zoomToFit();
 #else
-  kDebug() << "Disabled code, port to KDGantt2";
+  qDebug() << "Disabled code, port to KDGantt2";
 #endif
 }
 

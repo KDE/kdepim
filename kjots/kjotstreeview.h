@@ -22,7 +22,7 @@
 #ifndef KJOTSTREEVIEW_H
 #define KJOTSTREEVIEW_H
 
-#include <Akonadi/EntityTreeView>
+#include <AkonadiWidgets/EntityTreeView>
 
 class KXMLGUIClient;
 

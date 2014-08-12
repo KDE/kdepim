@@ -34,20 +34,23 @@
 
 #include <QMenu>
 #include <QStyleOption>
+#include <QDrag>
+#include <QMimeData>
 
 #include <kapplication.h>
-#include <kdebug.h>
-#include <ktabwidget.h>
-#include <ktabbar.h>
-#include <kmenu.h>
+#include <qdebug.h>
+#include <QTabWidget>
+#include <qtabbar.h>
+#include <QMenu>
 #include <krun.h>
 #include <klocale.h>
-#include <KIcon>
+#include <QIcon>
 #include <kiconloader.h>
 #include <ktoolinvocation.h>
 #include <kurl.h>
 #include <kmimetype.h>
 #include <kio/global.h>
+#include <kio/pixmaploader.h>
 
 #include "actionmanager.h"
 #include "akregatorconfig.h"
@@ -87,13 +90,17 @@ public:
 
 void TabWidget::Private::updateTabBarVisibility()
 {
-    q->setTabBarHidden( ( q->count() <= 1 ) && !Settings::alwaysShowTabBar() );
+    const bool tabBarIsHidden = ( ( q->count() <= 1 ) && !Settings::alwaysShowTabBar() );
+    if (tabBarIsHidden)
+       q->tabBar()->hide();
+    else
+       q->tabBar()->show();
     if (q->count() >= 1 && Settings::closeButtonOnTabs())
         q->tabBar()->tabButton(0, QTabBar::RightSide)->hide();
 }
 
 TabWidget::TabWidget(QWidget * parent)
-    :KTabWidget(parent), d(new Private( this ) )
+    :QTabWidget(parent), d(new Private( this ) )
 {
     setMinimumSize(250,150);
     setMovable(false);
@@ -108,7 +115,7 @@ TabWidget::TabWidget(QWidget * parent)
     connect( d->tabsClose, SIGNAL(clicked()), this,
             SLOT(slotRemoveCurrentFrame()) );
 
-    d->tabsClose->setIcon( KIcon( "tab-close" ) );
+    d->tabsClose->setIcon( QIcon::fromTheme( "tab-close" ) );
     d->tabsClose->setEnabled( false );
     d->tabsClose->adjustSize();
     d->tabsClose->setToolTip( i18n("Close the current tab"));
@@ -354,7 +361,7 @@ void TabWidget::contextMenu(int i, const QPoint &p)
 {
     QWidget* w = ActionManager::getInstance()->container("tab_popup");
     TemporaryValue<QWidget*> tmp( d->currentItem, widget( i ) );
-    //kDebug() << indexOf(d->currentItem);
+    //qDebug() << indexOf(d->currentItem);
     // FIXME: do not hardcode index of maintab
     if (w && indexOf(d->currentItem) != 0)
         static_cast<QMenu *>(w)->exec(p);

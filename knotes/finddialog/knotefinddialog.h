@@ -18,11 +18,11 @@
 #ifndef KNOTEFINDDIALOG_H
 #define KNOTEFINDDIALOG_H
 
-#include <KDialog>
-#include <Akonadi/Item>
+#include <QDialog>
+#include <AkonadiCore/Item>
 #include "knotes_export.h"
-class KPushButton;
-class KLineEdit;
+class QPushButton;
+class QLineEdit;
 class QListWidgetItem;
 class QListWidget;
 class QLabel;
@@ -49,12 +49,12 @@ private Q_SLOTS:
 private:
     QHash<Akonadi::Item::Id , Akonadi::Item> mNotes;
     QLabel *mResultSearch;
-    KLineEdit *mSearchLineEdit;
-    KPushButton *mSearchButton;
+    QLineEdit *mSearchLineEdit;
+    QPushButton *mSearchButton;
     NoteShared::NoteListWidget *mNoteList;
 };
 
-class KNOTES_EXPORT KNoteFindDialog : public KDialog
+class KNOTES_EXPORT KNoteFindDialog : public QDialog
 {
     Q_OBJECT
 public:

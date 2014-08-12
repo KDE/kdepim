@@ -72,13 +72,13 @@ namespace {
             m_error = i18n("Obsolete registry entries found");
 
             m_explaination
-                = i18nc( "@info",
+                = xi18nc( "@info",
                          "<para>Kleopatra detected an obsolete registry key (<resource>%1\\%2</resource>), "
                          "added by either a previous <application>Gpg4win</application> version or "
                          "applications such as <application>WinPT</application> or <application>EnigMail</application>.</para>"
                          "<para>Keeping the entry might lead to an old GnuPG backend being used.</para>",
                          gnupg_path, gnupg_key );
-            m_proposedFix = i18nc( "@info",
+            m_proposedFix = xi18nc( "@info",
                                    "<para>Delete registry key <resource>%1\\%2</resource>.</para>",
                                    gnupg_path, gnupg_key );
 
@@ -98,7 +98,7 @@ namespace {
             if ( settings.status() != QSettings::NoError ) {
                 KMessageBox::error(
                     0,
-                    i18nc("@info",
+                    xi18nc("@info",
                           "Could not delete the registry key <resource>%1\\%2</resource>",
                           gnupg_path, gnupg_key ),
                     i18nc("@title", "Error Deleting Registry Key") );

@@ -21,7 +21,7 @@
 #include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
@@ -46,10 +46,10 @@ QWidget *SieveConditionIhave::createParamWidget( QWidget *parent ) const
     lay->setMargin(0);
     w->setLayout(lay);
 
-    KLineEdit *edit = new KLineEdit;
+    QLineEdit *edit = new QLineEdit;
     connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
-    edit->setClickMessage(i18n("Use \",\" to separate capabilities"));
-    edit->setClearButtonShown(true);
+    edit->setPlaceholderText(i18n("Use \",\" to separate capabilities"));
+    edit->setClearButtonEnabled(true);
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("edit"));
 
@@ -58,7 +58,7 @@ QWidget *SieveConditionIhave::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionIhave::code(QWidget *w) const
 {
-    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
     const QString editValue = edit->text();
     return QString::fromLatin1("ihave %1").arg(AutoCreateScriptUtil::createList(editValue, QLatin1Char(',')));
 }
@@ -92,7 +92,7 @@ bool SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidge
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+                QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
                 edit->setText(tagValue);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing

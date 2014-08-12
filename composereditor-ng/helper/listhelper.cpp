@@ -19,7 +19,6 @@
 */
 
 #include "listhelper_p.h"
-#include <QDebug>
 
 namespace ComposerEditorNG {
 static QString OL = QLatin1String("ol");

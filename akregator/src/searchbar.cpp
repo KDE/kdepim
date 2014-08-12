@@ -31,15 +31,16 @@
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
+
 
 #include <khbox.h>
-#include <KIcon>
+#include <QIcon>
 
 #include <QLabel>
 #include <QList>
 #include <QString>
 #include <QTimer>
+#include <QStandardPaths>
 
 
 using namespace boost;
@@ -90,9 +91,9 @@ SearchBar::SearchBar(QWidget* parent) : KHBox(parent), d(new SearchBar::SearchBa
     d->searchCombo = new KComboBox(this);
 
     QIcon iconAll = KIconLoader::global()->loadIcon("system-run", KIconLoader::Small);
-    QIcon iconNew(KStandardDirs::locate("data", "akregator/pics/kmmsgnew.png"));
-    QIcon iconUnread(KStandardDirs::locate("data", "akregator/pics/kmmsgunseen.png"));
-    const KIcon iconKeep( "mail-mark-important" );
+    QIcon iconNew(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "akregator/pics/kmmsgnew.png"));
+    QIcon iconUnread(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "akregator/pics/kmmsgunseen.png"));
+    const QIcon iconKeep = QIcon::fromTheme( "mail-mark-important" );
 
     d->searchCombo->addItem(iconAll, i18n("All Articles"));
     d->searchCombo->addItem(iconUnread, i18nc("Unread articles filter", "Unread"));

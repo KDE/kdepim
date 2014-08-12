@@ -35,7 +35,7 @@
 #include "cryptobackend.h"
 #include "keylistjob.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QStringList>
 

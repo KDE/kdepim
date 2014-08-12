@@ -21,7 +21,7 @@
 #ifndef DOMTREEWIDGET_H
 #define DOMTREEWIDGET_H
 
-#include "composereditor_export.h"
+#include "composereditorng_export.h"
 
 #include <QWidget>
 class QTreeWidget;

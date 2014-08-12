@@ -23,7 +23,7 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include "filter_mailapp.h"
 
@@ -65,7 +65,7 @@ void FilterMailApp::importMails( const QString  &maildir )
     
     filterInfo()->setOverall(0);
 
-    //   kDebug() <<"starting by looking in directory" << directory;
+    //   qDebug() <<"starting by looking in directory" << directory;
     traverseDirectory(mailDir());
 
     QStringList::ConstIterator end( mMboxFiles.constEnd() );
@@ -77,7 +77,7 @@ void FilterMailApp::importMails( const QString  &maildir )
             filterInfo()->alert( i18n("Unable to open %1, skipping", *filename ) );
         } else {
             QFileInfo filenameInfo( *filename );
-            kDebug() <<"importing filename" << *filename;
+            qDebug() <<"importing filename" << *filename;
             QStringList name = (*filename).split('/', QString::SkipEmptyParts);
             QString folderName(name[name.count() - 2]);
 
@@ -90,7 +90,7 @@ void FilterMailApp::importMails( const QString  &maildir )
             long l = 0;
 
             while ( ! mbox.atEnd() ) {
-                KTemporaryFile tmp;
+                QTemporaryFile tmp;
                 tmp.open();
                 /* comment by Danny:
          * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only
@@ -159,7 +159,7 @@ void FilterMailApp::traverseDirectory(const QString &dirName)
             traverseDirectory(fi.filePath());
         } else {
             if (!fi.isDir() && (filename == QLatin1String( "mbox" ))) {
-                kDebug() <<"adding the file" << fi.filePath();
+                qDebug() <<"adding the file" << fi.filePath();
                 mMboxFiles.append(fi.filePath());
             }
         }

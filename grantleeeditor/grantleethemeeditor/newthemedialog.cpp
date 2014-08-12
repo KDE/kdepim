@@ -19,21 +19,22 @@
 #include "newthemedialog.h"
 #include "globalsettings_base.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 #include <KUrlRequester>
+#include <KLineEdit>
 
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 using namespace GrantleeThemeEditor;
 NewThemeDialog::NewThemeDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "New Theme" ) );
-    setButtons( Ok|Cancel );
-    setDefaultButton(Ok);
-    setButtonFocus(Ok);
+    setWindowTitle( i18n( "New Theme" ) );
 
     QWidget *w = new QWidget;
 
@@ -42,8 +43,8 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Theme name:"));
     lay->addWidget(lab);
 
-    mThemeName = new KLineEdit;
-    connect(mThemeName, SIGNAL(textChanged(QString)), this, SLOT(slotUpdateOkButton()));
+    mThemeName = new QLineEdit;
+    connect(mThemeName, &QLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
     lay->addWidget(mThemeName);
 
     lab = new QLabel(i18n("Theme directory:"));
@@ -56,8 +57,21 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
 
     w->setLayout(lay);
 
-    setMainWidget(w);
-    enableButtonOk(false);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(w);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &NewThemeDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &NewThemeDialog::reject);
+    mainLayout->addWidget(buttonBox);
+    mOkButton->setDefault(true);
+    mOkButton->setFocus();
+
+    mOkButton->setEnabled(false);
     resize(300,150);
     mThemeName->setFocus();
     readConfig();
@@ -69,7 +83,7 @@ NewThemeDialog::~NewThemeDialog()
 
 void NewThemeDialog::readConfig()
 {
-    mUrlRequester->setUrl(KUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
+    mUrlRequester->setUrl(QUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
 }
 
 QString NewThemeDialog::themeName() const
@@ -84,6 +98,6 @@ QString NewThemeDialog::directory() const
 
 void NewThemeDialog::slotUpdateOkButton()
 {
-    enableButtonOk(!mUrlRequester->lineEdit()->text().isEmpty() && !mThemeName->text().isEmpty());
+    mOkButton->setEnabled(!mUrlRequester->lineEdit()->text().isEmpty() && !mThemeName->text().isEmpty());
 }
 

@@ -125,7 +125,7 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
       case KMessageBox::No: // fall through
       default:
         {
-          fileName = KFileDialog::getSaveFileName( KUrl( "addressbook.vcf" ), QLatin1String( "*.vcf" ) );
+          fileName = KFileDialog::getSaveFileName( QUrl( QLatin1String("addressbook.vcf") ), QLatin1String( "*.vcf" ) );
           if ( fileName.isEmpty() )
             return true; // user canceled export
 

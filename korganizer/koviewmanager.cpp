@@ -43,10 +43,11 @@
 
 #include <KActionCollection>
 #include <KMessageBox>
-#include <KTabWidget>
+#include <QTabWidget>
 
 #include <QAction>
 #include <QStackedWidget>
+#include <KSharedConfig>
 
 KOViewManager::KOViewManager( CalendarView *mainView )
   : QObject(), mMainView( mainView )
@@ -161,7 +162,7 @@ void KOViewManager::writeSettings( KConfig *config )
 
   // write out custom view configuration
   Q_FOREACH ( KOrg::BaseView *const view, mViews ) {
-    KConfigGroup group = KGlobal::config()->group( view->identifier() );
+    KConfigGroup group = KSharedConfig::openConfig()->group( view->identifier() );
     view->saveConfig( group );
   }
 
@@ -403,7 +404,7 @@ void KOViewManager::addView( KOrg::BaseView *view, bool isTab )
 {
   connectView( view );
   mViews.append( view );
-  const KConfigGroup group = KGlobal::config()->group( view->identifier() );
+  const KConfigGroup group = KSharedConfig::openConfig()->group( view->identifier() );
   view->restoreConfig( group );
   if ( !isTab ) {
     mMainView->viewStack()->addWidget( view );
@@ -471,7 +472,7 @@ void KOViewManager::showAgendaView()
   QWidget *parent = mMainView->viewStack();
   if ( showBoth ) {
     if ( !mAgendaViewTabs && showBoth ) {
-      mAgendaViewTabs = new KTabWidget( mMainView->viewStack() );
+      mAgendaViewTabs = new QTabWidget( mMainView->viewStack() );
       connect( mAgendaViewTabs, SIGNAL(currentChanged(QWidget*)),
               this, SLOT(currentAgendaViewTabChanged(QWidget*)) );
       mMainView->viewStack()->addWidget( mAgendaViewTabs );

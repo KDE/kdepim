@@ -33,8 +33,8 @@
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <KCalCore/Event>
 
-#include <Akonadi/Collection>
-#include <Akonadi/Control>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Control>
 
 #include <KCheckableProxyModel>
 
@@ -91,7 +91,7 @@ void MainWindow::addView( const QString &viewName )
     eventView->updateConfig();
     mUi.tabWidget->addTab( eventView, viewName );
   } else {
-    kError() << "Cannot create view" << viewName;
+    qCritical() << "Cannot create view" << viewName;
   }
 }
 

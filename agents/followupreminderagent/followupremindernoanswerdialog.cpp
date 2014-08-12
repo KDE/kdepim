@@ -20,21 +20,35 @@
 #include "followupreminderinfowidget.h"
 
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 #include <KSharedConfig>
+#include <KGlobal>
 
 #include <QHBoxLayout>
 #include <QTreeWidget>
 #include <QHeaderView>
 #include <QLabel>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 
 FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n("Follow Up Mail") );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
-    setButtons( Ok|Cancel );
+    setWindowTitle( i18n("Follow Up Mail") );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setAttribute(Qt::WA_DeleteOnClose);
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -44,7 +58,9 @@ FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
 
     mWidget = new FollowUpReminderInfoWidget;
     vbox->addWidget(mWidget);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
+
     readConfig();
 }
 
@@ -60,7 +76,7 @@ void FollowUpReminderNoAnswerDialog::setInfo(const QList<FollowUpReminder::Follo
 
 void FollowUpReminderNoAnswerDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FollowUpReminderNoAnswerDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FollowUpReminderNoAnswerDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -70,7 +86,8 @@ void FollowUpReminderNoAnswerDialog::readConfig()
 
 void FollowUpReminderNoAnswerDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FollowUpReminderNoAnswerDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FollowUpReminderNoAnswerDialog" );
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
 }
+

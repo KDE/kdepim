@@ -1,14 +1,14 @@
 include_directories( ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
-KDE4_NO_ENABLE_FINAL(libkleo)
 if (KDEPIM_ONLY_KLEO)
   add_definitions( -DKDEPIM_ONLY_KLEO )
 endif ()
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libkleopatra\")
+
 #add_definitions( -DQT_NO_CAST_FROM_ASCII )
 #add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-
-add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
+kde_enable_exceptions()
 add_definitions( -DGPGMEPP_ERR_SOURCE_DEFAULT=13 ) # 13 is GPG_ERR_SOURCE_KLEO, even if gpg-error's too old to know about
 #parts of Boost don't build with the gcc pedantic option, so remove that option
 string(REPLACE "-pedantic" "" FOO "${CMAKE_CXX_FLAGS}")
@@ -94,24 +94,25 @@ set(libkleo_ui_SRCS    # make this a separate lib.
     ui/keyapprovaldialog.cpp
     )
 
-kde4_add_ui_files(libkleo_ui_common_SRCS
+ki18n_wrap_ui(libkleo_ui_common_SRCS
     ui/directoryserviceswidget.ui
 )
 
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})
-set(kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
+set(kleo_LIB_LIBS  ${QGPGME_LIBRARIES})
 if ( NOT KDEPIM_ONLY_KLEO )
    set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_chiasmus_SRCS} ${libkleo_ui_SRCS})
-   set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS})
+   set( kleo_LIB_LIBS ${kleo_LIB_LIBS}  KF5::KIOCore KF5::Gpgmepp KF5::QGpgme KF5::I18n KF5::WidgetsAddons KF5::IconThemes KF5::Completion KF5::KDELibs4Support)
 endif ()
 
-kde4_add_library(kleo ${LIBRARY_TYPE} ${kleo_LIB_SRCS})
+add_library(kleo ${LIBRARY_TYPE} ${kleo_LIB_SRCS})
+generate_export_header(kleo BASE_NAME kleo)
 if(WIN32)
 target_link_libraries(kleo ${kleo_LIB_LIBS}  ${GPGME_VANILLA_LIBRARIES} )
 else()
 target_link_libraries(kleo ${kleo_LIB_LIBS} )
 endif()
-set_target_properties(kleo PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties(kleo PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 install(TARGETS kleo ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if ( WIN32 )

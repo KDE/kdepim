@@ -20,20 +20,24 @@
 #include "messageviewer/globalsettings_base.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
-#include <KIcon>
+#include <QLineEdit>
+#include <QIcon>
 #include <KDateTimeEdit>
+#include <QDateTime>
+#include <QDebug>
 
 #include <QHBoxLayout>
 #include <QEvent>
 #include <QKeyEvent>
 #include <QLabel>
 
-#include <Akonadi/CollectionComboBox>
-#include <KPushButton>
+#include <AkonadiWidgets/CollectionComboBox>
+#include <QPushButton>
 
 #include <incidenceeditor-ng/incidencedialogfactory.h>
 #include <incidenceeditor-ng/incidencedialog.h>
+#include <KGuiItem>
+#include <KStandardGuiItem>
 
 
 namespace MessageViewer {
@@ -58,8 +62,8 @@ EventEdit::EventEdit(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Event:"));
     hbox->addWidget(lab);
 
-    mEventEdit = new KLineEdit;
-    mEventEdit->setClearButtonShown(true);
+    mEventEdit = new QLineEdit;
+    mEventEdit->setClearButtonEnabled(true);
     mEventEdit->setObjectName(QLatin1String("noteedit"));
     mEventEdit->setFocus();
     connect(mEventEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
@@ -92,12 +96,12 @@ EventEdit::EventEdit(QWidget *parent)
     KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
     mStartDateTimeEdit = new KDateTimeEdit;
     mStartDateTimeEdit->setObjectName(QLatin1String("startdatetimeedit"));
-    mStartDateTimeEdit->setDateTime(currentDateTime);
+    //QT5 mStartDateTimeEdit->setDateTime(currentDateTime);
 #ifndef QT_NO_ACCESSIBILITY
     mStartDateTimeEdit->setAccessibleDescription( i18n("Select start time for event.") );
 #endif
-    connect(mStartDateTimeEdit, SIGNAL(dateTimeChanged(KDateTime)),
-            this, SLOT(slotStartDateTimeChanged(KDateTime)));
+    connect(mStartDateTimeEdit, SIGNAL(dateTimeChanged(QDateTime)),
+            this, SLOT(slotStartDateTimeChanged(QDateTime)));
     hbox->addWidget(mStartDateTimeEdit);
 
     hbox->addSpacing(5);
@@ -106,7 +110,7 @@ EventEdit::EventEdit(QWidget *parent)
     hbox->addWidget(lab);
     mEndDateTimeEdit = new KDateTimeEdit;
     mEndDateTimeEdit->setObjectName(QLatin1String("enddatetimeedit"));
-    mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
+    //QT5 mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
 #ifndef QT_NO_ACCESSIBILITY
     mEndDateTimeEdit->setAccessibleDescription( i18n("Select end time for event.") );
 #endif
@@ -121,7 +125,7 @@ EventEdit::EventEdit(QWidget *parent)
 
     hbox->addStretch(1);
 
-    mSaveButton = new KPushButton(KIcon(QLatin1String("appointment-new")), i18n("&Save"));
+    mSaveButton = new QPushButton(QIcon::fromTheme(QLatin1String("appointment-new")), i18n("&Save"));
     mSaveButton->setObjectName(QLatin1String("save-button"));
     mSaveButton->setEnabled(false);
 #ifndef QT_NO_ACCESSIBILITY
@@ -130,7 +134,7 @@ EventEdit::EventEdit(QWidget *parent)
     connect(mSaveButton, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
     hbox->addWidget(mSaveButton);
 
-    mOpenEditorButton = new KPushButton(i18n("Open &editor..."));
+    mOpenEditorButton = new QPushButton(i18n("Open &editor..."));
 #ifndef QT_NO_ACCESSIBILITY
     mOpenEditorButton->setAccessibleDescription(i18n("Open event editor, where more details can be changed."));
 #endif
@@ -139,7 +143,8 @@ EventEdit::EventEdit(QWidget *parent)
     connect(mOpenEditorButton, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
     hbox->addWidget(mOpenEditorButton);
 
-    KPushButton *btn = new KPushButton(KStandardGuiItem::cancel());
+    QPushButton *btn = new QPushButton;
+    KGuiItem::assign(btn,KStandardGuiItem::cancel());
     btn->setObjectName(QLatin1String("close-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new events."));
@@ -162,7 +167,7 @@ void EventEdit::writeConfig()
 {
     if (mCollectionCombobox->currentCollection().id() != MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder()) {
         MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(mCollectionCombobox->currentCollection().id());
-        MessageViewer::GlobalSettingsBase::self()->writeConfig();
+        MessageViewer::GlobalSettingsBase::self()->save();
     }
 }
 
@@ -237,26 +242,28 @@ void EventEdit::slotCloseWidget()
 void EventEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        kDebug()<<" Message is null";
+        qDebug()<<" Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        kDebug()<<" Collection is not valid";
+        qDebug()<<" Collection is not valid";
         return;
     }
 
-    const KDateTime dtstart = mStartDateTimeEdit->dateTime();
-    const KDateTime dtend = mEndDateTimeEdit->dateTime();
+    const QDateTime dtstart = mStartDateTimeEdit->dateTime();
+    const QDateTime dtend = mEndDateTimeEdit->dateTime();
     if (!dtstart.isValid() || !dtend.isValid()) {
-        kDebug()<<" date is not valid !";
+        qDebug()<<" date is not valid !";
         return;
     }
 
     if (!mEventEdit->text().trimmed().isEmpty()) {
         KCalCore::Event::Ptr event( new KCalCore::Event );
+#if 0 //QT5
         event->setDtStart(dtstart);
         event->setDtEnd(dtend);
+#endif
         event->setSummary(mEventEdit->text());
         Q_EMIT createEvent(event, collection);
         mEventEdit->clear();
@@ -290,7 +297,7 @@ bool EventEdit::eventFilter(QObject *object, QEvent *e)
     return QWidget::eventFilter(object,e);
 }
 
-void EventEdit::slotStartDateTimeChanged(const KDateTime &newDateTime)
+void EventEdit::slotStartDateTimeChanged(const QDateTime &newDateTime)
 {
     if (!newDateTime.isValid()) {
       return;
@@ -317,8 +324,8 @@ void EventEdit::slotOpenEditor()
 
     KCalCore::Event::Ptr event(new KCalCore::Event);
     event->setSummary(mEventEdit->text());
-    event->setDtStart(mStartDateTimeEdit->dateTime());
-    event->setDtEnd(mEndDateTimeEdit->dateTime());
+    //QT5 event->setDtStart(mStartDateTimeEdit->dateTime());
+    //QT5 event->setDtEnd(mEndDateTimeEdit->dateTime());
     event->addAttachment(attachment);
 
     Akonadi::Item item;

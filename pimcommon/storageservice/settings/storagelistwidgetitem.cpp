@@ -28,7 +28,7 @@ StorageListWidgetItemProgress::StorageListWidgetItemProgress(StorageListWidgetIt
       mProgressCount(0),
       mItem(item)
 {
-    mProgressPix = KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
+    mProgressPix = KIconLoader::global()->loadPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
     mProgressTimer = new QTimer(this);
     connect(mProgressTimer, SIGNAL(timeout()), this, SLOT(slotTimerDone()));
 }
@@ -89,12 +89,12 @@ void StorageListWidgetItem::setProgressAnimation(const QPixmap &pix)
 
 void StorageListWidgetItem::setDefaultIcon(const KIcon &icon)
 {
-    mDefaultIcon = icon;
+    //QT5 mDefaultIcon = icon;
 }
 
 void StorageListWidgetItem::setDefaultIcon(const QString &defaultIconName)
 {
-    mDefaultIcon = KIcon(defaultIconName);
+    //QT5 mDefaultIcon = KIcon(defaultIconName);
 }
 
 void StorageListWidgetItem::resetToDefaultIcon()

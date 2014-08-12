@@ -23,13 +23,11 @@
 #include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
-#include <KIcon>
+#include <QLineEdit>
 
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QCheckBox>
-#include <QToolButton>
 #include <QWhatsThis>
 #include <QDomNode>
 #include <QDebug>
@@ -57,7 +55,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Name (optional):"));
     lay->addWidget(lab);
 
-    mName = new KLineEdit;
+    mName = new QLineEdit;
     connect(mName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mName->setEnabled(false);
     lay->addWidget(mName);

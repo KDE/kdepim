@@ -25,9 +25,9 @@
 
 #include <Akonadi/Contact/ContactGroupViewer>
 #include <Akonadi/Contact/ContactViewer>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <KLocalizedString>
-#include <KGlobal>
+
 #include <KConfigGroup>
 #include <KSharedConfig>
 
@@ -108,7 +108,7 @@ void ContactPreviewWidget::createScreenShot(const QStringList &fileName)
 
 void ContactPreviewWidget::loadConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));

@@ -24,18 +24,18 @@
 #include <KPIMUtils/KFileIO>
 
 // Akonadi Includes
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/CollectionCreateJob>
-#include <akonadi/kmime/messageparts.h>
+#include <CollectionFetchJob>
+#include <Item>
+#include <ItemCreateJob>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
+#include <CollectionCreateJob>
+#include <Akonadi/KMime/MessageParts>
 
 // KDE Includes
 #include <KUrl>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 #include <KMessageBox>
 
 #include <QScopedPointer>

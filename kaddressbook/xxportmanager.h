@@ -23,12 +23,12 @@
 
 #include "xxport/xxportfactory.h"
 #include "kaddressbook_export.h"
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 #include <QtCore/QObject>
 
 class KJob;
-class KProgressDialog;
+class QProgressDialog;
 
 class QAction;
 class QItemSelectionModel;
@@ -77,7 +77,7 @@ public:
      */
     void setSelectionModel( QItemSelectionModel *model );
 
-    void importFile( const KUrl &url);
+    void importFile( const QUrl &url);
 
 
 public Q_SLOTS:
@@ -101,7 +101,7 @@ private:
     QSignalMapper *mImportMapper;
     QSignalMapper *mExportMapper;
     Akonadi::Collection mDefaultAddressBook;
-    KProgressDialog *mImportProgressDialog;
+    QProgressDialog *mImportProgressDialog;
 };
 
 #endif

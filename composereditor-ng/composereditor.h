@@ -21,14 +21,14 @@
 #ifndef COMPOSEREDITOR_H
 #define COMPOSEREDITOR_H
 
-#include "composereditor_export.h"
+#include "composereditorng_export.h"
 #include "composerview.h"
 
 #include <QWidget>
 #include <QWebPage>
 
 class KActionCollection;
-class KAction;
+class QAction;
 
 namespace ComposerEditorNG
 {

@@ -23,18 +23,19 @@
 #include "storageservice/dialog/storageservicepropertiesdialog.h"
 #include "storageservicetreewidgetitem.h"
 
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
-#include <KMimeType>
-#include <KMenu>
-#include <KDateTime>
+
+#include <QMenu>
+#include <QDateTime>
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
-#include <QDebug>
 #include <QTimer>
+#include <KFormat>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace PimCommon;
 
@@ -67,17 +68,17 @@ void StorageServiceTreeWidget::slotMoveUp()
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
-void StorageServiceTreeWidget::createUpAction(KMenu *menu)
+void StorageServiceTreeWidget::createUpAction(QMenu *menu)
 {
-    menu->addAction( KIcon(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
+    menu->addAction( QIcon::fromTheme(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
 }
 
-void StorageServiceTreeWidget::createPropertiesAction(KMenu *menu)
+void StorageServiceTreeWidget::createPropertiesAction(QMenu *menu)
 {
-    menu->addAction(KIcon(QLatin1String("document-properties")), i18n("Properties"), this, SLOT(slotProperties()));
+    menu->addAction(QIcon::fromTheme(QLatin1String("document-properties")), i18n("Properties"), this, SLOT(slotProperties()));
 }
 
-void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
+void StorageServiceTreeWidget::createMenuActions(QMenu *menu)
 {
     createUpAction(menu);
     const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
@@ -89,7 +90,7 @@ void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
 
 void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
 {
-    KMenu *menu = new KMenu( this );
+    QMenu *menu = new QMenu( this );
     createMenuActions(menu);
     menu->exec( mapToGlobal( pos ) );
     delete menu;
@@ -100,7 +101,7 @@ void StorageServiceTreeWidget::createMoveUpItem()
     StorageServiceTreeWidgetItem *item = new StorageServiceTreeWidgetItem(this);
     item->setText(ColumnName, QLatin1String(".."));
     item->setData(ColumnName, ElementType, MoveUpType);
-    item->setIcon(ColumnName, KIcon(QLatin1String("go-up")));
+    item->setIcon(ColumnName, QIcon::fromTheme(QLatin1String("go-up")));
 }
 
 StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFolder(const QString &name, const QString &ident)
@@ -109,7 +110,7 @@ StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFolder(const QString 
     item->setText(ColumnName, name);
     item->setData(ColumnName, Ident, ident);
     item->setData(ColumnName, ElementType, Folder);
-    item->setIcon(ColumnName, KIcon(QLatin1String("folder")));
+    item->setIcon(ColumnName, QIcon::fromTheme(QLatin1String("folder")));
     return item;
 }
 
@@ -120,9 +121,10 @@ StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFile(const QString &n
     item->setData(ColumnName, Ident, ident);
     item->setData(ColumnName, ElementType, File);
     if (!mimetype.isEmpty()) {
-        KMimeType::Ptr mime = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
-        if (mime)
-            item->setIcon(ColumnName, KIcon(mime->iconName()));
+        QMimeDatabase db;
+        QMimeType mime = db.mimeTypeForName( mimetype );
+        if (mime.isValid())
+            item->setIcon(ColumnName, QIcon::fromTheme(mime.iconName()));
     }
     return item;
 }
@@ -245,8 +247,5 @@ void StorageServiceTreeWidget::slotProperties()
         delete dlg;
     }
 }
-
-
-
 
 #include "moc_storageservicetreewidget.cpp"

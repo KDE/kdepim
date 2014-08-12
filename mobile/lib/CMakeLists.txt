@@ -45,16 +45,17 @@ if (KDEQMLPLUGIN_STATIC)
   add_definitions(-DKDEQMLPLUGIN_STATIC)
 endif ()
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_library(kdepimmobileui ${LIBRARY_TYPE} ${mobileui_SRCS})
-set_target_properties(kdepimmobileui PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+
+add_library(kdepimmobileui ${LIBRARY_TYPE} ${mobileui_SRCS})
+generate_export_header(kdepimmobileui BASE_NAME mobileui)
+set_target_properties(kdepimmobileui PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 
 target_link_libraries(kdepimmobileui
-  ${QT_QTDECLARATIVE_LIBRARY}
-  ${QT_QTOPENGL_LIBRARY}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDE4_SOLID_LIBRARY}
+  Qt5::Declarative
+  Qt5::Declarative
+  Qt5::OpenGL
+  KF5::AkonadiMime
   akonadi_next
   kdepim
   calendarsupport

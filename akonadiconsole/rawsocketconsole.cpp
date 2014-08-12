@@ -20,15 +20,20 @@
 #include "rawsocketconsole.h"
 
 #include <akonadi/private/xdgbasedirs_p.h>
-#include <akonadi/servermanager.h>
+#include <AkonadiCore/servermanager.h>
 
-#include <KDebug>
+#include <QDebug>
+#include "akonadiconsole_debug.h"
+
+
 #include <KGlobalSettings>
-#include <KIcon>
+#include <QIcon>
+#include <KLocalizedString>
 
 #include <QFile>
 #include <QLocalSocket>
 #include <QSettings>
+#include <QFontDatabase>
 
 using namespace Akonadi;
 
@@ -37,16 +42,16 @@ RawSocketConsole::RawSocketConsole(QWidget* parent) :
   mSocket( new QLocalSocket( this ) )
 {
   ui.setupUi( this );
-  ui.execButton->setIcon( KIcon( "application-x-executable" ) );
+  ui.execButton->setIcon( QIcon::fromTheme( "application-x-executable" ) );
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
   connect( ui.commandEdit, SIGNAL(returnPressed()), SLOT(execClicked()) );
   connect( ui.connectButton, SIGNAL(clicked()), SLOT(connectClicked()) );
   connect( ui.clearButton, SIGNAL(clicked()), ui.protocolView, SLOT(clear()) );
-  ui.protocolView->setFont( KGlobalSettings::fixedFont() );
+  ui.protocolView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
 
-  connect( mSocket, SIGNAL(readyRead()), SLOT(dataReceived()) );
-  connect( mSocket, SIGNAL(connected()), SLOT(connected()) );
-  connect( mSocket, SIGNAL(disconnected()), SLOT(disconnected()) );
+  connect(mSocket, &QLocalSocket::readyRead, this, &RawSocketConsole::dataReceived);
+  connect(mSocket, &QLocalSocket::connected, this, &RawSocketConsole::connected);
+  connect(mSocket, &QLocalSocket::disconnected, this, &RawSocketConsole::disconnected);
 
   disconnected();
   connectClicked();
@@ -102,7 +107,7 @@ void RawSocketConsole::connectClicked()
     }
 
     if ( !QFile::exists( connectionConfigFile ) ) {
-      kWarning( 5250 ) << "Akonadi Client Session: connection config file '"
+      qCWarning(AKONADICONSOLE_LOG) << "Akonadi Client Session: connection config file '"
       << "akonadi/akonadiconnectionrc cannot be found in '"
       << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
       << XdgBaseDirs::systemPathList( "config" );

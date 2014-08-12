@@ -34,17 +34,20 @@
 #include "mailsourceviewer.h"
 #include "utils/util.h"
 #include "findbar/findbarsourceview.h"
-#include "kpimtextedit/htmlhighlighter.h"
+#include <kpimtextedit/htmlhighlighter.h>
 #include "pimcommon/util/pimutil.h"
 #include <kiconloader.h>
 #include <KLocalizedString>
 #include <KStandardAction>
 #include <kwindowsystem.h>
 #include <kglobalsettings.h>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KFileDialog>
 #include <KMessageBox>
-#include <KAction>
+#include <QAction>
+#include <QIcon>
+#include <KIconTheme>
+#include <KLocalizedString>
 
 #include <QtCore/QRegExp>
 #include <QApplication>
@@ -54,6 +57,7 @@
 #include <QContextMenuEvent>
 #include <QDebug>
 #include <QMenu>
+#include <QFontDatabase>
 
 namespace MessageViewer {
 
@@ -96,7 +100,7 @@ void MailSourceViewTextBrowserWidget::setPlainText( const QString& text )
 
 void MailSourceViewTextBrowserWidget::setFixedFont()
 {
-    mTextBrowser->setFont( KGlobalSettings::fixedFont() );
+    mTextBrowser->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
 }
 
 MessageViewer::MailSourceViewTextBrowser *MailSourceViewTextBrowserWidget::textBrowser() const
@@ -120,7 +124,7 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
                                                            : KIconTheme::TextEditor,
                                               popup->actions() );
         popup->addSeparator();
-        popup->addAction( KIcon(QLatin1String("preferences-desktop-text-to-speech")),i18n("Speak Text"),this,SLOT(slotSpeakText()));
+        popup->addAction( QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")),i18n("Speak Text"),this,SLOT(slotSpeakText()));
 
         popup->addSeparator();
         popup->addAction(KStandardAction::saveAs(this, SLOT(slotSaveAs()), this));
@@ -247,7 +251,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
     mRawBrowser = new MailSourceViewTextBrowserWidget();
 
 #ifndef NDEBUG
-    mTabWidget = new KTabWidget;
+    mTabWidget = new QTabWidget;
     layout->addWidget( mTabWidget );
 
     mTabWidget->addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );

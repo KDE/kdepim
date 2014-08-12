@@ -25,8 +25,11 @@
 
 #include <calendarsupport/kcalprefs.h>
 #include <kconfigdialogmanager.h>
-#include <kholidays/holidays.h>
+#include <KHolidays/kholidays/holidays.h>
 #include <qplatformdefs.h>
+
+
+#include <KLocale>
 
 using namespace CalendarSupport;
 
@@ -68,7 +71,7 @@ ConfigWidget::ConfigWidget( QWidget *parent )
 
   foreach ( const QString & regionCode, regions ) {
     const QString name = KHolidays::HolidayRegion::name( regionCode );
-    const QString languageName = KGlobal::locale()->languageCodeToName( KHolidays::HolidayRegion::languageCode( regionCode ) );
+    const QString languageName = KLocale::global()->languageCodeToName( KHolidays::HolidayRegion::languageCode( regionCode ) );
 
     QString label;
     if ( languageName.isEmpty() ) {
@@ -221,8 +224,8 @@ void ConfigWidget::saveToExternalSettings()
   // Group scheduling
   KCalPrefs::instance()->setUseGroupwareCommunication( Settings::self()->useGroupwareCommunication() );
 
-  Settings::self()->writeConfig();
-  KCalPrefs::instance()->writeConfig();
+  Settings::self()->save();
+  KCalPrefs::instance()->save();
   mViewPrefs->writeConfig();
 }
 

@@ -19,8 +19,8 @@
 #ifndef COLLECTIONVIEWPAGE_H
 #define COLLECTIONVIEWPAGE_H
 
-#include <akonadi/collectionpropertiespage.h>
-#include <akonadi/collection.h>
+#include <AkonadiWidgets/collectionpropertiespage.h>
+#include <AkonadiCore/collection.h>
 class QCheckBox;
 class QLabel;
 class KComboBox;

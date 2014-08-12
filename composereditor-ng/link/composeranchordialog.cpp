@@ -23,7 +23,7 @@
 #include "utils/composereditorutils_p.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KSeparator>
 
 #include <QVBoxLayout>
@@ -50,7 +50,7 @@ public:
     QString html() const;
 
     QWebElement webElement;
-    KLineEdit *anchorName;
+    QLineEdit *anchorName;
     ComposerAnchorDialog *q;
 };
 
@@ -69,9 +69,9 @@ void ComposerAnchorDialogPrivate::initialize(const QWebElement &element)
     QLabel *label = new QLabel(i18n("Enter anchor name:"));
     layout->addWidget( label, 0, 0 );
 
-    anchorName = new KLineEdit;
+    anchorName = new QLineEdit;
     anchorName->setReadOnly(!webElement.isNull());
-    anchorName->setClearButtonShown(true);
+    anchorName->setClearButtonEnabled(true);
     layout->addWidget( anchorName, 0, 1 );
 
     if (!webElement.isNull()) {

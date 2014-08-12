@@ -31,10 +31,10 @@ using MessageComposer::MessageFactory;
 #endif
 #include <messageviewer/viewer/objecttreeparser.h>
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemModifyJob>
+#include <ItemFetchJob>
+#include <ItemModifyJob>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KMessageBox>
 
@@ -101,6 +101,7 @@ MDNAdviceDialog::MDNAdviceDialog( const QString &text, bool canDeny, QWidget *pa
     setButtonText( KDialog::Yes, i18n( "&Ignore" ) );
     setButtonText( KDialog::User1, i18n( "&Send" ) );
     setEscapeButton( KDialog::Yes );
+#if 0 //QT5
     KMessageBox::createKMessageBox(
                 this,
                 QMessageBox::Question,
@@ -109,6 +110,7 @@ MDNAdviceDialog::MDNAdviceDialog( const QString &text, bool canDeny, QWidget *pa
                 QString(),
                 0,
                 KMessageBox::NoExec );
+#endif
 }
 
 MDNAdviceDialog::~MDNAdviceDialog()
@@ -271,7 +273,7 @@ int MDNAdviceHelper::requestAdviceOnMDN( const char *what )
             }
         }
     }
-    kWarning() << "didn't find data for message box \""  << what << "\"";
+    qWarning() << "didn't find data for message box \""  << what << "\"";
     return MessageComposer::MDNIgnore;
 }
 

@@ -18,12 +18,13 @@
 #include "addtagdialog.h"
 #include "mailcommon/tag/tagwidget.h"
 
-#include <akonadi/tagcreatejob.h>
+#include <AkonadiCore/tagcreatejob.h>
 
 #include <KLocale>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KMessageBox>
 #include <KJob>
+#include <QDebug>
 
 #include <QVBoxLayout>
 
@@ -88,7 +89,7 @@ void AddTagDialog::slotButtonClicked(int button)
 void AddTagDialog::onTagCreated(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Failed to create tag: " << job->errorString();
+        qWarning() << "Failed to create tag: " << job->errorString();
         reject();
         return;
     }

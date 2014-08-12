@@ -16,7 +16,7 @@
 
 #include "ksieveui_export.h"
 
-#include <kurl.h>
+#include <QUrl>
 
 #include <QtCore/QObject>
 
@@ -37,7 +37,7 @@ class KSIEVEUI_EXPORT Vacation : public QObject
     Q_OBJECT
 
 public:
-    explicit Vacation( QObject * parent=0, bool checkonly = false, const KUrl &url = KUrl() );
+    explicit Vacation( QObject * parent=0, bool checkonly = false, const QUrl &url = QUrl() );
     virtual ~Vacation();
 
     bool isUsable() const { return !mUrl.isEmpty(); }
@@ -46,7 +46,7 @@ public:
     void showVacationDialog();
 
 protected:
-    KUrl findURL(QString &serverName) const;
+    QUrl findURL(QString &serverName) const;
     void handlePutResult( KManageSieve::SieveJob * job, bool success, bool );
 
 
@@ -66,7 +66,7 @@ protected slots:
 protected:
     // IO:
     KManageSieve::SieveJob * mSieveJob;
-    KUrl mUrl;
+    QUrl mUrl;
     QString mServerName;
     // GUI:
     VacationDialog * mDialog;

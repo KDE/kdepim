@@ -107,7 +107,7 @@ QString FileDialog::getOpenFileName( QWidget * parent, const QString & caption, 
 #ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getOpenFileName( parent, caption, dir( dirID ), filter );
 #else
-    const QString fname = KFileDialog::getOpenFileName( dir( dirID ), qt2KdeFilter( filter ), parent, caption );
+    const QString fname = QFileDialog::getOpenFileName(parent, caption ,  dir( dirID ), qt2KdeFilter( filter ));
 #endif
     update( fname, dirID );
     return fname;

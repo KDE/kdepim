@@ -18,11 +18,11 @@
 #ifndef ADBLOCKBLOCKABLEITEMSDIALOG_H
 #define ADBLOCKBLOCKABLEITEMSDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 class QWebFrame;
 namespace MessageViewer {
 class AdBlockBlockableItemsWidget;
-class AdBlockBlockableItemsDialog : public KDialog
+class AdBlockBlockableItemsDialog : public QDialog
 {
     Q_OBJECT
 public:

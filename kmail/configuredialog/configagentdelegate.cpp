@@ -21,11 +21,10 @@
 
 #include "configagentdelegate.h"
 
-#include <Akonadi/AgentInstanceModel>
-#include <Akonadi/AgentInstance>
+#include <AkonadiCore/AgentInstanceModel>
+#include <AkonadiCore/AgentInstance>
 
-#include <KDebug>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KIconLoader>
 
@@ -42,17 +41,17 @@ static const int s_delegatePaddingSize = 7;
 
 struct Icons {
     Icons()
-        : readyPixmap ( KIcon ( QLatin1String ( "user-online" ) ).pixmap ( QSize ( 16, 16 ) ) )
-        , syncPixmap ( KIcon ( QLatin1String ( "network-connect" ) ).pixmap ( QSize ( 16, 16 ) ) )
-        , errorPixmap ( KIcon ( QLatin1String ( "dialog-error" ) ).pixmap ( QSize ( 16, 16 ) ) )
-        , offlinePixmap ( KIcon ( QLatin1String ( "network-disconnect" ) ).pixmap ( QSize ( 16, 16 ) ) )
-        , checkMailIcon ( KIcon ( QLatin1String ("mail-receive") ) ) {
+        : readyPixmap ( QIcon::fromTheme( QLatin1String ( "user-online" ) ).pixmap ( QSize ( 16, 16 ) ) )
+        , syncPixmap ( QIcon::fromTheme( QLatin1String ( "network-connect" ) ).pixmap ( QSize ( 16, 16 ) ) )
+        , errorPixmap ( QIcon::fromTheme( QLatin1String ( "dialog-error" ) ).pixmap ( QSize ( 16, 16 ) ) )
+        , offlinePixmap ( QIcon::fromTheme( QLatin1String ( "network-disconnect" ) ).pixmap ( QSize ( 16, 16 ) ) )
+        , checkMailIcon ( QIcon::fromTheme( QLatin1String ("mail-receive") ) ) {
     }
     QPixmap readyPixmap, syncPixmap, errorPixmap, offlinePixmap;
-    KIcon checkMailIcon;
+    QIcon checkMailIcon;
 };
 
-K_GLOBAL_STATIC ( Icons, s_icons )
+Q_GLOBAL_STATIC ( Icons, s_icons )
 
 ConfigAgentDelegate::ConfigAgentDelegate ( QObject *parent )
     : QStyledItemDelegate ( parent )

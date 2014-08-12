@@ -22,9 +22,9 @@
 #include "kernel/mailkernel.h"
 
 #include "foldercollection.h"
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
-#include <akonadi/kmime/messagefolderattribute.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <Akonadi/KMime/MessageFolderAttribute>
 
 using namespace MailCommon;
 
@@ -64,7 +64,7 @@ bool CollectionStorageModel::isOutBoundFolder( const Akonadi::Collection& c ) co
     }
     QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( c, false );
     if ( fd ) {
-        const QString folderString( QString::number( c.id() ) );
+        const QString folderId( QString::number(c.id()) );
         // default setting
         const KPIMIdentities::Identity & identity =
                 kmkernel->identityManager()->identityForUoidOrDefault( fd->identity() );
@@ -81,9 +81,9 @@ bool CollectionStorageModel::isOutBoundFolder( const Akonadi::Collection& c ) co
                  c == CommonKernel->templatesCollectionFolder() ||
                  c == CommonKernel->draftsCollectionFolder() )
                 return true;
-        } else if ( identity.drafts() == folderString ||
-                    identity.templates() == folderString ||
-                    identity.fcc() == folderString )
+        } else if ( identity.drafts() == folderId ||
+                    identity.templates() == folderId ||
+                    identity.fcc() == folderId )
             // drafts, templates or sent of the identity
             return true;
         else

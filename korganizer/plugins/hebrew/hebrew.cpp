@@ -25,16 +25,9 @@
 #include "holiday.h"
 
 #include <KCalendarSystem>
+#include <KLocale>
 
 using namespace EventViews::CalendarDecoration;
-
-class HebrewFactory : public DecorationFactory
-{
-  public:
-    Decoration *createPluginFactory() { return new Hebrew; }
-};
-
-K_EXPORT_PLUGIN( HebrewFactory )
 
 Hebrew::Hebrew()
 {
@@ -42,7 +35,7 @@ Hebrew::Hebrew()
 
   KConfigGroup group( &config, "Hebrew Calendar Plugin" );
   areWeInIsrael = group.readEntry(
-    "UseIsraelSettings", ( KGlobal::locale()->country() == QLatin1String( ".il" ) ) );
+    "UseIsraelSettings", ( KLocale::global()->country() == QLatin1String( ".il" ) ) );
   showParsha = group.readEntry( "ShowParsha", true );
   showChol = group.readEntry( "ShowChol_HaMoed", true );
   showOmer = group.readEntry( "ShowOmer", true );

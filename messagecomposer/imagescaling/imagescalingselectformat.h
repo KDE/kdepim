@@ -17,15 +17,15 @@
 #ifndef IMAGESCALINGSELECTFORMAT_H
 #define IMAGESCALINGSELECTFORMAT_H
 
-#include <KDialog>
+#include <QDialog>
 
-class KLineEdit;
-class KPushButton;
+class QLineEdit;
+class QPushButton;
 class QListWidget;
 
 namespace MessageComposer {
 
-class ImageScalingSelectFormatDialog : public KDialog
+class ImageScalingSelectFormatDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -61,8 +61,8 @@ private Q_SLOTS:
     void slotSelectFormat();
 
 private:
-    KLineEdit *mFormat;
-    KPushButton *mSelectFormat;
+    QLineEdit *mFormat;
+    QPushButton *mSelectFormat;
 };
 }
 

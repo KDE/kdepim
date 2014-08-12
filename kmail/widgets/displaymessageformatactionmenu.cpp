@@ -18,10 +18,9 @@
 #include "displaymessageformatactionmenu.h"
 
 #include <KLocalizedString>
-#include <KAction>
-#include <KMenu>
+#include <QAction>
+#include <QMenu>
 #include <KToggleAction>
-#include <QDebug>
 
 
 DisplayMessageFormatActionMenu::DisplayMessageFormatActionMenu(QObject *parent)
@@ -29,7 +28,7 @@ DisplayMessageFormatActionMenu::DisplayMessageFormatActionMenu(QObject *parent)
       mDisplayMessageFormat(MessageViewer::Viewer::UseGlobalSetting)
 {
     setText(i18n("Message Default Format"));
-    KMenu *subMenu = new KMenu;
+    QMenu *subMenu = new QMenu;
     setMenu(subMenu);
 
     QActionGroup *actionGroup = new QActionGroup(this);
@@ -39,19 +38,19 @@ DisplayMessageFormatActionMenu::DisplayMessageFormatActionMenu(QObject *parent)
     act->setData(MessageViewer::Viewer::Html);
     actionGroup->addAction(act);
     subMenu->addAction(act);
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(slotChangeDisplayMessageFormat()));
+    connect(act, &KToggleAction::triggered, this, &DisplayMessageFormatActionMenu::slotChangeDisplayMessageFormat);
 
     act = new KToggleAction(i18n("Prefer &Plain Text to HTML"), this);
     act->setData(MessageViewer::Viewer::Text);
     act->setObjectName(QLatin1String("prefer-text-action"));
     actionGroup->addAction(act);
     subMenu->addAction(act);
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(slotChangeDisplayMessageFormat()));
+    connect(act, &KToggleAction::triggered, this, &DisplayMessageFormatActionMenu::slotChangeDisplayMessageFormat);
 
     act = new KToggleAction(i18n("Use Global Setting"), this);
     act->setObjectName(QLatin1String("use-global-setting-action"));
     act->setData(MessageViewer::Viewer::UseGlobalSetting);
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(slotChangeDisplayMessageFormat()));
+    connect(act, &KToggleAction::triggered, this, &DisplayMessageFormatActionMenu::slotChangeDisplayMessageFormat);
     actionGroup->addAction(act);
     subMenu->addAction(act);
     updateMenu();

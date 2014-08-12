@@ -24,11 +24,12 @@
 #include "printstyle.h"
 #include "printingwizard.h"
 
-#include <KDebug>
-#include <KStandardDirs>
+#include <QDebug>
 
+#include <QPushButton>
 #include <QPixmap>
 #include <QWidget>
+#include <QStandardPaths>
 
 using namespace KABPrinting;
 
@@ -57,16 +58,16 @@ bool PrintStyle::setPreview( const QString &fileName )
 {
     QPixmap preview;
 
-    const QString path = KStandardDirs::locate( "data", QLatin1String("kaddressbook/printing/") + fileName );
+    const QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kaddressbook/printing/") + fileName );
     if ( path.isEmpty() ) {
-        kDebug() << "cannot locate preview image " << fileName << " in appdata";
+        qDebug() << "cannot locate preview image " << fileName << " in appdata";
         return false;
     } else {
         if ( preview.load( path ) ) {
             setPreview( preview );
             return true;
         } else {
-            kDebug() << "preview at '" << path <<"' cannot be loaded.";
+            qDebug() << "preview at '" << path <<"' cannot be loaded.";
             return false;
         }
     }
@@ -97,9 +98,8 @@ void PrintStyle::showPages()
     Q_FOREACH ( wdg, mPageList ) {
         mWizard->setAppropriate( mPageItems[ wdg ], true );
     }
-
-    mWizard->enableButton( KDialog::User2, wdg ); // next button
-    mWizard->enableButton( KDialog::User1, !wdg ); // finish button
+    mWizard->nextButton()->setEnabled(wdg);
+    mWizard->finishButton()->setEnabled(!wdg);
 }
 
 void PrintStyle::hidePages()

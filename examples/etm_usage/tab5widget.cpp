@@ -37,8 +37,8 @@
 #include <kcategorizedview.h>
 #include <kcategorydrawer.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
 
 class Tab5TreeWidget : public EntityTreeWidget
 {
@@ -101,7 +101,7 @@ Tab5Widget::Tab5Widget(QWidget* parent, Qt::WindowFlags f)
   categorizedModel->setCategorizedModel(true);
 
   m_itemView->setModel(categorizedModel);
-  m_itemView->setCategoryDrawer(new KCategoryDrawerV2());
+  m_itemView->setCategoryDrawer(new KCategoryDrawer(m_itemView));
 
   ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
 }

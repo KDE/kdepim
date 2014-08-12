@@ -18,13 +18,14 @@
 #include "kmailcvtkernel.h"
 
 #include <kglobal.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <messagecomposer/sender/akonadisender.h>
-#include <akonadi/session.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/changerecorder.h>
+#include <AkonadiCore/session.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/changerecorder.h>
+#include <KSharedConfig>
 
 KMailCVTKernel::KMailCVTKernel( QObject *parent )
     : QObject( parent )
@@ -62,7 +63,7 @@ Akonadi::EntityMimeTypeFilterModel *KMailCVTKernel::collectionModel() const
 
 KSharedConfig::Ptr KMailCVTKernel::config()
 {
-    return KGlobal::config();
+    return KSharedConfig::openConfig();
 }
 
 void KMailCVTKernel::syncConfig()

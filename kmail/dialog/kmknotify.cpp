@@ -35,19 +35,32 @@
 #include <KNotifyConfigWidget>
 #include <KLocalizedString>
 #include <KConfig>
-#include <KStandardDirs>
 #include <KSeparator>
+#include <KIconLoader>
+#include <QStandardPaths>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 using namespace KMail;
 
 KMKnotify::KMKnotify( QWidget * parent )
-    :KDialog( parent ), m_changed( false )
+    :QDialog( parent ), m_changed( false )
 {
-    setCaption( i18n("Notification") );
-    setButtons( Ok|Cancel );
+    setWindowTitle( i18n("Notification") );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &KMKnotify::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &KMKnotify::reject);
 
     QWidget *page = new QWidget( this );
-    setMainWidget( page );
+    mainLayout->addWidget(page);
 
     QVBoxLayout *layout = new QVBoxLayout( page );
     layout->setMargin( 0 );
@@ -64,9 +77,10 @@ KMKnotify::KMKnotify( QWidget * parent )
 
     layout->addWidget(new KSeparator);
 
+    mainLayout->addWidget(buttonBox);
     connect( m_comboNotify, SIGNAL(activated(int)),
              SLOT(slotComboChanged(int)) );
-    connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+    connect(okButton, SIGNAL(clicked()), SLOT(slotOk()) );
     connect( m_notifyWidget ,SIGNAL(changed(bool)) , this , SLOT(slotConfigChanged(bool)));
     initCombobox();
     readConfig();
@@ -89,7 +103,6 @@ void KMKnotify::slotComboChanged( int index )
         m_notifyWidget->save();
         m_changed = false;
     }
-
     m_notifyWidget->setApplication( text );
 }
 
@@ -106,25 +119,25 @@ void KMKnotify::initCombobox()
 {
 
     QStringList lstNotify;
-    lstNotify<< QLatin1String( "kmail2/kmail2.notifyrc" );
-    lstNotify<< QLatin1String( "akonadi_maildispatcher_agent/akonadi_maildispatcher_agent.notifyrc" );
-    lstNotify<< QLatin1String( "akonadi_mailfilter_agent/akonadi_mailfilter_agent.notifyrc" );
-    lstNotify<< QLatin1String( "akonadi_archivemail_agent/akonadi_archivemail_agent.notifyrc" );
-    lstNotify<< QLatin1String( "akonadi_sendlater_agent/akonadi_sendlater_agent.notifyrc" );
-    lstNotify<< QLatin1String( "akonadi_newmailnotifier_agent/akonadi_newmailnotifier_agent.notifyrc" );
-    lstNotify<< QLatin1String( "akonadi_followupreminder_agent/akonadi_followupreminder_agent.notifyrc" );
-    lstNotify<< QLatin1String( "messageviewer/messageviewer.notifyrc" );
+    lstNotify<< QLatin1String( "kmail2.notifyrc" );
+    lstNotify<< QLatin1String( "akonadi_maildispatcher_agent.notifyrc" );
+    lstNotify<< QLatin1String( "akonadi_mailfilter_agent.notifyrc" );
+    lstNotify<< QLatin1String( "akonadi_archivemail_agent.notifyrc" );
+    lstNotify<< QLatin1String( "akonadi_sendlater_agent.notifyrc" );
+    lstNotify<< QLatin1String( "akonadi_newmailnotifier_agent.notifyrc" );
+    lstNotify<< QLatin1String( "akonadi_followupreminder_agent.notifyrc" );
+    lstNotify<< QLatin1String( "messageviewer.notifyrc" );
     //TODO add other notifyrc here if necessary
 
     Q_FOREACH ( const QString& notify, lstNotify ) {
-        const QString fullPath = KStandardDirs::locate( "data", notify );
+        const QString fullPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("knotifications5/") + notify );
 
         if ( !fullPath.isEmpty() ) {
-            const int slash = fullPath.lastIndexOf( QLatin1Char('/') ) - 1;
-            const int slash2 = fullPath.lastIndexOf( QLatin1Char('/'), slash );
-            const QString appname= ( slash2 < 0 ) ? QString() :  fullPath.mid( slash2+1 , slash-slash2  );
+            const int slash = fullPath.lastIndexOf( QLatin1Char('/') );
+            QString appname= fullPath.right(fullPath.length() - slash-1);
+            appname.remove(QLatin1String(".notifyrc"));
             if ( !appname.isEmpty() ) {
-                KConfig config(fullPath, KConfig::NoGlobals, "data" );
+                KConfig config(fullPath, KConfig::NoGlobals, QStandardPaths::DataLocation );
                 KConfigGroup globalConfig( &config, QString::fromLatin1("Global") );
                 const QString icon = globalConfig.readEntry(QString::fromLatin1("IconName"), QString::fromLatin1("misc"));
                 const QString description = globalConfig.readEntry( QString::fromLatin1("Comment"), appname );

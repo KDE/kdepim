@@ -25,13 +25,16 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include "import/importabstractautocorrection.h"
 
 #include "settings/pimcommonsettings.h"
-#include <kpimtextedit/selectspecialchar.h>
+#include <kpimtextedit/selectspecialchardialog.h>
 
 #include <KFileDialog>
 #include <KMessageBox>
+#include <KLocalizedString>
+#include <KUrl>
 
 #include <QTreeWidgetItem>
 #include <QMenu>
+#include <QFileDialog>
 
 using namespace PimCommon;
 
@@ -60,29 +63,29 @@ AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
     connect(ui->capitalizeDaysName,SIGNAL(clicked()),SIGNAL(changed()));
     connect(ui->advancedAutocorrection,SIGNAL(clicked()),SIGNAL(changed()));
     connect(ui->enabledAutocorrection,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->typographicSingleQuotes, SIGNAL(clicked(bool)), this, SLOT(enableSingleQuotes(bool)));
-    connect(ui->typographicDoubleQuotes, SIGNAL(clicked(bool)), this, SLOT(enableDoubleQuotes(bool)));
+    connect(ui->typographicSingleQuotes, &QCheckBox::clicked, this, &AutoCorrectionWidget::enableSingleQuotes);
+    connect(ui->typographicDoubleQuotes, &QCheckBox::clicked, this, &AutoCorrectionWidget::enableDoubleQuotes);
     connect(ui->autoSuperScript,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->singleQuote1, SIGNAL(clicked()), this, SLOT(selectSingleQuoteCharOpen()));
-    connect(ui->singleQuote2, SIGNAL(clicked()), this, SLOT(selectSingleQuoteCharClose()));
-    connect(ui->singleDefault, SIGNAL(clicked()), this, SLOT(setDefaultSingleQuotes()));
-    connect(ui->doubleQuote1, SIGNAL(clicked()), this, SLOT(selectDoubleQuoteCharOpen()));
-    connect(ui->doubleQuote2, SIGNAL(clicked()), this, SLOT(selectDoubleQuoteCharClose()));
-    connect(ui->doubleDefault, SIGNAL(clicked()), this, SLOT(setDefaultDoubleQuotes()));
-    connect(ui->advancedAutocorrection, SIGNAL(clicked(bool)), this, SLOT(enableAdvAutocorrection(bool)));
-    connect(ui->addButton, SIGNAL(clicked()), this, SLOT(addAutocorrectEntry()));
-    connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(removeAutocorrectEntry()));
+    connect(ui->singleQuote1, &QPushButton::clicked, this, &AutoCorrectionWidget::selectSingleQuoteCharOpen);
+    connect(ui->singleQuote2, &QPushButton::clicked, this, &AutoCorrectionWidget::selectSingleQuoteCharClose);
+    connect(ui->singleDefault, &QPushButton::clicked, this, &AutoCorrectionWidget::setDefaultSingleQuotes);
+    connect(ui->doubleQuote1, &QPushButton::clicked, this, &AutoCorrectionWidget::selectDoubleQuoteCharOpen);
+    connect(ui->doubleQuote2, &QPushButton::clicked, this, &AutoCorrectionWidget::selectDoubleQuoteCharClose);
+    connect(ui->doubleDefault, &QPushButton::clicked, this, &AutoCorrectionWidget::setDefaultDoubleQuotes);
+    connect(ui->advancedAutocorrection, &QCheckBox::clicked, this, &AutoCorrectionWidget::enableAdvAutocorrection);
+    connect(ui->addButton, &QPushButton::clicked, this, &AutoCorrectionWidget::addAutocorrectEntry);
+    connect(ui->removeButton, &QPushButton::clicked, this, &AutoCorrectionWidget::removeAutocorrectEntry);
     connect(ui->treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(setFindReplaceText(QTreeWidgetItem*,int)));
     connect(ui->treeWidget,SIGNAL(deleteSelectedItems()),SLOT(removeAutocorrectEntry()));
     connect(ui->treeWidget,SIGNAL(itemSelectionChanged()),SLOT(updateAddRemoveButton()));
-    connect(ui->find, SIGNAL(textChanged(QString)), this, SLOT(enableAddRemoveButton()));
-    connect(ui->replace, SIGNAL(textChanged(QString)), this, SLOT(enableAddRemoveButton()));
-    connect(ui->abbreviation, SIGNAL(textChanged(QString)), this, SLOT(abbreviationChanged(QString)));
-    connect(ui->twoUpperLetter, SIGNAL(textChanged(QString)), this, SLOT(twoUpperLetterChanged(QString)));
-    connect(ui->add1, SIGNAL(clicked()), this, SLOT(addAbbreviationEntry()));
-    connect(ui->remove1, SIGNAL(clicked()), this, SLOT(removeAbbreviationEntry()));
-    connect(ui->add2, SIGNAL(clicked()), this, SLOT(addTwoUpperLetterEntry()));
-    connect(ui->remove2, SIGNAL(clicked()), this, SLOT(removeTwoUpperLetterEntry()));
+    connect(ui->find, &KLineEdit::textChanged, this, &AutoCorrectionWidget::enableAddRemoveButton);
+    connect(ui->replace, &KLineEdit::textChanged, this, &AutoCorrectionWidget::enableAddRemoveButton);
+    connect(ui->abbreviation, &KLineEdit::textChanged, this, &AutoCorrectionWidget::abbreviationChanged);
+    connect(ui->twoUpperLetter, &KLineEdit::textChanged, this, &AutoCorrectionWidget::twoUpperLetterChanged);
+    connect(ui->add1, &QPushButton::clicked, this, &AutoCorrectionWidget::addAbbreviationEntry);
+    connect(ui->remove1, &QPushButton::clicked, this, &AutoCorrectionWidget::removeAbbreviationEntry);
+    connect(ui->add2, &QPushButton::clicked, this, &AutoCorrectionWidget::addTwoUpperLetterEntry);
+    connect(ui->remove2, &QPushButton::clicked, this, &AutoCorrectionWidget::removeTwoUpperLetterEntry);
     connect(ui->typographicDoubleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
     connect(ui->typographicSingleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
     connect(ui->abbreviationList,SIGNAL(itemSelectionChanged()),SLOT(slotEnableDisableAbreviationList()));
@@ -107,7 +110,7 @@ AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
     act->setData( QVariant::fromValue( AutoCorrectionWidget::KMail ) );
     menu->addAction( act );
 
-    connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportAutoCorrection(QAction*)) );
+    connect(menu, &QMenu::triggered, this, &AutoCorrectionWidget::slotImportAutoCorrection);
 
     connect(ui->exportAutoCorrection,SIGNAL(clicked()),SLOT(slotExportAutoCorrection()));
 }
@@ -254,7 +257,7 @@ void AutoCorrectionWidget::enableDoubleQuotes(bool state)
 
 void AutoCorrectionWidget::selectSingleQuoteCharOpen()
 {
-    KPIMTextEdit::SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.setCurrentChar(m_singleQuotes.begin);
     dlg.showSelectButton(false);
     dlg.autoInsertChar();
@@ -267,7 +270,7 @@ void AutoCorrectionWidget::selectSingleQuoteCharOpen()
 
 void AutoCorrectionWidget::selectSingleQuoteCharClose()
 {
-    KPIMTextEdit::SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.showSelectButton(false);
     dlg.setCurrentChar(m_singleQuotes.end);
     dlg.autoInsertChar();
@@ -288,7 +291,7 @@ void AutoCorrectionWidget::setDefaultSingleQuotes()
 
 void AutoCorrectionWidget::selectDoubleQuoteCharOpen()
 {
-    KPIMTextEdit::SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.showSelectButton(false);
     dlg.setCurrentChar(m_doubleQuotes.begin);
     dlg.autoInsertChar();
@@ -301,7 +304,7 @@ void AutoCorrectionWidget::selectDoubleQuoteCharOpen()
 
 void AutoCorrectionWidget::selectDoubleQuoteCharClose()
 {
-    KPIMTextEdit::SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.showSelectButton(false);
     dlg.setCurrentChar(m_doubleQuotes.end);
     dlg.autoInsertChar();
@@ -380,7 +383,7 @@ void AutoCorrectionWidget::removeAutocorrectEntry()
 
         QString findStr;
         if ( below ) {
-            //kDebug() << "below";
+            //qDebug() << "below";
             findStr = item->text(0);
             delete item;
             item = 0;
@@ -537,7 +540,7 @@ void AutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
             filter = QLatin1String("*.xml");
             break;
         }
-        const QString fileName = KFileDialog::getOpenFileName( QString(), filter, this, title );
+        const QString fileName = QFileDialog::getOpenFileName(this, title ,  QString(), filter);
         if ( !fileName.isEmpty() ) {
             PimCommon::ImportAbstractAutocorrection *importAutoCorrection = 0;
             switch(type) {

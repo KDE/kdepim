@@ -18,20 +18,19 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-// kdepimlibs and kdepim-runtime 4.12.4 minimum are required
 #include <kdeversion.h>
-#if defined(USE_AKONADI) && KDE_IS_VERSION(4,12,4)
 
 #include "collectionsearch.h"
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemdeletejob.h>
+#include <AkonadiCore/agentinstance.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemdeletejob.h>
 
-#include <QStringList>
+#include <KDebug>
+
 #include <QTimer>
 
 using namespace Akonadi;
@@ -81,7 +80,7 @@ void CollectionSearch::collectionFetchResult(KJob* j)
 {
     CollectionFetchJob* job = static_cast<CollectionFetchJob*>(j);
     if (j->error())
-        kError() << "CollectionFetchJob" << job->fetchScope().resource() << "error: " << j->errorString();
+        qCritical() << "CollectionFetchJob" << job->fetchScope().resource() << "error: " << j->errorString();
     else
     {
         const Collection::List collections = job->collections();
@@ -121,7 +120,7 @@ void CollectionSearch::itemFetchResult(KJob* j)
 {
     ItemFetchJob* job = static_cast<ItemFetchJob*>(j);
     if (j->error())
-        kDebug() << "ItemFetchJob: collection" << mItemFetchJobs[job] << "GID" << mGid << "error: " << j->errorString();
+        qDebug() << "ItemFetchJob: collection" << mItemFetchJobs[job] << "GID" << mGid << "error: " << j->errorString();
     else
     {
         if (mDelete)
@@ -150,7 +149,7 @@ void CollectionSearch::itemDeleteResult(KJob* j)
 {
     ItemDeleteJob* job = static_cast<ItemDeleteJob*>(j);
     if (j->error())
-        kDebug() << "ItemDeleteJob: resource" << mItemDeleteJobs[job] << "GID" << mGid << "error: " << j->errorString();
+        qDebug() << "ItemDeleteJob: resource" << mItemDeleteJobs[job] << "GID" << mGid << "error: " << j->errorString();
     else
         ++mDeleteCount;
     mItemDeleteJobs.remove(job);
@@ -174,6 +173,5 @@ void CollectionSearch::finish()
 }
 
 #include "moc_collectionsearch.cpp"
-#endif
 
 // vim: et sw=4:

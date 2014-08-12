@@ -77,19 +77,19 @@ namespace {
             if ( command.error() ) {
                 m_passed = false;
                 m_error = i18n("not reachable");
-                m_explaination = i18nc("@info",
+                m_explaination = xi18nc("@info",
                                        "Could not connect to UiServer: <message>%1</message>",
-                                       Qt::escape( command.errorString() ) );
-                m_proposedFix = i18nc("@info",
+                                       command.errorString().toHtmlEscaped() );
+                m_proposedFix = xi18nc("@info",
                                       "<para>Check that your firewall is not set to block local connections "
                                       "(allow connections to <resource>localhost</resource> or <resource>127.0.0.1</resource>).</para>");
             } else if ( command.serverPid() != mygetpid() ) {
                 m_passed = false;
                 m_error = i18n("multiple instances");
-                m_explaination = i18nc("@info",
+                m_explaination = xi18nc("@info",
                                        "It seems another <application>Kleopatra</application> is running (with process-id %1)",
                                        command.serverPid() );
-                m_proposedFix = i18nc("@info",
+                m_proposedFix = xi18nc("@info",
                                       "Quit any other running instances of <application>Kleopatra</application>.");
             } else {
                 m_passed = true;

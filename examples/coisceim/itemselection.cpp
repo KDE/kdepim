@@ -22,8 +22,8 @@
 #include "itemselection.h"
 
 #include <QItemSelectionModel>
-#include <KDebug>
-#include <Akonadi/EntityTreeModel>
+#include <QDebug>
+#include <AkonadiCore/EntityTreeModel>
 #include <KCalCore/Todo>
 #include <KMime/Message>
 #include "note.h"

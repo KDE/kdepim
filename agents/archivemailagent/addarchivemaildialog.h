@@ -21,13 +21,13 @@
 #include "mailcommon/job/backupjob.h"
 #include "archivemailinfo.h"
 #include <kdialog.h>
-#include <Akonadi/Collection>
+#include <Collection>
 
 class KComboBox;
 class QCheckBox;
 class KUrlRequester;
 class QSpinBox;
-class KIntSpinBox;
+class QSpinBox;
 
 namespace MailCommon {
 class FolderRequester;
@@ -72,7 +72,7 @@ private:
     QCheckBox *mRecursiveCheckBox;
     KUrlRequester *mPath;
     QSpinBox *mDays;
-    KIntSpinBox *mMaximumArchive;
+    QSpinBox *mMaximumArchive;
 
     ArchiveMailInfo *mInfo;
 };

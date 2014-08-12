@@ -22,25 +22,42 @@
 
 #include "kdepim-version.h"
 
-#include <kapplication.h>
+#include <qapplication.h>
+#include <QCommandLineParser>
 #include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#include <KLocalizedString>
+
+#include <KDBusService>
+#include <QCommandLineOption>
 
 int main( int argc, char **argv )
 {
-    KAboutData aboutData( "headerthemeeditor", 0, ki18n("Messageviewer Header Theme Editor"),
-      KDEPIM_VERSION, ki18n("Header Theme Editor"), KAboutData::License_GPL_V2,
-      ki18n("Copyright © 2013, 2014 headerthemeeditor authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
+    KLocalizedString::setApplicationDomain("headerthemeeditor");
+    QApplication app(argc, argv);
+    KAboutData aboutData( QStringLiteral("headerthemeeditor"), 
+                          i18n("Header Theme Editor"), 
+                          QLatin1String(KDEPIM_VERSION),
+                          i18n("Messageviewer Header Theme Editor"),
+                          KAboutLicense::GPL_V2,
+                          i18n("Copyright © 2013, 2014 headerthemeeditor authors"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     aboutData.setProgramIconName(QLatin1String("kmail"));
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    aboutData.setOrganizationDomain(QByteArray("kde.org"));
+    aboutData.setProductName(QByteArray("headerthemeeditor"));
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KAboutData::setApplicationData(aboutData);
 
-    KApplication app;
-    KGlobal::locale()->insertCatalog(QLatin1String("libpimcommon"));
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
+    KDBusService service();
+
     ThemeEditorMainWindow *mw = new ThemeEditorMainWindow();
     mw->show();
-    app.exec();
+    return app.exec();
 }

@@ -23,16 +23,18 @@
 #include "settings/globalsettings.h"
 #include "adblockmanager.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KProtocolInfo>
 #include <KRun>
+#include <KGlobal>
 
 #include <QTimer>
 #include <QWidget>
 #include <QNetworkReply>
 #include <QWebFrame>
 #include <QWebElementCollection>
+#include <KLocale>
 
 
 #define HIDABLE_ELEMENTS   QLatin1String("audio,img,embed,object,iframe,frame,video")
@@ -65,7 +67,7 @@ namespace MessageViewer {
 MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent)
     : KIO::AccessManager(parent)
 {
-    QString c = KGlobal::locale()->language();
+    QString c = KLocale::global()->language();
 
     if (c == QLatin1String("C"))
         c = QLatin1String("en-US");
@@ -118,7 +120,7 @@ static void hideBlockedElements(const QUrl& url, QWebElementCollection& collecti
             continue;
         const QUrl resolvedUrl (baseUrl.resolved(src));
         if (url == resolvedUrl) {
-            //kDebug() << "*** HIDING ELEMENT: " << (*it).tagName() << resolvedUrl;
+            //qDebug() << "*** HIDING ELEMENT: " << (*it).tagName() << resolvedUrl;
             (*it).removeFromDocument();
         }
     }

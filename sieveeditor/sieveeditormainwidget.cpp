@@ -27,10 +27,11 @@
 #include <KLocalizedString>
 
 #include <KSharedConfig>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KGlobalSettings>
 #include <KColorScheme>
 #include <KMessageBox>
+
 
 #include <QSplitter>
 #include <QTabBar>
@@ -39,32 +40,32 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     : QSplitter(parent)
 {
     mTabWidget = new SieveEditorTabWidget;
-    connect(mTabWidget, SIGNAL(tabCloseRequestedIndex(int)), this, SLOT(slotTabCloseRequested(int)));
-    connect(mTabWidget, SIGNAL(tabRemoveAllExclude(int)), this, SLOT(slotTabRemoveAllExclude(int)));
+    connect(mTabWidget, &SieveEditorTabWidget::tabCloseRequestedIndex, this, &SieveEditorMainWidget::slotTabCloseRequested);
+    connect(mTabWidget, &SieveEditorTabWidget::tabRemoveAllExclude, this, &SieveEditorMainWidget::slotTabRemoveAllExclude);
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
-    connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
+    connect(mScriptManagerWidget, SIGNAL(createScriptPage(QUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(QUrl,QStringList,bool)));
     connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
-    connect(mScriptManagerWidget, SIGNAL(scriptDeleted(KUrl)), this, SLOT(slotScriptDeleted(KUrl)));
+    connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::scriptDeleted, this, &SieveEditorMainWidget::slotScriptDeleted);
     connect(mScriptManagerWidget, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));
-    connect(this, SIGNAL(updateScriptList()), mScriptManagerWidget, SLOT(slotRefreshList()));
+    connect(this, &SieveEditorMainWidget::updateScriptList, mScriptManagerWidget, &SieveEditorScriptManagerWidget::slotRefreshList);
     addWidget(mScriptManagerWidget);
     setChildrenCollapsible(false);
     QList<int> splitterSizes;
     splitterSizes << 80 << 20;
-    KConfigGroup myGroup( KGlobal::config(), "SieveEditorMainWidget" );
+    KConfigGroup myGroup( KSharedConfig::openConfig(), "SieveEditorMainWidget" );
     setSizes(myGroup.readEntry( "mainSplitter", splitterSizes));
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &SieveEditorMainWidget::slotGeneralPaletteChanged);
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
 {
-    KConfigGroup myGroup( KGlobal::config(), "SieveEditorMainWidget" );
+    KConfigGroup myGroup( KSharedConfig::openConfig(), "SieveEditorMainWidget" );
     myGroup.writeEntry( "mainSplitter", sizes());
     myGroup.sync();
 }
 
-QWidget *SieveEditorMainWidget::hasExistingPage(const KUrl &url)
+QWidget *SieveEditorMainWidget::hasExistingPage(const QUrl &url)
 {
     for (int i=0; i < mTabWidget->count(); ++i) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mTabWidget->widget(i));
@@ -77,7 +78,7 @@ QWidget *SieveEditorMainWidget::hasExistingPage(const KUrl &url)
     return 0;
 }
 
-void SieveEditorMainWidget::slotScriptDeleted(const KUrl &url)
+void SieveEditorMainWidget::slotScriptDeleted(const QUrl &url)
 {
     QWidget *page = hasExistingPage(url);
     if (page) {
@@ -86,7 +87,7 @@ void SieveEditorMainWidget::slotScriptDeleted(const KUrl &url)
     }
 }
 
-void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript)
+void SieveEditorMainWidget::slotCreateScriptPage(const QUrl &url, const QStringList &capabilities, bool isNewScript)
 {
     QWidget *page = hasExistingPage(url);
     if (page) {
@@ -160,7 +161,7 @@ bool SieveEditorMainWidget::needToSaveScript()
     return scriptSaved;
 }
 
-KTabWidget *SieveEditorMainWidget::tabWidget() const
+QTabWidget *SieveEditorMainWidget::tabWidget() const
 {
     return mTabWidget;
 }
@@ -183,7 +184,7 @@ void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidg
         if (!mScriptColor.isValid()) {
             slotGeneralPaletteChanged();
         }
-        mTabWidget->setTabTextColor(index, modified ? mModifiedScriptColor : mScriptColor);
+        mTabWidget->tabBar()->setTabTextColor(index, modified ? mModifiedScriptColor : mScriptColor);
     }
 }
 

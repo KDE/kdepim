@@ -18,13 +18,14 @@
 #include "archivemailkernel.h"
 
 #include <kglobal.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <mailcommon/job/jobscheduler.h>
-#include <akonadi/session.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/changerecorder.h>
+#include <AkonadiCore/session.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/changerecorder.h>
+#include <KSharedConfig>
 
 ArchiveMailKernel::ArchiveMailKernel( QObject *parent )
     : QObject( parent )
@@ -65,7 +66,7 @@ Akonadi::EntityMimeTypeFilterModel *ArchiveMailKernel::collectionModel() const
 
 KSharedConfig::Ptr ArchiveMailKernel::config()
 {
-    return KGlobal::config();
+    return KSharedConfig::openConfig();
 }
 
 void ArchiveMailKernel::syncConfig()

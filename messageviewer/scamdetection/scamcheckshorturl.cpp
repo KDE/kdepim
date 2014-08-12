@@ -20,17 +20,17 @@
 
 #include <libkdepim/misc/broadcaststatus.h>
 
-#include <KGlobal>
+
 #include <KStandardDirs>
 #include <KLocalizedString>
 
-#include <qjson/parser.h>
 
 #include <QFile>
 #include <QVariantMap>
 #include <QDebug>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
+#include <QStandardPaths>
 
 using namespace MessageViewer;
 QStringList ScamCheckShortUrl::sSupportedServices = QStringList();
@@ -72,6 +72,7 @@ void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
         shortUrl.setUrl(reply->property("shortUrl").toString());
     }
     reply->deleteLater();
+#if 0 //QT5
     const QString jsonData = QString::fromUtf8(reply->readAll());
 
     //qDebug() << jsonData;
@@ -90,8 +91,8 @@ void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
     } else {
         return;
     }
-
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Short url \'%1\' redirects to \'%2\'.", shortUrl.url(), longUrl.prettyUrl() ) );
+#endif
 }
 
 void ScamCheckShortUrl::slotError(QNetworkReply::NetworkError error)
@@ -110,10 +111,12 @@ bool ScamCheckShortUrl::isShortUrl(const KUrl &url)
 
 void ScamCheckShortUrl::loadLongUrlServices()
 {
-    QFile servicesFile(KGlobal::dirs()->findResource("data", QLatin1String("messageviewer/longurlServices.json")));
+    QFile servicesFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messageviewer/longurlServices.json")));
     if (servicesFile.open(QIODevice::ReadOnly)) {
+#if 0 //QT5
         const QVariantMap response = QJson::Parser().parse(&servicesFile).toMap();
         sSupportedServices = response.uniqueKeys();
+#endif
     } else {
         qDebug()<<" json file \'longurlServices.json\' not found";
     }

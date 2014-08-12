@@ -23,13 +23,8 @@
 
 #include "checkbox.h"
 
-#ifdef USE_AKONADI
-#include <kcalcore/duration.h>
+#include <KCalCore/Duration>
 using namespace KCalCore;
-#else
-#include <kcal/duration.h>
-using namespace KCal;
-#endif
 
 #include <klocale.h>
 #include <kdialog.h>
@@ -52,7 +47,7 @@ LateCancelSelector::LateCancelSelector(bool allowHourMinute, QWidget* parent)
       mReadOnly(false),
       mAutoCloseShown(false)
 {
-    QString whatsThis = i18nc("@info:whatsthis",
+    QString whatsThis = xi18nc("@info:whatsthis",
                               "<para>If checked, the alarm will be canceled if it cannot be triggered within the "
                              "specified period after its scheduled time. Possible reasons for not triggering "
                              "include your being logged off, X not running, or <application>KAlarm</application> not running.</para>"
@@ -83,11 +78,7 @@ LateCancelSelector::LateCancelSelector(bool allowHourMinute, QWidget* parent)
                                      whatsThis, i18nc("@info:whatsthis", "Enter how late will cause the alarm to be canceled"),
                                      allowHourMinute, mTimeSelectorFrame);
     connect(mTimeSelector, SIGNAL(toggled(bool)), SLOT(slotToggled(bool)));
-#ifdef USE_AKONADI
     connect(mTimeSelector, SIGNAL(valueChanged(KCalCore::Duration)), SIGNAL(changed()));
-#else
-    connect(mTimeSelector, SIGNAL(valueChanged(KCal::Duration)), SIGNAL(changed()));
-#endif
     hlayout->addWidget(mTimeSelector, 0, Qt::AlignLeft);
 
     hlayout = new QHBoxLayout();

@@ -18,13 +18,13 @@
 #ifndef SIEVESCRIPTDESCRIPTIONDIALOG_H
 #define SIEVESCRIPTDESCRIPTIONDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 namespace PimCommon {
 class RichTextEditorWidget;
 }
 namespace KSieveUi {
-class SieveScriptDescriptionDialog : public KDialog
+class SieveScriptDescriptionDialog : public QDialog
 {
     Q_OBJECT
 public:

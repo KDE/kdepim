@@ -47,7 +47,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QDateTime>
 
@@ -100,7 +100,7 @@ ChangeExpiryCommand::Private::Private( ChangeExpiryCommand * qq, KeyListControll
 
 }
 
-ChangeExpiryCommand::Private::~Private() { kDebug(); }
+ChangeExpiryCommand::Private::~Private() { qDebug(); }
 
 ChangeExpiryCommand::ChangeExpiryCommand( KeyListController * c )
     : Command( new Private( this, c ) )
@@ -124,7 +124,7 @@ void ChangeExpiryCommand::Private::init() {
 
 }
 
-ChangeExpiryCommand::~ChangeExpiryCommand() { kDebug(); }
+ChangeExpiryCommand::~ChangeExpiryCommand() { qDebug(); }
 
 void ChangeExpiryCommand::doStart() {
 
@@ -154,7 +154,7 @@ void ChangeExpiryCommand::Private::slotDialogAccepted() {
 
     const QDateTime expiry( dialog->dateOfExpiry(), END_OF_DAY );
 
-    kDebug() << "expiry" << expiry;
+    qDebug() << "expiry" << expiry;
 
     createJob();
     assert( job );
@@ -181,7 +181,7 @@ void ChangeExpiryCommand::Private::slotResult( const Error & err ) {
 }
 
 void ChangeExpiryCommand::doCancel() {
-    kDebug();
+    qDebug();
     if ( d->job )
         d->job->slotCancel();
 }

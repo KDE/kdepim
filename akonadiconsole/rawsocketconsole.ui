@@ -21,21 +21,21 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="KLineEdit" name="commandEdit">
-       <property name="clickMessage">
+      <widget class="QLineEdit" name="commandEdit">
+       <property name="placeholderText">
         <string>COMMAND</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="execButton">
+      <widget class="QPushButton" name="execButton">
        <property name="text">
         <string>Execute</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="connectButton">
+      <widget class="QPushButton" name="connectButton">
        <property name="text">
         <string>Connect</string>
        </property>
@@ -45,7 +45,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="clearButton">
+      <widget class="QPushButton" name="clearButton">
        <property name="text">
         <string>Clear</string>
        </property>
@@ -56,16 +56,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends></extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends></extends>
-   <header>klineedit.h</header>
-  </customwidget>
   <customwidget>
    <class>KTextEdit</class>
    <extends></extends>

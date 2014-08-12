@@ -9,17 +9,18 @@ set(akregatorinterfaces_LIB_SRCS
   storagefactoryregistry.cpp
 )
 
-kde4_add_kcfg_files(akregatorinterfaces_LIB_SRCS akregatorconfig.kcfgc)
+kconfig_add_kcfg_files(akregatorinterfaces_LIB_SRCS akregatorconfig.kcfgc)
 
-kde4_add_library(akregatorinterfaces ${LIBRARY_TYPE} ${akregatorinterfaces_LIB_SRCS})
+add_library(akregatorinterfaces ${LIBRARY_TYPE} ${akregatorinterfaces_LIB_SRCS})
+generate_export_header(akregatorinterfaces BASE_NAME akregatorinterfaces)
 
 target_link_libraries(akregatorinterfaces
   kdepim
-  ${KDE4_KHTML_LIBS}
-  ${KDEPIMLIBS_SYNDICATION_LIBS}
+  KF5::KHtml
+  KF5::Syndication
 )
 
-set_target_properties(akregatorinterfaces PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
+set_target_properties(akregatorinterfaces PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS akregatorinterfaces ${INSTALL_TARGETS_DEFAULT_ARGS})

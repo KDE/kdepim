@@ -30,8 +30,8 @@
 
 #include <calendarsupport/utils.h>
 
-#include <KVBox>
-
+#include <QVBoxLayout>
+#include <QDebug>
 #include <QEvent>
 #include <QScrollArea>
 #include <QVBoxLayout>
@@ -43,7 +43,9 @@ JournalView::JournalView( QWidget *parent ) : EventView( parent ), mChanger( 0 )
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setMargin( 0 );
   mSA = new QScrollArea( this );
-  mVBox = new KVBox( mSA->viewport() );
+  mVBox = new QWidget( mSA->viewport() );
+  QVBoxLayout *mVBoxVBoxLayout = new QVBoxLayout(mVBox);
+  mVBoxVBoxLayout->setMargin(0);
   mSA->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
   mSA->setWidgetResizable ( true );
   mSA->setWidget( mVBox );
@@ -63,6 +65,7 @@ void JournalView::appendJournal( const Akonadi::Item &journal, const QDate &dt )
     entry = mEntries[dt];
   } else {
     entry = new JournalDateView( calendar(), mVBox );
+    mVBox->layout()->addWidget(entry);
     entry->setDate( dt );
     entry->setIncidenceChanger( mChanger );
     entry->show();
@@ -121,7 +124,7 @@ void JournalView::updateView()
     --it;
     it.value()->clear();
     const KCalCore::Journal::List journals = calendar()->journals( it.key() );
-    kDebug() << "updateview found" << journals.count();
+    qDebug() << "updateview found" << journals.count();
     Q_FOREACH ( const KCalCore::Journal::Ptr &journal, journals ) {
       Akonadi::Item item = calendar()->item( journal );
       it.value()->addJournal( item );
@@ -138,14 +141,14 @@ void JournalView::showDates( const QDate &start, const QDate &end, const QDate &
 {
   clearEntries();
   if ( end<start ) {
-    kWarning() << "End is smaller than start. end=" << end << "; start=" << start;
+    qWarning() << "End is smaller than start. end=" << end << "; start=" << start;
     return;
   }
 
   KCalCore::Journal::List jnls;
   for ( QDate d=end; d>=start; d=d.addDays(-1) ) {
     jnls = calendar()->journals( d );
-    //kDebug() << "Found" << jnls.count() << "journals on date" << d;
+    //qDebug() << "Found" << jnls.count() << "journals on date" << d;
     foreach( const KCalCore::Journal::Ptr &journal, jnls ) {
       Akonadi::Item item = calendar()->item( journal );
       appendJournal( item, d );
@@ -153,7 +156,7 @@ void JournalView::showDates( const QDate &start, const QDate &end, const QDate &
     if ( jnls.isEmpty() ) {
       // create an empty dateentry widget
       //updateView();
-      //kDebug() << "Appended null journal";
+      //qDebug() << "Appended null journal";
       appendJournal( Akonadi::Item(), d );
     }
   }
@@ -185,7 +188,7 @@ void JournalView::changeIncidenceDisplay( const Akonadi::Item &incidence,
       emit journalDeleted( incidence );
       break;
     default:
-      kWarning() << "Illegal change type" << changeType;
+      qWarning() << "Illegal change type" << changeType;
     }
   }
 }

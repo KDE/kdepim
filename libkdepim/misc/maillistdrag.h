@@ -32,7 +32,7 @@
 
 #include <time.h>
 
-class KUrl;
+class QUrl;
 
 namespace KPIM {
 
@@ -90,14 +90,14 @@ public:
     operator KUrl() const;
 #endif
 
-    KDE_DUMMY_COMPARISON_OPERATOR(MailSummary)
+    //KDE_DUMMY_COMPARISON_OPERATOR(MailSummary)
     private:
         quint32 mSerialNumber;
     QString mMessageId, mSubject, mFrom, mTo;
     time_t mDate;
 };
 #ifdef MAKE_KDEPIM_LIBS
-KDE_DUMMY_QHASH_FUNCTION(MailSummary)
+//KDE_DUMMY_QHASH_FUNCTION(MailSummary)
 #endif
 
 /**

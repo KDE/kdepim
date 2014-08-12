@@ -33,13 +33,13 @@
 
 #include "libkdepim/ldap/ldapsearchdialog.h"
 
-#include <akonadi/agentactionmanager.h>
-#include <akonadi/collectiondialog.h>
-#include <akonadi/contact/contactgroupexpandjob.h>
-#include <akonadi/contact/contactsfilterproxymodel.h>
-#include <akonadi/contact/standardcontactactionmanager.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiWidgets/agentactionmanager.h>
+#include <AkonadiWidgets/collectiondialog.h>
+#include <Akonadi/Contact/ContactGroupExpandJob>
+#include <Akonadi/Contact/ContactsFilterProxyModel>
+#include <Akonadi/Contact/StandardContactActionManager>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/ItemFetchScope>
 #include <calendarsupport/categoryconfig.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>
@@ -88,32 +88,32 @@ void MainView::doDelayedInit()
   addMimeType( KABC::ContactGroup::mimeType() );
   itemFetchScope().fetchFullPayload();
 
-  KAction *action = new KAction( i18n( "Import Contacts" ), this );
+  QAction *action = new QAction( i18n( "Import Contacts" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
   actionCollection()->addAction( QLatin1String( "import_vcards" ), action );
 
-  action = new KAction( i18n( "Export Contacts From This Account" ), this );
+  action = new QAction( i18n( "Export Contacts From This Account" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_account_vcards" ), action );
 
-  action = new KAction( i18n( "Export Displayed Contacts" ), this );
+  action = new QAction( i18n( "Export Displayed Contacts" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_selected_vcards" ), action );
 
-  action = new KAction( i18n( "Export Contact" ), this );
+  action = new QAction( i18n( "Export Contact" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportSingleItem()) );
   actionCollection()->addAction( QLatin1String( "export_single_contact_vcard" ), action );
 
-  action = new KAction( i18n( "Send mail to" ), this );
+  action = new QAction( i18n( "Send mail to" ), this );
   action->setEnabled( false );
   connect( action, SIGNAL(triggered(bool)), SLOT(sendMailTo()) );
   actionCollection()->addAction( QLatin1String( "send_mail_to" ), action );
 
-  action = new KAction( i18n( "Search in LDAP directory" ), this );
+  action = new QAction( i18n( "Search in LDAP directory" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(searchLdap()) );
   actionCollection()->addAction( QLatin1String( "search_ldap" ), action );
 
-  action = new KAction( i18n( "Configure Categories" ), this );
+  action = new QAction( i18n( "Configure Categories" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(configureCategories()) );
   actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
 

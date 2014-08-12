@@ -43,13 +43,13 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 #include "mailcommon/util/mailutil.h"
 
-#include <Akonadi/Tag>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/TagFetchScope>
-#include <Akonadi/TagDeleteJob>
-#include <Akonadi/TagCreateJob>
-#include <Akonadi/TagAttribute>
-#include <Akonadi/TagModifyJob>
+#include <AkonadiCore/Tag>
+#include <AkonadiCore/TagFetchJob>
+#include <AkonadiCore/TagFetchScope>
+#include <AkonadiCore/TagDeleteJob>
+#include <AkonadiCore/TagCreateJob>
+#include <AkonadiCore/TagAttribute>
+#include <AkonadiCore/TagModifyJob>
 
 #include <KIconButton>
 #include <KButtonGroup>
@@ -57,11 +57,13 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <KColorScheme>
 #include <KSeparator>
 #include <KFontChooser>
-#include <KHBox>
+#include <QHBoxLayout>
 #include <KMessageBox>
 #include <KKeySequenceWidget>
 #include <KLineEdit>
-#include <KDialog>
+#include <QDialog>
+#include <QIcon>
+#include <QDebug>
 
 #include <kmime/kmime_dateformatter.h>
 using KMime::DateFormatter;
@@ -70,6 +72,7 @@ using KMime::DateFormatter;
 #include <QButtonGroup>
 #include <QSpinBox>
 #include <QLabel>
+#include <QFontDatabase>
 using namespace MailCommon;
 
 QString AppearancePage::helpAnchor() const
@@ -77,8 +80,8 @@ QString AppearancePage::helpAnchor() const
     return QString::fromLatin1("configure-appearance");
 }
 
-AppearancePage::AppearancePage( const KComponentData &instance, QWidget *parent )
-    : ConfigModuleWithTabs( instance, parent )
+AppearancePage::AppearancePage( QWidget *parent )
+    : ConfigModuleWithTabs( parent )
 {
     //
     // "Fonts" tab:
@@ -158,8 +161,8 @@ AppearancePageFontsTab::AppearancePageFontsTab( QWidget * parent )
 
     // "Use custom fonts" checkbox, followed by <hr>
     QVBoxLayout *vlay = new QVBoxLayout( this );
-    vlay->setSpacing( KDialog::spacingHint() );
-    vlay->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     vlay->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     vlay->setMargin( QDialog::marginHint() );
     mCustomFontCheck = new QCheckBox( i18n("&Use custom fonts"), this );
     vlay->addWidget( mCustomFontCheck );
     vlay->addWidget( new KSeparator( Qt::Horizontal, this ) );
@@ -185,7 +188,7 @@ AppearancePageFontsTab::AppearancePageFontsTab( QWidget * parent )
 
     hlay->addWidget( mFontLocationCombo );
     hlay->addStretch( 10 );
-    vlay->addSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     vlay->addSpacing( QDialog::spacingHint() );
     mFontChooser = new KFontChooser( this, KFontChooser::DisplayFrame,
                                      QStringList(), 4 );
     mFontChooser->setEnabled( false ); // since !mCustomFontCheck->isChecked()
@@ -209,7 +212,7 @@ AppearancePageFontsTab::AppearancePageFontsTab( QWidget * parent )
 
 void AppearancePage::FontsTab::slotFontSelectorChanged( int index )
 {
-    kDebug() << "slotFontSelectorChanged() called";
+    qDebug() << "slotFontSelectorChanged() called";
     if( index < 0 || index >= mFontLocationCombo->count() )
         return; // Should never happen, but it is better to check.
 
@@ -250,8 +253,8 @@ void AppearancePage::FontsTab::doLoadOther()
         KConfigGroup fonts( KMKernel::self()->config(), "Fonts" );
         KConfigGroup messagelistFont( KMKernel::self()->config(), "MessageListView::Fonts" );
 
-        mFont[0] = KGlobalSettings::generalFont();
-        QFont fixedFont = KGlobalSettings::fixedFont();
+        mFont[0] = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
+        QFont fixedFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
 
         for ( int i = 0 ; i < numFontNames ; ++i ) {
             const QString configName = QLatin1String(fontNames[i].configName);
@@ -353,8 +356,8 @@ AppearancePageColorsTab::AppearancePageColorsTab( QWidget * parent )
 {
     // "use custom colors" check box
     QVBoxLayout *vlay = new QVBoxLayout( this );
-    vlay->setSpacing( KDialog::spacingHint() );
-    vlay->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     vlay->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     vlay->setMargin( QDialog::marginHint() );
     mCustomColorCheck = new QCheckBox( i18n("&Use custom colors"), this );
     vlay->addWidget( mCustomColorCheck );
     connect( mCustomColorCheck, SIGNAL(stateChanged(int)),
@@ -520,8 +523,8 @@ AppearancePageLayoutTab::AppearancePageLayoutTab( QWidget * parent )
     : ConfigModuleTab( parent )
 {
     QVBoxLayout *vlay = new QVBoxLayout( this );
-    vlay->setSpacing( KDialog::spacingHint() );
-    vlay->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     vlay->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     vlay->setMargin( QDialog::marginHint() );
 
     // "folder list" radio buttons:
     populateButtonGroup( mFolderListGroupBox = new QGroupBox( this ),
@@ -536,13 +539,13 @@ AppearancePageLayoutTab::AppearancePageLayoutTab( QWidget * parent )
     connect( mFolderQuickSearchCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()) );
     folderCBHLayout->addWidget( mFolderQuickSearchCB );
     vlay->addLayout( folderCBHLayout );
-    vlay->addSpacing( KDialog::spacingHint() );   // space before next box
+//TODO PORT QT5     vlay->addSpacing( QDialog::spacingHint() );   // space before next box
 
     // "favorite folders view mode" radio buttons:
     mFavoriteFoldersViewGroupBox = new QGroupBox( this );
     mFavoriteFoldersViewGroupBox->setTitle( i18n( "Show Favorite Folders View" ) );
     mFavoriteFoldersViewGroupBox->setLayout( new QHBoxLayout() );
-    mFavoriteFoldersViewGroupBox->layout()->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     mFavoriteFoldersViewGroupBox->layout()->setSpacing( QDialog::spacingHint() );
     mFavoriteFoldersViewGroup = new QButtonGroup( this );
     connect( mFavoriteFoldersViewGroup, SIGNAL(buttonClicked(int)),
              this, SLOT(slotEmitChanged()) );
@@ -566,7 +569,7 @@ AppearancePageLayoutTab::AppearancePageLayoutTab( QWidget * parent )
     mFolderToolTipsGroupBox = new QGroupBox( this );
     mFolderToolTipsGroupBox->setTitle( i18n( "Folder Tooltips" ) );
     mFolderToolTipsGroupBox->setLayout( new QHBoxLayout() );
-    mFolderToolTipsGroupBox->layout()->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     mFolderToolTipsGroupBox->layout()->setSpacing( QDialog::spacingHint() );
     mFolderToolTipsGroup = new QButtonGroup( this );
     connect( mFolderToolTipsGroup, SIGNAL(buttonClicked(int)),
              this, SLOT(slotEmitChanged()) );
@@ -638,14 +641,14 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
       mCustomDateFormatEdit( 0 )
 {
     QVBoxLayout *vlay = new QVBoxLayout( this );
-    vlay->setSpacing( KDialog::spacingHint() );
-    vlay->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     vlay->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     vlay->setMargin( QDialog::marginHint() );
 
     // "General Options" group:
     QGroupBox *group = new QGroupBox( i18nc( "General options for the message list.", "General" ), this );
-    //  group->layout()->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     //  group->layout()->setSpacing( QDialog::spacingHint() );
     QVBoxLayout *gvlay = new QVBoxLayout( group );
-    gvlay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     gvlay->setSpacing( QDialog::spacingHint() );
 
     mDisplayMessageToolTips = new QCheckBox(
                 MessageList::Core::Settings::self()->messageToolTipEnabledItem()->label(), group );
@@ -716,7 +719,7 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
     mDateDisplay = new KButtonGroup( this );
     mDateDisplay->setTitle( i18n("Date Display") );
     gvlay = new QVBoxLayout( mDateDisplay );
-    gvlay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     gvlay->setSpacing( QDialog::spacingHint() );
 
     for ( int i = 0 ; i < numDateDisplayConfig ; ++i ) {
         const char *label = dateDisplayConfig[i].displayName;
@@ -729,12 +732,15 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
         gvlay->addWidget( radio );
 
         if ( dateDisplayConfig[i].dateDisplay == DateFormatter::Custom ) {
-            KHBox *hbox = new KHBox( mDateDisplay );
-            hbox->setSpacing( KDialog::spacingHint() );
+            QWidget *hbox = new QWidget( mDateDisplay );
+            QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+            hboxHBoxLayout->setMargin(0);
+//TODO PORT QT5             hboxHBoxLayout->setSpacing( QDialog::spacingHint() );
 
             mCustomDateFormatEdit = new KLineEdit( hbox );
+            hboxHBoxLayout->addWidget(mCustomDateFormatEdit);
             mCustomDateFormatEdit->setEnabled( false );
-            hbox->setStretchFactor( mCustomDateFormatEdit, 1 );
+            hboxHBoxLayout->setStretchFactor( mCustomDateFormatEdit, 1 );
 
             connect( radio, SIGNAL(toggled(bool)),
                      mCustomDateFormatEdit, SLOT(setEnabled(bool)) );
@@ -897,8 +903,8 @@ AppearancePageReaderTab::AppearancePageReaderTab( QWidget * parent )
     : ConfigModuleTab( parent )
 {
     QVBoxLayout *topLayout = new QVBoxLayout(this);
-    topLayout->setSpacing( KDialog::spacingHint() );
-    topLayout->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     topLayout->setMargin( QDialog::marginHint() );
 
     // "Close message window after replying or forwarding" check box:
     populateCheckBox( mCloseAfterReplyOrForwardCheck = new QCheckBox( this ),
@@ -943,8 +949,8 @@ AppearancePageSystemTrayTab::AppearancePageSystemTrayTab( QWidget * parent )
     : ConfigModuleTab( parent )
 {
     QVBoxLayout * vlay = new QVBoxLayout( this );
-    vlay->setSpacing( KDialog::spacingHint() );
-    vlay->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     vlay->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     vlay->setMargin( QDialog::marginHint() );
 
     // "Enable system tray applet" check box
     mSystemTrayCheck = new QCheckBox( i18n("Enable system tray icon"), this );
@@ -965,7 +971,7 @@ AppearancePageSystemTrayTab::AppearancePageSystemTrayTab( QWidget * parent )
     mSystemTrayGroup = new KButtonGroup( this );
     mSystemTrayGroup->setTitle( i18n("System Tray Mode" ) );
     QVBoxLayout *gvlay = new QVBoxLayout( mSystemTrayGroup );
-    gvlay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     gvlay->setSpacing( QDialog::spacingHint() );
 
     connect( mSystemTrayGroup, SIGNAL(clicked(int)),
              this, SLOT(slotEmitChanged()) );
@@ -992,7 +998,7 @@ void AppearancePage::SystemTrayTab::save()
     saveCheckBox(mSystemTrayCheck, GlobalSettings::self()->systemTrayEnabledItem() );
     GlobalSettings::self()->setSystemTrayPolicy( mSystemTrayGroup->selected() );
     saveCheckBox(mSystemTrayShowUnreadMail,GlobalSettings::self()->systemTrayShowUnreadItem());
-    GlobalSettings::self()->writeConfig();
+    GlobalSettings::self()->save();
 }
 
 QString AppearancePage::MessageTagTab::helpAnchor() const
@@ -1031,8 +1037,8 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
 {
     mPreviousTag = -1;
     QHBoxLayout *maingrid = new QHBoxLayout( this );
-    maingrid->setMargin( KDialog::marginHint() );
-    maingrid->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     maingrid->setMargin( QDialog::marginHint() );
+//TODO PORT QT5     maingrid->setSpacing( QDialog::spacingHint() );
 
 
     //Lefthand side Listbox and friends
@@ -1041,9 +1047,9 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
     mTagsGroupBox = new QGroupBox( i18n("A&vailable Tags"), this );
     maingrid->addWidget( mTagsGroupBox );
     QVBoxLayout *tageditgrid = new QVBoxLayout( mTagsGroupBox );
-    tageditgrid->setMargin( KDialog::marginHint() );
-    tageditgrid->setSpacing( KDialog::spacingHint() );
-    tageditgrid->addSpacing( 2 * KDialog::spacingHint() );
+//TODO PORT QT5     tageditgrid->setMargin( QDialog::marginHint() );
+//TODO PORT QT5     tageditgrid->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     tageditgrid->addSpacing( 2 * QDialog::spacingHint() );
 
     //Listbox, add, remove row
     QHBoxLayout *addremovegrid = new QHBoxLayout();
@@ -1053,29 +1059,29 @@ AppearancePageMessageTagTab::AppearancePageMessageTagTab( QWidget * parent )
     mTagAddLineEdit->setTrapReturnKey( true );
     addremovegrid->addWidget( mTagAddLineEdit );
 
-    mTagAddButton = new KPushButton( mTagsGroupBox );
+    mTagAddButton = new QPushButton( mTagsGroupBox );
     mTagAddButton->setToolTip( i18n("Add new tag") );
-    mTagAddButton->setIcon( KIcon( QLatin1String("list-add") ) );
+    mTagAddButton->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
     addremovegrid->addWidget( mTagAddButton );
 
-    mTagRemoveButton = new KPushButton( mTagsGroupBox );
+    mTagRemoveButton = new QPushButton( mTagsGroupBox );
     mTagRemoveButton->setToolTip( i18n("Remove selected tag") );
-    mTagRemoveButton->setIcon( KIcon( QLatin1String("list-remove") ) );
+    mTagRemoveButton->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     addremovegrid->addWidget( mTagRemoveButton );
 
     //Up and down buttons
     QHBoxLayout *updowngrid = new QHBoxLayout();
     tageditgrid->addLayout( updowngrid );
 
-    mTagUpButton = new KPushButton( mTagsGroupBox );
+    mTagUpButton = new QPushButton( mTagsGroupBox );
     mTagUpButton->setToolTip( i18n("Increase tag priority") );
-    mTagUpButton->setIcon( KIcon( QLatin1String("arrow-up") ) );
+    mTagUpButton->setIcon( QIcon::fromTheme( QLatin1String("arrow-up") ) );
     mTagUpButton->setAutoRepeat( true );
     updowngrid->addWidget( mTagUpButton );
 
-    mTagDownButton = new KPushButton( mTagsGroupBox );
+    mTagDownButton = new QPushButton( mTagsGroupBox );
     mTagDownButton->setToolTip( i18n("Decrease tag priority") );
-    mTagDownButton->setIcon( KIcon( QLatin1String("arrow-down") ) );
+    mTagDownButton->setIcon( QIcon::fromTheme( QLatin1String("arrow-down") ) );
     mTagDownButton->setAutoRepeat( true );
     updowngrid->addWidget( mTagDownButton );
 
@@ -1264,7 +1270,7 @@ void AppearancePage::MessageTagTab::slotUpdateTagSettingWidgets( int aIndex )
     mTagWidget->iconButton()->setIcon( tmp_desc->iconName );
 
     mTagWidget->keySequenceWidget()->setEnabled( true );
-    mTagWidget->keySequenceWidget()->setKeySequence( tmp_desc->shortcut.primary(),
+    mTagWidget->keySequenceWidget()->setKeySequence( tmp_desc->shortcut,
                                                      KKeySequenceWidget::NoValidate );
 
     mTagWidget->inToolBarCheck()->setEnabled( true );
@@ -1291,7 +1297,7 @@ void AppearancePage::MessageTagTab::slotRemoveTag()
             if ( tmp_desc->tag().isValid() ) {
                 new Akonadi::TagDeleteJob(tmp_desc->tag());
             } else {
-                kWarning() << "Can't remove tag with invalid akonadi tag";
+                qWarning() << "Can't remove tag with invalid akonadi tag";
             }
             mPreviousTag = -1;
 
@@ -1314,7 +1320,7 @@ void AppearancePage::MessageTagTab::slotRemoveTag()
 void AppearancePage::MessageTagTab::slotDeleteTagJob(KJob* job)
 {
     if (job->error()) {
-        kWarning() << "Failed to delete tag " << job->errorString();
+        qWarning() << "Failed to delete tag " << job->errorString();
     }
 }
 
@@ -1352,7 +1358,7 @@ void AppearancePage::MessageTagTab::slotNameLineTextChanged( const QString
 
 void AppearancePage::MessageTagTab::slotIconNameChanged( const QString &iconName )
 {
-    mTagListBox->currentItem()->setIcon( KIcon( iconName ) );
+    mTagListBox->currentItem()->setIcon( QIcon::fromTheme( iconName ) );
 }
 
 void AppearancePage::MessageTagTab::slotAddLineTextChanged( const QString &aText )
@@ -1377,7 +1383,7 @@ void AppearancePage::MessageTagTab::slotAddNewTag()
     tag->priority = tmp_priority;
 
     slotEmitChangeCheck();
-    TagListWidgetItem *newItem = new TagListWidgetItem( KIcon( tag->iconName ), newTagName,  mTagListBox );
+    TagListWidgetItem *newItem = new TagListWidgetItem( QIcon::fromTheme( tag->iconName ), newTagName,  mTagListBox );
     newItem->setKMailTag( tag );
     mTagListBox->addItem( newItem );
     mTagListBox->setCurrentItem( newItem );
@@ -1396,7 +1402,7 @@ void AppearancePage::MessageTagTab::doLoadFromGlobalSettings()
 void AppearancePage::MessageTagTab::slotTagsFetched(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Failed to load tags " << job->errorString();
+        qWarning() << "Failed to load tags " << job->errorString();
         return;
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
@@ -1410,7 +1416,7 @@ void AppearancePage::MessageTagTab::slotTagsFetched(KJob *job)
     qSort( msgTagList.begin(), msgTagList.end(), MailCommon::Tag::compare );
 
     foreach( const MailCommon::Tag::Ptr& tag, msgTagList ) {
-        TagListWidgetItem *newItem = new TagListWidgetItem( KIcon( tag->iconName ), tag->tagName, mTagListBox );
+        TagListWidgetItem *newItem = new TagListWidgetItem( QIcon::fromTheme( tag->iconName ), tag->tagName, mTagListBox );
         newItem->setKMailTag( tag );
         if ( tag->priority == -1 )
             tag->priority = mTagListBox->count() - 1;

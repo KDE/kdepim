@@ -33,7 +33,7 @@
 #define KLEOPATRA_GNUPGSYSTEMCONFIGURATIONPAGE_H
 
 #include <kcmodule.h>
-
+class KComponentData;
 namespace Kleo {
     class CryptoConfigModule;
 }

@@ -22,8 +22,9 @@
 
 #include "incidencetreemodel_p.h"
 
-#include <Akonadi/EntityTreeModel>
+#include <entitytreemodel.h>
 #include <QElapsedTimer>
+#include <QDebug>
 
 using namespace Akonadi;
 QDebug operator<<( QDebug s, const Node::Ptr &node );
@@ -103,7 +104,7 @@ int IncidenceTreeModel::Private::rowForNode( const Node::Ptr &node ) const
 void IncidenceTreeModel::Private::assert_and_dump( bool condition, const QString &message )
 {
   if ( !condition ) {
-    kError() << "This should never happen: " << message;
+    qCritical() << "This should never happen: " << message;
     dumpTree();
     Q_ASSERT( false );
   }
@@ -185,7 +186,7 @@ void IncidenceTreeModel::Private::onDataChanged( const QModelIndex &begin, const
       KCalCore::Incidence::Ptr incidence = !item.hasPayload<KCalCore::Incidence::Ptr>() ? KCalCore::Incidence::Ptr() :
                                                                                          item.payload<KCalCore::Incidence::Ptr>();
       if ( !incidence ) {
-        kError() << "Incidence shouldn't be invalid." << item.hasPayload() << item.id();
+        qCritical() << "Incidence shouldn't be invalid." << item.hasPayload() << item.id();
         Q_ASSERT( false );
         return;
       }
@@ -311,7 +312,7 @@ void IncidenceTreeModel::Private::onRowsInserted( const QModelIndex &parent, int
   // view can now call KViewStateSaver::restoreState(), to expand nodes.
   if ( end > begin )
     emit q->batchInsertionFinished();
-  //kDebug() << "Took " << timer.elapsed() << " to insert " << end-begin+1;
+  //qDebug() << "Took " << timer.elapsed() << " to insert " << end-begin+1;
 }
 
 void IncidenceTreeModel::Private::insertNode( const PreNode::Ptr &prenode, bool silent )
@@ -323,12 +324,12 @@ void IncidenceTreeModel::Private::insertNode( const PreNode::Ptr &prenode, bool 
   node->id = item.id();
   node->uid = incidence->instanceIdentifier();
   m_itemByUid.insert( node->uid, item );
-  //kDebug() << "New node " << node.data() << node->uid << node->id;
+  //qDebug() << "New node " << node.data() << node->uid << node->id;
   node->parentUid = incidence->relatedTo();
   Q_ASSERT( node->uid != node->parentUid );
 
   if (m_uidMap.contains(node->uid)) {
-    kWarning() << "Duplicate incidence detected. File a bug against the resource. collection=" << item.storageCollectionId();
+    qWarning() << "Duplicate incidence detected. File a bug against the resource. collection=" << item.storageCollectionId();
     return;
   }
 
@@ -462,18 +463,18 @@ void IncidenceTreeModel::Private::onRowsAboutToBeRemoved( const QModelIndex &par
     // while unparenting childs with moveRows() the view might call data() on the
     // item that is already removed from ETM.
     removeNode( node );
-    //kDebug() << "Just removed a node, here's the tree";
+    //qDebug() << "Just removed a node, here's the tree";
     //dumpTree();
   }
 
   m_removedNodes.clear();
-  //kDebug() << "Took " << timer.elapsed() << " to remove " << end-begin+1;
+  //qDebug() << "Took " << timer.elapsed() << " to remove " << end-begin+1;
 }
 
 void IncidenceTreeModel::Private::removeNode( const Node::Ptr &node )
 {
   Q_ASSERT( node );
-  //kDebug() << "Dealing with parent: " << node->id << node.data()
+  //qDebug() << "Dealing with parent: " << node->id << node.data()
   //         << node->uid << node->directChilds.count() << indexForNode( node );
 
   // First, unparent the children
@@ -489,7 +490,7 @@ void IncidenceTreeModel::Private::removeNode( const Node::Ptr &node )
     q->beginResetModel();
     node->directChilds.clear();
     foreach( const Node::Ptr &child, childs ) {
-      //kDebug() << "Dealing with child: " << child.data() << child->uid;
+      //qDebug() << "Dealing with child: " << child.data() << child->uid;
       m_toplevelNodeList.append( child );
       child->parentNode = Node::Ptr();
       m_waitingForParent.insert( node->uid, child );
@@ -705,7 +706,7 @@ void IncidenceTreeModel::setSourceModel( QAbstractItemModel *model )
 QModelIndex IncidenceTreeModel::mapFromSource( const QModelIndex &sourceIndex ) const
 {
   if ( !sourceIndex.isValid() ) {
-    kWarning() << "IncidenceTreeModel::mapFromSource() source index is invalid";
+    qWarning() << "IncidenceTreeModel::mapFromSource() source index is invalid";
     // Q_ASSERT( false );
     return QModelIndex();
   }
@@ -742,7 +743,7 @@ QModelIndex IncidenceTreeModel::mapToSource( const QModelIndex &proxyIndex ) con
   QModelIndexList indexes = EntityTreeModel::modelIndexesForItem( sourceModel(), Akonadi::Item( node->id ) );
   if ( indexes.isEmpty() ) {
     Q_ASSERT( sourceModel() );
-    kError() << "IncidenceTreeModel::mapToSource() no indexes."
+    qCritical() << "IncidenceTreeModel::mapToSource() no indexes."
              << proxyIndex << node->id << "; source.rowCount() = "
              << sourceModel()->rowCount() << "; source=" << sourceModel()
              << "rowCount()" << rowCount();
@@ -752,7 +753,7 @@ QModelIndex IncidenceTreeModel::mapToSource( const QModelIndex &proxyIndex ) con
   QModelIndex index = indexes.first();*/
   QModelIndex index = node->sourceIndex;
   if ( !index.isValid() ) {
-    kWarning() << "IncidenceTreeModel::mapToSource(): sourceModelIndex is invalid";
+    qWarning() << "IncidenceTreeModel::mapToSource(): sourceModelIndex is invalid";
     Q_ASSERT( false );
     return QModelIndex();
   }
@@ -764,7 +765,7 @@ QModelIndex IncidenceTreeModel::mapToSource( const QModelIndex &proxyIndex ) con
 QModelIndex IncidenceTreeModel::parent( const QModelIndex &child ) const
 {
   if ( !child.isValid() ) {
-    kWarning() << "IncidenceTreeModel::parent(): child is invalid";
+    qWarning() << "IncidenceTreeModel::parent(): child is invalid";
     Q_ASSERT( false );
     return QModelIndex();
   }
@@ -773,7 +774,7 @@ QModelIndex IncidenceTreeModel::parent( const QModelIndex &child ) const
   Q_ASSERT( child.internalPointer() );
   Node *childNode = reinterpret_cast<Node*>( child.internalPointer() );
   if ( d->m_removedNodes.contains( childNode ) ) {
-    kWarning() << "IncidenceTreeModel::parent() Node already removed.";
+    qWarning() << "IncidenceTreeModel::parent() Node already removed.";
     return QModelIndex();
   }
 
@@ -784,7 +785,7 @@ QModelIndex IncidenceTreeModel::parent( const QModelIndex &child ) const
   const QModelIndex parentIndex = d->indexForNode( childNode->parentNode );
 
   if ( !parentIndex.isValid() ) {
-    kWarning() << "IncidenceTreeModel::parent(): proxyModelIndex is invalid.";
+    qWarning() << "IncidenceTreeModel::parent(): proxyModelIndex is invalid.";
     Q_ASSERT( false );
     return QModelIndex();
   }
@@ -800,7 +801,7 @@ QModelIndex IncidenceTreeModel::index( int row, int column, const QModelIndex &p
 {
   if ( row < 0 || row >= rowCount( parent ) ) {
     // This is ok apparently
-    /*kWarning() << "IncidenceTreeModel::index() parent.isValid()" << parent.isValid()
+    /*qWarning() << "IncidenceTreeModel::index() parent.isValid()" << parent.isValid()
                << "; row=" << row << "; column=" << column
                << "; rowCount() = " << rowCount( parent ); */
     // Q_ASSERT( false );
@@ -816,7 +817,7 @@ QModelIndex IncidenceTreeModel::index( int row, int column, const QModelIndex &p
     Node *parentNode = reinterpret_cast<Node*>( parent.internalPointer() );
 
     if ( row >= parentNode->directChilds.count() ) {
-      kError() << "IncidenceTreeModel::index() row=" << row << "; column=" << column;
+      qCritical() << "IncidenceTreeModel::index() row=" << row << "; column=" << column;
       Q_ASSERT( false );
       return QModelIndex();
     }
@@ -851,12 +852,12 @@ Akonadi::Item IncidenceTreeModel::item( const QString &uid ) const
 {
   Akonadi::Item item;
   if ( uid.isEmpty() ) {
-    kWarning() << "Called with an empty uid";
+    qWarning() << "Called with an empty uid";
   } else {
     if ( d->m_itemByUid.contains( uid ) ) {
       item = d->m_itemByUid.value( uid );
     } else {
-      kWarning() << "There's no incidence with uid " << uid;
+      qWarning() << "There's no incidence with uid " << uid;
     }
   }
 

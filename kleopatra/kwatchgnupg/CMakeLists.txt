@@ -15,12 +15,12 @@ endif()
 
 include_directories(..)
 
-kde4_add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
+add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5153)
 
 target_link_libraries(kwatchgnupg
-  ${KDE4_KDEUI_LIBS}
+  
   kleo
   ${QGPGME_LIBRARIES}
 )
@@ -29,4 +29,4 @@ install(TARGETS kwatchgnupg ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES kwatchgnupg.png kwatchgnupg2.png DESTINATION ${DATA_INSTALL_DIR}/kwatchgnupg/pics)
 
-install(FILES kwatchgnupgui.rc DESTINATION ${DATA_INSTALL_DIR}/kwatchgnupg)
+install(FILES kwatchgnupgui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kwatchgnupg)

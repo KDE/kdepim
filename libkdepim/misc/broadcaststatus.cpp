@@ -26,7 +26,7 @@
 #include "progresswidget/progressmanager.h"
 
 #include <KLocale>
-#include <KGlobal>
+
 
 #include <QCoreApplication>
 #include <QTime>
@@ -70,7 +70,7 @@ void BroadcastStatus::setStatusMsg( const QString &message )
 
 void BroadcastStatus::setStatusMsgWithTimestamp( const QString &message )
 {
-    KLocale *locale = KGlobal::locale();
+    KLocale *locale = KLocale::global();
     setStatusMsg( i18nc( "%1 is a time, %2 is a status message", "[%1] %2",
                          locale->formatTime( QTime::currentTime(), true ), message ) );
 }

@@ -59,7 +59,7 @@
 #include <gpgme++/error.h>
 
 #include <QCoreApplication>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <gpg-error.h>
 
@@ -75,16 +75,16 @@ Kleo::Job::~Job() {
 }
 
 void Kleo::Job::showErrorDialog( QWidget *, const QString & ) const {
-  kDebug(5150) <<"Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!";
+  qDebug() <<"Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!";
 }
 
 QString Kleo::Job::auditLogAsHtml() const {
-    kDebug(5150) << "Kleo::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!" << endl;
+    qDebug() << "Kleo::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!" << endl;
     return QString();
 }
 
 GpgME::Error Kleo::Job::auditLogError() const {
-    kDebug(5150) << "Kleo::Job::auditLogError() should be reimplemented in Kleo::Job subclasses!" << endl;
+    qDebug() << "Kleo::Job::auditLogError() should be reimplemented in Kleo::Job subclasses!" << endl;
     return GpgME::Error::fromCode( GPG_ERR_NOT_IMPLEMENTED );
 }
 

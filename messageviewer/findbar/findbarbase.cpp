@@ -19,13 +19,13 @@
 
 #include "findbarbase.h"
 
-#include <kicon.h>
+#include <qicon.h>
 #include <klocale.h>
-#include <kpushbutton.h>
 #include <klineedit.h>
 #include <kmessagebox.h>
 #include <KColorScheme>
 
+#include <QPushButton>
 #include <QtCore/QTimer>
 #include <QLabel>
 #include <QLayout>
@@ -43,7 +43,7 @@ FindBarBase::FindBarBase( QWidget * parent )
     lay->setMargin( 2 );
 
     QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 
@@ -63,12 +63,12 @@ FindBarBase::FindBarBase( QWidget * parent )
     label->setBuddy( mSearch );
     lay->addWidget( mSearch );
 
-    mFindNextBtn = new QPushButton( KIcon( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
+    mFindNextBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
     mFindNextBtn->setToolTip( i18n( "Jump to next match" ) );
     lay->addWidget( mFindNextBtn );
     mFindNextBtn->setEnabled( false );
 
-    mFindPrevBtn = new QPushButton( KIcon( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
+    mFindPrevBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
     mFindPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
     lay->addWidget( mFindPrevBtn );
     mFindPrevBtn->setEnabled( false );

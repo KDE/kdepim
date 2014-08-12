@@ -20,7 +20,7 @@
 #define SEARCHPOTENTIALDUPLICATECONTACTJOB_H
 
 #include <QObject>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include "kaddressbook_export.h"
 
@@ -46,7 +46,5 @@ private:
     QList<Akonadi::Item::List > mListDuplicate;
 };
 }
-
-Q_DECLARE_METATYPE( QList<Akonadi::Item::List> )
 
 #endif // SEARCHPOTENTIALDUPLICATECONTACTJOB_H

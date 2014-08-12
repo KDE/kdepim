@@ -28,22 +28,25 @@
  *  your version.
  */
 #include "recentaddresses.h"
-#include <kpimutils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KLocale>
 #include <KLineEdit>
-#include <KPushButton>
+#include <QPushButton>
 #include <KMessageBox>
+#include <QIcon>
 
 #include <QCoreApplication>
 #include <QLayout>
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QKeyEvent>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
 
 using namespace KPIM;
 
@@ -72,7 +75,7 @@ bool RecentAddresses::exists()
 RecentAddresses::RecentAddresses( KConfig *config )
 {
     if ( !config ) {
-        load( KGlobal::config().data() );
+        load( KSharedConfig::openConfig().data() );
     } else {
         load( config );
     }
@@ -180,17 +183,25 @@ QStringList RecentAddresses::addresses() const
 }
 
 RecentAddressDialog::RecentAddressDialog( QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( i18n( "Edit Recent Addresses" ) );
-    setButtons( Ok|Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n( "Edit Recent Addresses" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &RecentAddressDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &RecentAddressDialog::reject);
+    okButton->setDefault(true);
     setModal( true );
     QWidget *page = new QWidget( this );
-    setMainWidget( page );
 
     QVBoxLayout *layout = new QVBoxLayout( page );
-    layout->setSpacing( spacingHint() );
+    //PORT QT5 layout->setSpacing( spacingHint() );
     layout->setMargin( 0 );
 
     mLineEdit = new KLineEdit(this);
@@ -199,21 +210,21 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
     mLineEdit->setTrapReturnKey(true);
     mLineEdit->installEventFilter(this);
 
-    connect(mLineEdit,SIGNAL(textChanged(QString)),SLOT(slotTypedSomething(QString)));
-    connect(mLineEdit,SIGNAL(returnPressed()),SLOT(slotAddItem()));
+    connect(mLineEdit, &KLineEdit::textChanged, this, &RecentAddressDialog::slotTypedSomething);
+    connect(mLineEdit, &KLineEdit::returnPressed, this, &RecentAddressDialog::slotAddItem);
 
 
     QHBoxLayout* hboxLayout = new QHBoxLayout;
 
     QVBoxLayout* btnsLayout = new QVBoxLayout;
     btnsLayout->addStretch();
-    mNewButton = new KPushButton(KIcon(QLatin1String("list-add")), i18n("&Add"), this);
-    connect(mNewButton, SIGNAL(clicked()), SLOT(slotAddItem()));
+    mNewButton = new QPushButton(QIcon::fromTheme(QLatin1String("list-add")), i18n("&Add"), this);
+    connect(mNewButton, &QPushButton::clicked, this, &RecentAddressDialog::slotAddItem);
     btnsLayout->insertWidget(0 ,mNewButton);
 
-    mRemoveButton = new KPushButton(KIcon(QLatin1String("list-remove")), i18n("&Remove"), this);
+    mRemoveButton = new QPushButton(QIcon::fromTheme(QLatin1String("list-remove")), i18n("&Remove"), this);
     mRemoveButton->setEnabled(false);
-    connect(mRemoveButton, SIGNAL(clicked()), SLOT(slotRemoveItem()));
+    connect(mRemoveButton, &QPushButton::clicked, this, &RecentAddressDialog::slotRemoveItem);
     btnsLayout->insertWidget(1, mRemoveButton);
 
 
@@ -227,6 +238,10 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
             SLOT(slotSelectionChanged()));
     // maybe supplied lineedit has some text already
     slotTypedSomething( mLineEdit->text() );
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
+
+
     readConfig();
 }
 
@@ -337,7 +352,7 @@ void RecentAddressDialog::addAddresses(KConfig *config)
 
 void RecentAddressDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "RecentAddressDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "RecentAddressDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -346,7 +361,7 @@ void RecentAddressDialog::readConfig()
 
 void RecentAddressDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "RecentAddressDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "RecentAddressDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

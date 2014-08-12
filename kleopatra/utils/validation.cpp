@@ -89,7 +89,7 @@ namespace {
                 assert( encoded.endsWith( QLatin1String( ".org" ) ) );
                 encoded.chop( 3 ); // '.' was part of domain before
             }
-            kDebug() << "\n str           :" << str
+            qDebug() << "\n str           :" << str
                      << "\n domain        :" << domain
                      << "\n domainEncoded :" << domainEncoded
                      << "\n domainRestored:" << domainRestored

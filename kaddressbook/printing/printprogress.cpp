@@ -24,10 +24,9 @@
 #include "printprogress.h"
 
 #include <KApplication>
-#include <KDebug>
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
-#include <KTextBrowser>
+#include <QTextBrowser>
 
 #include <QGridLayout>
 #include <QProgressBar>
@@ -41,10 +40,10 @@ PrintProgress::PrintProgress( QWidget *parent, const char *name )
     setWindowTitle( i18n( "Printing: Progress" ) );
 
     QGridLayout *topLayout = new QGridLayout( this );
-    topLayout->setSpacing( KDialog::spacingHint() );
-    topLayout->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     topLayout->setMargin( QDialog::marginHint() );
 
-    mLogBrowser = new KTextBrowser( this );
+    mLogBrowser = new QTextBrowser( this );
     topLayout->addWidget( mLogBrowser, 0, 0 );
 
     mProgressBar = new QProgressBar( this );

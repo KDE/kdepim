@@ -31,7 +31,7 @@
 #include "singlepartjob.h"
 #include "util.h"
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace MessageComposer;
 using namespace MessageCore;
@@ -56,7 +56,7 @@ QByteArray AttachmentJobPrivate::detectCharset( const QByteArray &data )
 {
     KEncodingProber prober;
     prober.feed( data );
-    kDebug() << "Autodetected charset" << prober.encoding() << "with confidence" << prober.confidence();
+    qDebug() << "Autodetected charset" << prober.encoding() << "with confidence" << prober.confidence();
 
     // The prober detects binary attachments as UTF-16LE with confidence 99%, which
     // obviously is wrong, so work around this here (most mail clients don't understand
@@ -65,7 +65,7 @@ QByteArray AttachmentJobPrivate::detectCharset( const QByteArray &data )
     if( prober.confidence() > 0.6 && !detectedEncoding.toLower().contains( "utf-16" ) ) {
         return detectedEncoding;
     } else {
-        kWarning() << "Could not autodetect charset; using UTF-8.";
+        qWarning() << "Could not autodetect charset; using UTF-8.";
         return QByteArray( "utf-8" );
     }
 }
@@ -142,7 +142,7 @@ void AttachmentJob::doStart()
         // (cberzan)
         QByteArray textCharset = d->part->charset();
         if( textCharset.isEmpty() ) {
-            kWarning() << "No charset specified. Using UTF-8.";
+            qWarning() << "No charset specified. Using UTF-8.";
             textCharset = "utf-8";
         }
         sjob->contentType()->setCharset( textCharset );

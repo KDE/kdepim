@@ -19,12 +19,16 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
-#include <KPushButton>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QIcon>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
 
 using namespace KSieveUi;
 
@@ -32,11 +36,20 @@ static const char selectMultipleHeaders[] = I18N_NOOP( "Select multiple headers.
 
 
 SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Headers" ) );
-    setButtons( Ok|Cancel );
-    setButtonFocus( Ok );
+    setWindowTitle( i18n( "Headers" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setFocus();
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
@@ -48,16 +61,16 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
 
     QHBoxLayout *hbox = new QHBoxLayout;
 
-    mNewHeader = new KLineEdit;
-    mNewHeader->setTrapReturnKey(true);
+    mNewHeader = new QLineEdit;
+    mNewHeader->setClearButtonEnabled(true);
+    //QT5 mNewHeader->setTrapReturnKey(true);
     connect(mNewHeader,SIGNAL(returnPressed()), SLOT(slotAddNewHeader()));
-    mNewHeader->setClearButtonShown(true);
-    hbox->addWidget(mNewHeader);
+    mNewHeader->setClearButtonEnabled(true);
 
 
-    mAddNewHeader = new KPushButton;
+    mAddNewHeader = new QPushButton;
     mAddNewHeader->setEnabled(false);
-    mAddNewHeader->setIcon( KIcon( QLatin1String("list-add") ) );
+    mAddNewHeader->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
     mAddNewHeader->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     connect(mAddNewHeader, SIGNAL(clicked(bool)), SLOT(slotAddNewHeader()));
     connect(mNewHeader, SIGNAL(textChanged(QString)), this, SLOT(slotNewHeaderTextChanged(QString)));
@@ -65,7 +78,9 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
 
     lay->addLayout(hbox);
 
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
+
     readConfig();
 }
 
@@ -76,7 +91,7 @@ SelectHeadersDialog::~SelectHeadersDialog()
 
 void SelectHeadersDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SelectHeadersDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SelectHeadersDialog" );
     const QSize size = group.readEntry( "Size", QSize(400,300) );
     if ( size.isValid() ) {
         resize( size );
@@ -85,7 +100,7 @@ void SelectHeadersDialog::readConfig()
 
 void SelectHeadersDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SelectHeadersDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SelectHeadersDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

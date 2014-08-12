@@ -24,18 +24,18 @@
 
 #include "global.h"
 #include "dbman.h"
-#include <kdebug.h>
+#include <qdebug.h>
 
 int __currentBlogId;
 
 void global_init()
 {
-    kDebug();
+    qDebug();
     __currentBlogId = -1;
 }
 
 void global_end()
 {
-    kDebug();
+    qDebug();
     delete DBMan::self();
 }

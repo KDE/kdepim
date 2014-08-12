@@ -2,8 +2,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui>
-
+#include <QWidget>
+class QStandardItemModel;
 class KBreadcrumbNavigationFactory;
 
 class MainWindow : public QWidget

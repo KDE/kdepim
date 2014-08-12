@@ -18,7 +18,7 @@
 #ifndef NOTESAGENT_H
 #define NOTESAGENT_H
 
-#include <akonadi/agentbase.h>
+#include <AkonadiAgentBase/agentbase.h>
 class NotesManager;
 class NotesAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {

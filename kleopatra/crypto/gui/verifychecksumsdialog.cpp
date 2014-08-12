@@ -88,7 +88,7 @@ namespace {
                     it = statusMap.find( filePath( mi ) );
                 if ( it != statusMap.end() )
                     if ( const Qt::GlobalColor c = statusColor[*it] )
-                        return c;
+                        return QColor(c);
             }
             return QDirModel::data( mi, role );
         }
@@ -103,7 +103,7 @@ namespace {
             const QModelIndex mi = index( file );
             const QString canonical = filePath( mi );
             if ( canonical.isEmpty() ) {
-                kDebug() << "can't locate file " << file;
+                qDebug() << "can't locate file " << file;
                 return;
             }
 
@@ -196,11 +196,11 @@ namespace {
             if ( QDirModel * fsm = qobject_cast<QDirModel*>( proxy.sourceModel() ) ) {
                 view.setRootIndex( proxy.mapFromSource( fsm->index( base ) ) );
             } else {
-                kWarning() << "expect a QDirModel-derived class as proxy.sourceModel(), got ";
+                qWarning() << "expect a QDirModel-derived class as proxy.sourceModel(), got ";
                 if ( !proxy.sourceModel() ) {
-                    kWarning() << "a null pointer";
+                    qWarning() << "a null pointer";
                 } else {
-                    kWarning() << proxy.sourceModel()->metaObject()->className();
+                    qWarning() << proxy.sourceModel()->metaObject()->className();
                 }
             }
         }

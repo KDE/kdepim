@@ -21,10 +21,12 @@
 
 #include "ui_editorgeneral.h"
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 #include <KABC/Addressee>
 #include <KABC/PhoneNumber>
+
+#include <KIconLoader>
 
 class PhoneWidgets
 {

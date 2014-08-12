@@ -1,5 +1,6 @@
 project(importwizard)
 
+
 add_subdirectory(icons)
 
 set(importwizard_SRCS
@@ -66,9 +67,7 @@ include_directories(${CMAKE_SOURCE_DIR}/mailimporter
 		    ${CMAKE_SOURCE_DIR}/libkdepim/
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-
-kde4_add_ui_files(importwizard_SRCS 
+ki18n_wrap_ui(importwizard_SRCS 
                   ui/selectprogrampage.ui
                   ui/importaddressbookpage.ui
                   ui/importfilterpage.ui
@@ -80,15 +79,16 @@ kde4_add_ui_files(importwizard_SRCS
 
 kde4_add_app_icon(importwizard_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-kontact-import-wizard.png")
 
-kde4_add_executable(importwizard ${importwizard_SRCS})
+add_executable(importwizard ${importwizard_SRCS})
 
 target_link_libraries(importwizard
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  KF5::KIOCore
+  KF5::AkonadiCore
+  KF5::AkonadiMime
+  KF5::Mime
+  KF5::PimUtils
+  KF5::MailTransport
+  KF5::DBusAddons
   mailimporter
   pimcommon
   mailcommon

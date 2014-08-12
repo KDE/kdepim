@@ -39,7 +39,7 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
-#include <KTabWidget>
+#include <KConfigGroup>
 
 #include <QSplitter>
 #include <QShortcut>
@@ -86,7 +86,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTextEdit = new SieveTextEdit;
     connect(mTextEdit, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
     mTabWidget->addTab(mTextEdit, i18n("Editor"));
-    mTabWidget->setTabBarHidden(true);
+    mTabWidget->tabBar()->hide();
     textEditLayout->addWidget(mTabWidget);
     connect(mTextEdit, SIGNAL(openHelp(QString,QString)), mTabWidget, SLOT(slotAddHelpPage(QString,QString)));
 
@@ -144,7 +144,7 @@ SieveEditorTextModeWidget::~SieveEditorTextModeWidget()
 
 void SieveEditorTextModeWidget::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
     group.writeEntry( "mainSplitter", mMainSplitter->sizes());
     group.writeEntry( "extraSplitter", mExtraSplitter->sizes());
     group.writeEntry( "templateSplitter", mTemplateSplitter->sizes());
@@ -152,7 +152,7 @@ void SieveEditorTextModeWidget::writeConfig()
 
 void SieveEditorTextModeWidget::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
     QList<int> size;
     size << 400 << 100;
 

@@ -58,7 +58,7 @@ static const about_data credits[] = {
 #endif
 
 AboutData::AboutData()
-  : KAboutData( "kwatchgnupg", 0, ki18n("KWatchGnuPG"),
+  : K4AboutData( "kwatchgnupg", 0, ki18n("KWatchGnuPG"),
                 kwatchgnupg_version, ki18n(description), License_GPL,
                 ki18n("(c) 2004 Klar\xC3\xA4lvdalens Datakonsult AB\n") )
 {

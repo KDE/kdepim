@@ -22,10 +22,10 @@
 #include <KIconTheme>
 #include <KStandardGuiItem>
 #include <KMessageBox>
-#include <KToolInvocation>
 #include <KStandardAction>
-#include <KAction>
 #include <KCursor>
+#include <QIcon>
+#include <KDialog>
 
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
@@ -39,7 +39,6 @@
 #include <QScrollBar>
 #include <QApplication>
 #include <QClipboard>
-#include <QDebug>
 
 using namespace PimCommon;
 
@@ -88,7 +87,7 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
             if ( idx < actionList.count() )
                 separatorAction = actionList.at( idx );
             if ( separatorAction ) {
-                KAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
+                QAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
                 if ( emptyDocument )
                     clearAllAction->setEnabled( false );
                 popup->insertAction( separatorAction, clearAllAction );
@@ -115,14 +114,14 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
         }
 
         if( !isReadOnly() && d->hasSpellCheckingSupport) {
-            QAction *spellCheckAction = popup->addAction( KIcon( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
+            QAction *spellCheckAction = popup->addAction( QIcon::fromTheme( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
             if (emptyDocument)
                 spellCheckAction->setEnabled(false);
             popup->addSeparator();
         }
 
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
-        speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
+        speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
         connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
         addExtraMenuEntry(popup, event->pos());
@@ -141,10 +140,11 @@ void PlainTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 void PlainTextEditor::slotSpeakText()
 {
     // If KTTSD not running, start it.
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
-        QString error;
-        if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error)) {
-            KMessageBox::error(this, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
+    QDBusConnectionInterface *bus = QDBusConnection::sessionBus().interface();
+    if (!bus->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
+        QDBusReply<void> reply = bus->startService(QLatin1String("org.kde.kttsd"));
+        if (!reply.isValid()) {
+            KMessageBox::error(this, i18n("Starting Jovie Text-to-Speech Service Failed"), reply.error().message());
             return;
         }
     }

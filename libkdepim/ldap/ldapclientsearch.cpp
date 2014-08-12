@@ -30,6 +30,7 @@
 #include "ldapsession.h"
 #include "ldapqueryjob.h"
 
+#include <kldap/ldapobject.h>
 #include <kldap/ldapserver.h>
 #include <kldap/ldapurl.h>
 #include <kldap/ldif.h>
@@ -44,6 +45,7 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QTimer>
+#include <QStandardPaths>
 
 
 using namespace KLDAP;
@@ -91,7 +93,7 @@ public:
 LdapClientSearch::LdapClientSearch( QObject *parent )
     : QObject( parent ), d( new Private( this ) )
 {
-    if ( !KProtocolInfo::isKnownProtocol( KUrl( "ldap://localhost" ) ) ) {
+    if ( !KProtocolInfo::isKnownProtocol( QUrl(QLatin1String("ldap://localhost")) ) ) {
         d->mNoLDAPLookup = true;
         return;
     }
@@ -201,7 +203,7 @@ void LdapClientSearch::Private::readConfig()
 
         q->connect( &mDataTimer, SIGNAL(timeout()), SLOT(slotDataTimer()) );
     }
-    mConfigFile = KStandardDirs::locateLocal( "config", QLatin1String("kabldaprc") );
+    mConfigFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1String("/kabldaprc") ;
     KDirWatch::self()->addFile( mConfigFile );
 }
 

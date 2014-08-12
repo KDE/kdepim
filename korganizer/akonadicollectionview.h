@@ -28,7 +28,7 @@
 #define KORG_AKONADICOLLECTIONVIEW_H
 
 #include "calendarview.h"
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 class AkonadiCollectionView;
 
@@ -38,7 +38,7 @@ namespace Akonadi {
   class StandardCalendarActionManager;
 }
 
-class KAction;
+class QAction;
 class KJob;
 class QAbstractProxyModel;
 class QModelIndex;
@@ -110,9 +110,9 @@ class AkonadiCollectionView : public CalendarViewExtension
     Akonadi::EntityTreeView *mCollectionView;
     QAbstractProxyModel *mBaseModel;
     KCheckableProxyModel *mSelectionProxyModel;
-    KAction *mAssignColor;
-    KAction *mDisableColor;
-    KAction *mDefaultCalendar;
+    QAction *mAssignColor;
+    QAction *mDisableColor;
+    QAction *mDefaultCalendar;
     bool mNotSendAddRemoveSignal;
     bool mWasDefaultCalendar;
     bool mHasContextMenu;

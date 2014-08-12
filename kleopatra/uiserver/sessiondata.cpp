@@ -73,7 +73,7 @@ SessionDataHandler::SessionDataHandler()
       
 
 void SessionDataHandler::enterSession( unsigned int id ) {
-    kDebug() << id;
+    qDebug() << id;
     const shared_ptr<SessionData> sd = sessionDataInternal( id );
     assert( sd );
     ++sd->ref;
@@ -81,7 +81,7 @@ void SessionDataHandler::enterSession( unsigned int id ) {
 }
 
 void SessionDataHandler::exitSession( unsigned int id ) {
-    kDebug() << id;
+    qDebug() << id;
     const shared_ptr<SessionData> sd = sessionDataInternal( id );
     assert( sd );
     if ( --sd->ref <= 0 ) {

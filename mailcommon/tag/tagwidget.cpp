@@ -27,8 +27,9 @@
 #include <KIconButton>
 #include <KKeySequenceWidget>
 #include <KActionCollection>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocale>
+#include <QIcon>
 using namespace MailCommon;
 
 TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget *parent)
@@ -45,9 +46,9 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     spacer->addSpacing( 2 * KDialog::spacingHint() );
 
     //First row for renaming
-    mTagNameLineEdit = new KLineEdit( this );
-    mTagNameLineEdit->setClearButtonShown(true);
-    mTagNameLineEdit->setTrapReturnKey( true );
+    mTagNameLineEdit = new QLineEdit( this );
+    mTagNameLineEdit->setClearButtonEnabled(true);
+    //QT5 mTagNameLineEdit->setTrapReturnKey( true );
     settings->addWidget( mTagNameLineEdit, 1, 1 );
 
     QLabel *namelabel = new QLabel( i18nc("@label:listbox Name of the tag", "Name:")
@@ -109,7 +110,7 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     mIconButton = new KIconButton( this );
     mIconButton->setIconSize( 16 );
     mIconButton->setIconType( KIconLoader::NoGroup, KIconLoader::Action );
-    mIconButton->setIcon(KIcon(QLatin1String("mail-tagged")));
+    mIconButton->setIcon(QIcon::fromTheme(QLatin1String("mail-tagged")));
     settings->addWidget( mIconButton, 5, 1 );
     connect( mIconButton, SIGNAL(iconChanged(QString)),
              SIGNAL(iconNameChanged(QString)) );
@@ -216,7 +217,7 @@ void TagWidget::recordTagSettings( MailCommon::Tag::Ptr tag)
     tag->iconName = iconButton()->icon();
     if (mKeySequenceWidget->isEnabled()) {
         mKeySequenceWidget->applyStealShortcut();
-        tag->shortcut = KShortcut( mKeySequenceWidget->keySequence() );
+        tag->shortcut = QKeySequence( mKeySequenceWidget->keySequence() );
     }
 
     tag->inToolbar = mInToolbarCheck->isChecked();

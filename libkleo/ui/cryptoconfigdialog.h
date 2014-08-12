@@ -32,18 +32,18 @@
 #ifndef CRYPTOCONFIGDIALOG_H
 #define CRYPTOCONFIGDIALOG_H
 
-#include "kleo/kleo_export.h"
-#include <kdialog.h>
-
+#include "kleo_export.h"
+#include <QDialog>
+class QDialogButtonBox;
 namespace Kleo {
 
   class CryptoConfig;
   class CryptoConfigModule;
 
   /**
-   * Simple KDialog wrapper around CryptoConfigModule
+   * Simple QDialog wrapper around CryptoConfigModule
    */
-  class KLEO_EXPORT CryptoConfigDialog : public KDialog
+  class KLEO_EXPORT CryptoConfigDialog : public QDialog
   {
     Q_OBJECT
   public:
@@ -61,6 +61,7 @@ namespace Kleo {
 
   private:
     CryptoConfigModule* mMainWidget;
+    QDialogButtonBox *mButtonBox;
   };
 
 }

@@ -11,7 +11,7 @@ include_directories(
 
 set( sieveeditor_kcfg_SRCS settings/sieveeditorglobalconfig.kcfgc )
 
-kde4_add_kcfg_files(sieveeditor_kcfg_SRCS ${sieveeditor_kcfg_SRCS})
+kconfig_add_kcfg_files(sieveeditor_kcfg_SRCS ${sieveeditor_kcfg_SRCS})
 
 
 set(sieveeditor_SRCS
@@ -35,17 +35,16 @@ set(sieveeditor_SRCS
   sieveeditorconfigureserverpage.cpp
 )
 
-kde4_add_ui_files(sieveeditor_SRCS
+ki18n_wrap_ui(sieveeditor_SRCS
     ui/serversievesettings.ui
     ui/sieveeditorconfigureserverwidget.ui
 )
 
 
-kde4_add_executable(sieveeditor ${sieveeditor_SRCS} )
+add_executable(sieveeditor ${sieveeditor_SRCS} )
 TARGET_LINK_LIBRARIES(sieveeditor 
-                       ${KDE4_KDEUI_LIBS} 
-                       ${KDE4_KNEWSTUFF3_LIBS}
-                       ${KDE4_SOLID_LIBS} 
+                       KF5::NewStuff
+                       KF5::DBusAddons 
                        pimcommon 
                        ksieveui
                        kmanagesieve
@@ -55,6 +54,6 @@ install(TARGETS sieveeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
   sieveeditorui.rc
-  DESTINATION  ${DATA_INSTALL_DIR}/sieveeditor)
+  DESTINATION  ${KXMLGUI_INSTALL_DIR}/sieveeditor)
 
 install(PROGRAMS sieveeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

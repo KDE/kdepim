@@ -13,8 +13,8 @@
 
 
 #include "MorkParser.h"
-#include <QtCore>
-
+#include <QFile>
+#include <QIODevice>
 //        =============================================================
 //        MorkParser::MorkParser
 

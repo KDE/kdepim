@@ -23,19 +23,12 @@
 
 #include <kalarmcal/kaevent.h>
 
-#ifdef USE_AKONADI
-#include <kcalcore/person.h>
-#else
-#include <kcal/person.h>
-#endif
+#include <KCalCore/Person>
 
 #include <QObject>
 #include <QString>
 #include <QStringList>
 #include <QQueue>
-#ifdef USE_AKONADI
-#include <QList>
-#endif
 
 class KUrl;
 class KJob;
@@ -70,11 +63,7 @@ class KAMail : public QObject
         static int         checkAddress(QString& address);
         static int         checkAttachment(QString& attachment, KUrl* = 0);
         static bool        checkAttachment(const KUrl&);
-#ifdef USE_AKONADI
         static QString     convertAddresses(const QString& addresses, KCalCore::Person::List&);
-#else
-        static QString     convertAddresses(const QString& addresses, QList<KCal::Person>&);
-#endif
         static QString     convertAttachments(const QString& attachments, QStringList& list);
         static QString     controlCentreAddress();
 #ifdef KMAIL_SUPPORTED

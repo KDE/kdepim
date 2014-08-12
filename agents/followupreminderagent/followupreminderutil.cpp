@@ -41,7 +41,7 @@ void FollowUpReminder::FollowUpReminderUtil::reload()
 
 void FollowUpReminder::FollowUpReminderUtil::forceReparseConfiguration()
 {
-    FollowUpReminderAgentSettings::self()->writeConfig();
+    FollowUpReminderAgentSettings::self()->save();
     FollowUpReminderAgentSettings::self()->config()->reparseConfiguration();
 }
 

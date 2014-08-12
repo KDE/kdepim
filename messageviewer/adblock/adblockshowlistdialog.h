@@ -18,10 +18,10 @@
 #ifndef ADBLOCKSHOWLISTDIALOG_H
 #define ADBLOCKSHOWLISTDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class KJob;
-class KTemporaryFile;
+class QTemporaryFile;
 
 namespace KPIMUtils {
 class ProgressIndicatorLabel;
@@ -30,9 +30,9 @@ class ProgressIndicatorLabel;
 namespace PimCommon {
 class PlainTextEditorWidget;
 }
-
+class QPushButton;
 namespace MessageViewer {
-class AdBlockShowListDialog : public KDialog
+class AdBlockShowListDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -56,8 +56,9 @@ private:
 
     QString mListName;
     PimCommon::PlainTextEditorWidget *mTextEdit;
-    KTemporaryFile *mTemporaryFile;
+    QTemporaryFile *mTemporaryFile;
     KPIMUtils::ProgressIndicatorLabel *mProgress;
+    QPushButton *mUser1Button;
 };
 }
 

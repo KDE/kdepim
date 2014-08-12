@@ -20,9 +20,9 @@
 
 #include "collectiongeneralpage.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/EntityDisplayAttribute>
-#include <akonadi/calendar/blockalarmsattribute.h>
+#include <Collection>
+#include <EntityDisplayAttribute>
+#include <Akonadi/Calendar/BlockAlarmsAttribute>
 
 #include <KCalCore/Event>
 #include <KCalCore/Journal>
@@ -30,7 +30,7 @@
 
 #include <KDialog>
 #include <KIconButton>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 
 #include <QCheckBox>
@@ -58,7 +58,7 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   QLabel *label = new QLabel( i18nc( "@label:textbox Name of the folder.", "&Name:" ), this );
   hbox->addWidget( label );
 
-  mNameEdit = new KLineEdit( this );
+  mNameEdit = new QLineEdit( this );
   mNameEdit->setToolTip(
     i18nc( "@info:tooltip", "Set the folder name" ) );
   mNameEdit->setWhatsThis(

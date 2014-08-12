@@ -25,10 +25,12 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <KUrlRequester>
+#include <KUrl>
 
 #include <QVBoxLayout>
 #include <QProcess>
 #include <QPushButton>
+#include <QStandardPaths>
 
 StorageServiceConfigureWidget::StorageServiceConfigureWidget(QWidget *parent)
     : PimCommon::StorageServiceConfigureWidget(parent)
@@ -49,7 +51,7 @@ void StorageServiceConfigureWidget::loadSettings()
 void StorageServiceConfigureWidget::writeSettings()
 {
     Settings::self()->setDownloadDirectory(downloadFolder()->url().path());
-    Settings::self()->writeConfig();
+    Settings::self()->save();
 }
 
 ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageServiceManager *storageManager, QWidget *parent)
@@ -66,10 +68,10 @@ ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageS
     hbox->addWidget(mManageStorageService);
     hbox->addStretch();
     lay->addLayout(hbox);
-    if (KStandardDirs::findExe(QLatin1String("storageservicemanager")).isEmpty()) {
+    if (QStandardPaths::findExecutable(QLatin1String("storageservicemanager")).isEmpty()) {
         mManageStorageService->setEnabled(false);
     } else {
-        connect(mManageStorageService, SIGNAL(clicked(bool)), this, SLOT(slotManageStorageService()));
+        connect(mManageStorageService, &QPushButton::clicked, this, &ConfigureStorageServiceWidget::slotManageStorageService);
     }
     setLayout(lay);
     //TODO need to implement save/load from KDialogConfig

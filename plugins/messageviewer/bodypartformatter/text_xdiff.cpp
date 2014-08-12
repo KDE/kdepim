@@ -34,16 +34,12 @@
 #include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
 
-#include <kglobal.h>
-#include <klocale.h>
+//#include <kglobal.h>
+//#include <klocale.h>
 #include <kstringhandler.h>
-#include <kglobalsettings.h>
 #include <kiconloader.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmessagebox.h>
-#include <kstandarddirs.h>
-#include <kapplication.h>
-#include <kdemacros.h>
 
 
 #include <QUrl>
@@ -91,7 +87,7 @@ namespace {
       const QStringList lines = diff.split( QLatin1Char('\n') );
       QStringList::ConstIterator end( lines.end() );
       for ( QStringList::ConstIterator it = lines.begin(); it != end; ++it ) {
-        const QString line( Qt::escape( *it ) );
+        const QString line( (*it).toHtmlEscaped() );
         QString style;
         if ( !line.isEmpty() ) {
           if ( line.startsWith( QLatin1String("+++") ) ) {
@@ -112,7 +108,7 @@ namespace {
       }
 
       html += QLatin1String("</pre></div>");
-      //kDebug( "%s", html.toLatin1() );
+      //qDebug( "%s", html.toLatin1() );
       writer->queue( html );
 
       return Ok;
@@ -140,8 +136,8 @@ namespace {
 }
 
 extern "C"
-KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
+Q_DECL_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
-  KGlobal::locale()->insertCatalog( QLatin1String("messageviewer_text_xdiff_plugin") );
+  //QT5 KLocale::global()->insertCatalog( QLatin1String("messageviewer_text_xdiff_plugin") );
   return new Plugin();
 }

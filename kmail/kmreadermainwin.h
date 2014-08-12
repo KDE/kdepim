@@ -9,12 +9,12 @@
 #include <KMime/Message>
 
 #include <boost/scoped_ptr.hpp>
-#include <akonadi/item.h>
-#include <akonadi/collection.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/collection.h>
 #include <QModelIndex>
 #include <messageviewer/viewer/viewer.h>
 class KMReaderWin;
-class KAction;
+class QAction;
 class KFontAction;
 class KFontSizeAction;
 class KJob;
@@ -81,12 +81,12 @@ private:
     Akonadi::Collection parentCollection() const;
     void initKMReaderMainWin();
     void setupAccel();
-    KAction *copyActionMenu(QMenu *menu);
+    QAction *copyActionMenu(QMenu *menu);
 
     KMReaderWin *mReaderWin;
     Akonadi::Item mMsg;
     // a few actions duplicated from kmmainwidget
-    KAction *mTrashAction, *mSaveAtmAction;
+    QAction *mTrashAction, *mSaveAtmAction;
     KFontAction *mFontAction;
     KFontSizeAction *mFontSizeAction;
     KMail::MessageActions *mMsgActions;

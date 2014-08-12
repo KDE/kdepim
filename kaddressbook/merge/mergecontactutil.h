@@ -19,7 +19,7 @@
 #ifndef MERGECONTACTUTIL_H
 #define MERGECONTACTUTIL_H
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 namespace KABMergeContacts {
 namespace MergeContactUtil
 {

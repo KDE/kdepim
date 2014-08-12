@@ -20,10 +20,10 @@
 
 #include "freebusyitemmodel.h"
 
-#include <akonadi/calendar/freebusymanager.h>
+#include <Akonadi/Calendar/FreeBusyManager>
 
-#include <KDebug>
-#include <KGlobal>
+#include <QDebug>
+
 #include <KLocalizedString>
 #include <KLocale>
 
@@ -146,8 +146,8 @@ QVariant FreeBusyItemModel::data( const QModelIndex &index, int role ) const
   switch( role ) {
   case Qt::DisplayRole: // return something to make modeltest happy
     return QString( "%1 - %2" ).
-      arg( KGlobal::locale()->formatDateTime( period.start() ) ).
-      arg( KGlobal::locale()->formatDateTime( period.end() ) );
+      arg( KLocale::global()->formatDateTime( period.start() ) ).
+      arg( KLocale::global()->formatDateTime( period.end() ) );
   case FreeBusyItemModel::FreeBusyPeriodRole:
     return QVariant::fromValue( period );
   default:
@@ -234,7 +234,7 @@ QVariant FreeBusyItemModel::headerData( int section, Qt::Orientation orientation
 
 void FreeBusyItemModel::addItem( const IncidenceEditorNG::FreeBusyItem::Ptr &freebusy )
 {
-  kDebug() << freebusy->attendee()->fullName();
+  qDebug() << freebusy->attendee()->fullName();
   int row = mFreeBusyItems.size();
   beginInsertRows( QModelIndex(), row, row );
   mFreeBusyItems.append( freebusy );

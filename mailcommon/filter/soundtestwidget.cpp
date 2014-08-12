@@ -18,12 +18,14 @@
 
 #include "soundtestwidget.h"
 
-#include <KFileDialog>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KUrlRequester>
 #include <KLineEdit>
 #include <KStandardDirs>
+#include <QIcon>
+#include <KGlobal>
+#include <KUrl>
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -39,7 +41,7 @@ SoundTestWidget::SoundTestWidget( QWidget *parent )
     layout->setMargin( 0 );
 
     m_playButton = new QPushButton( this );
-    m_playButton->setIcon( KIcon( QLatin1String("arrow-right") ) );
+    m_playButton->setIcon( QIcon::fromTheme( QLatin1String("arrow-right") ) );
     m_playButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     m_playButton->setToolTip(i18n("Play"));
     layout->addWidget( m_playButton );
@@ -75,9 +77,8 @@ void SoundTestWidget::openSoundDialog( KUrlRequester * )
     }
 
     init = false;
-
-    KFileDialog *fileDialog = m_urlRequester->fileDialog();
-    fileDialog->setCaption( i18n( "Select Sound File" ) );
+    QFileDialog *fileDialog = m_urlRequester->fileDialog();
+    fileDialog->setWindowTitle( i18n( "Select Sound File" ) );
 
     QStringList filters;
     filters << QLatin1String("audio/x-wav")
@@ -85,7 +86,7 @@ void SoundTestWidget::openSoundDialog( KUrlRequester * )
             << QLatin1String("application/ogg")
             << QLatin1String("audio/x-adpcm");
 
-    fileDialog->setMimeFilter( filters );
+    fileDialog->setMimeTypeFilters( filters );
 
     const QStringList soundDirs = KGlobal::dirs()->resourceDirs( "sound" );
 
@@ -98,7 +99,7 @@ void SoundTestWidget::openSoundDialog( KUrlRequester * )
             dir = soundDir;
             if ( dir.isReadable() && dir.count() > 2 ) {
                 soundURL.setPath( soundDir );
-                fileDialog->setUrl( soundURL );
+                fileDialog->setDirectoryUrl( soundURL );
                 break;
             }
         }
@@ -116,7 +117,6 @@ void SoundTestWidget::playSound()
     const QString play = ( parameter.startsWith( file ) ?
                                parameter.mid( file.length() ) :
                                parameter );
-
     Phonon::MediaObject *player = Phonon::createPlayer( Phonon::NotificationCategory, QUrl::fromLocalFile(play) );
     player->play();
     connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );

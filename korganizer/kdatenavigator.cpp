@@ -30,11 +30,13 @@
 
 #include <KCalendarSystem>
 #include <KGlobalSettings>
-
+#include <KGlobal>
 #include <QEvent>
 #include <QGridLayout>
 #include <QLabel>
 #include <QWheelEvent>
+#include <KLocale>
+#include <QFontDatabase>
 
 KDateNavigator::KDateNavigator( QWidget *parent )
   : QFrame( parent ), mBaseDate( 1970, 1, 1 )
@@ -53,7 +55,7 @@ KDateNavigator::KDateNavigator( QWidget *parent )
   connect( mNavigatorBar, SIGNAL(monthSelected(int)), SIGNAL(monthSelected(int)) );
   connect( mNavigatorBar, SIGNAL(yearSelected(int)), SIGNAL(yearSelected(int)));
 
-  QString generalFont = KGlobalSettings::generalFont().family();
+  QString generalFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont).family();
 
   // Set up the heading fields.
   for ( int i = 0; i < 7; ++i ) {
@@ -154,7 +156,7 @@ QDate KDateNavigator::startDate() const
 
   const KCalendarSystem *calsys = KOGlobals::self()->calendarSystem();
   int m_fstDayOfWkCalsys = calsys->dayOfWeek( dayone );
-  int weekstart = KGlobal::locale()->weekStartDay();
+  int weekstart = KLocale::global()->weekStartDay();
 
   // If month begins on Monday and Monday is first day of week,
   // month should begin on second line. Sunday doesn't have this problem.
@@ -247,7 +249,7 @@ void KDateNavigator::updateView()
 
 void KDateNavigator::updateConfig()
 {
-  int weekstart = KGlobal::locale()->weekStartDay();
+  int weekstart = KLocale::global()->weekStartDay();
   for ( int i=0; i < 7; ++i ) {
     const int day = weekstart + i <= 7 ? weekstart + i : ( weekstart + i ) % 7;
     QString dayName =

@@ -42,12 +42,14 @@ using KPIM::RecentAddresses;
 #include <KSeparator>
 #include <KCharsets>
 #include <KUrlRequester>
-#include <KHBox>
+#include <QHBoxLayout>
 #include <KMessageBox>
 #include <KFile>
 #include <kascii.h>
-#include <KIntSpinBox>
-#include <KIntNumInput>
+#include <QSpinBox>
+#include <QSpinBox>
+#include <KPluralHandlingSpinBox>
+#include <QDebug>
 
 #include <QLabel>
 #include <QGroupBox>
@@ -61,8 +63,8 @@ QString ComposerPage::helpAnchor() const
     return QString::fromLatin1("configure-composer");
 }
 
-ComposerPage::ComposerPage( const KComponentData &instance, QWidget *parent )
-    : ConfigModuleWithTabs( instance, parent )
+ComposerPage::ComposerPage( QWidget *parent )
+    : ConfigModuleWithTabs( parent )
 {
     //
     // "General" tab:
@@ -244,8 +246,11 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
     mWordWrapCheck->setToolTip( helpText );
     mWordWrapCheck->setWhatsThis( helpText );
 
-    mWrapColumnSpin = new KIntSpinBox( 30/*min*/, 78/*max*/, 1/*step*/,
-                                       78/*init*/, this );
+    mWrapColumnSpin = new QSpinBox(this );
+    mWrapColumnSpin->setMaximum(78/*max*/);
+    mWrapColumnSpin->setMinimum( 30/*min*/);
+    mWrapColumnSpin->setSingleStep(1/*step*/);
+    mWrapColumnSpin->setValue(78/*init*/);
     mWrapColumnSpin->setEnabled( false ); // since !mWordWrapCheck->isChecked()
 
     helpText = i18n( "Set the text width for automatic word wrapping" );
@@ -301,7 +306,11 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
     ++row;
 
     // "Autosave interval" spinbox
-    mAutoSave = new KIntSpinBox( 0, 60, 1, 1, this );
+    mAutoSave = new KPluralHandlingSpinBox(this );
+    mAutoSave->setMaximum(60);
+    mAutoSave->setMinimum( 0);
+    mAutoSave->setSingleStep(1);
+    mAutoSave->setValue(1);
     mAutoSave->setObjectName( QLatin1String("kcfg_AutosaveInterval") );
     mAutoSave->setSpecialValueText( i18n("No autosave") );
     mAutoSave->setSuffix( ki18ncp( "Interval suffix", " minute", " minutes" ) );
@@ -377,8 +386,11 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
     mRecipientCheck->setWhatsThis( helpText );
     mRecipientCheck->setToolTip( i18n( "Warn if too many recipients are specified" ) );
 
-    mRecipientSpin = new KIntSpinBox( 1/*min*/, 100/*max*/, 1/*step*/,
-                                      5/*init*/, this );
+    mRecipientSpin = new QSpinBox(this );
+    mRecipientSpin->setMaximum(100/*max*/);
+    mRecipientSpin->setMinimum( 1/*min*/);
+    mRecipientSpin->setSingleStep(1/*step*/);
+    mRecipientSpin->setValue(5/*init*/);
     mRecipientSpin->setObjectName( QLatin1String("kcfg_RecipientThreshold") );
     mRecipientSpin->setEnabled( false );
     helpText = i18n( GlobalSettings::self()->recipientThresholdItem()->whatsThis().toUtf8() );
@@ -399,7 +411,11 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
 #endif
 
     // "Maximum Reply-to-All recipients" spinbox
-    mMaximumRecipients = new KIntSpinBox( 0, 9999, 1, 1, this );
+    mMaximumRecipients = new QSpinBox(this );
+    mMaximumRecipients->setMaximum(9999);
+    mMaximumRecipients->setMinimum( 0);
+    mMaximumRecipients->setSingleStep(1);
+    mMaximumRecipients->setValue(1);
 
     helpText = i18n( "Only allow this many recipients to be specified for the message.\n"
                      "This applies to doing a \"Reply to All\", entering recipients manually\n"
@@ -440,8 +456,7 @@ ComposerPageGeneralTab::ComposerPageGeneralTab( QWidget * parent )
     ++row;
 
     // "Maximum recent addresses retained" spinbox
-    mMaximumRecentAddress = new KIntNumInput( this );
-    mMaximumRecentAddress->setSliderEnabled( false );
+    mMaximumRecentAddress = new QSpinBox( this );
     mMaximumRecentAddress->setMinimum( 0 );
     mMaximumRecentAddress->setMaximum( 999 );
     mMaximumRecentAddress->setSpecialValueText( i18nc( "No addresses are retained", "No save" ) );
@@ -638,18 +653,21 @@ ComposerPageExternalEditorTab::ComposerPageExternalEditorTab( QWidget * parent )
     connect( mExternalEditorCheck, SIGNAL(toggled(bool)),
              this, SLOT(slotEmitChanged()) );
 
-    KHBox *hbox = new KHBox( this );
+    QWidget *hbox = new QWidget( this );
+    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
     QLabel *label = new QLabel( GlobalSettings::self()->externalEditorItem()->label(),
                                 hbox );
     mEditorRequester = new KUrlRequester( hbox );
+    hboxHBoxLayout->addWidget(mEditorRequester);
     //Laurent 25/10/2011 fix #Bug 256655 - A "save changes?" dialog appears ALWAYS when leaving composer settings, even when unchanged.
     //mEditorRequester->setObjectName( "kcfg_ExternalEditor" );
-    connect( mEditorRequester, SIGNAL(urlSelected(KUrl)),
+    connect( mEditorRequester, SIGNAL(urlSelected(QUrl)),
              this, SLOT(slotEmitChanged()) );
     connect( mEditorRequester, SIGNAL(textChanged(QString)),
              this, SLOT(slotEmitChanged()) );
 
-    hbox->setStretchFactor( mEditorRequester, 1 );
+    hboxHBoxLayout->setStretchFactor( mEditorRequester, 1 );
     label->setBuddy( mEditorRequester );
     label->setEnabled( false ); // since !mExternalEditorCheck->isChecked()
     // ### FIXME: allow only executables (x-bit when available..)
@@ -916,7 +934,7 @@ void ComposerPage::CharsetTab::slotVerifyCharset( QString & charset )
     }
 
     bool ok = false;
-    QTextCodec *codec = KGlobal::charsets()->codecForName( charset, ok );
+    QTextCodec *codec = KCharsets::charsets()->codecForName( charset, ok );
     if ( ok && codec ) {
         charset = QString::fromLatin1( codec->name() ).toLower();
         return;
@@ -993,8 +1011,8 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
     // "Message-Id suffix" line edit and label:
     QHBoxLayout *hlay = new QHBoxLayout(); // inherits spacing
     vlay->addLayout( hlay );
-    mMessageIdSuffixEdit = new KLineEdit( this );
-    mMessageIdSuffixEdit->setClearButtonShown( true );
+    mMessageIdSuffixEdit = new QLineEdit( this );
+    mMessageIdSuffixEdit->setClearButtonEnabled( true );
     // only ASCII letters, digits, plus, minus and dots are allowed
     QRegExpValidator *messageIdSuffixValidator =
             new QRegExpValidator( QRegExp( QLatin1String("[a-zA-Z0-9+-]+(?:\\.[a-zA-Z0-9+-]+)*") ), this );
@@ -1043,8 +1061,8 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
     glay->addWidget( mRemoveHeaderButton, 1, 2 );
 
     // "name" and "value" line edits and labels:
-    mTagNameEdit = new KLineEdit( this );
-    mTagNameEdit->setClearButtonShown(true);
+    mTagNameEdit = new QLineEdit( this );
+    mTagNameEdit->setClearButtonEnabled(true);
     mTagNameEdit->setEnabled( false );
     mTagNameLabel = new QLabel( i18nc("@label:textbox Name of the mime header.","&Name:"), this );
     mTagNameLabel->setBuddy( mTagNameEdit );
@@ -1054,8 +1072,8 @@ ComposerPageHeadersTab::ComposerPageHeadersTab( QWidget * parent )
     connect( mTagNameEdit, SIGNAL(textChanged(QString)),
              this, SLOT(slotMimeHeaderNameChanged(QString)) );
 
-    mTagValueEdit = new KLineEdit( this );
-    mTagValueEdit->setClearButtonShown(true);
+    mTagValueEdit = new QLineEdit( this );
+    mTagValueEdit->setClearButtonEnabled(true);
     mTagValueEdit->setEnabled( false );
     mTagValueLabel = new QLabel( i18n("&Value:"), this );
     mTagValueLabel->setBuddy( mTagValueEdit );
@@ -1122,7 +1140,7 @@ void ComposerPage::HeadersTab::slotRemoveMimeHeader()
     // calling this w/o selection is a programming error:
     QTreeWidgetItem *item = mHeaderList->currentItem();
     if ( !item ) {
-        kDebug() << "=================================================="
+        qDebug() << "=================================================="
                  << "Error: Remove button was pressed although no custom header was selected\n"
                  << "==================================================\n";
         return;
@@ -1131,7 +1149,7 @@ void ComposerPage::HeadersTab::slotRemoveMimeHeader()
     QTreeWidgetItem *below = mHeaderList->itemBelow( item );
 
     if ( below ) {
-        kDebug() << "below";
+        qDebug() << "below";
         mHeaderList->setCurrentItem( below );
         delete item;
         item = 0;
@@ -1296,7 +1314,7 @@ ComposerPageAttachmentsTab::ComposerPageAttachmentsTab( QWidget * parent )
     label->setAlignment( Qt::AlignLeft );
     layAttachment->addWidget(label);
 
-    mMaximumAttachmentSize = new KIntNumInput( this );
+    mMaximumAttachmentSize = new QSpinBox( this );
     mMaximumAttachmentSize->setRange( -1, 99999 );
     mMaximumAttachmentSize->setSingleStep( 100 );
     mMaximumAttachmentSize->setSuffix(i18nc("spinbox suffix: unit for kilobyte", " kB"));

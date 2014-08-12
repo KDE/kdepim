@@ -30,22 +30,23 @@
 
 #include <calendarsupport/utils.h>
 #include <calendarsupport/calendarsingleton.h>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/EntityDisplayAttribute>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/EntityDisplayAttribute>
 #include <Akonadi/Contact/ContactSearchJob>
 #include <Akonadi/Contact/ContactViewerDialog>
 
 #include <KCalCore/Calendar>
 
-#include <KMenu>
+#include <QMenu>
 #include <KLocalizedString>
 #include <KLocale>
 #include <KUrlLabel>
 #include <KIconLoader>
 #include <KConfigGroup>
 #include <KToolInvocation>
-#include <KHolidays/Holidays>
+#include <KHolidays/kholidays/Holidays>
+
 
 #include <QDate>
 #include <QEvent>
@@ -92,7 +93,7 @@ BirthdaySearchJob::BirthdaySearchJob( QObject *parent, int daysInAdvance )
     arg( QString::fromLatin1( Akonadi::ItemSearchJob::akonadiItemIdUri().toEncoded() ) ).
     arg( QDate::currentDate().toString( Qt::ISODate ) ).
     arg( daysInAdvance );
-  Akonadi::ItemSearchJob::setQuery( query );
+  //QT5 Akonadi::ItemSearchJob::setQuery( query );
 }
 
 enum SDIncidenceType {
@@ -493,13 +494,13 @@ void SDSummaryWidget::createLabels()
       } else if ( (*addrIt).daysTo == 1 ) {
         datestr = i18nc( "the special day is tomorrow", "Tomorrow" );
       } else {
-        datestr = KGlobal::locale()->formatDate( sD, KLocale::FancyLongDate );
+        datestr = KLocale::global()->formatDate( sD, KLocale::FancyLongDate );
       }
       // Print the date span for multiday, floating events, for the
       // first day of the event only.
       if ( (*addrIt).span > 1 ) {
         QString endstr =
-          KGlobal::locale()->formatDate( sD.addDays( (*addrIt).span - 1 ) );
+          KLocale::global()->formatDate( sD.addDays( (*addrIt).span - 1 ) );
         datestr += QLatin1String(" -\n ") + endstr;
       }
 
@@ -633,7 +634,7 @@ void SDSummaryWidget::updateView()
   if ( mShowBirthdaysFromKAB && !mJobRunning ) {
     BirthdaySearchJob *job = new BirthdaySearchJob( this, mDaysAhead );
 
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotBirthdayJobFinished(KJob*)) );
+    connect(job, &BirthdaySearchJob::result, this, &SDSummaryWidget::slotBirthdayJobFinished);
     job->start();
     mJobRunning = true;
 
@@ -645,19 +646,19 @@ void SDSummaryWidget::mailContact( const QString &url )
 {
   const Akonadi::Item item = Akonadi::Item::fromUrl( url );
   if ( !item.isValid() ) {
-    kDebug() << QLatin1String("Invalid item found");
+    qDebug() << QLatin1String("Invalid item found");
     return;
   }
 
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect( job, SIGNAL(result(KJob*)), SLOT(slotItemFetchJobDone(KJob*)) );
+  connect(job, &Akonadi::ItemFetchJob::result, this, &SDSummaryWidget::slotItemFetchJobDone);
 }
 
 void SDSummaryWidget::slotItemFetchJobDone(KJob* job)
 {
     if ( job->error() ) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         return;
     }
     const Akonadi::Item::List lst = qobject_cast<Akonadi::ItemFetchJob*>( job )->items();
@@ -673,7 +674,7 @@ void SDSummaryWidget::viewContact( const QString &url )
 {
   const Akonadi::Item item = Akonadi::Item::fromUrl( url );
   if ( !item.isValid() ) {
-    kDebug() << "Invalid item found";
+    qDebug() << "Invalid item found";
     return;
   }
 
@@ -684,7 +685,7 @@ void SDSummaryWidget::viewContact( const QString &url )
 
 void SDSummaryWidget::popupMenu( const QString &url )
 {
-  KMenu popup( this );
+  QMenu popup( this );
   const QAction *sendMailAction = popup.addAction(
     KIconLoader::global()->loadIcon( QLatin1String("mail-message-new"), KIconLoader::Small ),
     i18n( "Send &Mail" ) );

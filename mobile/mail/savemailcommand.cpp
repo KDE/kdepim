@@ -22,9 +22,9 @@
 #include "messagecore/utils/stringutil.h"
 #include "messageviewer/viewer/nodehelper.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 
 #include <KUrl>
 #include <KFileDialog>
@@ -33,6 +33,7 @@
 #include <KIO/JobUiDelegate>
 #include <kio/job.h>
 #include <KMessageBox>
+#include <QDebug>
 
 //TODO: Review if it is needed in other place as well
 KUrl subjectToUrl( const QString &subject )
@@ -45,7 +46,7 @@ KUrl subjectToUrl( const QString &subject )
     fileName += QLatin1String(".mbox");
 
   const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
-  return KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter );
+  return KFileDialog::getSaveUrl( QUrl::fromLocalFile( fileName ), filter );
 }
 
 #define STRDIM(x) (sizeof(x)/sizeof(*x)-1)
@@ -123,7 +124,7 @@ void showJobError( KJob* job )
   if( kiojob && kiojob->ui() )
     kiojob->ui()->showErrorMessage();
   else
-    kWarning() << "There is no GUI delegate set for a kjob, and it failed with error:" << job->errorString();
+    qWarning() << "There is no GUI delegate set for a kjob, and it failed with error:" << job->errorString();
 }
 
 
@@ -170,7 +171,7 @@ void SaveMailCommand::slotFetchDone(KJob *job)
     if (mMessages.count() == 1)
         mTotalSize = mMessages.first().size();
 
-    kDebug() << mUrl << mTotalSize;
+    qDebug() << mUrl << mTotalSize;
 
 #ifndef KDEPIM_MOBILE_UI
     mJob = KIO::put( mUrl, -1 /*TODO: See MessageViewer::Util::getWritePermissions() */ );

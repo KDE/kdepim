@@ -24,11 +24,7 @@
 #include "editdlgtypes.h"
 
 #include "alarmcalendar.h"
-#ifdef USE_AKONADI
 #include "collectionmodel.h"
-#else
-#include "alarmresources.h"
-#endif
 #include "alarmtimewidget.h"
 #include "autoqpointer.h"
 #include "buttongroup.h"
@@ -58,11 +54,13 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kfiledialog.h>
-#include <kpushbutton.h>
+#include <QPushButton>
 #include <khbox.h>
 #include <kvbox.h>
 #include <kwindowsystem.h>
-#include <kdebug.h>
+#include <qdebug.h>
+#include <KIcon>
+#include <KTimeZone>
 
 #include <QLabel>
 #include <QGroupBox>
@@ -74,6 +72,8 @@
 #include <QShowEvent>
 #include <QScrollBar>
 #include <QTimer>
+#include <KSharedConfig>
+#include <KLocale>
 
 using namespace KCal;
 using namespace KAlarmCal;
@@ -101,7 +101,7 @@ QString EditAlarmDlg::i18n_chk_ShowInKOrganizer()   { return i18nc("@option:chec
 
 EditAlarmDlg* EditAlarmDlg::create(bool Template, Type type, QWidget* parent, GetResourceType getResource)
 {
-    kDebug();
+    qDebug();
     switch (type)
     {
         case DISPLAY:  return new EditDisplayAlarmDlg(Template, parent, getResource);
@@ -148,9 +148,6 @@ EditAlarmDlg::EditAlarmDlg(bool Template, KAEvent::SubAction action, QWidget* pa
       mDeferChangeButton(0),
       mTimeWidget(0),
       mShowInKorganizer(0),
-#ifndef USE_AKONADI
-      mResource(0),
-#endif
       mDeferGroupHeight(0),
       mTemplate(Template),
       mNewAlarm(true),
@@ -174,9 +171,6 @@ EditAlarmDlg::EditAlarmDlg(bool Template, const KAEvent* event, bool newAlarm, Q
       mDeferChangeButton(0),
       mTimeWidget(0),
       mShowInKorganizer(0),
-#ifndef USE_AKONADI
-      mResource(0),
-#endif
       mDeferGroupHeight(0),
       mEventId(newAlarm ? QString() : event->id()),
       mTemplate(Template),
@@ -193,7 +187,6 @@ void EditAlarmDlg::init(const KAEvent* event, GetResourceType getResource)
 {
     switch (getResource)
     {
-#ifdef USE_AKONADI
         case RES_USE_EVENT_ID:
             if (event)
             {
@@ -208,22 +201,6 @@ void EditAlarmDlg::init(const KAEvent* event, GetResourceType getResource)
         default:
             mCollectionItemId = -2;
             break;
-#else
-        case RES_USE_EVENT_ID:
-            if (event)
-            {
-                mResourceEventId = event->id();
-                break;
-            }
-            // fall through to RES_PROMPT
-        case RES_PROMPT:
-            mResourceEventId = QString("");   // empty but non-null
-            break;
-        case RES_IGNORE:
-        default:
-            mResourceEventId.clear();         // null
-            break;
-#endif
     }
 }
 
@@ -256,14 +233,14 @@ void EditAlarmDlg::init(const KAEvent* event)
         box->setSpacing(spacingHint());
         QLabel* label = new QLabel(i18nc("@label:textbox", "Template name:"), box);
         label->setFixedSize(label->sizeHint());
-        mTemplateName = new KLineEdit(box);
+        mTemplateName = new QLineEdit(box);
         mTemplateName->setReadOnly(mReadOnly);
-        connect(mTemplateName, SIGNAL(userTextChanged(QString)), SLOT(contentsChanged()));
+        connect(mTemplateName, SIGNAL(textEdited(QString)), SLOT(contentsChanged()));
         label->setBuddy(mTemplateName);
         box->setWhatsThis(i18nc("@info:whatsthis", "Enter the name of the alarm template"));
         box->setFixedHeight(box->sizeHint().height());
     }
-    mTabs = new KTabWidget(mainWidget);
+    mTabs = new QTabWidget(mainWidget);
     mTabScrollGroup = new StackedScrollGroup(this, mTabs);
 
     StackedScrollWidget* mainScroll = new StackedScrollWidget(mTabScrollGroup);
@@ -356,7 +333,7 @@ void EditAlarmDlg::init(const KAEvent* event)
         mTemplateTime = new TimeEdit(box);
         mTemplateTime->setFixedSize(mTemplateTime->sizeHint());
         mTemplateTime->setReadOnly(mReadOnly);
-        mTemplateTime->setWhatsThis(i18nc("@info:whatsthis",
+        mTemplateTime->setWhatsThis(xi18nc("@info:whatsthis",
               "<para>Enter the start time for alarms based on this template.</para><para>%1</para>",
               TimeSpinBox::shiftWhatsThis()));
         connect(mTemplateTime, SIGNAL(valueChanged(int)), SLOT(contentsChanged()));
@@ -367,7 +344,7 @@ void EditAlarmDlg::init(const KAEvent* event)
         mTemplateAnyTime = new RadioButton(i18nc("@option:radio", "Date only"), templateTimeBox);
         mTemplateAnyTime->setFixedSize(mTemplateAnyTime->sizeHint());
         mTemplateAnyTime->setReadOnly(mReadOnly);
-        mTemplateAnyTime->setWhatsThis(i18nc("@info:whatsthis", "Set the <interface>Any time</interface> option for alarms based on this template."));
+        mTemplateAnyTime->setWhatsThis(xi18nc("@info:whatsthis", "Set the <interface>Any time</interface> option for alarms based on this template."));
         mTemplateTimeGroup->addButton(mTemplateAnyTime);
         grid->addWidget(mTemplateAnyTime, 1, 0, Qt::AlignLeft);
 
@@ -386,7 +363,7 @@ void EditAlarmDlg::init(const KAEvent* event)
         mTemplateTimeAfter->setFixedSize(mTemplateTimeAfter->sizeHint());
         mTemplateTimeAfter->setReadOnly(mReadOnly);
         connect(mTemplateTimeAfter, SIGNAL(valueChanged(int)), SLOT(contentsChanged()));
-        mTemplateTimeAfter->setWhatsThis(i18nc("@info:whatsthis", "<para>%1</para><para>%2</para>",
+        mTemplateTimeAfter->setWhatsThis(xi18nc("@info:whatsthis", "<para>%1</para><para>%2</para>",
                                                AlarmTimeWidget::i18n_TimeAfterPeriod(), TimeSpinBox::shiftWhatsThis()));
         box->setFixedHeight(box->sizeHint().height());
         grid->addWidget(box, 1, 1, Qt::AlignLeft);
@@ -451,7 +428,7 @@ void EditAlarmDlg::init(const KAEvent* event)
     setButtonWhatsThis(Ok, i18nc("@info:whatsthis", "Schedule the alarm at the specified time."));
 
     // Hide optional controls
-    KConfigGroup config(KGlobal::config(), EDIT_MORE_GROUP);
+    KConfigGroup config(KSharedConfig::openConfig(), EDIT_MORE_GROUP);
     showOptions(config.readEntry(EDIT_MORE_KEY, false));
 
     // Initialise the state of all controls according to the specified event, if any
@@ -733,17 +710,9 @@ void EditAlarmDlg::contentsChanged()
 * The data is returned in the supplied KAEvent instance.
 * Reply = false if the only change has been to an existing deferral.
 */
-#ifdef USE_AKONADI
 bool EditAlarmDlg::getEvent(KAEvent& event, Akonadi::Collection& collection)
-#else
-bool EditAlarmDlg::getEvent(KAEvent& event, AlarmResource*& resource)
-#endif
 {
-#ifdef USE_AKONADI
     collection = mCollection;
-#else
-    resource = mResource;
-#endif
     if (mChanged)
     {
         // It's a new event, or the edit controls have changed
@@ -1003,11 +972,11 @@ bool EditAlarmDlg::validate()
                 QString prompt = dateOnly ? i18nc("@info The parameter is a date value",
                                                   "The start date does not match the alarm's recurrence pattern, "
                                                   "so it will be adjusted to the date of the next recurrence (%1).",
-                                                  KGlobal::locale()->formatDate(next.date(), KLocale::ShortDate))
+                                                  KLocale::global()->formatDate(next.date(), KLocale::ShortDate))
                                           : i18nc("@info The parameter is a date/time value",
                                                   "The start date/time does not match the alarm's recurrence pattern, "
                                                   "so it will be adjusted to the date/time of the next recurrence (%1).",
-                                                  KGlobal::locale()->formatDateTime(next.kDateTime(), KLocale::ShortDate));
+                                                  KLocale::global()->formatDateTime(next.kDateTime(), KLocale::ShortDate));
                 if (KAMessageBox::warningContinueCancel(this, prompt) != KMessageBox::Continue)
                     return false;
             }
@@ -1016,13 +985,8 @@ bool EditAlarmDlg::validate()
         if (timedRecurrence)
         {
             KAEvent event;
-#ifdef USE_AKONADI
             Akonadi::Collection c;
             getEvent(event, c);     // this may adjust mAlarmDateTime
-#else
-            AlarmResource* r;
-            getEvent(event, r);     // this may adjust mAlarmDateTime
-#endif
             KDateTime now = KDateTime::currentDateTime(mAlarmDateTime.timeSpec());
             bool dateOnly = mAlarmDateTime.isDateOnly();
             if ((dateOnly  &&  mAlarmDateTime.date() < now.date())
@@ -1066,7 +1030,7 @@ bool EditAlarmDlg::validate()
             {
                 mTabs->setCurrentIndex(mMainPageIndex);
                 mReminder->setFocusOnCount();
-                KAMessageBox::sorry(this, i18nc("@info", "Reminder period must be less than the recurrence interval, unless <interface>%1</interface> is checked.",
+                KAMessageBox::sorry(this, xi18nc("@info", "Reminder period must be less than the recurrence interval, unless <interface>%1</interface> is checked.",
                                                 Reminder::i18n_chk_FirstRecurrenceOnly()));
                 return false;
             }
@@ -1097,7 +1061,6 @@ bool EditAlarmDlg::validate()
     if (!checkText(mAlarmMessage))
         return false;
 
-#ifdef USE_AKONADI
     mCollection = Akonadi::Collection();
     // An item ID = -2 indicates that the caller already
     // knows which collection to use.
@@ -1124,36 +1087,6 @@ bool EditAlarmDlg::validate()
             return false;
         }
     }
-#else
-    mResource = 0;
-    // A null resource event ID indicates that the caller already
-    // knows which resource to use.
-    if (!mResourceEventId.isNull())
-    {
-        if (!mResourceEventId.isEmpty())
-        {
-            mResource = AlarmCalendar::resources()->resourceForEvent(mResourceEventId);
-            if (mResource)
-            {
-                CalEvent::Type type = mTemplate ? CalEvent::TEMPLATE : CalEvent::ACTIVE;
-                if (mResource->alarmType() != type)
-                    mResource = 0;   // event may have expired while dialog was open
-            }
-        }
-        bool cancelled = false;
-        if (!mResource  ||  !mResource->writable())
-        {
-            CalEvent::Type type = mTemplate ? CalEvent::TEMPLATE : CalEvent::ACTIVE;
-            mResource = AlarmResources::instance()->destination(type, this, false, &cancelled);
-        }
-        if (!mResource)
-        {
-            if (!cancelled)
-                KAMessageBox::sorry(this, i18nc("@info", "You must select a calendar to save the alarm in"));
-            return false;
-        }
-    }
-#endif
     return true;
 }
 
@@ -1204,14 +1137,10 @@ void EditAlarmDlg::slotHelp()
     // deletion of EditAlarmDlg, and on return from this function).
     AutoQPointer<TemplatePickDlg> dlg = new TemplatePickDlg(type, this);
     if (dlg->exec() == QDialog::Accepted)
-#ifdef USE_AKONADI
     {
         KAEvent event = dlg->selectedTemplate();
         initValues(&event);
     }
-#else
-    initValues(dlg->selectedTemplate());
-#endif
 }
 
 /******************************************************************************
@@ -1222,7 +1151,7 @@ void EditAlarmDlg::slotHelp()
 void EditAlarmDlg::slotDefault()
 {
     showOptions(!mShowingMore);
-    KConfigGroup config(KGlobal::config(), EDIT_MORE_GROUP);
+    KConfigGroup config(KSharedConfig::openConfig(), EDIT_MORE_GROUP);
     config.writeEntry(EDIT_MORE_KEY, mShowingMore);
 }
 
@@ -1231,7 +1160,7 @@ void EditAlarmDlg::slotDefault()
 */
 void EditAlarmDlg::showOptions(bool more)
 {
-    kDebug() << (more ? "More" : "Less");
+    qDebug() << (more ? "More" : "Less");
     if (more)
     {
         mMoreOptions->show();

@@ -24,7 +24,7 @@
 #include "incidenceeditor-ng.h"
 
 #include <KLocalizedString>
-
+#include <QDate>
 namespace Ui {
   class EventOrTodoDesktop;
   class EventOrTodoMore;

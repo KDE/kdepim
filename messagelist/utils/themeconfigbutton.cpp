@@ -59,7 +59,7 @@ void ThemeConfigButtonPrivate::slotConfigureThemes()
 
 
 ThemeConfigButton::ThemeConfigButton( QWidget * parent, const ThemeComboBox * themeComboBox )
-    : KPushButton( i18n( "Configure..." ), parent ), d( new ThemeConfigButtonPrivate( this ) )
+    : QPushButton( i18n( "Configure..." ), parent ), d( new ThemeConfigButtonPrivate( this ) )
 {
     d->mThemeComboBox = themeComboBox;
     connect( this, SIGNAL(pressed()),

@@ -49,8 +49,8 @@
 #include <ktemporaryfile.h>
 #include <QFile>
 #include <cstdlib>
-#include <QTextCodec>
 #include <iterator>
+#include <QStandardPaths>
 
 // Just for the Q_ASSERT in the dtor. Not thread-safe, but who would
 // have 2 threads talking to gpgconf anyway? :)
@@ -69,7 +69,7 @@ static const int GPGCONF_FLAG_NO_CHANGE = 128; // readonly
 QString QGpgMECryptoConfig::gpgConfPath()
 {
     const GpgME::EngineInfo info = GpgME::engineInfo( GpgME::GpgConfEngine );
-    return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( QLatin1String("gpgconf") );
+    return info.fileName() ? QFile::decodeName( info.fileName() ) : QStandardPaths::findExecutable( QLatin1String("gpgconf") );
 }
 
 QGpgMECryptoConfig::QGpgMECryptoConfig()
@@ -304,7 +304,7 @@ Kleo::CryptoConfigGroup* QGpgMECryptoConfigComponent::group(const QString& name 
 
 void QGpgMECryptoConfigComponent::sync( bool runtime )
 {
-  KTemporaryFile tmpFile;
+  QTemporaryFile tmpFile;
   tmpFile.open();
 
   QList<QGpgMECryptoConfigEntry *> dirtyEntries;
@@ -419,13 +419,13 @@ Kleo::CryptoConfigEntry* QGpgMECryptoConfigGroup::entry( const QString& name ) c
 static QString gpgconf_unescape( const QString& str )
 {
   // Looks like it's the same rules as KUrl.
-  return KUrl::fromPercentEncoding( str.toLatin1() );
+  return QUrl::fromPercentEncoding( str.toLatin1() );
 }
 
 static QString gpgconf_escape( const QString& str )
 {
   // Escape special chars (including ':' and '%')
-  QString enc = QLatin1String(KUrl::toPercentEncoding( str )); // and convert to utf8 first (to get %12%34 for one special char)
+  QString enc = QLatin1String(QUrl::toPercentEncoding( str )); // and convert to utf8 first (to get %12%34 for one special char)
   // Also encode commas, for lists.
   enc.replace( QLatin1Char(','), QLatin1String("%2c") );
   return enc;
@@ -442,7 +442,7 @@ static QString urlpart_encode( const QString& str )
 
 static QString urlpart_decode( const QString& str )
 {
-  return KUrl::fromPercentEncoding( str.toLatin1() );
+  return QUrl::fromPercentEncoding( str.toLatin1() );
 }
 
 // gpgconf arg type number -> CryptoConfigEntry arg type enum mapping
@@ -660,7 +660,7 @@ static QString splitURL( int mRealArgType, const KUrl& url )
       urlpart_encode( url.pass() ) + QLatin1Char(':') +
       // KUrl automatically encoded the query (e.g. for spaces inside it),
       // so decode it before writing it out to gpgconf (issue119)
-      urlpart_encode( KUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );
+      urlpart_encode( QUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );
   }
   return url.path();
 }

@@ -20,52 +20,49 @@
 
 #include "mailerservice.h"
 
-#include <kaboutdata.h>
-#include <kapplication.h>
-#include <kcmdlineargs.h>
+
+
+
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+#include <KLocalizedString>
 
 static const char description[] =
   I18N_NOOP( "KDE Command Line Emailer." );
 
-static KCmdLineOptions kmail_options ()
-{
-    KCmdLineOptions options;
-    options.add("s");
-    options.add("subject <subject>", ki18n("Set subject of message"));
-    options.add("c");
-    options.add("cc <address>",      ki18n("Send CC: to 'address'"));
-    options.add("b");
-    options.add("bcc <address>",     ki18n("Send BCC: to 'address'"));
-    options.add("h");
-    options.add("header <header>",   ki18n("Add 'header' to message"));
-    options.add("msg <file>",        ki18n("Read message body from 'file'"));
-    options.add("body <text>",       ki18n("Set body of message"));
-    options.add("attach <url>",      ki18n("Add an attachment to the mail. This can be repeated"));
-    options.add("composer",          ki18n("Only open composer window"));
-    options.add("+[address]",        ki18n("Address to send the message to"));
-    return options;
-}
-
-
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "ksendemail", 0, ki18n( "KSendEmail" ), "0.01", ki18n(description),
-                      KAboutData::License_GPL,
-                      ki18n( "(C) 2008 Pradeepto Bhattacharya" ),
-                             KLocalizedString(), "http://kontact.kde.org" );
+  KAboutData aboutData( QStringLiteral("ksendemail"), i18n( "KSendEmail" ), QStringLiteral("0.01"), i18n(description),
+                      KAboutLicense::GPL,
+                      i18n( "(C) 2008 Pradeepto Bhattacharya" ),
+                      QStringLiteral("http://kontact.kde.org") );
 
-  aboutData.addAuthor( ki18n( "Pradeepto Bhattacharya" ), KLocalizedString(), "pradeepto@kde.org" );
+  aboutData.addAuthor( i18n( "Pradeepto Bhattacharya" ), QString(), QStringLiteral("pradeepto@kde.org") );
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( kmail_options() );
+  QCommandLineParser parser;
+  QApplication app(argc, argv);
+  parser.addVersionOption();
+  parser.addHelpOption();
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("s") << QLatin1String("subject"), i18n("Set subject of message"), QLatin1String("subject")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("c") << QLatin1String("cc"), i18n("Send CC: to 'address'"), QLatin1String("address")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("b") << QLatin1String("bcc"), i18n("Send BCC: to 'address'"), QLatin1String("address")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("h") << QLatin1String("header"), i18n("Add 'header' to message"), QLatin1String("header")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("msg"), i18n("Read message body from 'file'"), QLatin1String("file")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("body"), i18n("Set body of message"), QLatin1String("text")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("attach"), i18n("Add an attachment to the mail. This can be repeated"), QLatin1String("url")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("composer"), i18n("Only open composer window")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("+[address]"), i18n("Address to send the message to")));
 
-  KApplication app;
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   MailerService *ms = new MailerService();
-  ms->processArgs( args );
-  args->clear();
+  ms->processArgs( parser );
+  
   delete ms;
   return 0;
 }

@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include <QStringList>
-#include <KUrl>
+#include <QUrl>
 namespace KManageSieve {
 class SieveJob;
 }
@@ -29,7 +29,7 @@ class GenerateGlobalScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit GenerateGlobalScriptJob(const KUrl &url, QObject *parent=0);
+    explicit GenerateGlobalScriptJob(const QUrl &url, QObject *parent=0);
     ~GenerateGlobalScriptJob();
 
     void start();
@@ -49,7 +49,7 @@ private:
     void writeMasterScript();
     void writeUserScript();
     QStringList mListUserActiveScripts;
-    KUrl mCurrentUrl;
+    QUrl mCurrentUrl;
     KManageSieve::SieveJob *mMasterjob;
     KManageSieve::SieveJob *mUserJob;
 };

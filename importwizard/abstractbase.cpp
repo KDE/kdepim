@@ -18,12 +18,11 @@
 #include "abstractbase.h"
 #include "pimcommon/util/createresource.h"
 
-#include <KDebug>
 #include <KSharedConfig>
 
-#include <akonadi/agenttype.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstancecreatejob.h>
+#include <AkonadiCore/agenttype.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
 
 #include <QMetaMethod>
 
@@ -32,8 +31,8 @@ using namespace Akonadi;
 AbstractBase::AbstractBase()
 {
     mCreateResource = new PimCommon::CreateResource();
-    connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SLOT(slotCreateResourceInfo(QString)));
-    connect(mCreateResource,SIGNAL(createResourceError(QString)),SLOT(slotCreateResourceError(QString)));
+    connect(mCreateResource, &PimCommon::CreateResource::createResourceInfo, this, &AbstractBase::slotCreateResourceInfo);
+    connect(mCreateResource, &PimCommon::CreateResource::createResourceError, this, &AbstractBase::slotCreateResourceError);
 }
 
 AbstractBase::~AbstractBase()

@@ -22,14 +22,17 @@
 #include "autostart.h"
 
 #include <kcmdlineargs.h>
-#include <kaboutdata.h>
-#include <klocale.h>
-#include <kstandarddirs.h>
+#include <K4AboutData>
+#include <KLocalizedString>
+
 #include <kprocess.h>
-#include <kdebug.h>
+#include "kalarm_autostart_debug.h"
+#include <QDebug>
 
 #include <QTimer>
 #include <QtDBus/QtDBus>
+
+#include <QStandardPaths>
 
 // Number of seconds to wait before autostarting KAlarm.
 // Allow plenty of time for session restoration to happen first.
@@ -41,8 +44,9 @@ static const int AUTOSTART_DELAY = 30;
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData(PROGRAM_NAME, "kalarm", ki18n("KAlarm Autostart"),
-        PROGRAM_VERSION, ki18n("KAlarm autostart at login"), KAboutData::License_GPL,
+    KLocalizedString::setApplicationDomain("kalarm");
+    K4AboutData aboutData(PROGRAM_NAME, "kalarm", ki18n("KAlarm Autostart"),
+        PROGRAM_VERSION, ki18n("KAlarm autostart at login"), K4AboutData::License_GPL,
         ki18n("Copyright 2001,2008 David Jarvie"), KLocalizedString(),
         "http://www.astrojar.org.uk/kalarm");
     aboutData.addAuthor(ki18n("David Jarvie"), ki18n("Maintainer"), "djarvie@kde.org");
@@ -55,7 +59,6 @@ int main(int argc, char *argv[])
     KCmdLineArgs::addCmdLineOptions(options);
 
     AutostartApp app;
-    KGlobal::locale()->insertCatalog(QLatin1String("kalarm"));
     return app.exec();
 }
 
@@ -78,21 +81,21 @@ void AutostartApp::slotAutostart()
 {
     QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String(KALARM_DBUS_SERVICE));
     if (reply.isValid()  &&  reply.value())
-        kDebug(5900) << "KAlarm already running";
+        qCDebug(KALARMAUTOSTART_LOG) << "KAlarm already running";
     else
     {
         KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
         if (args->count() <= 0)
-            kWarning(5900) << "No command line";
+            qCWarning(KALARMAUTOSTART_LOG) << "No command line";
         else
         {
             QString prog = args->arg(0);
-            QString exe = KStandardDirs::locate("exe", prog);
+            QString exe = QStandardPaths::findExecutable(prog);
             if (exe.isEmpty())
-                kWarning(5900) << "Executable not found:" << prog;
+                qCWarning(KALARMAUTOSTART_LOG) << "Executable not found:" << prog;
             else
             {
-                kDebug(5900) << "Starting" << prog;
+                qCDebug(KALARMAUTOSTART_LOG) << "Starting" << prog;
                 KProcess proc;
                 proc << exe;
                 for (int i = 1;  i < args->count();  ++i)

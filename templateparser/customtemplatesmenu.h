@@ -28,7 +28,7 @@
 class QSignalMapper;
 
 class KActionCollection;
-class KAction;
+class QAction;
 class KActionMenu;
 
 namespace TemplateParser {
@@ -64,7 +64,7 @@ private:
     KActionCollection *mOwnerActionCollection;
 
     QStringList mCustomTemplates;
-    QList<KAction*> mCustomTemplateActions;
+    QList<QAction *> mCustomTemplateActions;
 
     // Custom template actions menu
     KActionMenu *mCustomReplyActionMenu, *mCustomReplyAllActionMenu, *mCustomForwardActionMenu;

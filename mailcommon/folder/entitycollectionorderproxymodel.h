@@ -19,7 +19,7 @@
 #ifndef MAILCOMMON_ENTITYCOLLECTIONORDERPROXYMODEL_H
 #define MAILCOMMON_ENTITYCOLLECTIONORDERPROXYMODEL_H
 
-#include <Akonadi/EntityOrderProxyModel>
+#include <EntityOrderProxyModel>
 
 namespace MailCommon {
 

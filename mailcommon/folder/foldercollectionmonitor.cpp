@@ -20,18 +20,18 @@
 #include "foldercollection.h"
 #include "collectionpage/expirecollectionattribute.h"
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/CollectionModel>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Item>
-#include <Akonadi/ItemDeleteJob>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <ChangeRecorder>
+#include <Collection>
+#include <CollectionFetchScope>
+#include <CollectionModel>
+#include <EntityTreeModel>
+#include <Item>
+#include <ItemDeleteJob>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
 #include <Akonadi/KMime/MessageParts>
-#include <akonadi/entityannotationsattribute.h>
-
+#include <AkonadiCore/entityannotationsattribute.h>
+#include <QDebug>
 #include <KMime/KMimeMessage>
 
 namespace MailCommon {
@@ -119,7 +119,7 @@ void FolderCollectionMonitor::expunge( const Akonadi::Collection & col, bool syn
             job->exec();
         }
     } else {
-        kDebug() << " Try to expunge an invalid collection :" << col;
+        qDebug() << " Try to expunge an invalid collection :" << col;
     }
 }
 

@@ -26,7 +26,7 @@
 
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KGlobal>
+#include <QDebug>
 
 #include <QDate>
 #include <QFile>
@@ -38,7 +38,7 @@ ArchiveMailManager::ArchiveMailManager(QObject *parent)
     mArchiveMailKernel = new ArchiveMailKernel( this );
     CommonKernel->registerKernelIf( mArchiveMailKernel ); //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf( mArchiveMailKernel ); //SettingsIf is used in FolderTreeWidget
-    mConfig = KGlobal::config();
+    mConfig = KSharedConfig::openConfig();
 }
 
 ArchiveMailManager::~ArchiveMailManager()
@@ -129,7 +129,7 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
                 const int diff = (lst.count() - info->maximumArchiveCount());
                 for (int i = 0; i < diff; ++i) {
                     const QString fileToRemove(info->url().path() + QDir::separator() + lst.at(i));
-                    kDebug()<<" file to remove "<<fileToRemove;
+                    qDebug()<<" file to remove "<<fileToRemove;
                     QFile::remove(fileToRemove);
                 }
             }

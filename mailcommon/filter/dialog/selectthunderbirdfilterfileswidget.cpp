@@ -21,6 +21,8 @@
 #include <QAbstractButton>
 #include <QListWidgetItem>
 
+#include <KLocalizedString>
+
 SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SelectThunderbirdFilterFilesWidget)
@@ -122,6 +124,6 @@ QStringList SelectThunderbirdFilterFilesWidget::selectedFiles() const
 void SelectThunderbirdFilterFilesWidget::setStartDir(const KUrl &url)
 {
     ui->fileUrl->setFilter(QLatin1String("*.dat"));
-    ui->fileUrl->setStartDir(url);
+    //QT5 ui->fileUrl->setStartDir(url);
 }
 

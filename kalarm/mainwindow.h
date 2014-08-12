@@ -23,21 +23,14 @@
 
 /** @file mainwindow.h - main application window */
 
-#ifndef USE_AKONADI
-#include "alarmresources.h"
-#endif
 #include "editdlg.h"
 #include "mainwindowbase.h"
 #include "undo.h"
 
 #include <kalarmcal/kaevent.h>
 
-#ifdef USE_AKONADI
-#include <akonadi/item.h>
-#include <kcalcore/calendar.h>
-#else
-#include <kcal/calendar.h>
-#endif
+#include <AkonadiCore/item.h>
+#include <KCalCore/Calendar>
 
 #include <QList>
 #include <QMap>
@@ -50,25 +43,17 @@ class QDropEvent;
 class QCloseEvent;
 class QSplitter;
 class QMenu;
-class KAction;
+class QAction;
 class KToggleAction;
 class KToolBarPopupAction;
-#ifdef USE_AKONADI
 class AlarmListModel;
-#else
-class AlarmListFilterModel;
-#endif
 class AlarmListView;
 class NewAlarmAction;
 class TemplateDlg;
 class ResourceSelector;
 
 
-#ifdef USE_AKONADI
 class MainWindow : public MainWindowBase, public KCalCore::Calendar::CalendarObserver
-#else
-class MainWindow : public MainWindowBase, public KCal::Calendar::CalendarObserver
-#endif
 {
         Q_OBJECT
 
@@ -78,15 +63,9 @@ class MainWindow : public MainWindowBase, public KCal::Calendar::CalendarObserve
         bool               isTrayParent() const;
         bool               isHiddenTrayParent() const   { return mHiddenTrayParent; }
         bool               showingArchived() const      { return mShowArchived; }
-#ifdef USE_AKONADI
         void               selectEvent(Akonadi::Item::Id);
         KAEvent            selectedEvent() const;
         void               editAlarm(EditAlarmDlg*, const KAEvent&);
-#else
-        void               selectEvent(const QString& eventID);
-        KAEvent*           selectedEvent() const;
-        void               editAlarm(EditAlarmDlg*, const KAEvent&, AlarmResource*);
-#endif
         void               clearSelection();
         virtual bool       eventFilter(QObject*, QEvent*);
 
@@ -188,34 +167,27 @@ class MainWindow : public MainWindowBase, public KCal::Calendar::CalendarObserve
         static WindowList    mWindowList;   // active main windows
         static TemplateDlg*  mTemplateDlg;  // the one and only template dialog
 
-#ifdef USE_AKONADI
         AlarmListModel*      mListFilterModel;
-#else
-        AlarmListFilterModel* mListFilterModel;
-#endif
         AlarmListView*       mListView;
         ResourceSelector*    mResourceSelector;    // resource selector widget
         QSplitter*           mSplitter;            // splits window into list and resource selector
-#ifndef USE_AKONADI
-        AlarmResources*      mAlarmResources;      // calendar resources to use for this window
-#endif
         QMap<EditAlarmDlg*, KAEvent> mEditAlarmMap; // edit alarm dialogs to be handled by this window
         KToggleAction*       mActionToggleResourceSel;
-        KAction*             mActionImportAlarms;
-        KAction*             mActionExportAlarms;
-        KAction*             mActionExport;
-        KAction*             mActionImportBirthdays;
-        KAction*             mActionTemplates;
+        QAction *             mActionImportAlarms;
+        QAction *             mActionExportAlarms;
+        QAction *             mActionExport;
+        QAction *             mActionImportBirthdays;
+        QAction *             mActionTemplates;
         NewAlarmAction*      mActionNew;
-        KAction*             mActionCreateTemplate;
-        KAction*             mActionCopy;
-        KAction*             mActionModify;
-        KAction*             mActionDelete;
-        KAction*             mActionDeleteForce;
-        KAction*             mActionReactivate;
-        KAction*             mActionEnable;
-        KAction*             mActionFindNext;
-        KAction*             mActionFindPrev;
+        QAction *             mActionCreateTemplate;
+        QAction *             mActionCopy;
+        QAction *             mActionModify;
+        QAction *             mActionDelete;
+        QAction *             mActionDeleteForce;
+        QAction *             mActionReactivate;
+        QAction *             mActionEnable;
+        QAction*             mActionFindNext;
+        QAction*             mActionFindPrev;
         KToolBarPopupAction* mActionUndo;
         KToolBarPopupAction* mActionRedo;
         KToggleAction*       mActionToggleTrayIcon;
@@ -223,8 +195,8 @@ class MainWindow : public MainWindowBase, public KCal::Calendar::CalendarObserve
         KToggleAction*       mActionShowTimeTo;
         KToggleAction*       mActionShowArchived;
         KToggleAction*       mActionSpreadWindows;
-        KMenu*               mActionsMenu;
-        KMenu*               mContextMenu;
+        QMenu*               mActionsMenu;
+        QMenu*               mContextMenu;
         QMap<QAction*, int>  mUndoMenuIds;         // items in the undo/redo menu, in order of appearance
         int                  mResourcesWidth;      // width of resource selector widget
         bool                 mHiddenTrayParent;    // on session restoration, hide this window

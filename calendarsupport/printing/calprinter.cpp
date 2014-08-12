@@ -32,7 +32,7 @@
 #include <KMessageBox>
 #include <KPrintPreview>
 #include <KStandardGuiItem>
-#include <KVBox>
+#include <QVBoxLayout>
 
 #include <QButtonGroup>
 #include <QGridLayout>
@@ -177,10 +177,13 @@ CalPrintDialog::CalPrintDialog( int initialPrintType, PrintPlugin::List plugins,
   setCaption( i18nc( "@title:window", "Print" ) );
   setButtons( Ok | Cancel );
   setModal( true );
-  KVBox *page = new KVBox( this );
+  QWidget *page = new QWidget( this );
+  QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
+  pageVBoxLayout->setMargin(0);
   setMainWidget( page );
 
   QSplitter *splitter = new QSplitter( page );
+  pageVBoxLayout->addWidget(splitter);
   splitter->setOrientation( Qt::Horizontal );
   splitter->setChildrenCollapsible( false );
   QGroupBox *typeBox = new QGroupBox( i18nc( "@title:group", "Print Style" ), splitter );

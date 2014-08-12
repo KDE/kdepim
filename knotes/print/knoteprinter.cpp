@@ -29,7 +29,7 @@
 #include <KMessageBox>
 
 #include <klocale.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KPrintPreview>
 
 #include <grantlee/context.h>

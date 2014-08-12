@@ -20,6 +20,7 @@
 
 #ifndef KNOTE_H
 #define KNOTE_H
+#include "config-kdepim.h"
 #include <QDomDocument>
 #include <QEvent>
 #include <QFrame>
@@ -27,7 +28,7 @@
 #include <kconfig.h>
 #include <kxmlguiclient.h>
 #include <KSharedConfig>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include "knoteinterface.h"
 
 class KNoteDisplaySettings;
@@ -36,7 +37,7 @@ class QLabel;
 class QLayout;
 class QSizeGrip;
 
-class KMenu;
+class QMenu;
 class KNoteButton;
 class KNoteEdit;
 class KSelectAction;
@@ -145,11 +146,11 @@ private:
     KToolBar      *m_tool;
     KNoteEdit     *m_editor;
 
-    KMenu         *m_menu;
+    QMenu         *m_menu;
 
     KToggleAction *m_readOnly;
 
-#ifdef Q_WS_X11
+#if KDEPIM_HAVE_X11
     KSelectAction   *m_toDesktop;
 #endif
     KToggleAction *m_keepAbove;

@@ -26,7 +26,7 @@
 #include "ui/configurationdialog.h"
 #include "sync/feedsync.h"
 
-#include <KAction>
+#include <QAction>
 #include <KActionMenu>
 #include <KActionCollection>
 #include <KLocalizedString>
@@ -38,8 +38,6 @@ using namespace feedsync;
 K_PLUGIN_FACTORY(OnlineSyncPluginFactory,
                  registerPlugin<Akregator::OnlineSyncPluginIface>();
 )
-K_EXPORT_PLUGIN(OnlineSyncPluginFactory( "akregator_onlinesync_plugin" ) )
-
 
 OnlineSyncPluginIface::OnlineSyncPluginIface( QObject* parent, const QList<QVariant>& args ) : Plugin( parent ), m_impl( new OnlineSyncPlugin( parent, args ) )
 {
@@ -65,33 +63,33 @@ OnlineSyncPlugin::OnlineSyncPlugin( QObject* parent, const QList<QVariant>& args
 
 OnlineSyncPlugin::~OnlineSyncPlugin()
 {
-    kDebug();
+    qDebug();
 }
 
 void OnlineSyncPlugin::updateActions()
 {
-    kDebug();
+    qDebug();
 
     // Clear the menubar
-    Q_FOREACH( KAction* const i, m_feedSyncActions )
+    Q_FOREACH( QAction * const i, m_feedSyncActions )
         m_feedSyncMenu->removeAction( i );
     qDeleteAll( m_feedSyncActions );
     m_feedSyncActions.clear();
 
     // Fill the menubar
     KActionCollection* coll = actionCollection();
-    KAction* action;
+    QAction * action;
     // Read configuration
     const KConfig config("akregator_feedsyncrc");
     Q_FOREACH ( const QString& groupname, config.groupList() ) {
         if ( groupname.startsWith( QLatin1String("FeedSyncSource_") ) ) {
-            kDebug() << groupname;
+            qDebug() << groupname;
             KConfigGroup generalGroup( &config, groupname );
 
             action = coll->addAction(groupname);
             action->setProperty("ConfigGroup",groupname);
             action->setProperty("SyncType", m_syncTool->Get);
-            action->setIcon(KIcon("mail-receive"));
+            action->setIcon(QIcon::fromTheme("mail-receive"));
             action->setText(i18n("Get from %1",generalGroup.readEntry( "Identifier", QString() )));
             m_feedSyncMenu->addAction(action);
             m_feedSyncActions.append(action);
@@ -100,7 +98,7 @@ void OnlineSyncPlugin::updateActions()
             action = coll->addAction(groupname);
             action->setProperty("ConfigGroup",groupname);
             action->setProperty("SyncType", m_syncTool->Send);
-            action->setIcon(KIcon("mail-send"));
+            action->setIcon(QIcon::fromTheme("mail-send"));
             action->setText(i18n("Send to %1",generalGroup.readEntry( "Identifier", QString() )));
             m_feedSyncMenu->addAction(action);
             m_feedSyncActions.append(action);
@@ -109,7 +107,7 @@ void OnlineSyncPlugin::updateActions()
     }
 
     action = coll->addAction("feedsync_manage");
-    action->setIcon(KIcon("application-rss+xml"));
+    action->setIcon(QIcon::fromTheme("application-rss+xml"));
     action->setText(i18n("Manage..."));
     m_feedSyncMenu->addAction(action);
     m_feedSyncActions.append(action);
@@ -118,12 +116,12 @@ void OnlineSyncPlugin::updateActions()
 
 void OnlineSyncPlugin::doSynchronize()
 {
-    kDebug();
+    qDebug();
 }
 
 void OnlineSyncPlugin::slotFeedSyncManage()
 {
-    kDebug();
+    qDebug();
     feedsync::ConfigurationDialog* dlg = new feedsync::ConfigurationDialog();
     dlg->setAttribute( Qt::WA_DeleteOnClose );
     connect( dlg, SIGNAL(finished()), this, SLOT(slotFeedSyncManageDone()) );
@@ -132,7 +130,7 @@ void OnlineSyncPlugin::slotFeedSyncManage()
 
 void OnlineSyncPlugin::slotFeedSyncManageDone()
 {
-    kDebug();
+    qDebug();
     updateActions();
 }
 

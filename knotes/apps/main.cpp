@@ -18,34 +18,37 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 *******************************************************************/
 
+#include "config-kdepim.h"
 #include <QDebug>
 #include "kdepim-version.h"
+
 #include "knotes_options.h"
 #include "apps/application.h"
 #include <KUniqueApplication>
 #include <kcmdlineargs.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <klocale.h>
 #include <kxerrorhandler.h>
 
-#ifdef Q_WS_X11
+
+#if KDEPIM_HAVE_X11
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
-#include <QX11Info>
+#include <qx11info_x11.h>
 #endif
 
 void remove_sm_from_client_leader();
 KCmdLineOptions knotesOptions();
-void knotesAuthors(  KAboutData &aboutData );
+void knotesAuthors(  K4AboutData &aboutData );
 
 int main( int argc, char *argv[] )
 {
-    KAboutData aboutData( "knotes",
+    K4AboutData aboutData( "knotes",
                           0,
                           ki18n( "KNotes" ),
                           KDEPIM_VERSION,
                           ki18n( "KDE Notes" ),
-                          KAboutData::License_GPL,
+                          K4AboutData::License_GPL,
                           ki18n( "Copyright © 1997–2014 KNotes authors" ) );
 
     knotesAuthors( aboutData );
@@ -66,7 +69,6 @@ int main( int argc, char *argv[] )
     // Create Application
 
     Application app;
-    KGlobal::locale()->insertCatalog(QLatin1String("libkdepim"));
 
     remove_sm_from_client_leader();
 
@@ -75,7 +77,7 @@ int main( int argc, char *argv[] )
 
 void remove_sm_from_client_leader()
 {
-#ifdef Q_WS_X11
+#if KDEPIM_HAVE_X11
     Atom type;
     int format, status;
     unsigned long nitems = 0;
@@ -104,7 +106,7 @@ void remove_sm_from_client_leader()
 #endif
 }
 
-void knotesAuthors(  KAboutData &aboutData )
+void knotesAuthors(  K4AboutData &aboutData )
 {
     aboutData.addAuthor( ki18n( "Laurent Montel" ),
                          ki18n( "Maintainer" ),

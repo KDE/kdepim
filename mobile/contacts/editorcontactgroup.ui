@@ -104,7 +104,7 @@
   <customwidget>
    <class>Akonadi::CollectionComboBox</class>
    <extends>QComboBox</extends>
-   <header location="global">akonadi/collectioncombobox.h</header>
+   <header location="global">AkonadiWidgets/collectioncombobox.h</header>
   </customwidget>
   <customwidget>
    <class>MobileLineEdit</class>

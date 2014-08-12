@@ -120,7 +120,7 @@ QString FilterActionWithFolder::displayString() const
     if ( mFolder.isValid() )
         result = MailCommon::Util::fullCollectionPath(MailCommon::Util::updatedCollection( mFolder ));
 
-    return label() + QLatin1String( " \"" ) + Qt::escape( result ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + result.toHtmlEscaped() + QLatin1String( "\"" );
 }
 
 bool FilterActionWithFolder::folderRemoved( const Akonadi::Collection &oldFolder, const Akonadi::Collection &newFolder )

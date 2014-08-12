@@ -18,11 +18,11 @@
 
 #include "templatesinsertcommand.h"
 
-#include <KAction>
+#include <QAction>
 #include <KActionMenu>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 
 #include <QSignalMapper>
 
@@ -330,7 +330,7 @@ static void fillMenuFromActionMap( const QMap< QString, TemplatesInsertCommand::
     QMap< QString, TemplatesInsertCommand::Command >::const_iterator end = map.constEnd();
 
     while ( it != end ) {
-        KAction *action = new KAction( it.key(), menu ); //krazy:exclude=tipsandthis
+        QAction *action = new QAction( it.key(), menu ); //krazy:exclude=tipsandthis
         QObject::connect( action, SIGNAL(triggered(bool)), mapper, SLOT(map()) );
         mapper->setMapping( action, it.value() );
         menu->addAction( action );
@@ -616,7 +616,7 @@ void TemplatesInsertCommand::slotMapped( int cmd )
         emit insertCommand( QLatin1String("%FORCEDHTML") );
         break;
     default:
-        kDebug() << "Unknown template command index:" << cmd;
+        qDebug() << "Unknown template command index:" << cmd;
         break;
     }
 }

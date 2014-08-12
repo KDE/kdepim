@@ -20,26 +20,23 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
 
-#include <libkgapi2/authjob.h>
-#include <libkgapi2/account.h>
-#include <libkgapi2/drive/aboutfetchjob.h>
-#include <libkgapi2/drive/about.h>
-#include <libkgapi2/drive/filecreatejob.h>
-#include <libkgapi2/drive/filedeletejob.h>
-#include <libkgapi2/drive/filefetchjob.h>
-#include <libkgapi2/drive/filefetchcontentjob.h>
-#include <libkgapi2/types.h>
-#include <libkgapi2/drive/childreferencefetchjob.h>
-#include <libkgapi2/drive/childreference.h>
-#include <libkgapi2/drive/file.h>
-#include <libkgapi2/drive/filecopyjob.h>
-#include <LibKGAPI2/Drive/ParentReference>
+#include <kgapi/authjob.h>
+#include <kgapi/account.h>
+#include <kgapi/drive/aboutfetchjob.h>
+#include <kgapi/drive/about.h>
+#include <kgapi/drive/filecreatejob.h>
+#include <kgapi/drive/filedeletejob.h>
+#include <kgapi/drive/filefetchjob.h>
+#include <kgapi/drive/filefetchcontentjob.h>
+#include <kgapi/types.h>
+#include <kgapi/drive/childreferencefetchjob.h>
+#include <kgapi/drive/childreference.h>
+#include <kgapi/drive/file.h>
+#include <kgapi/drive/filecopyjob.h>
+#include <KGAPI/Drive/ParentReference>
 
-#include <KLocalizedString>
 
-#include <qjson/parser.h>
 
-#include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
 #include <QPointer>
@@ -47,7 +44,6 @@
 #include <QDebug>
 #include <QFile>
 #include <QPointer>
-#include <QDateTime>
 
 using namespace PimCommon;
 

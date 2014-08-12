@@ -23,10 +23,11 @@
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <KProcess>
-#include <KDebug>
+#include <QDebug>
 #include <KConfigGroup>
 #include <QDBusInterface>
 #include <QFileInfo>
+#include <QStandardPaths>
 
 void KNoteUtils::updateConfiguration()
 {
@@ -59,7 +60,7 @@ void KNoteUtils::migrateToAkonadi()
 {
     bool needMigration = true;
 
-    const QFileInfo oldDataDirFileInfo( KStandardDirs::locateLocal( "data", QLatin1String("knotes") ) );
+    const QFileInfo oldDataDirFileInfo( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/knotes") ) ;
     if ( !oldDataDirFileInfo.exists() || !oldDataDirFileInfo.isDir() ) {
         // neither config or data, the migrator cannot do anything useful anyways
         needMigration = false;
@@ -95,10 +96,10 @@ void KNoteUtils::migrateToAkonadi()
                 return;
             }
 
-            kDebug() << "Performing Akonadi migration. Good luck!";
+            qDebug() << "Performing Akonadi migration. Good luck!";
             KProcess proc;
             QStringList args = QStringList() << QLatin1String("--interactive-on-change");
-            const QString path = KStandardDirs::findExe( QLatin1String("knotes-migrator" ) );
+            const QString path = QStandardPaths::findExecutable( QLatin1String("knotes-migrator" ) );
             proc.setProgram( path, args );
             proc.start();
             bool result = proc.waitForStarted();
@@ -106,14 +107,14 @@ void KNoteUtils::migrateToAkonadi()
                 result = proc.waitForFinished( -1 );
             }
             if ( result && proc.exitCode() == 0 ) {
-                kDebug() << "Akonadi migration has been successful";
+                qDebug() << "Akonadi migration has been successful";
             } else {
                 // exit code 1 means it is already running, so we are probably called by a migrator instance
-                kError() << "Akonadi migration failed!";
-                kError() << "command was: " << proc.program();
-                kError() << "exit code: " << proc.exitCode();
-                kError() << "stdout: " << proc.readAllStandardOutput();
-                kError() << "stderr: " << proc.readAllStandardError();
+                qCritical() << "Akonadi migration failed!";
+                qCritical() << "command was: " << proc.program();
+                qCritical() << "exit code: " << proc.exitCode();
+                qCritical() << "stdout: " << proc.readAllStandardOutput();
+                qCritical() << "stderr: " << proc.readAllStandardError();
 
                 KMessageBox::error( 0, i18n("Migration to KNotes failed. In case you want to try again, run 'knotes-migrator --interactive' manually."),
                                     i18n( "Migration Failed" ) );

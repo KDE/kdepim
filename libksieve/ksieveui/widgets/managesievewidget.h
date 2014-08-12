@@ -20,7 +20,7 @@
 #define MANAGESIEVEWIDGET_H
 #include "ksieveui_export.h"
 
-#include <KUrl>
+#include <QUrl>
 
 #include <Solid/Networking>
 
@@ -51,9 +51,9 @@ public:
 
 Q_SIGNALS:
     void updateButtons(QTreeWidgetItem *item);
-    void newScript(const KUrl &u, const QStringList &currentCapabilities);
-    void editScript(const KUrl &url, const QStringList &currentCapabilities);
-    void scriptDeleted(const KUrl &u);
+    void newScript(const QUrl &u, const QStringList &currentCapabilities);
+    void editScript(const QUrl &url, const QStringList &currentCapabilities);
+    void scriptDeleted(const QUrl &u);
     void serverSieveFound(bool imapFound);
 
 protected:
@@ -77,7 +77,7 @@ public Q_SLOTS:
 
 protected:
     QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
-    QMap<QTreeWidgetItem*,KUrl> mUrls;
+    QMap<QTreeWidgetItem*,QUrl> mUrls;
 
 private:
     enum sieveServerStatus

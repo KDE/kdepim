@@ -137,7 +137,7 @@
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="KTabWidget" name="mTabWidget">
+    <widget class="QTabWidget" name="mTabWidget">
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -264,12 +264,6 @@
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>ktabwidget.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>KPIM::KWeekdayCheckCombo</class>

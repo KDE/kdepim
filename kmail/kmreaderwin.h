@@ -25,12 +25,12 @@
 #include <kurl.h>
 #include <messageviewer/viewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <KABC/Addressee>
 class KActionCollection;
-class KAction;
+class QAction;
 class KToggleAction;
-class KMenu;
+class QMenu;
 namespace MessageViewer {
 class HeaderStrategy;
 class HeaderStyle;
@@ -132,39 +132,39 @@ public:
     void setUseFixedFont( bool useFixedFont );
     MessageViewer::Viewer *viewer() { return mViewer; }
     KToggleAction *toggleFixFontAction() const;
-    KAction *mailToComposeAction() const { return mMailToComposeAction; }
-    KAction *mailToReplyAction() const { return mMailToReplyAction; }
-    KAction *mailToForwardAction() const { return mMailToForwardAction; }
-    KAction *addAddrBookAction() const { return mAddAddrBookAction; }
-    KAction *openAddrBookAction() const { return mOpenAddrBookAction; }
-    KAction *copyAction() const;
-    KAction *selectAllAction() const;
-    KAction *copyURLAction() const;
-    KAction *copyImageLocation() const;
-    KAction *urlOpenAction() const;
-    KAction *urlSaveAsAction() const { return mUrlSaveAsAction; }
-    KAction *addBookmarksAction() const { return mAddBookmarksAction;}
-    KAction *toggleMimePartTreeAction() const;
-    KAction *speakTextAction() const;
-    KAction* translateAction() const;
-    KAction* downloadImageToDiskAction() const;
-    KAction *viewSourceAction() const;
-    KAction *findInMessageAction() const;
-    KAction *saveAsAction() const;
-    KAction *saveMessageDisplayFormatAction() const;
-    KAction *resetMessageDisplayFormatAction() const;
-    KAction *blockImage() const;
-    KAction *openBlockableItems() const;
-    KAction *expandShortUrlAction() const;
-    KAction *createTodoAction() const;
-    KAction *createEventAction() const;
+    QAction *mailToComposeAction() const { return mMailToComposeAction; }
+    QAction *mailToReplyAction() const { return mMailToReplyAction; }
+    QAction *mailToForwardAction() const { return mMailToForwardAction; }
+    QAction *addAddrBookAction() const { return mAddAddrBookAction; }
+    QAction *openAddrBookAction() const { return mOpenAddrBookAction; }
+    QAction *copyAction() const;
+    QAction *selectAllAction() const;
+    QAction *copyURLAction() const;
+    QAction *copyImageLocation() const;
+    QAction *urlOpenAction() const;
+    QAction *urlSaveAsAction() const { return mUrlSaveAsAction; }
+    QAction *addBookmarksAction() const { return mAddBookmarksAction;}
+    QAction *toggleMimePartTreeAction() const;
+    QAction *speakTextAction() const;
+    QAction * translateAction() const;
+    QAction * downloadImageToDiskAction() const;
+    QAction *viewSourceAction() const;
+    QAction *findInMessageAction() const;
+    QAction *saveAsAction() const;
+    QAction *saveMessageDisplayFormatAction() const;
+    QAction *resetMessageDisplayFormatAction() const;
+    QAction *blockImage() const;
+    QAction *openBlockableItems() const;
+    QAction *expandShortUrlAction() const;
+    QAction *createTodoAction() const;
+    QAction *createEventAction() const;
 
-    KAction *editContactAction() const { return mEditContactAction; }
+    QAction *editContactAction() const { return mEditContactAction; }
 
-    KMenu *viewHtmlOption() const { return mViewHtmlOptions; }
-    KAction *shareImage() const { return mShareImage; }
+    QMenu *viewHtmlOption() const { return mViewHtmlOptions; }
+    QAction *shareImage() const { return mShareImage; }
 
-    KAction *addToExistingContactAction() const { return mAddEmailToExistingContactAction; }
+    QAction *addToExistingContactAction() const { return mAddEmailToExistingContactAction; }
 
     Akonadi::Item message() const;
 
@@ -235,21 +235,21 @@ private:
     QWidget *mMainWindow;
     KActionCollection *mActionCollection;
 
-    KAction *mMailToComposeAction;
-    KAction *mMailToReplyAction;
-    KAction *mMailToForwardAction;
-    KAction *mAddAddrBookAction;
-    KAction *mOpenAddrBookAction;
-    KAction *mUrlSaveAsAction;
-    KAction *mAddBookmarksAction;
-    KAction *mImageUrlSaveAsAction;
-    KAction *mEditContactAction;
-    KAction *mViewAsHtml;
-    KAction *mLoadExternalReference;
-    KAction *mShareImage;
-    KAction *mAddEmailToExistingContactAction;
+    QAction *mMailToComposeAction;
+    QAction *mMailToReplyAction;
+    QAction *mMailToForwardAction;
+    QAction *mAddAddrBookAction;
+    QAction *mOpenAddrBookAction;
+    QAction *mUrlSaveAsAction;
+    QAction *mAddBookmarksAction;
+    QAction *mImageUrlSaveAsAction;
+    QAction *mEditContactAction;
+    QAction *mViewAsHtml;
+    QAction *mLoadExternalReference;
+    QAction *mShareImage;
+    QAction *mAddEmailToExistingContactAction;
 
-    KMenu *mViewHtmlOptions;
+    QMenu *mViewHtmlOptions;
 
     MessageViewer::Viewer *mViewer;
 };

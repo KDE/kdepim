@@ -24,14 +24,15 @@
 
 #include <kalarmcal/kaevent.h>
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/session.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/entitydisplayattribute.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/session.h>
 #include <kabc/addressee.h>
 
 #include <kglobal.h>
 #include <klocale.h>
+#include <KLocale>
 
 using namespace KAlarmCal;
 
@@ -79,7 +80,7 @@ QVariant BirthdayModel::entityData(const Akonadi::Item& item, int column, int ro
     {
         QDate date = Akonadi::ContactsTreeModel::entityData(item, column, DateRole).toDate();
         if (date.isValid())
-            return KGlobal::locale()->formatDate(date, KLocale::ShortDate);
+            return KLocale::global()->formatDate(date, KLocale::ShortDate);
     }
     return Akonadi::ContactsTreeModel::entityData(item, column, role);
 }

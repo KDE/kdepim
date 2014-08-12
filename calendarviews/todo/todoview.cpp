@@ -44,17 +44,18 @@
 
 #include <libkdepim/widgets/kdatepickerpopup.h>
 
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/ETMViewStateSaver>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/Tag>
+#include <entitymimetypefiltermodel.h>
+#include <ETMViewStateSaver>
+#include <TagFetchJob>
+#include <Tag>
 
 #include <KCalCore/CalFormat>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 #include <KGlobal>
 #include <KComponentData>
 #include <KJob>
+#include <QDebug>
 
 #include <QCheckBox>
 #include <QGridLayout>
@@ -273,7 +274,7 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
            SLOT(selectionChanged(QItemSelection,QItemSelection)) );
 
   mQuickAdd = new TodoViewQuickAddLine( this );
-  mQuickAdd->setClearButtonShown( true );
+  mQuickAdd->setClearButtonEnabled( true );
   mQuickAdd->setVisible( preferences()->enableQuickTodo() );
   connect( mQuickAdd, SIGNAL(returnPressed(Qt::KeyboardModifiers)),
            this, SLOT(addQuickTodo(Qt::KeyboardModifiers)) );
@@ -697,7 +698,7 @@ void TodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
   } else if ( modifiers == Qt::ControlModifier ) {
     QModelIndexList selection = mView->selectionModel()->selectedRows();
     if ( selection.count() != 1 ) {
-      kWarning() << "No to-do selected" << selection;
+      qWarning() << "No to-do selected" << selection;
       return;
     }
     const QModelIndex idx = mProxyModel->mapToSource( selection[0] );
@@ -848,7 +849,7 @@ void TodoView::newSubTodo()
     emit newSubTodoSignal( todoItem );
   } else {
     // This never happens
-    kWarning() << "Selection size isn't 1";
+    qWarning() << "Selection size isn't 1";
   }
 }
 
@@ -935,7 +936,7 @@ QMenu *TodoView::createCategoryPopupMenu()
 void TodoView::onTagsFetched(KJob *job)
 {
   if (job->error()) {
-    kWarning() << "Failed to fetch tags " << job->errorString();
+    qWarning() << "Failed to fetch tags " << job->errorString();
     return;
   }
   Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
@@ -979,7 +980,7 @@ void TodoView::setNewDate( const QDate &date )
 
     changer()->modifyIncidence( todoItem, oldTodo, this );
   } else {
-    kDebug() << "Item is readOnly";
+    qDebug() << "Item is readOnly";
   }
 }
 
@@ -1010,7 +1011,7 @@ void TodoView::setNewPercentage( QAction *action )
       changer()->modifyIncidence( todoItem, oldTodo, this );
     }
   } else {
-    kDebug() << "Item is read only";
+    qDebug() << "Item is read only";
   }
 }
 
@@ -1054,7 +1055,7 @@ void TodoView::changedCategories( QAction *action )
     todo->setCategories( categories );
     changer()->modifyIncidence( todoItem, oldTodo, this );
   } else {
-    kDebug() << "No active item, active item is read-only, or locking failed";
+    qDebug() << "No active item, active item is read-only, or locking failed";
   }
 }
 
@@ -1066,9 +1067,9 @@ void TodoView::setFullView( bool fullView )
 
   mFullViewButton->setChecked( fullView );
   if ( fullView ) {
-    mFullViewButton->setIcon( KIcon( QLatin1String("view-restore") ) );
+    mFullViewButton->setIcon( QIcon::fromTheme( QLatin1String("view-restore") ) );
   } else {
-    mFullViewButton->setIcon( KIcon( QLatin1String("view-fullscreen") ) );
+    mFullViewButton->setIcon( QIcon::fromTheme( QLatin1String("view-fullscreen") ) );
   }
 
   mFullViewButton->blockSignals( true );
@@ -1086,9 +1087,9 @@ void TodoView::setFullView( bool fullView )
 void TodoView::setFlatView( bool flatView, bool notifyOtherViews )
 {
   if ( flatView ) {
-    mFlatViewButton->setIcon( KIcon( QLatin1String("view-list-tree") ) );
+    mFlatViewButton->setIcon( QIcon::fromTheme( QLatin1String("view-list-tree") ) );
   } else {
-    mFlatViewButton->setIcon( KIcon( QLatin1String("view-list-details") ) );
+    mFlatViewButton->setIcon( QIcon::fromTheme( QLatin1String("view-list-details") ) );
   }
 
   if ( notifyOtherViews ) {
@@ -1217,10 +1218,10 @@ void TodoView::restoreViewState()
   //timer.start();
   delete mTreeStateRestorer;
   mTreeStateRestorer = new Akonadi::ETMViewStateSaver();
-  KConfigGroup group( KGlobal::activeComponent().config().data(), stateSaverGroup() );
+  KConfigGroup group( KComponentData::activeComponent().config().data(), stateSaverGroup() );
   mTreeStateRestorer->setView( mView );
   mTreeStateRestorer->restoreState( group );
-  //kDebug() << "Took " << timer.elapsed();
+  //qDebug() << "Took " << timer.elapsed();
 }
 
 QString TodoView::stateSaverGroup() const

@@ -19,7 +19,6 @@
 #include "mergecontactshowresulttabwidget.h"
 
 #include <KLocalizedString>
-#include <QTabWidget>
 
 using namespace KABMergeContacts;
 MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const Akonadi::Item::List &lst, QWidget *parent)

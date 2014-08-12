@@ -20,7 +20,7 @@
 
 #include "mailwebview.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KActionCollection>
 
 #include <QContextMenuEvent>
@@ -62,7 +62,7 @@ bool MailWebView::event( QEvent *event )
     QContextMenuEvent const *contextMenuEvent = static_cast<QContextMenuEvent*>( event );
     const QWebFrame * const frame = page()->currentFrame();
     const QWebHitTestResult hit = frame->hitTestContent( contextMenuEvent->pos() );
-    kDebug() << "Right-clicked URL:" << hit.linkUrl();
+    qDebug() << "Right-clicked URL:" << hit.linkUrl();
     emit popupMenu( hit.linkUrl().toString(), QUrl(), mapToGlobal( contextMenuEvent->pos() ) );
     event->accept();
     return true;
@@ -96,7 +96,7 @@ void MailWebView::scrollPageDown( int percent )
       // do arithmetic in higher precision, and check for overflow:
       const qint64 newPosition = current + height * percent / 100;
       if ( newPosition > std::numeric_limits<int>::max() )
-          kWarning() << "new position" << newPosition << "exceeds range of 'int'!";
+          qWarning() << "new position" << newPosition << "exceeds range of 'int'!";
       vsb->setValue( newPosition );
   }
 }
@@ -153,7 +153,7 @@ void MailWebView::clearSelection()
 bool MailWebView::isAttachmentInjectionPoint( const QPoint & global ) const
 {
   // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
-  kDebug() << "sorry, not implemented";
+  qDebug() << "sorry, not implemented";
   Q_UNUSED( global );
   return false;
 }
@@ -161,7 +161,7 @@ bool MailWebView::isAttachmentInjectionPoint( const QPoint & global ) const
 void MailWebView::injectAttachments( const function<QString()> & delayedHtml )
 {
   // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
-  kDebug() << "sorry, not implemented";
+  qDebug() << "sorry, not implemented";
   Q_UNUSED( delayedHtml );
 }
 
@@ -173,7 +173,7 @@ void MailWebView::scrollToAnchor( const QString & anchor )
 bool MailWebView::removeAttachmentMarking( const QString & id )
 {
   // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
-  kDebug() << "sorry, not implemented";
+  qDebug() << "sorry, not implemented";
   Q_UNUSED( id );
   return true;
 }
@@ -181,7 +181,7 @@ bool MailWebView::removeAttachmentMarking( const QString & id )
 void MailWebView::markAttachment( const QString & id, const QString & style )
 {
   // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
-  kDebug() << "sorry, not implemented";
+  qDebug() << "sorry, not implemented";
   Q_UNUSED( id );
   Q_UNUSED( style );
 }

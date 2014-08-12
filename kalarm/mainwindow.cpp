@@ -25,11 +25,6 @@
 #include "alarmlistdelegate.h"
 #include "autoqpointer.h"
 #include "alarmlistview.h"
-#ifndef USE_AKONADI
-#include "alarmlistfiltermodel.h"
-#include "alarmresources.h"
-#include "eventlistmodel.h"
-#endif
 #include "birthdaydlg.h"
 #include "functions.h"
 #include "kalarmapp.h"
@@ -51,24 +46,18 @@
 
 #include <libkdepim/misc/maillistdrag.h>
 #include <kmime/kmime_content.h>
-#ifdef USE_AKONADI
-#include <kcalcore/memorycalendar.h>
-#include <kcalutils/icaldrag.h>
-#include <akonadi/control.h>
+#include <KCalCore/MemoryCalendar>
+#include <KCalUtils/kcalutils/icaldrag.h>
+#include <AkonadiCore/control.h>
 using namespace KCalCore;
 using namespace KCalUtils;
-#else
-#include <kcal/calendarlocal.h>
-#include <kcal/icaldrag.h>
-using namespace KCal;
-#endif
 
-#include <kmenubar.h>
+#include <QMenuBar>
 #include <ktoolbar.h>
-#include <kmenu.h>
+#include <QMenu>
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kinputdialog.h>
+#include <qinputdialog.h>
 #include <ksystemtrayicon.h>
 #include <kstandardaction.h>
 #include <kiconloader.h>
@@ -79,11 +68,13 @@ using namespace KCal;
 #include <kshortcutsdialog.h>
 #include <kedittoolbar.h>
 #include <kxmlguifactory.h>
-#include <kaboutdata.h>
-#include <kdebug.h>
+#include <K4AboutData>
+#include <qdebug.h>
 #include <ktoggleaction.h>
 #include <ktoolbarpopupaction.h>
-#include <kicon.h>
+#include <KTimeZone>
+#include <KGlobal>
+#include <KShortcut>
 
 #include <QSplitter>
 #include <QByteArray>
@@ -92,6 +83,9 @@ using namespace KCal;
 #include <QResizeEvent>
 #include <QCloseEvent>
 #include <QDesktopWidget>
+#include <KSharedConfig>
+#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KAlarmCal;
 
@@ -106,10 +100,10 @@ static const char*   SHOW_RESOURCES_KEY = "ShowResources";
 
 static QString   undoText;
 static QString   undoTextStripped;
-static KShortcut undoShortcut;
+static QList<QKeySequence>  undoShortcut;
 static QString   redoText;
 static QString   redoTextStripped;
-static KShortcut redoShortcut;
+static QList<QKeySequence> redoShortcut;
 
 
 /*=============================================================================
@@ -145,19 +139,19 @@ MainWindow::MainWindow(bool restored)
       mShown(false),
       mResizing(false)
 {
-    kDebug();
+    qDebug();
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowModality(Qt::WindowModal);
     setObjectName(QLatin1String("MainWin"));    // used by LikeBack
-    setPlainCaption(KGlobal::mainComponent().aboutData()->programName());
-    KConfigGroup config(KGlobal::config(), VIEW_GROUP);
+    setPlainCaption(KComponentData::mainComponent().aboutData()->programName());
+    KConfigGroup config(KSharedConfig::openConfig(), VIEW_GROUP);
     mShowResources = config.readEntry(SHOW_RESOURCES_KEY, false);
     mShowArchived  = config.readEntry(SHOW_ARCHIVED_KEY, false);
     mShowTime      = config.readEntry(SHOW_TIME_KEY, true);
     mShowTimeTo    = config.readEntry(SHOW_TIME_TO_KEY, false);
     if (!restored)
     {
-        KConfigGroup wconfig(KGlobal::config(), WINDOW_NAME);
+        KConfigGroup wconfig(KSharedConfig::openConfig(), WINDOW_NAME);
         mResourcesWidth = wconfig.readEntry(QString::fromLatin1("Splitter %1").arg(KApplication::desktop()->width()), (int)0);
     }
 
@@ -171,45 +165,23 @@ MainWindow::MainWindow(bool restored)
     setCentralWidget(mSplitter);
 
     // Create the calendar resource selector widget
-#ifdef USE_AKONADI
     Akonadi::Control::widgetNeedsAkonadi(this);
     mResourceSelector = new ResourceSelector(mSplitter);
-#else
-    AlarmResources* resources = AlarmResources::instance();
-    mResourceSelector = new ResourceSelector(resources, mSplitter);
-#endif
     mSplitter->setStretchFactor(0, 0);   // don't resize resource selector when window is resized
     mSplitter->setStretchFactor(1, 1);
-#ifndef USE_AKONADI
-    connect(resources, SIGNAL(signalErrorMessage(QString)), SLOT(showErrorMessage(QString)));
-#endif
 
     // Create the alarm list widget
-#ifdef USE_AKONADI
     mListFilterModel = new AlarmListModel(this);
     mListFilterModel->setEventTypeFilter(mShowArchived ? CalEvent::ACTIVE | CalEvent::ARCHIVED : CalEvent::ACTIVE);
-#else
-    mListFilterModel = new AlarmListFilterModel(EventListModel::alarms(), this);
-    mListFilterModel->setStatusFilter(mShowArchived ? CalEvent::ACTIVE | CalEvent::ARCHIVED : CalEvent::ACTIVE);
-#endif
     mListView = new AlarmListView(WINDOW_NAME, mSplitter);
     mListView->setModel(mListFilterModel);
     mListView->selectTimeColumns(mShowTime, mShowTimeTo);
-#ifdef USE_AKONADI
     mListView->sortByColumn(mShowTime ? AlarmListModel::TimeColumn : AlarmListModel::TimeToColumn, Qt::AscendingOrder);
-#else
-    mListView->sortByColumn(mShowTime ? EventListModel::TimeColumn : EventListModel::TimeToColumn, Qt::AscendingOrder);
-#endif
     mListView->setItemDelegate(new AlarmListDelegate(mListView));
     connect(mListView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(slotSelection()));
     connect(mListView, SIGNAL(contextMenuRequested(QPoint)), SLOT(slotContextMenuRequested(QPoint)));
-#ifdef USE_AKONADI
     connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(Akonadi::Collection,AkonadiModel::Change,QVariant,bool)),
                        SLOT(slotCalendarStatusChanged()));
-#else
-    connect(resources, SIGNAL(resourceStatusChanged(AlarmResource*,AlarmResources::Change)),
-                       SLOT(slotCalendarStatusChanged()));
-#endif
     connect(mResourceSelector, SIGNAL(resized(QSize,QSize)), SLOT(resourcesResized()));
     mListView->installEventFilter(this);
     initActions();
@@ -229,7 +201,7 @@ MainWindow::MainWindow(bool restored)
 
 MainWindow::~MainWindow()
 {
-    kDebug();
+    qDebug();
     bool trayParent = isTrayParent();   // must call before removing from window list
     mWindowList.removeAt(mWindowList.indexOf(this));
 
@@ -246,7 +218,7 @@ MainWindow::~MainWindow()
         else
             theApp()->trayWindow()->removeWindow(this);
     }
-    KGlobal::config()->sync();    // save any new window size to disc
+    KSharedConfig::openConfig()->sync();    // save any new window size to disc
     theApp()->quitIf();
 }
 
@@ -397,7 +369,7 @@ void MainWindow::resourcesResized()
             mResourcesWidth = 0;
         else if (mainMainWindow() == this)
         {
-            KConfigGroup config(KGlobal::config(), WINDOW_NAME);
+            KConfigGroup config(KSharedConfig::openConfig(), WINDOW_NAME);
             config.writeEntry(QString::fromLatin1("Splitter %1").arg(KApplication::desktop()->width()), mResourcesWidth);
         }
     }
@@ -432,7 +404,7 @@ void MainWindow::show()
         // Show error message now that the main window has been displayed.
         // Waiting until now lets the user easily associate the message with
         // the main window which is faulty.
-        KAMessageBox::error(this, i18nc("@info", "Failure to create menus (perhaps <filename>%1</filename> missing or corrupted)", UI_FILE));
+        KAMessageBox::error(this, xi18nc("@info", "Failure to create menus (perhaps <filename>%1</filename> missing or corrupted)", UI_FILE));
         mMenuError = false;
     }
 }
@@ -453,79 +425,79 @@ void MainWindow::initActions()
     KShortcut dummy;
     KActionCollection* actions = actionCollection();
 
-    mActionTemplates = new KAction(i18nc("@action", "&Templates..."), this);
+    mActionTemplates = new QAction(i18nc("@action", "&Templates..."), this);
     actions->addAction(QLatin1String("templates"), mActionTemplates);
     connect(mActionTemplates, SIGNAL(triggered(bool)), SLOT(slotTemplates()));
 
     mActionNew = new NewAlarmAction(false, i18nc("@action", "&New"), this);
     actions->addAction(QLatin1String("new"), mActionNew);
 
-    KAction* action = mActionNew->displayAlarmAction();
+    QAction * action = mActionNew->displayAlarmAction();
     actions->addAction(QLatin1String("newDisplay"), action);
-    action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
+    //QT5 action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
     connect(action, SIGNAL(triggered(bool)), SLOT(slotNewDisplay()));
 
     action = mActionNew->commandAlarmAction();
     actions->addAction(QLatin1String("newCommand"), action);
-    action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
+    //QT5 action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
     connect(action, SIGNAL(triggered(bool)), SLOT(slotNewCommand()));
 
     action = mActionNew->emailAlarmAction();
     actions->addAction(QLatin1String("newEmail"), action);
-    action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
+    //QT5 action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
     connect(action, SIGNAL(triggered(bool)), SLOT(slotNewEmail()));
 
     action = mActionNew->audioAlarmAction();
     actions->addAction(QLatin1String("newAudio"), action);
-    action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
+    //QT5 action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
     connect(action, SIGNAL(triggered(bool)), SLOT(slotNewAudio()));
 
     action = mActionNew->fromTemplateAlarmAction();
     actions->addAction(QLatin1String("newFromTemplate"), action);
     connect(action, SIGNAL(selected(const KAEvent*)), SLOT(slotNewFromTemplate(const KAEvent*)));
 
-    mActionCreateTemplate = new KAction(i18nc("@action", "Create Tem&plate..."), this);
+    mActionCreateTemplate = new QAction(i18nc("@action", "Create Tem&plate..."), this);
     actions->addAction(QLatin1String("createTemplate"), mActionCreateTemplate);
     connect(mActionCreateTemplate, SIGNAL(triggered(bool)), SLOT(slotNewTemplate()));
 
-    mActionCopy = new KAction(KIcon(QLatin1String("edit-copy")), i18nc("@action", "&Copy..."), this);
+    mActionCopy = new QAction(QIcon::fromTheme(QLatin1String("edit-copy")), i18nc("@action", "&Copy..."), this);
     actions->addAction(QLatin1String("copy"), mActionCopy);
     mActionCopy->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_Insert));
     connect(mActionCopy, SIGNAL(triggered(bool)), SLOT(slotCopy()));
 
-    mActionModify = new KAction(KIcon(QLatin1String("document-properties")), i18nc("@action", "&Edit..."), this);
+    mActionModify = new QAction(QIcon::fromTheme(QLatin1String("document-properties")), i18nc("@action", "&Edit..."), this);
     actions->addAction(QLatin1String("modify"), mActionModify);
     mActionModify->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
     connect(mActionModify, SIGNAL(triggered(bool)), SLOT(slotModify()));
 
-    mActionDelete = new KAction(KIcon(QLatin1String("edit-delete")), i18nc("@action", "&Delete"), this);
+    mActionDelete = new QAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18nc("@action", "&Delete"), this);
     actions->addAction(QLatin1String("delete"), mActionDelete);
     mActionDelete->setShortcut(QKeySequence::Delete);
     connect(mActionDelete, SIGNAL(triggered(bool)), SLOT(slotDeleteIf()));
 
     // Set up Shift-Delete as a shortcut to delete without confirmation
-    mActionDeleteForce = new KAction(i18nc("@action", "Delete Without Confirmation"), this);
+    mActionDeleteForce = new QAction(i18nc("@action", "Delete Without Confirmation"), this);
     actions->addAction(QLatin1String("delete-force"), mActionDeleteForce);
     mActionDeleteForce->setShortcut(QKeySequence::Delete + Qt::SHIFT);
     connect(mActionDeleteForce, SIGNAL(triggered(bool)), SLOT(slotDeleteForce()));
 
-    mActionReactivate = new KAction(i18nc("@action", "Reac&tivate"), this);
+    mActionReactivate = new QAction(i18nc("@action", "Reac&tivate"), this);
     actions->addAction(QLatin1String("undelete"), mActionReactivate);
     mActionReactivate->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
     connect(mActionReactivate, SIGNAL(triggered(bool)), SLOT(slotReactivate()));
 
-    mActionEnable = new KAction(this);
+    mActionEnable = new QAction(this);
     actions->addAction(QLatin1String("disable"), mActionEnable);
     mActionEnable->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_B));
     connect(mActionEnable, SIGNAL(triggered(bool)), SLOT(slotEnable()));
 
-    action = new KAction(i18nc("@action", "Wake From Suspend..."), this);
+    action = new QAction(i18nc("@action", "Wake From Suspend..."), this);
     actions->addAction(QLatin1String("wakeSuspend"), action);
     connect(action, SIGNAL(triggered(bool)), SLOT(slotWakeFromSuspend()));
 
     action = KAlarm::createStopPlayAction(this);
     actions->addAction(QLatin1String("stopAudio"), action);
-    action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
+    //QT5 action->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
 
     mActionShowTime = new KToggleAction(i18n_a_ShowAlarmTimes(), this);
     actions->addAction(QLatin1String("showAlarmTimes"), mActionShowTime);
@@ -545,58 +517,58 @@ void MainWindow::initActions()
     actions->addAction(QLatin1String("showInSystemTray"), mActionToggleTrayIcon);
     connect(mActionToggleTrayIcon, SIGNAL(triggered(bool)), SLOT(slotToggleTrayIcon()));
 
-    mActionToggleResourceSel = new KToggleAction(KIcon(QLatin1String("view-choose")), i18nc("@action", "Show &Calendars"), this);
+    mActionToggleResourceSel = new KToggleAction(QIcon::fromTheme(QLatin1String("view-choose")), i18nc("@action", "Show &Calendars"), this);
     actions->addAction(QLatin1String("showResources"), mActionToggleResourceSel);
     connect(mActionToggleResourceSel, SIGNAL(triggered(bool)), SLOT(slotToggleResourceSelector()));
 
     mActionSpreadWindows = KAlarm::createSpreadWindowsAction(this);
     actions->addAction(QLatin1String("spread"), mActionSpreadWindows);
-    mActionSpreadWindows->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
+    //QT5 mActionSpreadWindows->setGlobalShortcut(dummy);   // actions->addAction() must be called first!
 
-    mActionImportAlarms = new KAction(i18nc("@action", "Import &Alarms..."), this);
+    mActionImportAlarms = new QAction(i18nc("@action", "Import &Alarms..."), this);
     actions->addAction(QLatin1String("importAlarms"), mActionImportAlarms);
     connect(mActionImportAlarms, SIGNAL(triggered(bool)), SLOT(slotImportAlarms()));
 
-    mActionImportBirthdays = new KAction(i18nc("@action", "Import &Birthdays..."), this);
+    mActionImportBirthdays = new QAction(i18nc("@action", "Import &Birthdays..."), this);
     actions->addAction(QLatin1String("importBirthdays"), mActionImportBirthdays);
     connect(mActionImportBirthdays, SIGNAL(triggered(bool)), SLOT(slotBirthdays()));
 
-    mActionExportAlarms = new KAction(i18nc("@action", "E&xport Selected Alarms..."), this);
+    mActionExportAlarms = new QAction(i18nc("@action", "E&xport Selected Alarms..."), this);
     actions->addAction(QLatin1String("exportAlarms"), mActionExportAlarms);
     connect(mActionExportAlarms, SIGNAL(triggered(bool)), SLOT(slotExportAlarms()));
 
-    mActionExport = new KAction(i18nc("@action", "E&xport..."), this);
+    mActionExport = new QAction(i18nc("@action", "E&xport..."), this);
     actions->addAction(QLatin1String("export"), mActionExport);
     connect(mActionExport, SIGNAL(triggered(bool)), SLOT(slotExportAlarms()));
 
-    action = new KAction(KIcon(QLatin1String("view-refresh")), i18nc("@action", "&Refresh Alarms"), this);
+    action = new QAction(QIcon::fromTheme(QLatin1String("view-refresh")), i18nc("@action", "&Refresh Alarms"), this);
     actions->addAction(QLatin1String("refreshAlarms"), action);
     connect(action, SIGNAL(triggered(bool)), SLOT(slotRefreshAlarms()));
 
-    action = KAlarm::createAlarmEnableAction(this);
-    actions->addAction(QLatin1String("alarmsEnable"), action);
+    KToggleAction *toggleAction = KAlarm::createAlarmEnableAction(this);
+    actions->addAction(QLatin1String("alarmsEnable"), toggleAction);
     if (undoText.isNull())
     {
         // Get standard texts, etc., for Undo and Redo actions
         QAction * act = KStandardAction::undo(this, 0, actions);
-        undoShortcut     = KShortcut(act->shortcuts());
+        undoShortcut     = act->shortcuts();
         undoText         = act->text();
-        undoTextStripped = KGlobal::locale()->removeAcceleratorMarker(undoText);
+        undoTextStripped = KLocalizedString::removeAcceleratorMarker(undoText);
         delete act;
         act = KStandardAction::redo(this, 0, actions);
-        redoShortcut     = KShortcut(act->shortcuts());
+        redoShortcut     = act->shortcuts();
         redoText         = act->text();
-        redoTextStripped = KGlobal::locale()->removeAcceleratorMarker(redoText);
+        redoTextStripped = KLocalizedString::removeAcceleratorMarker(redoText);
         delete act;
     }
-    mActionUndo = new KToolBarPopupAction(KIcon(QLatin1String("edit-undo")), undoText, this);
+    mActionUndo = new KToolBarPopupAction(QIcon::fromTheme(QLatin1String("edit-undo")), undoText, this);
     actions->addAction(QLatin1String("edit_undo"), mActionUndo);
-    mActionUndo->setShortcut(undoShortcut);
+    mActionUndo->setShortcuts(undoShortcut);
     connect(mActionUndo, SIGNAL(triggered(bool)), SLOT(slotUndo()));
 
-    mActionRedo = new KToolBarPopupAction(KIcon(QLatin1String("edit-redo")), redoText, this);
+    mActionRedo = new KToolBarPopupAction(QIcon::fromTheme(QLatin1String("edit-redo")), redoText, this);
     actions->addAction(QLatin1String("edit_redo"), mActionRedo);
-    mActionRedo->setShortcut(redoShortcut);
+    mActionRedo->setShortcuts(redoShortcut);
     connect(mActionRedo, SIGNAL(triggered(bool)), SLOT(slotRedo()));
 
     KStandardAction::find(mListView, SLOT(slotFind()), actions);
@@ -606,7 +578,7 @@ void MainWindow::initActions()
     KStandardAction::deselect(mListView, SLOT(clearSelection()), actions);
     // Quit only once the event loop is called; otherwise, the parent window will
     // be deleted while still processing the action, resulting in a crash.
-    KAction* act = KStandardAction::quit(0, 0, actions);
+    QAction* act = KStandardAction::quit(0, 0, actions);
     connect(act, SIGNAL(triggered(bool)), SLOT(slotQuit()), Qt::QueuedConnection);
     KStandardAction::keyBindings(this, SLOT(slotConfigureKeys()), actions);
     KStandardAction::configureToolbars(this, SLOT(slotConfigureToolbar()), actions);
@@ -615,11 +587,11 @@ void MainWindow::initActions()
     setStandardToolBarMenuEnabled(true);
     createGUI(UI_FILE);
     // Load menu and toolbar settings
-    applyMainWindowSettings(KGlobal::config()->group(WINDOW_NAME));
+    applyMainWindowSettings(KSharedConfig::openConfig()->group(WINDOW_NAME));
 
-    mContextMenu = static_cast<KMenu*>(factory()->container(QLatin1String("listContext"), this));
-    mActionsMenu = static_cast<KMenu*>(factory()->container(QLatin1String("actions"), this));
-    KMenu* resourceMenu = static_cast<KMenu*>(factory()->container(QLatin1String("resourceContext"), this));
+    mContextMenu = static_cast<QMenu*>(factory()->container(QLatin1String("listContext"), this));
+    mActionsMenu = static_cast<QMenu*>(factory()->container(QLatin1String("actions"), this));
+    QMenu* resourceMenu = static_cast<QMenu*>(factory()->container(QLatin1String("resourceContext"), this));
     mResourceSelector->setContextMenu(resourceMenu);
     mMenuError = (!mContextMenu  ||  !mActionsMenu  ||  !resourceMenu);
     connect(mActionUndo->menu(), SIGNAL(aboutToShow()), SLOT(slotInitUndoMenu()));
@@ -673,12 +645,8 @@ void MainWindow::enableTemplateMenuItem(bool enable)
 */
 void MainWindow::refresh()
 {
-    kDebug();
-#ifdef USE_AKONADI
+    qDebug();
     AkonadiModel::instance()->reload();
-#else
-    EventListModel::alarms()->reload();
-#endif
 }
 
 /******************************************************************************
@@ -687,7 +655,7 @@ void MainWindow::refresh()
 */
 void MainWindow::updateKeepArchived(int days)
 {
-    kDebug() << (bool)days;
+    qDebug() << (bool)days;
     if (mShowArchived  &&  !days)
         slotShowArchived();   // toggle Show Archived option setting
     mActionShowArchived->setEnabled(days);
@@ -696,33 +664,21 @@ void MainWindow::updateKeepArchived(int days)
 /******************************************************************************
 * Select an alarm in the displayed list.
 */
-#ifdef USE_AKONADI
 void MainWindow::selectEvent(Akonadi::Item::Id eventId)
-#else
-void MainWindow::selectEvent(const QString& eventId)
-#endif
 {
     mListView->clearSelection();
-#ifdef USE_AKONADI
     QModelIndex index = mListFilterModel->eventIndex(eventId);
     if (index.isValid())
     {
         mListView->select(index);
         mListView->scrollTo(index);
     }
-#else
-    mListView->select(eventId, true);
-#endif
 }
 
 /******************************************************************************
 * Return the single selected alarm in the displayed list.
 */
-#ifdef USE_AKONADI
 KAEvent MainWindow::selectedEvent() const
-#else
-KAEvent* MainWindow::selectedEvent() const
-#endif
 {
     return mListView->selectedEvent();
 }
@@ -758,15 +714,9 @@ void MainWindow::slotNewFromTemplate(const KAEvent* tmplate)
 */
 void MainWindow::slotNewTemplate()
 {
-#ifdef USE_AKONADI
     KAEvent event = mListView->selectedEvent();
     if (event.isValid())
         KAlarm::editNewTemplate(&event, this);
-#else
-    KAEvent* event = mListView->selectedEvent();
-    if (event)
-        KAlarm::editNewTemplate(event, this);
-#endif
 }
 
 /******************************************************************************
@@ -775,15 +725,9 @@ void MainWindow::slotNewTemplate()
 */
 void MainWindow::slotCopy()
 {
-#ifdef USE_AKONADI
     KAEvent event = mListView->selectedEvent();
     if (event.isValid())
         KAlarm::editNewAlarm(&event, this);
-#else
-    KAEvent* event = mListView->selectedEvent();
-    if (event)
-        KAlarm::editNewAlarm(event, this);
-#endif
 }
 
 /******************************************************************************
@@ -792,15 +736,9 @@ void MainWindow::slotCopy()
 */
 void MainWindow::slotModify()
 {
-#ifdef USE_AKONADI
     KAEvent event = mListView->selectedEvent();
     if (event.isValid())
         KAlarm::editAlarm(&event, this);   // edit alarm (view-only mode if archived or read-only)
-#else
-    KAEvent* event = mListView->selectedEvent();
-    if (event)
-        KAlarm::editAlarm(event, this);   // edit alarm (view-only mode if archived or read-only)
-#endif
 }
 
 /******************************************************************************
@@ -809,18 +747,7 @@ void MainWindow::slotModify()
 */
 void MainWindow::slotDelete(bool force)
 {
-#ifdef USE_AKONADI
     QVector<KAEvent> events = mListView->selectedEvents();
-#else
-    KAEvent::List events = mListView->selectedEvents();
-    // Save the IDs of the events to be deleted, in case any events are
-    // deleted by being triggered while the confirmation prompt is displayed
-    // (in which case their pointers will become invalid).
-    QStringList ids;
-    for (int i = 0, end = events.count();  i < end;  ++i)
-        ids.append(events[i]->id());
-#endif
-
     if (!force  &&  Preferences::confirmAlarmDeletion())
     {
         int n = events.count();
@@ -837,7 +764,6 @@ void MainWindow::slotDelete(bool force)
     // Remove any events which have just triggered, from the list to delete.
     Undo::EventList undos;
     AlarmCalendar* resources = AlarmCalendar::resources();
-#ifdef USE_AKONADI
     for (int i = 0;  i < events.count();  )
     {
         Akonadi::Collection c = resources->collectionForEvent(events[i].itemId());
@@ -846,19 +772,9 @@ void MainWindow::slotDelete(bool force)
         else
             undos.append(events[i++], c);
     }
-#else
-    for (int i = 0, e = 0, end = ids.count();  i < end;  ++i)
-    {
-        AlarmResource* r = resources->resourceForEvent(ids[i]);
-        if (!r)
-            events.remove(e);
-        else
-            undos.append(*events[e++], r);
-    }
-#endif
 
     if (events.isEmpty())
-        kDebug() << "No alarms left to delete";
+        qDebug() << "No alarms left to delete";
     else
     {
         // Delete the events from the calendar and displays
@@ -873,37 +789,22 @@ void MainWindow::slotDelete(bool force)
 */
 void MainWindow::slotReactivate()
 {
-#ifdef USE_AKONADI
     QVector<KAEvent> events = mListView->selectedEvents();
-#else
-    KAEvent::List events = mListView->selectedEvents();
-#endif
     mListView->clearSelection();
 
     // Add the alarms to the displayed lists and to the calendar file
     Undo::EventList undos;
-#ifdef USE_AKONADI
     QVector<EventId> ineligibleIDs;
     KAlarm::reactivateEvents(events, ineligibleIDs, 0, this);
-#else
-    QStringList ineligibleIDs;
-    KAlarm::reactivateEvents(events, ineligibleIDs, 0, this);
-#endif
 
     // Create the undo list, excluding ineligible events
     AlarmCalendar* resources = AlarmCalendar::resources();
     for (int i = 0, end = events.count();  i < end;  ++i)
     {
-#ifdef USE_AKONADI
         if (!ineligibleIDs.contains(EventId(events[i])))
         {
             undos.append(events[i], resources->collectionForEvent(events[i].itemId()));
         }
-#else
-        QString id = events[i]->id();
-        if (!ineligibleIDs.contains(id))
-            undos.append(*events[i], resources->resourceForEvent(id));
-#endif
     }
     Undo::saveReactivates(undos);
 }
@@ -915,13 +816,8 @@ void MainWindow::slotReactivate()
 void MainWindow::slotEnable()
 {
     bool enable = mActionEnableEnable;    // save since changed in response to KAlarm::enableEvent()
-#ifdef USE_AKONADI
     QVector<KAEvent> events = mListView->selectedEvents();
     QVector<KAEvent> eventCopies;
-#else
-    KAEvent::List events = mListView->selectedEvents();
-    KAEvent::List eventCopies;
-#endif
     for (int i = 0, end = events.count();  i < end;  ++i)
         eventCopies += events[i];
     KAlarm::enableEvents(eventCopies, enable, this);
@@ -940,7 +836,7 @@ void MainWindow::slotShowTime()
     else
     {
         mListView->selectTimeColumns(mShowTime, mShowTimeTo);
-        KConfigGroup config(KGlobal::config(), VIEW_GROUP);
+        KConfigGroup config(KSharedConfig::openConfig(), VIEW_GROUP);
         config.writeEntry(SHOW_TIME_KEY, mShowTime);
         config.writeEntry(SHOW_TIME_TO_KEY, mShowTimeTo);
     }
@@ -958,7 +854,7 @@ void MainWindow::slotShowTimeTo()
     else
     {
         mListView->selectTimeColumns(mShowTime, mShowTimeTo);
-        KConfigGroup config(KGlobal::config(), VIEW_GROUP);
+        KConfigGroup config(KSharedConfig::openConfig(), VIEW_GROUP);
         config.writeEntry(SHOW_TIME_KEY, mShowTime);
         config.writeEntry(SHOW_TIME_TO_KEY, mShowTimeTo);
     }
@@ -973,13 +869,9 @@ void MainWindow::slotShowArchived()
     mActionShowArchived->setChecked(mShowArchived);
     mActionShowArchived->setToolTip(mShowArchived ? i18nc("@info:tooltip", "Hide Archived Alarms")
                                                   : i18nc("@info:tooltip", "Show Archived Alarms"));
-#ifdef USE_AKONADI
     mListFilterModel->setEventTypeFilter(mShowArchived ? CalEvent::ACTIVE | CalEvent::ARCHIVED : CalEvent::ACTIVE);
-#else
-    mListFilterModel->setStatusFilter(mShowArchived ? CalEvent::ACTIVE | CalEvent::ARCHIVED : CalEvent::ACTIVE);
-#endif
     mListView->reset();
-    KConfigGroup config(KGlobal::config(), VIEW_GROUP);
+    KConfigGroup config(KSharedConfig::openConfig(), VIEW_GROUP);
     config.writeEntry(SHOW_ARCHIVED_KEY, mShowArchived);
 }
 
@@ -1015,18 +907,12 @@ void MainWindow::slotImportAlarms()
 */
 void MainWindow::slotExportAlarms()
 {
-#ifdef USE_AKONADI
     QVector<KAEvent> events = mListView->selectedEvents();
     if (!events.isEmpty())
     {
         KAEvent::List evts = KAEvent::ptrList(events);
         AlarmCalendar::exportAlarms(evts, this);
     }
-#else
-    KAEvent::List events = mListView->selectedEvents();
-    if (!events.isEmpty())
-        AlarmCalendar::exportAlarms(events, this);
-#endif
 }
 
 /******************************************************************************
@@ -1051,14 +937,10 @@ void MainWindow::slotBirthdays()
             Undo::EventList undos;
             AlarmCalendar* resources = AlarmCalendar::resources();
             for (int i = 0, end = events.count();  i < end;  ++i)
-#ifdef USE_AKONADI
             {
                 Akonadi::Collection c = resources->collectionForEvent(events[i].itemId());
                 undos.append(events[i], c);
             }
-#else
-                undos.append(events[i], resources->resourceForEvent(events[i].id()));
-#endif
             Undo::saveAdds(undos, i18nc("@info", "Import birthdays"));
 
             if (status != KAlarm::UPDATE_FAILED)
@@ -1130,7 +1012,7 @@ void MainWindow::slotToggleResourceSelector()
     else
         mResourceSelector->hide();
 
-    KConfigGroup config(KGlobal::config(), VIEW_GROUP);
+    KConfigGroup config(KSharedConfig::openConfig(), VIEW_GROUP);
     config.writeEntry(SHOW_RESOURCES_KEY, mShowResources);
 }
 
@@ -1167,7 +1049,7 @@ void MainWindow::slotFindActive(bool active)
 */
 void MainWindow::slotUndo()
 {
-    Undo::undo(this, KGlobal::locale()->removeAcceleratorMarker(mActionUndo->text()));
+    Undo::undo(this, KLocalizedString::removeAcceleratorMarker(mActionUndo->text()));
 }
 
 /******************************************************************************
@@ -1175,7 +1057,7 @@ void MainWindow::slotUndo()
 */
 void MainWindow::slotRedo()
 {
-    Undo::redo(this, KGlobal::locale()->removeAcceleratorMarker(mActionRedo->text()));
+    Undo::redo(this, KLocalizedString::removeAcceleratorMarker(mActionRedo->text()));
 }
 
 /******************************************************************************
@@ -1293,7 +1175,8 @@ void MainWindow::slotConfigureKeys()
 */
 void MainWindow::slotConfigureToolbar()
 {
-    saveMainWindowSettings(KGlobal::config()->group(WINDOW_NAME));
+    KConfigGroup grp(KSharedConfig::openConfig()->group(WINDOW_NAME));
+    saveMainWindowSettings(grp);
     KEditToolBar dlg(factory());
     connect(&dlg, SIGNAL(newToolBarConfig()), this, SLOT(slotNewToolbarConfig()));
     dlg.exec();
@@ -1306,7 +1189,7 @@ void MainWindow::slotConfigureToolbar()
 void MainWindow::slotNewToolbarConfig()
 {
     createGUI(UI_FILE);
-    applyMainWindowSettings(KGlobal::config()->group(WINDOW_NAME));
+    applyMainWindowSettings(KSharedConfig::openConfig()->group(WINDOW_NAME));
 }
 
 /******************************************************************************
@@ -1377,21 +1260,17 @@ static QString getMailHeader(const char* header, KMime::Content& content)
 */
 void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
 {
-    kDebug() << "Formats:" << e->mimeData()->formats();
+    qDebug() << "Formats:" << e->mimeData()->formats();
     const QMimeData* data = e->mimeData();
     KAEvent::SubAction action = KAEvent::MESSAGE;
     QByteArray         bytes;
     AlarmText          alarmText;
     KPIM::MailList     mailList;
     KUrl::List         files;
-#ifdef USE_AKONADI
     MemoryCalendar::Ptr calendar(new MemoryCalendar(Preferences::timeZone(true)));
-#else
-    CalendarLocal calendar(Preferences::timeZone(true));
-#endif
 #ifndef NDEBUG
     QString fmts = data->formats().join(QLatin1String(", "));
-    kDebug() << fmts;
+    qDebug() << fmts;
 #endif
 
     /* The order of the tests below matters, since some dropped objects
@@ -1401,7 +1280,7 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
     if (!(bytes = data->data(QLatin1String("message/rfc822"))).isEmpty())
     {
         // Email message(s). Ignore all but the first.
-        kDebug() << "email";
+        qDebug() << "email";
         KMime::Content content;
         content.setContent(bytes);
         content.parse();
@@ -1429,7 +1308,7 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
     {
         mailList = KPIM::MailList::fromMimeData(data);
         // KMail message(s). Ignore all but the first.
-        kDebug() << "KMail_list";
+        qDebug() << "KMail_list";
         if (mailList.isEmpty())
             return;
         KPIM::MailSummary& summary = mailList[0];
@@ -1437,23 +1316,15 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
         dt.setTime_t(summary.date());
         QString body = KAMail::getMailBody(summary.serialNumber());
         alarmText.setEmail(summary.to(), summary.from(), QString(),
-                           KGlobal::locale()->formatDateTime(dt), summary.subject(),
+                           KLocale::global()->formatDateTime(dt), summary.subject(),
                            body, summary.serialNumber());
     }
 #endif
-#ifdef USE_AKONADI
     else if (ICalDrag::fromMimeData(data, calendar))
-#else
-    else if (ICalDrag::fromMimeData(data, &calendar))
-#endif
     {
         // iCalendar - If events are included, use the first event
-        kDebug() << "iCalendar";
-#ifdef USE_AKONADI
+        qDebug() << "iCalendar";
         Event::List events = calendar->rawEvents();
-#else
-        Event::List events = calendar.rawEvents();
-#endif
         if (!events.isEmpty())
         {
             KAEvent ev(events[0]);
@@ -1461,18 +1332,10 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
             return;
         }
         // If todos are included, use the first todo
-#ifdef USE_AKONADI
         Todo::List todos = calendar->rawTodos();
-#else
-        Todo::List todos = calendar.rawTodos();
-#endif
         if (todos.isEmpty())
             return;
-#ifdef USE_AKONADI
         Todo::Ptr todo = todos[0];
-#else
-        Todo* todo = todos[0];
-#endif
         alarmText.setTodo(todo);
         KDateTime start = todo->dtStart(true);
         if (!start.isValid()  &&  todo->hasDueDate())
@@ -1493,7 +1356,7 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
     }
     else if (!(files = KUrl::List::fromMimeData(data)).isEmpty())
     {
-        kDebug() << "URL";
+        qDebug() << "URL";
         // Try to find the mime type of the file, without downloading a remote file
         KMimeType::Ptr mimeType = KMimeType::findByUrl(files[0]);
         action = mimeType->name().startsWith(QLatin1String("audio/")) ? KAEvent::AUDIO : KAEvent::FILE;
@@ -1502,7 +1365,7 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
     else if (data->hasText())
     {
         QString text = data->text();
-        kDebug() << "text";
+        qDebug() << "text";
         alarmText.setText(text);
     }
     else
@@ -1522,8 +1385,8 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
             else if (alarmText.isScript())
                 types += i18nc("@item:inlistbox", "Command Alarm");
             bool ok = false;
-            QString type = KInputDialog::getItem(i18nc("@title:window", "Alarm Type"),
-                                                 i18nc("@info", "Choose alarm type to create:"), types, 0, false, &ok, mainMainWindow());
+            QString type = QInputDialog::getItem(mainMainWindow(), i18nc("@title:window", "Alarm Type"),
+                                                 i18nc("@info", "Choose alarm type to create:"), types, 0, false, &ok);
             if (!ok)
                 return;   // user didn't press OK
             int i = types.indexOf(type);
@@ -1541,14 +1404,8 @@ void MainWindow::executeDropEvent(MainWindow* win, QDropEvent* e)
 void MainWindow::slotCalendarStatusChanged()
 {
     // Find whether there are any writable calendars
-#ifdef USE_AKONADI
     bool active  = !CollectionControlModel::enabledCollections(CalEvent::ACTIVE, true).isEmpty();
     bool templat = !CollectionControlModel::enabledCollections(CalEvent::TEMPLATE, true).isEmpty();
-#else
-    AlarmResources* resources = AlarmResources::instance();
-    bool active  = resources->activeCount(CalEvent::ACTIVE, true);
-    bool templat = resources->activeCount(CalEvent::TEMPLATE, true);
-#endif
     for (int i = 0, end = mWindowList.count();  i < end;  ++i)
     {
         MainWindow* w = mWindowList[i];
@@ -1567,11 +1424,7 @@ void MainWindow::slotCalendarStatusChanged()
 void MainWindow::slotSelection()
 {
     // Find which events have been selected
-#ifdef USE_AKONADI
     QVector<KAEvent> events = mListView->selectedEvents();
-#else
-    KAEvent::List events = mListView->selectedEvents();
-#endif
     int count = events.count();
     if (!count)
     {
@@ -1593,20 +1446,12 @@ void MainWindow::slotSelection()
     KDateTime now = KDateTime::currentUtcDateTime();
     for (int i = 0;  i < count;  ++i)
     {
-#ifdef USE_AKONADI
         KAEvent* ev = resources->event(EventId(events[i]));   // get up-to-date status
         KAEvent* event = ev ? ev : &events[i];
-#else
-        KAEvent* event = events[i];
-#endif
         bool expired = event->expired();
         if (!expired)
             allArchived = false;
-#ifdef USE_AKONADI
         if (resources->eventReadOnly(event->itemId()))
-#else
-        if (resources->eventReadOnly(event->id()))
-#endif
             readOnly = true;
         if (enableReactivate
         &&  (!expired  ||  !event->occursAfter(now, true)))
@@ -1625,12 +1470,8 @@ void MainWindow::slotSelection()
         }
     }
 
-    kDebug() << "true";
-#ifdef USE_AKONADI
+    qDebug() << "true";
     mActionCreateTemplate->setEnabled((count == 1) && !CollectionControlModel::enabledCollections(CalEvent::TEMPLATE, true).isEmpty());
-#else
-    mActionCreateTemplate->setEnabled((count == 1) && (AlarmResources::instance()->activeCount(CalEvent::TEMPLATE, true) > 0));
-#endif
     mActionExportAlarms->setEnabled(true);
     mActionExport->setEnabled(true);
     mActionCopy->setEnabled(active && count == 1);
@@ -1650,7 +1491,7 @@ void MainWindow::slotSelection()
 */
 void MainWindow::slotContextMenuRequested(const QPoint& globalPos)
 {
-    kDebug();
+    qDebug();
     if (mContextMenu)
         mContextMenu->popup(globalPos);
 }
@@ -1717,19 +1558,9 @@ MainWindow* MainWindow::toggleWindow(MainWindow* win)
 * it to remain unaffected by the alarm window closing.
 * See MessageWin::slotEdit() for more information.
 */
-#ifdef USE_AKONADI
 void MainWindow::editAlarm(EditAlarmDlg* dlg, const KAEvent& event)
-#else
-void MainWindow::editAlarm(EditAlarmDlg* dlg, const KAEvent& event, AlarmResource* resource)
-#endif
 {
-#ifdef USE_AKONADI
     mEditAlarmMap[dlg] = event;
-#else
-    KAEvent ev = event;
-    ev.setResource(resource);
-    mEditAlarmMap[dlg] = ev;
-#endif
     connect(dlg, SIGNAL(accepted()), SLOT(editAlarmOk()));
     connect(dlg, SIGNAL(destroyed(QObject*)), SLOT(editAlarmDeleted(QObject*)));
     dlg->setAttribute(Qt::WA_DeleteOnClose, true);   // ensure no memory leaks
@@ -1754,12 +1585,8 @@ void MainWindow::editAlarmOk()
         return;
     if (dlg->result() != QDialog::Accepted)
         return;
-#ifdef USE_AKONADI
     Akonadi::Collection c = AkonadiModel::instance()->collection(event);
     KAlarm::updateEditedAlarm(dlg, event, c);
-#else
-    KAlarm::updateEditedAlarm(dlg, event, event.resource());
-#endif
 }
 
 /******************************************************************************

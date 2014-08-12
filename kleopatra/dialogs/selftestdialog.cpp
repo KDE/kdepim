@@ -39,6 +39,7 @@
 #include <selftest/selftest.h>
 
 #include <KDebug>
+#include <KLocalizedString>
 
 #include <QAbstractTableModel>
 #include <QHeaderView>

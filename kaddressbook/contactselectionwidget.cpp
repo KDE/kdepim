@@ -20,11 +20,11 @@
 #include "contactselectionwidget.h"
 #include "utils.h"
 
-#include <Akonadi/CollectionComboBox>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/RecursiveItemFetchJob>
+#include <AkonadiWidgets/CollectionComboBox>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/RecursiveItemFetchJob>
 
 #include <KLocalizedString>
 

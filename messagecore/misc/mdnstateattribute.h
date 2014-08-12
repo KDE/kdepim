@@ -25,7 +25,7 @@
 
 #include "messagecore_export.h"
 
-#include <akonadi/attribute.h>
+#include <attribute.h>
 
 namespace MessageCore {
 

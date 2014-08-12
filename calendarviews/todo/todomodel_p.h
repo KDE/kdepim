@@ -26,7 +26,7 @@
 
 #include "todomodel.h"
 
-#include <Akonadi/Item>
+#include <Item>
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <QModelIndex>

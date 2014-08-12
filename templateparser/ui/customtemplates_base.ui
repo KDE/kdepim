@@ -64,7 +64,7 @@
           </widget>
          </item>
          <item>
-          <widget class="KPushButton" name="mAdd">
+          <widget class="QPushButton" name="mAdd">
            <property name="toolTip">
             <string comment="@info:tooltip">Add a new custom template</string>
            </property>
@@ -74,7 +74,7 @@
           </widget>
          </item>
          <item>
-          <widget class="KPushButton" name="mRemove">
+          <widget class="QPushButton" name="mRemove">
            <property name="toolTip">
             <string comment="@info:tooltip">Remove the selected custom template</string>
            </property>
@@ -84,7 +84,7 @@
           </widget>
          </item>
          <item>
-          <widget class="KPushButton" name="mDuplicate">
+          <widget class="QPushButton" name="mDuplicate">
            <property name="toolTip">
             <string comment="@info:tooltip">Duplicate the selected custom template</string>
            </property>
@@ -317,12 +317,6 @@
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

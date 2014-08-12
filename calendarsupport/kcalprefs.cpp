@@ -35,9 +35,11 @@
 #include <KEMailSettings>
 #include <KSystemTimeZone>
 
+#include <KDebug>
+
 using namespace CalendarSupport;
 
-K_GLOBAL_STATIC( KCalPrefs, globalPrefs )
+Q_GLOBAL_STATIC( KCalPrefs, globalPrefs )
 
 class KCalPrefs::Private
 {
@@ -80,7 +82,7 @@ KCalPrefs *KCalPrefs::instance()
 
   if ( firstCall ) {
     firstCall = false;
-    globalPrefs->readConfig();
+    globalPrefs->load();
   }
 
   return globalPrefs;
@@ -131,7 +133,7 @@ void KCalPrefs::setTimeZoneDefault()
 {
   KTimeZone zone = KSystemTimeZones::local();
   if ( !zone.isValid() ) {
-    kError() << "KSystemTimeZones::local() return 0";
+    qCritical() << "KSystemTimeZones::local() return 0";
     return;
   }
 
@@ -155,7 +157,7 @@ void KCalPrefs::fillMailDefaults()
   }
 }
 
-void KCalPrefs::usrReadConfig()
+void KCalPrefs::usrRead()
 {
   KConfigGroup generalConfig( config(), "General" );
 
@@ -176,11 +178,11 @@ void KCalPrefs::usrReadConfig()
   }
 #endif
 
-  KConfigSkeleton::usrReadConfig();
+  KConfigSkeleton::usrRead();
   fillMailDefaults();
 }
 
-void KCalPrefs::usrWriteConfig()
+bool KCalPrefs::usrSave()
 {
   KConfigGroup generalConfig( config(), "General" );
   d->mCategoryConfig->setColors( d->mCategoryColors );
@@ -197,7 +199,7 @@ void KCalPrefs::usrWriteConfig()
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
   defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendarId() );
 
-  KConfigSkeleton::usrWriteConfig();
+  return KConfigSkeleton::usrSave();
 }
 
 QString KCalPrefs::fullName()

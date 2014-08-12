@@ -32,40 +32,43 @@
 #include "qmllistselectionmodel.h"
 #include "statemachinebuilder.h"
 
-#include <akonadi/agentactionmanager.h>
-#include <akonadi/agentinstancemodel.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/etmviewstatesaver.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/selectionproxymodel.h>
-#include <akonadi/standardactionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
+#include <AkonadiCore/agentinstancemodel.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/entitydisplayattribute.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/itemmodifyjob.h>
+#include <AkonadiCore/selectionproxymodel.h>
+#include <AkonadiWidgets/standardactionmanager.h>
 #include <kviewstatemaintainer.h>
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>
 #include <kselectionproxymodel.h>
 
-#include <KDE/KAboutData>
-#include <KDE/KAction>
-#include <KDE/KActionCollection>
-#include <KDE/KCmdLineArgs>
-#include <KDE/KConfigGroup>
-#include <KDE/KDebug>
-#include <KDE/KFileDialog>
-#include <KDE/KGlobal>
-#include <KDE/KInputDialog>
-#include <KDE/KLineEdit>
-#include <KDE/KLocale>
-#include <KDE/KMessageBox>
-#include <KDE/KProcess>
-#include <KDE/KRun>
-#include <KDE/KSharedConfig>
-#include <KDE/KSharedConfigPtr>
-#include <KDE/KStandardDirs>
-#include <KDE/KToolInvocation>
+#include <KIconLoader>
+#include <KMimeType>
+#include <KComponentData>
+#include <K4AboutData>
+#include <QAction>
+#include <KActionCollection>
+#include <KCmdLineArgs>
+#include <KConfigGroup>
+#include <QDebug>
+#include <KFileDialog>
+#include <KGlobal>
+#include <QInputDialog>
+#include <KLineEdit>
+#include <KLocale>
+#include <KMessageBox>
+#include <KProcess>
+#include <KRun>
+#include <KSharedConfig>
+#include <KSharedConfigPtr>
+#include <KStandardDirs>
+#include <KToolInvocation>
 #include "kdeversion.h"
 
 #include <QtCore/QCoreApplication>
@@ -77,10 +80,11 @@
 #include <QDeclarativeImageProvider>
 #include <QApplication>
 #include <QTreeView>
-
+#include <QTimer>
 #include <QDeclarativeItem>
 
 #include <sys/utsname.h>
+#include <QStandardPaths>
 
 #define VIEW(model) {                        \
   QTreeView *view = new QTreeView( this );   \
@@ -151,14 +155,12 @@ void KDeclarativeMainView::doDelayedInitInternal()
   QTime time;
   if ( debugTiming ) {
     time.start();
-    kWarning() << "Start KDeclarativeMainView ctor" << &time << " - " << QDateTime::currentDateTime();
+    qWarning() << "Start KDeclarativeMainView ctor" << &time << " - " << QDateTime::currentDateTime();
   }
 
-  KGlobal::locale()->insertCatalog( QLatin1String( "libkdepimmobileui" ) );
-  KGlobal::locale()->insertCatalog( QLatin1String( "libincidenceeditors" ) ); // for category dialog
 
   if ( debugTiming ) {
-    kWarning() << "Catalog inserted" << time.elapsed() << &time;
+    qWarning() << "Catalog inserted" << time.elapsed() << &time;
   }
 
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
@@ -171,7 +173,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   d->mEtm->setIncludeUnsubscribed( false );
 
   if ( debugTiming ) {
-    kWarning() << "ETM created" << time.elapsed() << &time;
+    qWarning() << "ETM created" << time.elapsed() << &time;
   }
 
   QAbstractItemModel *mainModel = d->mEtm;
@@ -188,7 +190,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   connect( d->mBnf, SIGNAL(collectionSelectionChanged()), SIGNAL(collectionSelectionChanged()) );
 
   if ( debugTiming ) {
-    kWarning() << "BreadcrumbNavigation factory created" << time.elapsed() << &time;
+    qWarning() << "BreadcrumbNavigation factory created" << time.elapsed() << &time;
   }
 
   QDeclarativeContext *context = engine()->rootContext();
@@ -217,7 +219,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   connect( d->mGuiStateManager, SIGNAL(guiStateChanged(int,int)), d, SLOT(guiStateChanged(int,int)) );
 
   // A list of available favorites
-  d->mFavoritesEditor = new FavoritesEditor( actionCollection(), KGlobal::config(), this );
+  d->mFavoritesEditor = new FavoritesEditor( actionCollection(), KSharedConfig::openConfig(), this );
   d->mFavoritesEditor->setCollectionSelectionModel( d->mBnf->selectionModel() );
 
   context->setContextProperty( QLatin1String("favoritesEditor"), d->mFavoritesEditor );
@@ -234,14 +236,14 @@ void KDeclarativeMainView::doDelayedInitInternal()
 
   setupAgentActionManager( d->mAgentInstanceSelectionModel );
 
-  KAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
+  QAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
   actionCollection()->addAction( QLatin1String( "quit" ), action );
 
-  action = new KAction( i18n( "Synchronize all" ), this );
+  action = new QAction( i18n( "Synchronize all" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(synchronizeAllItems()) );
   actionCollection()->addAction( QLatin1String( "synchronize_all_items" ), action );
 
-  action = new KAction( i18n( "Report Bug Or Request Feature" ), this );
+  action = new QAction( i18n( "Report Bug Or Request Feature" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(reportBug()) );
   actionCollection()->addAction( QLatin1String( "report_bug" ), action );
 
@@ -259,20 +261,20 @@ void KDeclarativeMainView::doDelayedInitInternal()
   connect( d->mBnf->qmlSelectedItemModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(breadcrumbsSelectionChanged()) );
 
   if ( debugTiming ) {
-    kWarning() << "Restoring state" << time.elapsed() << &time;
+    qWarning() << "Restoring state" << time.elapsed() << &time;
   }
 
   QTimer::singleShot(1000, d, SLOT(initializeStateSaver()));
 
   if ( debugTiming ) {
-    kWarning() << "restore state done" << time.elapsed() << &time;
+    qWarning() << "restore state done" << time.elapsed() << &time;
   }
 
   connect( d->mBnf->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(numSelectedAccountsChanged()) );
 
   if ( debugTiming ) {
     time.start();
-    kWarning() << "Finished KDeclarativeMainView ctor: " << time.elapsed() << " - " << &time;
+    qWarning() << "Finished KDeclarativeMainView ctor: " << time.elapsed() << " - " << &time;
   }
 
   qmlRegisterUncreatableType<AgentStatusMonitor>( "org.kde.pim.mobileui", 4, 5, "AgentStatusMonitor", QLatin1String( "This type is only exported for its enums" ) );
@@ -324,7 +326,7 @@ void KDeclarativeMainView::setItemNaigationAndActionSelectionModels( QItemSelect
 {
   d->mItemNavigationSelectionModel = itemNavigationSelectionModel;
 
-  d->mItemViewStateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
+  d->mItemViewStateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KSharedConfig::openConfig()->group( QLatin1String( "ItemSelectionState" ) ), this );
   d->mItemViewStateMaintainer->setSelectionModel( d->mItemNavigationSelectionModel );
 
   d->mItemActionSelectionModel = itemActionSelectionModel;
@@ -487,7 +489,7 @@ void KDeclarativeMainView::launchAccountWizard()
 {
 #ifdef Q_OS_UNIX
   const QString inProcessAccountWizard = KStandardDirs::locate( "module", QLatin1String("accountwizard_plugin.so") );
-  kDebug() << inProcessAccountWizard;
+  qDebug() << inProcessAccountWizard;
   if ( !inProcessAccountWizard.isEmpty() ) {
     QPluginLoader loader( inProcessAccountWizard );
     if ( loader.load() ) {
@@ -497,7 +499,7 @@ void KDeclarativeMainView::launchAccountWizard()
       loader.unload();
       return;
     } else {
-      kDebug() << loader.fileName() << loader.errorString();
+      qDebug() << loader.fileName() << loader.errorString();
     }
   }
 #endif
@@ -508,7 +510,7 @@ void KDeclarativeMainView::launchAccountWizard()
   int pid = KProcess::startDetached( QLatin1String( "accountwizard" ), args );
   if ( !pid ) {
     // Handle error
-    kDebug() << "error creating accountwizard";
+    qDebug() << "error creating accountwizard";
   }
 }
 
@@ -542,9 +544,9 @@ void KDeclarativeMainView::saveFavorite()
   }
 
   bool ok;
-  const QString name = KInputDialog::getText( i18n( "Select name for favorite" ),
-                                              i18n( "Favorite name" ),
-                                              collectionName, &ok, this );
+  const QString name = QInputDialog::getText( this, i18n( "Select name for favorite" ),
+                                              i18n( "Favorite name" ), QLineEdit::Normal,
+                                              collectionName, &ok);
 
   if ( !ok || name.isEmpty() )
     return;
@@ -664,9 +666,9 @@ static QString lookupDocumentation( const QString &fileName )
   // assemble the local search paths
   // all files on /usr/share/doc are deleted instantly on maemo5 by docpurge
   // therefore manual must be installed in data dir
-  const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "data" );
+  const QStringList localDirectories = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation) /* WARNING: no more trailing slashes */;
 
-  QStringList languages = KGlobal::locale()->languageList();
+  QStringList languages = KLocale::global()->languageList();
   languages.append( QLatin1String("en") );
   languages.removeAll( QLatin1String("C") );
 
@@ -727,7 +729,7 @@ void KDeclarativeMainView::openDocumentation( const QString &relativePath )
 
 void KDeclarativeMainView::openLicenses()
 {
-  KDeclarativeMainView::openAttachment( KGlobal::dirs()->findResource( "data", QLatin1String("kontact-touch/licenses.pdf") ),
+  KDeclarativeMainView::openAttachment( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kontact-touch/licenses.pdf") ),
                                         QLatin1String( "application/pdf" ) );
 }
 
@@ -735,7 +737,7 @@ void KDeclarativeMainView::openAttachment( const QString &url, const QString &mi
 {
   qDebug() << "opening attachment: " << url;
 
-  KRun::runUrl( KUrl( url ), mimeType, this );
+  KRun::runUrl( QUrl( url ), mimeType, this );
 }
 
 void KDeclarativeMainView::saveAttachment( const QString &url, const QString &defaultFileName )
@@ -753,7 +755,7 @@ void KDeclarativeMainView::saveAttachment( const QString &url, const QString &de
     filter += patterns.join( QLatin1String( "\n" ) );
     filter += i18n( "\n*|all files" );
   }
-  const QString targetFile = KFileDialog::getSaveFileName( KUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
+  const QString targetFile = KFileDialog::getSaveFileName( QUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
                                                            filter,
                                                            this,
                                                            i18n( "Save Attachment" ) );
@@ -763,7 +765,7 @@ void KDeclarativeMainView::saveAttachment( const QString &url, const QString &de
 
   if ( QFile::exists( targetFile ) ) {
     if ( KMessageBox::warningContinueCancel( this,
-            i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
+            xi18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
                   targetFile ),
             i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")) ) == KMessageBox::Cancel) {
         return;
@@ -779,7 +781,7 @@ void KDeclarativeMainView::saveAttachment( const QString &url, const QString &de
 
   if ( !success ) {
     KMessageBox::error( this,
-                        i18nc( "1 = file name, 2 = error string",
+                        xi18nc( "1 = file name, 2 = error string",
                                "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
                                targetFile,
                                file.errorString() ),
@@ -888,7 +890,7 @@ QString KDeclarativeMainView::version() const
 
 QString KDeclarativeMainView::name() const
 {
-  const static QString app_name = QString( KGlobal::mainComponent().aboutData()->programName() );
+  const static QString app_name = QString( KComponentData::mainComponent().aboutData()->programName() );
   return app_name;
 }
 
@@ -964,8 +966,8 @@ void KDeclarativeMainView::reportBug()
     KUrl url = KUrl( QLatin1String("https://bugs.kde.org/wizard.cgi") );
     url.addQueryItem( QLatin1String("os"), os );
     url.addQueryItem( QLatin1String("kdeVersion"), kde_version );
-    url.addQueryItem( QLatin1String("appVersion"), KGlobal::mainComponent().aboutData()->version() );
-    url.addQueryItem( QLatin1String("package"),  KGlobal::mainComponent().aboutData()->productName() );
+    url.addQueryItem( QLatin1String("appVersion"), KComponentData::mainComponent().aboutData()->version() );
+    url.addQueryItem( QLatin1String("package"),  KComponentData::mainComponent().aboutData()->productName() );
     url.addQueryItem( QLatin1String("kbugreport"), QLatin1String("1") );
 
     KToolInvocation::invokeBrowser( url.url() );

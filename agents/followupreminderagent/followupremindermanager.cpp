@@ -21,17 +21,21 @@
 #include "jobs/followupreminderjob.h"
 #include "jobs/followupreminderfinishtaskjob.h"
 
-#include <KGlobal>
+#include <QIcon>
+
 #include <KConfigGroup>
 #include <KConfig>
+#include <KSharedConfig>
 #include <knotification.h>
 #include <KLocalizedString>
+#include <KIconLoader>
+#include <KComponentData>
 using namespace FollowUpReminder;
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
     : QObject(parent)
 {
-    mConfig = KGlobal::config();
+    mConfig = KSharedConfig::openConfig();
 }
 
 FollowUpReminderManager::~FollowUpReminderManager()
@@ -94,13 +98,13 @@ void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId
 
 void FollowUpReminderManager::answerReceived(const QString &from)
 {
-    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     KNotification::event( QLatin1String("mailreceived"),
                           i18n("Answer from %1 received", from),
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
+                          KComponentData::mainComponent().componentName());
 
 }
 

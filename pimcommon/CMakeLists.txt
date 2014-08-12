@@ -3,13 +3,13 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_CURRENT_SOURCE_DIR}/util/
   ${CMAKE_CURRENT_SOURCE_DIR}/shorturl/
-  ${QJSON_INCLUDE_DIR}
 )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
+
+add_definitions(-DTRANSLATION_DOMAIN=\"libpimcommon\")
 
 set(libpimcommon_shorturl_SRCS
   shorturl/abstractshorturl.cpp
@@ -23,7 +23,7 @@ set(libpimcommon_shorturl_SRCS
   shorturl/engine/triopabshorturl.cpp
 )
 
-if( LibKGAPI2_FOUND )
+if( KF5GAPI_FOUND )
   include_directories(${LibKGAPI2_INCLUDE_DIR})
   set(libpimcommon_storageservice_gdrive 
     storageservice/gdrive/gdrivestorageservice.cpp
@@ -64,10 +64,10 @@ set(libpimcommon_storageservice_SRCS
   storageservice/yousendit/yousenditstorageservice.cpp
   storageservice/yousendit/yousenditutil.cpp
 
-  storageservice/webdav/webdavstorageservice.cpp
-  storageservice/webdav/webdavjob.cpp
-  storageservice/webdav/webdavsettingsdialog.cpp
-  storageservice/webdav/protocol/webdav_url_info.cpp
+  #storageservice/webdav/webdavstorageservice.cpp
+  #storageservice/webdav/webdavjob.cpp
+  #storageservice/webdav/webdavsettingsdialog.cpp
+  #storageservice/webdav/protocol/webdav_url_info.cpp
 
   storageservice/utils/storageserviceutils.cpp
 
@@ -92,7 +92,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/tests/testsettingsjob.cpp
 )
 
-qt4_add_dbus_adaptor(libpimcommon_storageservice_SRCS storageservice/org.kde.pim.StorageManager.xml storageservice/storageservicemanager.h PimCommon::StorageServiceManager )
+qt5_add_dbus_adaptor(libpimcommon_storageservice_SRCS storageservice/org.kde.pim.StorageManager.xml storageservice/storageservicemanager.h PimCommon::StorageServiceManager )
 
 set(libpimcommon_autocorrection_SRCS
   autocorrection/autocorrection.cpp
@@ -170,6 +170,7 @@ set(libpimcommon_SRCS
   util/createresource.cpp
   util/pimutil.cpp
   util/editorutil.cpp
+  util/migrateconfig.cpp
   settings/pimcommonsettings.cpp
   ${libpimcommon_texteditor_SRCS}
   ${libpimcommon_shorturl_SRCS}
@@ -183,48 +184,50 @@ set(libpimcommon_SRCS
   ${libpimcommon_widgets_SRCS}
 )
 
-kde4_add_ui_files(libpimcommon_SRCS
+ki18n_wrap_ui(libpimcommon_SRCS
      autocorrection/ui/autocorrectionwidget.ui
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
   kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
   set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
-  qt4_add_dbus_interface(libpimcommon_SRCS
+  qt5_add_dbus_interface(libpimcommon_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_fileName} ${_className}
   )
 endmacro()
 
 add_resource_iface(util/imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings imapresourcesettings)
 
-kde4_add_kcfg_files(libpimcommon_SRCS
+kconfig_add_kcfg_files(libpimcommon_SRCS
   settings/pimcommonsetting_base.kcfgc
 )
 
-kde4_add_library(pimcommon ${LIBRARY_TYPE} ${libpimcommon_SRCS})
+add_library(pimcommon ${LIBRARY_TYPE} ${libpimcommon_SRCS})
+generate_export_header(pimcommon BASE_NAME pimcommon)
 
-if( LibKGAPI2_FOUND )
+if( KF5GAPI_FOUND )
   target_link_libraries(pimcommon
-    ${LibKGAPI2_LIBRARY}
+    KF5::GAPIDrive
   )
 endif()
 
 
 target_link_libraries(pimcommon
-    ${KDEPIMLIBS_KABC_LIBS}
-    ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
-    ${KDEPIMLIBS_AKONADI_LIBS}
-    ${KDEPIMLIBS_KIMAP_LIBS}
-    ${KDEPIMLIBS_KPIMUTILS_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${QT_QTWEBKIT_LIBRARY}
-    ${QJSON_LIBRARIES}
-    ${KDE4_SOLID_LIBS}
-    ${KDE4_KNEWSTUFF3_LIBS}
+    KF5::Abc
+    KF5::AkonadiContact
+    KF5::AkonadiCore
+    KF5::PimUtils
+    KF5::SonnetCore
+    KF5::NewStuff
+    KF5::Wallet
     kdepim
+    KF5::Imap
+    KF5::AkonadiWidgets
+    KF5::Archive
+    Qt5::WebKitWidgets
 )
 
-set_target_properties(pimcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(translator/tests)
@@ -239,7 +242,7 @@ add_subdirectory(storageservice/dropbox/tests)
 add_subdirectory(storageservice/hubic/tests)
 add_subdirectory(storageservice/tests)
 add_subdirectory(storageservice/yousendit/tests)
-add_subdirectory(storageservice/webdav/tests)
+#add_subdirectory(storageservice/webdav/tests)
 add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
 
@@ -248,16 +251,24 @@ add_subdirectory(storageservice/gdrive/tests/)
 add_subdirectory(storageservice/gdrive/icons/)
 endif()
 
-if (QT_QTDESIGNER_FOUND)
-  set(pimcommonwidgets_PART_SRCS)
-  kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
+if (Qt5Designer_FOUND)
+    kf5designerplugin_add_plugin(pimcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
+    target_link_libraries(pimcommonwidgets
+        pimcommon
+    )
+    if(NOT WIN32)
+        # Since there are no libraries provided by this module,
+        # there is no point including the build tree in RPath,
+        # and then having to edit it at install time.
+        set_target_properties(pimcommonwidgets PROPERTIES
+            SKIP_BUILD_RPATH TRUE
+            BUILD_WITH_INSTALL_RPATH TRUE
+        )
+    endif()
 
-  kde4_add_plugin(pimcommonwidgets ${pimcommonwidgets_PART_SRCS})
-
-
-  target_link_libraries(pimcommonwidgets  ${KDE4_KIO_LIBS} pimcommon)
-
-  install(TARGETS pimcommonwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
-endif ()
-
+    install(TARGETS
+        pimcommonwidgets
+        DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
+    )
+endif()
 

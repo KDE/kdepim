@@ -18,17 +18,29 @@
 #include "customheadersettingdialog.h"
 #include "header/customheadersettingwidget.h"
 #include "settings/globalsettings.h"
+#include <QDialogButtonBox>
 
 using namespace MessageViewer;
 
 CustomHeaderSettingDialog::CustomHeaderSettingDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setButtons( KDialog::Default | KDialog::Ok | KDialog::Cancel );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mCustomHeaderWidget = new CustomHeaderSettingWidget();
-    connect( this, SIGNAL(defaultClicked()), mCustomHeaderWidget, SLOT(resetToDefault()) );
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), mCustomHeaderWidget, SLOT(resetToDefault()) );
     mCustomHeaderWidget->readConfig();
-    setMainWidget( mCustomHeaderWidget );
+    mainLayout->addWidget (mCustomHeaderWidget );
+    mainLayout->addWidget(buttonBox);
+
     readConfig();
 }
 

@@ -26,17 +26,18 @@
 #include <KParts/ReadOnlyPart>
 #include <QListWidgetItem>
 #include <KViewStateMaintainer>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <QPointer>
+#include <kparts/readonlypart.h>
 
 class KNoteFindDialog;
 class KNotesIconView;
 class KNotesWidget;
 class KNotesIconViewItem;
-class KAction;
+class QAction;
 class KToggleAction;
 
-namespace DNSSD {
+namespace KDNSSD {
 class PublicService;
 }
 namespace Akonadi {
@@ -123,19 +124,19 @@ private:
     void updateNetworkListener();
     void printSelectedNotes(bool preview);
     KNotesWidget *mNotesWidget;
-    DNSSD::PublicService *mPublisher;
-    KAction *mNoteEdit;
-    KAction *mNoteRename;
-    KAction *mNoteDelete;
-    KAction *mNotePrint;
-    KAction *mNotePrintPreview;
-    KAction *mNoteConfigure;
-    KAction *mNoteSendMail;
-    KAction *mNoteSendNetwork;
-    KAction *mNoteSetAlarm;
-    KAction *mNewNote;
-    KAction *mSaveAs;
-    KAction *mQuickSearchAction;
+    KDNSSD::PublicService *mPublisher;
+    QAction *mNoteEdit;
+    QAction *mNoteRename;
+    QAction *mNoteDelete;
+    QAction *mNotePrint;
+    QAction *mNotePrintPreview;
+    QAction *mNoteConfigure;
+    QAction *mNoteSendMail;
+    QAction *mNoteSendNetwork;
+    QAction *mNoteSetAlarm;
+    QAction *mNewNote;
+    QAction *mSaveAs;
+    QAction *mQuickSearchAction;
     KToggleAction *mReadOnly;
     NoteShared::NotesChangeRecorder *mNoteRecorder;
     NoteShared::NotesAkonadiTreeModel *mNoteTreeModel;

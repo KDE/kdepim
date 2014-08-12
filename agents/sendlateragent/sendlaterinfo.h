@@ -18,7 +18,7 @@
 #ifndef SENDLATERINFO_H
 #define SENDLATERINFO_H
 
-#include <Akonadi/Item>
+#include <item.h>
 #include <QDateTime>
 #include "sendlater_export.h"
 

@@ -34,7 +34,7 @@
 
 #include "helpers/nodehelper.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmime/kmime_content.h>
 
 static bool isInSkipMimeContentList( KMime::Content* )

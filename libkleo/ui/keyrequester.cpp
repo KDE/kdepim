@@ -61,19 +61,17 @@
 // KDE
 #include <klocale.h>
 #include <kiconloader.h>
-#include <kdialog.h>
+#include <QDialog>
 #include <kdebug.h>
 #include <kmessagebox.h>
-#include <kpushbutton.h>
+#include <qpushbutton.h>
 
 // Qt
 #include <QApplication>
-#include <QLayout>
 
 #include <QString>
 #include <QStringList>
 #include <QLabel>
-#include <QRegExp>
 
 #include <QHBoxLayout>
 
@@ -107,7 +105,7 @@ Kleo::KeyRequester::KeyRequester( QWidget * parent )
 void Kleo::KeyRequester::init()
 {
   QHBoxLayout * hlay = new QHBoxLayout( this );
-  hlay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   hlay->setSpacing( QDialog::spacingHint() );
   hlay->setMargin( 0 );
 
   // the label where the key id is to be displayed:
@@ -115,11 +113,11 @@ void Kleo::KeyRequester::init()
   mLabel->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
 
   // the button to unset any key:
-  mEraseButton = new KPushButton( this );
+  mEraseButton = new QPushButton( this );
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
                                             QSizePolicy::Minimum ) );
-  mEraseButton->setIcon( KIcon( QApplication::isRightToLeft() ? QLatin1String("edit-clear-locationbar-ltr") : QLatin1String("edit-clear-locationbar-rtl") ) );
+  mEraseButton->setIcon( QIcon::fromTheme( QApplication::isRightToLeft() ? QLatin1String("edit-clear-locationbar-ltr") : QLatin1String("edit-clear-locationbar-rtl") ) );
   mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
@@ -216,7 +214,7 @@ void Kleo::KeyRequester::updateKeys() {
       else
         toolTipText += Kleo::DN( uid ).prettyDN();
     else
-      toolTipText += i18n("<placeholder>unknown</placeholder>");
+      toolTipText += xi18n("<placeholder>unknown</placeholder>");
     toolTipText += QLatin1Char('\n');
   }
 

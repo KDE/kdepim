@@ -22,8 +22,8 @@
 
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/Item>
-
+#include <Item>
+#include <QDebug>
 using namespace IncidenceEditorNG;
 
 void GroupwareUiDelegate::requestIncidenceEditor(const Akonadi::Item &item)
@@ -36,7 +36,7 @@ void GroupwareUiDelegate::requestIncidenceEditor(const Akonadi::Item &item)
 #ifndef KDEPIM_MOBILE_UI
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
     if (!incidence) {
-        kWarning() << "Incidence is null, won't open the editor";
+        qWarning() << "Incidence is null, won't open the editor";
         return;
     }
 

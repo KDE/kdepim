@@ -19,17 +19,18 @@
 
 #include "messageviewer/utils/kcursorsaver.h"
 
-#include <Akonadi/AgentManager>
+#include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
 #include <KStandardDirs>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KConfigGroup>
 #include <KZip>
 
 #include <QWidget>
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 ExportJotJob::ExportJotJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -104,11 +105,11 @@ void ExportJotJob::backupConfig()
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     const QString kjotStr(QLatin1String("kjotrc"));
-    const QString kjotrc = KStandardDirs::locateLocal( "config", kjotStr);
+    const QString kjotrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kjotStr;
     if (QFile(kjotrc).exists()) {
         KSharedConfigPtr kjot = KSharedConfig::openConfig(kjotrc);
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
 
         KConfig *kjotConfig = kjot->copyTo( tmp.fileName() );

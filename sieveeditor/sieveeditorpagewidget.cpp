@@ -37,9 +37,9 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
     mSieveEditorWidget = new KSieveUi::SieveEditorWidget;
-    connect(mSieveEditorWidget, SIGNAL(valueChanged(bool)), this, SLOT(slotValueChanged(bool)));
+    connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::valueChanged, this, &SieveEditorPageWidget::slotValueChanged);
     vbox->addWidget(mSieveEditorWidget);
-    connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SLOT(slotCheckSyntaxClicked()));
+    connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::checkSyntax, this, &SieveEditorPageWidget::slotCheckSyntaxClicked);
     connect(mSieveEditorWidget, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)));
     //qDebug()<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
 }
@@ -78,7 +78,7 @@ void SieveEditorPageWidget::setIsNewScript(bool isNewScript)
     mIsNewScript = isNewScript;
 }
 
-void SieveEditorPageWidget::loadScript(const KUrl &url, const QStringList &capabilities)
+void SieveEditorPageWidget::loadScript(const QUrl &url, const QStringList &capabilities)
 {
     mCurrentURL = url;
     mSieveEditorWidget->setSieveCapabilities(capabilities);
@@ -87,7 +87,7 @@ void SieveEditorPageWidget::loadScript(const KUrl &url, const QStringList &capab
              this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
-KUrl SieveEditorPageWidget::currentUrl() const
+QUrl SieveEditorPageWidget::currentUrl() const
 {
     return mCurrentURL;
 }

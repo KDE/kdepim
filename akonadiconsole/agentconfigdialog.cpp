@@ -20,6 +20,7 @@
 #include "agentconfigdialog.h"
 #include "agentconfigmodel.h"
 #include <KLocalizedString>
+#include <QIcon>
 
 AgentConfigDialog::AgentConfigDialog(QWidget* parent) :
   KDialog(parent),
@@ -29,15 +30,15 @@ AgentConfigDialog::AgentConfigDialog(QWidget* parent) :
   ui.propertyView->setModel( m_model );
 
   setButtons( User1 | User2 | Apply | Close );
-  setButtonGuiItem( User1, KGuiItem( i18n( "Save Configuration" ), KIcon( "document-save" ) ) );
-  setButtonGuiItem( User2, KGuiItem( i18n( "Refresh" ), KIcon( "view-refresh" ) ) );
+  setButtonGuiItem( User1, KGuiItem( i18n( "Save Configuration" ), QIcon::fromTheme( "document-save" ) ) );
+  setButtonGuiItem( User2, KGuiItem( i18n( "Refresh" ), QIcon::fromTheme( "view-refresh" ) ) );
   setButtonText( Apply, i18n( "Apply Configuration" ) );
 
   setCaption( i18n( "Agent Configuration" ) );
 
   connect( this, SIGNAL(applyClicked()), SLOT(reconfigure()) );
-  connect( this, SIGNAL(user1Clicked()), m_model, SLOT(writeConfig()) );
-  connect( this, SIGNAL(user2Clicked()), m_model, SLOT(reload()) );
+  connect(this, &AgentConfigDialog::user1Clicked, m_model, &AgentConfigModel::writeConfig);
+  connect(this, &AgentConfigDialog::user2Clicked, m_model, &AgentConfigModel::reload);
 }
 
 void AgentConfigDialog::setAgentInstance(const Akonadi::AgentInstance& instance)

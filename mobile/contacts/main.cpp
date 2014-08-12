@@ -18,15 +18,13 @@
 */
 
 #include <kdeclarativeapplication.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcmdlineargs.h>
-
 #include <incidenceeditor-ng/korganizereditorconfig.h>
 
 #include "mainview.h"
 
 #ifdef MAIL_SERIALIZER_PLUGIN_STATIC
-#include <QtPlugin>
 
 Q_IMPORT_PLUGIN(akonadi_serializer_addressee)
 Q_IMPORT_PLUGIN(akonadi_serializer_contactgroup)
@@ -39,17 +37,11 @@ int main( int argc, char **argv )
 
   IncidenceEditorNG::EditorConfig::setEditorConfig( new IncidenceEditorNG::KOrganizerEditorConfig ); //FIXME: use our own config for contacts
 
-  KAboutData aboutData( ba, ba, name, ba, name );
+  K4AboutData aboutData( ba, ba, name, ba, name );
   aboutData.setProductName( "KAddressbook Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication<MainView> app;
-
-  KGlobal::locale()->insertCatalog( QLatin1String("kabc") );
-  KGlobal::locale()->insertCatalog( QLatin1String("akonadicontact") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libkdepim") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libkldap") ); // for ldap server dialog
-  KGlobal::locale()->insertCatalog( QLatin1String("calendarsupport") ); // for categories
 
   return app.exec();
 }

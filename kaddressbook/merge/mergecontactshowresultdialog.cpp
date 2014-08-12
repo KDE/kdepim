@@ -24,7 +24,7 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
-#include <QTabBar>
+
 
 using namespace KABMergeContacts;
 
@@ -57,7 +57,7 @@ void MergeContactShowResultDialog::setContacts(const Akonadi::Item::List &lstIte
 
 void MergeContactShowResultDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "MergeContactShowResultDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactShowResultDialog" );
     const QSize size = grp.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -66,7 +66,7 @@ void MergeContactShowResultDialog::readConfig()
 
 void MergeContactShowResultDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "MergeContactShowResultDialog");
+    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactShowResultDialog");
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

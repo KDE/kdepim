@@ -19,12 +19,14 @@
 
 #include "agendaviewitem.h"
 
-#include <KGlobal>
-#include <KGlobalSettings>
+
 
 #include <calendarviews/agenda/agendaview.h>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <KLocale>
+#include <QDebug>
+#include <KSharedConfig>
+#include <KColorScheme>
 
 using namespace EventViews;
 
@@ -37,7 +39,7 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
   , m_currentRange( Week )
 {
   // start with the oxygen palette (which is not necessarily the default on all platforms)
-  QPalette pal = KGlobalSettings::createApplicationPalette( KGlobal::config() );
+  QPalette pal = KColorScheme::createApplicationPalette( KSharedConfig::openConfig() );
   m_view->setPalette( pal );
   m_view->setDateRangeSelectionEnabled( false );
 
@@ -65,7 +67,7 @@ QDate AgendaViewItem::startDate() const
 
 void AgendaViewItem::setStartDate(const QDate& startDate)
 {
-  kDebug() << startDate;
+  qDebug() << startDate;
   if ( startDate.isValid() )
     m_view->showDates( startDate, endDate() );
 }
@@ -77,7 +79,7 @@ QDate AgendaViewItem::endDate() const
 
 void AgendaViewItem::setEndDate(const QDate& endDate)
 {
-  kDebug() << endDate;
+  qDebug() << endDate;
   if ( endDate.isValid() )
     m_view->showDates( startDate(), endDate );
 }
@@ -91,7 +93,7 @@ void AgendaViewItem::setCalendar(QObject* calendarObj)
 {
   Akonadi::ETMCalendar *cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
 
-  kDebug() << calendarObj << cal;
+  qDebug() << calendarObj << cal;
   if ( cal ) {
     m_view->setCalendar( cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>() );
     m_view->updateConfig();
@@ -109,15 +111,15 @@ void AgendaViewItem::showRange( const QDate &date, int range )
     break;
   }
   case Week: {
-    int weekStartDay = KGlobal::locale()->weekStartDay();
+    int weekStartDay = KLocale::global()->weekStartDay();
     if ( weekStartDay > date.dayOfWeek() )
       weekStartDay = weekStartDay - 7;
     m_view->showDates( date.addDays( weekStartDay - date.dayOfWeek() ), date.addDays( weekStartDay + 6 - date.dayOfWeek() ) );
     break;
   }
   case WorkWeek: {
-    int workingWeekStartDay = KGlobal::locale()->workingWeekStartDay();
-    int workingWeekEndDay = KGlobal::locale()->workingWeekEndDay();
+    int workingWeekStartDay = KLocale::global()->workingWeekStartDay();
+    int workingWeekEndDay = KLocale::global()->workingWeekEndDay();
     m_view->showDates( date.addDays( workingWeekStartDay - date.dayOfWeek() ), date.addDays( workingWeekEndDay - date.dayOfWeek() ) );
     break;
   }

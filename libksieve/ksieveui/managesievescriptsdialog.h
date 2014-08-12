@@ -22,12 +22,11 @@
 #include "widgets/managesievewidget.h"
 
 #include <qdialog.h>
-#include <kurl.h>
+#include <QUrl>
 
-#include <QMap>
 
 class QTreeWidgetItem;
-class KPushButton;
+class QPushButton;
 
 namespace KManageSieve {
 class SieveJob;
@@ -63,8 +62,8 @@ private slots:
     void slotSieveEditorCancelClicked();
     void slotSieveEditorCheckSyntaxClicked();
     void slotUpdateButtons(QTreeWidgetItem *item);
-    void slotEditScript(const KUrl &u, const QStringList &capabilities);
-    void slotNewScript(const KUrl &u, const QStringList &capabilities);
+    void slotEditScript(const QUrl &u, const QStringList &capabilities);
+    void slotNewScript(const QUrl &u, const QStringList &capabilities);
 
 private:
     void changeActiveScript( QTreeWidgetItem *, bool activate = true );
@@ -77,13 +76,13 @@ private:
     CustomManageSieveWidget* mTreeView;
     SieveEditor * mSieveEditor;
 
-    KUrl mCurrentURL;
+    QUrl mCurrentURL;
     QStringList mCurrentCapabilities;
 
-    KPushButton *mNewScript;
-    KPushButton *mEditScript;
-    KPushButton *mDeleteScript;
-    KPushButton *mDeactivateScript;
+    QPushButton *mNewScript;
+    QPushButton *mEditScript;
+    QPushButton *mDeleteScript;
+    QPushButton *mDeactivateScript;
 
     bool mIsNewScript : 1;
     bool mWasActive : 1;

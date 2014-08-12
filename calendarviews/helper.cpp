@@ -23,8 +23,8 @@
 #include "helper.h"
 #include "prefs.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <Collection>
+#include <Item>
 
 #include <KIconLoader>
 

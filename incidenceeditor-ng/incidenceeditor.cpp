@@ -20,10 +20,8 @@
 
 #include "incidenceeditor-ng.h"
 
-#include <KDebug>
-#include <KGlobal>
+#include <QDebug>
 
-static const KCatalogLoader loader( "libincidenceeditors" );
 
 using namespace IncidenceEditorNG;
 
@@ -39,7 +37,7 @@ IncidenceEditor::~IncidenceEditor()
 void IncidenceEditor::checkDirtyStatus()
 {
   if ( !mLoadedIncidence ) {
-    kDebug() << "checkDirtyStatus called on an invalid incidence";
+    qDebug() << "checkDirtyStatus called on an invalid incidence";
     return;
   }
 

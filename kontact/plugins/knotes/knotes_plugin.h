@@ -25,7 +25,7 @@
 
 #include <KontactInterface/Plugin>
 #include <KontactInterface/UniqueAppHandler>
-
+#include <KAboutData>
 class KNotesSummaryWidget;
 
 class KNotesUniqueAppHandler : public KontactInterface::UniqueAppHandler

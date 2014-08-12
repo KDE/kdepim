@@ -20,7 +20,6 @@
 
 #include "pimcommon_export.h"
 #include <QObject>
-#include <QUrl>
 #include <KIcon>
 #include <QPointer>
 #include <QNetworkReply>

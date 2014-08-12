@@ -18,7 +18,7 @@
 #include "filterimporterthunderbird_p.h"
 #include "mailfilter.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QFile>
 #include <QDir>
@@ -48,7 +48,7 @@ void FilterImporterThunderbird::readStream(QTextStream &stream)
     MailFilter *filter = 0;
     while ( !stream.atEnd() ) {
         QString line = stream.readLine();
-        kDebug() << " line :" << line << " filter " << filter;
+        qDebug() << " line :" << line << " filter " << filter;
         filter = parseLine( stream, line, filter );
     }
     appendFilter(filter);
@@ -127,7 +127,7 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
     } else if ( line.startsWith( QLatin1String( "version=" ) ) ) {
         line = cleanArgument( line, QLatin1String( "version=" ) );
         if ( line.toInt() != 9 ) {
-            kDebug() << " thunderbird filter version different of 9 need to look at if it changed";
+            qDebug() << " thunderbird filter version different of 9 need to look at if it changed";
         }
     } else if ( line.startsWith( QLatin1String( "logging=" ) ) ) {
         line = cleanArgument( line, QLatin1String( "logging=" ) );
@@ -136,10 +136,10 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
         } else if ( line == QLatin1String( "yes" ) ) {
             //TODO
         } else {
-            kDebug() << " Logging option not implemented " << line;
+            qDebug() << " Logging option not implemented " << line;
         }
     } else {
-        kDebug() << "unknown tag : " << line;
+        qDebug() << "unknown tag : " << line;
     }
     return filter;
 }
@@ -168,7 +168,7 @@ void FilterImporterThunderbird::extractConditions( const QString &line,
     } else if ( line.startsWith( QLatin1String( "ALL" ) ) ){
         filter->pattern()->setOp( SearchPattern::OpAll );
     } else {
-        kDebug() << " missing extract condition" << line;
+        qDebug() << " missing extract condition" << line;
     }
 }
 
@@ -208,7 +208,7 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
 
     const QStringList listOfCond = str.split( QLatin1Char( ',' ) );
     if ( listOfCond.count() < 3 ) {
-        kDebug() << "We have a pb in cond:" << cond;
+        qDebug() << "We have a pb in cond:" << cond;
         return false;
     }
     const QString field = listOfCond.at( 0 );
@@ -257,7 +257,7 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
     }
 
     if ( fieldName.isEmpty() ) {
-        kDebug() << " Field not implemented: " << field;
+        qDebug() << " Field not implemented: " << field;
     }
     /*
   {nsMsgSearchOp::Contains, "contains"},
@@ -320,7 +320,7 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
     }
 
     if ( functionName == SearchRule::FuncNone ) {
-        kDebug() << " functionName not implemented: " << function;
+        qDebug() << " functionName not implemented: " << function;
     }
     QString contentsName;
     if ( fieldName == "<status>" ) {
@@ -333,7 +333,7 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
         } else if ( contents == QLatin1String( "forwarded" ) ) {
             contentsName = QLatin1String( "Forwarded" );
         } else {
-            kDebug() << " contents for status not implemented " << contents;
+            qDebug() << " contents for status not implemented " << contents;
         }
     } else if ( fieldName == "<size>" ) {
         int value = contents.toInt();
@@ -349,7 +349,7 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
 
     SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, contentsName );
     filter->pattern()->append( rule );
-    //kDebug() << " field :" << field << " function :" << function
+    //qDebug() << " field :" << field << " function :" << function
     //         << " contents :" << contents << " cond :" << cond;
     return true;
 }
@@ -415,7 +415,7 @@ QString FilterImporterThunderbird::extractActions( const QString &line,
     } else if ( line == QLatin1String( "Custom" ) ) {
     }
     if ( actionName.isEmpty() ) {
-        kDebug() << QString::fromLatin1( " missing convert method: %1" ).arg( line );
+        qDebug() << QString::fromLatin1( " missing convert method: %1" ).arg( line );
     }
     return actionName;
 }
@@ -446,7 +446,7 @@ void FilterImporterThunderbird::extractType( const QString &line, MailCommon::Ma
         filter->setApplyOnInbound( false );
         //checking mail after classification or manual check
     } else {
-        kDebug() << " type value is not valid :" << value;
+        qDebug() << " type value is not valid :" << value;
     }
 }
 

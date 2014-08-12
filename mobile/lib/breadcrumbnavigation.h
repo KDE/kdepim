@@ -24,7 +24,7 @@
 
 #include <QItemSelectionModel>
 
-#include <akonadi/selectionproxymodel.h>
+#include <AkonadiCore/selectionproxymodel.h>
 
 // Copied from kdeui/tests/proxymodeltestapp/breadcrumbnavigationwidget
 // A version of these might be somewhere stable in the future.

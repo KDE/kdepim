@@ -28,6 +28,7 @@
 #include <QHBoxLayout>
 
 #include <errno.h>
+#include <KSharedConfig>
 
 using namespace MailCommon;
 
@@ -74,7 +75,7 @@ static const char *myConfigGroupName = "FilterConvertToSieveResultDialog";
 
 void FilterConvertToSieveResultDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
 
     const QSize size = group.readEntry( "Size", QSize(500, 300) );
     if ( size.isValid() ) {
@@ -84,7 +85,7 @@ void FilterConvertToSieveResultDialog::readConfig()
 
 void FilterConvertToSieveResultDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
     group.writeEntry( "Size", size() );
     group.sync();
 }

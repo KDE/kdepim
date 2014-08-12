@@ -21,12 +21,12 @@
 #ifndef KMAIL_MESSAGE_HELPER_H
 #define KMAIL_MESSAGE_HELPER_H
 
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include "messagecomposer_export.h"
 
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_message.h>
-#include <akonadi/item.h>
+#include <item.h>
 
 namespace KPIMIdentities {
 class IdentityManager;

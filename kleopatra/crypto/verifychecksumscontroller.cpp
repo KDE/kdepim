@@ -181,7 +181,7 @@ VerifyChecksumsController::Private::Private( VerifyChecksumsController * qq )
              q, SLOT(slotOperationFinished()) );
 }
 
-VerifyChecksumsController::Private::~Private() { kDebug(); }
+VerifyChecksumsController::Private::~Private() { qDebug(); }
 
 VerifyChecksumsController::VerifyChecksumsController( QObject * p )
     : Controller( p ), d( new Private( this ) )
@@ -196,7 +196,7 @@ VerifyChecksumsController::VerifyChecksumsController( const shared_ptr<const Exe
 }
 
 VerifyChecksumsController::~VerifyChecksumsController() {
-    kDebug();
+    qDebug();
 }
 
 void VerifyChecksumsController::setFiles( const QStringList & files ) {
@@ -236,7 +236,7 @@ void VerifyChecksumsController::start() {
 }
 
 void VerifyChecksumsController::cancel() {
-    kDebug();
+    qDebug();
     const QMutexLocker locker( &d->mutex );
     d->canceled = true;
 }
@@ -278,7 +278,7 @@ static QString decode( const QString & encoded ) {
             case '\\': decoded += QLatin1Char( '\\' ); break;
             case 'n':  decoded += QLatin1Char( '\n' ); break;
             default:
-                kDebug() << "invalid escape sequence" << '\\' << ch << "(interpreted as '" << ch << "')";
+                qDebug() << "invalid escape sequence" << '\\' << ch << "(interpreted as '" << ch << "')";
                 decoded += ch;
                 break;
             }
@@ -350,11 +350,11 @@ namespace {
             : dir( dir_ ), fileName( fileName_ ) {}
         bool operator()( const QString & sumFile ) const {
             const std::vector<File> files = parse_sum_file( dir.absoluteFilePath( sumFile ) );
-            kDebug() << "find_sums_by_input_files:      found " << files.size()
+            qDebug() << "find_sums_by_input_files:      found " << files.size()
                      << " files listed in " << qPrintable( dir.absoluteFilePath( sumFile ) );
             Q_FOREACH( const File & file, files ) {
                 const bool isSameFileName = ( QString::compare( file.name, fileName, fs_cs ) == 0 );
-                kDebug() << "find_sums_by_input_files:        "
+                qDebug() << "find_sums_by_input_files:        "
                          << qPrintable( file.name ) << " == "
                          << qPrintable( fileName )  << " ? "
                          << isSameFileName;
@@ -425,31 +425,31 @@ static std::vector<SumFile> find_sums_by_input_files( const QStringList & files,
     int i = 0;
     while ( !inputs.empty() ) {
         const QString file = inputs.front();
-        kDebug() << "find_sums_by_input_files: considering " << qPrintable( file );
+        qDebug() << "find_sums_by_input_files: considering " << qPrintable( file );
         inputs.pop_front();
         const QFileInfo fi( file );
         const QString fileName = fi.fileName();
         if ( fi.isDir() ) {
-            kDebug() << "find_sums_by_input_files:   it's a directory";
+            qDebug() << "find_sums_by_input_files:   it's a directory";
             QDir dir( file );
             const QStringList sumfiles = filter_checksum_files( dir.entryList( QDir::Files ), patterns );
-            kDebug() << "find_sums_by_input_files:   found " << sumfiles.size()
+            qDebug() << "find_sums_by_input_files:   found " << sumfiles.size()
                      << " sum files: " << qPrintable( sumfiles.join(QLatin1String(", ")) );
             dirs2sums[ dir ].insert( sumfiles.begin(), sumfiles.end() );
             const QStringList dirs = dir.entryList( QDir::Dirs|QDir::NoDotAndDotDot );
-            kDebug() << "find_sums_by_input_files:   found " << dirs.size()
+            qDebug() << "find_sums_by_input_files:   found " << dirs.size()
                      << " subdirs, prepending";
             kdtools::transform( dirs,
                                 std::inserter( inputs, inputs.begin() ),
                                 boost::bind( &QDir::absoluteFilePath, cref(dir), _1 ) );
         } else if ( is_sum_file( fileName ) ) {
-            kDebug() << "find_sums_by_input_files:   it's a sum file";
+            qDebug() << "find_sums_by_input_files:   it's a sum file";
             dirs2sums[fi.dir()].insert( fileName );
         } else {
-            kDebug() << "find_sums_by_input_files:   it's something else; checking whether we'll find a sumfile for it...";
+            qDebug() << "find_sums_by_input_files:   it's something else; checking whether we'll find a sumfile for it...";
             const QDir dir = fi.dir();
             const QStringList sumfiles = filter_checksum_files( dir.entryList( QDir::Files ), patterns );
-            kDebug() << "find_sums_by_input_files:   found " << sumfiles.size()
+            qDebug() << "find_sums_by_input_files:   found " << sumfiles.size()
                      << " potential sumfiles: " << qPrintable( sumfiles.join(QLatin1String(", ")) );
             const QStringList::const_iterator it = kdtools::find_if( sumfiles, sumfile_contains_file( dir, fileName ) );
             if ( it == sumfiles.end() )
@@ -549,7 +549,7 @@ static QString process( const SumFile & sumFile, bool * fatal, const QStringList
             status( sumFile.dir.absoluteFilePath( file ), result );
         }
     }
-    kDebug() << "[" << &p << "] Exit code " << p.exitCode();
+    qDebug() << "[" << &p << "] Exit code " << p.exitCode();
 
     if ( p.exitStatus() != QProcess::NormalExit || p.exitCode() != 0 ) {
         if ( fatal && p.error() == QProcess::FailedToStart )
@@ -600,7 +600,7 @@ void VerifyChecksumsController::Private::run() {
     const std::vector<SumFile> sumfiles = find_sums_by_input_files( files, errors, progressCb, checksumDefinitions );
 
     Q_FOREACH( const SumFile & sumfile, sumfiles )
-        kDebug() << sumfile;
+        qDebug() << sumfile;
 
     if ( !canceled ) {
 

@@ -41,18 +41,18 @@
 #include "timelineviewitem.h"
 #include "qmldateedit.h"
 
-#include <akonadi/agentactionmanager.h>
-#include <akonadi/calendar/standardcalendaractionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
+#include <Akonadi/Calendar/StandardCalendarActionManager>
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <Akonadi/Calendar/ITIPHandler>
-#include <akonadi/calendar/freebusymanager.h>
+#include <Akonadi/Calendar/FreeBusyManager>
 #include <akonadi/calendar/calendarsettings.h>
-#include <akonadi/collectionmodel.h>
-#include <akonadi/collectionpropertiesdialog.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/standardactionmanager.h>
+#include <AkonadiCore/collectionmodel.h>
+#include <AkonadiWidgets/collectionpropertiesdialog.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiWidgets/standardactionmanager.h>
 #include <calendarsupport/archivedialog.h>
 #include <calendarsupport/categoryconfig.h>
 #include <calendarsupport/collectiongeneralpage.h>
@@ -65,10 +65,10 @@
 #include <calendarviews/month/monthview.h>
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
 #include <kcolorcombo.h>
-#include <kcolordialog.h>
+#include <QColorDialog>
 #include <kmessagebox.h>
 #include <ksystemtimezone.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
@@ -81,6 +81,8 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include <QGraphicsItem>
+
+#include <QDebug>
 
 Q_DECLARE_METATYPE(KCalCore::iTIPMethod)
 
@@ -160,67 +162,67 @@ void MainView::doDelayedInit()
 
   QDBusConnection::sessionBus().registerService( QLatin1String("org.kde.korganizer") ); //register also as the real korganizer, so kmail can communicate with it
 
-  KAction *action = new KAction( i18n( "Import Events" ), this );
+  QAction *action = new QAction( i18n( "Import Events" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
   actionCollection()->addAction( QLatin1String( "import_events" ), action );
 
-  action = new KAction( i18n( "Export Events From This Account" ), this );
+  action = new QAction( i18n( "Export Events From This Account" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_account_events" ), action );
 
-  action = new KAction( i18n( "Export Displayed Events" ), this );
+  action = new QAction( i18n( "Export Displayed Events" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_selected_events" ), action );
 
-  action = new KAction( i18n( "Archive Old Events" ), this );
+  action = new QAction( i18n( "Archive Old Events" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(archiveOldEntries()) );
   actionCollection()->addAction( QLatin1String( "archive_old_entries" ), action );
 
-  action = new KAction( i18n( "Publish Item Information" ), this );
+  action = new QAction( i18n( "Publish Item Information" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(publishItemInformation()) );
   actionCollection()->addAction( QLatin1String( "publish_item_information" ), action );
 
-  action = new KAction( i18n( "Send Invitations To Attendees" ), this );
+  action = new QAction( i18n( "Send Invitations To Attendees" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(sendInvitation()) );
   actionCollection()->addAction( QLatin1String( "send_invitations_to_attendees" ), action );
 
-  action = new KAction( i18n( "Send Status Update" ), this );
+  action = new QAction( i18n( "Send Status Update" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(sendStatusUpdate()) );
   actionCollection()->addAction( QLatin1String( "send_status_update" ), action );
 
-  action = new KAction( i18n( "Send Cancellation To Attendees" ), this );
+  action = new QAction( i18n( "Send Cancellation To Attendees" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(sendCancellation()) );
   actionCollection()->addAction( QLatin1String( "send_cancellation_to_attendees" ), action );
 
-  action = new KAction( i18n( "Request Update" ), this );
+  action = new QAction( i18n( "Request Update" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(requestUpdate()) );
   actionCollection()->addAction( QLatin1String( "request_update" ), action );
 
-  action = new KAction( i18n( "Request Change" ), this );
+  action = new QAction( i18n( "Request Change" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(requestChange()) );
   actionCollection()->addAction( QLatin1String( "request_change" ), action );
 
-  action = new KAction( i18n( "Send As ICalendar" ), this );
+  action = new QAction( i18n( "Send As ICalendar" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(sendAsICalendar()) );
   actionCollection()->addAction( QLatin1String( "send_as_icalendar" ), action );
 
-  action = new KAction( i18n( "Mail Free Busy Information" ), this );
+  action = new QAction( i18n( "Mail Free Busy Information" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(mailFreeBusy()) );
   actionCollection()->addAction( QLatin1String( "mail_freebusy" ), action );
 
-  action = new KAction( i18n( "Upload Free Busy Information" ), this );
+  action = new QAction( i18n( "Upload Free Busy Information" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(uploadFreeBusy()) );
   actionCollection()->addAction( QLatin1String( "upload_freebusy" ), action );
 
-  action = new KAction( i18n( "Save All" ), this );
+  action = new QAction( i18n( "Save All" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(saveAllAttachments()) );
   actionCollection()->addAction( QLatin1String( "save_all_attachments" ), action );
 
-  action = new KAction( i18n( "Set Color Of Calendar" ), this );
+  action = new QAction( i18n( "Set Color Of Calendar" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(changeCalendarColor()) );
   actionCollection()->addAction( QLatin1String( "set_calendar_colour" ), action );
 
-  action = new KAction( i18n( "Configure Categories" ), this );
+  action = new QAction( i18n( "Configure Categories" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(configureCategories()) );
   actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
 
@@ -365,7 +367,7 @@ void MainView::openIncidenceEditor( const QString &summary,
                                     bool attachmentsAreInline,
                                     KCalCore::Incidence::IncidenceType type )
 {
-  kDebug();
+  qDebug();
 
   IncidenceEditorNG::IncidenceDefaults defaults = IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults( attachmentsAreInline );
   // if attach or attendee list is empty, these methods don't do anything, so
@@ -586,7 +588,7 @@ void MainView::sendAsICalendar()
 void MainView::fetchForSendICalDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error trying to fetch item";
+    qDebug() << "Error trying to fetch item";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Cannot fetch calendar item." ),
@@ -617,7 +619,7 @@ void MainView::publishItemInformation()
 void MainView::fetchForPublishItemDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error trying to fetch item";
+    qDebug() << "Error trying to fetch item";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Cannot fetch calendar item." ),
@@ -675,7 +677,7 @@ void MainView::scheduleiTIPMethod( KCalCore::iTIPMethod method )
 void MainView::fetchForiTIPMethodDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error trying to fetch item";
+    qDebug() << "Error trying to fetch item";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Cannot fetch calendar item." ),
@@ -707,7 +709,7 @@ void MainView::saveAllAttachments()
 void MainView::fetchForSaveAllAttachmentsDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error trying to fetch item";
+    qDebug() << "Error trying to fetch item";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Cannot fetch calendar item." ),
@@ -742,9 +744,8 @@ void MainView::changeCalendarColor()
   QColor calendarColor = agendaItem->preferences()->resourceColor( id );
   QColor myColor;
 
-  const int result = KColorDialog::getColor( myColor, calendarColor );
-
-  if ( result == KDialog::Accepted && myColor != calendarColor ) {
+  myColor = QColorDialog::getColor(calendarColor);
+  if ( myColor.isValid() && myColor != calendarColor) {
     agendaItem->preferences()->setResourceColor( id, myColor );
     agendaItem->updateConfig();
 

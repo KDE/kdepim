@@ -32,8 +32,8 @@
 #include <qdom.h>
 #include <QList>
 
-#include <KIcon>
-#include <kdebug.h>
+#include <QIcon>
+#include <qdebug.h>
 
 #include <cassert>
 
@@ -189,12 +189,12 @@ void Folder::insertChild(TreeNode* node, TreeNode* after)
 
 QIcon Folder::icon() const
 {
-    return KIcon(QLatin1String("folder"));
+    return QIcon::fromTheme(QLatin1String("folder"));
 }
 
 void Folder::insertChild(int index, TreeNode* node)
 {
-//    kDebug() <<"enter Folder::insertChild(int, node)" << node->title();
+//    qDebug() <<"enter Folder::insertChild(int, node)" << node->title();
     if (node)
     {
         if (index >= d->children.size())
@@ -209,12 +209,12 @@ void Folder::insertChild(int index, TreeNode* node)
         articlesModified();
         nodeModified();
     }
-//    kDebug() <<"leave Folder::insertChild(int, node)" << node->title();
+//    qDebug() <<"leave Folder::insertChild(int, node)" << node->title();
 }
 
 void Folder::appendChild(TreeNode* node)
 {
-//    kDebug() <<"enter Folder::appendChild()" << node->title();
+//    qDebug() <<"enter Folder::appendChild()" << node->title();
     if (node)
     {
         d->children.append(node);
@@ -226,12 +226,12 @@ void Folder::appendChild(TreeNode* node)
         articlesModified();
         nodeModified();
     }
-//    kDebug() <<"leave Folder::appendChild()" << node->title();
+//    qDebug() <<"leave Folder::appendChild()" << node->title();
 }
 
 void Folder::prependChild(TreeNode* node)
 {
-//    kDebug() <<"enter Folder::prependChild()" << node->title();
+//    qDebug() <<"enter Folder::prependChild()" << node->title();
     if (node)
     {
         d->children.prepend(node);
@@ -243,7 +243,7 @@ void Folder::prependChild(TreeNode* node)
         articlesModified();
         nodeModified();
     }
-//    kDebug() <<"leave Folder::prependChild()" << node->title();
+//    qDebug() <<"leave Folder::prependChild()" << node->title();
 }
 
 void Folder::removeChild(TreeNode* node)

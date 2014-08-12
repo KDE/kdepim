@@ -21,11 +21,10 @@
 #include "sieveeditorwidget.h"
 
 #include <klocale.h>
-#include <KStandardGuiItem>
 
 #include <QPushButton>
 #include <QKeyEvent>
-#include <QDebug>
+#include <KSharedConfig>
 
 using namespace KSieveUi;
 
@@ -39,7 +38,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     mSieveEditorWidget = new SieveEditorWidget;
     connect(mSieveEditorWidget, SIGNAL(valueChanged(bool)), this, SIGNAL(valueChanged(bool)));
     setMainWidget(mSieveEditorWidget);
-    connect(mSieveEditorWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
+    connect(mSieveEditorWidget, &SieveEditorWidget::enableButtonOk, this, &SieveEditor::slotEnableButtonOk);
     connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SIGNAL(checkSyntax()));
     readConfig();
 }
@@ -74,13 +73,13 @@ void SieveEditor::slotEnableButtonOk(bool b)
 
 void SieveEditor::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
     group.writeEntry( "Size", size() );
 }
 
 void SieveEditor::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

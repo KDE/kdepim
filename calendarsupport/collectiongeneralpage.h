@@ -22,9 +22,9 @@
 
 #include "calendarsupport_export.h"
 
-#include <Akonadi/CollectionPropertiesPage>
+#include <CollectionPropertiesPage>
 
-class KLineEdit;
+class QLineEdit;
 class KIconButton;
 class QCheckBox;
 
@@ -43,7 +43,7 @@ class CALENDARSUPPORT_EXPORT CollectionGeneralPage : public Akonadi::CollectionP
 
   private:
     QCheckBox *mBlockAlarmsCheckBox;
-    KLineEdit *mNameEdit;
+    QLineEdit *mNameEdit;
     QCheckBox *mIconCheckBox;
     KIconButton *mIconButton;
 };

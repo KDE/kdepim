@@ -22,14 +22,14 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "editor/sieveeditorutil.h"
 
-#include <KPushButton>
+#include <QPushButton>
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
+#include <QIcon>
 
 #include <QGridLayout>
 #include <QCheckBox>
 #include <QLabel>
-#include <QToolButton>
 #include <QWhatsThis>
 #include <QDomNode>
 #include <QDebug>
@@ -140,7 +140,7 @@ void SieveIncludeActionWidget::initWidget()
     lab = new QLabel(i18n("Name:"));
     mLayout->addWidget( lab, 1, 2 );
 
-    mIncludeName = new KLineEdit;
+    mIncludeName = new QLineEdit;
     connect(mIncludeName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mIncludeName, 1, 3 );
 
@@ -152,12 +152,12 @@ void SieveIncludeActionWidget::initWidget()
     connect(mOnce, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mOnce, 1, 5 );
 
-    mAdd = new KPushButton( this );
-    mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    mAdd = new QPushButton( this );
+    mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
-    mRemove = new KPushButton( this );
-    mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    mRemove = new QPushButton( this );
+    mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     mLayout->addWidget( mAdd, 1, 6 );
     mLayout->addWidget( mRemove, 1, 7 );

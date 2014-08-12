@@ -58,14 +58,15 @@
 #include <KToggleAction>
 #include <kactioncollection.h>
 #include <KActionMenu>
+#include <QAction>
 #include <kconfigdialog.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmessagebox.h>
 #include <KLocale>
 #include <KSelectAction>
 #include <kimagefilepreview.h>
 #include <KToolInvocation>
-#include <KMenu>
+#include <QMenu>
 
 #include <QDockWidget>
 #include <QProgressBar>
@@ -191,7 +192,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     writeConfigs();
     if ( !DBMan::self()->clearTempEntries() )
-        kDebug()<<"Could not erase temp_post table: "<< DBMan::self()->lastErrorText();
+        qDebug()<<"Could not erase temp_post table: "<< DBMan::self()->lastErrorText();
     const int count = tabPosts->count();
     if (count > 0) {
         toolbox->getFieldsValue(activePost->currentPost());
@@ -210,31 +211,31 @@ void MainWindow::setupActions()
     KStandardAction::preferences( this, SLOT(optionsPreferences()), actionCollection() );
 
     // custom menu and menu item
-    KAction *actNewPost = new KAction( KIcon( QLatin1String("document-new") ), i18n( "New Post" ), this );
+    QAction *actNewPost = new QAction( QIcon::fromTheme( QLatin1String("document-new") ), i18n( "New Post" ), this );
     actionCollection()->addAction( QLatin1String( "new_post" ), actNewPost );
-    actNewPost->setShortcut( Qt::CTRL + Qt::Key_N );
+    actionCollection()->setDefaultShortcut(actNewPost, QKeySequence( Qt::CTRL + Qt::Key_N ));
     connect( actNewPost, SIGNAL(triggered(bool)), this, SLOT(slotCreateNewPost()) );
 
-    KAction *actAddBlog = new KAction( KIcon( QLatin1String("list-add") ), i18n( "Add Blog..." ), this );
+    QAction *actAddBlog = new QAction( QIcon::fromTheme( QLatin1String("list-add") ), i18n( "Add Blog..." ), this );
     actionCollection()->addAction( QLatin1String( "add_blog" ), actAddBlog );
     connect( actAddBlog, SIGNAL(triggered(bool)), this, SLOT(addBlog()) );
 
-    KAction *actPublish = new KAction( KIcon( QLatin1String("arrow-up") ), i18n( "Submit..." ), this );
+    QAction *actPublish = new QAction( QIcon::fromTheme( QLatin1String("arrow-up") ), i18n( "Submit..." ), this );
     actionCollection()->addAction( QLatin1String( "publish_post" ), actPublish );
     connect( actPublish, SIGNAL(triggered(bool)), this, SLOT(slotPublishPost()) );
 
-    KAction *actUpload = new KAction( KIcon( QLatin1String("upload-media") ), i18n( "Upload Media..." ), this );
+    QAction *actUpload = new QAction( QIcon::fromTheme( QLatin1String("upload-media") ), i18n( "Upload Media..." ), this );
     actionCollection()->addAction( QLatin1String( "upload_media" ), actUpload );
     connect( actUpload, SIGNAL(triggered(bool)), this, SLOT(uploadMediaObject()) );
 
-    KAction *actSaveLocally = new KAction( KIcon( QLatin1String("document-save") ), i18n( "Save Locally" ), this );
+    QAction *actSaveLocally = new QAction( QIcon::fromTheme( QLatin1String("document-save") ), i18n( "Save Locally" ), this );
     actionCollection()->addAction( QLatin1String( "save_locally" ), actSaveLocally );
-    actSaveLocally->setShortcut( Qt::CTRL + Qt::Key_S );
+    actionCollection()->setDefaultShortcut(actSaveLocally, QKeySequence( Qt::CTRL + Qt::Key_S ));
     connect( actSaveLocally, SIGNAL(triggered(bool)), this, SLOT(slotSavePostLocally()) );
 
     KToggleAction *actToggleToolboxVisible = new KToggleAction( i18n( "Show Toolbox" ), this );
     actionCollection()->addAction( QLatin1String( "toggle_toolbox" ), actToggleToolboxVisible );
-    actToggleToolboxVisible->setShortcut( Qt::CTRL + Qt::Key_T );
+    actionCollection()->setDefaultShortcut(actToggleToolboxVisible, QKeySequence( Qt::CTRL + Qt::Key_T ));
     connect( actToggleToolboxVisible, SIGNAL(toggled(bool)),
              this, SLOT(slotToggleToolboxVisible(bool)) );
     connect( toolboxDock, SIGNAL(visibilityChanged(bool)),
@@ -243,7 +244,7 @@ void MainWindow::setupActions()
     blogs = new KSelectAction( this );
     actionCollection()->addAction( QLatin1String( "blogs_list" ), blogs );
 
-    KAction *actOpenBlog = new KAction(KIcon(QLatin1String("applications-internet")), i18n("Open in browser"), this);
+    QAction *actOpenBlog = new QAction(QIcon::fromTheme(QLatin1String("applications-internet")), i18n("Open in browser"), this);
     actionCollection()->addAction( QLatin1String("open_blog_in_browser"), actOpenBlog);
     actOpenBlog->setToolTip(i18n("Open current blog in browser"));
     connect( actOpenBlog, SIGNAL(triggered(bool)), this, SLOT(slotOpenCurrentBlogInBrowser()) );
@@ -255,7 +256,7 @@ void MainWindow::setupActions()
 
 void MainWindow::loadTempPosts()
 {
-    kDebug();
+    qDebug();
     QMap<BilboPost*, int> tempList = DBMan::self()->listTempPosts();
     const int count = tempList.count();
     if ( count > 0 ){
@@ -275,7 +276,7 @@ void MainWindow::loadTempPosts()
 
 void MainWindow::setCurrentBlog( int blog_id )
 {
-    kDebug()<<blog_id;
+    qDebug()<<blog_id;
     if (blog_id == -1) {
         blogs->setCurrentItem( -1 );
         toolbox->setCurrentBlogId( blog_id );
@@ -316,7 +317,7 @@ void MainWindow::currentBlogChanged( QAction *act )
 
 void MainWindow::slotCreateNewPost()
 {
-    kDebug();
+    qDebug();
 
     tabPosts->setCurrentWidget( createPostEntry( mCurrentBlogId, BilboPost()) );
     if ( mCurrentBlogId == -1 ) {
@@ -437,7 +438,7 @@ void MainWindow::setupSystemTray()
 
 void MainWindow::slotPostTitleChanged( const QString& title )
 {
-//     kDebug();
+//     qDebug();
     tabPosts->setTabText( tabPosts->currentIndex(), title );
 }
 
@@ -453,7 +454,7 @@ void MainWindow::slotToolboxVisibilityChanged(bool)
 
 void MainWindow::slotActivePostChanged( int index )
 {
-    kDebug() << "new post index: " << index << "\tPrev Index: " << previousActivePostIndex;
+    qDebug() << "new post index: " << index << "\tPrev Index: " << previousActivePostIndex;
 
     activePost = qobject_cast<PostEntry*>( tabPosts->widget( index ) );
     PostEntry *prevActivePost = qobject_cast<PostEntry*>( tabPosts->widget( previousActivePostIndex ) );
@@ -473,14 +474,14 @@ void MainWindow::slotActivePostChanged( int index )
         }
         toolbox->setFieldsValue( activePost->currentPost() );
     } else {
-        kError() << "ActivePost is NULL! tabPosts Current index is: " << tabPosts->currentIndex() ;
+        qCritical() << "ActivePost is NULL! tabPosts Current index is: " << tabPosts->currentIndex() ;
     }
     previousActivePostIndex = index;
 }
 
 void MainWindow::slotPublishPost()
 {
-    kDebug();
+    qDebug();
     if ( mCurrentBlogId == -1 ) {
         KMessageBox::sorry( this, i18n( "You have to select a blog to publish this post to." ) );
         return;
@@ -519,7 +520,7 @@ void MainWindow::slotRemoveAllExclude(int pos)
 
 void MainWindow::slotRemovePostEntry( int pos )
 {
-    kDebug();
+    qDebug();
 
     PostEntry *widget = qobject_cast<PostEntry*>( tabPosts->widget( pos ) );
     
@@ -542,14 +543,14 @@ void MainWindow::slotRemovePostEntry( int pos )
 
 void MainWindow::slotNewPostOpened( BilboPost &newPost, int blog_id )
 {
-    kDebug();
+    qDebug();
     QWidget * w = createPostEntry( blog_id, newPost );
     tabPosts->setCurrentWidget( w );
 }
 
 void MainWindow::slotSavePostLocally()
 {
-    kDebug();
+    qDebug();
     if (activePost && (tabPosts->count() > 0)) {
         toolbox->getFieldsValue(activePost->currentPost());
         activePost->saveLocally();
@@ -559,7 +560,7 @@ void MainWindow::slotSavePostLocally()
 
 void MainWindow::slotError( const QString & errorMessage )
 {
-    kDebug() << "Error message: " << errorMessage;
+    qDebug() << "Error message: " << errorMessage;
     KMessageBox::detailedError( this, i18n( "An error occurred in the last transaction." ), errorMessage );
     statusBar()->clearMessage();
     slotBusy(false);
@@ -567,7 +568,7 @@ void MainWindow::slotError( const QString & errorMessage )
 
 void MainWindow::writeConfigs()
 {
-    kDebug();
+    qDebug();
     if ( toolboxDock->isVisible() )
         Settings::setShowToolboxOnStart( true );
     else
@@ -605,7 +606,7 @@ void MainWindow::keyPressEvent( QKeyEvent * event )
 
 void MainWindow::postManipulationDone( bool isError, const QString &customMessage )
 {
-    kDebug();
+    qDebug();
     if (isError){
         KMessageBox::detailedError(this, i18n("Submitting post failed"), customMessage);
     } else {
@@ -626,7 +627,7 @@ void MainWindow::postManipulationDone( bool isError, const QString &customMessag
 
 void MainWindow::slotBusy(bool isBusy)
 {
-    kDebug()<<"isBusy="<<isBusy<<"\tbusyNumber="<<busyNumber;
+    qDebug()<<"isBusy="<<isBusy<<"\tbusyNumber="<<busyNumber;
     if (isBusy){
         this->setCursor(Qt::BusyCursor);
         toolbox->setCursor( Qt::BusyCursor );
@@ -655,7 +656,7 @@ void MainWindow::slotBusy(bool isBusy)
 
 QWidget* MainWindow::createPostEntry(int blog_id, const BilboPost& post)
 {
-    kDebug();
+    qDebug();
     PostEntry *temp = new PostEntry( this );
     temp->setAttribute( Qt::WA_DeleteOnClose );
     temp->setCurrentPost(post);

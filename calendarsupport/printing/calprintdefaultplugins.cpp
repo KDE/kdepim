@@ -29,7 +29,7 @@
 #include "kcalprefs.h"
 #include "utils.h"
 
-#include <Akonadi/Item>
+#include <Item>
 
 #include <KCalCore/Visitor>
 
@@ -44,6 +44,7 @@
 #include <QDateTime>
 #include <QPainter>
 #include <QPrinter>
+#include <KLocale>
 
 using namespace CalendarSupport;
 
@@ -316,7 +317,7 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
         exceptString = i18nc( "except for listed dates", " except" );
         for ( int i = 0; i < recurs->exDates().size(); ++i ) {
           exceptString.append( QLatin1String(" ") );
-          exceptString.append( KGlobal::locale()->formatDate( recurs->exDates()[i],
+          exceptString.append( KLocale::global()->formatDate( recurs->exDates()[i],
                                                               KLocale::ShortDate ) );
         }
       }
@@ -517,26 +518,26 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
           if ( todo->dtStart().isValid() ) {
             datesString += i18nc(
               "subitem start date", "Start Date: %1\n",
-              KGlobal::locale()->formatDate( todo->dtStart().toTimeSpec( spec ).date(),
+              KLocale::global()->formatDate( todo->dtStart().toTimeSpec( spec ).date(),
                                              KLocale::ShortDate ) );
             if ( !todo->allDay() ) {
               datesString += i18nc(
                 "subitem start time", "Start Time: %1\n",
-                KGlobal::locale()->formatTime( todo->dtStart().toTimeSpec( spec ).time(),
+                KLocale::global()->formatTime( todo->dtStart().toTimeSpec( spec ).time(),
                                                false, false ) );
             }
           }
           if ( todo->dateTime( KCalCore::Incidence::RoleEnd ).isValid() ) {
             subitemString +=
               i18nc( "subitem due date", "Due Date: %1\n",
-                     KGlobal::locale()->formatDate(
+                     KLocale::global()->formatDate(
                        todo->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec( spec ).date(),
                        KLocale::ShortDate ) );
 
             if ( !todo->allDay() ) {
               subitemString += i18nc(
                 "subitem due time", "Due Time: %1\n",
-                KGlobal::locale()->formatTime(
+                KLocale::global()->formatTime(
                   todo->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec( spec ).time(),
                   false, false ) );
             }
@@ -553,8 +554,8 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
                                    statusString );
           subitemString += KCalUtils::IncidenceFormatter::recurrenceString( todo ) + QLatin1Char('\n');
           subitemString += i18nc( "subitem Priority: N",
-                                  "Priority: <numid>%1</numid>\n",
-                                  todo->priority() );
+                                  "Priority: %1\n",
+                                  QString::number(todo->priority()) );
           subitemString += i18nc( "subitem Secrecy: secrecyString",
                                   "Secrecy: %1\n",
                                   KCalUtils::Stringify::incidenceSecrecy( todo->secrecy() ) );
@@ -805,7 +806,7 @@ void CalPrintDay::print( QPainter &p, int width, int height )
   QRect footerBox( 0, height - footerHeight(), width, footerHeight() );
   height -= footerHeight();
 
-  KLocale *local = KGlobal::locale();
+  KLocale *local = KLocale::global();
 
   switch ( mDayPrintType ) {
   case Filofax:
@@ -1094,7 +1095,7 @@ void CalPrintWeek::print( QPainter &p, int width, int height )
   toWeek = mToDate.addDays( 6 - weekdayCol );
 
   curWeek = fromWeek.addDays( 6 );
-  KLocale *local = KGlobal::locale();
+  KLocale *local = KLocale::global();
 
   QString line1, line2, title;
   QRect headerBox( 0, 0, width, headerHeight() );
@@ -1343,9 +1344,9 @@ void CalPrintMonth::print( QPainter &p, int width, int height )
   monthBox.setTop( headerBox.bottom() + padding() );
 
   do {
-    QString title( i18nc( "monthname year", "%1 <numid>%2</numid>",
+    QString title( i18nc( "monthname year", "%1 %2",
                           calSys->monthName( curMonth ),
-                          curMonth.year() ) );
+                          QString::number(curMonth.year()) ) );
     QDate tmp( fromMonth );
     int weekdayCol = weekdayColumn( tmp.dayOfWeek() );
     tmp = tmp.addDays( -weekdayCol );

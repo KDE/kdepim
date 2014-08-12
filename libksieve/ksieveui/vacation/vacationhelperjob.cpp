@@ -21,7 +21,7 @@
 
 using namespace KSieveUi;
 
-VacationHelperJob::VacationHelperJob(const KUrl &url, QObject *parent)
+VacationHelperJob::VacationHelperJob(const QUrl &url, QObject *parent)
     : QObject(parent),
       mUrl(url),
       mSieveJob(0)

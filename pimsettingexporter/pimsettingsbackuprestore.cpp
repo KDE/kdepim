@@ -42,12 +42,8 @@
 #include "blogilo/exportblogilojob.h"
 #include "blogilo/importblogilojob.h"
 
-#include "knode/exportknodejob.h"
-#include "knode/importknodejob.h"
-
 #include <KLocalizedString>
 #include <KLocale>
-#include <KGlobal>
 #include <KMessageBox>
 
 #include <QDebug>
@@ -94,7 +90,7 @@ void PimSettingsBackupRestore::backupStart(const QString &filename)
     mAction = Backup;
     mStoreIterator = mStored.constBegin();
     const QDateTime now = QDateTime::currentDateTime();
-    Q_EMIT addInfo(QLatin1Char('[') + KGlobal::locale()->formatDateTime( now ) + QLatin1Char(']'));
+    Q_EMIT addInfo(QLatin1Char('[') + KLocale::global()->formatDateTime( now ) + QLatin1Char(']'));
     Q_EMIT addInfo(i18n("Start to backup data in \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();
     //Add version
@@ -151,12 +147,6 @@ void PimSettingsBackupRestore::backupNextStep()
         case Utils::Blogilo:
             if (mStoreIterator.value().numberSteps != 0) {
                 mImportExportData = new ExportBlogiloJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
-                executeJob();
-            }
-            break;
-        case Utils::KNode:
-            if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportKnodeJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
@@ -235,12 +225,6 @@ void PimSettingsBackupRestore::restoreNextStep()
                 executeJob();
             }
             break;
-        case Utils::KNode:
-            if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportKnodeJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
-                executeJob();
-            }
-            break;
         case Utils::Unknown:
         break;
         }
@@ -268,7 +252,7 @@ void PimSettingsBackupRestore::restoreStart(const QString &filename)
     AbstractImportExportJob::setArchiveVersion(version);
 
     const QDateTime now = QDateTime::currentDateTime();
-    Q_EMIT addInfo(QLatin1Char('[') + KGlobal::locale()->formatDateTime( now ) + QLatin1Char(']'));
+    Q_EMIT addInfo(QLatin1Char('[') + KLocale::global()->formatDateTime( now ) + QLatin1Char(']'));
 
     Q_EMIT addInfo(i18n("Start to restore data from \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();

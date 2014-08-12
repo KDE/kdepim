@@ -27,14 +27,14 @@
 #ifndef KORG_CALENDARVIEW_H
 #define KORG_CALENDARVIEW_H
 
-#include "korganizer_export.h"
+#include "korganizerprivate_export.h"
 #include "interfaces/korganizer/calendarviewbase.h"
 
 #include <KCalCore/Incidence>
 #include <KCalCore/Visitor>
 #include <KCalCore/ScheduleMessage>
 
-#include <akonadi/calendar/itiphandler.h>
+#include <Akonadi/Calendar/ITIPHandler>
 
 #include <calendarsupport/messagewidget.h>
 
@@ -67,7 +67,6 @@ namespace Akonadi {
   class TodoPurger;
 }
 
-class KVBox;
 
 class QSplitter;
 class QStackedWidget;
@@ -703,7 +702,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     DateNavigator *mDateNavigator;
     DateChecker *mDateChecker;
 
-    KVBox *mEventViewerBox;
+    QWidget *mEventViewerBox;
     CalendarSupport::IncidenceViewer *mEventViewer;
     KOViewManager *mViewManager;
     KODialogManager *mDialogManager;

@@ -24,25 +24,26 @@
 #include "folderrequester.h"
 #include "messageviewer/utils/util.h"
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 #include <klocale.h>
 #include <kcombobox.h>
 #include <kurlrequester.h>
 #include <kmessagebox.h>
-#include <KMimeType>
 #include <KSeparator>
 
 #include <qlabel.h>
 #include <qcheckbox.h>
 #include <QGridLayout>
+#include <QStandardPaths>
+#include <QMimeDatabase>
 
 using namespace KMail;
 using namespace MailCommon;
 
 static QString standardArchivePath( const QString &folderName )
 {
-    QString currentPath = KGlobalSettings::documentPath();
+    QString currentPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     QDir dir( currentPath );
     if( !dir.exists() )
         currentPath = QDir::homePath();
@@ -74,7 +75,7 @@ ArchiveFolderDialog::ArchiveFolderDialog( QWidget *parent )
     mFolderRequester = new FolderRequester( mainWidget );
     mFolderRequester->setMustBeReadWrite( false );
     mFolderRequester->setNotAllowToCreateNewFolder( true );
-    connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)), SLOT(slotFolderChanged(Akonadi::Collection)) );
+    connect(mFolderRequester, &FolderRequester::folderChanged, this, &ArchiveFolderDialog::slotFolderChanged);
     folderLabel->setBuddy( mFolderRequester );
     mainLayout->addWidget( mFolderRequester, row, 1 );
     row++;
@@ -101,7 +102,7 @@ ArchiveFolderDialog::ArchiveFolderDialog( QWidget *parent )
     mUrlRequester->setMode( KFile::LocalOnly | KFile::File );
     mUrlRequester->setFilter( QLatin1String("*.tar *.zip *.tar.gz *.tar.bz2") );
     fileNameLabel->setBuddy( mUrlRequester );
-    connect( mUrlRequester, SIGNAL(urlSelected(KUrl)),
+    connect( mUrlRequester, SIGNAL(urlSelected(QUrl)),
              this, SLOT(slotFixFileExtension()) );
     connect( mUrlRequester, SIGNAL(textChanged(QString)),
              this, SLOT(slotUrlChanged(QString)) );
@@ -114,7 +115,7 @@ ArchiveFolderDialog::ArchiveFolderDialog( QWidget *parent )
     row++;
 
     mRecursiveCheckBox = new QCheckBox( i18n( "Archive all subfolders" ), mainWidget );
-    connect( mRecursiveCheckBox, SIGNAL(clicked()), this, SLOT(slotRecursiveCheckboxClicked()) );
+    connect(mRecursiveCheckBox, &QCheckBox::clicked, this, &ArchiveFolderDialog::slotRecursiveCheckboxClicked);
     mainLayout->addWidget( mRecursiveCheckBox, row, 0, 1, 2, Qt::AlignLeft );
     mRecursiveCheckBox->setChecked( true );
     row++;
@@ -207,7 +208,8 @@ void ArchiveFolderDialog::slotFixFileExtension()
         fileName = standardArchivePath( mFolderRequester->hasCollection() ?
                                             mFolderRequester->collection().name() : QString() );
 
-    const QString extension = KMimeType::extractKnownExtension(fileName);
+    QMimeDatabase db;
+    const QString extension = db.suffixForFileName(fileName);
     if(!extension.isEmpty()) {
         fileName = fileName.left( fileName.length() - extension.length() - 1 );
     }

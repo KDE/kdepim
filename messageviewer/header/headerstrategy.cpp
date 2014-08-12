@@ -37,7 +37,7 @@
 #include "headerstrategy.h"
 #include "header/headerstrategy_p.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 //
 // HeaderStrategy abstract base:
@@ -74,7 +74,7 @@ HeaderStrategy * HeaderStrategy::create( Type type ) {
     case Custom:  return custom();
     case Grantlee:  return grantlee();
     }
-    kFatal() << "Unknown header strategy ( type ==" << (int)type << ") requested!";
+    qCritical() << "Unknown header strategy ( type ==" << (int)type << ") requested!";
     return 0; // make compiler happy
 }
 

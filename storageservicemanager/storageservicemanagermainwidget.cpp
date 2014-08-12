@@ -27,7 +27,7 @@ StorageServiceManagerMainWidget::StorageServiceManagerMainWidget(QWidget *parent
     connect(mConfigureWidget, SIGNAL(configureClicked()), SIGNAL(configureClicked()));
     addWidget(mConfigureWidget);
     mStorageServiceTabWidget = new StorageServiceTabWidget;
-    connect(mStorageServiceTabWidget, SIGNAL(tabCountChanged(bool)), SLOT(slotTabCountchanged(bool)));
+    connect(mStorageServiceTabWidget, &StorageServiceTabWidget::tabCountChanged, this, &StorageServiceManagerMainWidget::slotTabCountchanged);
     addWidget(mStorageServiceTabWidget);
     setCurrentWidget(mConfigureWidget);
 }

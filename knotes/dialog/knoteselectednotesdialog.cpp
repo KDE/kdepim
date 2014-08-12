@@ -22,19 +22,34 @@
 #include <KConfigGroup>
 
 #include <QListWidget>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 KNoteSelectedNotesDialog::KNoteSelectedNotesDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Select notes" ) );
-    setButtons( Ok | Cancel );
+    setWindowTitle( i18n( "Select notes" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     mListNotes = new QListWidget;
     mListNotes->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
 
     connect(mListNotes, SIGNAL(itemSelectionChanged()), this, SLOT(slotSelectionChanged()));
-    setMainWidget(mListNotes);
+    mainLayout->addWidget(mListNotes);
+    mainLayout->addWidget(buttonBox);
+
     readConfig();
     slotSelectionChanged();
 }
@@ -47,7 +62,7 @@ KNoteSelectedNotesDialog::~KNoteSelectedNotesDialog()
 void KNoteSelectedNotesDialog::slotSelectionChanged()
 {
     const bool hasSelection = (mListNotes->selectedItems().count() > 0);
-    enableButtonOk(hasSelection);
+    mOkButton->setEnabled(hasSelection);
 }
 
 void KNoteSelectedNotesDialog::setNotes(const QHash<Akonadi::Item::Id, KNote*> &notes)
@@ -77,7 +92,7 @@ QStringList KNoteSelectedNotesDialog::selectedNotes() const
 
 void KNoteSelectedNotesDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "KNoteSelectedNotesDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "KNoteSelectedNotesDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -86,7 +101,7 @@ void KNoteSelectedNotesDialog::readConfig()
 
 void KNoteSelectedNotesDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "KNoteSelectedNotesDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "KNoteSelectedNotesDialog" );
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

@@ -25,7 +25,7 @@
 
 class QTreeWidgetItem;
 class QLabel;
-class KMenu;
+class QMenu;
 namespace PimCommon {
 class StorageServiceAbstract;
 class StorageServiceProgressIndicator;
@@ -87,7 +87,7 @@ Q_SIGNALS:
     void deleteFileFolder();
 
 protected:
-    virtual void createMenuActions(KMenu *menu);
+    virtual void createMenuActions(QMenu *menu);
 
 private:
     PimCommon::StorageServiceDeleteDialog::DeleteType mDeleteType;

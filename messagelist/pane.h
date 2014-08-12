@@ -22,11 +22,11 @@
 #include <messagelist/core/enums.h>
 #include <messagelist/core/view.h>
 #include <QtCore/QHash>
-#include <KTabWidget>
+#include <QTabWidget>
 
 #include <kmime/kmime_message.h>
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include <collection.h>
+#include <item.h>
 #include <messagelist/messagelist_export.h>
 
 class KXMLGUIClient;
@@ -62,7 +62,7 @@ class StorageModel;
  * used if available.
  *
  */
-class MESSAGELIST_EXPORT Pane : public KTabWidget
+class MESSAGELIST_EXPORT Pane : public QTabWidget
 {
     Q_OBJECT
 

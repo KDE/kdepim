@@ -26,16 +26,12 @@
 
 #include <klocale.h>
 #include <kdialog.h>
-#include <khbox.h>
-#include <kdebug.h>
+#include <QHBoxLayout>
+#include <qdebug.h>
 
 #include <QHBoxLayout>
 
-#ifdef USE_AKONADI
 using namespace KCalCore;
-#else
-using namespace KCal;
-#endif
 
 
 TimeSelector::TimeSelector(const QString& selectText, const QString& selectWhatsThis,
@@ -53,17 +49,16 @@ TimeSelector::TimeSelector(const QString& selectText, const QString& selectWhats
     mSelect->setWhatsThis(selectWhatsThis);
     layout->addWidget(mSelect);
 
-    KHBox* box = new KHBox(this);    // to group widgets for QWhatsThis text
-    box->setSpacing(KDialog::spacingHint());
+    QWidget* box = new QWidget(this);    // to group widgets for QWhatsThis text
+    QHBoxLayout *boxHBoxLayout = new QHBoxLayout(box);
+    boxHBoxLayout->setMargin(0);
+    boxHBoxLayout->setSpacing(KDialog::spacingHint());
     layout->addWidget(box);
     mPeriod = new TimePeriod(allowHourMinute, box);
+    boxHBoxLayout->addWidget(mPeriod);
     mPeriod->setFixedSize(mPeriod->sizeHint());
     mPeriod->setSelectOnStep(false);
-#ifdef USE_AKONADI
     connect(mPeriod, SIGNAL(valueChanged(KCalCore::Duration)), SLOT(periodChanged(KCalCore::Duration)));
-#else
-    connect(mPeriod, SIGNAL(valueChanged(KCal::Duration)), SLOT(periodChanged(KCal::Duration)));
-#endif
     mSelect->setFocusWidget(mPeriod);
     mPeriod->setEnabled(false);
 

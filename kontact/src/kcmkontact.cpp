@@ -31,6 +31,7 @@ using namespace Kontact;
 #include <KAboutData>
 #include <KComboBox>
 #include <KServiceTypeTrader>
+#include <KLocalizedString>
 
 #include <QCheckBox>
 #include <QHBoxLayout>
@@ -38,15 +39,14 @@ using namespace Kontact;
 
 extern "C"
 {
-KDE_EXPORT KCModule *create_kontactconfig( QWidget *parent, const char * )
+Q_DECL_EXPORT KCModule *create_kontactconfig( QWidget *parent, const char * )
 {
-    KComponentData inst( "kcmkontact" );
-    return new KcmKontact( inst, parent );
+    return new KcmKontact( parent );
 }
 }
 
-KcmKontact::KcmKontact( const KComponentData &inst, QWidget *parent )
-    : KPrefsModule( Prefs::self(), inst, parent )
+KcmKontact::KcmKontact( QWidget *parent )
+    : KPrefsModule( Prefs::self(), parent )
 {
     QBoxLayout *topLayout = new QVBoxLayout( this );
     QBoxLayout *pluginStartupLayout = new QHBoxLayout();
@@ -74,19 +74,19 @@ KcmKontact::KcmKontact( const KComponentData &inst, QWidget *parent )
 const KAboutData *KcmKontact::aboutData() const
 {
     KAboutData *about = new KAboutData(
-                "kontactconfig", 0,
-                ki18nc( "@title", "KDE Kontact" ),
-                0,
-                KLocalizedString(),
-                KAboutData::License_GPL,
-                ki18nc( "@info:credit", "(c), 2003 Cornelius Schumacher" ) );
+                QLatin1String("kontactconfig"),
+                i18nc( "@title", "KDE Kontact" ),
+                QString(),
+                QString(),
+                KAboutLicense::GPL,
+                i18nc( "@info:credit", "(c), 2003 Cornelius Schumacher" ) );
 
-    about->addAuthor( ki18nc( "@info:credit", "Cornelius Schumacher" ),
-                      ki18nc( "@info:credit", "Developer" ),
-                      "schumacher@kde.org" );
-    about->addAuthor( ki18nc( "@info:credit", "Tobias Koenig" ),
-                      ki18nc( "@info:credit", "Developer" ),
-                      "tokoe@kde.org" );
+    about->addAuthor( i18nc( "@info:credit", "Cornelius Schumacher" ),
+                      i18nc( "@info:credit", "Developer" ),
+                      QLatin1String("schumacher@kde.org") );
+    about->addAuthor( i18nc( "@info:credit", "Tobias Koenig" ),
+                      i18nc( "@info:credit", "Developer" ),
+                      QLatin1String("tokoe@kde.org") );
 
     return about;
 }

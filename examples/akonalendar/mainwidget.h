@@ -26,10 +26,10 @@
 #include <QSplitter>
 #include <QHBoxLayout>
 
-#include <akonadi/collection.h>
-#include <akonadi/collectionview.h>
-#include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/collectionmodel.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiWidgets/collectionview.h>
+#include <AkonadiCore/collectionfilterproxymodel.h>
+#include <AkonadiCore/collectionmodel.h>
 #include "calendarsupport/kcalmodel.h"
 #include "calendarsupport/next/incidenceviewer.h"
 

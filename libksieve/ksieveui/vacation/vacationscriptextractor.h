@@ -26,6 +26,7 @@
 #include <ksieve/parser.h>
 #include <ksieve/scriptbuilder.h>
 
+#include <QDebug>
 #include <cassert>
 #include <limits.h>
 #include <map>
@@ -153,7 +154,7 @@ private:
         if ( const char * str = expected.string )
             if ( string.toLower() != QString::fromUtf8( str ).toLower() )
                 found = false;
-        kDebug() << ( found ?"found:" :"not found:" )
+        qDebug() << ( found ?"found:" :"not found:" )
                  << mState << "->"
                  << ( found ? expected.if_found : expected.if_not_found );
         mState = found ? expected.if_found : expected.if_not_found ;
@@ -165,29 +166,29 @@ private:
             doProcess( method, string );
         }
     }
-    void commandStart( const QString & identifier ) { kDebug() ; process( CommandStart, identifier ); }
-    void commandEnd() { kDebug() ; process( CommandEnd ); }
-    void testStart( const QString & identifier ) { kDebug() ; process( TestStart, identifier ); }
-    void testEnd() { kDebug() ; process( TestEnd ); }
-    void testListStart() { kDebug() ; process( TestListStart ); }
-    void testListEnd() { kDebug() ; process( TestListEnd ); }
-    void blockStart() { kDebug() ; process( BlockStart ); ++mNestingDepth; }
-    void blockEnd() { kDebug() ; --mNestingDepth; process( BlockEnd ); }
-    void hashComment( const QString & ) { kDebug() ; }
-    void bracketComment( const QString & ) { kDebug() ; }
-    void lineFeed() { kDebug() ; }
+    void commandStart( const QString & identifier ) { qDebug() ; process( CommandStart, identifier ); }
+    void commandEnd() { qDebug() ; process( CommandEnd ); }
+    void testStart( const QString & identifier ) { qDebug() ; process( TestStart, identifier ); }
+    void testEnd() { qDebug() ; process( TestEnd ); }
+    void testListStart() { qDebug() ; process( TestListStart ); }
+    void testListEnd() { qDebug() ; process( TestListEnd ); }
+    void blockStart() { qDebug() ; process( BlockStart ); ++mNestingDepth; }
+    void blockEnd() { qDebug() ; --mNestingDepth; process( BlockEnd ); }
+    void hashComment( const QString & ) { qDebug() ; }
+    void bracketComment( const QString & ) { qDebug() ; }
+    void lineFeed() { qDebug() ; }
     void error( const KSieve::Error & ) {
-        kDebug() ;
+        qDebug() ;
         mState = 0;
     }
-    void finished() { kDebug() ; }
+    void finished() { qDebug() ; }
 
-    void taggedArgument( const QString & tag ) { kDebug() ; process( TaggedArgument, tag ); }
-    void stringArgument( const QString & string, bool, const QString & ) { kDebug() ; process( StringArgument, string ); }
-    void numberArgument( unsigned long number, char ) { kDebug(); process( NumberArgument, QString::number( number ) ); }
-    void stringListArgumentStart() { kDebug() ; process( StringListArgumentStart ); }
-    void stringListEntry( const QString & string, bool, const QString & ) { kDebug() ; process( StringListEntry, string ); }
-    void stringListArgumentEnd() { kDebug() ; process( StringListArgumentEnd ); }
+    void taggedArgument( const QString & tag ) { qDebug() ; process( TaggedArgument, tag ); }
+    void stringArgument( const QString & string, bool, const QString & ) { qDebug() ; process( StringArgument, string ); }
+    void numberArgument( unsigned long number, char ) { qDebug(); process( NumberArgument, QString::number( number ) ); }
+    void stringListArgumentStart() { qDebug() ; process( StringListArgumentStart ); }
+    void stringListEntry( const QString & string, bool, const QString & ) { qDebug() ; process( StringListEntry, string ); }
+    void stringListArgumentEnd() { qDebug() ; process( StringListArgumentEnd ); }
 };
 
 typedef GenericInformationExtractor GIE;

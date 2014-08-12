@@ -22,7 +22,7 @@
 #include <KDialog>
 #include "kaddressbook_export.h"
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 namespace KABMergeContacts {
 class MergeContactShowResultTabWidget;

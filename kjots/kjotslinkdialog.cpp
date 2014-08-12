@@ -28,14 +28,14 @@
 
 #include <KLocalizedString>
 #include <KComboBox>
-#include <KLineEdit>
+#include <QLineEdit>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include "KJotsSettings.h"
 #include "kjotsbookshelfentryvalidator.h"
 #include <kdescendantsproxymodel.h>
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/EntityTreeModel>
 
 KJotsLinkDialog::KJotsLinkDialog( QAbstractItemModel *kjotsModel, QWidget *parent)
   : KDialog(parent), m_kjotsModel(kjotsModel)
@@ -57,12 +57,12 @@ KJotsLinkDialog::KJotsLinkDialog( QAbstractItemModel *kjotsModel, QWidget *paren
     QGridLayout *layout = new QGridLayout(entries);
 
     textLabel = new QLabel(i18n("Link Text:"), this);
-    textLineEdit = new KLineEdit(this);
-    textLineEdit->setClearButtonShown(true);
+    textLineEdit = new QLineEdit(this);
+    textLineEdit->setClearButtonEnabled(true);
     linkUrlLabel = new QLabel(i18n("Link URL:"), this);
-    linkUrlLineEdit = new KLineEdit(this);
+    linkUrlLineEdit = new QLineEdit(this);
     hrefCombo = new KComboBox(this);
-    linkUrlLineEdit->setClearButtonShown(true);
+    linkUrlLineEdit->setClearButtonEnabled(true);
 
     tree = new QTreeView();
     tree->setModel(proxyModel);

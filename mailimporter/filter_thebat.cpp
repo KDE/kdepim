@@ -226,7 +226,7 @@ void FilterTheBat::importFiles( const QString &FileName)
                 QByteArray input(endPos-lastPos,'\0');
                 tbb.read(input.data(), endPos-lastPos);
 
-                KTemporaryFile tmp;
+                QTemporaryFile tmp;
                 tmp.open();
                 tmp.write( input, endPos-lastPos );
                 tmp.flush();

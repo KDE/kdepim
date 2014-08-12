@@ -26,7 +26,7 @@
 
 class SummaryViewPart;
 class KSelectAction;
-
+class KAboutData;
 class SummaryView : public KontactInterface::Plugin
 {
   Q_OBJECT

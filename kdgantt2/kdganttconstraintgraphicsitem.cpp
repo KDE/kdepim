@@ -38,8 +38,20 @@ using namespace KDGantt;
  */
 
 ConstraintGraphicsItem::ConstraintGraphicsItem( const Constraint& c, QGraphicsItem* parent, GraphicsScene* scene )
-    : QGraphicsItem( parent, scene ),  m_constraint( c )
+    : QGraphicsItem( parent ),  m_constraint( c )
 {
+    if (scene && !parent) {
+       scene->addItem(this);
+    }
+
+    if (scene && parent)
+    {
+      if (scene != parent->scene())
+      {
+        qDebug("%s: parent scene is different than given scene", Q_FUNC_INFO);
+      }
+    }
+
     setPos( QPointF( 0., 0. ) );
     setAcceptsHoverEvents( false );
     setAcceptedMouseButtons( Qt::NoButton );

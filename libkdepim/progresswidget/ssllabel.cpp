@@ -35,7 +35,6 @@
 #include <KIconLoader>
 
 #include <QLabel>
-#include <QPixmap>
 
 using namespace KPIM;
 

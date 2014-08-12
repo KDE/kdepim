@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>AddEditBlogBase</class>
- <widget class="KTabWidget" name="AddEditBlogBase">
+ <widget class="QTabWidget" name="AddEditBlogBase">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -91,7 +91,7 @@ You can set more options in the Advanced tab.</string>
       <property name="text">
        <string>http://</string>
       </property>
-      <property name="clickMessage">
+      <property name="placeholderText">
        <string>http://YourHomePage.com</string>
       </property>
       <property name="showClearButton" stdset="0">
@@ -127,7 +127,7 @@ You can set more options in the Advanced tab.</string>
      </widget>
     </item>
     <item row="7" column="1" colspan="2">
-     <widget class="KLineEdit" name="txtUser"/>
+     <widget class="QLineEdit" name="txtUser"/>
     </item>
     <item row="8" column="0">
      <widget class="QLabel" name="label_3">
@@ -172,7 +172,7 @@ You can set more options in the Advanced tab.</string>
      </spacer>
     </item>
     <item row="9" column="2">
-     <widget class="KPushButton" name="btnAutoConf">
+     <widget class="QPushButton" name="btnAutoConf">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -201,7 +201,7 @@ You can set more options in the Advanced tab.</string>
      <widget class="KSeparator" name="kseparator_4"/>
     </item>
     <item row="4" column="1" colspan="2">
-     <widget class="KLineEdit" name="txtTitle"/>
+     <widget class="QLineEdit" name="txtTitle"/>
     </item>
    </layout>
   </widget>
@@ -301,7 +301,7 @@ You can set more options in the Advanced tab.</string>
      <widget class="KLineEdit" name="txtId"/>
     </item>
     <item row="3" column="2">
-     <widget class="KPushButton" name="btnFetch">
+     <widget class="QPushButton" name="btnFetch">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -519,17 +519,6 @@ You can set more options in the Advanced tab.</string>
    <class>KSeparator</class>
    <extends>QFrame</extends>
    <header>kseparator.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>ktabwidget.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>

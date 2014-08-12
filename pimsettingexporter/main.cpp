@@ -20,18 +20,17 @@
 #include "pimsettingexporter_options.h"
 
 #include <kcmdlineargs.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <klocale.h>
 #include <KUniqueApplication>
-#include <KDebug>
+#include <QDebug>
 #include "kdepim-version.h"
 
 int main(int argc, char *argv[])
 {
-    KLocale::setMainCatalog("pimsettingexporter");
-
-    KAboutData aboutData( "pimsettingexporter", 0, ki18n("PIM Setting Exporter"),
-                          KDEPIM_VERSION, ki18n("PIM Setting Exporter"), KAboutData::License_GPL_V2,
+    KLocalizedString::setApplicationDomain("pimsettingexporter");
+    K4AboutData aboutData( "pimsettingexporter", 0, ki18n("PIM Setting Exporter"),
+                          KDEPIM_VERSION, ki18n("PIM Setting Exporter"), K4AboutData::License_GPL_V2,
                           ki18n("Copyright © 2012-2014 pimsettingexporter authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
     aboutData.setProgramIconName(QLatin1String("kontact"));
@@ -43,7 +42,7 @@ int main(int argc, char *argv[])
 
     if (!KUniqueApplication::start())
     {
-        kDebug() << "pimsettingexporter is already running!";
+        qDebug() << "pimsettingexporter is already running!";
         return (0);
     }
     KUniqueApplication a;

@@ -5,7 +5,7 @@
 
   <kcfgfile name="messagecorerc" />
   <include>qtextcodec.h</include>
-  <include>kglobalsettings.h</include>
+  <include>QFontDatabase</include>
   
   <group name="General">
     <entry name="disregardUmask" type="Bool">
@@ -25,11 +25,11 @@
     </entry>
     <entry name="BodyFont" type="Font" key="body-font">
       <label>Specifies the font to use for the message body</label>
-      <default code="true">KGlobalSettings::generalFont()</default>
+      <default code="true">QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
     </entry>
     <entry name="PrintFont" type="Font" key="print-font">
       <label>Specifies the font to use for printing</label>
-      <default code="true">KGlobalSettings::generalFont()</default>
+      <default code="true">QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
     </entry>
   </group>
 

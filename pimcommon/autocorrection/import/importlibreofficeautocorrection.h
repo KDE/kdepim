@@ -20,7 +20,7 @@
 
 #include "importabstractautocorrection.h"
 
-class KTempDir;
+class QTemporaryDir;
 class KZip;
 class QDomDocument;
 class QFile;
@@ -44,7 +44,7 @@ private:
     bool loadDomElement( QDomDocument &doc, QFile *file );
     bool importFile(Type type, const KArchiveDirectory* archiveDirectory);
     KZip *mArchive;
-    KTempDir *mTempDir;
+    QTemporaryDir *mTempDir;
 };
 
 }

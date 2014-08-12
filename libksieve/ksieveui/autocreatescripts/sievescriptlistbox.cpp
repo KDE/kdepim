@@ -21,11 +21,13 @@
 #include "sievescriptpage.h"
 #include "sieveincludewidget.h"
 
-#include <KHBox>
+#include <QHBoxLayout>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KInputDialog>
-#include <KPushButton>
+#include <QInputDialog>
+#include <QPushButton>
+#include <KIconLoader>
+#include <QIcon>
 
 #include <QVBoxLayout>
 #include <QListWidget>
@@ -90,27 +92,33 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     layout->addWidget(mSieveListScript);
 
     //----------- the first row of buttons
-    KHBox *hb = new KHBox( this );
-    hb->setSpacing( 4 );
+    QWidget *hb = new QWidget( this );
+    QHBoxLayout *hbHBoxLayout = new QHBoxLayout(hb);
+    hbHBoxLayout->setMargin(0);
+    hbHBoxLayout->setSpacing( 4 );
 
-    mBtnTop = new KPushButton( QString(), hb );
-    mBtnTop->setIcon( KIcon( QLatin1String("go-top") ) );
+    mBtnTop = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnTop);
+    mBtnTop->setIcon( QIcon::fromTheme( QLatin1String("go-top") ) );
     mBtnTop->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnTop->setMinimumSize( mBtnTop->sizeHint() * 1.2 );
 
-    mBtnUp = new KPushButton( QString(), hb );
+    mBtnUp = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnUp);
     mBtnUp->setAutoRepeat( true );
-    mBtnUp->setIcon( KIcon( QLatin1String("go-up") ) );
+    mBtnUp->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
     mBtnUp->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnUp->setMinimumSize( mBtnUp->sizeHint() * 1.2 );
-    mBtnDown = new KPushButton( QString(), hb );
+    mBtnDown = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnDown);
     mBtnDown->setAutoRepeat( true );
-    mBtnDown->setIcon( KIcon( QLatin1String("go-down") ) );
+    mBtnDown->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
     mBtnDown->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDown->setMinimumSize( mBtnDown->sizeHint() * 1.2 );
 
-    mBtnBottom = new KPushButton( QString(), hb );
-    mBtnBottom->setIcon( KIcon( QLatin1String("go-bottom") ) );
+    mBtnBottom = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnBottom);
+    mBtnBottom->setIcon( QIcon::fromTheme( QLatin1String("go-bottom") ) );
     mBtnBottom->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnBottom->setMinimumSize( mBtnBottom->sizeHint() * 1.2 );
 
@@ -121,22 +129,28 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
 
     layout->addWidget( hb );
 
-    hb = new KHBox( this );
-    hb->setSpacing( 4 );
+    hb = new QWidget( this );
+    hbHBoxLayout = new QHBoxLayout(hb);
+    hbHBoxLayout->setMargin(0);
+    hbHBoxLayout->setSpacing( 4 );
 
-    mBtnNew = new KPushButton( QString(), hb );
-    mBtnNew->setIcon( KIcon( QLatin1String("document-new") ) );
+    mBtnNew = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnNew);
+    mBtnNew->setIcon( QIcon::fromTheme( QLatin1String("document-new") ) );
     mBtnNew->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnNew->setMinimumSize( mBtnNew->sizeHint() * 1.2 );
 
-    mBtnDelete = new KPushButton( QString(), hb );
-    mBtnDelete->setIcon( KIcon( QLatin1String("edit-delete") ) );
+    mBtnDelete = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnDelete);
+    mBtnDelete->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
     mBtnDelete->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDelete->setMinimumSize( mBtnDelete->sizeHint() * 1.2 );
 
-    mBtnRename = new KPushButton( i18n( "Rename..." ), hb );
+    mBtnRename = new QPushButton( i18n( "Rename..." ), hb );
+    hbHBoxLayout->addWidget(mBtnRename);
 
-    mBtnDescription = new KPushButton( i18n( "Edit description..." ), hb );
+    mBtnDescription = new QPushButton( i18n( "Edit description..." ), hb );
+    hbHBoxLayout->addWidget(mBtnDescription);
 
 
     layout->addWidget( hb );
@@ -203,7 +217,7 @@ SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName, con
 
 void SieveScriptListBox::slotNew()
 {
-    const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
+    const QString newName = QInputDialog::getText(this, i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
         createNewScript(newName);
         Q_EMIT valueChanged();
@@ -229,7 +243,7 @@ void SieveScriptListBox::slotRename()
 {
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
-        const QString newName = KInputDialog::getText(i18n("Rename"), i18n("Add new name:"), item->text());
+        const QString newName = QInputDialog::getText(this, i18n("Rename"), i18n("Add new name:"), QLineEdit::Normal, item->text());
         if (!newName.isEmpty()) {
             item->setText(newName);
             Q_EMIT valueChanged();

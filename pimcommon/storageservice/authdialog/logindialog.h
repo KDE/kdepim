@@ -20,7 +20,7 @@
 
 #include <KDialog>
 
-class KLineEdit;
+class QLineEdit;
 class QLabel;
 namespace PimCommon {
 class LoginDialog : public KDialog
@@ -41,8 +41,8 @@ private slots:
     void slotUserNameChanged(const QString &passwd);
 
 private:
-    KLineEdit *mUsername;
-    KLineEdit *mPassword;
+    QLineEdit *mUsername;
+    QLineEdit *mPassword;
     QLabel *mLabUsername;
 };
 

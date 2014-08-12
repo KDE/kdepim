@@ -25,13 +25,15 @@
 #include <kprocess.h>
 #include <kdatetime.h>
 
+#include <kauthactionreply.h>
 #include <QDebug>
 
 #include <stdio.h>
+#include <KLocale>
 
 RtcWakeAction::RtcWakeAction()
 {
-    KGlobal::locale()->insertCatalog(QLatin1String("kalarm"));
+    KLocalizedString::setApplicationDomain("kalarm");
 }
 
 ActionReply RtcWakeAction::settimer(const QVariantMap& args)
@@ -84,21 +86,25 @@ ActionReply RtcWakeAction::settimer(const QVariantMap& args)
     switch (result)
     {
         case 0:
-            return ActionReply::SuccessReply;
+            return ActionReply::SuccessType;
         case -2:
-            errmsg = i18nc("@text/plain", "Could not run <command>%1</command> to set wake from suspend", QLatin1String("rtcwake"));
+            errmsg = xi18nc("@text/plain", "Could not run <command>%1</command> to set wake from suspend", QLatin1String("rtcwake"));
             break;
         default:
-            errmsg = i18nc("@text/plain", "Error setting wake from suspend.<nl/>Command was: <command>%1</command><nl/>Error code: %2.", proc.program().join(QLatin1String(" ")), result);
+            errmsg = xi18nc("@text/plain", "Error setting wake from suspend.<nl/>Command was: <command>%1</command><nl/>Error code: %2.", proc.program().join(QLatin1String(" ")), result);
             break;
     }
-    ActionReply reply(ActionReply::HelperError);
+#if 0 //QT5
+    ActionReply reply(ActionReply::HelperErrorReply);
     reply.setErrorCode(result);
     reply.setErrorDescription(errmsg);
     qDebug() << "RtcWakeAction::settimer: Code=" << reply.errorCode() << reply.errorDescription();
     return reply;
+#else
+    return 0;
+#endif
 }
 
-KDE4_AUTH_HELPER_MAIN("org.kde.kalarmrtcwake", RtcWakeAction)
+KAUTH_HELPER_MAIN("org.kde.kalarmrtcwake", RtcWakeAction)
 
 // vim: et sw=4:

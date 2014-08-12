@@ -39,7 +39,6 @@
 #ifndef QWEBDAV_URL_INFO_H
 #define QWEBDAV_URL_INFO_H
 
-#include <QDomDocument>
 #include <QDomElement>
 #include <QDomNodeList>
 #include <QDateTime>

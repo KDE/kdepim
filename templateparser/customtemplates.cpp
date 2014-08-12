@@ -26,6 +26,7 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <QIcon>
 
 #include <QWhatsThis>
 
@@ -39,10 +40,10 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
     mUi = new Ui_CustomTemplatesBase;
     mUi->setupUi( this );
 
-    mUi->mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    mUi->mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
     mUi->mAdd->setEnabled( false );
-    mUi->mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
-    mUi->mDuplicate->setIcon( KIcon( QLatin1String("edit-copy") ) );
+    mUi->mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
+    mUi->mDuplicate->setIcon( QIcon::fromTheme( QLatin1String("edit-copy") ) );
 
     mUi->mList->setColumnWidth( 0, 100 );
     mUi->mList->header()->setStretchLastSection( true );
@@ -245,12 +246,12 @@ void CustomTemplates::save()
         t.setType( it->customType() );
         t.setTo( it->to() );
         t.setCC( it->cc() );
-        t.writeConfig();
+        t.save();
         ++lit;
     }
 
     GlobalSettings::self()->setCustomTemplates( list );
-    GlobalSettings::self()->writeConfig();
+    GlobalSettings::self()->save();
 
     emit templatesUpdated();
 }

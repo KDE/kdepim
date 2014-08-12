@@ -18,13 +18,13 @@
 #ifndef SELECTFILEINTOWIDGET_H
 #define SELECTFILEINTOWIDGET_H
 
-#include <KDialog>
+#include <QDialog>
 
-class KLineEdit;
+class QLineEdit;
 
 namespace KSieveUi {
 
-class SelectFileIntoDialog : public KDialog
+class SelectFileIntoDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -50,7 +50,7 @@ private Q_SLOTS:
     void slotSelectFolder();
 
 private:
-    KLineEdit *mLineEdit;
+    QLineEdit *mLineEdit;
 };
 }
 

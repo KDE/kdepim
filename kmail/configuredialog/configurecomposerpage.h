@@ -23,16 +23,16 @@
 #include "configuredialog_p.h"
 #include "ui_customtemplates_base.h"
 class QCheckBox;
-class KIntSpinBox;
-class KIntNumInput;
+class QSpinBox;
+class QSpinBox;
 class KComboBox;
 class KUrlRequester;
-class KLineEdit;
+class QLineEdit;
 class ListView;
 class QPushButton;
 class QLabel;
 class ConfigureStorageServiceWidget;
-
+class KPluralHandlingSpinBox;
 namespace TemplateParser {
 class CustomTemplates;
 class TemplatesConfiguration;
@@ -74,15 +74,15 @@ private:
     QCheckBox     *mAutoRequestMDNCheck;
     QCheckBox        *mShowRecentAddressesInComposer;
     QCheckBox     *mWordWrapCheck;
-    KIntSpinBox   *mWrapColumnSpin;
-    KIntSpinBox   *mAutoSave;
-    KIntSpinBox   *mMaximumRecipients;
+    QSpinBox   *mWrapColumnSpin;
+    KPluralHandlingSpinBox   *mAutoSave;
+    QSpinBox   *mMaximumRecipients;
     QCheckBox     *mImprovePlainTextOfHtmlMessage;
-    KIntNumInput  *mMaximumRecentAddress;
+    QSpinBox  *mMaximumRecentAddress;
 #ifdef KDEPIM_ENTERPRISE_BUILD
     KComboBox     *mForwardTypeCombo;
     QCheckBox     *mRecipientCheck;
-    KIntSpinBox   *mRecipientSpin;
+    QSpinBox   *mRecipientSpin;
 #endif
 };
 
@@ -196,11 +196,11 @@ private:
 
 private:
     QCheckBox   *mCreateOwnMessageIdCheck;
-    KLineEdit   *mMessageIdSuffixEdit;
+    QLineEdit   *mMessageIdSuffixEdit;
     ListView    *mHeaderList;
     QPushButton *mRemoveHeaderButton;
-    KLineEdit   *mTagNameEdit;
-    KLineEdit   *mTagValueEdit;
+    QLineEdit   *mTagNameEdit;
+    QLineEdit   *mTagValueEdit;
     QLabel      *mTagNameLabel;
     QLabel      *mTagValueLabel;
 };
@@ -224,7 +224,7 @@ private:
     QCheckBox   *mOutlookCompatibleCheck;
     QCheckBox   *mMissingAttachmentDetectionCheck;
     PimCommon::SimpleStringListEditor *mAttachWordsListEditor;
-    KIntNumInput *mMaximumAttachmentSize;
+    QSpinBox *mMaximumAttachmentSize;
     ConfigureStorageServiceWidget *mStorageServiceWidget;
 };
 
@@ -264,7 +264,7 @@ private:
 class KMAIL_EXPORT ComposerPage : public ConfigModuleWithTabs {
     Q_OBJECT
 public:
-    explicit ComposerPage( const KComponentData &instance, QWidget *parent=0 );
+    explicit ComposerPage( QWidget *parent=0 );
 
     QString helpAnchor() const;
 

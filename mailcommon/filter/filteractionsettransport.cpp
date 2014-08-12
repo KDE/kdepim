@@ -21,10 +21,10 @@
 
 #include "dialog/filteractionmissingargumentdialog.h"
 
-#include <KDE/KLocale>
-#include <KDE/Mailtransport/Transport>
-#include <KDE/Mailtransport/TransportComboBox>
-#include <KDE/Mailtransport/TransportManager>
+#include <KLocale>
+#include <MailTransport/Transport>
+#include <MailTransport/TransportComboBox>
+#include <MailTransport/TransportManager>
 
 #include <QTextDocument>
 #include <QPointer>
@@ -147,6 +147,6 @@ QString FilterActionSetTransport::displayString() const
             mTransportName = listNames.at( index );
         }
     }
-    return label() + QLatin1String( " \"" ) + ( mTransportName.isEmpty() ? Qt::escape( argsAsString() ) : mTransportName ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + ( mTransportName.isEmpty() ? argsAsString().toHtmlEscaped() : mTransportName ) + QLatin1String( "\"" );
 }
 

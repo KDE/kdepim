@@ -64,21 +64,21 @@
 #include "threadselectionmodel.h"
 #include "vacationmanager.h"
 
-#include <akonadi/agentactionmanager.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionmodel.h>
-#include <akonadi/collectionpropertiesdialog.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/kmime/messageflags.h>
-#include <akonadi/kmime/messagefolderattribute.h>
-#include <akonadi/kmime/messageparts.h>
-#include <akonadi/kmime/messagestatus.h>
-#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
-#include <akonadi/kmime/standardmailactionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/collectionmodel.h>
+#include <AkonadiWidgets/collectionpropertiesdialog.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/itemdeletejob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemmodifyjob.h>
+#include <Akonadi/KMime/MessageFlags>
+#include <Akonadi/KMime/MessageFolderAttribute>
+#include <Akonadi/KMime/MessageParts>
+#include <Akonadi/KMime/MessageStatus>
+#include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
+#include <Akonadi/KMime/StandardMailActionManager>
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <akonadibreadcrumbnavigationfactory.h>
 #include <kaction.h>
@@ -86,21 +86,21 @@
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>
 #include <kcodecs.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klinkitemselectionmodel.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>
 #include <kmimetype.h>
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <kselectionproxymodel.h>
-#include <kstandarddirs.h>
+
 #include <mailcommon/filter/filteraction.h>
 #include <mailcommon/folder/foldercollection.h>
 #include <mailcommon/util/mailutil.h>
 #include <pimcommon/util/pimutil.h>
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 #include <messagecomposer/sender/akonadisender.h>
 #include <messagecore/utils/stringutil.h>
 #include <qmllistselectionmodel.h>
@@ -114,6 +114,7 @@
 #include <QLabel>
 #include <QItemSelectionModel>
 #include <QTreeView>
+#include <QStandardPaths>
 
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
@@ -216,7 +217,7 @@ int MainView::openComposer( const QString &to, const QString &cc, const QString 
   message->to()->fromUnicodeString( to, "utf-8" );
   message->cc()->fromUnicodeString( cc, "utf-8" );
   message->bcc()->fromUnicodeString( bcc, "utf-8" );
-  message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+  message->date()->setDateTime( QDateTime::currentDateTime() );
   message->subject()->fromUnicodeString( subject, "utf-8" );
 
   KMime::Content *bodyMessage = message->mainBodyPart();
@@ -252,7 +253,7 @@ int MainView::openComposerAndAttach( const QString &to, const QString &cc, const
   message->to()->fromUnicodeString( to, "utf-8" );
   message->cc()->fromUnicodeString( cc, "utf-8" );
   message->bcc()->fromUnicodeString( bcc, "utf-8" );
-  message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+  message->date()->setDateTime( QDateTime::currentDateTime() );
   message->subject()->fromUnicodeString( subject, "utf-8" );
 
   // Set the first multipart, the body message.
@@ -286,7 +287,7 @@ KMime::Content *MainView::createAttachment( const KUrl &url ) const
   QFile file(fileName);
 
   if ( !file.open(QIODevice::ReadOnly) ) {
-      kWarning() << "Error opening file" << fileName << "for attaching: " << file.errorString();
+      qWarning() << "Error opening file" << fileName << "for attaching: " << file.errorString();
       return 0;
   }
 
@@ -296,7 +297,7 @@ KMime::Content *MainView::createAttachment( const KUrl &url ) const
   file.close();
 
   if ( contents.size() < size ) {
-      kDebug() << "Short read while attaching file" << fileName;
+      qDebug() << "Short read while attaching file" << fileName;
   }
 
   QByteArray coded = KCodecs::base64Encode( contents, true );
@@ -466,7 +467,7 @@ void MainView::doDelayedInit()
   QTime time;
   if ( debugTiming ) {
     time.start();
-    kWarning() << "Start MainView ctor" << &time << " - " << QDateTime::currentDateTime();
+    qWarning() << "Start MainView ctor" << &time << " - " << QDateTime::currentDateTime();
   }
 
   qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
@@ -508,31 +509,31 @@ void MainView::doDelayedInit()
 
   connect( itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()) );
 
-  KAction *action = new KAction( i18n( "New Email" ), this );
+  QAction *action = new QAction( i18n( "New Email" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(startComposer()) );
   actionCollection()->addAction( QLatin1String("add_new_mail"), action );
 
-  action = new KAction( i18n( "Import Emails" ), this );
+  action = new QAction( i18n( "Import Emails" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
   actionCollection()->addAction( QLatin1String( "import_emails" ), action );
 
-  action = new KAction( i18n( "Export Emails From This Account" ), this );
+  action = new QAction( i18n( "Export Emails From This Account" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_account_emails" ), action );
 
-  action = new KAction( i18n( "Export Displayed Emails" ), this );
+  action = new QAction( i18n( "Export Displayed Emails" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_selected_emails" ), action );
 
-  action = new KAction( i18n( "Show Source" ), this );
+  action = new QAction( i18n( "Show Source" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(showMessageSource()) );
   actionCollection()->addAction( QLatin1String( "show_message_source" ), action );
 
-  action = new KAction( i18n( "Email Encoding" ), this );
+  action = new QAction( i18n( "Email Encoding" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(selectOverrideEncoding()) );
   actionCollection()->addAction( QLatin1String( "change_message_encoding" ), action );
 
-  action = new KAction( i18n( "Show All Recipients" ), this );
+  action = new QAction( i18n( "Show All Recipients" ), this );
   action->setCheckable( true );
   connect( action, SIGNAL(triggered(bool)), SLOT(toggleShowExtendedHeaders(bool)) );
   actionCollection()->addAction( QLatin1String( "show_extended_headers" ), action );
@@ -544,7 +545,7 @@ void MainView::doDelayedInit()
   recoverAutoSavedMessages();
 
   if ( debugTiming ) {
-    kWarning() << "Finished MainView ctor: " << time.elapsed() << " - "<< &time;
+    qWarning() << "Finished MainView ctor: " << time.elapsed() << " - "<< &time;
   }
 
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)),
@@ -596,14 +597,14 @@ void MainView::slotDeleteMessage( const Akonadi::Item &item )
 
 void MainView::recoverAutoSavedMessages()
 {
-  kDebug() << "Any message to recover?";
-  QDir autoSaveDir( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave" ) );
+  qDebug() << "Any message to recover?";
+  QDir autoSaveDir( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/" ) + QLatin1String( "autosave" ) );
   //### move directory creation to here
 
   const QFileInfoList savedMessages = autoSaveDir.entryInfoList( QDir::Files );
 
   if ( savedMessages.empty() ) {
-    kDebug() << "No messages to recover";
+    qDebug() << "No messages to recover";
     return;
   }
 
@@ -623,7 +624,7 @@ void MainView::recoverAutoSavedMessages()
 
       file.close();
     } else {
-      kDebug() << "error!!";
+      qDebug() << "error!!";
       //###: review error string
       KMessageBox::sorry( this,
                           i18n( "Could not recover a saved message." ),
@@ -677,7 +678,7 @@ void MainView::composeFetchResult( KJob *job )
 {
   const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetchJob->items().isEmpty() ) {
-    kDebug() << "error:" << job->errorText();
+    qDebug() << "error:" << job->errorText();
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Could not restore a draft." ),
@@ -1081,7 +1082,7 @@ Item MainView::currentItem() const
 void MainView::modifyDone( KJob *job )
 {
   if ( job->error() ) {
-    kWarning() << "Modify error: " << job->errorString();
+    qWarning() << "Modify error: " << job->errorString();
     //###: review error string
     //## Use a notification instead?
     KMessageBox::sorry( this,
@@ -1109,7 +1110,7 @@ void MainView::configureIdentity()
   KCMultiDialog dlg;
   dlg.addModule( QLatin1String("kcm_kpimidentities") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
-  dlg.setButtons( KDialog::Ok | KDialog::Cancel );
+  dlg.setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ); 
   dlg.exec();
 }
 
@@ -1189,7 +1190,7 @@ void MainView::findCreateDefaultCollection( SpecialMailCollections::Type type )
   if ( SpecialMailCollections::self()->hasDefaultCollection( type ) ) {
     const Collection collection = SpecialMailCollections::self()->defaultCollection( type );
     if ( !( collection.rights() & Collection::AllRights ) )
-      kDebug() << "You do not have read/write permission to your inbox folder";
+      qDebug() << "You do not have read/write permission to your inbox folder";
   } else {
     SpecialMailCollectionsRequestJob *job =
         new SpecialMailCollectionsRequestJob( this );
@@ -1204,7 +1205,7 @@ void MainView::findCreateDefaultCollection( SpecialMailCollections::Type type )
 void MainView::createDefaultCollectionDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error creating default collection: " << job->errorText();
+    qDebug() << "Error creating default collection: " << job->errorText();
     //###: review error string
     // disabled for now, triggers too often without good reason on the n900 (too short timeouts probably)
 /*    KMessageBox::sorry( this,
@@ -1222,7 +1223,7 @@ void MainView::createDefaultCollectionDone( KJob *job )
 
   const Collection collection = requestJob->collection();
   if ( !( collection.rights() & Collection::AllRights ) )
-    kDebug() << "You do not have read/write permission to your inbox folder.";
+    qDebug() << "You do not have read/write permission to your inbox folder.";
 
   connect( SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
            this, SLOT(initDefaultFolders()), Qt::UniqueConnection );
@@ -1242,14 +1243,14 @@ bool MainView::folderIsDrafts( const Collection &collection )
   const QString idString = QString::number( collection.id() );
   if ( idString.isEmpty() )
     return false;
-
+#if 0 //QT5
   // search the identities if the folder matches the drafts-folder
   const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
   for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).drafts() == idString )
       return true;
   }
-
+#endif
   return false;
 }
 
@@ -1265,21 +1266,21 @@ bool MainView::folderIsTemplates( const Collection &collection )
   const QString idString = QString::number( collection.id() );
   if ( idString.isEmpty() )
     return false;
-
+#if 0 //QT5
   // search the identities if the folder matches the drafts-folder
   const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
   for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).templates() == idString )
       return true;
   }
-
+#endif
   return false;
 }
 
 void MainView::deleteItemResult( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error trying to delete item";
+    qDebug() << "Error trying to delete item";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Cannot delete draft." ),
@@ -1658,7 +1659,7 @@ void MainView::moveToOrEmptyTrash()
 
   if ( indexes.count() == 1 && CommonKernel->folderIsTrash( collection ) ) {
     //empty trash
-    kDebug() << "EMPTY TRASH";
+    qDebug() << "EMPTY TRASH";
     mMailActionManager->action( Akonadi::StandardMailActionManager::EmptyTrash )->trigger();
   } else {
     mMailActionManager->action( Akonadi::StandardMailActionManager::MoveAllToTrash )->trigger();
@@ -1674,7 +1675,7 @@ void MainView::useFixedFont()
     item->viewer()->setUseFixedFont( !fixedFont );
     item->viewer()->update( MessageViewer::Viewer::Force );
     MessageViewer::GlobalSettings::self()->setUseFixedFont( !fixedFont );
-    MessageViewer::GlobalSettings::self()->writeConfig();
+    MessageViewer::GlobalSettings::self()->save();
   }
 }
 
@@ -1703,7 +1704,7 @@ void MainView::templateFetchResult( KJob* job)
 {
   const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetchJob->items().isEmpty() ) {
-    kDebug() << "error!!";
+    qDebug() << "error!!";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Could not fetch template." ),

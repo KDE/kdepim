@@ -50,8 +50,9 @@ void KJotsBookmarks::openBookmark(const KBookmark & bookmark, Qt::MouseButtons, 
 #endif
 }
 
-QString KJotsBookmarks::currentUrl() const
+QUrl KJotsBookmarks::currentUrl() const
 {
+#if 0 //QT5
   QModelIndexList rows = m_treeView->selectionModel()->selectedRows();
 
   if ( rows.size() != 1 )
@@ -60,6 +61,9 @@ QString KJotsBookmarks::currentUrl() const
   return rows.at( 0 ).data( EntityTreeModel::EntityUrlRole ).toString();
 #else
   return QString();
+#endif
+#else
+  return QUrl();
 #endif
 }
 

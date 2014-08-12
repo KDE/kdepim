@@ -22,16 +22,16 @@
 #include "mailcommon_export.h"
 #include "foldertreewidgetproxymodel.h"
 
-#include <Akonadi/Collection>
+#include <Collection>
 
 #include <QAbstractItemView>
 #include <QWidget>
 
-namespace KPIM {
+namespace Akonadi {
 class StatisticsProxyModel;
 }
 
-class KLineEdit;
+class QLineEdit;
 class KXMLGUIClient;
 
 class QItemSelectionModel;
@@ -103,7 +103,7 @@ public:
 
     FolderTreeView *folderTreeView() const;
 
-    KPIM::StatisticsProxyModel * statisticsProxyModel() const;
+    Akonadi::StatisticsProxyModel * statisticsProxyModel() const;
 
     FolderTreeWidgetProxyModel *folderTreeWidgetProxyModel() const;
 
@@ -112,7 +112,7 @@ public:
     void quotaWarningParameters( const QColor &color, qreal threshold );
     void readQuotaConfig();
 
-    KLineEdit *filterFolderLineEdit() const;
+    QLineEdit *filterFolderLineEdit() const;
     void applyFilter( const QString & );
     void clearFilter();
 

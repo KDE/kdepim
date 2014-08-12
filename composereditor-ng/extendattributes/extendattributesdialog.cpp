@@ -22,18 +22,14 @@
 #include "extendattributeswidget.h"
 #include "extendattributesutils_p.h"
 
-#include <KSeparator>
 #include <KLocalizedString>
-#include <KComboBox>
-#include <KLineEdit>
-#include <KPushButton>
-#include <KDebug>
+#include <QPushButton>
+#include <QDebug>
 
 #include <QWebElement>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QTreeWidget>
 #include <QLabel>
+#include <QTabWidget>
 
 namespace ComposerEditorNG {
 
@@ -76,7 +72,7 @@ public:
             tagName = QLatin1String("dl");
             break;
         default:
-            kDebug()<<" extendattribute not implemented"<<extendType;
+            qDebug()<<" extendattribute not implemented"<<extendType;
             break;
         }
 

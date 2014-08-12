@@ -22,7 +22,7 @@
 #include "pimcommon_export.h"
 
 #include <QDateTime>
-#include <libkgapi2/account.h>
+#include <kgapi/account.h>
 
 namespace PimCommon {
 class PIMCOMMON_EXPORT GDriveStorageService : public PimCommon::StorageServiceAbstract

@@ -25,9 +25,9 @@
 
 #include "agentprogressmonitor.h"
 
-#include <KDebug>
+#include <QDebug>
 
-#include <Akonadi/AgentInstance>
+#include <AgentInstance>
 
 using namespace Akonadi;
 
@@ -49,7 +49,7 @@ ProgressItem *ProgressManager::createProgressItemForAgent(ProgressItem *parent,
     // Should I block that and emit it when I'm done?
 
     if (!itemAlreadyExists) {
-        //    kDebug() << "Created ProgressItem for agent" << instance.name();
+        //    qDebug() << "Created ProgressItem for agent" << instance.name();
         new AgentProgressMonitor( instance, t );
     }
     return t;

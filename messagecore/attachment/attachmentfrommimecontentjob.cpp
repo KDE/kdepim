@@ -22,7 +22,7 @@
 
 #include "attachmentfrommimecontentjob.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmime/kmime_content.h>
 
 #include <boost/shared_ptr.hpp>

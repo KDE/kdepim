@@ -18,11 +18,11 @@
 #ifndef ADDRESSLINEEDIT_H
 #define ADDRESSLINEEDIT_H
 
-#include <KLineEdit>
+#include <QLineEdit>
 
 namespace KSieveUi {
 
-class AddressLineEdit : public KLineEdit
+class AddressLineEdit : public QLineEdit
 {
     Q_OBJECT
 public:

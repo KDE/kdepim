@@ -61,7 +61,6 @@
 #include <KDebug>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KGlobalSettings>
 
 #include <QPointer>
 #include <QHeaderView>
@@ -70,6 +69,8 @@
 
 #include <algorithm>
 #include <cassert>
+#include <KSharedConfig>
+#include <QFontDatabase>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
@@ -130,7 +131,7 @@ public:
 
     void readConfig()
     {
-        KConfigGroup dialog( KGlobal::config(), "CertificateDetailsDialog" );
+        KConfigGroup dialog( KSharedConfig::openConfig(), "CertificateDetailsDialog" );
         const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
         if ( size.isValid() ) {
             q->resize( size );
@@ -139,7 +140,7 @@ public:
 
     void writeConfig()
     {
-        KConfigGroup dialog( KGlobal::config(), "CertificateDetailsDialog" );
+        KConfigGroup dialog( KSharedConfig::openConfig(), "CertificateDetailsDialog" );
         dialog.writeEntry( "Size", q->size() );
         dialog.sync();
     }
@@ -261,7 +262,7 @@ private:
         enableDisableWidgets();
     }
     void showSignatureListingErrorDialog( const Error & err ) {
-        KMessageBox::information( q, i18nc("@info",
+        KMessageBox::information( q, xi18nc("@info",
                                            "<para>An error occurred while loading the certifications: "
                                            "<message>%1</message></para>",
                                            QString::fromLocal8Bit( err.asString() ) ),
@@ -446,7 +447,7 @@ private:
             qq->setHelp(QString(), QLatin1String("kleopatra"));
             chainTW->header()->setResizeMode( 0, QHeaderView::Stretch );
 
-            dumpLTW->setFont( KGlobalSettings::fixedFont() );
+            dumpLTW->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
             dumpLTW->setMinimumVisibleLines( 15 );
             dumpLTW->setMinimumVisibleColumns( 40 );
 

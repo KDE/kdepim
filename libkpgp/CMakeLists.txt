@@ -2,6 +2,8 @@
 add_subdirectory( pics )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
+add_definitions(-DTRANSLATION_DOMAIN=\"libkpgp\")
+
 
 INCLUDE(CheckIncludeFiles)
 check_include_files(sys/poll.h HAVE_SYS_POLL_H)
@@ -10,6 +12,7 @@ configure_file(config-libkpgp.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-libkpgp
 ########### next target ###############
 
 set(kpgp_LIB_SRCS
+   kpgp_debug.cpp
    kpgpblock.cpp
    kpgpui.cpp
    kpgpkey.cpp
@@ -21,11 +24,12 @@ set(kpgp_LIB_SRCS
    kpgpbase6.cpp )
 
 
-kde4_add_library(kpgp ${LIBRARY_TYPE} ${kpgp_LIB_SRCS})
+add_library(kpgp ${LIBRARY_TYPE} ${kpgp_LIB_SRCS})
+generate_export_header(kpgp BASE_NAME libkpgp)
 
-target_link_libraries(kpgp ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBRARY} ${KDE4_KDEUI_LIBRARY})
+target_link_libraries(kpgp  KF5::I18n Qt5::Widgets KF5::WidgetsAddons KF5::ConfigCore KF5::Codecs KF5::IconThemes KF5::WindowSystem KF5::Completion KF5::CoreAddons) 
 
-set_target_properties(kpgp PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(kpgp PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS kpgp ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory( tests )

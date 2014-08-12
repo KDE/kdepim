@@ -22,10 +22,10 @@
 #include "kmkernel.h" //control center
 
 #include <klocale.h>
-#include <kstandarddirs.h>
+
 #include <kglobal.h>
-#include <kaboutdata.h>
 #include <kiconloader.h>
+#include <KLocale>
 
 #undef Status // stupid X headers
 
@@ -104,10 +104,9 @@ void insertLibraryCataloguesAndIcons() {
         "akonadi_followupreminder_agent"
     };
 
-    KLocale * l = KGlobal::locale();
+    KLocale * l = KLocale::global();
     KIconLoader * il = KIconLoader::global();
     for ( unsigned int i = 0 ; i < sizeof catalogs / sizeof *catalogs ; ++i ) {
-        l->insertCatalog( QLatin1String(catalogs[i]) );
         il->addAppDir( QLatin1String(catalogs[i]) );
     }
 

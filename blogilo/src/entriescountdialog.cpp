@@ -25,7 +25,7 @@
 #include "entriescountdialog.h"
 #include "settings.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 
 EntriesCountDialog::EntriesCountDialog( QWidget *parent )
@@ -41,7 +41,7 @@ EntriesCountDialog::~EntriesCountDialog()
 {
     Settings::setShowUpdateEntriesDialog( !ui.kcfg_remember->isChecked() );
     Settings::setUpdateEntriesCount( ui.spinCount->value() );
-    Settings::self()->writeConfig();
+    Settings::self()->save();
 }
 
 int EntriesCountDialog::count() const

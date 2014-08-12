@@ -21,10 +21,10 @@
 #ifndef INCIDENCEEDITOR_EDITORITEMMANAGER_H
 #define INCIDENCEEDITOR_EDITORITEMMANAGER_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <Akonadi/Collection>
+#include <Collection>
 #include <QObject>
 
 namespace Akonadi {

@@ -82,7 +82,7 @@ TripWidget::TripWidget(Trip *trip, QWidget *parent)
   vSplitter->addWidget(browser);
 
   QPushButton *deleteButton = new QPushButton(i18n("Delete"));
-  connect(deleteButton, SIGNAL(clicked(bool)), SLOT(doDeleteThis()));
+  connect(deleteButton, &QPushButton::clicked, this, &TripWidget::doDeleteThis);
   layout->addWidget(deleteButton);
 }
 

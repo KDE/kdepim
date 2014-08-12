@@ -57,19 +57,16 @@
 #include "mailimporter/filter_opera.h"
 #include "mailimporter/othermailerutil.h"
 
-#include <incidenceeditor-ng/globalsettings.h>
-#include <incidenceeditor-ng/incidencedialogfactory.h>
-
 #include <messagecore/utils/stringutil.h>
 #include <messagecore/helpers/messagehelpers.h>
 
 #include <messagecomposer/helper/messagehelper.h>
-
-#include <Akonadi/AgentManager>
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <QDebug>
+#include <AgentManager>
+#include <entitymimetypefiltermodel.h>
+#include <EntityTreeModel>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
 #include <Akonadi/KMime/MessageParts>
 
 #include <KMime/KMimeMessage>
@@ -79,9 +76,6 @@
 #include <KColorScheme>
 #include <KDBusServiceStarter>
 #include <KJob>
-#include <KLocale>
-#include <KMessageBox>
-#include <KTemporaryFile>
 #include <KIO/JobUiDelegate>
 
 
@@ -136,7 +130,7 @@ bool MailCommon::Util::showJobErrorMessage( KJob *job )
         if ( static_cast<KIO::Job*>( job )->ui() ) {
             static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
         } else {
-            kDebug() << " job->errorString() :"<<job->errorString();
+            qDebug() << " job->errorString() :"<<job->errorString();
         }
         return true;
     }
@@ -177,7 +171,7 @@ bool MailCommon::Util::ensureKorganizerRunning( bool switchTo )
     //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
     QDBusInterface *interface = new QDBusInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication") );
     if ( !interface->isValid() ) {
-        kDebug() << "Starting korganizer...";
+        qDebug() << "Starting korganizer...";
 
         QDBusServiceWatcher *watcher =
                 new QDBusServiceWatcher( QLatin1String("org.kde.korganizer"), QDBusConnection::sessionBus(),
@@ -186,11 +180,11 @@ bool MailCommon::Util::ensureKorganizerRunning( bool switchTo )
         watcher->connect( watcher, SIGNAL(serviceRegistered(QString)), &loop, SLOT(quit()) );
         result = QProcess::startDetached( QLatin1String("korganizer-mobile") );
         if ( result ) {
-            kDebug() << "Starting loop";
+            qDebug() << "Starting loop";
             loop.exec();
-            kDebug() << "Korganizer finished starting";
+            qDebug() << "Korganizer finished starting";
         } else {
-            kWarning() << "Failed to start korganizer with QProcess";
+            qWarning() << "Failed to start korganizer with QProcess";
         }
 
         delete watcher;
@@ -221,17 +215,17 @@ bool MailCommon::Util::ensureKorganizerRunning( bool switchTo )
                                      "org.kde.KUniqueApplication" );
             QDBusReply<bool> r = pimIface.call( "load" );
             if ( !r.isValid() || !r.value() ) {
-                kWarning() << "Loading korganizer failed: " << pimIface.lastError().message();
+                qWarning() << "Loading korganizer failed: " << pimIface.lastError().message();
             }
 #endif
         } else {
-            kWarning() << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
+            qWarning() << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
         }
 
         // We don't do anything with it, we just need it to be running so that it handles
         // the incoming directory.
     } else {
-        kWarning() << "Couldn't start DBUS/Organizer:" << dbusService << error;
+        qWarning() << "Couldn't start DBUS/Organizer:" << dbusService << error;
     }
     return result;
 }

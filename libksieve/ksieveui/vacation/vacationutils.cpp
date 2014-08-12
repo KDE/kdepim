@@ -23,7 +23,6 @@
 
 #include <KLocalizedString>
 #include <KLocale>
-#include <KGlobal>
 #include <QDate>
 
 using KMime::Types::AddrSpecList;
@@ -46,7 +45,7 @@ QString KSieveUi::VacationUtils::defaultMessageText() {
                  "\n"
                  "Yours sincerely,\n"
                  "-- \"enter your name and email address here\"\n",
-                 KGlobal::locale()->formatDate( QDate::currentDate().addDays( 1 ) ) );
+                 KLocale::global()->formatDate( QDate::currentDate().addDays( 1 ) ) );
 }
 
 int KSieveUi::VacationUtils::defaultNotificationInterval() {
@@ -92,7 +91,7 @@ bool KSieveUi::VacationUtils::parseScript( const QString &script, QString &messa
     // slave somehow omits the last \n, which results in a lone \r at
     // the end, leading to a parse error.
     const QByteArray scriptUTF8 = script.trimmed().toUtf8();
-    kDebug() << "scriptUtf8 = \"" + scriptUTF8 +"\"";
+    qDebug() << "scriptUtf8 = \"" + scriptUTF8 +"\"";
     KSieve::Parser parser( scriptUTF8.begin(),
                            scriptUTF8.begin() + scriptUTF8.length() );
     VacationDataExtractor vdx;

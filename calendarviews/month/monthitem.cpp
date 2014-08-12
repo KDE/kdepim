@@ -36,6 +36,7 @@
 #include <KCalUtils/RecurrenceActions>
 
 #include <KMessageBox>
+#include <QDebug>
 
 using namespace EventViews;
 using namespace KCalCore;
@@ -424,7 +425,7 @@ void IncidenceMonthItem::updateDates( int startOffset, int endOffset )
 {
   Akonadi::IncidenceChanger *changer = monthScene()->incidenceChanger();
   if ( !changer || ( startOffset == 0 && endOffset == 0 ) ) {
-    kDebug() << changer << startOffset << endOffset;
+    qDebug() << changer << startOffset << endOffset;
     return;
   }
 
@@ -716,7 +717,7 @@ void IncidenceMonthItem::setNewDates( const KCalCore::Incidence::Ptr &incidence,
       todo->setDtStart( start );
     } else {
       // This never happens
-      kWarning() << "Move what? uid:" << todo->uid() << "; summary=" << todo->summary();
+      qWarning() << "Move what? uid:" << todo->uid() << "; summary=" << todo->summary();
     }
   } else {
     incidence->setDtStart( incidence->dtStart().addDays( startOffset ) );

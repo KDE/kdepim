@@ -17,13 +17,14 @@
 #include "addarchivemaildialog.h"
 #include "mailcommon/folder/folderrequester.h"
 
-#include <Akonadi/Collection>
+#include <Collection>
 
 #include <KLocale>
 #include <KComboBox>
 #include <KUrlRequester>
-#include <KIntSpinBox>
+#include <QSpinBox>
 #include <KSeparator>
+#include <QIcon>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -41,7 +42,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     setButtons( Ok|Cancel );
     setDefaultButton( Ok );
     setModal( true );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
     QWidget *mainWidget = new QWidget( this );
     QGridLayout *mainLayout = new QGridLayout( mainWidget );
     mainLayout->setSpacing( KDialog::spacingHint() );
@@ -55,7 +56,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     mFolderRequester = new MailCommon::FolderRequester( mainWidget );
     mFolderRequester->setMustBeReadWrite( false );
     mFolderRequester->setNotAllowToCreateNewFolder( true );
-    connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)), SLOT(slotFolderChanged(Akonadi::Collection)) );
+    connect(mFolderRequester, &MailCommon::FolderRequester::folderChanged, this, &AddArchiveMailDialog::slotFolderChanged);
     if (info) //Don't autorize to modify folder when we just modify item.
         mFolderRequester->setEnabled( false );
     folderLabel->setBuddy( mFolderRequester );
@@ -85,7 +86,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     QLabel *pathLabel = new QLabel( i18n( "Path:" ), mainWidget );
     mainLayout->addWidget( pathLabel, row, 0 );
     mPath = new KUrlRequester(mainWidget);
-    connect(mPath, SIGNAL(textChanged(QString)), this, SLOT(slotUpdateOkButton()));
+    connect(mPath, &KUrlRequester::textChanged, this, &AddArchiveMailDialog::slotUpdateOkButton);
     mPath->setMode(KFile::Directory);
     mainLayout->addWidget(mPath);
     ++row;
@@ -113,7 +114,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
 
     QLabel *maxCountlabel = new QLabel( i18n( "Maximum number of archive:" ), mainWidget );
     mainLayout->addWidget( maxCountlabel, row, 0 );
-    mMaximumArchive = new KIntSpinBox( mainWidget );
+    mMaximumArchive = new QSpinBox( mainWidget );
     mMaximumArchive->setMinimum(0);
     mMaximumArchive->setMaximum(9999);
     mMaximumArchive->setSpecialValueText(i18n("unlimited"));

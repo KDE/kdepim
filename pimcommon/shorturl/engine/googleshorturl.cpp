@@ -20,7 +20,7 @@
 #include <QNetworkRequest>
 #include <QUrl>
 #include <QDebug>
-#include <qjson/parser.h>
+#include <QJsonDocument>
 
 
 using namespace PimCommon;
@@ -62,15 +62,12 @@ void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     if (mErrorFound)
         return;
 
-    const QString jsonData = QString::fromUtf8(reply->readAll());
-
-    QJson::Parser parser;
-    bool ok;
-    const QMap<QString, QVariant> map = parser.parse(jsonData.toUtf8(), &ok).toMap();
-    if (!ok) {
+    QJsonDocument jsonDoc = QJsonDocument::fromBinaryData(reply->readAll());
+    if (jsonDoc.isNull()) {
         qDebug()<<" Error during parsing";
         return;
     }
+    const QMap<QString, QVariant> map = jsonDoc.toVariant().toMap();
     if (map.contains(QLatin1String("id")) && map.contains(QLatin1String("kind"))) {
         Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
     }

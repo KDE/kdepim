@@ -19,10 +19,10 @@
 #define MULTIIMAPVACATIONDIALOG_H
 
 #include <KDialog>
-
+#include <QUrl>
 #include "ksieveui_export.h"
 
-class KTabWidget;
+class QTabWidget;
 class QStackedWidget;
 namespace KSieveUi {
 class VacationCreateScriptJob;
@@ -42,12 +42,12 @@ private slots:
     void slotDefaultClicked();
 
 private:
-    void createPage(const QString &serverName, const KUrl &url);
+    void createPage(const QString &serverName, const QUrl &url);
     void init();
     void readConfig();
     void writeConfig();
     QList<VacationCreateScriptJob *> mListCreateJob;
-    KTabWidget *mTabWidget;
+    QTabWidget *mTabWidget;
     QStackedWidget *mStackedWidget;
 };
 }

@@ -40,48 +40,46 @@
 #include "printing/grantlee/grantleeprintstyle.h"
 
 #include <KApplication>
-#include <KDebug>
-#include <KDialog>
-#include <KGlobal>
+#include <QDebug>
 #include <KLocalizedString>
-#include <KStandardDirs>
 
 #include <QPushButton>
 #include <QPrinter>
 #include <QDirIterator>
+#include <KSharedConfig>
+#include <QStandardPaths>
 
 using namespace KABPrinting;
 
 PrintingWizard::PrintingWizard( QPrinter *printer, QItemSelectionModel *selectionModel,
                                 QWidget *parent )
-    : KAssistantDialog( parent ), mPrinter( printer ), mStyle( 0 )
+  : KAssistantDialog( parent ), mPrinter( printer ), mStyle( 0 )
 {
-    setCaption( i18n( "Print Contacts" ) );
-    showButton( Help, false );
+  setWindowTitle( i18n( "Print Contacts" ) );
 
-    mSelectionPage = new ContactSelectionWidget( selectionModel, this );
-    mSelectionPage->setMessageText( i18n( "Which contacts do you want to print?" ) );
+  mSelectionPage = new ContactSelectionWidget( selectionModel, this );
+  mSelectionPage->setMessageText( i18n( "Which contacts do you want to print?" ) );
 
-    KPageWidgetItem *mSelectionPageItem =
-            new KPageWidgetItem( mSelectionPage, i18n( "Choose Contacts to Print" ) );
-    addPage( mSelectionPageItem );
-    setAppropriate( mSelectionPageItem, true );
+  KPageWidgetItem *mSelectionPageItem =
+    new KPageWidgetItem( mSelectionPage, i18n( "Choose Contacts to Print" ) );
+  addPage( mSelectionPageItem );
+  setAppropriate( mSelectionPageItem, true );
 
-    mStylePage = new StylePage( this );
-    connect( mStylePage, SIGNAL(styleChanged(int)), SLOT(slotStyleSelected(int)) );
-    addPage( mStylePage, i18n( "Choose Printing Style" ) );
+  mStylePage = new StylePage( this );
+  connect( mStylePage, SIGNAL(styleChanged(int)), SLOT(slotStyleSelected(int)) );
+  addPage( mStylePage, i18n( "Choose Printing Style" ) );
 
-    registerStyles();
+  registerStyles();
 
-    if ( mStyleFactories.count() > Settings::self()->printingStyle() ) {
-        mStylePage->setPrintingStyle( Settings::self()->printingStyle() ); // should emit styleChanged
-        slotStyleSelected( Settings::self()->printingStyle() );
-    }
+  if ( mStyleFactories.count() > Settings::self()->printingStyle() ) {
+    mStylePage->setPrintingStyle( Settings::self()->printingStyle() ); // should emit styleChanged
+    slotStyleSelected( Settings::self()->printingStyle() );
+  }
 
-    mStylePage->setSortOrder( Settings::self()->sortOrder() == 0 ?
-                                  Qt::AscendingOrder :
-                                  Qt::DescendingOrder );
-    readConfig();
+  mStylePage->setSortOrder( Settings::self()->sortOrder() == 0 ?
+                              Qt::AscendingOrder :
+                              Qt::DescendingOrder );
+  readConfig();
 }
 
 PrintingWizard::~PrintingWizard()
@@ -91,7 +89,7 @@ PrintingWizard::~PrintingWizard()
 
 void PrintingWizard::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "PrintingWizard" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "PrintingWizard" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -100,30 +98,30 @@ void PrintingWizard::readConfig()
 
 void PrintingWizard::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "PrintingWizard" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "PrintingWizard" );
     grp.writeEntry( "Size", size() );
     grp.sync();
 }
 
 void PrintingWizard::setDefaultAddressBook( const Akonadi::Collection &addressBook )
 {
-    mSelectionPage->setDefaultAddressBook( addressBook );
+  mSelectionPage->setDefaultAddressBook( addressBook );
 }
 
 void PrintingWizard::accept()
 {
-    print();
-    close();
-    setResult(QDialog::Accepted);
+  print();
+  close();
+  setResult(QDialog::Accepted);
 }
 
 void PrintingWizard::loadGrantleeStyle()
 {
     const QString relativePath = QLatin1String("kaddressbook/printing/themes/");
-    QStringList themesDirectories = KGlobal::dirs()->findDirs("data", relativePath);
+    QStringList themesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, relativePath, QStandardPaths::LocateDirectory);
     if (themesDirectories.count() < 2) {
         //Make sure to add local directory
-        const QString localDirectory = KStandardDirs::locateLocal("data", relativePath);
+        const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativePath;
         if (!themesDirectories.contains(localDirectory)) {
             themesDirectories.append(localDirectory);
         }
@@ -160,79 +158,80 @@ void PrintingWizard::loadGrantleeStyle()
 
 void PrintingWizard::registerStyles()
 {
-    mStyleFactories.append( new DetailledPrintStyleFactory( this ) );
-    mStyleFactories.append( new MikesStyleFactory( this ) );
-    mStyleFactories.append( new RingBinderPrintStyleFactory( this ) );
-    mStyleFactories.append( new CompactStyleFactory( this ) );
+  mStyleFactories.append( new DetailledPrintStyleFactory( this ) );
+  mStyleFactories.append( new MikesStyleFactory( this ) );
+  mStyleFactories.append( new RingBinderPrintStyleFactory( this ) );
+  mStyleFactories.append( new CompactStyleFactory( this ) );
 
-    loadGrantleeStyle();
+  loadGrantleeStyle();
 
-    mStylePage->clearStyleNames();
-    for ( int i = 0; i < mStyleFactories.count(); ++i ) {
-        mStylePage->addStyleName( mStyleFactories.at( i )->description() );
-    }
+  mStylePage->clearStyleNames();
+  for ( int i = 0; i < mStyleFactories.count(); ++i ) {
+    mStylePage->addStyleName( mStyleFactories.at( i )->description() );
+  }
 }
 
 void PrintingWizard::slotStyleSelected( int index )
 {
-    if ( index < 0 || index >= mStyleFactories.count() ) {
-        return;
-    }
+  if ( index < 0 || index >= mStyleFactories.count() ) {
+    return;
+  }
 
-    if ( mStyle ) {
-        mStyle->hidePages();
-    }
+  if ( mStyle ) {
+    mStyle->hidePages();
+  }
 
-    mStyle = mStyleList.value( index );
-    if ( !mStyle ) {
-        PrintStyleFactory *factory = mStyleFactories.at( index );
-        kDebug() << "creating print style" << factory->description();
+  mStyle = mStyleList.value( index );
+  if ( !mStyle ) {
+    PrintStyleFactory *factory = mStyleFactories.at( index );
+    qDebug() << "creating print style" << factory->description();
 
-        mStyle = factory->create();
-        mStyleList.insert( index, mStyle );
-    }
+    mStyle = factory->create();
+    mStyleList.insert( index, mStyle );
+  }
 
-    mStyle->showPages();
+  mStyle->showPages();
 
-    mStylePage->setPreview( mStyle->preview() );
+  mStylePage->setPreview( mStyle->preview() );
 
-    mStylePage->setSortField( mStyle->preferredSortField() );
-    mStylePage->setSortOrder( mStyle->preferredSortOrder() );
+  mStylePage->setSortField( mStyle->preferredSortField() );
+  mStylePage->setSortOrder( mStyle->preferredSortOrder() );
 }
 
 QPrinter *PrintingWizard::printer()
 {
-    return mPrinter;
+  return mPrinter;
 }
 
 int PrintingWizard::printingStyle() const
 {
-    return mStylePage->printingStyle();
+  return mStylePage->printingStyle();
 }
 
 int PrintingWizard::sortOrder() const
 {
-    return mStylePage->sortOrder();
+  return mStylePage->sortOrder();
 }
 
 void PrintingWizard::print()
 {
-    // create and show print progress widget:
-    mProgress = new PrintProgress( this );
-    KPageWidgetItem *progressItem = new KPageWidgetItem( mProgress, i18n( "Print Progress" ) );
-    addPage( progressItem );
-    setCurrentPage( progressItem );
-    kapp->processEvents();
+  // create and show print progress widget:
+  mProgress = new PrintProgress( this );
+  KPageWidgetItem *progressItem = new KPageWidgetItem( mProgress, i18n( "Print Progress" ) );
+  addPage( progressItem );
+  setCurrentPage( progressItem );
+  kapp->processEvents();
 
-    KABC::Addressee::List contacts = mSelectionPage->selectedContacts();
+  KABC::Addressee::List contacts = mSelectionPage->selectedContacts();
 
-    const ContactSorter sorter( mStylePage->sortField(), mStylePage->sortOrder() );
-    sorter.sort( contacts );
+  const ContactSorter sorter( mStylePage->sortField(), mStylePage->sortOrder() );
+  sorter.sort( contacts );
 
-    kDebug() <<"printing" << contacts.count() << "contacts.";
-    // ... print:
-    enableButton( KDialog::User3, false ); // back button
-    enableButton( KDialog::Cancel, false );
-    mStyle->print( contacts, mProgress );
+  qDebug() <<"printing" << contacts.count() << "contacts.";
+  // ... print:
+  backButton()->setEnabled(false);
+
+  button(QDialogButtonBox::Cancel)->setEnabled(false);
+  mStyle->print( contacts, mProgress );
 }
 

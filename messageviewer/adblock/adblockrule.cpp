@@ -35,7 +35,7 @@
 #include "adblockrulenullimpl.h"
 #include "adblockruletextmatchimpl.h"
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace MessageViewer;
 AdBlockRule::AdBlockRule(const QString &filter)
@@ -74,7 +74,7 @@ bool AdBlockRule::match(const QNetworkRequest &request, const QString &encodedUr
     Q_ASSERT(encodedUrl.toLower() == encodedUrlLowerCase);
     const bool b = m_implementation->match(request, encodedUrl, encodedUrlLowerCase);
     if (b) {
-        kDebug() << m_implementation->ruleType() << ": rule string = " << m_implementation->ruleString();
+        qDebug() << m_implementation->ruleType() << ": rule string = " << m_implementation->ruleString();
     }
     return b;
 }

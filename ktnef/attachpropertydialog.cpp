@@ -23,16 +23,18 @@
 #include <KTNEF/KTNEFDefs>
 
 #include <KApplication>
-#include <KDebug>
+#include <QDebug>
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KMimeType>
+
 
 #include <QBuffer>
 #include <QDataStream>
-#include <QLabel>
 #include <QTreeWidget>
+#include <KSharedConfig>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 AttachPropertyDialog::AttachPropertyDialog( QWidget *parent )
   : KDialog( parent ),
@@ -46,7 +48,7 @@ AttachPropertyDialog::AttachPropertyDialog( QWidget *parent )
   mUI.setupUi( mainWidget );
   mUI.mProperties->setHeaderHidden( true );
   setMainWidget( mainWidget );
-  connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSave()));
+  connect(this, &AttachPropertyDialog::user1Clicked, this, &AttachPropertyDialog::slotSave);
   readConfig();
 }
 
@@ -57,7 +59,7 @@ AttachPropertyDialog::~AttachPropertyDialog()
 
 void AttachPropertyDialog::readConfig()
 {
-  KConfigGroup group( KGlobal::config(), "AttachPropertyDialog" );
+  KConfigGroup group( KSharedConfig::openConfig(), "AttachPropertyDialog" );
   const QSize size = group.readEntry( "Size", QSize(500, 400) );
   if ( size.isValid() ) {
     resize( size );
@@ -66,7 +68,7 @@ void AttachPropertyDialog::readConfig()
 
 void AttachPropertyDialog::writeConfig()
 {
-  KConfigGroup group( KGlobal::config(), "AttachPropertyDialog" );
+  KConfigGroup group( KSharedConfig::openConfig(), "AttachPropertyDialog" );
   group.writeEntry( "Size", size() );
   group.sync();
 }
@@ -84,14 +86,15 @@ void AttachPropertyDialog::setAttachment( KTNEFAttach *attach )
   s.setNum( attach->size() );
   s.append( i18n(" bytes") );
   mUI.mSize->setText( s );
-  KMimeType::Ptr mimetype = KMimeType::mimeType( attach->mimeTag() );
+  QMimeDatabase db;
+  QMimeType mimetype = db.mimeTypeForName( attach->mimeTag() );
   QPixmap pix = loadRenderingPixmap( attach, kapp->palette().color( QPalette::Background ) );
   if ( !pix.isNull() ) {
     mUI.mIcon->setPixmap( pix );
   } else {
-    mUI.mIcon->setPixmap( mimetype->iconName() );
+    mUI.mIcon->setPixmap( mimetype.iconName() );
   }
-  mUI.mDescription->setText( mimetype->comment() );
+  mUI.mDescription->setText( mimetype.comment() );
   s.setNum( attach->index() );
   mUI.mIndex->setText( s );
 
@@ -115,7 +118,7 @@ void AttachPropertyDialog::formatProperties( const QMap<int,KTNEFProperty*>& pro
     } else if ( item ) {
       newItem = new QTreeWidgetItem( item, QStringList( ( *it )->keyString() ) );
     } else {
-      kWarning() << "formatProperties() called with no listview and no item";
+      qWarning() << "formatProperties() called with no listview and no item";
       return;
     }
 

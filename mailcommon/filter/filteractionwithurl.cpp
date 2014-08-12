@@ -19,7 +19,7 @@
 
 #include "filteractionwithurl.h"
 
-#include <KDE/KUrlRequester>
+#include <KUrlRequester>
 
 #include <QTextDocument>
 
@@ -79,7 +79,7 @@ QString FilterActionWithUrl::argsAsString() const
 
 QString FilterActionWithUrl::displayString() const
 {
-    return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + argsAsString().toHtmlEscaped() + QLatin1String( "\"" );
 }
 
 

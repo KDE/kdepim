@@ -21,23 +21,18 @@
 #include "kalarm.h"
 #include "newalarmaction.h"
 
-#ifdef USE_AKONADI
 #include "akonadimodel.h"
 #include "collectionmodel.h"
 #include "itemlistmodel.h"
-#else
-#include "alarmresources.h"
-#include "eventlistmodel.h"
-#endif
 #include "functions.h"
 #include "shellprocess.h"
 #include "templatemenuaction.h"
 
-#include <kmenu.h>
+#include <QMenu>
 #include <kactionmenu.h>
 #include <klocale.h>
 #include <kstandardshortcut.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 using namespace KAlarmCal;
 
@@ -53,19 +48,19 @@ using namespace KAlarmCal;
 
 
 NewAlarmAction::NewAlarmAction(bool templates, const QString& label, QObject* parent)
-    : KActionMenu(KIcon(QLatin1String("document-new")), label, parent),
+    : KActionMenu(QIcon::fromTheme(QLatin1String("document-new")), label, parent),
       mTemplateAction(0)
 {
-    mDisplayAction = new KAction(KIcon(DISP_ICON), (templates ? i18nc("@item:inmenu", "&Display Alarm Template") : i18nc("@action", "New Display Alarm")), parent);
+    mDisplayAction = new QAction(QIcon::fromTheme(DISP_ICON), (templates ? i18nc("@item:inmenu", "&Display Alarm Template") : i18nc("@action", "New Display Alarm")), parent);
     menu()->addAction(mDisplayAction);
     mTypes[mDisplayAction] = EditAlarmDlg::DISPLAY;
-    mCommandAction = new KAction(KIcon(CMD_ICON), (templates ? i18nc("@item:inmenu", "&Command Alarm Template") : i18nc("@action", "New Command Alarm")), parent);
+    mCommandAction = new QAction(QIcon::fromTheme(CMD_ICON), (templates ? i18nc("@item:inmenu", "&Command Alarm Template") : i18nc("@action", "New Command Alarm")), parent);
     menu()->addAction(mCommandAction);
     mTypes[mCommandAction] = EditAlarmDlg::COMMAND;
-    mEmailAction = new KAction(KIcon(MAIL_ICON), (templates ? i18nc("@item:inmenu", "&Email Alarm Template") : i18nc("@action", "New Email Alarm")), parent);
+    mEmailAction = new QAction(QIcon::fromTheme(MAIL_ICON), (templates ? i18nc("@item:inmenu", "&Email Alarm Template") : i18nc("@action", "New Email Alarm")), parent);
     menu()->addAction(mEmailAction);
     mTypes[mEmailAction] = EditAlarmDlg::EMAIL;
-    mAudioAction = new KAction(KIcon(AUDIO_ICON), (templates ? i18nc("@item:inmenu", "&Audio Alarm Template") : i18nc("@action", "New Audio Alarm")), parent);
+    mAudioAction = new QAction(QIcon::fromTheme(AUDIO_ICON), (templates ? i18nc("@item:inmenu", "&Audio Alarm Template") : i18nc("@action", "New Audio Alarm")), parent);
     menu()->addAction(mAudioAction);
     mTypes[mAudioAction] = EditAlarmDlg::AUDIO;
     if (!templates)
@@ -76,15 +71,10 @@ NewAlarmAction::NewAlarmAction(bool templates, const QString& label, QObject* pa
         mAudioAction->setShortcut(AUDIO_KEY);
 
         // Include New From Template only in non-template menu
-        mTemplateAction = new TemplateMenuAction(KIcon(TEMPLATE_ICON), i18nc("@action", "New Alarm From &Template"), parent);
+        mTemplateAction = new TemplateMenuAction(QIcon::fromTheme(TEMPLATE_ICON), i18nc("@action", "New Alarm From &Template"), parent);
         menu()->addAction(mTemplateAction);
-#ifdef USE_AKONADI
         connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(Akonadi::Collection,AkonadiModel::Change,QVariant,bool)), SLOT(slotCalendarStatusChanged()));
         connect(TemplateListModel::all(), SIGNAL(haveEventsStatus(bool)), SLOT(slotCalendarStatusChanged()));
-#else
-        connect(AlarmResources::instance(), SIGNAL(resourceStatusChanged(AlarmResource*,AlarmResources::Change)), SLOT(slotCalendarStatusChanged()));
-        connect(EventListModel::templates(), SIGNAL(haveEventsStatus(bool)), SLOT(slotCalendarStatusChanged()));
-#endif
         slotCalendarStatusChanged();   // initialise action states
     }
     setDelayed(false);
@@ -118,13 +108,8 @@ void NewAlarmAction::slotSelected(QAction* action)
 void NewAlarmAction::slotCalendarStatusChanged()
 {
     // Find whether there are any writable active alarm calendars
-#ifdef USE_AKONADI
     bool active = !CollectionControlModel::enabledCollections(CalEvent::ACTIVE, true).isEmpty();
     bool haveEvents = TemplateListModel::all()->haveEvents();
-#else
-    bool active = AlarmResources::instance()->activeCount(CalEvent::ACTIVE, true);
-    bool haveEvents = EventListModel::templates()->haveEvents();
-#endif
     mTemplateAction->setEnabled(active && haveEvents);
     setEnabled(active);
 }

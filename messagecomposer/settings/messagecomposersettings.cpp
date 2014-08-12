@@ -33,7 +33,7 @@ MessageComposerSettings *MessageComposerSettings::self()
 {
     if ( !mSelf ) {
         mSelf = new MessageComposerSettings();
-        mSelf->readConfig();
+        mSelf->load();
     }
 
     return mSelf;

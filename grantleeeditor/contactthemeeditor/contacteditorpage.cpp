@@ -23,20 +23,22 @@
 #include "themesession.h"
 #include "themeeditortabwidget.h"
 
-#include <knewstuff3/uploaddialog.h>
+#include <kns3/uploaddialog.h>
 
 #include <KLocalizedString>
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KZip>
-#include <KTempDir>
-#include <KDebug>
+#include <QTemporaryDir>
+#include <QDebug>
 #include <KMessageBox>
 #include <KFileDialog>
+#include <KUrl>
 
 #include <QHBoxLayout>
 #include <QDir>
 #include <QPointer>
 #include <QDebug>
+#include <QFileDialog>
 
 ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
     : QWidget(parent),
@@ -45,12 +47,12 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new GrantleeThemeEditor::ThemeEditorTabWidget;
-    connect(mTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentWidgetChanged(QWidget*)));
+    connect(mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::currentChanged, this, &ContactEditorPage::slotCurrentWidgetChanged);
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     mEditorPage->setPageFileName(QLatin1String("contact.html"));
-    connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
-    connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
+    connect(mEditorPage, &EditorPage::needUpdateViewer, this, &ContactEditorPage::slotUpdateViewer);
+    connect(mEditorPage, &EditorPage::changed, this, &ContactEditorPage::slotChanged);
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (contact.html)"));
 
     mEditorEmbeddedPage = createCustomPage(QLatin1String("contact_embedded.html"));
@@ -66,8 +68,8 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
 
-    connect(mDesktopPage, SIGNAL(changed()), SLOT(slotChanged()));
-    connect(mTabWidget, SIGNAL(tabCloseRequested(int)), SLOT(slotCloseTab(int)));
+    connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::changed, this, &ContactEditorPage::slotChanged);
+    connect(mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::tabCloseRequested, this, &ContactEditorPage::slotCloseTab);
     setLayout(lay);
 }
 
@@ -117,7 +119,7 @@ void ContactEditorPage::insertFile()
         return;
     GrantleeThemeEditor::EditorPage * page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
     if (page) {
-        const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
+        const QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), QLatin1String("*"));
         if (!fileName.isEmpty()) {
             page->insertFile(fileName);
         }
@@ -161,15 +163,15 @@ void ContactEditorPage::uploadTheme()
 {
     //force update for screenshot
     mEditorPage->preview()->updateViewer();
-    KTempDir tmp;
+    QTemporaryDir tmp;
     const QString themename = mDesktopPage->themeName();
-    const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");
+    const QString zipFileName = tmp.path() + QDir::separator() + themename + QLatin1String(".zip");
     KZip *zip = new KZip(zipFileName);
     if (zip->open(QIODevice::WriteOnly)) {
 
         //TODO reactivate it when we will be able to create a preview
-        const QString previewContactFileName = tmp.name() + QDir::separator() + themename + QLatin1String("contact_preview.png");
-        const QString previewContactGroupFileName = tmp.name() + QDir::separator() + themename + QLatin1String("contactgroup_preview.png");
+        const QString previewContactFileName = tmp.path() + QDir::separator() + themename + QLatin1String("contact_preview.png");
+        const QString previewContactGroupFileName = tmp.path() + QDir::separator() + themename + QLatin1String("contactgroup_preview.png");
         QStringList lst;
         lst << previewContactFileName << previewContactGroupFileName;
 
@@ -200,7 +202,7 @@ void ContactEditorPage::uploadTheme()
         dialog->exec();
         delete dialog;
     } else {
-        kDebug()<<" We can't open in zip write mode";
+        qDebug()<<" We can't open in zip write mode";
     }
     delete zip;
 }
@@ -221,7 +223,7 @@ void ContactEditorPage::createZip(const QString &themeName, KZip *zip)
 
 void ContactEditorPage::addExtraPage()
 {
-    QString filename = KInputDialog::getText(i18n("Filename of extra page"), i18n("Filename:"));
+    QString filename = QInputDialog::getText(this, i18n("Filename of extra page"), i18n("Filename:"));
     if (!filename.isEmpty()) {
         if (!filename.endsWith(QLatin1String(".html")) && !filename.endsWith(QLatin1String(".css")) && !filename.endsWith(QLatin1String(".js"))) {
             filename += QLatin1String(".html");
@@ -235,7 +237,7 @@ void ContactEditorPage::addExtraPage()
 EditorPage *ContactEditorPage::createCustomPage(const QString &filename)
 {
     EditorPage *customPage = new EditorPage(EditorPage::SecondPage, QString());
-    connect(customPage, SIGNAL(changed()), SLOT(slotChanged()));
+    connect(customPage, &EditorPage::changed, this, &ContactEditorPage::slotChanged);
     customPage->setPageFileName(filename);
     mTabWidget->addTab(customPage, filename);
     return customPage;
@@ -245,7 +247,7 @@ EditorPage *ContactEditorPage::createCustomPage(const QString &filename)
 EditorPage *ContactEditorPage::createExtraPage(const QString &filename)
 {
     EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
-    connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
+    connect(extraPage, &EditorPage::changed, this, &ContactEditorPage::slotChanged);
     extraPage->setPageFileName(filename);
     mTabWidget->addTab(extraPage, filename);
     mTabWidget->setCurrentWidget(extraPage);
@@ -324,9 +326,12 @@ QString ContactEditorPage::projectDirectory() const
     return mThemeSession->projectDirectory();
 }
 
-void ContactEditorPage::slotCurrentWidgetChanged(QWidget *w)
+void ContactEditorPage::slotCurrentWidgetChanged(int index)
 {
-    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    if (index < 0)
+       return;
+    
+    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(mTabWidget->widget(index));
     Q_EMIT canInsertFile(page);
 }
 

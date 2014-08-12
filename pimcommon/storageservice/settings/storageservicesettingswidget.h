@@ -26,7 +26,7 @@
 class QListWidget;
 class QPushButton;
 class QLabel;
-class KTextBrowser;
+class QTextBrowser;
 class QStackedWidget;
 namespace PimCommon {
 class StorageListWidgetItem;
@@ -68,7 +68,7 @@ private:
     QList<PimCommon::StorageServiceAbstract::Capability> mNeedCapability;
     QMap<QString, PimCommon::StorageServiceAbstract *> mListStorageService;
     QListWidget *mListService;
-    KTextBrowser *mDescription;
+    QTextBrowser *mDescription;
     QPushButton *mAddService;
     QPushButton *mRemoveService;
     QPushButton *mModifyService;

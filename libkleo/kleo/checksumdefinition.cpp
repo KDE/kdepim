@@ -37,10 +37,8 @@
 
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KConfig>
 #include <KShell>
-#include <KStandardDirs>
 
 #include <QString>
 #include <QStringList>
@@ -52,6 +50,8 @@
 #include <QCoreApplication>
 
 #include <boost/shared_ptr.hpp>
+#include <KSharedConfig>
+#include <QStandardPaths>
 
 #ifdef stdin
 # undef stdin // pah..
@@ -165,7 +165,7 @@ static void parse_command( QString cmdline, const QString & id, const QString & 
     if ( fi1.isAbsolute() )
         *command = try_extensions( l.front() );
     else
-        *command = KStandardDirs::findExe( fi1.fileName() );
+        *command = QStandardPaths::findExecutable( fi1.fileName() );
     if ( command->isEmpty() )
         throw ChecksumDefinitionError( id, i18n("'%1' empty or not found", whichCommand) );
     const int idx1 = l.indexOf( FILE_PLACEHOLDER );
@@ -361,7 +361,7 @@ std::vector< shared_ptr<ChecksumDefinition> > ChecksumDefinition::getChecksumDef
 
 // static
 shared_ptr<ChecksumDefinition> ChecksumDefinition::getDefaultChecksumDefinition( const std::vector< shared_ptr<ChecksumDefinition> > & checksumDefinitions ) {
-    const KConfigGroup group( KGlobal::config(), "ChecksumOperations" );
+    const KConfigGroup group( KSharedConfig::openConfig(), "ChecksumOperations" );
     const QString checksumDefinitionId = group.readEntry( CHECKSUM_DEFINITION_ID_ENTRY );
     if ( !checksumDefinitionId.isEmpty() )
         Q_FOREACH( const shared_ptr<ChecksumDefinition> & cd, checksumDefinitions )
@@ -377,7 +377,7 @@ shared_ptr<ChecksumDefinition> ChecksumDefinition::getDefaultChecksumDefinition(
 void ChecksumDefinition::setDefaultChecksumDefinition( const shared_ptr<ChecksumDefinition> & checksumDefinition ) {
     if ( !checksumDefinition )
         return;
-    KConfigGroup group( KGlobal::config(), "ChecksumOperations" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ChecksumOperations" );
     group.writeEntry( CHECKSUM_DEFINITION_ID_ENTRY, checksumDefinition->id() );
     group.sync();
 }

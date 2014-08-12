@@ -28,26 +28,27 @@
 
 #include <akonadi_next/quotacolorproxymodel.h>
 
-#include <libkdepim/misc/statisticsproxymodel.h>
+#include <AkonadiCore/statisticsproxymodel.h>
 
 #include <messageviewer/settings/globalsettings.h>
 
 #include <messagecore/settings/globalsettings.h>
 
-#include <Akonadi/AttributeFactory>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/Collection>
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/EntityTreeView>
-#include <Akonadi/ETMViewStateSaver>
-#include <Akonadi/ItemFetchScope>
+#include <AttributeFactory>
+#include <ChangeRecorder>
+#include <Collection>
+#include <EntityMimeTypeFilterModel>
+#include <EntityTreeModel>
+#include <EntityTreeView>
+#include <ETMViewStateSaver>
+#include <ItemFetchScope>
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
-
+#include <KGlobalSettings>
 #include <QKeyEvent>
 #include <QLabel>
+#include <QFontDatabase>
 
 namespace MailCommon {
 
@@ -69,12 +70,12 @@ public:
 
     QString filter;
     QString oldFilterStr;
-    KPIM::StatisticsProxyModel *filterModel;
+    Akonadi::StatisticsProxyModel *filterModel;
     FolderTreeView *folderTreeView;
     Akonadi::QuotaColorProxyModel *quotaModel;
     FolderTreeWidgetProxyModel *readableproxy;
     EntityCollectionOrderProxyModel *entityOrderProxy;
-    KLineEdit *filterFolderLineEdit;
+    QLineEdit *filterFolderLineEdit;
     QPointer<Akonadi::ETMViewStateSaver> saver;
     QStringList expandedItems;
     QString currentItem;
@@ -102,9 +103,10 @@ FolderTreeWidget::FolderTreeWidget(
     d->label = new QLabel( i18n( "You can start typing to filter the list of folders." ), this );
     lay->addWidget( d->label );
 
-    d->filterFolderLineEdit = new KLineEdit( this );
-    d->filterFolderLineEdit->setClearButtonShown( true );
-    d->filterFolderLineEdit->setClickMessage(
+    d->filterFolderLineEdit = new QLineEdit( this );
+
+    d->filterFolderLineEdit->setClearButtonEnabled( true );
+    d->filterFolderLineEdit->setPlaceholderText(
                 i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
                        "Search" ) );
     lay->addWidget( d->filterFolderLineEdit );
@@ -113,7 +115,7 @@ FolderTreeWidget::FolderTreeWidget(
     d->quotaModel = new Akonadi::QuotaColorProxyModel( this );
     d->quotaModel->setSourceModel( KernelIf->collectionModel() );
 
-    d->filterModel = new KPIM::StatisticsProxyModel( this );
+    d->filterModel = new Akonadi::StatisticsProxyModel( this );
     d->filterModel->setSourceModel( d->quotaModel );
 
     d->readableproxy = new FolderTreeWidgetProxyModel( this, optReadableProxy );
@@ -265,7 +267,7 @@ void FolderTreeWidget::slotGeneralFontChanged()
 {
     // Custom/System font support
     if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-        setFont( KGlobalSettings::generalFont() );
+        setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
     }
 }
 
@@ -280,9 +282,9 @@ void FolderTreeWidget::readConfig()
     // Custom/System font support
     if ( !MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
         KConfigGroup fontConfig( KernelIf->config(), "Fonts" );
-        setFont( fontConfig.readEntry( "folder-font", KGlobalSettings::generalFont() ) );
+        setFont( fontConfig.readEntry( "folder-font", QFontDatabase::systemFont(QFontDatabase::GeneralFont) ) );
     } else {
-        setFont( KGlobalSettings::generalFont() );
+        setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
     }
 
     d->folderTreeView->readConfig();
@@ -340,7 +342,7 @@ void FolderTreeWidget::readQuotaConfig()
     quotaWarningParameters( quotaColor, threshold );
 }
 
-KPIM::StatisticsProxyModel *FolderTreeWidget::statisticsProxyModel() const
+Akonadi::StatisticsProxyModel *FolderTreeWidget::statisticsProxyModel() const
 {
     return d->filterModel;
 }
@@ -355,7 +357,7 @@ EntityCollectionOrderProxyModel *FolderTreeWidget::entityOrderProxy() const
     return d->entityOrderProxy;
 }
 
-KLineEdit *FolderTreeWidget::filterFolderLineEdit() const
+QLineEdit *FolderTreeWidget::filterFolderLineEdit() const
 {
     return d->filterFolderLineEdit;
 }

@@ -19,7 +19,7 @@
 
 #include <KLocalizedString>
 #include <KComboBox>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KDateComboBox>
 #include <KTimeComboBox>
 
@@ -28,6 +28,7 @@
 #include <QStackedWidget>
 #include <QSpinBox>
 #include <QDebug>
+#include <QDate>
 
 Q_DECLARE_METATYPE(KSieveUi::SelectDateWidget::DateType)
 
@@ -71,7 +72,7 @@ void SelectDateWidget::initialize()
     mStackWidget = new QStackedWidget;
     lay->addWidget(mStackWidget);
 
-    mDateLineEdit = new KLineEdit;
+    mDateLineEdit = new QLineEdit;
     mStackWidget->addWidget(mDateLineEdit);
     connect(mDateLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
 

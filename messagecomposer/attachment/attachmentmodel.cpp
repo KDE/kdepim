@@ -24,16 +24,17 @@
 #include <QMimeData>
 #include <QUrl>
 
-#include <KDebug>
-#include <KGlobal>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KLocale>
-#include <KTempDir>
+#include <QTemporaryDir>
 
+#include <kmime/kmime_headers.h>
 #include <kmime/kmime_util.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
-#include <kpimutils/kfileio.h>
+#include <KPIMUtils/kpimutils/kfileio.h>
+#include <KFormat>
 
 using namespace MessageComposer;
 using namespace MessageCore;
@@ -61,7 +62,7 @@ public:
     bool encryptSelected;
     bool signSelected;
     bool autoDisplayEnabled;
-    QList<KTempDir*> tempDirs;
+    QList<QTemporaryDir*> tempDirs;
 };
 
 AttachmentModel::Private::Private( AttachmentModel *qq )
@@ -112,7 +113,7 @@ bool AttachmentModel::dropMimeData( const QMimeData *data, Qt::DropAction action
     Q_UNUSED( column );
     Q_UNUSED( parent );
 
-    kDebug() << "data has formats" << data->formats()
+    qDebug() << "data has formats" << data->formats()
              << "urls" << data->urls()
              << "action" << int( action );
 
@@ -144,13 +145,13 @@ bool AttachmentModel::dropMimeData( const QMimeData *data, Qt::DropAction action
 
 QMimeData *AttachmentModel::mimeData( const QModelIndexList &indexes ) const
 {
-    kDebug();
+    qDebug();
     QList<QUrl> urls;
     foreach( const QModelIndex &index, indexes ) {
         if( index.column() != 0 ) {
             // Avoid processing the same attachment more than once, since the entire
             // row is selected.
-            kWarning() << "column != 0. Possibly duplicate rows passed to mimeData().";
+            qWarning() << "column != 0. Possibly duplicate rows passed to mimeData().";
             continue;
         }
 
@@ -163,9 +164,9 @@ QMimeData *AttachmentModel::mimeData( const QModelIndexList &indexes ) const
             attachmentName = i18n( "unnamed attachment" );
         }
 
-        KTempDir *tempDir = new KTempDir; // Will remove the directory on destruction.
+        QTemporaryDir *tempDir = new QTemporaryDir; // Will remove the directory on destruction.
         d->tempDirs.append( tempDir );
-        const QString fileName = tempDir->name() + attachmentName;
+        const QString fileName = tempDir->path() + attachmentName;
         KPIMUtils::kByteArrayToFile( part->data(),
                                      fileName,
                                      false, false, false );
@@ -173,7 +174,7 @@ QMimeData *AttachmentModel::mimeData( const QModelIndexList &indexes ) const
         QUrl url;
         url.setScheme( QLatin1String( "file" ) );
         url.setPath( fileName );
-        kDebug() << url;
+        qDebug() << url;
         urls.append( url );
     }
 
@@ -279,7 +280,7 @@ QVariant AttachmentModel::data( const QModelIndex &index, int role ) const
         case NameColumn:
             return QVariant::fromValue( part->name().isEmpty() ? part->fileName() : part->name() );
         case SizeColumn:
-            return QVariant::fromValue( KGlobal::locale()->formatByteSize( part->size() ) );
+            return QVariant::fromValue( KFormat().formatByteSize( part->size() ) );
         case EncodingColumn:
             return QVariant::fromValue( KMime::nameForEncoding( part->encoding() ) );
         case MimeTypeColumn:
@@ -304,13 +305,13 @@ QVariant AttachmentModel::data( const QModelIndex &index, int role ) const
         if( index.column() == 0 ) {
             return QVariant::fromValue( part );
         } else {
-            kWarning() << "AttachmentPartRole and column != 0.";
+            qWarning() << "AttachmentPartRole and column != 0.";
             return QVariant();
         }
     } else if ( role == NameRole ) {
         return QVariant::fromValue( part->fileName().isEmpty() ? part->name() : part->fileName() );
     } else if ( role == SizeRole ) {
-        return QVariant::fromValue( KGlobal::locale()->formatByteSize( part->size() ) );
+        return QVariant::fromValue( KFormat().formatByteSize( part->size() ) );
     } else if ( role == EncodingRole ) {
         return QVariant::fromValue( KMime::nameForEncoding( part->encoding() ) );
     } else if ( role == MimeTypeRole ) {
@@ -380,7 +381,7 @@ bool AttachmentModel::updateAttachment( AttachmentPart::Ptr part )
 {
     int idx = d->parts.indexOf( part );
     if( idx == -1 ) {
-        kWarning() << "Tried to update non-existent part.";
+        qWarning() << "Tried to update non-existent part.";
         return false;
     }
     // Emit dataChanged() for the whole row.
@@ -394,7 +395,7 @@ bool AttachmentModel::replaceAttachment( AttachmentPart::Ptr oldPart, Attachment
 
     int idx = d->parts.indexOf( oldPart );
     if( idx == -1 ) {
-        kWarning() << "Tried to replace non-existent part.";
+        qWarning() << "Tried to replace non-existent part.";
         return false;
     }
     d->parts[ idx ] = newPart;
@@ -407,7 +408,7 @@ bool AttachmentModel::removeAttachment( AttachmentPart::Ptr part )
 {
     int idx = d->parts.indexOf( part );
     if( idx < 0 ) {
-        kWarning() << "Attachment not found.";
+        qWarning() << "Attachment not found.";
         return false;
     }
 
@@ -465,7 +466,7 @@ QVariant AttachmentModel::headerData( int section, Qt::Orientation orientation, 
     case AutoDisplayColumn:
         return i18nc( "@title column attachment inlined checkbox.", "Suggest Automatic Display" );
     default:
-        kWarning() << "Bad column" << section;
+        qWarning() << "Bad column" << section;
         return QVariant();
     };
 }
@@ -478,7 +479,7 @@ QModelIndex AttachmentModel::index( int row, int column, const QModelIndex &pare
     Q_ASSERT( row >= 0 && row < rowCount() );
 
     if( parent.isValid() ) {
-        kWarning() << "Called with weird parent.";
+        qWarning() << "Called with weird parent.";
         return QModelIndex();
     }
 

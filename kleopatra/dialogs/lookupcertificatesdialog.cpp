@@ -42,7 +42,7 @@
 #include <utils/headerview.h>
 
 #include <kleo/stl_util.h>
-
+#include <KConfigGroup>
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
@@ -53,6 +53,7 @@
 #include <boost/bind.hpp>
 
 #include <cassert>
+#include <KSharedConfig>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
@@ -114,7 +115,7 @@ private:
 
             saveAsPB->hide(); // ### not yet implemented in LookupCertificatesCommand
 
-            findED->setClearButtonShown( true );
+            findED->setClearButtonEnabled( true );
 
             importPB()->setText( i18n("Import") );
             importPB()->setEnabled( false );
@@ -156,7 +157,7 @@ LookupCertificatesDialog::Private::~Private() {}
 
 void LookupCertificatesDialog::Private::readConfig()
 {
-    KConfigGroup dialog( KGlobal::config(), "LookupCertificatesDialog" );
+    KConfigGroup dialog( KSharedConfig::openConfig(), "LookupCertificatesDialog" );
     const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         q->resize( size );
@@ -168,7 +169,7 @@ void LookupCertificatesDialog::Private::readConfig()
 
 void LookupCertificatesDialog::Private::writeConfig()
 {
-    KConfigGroup dialog( KGlobal::config(), "LookupCertificatesDialog" );
+    KConfigGroup dialog( KSharedConfig::openConfig(), "LookupCertificatesDialog" );
     dialog.writeEntry( "header", ui.resultTV->header()->saveState());
     dialog.writeEntry( "Size", q->size() );
     dialog.sync();

@@ -26,12 +26,13 @@
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/sievescriptparsingerrordialog.h"
 
-#include <knewstuff3/uploaddialog.h>
+#include <kns3/uploaddialog.h>
 #include <klocale.h>
 #include <KStandardGuiItem>
-#include <ktempdir.h>
+#include <QTemporaryDir>
 #include <kzip.h>
 #include <ktemporaryfile.h>
+#include <KIconEngine>
 
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -57,28 +58,28 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     QToolBar *bar = new QToolBar;
     bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     mCheckSyntax = new QAction(i18n("Check Syntax"), this);
-    connect(mCheckSyntax, SIGNAL(triggered(bool)), SLOT(slotCheckSyntax()));
+    connect(mCheckSyntax, &QAction::triggered, this, &SieveEditorWidget::slotCheckSyntax);
     bar->addAction(mCheckSyntax);
     mSaveAs = bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
     bar->addAction(i18n("Import..."), this, SLOT(slotImport()));
 
     mAutoGenerateScript = new QAction(i18n("Autogenerate Script..."), this);
-    connect(mAutoGenerateScript, SIGNAL(triggered(bool)), SLOT(slotAutoGenerateScripts()));
+    connect(mAutoGenerateScript, &QAction::triggered, this, &SieveEditorWidget::slotAutoGenerateScripts);
     bar->addAction(mAutoGenerateScript);
     mSwitchMode = new QAction(i18n("Switch Mode"), this);
     bar->addAction(mSwitchMode);
-    connect(mSwitchMode, SIGNAL(triggered(bool)), SLOT(slotSwitchMode()));
+    connect(mSwitchMode, &QAction::triggered, this, &SieveEditorWidget::slotSwitchMode);
 #if !defined(NDEBUG)
     //Not necessary to translate it.
     mGenerateXml = new QAction(QLatin1String("Generate xml"), this);
-    connect(mGenerateXml, SIGNAL(triggered(bool)), SLOT(slotGenerateXml()));
+    connect(mGenerateXml, &QAction::triggered, this, &SieveEditorWidget::slotGenerateXml);
     bar->addAction(mGenerateXml);
 #endif
 
     QStringList overlays;
     overlays <<QLatin1String("list-add");
-    mUpload = new QAction(KIcon(QLatin1String("get-hot-new-stuff"), 0, overlays), i18n("Upload..."), this);
-    connect(mUpload, SIGNAL(triggered(bool)), SLOT(slotUploadScripts()));
+    mUpload = new QAction(QIcon( new KIconEngine( QLatin1String( "get-hot-new-stuff" ), 0, overlays)), i18n("Upload..."), this);
+    connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
     bar->addAction(mUpload);
 
     lay->addWidget(bar);
@@ -98,17 +99,17 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     mStackedWidget = new QStackedWidget;
 
     mTextModeWidget = new SieveEditorTextModeWidget;
-    connect(mTextModeWidget, SIGNAL(valueChanged()), this, SLOT(slotModified()));
+    connect(mTextModeWidget, &SieveEditorTextModeWidget::valueChanged, this, &SieveEditorWidget::slotModified);
     mStackedWidget->addWidget(mTextModeWidget);
     mGraphicalModeWidget = new SieveEditorGraphicalModeWidget;
-    connect(mGraphicalModeWidget, SIGNAL(valueChanged()), this, SLOT(slotModified()));
+    connect(mGraphicalModeWidget, &SieveEditorGraphicalModeWidget::valueChanged, this, &SieveEditorWidget::slotModified);
     mStackedWidget->addWidget(mGraphicalModeWidget);
 
     lay->addWidget(mStackedWidget);
-    connect(mTextModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
-    connect(mGraphicalModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
-    connect(mGraphicalModeWidget, SIGNAL(switchTextMode(QString)), this, SLOT(slotSwitchTextMode(QString)));
-    connect(mTextModeWidget, SIGNAL(switchToGraphicalMode()), SLOT(slotSwitchToGraphicalMode()));
+    connect(mTextModeWidget, &SieveEditorTextModeWidget::enableButtonOk, this, &SieveEditorWidget::slotEnableButtonOk);
+    connect(mGraphicalModeWidget, &SieveEditorGraphicalModeWidget::enableButtonOk, this, &SieveEditorWidget::slotEnableButtonOk);
+    connect(mGraphicalModeWidget, &SieveEditorGraphicalModeWidget::switchTextMode, this, &SieveEditorWidget::slotSwitchTextMode);
+    connect(mTextModeWidget, &SieveEditorTextModeWidget::switchToGraphicalMode, this, &SieveEditorWidget::slotSwitchToGraphicalMode);
     if (KSieveUi::EditorSettings::useGraphicEditorByDefault()) {
         changeMode(GraphicMode);
     }
@@ -151,15 +152,15 @@ void SieveEditorWidget::setModified(bool b)
 
 void SieveEditorWidget::slotUploadScripts()
 {
-    KTempDir tmp;
-    KTemporaryFile tmpFile;
+    QTemporaryDir tmp;
+    QTemporaryFile tmpFile;
     if (tmpFile.open()) {
         QTextStream out(&tmpFile);
         out.setCodec("UTF-8");
         out << script();
         tmpFile.close();
         const QString sourceName = mScriptName->text();
-        const QString zipFileName = tmp.name() + QDir::separator() + sourceName + QLatin1String(".zip");
+        const QString zipFileName = tmp.path() + QDir::separator() + sourceName + QLatin1String(".zip");
         KZip *zip = new KZip(zipFileName);
         if (zip->open(QIODevice::WriteOnly)) {
             if (zip->addLocalFile(tmpFile.fileName(), sourceName + QLatin1String(".siv"))) {

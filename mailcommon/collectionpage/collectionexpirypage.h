@@ -21,10 +21,10 @@
 
 #include "mailcommon_export.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionPropertiesPage>
+#include <Collection>
+#include <CollectionPropertiesPage>
 
-class KIntSpinBox;
+class KPluralHandlingSpinBox;
 class KJob;
 
 class QCheckBox;
@@ -61,9 +61,9 @@ private:
 
 private:
     QCheckBox *expireReadMailCB;
-    KIntSpinBox *expireReadMailSB;
+    KPluralHandlingSpinBox *expireReadMailSB;
     QCheckBox *expireUnreadMailCB;
-    KIntSpinBox *expireUnreadMailSB;
+    KPluralHandlingSpinBox *expireUnreadMailSB;
     QRadioButton *moveToRB;
     FolderRequester *folderSelector;
     QRadioButton *deletePermanentlyRB;

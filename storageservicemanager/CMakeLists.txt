@@ -10,7 +10,7 @@ include_directories(
 
 set( storageservicemanager_kcfg_SRCS settings/storageservicemanagerglobalconfig.kcfgc )
 
-kde4_add_kcfg_files(storageservicemanager_kcfg_SRCS ${storageservicemanager_kcfg_SRCS})
+kconfig_add_kcfg_files(storageservicemanager_kcfg_SRCS ${storageservicemanager_kcfg_SRCS})
 
 set(storageservicemanager_SRCS
   ${storageservicemanager_kcfg_SRCS}
@@ -30,27 +30,25 @@ set(storageservicemanager_SRCS
   storageserviceconfigurestoragewidget.cpp
 )
 
-kde4_add_executable(storageservicemanager ${storageservicemanager_SRCS} )
+add_executable(storageservicemanager ${storageservicemanager_SRCS} )
 TARGET_LINK_LIBRARIES(storageservicemanager 
-                       ${KDE4_KDEUI_LIBS} 
-                       ${KDE4_KIO_LIBS}
-		       ${KDE4_SOLID_LIBS}
-                       ${KDE4_KNOTIFYCONFIG_LIBS}
+                       KF5::KIOCore
+                       KF5::NotifyConfig
                        pimcommon
                        kdepim
+                       KF5::DBusAddons
 )
 
 install(TARGETS storageservicemanager ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
   storageservicemanagerui.rc
-  DESTINATION  ${DATA_INSTALL_DIR}/storageservicemanager)
+  DESTINATION  ${KXMLGUI_INSTALL_DIR}/storageservicemanager)
 
 install(PROGRAMS storageservicemanager.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
 install(FILES data/storageservicemanager.notifyrc
-    DESTINATION ${DATA_INSTALL_DIR}/storageservicemanager
+    DESTINATION ${KNOTIFYRC_INSTALL_DIR}
   )
 
-
-add_subdirectory(tests)
+add_subdirectory(autotests)

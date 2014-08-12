@@ -25,9 +25,10 @@
 #include <kcmodule.h>
 #include <kcmultidialog.h>
 #include "knotes_export.h"
+
 class KNotePrintSelectThemeComboBox;
 class KNoteCollectionConfigWidget;
-class KLineEdit;
+class QLineEdit;
 
 class KNOTES_EXPORT KNoteConfigDialog : public KCMultiDialog
 {
@@ -48,7 +49,7 @@ class KNoteDisplayConfig : public KCModule
 {
     Q_OBJECT
 public:
-    KNoteDisplayConfig( const KComponentData &inst, QWidget *parent );
+    KNoteDisplayConfig( QWidget *parent );
     /** Reimplemented from KCModule. */
     virtual void load();
     virtual void save();
@@ -58,7 +59,7 @@ class KNoteEditorConfig : public KCModule
 {
     Q_OBJECT
 public:
-    KNoteEditorConfig( const KComponentData &inst, QWidget *parent );
+    KNoteEditorConfig( QWidget *parent );
     /** Reimplemented from KCModule. */
     virtual void load();
     virtual void save();
@@ -68,7 +69,7 @@ class KNoteMiscConfig : public KCModule
 {
     Q_OBJECT
 public:
-    KNoteMiscConfig( const KComponentData &inst, QWidget *parent );
+    KNoteMiscConfig( QWidget *parent );
     /** Reimplemented from KCModule. */
     virtual void load();
     virtual void save();
@@ -76,14 +77,14 @@ public:
 private slots:
     void slotHelpLinkClicked(const QString &);
 private:
-    KLineEdit *mDefaultTitle;
+    QLineEdit *mDefaultTitle;
 };
 
 class KNotePrintConfig : public KCModule
 {
     Q_OBJECT
 public:
-    KNotePrintConfig( const KComponentData &inst, QWidget *parent );
+    KNotePrintConfig( QWidget *parent );
     /** Reimplemented from KCModule. */
     virtual void load();
     virtual void save();
@@ -101,7 +102,7 @@ class KNoteCollectionConfig : public KCModule
 {
     Q_OBJECT
 public:
-    KNoteCollectionConfig( const KComponentData &inst, QWidget *parent );
+    KNoteCollectionConfig( QWidget *parent );
     /** Reimplemented from KCModule. */
     virtual void load();
     virtual void save();

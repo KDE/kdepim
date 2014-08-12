@@ -37,7 +37,7 @@
 
 #include <view/tabwidget.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KWindowSystem>
 
 #include <QAbstractItemView>
@@ -57,7 +57,7 @@ Command::Private::Private( Command * qq, KeyListController * controller )
 
 }
 
-Command::Private::~Private() { kDebug(); }
+Command::Private::~Private() { qDebug(); }
 
 Command::Command( KeyListController * p )
     : QObject( p ), d( new Private( this, p ) )
@@ -115,7 +115,7 @@ Command::Command( const std::vector<Key> & keys, Private * pp )
     d->keys_ = keys;
 }
 
-Command::~Command() { kDebug(); }
+Command::~Command() { qDebug(); }
 
 void Command::setAutoDelete( bool on ) {
     d->autoDelete = on;
@@ -149,7 +149,7 @@ void Command::setView( QAbstractItemView * view ) {
         return;
     const QItemSelectionModel * const sm = view->selectionModel();
     if ( !sm ) {
-        kWarning() << "view " << ( void*)view << " has no selectionModel!";
+        qWarning() << "view " << ( void*)view << " has no selectionModel!";
         return;
     }
     const QList<QModelIndex> selected = sm->selectedRows();
@@ -184,7 +184,7 @@ void Command::start() {
 }
 
 void Command::cancel() {
-    kDebug();
+    qDebug();
     doCancel();
     emit canceled();
 }

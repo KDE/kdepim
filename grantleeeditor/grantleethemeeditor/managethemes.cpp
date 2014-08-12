@@ -19,27 +19,28 @@
 
 #include <KLocalizedString>
 #include <KStandardDirs>
-#include <KPushButton>
+#include <QPushButton>
 #include <KMessageBox>
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <KSharedConfig>
+
 
 #include <QLabel>
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QDir>
 #include <QDirIterator>
-
-static const KCatalogLoader loader( QLatin1String("libgrantleethemeeditor") );
+#include <QStandardPaths>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
 
 using namespace GrantleeThemeEditor;
 
 ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    mLocalDirectory = KStandardDirs::locateLocal("data", relativeThemePath);
-    setCaption( i18n( "Manage Theme" ) );
-    setButtons( Close );
+    mLocalDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativeThemePath;
+    setWindowTitle( i18n( "Manage Theme" ) );
     QWidget *w = new QWidget;
 
     QVBoxLayout *lay = new QVBoxLayout;
@@ -49,11 +50,11 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
 
     mListThemes = new QListWidget;
     mListThemes->setSelectionMode(QAbstractItemView::MultiSelection);
-    connect(mListThemes, SIGNAL(itemSelectionChanged()), this, SLOT(slotItemSelectionChanged()));
+    connect(mListThemes, &QListWidget::itemSelectionChanged, this, &ManageThemes::slotItemSelectionChanged);
     lay->addWidget(mListThemes);
 
-    mDeleteTheme = new KPushButton(i18n("Delete theme"));
-    connect(mDeleteTheme, SIGNAL(clicked()), this, SLOT(slotDeleteTheme()));
+    mDeleteTheme = new QPushButton(i18n("Delete theme"));
+    connect(mDeleteTheme, &QPushButton::clicked, this, &ManageThemes::slotDeleteTheme);
     mDeleteTheme->setEnabled(false);
     lay->addWidget(mDeleteTheme);
 
@@ -61,7 +62,14 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
 
     initialize();
 
-    setMainWidget(w);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(w);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ManageThemes::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ManageThemes::reject);
+    mainLayout->addWidget(buttonBox);
+
     readConfig();
 }
 
@@ -72,7 +80,7 @@ ManageThemes::~ManageThemes()
 
 void ManageThemes::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ManageThemesDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ManageThemesDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(300, 150) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -81,7 +89,7 @@ void ManageThemes::readConfig()
 
 void ManageThemes::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ManageThemesDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ManageThemesDialog" );
     group.writeEntry( "Size", size() );
 }
 
@@ -91,7 +99,7 @@ void ManageThemes::slotDeleteTheme()
     if (!selectItems.isEmpty()) {
         if (KMessageBox::questionYesNo(this, i18np("Do you want to remove selected theme?", "Do you want to remove %1 selected themes?", selectItems.count()), i18n("Remove theme")) == KMessageBox::Yes) {
             Q_FOREACH(QListWidgetItem *item, selectItems) {
-                if (KTempDir::removeDir(mLocalDirectory + QDir::separator() + item->text())) {
+                if (QDir((mLocalDirectory + QDir::separator() + item->text())).removeRecursively()) {
                     delete item;
                 } else {
                     KMessageBox::error(this, i18n("Theme \"%1\" cannot be deleted. Please contact your administrator.", item->text()), i18n("Delete theme failed"));

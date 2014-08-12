@@ -6,11 +6,11 @@ if(KMAIL_SUPPORTED)
 
   set( ksendemail_SRCS main.cpp mailerservice.cpp )
 
-  qt4_add_dbus_interfaces( ksendemail_SRCS  ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml )
+  qt5_add_dbus_interfaces( ksendemail_SRCS  ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml )
 
-  kde4_add_executable( ksendemail ${ksendemail_SRCS})
+  add_executable( ksendemail ${ksendemail_SRCS})
   add_dependencies( ksendemail kmail_xml )
-  target_link_libraries( ksendemail ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} )
+  target_link_libraries( ksendemail   KF5::KIOCore Qt5::Widgets KF5::I18n KF5::WidgetsAddons Qt5::DBus)
 
   install( TARGETS ksendemail ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

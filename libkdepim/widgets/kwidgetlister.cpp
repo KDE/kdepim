@@ -32,17 +32,16 @@
 
 #include "kwidgetlister.h"
 
-#include <KDebug>
 #include <KDialog>
 #include <KLocale>
 #include <KGuiItem>
-#include <KHBox>
-#include <KPushButton>
+#include <QHBoxLayout>
 
 #include <QPushButton>
 #include <QVBoxLayout>
 
 #include <assert.h>
+#include <KStandardGuiItem>
 
 using namespace KPIM;
 
@@ -74,7 +73,7 @@ public:
     KWidgetLister *q;
     QPushButton *mBtnMore, *mBtnFewer, *mBtnClear;
     QVBoxLayout *mLayout;
-    KHBox       *mButtonBox;
+    QWidget *mButtonBox;
     QList<QWidget*> mWidgetList;
     int mMinWidgets;
     int mMaxWidgets;
@@ -119,27 +118,36 @@ void KWidgetLister::init( bool fewerMoreButton )
     d->mLayout->setMargin( 0 );
     d->mLayout->setSpacing( 4 );
 
-    d->mButtonBox = new KHBox( this );
-    d->mButtonBox->setSpacing( KDialog::spacingHint() );
+    d->mButtonBox = new QWidget( this );
+    QHBoxLayout *mButtonBoxHBoxLayout = new QHBoxLayout(d->mButtonBox);
+    mButtonBoxHBoxLayout->setMargin(0);
+    mButtonBoxHBoxLayout->setSpacing( KDialog::spacingHint() );
     d->mLayout->addWidget( d->mButtonBox );
 
     if ( fewerMoreButton )
     {
-        d->mBtnMore = new KPushButton( KGuiItem( i18nc( "more widgets", "More" ),
-                                                 QLatin1String("list-add") ), d->mButtonBox );
-        d->mButtonBox->setStretchFactor( d->mBtnMore, 0 );
+        d->mBtnMore = new QPushButton( d->mButtonBox );
+        mButtonBoxHBoxLayout->addWidget(d->mBtnMore);
+        KGuiItem::assign(d->mBtnMore, KGuiItem(i18nc( "more widgets", "More" ),
+                                                 QLatin1String("list-add") ));
+        mButtonBoxHBoxLayout->setStretchFactor( d->mBtnMore, 0 );
 
-        d->mBtnFewer = new KPushButton( KGuiItem( i18nc( "fewer widgets", "Fewer" ),
-                                                  QLatin1String("list-remove") ), d->mButtonBox );
-        d->mButtonBox->setStretchFactor( d->mBtnFewer, 0 );
+        d->mBtnFewer = new QPushButton( d->mButtonBox );
+        mButtonBoxHBoxLayout->addWidget(d->mBtnFewer);
+        KGuiItem::assign( d->mBtnFewer, KGuiItem( i18nc( "fewer widgets", "Fewer" ),
+                                                  QLatin1String("list-remove") ) );
+        mButtonBoxHBoxLayout->setStretchFactor( d->mBtnFewer, 0 );
     }
     QWidget *spacer = new QWidget( d->mButtonBox );
-    d->mButtonBox->setStretchFactor( spacer, 1 );
+    mButtonBoxHBoxLayout->addWidget(spacer);
+    mButtonBoxHBoxLayout->setStretchFactor( spacer, 1 );
 
-    d->mBtnClear = new KPushButton( KStandardGuiItem::clear(), d->mButtonBox );
+    d->mBtnClear = new QPushButton(d->mButtonBox );
+    mButtonBoxHBoxLayout->addWidget(d->mBtnClear);
+    KGuiItem::assign(d->mBtnClear, KStandardGuiItem::clear());
     // FIXME a useful whats this. KStandardGuiItem::clear() returns a text with an edit box
     d->mBtnClear->setWhatsThis( QString() );
-    d->mButtonBox->setStretchFactor( d->mBtnClear, 0 );
+    mButtonBoxHBoxLayout->setStretchFactor( d->mBtnClear, 0 );
 
     //---------- connect everything
     if ( fewerMoreButton )

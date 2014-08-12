@@ -19,12 +19,12 @@
 
 #include "agentstatusmonitor.h"
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/mimetypechecker.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/mimetypechecker.h>
 
 #include <solid/networking.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 using namespace Akonadi;
 

@@ -24,18 +24,18 @@
 #include "foldertreewidgetproxymodel.h"
 #include "kernel/mailkernel.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionCreateJob>
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/EntityTreeModel>
+#include <Collection>
+#include <CollectionCreateJob>
+#include <EntityMimeTypeFilterModel>
+#include <EntityTreeModel>
 
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KLocale>
 #include <KMessageBox>
-#include <KMenu>
+#include <QMenu>
 
-#include <QKeyEvent>
 #include <QVBoxLayout>
+#include <QShowEvent>
 
 namespace MailCommon {
 
@@ -140,7 +140,7 @@ FolderSelectionDialog::~FolderSelectionDialog()
 void FolderSelectionDialog::slotFolderTreeWidgetContextMenuRequested(const QPoint& pos)
 {
     if (isButtonEnabled( KDialog::User1 ) && d->folderTreeWidget->folderTreeView()->indexAt(pos).isValid()) {
-        KMenu menu;
+        QMenu menu;
         menu.addAction(i18n( "&New Subfolder..." ),this, SLOT(slotAddChildFolder()));
         menu.exec(QCursor::pos());
     }
@@ -196,10 +196,9 @@ void FolderSelectionDialog::slotAddChildFolder()
 {
     Akonadi::Collection parentCol;
     if ( canCreateCollection( parentCol ) ) {
-        const QString name = KInputDialog::getText(
+        const QString name = QInputDialog::getText( this,
                     i18nc( "@title:window", "New Folder" ),
-                    i18nc( "@label:textbox, name of a thing", "Name" ),
-                    QString(), 0, this );
+                    i18nc( "@label:textbox, name of a thing", "Name" ));
 
         if ( name.isEmpty() ) {
             return;

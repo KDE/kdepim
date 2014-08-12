@@ -30,11 +30,14 @@
 #include "backend.h"
 
 #include <KApplication>
-#include <KDebug>
+#include <QDebug>
 #include <KMessageBox>
 #include <KFileDialog>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
+#include <KLocalizedString>
+#include <KMimeType>
+#include <QIcon>
 
 #include <QClipboard>
 
@@ -51,7 +54,7 @@ UploadMediaDialog::UploadMediaDialog( QWidget *parent )
     ui.kcfg_FtpPath->setText(Settings::ftpServerPath());
     ui.kcfg_httpUrl->setText(Settings::httpUrl());
     setWindowModality(Qt::ApplicationModal);
-    ui.kcfg_urlBrowser->setIcon(KIcon(QLatin1String("document-open")));
+    ui.kcfg_urlBrowser->setIcon(QIcon::fromTheme(QLatin1String("document-open")));
     connect( ui.kcfg_urlBrowser, SIGNAL(clicked(bool)), this, SLOT(selectNewFile()) );
     connect(ui.kcfg_uploadType, SIGNAL(currentIndexChanged(int)), this, SLOT(slotUploadTypeChanged(int)));
     connect( ui.kcfg_urlLineEdit, SIGNAL(textChanged(QString)), this, SLOT(currentMediaChanged(QString)) );
@@ -61,7 +64,7 @@ UploadMediaDialog::~UploadMediaDialog()
 {
     Settings::setFtpServerPath(ui.kcfg_FtpPath->text());
     Settings::setHttpUrl(ui.kcfg_httpUrl->text());
-    Settings::self()->writeConfig();
+    Settings::self()->save();
 }
 
 void UploadMediaDialog::init( const BilboBlog *currentBlog )
@@ -88,7 +91,7 @@ void UploadMediaDialog::currentMediaChanged(const QString& newPath)
 
 bool UploadMediaDialog::selectNewFile()
 {
-    const QString mediaPath = KFileDialog::getOpenFileName( KUrl("kfiledialog:///image?global"),
+    const QString mediaPath = KFileDialog::getOpenFileName( QUrl(QLatin1String("kfiledialog:///image?global")),
                                                             QString(), this,
                                                             i18n("Select Media to Upload"));
     if ( mediaPath.isEmpty() )
@@ -125,7 +128,7 @@ void UploadMediaDialog::slotButtonClicked(int button)
             Backend *b = new Backend( mCurrentBlog->id(), this);
             connect( b, SIGNAL(sigMediaUploaded(BilboMedia*)),
                      this, SLOT(slotMediaObjectUploaded(BilboMedia*)) );
-            connect( b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)));
+            connect(b, &Backend::sigError, this, &UploadMediaDialog::slotError);
             connect( b, SIGNAL(sigMediaError(QString,BilboMedia*)), this, SLOT(slotError(QString)) );
             b->uploadMedia( media );
             this->hide();
@@ -164,7 +167,7 @@ void UploadMediaDialog::slotMediaObjectUploaded(KJob *job)
 {
     emit sigBusy(false);
     if (job->error()) {
-        kDebug()<<"Job error: "<<job->errorString();
+        qDebug()<<"Job error: "<<job->errorString();
         slotError(job->errorString());
     } else {
         KIO::FileCopyJob *fcj = qobject_cast<KIO::FileCopyJob*>(job);
@@ -175,11 +178,11 @@ void UploadMediaDialog::slotMediaObjectUploaded(KJob *job)
             tmpUrl.setFileName(ui.kcfg_Name->text());
             destUrl = tmpUrl.prettyUrl();
         } else {
-            destUrl = fcj->destUrl().prettyUrl();
+            destUrl = fcj->destUrl().toDisplayString();
         }
         QString msg;
         if ( Settings::copyMediaUrl() ) {
-            KApplication::clipboard()->setText( destUrl );
+            QApplication::clipboard()->setText( destUrl );
             msg = i18n( "Media uploaded, and URL copied to clipboard.\nYou can find it here:\n%1",
                         destUrl );
         } else {
@@ -196,7 +199,7 @@ void UploadMediaDialog::slotMediaObjectUploaded(BilboMedia *media)
     QString msg;
     emit sigBusy(false);
     if ( Settings::copyMediaUrl() ) {
-        KApplication::clipboard()->setText( media->remoteUrl().prettyUrl() );
+        QApplication::clipboard()->setText( media->remoteUrl().prettyUrl() );
         msg = i18n( "Media uploaded, and URL copied to clipboard.\nYou can find it here:\n%1",
                     media->remoteUrl().prettyUrl() );
     } else {

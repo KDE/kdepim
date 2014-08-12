@@ -46,7 +46,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QApplication>
 #include <QClipboard>
@@ -99,7 +99,7 @@ SignClipboardCommand::Private::Private( SignClipboardCommand * qq, KeyListContro
 
 }
 
-SignClipboardCommand::Private::~Private() { kDebug(); }
+SignClipboardCommand::Private::~Private() { qDebug(); }
 
 SignClipboardCommand::SignClipboardCommand( GpgME::Protocol protocol, KeyListController * c )
     : Command( new Private( this, c ) )
@@ -122,7 +122,7 @@ void SignClipboardCommand::Private::init() {
     connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
 }
 
-SignClipboardCommand::~SignClipboardCommand() { kDebug(); }
+SignClipboardCommand::~SignClipboardCommand() { qDebug(); }
 
 // static
 bool SignClipboardCommand::canSignCurrentClipboard() {
@@ -166,7 +166,7 @@ void SignClipboardCommand::Private::slotSignersResolved() {
 }
 
 void SignClipboardCommand::doCancel() {
-    kDebug();
+    qDebug();
     d->controller.cancel();
 }
 

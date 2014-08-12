@@ -26,10 +26,14 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include <akonadi/contact/contacteditor.h>
-#include <akonadi/item.h>
-#include <kapplication.h>
-#include <kcmdlineargs.h>
+#include <Akonadi/Contact/ContactEditor>
+#include <AkonadiCore/item.h>
+
+
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 Dialog::Dialog( QWidget *parent )
   : KDialog( parent )
@@ -54,12 +58,12 @@ Dialog::Dialog( QWidget *parent )
   QPushButton *button = new QPushButton( i18n("Load"), wdg );
   layout->addWidget( button, 1, 2 );
 
-  connect( button, SIGNAL(clicked()), SLOT(load()) );
+  connect(button, &QPushButton::clicked, this, &Dialog::load);
 
   button = new QPushButton( i18n("Save"), wdg );
   layout->addWidget( button, 2, 2 );
 
-  connect( button, SIGNAL(clicked()), SLOT(save()) );
+  connect(button, &QPushButton::clicked, this, &Dialog::save);
 
   setMainWidget( wdg );
 }
@@ -75,13 +79,21 @@ void Dialog::load()
 
 void Dialog::save()
 {
-  mEditor->saveContact();
+  mEditor->saveContactInAddressBook();
 }
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "kabceditor", 0, ki18n("KABC Editor"), "1.0" , ki18n("A contact editor for Akonadi"));
-  KApplication app;
+  KAboutData aboutData( QLatin1String("kabceditor"), i18n("KABC Editor"), QLatin1String("1.0" ));
+  aboutData.setShortDescription( i18n("A contact editor for Akonadi"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
   Dialog dlg;
   dlg.exec();

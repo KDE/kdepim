@@ -52,8 +52,8 @@ ContactSwitcher::ContactSwitcher( QWidget *parent )
     layout->addStretch( 1 );
     layout->addWidget( mStatusLabel );
 
-    connect( mPreviousButton, SIGNAL(clicked()), SLOT(previousClicked()) );
-    connect( mNextButton, SIGNAL(clicked()), SLOT(nextClicked()) );
+    connect(mPreviousButton, &QPushButton::clicked, this, &ContactSwitcher::previousClicked);
+    connect(mNextButton, &QPushButton::clicked, this, &ContactSwitcher::nextClicked);
 }
 
 void ContactSwitcher::setView( QAbstractItemView *view )

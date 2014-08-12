@@ -19,6 +19,8 @@
 #include "addressbook/MorkParser.h"
 
 #include <KABC/Addressee>
+#include <QUrl>
+#include <QDebug>
 
 ThunderBirdAddressBook::ThunderBirdAddressBook(const QDir& dir, ImportWizard *parent)
     : AbstractAddressBook( parent )
@@ -77,7 +79,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString &filename )
                             for ( MorkCells::iterator cellsIter = cells.begin();cellsIter != endCellIter; ++cellsIter ) {
                                 const QString value = mork.getValue(cellsIter.value());
                                 const QString column = mork.getColumn(cellsIter.key());
-                                kDebug()<<"column :"<<column<<" value :"<<value;
+                                qDebug()<<"column :"<<column<<" value :"<<value;
                                 if ( column == QLatin1String("LastModifiedDate" ) ) {
                                     qDebug()<<" column "<<column<<" found but not imported. Need to look at how to import it";
                                 } else if ( column == QLatin1String("RecordKey" ) ) {
@@ -206,7 +208,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString &filename )
                                 } else if ( column == QLatin1String("FamilyName" ) ) {
                                     qDebug()<<" column "<<column<<" found but not imported. Need to look at how to import it";
                                 } else if ( column == QLatin1String("WebPage1" ) ) {
-                                    contact.setUrl(KUrl(value));
+                                    contact.setUrl(QUrl(value));
                                 } else if ( column == QLatin1String("WebPage2" ) ) {
                                     qDebug()<<" column "<<column<<" found but not imported. Need to look at how to import it";
                                 } else if ( column == QLatin1String("BirthYear" ) ) {
@@ -226,7 +228,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString &filename )
                                 } else if ( column == QLatin1String("Notes" ) ) {
                                     contact.setNote(value);
                                 } else {
-                                    kDebug()<<" Columnn not implemented "<<column;
+                                    qDebug()<<" Columnn not implemented "<<column;
                                 }
                                 //qDebug()<<" value :"<<value<<" column"<<column;
                             }
@@ -242,7 +244,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString &filename )
                             }
                             addImportNote(contact, QLatin1String("Thunderbird"));
                             createContact( contact );
-                            kDebug()<<"-----------------------";
+                            qDebug()<<"-----------------------";
                         }
                     }
                 }

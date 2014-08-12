@@ -19,9 +19,9 @@
 #define THEMEEDITORTABWIDGET_H
 
 #include "grantleethemeeditor_export.h"
-#include <KTabWidget>
+#include <QTabWidget>
 namespace GrantleeThemeEditor {
-class GRANTLEETHEMEEDITOR_EXPORT ThemeEditorTabWidget : public KTabWidget
+class GRANTLEETHEMEEDITOR_EXPORT ThemeEditorTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:

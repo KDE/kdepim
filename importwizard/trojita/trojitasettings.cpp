@@ -18,10 +18,12 @@
 #include "trojitasettings.h"
 #include "importwizardutil.h"
 
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/signature.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/signature.h>
+
+#include <QDebug>
 
 #include <QSettings>
 
@@ -170,7 +172,7 @@ void TrojitaSettings::readIdentity()
             signature.setText( signatureStr );
             identity->setSignature( signature );
         }
-        kDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signatureStr;
+        qDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signatureStr;
         storeIdentity(identity);
     }
     settings->endArray();

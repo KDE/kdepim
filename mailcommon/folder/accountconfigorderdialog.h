@@ -22,7 +22,7 @@
 #include "mailcommon_export.h"
 
 class QListWidget;
-class KPushButton;
+class QPushButton;
 class QCheckBox;
 namespace MailCommon {
 
@@ -48,8 +48,8 @@ private:
     void readConfig();
     void init();
     QListWidget *mListAccount;
-    KPushButton *mUpButton;
-    KPushButton *mDownButton;
+    QPushButton *mUpButton;
+    QPushButton *mDownButton;
     QCheckBox *mEnableAccountOrder;
 };
 }

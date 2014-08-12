@@ -24,11 +24,9 @@
 
 #include "mobileui_export.h"
 
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/EntityTreeModel>
 
 #include <QtCore/QAbstractItemModel>
-#include <QItemSelectionModel>
-#include <QSortFilterProxyModel>
 
 class ThreadModelPrivate;
 

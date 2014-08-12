@@ -26,13 +26,14 @@
 #include <kalarmcal/collectionattribute.h>
 #include <kalarmcal/compatibilityattribute.h>
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/collectiondialog.h>
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionmodifyjob.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiWidgets/collectiondialog.h>
+#include <AkonadiCore/collectiondeletejob.h>
+#include <AkonadiCore/collectionmodifyjob.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
 
 #include <klocale.h>
+#include <KDebug>
 
 #include <QApplication>
 #include <QMouseEvent>
@@ -40,6 +41,7 @@
 #include <QToolTip>
 #include <QTimer>
 #include <QObject>
+#include <KSharedConfig>
 
 using namespace Akonadi;
 using namespace KAlarmCal;
@@ -432,10 +434,10 @@ void CollectionCheckListModel::collectionStatusChanged(const Collection& collect
     switch (change)
     {
         case AkonadiModel::Enabled:
-            kDebug() << "Enabled" << collection.id();
+            qDebug() << "Enabled" << collection.id();
             break;
         case AkonadiModel::AlarmTypes:
-            kDebug() << "AlarmTypes" << collection.id();
+            qDebug() << "AlarmTypes" << collection.id();
             break;
         default:
             return;
@@ -658,7 +660,7 @@ CollectionControlModel* CollectionControlModel::instance()
 }
 
 CollectionControlModel::CollectionControlModel(QObject* parent)
-    : FavoriteCollectionsModel(AkonadiModel::instance(), KConfigGroup(KGlobal::config(), "Collections"), parent),
+    : FavoriteCollectionsModel(AkonadiModel::instance(), KConfigGroup(KSharedConfig::openConfig(), "Collections"), parent),
       mPopulatedCheckLoop(0)
 {
     // Initialise the list of enabled collections
@@ -671,12 +673,10 @@ CollectionControlModel::CollectionControlModel(QObject* parent)
 
     connect(AkonadiModel::instance(), SIGNAL(collectionStatusChanged(Akonadi::Collection,AkonadiModel::Change,QVariant,bool)),
                                       SLOT(statusChanged(Akonadi::Collection,AkonadiModel::Change,QVariant,bool)));
-#if KDE_IS_VERSION(4,9,80)
     connect(AkonadiModel::instance(), SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
                                       SLOT(collectionPopulated()));
     connect(AkonadiModel::instance(), SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
                                       SLOT(collectionPopulated()));
-#endif
 }
 
 /******************************************************************************
@@ -734,7 +734,7 @@ bool CollectionControlModel::isEnabled(const Collection& collection, CalEvent::T
 */
 CalEvent::Types CollectionControlModel::setEnabled(const Collection& collection, CalEvent::Types types, bool enabled)
 {
-    kDebug() << "id:" << collection.id() << ", alarm types" << types << "->" << enabled;
+    qDebug() << "id:" << collection.id() << ", alarm types" << types << "->" << enabled;
     if (!collection.isValid()  ||  (!enabled && !instance()->collections().contains(collection)))
         return CalEvent::EMPTY;
     Collection col = collection;
@@ -756,7 +756,7 @@ CalEvent::Types CollectionControlModel::setEnabled(const Collection& collection,
 */
 CalEvent::Types CollectionControlModel::setEnabledStatus(const Collection& collection, CalEvent::Types types, bool inserted)
 {
-    kDebug() << "id:" << collection.id() << ", types=" << types;
+    qDebug() << "id:" << collection.id() << ", types=" << types;
     CalEvent::Types disallowedStdTypes(0);
     CalEvent::Types stdTypes(0);
 
@@ -844,14 +844,14 @@ void CollectionControlModel::statusChanged(const Collection& collection, Akonadi
         case AkonadiModel::Enabled:
         {
             const CalEvent::Types enabled = static_cast<CalEvent::Types>(value.toInt());
-            kDebug() << "id:" << collection.id() << ", enabled=" << enabled << ", inserted=" << inserted;
+            qDebug() << "id:" << collection.id() << ", enabled=" << enabled << ", inserted=" << inserted;
             setEnabledStatus(collection, enabled, inserted);
             break;
         }
         case AkonadiModel::ReadOnly:
         {
             bool readOnly = value.toBool();
-            kDebug() << "id:" << collection.id() << ", readOnly=" << readOnly;
+            qDebug() << "id:" << collection.id() << ", readOnly=" << readOnly;
             if (readOnly)
             {
                 // A read-only collection can't be the default for any alarm type
@@ -866,22 +866,22 @@ void CollectionControlModel::statusChanged(const Collection& collection, Akonadi
                     switch (std)
                     {
                         case CalEvent::ACTIVE:
-                            msg = i18nc("@info", "The calendar <resource>%1</resource> has been made read-only. "
+                            msg = xi18nc("@info", "The calendar <resource>%1</resource> has been made read-only. "
                                                  "This was the default calendar for active alarms.",
                                         collection.name());
                             break;
                         case CalEvent::ARCHIVED:
-                            msg = i18nc("@info", "The calendar <resource>%1</resource> has been made read-only. "
+                            msg = xi18nc("@info", "The calendar <resource>%1</resource> has been made read-only. "
                                                  "This was the default calendar for archived alarms.",
                                         collection.name());
                             break;
                         case CalEvent::TEMPLATE:
-                            msg = i18nc("@info", "The calendar <resource>%1</resource> has been made read-only. "
+                            msg = xi18nc("@info", "The calendar <resource>%1</resource> has been made read-only. "
                                                  "This was the default calendar for alarm templates.",
                                         collection.name());
                             break;
                         default:
-                            msg = i18nc("@info", "<para>The calendar <resource>%1</resource> has been made read-only. "
+                            msg = xi18nc("@info", "<para>The calendar <resource>%1</resource> has been made read-only. "
                                                  "This was the default calendar for:%2</para>"
                                                  "<para>Please select new default calendars.</para>",
                                         collection.name(), typeListForDisplay(std));
@@ -889,7 +889,7 @@ void CollectionControlModel::statusChanged(const Collection& collection, Akonadi
                             break;
                     }
                     if (singleType)
-                        msg = i18nc("@info", "<para>%1</para><para>Please select a new default calendar.</para>", msg);
+                        msg = xi18nc("@info", "<para>%1</para><para>Please select a new default calendar.</para>", msg);
                     KAMessageBox::information(messageParent, msg);
                 }
             }
@@ -1253,7 +1253,6 @@ Collection CollectionControlModel::collectionForResource(const QString& resource
     return Collection();
 }
 
-#if KDE_IS_VERSION(4,9,80)
 /******************************************************************************
 * Return whether all enabled collections have been populated.
 */
@@ -1281,7 +1280,7 @@ bool CollectionControlModel::isPopulated(Collection::Id colId)
 */
 bool CollectionControlModel::waitUntilPopulated(Collection::Id colId, int timeout)
 {
-    kDebug();
+    qDebug();
     int result = 1;
     AkonadiModel* model = AkonadiModel::instance();
     while (!model->isCollectionTreeFetched()
@@ -1297,7 +1296,6 @@ bool CollectionControlModel::waitUntilPopulated(Collection::Id colId, int timeou
     mPopulatedCheckLoop = 0;
     return result;
 }
-#endif
 
 /******************************************************************************
 * Exit from the populated event loop when a collection has been populated.

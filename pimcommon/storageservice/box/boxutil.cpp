@@ -16,10 +16,11 @@
 */
 
 #include "boxutil.h"
-
-KDateTime PimCommon::BoxUtil::convertToDateTime(QString dateTime)
+#include <QString>
+#include <QDateTime>
+QDateTime PimCommon::BoxUtil::convertToDateTime(QString dateTime)
 {
     dateTime.chop(6); // chop() removes the time zone
-    const KDateTime t = KDateTime(QDateTime::fromString(dateTime, QLatin1String("yyyy-MM-ddThh:mm:ss")));
+    const QDateTime t = QDateTime(QDateTime::fromString(dateTime, QLatin1String("yyyy-MM-ddThh:mm:ss")));
     return t;
 }

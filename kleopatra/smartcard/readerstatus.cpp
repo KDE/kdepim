@@ -131,11 +131,11 @@ BOOST_STATIC_ASSERT(( sizeof prettyFlags/sizeof *prettyFlags == ReaderStatus::Nu
 static QByteArray read_file( const QString & fileName ) {
     QFile file( fileName );
     if ( !file.exists() ) {
-        kDebug() << "read_file: file" << fileName << "does not exist";
+        qDebug() << "read_file: file" << fileName << "does not exist";
         return QByteArray();
     }
     if ( !file.open( QIODevice::ReadOnly ) ) {
-        kDebug() << "read_file: failed to open" << fileName << ':' << file.errorString();
+        qDebug() << "read_file: failed to open" << fileName << ':' << file.errorString();
         return QByteArray();
     }
     return file.readAll().trimmed();
@@ -163,7 +163,7 @@ namespace {
 
     template <typename T>
     const T & _trace__impl( const T & t, const char * msg ) {
-        kDebug() << msg << t;
+        qDebug() << msg << t;
         return t;
     }
 #define TRACE( x ) _trace__impl( x, #x )
@@ -189,7 +189,7 @@ BOOST_STATIC_ASSERT(( sizeof app_types / sizeof *app_types == ReaderStatus::NumA
 
 
 static ReaderStatus::AppType parse_app_type( const std::string & s ) {
-    kDebug() << "parse_app_type(" << s.c_str() << ")";
+    qDebug() << "parse_app_type(" << s.c_str() << ")";
     const char ** it = std::find( begin( app_types ), end( app_types ), to_lower_copy( s ) );
     if ( it == end( app_types ) )
         return TRACE( ReaderStatus::UnknownApplication );
@@ -217,7 +217,7 @@ static ReaderStatus::PinState parse_pin_state( const std::string & s ) {
 
 static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact( shared_ptr<Context> & gpgAgent, const char * command, Error & err ) {
 #ifdef DEBUG_SCREADER
-    kDebug() << "gpgagent_transact(" << command << ")";
+    qDebug() << "gpgagent_transact(" << command << ")";
 #endif
     const AssuanResult res = gpgAgent->assuanTransact( command );
     err = res.error();
@@ -225,10 +225,10 @@ static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact( shared_ptr<Con
         err = res.assuanError();
     if ( err.code() ) {
 #ifdef DEBUG_SCREADER
-        kDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit( err.asString() );
+        qDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit( err.asString() );
 #endif
         if ( err.code() >= GPG_ERR_ASS_GENERAL && err.code() <= GPG_ERR_ASS_UNKNOWN_INQUIRE ) {
-            kDebug() << "Assuan problem, killing context";
+            qDebug() << "Assuan problem, killing context";
             gpgAgent.reset();
         }
         return std::auto_ptr<DefaultAssuanTransaction>();
@@ -243,10 +243,10 @@ static const std::string scd_getattr_status( shared_ptr<Context> & gpgAgent, con
     cmd += what;
     const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact( gpgAgent, cmd.c_str(), err );
     if ( t.get() ) {
-        kDebug() << "scd_getattr_status(" << what << "): got" << t->statusLines();
+        qDebug() << "scd_getattr_status(" << what << "): got" << t->statusLines();
         return t->firstStatusLine( what );
     } else {
-        kDebug() << "scd_getattr_status(" << what << "): t == NULL";
+        qDebug() << "scd_getattr_status(" << what << "): t == NULL";
         return std::string();
     }
 }
@@ -262,14 +262,14 @@ static unsigned int get_event_counter( shared_ptr<Context> & gpgAgent ) {
     Error err;
     const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact( gpgAgent, "GETEVENTCOUNTER", err );
     if ( err.code() )
-        kDebug() << "get_event_counter(): got error" << err.asString();
+        qDebug() << "get_event_counter(): got error" << err.asString();
     if ( t.get() ) {
 #ifdef DEBUG_SCREADER
-        kDebug() << "get_event_counter(): got" << t->statusLines();
+        qDebug() << "get_event_counter(): got" << t->statusLines();
 #endif
         return parse_event_counter( t->firstStatusLine( "EVENTCOUNTER" ) );
     } else {
-        kDebug() << "scd_getattr_status(): t == NULL";
+        qDebug() << "scd_getattr_status(): t == NULL";
         return -1;
     }
 }
@@ -292,21 +292,21 @@ static bool parse_keypairinfo_and_lookup_key( Context * ctx, const std::string &
     if ( !ctx )
         return false;
     const std::string pattern = parse_keypairinfo( kpi );
-    kDebug() << "parse_keypairinfo_and_lookup_key: pattern=" << pattern.c_str();
+    qDebug() << "parse_keypairinfo_and_lookup_key: pattern=" << pattern.c_str();
     if ( const Error err = ctx->startKeyListing( pattern.c_str() ) ) {
-        kDebug() << "parse_keypairinfo_and_lookup_key: startKeyListing failed:" << err.asString();
+        qDebug() << "parse_keypairinfo_and_lookup_key: startKeyListing failed:" << err.asString();
         return false;
     }
     Error e;
     const Key key = ctx->nextKey( e );
     ctx->endKeyListing();
-    kDebug() << "parse_keypairinfo_and_lookup_key: e=" << e.code() << "; key.isNull()" << key.isNull();
+    qDebug() << "parse_keypairinfo_and_lookup_key: e=" << e.code() << "; key.isNull()" << key.isNull();
     return !e && !key.isNull();
 }
 
 static CardInfo get_card_status( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent ) {
 #ifdef DEBUG_SCREADER
-    kDebug() << "get_card_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
+    qDebug() << "get_card_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
 #endif
     CardInfo ci( fileName, ReaderStatus::CardUsable );
     if ( idx != 0 || !gpg_agent )
@@ -325,14 +325,14 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
     if ( err.code() )
         return ci;
     if ( ci.appType != ReaderStatus::NksApplication ) {
-        kDebug() << "get_card_status: not a NetKey card, giving up";
+        qDebug() << "get_card_status: not a NetKey card, giving up";
         return ci;
     }
     ci.appVersion = parse_app_version( scd_getattr_status( gpg_agent, "NKS-VERSION", err ) );
     if ( err.code() )
         return ci;
     if ( ci.appVersion != 3 ) {
-        kDebug() << "get_card_status: not a NetKey v3 card, giving up";
+        qDebug() << "get_card_status: not a NetKey v3 card, giving up";
         return ci;
     }
 
@@ -369,7 +369,7 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
         ci.status = ReaderStatus::CardCanLearnKeys;
 
 #ifdef DEBUG_SCREADER
-    kDebug() << "get_card_status: ci.status " << prettyFlags[ci.status];
+    qDebug() << "get_card_status: ci.status " << prettyFlags[ci.status];
 #endif
 
     return ci;
@@ -377,15 +377,15 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
 
 static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, shared_ptr<Context> & gpgAgent ) {
 #ifdef DEBUG_SCREADER
-    kDebug() << "<update_cardinfo>";
+    qDebug() << "<update_cardinfo>";
 #endif
     const QDir gnupgHome( gnupgHomePath );
     if ( !gnupgHome.exists() )
-        kWarning() << "gnupg home" << gnupgHomePath << "does not exist!";
+        qWarning() << "gnupg home" << gnupgHomePath << "does not exist!";
 
     const CardInfo ci = get_card_status( gnupgHome.absoluteFilePath( QLatin1String( "reader_0.status" ) ), 0, gpgAgent );
 #ifdef DEBUG_SCREADER
-    kDebug() << "</update_cardinfo>";
+    qDebug() << "</update_cardinfo>";
 #endif
     return std::vector<CardInfo>( 1, ci );
 }
@@ -395,7 +395,7 @@ static bool check_event_counter_changed( shared_ptr<Context> & gpg_agent, unsign
     counter = get_event_counter( gpg_agent );
     if ( oldCounter != counter ) {
 #ifdef DEBUG_SCREADER
-        kDebug() << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter ;
+        qDebug() << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter ;
 #endif
         return true;
     } else {
@@ -457,7 +457,7 @@ namespace {
 
     public Q_SLOTS:
         void ping() {
-            kDebug() << "ReaderStatusThread[GUI]::ping()";
+            qDebug() << "ReaderStatusThread[GUI]::ping()";
             addTransaction( updateTransaction );
         }
 
@@ -470,7 +470,7 @@ namespace {
         void slotReaderStatusFileChanged() {
             const QDir gnupgHome( m_gnupgHomePath );
             if ( !gnupgHome.exists() ) {
-                kWarning() << "gnupg home" << m_gnupgHomePath << "does not exist!";
+                qWarning() << "gnupg home" << m_gnupgHomePath << "does not exist!";
                 return;
             }
 
@@ -484,7 +484,7 @@ namespace {
                 bool ok = false;
                 const unsigned int idx = parseFileName( file, &ok );
                 if ( !ok ) {
-                    kDebug() << "filename" << file << ": cannot parse reader slot number";
+                    qDebug() << "filename" << file << ": cannot parse reader slot number";
                     continue;
                 }
                 assert( idx >= contents.size() );
@@ -538,12 +538,12 @@ namespace {
                     while ( m_transactions.empty() ) {
                         // go to sleep waiting for more work:
 #ifdef DEBUG_SCREADER
-                        kDebug() << "ReaderStatusThread[2nd]: .zZZ";
+                        qDebug() << "ReaderStatusThread[2nd]: .zZZ";
 #endif
                         if ( !m_waitForTransactions.wait( &m_mutex, CHECK_INTERVAL ) )
                             m_transactions.push_front( checkTransaction );
 #ifdef DEBUG_SCREADER
-                        kDebug() << "ReaderStatusThread[2nd]: .oOO";
+                        qDebug() << "ReaderStatusThread[2nd]: .oOO";
 #endif
                     }
 
@@ -562,7 +562,7 @@ namespace {
                 }
 
 #ifdef DEBUG_SCREADER
-                kDebug() << "ReaderStatusThread[2nd]: new iteration command=" << command << " ; nullSlot=" << nullSlot;
+                qDebug() << "ReaderStatusThread[2nd]: new iteration command=" << command << " ; nullSlot=" << nullSlot;
 #endif
                 // now, let's see what we got:
 
@@ -595,7 +595,7 @@ namespace {
                     while ( nit != nend && oit != oend ) {
                         if ( nit->status != oit->status ) {
 #ifdef DEBUG_SCREADER
-                            kDebug() << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
+                            qDebug() << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
 #endif
                             emit cardStatusChanged( idx, nit->status );
                         }
@@ -635,7 +635,7 @@ namespace {
                 else
                     eventCounter = -1;
 #ifdef DEBUG_SCREADER
-                kDebug() << "eventCounter:" << eventCounter;
+                qDebug() << "eventCounter:" << eventCounter;
 #endif
 
             }

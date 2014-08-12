@@ -42,12 +42,12 @@
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KTemporaryFile>
-#include <KUrl>
+#include <QTemporaryFile>
 #include <KIO/NetAccess>
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
+#include <QFileDialog>
 
 void doExport( QFile *file, const KABC::Addressee::List &list )
 {
@@ -68,7 +68,7 @@ KABC::Addressee::List LDIFXXPort::importContacts() const
 {
     KABC::Addressee::List contacts;
 
-    const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QLatin1String("text/x-ldif"), 0 );
+    const QString fileName = QFileDialog::getOpenFileName(0 , QString(),  QDir::homePath(), QLatin1String("text/x-ldif"));
     if ( fileName.isEmpty() ) {
         return contacts;
     }
@@ -101,7 +101,7 @@ bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list ) const
     }
 
     if ( !url.isLocalFile() ) {
-        KTemporaryFile tmpFile;
+        QTemporaryFile tmpFile;
         if ( !tmpFile.open() ) {
             const QString msg = i18n( "<qt>Unable to open file <b>%1</b></qt>", url.url() );
             KMessageBox::error( parentWidget(), msg );

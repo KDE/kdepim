@@ -125,7 +125,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="mSearchFolderOpenBtn">
+      <widget class="QPushButton" name="mSearchFolderOpenBtn">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -135,7 +135,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="mSearchResultOpenBtn">
+      <widget class="QPushButton" name="mSearchResultOpenBtn">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -172,7 +172,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KDialogButtonBox" name="mButtonBox">
+      <widget class="QDialogButtonBox" name="mButtonBox">
        <property name="standardButtons">
         <set>QDialogButtonBox::Close</set>
        </property>
@@ -189,19 +189,9 @@
    <header>klineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
    <class>Akonadi::EntityTreeView</class>
    <extends>QTreeView</extends>
-   <header>akonadi/entitytreeview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KDialogButtonBox</class>
-   <extends>QDialogButtonBox</extends>
-   <header>kdialogbuttonbox.h</header>
+   <header>AkonadiWidgets/entitytreeview.h</header>
   </customwidget>
   <customwidget>
    <class>MailCommon::FolderRequester</class>

@@ -19,14 +19,14 @@
 #include "editorpage.h"
 
 #include <KLocalizedString>
-#include <KMenu>
-#include <KIcon>
+#include <QMenu>
+#include <QIcon>
 
 #include <QTabBar>
 using namespace GrantleeThemeEditor;
 
 ThemeEditorTabWidget::ThemeEditorTabWidget(QWidget *parent)
-    : KTabWidget(parent)
+    : QTabWidget(parent)
 {
     setElideMode( Qt::ElideRight );
     tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
@@ -61,9 +61,9 @@ void ThemeEditorTabWidget::slotTabContextMenuRequest( const QPoint &pos )
         return;
 
     if (page->pageType() == EditorPage::ExtraPage) {
-        KMenu menu( this );
+        QMenu menu( this );
         QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-        closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
+        closeTab->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
 
         QAction *action = menu.exec( mapToGlobal( pos ) );
 

@@ -27,7 +27,7 @@ SieveEditorCentralWidget::SieveEditorCentralWidget(QWidget *parent)
     connect(mConfigureWidget, SIGNAL(configureClicked()), SIGNAL(configureClicked()));
     addWidget(mConfigureWidget);
     mSieveEditorMainWidget = new SieveEditorMainWidget;
-    connect(mSieveEditorMainWidget, SIGNAL(serverSieveFound(bool)), SLOT(slotServerSieveFound(bool)));
+    connect(mSieveEditorMainWidget, &SieveEditorMainWidget::serverSieveFound, this, &SieveEditorCentralWidget::slotServerSieveFound);
     addWidget(mSieveEditorMainWidget);
     setCurrentWidget(mConfigureWidget);
 }

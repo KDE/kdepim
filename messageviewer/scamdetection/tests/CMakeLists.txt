@@ -5,25 +5,16 @@ include_directories(
   ${CMAKE_BINARY_DIR}/messageviewer/
 )
 
-macro( add_scamdetection_test _source )
-  set( _test ${_source} )
-  get_filename_component( _name ${_source} NAME_WE )
-  kde4_add_unit_test( ${_name} TESTNAME messageviewer-${_name} ${_test} )
-  target_link_libraries( ${_name} messageviewer ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${QT_QTWEBKIT_LIBRARY} )
-endmacro()
-
-add_scamdetection_test(test_scamdetection.cpp)
-
-
-
+include(ECMAddTests)
+ 
+set(QT_REQUIRED_VERSION "5.2.0")
+find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. )
+ 
 set(scamdetection_gui_SRCS scamdetection_gui.cpp)
-kde4_add_executable(scamdetection_gui TEST ${scamdetection_gui_SRCS})
+add_executable(scamdetection_gui ${scamdetection_gui_SRCS})
 target_link_libraries(scamdetection_gui
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${KDE4_KDEUI_LIBS}
-  ${QT_QTWEBKIT_LIBRARY}
-  ${KDE4_KIO_LIBS}
+  KF5::KIOCore
   messageviewer
 )
 

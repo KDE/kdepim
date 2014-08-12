@@ -20,7 +20,7 @@
 
 #include <KDialog>
 
-class KLineEdit;
+class QLineEdit;
 namespace PimCommon {
 class RichTextEditorWidget;
 class TemplateEditDialog : public KDialog
@@ -43,7 +43,7 @@ private:
     void readConfig();
     void writeConfig();
     PimCommon::RichTextEditorWidget *mTextEdit;
-    KLineEdit *mTemplateNameEdit;
+    QLineEdit *mTemplateNameEdit;
 };
 }
 

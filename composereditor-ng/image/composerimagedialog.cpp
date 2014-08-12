@@ -21,11 +21,12 @@
 #include "composerimagedialog.h"
 #include "extendattributes/extendattributesbutton.h"
 
-#include "kpimtextedit/insertimagewidget.h"
+#include <kpimtextedit/insertimagewidget.h>
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KSeparator>
+#include <QUrl>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -55,8 +56,8 @@ public:
     QWebElement webElement;
 
     KPIMTextEdit::InsertImageWidget *imageWidget;
-    KLineEdit *title;
-    KLineEdit *alternateTitle;
+    QLineEdit *title;
+    QLineEdit *alternateTitle;
     ComposerImageDialog *q;
 };
 
@@ -141,8 +142,8 @@ void ComposerImageDialogPrivate::initialize()
     QHBoxLayout *hbox = new QHBoxLayout;
     QLabel *lab = new QLabel(i18n("Tooltip:"));
     hbox->addWidget(lab);
-    title = new KLineEdit;
-    title->setClearButtonShown(true);
+    title = new QLineEdit;
+    title->setClearButtonEnabled(true);
     hbox->addWidget(title);
     lay->addLayout(hbox);
 
@@ -150,8 +151,8 @@ void ComposerImageDialogPrivate::initialize()
     hbox = new QHBoxLayout;
     lab = new QLabel(i18n("Alternate text:"));
     hbox->addWidget(lab);
-    alternateTitle = new KLineEdit;
-    alternateTitle->setClearButtonShown(true);
+    alternateTitle = new QLineEdit;
+    alternateTitle->setClearButtonEnabled(true);
     hbox->addWidget(alternateTitle);
     lay->addLayout(hbox);
 
@@ -189,7 +190,7 @@ void ComposerImageDialogPrivate::updateSettings()
 
 QString ComposerImageDialogPrivate::html() const
 {
-    const KUrl url = imageWidget->imageUrl();
+    const QUrl url = imageWidget->imageUrl();
     int imageWidth = -1;
     int imageHeight = -1;
     if ( !imageWidget->keepOriginalSize() ) {

@@ -36,8 +36,9 @@
 #include <KPIMUtils/Email>
 #include <KIO/Job>
 #include <KIO/NetAccess>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
+#include <KUrl>
 
 #include <QFile>
 
@@ -278,10 +279,10 @@ void IncidenceDefaults::setAttachments( const QStringList &attachments,
               attachment->setLabel( attachmentLabels[ i ] );
             }
           } else {
-            kError() << "Error opening " << *it;
+            qCritical() << "Error opening " << *it;
           }
         } else {
-          kError() << "Error downloading uri " << *it
+          qCritical() << "Error downloading uri " << *it
                    << KIO::NetAccess::lastErrorString(); //krazy:exclude=kdebug
         }
         // TODO, this method needs better error reporting.
@@ -411,7 +412,7 @@ void IncidenceDefaults::setDefaults( const KCalCore::Incidence::Ptr &incidence )
     d->journalDefaults( incidence.dynamicCast<KCalCore::Journal>() );
     break;
   default:
-    kDebug() << "Unsupported incidence type, keeping current values. Type: "
+    qDebug() << "Unsupported incidence type, keeping current values. Type: "
              << static_cast<int>( incidence->type() );
   }
 }

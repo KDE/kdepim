@@ -30,18 +30,19 @@
 #include <kiconloader.h>
 #include <kcolorscheme.h>
 #include <kwindowsystem.h>
-#include <kdebug.h>
-#include <KMenu>
+#include <qdebug.h>
+#include <QMenu>
 #include <KLocalizedString>
-#include <KAction>
+#include <QAction>
 #include <KActionMenu>
 #include <KActionCollection>
-
+#include <KGlobalSettings>
 #include <QPainter>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/CollectionModel>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/CollectionModel>
+#include <QFontDatabase>
 
 using namespace MailCommon;
 
@@ -59,6 +60,7 @@ using namespace MailCommon;
 namespace KMail {
 KMSystemTray::KMSystemTray(QObject *parent)
     : KStatusNotifierItem( parent),
+      mIcon(QIcon::fromTheme(QLatin1String("mail-unread-new"))),
       mDesktopOfMainWin( 0 ),
       mMode( GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ),
       mCount( 0 ),
@@ -67,11 +69,10 @@ KMSystemTray::KMSystemTray(QObject *parent)
       mNewMessagesPopup( 0 ),
       mSendQueued( 0 )
 {
-    kDebug() << "Initting systray";
+    qDebug() << "Initting systray";
     setToolTipTitle( i18n("KMail") );
     setToolTipIconByName( QLatin1String("kmail") );
     setIconByName( QLatin1String("kmail") );
-    mIcon = KIcon( QLatin1String("mail-unread-new") );
 
     KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
     if ( mainWidget ) {
@@ -83,8 +84,8 @@ KMSystemTray::KMSystemTray(QObject *parent)
     }
 
 
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()) );
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &KMSystemTray::slotGeneralPaletteChanged);
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &KMSystemTray::slotGeneralFontChanged);
 
     connect( this, SIGNAL(activateRequested(bool,QPoint)),
              this, SLOT(slotActivated()) );
@@ -110,12 +111,12 @@ bool KMSystemTray::buildPopupMenu()
     }
 
     if ( !contextMenu() ) {
-        setContextMenu( new KMenu() );
+        setContextMenu( new QMenu() );
     }
 
     contextMenu()->clear();
 
-    contextMenu()->addTitle(qApp->windowIcon(), i18n("KMail"));
+    contextMenu()->setTitle(/*QT5 qApp->windowIcon(),*/ i18n("KMail"));
     QAction * action;
     if ( ( action = mainWidget->action(QLatin1String("check_mail")) ) )
         contextMenu()->addAction( action );
@@ -136,9 +137,12 @@ bool KMSystemTray::buildPopupMenu()
         contextMenu()->addAction( action );
     contextMenu()->addSeparator();
 
-    if ( ( action = actionCollection()->action(QLatin1String("file_quit")) ) )
-        contextMenu()->addAction( action );
-
+    Q_FOREACH( QAction *act, actionCollection() ) {
+       if (act->objectName() == QLatin1String("file_quit")) {
+           contextMenu()->addAction( act );
+           break;
+       }
+    }
     return true;
 }
 
@@ -159,7 +163,7 @@ void KMSystemTray::setMode(int newMode)
     if (newMode == mMode)
         return;
 
-    kDebug() << "Setting systray mMode to" << newMode;
+    qDebug() << "Setting systray mMode to" << newMode;
     mMode = newMode;
 
     switch ( mMode ) {
@@ -170,7 +174,7 @@ void KMSystemTray::setMode(int newMode)
         setStatus( mCount > 0 ? KStatusNotifierItem::Active : KStatusNotifierItem::Passive );
         break;
     default:
-        kDebug() << "Unknown systray mode" << mMode;
+        qDebug() << "Unknown systray mode" << mMode;
     }
 }
 
@@ -207,7 +211,7 @@ void KMSystemTray::updateCount()
         const int overlaySize = KIconLoader::SizeSmallMedium;
 
         const QString countString = QString::number( mCount );
-        QFont countFont = KGlobalSettings::generalFont();
+        QFont countFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
         countFont.setBold(true);
 
         // decrease the size of the font for the number of unread messages if the
@@ -303,7 +307,7 @@ void KMSystemTray::slotContextMenuAboutToShow()
         delete mNewMessagesPopup;
         mNewMessagesPopup = 0;
     }
-    mNewMessagesPopup = new KMenu();
+    mNewMessagesPopup = new QMenu();
     fillFoldersMenu( mNewMessagesPopup, kmkernel->treeviewModelSelection() );
 
     connect( mNewMessagesPopup, SIGNAL(triggered(QAction*)), this,
@@ -382,7 +386,7 @@ void KMSystemTray::initListOfCollection()
         }
     }
 
-    //kDebug()<<" mCount :"<<mCount;
+    //qDebug()<<" mCount :"<<mCount;
     updateCount();
 }
 

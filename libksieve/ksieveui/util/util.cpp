@@ -42,23 +42,23 @@
 #include "imapresourcesettings.h"
 #include "sieve-vacation.h"
 
-#include <akonadi/agentmanager.h>
+#include <agentmanager.h>
 #include <kimap/loginjob.h>
 #include <kmime/kmime_message.h>
-#include <mailtransport/transport.h>
+#include <MailTransport/mailtransport/transport.h>
 
 using namespace KSieveUi;
 
-KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
+QUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
 {
     QScopedPointer<OrgKdeAkonadiImapSettingsInterface> interface( PimCommon::Util::createImapSettingsInterface(identifier) );
 
     if ( !interface->sieveSupport() )
-        return KUrl();
+        return QUrl();
 
     if ( interface->sieveReuseConfig() ) {
         // assemble Sieve url from the settings of the account:
-        KUrl u;
+        QUrl u;
         u.setScheme( QLatin1String("sieve") );
         QString server;
         QDBusReply<QString> reply = interface->imapServer();
@@ -66,7 +66,7 @@ KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
             server = reply;
             server = server.section( QLatin1Char(':'), 0, 0 );
         } else {
-            return KUrl();
+            return QUrl();
         }
         u.setHost( server );
         u.setUserName( interface->userName() );
@@ -109,12 +109,13 @@ KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
         const QString resultSafety = interface->safety();
         if ( resultSafety == QLatin1String("None"))
             u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
-        u.setFileName( interface->sieveVacationFilename() );
+        u = u.adjusted(QUrl::RemoveFilename);
+        u.setPath(u.path() + QString(interface->sieveVacationFilename()));
         return u;
     } else {
-        KUrl u( interface->sieveAlternateUrl() );
+        QUrl u( interface->sieveAlternateUrl() );
         const QString resultSafety = interface->safety();
-        if ( u.protocol().toLower() == QLatin1String("sieve") && ( resultSafety ==  QLatin1String("None") ) && u.queryItem(QLatin1String("x-allow-unencrypted")).isEmpty() )
+        if ( u.scheme().toLower() == QLatin1String("sieve") && ( resultSafety ==  QLatin1String("None") ) && QUrlQuery(u).queryItemValue(QLatin1String("x-allow-unencrypted")).isEmpty() )
             u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
 
         const QString resultCustomAuthentication = interface->sieveCustomAuthentification();
@@ -137,7 +138,8 @@ KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
             u.setPassword( pwd );
             u.setUserName( interface->sieveCustomUsername() );
         }
-        u.setFileName( interface->sieveVacationFilename() );
+        u = u.adjusted(QUrl::RemoveFilename);
+        u.setPath(u.path() + QString(interface->sieveVacationFilename()) );
         return u;
     }
 }

@@ -28,19 +28,20 @@
 
 #include <KLocalizedString>
 #include <KConfig>
-#include <KGlobal>
+
 #include <KConfigGroup>
 
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QTabWidget>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Configure" ) );
-    setButtons( Default|Ok|Cancel );
-    setButtonFocus( Ok );
+    setWindowTitle( i18n( "Configure" ) );
 
     QTabWidget *tab = new QTabWidget;
 
@@ -63,15 +64,26 @@ ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
     mDefaultTemplate->setAcceptRichText(false);
     tab->addTab(mDefaultTemplate, i18n("Default Template"));
 
-    setMainWidget(tab);
-    connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(tab);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ContactConfigureDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ContactConfigureDialog::reject);
+    mainLayout->addWidget(buttonBox);
+    okButton->setFocus();
+
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(slotDefaultClicked()));
+    connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(slotOkClicked()));
     readConfig();
 }
 
 ContactConfigureDialog::~ContactConfigureDialog()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("ContactConfigureDialog") );
     group.writeEntry( "Size", size() );
@@ -98,7 +110,7 @@ void ContactConfigureDialog::slotOkClicked()
 
 void ContactConfigureDialog::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
@@ -133,7 +145,7 @@ void ContactConfigureDialog::readConfig()
 
 void ContactConfigureDialog::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = config->group(QLatin1String("Global"));
     const KABC::Addressee addr = mDefaultContact->contact();
     KABC::VCardConverter converter;

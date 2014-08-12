@@ -20,8 +20,8 @@
 #ifndef FILTERMANAGER_H
 #define FILTERMANAGER_H
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/item.h>
 
 #include "mailcommon/search/searchpattern.h"
 

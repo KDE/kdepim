@@ -18,7 +18,7 @@
 #include "sieveconditionservermetadataexists.h"
 #include "editor/sieveeditorutil.h"
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QHBoxLayout>
 #include <QDebug>
@@ -46,7 +46,7 @@ QWidget *SieveConditionServerMetaDataExists::createParamWidget( QWidget *parent 
     QLabel *lab = new QLabel(i18n("Annotation:"));
     lay->addWidget(lab);
 
-    KLineEdit *value = new KLineEdit;
+    QLineEdit *value = new QLineEdit;
     value->setObjectName(QLatin1String("value"));
     connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(value);
@@ -56,7 +56,7 @@ QWidget *SieveConditionServerMetaDataExists::createParamWidget( QWidget *parent 
 
 QString SieveConditionServerMetaDataExists::code(QWidget *w) const
 {
-    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+    const QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
     const QString valueStr = value->text();
     return QString::fromLatin1("servermetadataexists \"%1\"").arg(valueStr);
 }
@@ -90,7 +90,7 @@ bool SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+                QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
                 value->setText(tagValue);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing

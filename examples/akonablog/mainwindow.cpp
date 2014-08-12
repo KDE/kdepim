@@ -24,7 +24,7 @@
 
 #include <QToolBar>
 
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 
 MainWindow::MainWindow( QWidget *parent )
         : QMainWindow( parent )

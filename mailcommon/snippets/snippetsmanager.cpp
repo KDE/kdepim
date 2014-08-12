@@ -24,11 +24,12 @@
 #include "snippetsmodel_p.h"
 #include "snippetvariabledialog_p.h"
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KMessageBox>
+#include <QIcon>
 
 #include <QAction>
 #include <QPointer>
@@ -228,7 +229,7 @@ void SnippetsManager::Private::deleteSnippet()
 
     if ( KMessageBox::warningContinueCancel(
              0,
-             i18nc( "@info",
+             xi18nc( "@info",
                     "Do you really want to remove snippet \"%1\"?<nl/>"
                     "<warning>There is no way to undo the removal.</warning>", snippetName ),
              QString(),
@@ -250,7 +251,7 @@ void SnippetsManager::Private::addSnippetGroup()
     if ( dlg->exec() ) {
 
         if ( !mModel->insertRow( mModel->rowCount(), QModelIndex() ) ) {
-            kDebug() << "unable to insert row";
+            qDebug() << "unable to insert row";
             delete dlg;
             return;
         }
@@ -298,7 +299,7 @@ void SnippetsManager::Private::deleteSnippetGroup()
     if ( mModel->rowCount( groupIndex ) > 0 ) {
         if ( KMessageBox::warningContinueCancel(
                  0,
-                 i18nc( "@info",
+                 xi18nc( "@info",
                         "Do you really want to remove group \"%1\" along with all its snippets?<nl/>"
                         "<warning>There is no way to undo the removal.</warning>", groupName ),
                  QString(),
@@ -376,7 +377,7 @@ void SnippetsManager::Private::updateActionCollection( const QString &oldName,
         const QString actionName = i18nc( "@action", "Snippet %1", newName );
         const QString normalizedName = QString( actionName ).replace( QLatin1Char(' '), QLatin1Char('_') );
 
-        KAction *action =
+        QAction *action =
                 mActionCollection->addAction( normalizedName, q, SLOT(insertActionSnippet()) );
         action->setProperty( "snippetText", text );
         action->setText( actionName );
@@ -472,7 +473,7 @@ void SnippetsManager::Private::loadFromOldFormat( const KConfigGroup &group )
         const int iIdVal =
                 group.readEntry( QString::fromLatin1( "snippetGroupId_%1" ).arg( i ), -1 );
 
-        //kDebug() << "Read group "  << " " << iIdVal;
+        //qDebug() << "Read group "  << " " << iIdVal;
 
         if ( !strNameVal.isEmpty() && iIdVal != -1 ) {
             // create group
@@ -650,15 +651,15 @@ SnippetsManager::SnippetsManager( KActionCollection *actionCollection,
 
     d->mAddSnippetAction = new QAction( i18n( "Add Snippet..." ), this );
     d->mEditSnippetAction = new QAction( i18n( "Edit Snippet..." ), this );
-    d->mEditSnippetAction->setIcon( KIcon( QLatin1String("document-properties") ) );
+    d->mEditSnippetAction->setIcon( QIcon::fromTheme( QLatin1String("document-properties") ) );
     d->mDeleteSnippetAction = new QAction( i18n( "Remove Snippet" ), this );
-    d->mDeleteSnippetAction->setIcon( KIcon( QLatin1String("edit-delete") ) );
+    d->mDeleteSnippetAction->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
 
     d->mAddSnippetGroupAction = new QAction( i18n( "Add Group..." ), this );
     d->mEditSnippetGroupAction = new QAction( i18n( "Rename Group..." ), this );
-    d->mEditSnippetGroupAction->setIcon( KIcon( QLatin1String("edit-rename") ) );
+    d->mEditSnippetGroupAction->setIcon( QIcon::fromTheme( QLatin1String("edit-rename") ) );
     d->mDeleteSnippetGroupAction = new QAction( i18n( "Remove Group" ), this );
-    d->mDeleteSnippetGroupAction->setIcon( KIcon( QLatin1String("edit-delete") ) );
+    d->mDeleteSnippetGroupAction->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
 
     d->mInsertSnippetAction = new QAction( i18n( "Insert Snippet" ), this );
 

@@ -22,7 +22,7 @@
 #define STORAGESERVICETREEWIDGETITEM_H
 
 #include <QTreeWidget>
-#include <KDateTime>
+#include <QDateTime>
 #include "pimcommon_export.h"
 
 namespace PimCommon {
@@ -33,18 +33,18 @@ public:
     StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent);
     bool operator<(const QTreeWidgetItem &other) const;
     void setSize(qulonglong size);
-    void setDateCreated(const KDateTime &date);
-    void setLastModification(const KDateTime &date);
+    void setDateCreated(const QDateTime &date);
+    void setLastModification(const QDateTime &date);
     void setStoreInfo(const QVariantMap &data);
     QVariantMap storeInfo() const;
 
 
-    KDateTime lastModificationDate() const;
-    KDateTime createDate() const;
+    QDateTime lastModificationDate() const;
+    QDateTime createDate() const;
     qulonglong size() const;
 private:
-    KDateTime mCreateDate;
-    KDateTime mLastModificationDate;
+    QDateTime mCreateDate;
+    QDateTime mLastModificationDate;
     qulonglong mSize;
 };
 }

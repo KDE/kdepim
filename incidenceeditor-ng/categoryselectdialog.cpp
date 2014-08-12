@@ -24,6 +24,9 @@
 
 #include <calendarsupport/categoryconfig.h>
 
+#include <QIcon>
+#include <KLocalizedString>
+
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
 
@@ -38,8 +41,8 @@ class CategorySelectWidgetBase : public QWidget, public Ui::CategorySelectDialog
       mButtonClear->setVisible( false );
       mButtonEdit->setVisible( false );
 #else
-      mButtonClear->setIcon( KIcon( "edit-clear-locationbar-rtl" ) );
-      mButtonEdit->setIcon( KIcon( "document-properties" ) );
+      mButtonClear->setIcon( QIcon::fromTheme( "edit-clear-locationbar-rtl" ) );
+      mButtonEdit->setIcon( QIcon::fromTheme( "document-properties" ) );
 #endif
     }
 };

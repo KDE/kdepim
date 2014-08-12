@@ -42,7 +42,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardGuiItem>
-#include <KDebug>
+#include <QDebug>
 #include <KConfigGroup>
 #include <KSharedConfig>
 
@@ -77,7 +77,7 @@ public:
     }
 
     void slotWhatsThisRequested() {
-        kDebug();
+        qDebug();
         if ( QWidget * const widget = qobject_cast<QWidget*>( q->sender() ) )
             if ( !widget->whatsThis().isEmpty() )
                 QWhatsThis::showText( QCursor::pos(), widget->whatsThis() );
@@ -85,7 +85,7 @@ public:
 
     void readConfig()
     {
-        KConfigGroup dialog( KGlobal::config(), "DeleteCertificatesDialog" );
+        KConfigGroup dialog( KSharedConfig::openConfig(), "DeleteCertificatesDialog" );
         const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
         if ( size.isValid() ) {
             q->resize( size );
@@ -94,7 +94,7 @@ public:
 
     void writeConfig()
     {
-        KConfigGroup dialog( KGlobal::config(), "DeleteCertificatesDialog" );
+        KConfigGroup dialog( KSharedConfig::openConfig(), "DeleteCertificatesDialog" );
         dialog.writeEntry( "Size", q->size() );
         dialog.sync();
     }
@@ -111,7 +111,7 @@ private:
         explicit UI( DeleteCertificatesDialog * qq )
             : selectedLB( i18n( "These are the certificates you have selected for deletion:" ), qq ),
               selectedKTV( qq ),
-              unselectedLB( i18n("These certificates will be deleted even though you did <emphasis>not</emphasis><nl/> "
+              unselectedLB( xi18n("These certificates will be deleted even though you did <emphasis>not</emphasis><nl/> "
                                  "explicitly select them (<a href=\"whatsthis://\">Why?</a>):"), qq ),
               unselectedKTV( qq ),
               buttonBox( QDialogButtonBox::Ok|QDialogButtonBox::Cancel ),
@@ -131,7 +131,7 @@ private:
             vlay.addWidget( &buttonBox );
 
             const QString unselectedWhatsThis
-                = i18nc( "@info:whatsthis",
+                = xi18nc( "@info:whatsthis",
                          "<title>Why do you want to delete more certificates than I selected?</title>"
                          "<para>When you delete CA certificates (both root CAs and intermediate CAs), "
                          "the certificates issued by them will also be deleted.</para>"

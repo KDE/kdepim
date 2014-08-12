@@ -37,9 +37,9 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/key.h>
 
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+
+#include <KAboutData>
+
 #include <kdebug.h>
 
 #include <QMessageBox>
@@ -47,6 +47,9 @@
 #include <QTimer>
 
 #include <assert.h>
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 namespace {
   class TestColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
@@ -129,9 +132,15 @@ void CertListView::slotStart() {
 
 int main( int argc, char** argv ) {
 
-  KAboutData aboutData( "test_keylister", 0, ki18n("KeyLister Test"), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+  KAboutData aboutData( QLatin1String("test_keylister"), i18n("KeyLister Test"), QLatin1String("0.1") );
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  KAboutData::setApplicationData(aboutData);
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
   CertListView * clv = new CertListView;
   clv->show();

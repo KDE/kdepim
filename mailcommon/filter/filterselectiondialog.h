@@ -23,7 +23,7 @@
 
 #include <QList>
 
-class KPushButton;
+class QPushButton;
 
 class QListWidget;
 class QWidget;
@@ -52,8 +52,8 @@ private:
     void readConfig();
     QListWidget *filtersListWidget;
     QList<MailFilter*> originalFilters;
-    KPushButton *selectAllButton;
-    KPushButton *unselectAllButton;
+    QPushButton *selectAllButton;
+    QPushButton *unselectAllButton;
 };
 
 }

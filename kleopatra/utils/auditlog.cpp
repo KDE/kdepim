@@ -55,10 +55,10 @@ QString AuditLog::formatLink( const KUrl & urlTemplate ) const {
     // fixed here eqally applies there:
     if ( const unsigned int code = m_error.code() ) {
         if ( code == GPG_ERR_NOT_IMPLEMENTED ) {
-            kDebug() << "not showing link (not implemented)";
+            qDebug() << "not showing link (not implemented)";
             return QString();
         } else if ( code == GPG_ERR_NO_DATA ) {
-            kDebug() << "not showing link (not available)";
+            qDebug() << "not showing link (not available)";
             return i18n("No Audit Log available");
         } else {
             return i18n("Error Retrieving Audit Log: %1", QString::fromLocal8Bit( m_error.asString() ) );

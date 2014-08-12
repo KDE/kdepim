@@ -44,7 +44,9 @@
 #include <unistd.h> // link()
 #include <errno.h>
 //KDE includes
-#include <KAction>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
 #include <kascii.h>
@@ -54,7 +56,7 @@
 #include <QWebView>
 #include <QWebPage>
 #include <QWebFrame>
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
 #include <KMimeType>
 #include <KMimeTypeChooser>
@@ -63,29 +65,32 @@
 #include <KSelectAction>
 #include <KSharedConfigPtr>
 #include <KStandardDirs>
+#include <KGlobalSettings>
 #include <KStandardGuiItem>
-#include <KTempDir>
-#include <KTemporaryFile>
+#include <QTemporaryDir>
+#include <QTemporaryFile>
 #include <KToggleAction>
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
-
+#include <QIcon>
+#include <QDebug>
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
-
+#include <KLocalizedString>
+#include <QMimeData>
 #include <KIO/NetAccess>
 #include <KABC/Addressee>
 #include <KABC/VCardConverter>
 #include <KPIMUtils/Email>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/ItemCreateJob>
+#include <AkonadiCore/ItemModifyJob>
+#include <AkonadiCore/ItemCreateJob>
 
-#include <kpimutils/kfileio.h>
+#include <KPIMUtils/kpimutils/kfileio.h>
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
 
-#include <mailtransport/errorattribute.h>
+#include <MailTransport/mailtransport/errorattribute.h>
 
 //Qt includes
 #include <QClipboard>
@@ -105,12 +110,12 @@
 #include "libkdepim/misc/broadcaststatus.h"
 #include <messagecore/attachment/attachmentpropertiesdialog.h>
 
-#include <akonadi/collection.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/kmime/messagestatus.h>
-#include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/attributefactory.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <Akonadi/KMime/MessageStatus>
+#include <Akonadi/KMime/SpecialMailCollections>
+#include <AkonadiCore/attributefactory.h>
 #include <Akonadi/KMime/MessageParts>
 #include <kleo/specialjob.h>
 
@@ -151,12 +156,15 @@
 #include <gpgme++/error.h>
 #include <messagecore/helpers/nodehelper.h>
 #include "messagecore/settings/globalsettings.h"
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
-#include <Akonadi/CollectionFetchJob>
-#include <akonadi/collectionfetchscope.h>
+#include <AkonadiCore/agentinstance.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/CollectionFetchJob>
+#include <AkonadiCore/collectionfetchscope.h>
 
 #include <boost/bind.hpp>
+#include <KJobWidgets/KJobWidgets>
+#include <QApplication>
+#include <QStandardPaths>
 
 using namespace boost;
 using namespace MailTransport;
@@ -286,7 +294,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
 
 ViewerPrivate::~ViewerPrivate()
 {
-    GlobalSettings::self()->writeConfig();
+    GlobalSettings::self()->save();
     delete mHtmlWriter; mHtmlWriter = 0;
     delete mViewer; mViewer = 0;
     delete mCSSHelper;
@@ -398,7 +406,7 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     } else if ( choice == AttachmentDialog::OpenWith ) {
         attachmentOpenWith( node );
     } else { // Cancel
-        kDebug() << "Canceled opening attachment";
+        qDebug() << "Canceled opening attachment";
     }
 
 }
@@ -474,7 +482,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
 void ViewerPrivate::itemModifiedResult( KJob* job )
 {
     if ( job->error() ) {
-        kDebug() << "Item update failed:" << job->errorString();
+        qDebug() << "Item update failed:" << job->errorString();
     } else {
         setMessageItem( mMessageItem, MessageViewer::Viewer::Force );
     }
@@ -492,10 +500,10 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
         return false;
     }
 
-    KTemporaryFile file;
+    QTemporaryFile file;
     file.setAutoRemove( false );
     if ( !file.open() ) {
-        kWarning() << "Edit Attachment: Unable to open temp file.";
+        qWarning() << "Edit Attachment: Unable to open temp file.";
         return true;
     }
     file.write( node->decodedContent() );
@@ -514,7 +522,7 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
     return true;
 }
 
-void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent )
+void ViewerPrivate::createOpenWithMenu( QMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent )
 {
     const KService::List offers = KFileItemActions::associatedApplications(QStringList()<<contentTypeStr, QString() );
     if (!offers.isEmpty()) {
@@ -531,15 +539,18 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTy
             menu->menuAction()->setObjectName(QLatin1String("openWith_submenu")); // for the unittest
             topMenu->addMenu(menu);
         }
-        //kDebug() << offers.count() << "offers" << topMenu << menu;
+        //qDebug() << offers.count() << "offers" << topMenu << menu;
 
         KService::List::ConstIterator it = offers.constBegin();
         KService::List::ConstIterator end = offers.constEnd();
         for(; it != end; ++it) {
-            KAction* act = MessageViewer::Util::createAppAction(*it,
+//QT5
+#if 0
+            QAction * act = MessageViewer::Util::createAppAction(*it,
                                                                 // no submenu -> prefix single offer
                                                                 menu == topMenu, actionGroup, menu);
             menu->addAction(act);
+#endif
         }
 
         QString openWithActionName;
@@ -549,7 +560,7 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTy
         } else {
             openWithActionName = i18nc("@title:menu", "&Open With...");
         }
-        KAction *openWithAct = new KAction(menu);
+        QAction *openWithAct = new QAction(menu);
         openWithAct->setText(openWithActionName);
         if(fromCurrentContent)
             connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialogCurrentContent()));
@@ -558,7 +569,7 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTy
 
         menu->addAction(openWithAct);
     } else { // no app offers -> Open With...
-        KAction *act = new KAction(topMenu);
+        QAction *act = new QAction(topMenu);
         act->setText(i18nc("@title:menu", "&Open With..."));
         if(fromCurrentContent)
             connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialogCurrentContent()));
@@ -604,7 +615,7 @@ void ViewerPrivate::slotOpenWithAction(QAction *act)
 void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & globalPos )
 {
     prepareHandleAttachment( node, name );
-    KMenu *menu = new KMenu();
+    QMenu *menu = new QMenu();
     QAction *action;
     bool deletedAttachment = false;
     if(node->contentType(false)) {
@@ -687,8 +698,10 @@ QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
     QFileInfo atmFileInfo( atmFileName );
 
     // tempfile name is /TMP/attachmentsRANDOM/atmFileInfo.fileName()"
-    KTempDir *linkDir = new KTempDir( KStandardDirs::locateLocal( "tmp", QLatin1String("attachments") ) );
-    QString linkPath = linkDir->name() + atmFileInfo.fileName();
+    const QString tmpPath = QDir::tempPath() + QLatin1Char('/') +  QLatin1String("attachments");
+    QDir().mkpath(tmpPath);
+    QTemporaryDir *linkDir = new QTemporaryDir( tmpPath );
+    QString linkPath = linkDir->path() + atmFileInfo.fileName();
     QFile *linkFile = new QFile( linkPath );
     linkFile->open( QIODevice::ReadWrite );
     const QString linkName = linkFile->fileName();
@@ -766,7 +779,7 @@ void ViewerPrivate::attachmentOpen( KMime::Content *node )
 {
     KService::Ptr offer = getServiceOffer( node );
     if ( !offer ) {
-        kDebug() << "got no offer";
+        qDebug() << "got no offer";
         return;
     }
     attachmentOpenWith( node, offer );
@@ -796,14 +809,14 @@ void ViewerPrivate::displaySplashPage( const QString &info )
     adjustLayout();
 
 #ifdef KDEPIM_MOBILE_UI
-    const QString location = KStandardDirs::locate( "data", QLatin1String("messageviewer/about/main_mobile.html") );
+    const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messageviewer/about/main_mobile.html") );
     QString content = QLatin1String( KPIMUtils::kFileToByteArray( location ) );
     content = content.arg( QLatin1String( "" ) ); // infopage stylesheet
     content = content.arg( QLatin1String( "" ) ); // rtl infopage stylesheet
 #else
-    const QString location = KStandardDirs::locate( "data", QLatin1String("kmail2/about/main.html") ); //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
+    const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kmail2/about/main.html") ); //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
     QString content = QLatin1String(KPIMUtils::kFileToByteArray( location ));
-    content = content.arg( KStandardDirs::locate( "data", QLatin1String("kdeui/about/kde_infopage.css") ) );
+    content = content.arg( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kdeui/about/kde_infopage.css") ) );
     if ( QApplication::isRightToLeft() )
         content = content.arg( QLatin1String("@import \"") + KStandardDirs::locate( "data",
                                                                                     QLatin1String("kdeui/about/kde_infopage_rtl.css") ) +  QLatin1String("\";"));
@@ -815,7 +828,7 @@ void ViewerPrivate::displaySplashPage( const QString &info )
     const QString catchPhrase; //not enough space for a catch phrase at default window size i18n("Part of the Kontact Suite");
     const QString quickDescription = i18n( "The KDE email client." );
 
-    mViewer->setHtml( content.arg( fontSize ).arg( mAppName ).arg( catchPhrase ).arg( quickDescription ).arg( info ), KUrl::fromPath( location ) );
+    mViewer->setHtml( content.arg( fontSize ).arg( mAppName ).arg( catchPhrase ).arg( quickDescription ).arg( info ), QUrl::fromLocalFile( location ) );
     mViewer->show();
 }
 
@@ -854,7 +867,7 @@ void ViewerPrivate::displayMessage()
         const QColor foreground = KColorScheme( QPalette::Active, KColorScheme::View ).foreground( KColorScheme::NegativeText ).color();
         const QColor background = KColorScheme( QPalette::Active, KColorScheme::View ).background( KColorScheme::NegativeBackground ).color();
 
-        htmlWriter()->queue( QString::fromLatin1("<div style=\"background:%1;color:%2;border:1px solid %3\">%4</div>").arg( background.name(), foreground.name(), foreground.name(), Qt::escape( attr->message() ) ) );
+        htmlWriter()->queue( QString::fromLatin1("<div style=\"background:%1;color:%2;border:1px solid %3\">%4</div>").arg( background.name(), foreground.name(), foreground.name(), attr->message().toHtmlEscaped() ) );
         htmlWriter()->queue( QLatin1String("<p></p>") );
     }
 
@@ -1012,9 +1025,9 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCa
                                        bool topLevel )
 {
     if ( !headerStyle() )
-        kFatal() << "trying to writeMsgHeader() without a header style set!";
+        qCritical() << "trying to writeMsgHeader() without a header style set!";
     if ( !headerStrategy() )
-        kFatal() << "trying to writeMsgHeader() without a header strategy set!";
+        qCritical() << "trying to writeMsgHeader() without a header strategy set!";
     QString href;
     if ( vCardNode )
         href = mNodeHelper->asHREF( vCardNode, QLatin1String("body") );
@@ -1108,7 +1121,7 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
         // If we are potentially handling a drag, deal with that.
         if ( mCanStartDrag && me->buttons() & Qt::LeftButton ) {
 
-            if ( ( mLastClickPosition - me->pos() ).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
+            if ( ( mLastClickPosition - me->pos() ).manhattanLength() > QApplication::startDragDistance() ) {
                 if ( URLHandlerManager::instance()->handleDrag( mHoveredUrl, this ) ) {
 
                     // If the URL handler manager started a drag, don't handle this in the future
@@ -1269,7 +1282,7 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
             }
             if ( i == encodings.size() ) {
                 // the value of encoding is unknown => use Auto
-                kWarning() << "Unknown override character encoding" << encoding
+                qWarning() << "Unknown override character encoding" << encoding
                            << ". Using Auto instead.";
                 mSelectEncodingAction->setCurrentItem( 0 );
                 mOverrideEncoding.clear();
@@ -1352,7 +1365,7 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item, Viewer::UpdateMod
 
     if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
         if ( mMessageItem.isValid() )
-            kWarning() << "Payload is not a MessagePtr!";
+            qWarning() << "Payload is not a MessagePtr!";
         return;
     }
 
@@ -1491,24 +1504,37 @@ void ViewerPrivate::createWidgets() {
     connect(mMimePartTree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotMimeTreeContextMenuRequested(QPoint)) );
 #endif
 
-    mBox = new KHBox( mSplitter );
+    mBox = new QWidget( mSplitter );
+    QHBoxLayout *mBoxHBoxLayout = new QHBoxLayout(mBox);
+    mBoxHBoxLayout->setMargin(0);
 
 #ifndef KDEPIM_MOBILE_UI
     mColorBar = new HtmlStatusBar( mBox );
-    KVBox *readerBox = new KVBox( mBox );
+    mBoxHBoxLayout->addWidget(mColorBar);
+    QWidget *readerBox = new QWidget( mBox );
+    QVBoxLayout *readerBoxVBoxLayout = new QVBoxLayout(readerBox);
+    readerBoxVBoxLayout->setMargin(0);
+    mBoxHBoxLayout->addWidget(readerBox);
 #else // for mobile ui we position the HTML status bar on the right side
-    KVBox *readerBox = new KVBox( mBox );
+    QWidget *readerBox = new QWidget( mBox );
+    readerBoxVBoxLayout = new QVBoxLayout(readerBox);
+    readerBoxVBoxLayout->setMargin(0);
+    mBoxHBoxLayout->addWidget(readerBox);
     mColorBar = new HtmlStatusBar( mBox );
+    mBoxHBoxLayout->addWidget(mColorBar);
 #endif
 
     mColorBar->setObjectName( QLatin1String("mColorBar") );
     mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
 
     mScamDetectionWarning = new ScamDetectionWarningWidget(readerBox);
+    readerBoxVBoxLayout->addWidget(mScamDetectionWarning);
 
     mOpenAttachmentFolderWidget = new OpenAttachmentFolderWidget(readerBox);
+    readerBoxVBoxLayout->addWidget(mOpenAttachmentFolderWidget);
 
     mViewer = new MailWebView( mActionCollection, readerBox );
+    readerBoxVBoxLayout->addWidget(mViewer);
     mViewer->setObjectName( QLatin1String("mViewer") );
 
     mCreateTodo = new MessageViewer::TodoEdit(readerBox);
@@ -1522,6 +1548,7 @@ void ViewerPrivate::createWidgets() {
     mCreateEvent->hide();
 
     mFindBar = new FindBarMailWebView( mViewer, readerBox );
+    readerBoxVBoxLayout->addWidget(mFindBar);
     mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);
 #ifndef QT_NO_TREEVIEW
     mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
@@ -1541,55 +1568,55 @@ void ViewerPrivate::createActions()
     // header style
     KActionMenu *headerMenu  = new KActionMenu(i18nc("View->", "&Headers"), this);
     ac->addAction(QLatin1String("view_headers"), headerMenu );
-    headerMenu->setHelpText( i18n("Choose display style of message headers") );
+    addHelpTextAction(headerMenu, i18n("Choose display style of message headers") );
 
     QActionGroup *group = new QActionGroup( this );
     raction = new KToggleAction( i18nc("View->headers->", "&Enterprise Headers"), this);
     ac->addAction( QLatin1String("view_headers_enterprise"), raction );
     connect( raction, SIGNAL(triggered(bool)), SLOT(slotEnterpriseHeaders()) );
-    raction->setHelpText( i18n("Show the list of headers in Enterprise style") );
+    addHelpTextAction(raction, i18n("Show the list of headers in Enterprise style") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Fancy Headers"), this);
     ac->addAction(QLatin1String("view_headers_fancy"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotFancyHeaders()));
-    raction->setHelpText( i18n("Show the list of headers in a fancy format") );
+    addHelpTextAction(raction, i18n("Show the list of headers in a fancy format") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Brief Headers"), this);
     ac->addAction(QLatin1String("view_headers_brief"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotBriefHeaders()));
-    raction->setHelpText( i18n("Show brief list of message headers") );
+    addHelpTextAction(raction, i18n("Show brief list of message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Standard Headers"), this);
     ac->addAction(QLatin1String("view_headers_standard"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotStandardHeaders()));
-    raction->setHelpText( i18n("Show standard list of message headers") );
+    addHelpTextAction(raction, i18n("Show standard list of message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Long Headers"), this);
     ac->addAction(QLatin1String("view_headers_long"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotLongHeaders()));
-    raction->setHelpText( i18n("Show long list of message headers") );
+    addHelpTextAction(raction, i18n("Show long list of message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&All Headers"), this);
     ac->addAction(QLatin1String("view_headers_all"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotAllHeaders()));
-    raction->setHelpText( i18n("Show all message headers") );
+    addHelpTextAction(raction, i18n("Show all message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Custom Headers"), this);
     ac->addAction(QLatin1String("view_custom_headers"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotCustomHeaders()));
-    raction->setHelpText( i18n("Show custom headers") );
+    addHelpTextAction(raction, i18n("Show custom headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
     //Same action group
@@ -1599,34 +1626,34 @@ void ViewerPrivate::createActions()
     // attachment style
     KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
     ac->addAction(QLatin1String("view_attachments"), attachmentMenu );
-    attachmentMenu->setHelpText( i18n("Choose display style of attachments") );
+    addHelpTextAction(attachmentMenu, i18n("Choose display style of attachments") );
 
     group = new QActionGroup( this );
     raction  = new KToggleAction(i18nc("View->attachments->", "&As Icons"), this);
     ac->addAction(QLatin1String("view_attachments_as_icons"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotIconicAttachments()));
-    raction->setHelpText( i18n("Show all attachments as icons. Click to see them.") );
+    addHelpTextAction(raction, i18n("Show all attachments as icons. Click to see them.") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->attachments->", "&Smart"), this);
     ac->addAction(QLatin1String("view_attachments_smart"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotSmartAttachments()));
-    raction->setHelpText( i18n("Show attachments as suggested by sender.") );
+    addHelpTextAction(raction, i18n("Show attachments as suggested by sender.") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->attachments->", "&Inline"), this);
     ac->addAction(QLatin1String("view_attachments_inline"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotInlineAttachments()));
-    raction->setHelpText( i18n("Show all attachments inline (if possible)") );
+    addHelpTextAction(raction, i18n("Show all attachments inline (if possible)") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->attachments->", "&Hide"), this);
     ac->addAction(QLatin1String("view_attachments_hide"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotHideAttachments()));
-    raction->setHelpText( i18n("Do not show attachments in the message viewer") );
+    addHelpTextAction(raction, i18n("Do not show attachments in the message viewer") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
@@ -1634,12 +1661,12 @@ void ViewerPrivate::createActions()
     ac->addAction( QLatin1String("view_attachments_headeronly"), mHeaderOnlyAttachmentsAction );
     connect( mHeaderOnlyAttachmentsAction, SIGNAL(triggered(bool)),
              SLOT(slotHeaderOnlyAttachments()) );
-    mHeaderOnlyAttachmentsAction->setHelpText( i18n( "Show Attachments only in the header of the mail" ) );
+    addHelpTextAction(mHeaderOnlyAttachmentsAction, i18n( "Show Attachments only in the header of the mail" ) );
     group->addAction( mHeaderOnlyAttachmentsAction );
     attachmentMenu->addAction( mHeaderOnlyAttachmentsAction );
 
     // Set Encoding submenu
-    mSelectEncodingAction  = new KSelectAction(KIcon(QLatin1String("character-set")), i18n("&Set Encoding"), this);
+    mSelectEncodingAction  = new KSelectAction(QIcon::fromTheme(QLatin1String("character-set")), i18n("&Set Encoding"), this);
     mSelectEncodingAction->setToolBarMode( KSelectAction::MenuMode );
     ac->addAction(QLatin1String("encoding"), mSelectEncodingAction );
     connect(mSelectEncodingAction,SIGNAL(triggered(int)),
@@ -1662,19 +1689,19 @@ void ViewerPrivate::createActions()
     viewerSelectionChanged();
 
     // copy all text to clipboard
-    mSelectAllAction  = new KAction(i18n("Select All Text"), this);
+    mSelectAllAction  = new QAction(i18n("Select All Text"), this);
     ac->addAction(QLatin1String("mark_all_text"), mSelectAllAction );
     connect(mSelectAllAction, SIGNAL(triggered(bool)), SLOT(selectAll()));
     mSelectAllAction->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_A ) );
 
     // copy Email address to clipboard
-    mCopyURLAction = new KAction( KIcon( QLatin1String("edit-copy" )),
+    mCopyURLAction = new QAction( QIcon::fromTheme( QLatin1String("edit-copy" )),
                                   i18n( "Copy Link Address" ), this );
     ac->addAction( QLatin1String("copy_url"), mCopyURLAction );
     connect( mCopyURLAction, SIGNAL(triggered(bool)), SLOT(slotUrlCopy()) );
 
     // open URL
-    mUrlOpenAction = new KAction( KIcon(QLatin1String( "document-open" )), i18n( "Open URL" ), this );
+    mUrlOpenAction = new QAction( QIcon::fromTheme(QLatin1String( "document-open" )), i18n( "Open URL" ), this );
     ac->addAction( QLatin1String("open_url"), mUrlOpenAction );
     connect( mUrlOpenAction, SIGNAL(triggered(bool)), this, SLOT(slotUrlOpen()) );
 
@@ -1689,17 +1716,17 @@ void ViewerPrivate::createActions()
     mZoomTextOnlyAction = new KToggleAction( i18n( "Zoom Text Only" ), this );
     ac->addAction( QLatin1String("toggle_zoomtextonly"), mZoomTextOnlyAction );
     connect( mZoomTextOnlyAction, SIGNAL(triggered(bool)), SLOT(slotZoomTextOnly()) );
-    mZoomInAction = new KAction( KIcon(QLatin1String("zoom-in")), i18n("&Zoom In"), this);
+    mZoomInAction = new QAction( QIcon::fromTheme(QLatin1String("zoom-in")), i18n("&Zoom In"), this);
     ac->addAction(QLatin1String("zoom_in"), mZoomInAction);
     connect(mZoomInAction, SIGNAL(triggered(bool)), SLOT(slotZoomIn()));
     mZoomInAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Plus));
 
-    mZoomOutAction = new KAction( KIcon(QLatin1String("zoom-out")), i18n("Zoom &Out"), this);
+    mZoomOutAction = new QAction( QIcon::fromTheme(QLatin1String("zoom-out")), i18n("Zoom &Out"), this);
     ac->addAction(QLatin1String("zoom_out"), mZoomOutAction);
     connect(mZoomOutAction, SIGNAL(triggered(bool)), SLOT(slotZoomOut()));
     mZoomOutAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Minus));
 
-    mZoomResetAction = new KAction( i18n("Reset"), this);
+    mZoomResetAction = new QAction( i18n("Reset"), this);
     ac->addAction(QLatin1String("zoom_reset"), mZoomResetAction);
     connect(mZoomResetAction, SIGNAL(triggered(bool)), SLOT(slotZoomReset()));
     mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_0));
@@ -1711,47 +1738,47 @@ void ViewerPrivate::createActions()
     connect( mToggleMimePartTreeAction, SIGNAL(toggled(bool)),
              SLOT(slotToggleMimePartTree()));
 
-    mViewSourceAction  = new KAction(i18n("&View Source"), this);
+    mViewSourceAction  = new QAction(i18n("&View Source"), this);
     ac->addAction(QLatin1String("view_source"), mViewSourceAction );
     connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotShowMessageSource()));
     mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
-    mSaveMessageAction = new KAction(KIcon(QLatin1String("document-save-as")), i18n("&Save message..."), this);
+    mSaveMessageAction = new QAction(QIcon::fromTheme(QLatin1String("document-save-as")), i18n("&Save message..."), this);
     ac->addAction(QLatin1String("save_message"), mSaveMessageAction);
     connect(mSaveMessageAction, SIGNAL(triggered(bool)), SLOT(slotSaveMessage()));
     //Laurent: conflict with kmail shortcut
     //mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
-    mSaveMessageDisplayFormat = new KAction( i18n("&Save Display Format"), this);
+    mSaveMessageDisplayFormat = new QAction( i18n("&Save Display Format"), this);
     ac->addAction(QLatin1String("save_message_display_format"), mSaveMessageDisplayFormat );
     connect(mSaveMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotSaveMessageDisplayFormat()));
 
-    mResetMessageDisplayFormat = new KAction( i18n("&Reset Display Format"), this);
+    mResetMessageDisplayFormat = new QAction( i18n("&Reset Display Format"), this);
     ac->addAction(QLatin1String("reset_message_display_format"), mResetMessageDisplayFormat );
     connect(mResetMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotResetMessageDisplayFormat()));
 
     //
     // Scroll actions
     //
-    mScrollUpAction = new KAction( i18n("Scroll Message Up"), this );
+    mScrollUpAction = new QAction( i18n("Scroll Message Up"), this );
     mScrollUpAction->setShortcut( QKeySequence( Qt::Key_Up ) );
     ac->addAction( QLatin1String("scroll_up"), mScrollUpAction );
     connect( mScrollUpAction, SIGNAL(triggered(bool)),
              q, SLOT(slotScrollUp()) );
 
-    mScrollDownAction = new KAction( i18n("Scroll Message Down"), this );
+    mScrollDownAction = new QAction( i18n("Scroll Message Down"), this );
     mScrollDownAction->setShortcut( QKeySequence( Qt::Key_Down ) );
     ac->addAction( QLatin1String("scroll_down"), mScrollDownAction );
     connect( mScrollDownAction, SIGNAL(triggered(bool)),
              q, SLOT(slotScrollDown()) );
 
-    mScrollUpMoreAction = new KAction( i18n("Scroll Message Up (More)"), this );
+    mScrollUpMoreAction = new QAction( i18n("Scroll Message Up (More)"), this );
     mScrollUpMoreAction->setShortcut( QKeySequence( Qt::Key_PageUp ) );
     ac->addAction( QLatin1String("scroll_up_more"), mScrollUpMoreAction );
     connect( mScrollUpMoreAction, SIGNAL(triggered(bool)),
              q, SLOT(slotScrollPrior()) );
 
-    mScrollDownMoreAction = new KAction( i18n("Scroll Message Down (More)"), this );
+    mScrollDownMoreAction = new QAction( i18n("Scroll Message Down (More)"), this );
     mScrollDownMoreAction->setShortcut( QKeySequence( Qt::Key_PageDown ) );
     ac->addAction( QLatin1String("scroll_down_more"), mScrollDownMoreAction );
     connect( mScrollDownMoreAction, SIGNAL(triggered(bool)),
@@ -1767,41 +1794,41 @@ void ViewerPrivate::createActions()
     mToggleDisplayModeAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_H));
     connect( mToggleDisplayModeAction, SIGNAL(triggered(bool)),
              SLOT(slotToggleHtmlMode()) );
-    mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
+    addHelpTextAction(mToggleDisplayModeAction, i18n( "Toggle display mode between HTML and plain text" ) );
 
     // Load external reference
-    KAction *loadExternalReferenceAction = new KAction( i18n( "Load external references" ), this );
+    QAction *loadExternalReferenceAction = new QAction( i18n( "Load external references" ), this );
     ac->addAction( QLatin1String("load_external_reference"), loadExternalReferenceAction );
     loadExternalReferenceAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::CTRL + Qt::Key_R));
     connect( loadExternalReferenceAction, SIGNAL(triggered(bool)),
              SLOT(slotLoadExternalReference()) );
-    loadExternalReferenceAction->setHelpText( i18n( "Load external references from the Internet for this message." ) );
+    addHelpTextAction(loadExternalReferenceAction, i18n( "Load external references from the Internet for this message." ) );
 
 
-    mSpeakTextAction = new KAction(i18n("Speak Text"),this);
-    mSpeakTextAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
+    mSpeakTextAction = new QAction(i18n("Speak Text"),this);
+    mSpeakTextAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
     ac->addAction( QLatin1String("speak_text"), mSpeakTextAction );
     connect( mSpeakTextAction, SIGNAL(triggered(bool)),
              this, SLOT(slotSpeakText()) );
 
-    mCopyImageLocation = new KAction(i18n("Copy Image Location"),this);
-    mCopyImageLocation->setIcon(KIcon(QLatin1String("view-media-visualization")));
+    mCopyImageLocation = new QAction(i18n("Copy Image Location"),this);
+    mCopyImageLocation->setIcon(QIcon::fromTheme(QLatin1String("view-media-visualization")));
     ac->addAction(QLatin1String("copy_image_location"), mCopyImageLocation);
-    mCopyImageLocation->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable(mCopyImageLocation, false);
     connect( mCopyImageLocation, SIGNAL(triggered(bool)),
              SLOT(slotCopyImageLocation()) );
 
-    mTranslateAction = new KAction(i18n("Translate..."),this);
+    mTranslateAction = new QAction(i18n("Translate..."),this);
     mTranslateAction->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
-    mTranslateAction->setIcon(KIcon(QLatin1String("preferences-desktop-locale")));
+    mTranslateAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-locale")));
     ac->addAction(QLatin1String("translate_text"), mTranslateAction);
     connect( mTranslateAction, SIGNAL(triggered(bool)),
              SLOT(slotTranslate()) );
 
-    mFindInMessageAction = new KAction(KIcon(QLatin1String("edit-find")), i18n("&Find in Message..."), this);
+    mFindInMessageAction = new QAction(QIcon::fromTheme(QLatin1String("edit-find")), i18n("&Find in Message..."), this);
     ac->addAction(QLatin1String("find_in_messages"), mFindInMessageAction );
     connect(mFindInMessageAction, SIGNAL(triggered(bool)), SLOT(slotFind()));
-    mFindInMessageAction->setShortcut(KStandardShortcut::find());
+    mFindInMessageAction->setShortcut(KStandardShortcut::find().first());
 
 #ifndef KDEPIM_NO_WEBKIT
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
@@ -1812,32 +1839,32 @@ void ViewerPrivate::createActions()
     mCaretBrowsing->setChecked(false);
 #endif
 #endif
-    mBlockImage = new KAction(i18n("Block image"), this);
+    mBlockImage = new QAction(i18n("Block image"), this);
     ac->addAction(QLatin1String("adblock_image"), mBlockImage);
-    mBlockImage->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable( mBlockImage, false );
     connect( mBlockImage, SIGNAL(triggered(bool)), SLOT(slotBlockImage()) );
 
-    mBlockableItems = new KAction(i18n("Open Blockable Items..."), this);
+    mBlockableItems = new QAction(i18n("Open Blockable Items..."), this);
     ac->addAction(QLatin1String("adblock_blockable_items"), mBlockableItems);
     connect( mBlockableItems, SIGNAL(triggered(bool)), SLOT(slotOpenBlockableItems()) );
 
 
-    mExpandUrlAction = new KAction(i18n("Expand Short URL"), this);
+    mExpandUrlAction = new QAction(i18n("Expand Short URL"), this);
     ac->addAction(QLatin1String("expand_short_url"), mExpandUrlAction);
-    mExpandUrlAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable(mExpandUrlAction,false);
     connect( mExpandUrlAction, SIGNAL(triggered(bool)), SLOT(slotExpandShortUrl()) );
 
-    mCreateTodoAction = new KAction(KIcon( QLatin1String("task-new") ),i18n("Create Todo"), this);
+    mCreateTodoAction = new QAction(QIcon::fromTheme( QLatin1String("task-new") ),i18n("Create Todo"), this);
     mCreateTodoAction->setIconText( i18n( "Create To-do" ) );
-    mCreateTodoAction->setHelpText( i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
+    addHelpTextAction(mCreateTodoAction, i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
     mCreateTodoAction->setWhatsThis( i18n( "This option starts the KOrganizer to-do editor with initial values taken from the currently selected message. Then you can edit the to-do to your liking before saving it to your calendar." ) );
     ac->addAction(QLatin1String("create_todo"), mCreateTodoAction);
     mCreateTodoAction->setShortcut(Qt::CTRL + Qt::Key_T);
     connect( mCreateTodoAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateTodoWidget()) );
 
-    mCreateEventAction = new KAction(KIcon( QLatin1String("appointment-new") ),i18n("Create Event"), this);
+    mCreateEventAction = new QAction(QIcon::fromTheme( QLatin1String("appointment-new") ),i18n("Create Event"), this);
     mCreateEventAction->setIconText( i18n( "Create Event" ) );
-    mCreateEventAction->setHelpText( i18n( "Allows you to create a calendar Event" ) );
+    addHelpTextAction(mCreateEventAction, i18n( "Allows you to create a calendar Event" ) );
     ac->addAction(QLatin1String("create_event"), mCreateEventAction);
     mCreateEventAction->setShortcut(Qt::CTRL + Qt::Key_E);
     connect( mCreateEventAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateEventWidget()) );
@@ -1861,7 +1888,7 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     const bool isRoot = ( content == mMessage.get() );
     const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
 
-    KMenu popup;
+    QMenu popup;
 
     if ( !isRoot ) {
         popup.addAction( SmallIcon( QLatin1String("document-save-as") ), i18n( "Save &As..." ),
@@ -2079,7 +2106,7 @@ const QTextCodec* ViewerPrivate::codecForName(const QByteArray& _str)
         return 0;
     QByteArray codec = _str;
     kAsciiToLower(codec.data());
-    return KGlobal::charsets()->codecForName(QLatin1String(codec));
+    return KCharsets::charsets()->codecForName(QLatin1String(codec));
 }
 
 void ViewerPrivate::update( MessageViewer::Viewer::UpdateMode updateMode )
@@ -2271,7 +2298,7 @@ void ViewerPrivate::updateReaderWin()
         //
         // While the exec() eventloop is running, it is possible that a timer calls updateReaderWin(),
         // and not aborting here would confuse the state terribly.
-        kWarning() << "Danger, recursion while displaying a message!";
+        qWarning() << "Danger, recursion while displaying a message!";
         return;
     }
     mRecursionCountForDisplayMessage++;
@@ -2413,9 +2440,9 @@ void ViewerPrivate::attachmentView( KMime::Content *atmNode )
         const bool isEncapsulatedMessage = atmNode->parent() && atmNode->parent()->bodyIsMessage();
         if ( isEncapsulatedMessage ) {
             atmViewMsg( atmNode->parent()->bodyAsMessage() );
-        } else if ((kasciistricmp(atmNode->contentType()->mediaType(), "text")==0) &&
-                   ( (kasciistricmp(atmNode->contentType()->subType(), "x-vcard")==0) ||
-                     (kasciistricmp(atmNode->contentType()->subType(), "directory")==0) )) {
+        } else if ((qstricmp(atmNode->contentType()->mediaType(), "text")==0) &&
+                   ( (qstricmp(atmNode->contentType()->subType(), "x-vcard")==0) ||
+                     (qstricmp(atmNode->contentType()->subType(), "directory")==0) )) {
             setMessagePart( atmNode );
         } else {
             emit showReader( atmNode, htmlMail(), overrideEncoding() );
@@ -2467,7 +2494,7 @@ void ViewerPrivate::slotSetEncoding()
 
 QString ViewerPrivate::attachmentInjectionHtml() const
 {
-    QString imgpath( KStandardDirs::locate("data",QLatin1String("libmessageviewer/pics/")) );
+    QString imgpath( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/")) );
     QString urlHandle;
     QString imgSrc;
     if( !mShowAttachmentQuicklist ) {
@@ -2725,7 +2752,7 @@ void ViewerPrivate::slotHandleAttachment( int choice )
         scrollToAttachment( mCurrentContent );
     }
     else {
-        kDebug() << " not implemented :" << choice;
+        qDebug() << " not implemented :" << choice;
     }
 }
 
@@ -2790,7 +2817,7 @@ void ViewerPrivate::slotSaveMessage()
 {
     if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
         if ( mMessageItem.isValid() ) {
-            kWarning() << "Payload is not a MessagePtr!";
+            qWarning() << "Payload is not a MessagePtr!";
         }
         return;
     }
@@ -3030,7 +3057,7 @@ void ViewerPrivate::slotAtmDecryptWithChiasmusResult( const GpgME::Error & err, 
         return;
 
     KIO::Job * uploadJob = KIO::storedPut( result.toByteArray(), url, -1, KIO::Overwrite );
-    uploadJob->ui()->setWindow( mMainWindow );
+    KJobWidgets::setWindow(uploadJob, mMainWindow );
     connect( uploadJob, SIGNAL(result(KJob*)),
              this, SLOT(slotAtmDecryptWithChiasmusUploadResult(KJob*)) );
 }
@@ -3069,7 +3096,7 @@ void ViewerPrivate::toggleFullAddressList()
 
 QString ViewerPrivate::recipientsQuickListLinkHtml( bool doShow, const QString & field ) const
 {
-    QString imgpath( KStandardDirs::locate( "data",QLatin1String("libmessageviewer/pics/") ) );
+    QString imgpath( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/") ) );
     QString urlHandle;
     QString imgSrc;
     QString altText;
@@ -3118,7 +3145,7 @@ void ViewerPrivate::itemFetchResult( KJob* job )
 void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, const QSet<QByteArray> & parts )
 {
     if ( item.id() != messageItem().id() ) {
-        kDebug() << "Update for an already forgotten item. Weird.";
+        qDebug() << "Update for an already forgotten item. Weird.";
         return;
     }
     if( parts.contains( "PLD:RFC822" ) )
@@ -3302,7 +3329,7 @@ void ViewerPrivate::slotMessageIsNotAScam()
 void ViewerPrivate::slotModifyItemDone(KJob* job)
 {
     if ( job && job->error() ) {
-        kWarning() << " Error trying to change attribute:" << job->errorText();
+        qWarning() << " Error trying to change attribute:" << job->errorText();
     }
 }
 
@@ -3329,7 +3356,7 @@ void ViewerPrivate::slotAddToWhiteList()
                 return;
             lst << email;
             MessageViewer::GlobalSettings::self()->setScamDetectionWhiteList( lst );
-            MessageViewer::GlobalSettings::self()->writeConfig();
+            MessageViewer::GlobalSettings::self()->save();
         }
     }
 }
@@ -3392,4 +3419,9 @@ void ViewerPrivate::slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const 
 {
     CreateEventJob *createJob = new CreateEventJob(eventPtr, collection, mMessageItem, this);
     createJob->start();
+}
+
+void ViewerPrivate::addHelpTextAction(QAction *act, const QString &text)
+{
+
 }

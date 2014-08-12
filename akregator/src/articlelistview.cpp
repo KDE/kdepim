@@ -33,11 +33,10 @@
 #include <utils/filtercolumnsproxymodel.h>
 
 #include <KDateTime>
-#include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KUrl>
-#include <KMenu>
+#include <QMenu>
 #include <KColorScheme>
 #include <KLocale>
 
@@ -65,7 +64,7 @@ bool FilterDeletedProxyModel::filterAcceptsRow( int source_row, const QModelInde
     return !sourceModel()->index( source_row, 0, source_parent ).data( ArticleModel::IsDeletedRole ).toBool();
 }
 
-SortColorizeProxyModel::SortColorizeProxyModel( QObject* parent ) : QSortFilterProxyModel( parent ), m_keepFlagIcon( KIcon( "mail-mark-important" ) )
+SortColorizeProxyModel::SortColorizeProxyModel( QObject* parent ) : QSortFilterProxyModel( parent ), m_keepFlagIcon( QIcon::fromTheme( "mail-mark-important" ) )
 {
     m_unreadColor = KColorScheme( QPalette::Normal, KColorScheme::View ).foreground( KColorScheme::PositiveText ).color();
     m_newColor = KColorScheme( QPalette::Normal, KColorScheme::View ).foreground( KColorScheme::NegativeText ).color();
@@ -182,8 +181,8 @@ void ArticleListView::showHeaderMenu(const QPoint& pos)
     if ( !model() )
         return;
 
-    QPointer<KMenu> menu = new KMenu( this );
-    menu->addTitle( i18n( "Columns" ) );
+    QPointer<QMenu> menu = new QMenu( this );
+    menu->setTitle( i18n( "Columns" ) );
     menu->setAttribute( Qt::WA_DeleteOnClose );
 
     const int colCount = model()->columnCount();
@@ -296,7 +295,7 @@ static int maxDateColumnWidth( const QFontMetrics &fm )
     int width = 0;
     KDateTime date( KDateTime::currentLocalDate(), QTime(23, 59) );
     for (int x=0; x<10; x++, date = date.addDays( -1 ) ) {
-        QString txt = ' ' + KGlobal::locale()->formatDateTime(date, KLocale::FancyShortDate ) + ' ';
+        QString txt = ' ' + KLocale::global()->formatDateTime(date, KLocale::FancyShortDate ) + ' ';
         width = qMax( width, fm.width( txt ) );
     }
     return width;

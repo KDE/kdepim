@@ -22,7 +22,7 @@
 
 #include "mobileui_export.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 #include <QtCore/QObject>
 

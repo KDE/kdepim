@@ -31,7 +31,7 @@
 #include <KLocalizedString>
 #include <KLocale>
 #include <KMessageBox>
-#include <KTextBrowser>
+#include <QTextBrowser>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -39,8 +39,8 @@
 #include <QListWidget>
 #include <QPushButton>
 #include <QPointer>
-#include <QDebug>
 #include <QStackedWidget>
+#include <KFormat>
 
 using namespace PimCommon;
 
@@ -81,7 +81,7 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mainLayout->addLayout(vlay);
 
     QVBoxLayout *vbox = new QVBoxLayout;
-    mDescription = new KTextBrowser;
+    mDescription = new QTextBrowser;
     mDescription->setReadOnly(true);
     vbox->addWidget(mDescription);
 
@@ -270,7 +270,7 @@ void StorageServiceSettingsWidget::slotAddService()
                 break;
             }
             case PimCommon::StorageServiceManager::WebDav: {
-                storage = new PimCommon::WebDavStorageService;
+                //storage = new PimCommon::WebDavStorageService;
                 break;
             }
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -369,17 +369,17 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceN
         if (info.isValid()) {
             mStackWidget->setCurrentWidget(mInformationPage);
             if (info.accountSize >= 0) {
-                mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+                mAccountSize->setText(i18n("Account size: %1", KFormat().formatByteSize(info.accountSize,1)));
             } else {
                 mAccountSize->setText(i18n("Account size:"));
             }
             if (info.quota >= 0) {
-                mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
+                mQuota->setText(i18n("Quota: %1", KFormat().formatByteSize(info.quota,1)));
             } else {
                 mQuota->setText(i18n("Quota:"));
             }
             if (info.shared >= 0) {
-                mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.shared,1)));
+                mShared->setText(i18n("Shared: %1", KFormat().formatByteSize(info.shared,1)));
             } else {
                 mShared->setText(i18n("Shared:"));
             }

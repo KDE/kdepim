@@ -2,7 +2,7 @@ PROJECT(grantleefilters)
 
 INCLUDE(${Grantlee_USE_FILE}) # This files defines the grantlee_add_plugin macro
 
-INCLUDE_DIRECTORIES( ${PROJECT_BINARY_DIR} ${KDE4_INCLUDES} ${QT_INCLUDES} ${Grantlee_INCLUDE_DIRS} 
+INCLUDE_DIRECTORIES( ${PROJECT_BINARY_DIR} ${Grantlee_INCLUDE_DIRS} 
 )
 
 # Make the following conditional on Grantlee_FOUND despite Grantlee being a

@@ -21,7 +21,7 @@
 #include <QObject>
 
 #include <KSharedConfig>
-#include <Akonadi/Collection>
+#include <Collection>
 
 class ArchiveMailKernel;
 class ArchiveMailInfo;

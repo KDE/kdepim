@@ -17,21 +17,28 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kaboutdata.h>
-#include <kapplication.h>
-#include <kcmdlineargs.h>
-#include <kdebug.h>
-#include <klocale.h>
+#include <KAboutData>
+
+#include <KLocalizedString>
 
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpui.h> 
+#include <QApplication>
+#include <QCommandLineParser>
 
 int main(int argc,char **argv)
 {
-  KAboutData aboutData( "testkeyselectiondialog", 0, KLocalizedString(), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
+  QApplication app(argc, argv);
+  KAboutData aboutData( QLatin1String("testkeyselectiondialog"),QString(), QLatin1String("0.1") );
+  
+  KAboutData::setApplicationData(aboutData);
 
-  KApplication app;
+  QCommandLineParser parser;
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
   Kpgp::KeySelectionDialog dlg( Kpgp::Module::getKpgp()->publicKeys(), QLatin1String("Public Keys") );
   dlg.show();  

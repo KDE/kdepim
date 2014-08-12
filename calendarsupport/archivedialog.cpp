@@ -35,19 +35,17 @@
 #include <KLineEdit>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KNumInput>
 #include <KUrl>
 #include <KUrlRequester>
-#include <KVBox>
+#include <QHBoxLayout>
 
+#include <QSpinBox>
 #include <QButtonGroup>
 #include <QCheckBox>
-#include <QDateTime>
 #include <QFrame>
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLayout>
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include <QWhatsThis>
@@ -75,7 +73,7 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
 #ifndef KDEPIM_MOBILE_UI
   QLabel *descLabel = new QLabel( topFrame );
   descLabel->setText(
-    i18nc( "@info:whatsthis",
+    xi18nc( "@info:whatsthis",
            "Archiving saves old items into the given file and "
            "then deletes them in the current calendar. If the archive file "
            "already exists they will be added. "
@@ -128,7 +126,9 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
 
   // Checkbox, numinput and combo for auto-archiving (similar to kmail's
   // mExpireFolderCheckBox/mReadExpiryTimeNumInput in kmfolderdia.cpp)
-  KHBox *autoArchiveHBox = new KHBox( topFrame );
+  QWidget *autoArchiveHBox = new QWidget( topFrame );
+  QHBoxLayout *autoArchiveHBoxHBoxLayout = new QHBoxLayout(autoArchiveHBox);
+  autoArchiveHBoxHBoxLayout->setMargin(0);
   topLayout->addWidget( autoArchiveHBox );
   mAutoArchiveRB = new QRadioButton( i18nc( "@option:radio",
                                             "Automaticall&y archive items older than:" ),
@@ -143,9 +143,11 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
            "need to use this dialog box again, except to change the settings." ) );
   radioBG->addButton( mAutoArchiveRB );
 
-  mExpiryTimeNumInput = new KIntNumInput( autoArchiveHBox );
-  mExpiryTimeNumInput->setRange( 1, 500, 1 );
-  mExpiryTimeNumInput->setSliderEnabled( false );
+  mExpiryTimeNumInput = new QSpinBox( autoArchiveHBox );
+  autoArchiveHBoxHBoxLayout->addWidget(mExpiryTimeNumInput);
+  mExpiryTimeNumInput->setRange( 1, 500 );
+  mExpiryTimeNumInput->setSingleStep( 1 );
+
   mExpiryTimeNumInput->setEnabled( false );
   mExpiryTimeNumInput->setValue( 7 );
   mExpiryTimeNumInput->setToolTip(
@@ -157,6 +159,7 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
            "will be saved and deleted, the newer will be kept." ) );
 
   mExpiryUnitsComboBox = new KComboBox( autoArchiveHBox );
+  autoArchiveHBoxHBoxLayout->addWidget(mExpiryUnitsComboBox);
   mExpiryUnitsComboBox->setToolTip(
     i18nc( "@info:tooltip",
            "Set the units for the automatic archive age" ) );
@@ -190,7 +193,8 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
            "will not be modified or deleted. You can later load or merge the "
            "file like any other calendar. It is not saved in a special "
            "format, it uses the iCalendar format." ) );
-  mArchiveFile->fileDialog()->setOperationMode( KFileDialog::Saving );
+//QT5
+  //mArchiveFile->fileDialog()->setOperationMode( KFileDialog::Saving );
   l->setBuddy( mArchiveFile->lineEdit() );
   fileLayout->addWidget( mArchiveFile );
   topLayout->addLayout( fileLayout );

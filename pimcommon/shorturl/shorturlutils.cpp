@@ -24,7 +24,6 @@
 
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KGlobal>
 #include <KLocalizedString>
 
 #include <QDebug>
@@ -80,13 +79,13 @@ QString PimCommon::ShortUrlUtils::stringFromEngineType(EngineType type)
 
 int PimCommon::ShortUrlUtils::readEngineSettings()
 {
-    KConfigGroup grp( KGlobal::config(), "ShortUrl" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "ShortUrl" );
     const int engineType = grp.readEntry("Engine", static_cast<int>(PimCommon::ShortUrlUtils::Google));
     return engineType;
 }
 
 void PimCommon::ShortUrlUtils::writeEngineSettings(int value)
 {
-    KConfigGroup grp( KGlobal::config(), "ShortUrl" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "ShortUrl" );
     grp.writeEntry("Engine", value);
 }

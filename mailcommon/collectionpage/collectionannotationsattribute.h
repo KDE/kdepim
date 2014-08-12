@@ -20,7 +20,7 @@
 #ifndef MAILCOMMON_COLLECTIONANNOTATIONSATTRIBUTE_H
 #define MAILCOMMON_COLLECTIONANNOTATIONSATTRIBUTE_H
 
-#include <Akonadi/Attribute>
+#include <Attribute>
 
 #include <QMap>
 

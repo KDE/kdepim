@@ -41,13 +41,11 @@
 
 #include <messageviewer/viewer/stl_util.h>
 
-#include <KDebug>
 #include <QObject>
 #include <QStackedWidget>
 
 #include "search/searchpattern.h"
 
-#include <KLocale>
 
 
 #include <algorithm>

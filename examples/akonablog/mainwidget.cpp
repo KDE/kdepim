@@ -24,18 +24,18 @@
 #include "microblogdelegate.h"
 #include "akonaditabbar.h"
 
-#include <akonadi/agentinstancemodel.h>
-#include <akonadi/agentfilterproxymodel.h>
-#include <akonadi/collectionfetchjob.h>
+#include <AkonadiCore/agentinstancemodel.h>
+#include <AkonadiCore/agentfilterproxymodel.h>
+#include <AkonadiCore/collectionfetchjob.h>
 
 #include <QVBoxLayout>
 #include <QSplitter>
 #include <QListView>
 #include <QTreeView>
 
-#include <KVBox>
+#include <QVBoxLayout>
 #include <KTabBar>
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
 using namespace Akonadi;
@@ -64,14 +64,18 @@ MainWidget::MainWidget( MainWindow * parent ) :
     m_resourcesView->setModel( proxy );
 
     // Bottom part
-    KVBox* box = new KVBox( splitter );
+    QWidget* box = new QWidget( splitter );
+    QVBoxLayout *boxVBoxLayout = new QVBoxLayout(box);
+    boxVBoxLayout->setMargin(0);
 
     // Folders
     m_tabBar = new AkonadiTabBar( box );
+    boxVBoxLayout->addWidget(m_tabBar);
     connect( m_tabBar, SIGNAL(currentChanged(Akonadi::Collection)),
              SLOT(slotCurrentTabChanged(Akonadi::Collection)) );
 
     mMessageList = new QTreeView( box );
+    boxVBoxLayout->addWidget(mMessageList);
     mMessageList->setRootIsDecorated( false );
     mMessageList->setDragEnabled( false );
     mMessageList->setSelectionMode( QAbstractItemView::ExtendedSelection );

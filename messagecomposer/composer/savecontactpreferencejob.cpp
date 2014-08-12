@@ -17,13 +17,13 @@
 
 #include "savecontactpreferencejob.h"
 
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KLocalizedString>
 
 #include <Akonadi/Contact/ContactSearchJob>
-#include <Akonadi/CollectionDialog>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemModifyJob>
+#include <AkonadiWidgets/CollectionDialog>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/ItemModifyJob>
 
 #include <QPointer>
 #include <QDebug>
@@ -60,7 +60,7 @@ void SaveContactPreferenceJob::slotSearchContact(KJob* job)
 
     if ( items.isEmpty() ) {
         bool ok = true;
-        const QString fullName = KInputDialog::getText( i18n( "Name Selection" ), i18n( "Which name shall the contact '%1' have in your address book?", mEmail ), QString(), &ok );
+        const QString fullName = QInputDialog::getText( 0, i18n( "Name Selection" ), i18n( "Which name shall the contact '%1' have in your address book?", mEmail ), QLineEdit::Normal, QString(), &ok );
         if ( !ok ) {
             emitResult();
             return;

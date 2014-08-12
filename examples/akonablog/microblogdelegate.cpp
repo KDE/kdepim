@@ -19,7 +19,7 @@
 
 #include "microblogdelegate.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KToolInvocation>
 
@@ -34,13 +34,13 @@ MicroblogDelegate::MicroblogDelegate( QAbstractItemView *itemView, QObject * par
 {
 }
 
-QList<QWidget*> MicroblogDelegate::createItemWidgets() const
+QList<QWidget*> MicroblogDelegate::createItemWidgets(const QModelIndex &index) const
 {
     QList<QWidget*> list;
 
     QWebView * infoLabel = new QWebView();
     infoLabel->setBackgroundRole( QPalette::NoRole );
-    connect( infoLabel, SIGNAL(linkClicked(QUrl)), SLOT(slotLinkClicked(QUrl)) );
+    connect(infoLabel, &QWebView::linkClicked, this, &MicroblogDelegate::slotLinkClicked);
     list << infoLabel;
     return list;
 }
@@ -68,7 +68,7 @@ void MicroblogDelegate::updateItemWidgets( const QList<QWidget*> widgets,
     text.append( QLatin1String("<Br>") + getData( model, row, BlogModel::User ).toString() );
     text.append( QLatin1String("</td></tr></table>") );
     text.append( QLatin1String("<Br>") + getData( model, row, BlogModel::Text ).toString() );
-    //kDebug() << text;
+    //qDebug() << text;
     edit->setHtml( text );
 }
 

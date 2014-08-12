@@ -21,7 +21,7 @@
 #define CONTACTSELECTIONWIDGET_H
 
 #include <KABC/Addressee>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <QWidget>
 
 class QCheckBox;

@@ -25,19 +25,16 @@
 
 #include "kdepim_export.h"
 
-#define KDE3_SUPPORT
-#include <KCModule>
-#undef KDE3_SUPPORT
 #include <KConfigSkeleton>
 #include <KFile>
 #include <KLineEdit>
 #include <KPageDialog>
+#include <KCModule>
 
 #include <QVariantList>
 
 class KColorButton;
 class KComboBox;
-class KComponentData;
 class KDateComboBox;
 class KTimeComboBox;
 class KUrlRequester;
@@ -438,7 +435,7 @@ private:
   The setting is interpreted as an int value, corresponding to the index in
   the combo box.
 */
-class KDE_EXPORT KPrefsWidCombo : public KPrefsWid
+class KDEPIM_EXPORT KPrefsWidCombo : public KPrefsWid
 {
 public:
     /**
@@ -793,7 +790,7 @@ class KDEPIM_EXPORT KPrefsModule : public KCModule, public KPrefsWidManager
 {
     Q_OBJECT
 public:
-    KPrefsModule( KConfigSkeleton *, const KComponentData &instance,
+    KPrefsModule( KConfigSkeleton *, 
                   QWidget *parent=0, const QVariantList &args=QVariantList() );
 
     virtual void addWid( KPrefsWid * );

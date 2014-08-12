@@ -23,20 +23,20 @@
 #include <kblog/blogcomment.h>
 
 #include <KUrl>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
-#include <LibKGAPI2/Blogger/Blog>
-#include <LibKGAPI2/Blogger/BlogFetchJob>
-#include <LibKGAPI2/Blogger/Post>
-#include <LibKGAPI2/Blogger/PostCreateJob>
-#include <LibKGAPI2/Blogger/PostDeleteJob>
-#include <LibKGAPI2/Blogger/PostFetchJob>
-#include <LibKGAPI2/Blogger/PostModifyJob>
-#include <LibKGAPI2/Blogger/Comment>
-#include <LibKGAPI2/Blogger/CommentFetchJob>
-#include <LibKGAPI2/Account>
-#include <LibKGAPI2/AuthJob>
+#include <KGAPI/Blogger/Blog>
+#include <KGAPI/Blogger/BlogFetchJob>
+#include <KGAPI/Blogger/Post>
+#include <KGAPI/Blogger/PostCreateJob>
+#include <KGAPI/Blogger/PostDeleteJob>
+#include <KGAPI/Blogger/PostFetchJob>
+#include <KGAPI/Blogger/PostModifyJob>
+#include <KGAPI/Blogger/Comment>
+#include <KGAPI/Blogger/CommentFetchJob>
+#include <KGAPI/Account>
+#include <KGAPI/AuthJob>
 
 Q_DECLARE_METATYPE(KBlog::BlogPost*)
 Q_DECLARE_METATYPE(KGAPI2::Job*)
@@ -237,12 +237,12 @@ bool BloggerPrivate::handleError(KGAPI2::Job *job)
 Blogger::Blogger(const KUrl &server, QObject *parent)
     : Blog(server, *new BloggerPrivate(this), parent)
 {
-    kDebug();
+    qDebug();
 }
 
 Blogger::~Blogger()
 {
-    kDebug();
+    qDebug();
 }
 
 
@@ -268,7 +268,7 @@ void Blogger::authenticate(const QMap<QString, QString> &authData)
     Q_D(Blogger);
 
     KGAPI2::AccountPtr account;
-    kDebug() << authData;
+    qDebug() << authData;
     if (!authData.isEmpty()) {
         QList<QUrl> scopes;
         scopes << KGAPI2::Account::bloggerScopeUrl();

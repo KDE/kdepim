@@ -21,6 +21,7 @@
 #ifndef __MESSAGELIST_CORE_MODELINVARIANTROWMAPPER_H__
 #define __MESSAGELIST_CORE_MODELINVARIANTROWMAPPER_H__
 
+#include <QObject>
 #include <QHash>
 #include <QList>
 

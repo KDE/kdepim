@@ -22,8 +22,8 @@
 #include <libkdepim/widgets/kwidgetlister.h>
 #include <KComboBox>
 
-class KPushButton;
-class KLineEdit;
+class QPushButton;
+class QLineEdit;
 class QGridLayout;
 class QCheckBox;
 class QDomElement;
@@ -69,13 +69,13 @@ Q_SIGNALS:
 
 private:
     void initWidget();
-    KPushButton *mAdd;
-    KPushButton *mRemove;
+    QPushButton *mAdd;
+    QPushButton *mRemove;
     QGridLayout *mLayout;
     QCheckBox *mOptional;
     QCheckBox *mOnce;
     SieveIncludeLocation *mLocation;
-    KLineEdit *mIncludeName;
+    QLineEdit *mIncludeName;
 };
 
 class SieveIncludeWidgetLister : public KPIM::KWidgetLister

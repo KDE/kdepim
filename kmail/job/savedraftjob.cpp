@@ -19,9 +19,9 @@
 */
 
 #include "savedraftjob.h"
-#include <akonadi/kmime/messagestatus.h>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
+#include <Akonadi/KMime/MessageStatus>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/ItemCreateJob>
 
 SaveDraftJob::SaveDraftJob(const KMime::Message::Ptr &msg, const Akonadi::Collection &col, QObject *parent)
     : KJob(parent),

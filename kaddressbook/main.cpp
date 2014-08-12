@@ -20,12 +20,11 @@
 
 #include "aboutdata.h"
 #include "mainwindow.h"
-#include "startup.h"
 #include "mainwidget.h"
 #include "kaddressbook_options.h"
 
 #include <KCmdLineArgs>
-#include <KDebug>
+#include <QDebug>
 #include <kontactinterface/pimuniqueapplication.h>
 
 //-----------------------------------------------------------------------------
@@ -46,7 +45,7 @@ private:
 
 int KAddressBookApplication::newInstance()
 {
-    kDebug();
+    qDebug();
     if (!mMainWindow) {
         mMainWindow = new MainWindow;
         mMainWindow->show();
@@ -57,6 +56,7 @@ int KAddressBookApplication::newInstance()
 
 int main( int argc, char **argv )
 {
+    KLocalizedString::setApplicationDomain("kaddressbook");
     AboutData about;
 
     KCmdLineArgs::init( argc, argv, &about );
@@ -68,7 +68,6 @@ int main( int argc, char **argv )
     }
 
     KAddressBookApplication app;
-    KAddressBook::insertLibraryCatalogues();
 
     return app.exec();
 }

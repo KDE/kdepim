@@ -37,9 +37,7 @@
 
 #include <QFontMetrics>
 #include <QToolTip>
-#include <QRect>
 #include <QPoint>
-#include <QPainter>
 #include <QFont>
 #include <QColor>
 #include <QTimer>
@@ -375,7 +373,7 @@ void Kleo::KeyListViewItem::setKey( const GpgME::Key & key ) {
   for ( int i = 0 ; i < numCols ; ++i ) {
     setText( i, cs->text( key, i ) );
     setToolTip( i, cs->toolTip( key, i ) );
-    const KIcon icon = cs->icon( key, i );
+    const QIcon icon = cs->icon( key, i );
     if ( !icon.isNull() )
       setIcon( i, icon );
     if ( ds ) {

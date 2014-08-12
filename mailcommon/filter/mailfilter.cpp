@@ -33,12 +33,12 @@ using MailCommon::FilterLog;
 #include "pimcommon/util/pimutil.h"
 
 // KDEPIMLIBS headers
-#include <Akonadi/AgentManager>
+#include <AgentManager>
 
 // other KDE headers
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <krandom.h>
@@ -340,12 +340,12 @@ void MailFilter::setToolbarName( const QString &toolbarName )
     mToolbarName = toolbarName;
 }
 
-void MailFilter::setShortcut( const KShortcut &shortcut )
+void MailFilter::setShortcut( const QKeySequence &shortcut )
 {
     mShortcut = shortcut;
 }
 
-const KShortcut& MailFilter::shortcut() const
+const QKeySequence& MailFilter::shortcut() const
 {
     return mShortcut;
 }
@@ -399,7 +399,7 @@ bool MailFilter::readConfig(const KConfigGroup & config, bool interactive)
     bConfigureShortcut = config.readEntry( "ConfigureShortcut", false );
     QString shortcut( config.readEntry( "Shortcut", QString() ) );
     if ( !shortcut.isEmpty() ) {
-        KShortcut sc( shortcut );
+        QKeySequence sc( shortcut );
         setShortcut( sc );
     }
     bConfigureToolbar = config.readEntry( "ConfigureToolbar", false );
@@ -644,7 +644,7 @@ QDataStream& MailCommon::operator<<( QDataStream &stream, const MailCommon::Mail
     stream << filter.mAccounts;
     stream << filter.mIcon;
     stream << filter.mToolbarName;
-    stream << filter.mShortcut.primary() << filter.mShortcut.alternate();
+    stream << filter.mShortcut;
     stream << filter.bApplyOnInbound;
     stream << filter.bApplyBeforeOutbound;
     stream << filter.bApplyOnOutbound;
@@ -663,7 +663,7 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
 {
     QByteArray pattern;
     int numberOfActions;
-    QKeySequence primary, alternate;
+    QKeySequence shortcut;
     bool bApplyOnInbound;
     bool bApplyBeforeOutbound;
     bool bApplyOnOutbound;
@@ -702,7 +702,7 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
     stream >> filter.mAccounts;
     stream >> filter.mIcon;
     stream >> filter.mToolbarName;
-    stream >> primary >> alternate;
+    stream >> shortcut;
     stream >> bApplyOnInbound;
     stream >> bApplyBeforeOutbound;
     stream >> bApplyOnOutbound;
@@ -715,7 +715,7 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
     stream >> bEnabled;
 
     filter.mPattern.deserialize(pattern);
-    filter.mShortcut = KShortcut( primary, alternate );
+    filter.mShortcut = shortcut;
     filter.bApplyOnInbound = bApplyOnInbound;
     filter.bApplyBeforeOutbound = bApplyBeforeOutbound;
     filter.bApplyOnOutbound = bApplyOnOutbound;

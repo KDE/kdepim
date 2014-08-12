@@ -21,14 +21,14 @@
 #include "commonwidgets/sievehelpbutton.h"
 #include "editor/sieveeditorutil.h"
 
-#include <KPushButton>
+#include <QPushButton>
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
+#include <QIcon>
 
 #include <QGridLayout>
 #include <QCheckBox>
 #include <QLabel>
-#include <QToolButton>
 #include <QWhatsThis>
 #include <QDebug>
 #include <QDomNode>
@@ -69,7 +69,7 @@ void SieveGlobalVariableActionWidget::initWidget()
     QLabel *lab = new QLabel(i18n("Variable name:"));
     mLayout->addWidget( lab, 1, 0 );
 
-    mVariableName = new KLineEdit;
+    mVariableName = new QLineEdit;
     connect(mVariableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mVariableName, 1, 1 );
 
@@ -78,19 +78,19 @@ void SieveGlobalVariableActionWidget::initWidget()
     mLayout->addWidget( mSetValueTo, 1, 2 );
     mSetValueTo->setChecked(false);
 
-    mVariableValue = new KLineEdit;
+    mVariableValue = new QLineEdit;
     connect(mVariableValue, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mVariableValue->setEnabled(false);
     mLayout->addWidget( mVariableValue, 1, 3 );
 
     connect(mSetValueTo, SIGNAL(clicked(bool)), mVariableValue, SLOT(setEnabled(bool)));
 
-    mAdd = new KPushButton( this );
-    mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    mAdd = new QPushButton( this );
+    mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
-    mRemove = new KPushButton( this );
-    mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    mRemove = new QPushButton( this );
+    mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     mLayout->addWidget( mAdd, 1, 4 );
     mLayout->addWidget( mRemove, 1, 5 );

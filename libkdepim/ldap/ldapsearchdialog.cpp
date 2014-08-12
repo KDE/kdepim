@@ -41,21 +41,22 @@
 #include <QMenu>
 #include <QClipboard>
 
-#include <akonadi/collection.h>
-#include <akonadi/itemcreatejob.h>
+#include <collection.h>
+#include <itemcreatejob.h>
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kcmultidialog.h>
-#include <kdialogbuttonbox.h>
+#include <qdialogbuttonbox.h>
 #include <kldap/ldapobject.h>
 #include <kldap/ldapserver.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <KPIMUtils/ProgressIndicatorLabel>
+#include <KLocale>
 
 using namespace KLDAP;
 
@@ -506,15 +507,15 @@ public:
 
     KComboBox *mFilterCombo;
     KComboBox *mSearchType;
-    KLineEdit *mSearchEdit;
+    QLineEdit *mSearchEdit;
 
     QCheckBox *mRecursiveCheckbox;
     QTableView *mResultView;
-    KPushButton *mSearchButton;
+    QPushButton *mSearchButton;
     ContactListModel *mModel;
     KPIMUtils::ProgressIndicatorLabel *progressIndication;
     QSortFilterProxyModel *sortproxy;
-    KLineEdit *searchLine;
+    QLineEdit *searchLine;
 };
 
 LdapSearchDialog::LdapSearchDialog( QWidget *parent )
@@ -542,8 +543,8 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
     QLabel *label = new QLabel( i18n( "Search for:" ), groupBox );
     boxLayout->addWidget( label, 0, 0 );
 
-    d->mSearchEdit = new KLineEdit( groupBox );
-    d->mSearchEdit->setClearButtonShown(true);
+    d->mSearchEdit = new QLineEdit( groupBox );
+    d->mSearchEdit->setClearButtonEnabled(true);
     boxLayout->addWidget( d->mSearchEdit, 0, 1 );
     label->setBuddy( d->mSearchEdit );
 
@@ -560,8 +561,8 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
     d->stopSearchGuiItem = KStandardGuiItem::stop();
 
     QSize buttonSize;
-    d->mSearchButton = new KPushButton( groupBox );
-    d->mSearchButton->setGuiItem(d->startSearchGuiItem);
+    d->mSearchButton = new QPushButton( groupBox );
+    KGuiItem::assign(d->mSearchButton, d->startSearchGuiItem);
 
     buttonSize = d->mSearchButton->sizeHint();
     if ( buttonSize.width() < d->mSearchButton->sizeHint().width() ) {
@@ -586,9 +587,9 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 
     QHBoxLayout *quickSearchLineLayout = new QHBoxLayout;
     quickSearchLineLayout->addStretch();
-    d->searchLine = new KLineEdit;
-    d->searchLine->setClearButtonShown(true);
-    d->searchLine->setClickMessage(i18n("Search in result"));
+    d->searchLine = new QLineEdit;
+    d->searchLine->setClearButtonEnabled(true);
+    d->searchLine->setPlaceholderText(i18n("Search in result"));
     quickSearchLineLayout->addWidget(d->searchLine);
     topLayout->addLayout( quickSearchLineLayout );
 
@@ -625,11 +626,13 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
     d->progressIndication = new KPIMUtils::ProgressIndicatorLabel(i18n("Searching..."));
     buttonLayout->addWidget(d->progressIndication);
 
-    KDialogButtonBox *buttons = new KDialogButtonBox( page, Qt::Horizontal );
-    buttons->addButton( i18n( "Select All" ),
-                        QDialogButtonBox::ActionRole, this, SLOT(slotSelectAll()) );
-    buttons->addButton( i18n( "Unselect All" ),
-                        QDialogButtonBox::ActionRole, this, SLOT(slotUnselectAll()) );
+    QDialogButtonBox *buttons = new QDialogButtonBox( page );
+    QPushButton *button = buttons->addButton( i18n( "Select All" ),
+                        QDialogButtonBox::ActionRole);
+    connect(button, SIGNAL(clicked()), this, SLOT(slotSelectAll()) );
+    button = buttons->addButton( i18n( "Unselect All" ),
+                        QDialogButtonBox::ActionRole);
+    connect(button, SIGNAL(clicked()), this, SLOT(slotUnselectAll()) );
 
     buttonLayout->addWidget( buttons );
 
@@ -647,9 +650,9 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
     setTabOrder( d->mFilterCombo, d->mSearchButton );
     d->mSearchEdit->setFocus();
 
-    connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
-    connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
-    connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancelClicked()));
+    connect(this, &LdapSearchDialog::user1Clicked, this, &LdapSearchDialog::slotUser1);
+    connect(this, &LdapSearchDialog::user2Clicked, this, &LdapSearchDialog::slotUser2);
+    connect(this, &LdapSearchDialog::cancelClicked, this, &LdapSearchDialog::slotCancelClicked);
     d->slotSelectionChanged();
     d->restoreSettings();
 }
@@ -806,7 +809,7 @@ void LdapSearchDialog::Private::slotStartSearch()
 #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor( Qt::WaitCursor );
 #endif
-    mSearchButton->setGuiItem(stopSearchGuiItem);
+    KGuiItem::assign(mSearchButton,stopSearchGuiItem);
     progressIndication->start();
 
     q->disconnect( mSearchButton, SIGNAL(clicked()),
@@ -848,7 +851,7 @@ void LdapSearchDialog::Private::slotSearchDone()
     q->connect( mSearchButton, SIGNAL(clicked()),
                 q, SLOT(slotStartSearch()) );
 
-    mSearchButton->setGuiItem(startSearchGuiItem);
+    KGuiItem::assign(mSearchButton, startSearchGuiItem);
     progressIndication->stop();
 #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
@@ -898,7 +901,7 @@ void LdapSearchDialog::slotUser1()
             // set a comment where the contact came from
             contact.setNote( i18nc( "arguments are host name, datetime",
                                     "Imported from LDAP directory %1 on %2",
-                                    items.at( i ).second, KGlobal::locale()->formatDateTime( now ) ) );
+                                    items.at( i ).second, KLocale::global()->formatDateTime( now ) ) );
 
             d->mSelectedContacts.append( contact );
         }
@@ -915,7 +918,7 @@ void LdapSearchDialog::slotUser2()
     // Configure LDAP servers
 
     KCMultiDialog dialog( this );
-    dialog.setCaption( i18n( "Configure the Address Book LDAP Settings" ) );
+    dialog.setWindowTitle( i18n( "Configure the Address Book LDAP Settings" ) );
     dialog.addModule( QLatin1String("kcmldap.desktop") );
 
     if ( dialog.exec() ) { //krazy:exclude=crashy

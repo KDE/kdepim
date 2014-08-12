@@ -26,7 +26,7 @@
 #include "todoviewview.h"
 
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 
 #include <QAction>
 #include <QContextMenuEvent>
@@ -57,8 +57,8 @@ bool TodoViewView::eventFilter( QObject *watched, QEvent *event )
     QContextMenuEvent *e = static_cast<QContextMenuEvent *>( event );
 
     if ( !mHeaderPopup ) {
-      mHeaderPopup = new KMenu( this );
-      mHeaderPopup->addTitle( i18n( "View Columns" ) );
+      mHeaderPopup = new QMenu( this );
+      mHeaderPopup->setTitle( i18n( "View Columns" ) );
       // First entry can't be disabled
       for ( int i = 1; i < model()->columnCount(); ++i ) {
         QAction *tmp =

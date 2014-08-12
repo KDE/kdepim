@@ -25,11 +25,12 @@
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KSharedConfig>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KLocalizedString>
 #include <KZip>
 
 #include <QDir>
+#include <QStandardPaths>
 
 int Utils::currentArchiveVersion()
 {
@@ -208,7 +209,7 @@ void Utils::convertCollectionToRealPath(KConfigGroup &group, const QString &curr
 KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath)
 {
     const QString agentFileName = agent.identifier() + QLatin1String("rc");
-    const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+    const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName ;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
     KUrl url = Utils::resourcePath(resourceConfig, defaultPath);
@@ -218,11 +219,11 @@ KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &def
 QString Utils::storeResources(KZip *archive, const QString &identifier, const QString &path)
 {
     const QString agentFileName = identifier + QLatin1String("rc");
-    const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+    const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName ;
     qDebug()<<"configFileName "<<configFileName<<"agentFileName "<<configFileName;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-    KTemporaryFile tmp;
+    QTemporaryFile tmp;
     tmp.open();
     KConfig * config = resourceConfig->copyTo( tmp.fileName() );
 
@@ -278,7 +279,7 @@ KZip *Utils::openZip(const QString &filename, QString &errorMsg)
 
 void Utils::addVersion(KZip *archive)
 {
-    KTemporaryFile tmp;
+    QTemporaryFile tmp;
     tmp.open();
     const bool fileAdded  = archive->addLocalFile(tmp.fileName(), Utils::infoPath() + QString::fromLatin1("VERSION_%1").arg(currentArchiveVersion()));
     if (!fileAdded) {
@@ -320,8 +321,6 @@ QString Utils::appTypeToI18n(AppsType type)
         return i18n("Akregator");
     case Blogilo:
         return i18n("Blogilo");
-    case KNode:
-        return i18n("KNode");
     }
     qDebug()<<" type unknown "<<type;
     return QString();

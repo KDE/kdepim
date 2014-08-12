@@ -18,15 +18,15 @@
 */
 
 #include <kdeclarativeapplication.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcmdlineargs.h>
+
 
 #include <incidenceeditor-ng/korganizereditorconfig.h>
 
 #include "mainview.h"
 
 #ifdef MAIL_SERIALIZER_PLUGIN_STATIC
-#include <QtPlugin>
 
 Q_IMPORT_PLUGIN(akonadi_serializer_mail)
 Q_IMPORT_PLUGIN(akonadi_serializer_addressee)
@@ -48,15 +48,11 @@ int main( int argc, char **argv )
   //       in incidinceeditors/groupwareintegration.cpp
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
-  KAboutData aboutData( ba, ba, name, ba, name );
+  K4AboutData aboutData( ba, ba, name, ba, name );
   aboutData.setProductName( "KOrganizer Mobile/calendar" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication<MainView> app;
-
-  KGlobal::locale()->insertCatalog( QLatin1String("libkcalutils") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libincidenceeditors") );
-  KGlobal::locale()->insertCatalog( QLatin1String("calendarsupport") );
 
   return app.exec();
 }

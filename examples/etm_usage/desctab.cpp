@@ -28,9 +28,9 @@
 #include <QTreeView>
 
 #include "entitytreewidget.h"
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/entityrightsfiltermodel.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/collectionfilterproxymodel.h>
+#include <AkonadiCore/entityrightsfiltermodel.h>
 #include <kdescendantsproxymodel.h>
 
 #include <QTimer>
@@ -62,7 +62,7 @@ void DescTabWidget::connectProxy()
   Akonadi::EntityRightsFilterModel *collectionFilter = new Akonadi::EntityRightsFilterModel( this );
   collectionFilter->setSourceModel( m_etw->model() );
 
-  kDebug() << descProxy;
+  qDebug() << descProxy;
   descProxy->setSourceModel( collectionFilter );
 
 //  new ModelTest(descProxy, this);

@@ -28,13 +28,13 @@
 
 #include <KLocale>
 
-#include <Akonadi/CollectionDialog>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/EntityTreeView>
+#include <AkonadiWidgets/CollectionDialog>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiWidgets/EntityTreeView>
 
 #include <kmime/kmime_message.h>
 
-#include <kcalcore/todo.h>
+#include <KCalCore/Todo>
 
 #include "trip.h"
 #include "note.h"
@@ -48,7 +48,7 @@ FolderContentsWidget::FolderContentsWidget(Trip *trip, int role, const QString &
 
   QPushButton *confButton = new QPushButton(type);
   layout->addWidget(confButton);
-  connect(confButton, SIGNAL(clicked()), SLOT(configure()));
+  connect(confButton, &QPushButton::clicked, this, &FolderContentsWidget::configure);
 
   m_view = new EntityTreeView;
   layout->addWidget(m_view);

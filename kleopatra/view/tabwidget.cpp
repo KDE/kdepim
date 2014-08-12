@@ -50,9 +50,9 @@
 #include <KTabWidget>
 #include <KConfigGroup>
 #include <KConfig>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
-#include <KInputDialog>
+#include <QInputDialog>
 
 #include <QTreeView>
 #include <QToolButton>
@@ -531,7 +531,7 @@ void TabWidget::Private::renamePage( Page * page ) {
     if ( !page )
         return;
     bool ok;
-    const QString text = KInputDialog::getText( i18n("Rename Tab"), i18n("New tab title:"), page->title(), &ok, q);
+    const QString text = QInputDialog::getText( q, i18n("Rename Tab"), i18n("New tab title:"), QLineEdit::Normal, page->title(), &ok);
     if ( !ok )
         return;
     page->setTitle( text );

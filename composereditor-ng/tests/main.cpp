@@ -21,14 +21,14 @@
 #include "composerhtmleditor.h"
 
 #include <kapplication.h>
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kcmdlineargs.h>
 
 int main( int argc, char **argv )
 {
     const QByteArray& ba = QByteArray( "composerhtmleditor" );
     const KLocalizedString name = ki18n( "KDE HTML Editor" );
-    KAboutData aboutData( ba, ba, name, ba, name );
+    K4AboutData aboutData( ba, ba, name, ba, name );
     KCmdLineArgs::init( argc, argv, &aboutData );
     KApplication app;
     ComposerHtmlEditor* mw = new ComposerHtmlEditor();

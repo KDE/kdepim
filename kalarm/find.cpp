@@ -21,13 +21,11 @@
 #include "kalarm.h"
 #include "find.h"
 
-#ifndef USE_AKONADI
-#include "alarmlistfiltermodel.h"
-#endif
 #include "alarmlistview.h"
 #include "eventlistview.h"
 #include "messagebox.h"
 #include "preferences.h"
+#include "config-kdepim.h"
 
 #include <kalarmcal/kaevent.h>
 
@@ -36,7 +34,8 @@
 #include <kseparator.h>
 #include <kwindowsystem.h>
 #include <klocale.h>
-#include <kdebug.h>
+#include <qdebug.h>
+#include <KDialog>
 
 #include <QGroupBox>
 #include <QCheckBox>
@@ -67,10 +66,12 @@ class FindDlg : public KFindDialog
     protected slots:
         void slotButtonClicked(int button)
         {
-            if (button == Ok)
+#if 0 //QT5
+            if (button == KDialog::Ok)
                 emit okClicked();
             else
                 KFindDialog::slotButtonClicked(button);
+#endif
         }
 };
 
@@ -109,17 +110,13 @@ void Find::display()
         mOptions = FIND_LIVE | FIND_ARCHIVED | FIND_MESSAGE | FIND_FILE | FIND_COMMAND | FIND_EMAIL | FIND_AUDIO;
     bool noArchived = !Preferences::archivedKeepDays();
     bool showArchived = qobject_cast<AlarmListView*>(mListView)
-#ifdef USE_AKONADI
                         && (static_cast<AlarmListModel*>(mListView->model())->eventTypeFilter() & CalEvent::ARCHIVED);
-#else
-                        && (static_cast<AlarmListFilterModel*>(mListView->model())->statusFilter() & CalEvent::ARCHIVED);
-#endif
     if (noArchived  ||  !showArchived)      // these settings could change between activations
         mOptions &= ~FIND_ARCHIVED;
 
     if (mDialog)
     {
-#ifdef Q_WS_X11
+#if KDEPIM_HAVE_X11
         KWindowSystem::activateWindow(mDialog->winId());
 #endif
     }
@@ -220,12 +217,8 @@ void Find::display()
     int rowCount = mListView->model()->rowCount();
     for (int row = 0;  row < rowCount;  ++row)
     {
-#ifdef USE_AKONADI
         KAEvent viewEvent = mListView->event(row);
         const KAEvent* event = &viewEvent;
-#else
-        const KAEvent* event = mListView->event(row);
-#endif
         if (event->expired())
             archived = true;
         else
@@ -315,11 +308,7 @@ void Find::slotFind()
             QModelIndex index = mListView->selectionModel()->currentIndex();
             if (index.isValid())
             {
-#ifdef USE_AKONADI
                 mStartID       = mListView->event(index).id();
-#else
-                mStartID       = mListView->event(index)->id();
-#endif
                 mNoCurrentItem = false;
                 checkEnd = true;
             }
@@ -350,12 +339,8 @@ void Find::findNext(bool forward, bool checkEnd, bool fromCurrent)
     bool last = false;
     for ( ;  index.isValid() && !last;  index = nextItem(index, forward))
     {
-#ifdef USE_AKONADI
         KAEvent viewEvent = mListView->event(index);
         const KAEvent* event = &viewEvent;
-#else
-        const KAEvent* event = mListView->event(index);
-#endif
         if (!fromCurrent  &&  !mStartID.isNull()  &&  mStartID == event->id())
             last = true;    // we've wrapped round and reached the starting alarm again
         fromCurrent = false;
@@ -437,8 +422,8 @@ void Find::findNext(bool forward, bool checkEnd, bool fromCurrent)
         // No match was found
         if (mFound  ||  checkEnd)
         {
-            QString msg = forward ? i18nc("@info", "<para>End of alarm list reached.</para><para>Continue from the beginning?</para>")
-                                  : i18nc("@info", "<para>Beginning of alarm list reached.</para><para>Continue from the end?</para>");
+            QString msg = forward ? xi18nc("@info", "<para>End of alarm list reached.</para><para>Continue from the beginning?</para>")
+                                  : xi18nc("@info", "<para>Beginning of alarm list reached.</para><para>Continue from the end?</para>");
             if (KAMessageBox::questionYesNo(mListView, msg, QString(), KStandardGuiItem::cont(), KStandardGuiItem::cancel()) == KMessageBox::Yes)
             {
                 mNoCurrentItem = true;

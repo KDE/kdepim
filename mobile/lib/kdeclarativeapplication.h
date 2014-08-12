@@ -22,7 +22,7 @@
 
 #include "mobileui_export.h"
 #include <kuniqueapplication.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 class KCmdLineOptions;
 
@@ -44,7 +44,7 @@ class MOBILEUI_EXPORT KDeclarativeApplicationBase : public KUniqueApplication
     */
     static void preApplicationSetup();
 
-    KDE_DEPRECATED static void initCmdLine() { preApplicationSetup(); }
+    MOBILEUI_DEPRECATED_EXPORT static void initCmdLine() { preApplicationSetup(); }
 
     /** Sets up some other stuff. Only needs to be called (after the
         KApplication constructor) if you don't use
@@ -69,7 +69,7 @@ class KDeclarativeApplication : public KDeclarativeApplicationBase
 
     int newInstance()
     {
-      kDebug();
+      qDebug();
       if ( !m_mainView ) {
         m_mainView = new T;
         m_mainView->show();

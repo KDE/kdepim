@@ -26,9 +26,10 @@
 #include <KPIMUtils/Email>
 
 #include <KCompletionBox>
-#include <KDebug>
+#include <QDebug>
 #include <KDialog>
 #include <KLocalizedString>
+#include <KIconLoader>
 
 #include <QBoxLayout>
 #include <QKeyEvent>
@@ -293,7 +294,7 @@ void AttendeeLine::dataFromFields()
   clearModified();
   if ( !( oldAttendee == mData->attendee() ) && !email.isEmpty() ) {
     // if email is empty, we don't want to update anything
-    kDebug() << oldAttendee->email() << mData->email();
+    qDebug() << oldAttendee->email() << mData->email();
     emit changed( oldAttendee, mData->attendee() );
   }
 }
@@ -426,7 +427,7 @@ void AttendeeLine::setActions( AttendeeActions actions )
   }
 }
 
-void AttendeeLine::setCompletionMode( KGlobalSettings::Completion mode )
+void AttendeeLine::setCompletionMode( KCompletion::CompletionMode mode )
 {
   mEdit->setCompletionMode( mode );
 }

@@ -32,8 +32,8 @@
 
 #include "collectionquotapage.h"
 #include "collectionquotapage_p.h"
-#include <akonadi/collectionquotaattribute.h>
-#include <akonadi/collection.h>
+#include <AkonadiCore/collectionquotaattribute.h>
+#include <AkonadiCore/collection.h>
 
 #include <qlayout.h>
 #include <KLocalizedString>

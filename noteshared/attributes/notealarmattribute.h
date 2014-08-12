@@ -19,7 +19,7 @@
 #define NOTE_ALARM_ATTRIBUTE_H
 
 #include "noteshared_export.h"
-#include <Akonadi/Attribute>
+#include <AkonadiCore/Attribute>
 
 #include <KDateTime>
 namespace NoteShared {

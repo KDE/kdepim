@@ -28,23 +28,25 @@
 #include "kcalprefs.h"
 #include "utils.h"
 
-#include <Akonadi/Item>
+#include <Item>
 
 #include <KCalendarSystem>
 #include <KConfigGroup>
 #include <KDebug>
 #include <KSystemTimeZones>
 #include <KWordWrap>
+#include <KConfig>
 
 #include <QAbstractTextDocumentLayout>
 #include <QFrame>
 #include <QLabel>
-#include <QLayout>
 #include <QPainter>
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextDocumentFragment>
 #include <qmath.h> // qCeil krazy:exclude=camelcase since no QMath
+#include <QVBoxLayout>
+#include <KLocale>
 
 using namespace CalendarSupport;
 
@@ -180,7 +182,7 @@ void CalPrintPluginBase::doLoadConfig()
     mPrintFooter = group.readEntry( "PrintFooter", true );
     loadConfig();
   } else {
-    kDebug() << "No config available in loadConfig!!!!";
+    qDebug() << "No config available in loadConfig!!!!";
   }
 }
 
@@ -198,7 +200,7 @@ void CalPrintPluginBase::doSaveConfig()
     group.writeEntry( "PrintFooter", mPrintFooter );
     mConfig->sync();
   } else {
-    kDebug() << "No config available in saveConfig!!!!";
+    qDebug() << "No config available in saveConfig!!!!";
   }
 }
 
@@ -314,7 +316,7 @@ KCalCore::Event::Ptr CalPrintPluginBase::holidayEvent( const QDate &date ) const
 const KCalendarSystem *CalPrintPluginBase::calendarSystem()
 {
   if ( !mCalSys ) {
-    mCalSys = KGlobal::locale()->calendar();
+    mCalSys = KLocale::global()->calendar();
   }
   return mCalSys;
 }
@@ -643,7 +645,7 @@ int CalPrintPluginBase::drawFooter( QPainter &p, const QRect &footbox )
   p.setFont( QFont( QLatin1String("sans-serif"), 6 ) );
   QFontMetrics fm( p.font() );
   QString dateStr =
-    KGlobal::locale()->formatDateTime( QDateTime::currentDateTime(), KLocale::LongDate );
+    KLocale::global()->formatDateTime( QDateTime::currentDateTime(), KLocale::LongDate );
   p.drawText( footbox, Qt::AlignCenter | Qt::AlignVCenter | Qt::TextSingleLine,
               i18nc( "print date: formatted-datetime", "printed: %1", dateStr ) );
   p.setFont( oldfont );
@@ -766,7 +768,7 @@ void CalPrintPluginBase::drawTimeLine( QPainter &p, const QTime &fromTime,
     if ( newY < box.bottom() ) {
       QFont oldFont( p.font() );
       // draw the time:
-      if ( !KGlobal::locale()->use12Clock() ) {
+      if ( !KLocale::global()->use12Clock() ) {
         p.drawLine( xcenter, (int)newY, box.right(), (int)newY );
         numStr.setNum( curTime.hour() );
         if ( cellHeight > 30 ) {
@@ -782,7 +784,7 @@ void CalPrintPluginBase::drawTimeLine( QPainter &p, const QTime &fromTime,
       } else {
         p.drawLine( box.left(), (int)newY, box.right(), (int)newY );
         QTime time( curTime.hour(), 0 );
-        numStr = KGlobal::locale()->formatTime( time );
+        numStr = KLocale::global()->formatTime( time );
         if ( box.width() < 60 ) {
           p.setFont( QFont( QLatin1String("sans-serif"), 7, QFont::Bold ) ); // for weekprint
         } else {
@@ -1024,14 +1026,14 @@ void CalPrintPluginBase::drawAgendaItem( PrintCellItem *item, QPainter &p,
       if ( event->location().isEmpty() ) {
         str = i18nc( "starttime - endtime summary",
                      "%1-%2 %3",
-                     KGlobal::locale()->formatTime( item->start().toLocalZone().time() ),
-                     KGlobal::locale()->formatTime( item->end().toLocalZone().time() ),
+                     KLocale::global()->formatTime( item->start().toLocalZone().time() ),
+                     KLocale::global()->formatTime( item->end().toLocalZone().time() ),
                      cleanStr( event->summary() ) );
       } else {
         str = i18nc( "starttime - endtime summary, location",
                      "%1-%2 %3, %4",
-                     KGlobal::locale()->formatTime( item->start().toLocalZone().time() ),
-                     KGlobal::locale()->formatTime( item->end().toLocalZone().time() ),
+                     KLocale::global()->formatTime( item->start().toLocalZone().time() ),
+                     KLocale::global()->formatTime( item->end().toLocalZone().time() ),
                      cleanStr( event->summary() ),
                      cleanStr( event->location() ) );
       }
@@ -1073,7 +1075,7 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
                                      bool excludePrivate )
 {
   QString dayNumStr;
-  const KLocale *local = KGlobal::locale();
+  const KLocale *local = KLocale::global();
 
   QTime myFromTime, myToTime;
   if ( fromTime.isValid() ) {
@@ -1089,10 +1091,10 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
 
   if ( fullDate && mCalSys ) {
     dayNumStr = i18nc( "weekday, shortmonthname daynumber",
-                       "%1, %2 <numid>%3</numid>",
+                       "%1, %2 %3",
                        mCalSys->weekDayName( qd ),
                        mCalSys->monthName( qd, KCalendarSystem::ShortName ),
-                       qd.day() );
+                       QString::number(qd.day()) );
   } else {
     dayNumStr = QString::number( qd.day() );
   }
@@ -1201,7 +1203,7 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
         continue;
       }
       if ( todo->hasStartDate() && !todo->allDay() ) {
-        timeText = KGlobal::locale()->formatTime( todo->dtStart().toLocalZone().time() ) + QLatin1Char(' ');
+        timeText = KLocale::global()->formatTime( todo->dtStart().toLocalZone().time() ) + QLatin1Char(' ');
       } else {
         timeText.clear();
       }
@@ -1218,11 +1220,11 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
         if ( !todo->allDay() ) {
           str = i18nc( "to-do summary (Due: datetime)", "%1 (Due: %2)",
                       summaryStr,
-                      KGlobal::locale()->formatDateTime( todo->dtDue().toLocalZone() ) );
+                      KLocale::global()->formatDateTime( todo->dtDue().toLocalZone() ) );
         } else {
           str = i18nc( "to-do summary (Due: date)", "%1 (Due: %2)",
                       summaryStr,
-                      KGlobal::locale()->formatDate(
+                      KLocale::global()->formatDate(
                         todo->dtDue().toLocalZone().date(), KLocale::ShortDate ) );
         }
       } else {
@@ -1250,7 +1252,7 @@ void CalPrintPluginBase::drawIncidence( QPainter &p, const QRect &dayBox,
                                         bool includeDescription,
                                         bool richDescription )
 {
-  kDebug() << "summary =" << summary << ", singleLineLimit=" << singleLineLimit;
+  qDebug() << "summary =" << summary << ", singleLineLimit=" << singleLineLimit;
 
   int flags = Qt::AlignLeft | Qt::OpaqueMode;
   QFontMetrics fm = p.fontMetrics();
@@ -1847,9 +1849,8 @@ void CalPrintPluginBase::drawTodoLines( QPainter &p,
   QStringList lines = plainEntry.split( QLatin1Char( '\n' ) );
   for ( int currentLine = 0; currentLine < lines.count(); currentLine++ ) {
     // split paragraphs into lines
-    KWordWrap *ww = KWordWrap::formatText( fm, textrect, flags, lines[currentLine] );
-    QStringList textLine = ww->wrappedString().split( QLatin1Char( '\n' ) );
-    delete ww;
+    KWordWrap ww = KWordWrap::formatText( fm, textrect, flags, lines[currentLine] );
+    QStringList textLine = ww.wrappedString().split( QLatin1Char( '\n' ) );
 
     // print each individual line
     for ( int lineCount = 0; lineCount < textLine.count(); lineCount++ ) {
@@ -1891,7 +1892,7 @@ void CalPrintPluginBase::drawTodo( int &count, const KCalCore::Todo::Ptr &todo, 
                                    bool excludePrivate )
 {
   QString outStr;
-  const KLocale *local = KGlobal::locale();
+  const KLocale *local = KLocale::global();
   QRect rect;
   TodoParentStart startpt;
   // This list keeps all starting points of the parent to-dos so the connection
@@ -2083,7 +2084,7 @@ void CalPrintPluginBase::drawTodo( int &count, const KCalCore::Todo::Ptr &todo, 
 
 int CalPrintPluginBase::weekdayColumn( int weekday )
 {
-  int w = weekday + 7 - KGlobal::locale()->weekStartDay();
+  int w = weekday + 7 - KLocale::global()->weekStartDay();
   return w % 7;
 }
 
@@ -2100,9 +2101,8 @@ void CalPrintPluginBase::drawTextLines( QPainter &p, const QString &entry,
   QStringList lines = plainEntry.split( QLatin1Char( '\n' ) );
   for ( int currentLine = 0; currentLine < lines.count(); currentLine++ ) {
     // split paragraphs into lines
-    KWordWrap *ww = KWordWrap::formatText( fm, textrect, flags, lines[currentLine] );
-    QStringList textLine = ww->wrappedString().split( QLatin1Char( '\n' ) );
-    delete ww;
+    KWordWrap ww = KWordWrap::formatText( fm, textrect, flags, lines[currentLine] );
+    QStringList textLine = ww.wrappedString().split( QLatin1Char( '\n' ) );
     // print each individual line
     for ( int lineCount = 0; lineCount < textLine.count(); lineCount++ ) {
       if ( y >= pageHeight ) {
@@ -2121,7 +2121,7 @@ void CalPrintPluginBase::drawJournal( const KCalCore::Journal::Ptr &journal, QPa
   QFont oldFont( p.font() );
   p.setFont( QFont( QLatin1String("sans-serif"), 15 ) );
   QString headerText;
-  QString dateText( KGlobal::locale()->formatDate( journal->dtStart().toLocalZone().date(),
+  QString dateText( KLocale::global()->formatDate( journal->dtStart().toLocalZone().date(),
                                                    KLocale::LongDate ) );
 
   if ( journal->summary().isEmpty() ) {

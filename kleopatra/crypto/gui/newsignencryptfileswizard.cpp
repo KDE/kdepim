@@ -54,7 +54,7 @@
 #include <ui/filenamerequester.h>
 
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 #include <KDebug>
 #include <KMessageBox>
 
@@ -75,6 +75,8 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
+
+#include <KSharedConfig>
 
 using namespace GpgME;
 using namespace boost;
@@ -518,7 +520,7 @@ namespace {
         /* reimp */ bool validatePage() {
             if ( isSignOnlySelected() && isArchiveRequested() )
                 return KMessageBox::warningContinueCancel( this,
-                                                           i18nc("@info",
+                                                           xi18nc("@info",
                                                                  "<para>Archiving in combination with sign-only currently requires what are known as opaque signatures - "
                                                                  "unlike detached ones, these embed the content in the signature.</para>"
                                                                  "<para>This format is rather unusual. You might want to archive the files separately, "
@@ -628,8 +630,8 @@ namespace {
             KDAB_SET_OBJECT_NAME( m_unselectPB );
             KDAB_SET_OBJECT_NAME( m_selectedKTV );
 
-            m_selectPB.setIcon( KIcon( QLatin1String("arrow-down") ) );
-            m_unselectPB.setIcon( KIcon( QLatin1String("arrow-up") ) );
+            m_selectPB.setIcon( QIcon::fromTheme( QLatin1String("arrow-down") ) );
+            m_unselectPB.setIcon( QIcon::fromTheme( QLatin1String("arrow-up") ) );
 
             m_selectPB.setEnabled( false );
             m_unselectPB.setEnabled( false );
@@ -713,7 +715,7 @@ namespace {
             const std::vector<Key> & r = keys();
             if ( _detail::none_of_secret( r ) ) {
                 if ( KMessageBox::warningContinueCancel( this,
-                                                         i18nc("@info",
+                                                         xi18nc("@info",
                                                                "<para>None of the recipients you are encrypting to seems to be your own.</para>"
                                                                "<para>This means that you will not be able to decrypt the data anymore, once encrypted.</para>"
                                                                "<para>Do you want to continue, or cancel to change the recipient selection?</para>"),
@@ -725,7 +727,7 @@ namespace {
                     return false;
                 else if ( isRemoveUnencryptedFilesEnabled() )
                     if ( KMessageBox::warningContinueCancel( this,
-                                                             i18nc("@info",
+                                                             xi18nc("@info",
                                                                    "<para>You have requested the unencrypted data to be removed after encryption.</para>"
                                                                    "<para>Are you really sure you do not need to access the data anymore in decrypted form?</para>"),
                                                              i18nc("@title:window","Encrypt-To-Self Warning"),
@@ -876,7 +878,7 @@ namespace {
             }
 
             if ( !signPref ) {
-                signPref.reset( new KConfigBasedSigningPreferences( KGlobal::config() ) );
+                signPref.reset( new KConfigBasedSigningPreferences( KSharedConfig::openConfig() ) );
                 widget.setSelectedCertificates( signPref->preferredCertificate( OpenPGP ),
                                                 signPref->preferredCertificate( CMS ) );
             }
@@ -1000,7 +1002,7 @@ NewSignEncryptFilesWizard::NewSignEncryptFilesWizard( QWidget * parent, Qt::Wind
 
 }
 
-NewSignEncryptFilesWizard::~NewSignEncryptFilesWizard() { kDebug(); }
+NewSignEncryptFilesWizard::~NewSignEncryptFilesWizard() { qDebug(); }
 
 void NewSignEncryptFilesWizard::setPresetProtocol( Protocol proto ) {
     d->operationPage->setPresetProtocol( proto );

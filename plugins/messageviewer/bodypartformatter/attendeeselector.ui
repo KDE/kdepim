@@ -16,7 +16,7 @@
     <widget class="KPIM::AddresseeLineEdit" name="attendeeEdit"/>
    </item>
    <item row="0" column="1">
-    <widget class="KPushButton" name="addButton">
+    <widget class="QPushButton" name="addButton">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -29,7 +29,7 @@
     <widget class="QListWidget" name="attendeeList"/>
    </item>
    <item row="1" column="1">
-    <widget class="KPushButton" name="removeButton">
+    <widget class="QPushButton" name="removeButton">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -63,19 +63,12 @@
    <header>libkdepim/addressline/addresseelineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
   </customwidget>
  </customwidgets>
  <includes>
-  <include location="local">kpushbutton.h</include>
-  <include location="local">kpushbutton.h</include>
   <include location="local">libkdepim/addressline/addresseelineedit.h</include>
  </includes>
  <resources/>

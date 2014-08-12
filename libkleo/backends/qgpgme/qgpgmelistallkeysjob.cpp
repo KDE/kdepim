@@ -43,7 +43,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <QStringList>
 
 #include <algorithm>
 

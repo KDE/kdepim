@@ -22,7 +22,7 @@
 
 #include "ui_collectionattributespage.h"
 
-#include <akonadi/collectionpropertiespage.h>
+#include <AkonadiWidgets/collectionpropertiespage.h>
 
 class QStandardItem;
 class QStandardItemModel;

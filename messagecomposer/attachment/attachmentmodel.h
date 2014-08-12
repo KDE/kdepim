@@ -24,10 +24,10 @@
 
 #include <QtCore/QAbstractItemModel>
 
-#include <KDE/KUrl>
+#include <KUrl>
 
 #include <messagecore/attachment/attachmentpart.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 namespace MessageComposer {
 

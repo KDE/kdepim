@@ -42,9 +42,8 @@
 #include <KProcess>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
 #include <KStandardGuiItem>
-#include <KGlobalSettings>
 #include <KConfigGroup>
 
 #include <QString>
@@ -52,6 +51,8 @@
 #include <QTimer>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <KSharedConfig>
+#include <QFontDatabase>
 
 static const int PROCESS_TERMINATE_TIMEOUT = 5000; // milliseconds
 
@@ -83,7 +84,7 @@ namespace {
     private:
         void readConfig()
         {
-            KConfigGroup dialog( KGlobal::config(), "DumpCrlCacheDialog" );
+            KConfigGroup dialog( KSharedConfig::openConfig(), "DumpCrlCacheDialog" );
             const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
             if ( size.isValid() ) {
                 resize( size );
@@ -92,31 +93,32 @@ namespace {
 
         void writeConfig()
         {
-            KConfigGroup dialog( KGlobal::config(), "DumpCrlCacheDialog" );
+            KConfigGroup dialog( KSharedConfig::openConfig(), "DumpCrlCacheDialog" );
             dialog.writeEntry( "Size", size() );
             dialog.sync();
         }
 
         struct Ui {
             KDLogTextWidget logTextWidget;
-            KPushButton     updateButton, closeButton;
+            QPushButton     updateButton, closeButton;
             QVBoxLayout vlay;
             QHBoxLayout  hlay;
 
             explicit Ui( DumpCrlCacheDialog * q )
                 : logTextWidget( q ),
                   updateButton( i18nc("@action:button Update the log text widget", "&Update"), q ),
-                  closeButton( KStandardGuiItem::close(), q ),
+                  closeButton( q ),
                   vlay( q ),
                   hlay()
             {
+                KGuiItem::assign(&closeButton, KStandardGuiItem::close() );
                 KDAB_SET_OBJECT_NAME( logTextWidget );
                 KDAB_SET_OBJECT_NAME( updateButton );
                 KDAB_SET_OBJECT_NAME( closeButton );
                 KDAB_SET_OBJECT_NAME( vlay );
                 KDAB_SET_OBJECT_NAME( hlay );
 
-                logTextWidget.setFont( KGlobalSettings::fixedFont() );
+                logTextWidget.setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
                 logTextWidget.setMinimumVisibleLines( 25 );
                 logTextWidget.setMinimumVisibleColumns( 80 );
 

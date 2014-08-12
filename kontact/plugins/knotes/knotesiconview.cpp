@@ -26,7 +26,7 @@
 
 #include <KLocalizedString>
 
-#include <Akonadi/ItemModifyJob>
+#include <AkonadiCore/ItemModifyJob>
 
 #include <KMime/KMimeMessage>
 
@@ -43,7 +43,7 @@
 //#define DEBUG_SAVE_NOTE 1
 
 KNotesIconView::KNotesIconView( KNotesPart *part, QWidget *parent )
-    : KListWidget(parent),
+    : QListWidget(parent),
       m_part(part)
 {
     setViewMode( QListView::IconMode );
@@ -63,7 +63,7 @@ KNotesIconView::~KNotesIconView()
 bool KNotesIconView::event(QEvent *e)
 {
     if( e->type() != QEvent::ToolTip )
-      return KListWidget::event( e );
+      return QListWidget::event( e );
     QHelpEvent * he = static_cast< QHelpEvent * >( e );
 
     QPoint pnt = viewport()->mapFromGlobal( mapToGlobal( he->pos() ) );
@@ -165,7 +165,7 @@ void KNotesIconViewItem::setReadOnly(bool b, bool save)
 #ifdef DEBUG_SAVE_NOTE
         qDebug()<<" KNotesIconViewItem::setReadOnly savenote";
 #endif
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+        connect(job, &Akonadi::ItemModifyJob::result, this, &KNotesIconViewItem::slotNoteSaved);
     }
 }
 
@@ -173,7 +173,7 @@ void KNotesIconViewItem::setDisplayDefaultValue()
 {
     KNoteUtils::setDefaultValue(mItem);
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+    connect(job, &Akonadi::ItemModifyJob::result, this, &KNotesIconViewItem::slotNoteSaved);
 }
 
 void KNotesIconViewItem::slotNoteSaved(KJob *job)
@@ -284,7 +284,7 @@ void KNotesIconViewItem::saveNoteContent(const QString &subject, const QString &
     message->contentType( true )->setMimeType( isRichText() ? "text/html" : "text/plain" );
     message->contentType()->setCharset(encoding);
     message->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
-    message->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+    message->date( true )->setDateTime( QDateTime::currentDateTime() );
     if (!description.isEmpty()) {
         message->mainBodyPart()->fromUnicodeString( description );
     } else if (message->mainBodyPart()->decodedText().isEmpty()) {
@@ -303,7 +303,7 @@ void KNotesIconViewItem::saveNoteContent(const QString &subject, const QString &
 #ifdef DEBUG_SAVE_NOTE
     qDebug()<<" KNotesIconViewItem::saveNoteContent savenote";
 #endif
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+    connect(job, &Akonadi::ItemModifyJob::result, this, &KNotesIconViewItem::slotNoteSaved);
 }
 
 

@@ -22,30 +22,39 @@
 #include "header/headerstyle.h"
 #include "header/headerstrategy.h"
 
-#include <kdebug.h>
-#include <kcmdlineargs.h>
-#include <kapplication.h>
+#include <qdebug.h>
+
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+
 
 using namespace MessageViewer;
 
 int main (int argc, char **argv)
 {
-  KCmdLineArgs::init(argc, argv, "viewertest_gui", 0, ki18n("Viewertest_Gui"),
-                     "1.0", ki18n("Test for MessageViewer"));
+  KAboutData aboutData( QLatin1String("viewertest_gui"), i18n("Viewertest_Gui"), QLatin1String("1.0"));
+  aboutData.setShortDescription(i18n("Test for MessageViewer"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("+[file]"), i18n("File containing an email")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("headerstrategy"), i18n("Header Strategy: [all|rich|standard|brief|custom]"), QLatin1String("strategy")));
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("headerstyle"), i18n("Header Style: [brief|plain|enterprise|mobile|fancy]"), QLatin1String("style")));
 
-  KCmdLineOptions options;
-  options.add("+[file]", ki18n("File containing an email"));
-  options.add("headerstrategy <strategy>", ki18n("Header Strategy: [all|rich|standard|brief|custom]"));
-  options.add("headerstyle <style>", ki18n("Header Style: [brief|plain|enterprise|mobile|fancy]"));
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  KCmdLineArgs::addCmdLineOptions( options );
-  KCmdLineArgs::addStdCmdLineOptions();
+  //KCmdLineArgs::addStdCmdLineOptions();
 
-  KApplication app;
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   KMime::Message *msg = new KMime::Message;
-  if (args->count() == 0) {
+  if (parser.positionalArguments().count() == 0) {
     QByteArray mail = "From: dfaure@example.com\n"
                       "To: kde@example.com\n"
                       "Sender: dfaure@example.com\n"
@@ -59,12 +68,12 @@ int main (int argc, char **argv)
                       "Hello this is a test mail\n";
     msg->setContent( mail );
   } else {
-    const QString fileName = args->arg(0);
+    const QString fileName = parser.positionalArguments().at(0);
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly)) {
       msg->setContent(file.readAll());
     } else {
-      kWarning() << "Couldn't read" << fileName;
+      qWarning() << "Couldn't read" << fileName;
     }
   }
   msg->parse();
@@ -72,8 +81,8 @@ int main (int argc, char **argv)
   Viewer* viewer = new Viewer(0);
   viewer->setMessage(KMime::Message::Ptr(msg));
 
-  const QString headerStrategy = args->getOption("headerstrategy");
-  const QString headerStyle = args->getOption("headerstyle");
+  const QString headerStrategy = parser.value(QLatin1String("headerstrategy"));
+  const QString headerStyle = parser.value(QLatin1String("headerstyle"));
   viewer->setHeaderStyleAndStrategy(HeaderStyle::create(headerStyle),
                                     HeaderStrategy::create(headerStrategy));
 

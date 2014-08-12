@@ -86,7 +86,7 @@ enum MessageStatus{
    * BEGIN PGP SIGNED MESSAGE
    *     Used for cleartext signed messages.
    */
-class KPGP_EXPORT Block
+class LIBKPGP_EXPORT Block
 {
  public:
 

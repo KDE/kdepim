@@ -20,11 +20,11 @@
 #ifndef MAILCOMMON_FILTERMANAGER_H
 #define MAILCOMMON_FILTERMANAGER_H
 
-#include "../mailcommon_export.h"
+#include "mailcommon_export.h"
 #include "mailfilter.h"
 
-#include <Akonadi/Item>
-#include <Akonadi/ServerManager>
+#include <Item>
+#include <ServerManager>
 
 #include <QObject>
 

@@ -19,7 +19,7 @@
 
 #include "messageviewer/utils/kcursorsaver.h"
 
-#include <Akonadi/AgentManager>
+#include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
 #include <KStandardDirs>
@@ -27,6 +27,7 @@
 
 #include <QWidget>
 #include <QDir>
+#include <QStandardPaths>
 
 ExportAkregatorJob::ExportAkregatorJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -67,7 +68,7 @@ void ExportAkregatorJob::backupConfig()
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     const QString akregatorStr(QLatin1String("akregatorrc"));
-    const QString akregatorsrc = KStandardDirs::locateLocal( "config", akregatorStr);
+    const QString akregatorsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + akregatorStr;
     backupFile(akregatorsrc, Utils::configsPath(), akregatorStr);
     Q_EMIT info(i18n("Config backup done."));
 }
@@ -76,7 +77,7 @@ void ExportAkregatorJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    const QString akregatorDir = KStandardDirs::locateLocal( "data", QLatin1String( "akregator" ) );
+    const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/akregator" ) ;
     QDir akregatorDirectory( akregatorDir );
     if (akregatorDirectory.exists()) {
         const bool akregatorDirAdded = archive()->addLocalDirectory(akregatorDir, Utils::dataPath() +  QLatin1String( "/akregator" ));

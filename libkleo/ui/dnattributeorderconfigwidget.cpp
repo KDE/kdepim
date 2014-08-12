@@ -34,15 +34,14 @@
 
 #include "kleo/dn.h"
 
-#include <klocale.h>
-#include <kdebug.h>
-#include <kdialog.h>
+#include <KLocalizedString>
+#include <qdebug.h>
 #include <kiconloader.h>
 #include <kconfig.h>
+#include <QIcon>
 
 #include <QToolButton>
 #include <QGridLayout>
-#include <QLayout>
 #include <QLabel>
 
 #include <QTreeWidget>
@@ -83,7 +82,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
 
   QGridLayout * glay = new QGridLayout( this );
   glay->setMargin( 0 );
-  glay->setSpacing( KDialog::spacingHint() );
+  //PORT QT5 glay->setSpacing( KDialog::spacingHint() );
   glay->setColumnStretch( 0, 1 );
   glay->setColumnStretch( 2, 1 );
 
@@ -141,7 +140,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
 
   for ( unsigned int i = 0 ; i < sizeof navButtons / sizeof *navButtons ; ++i ) {
     QToolButton * tb = d->navTB[i] = new QToolButton( this );
-    tb->setIcon( KIcon( QLatin1String(navButtons[i].icon) ) );
+    tb->setIcon( QIcon::fromTheme( QLatin1String(navButtons[i].icon) ) );
     tb->setEnabled( false );
     tb->setToolTip( i18n( navButtons[i].tooltip ) );
     xlay->addWidget( tb, navButtons[i].row, navButtons[i].col );
@@ -215,7 +214,7 @@ void Kleo::DNAttributeOrderConfigWidget::save() const {
 }
 
 void Kleo::DNAttributeOrderConfigWidget::defaults() {
-  kDebug(5150) <<"Sorry, not implemented: Kleo::DNAttributeOrderConfigWidget::defaults()";
+  qDebug() <<"Sorry, not implemented: Kleo::DNAttributeOrderConfigWidget::defaults()";
 }
 
 

@@ -29,7 +29,7 @@
 
 #include <KDialog>
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <QLabel>
 #include <QBoxLayout>
@@ -53,7 +53,7 @@ RecipientsEditorSideWidget::RecipientsEditorSideWidget( RecipientsEditor *view, 
 
     topLayout->addStretch( 1 );
 
-    mDistributionListButton = new KPushButton(
+    mDistributionListButton = new QPushButton(
                 i18nc("@action:button","Save List..."), this );
     topLayout->addWidget( mDistributionListButton );
     mDistributionListButton->hide();
@@ -122,7 +122,7 @@ void RecipientsEditorSideWidget::updateTotalToolTip()
     Recipient::List recipients = mEditor->recipients();
     Recipient::List::ConstIterator it;
     for( it = recipients.constBegin(); it != recipients.constEnd(); ++it ) {
-        QString emailLine = QLatin1String("&nbsp;&nbsp;") + Qt::escape( (*it)->email() ) + QLatin1String("<br/>");
+        QString emailLine = QLatin1String("&nbsp;&nbsp;") + (*it)->email().toHtmlEscaped() + QLatin1String("<br/>");
         switch( (*it)->type() ) {
         case Recipient::To:
             to += emailLine;
@@ -138,12 +138,12 @@ void RecipientsEditorSideWidget::updateTotalToolTip()
         }
     }
 
-    text += i18nc("@info:tooltip %1 list of emails", "<interface>To:</interface><nl/>%1", to);
+    text += xi18nc("@info:tooltip %1 list of emails", "<interface>To:</interface><nl/>%1", to);
     if ( !cc.isEmpty() ) {
-        text += i18nc("@info:tooltip %1 list of emails", "<interface>CC:</interface><nl/>%1", cc);
+        text += xi18nc("@info:tooltip %1 list of emails", "<interface>CC:</interface><nl/>%1", cc);
     }
     if ( !bcc.isEmpty() ) {
-        text += i18nc("@info:tooltip %1 list of emails", "<interface>BCC:</interface><nl/>%1", bcc);
+        text += xi18nc("@info:tooltip %1 list of emails", "<interface>BCC:</interface><nl/>%1", bcc);
     }
 
     text.append( QLatin1String("</qt>") );

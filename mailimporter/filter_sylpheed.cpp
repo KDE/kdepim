@@ -20,7 +20,7 @@
 
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QPointer>
@@ -59,7 +59,7 @@ QString FilterSylpheed::localMailDirPath()
         int errorRow;
         int errorCol;
         if ( !doc.setContent( &folderListFile, &errorMsg, &errorRow, &errorCol ) ) {
-            kDebug() << "Unable to load document.Parse error in line " << errorRow
+            qDebug() << "Unable to load document.Parse error in line " << errorRow
                      << ", col " << errorCol << ": " << errorMsg;
             return QString();
         }

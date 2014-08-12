@@ -24,12 +24,12 @@
 #ifndef KORG_ABOUTDATA_H
 #define KORG_ABOUTDATA_H
 
-#include "korganizer_export.h"
-#include <KAboutData>
+#include "korganizerprivate_export.h"
+#include <k4aboutdata.h>
 
 namespace KOrg {
 
-class KORGANIZERPRIVATE_EXPORT AboutData : public KAboutData
+class KORGANIZERPRIVATE_EXPORT AboutData : public K4AboutData
 {
   public:
     AboutData();

@@ -29,6 +29,7 @@
 
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 static const QString storeJot = QLatin1String("backupjot/");
 
@@ -169,7 +170,7 @@ void ImportJotJob::storeJotArchiveResource(const KArchiveDirectory *dir, const Q
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                kDebug()<<" Problem in archive. number of file "<<lst.count();
+                qDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }
     }
@@ -182,7 +183,7 @@ void ImportJotJob::restoreConfig()
     const KArchiveEntry* jotrcentry  = mArchiveDirectory->entry(Utils::configsPath() + jotStr);
     if (jotrcentry && jotrcentry->isFile()) {
         const KArchiveFile* jotrcFile = static_cast<const KArchiveFile*>(jotrcentry);
-        const QString jotrc = KStandardDirs::locateLocal( "config",  jotStr);
+        const QString jotrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + jotStr;
         if (QFile(jotrc).exists()) {
             if (overwriteConfigMessageBox(jotStr)) {
                 importjotConfig(jotrcFile, jotrc, jotStr, Utils::configsPath());

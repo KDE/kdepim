@@ -19,10 +19,10 @@
 
 #include "tasksexporthandler.h"
 
-#include <kcalcore/filestorage.h>
-#include <kcalcore/icalformat.h>
-#include <kcalcore/memorycalendar.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/FileStorage>
+#include <KCalCore/ICalFormat>
+#include <KCalCore/MemoryCalendar>
+#include <KCalCore/Todo>
 #include <kfiledialog.h>
 #include <klocale.h>
 
@@ -48,7 +48,7 @@ QStringList TasksExportHandler::mimeTypes() const
 
 bool TasksExportHandler::exportItems( const Akonadi::Item::List &items )
 {
-  const QString fileName = KFileDialog::getSaveFileName( KUrl( "calendar.ics" ), QLatin1String( "*.ics" ) );
+  const QString fileName = KFileDialog::getSaveFileName( QUrl( QLatin1String("calendar.ics") ), QLatin1String( "*.ics" ) );
   if ( fileName.isEmpty() )
     return true;
 

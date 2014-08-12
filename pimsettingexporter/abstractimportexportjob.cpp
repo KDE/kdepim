@@ -23,18 +23,19 @@
 
 #include "pimcommon/util/createresource.h"
 
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <KZip>
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardDirs>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 
 #include <QWidget>
 #include <QProgressDialog>
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 int AbstractImportExportJob::sArchiveVersion = -1;
 
@@ -109,7 +110,7 @@ KZip *AbstractImportExportJob::archive()
 void AbstractImportExportJob::backupConfigFile(const QString &configFileName)
 {
     const QString configrcStr(configFileName);
-    const QString configrc = KStandardDirs::locateLocal( "config", configrcStr);
+    const QString configrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + configrcStr;
     if (QFile(configrc).exists()) {
         backupFile(configrc, Utils::configsPath(), configrcStr);
     }
@@ -215,8 +216,8 @@ void AbstractImportExportJob::initializeImportJob()
     if (mTempDir) {
         qDebug()<<" initializeImportJob already called";
     } else {
-        mTempDir = new KTempDir();
-        mTempDirName = mTempDir->name();
+        mTempDir = new QTemporaryDir();
+        mTempDirName = mTempDir->path();
         mCreateResource = new PimCommon::CreateResource();
         connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SIGNAL(info(QString)));
         connect(mCreateResource,SIGNAL(createResourceError(QString)),SIGNAL(error(QString)));
@@ -427,7 +428,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
 
 bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename)
 {
-    KTemporaryFile tmp;
+    QTemporaryFile tmp;
     tmp.open();
     KZip *vcarddirArchive = new KZip(tmp.fileName());
     vcarddirArchive->setCompression(KZip::NoCompression);
@@ -462,7 +463,7 @@ void AbstractImportExportJob::restoreConfigFile(const QString &configNameStr)
     const KArchiveEntry* configNameentry  = mArchiveDirectory->entry(Utils::configsPath() + configNameStr);
     if ( configNameentry &&  configNameentry->isFile()) {
         const KArchiveFile* configNameconfiguration = static_cast<const KArchiveFile*>(configNameentry);
-        const QString configNamerc = KStandardDirs::locateLocal( "config",  configNameStr);
+        const QString configNamerc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + configNameStr;
         if (QFile(configNamerc).exists()) {
             //TODO 4.12 allow to merge config.
             if (overwriteConfigMessageBox(configNameStr)) {
@@ -514,9 +515,9 @@ void AbstractImportExportJob::startSynchronizeResources(const QStringList &listR
 {
     SynchronizeResourceJob *job = new SynchronizeResourceJob(this);
     job->setListResources(listResourceToSync);
-    connect(job, SIGNAL(synchronizationFinished()), SLOT(slotAllResourceSynchronized()));
-    connect(job, SIGNAL(synchronizationInstanceDone(QString)), SLOT(slotSynchronizeInstanceDone(QString)));
-    connect(job, SIGNAL(synchronizationInstanceFailed(QString)), SLOT(slotSynchronizeInstanceFailed(QString)));
+    connect(job, &SynchronizeResourceJob::synchronizationFinished, this, &AbstractImportExportJob::slotAllResourceSynchronized);
+    connect(job, &SynchronizeResourceJob::synchronizationInstanceDone, this, &AbstractImportExportJob::slotSynchronizeInstanceDone);
+    connect(job, &SynchronizeResourceJob::synchronizationInstanceFailed, this, &AbstractImportExportJob::slotSynchronizeInstanceFailed);
     job->start();
 }
 

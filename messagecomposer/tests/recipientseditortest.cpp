@@ -25,12 +25,12 @@
 #include "recipientseditortest.h"
 #include <messagecomposer/recipient/recipientseditor.h>
 
-#include <kapplication.h>
-#include <kdebug.h>
+
+#include <qdebug.h>
 #include <klocale.h>
-#include <kcmdlineargs.h>
+
 #include <kmessagebox.h>
-#include <kaboutdata.h>
+#include <KAboutData>
 
 #include <QPushButton>
 #include <QLayout>
@@ -38,6 +38,8 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QGridLayout>
+#include <QApplication>
+#include <QCommandLineParser>
 
 using namespace MessageComposer;
 
@@ -56,7 +58,7 @@ Composer::Composer( QWidget *parent )
   mRecipients = new RecipientsEditor( this );
   topLayout->addWidget( mRecipients, 1, 0, 1, 2 );
 
-  kDebug() << "SIZEHINT:" << mRecipients->sizeHint();
+  qDebug() << "SIZEHINT:" << mRecipients->sizeHint();
 
 //  mRecipients->setFixedHeight( 10 );
 
@@ -92,11 +94,17 @@ void Composer::slotClose()
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "testrecipienteditor", 0,
-   ki18n("Test Recipient Editor"), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
+  KAboutData aboutData( QLatin1String("testrecipienteditor"),
+   i18n("Test Recipient Editor"), QLatin1String("0.1") );
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  KAboutData::setApplicationData(aboutData);
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
-  KApplication app;
 
   QObject::connect( &app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()) );
 

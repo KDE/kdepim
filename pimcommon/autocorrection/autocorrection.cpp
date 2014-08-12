@@ -19,15 +19,17 @@
 #include "autocorrection.h"
 #include "settings/pimcommonsettings.h"
 #include "import/importkmailautocorrection.h"
-#include <KLocalizedString>
 #include <KGlobal>
 #include <KColorScheme>
-#include <KCalendarSystem>
 #include <KStandardDirs>
+#include <QDebug>
 #include <QTextBlock>
 #include <QTextDocument>
 #include <QDomDocument>
 #include <QFile>
+#include <KCalendarSystem>
+#include <KLocale>
+#include <QStandardPaths>
 
 using namespace PimCommon;
 
@@ -54,7 +56,7 @@ AutoCorrection::AutoCorrection()
 
     readConfig();
 
-    KLocale *locale = KGlobal::locale();
+    KLocale *locale = KLocale::global();
     for (int i = 1; i <=7; ++i)
         mCacheNameOfDays.append(locale->calendar()->weekDayName(i).toLower());
 }
@@ -373,7 +375,7 @@ QString AutoCorrection::autoDetectURL(const QString &_word) const
 
     /* this method is ported from lib/kotext/KoAutoFormat.cpp KoAutoFormat::doAutoDetectUrl
      * from Calligra 1.x branch */
-    // kDebug() <<"link:" << word;
+    // qDebug() <<"link:" << word;
 
     bool secure = false;
     int link_type = 0;
@@ -452,7 +454,7 @@ QString AutoCorrection::autoDetectURL(const QString &_word) const
             newWord = (secure ? QLatin1String("ftps://") : QLatin1String("ftp://")) + word;
             break;
         }
-        //kDebug() <<"newWord:" << newWord;
+        //qDebug() <<"newWord:" << newWord;
         return newWord;
     }
 
@@ -730,7 +732,6 @@ void AutoCorrection::replaceTypographicQuotes()
             }
 
             if (doubleQuotes && mReplaceDoubleQuotes) {
-
                 if (!ending) {
                     if (addNonBreakingSpace)
                         mWord.replace(i-1, 2, QString(nbsp + mTypographicDoubleQuotes.begin));
@@ -758,7 +759,6 @@ void AutoCorrection::replaceTypographicQuotes()
         }
     }
 
-
     // first character
     if (mWord.at(0) == QLatin1Char('"') && mReplaceDoubleQuotes) {
         if (addNonBreakingSpace)
@@ -771,13 +771,12 @@ void AutoCorrection::replaceTypographicQuotes()
         else
             mWord[0] = mTypographicSingleQuotes.begin;
     }
-
 }
 
 
 void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 {
-    KLocale *locale = KGlobal::locale();
+    KLocale *locale = KLocale::global();
     QString kdelang = locale->languageList().first();
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 
@@ -791,13 +790,13 @@ void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
     //Look at local file:
     if (!forceGlobal) {
         if (!mAutoCorrectLang.isEmpty()) {
-            LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + mAutoCorrectLang + QLatin1String(".xml"));
+            LocalFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/custom-") + mAutoCorrectLang + QLatin1String(".xml"));
         } else {
             if (!kdelang.isEmpty())
-                LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
+                LocalFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
             if (LocalFile.isEmpty() && kdelang.contains(QLatin1String("_"))) {
                 kdelang.remove( QRegExp( QLatin1String("_.*") ) );
-                LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
+                LocalFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
             }
         }
     }
@@ -805,20 +804,20 @@ void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
     //Load Global directly
     if (!mAutoCorrectLang.isEmpty()) {
         if (mAutoCorrectLang == QLatin1String("en_US")) {
-            fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
+            fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/autocorrect.xml"));
         } else {
-            fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + mAutoCorrectLang + QLatin1String(".xml"));
+            fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/") + mAutoCorrectLang + QLatin1String(".xml"));
         }
     } else {
         if (fname.isEmpty() && !kdelang.isEmpty())
-            fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + kdelang + QLatin1String(".xml"));
+            fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/") + kdelang + QLatin1String(".xml"));
         if (fname.isEmpty() && kdelang.contains(QLatin1String("_"))) {
             kdelang.remove( QRegExp( QLatin1String("_.*") ) );
-            fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + kdelang + QLatin1String(".xml"));
+            fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/") + kdelang + QLatin1String(".xml"));
         }
     }
     if (fname.isEmpty())
-        fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
+        fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/autocorrect.xml"));
 
 
     if (mAutoCorrectLang.isEmpty())
@@ -864,10 +863,10 @@ void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 
 void AutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
 {
-    const QString fname = filename.isEmpty() ? KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml")) : filename;
+    const QString fname = filename.isEmpty() ? QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml") : filename;
     QFile file(fname);
     if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-        kDebug()<<"We can't save in file :"<<fname;
+        qDebug()<<"We can't save in file :"<<fname;
         return;
     }
     QDomDocument root(QLatin1String("autocorrection"));

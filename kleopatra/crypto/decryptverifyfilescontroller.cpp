@@ -131,7 +131,7 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
     case DecryptVerifyOperationWidget::DecryptVerifyOpaque:
     {
         const unsigned int classification = classify( fileName );
-        kDebug() << "classified" << fileName << "as" << printableClassification( classification );
+        qDebug() << "classified" << fileName << "as" << printableClassification( classification );
 
         const shared_ptr<ArchiveDefinition> ad = w->selectedArchiveDefinition();
 
@@ -147,13 +147,13 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
             /*else*/   Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( fileName ).fileName() ) ), overwritePolicy );
 
         if ( mayBeCipherText( classification ) ) {
-            kDebug() << "creating a DecryptVerifyTask";
+            qDebug() << "creating a DecryptVerifyTask";
             shared_ptr<DecryptVerifyTask> t( new DecryptVerifyTask );
             t->setInput( input );
             t->setOutput( output );
             task = t;
         } else {
-            kDebug() << "creating a VerifyOpaqueTask";
+            qDebug() << "creating a VerifyOpaqueTask";
             shared_ptr<VerifyOpaqueTask> t( new VerifyOpaqueTask );
             t->setInput( input );
             t->setOutput( output );
@@ -204,7 +204,7 @@ void DecryptVerifyFilesController::Private::slotWizardOperationPrepared()
 
 void DecryptVerifyFilesController::Private::slotWizardCanceled()
 {
-    kDebug();
+    qDebug();
     reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User canceled") );
 }
 
@@ -265,13 +265,13 @@ namespace {
         const Protocol proto;
         FindExtension( const QString & ext, Protocol proto ) : ext( ext ), proto( proto ) {}
         bool operator()( const shared_ptr<ArchiveDefinition> & ad ) const {
-            kDebug() << "   considering" << ( ad ? ad->label() : QLatin1String( "<null>" ) ) << "for" << ext;
+            qDebug() << "   considering" << ( ad ? ad->label() : QLatin1String( "<null>" ) ) << "for" << ext;
             bool result;
             if ( proto == UnknownProtocol )
                 result = ad && ( ad->extensions( OpenPGP ).contains( ext, Qt::CaseInsensitive ) || ad->extensions( CMS ).contains( ext, Qt::CaseInsensitive ) );
             else
                 result = ad && ad->extensions( proto ).contains( ext, Qt::CaseInsensitive );
-            kDebug() << ( result ? "   -> matches" : "   -> doesn't match" );
+            qDebug() << ( result ? "   -> matches" : "   -> doesn't match" );
             return result;
         }
     };
@@ -427,7 +427,7 @@ DecryptVerifyFilesController::DecryptVerifyFilesController( const shared_ptr<con
 }
 
 
-DecryptVerifyFilesController::~DecryptVerifyFilesController() { kDebug(); }
+DecryptVerifyFilesController::~DecryptVerifyFilesController() { qDebug(); }
 
 void DecryptVerifyFilesController::start()
 {
@@ -458,14 +458,14 @@ void DecryptVerifyFilesController::Private::cancelAllTasks() {
 
 void DecryptVerifyFilesController::cancel()
 {
-    kDebug();
+    qDebug();
     try {
         d->m_errorDetected = true;
         if ( d->m_wizard )
             d->m_wizard->close();
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        kDebug() << "Caught exception: " << e.what();
+        qDebug() << "Caught exception: " << e.what();
     }
 }
 

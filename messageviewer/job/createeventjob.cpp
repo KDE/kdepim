@@ -18,9 +18,9 @@
 #include "createeventjob.h"
 
 #include <Akonadi/KMime/MessageParts>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemCreateJob>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/ItemCreateJob>
 
 #include <KMime/Message>
 #include <QDebug>

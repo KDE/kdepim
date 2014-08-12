@@ -22,7 +22,6 @@
 #include "interface/storageserviceinterface.h"
 
 
-#include <KGlobal>
 
 #include <QDebug>
 
@@ -44,7 +43,7 @@ public:
     StorageServiceJobConfig *storageServiceJobConfig;
 };
 
-K_GLOBAL_STATIC( StorageServiceJobConfigPrivate, sInstance )
+Q_GLOBAL_STATIC( StorageServiceJobConfigPrivate, sInstance )
 
 
 StorageServiceJobConfig::StorageServiceJobConfig(QObject *parent)

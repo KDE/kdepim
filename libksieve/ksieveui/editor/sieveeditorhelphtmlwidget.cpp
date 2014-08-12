@@ -26,12 +26,12 @@ SieveEditorHelpHtmlWidget::SieveEditorHelpHtmlWidget(QWidget *parent)
     : QWidget(parent)
 {
     mProgressIndicator = new SieveEditorLoadProgressIndicator(this);
-    connect(mProgressIndicator, SIGNAL(pixmapChanged(QPixmap)), this, SLOT(slotPixmapChanged(QPixmap)));
-    connect(mProgressIndicator, SIGNAL(loadFinished(bool)), this, SLOT(slotLoadFinished(bool)));
+    connect(mProgressIndicator, &SieveEditorLoadProgressIndicator::pixmapChanged, this, &SieveEditorHelpHtmlWidget::slotPixmapChanged);
+    connect(mProgressIndicator, &SieveEditorLoadProgressIndicator::loadFinished, this, &SieveEditorHelpHtmlWidget::slotLoadFinished);
     mWebView = new SieveEditorWebView;
-    connect(mWebView, SIGNAL(titleChanged(QString)), this, SLOT(slotTitleChanged(QString)));
-    connect(mWebView, SIGNAL(loadStarted()), this, SLOT(slotLoadStarted()));
-    connect(mWebView, SIGNAL(loadFinished(bool)), this, SLOT(slotFinished(bool)));
+    connect(mWebView, &SieveEditorWebView::titleChanged, this, &SieveEditorHelpHtmlWidget::slotTitleChanged);
+    connect(mWebView, &SieveEditorWebView::loadStarted, this, &SieveEditorHelpHtmlWidget::slotLoadStarted);
+    connect(mWebView, &SieveEditorWebView::loadFinished, this, &SieveEditorHelpHtmlWidget::slotFinished);
     QVBoxLayout *lay = new QVBoxLayout;
     lay->addWidget(mWebView);
     setLayout(lay);

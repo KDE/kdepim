@@ -21,14 +21,14 @@
 
 #include "searchwidget.h"
 
-#include <akonadi/control.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemsearchjob.h>
+#include <AkonadiCore/control.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/itemsearchjob.h>
 
 #include <KComboBox>
 #include <KMessageBox>
-#include <KTextBrowser>
+#include <QTextBrowser>
 #include <KTextEdit>
 
 #include <QGridLayout>
@@ -48,7 +48,7 @@ SearchWidget::SearchWidget( QWidget *parent )
   mQueryCombo = new KComboBox;
   mQueryWidget = new KTextEdit;
   mResultView = new QListView;
-  mItemView = new KTextBrowser;
+  mItemView = new QTextBrowser;
   QPushButton *button = new QPushButton( "Search" );
 
   layout->addWidget( new QLabel( "Query:" ), 0, 0 );
