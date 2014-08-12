@@ -100,7 +100,7 @@ void AttachmentEditDialog::accept()
 
 void AttachmentEditDialog::slotApply()
 {
-  KUrl url = mUi->mURLRequester->url();
+  QUrl url = mUi->mURLRequester->url();
 
   if ( mUi->mLabelEdit->text().isEmpty() ) {
     if ( url.isLocalFile() ) {
@@ -124,7 +124,7 @@ void AttachmentEditDialog::slotApply()
     // to the home directory (not pwd), so we must prepend home
 
     correctedUrl = QDir::home().filePath( url.toLocalFile() );
-    url = KUrl( correctedUrl );
+    url = QUrl::fromLocalFile( correctedUrl );
     if ( url.isValid() ) {
       urlChanged( url );
       mItem->setLabel( url.fileName() );

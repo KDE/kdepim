@@ -55,6 +55,7 @@
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
 
+#include <KUrl>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <KCalCore/Todo>

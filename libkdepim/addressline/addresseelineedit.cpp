@@ -38,7 +38,7 @@
 #include <RecursiveItemFetchJob>
 #include <Session>
 #include <Job>
-
+#include <KUrl>
 #include <baloo/pim/contactcompleter.h>
 
 #include <KPIMUtils/Email>

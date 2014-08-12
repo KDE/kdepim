@@ -42,7 +42,7 @@ class EVENTVIEWS_EXPORT DecorationLabel : public QLabel
                               const QString &longText = QString(),
                               const QString &extensiveText = QString(),
                               const QPixmap &pixmap = QPixmap(),
-                              const KUrl &url = KUrl(),
+                              const QUrl &url = QUrl(),
                               QWidget *parent = 0 );
     ~DecorationLabel();
 
@@ -52,7 +52,7 @@ class EVENTVIEWS_EXPORT DecorationLabel : public QLabel
     void setPixmap( const QPixmap & );
     void setShortText( const QString & );
     void setText( const QString & );
-    void setUrl( const KUrl & );
+    void setUrl( const QUrl & );
     void useShortText( bool allowAutomaticSqueeze = false );
     void useLongText( bool allowAutomaticSqueeze = false );
     void useExtensiveText( bool allowAutomaticSqueeze = false );
@@ -67,7 +67,7 @@ class EVENTVIEWS_EXPORT DecorationLabel : public QLabel
     EventViews::CalendarDecoration::Element *mDecorationElement;
     QString mShortText, mLongText, mExtensiveText;
     QPixmap mPixmap;
-    KUrl mUrl;
+    QUrl mUrl;
 };
 
 }

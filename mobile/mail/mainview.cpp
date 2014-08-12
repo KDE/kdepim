@@ -87,6 +87,7 @@
 #include <kcmultidialog.h>
 #include <kcodecs.h>
 #include <qdebug.h>
+#include <KUrl>
 #include <klinkitemselectionmodel.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>

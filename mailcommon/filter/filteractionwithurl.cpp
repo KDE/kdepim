@@ -20,7 +20,7 @@
 #include "filteractionwithurl.h"
 
 #include <KUrlRequester>
-
+#include <KUrl>
 #include <QTextDocument>
 
 using namespace MailCommon;

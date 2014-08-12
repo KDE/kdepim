@@ -48,8 +48,8 @@ DecorationLabel::DecorationLabel( CalendarDecoration::Element *e,
            this, SLOT(setPixmap(QPixmap)) );
   connect( e, SIGNAL(gotNewShortText(QString)),
            this, SLOT(setShortText(QString)) );
-  connect( e, SIGNAL(gotNewUrl(KUrl)),
-           this, SLOT(setUrl(KUrl)) );
+  connect( e, SIGNAL(gotNewUrl(QUrl)),
+           this, SLOT(setUrl(QUrl)) );
   squeezeContentsToLabel();
 }
 
@@ -57,7 +57,7 @@ DecorationLabel::DecorationLabel( const QString &shortText,
                                   const QString &longText,
                                   const QString &extensiveText,
                                   const QPixmap &pixmap,
-                                  const KUrl &url,
+                                  const QUrl &url,
                                   QWidget *parent )
   : QLabel( parent ), mAutomaticSqueeze( true ), mShortText( shortText ),
     mLongText( longText ), mExtensiveText( extensiveText ),
@@ -126,7 +126,7 @@ void DecorationLabel::setText( const QString &text )
   setLongText( text );
 }
 
-void DecorationLabel::setUrl( const KUrl &url )
+void DecorationLabel::setUrl( const QUrl &url )
 {
   mUrl = url;
   QFont f = font();

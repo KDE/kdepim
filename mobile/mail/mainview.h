@@ -29,6 +29,7 @@
 #include <Akonadi/KMime/SpecialMailCollections>
 #include <AkonadiCore/selectionproxymodel.h>
 #include <messagecomposer/helper/messagefactory.h>
+#include <KUrl>
 
 namespace Akonadi {
   class EntityMimeTypeFilterModel;

@@ -81,7 +81,7 @@ bool KOrganizerEditorConfig::defaultAudioFileReminders() const
   return CalendarSupport::KCalPrefs::instance()->defaultAudioFileReminders();
 }
 
-KUrl KOrganizerEditorConfig::audioFilePath() const
+QUrl KOrganizerEditorConfig::audioFilePath() const
 {
   return CalendarSupport::KCalPrefs::instance()->audioFilePath();
 }

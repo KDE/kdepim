@@ -22,7 +22,7 @@
 #define INCIDENCEEDITOR_INCIDENCEATTACHMENT_H
 
 #include "incidenceeditor-ng.h"
-class KUrl;
+class QUrl;
 namespace Ui {
   class EventOrTodoDesktop;
   class EventOrTodoMore;
@@ -63,7 +63,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
     void copyToClipboard(); /// Copies selected items to clip board
     void cutToClipboard();  /// Copies selected items to clipboard and removes them from the list
     void editSelectedAttachments();
-    void openURL( const KUrl &url );
+    void openURL( const QUrl &url );
     void pasteFromClipboard();
     void removeSelectedAttachments();
     void saveAttachment( QListWidgetItem *item );

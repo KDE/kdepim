@@ -52,7 +52,7 @@
 
 #include <MailTransport/TransportManager>
 
-#include <KUrl>
+#include <QUrl>
 #include <KIconLoader>
 
 #include <QAbstractItemModel>
@@ -272,7 +272,7 @@ Akonadi::Item::List CalendarSupport::applyCalFilter( const Akonadi::Item::List &
   return items;
 }
 
-bool CalendarSupport::isValidIncidenceItemUrl( const KUrl &url,
+bool CalendarSupport::isValidIncidenceItemUrl( const QUrl &url,
                                                const QStringList &supportedMimeTypes )
 {
   if ( !url.isValid() ) {
@@ -283,10 +283,10 @@ bool CalendarSupport::isValidIncidenceItemUrl( const KUrl &url,
     return false;
   }
 
-  return supportedMimeTypes.contains( url.queryItem( QLatin1String( "type" ) ) );
+  return supportedMimeTypes.contains( QUrlQuery(url).queryItemValue( QLatin1String( "type" ) ) );
 }
 
-bool CalendarSupport::isValidIncidenceItemUrl( const KUrl &url )
+bool CalendarSupport::isValidIncidenceItemUrl( const QUrl &url )
 {
   return isValidIncidenceItemUrl( url,
                                   QStringList() << KCalCore::Event::eventMimeType()
@@ -302,13 +302,13 @@ static bool containsValidIncidenceItemUrl( const QList<QUrl>& urls )
                   bind( CalendarSupport::isValidIncidenceItemUrl, _1 ) ) != urls.constEnd();
 }
 
-bool CalendarSupport::isValidTodoItemUrl( const KUrl &url )
+bool CalendarSupport::isValidTodoItemUrl( const QUrl &url )
 {
   if ( !url.isValid() || url.scheme() != QLatin1String( "akonadi" ) ) {
     return false;
   }
 
-  return url.queryItem( QLatin1String( "type" ) ) == KCalCore::Todo::todoMimeType();
+  return QUrlQuery(url).queryItemValue( QLatin1String( "type" ) ) == KCalCore::Todo::todoMimeType();
 }
 
 bool CalendarSupport::canDecode( const QMimeData *md )
@@ -320,10 +320,10 @@ bool CalendarSupport::canDecode( const QMimeData *md )
     KCalUtils::VCalDrag::canDecode( md );
 }
 
-QList<KUrl> CalendarSupport::incidenceItemUrls( const QMimeData *mimeData )
+QList<QUrl> CalendarSupport::incidenceItemUrls( const QMimeData *mimeData )
 {
-  QList<KUrl> urls;
-  Q_FOREACH ( const KUrl &i, mimeData->urls() ) {
+  QList<QUrl> urls;
+  Q_FOREACH ( const QUrl &i, mimeData->urls() ) {
     if ( isValidIncidenceItemUrl( i ) ) {
       urls.push_back( i );
     }
@@ -331,11 +331,11 @@ QList<KUrl> CalendarSupport::incidenceItemUrls( const QMimeData *mimeData )
   return urls;
 }
 
-QList<KUrl> CalendarSupport::todoItemUrls( const QMimeData *mimeData )
+QList<QUrl> CalendarSupport::todoItemUrls( const QMimeData *mimeData )
 {
-  QList<KUrl> urls;
+  QList<QUrl> urls;
 
-  Q_FOREACH ( const KUrl &i, mimeData->urls() ) {
+  Q_FOREACH ( const QUrl &i, mimeData->urls() ) {
     if ( isValidIncidenceItemUrl( i, QStringList() << KCalCore::Todo::todoMimeType() ) ) {
       urls.push_back( i );
     }
@@ -729,14 +729,14 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
 
   Q_FOREACH ( Attachment::Ptr attachment, attachments ) {
     targetFile = targetDir + attachment->label();
-    KUrl sourceUrl;
+    QUrl sourceUrl;
     if ( attachment->isUri() ) {
       sourceUrl = attachment->uri();
     } else {
       sourceUrl = incidence->writeAttachmentToTempFile( attachment );
     }
     // save the attachment url
-    if ( !KIO::NetAccess::file_copy( sourceUrl, KUrl( targetFile ) ) &&
+    if ( !KIO::NetAccess::file_copy( sourceUrl, QUrl::fromLocalFile( targetFile ) ) &&
         KIO::NetAccess::lastError() ) {
       KMessageBox::error( parentWidget, KIO::NetAccess::lastErrorString() );
     }

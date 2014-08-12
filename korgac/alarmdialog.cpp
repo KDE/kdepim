@@ -47,6 +47,7 @@
 #include <AkonadiCore/Item>
 
 #include <MailTransport/TransportManager>
+#include <KUrl>
 
 #include <KComboBox>
 #include <QDebug>

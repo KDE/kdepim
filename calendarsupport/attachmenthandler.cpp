@@ -142,9 +142,9 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
 
 static QTemporaryFile *s_tempFile = 0;
 
-static KUrl tempFileForAttachment( const Attachment::Ptr &attachment )
+static QUrl tempFileForAttachment( const Attachment::Ptr &attachment )
 {
-  KUrl url;
+  QUrl url;
 
   QMimeDatabase db;
   QStringList patterns = db.mimeTypeForName( attachment->mimeType() ).globPatterns();
@@ -181,7 +181,7 @@ bool AttachmentHandler::view( const Attachment::Ptr &attachment )
     KToolInvocation::invokeBrowser( attachment->uri() );
   } else {
     // put the attachment in a temporary file and launch it
-    KUrl tempUrl = tempFileForAttachment( attachment );
+    QUrl tempUrl = tempFileForAttachment( attachment );
     if ( tempUrl.isValid() ) {
       stat = KRun::runUrl( tempUrl, attachment->mimeType(), 0, true );
     } else {
@@ -237,12 +237,12 @@ bool AttachmentHandler::saveAs( const Attachment::Ptr &attachment )
   bool stat = false;
   if ( attachment->isUri() ) {
     // save the attachment url
-    stat = KIO::NetAccess::file_copy( attachment->uri(), KUrl( saveAsFile ) );
+    stat = KIO::NetAccess::file_copy( attachment->uri(), QUrl( saveAsFile ) );
   } else {
     // put the attachment in a temporary file and save it
-    KUrl tempUrl = tempFileForAttachment( attachment );
+    QUrl tempUrl = tempFileForAttachment( attachment );
     if ( tempUrl.isValid() ) {
-      stat = KIO::NetAccess::file_copy( tempUrl, KUrl( saveAsFile ) );
+      stat = KIO::NetAccess::file_copy( tempUrl, QUrl( saveAsFile ) );
       if ( !stat && KIO::NetAccess::lastError() ) {
         KMessageBox::error( d->mParent, KIO::NetAccess::lastErrorString() );
       }

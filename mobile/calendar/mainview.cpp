@@ -75,6 +75,7 @@
 #include <incidenceeditor-ng/editorconfig.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <libkdepimdbusinterfaces/reminderclient.h>
+#include <KUrl>
 
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>

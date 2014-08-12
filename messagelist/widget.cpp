@@ -46,6 +46,7 @@
 #include <KToggleAction>
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
+#include <KUrl>
 
 #include "core/groupheaderitem.h"
 

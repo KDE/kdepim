@@ -24,6 +24,7 @@
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <KUrl>
 
 #include <QtCore/QFile>
 

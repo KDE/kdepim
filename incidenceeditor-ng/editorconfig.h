@@ -27,7 +27,7 @@
 
 #include <KCalCore/IncidenceBase>
 
-#include <KUrl>
+#include <QUrl>
 
 #include <QStringList>
 #include <QDateTime>
@@ -77,7 +77,7 @@ class INCIDENCEEDITORS_NG_EXPORT EditorConfig
     { return QDateTime( QDate( 1752, 1, 1 ), QTime( 10, 0 ) ); }
 
     virtual bool defaultAudioFileReminders() const { return false; }
-    virtual KUrl audioFilePath() const { return KUrl(); }
+    virtual QUrl audioFilePath() const { return QUrl(); }
     virtual int reminderTime() const { return 15; }
     virtual int reminderTimeUnits() const { return 0; }
     virtual bool defaultTodoReminders() const { return false; }

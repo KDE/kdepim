@@ -125,10 +125,10 @@ namespace CalendarSupport {
   /**
    * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
    */
-  CALENDARSUPPORT_EXPORT bool isValidIncidenceItemUrl( const KUrl &url,
+  CALENDARSUPPORT_EXPORT bool isValidIncidenceItemUrl( const QUrl &url,
                                                        const QStringList &supportedMimeTypes );
 
-  CALENDARSUPPORT_EXPORT bool isValidIncidenceItemUrl( const KUrl &url );
+  CALENDARSUPPORT_EXPORT bool isValidIncidenceItemUrl( const QUrl &url );
 
   /**
    * returns @p true if the mime data object contains any of the following:
@@ -139,9 +139,9 @@ namespace CalendarSupport {
    */
   CALENDARSUPPORT_EXPORT bool canDecode( const QMimeData *mimeData );
 
-  CALENDARSUPPORT_EXPORT QList<KUrl> incidenceItemUrls( const QMimeData *mimeData );
+  CALENDARSUPPORT_EXPORT QList<QUrl> incidenceItemUrls( const QMimeData *mimeData );
 
-  CALENDARSUPPORT_EXPORT QList<KUrl> todoItemUrls( const QMimeData *mimeData );
+  CALENDARSUPPORT_EXPORT QList<QUrl> todoItemUrls( const QMimeData *mimeData );
 
   CALENDARSUPPORT_EXPORT bool mimeDataHasIncidence( const QMimeData *mimeData );
   CALENDARSUPPORT_EXPORT bool mimeDataHasTodo( const QMimeData *mimeData );
@@ -155,7 +155,7 @@ namespace CalendarSupport {
   /**
   * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
   */
-  CALENDARSUPPORT_EXPORT bool isValidTodoItemUrl( const KUrl &url );
+  CALENDARSUPPORT_EXPORT bool isValidTodoItemUrl( const QUrl &url );
 
   /**
   * creates mime data object for dragging an akonadi item containing an incidence

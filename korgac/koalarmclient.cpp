@@ -48,6 +48,7 @@
 #include <KCheckableProxyModel>
 #include <KConfig>
 #include <KConfigGroup>
+#include <KUrl>
 
 #ifdef Q_OS_MAEMO_5
 #include <KSharedConfig>

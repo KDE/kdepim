@@ -32,6 +32,7 @@
 
 #include <AkonadiCore/Item>
 
+#include <KUrl>
 #include "KJotsSettings.h"
 #include "kjotsbookshelfentryvalidator.h"
 #include <kdescendantsproxymodel.h>

@@ -48,6 +48,7 @@
 #include <klinkitemselectionmodel.h>
 #include <kselectionproxymodel.h>
 
+#include <KUrl>
 #include <KIconLoader>
 #include <KMimeType>
 #include <KComponentData>

@@ -35,7 +35,7 @@
 #include <KLineEdit>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KUrl>
+#include <QUrl>
 #include <KUrlRequester>
 #include <QHBoxLayout>
 
@@ -300,7 +300,7 @@ void ArchiveDialog::slotUser1()
     KCalPrefs::instance()->mArchiveAction = KCalPrefs::actionArchive;
 
     // Get destination URL
-    KUrl destUrl( mArchiveFile->url() );
+    QUrl destUrl( mArchiveFile->url() );
     if ( !destUrl.isValid() ) {
       KMessageBox::sorry( this, i18nc( "@info", "The archive file name is not valid." ) );
       return;
@@ -310,7 +310,8 @@ void ArchiveDialog::slotUser1()
     if ( !filename.endsWith( QLatin1String( ".vcs" ) ) &&
          !filename.endsWith( QLatin1String( ".ics" ) ) ) {
       filename.append( QLatin1String( ".ics" ) );
-      destUrl.setFileName( filename );
+      destUrl = destUrl.adjusted(QUrl::RemoveFilename);
+      destUrl.setPath(destUrl.path() +  filename );
     }
 
     KCalPrefs::instance()->mArchiveFile = destUrl.url();

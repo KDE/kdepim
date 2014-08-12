@@ -85,11 +85,6 @@ public:
     /** Date the message was sent */
     time_t date() const;
 
-    /** returns kmail:&lt;serial number&gt;/&lt;message id&gt; style uri */
-#ifdef Q_CC_MSVC
-    operator KUrl() const;
-#endif
-
     //KDE_DUMMY_COMPARISON_OPERATOR(MailSummary)
     private:
         quint32 mSerialNumber;

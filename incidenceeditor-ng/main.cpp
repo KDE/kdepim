@@ -78,7 +78,7 @@ int main( int argc, char **argv )
   //       the incidence is added.
   if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
     defaults.setGroupWareDomain(
-      KUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
+      QUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
   }
 
   if ( args->isSet( "new-event" ) ) {

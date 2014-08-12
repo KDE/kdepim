@@ -896,8 +896,8 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
   // rescheduling of todos by d'n'd
   connect( agenda, SIGNAL(droppedIncidences(KCalCore::Incidence::List,QPoint,bool)),
            SLOT(slotIncidencesDropped(KCalCore::Incidence::List,QPoint,bool)) );
-  connect( agenda, SIGNAL(droppedIncidences(QList<KUrl>,QPoint,bool)),
-           SLOT(slotIncidencesDropped(QList<KUrl>,QPoint,bool)) );
+  connect( agenda, SIGNAL(droppedIncidences(QList<QUrl>,QPoint,bool)),
+           SLOT(slotIncidencesDropped(QList<QUrl>,QPoint,bool)) );
 
 }
 
@@ -1880,7 +1880,7 @@ void AgendaView::updateEventIndicatorBottom( int newY )
   d->mEventIndicatorBottom->update();
 }
 
-void AgendaView::slotIncidencesDropped( const QList<KUrl> &items, const QPoint &gpos, bool allDay )
+void AgendaView::slotIncidencesDropped( const QList<QUrl> &items, const QPoint &gpos, bool allDay )
 {
   Q_UNUSED( items );
   Q_UNUSED( gpos );

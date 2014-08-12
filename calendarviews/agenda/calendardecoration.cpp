@@ -61,9 +61,9 @@ QPixmap Element::newPixmap( const QSize & )
   return QPixmap();
 }
 
-KUrl Element::url()
+QUrl Element::url()
 {
-  return KUrl();
+  return QUrl();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,12 +136,12 @@ QPixmap StoredElement::pixmap()
   return mPixmap;
 }
 
-void StoredElement::setUrl( const KUrl &u )
+void StoredElement::setUrl( const QUrl &u )
 {
   mUrl = u;
 }
 
-KUrl StoredElement::url()
+QUrl StoredElement::url()
 {
   return mUrl;
 }

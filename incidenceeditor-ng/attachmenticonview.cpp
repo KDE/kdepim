@@ -32,6 +32,7 @@
 #include "attachmenticonview.h"
 
 #include <KIconLoader>
+#include <KUrlMimeData>
 #include <QTemporaryFile>
 #include <QDir>
 
@@ -186,7 +187,7 @@ AttachmentIconView::AttachmentIconView( QWidget *parent )
   setContextMenuPolicy( Qt::CustomContextMenu );
 }
 
-KUrl AttachmentIconView::tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const
+QUrl AttachmentIconView::tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const
 {
   if ( mTempFiles.contains( attachment ) ) {
     return mTempFiles.value( attachment );
@@ -215,7 +216,7 @@ KUrl AttachmentIconView::tempFileForAttachment( const KCalCore::Attachment::Ptr 
 QMimeData *AttachmentIconView::mimeData( const QList< QListWidgetItem*> items ) const
 {
   // create a list of the URL:s that we want to drag
-  KUrl::List urls;
+  QList<QUrl> urls;
   QStringList labels;
   foreach ( QListWidgetItem *it, items ) {
     if ( it->isSelected() ) {
@@ -240,7 +241,8 @@ QMimeData *AttachmentIconView::mimeData( const QList< QListWidgetItem*> items ) 
   metadata["labels"] = labels.join( ":" );
 
   QMimeData *mimeData = new QMimeData;
-  urls.populateMimeData( mimeData, metadata );
+  mimeData->setUrls(urls);
+  KUrlMimeData::setMetaData(metadata, mimeData);
   return mimeData;
 }
 

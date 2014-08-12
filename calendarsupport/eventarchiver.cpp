@@ -242,7 +242,7 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
   }
 
   // Get or create the archive file
-  KUrl archiveURL( KCalPrefs::instance()->mArchiveFile );
+  QUrl archiveURL( KCalPrefs::instance()->mArchiveFile );
   QString archiveFile;
 
   // There is no KIO::NetAccess availabe for Windows CE
@@ -278,7 +278,7 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
   }
 
   // Upload if necessary
-  KUrl srcUrl;
+  QUrl srcUrl;
   srcUrl.setPath( archiveFile );
   if ( srcUrl != archiveURL ) {
     if ( !KIO::NetAccess::upload( archiveFile, archiveURL, widget ) ) {

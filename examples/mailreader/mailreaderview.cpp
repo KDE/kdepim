@@ -16,6 +16,7 @@
 #include <QHBoxLayout>
 #include <QDebug>
 #include <KApplication>
+#include <KUrl>
 
 #include <AkonadiCore/item.h>
 #include "messagelist/core/settings.h"

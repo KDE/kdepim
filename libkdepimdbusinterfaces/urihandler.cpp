@@ -34,7 +34,7 @@
 #include <kshell.h>
 #include <qdebug.h>
 #include <ktoolinvocation.h>
-
+#include <KUrl>
 #include <QObject>
 
 bool UriHandler::process( const QString &uri, const Akonadi::Item& item )

@@ -44,7 +44,7 @@
 #include <KIO/NetAccess>
 #include <KLocalizedString>
 #include <QIcon>
-#include <KUrl>
+#include <QUrl>
 
 #include <QClipboard>
 #include <QMimeData>
@@ -172,7 +172,7 @@ void IncidenceAttachment::copyToClipboard()
 #endif
 }
 
-void IncidenceAttachment::openURL( const KUrl &url )
+void IncidenceAttachment::openURL( const QUrl &url )
 {
   QString uri = url.url();
   UriHandler::process( uri );
@@ -263,14 +263,15 @@ void IncidenceAttachment::saveAttachment( QListWidgetItem *item )
     return;
   }
 
-  KUrl sourceUrl;
+  QUrl sourceUrl;
   if ( att->isUri() ) {
     sourceUrl = att->uri();
   } else {
     sourceUrl = mAttachmentView->tempFileForAttachment( att );
   }
   // save the attachment url
-  if ( !KIO::NetAccess::file_copy( sourceUrl, KUrl( saveAsFile ) ) &&
+  //QT5 verify QUrl(...)
+  if ( !KIO::NetAccess::file_copy( sourceUrl, QUrl( saveAsFile ) ) &&
        KIO::NetAccess::lastError() ) {
     KMessageBox::error( 0, KIO::NetAccess::lastErrorString() );
   }
@@ -397,7 +398,7 @@ void IncidenceAttachment::slotSelectionChanged()
 
 void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
 {
-  KUrl::List urls;
+  QList<QUrl> urls;
   bool probablyWeHaveUris = false;
   QStringList labels;
 
@@ -411,11 +412,11 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
       labels.append( QString::fromUtf8( ( *it ).realName().toLatin1() ) );
     }
     probablyWeHaveUris = true;
-  } else if ( KUrl::List::canDecode( mimeData ) ) {
+  } else if ( mimeData->hasUrls() ) {
     QMap<QString,QString> metadata;
 
      //QT5
-    //urls = KUrl::List::fromMimeData( mimeData, &metadata );
+    //urls = QList<QUrl>::fromMimeData( mimeData, &metadata );
     probablyWeHaveUris = true;
     labels = metadata["labels"].split( ':', QString::SkipEmptyParts );
     for ( QStringList::Iterator it = labels.begin(); it != labels.end(); ++it ) {
@@ -435,7 +436,7 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
     linkAction = menu.addAction( QIcon::fromTheme( "insert-link" ), i18nc( "@action:inmenu", "&Link here" ) );
     // we need to check if we can reasonably expect to copy the objects
     bool weCanCopy = true;
-    for ( KUrl::List::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it ) {
+    for ( QList<QUrl>::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it ) {
       if ( !( weCanCopy = KProtocolManager::supportsReading( *it ) ) ) {
         break; // either we can copy them all, or no copying at all
       }
@@ -466,14 +467,14 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
   QAction *ret = menu.exec( QCursor::pos() );
   if ( linkAction == ret ) {
     QStringList::ConstIterator jt = labels.constBegin();
-    for ( KUrl::List::ConstIterator it = urls.constBegin();
+    for ( QList<QUrl>::ConstIterator it = urls.constBegin();
           it != urls.constEnd(); ++it ) {
       addUriAttachment( (*it).url(), QString(), ( jt == labels.constEnd() ?
                                                   QString() : *( jt++ ) ), true );
     }
   } else if ( cancelAction != ret ) {
     if ( probablyWeHaveUris ) {
-      for ( KUrl::List::ConstIterator it = urls.constBegin();
+      for ( QList<QUrl>::ConstIterator it = urls.constBegin();
             it != urls.constEnd(); ++it ) {
         KIO::Job *job = KIO::storedGet( *it );
         connect( job, SIGNAL(result(KJob*)), SLOT(downloadComplete(KJob*)) );

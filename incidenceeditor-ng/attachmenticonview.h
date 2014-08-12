@@ -35,7 +35,7 @@
 #include <KCalCore/Attachment>
 
 #include <KMimeType>
-#include <KUrl>
+#include <QUrl>
 
 #include <QListWidget>
 
@@ -48,7 +48,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentIconView : public QListWidget
     explicit AttachmentIconView( QWidget *parent = 0 );
 
     QMimeData *mimeData() const;
-    KUrl tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const;
+    QUrl tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const;
 
   protected:
     QMimeData * mimeData( const QList<QListWidgetItem*> items ) const;
@@ -56,7 +56,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentIconView : public QListWidget
     void keyPressEvent( QKeyEvent *event );
 
   private:
-    mutable QHash<KCalCore::Attachment::Ptr, KUrl> mTempFiles;
+    mutable QHash<KCalCore::Attachment::Ptr, QUrl> mTempFiles;
 };
 
 class INCIDENCEEDITORS_NG_EXPORT AttachmentIconItem : public QListWidgetItem

@@ -41,7 +41,7 @@ class INCIDENCEEDITORS_NG_EXPORT KOrganizerEditorConfig : public IncidenceEditor
     virtual QDateTime defaultDuration() const;
     virtual QDateTime startTime() const;
     virtual bool defaultAudioFileReminders() const;
-    virtual KUrl audioFilePath() const;
+    virtual QUrl audioFilePath() const;
     virtual int reminderTime() const;
     virtual int reminderTimeUnits() const;
     virtual bool defaultTodoReminders() const;

@@ -37,7 +37,7 @@
 #include "core/messageitem.h"
 #include "core/settings.h"
 #include "messagelistutil.h"
-
+#include <KUrl>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>

@@ -18,6 +18,7 @@
 #include "filterimporterthunderbird_p.h"
 #include "mailfilter.h"
 
+#include <KUrl>
 #include <QDebug>
 
 #include <QFile>

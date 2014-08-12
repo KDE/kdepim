@@ -38,7 +38,7 @@
 #include <KIO/NetAccess>
 #include <QDebug>
 #include <KLocalizedString>
-#include <KUrl>
+#include <QUrl>
 
 #include <QFile>
 
@@ -433,7 +433,7 @@ IncidenceDefaults IncidenceDefaults::minimalIncidenceDefaults( bool cleanupAttac
   //       the incidence is added.
   if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() ) {
     defaults.setGroupWareDomain(
-      KUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
+      QUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
   }
   return defaults;
 }

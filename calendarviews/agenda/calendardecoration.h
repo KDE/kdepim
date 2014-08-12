@@ -23,7 +23,7 @@
 
 #include <calendarsupport/plugin.h>
 
-#include <KUrl>
+#include <QUrl>
 
 #include <QDate>
 #include <QPixmap>
@@ -93,14 +93,14 @@ class EVENTVIEWS_EXPORT Element : public QObject
       Return a URL pointing to more information about the content of the
       element.
      */
-    virtual KUrl url();
+    virtual QUrl url();
 
   Q_SIGNALS:
     void gotNewPixmap( const QPixmap & ) const;
     void gotNewShortText( const QString & ) const;
     void gotNewLongText( const QString & ) const;
     void gotNewExtensiveText( const QString & ) const;
-    void gotNewUrl( const KUrl & ) const;
+    void gotNewUrl( const QUrl & ) const;
 
   protected:
     QString mId;
@@ -133,15 +133,15 @@ class EVENTVIEWS_EXPORT StoredElement : public Element
     virtual void setPixmap( const QPixmap &p );
     virtual QPixmap pixmap();
 
-    virtual void setUrl( const KUrl &u );
-    virtual KUrl url();
+    virtual void setUrl( const QUrl &u );
+    virtual QUrl url();
 
   protected:
     QString mShortText;
     QString mLongText;
     QString mExtensiveText;
     QPixmap mPixmap;
-    KUrl mUrl;
+    QUrl mUrl;
 };
 
 /**

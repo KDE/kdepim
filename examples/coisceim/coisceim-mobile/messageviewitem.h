@@ -21,7 +21,7 @@
 #define MESSAGEVIEWER_MESSAGEVIEWITEM_H
 
 #include <mobile/lib/declarativeakonadiitem.h>
-
+#include <KUrl>
 class QSortFilterProxyModel;
 class KUrl;
 

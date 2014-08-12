@@ -24,7 +24,7 @@
 #include <AkonadiCore/itemcreatejob.h>
 #include <kfiledialog.h>
 #include <QProgressDialog>
-
+#include <KUrl>
 #include <QtCore/QPointer>
 
 ImportHandlerBase::ImportHandlerBase( QObject *parent )

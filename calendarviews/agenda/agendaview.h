@@ -174,7 +174,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
         Third parameter determines all-day (no time specified) */
     void slotIncidencesDropped( const KCalCore::Incidence::List &incidences,
                                 const QPoint &, bool );
-    void slotIncidencesDropped( const QList<KUrl>& incidences, const QPoint &, bool );
+    void slotIncidencesDropped( const QList<QUrl>& incidences, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
