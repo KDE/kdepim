@@ -64,8 +64,8 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
     
     KGuiItem::assign(user1Button, KGuiItem(i18n("&Import")));
-    KGuiItem::assign(user1Button, KGuiItem(i18n("&NextCard")));
-    KGuiItem::assign(user1Button, KGuiItem(i18n("&PreviousCard")));
+    KGuiItem::assign(user1Button, KGuiItem(i18n("&Next Card")));
+    KGuiItem::assign(user1Button, KGuiItem(i18n("&Previous Card")));
 
     mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer( this );
     mContactViewer->setForceDisableQRCode(true);

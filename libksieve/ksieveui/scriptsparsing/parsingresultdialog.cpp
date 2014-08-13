@@ -42,7 +42,7 @@ ParsingResultDialog::ParsingResultDialog(QWidget *parent)
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    user1Button->setText(i18n("SaveAs..."));
+    user1Button->setText(i18n("Save As..."));
 
     mTextEdit = new PimCommon::PlainTextEditorWidget( this );
     new XMLPrintingSyntaxHighLighter(mTextEdit->editor()->document());
