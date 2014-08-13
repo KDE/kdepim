@@ -2,6 +2,7 @@
 Name=Cloud Storage Manager
 Name[ca]=Gestor de l'emmagatzematge al núvol
 Name[cs]=Správce úložiště Cloudu
+Name[da]=Håndtering af cloud-lagring
 Name[de]=Cloud-Speicherverwaltung
 Name[en_GB]=Cloud Storage Manager
 Name[es]=Gestor de almacenamiento en la nube
@@ -32,6 +33,7 @@ X-DocPath=storageservicemanager/index.html
 GenericName=Cloud Storage Manager
 GenericName[ca]=Gestor de l'emmagatzematge al núvol
 GenericName[cs]=Správce úložiště Cloudu
+GenericName[da]=Håndtering af cloud-lagring
 GenericName[de]=Cloud-Speicherverwaltung
 GenericName[en_GB]=Cloud Storage Manager
 GenericName[es]=Gestor de almacenamiento en la nube
