@@ -38,6 +38,7 @@ Comment[zh_TW]=回覆提醒代理程式
 [Event/mailreceived]
 Name=Mail Follow Up Received
 Name[ca]=S'ha rebut correu de seguiment
+Name[da]=Opfølgning på mail modtaget
 Name[en_GB]=Mail Follow Up Received
 Name[es]=Recibido seguimiento de correo
 Name[et]=Saadi vastuskiri
