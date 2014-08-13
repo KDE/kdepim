@@ -44,7 +44,6 @@
 #include <kglobal.h>
 #include <kconfig.h>
 
-#include <kurl.h>
 #include <qdebug.h>
 #include <KApplication>
 
