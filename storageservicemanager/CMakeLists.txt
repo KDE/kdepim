@@ -45,7 +45,7 @@ install(FILES
   storageservicemanagerui.rc
   DESTINATION  ${KXMLGUI_INSTALL_DIR}/storageservicemanager)
 
-install(PROGRAMS storageservicemanager.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.storageservicemanager.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
 install(FILES data/storageservicemanager.notifyrc
     DESTINATION ${KNOTIFYRC_INSTALL_DIR}
