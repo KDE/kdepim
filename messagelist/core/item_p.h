@@ -461,6 +461,31 @@ public:
   }
 };
 
+/**
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
+ */
+class ItemAttachmentStatusComparator
+{
+public:
+  static inline bool firstGreaterOrEqual( Item * first, Item * second )
+  {
+    if ( !first->status().hasAttachment() )
+    {
+      // fist is unread
+      if ( !second->status().hasAttachment() )
+        return first->date() >= second->date(); // both are unread
+      // unread comes always first with respect to non-unread
+      return true;
+    }
+    if ( !second->status().hasAttachment() )
+      return false;
+    // both are read
+    return first->date() >= second->date();
+  }
+};
+
+
 } // namespace Core
 
 } // namespace MessageList

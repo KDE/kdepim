@@ -50,6 +50,7 @@ QList< QPair< QString, int > > SortOrder::enumerateMessageSortingOptions( Aggreg
     ret.append( QPair< QString, int >( i18n( "By Action Item Status" ), SortOrder::SortMessagesByActionItemStatus ) );
     ret.append( QPair< QString, int >( i18n( "By Unread Status" ), SortOrder::SortMessagesByUnreadStatus ) );
     ret.append( QPair< QString, int >( i18n( "By Important Status" ), SortOrder::SortMessagesByImportantStatus ) );
+    ret.append( QPair< QString, int >( i18n( "By Attachment Status" ), SortOrder::SortMessagesByAttachmentStatus ) );
     return ret;
 }
 
@@ -278,6 +279,7 @@ bool SortOrder::isValidMessageSorting( SortOrder::MessageSorting ms )
     case SortOrder::SortMessagesByActionItemStatus:
     case SortOrder::SortMessagesByUnreadStatus:
     case SortOrder::SortMessagesByImportantStatus:
+    case SortOrder::SortMessagesByAttachmentStatus:
         // ok
         break;
     default:
