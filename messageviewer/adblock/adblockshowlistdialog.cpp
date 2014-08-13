@@ -50,7 +50,7 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    mUser1Button->setText(i18n("Deletelist"));
+    mUser1Button->setText(i18n("Delete List"));
     mUser1Button->setEnabled(false);
     connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotDeleteBrokenList()));
     QWidget *w = new QWidget;

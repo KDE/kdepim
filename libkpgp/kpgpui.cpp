@@ -425,7 +425,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   connect( mListView, SIGNAL(customContextMenuRequested(QPoint)),
            this,      SLOT(slotRMB(QPoint)) );
 
-  KGuiItem::assign(buttonBox->button(QDialogButtonBox::RestoreDefaults), KGuiItem(i18n("&RereadKeys")));
+  KGuiItem::assign(buttonBox->button(QDialogButtonBox::RestoreDefaults), KGuiItem(i18n("&Reread Keys")));
   connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()),
            this, SLOT(slotRereadKeys()) );
   connect(mOkButton, SIGNAL(clicked()),SLOT(slotOk()));

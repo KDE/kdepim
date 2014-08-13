@@ -61,7 +61,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SendLaterDialog::reject);
 
     if (!info) {
-        okButton->setText(i18n("SendLater"));
+        okButton->setText(i18n("Send Later"));
         mDelay = new QCheckBox(i18n("Delay"));
         mDelay->setChecked(false);
         slotDelay(false);

@@ -54,7 +54,7 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     const bool result = fillTree();
     mTreeWidget->expandAll();
     readConfig();
-    user1Button->setText(i18n("SaveAsText..."));
+    user1Button->setText(i18n("Save As Text..."));
     user1Button->setEnabled(result);
     connect(user1Button, SIGNAL(clicked()), SLOT(slotExportAsLogFile()));
 }
