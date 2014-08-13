@@ -87,7 +87,8 @@ public:
         SortMessagesBySize,                  ///< Sort the messages by size
         SortMessagesByActionItemStatus,      ///< Sort the messages by the "Action Item" flag of status
         SortMessagesByUnreadStatus,        ///< Sort the messages by the "Unread" flags of status
-        SortMessagesByImportantStatus        /// Sort the messages By "Important" flags of status
+        SortMessagesByImportantStatus,        /// Sort the messages By "Important" flags of status
+        SortMessagesByAttachmentStatus        /// Sort the messages By "Attachment" flags of status
         // Warning: Never add enum entries in the middle: always add them at the end (numeric values are stored in configuration)
     };
 

@@ -1799,6 +1799,13 @@ bool ModelPrivate::handleItemPropertyChanges( int propertyChangeMask, Item * par
                         attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
                 } // else new/unread status changed, but it doesn't match sorting order: no need to re-sort
                 break;
+            case SortOrder::SortMessagesByAttachmentStatus:
+                if ( propertyChangeMask & AttachmentStatusChanged ) // attachment status changed
+                {
+                    if ( messageItemNeedsReSorting< ItemAttachmentStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
+                        attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
+                } // else new/unread status changed, but it doesn't match sorting order: no need to re-sort
+                break;
             default:
                 // this kind of message sorting isn't affected by the property changes: nothing to do.
                 break;
@@ -1878,6 +1885,13 @@ bool ModelPrivate::handleItemPropertyChanges( int propertyChangeMask, Item * par
         if ( propertyChangeMask & ImportantStatusChanged ) // important status changed
         {
             if ( messageItemNeedsReSorting< ItemImportantStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
+                attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
+        } // else important status changed, but it doesn't match sorting order: no need to re-sort
+        break;
+    case SortOrder::SortMessagesByAttachmentStatus:
+        if ( propertyChangeMask & AttachmentStatusChanged ) // attachment status changed
+        {
+            if ( messageItemNeedsReSorting< ItemAttachmentStatusComparator >( mSortOrder->messageSortDirection(), parent->d_ptr, static_cast< MessageItem * >( item ) ) )
                 attachMessageToParent( parent, static_cast< MessageItem * >( item ) );
         } // else important status changed, but it doesn't match sorting order: no need to re-sort
         break;
@@ -2158,6 +2172,9 @@ void ModelPrivate::attachMessageToParent( Item *pParent, MessageItem *mi )
                 break;
     case SortOrder::SortMessagesByImportantStatus:
         INSERT_MESSAGE_WITH_COMPARATOR( ItemImportantStatusComparator )
+                break;
+    case SortOrder::SortMessagesByAttachmentStatus:
+        INSERT_MESSAGE_WITH_COMPARATOR( ItemAttachmentStatusComparator )
                 break;
     case SortOrder::NoMessageSorting:
         pParent->appendChildItem( mModelForItemFunctions, mi );

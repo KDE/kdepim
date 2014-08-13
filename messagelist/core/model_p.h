@@ -116,7 +116,8 @@ public:
     MaxDateChanged = (1 << 1),
     ActionItemStatusChanged = (1 << 2),
     UnreadStatusChanged = (1 << 3),
-    ImportantStatusChanged = (1 << 4)
+    ImportantStatusChanged = (1 << 4),
+    AttachmentStatusChanged = (1 << 5)
   };
 
   /**
