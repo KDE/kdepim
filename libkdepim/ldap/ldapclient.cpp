@@ -24,6 +24,7 @@
 #include "ldapclient.h"
 #include "ldapsession.h"
 #include "ldapqueryjob.h"
+#include "ldapclient_debug.h"
 
 #include <kldap/ldapobject.h>
 #include <kldap/ldapserver.h>
@@ -31,7 +32,7 @@
 #include <kldap/ldif.h>
 
 #include <KConfig>
-#include <KDebug>
+#include <QDebug>
 #include <KDirWatch>
 #include <kio/job.h>
 
@@ -146,7 +147,7 @@ void LdapClient::startQuery( const QString &filter )
     url.setScope( d->mScope == QLatin1String("one") ? KLDAP::LdapUrl::One : KLDAP::LdapUrl::Sub );
     url.setFilter( QLatin1Char('(') + filter + QLatin1Char(')') );
 
-    kDebug(5300) <<"LdapClient: Doing query:" << url.toDisplayString();
+    qCDebug(LDAPCLIENT_LOG) <<"LdapClient: Doing query:" << url.toDisplayString();
 
     d->startParseLDIF();
     d->mActive = true;
@@ -274,7 +275,7 @@ void LdapClient::Private::finishCurrentObject()
 
 void LdapClient::Private::parseLDIF( const QByteArray &data )
 {
-    //kDebug(5300) <<"LdapClient::parseLDIF(" << QCString(data.data(), data.size()+1) <<" )";
+    //qCDebug(LDAPCLIENT_LOG) <<"LdapClient::parseLDIF(" << QCString(data.data(), data.size()+1) <<" )";
     if ( data.size() ) {
         mLdif.setLdif( data );
     } else {

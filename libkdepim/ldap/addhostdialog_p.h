@@ -22,14 +22,15 @@
 #ifndef ADDHOSTDIALOG_H
 #define ADDHOSTDIALOG_H
 
-#include <kdialog.h>
+#include <qdialog.h>
 
 namespace KLDAP {
 class LdapConfigWidget;
 class LdapServer;
 }
 
-class AddHostDialog : public KDialog
+class QPushButton;
+class AddHostDialog : public QDialog
 {
     Q_OBJECT
 
@@ -47,6 +48,7 @@ class AddHostDialog : public KDialog
   private:
     KLDAP::LdapConfigWidget *mCfg;
     KLDAP::LdapServer *mServer;
+    QPushButton *mOkButton;
 };
 
 #endif // ADDHOSTDIALOG_H

@@ -25,6 +25,7 @@
 
 #include "ldapclientsearch.h"
 #include "ldapclientsearchconfig.h"
+#include "ldapclient_debug.h"
 
 #include "ldapclient.h"
 #include "ldapsession.h"
@@ -37,7 +38,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KDirWatch>
 #include <KProtocolInfo>
 #include <KStandardDirs>
@@ -241,7 +242,7 @@ void LdapClientSearch::startSearch( const QString &txt )
     QList<LdapClient*>::Iterator end(d->mClients.end());
     for ( it = d->mClients.begin(); it != end; ++it ) {
         (*it)->startQuery( filter );
-        kDebug(5300) <<"LdapClientSearch::startSearch()" << filter;
+        qCDebug(LDAPCLIENT_LOG) <<"LdapClientSearch::startSearch()" << filter;
         ++d->mActiveClients;
     }
 }
@@ -322,7 +323,7 @@ void LdapClientSearch::Private::makeSearchData( QStringList &ret, LdapResult::Li
         bool wasCN = false;
         bool wasDC = false;
 
-        //kDebug(5300) <<"\n\nLdapClientSearch::makeSearchData()";
+        //qCDebug(LDAPCLIENT_LOG) <<"\n\nLdapClientSearch::makeSearchData()";
 
         KLDAP::LdapAttrMap::ConstIterator it2;
         for ( it2 = (*it1).object.attributes().constBegin();
@@ -333,7 +334,7 @@ void LdapClientSearch::Private::makeSearchData( QStringList &ret, LdapResult::Li
                 --len;
             }
             const QString tmp = QString::fromUtf8( val, len );
-            //kDebug(5300) <<"      key: \"" << it2.key() <<"\" value: \"" << tmp <<"\"";
+            //qCDebug(LDAPCLIENT_LOG) <<"      key: \"" << it2.key() <<"\" value: \"" << tmp <<"\"";
             if ( it2.key() == QLatin1String("cn") ) {
                 name = tmp;
                 if ( mail.isEmpty() ) {
@@ -380,7 +381,7 @@ void LdapClientSearch::Private::makeSearchData( QStringList &ret, LdapResult::Li
                 mails.append( mail );
             }
             if ( isDistributionList ) {
-                //kDebug(5300) <<"\n\nLdapClientSearch::makeSearchData() found a list:" << name;
+                //qCDebug(LDAPCLIENT_LOG) <<"\n\nLdapClientSearch::makeSearchData() found a list:" << name;
                 ret.append( name );
                 // following lines commented out for bugfixing kolab issue #177:
                 //

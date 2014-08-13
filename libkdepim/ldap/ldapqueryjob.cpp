@@ -26,7 +26,7 @@
 #include <kldap/ldapconnection.h>
 #include <kldap/ldapdn.h>
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace KLDAP;
 

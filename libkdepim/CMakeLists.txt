@@ -51,6 +51,7 @@ set(kdepim_ldap_LIB_SRCS
    ldap/ldapsearchdialog.cpp
    ldap/ldapclientsearch.cpp
    ldap/ldapclientsearchconfig.cpp
+   ldap/ldapclient_debug.cpp
 )
 
 set(kdepim_misc_LIB_SRCS

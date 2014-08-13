@@ -34,7 +34,7 @@
 #include "kdepim_export.h"
 
 #include <KConfig>
-#include <KDialog>
+#include <QDialog>
 
 class QPushButton;
 class QAbstractItemModel;
@@ -62,7 +62,7 @@ public:
 };
 
 
-class KDEPIM_EXPORT CompletionOrderEditor : public KDialog
+class KDEPIM_EXPORT CompletionOrderEditor : public QDialog
 {
     Q_OBJECT
 

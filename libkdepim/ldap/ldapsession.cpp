@@ -25,7 +25,7 @@
 #include <kldap/ldapcontrol.h>
 #include <kldap/ldapdefs.h>
 
-#include <KDebug>
+#include <QDebug>
 #include "ldapqueryjob.h"
 
 using namespace KLDAP;

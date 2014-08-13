@@ -155,7 +155,7 @@ void KCMLdap::slotEditHost()
 
     KLDAP::LdapServer server = item->server();
     AddHostDialog dlg( &server, dialogParent() );
-    dlg.setCaption( i18n( "Edit Host" ) );
+    dlg.setWindowTitle( i18n( "Edit Host" ) );
 
     if ( dlg.exec() && !server.host().isEmpty() ) { //krazy:exclude=crashy
         item->setServer( server );
@@ -306,7 +306,7 @@ void KCMLdap::defaults()
 void KCMLdap::initGUI()
 {
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->setSpacing( KDialog::spacingHint() );
+    //PORT TO QT5 layout->setSpacing( KDialog::spacingHint() );
     layout->setMargin( 0 );
     setLayout(layout);
 

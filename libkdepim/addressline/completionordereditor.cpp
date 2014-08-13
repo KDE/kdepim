@@ -56,6 +56,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QTreeWidget>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
 
 using namespace KPIM;
 
@@ -195,20 +196,27 @@ private:
 
 CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearch,
                                               QWidget* parent )
-    : KDialog( parent ), mConfig( QLatin1String("kpimcompletionorder") ), mLdapSearch( ldapSearch ), mDirty( false )
+    : QDialog( parent ), mConfig( QLatin1String("kpimcompletionorder") ), mLdapSearch( ldapSearch ), mDirty( false )
 {
-    setCaption( i18n( "Edit Completion Order" ) );
-    setButtons( Ok|Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n( "Edit Completion Order" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
     setModal( true );
-    showButtonSeparator( true );
     new CompletionOrderEditorAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String("/"), this, QDBusConnection::ExportAdaptors );
 
     QWidget* page = new QWidget( this );
     QHBoxLayout *pageHBoxLayout = new QHBoxLayout(page);
     pageHBoxLayout->setMargin(0);
-    setMainWidget( page );
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
     mListView = new QTreeWidget( page );
     pageHBoxLayout->addWidget(mListView);
     mListView->setColumnCount( 1 );
@@ -248,7 +256,6 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
              SLOT(slotSelectionChanged()) );
     connect(mUpButton, &QPushButton::clicked, this, &CompletionOrderEditor::slotMoveUp);
     connect(mDownButton, &QPushButton::clicked, this, &CompletionOrderEditor::slotMoveDown);
-    connect(this, &CompletionOrderEditor::okClicked, this, &CompletionOrderEditor::slotOk);
 
     loadCompletionItems();
     readConfig();
@@ -391,7 +398,7 @@ void CompletionOrderEditor::slotOk()
         }
         emit completionOrderChanged();
     }
-    KDialog::accept();
+    QDialog::accept();
 }
 
 #include "moc_completionordereditor_p.cpp"

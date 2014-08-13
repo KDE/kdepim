@@ -27,22 +27,33 @@
 #include <kldap/ldapserver.h>
 #include <kldap/ldapconfigwidget.h>
 #include <klocale.h>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( i18n( "Add Host" ) );
-    setButtons( Ok | Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n( "Add Host" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mOkButton->setDefault(true);
     setModal( true );
-    showButtonSeparator( true );
 
     mServer = server;
 
     QWidget *page = new QWidget( this );
-    setMainWidget( page );
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
     QHBoxLayout *layout = new QHBoxLayout( page );
-    layout->setSpacing( spacingHint() );
+    //QT5 port layout->setSpacing( spacingHint() );
     layout->setMargin( 0 );
 
     mCfg = new KLDAP::LdapConfigWidget(
@@ -98,8 +109,8 @@ AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget *parent )
 
     KAcceleratorManager::manage( this );
     connect(mCfg, SIGNAL(hostNameChanged(QString)), this, SLOT(slotHostEditChanged(QString)));
-    connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
-    enableButtonOk(!mServer->host().isEmpty());
+    connect(mOkButton, SIGNAL(clicked()), SLOT(slotOk()) );
+    mOkButton->setEnabled(!mServer->host().isEmpty());
 }
 
 AddHostDialog::~AddHostDialog()
@@ -108,7 +119,7 @@ AddHostDialog::~AddHostDialog()
 
 void AddHostDialog::slotHostEditChanged( const QString &text )
 {
-    enableButtonOk( !text.isEmpty() );
+    mOkButton->setEnabled( !text.isEmpty() );
 }
 
 void AddHostDialog::slotOk()
@@ -144,7 +155,7 @@ void AddHostDialog::slotOk()
         mServer->setAuth( KLDAP::LdapServer::Anonymous );
     }
     mServer->setMech( mCfg->mech() );
-    KDialog::accept();
+    QDialog::accept();
 }
 
 #include "moc_addhostdialog_p.cpp"
