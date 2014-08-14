@@ -75,7 +75,7 @@ TemplateManagementDialog::TemplateManagementDialog(
            SLOT(slotItemSelected()) );
   connect( m_base.m_listBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
            SLOT(slotApplyTemplate()) );
-  connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+  connect(this, &TemplateManagementDialog::okClicked, this, &TemplateManagementDialog::slotOk);
 
   m_base.m_buttonRemove->setEnabled( false );
   m_base.m_buttonApply->setEnabled( false );
