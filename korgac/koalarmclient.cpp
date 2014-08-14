@@ -80,7 +80,7 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
   mCalendar->setObjectName( QLatin1String("KOrgac's calendar") );
   mETM = mCalendar->entityTreeModel();
 
-  connect( &mCheckTimer, SIGNAL(timeout()), SLOT(checkAlarms()) );
+  connect(&mCheckTimer, &QTimer::timeout, this, &KOAlarmClient::checkAlarms);
   connect( mETM, SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
            SLOT(deferredInit()) );
   connect( mETM, SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
@@ -93,7 +93,7 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
 
   checkAlarms();
   mCheckTimer.start( 1000 * interval );  // interval in seconds
-  connect(qApp, SIGNAL(commitDataRequest(QSessionManager)), SLOT(slotCommitData(QSessionManager)));
+  connect(qApp, &QApplication::commitDataRequest, this, &KOAlarmClient::slotCommitData);
 }
 
 KOAlarmClient::~KOAlarmClient()
