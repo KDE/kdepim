@@ -23,20 +23,30 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 
 
 using namespace KABMergeContacts;
 
 MergeContactShowResultDialog::MergeContactShowResultDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Merged Contact" ) );
-    setButtons( Close );
+    setWindowTitle( i18n( "Merged Contact" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     readConfig();
     mTabWidget = new MergeContactShowResultTabWidget(this);
     mTabWidget->setObjectName(QLatin1String("tabwidget"));
-    setMainWidget(mTabWidget);
+    mainLayout->addWidget(mTabWidget);
+    mainLayout->addWidget(buttonBox);
+
     updateTabWidget();
 }
 

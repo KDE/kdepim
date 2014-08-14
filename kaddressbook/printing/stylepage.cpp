@@ -31,7 +31,7 @@
 #include <QVBoxLayout>
 
 #include <KComboBox>
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
 
 // helper method to sort contact fields by field label
@@ -128,8 +128,8 @@ void StylePage::initGUI()
     setWindowTitle( i18nc( "@title:window", "Choose Printing Style" ) );
 
     QGridLayout *topLayout = new QGridLayout( this );
-    topLayout->setSpacing( KDialog::spacingHint() );
-    topLayout->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     topLayout->setMargin( QDialog::marginHint() );
 
     QLabel *label =
             new QLabel(
@@ -142,8 +142,8 @@ void StylePage::initGUI()
     QGroupBox *group = new QGroupBox( i18nc( "@title:group", "Sorting" ), this );
     QGridLayout *sortLayout = new QGridLayout();
     group->setLayout( sortLayout );
-    sortLayout->setSpacing( KDialog::spacingHint() );
-    sortLayout->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     sortLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     sortLayout->setMargin( QDialog::marginHint() );
     sortLayout->setAlignment( Qt::AlignTop );
 
     label = new QLabel( i18nc( "@label:listbox", "Criterion:" ), group );
@@ -177,8 +177,8 @@ void StylePage::initGUI()
     group = new QGroupBox( i18nc( "@title:group", "Print Style" ), this );
     QVBoxLayout *styleLayout = new QVBoxLayout();
     group->setLayout( styleLayout );
-    styleLayout->setSpacing( KDialog::spacingHint() );
-    styleLayout->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     styleLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     styleLayout->setMargin( QDialog::marginHint() );
 
     mStyleCombo = new KComboBox( false, group );
     mStyleCombo->setToolTip(

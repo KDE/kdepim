@@ -30,9 +30,9 @@
 #include "ui_ds_appearance.h"
 
 #include <KConfig>
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
-
+#include <KConfigGroup>
 #include <QCheckBox>
 #include <QPrinter>
 #include <QTextDocument>
@@ -268,8 +268,8 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
     mPageAppearance->kcbHeaderTextColor->
             setColor( config.readEntry( ContactHeaderForeColor, QColor( Qt::white ) ) );
 
-    mPageAppearance->layout()->setMargin( KDialog::marginHint() );
-    mPageAppearance->layout()->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     mPageAppearance->layout()->setMargin( QDialog::marginHint() );
+//TODO PORT QT5     mPageAppearance->layout()->setSpacing( QDialog::spacingHint() );
 }
 
 DetailledPrintStyle::~DetailledPrintStyle()

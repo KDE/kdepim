@@ -19,17 +19,30 @@
 #include "mergecontactshowresulttabwidget.h"
 
 #include <KLocalizedString>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace KABMergeContacts;
 MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const Akonadi::Item::List &lst, QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mList(lst)
 {
-    setCaption(i18n("Select Which Information to Use for new Contact"));
-    setButtons(Ok|Cancel);
+    setWindowTitle(i18n("Select Which Information to Use for new Contact"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mTabWidget = new MergeContactShowResultTabWidget(this);
     mTabWidget->setObjectName(QLatin1String("tabwidget"));
-    setMainWidget(mTabWidget);
+    mainLayout->addWidget(mTabWidget);
+    mainLayout->addWidget(buttonBox);
+
     updateTabWidget();
 }
 

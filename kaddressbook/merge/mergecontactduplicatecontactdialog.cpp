@@ -29,14 +29,21 @@
 
 #include <QStackedWidget>
 #include <QLabel>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace KABMergeContacts;
 
 MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Select Contacts to merge" ) );
-    setButtons( Close );
+    setWindowTitle( i18n( "Select Contacts to merge" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mStackedWidget = new QStackedWidget(this);
     mStackedWidget->setObjectName(QLatin1String("stackedwidget"));
 
@@ -58,7 +65,9 @@ MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Ako
     mStackedWidget->addWidget(mNoEnoughContactSelected);
 
 
-    setMainWidget(mStackedWidget);
+    mainLayout->addWidget(mStackedWidget);
+    mainLayout->addWidget(buttonBox);
+
     readConfig();
     searchPotentialDuplicateContacts(list);
 }

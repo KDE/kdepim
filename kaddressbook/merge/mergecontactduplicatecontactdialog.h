@@ -18,7 +18,7 @@
 #ifndef MERGECONTACTDUPLICATECONTACTDIALOG_H
 #define MERGECONTACTDUPLICATECONTACTDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include <AkonadiCore/Item>
 
 #include "kaddressbook_export.h"
@@ -26,7 +26,7 @@ class QStackedWidget;
 class QLabel;
 namespace KABMergeContacts {
 class MergeContactShowResultTabWidget;
-class KADDRESSBOOK_EXPORT MergeContactDuplicateContactDialog : public KDialog
+class KADDRESSBOOK_EXPORT MergeContactDuplicateContactDialog : public QDialog
 {
     Q_OBJECT
 public:
