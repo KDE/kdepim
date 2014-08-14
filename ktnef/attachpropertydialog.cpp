@@ -22,7 +22,6 @@
 #include <KTNEF/KTNEFPropertySet>
 #include <KTNEF/KTNEFDefs>
 
-#include <KApplication>
 #include <QDebug>
 #include <KFileDialog>
 #include <KLocalizedString>
@@ -100,7 +99,7 @@ void AttachPropertyDialog::setAttachment( KTNEFAttach *attach )
   mUI.mSize->setText( s );
   QMimeDatabase db;
   QMimeType mimetype = db.mimeTypeForName( attach->mimeTag() );
-  QPixmap pix = loadRenderingPixmap( attach, kapp->palette().color( QPalette::Background ) );
+  QPixmap pix = loadRenderingPixmap( attach, qApp->palette().color( QPalette::Background ) );
   if ( !pix.isNull() ) {
     mUI.mIcon->setPixmap( pix );
   } else {

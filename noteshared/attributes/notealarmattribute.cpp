@@ -17,8 +17,8 @@
 
 #include "notealarmattribute.h"
 
-#include <kglobal.h>
 
+#include <QDataStream>
 #include <QByteArray>
 
 using namespace NoteShared;

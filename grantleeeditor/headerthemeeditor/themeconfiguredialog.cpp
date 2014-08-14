@@ -22,7 +22,7 @@
 
 #include "configurewidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 
 #include <KConfigGroup>

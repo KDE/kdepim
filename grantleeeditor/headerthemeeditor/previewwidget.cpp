@@ -22,7 +22,7 @@
 #include "messageviewer/header/grantleeheaderteststyle.h"
 
 #include <QPushButton>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
 
 

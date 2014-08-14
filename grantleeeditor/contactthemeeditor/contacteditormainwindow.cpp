@@ -32,7 +32,7 @@
 #include <KStandardDirs>
 #include <KRecentFilesAction>
 #include <KLocalizedString>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KUrl>
 #include <KConfigGroup>
 

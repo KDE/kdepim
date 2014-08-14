@@ -35,9 +35,8 @@
 
 #include <kconfig.h>
 #include <qdebug.h>
-#include <kglobal.h>
 #include <khistorycombobox.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 #include <QLineEdit>

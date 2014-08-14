@@ -18,7 +18,7 @@
 
 #include "themedefaulttemplate.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 QList<PimCommon::defaultTemplate> ThemeDefaultTemplate::defaultTemplates()
 {

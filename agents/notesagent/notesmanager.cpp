@@ -31,7 +31,7 @@
 #include <AkonadiCore/ChangeRecorder>
 
 #include <KMime/KMimeMessage>
-
+#include <KDateTime>
 #include <KComponentData>
 #include <ksocketfactory.h>
 #include <KNotification>

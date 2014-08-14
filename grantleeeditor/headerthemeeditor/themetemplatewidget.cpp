@@ -18,7 +18,7 @@
 #include "themetemplatewidget.h"
 #include "themedefaulttemplate.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 #include <QLabel>

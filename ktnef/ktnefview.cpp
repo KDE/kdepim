@@ -19,7 +19,6 @@
 
 #include <KTNEF/KTNEFAttach>
 
-#include <KApplication>
 #include <KLocalizedString>
 
 #include <QIcon>
@@ -56,7 +55,7 @@ Attachment::Attachment( QTreeWidget *parent, KTNEFAttach *attach )
   QMimeType mimeType = db.mimeTypeForName( mAttach->mimeTag() );
   setText( 1, mimeType.comment() );
 
-  QPixmap pix = AttachPropertyDialog::loadRenderingPixmap( attach, kapp->palette().color( QPalette::Background ) );
+  QPixmap pix = AttachPropertyDialog::loadRenderingPixmap( attach, qApp->palette().color( QPalette::Background ) );
   if ( !pix.isNull() ) {
     setIcon( 0, pix );
   } else {

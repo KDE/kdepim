@@ -25,7 +25,7 @@
 
 #include <kns3/uploaddialog.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QInputDialog>
 #include <KZip>
 #include <QTemporaryDir>
