@@ -24,8 +24,9 @@
 #include <messagecomposer/recipient/recipient.h>
 
 #include <kabc/addressee.h>
-#include <kdialog.h>
+#include <QDialog>
 
+class QPushButton;
 namespace Akonadi {
 class EmailAddressSelectionWidget;
 }
@@ -37,7 +38,7 @@ class LdapSearchDialog;
 namespace MessageComposer {
 
 // ### temporary export
-class MESSAGECOMPOSER_EXPORT RecipientsPicker : public KDialog
+class MESSAGECOMPOSER_EXPORT RecipientsPicker : public QDialog
 {
     Q_OBJECT
 
@@ -75,6 +76,10 @@ private:
     KLDAP::LdapSearchDialog *mLdapSearchDialog;
 
     Recipient::Type mDefaultType;
+    QPushButton *mUser3Button;
+    QPushButton *mUser2Button;
+    QPushButton *mUser1Button;
+
 };
 
 }

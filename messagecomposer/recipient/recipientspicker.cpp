@@ -41,36 +41,38 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
 
 using namespace MessageComposer;
 
 RecipientsPicker::RecipientsPicker( QWidget *parent )
-    : KDialog( parent ),
+    : QDialog( parent ),
       mLdapSearchDialog( 0 )
 {
     setObjectName( QLatin1String("RecipientsPicker") );
     setWindowTitle( i18n( "Select Recipient" ) );
 
-    QVBoxLayout *topLayout = new QVBoxLayout( mainWidget() );
-    topLayout->setSpacing( KDialog::spacingHint() );
-    topLayout->setMargin( 0 );
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->setMargin(0);
+    setLayout(mainLayout);
 
-    mView = new Akonadi::EmailAddressSelectionWidget( mainWidget() );
+    mView = new Akonadi::EmailAddressSelectionWidget(this);
+    mainLayout->addWidget(mView);
     mView->view()->setSelectionMode( QAbstractItemView::ExtendedSelection );
     mView->view()->setAlternatingRowColors( true );
     mView->view()->setSortingEnabled( true );
     mView->view()->sortByColumn( 0, Qt::AscendingOrder );
-    topLayout->addWidget( mView );
-    topLayout->setStretchFactor( mView, 1 );
+    mainLayout->setStretchFactor( mView, 1 );
 
     connect( mView->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
              SLOT(slotSelectionChanged()) );
     connect( mView->view(), SIGNAL(doubleClicked(QModelIndex)),
              SLOT(slotPicked()) );
 
-    QPushButton *searchLDAPButton = new QPushButton( i18n("Search &Directory Service"), mainWidget() );
+    QPushButton *searchLDAPButton = new QPushButton( i18n("Search &Directory Service"), this );
     connect( searchLDAPButton, SIGNAL(clicked()), SLOT(slotSearchLDAP()) );
-    topLayout->addWidget( searchLDAPButton );
+    mainLayout->addWidget( searchLDAPButton );
 
     KConfig config( QLatin1String("kabldaprc") );
     KConfigGroup group = config.group( "LDAP" );
@@ -78,13 +80,22 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
     if ( !numHosts )
         searchLDAPButton->setVisible( false );
 
-    setButtons( Close|User1|User2|User3 );
-    setButtonText( User3, i18n("Add as &To") );
-    setButtonText( User2, i18n("Add as CC") );
-    setButtonText( User1, i18n("Add as &BCC") );
-    connect(this,SIGNAL(user1Clicked()),this,SLOT(slotBccClicked()));
-    connect(this,SIGNAL(user2Clicked()),this,SLOT(slotCcClicked()));
-    connect(this,SIGNAL(user3Clicked()),this,SLOT(slotToClicked()));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    mUser1Button = new QPushButton;
+    buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+    mUser2Button = new QPushButton;
+    buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
+    mUser3Button = new QPushButton;
+    buttonBox->addButton(mUser3Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    mUser3Button->setText(i18n("Add as &To" ));
+    mUser2Button->setText(i18n("Add as CC" ));
+    mUser1Button->setText(i18n("Add as &BCC" ));
+    connect(mUser1Button,SIGNAL(clicked()),this,SLOT(slotBccClicked()));
+    connect(mUser2Button,SIGNAL(clicked()),this,SLOT(slotCcClicked()));
+    connect(mUser3Button,SIGNAL(clicked()),this,SLOT(slotToClicked()));
 
     mView->searchLineEdit()->setFocus();
 
@@ -101,9 +112,9 @@ RecipientsPicker::~RecipientsPicker()
 void RecipientsPicker::slotSelectionChanged()
 {
     const bool hasSelection = !mView->selectedAddresses().isEmpty();
-    enableButton(User1, hasSelection );
-    enableButton(User2, hasSelection );
-    enableButton(User3, hasSelection );
+    mUser1Button->setEnabled(hasSelection);
+    mUser2Button->setEnabled(hasSelection);
+    mUser3Button->setEnabled(hasSelection);
 }
 
 void RecipientsPicker::setRecipients( const Recipient::List& )
@@ -114,9 +125,9 @@ void RecipientsPicker::setRecipients( const Recipient::List& )
 void RecipientsPicker::setDefaultType( Recipient::Type type )
 {
     mDefaultType = type;
-    button(User3)->setDefault( type == Recipient::To );
-    button(User2)->setDefault( type == Recipient::Cc );
-    button(User1)->setDefault( type == Recipient::Bcc );
+    mUser1Button->setDefault( type == Recipient::To );
+    mUser2Button->setDefault( type == Recipient::Cc );
+    mUser3Button->setDefault( type == Recipient::Bcc );
 }
 
 void RecipientsPicker::slotToClicked()
@@ -176,7 +187,7 @@ void RecipientsPicker::keyPressEvent( QKeyEvent *event )
     if ( event->key() == Qt::Key_Escape )
         close();
 
-    KDialog::keyPressEvent( event );
+    QDialog::keyPressEvent( event );
 }
 
 void RecipientsPicker::readConfig()

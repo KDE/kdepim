@@ -27,7 +27,7 @@
 #include "recipientspicker.h"
 #include "kwindowpositioner.h"
 
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
 #include <QPushButton>
 
@@ -42,7 +42,7 @@ RecipientsEditorSideWidget::RecipientsEditorSideWidget( RecipientsEditor *view, 
 {
     QBoxLayout *topLayout = new QVBoxLayout( this );
 
-    topLayout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
     topLayout->setMargin( 0 );
     topLayout->addStretch( 1 );
 

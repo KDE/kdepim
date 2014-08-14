@@ -22,15 +22,16 @@
 #define MESSAGECOMPOSER_DISTRIBUTIONLISTDIALOG_H
 
 #include <messagecomposer/recipient/recipient.h>
-#include <kdialog.h>
+#include <QDialog>
 
 class KJob;
 class QLineEdit;
 class QTreeWidget;
+class QPushButton;
 
 namespace MessageComposer {
 
-class DistributionListDialog : public KDialog
+class DistributionListDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -54,6 +55,7 @@ private:
 private:
     QLineEdit *mTitleEdit;
     QTreeWidget *mRecipientsList;
+    QPushButton *mUser1Button;
 };
 
 }

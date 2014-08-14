@@ -41,6 +41,9 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 using namespace MessageComposer;
 
@@ -102,22 +105,29 @@ private:
 
 
 DistributionListDialog::DistributionListDialog( QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
     QFrame *topFrame = new QFrame( this );
-    setMainWidget( topFrame );
-    setCaption( i18nc("@title:window", "Save Distribution List") );
-    setButtons( User1 | Cancel );
-    setDefaultButton( User1 );
+    setWindowTitle( i18nc("@title:window", "Save Distribution List") );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(topFrame);
+    mUser1Button = new QPushButton;
+    buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
+    mainLayout->addWidget(buttonBox);
+    mUser1Button->setDefault(true);
     setModal( false );
-    setButtonText( User1, i18nc("@action:button","Save List") );
-    enableButton( User1, false );
+    mUser1Button->setText(i18nc("@action:button","Save List"));
+    mUser1Button->setEnabled(false);
 
     QBoxLayout *topLayout = new QVBoxLayout( topFrame );
-    topLayout->setSpacing( spacingHint() );
+    //PORT QT5 topLayout->setSpacing( spacingHint() );
 
     QBoxLayout *titleLayout = new QHBoxLayout();
-    titleLayout->setSpacing( spacingHint() );
+    //PORT QT5 titleLayout->setSpacing( spacingHint() );
     topLayout->addItem( titleLayout );
 
     QLabel *label = new QLabel(
@@ -138,7 +148,7 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
     mRecipientsList->setRootIsDecorated( false );
     mRecipientsList->header()->setMovable(false);
     topLayout->addWidget( mRecipientsList );
-    connect( this, SIGNAL(user1Clicked()),
+    connect(mUser1Button, SIGNAL(clicked()),
              this, SLOT(slotUser1()) );
     connect( mTitleEdit, SIGNAL(textChanged(QString)),
              this, SLOT(slotTitleChanged(QString)) );
@@ -282,7 +292,7 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
     dlg->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType()
                             << KABC::ContactGroup::mimeType() );
     dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    dlg->setCaption( i18nc( "@title:window", "Select Address Book" ) );
+    dlg->setWindowTitle( i18nc( "@title:window", "Select Address Book" ) );
     dlg->setDescription( i18n( "Select the address book folder to store the contact group in:" ) );
     if ( dlg->exec() ) {
         const Akonadi::Collection targetCollection = dlg->selectedCollection();
@@ -328,7 +338,7 @@ void DistributionListDialog::slotContactGroupCreateJobResult( KJob *job )
 
 void DistributionListDialog::slotTitleChanged( const QString& text )
 {
-    enableButton( KDialog::User1, !text.trimmed().isEmpty() );
+    mUser1Button->setEnabled(!text.trimmed().isEmpty());
 }
 
 void DistributionListDialog::readConfig()
