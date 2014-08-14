@@ -22,7 +22,6 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
-#include <KLocale>
 
 #include <QVBoxLayout>
 #include <QGroupBox>

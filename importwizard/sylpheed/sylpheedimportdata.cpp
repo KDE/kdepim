@@ -24,7 +24,7 @@
 #include "sylpheed/sylpheedsettings.h"
 #include "sylpheed/sylpheedaddressbook.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDir>
 

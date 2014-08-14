@@ -20,7 +20,7 @@
 #include <kabc/contactgroup.h>
 
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDir>
 #include <QDebug>

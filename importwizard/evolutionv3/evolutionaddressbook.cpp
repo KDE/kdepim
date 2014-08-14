@@ -18,7 +18,7 @@
 #include "importwizard.h"
 #include <QProcess>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KFileDialog>
 
 EvolutionAddressBook::EvolutionAddressBook(ImportWizard *parent)

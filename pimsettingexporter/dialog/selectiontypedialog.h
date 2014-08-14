@@ -18,12 +18,13 @@
 #ifndef SELECTIONTYPEDIALOG_H
 #define SELECTIONTYPEDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 #include "utils.h"
 
 class SelectionTypeTreeWidget;
 
-class SelectionTypeDialog : public KDialog
+class SelectionTypeDialog : public QDialog
 {
     Q_OBJECT
 public:

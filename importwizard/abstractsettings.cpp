@@ -22,7 +22,7 @@
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <MailTransport/mailtransport/transportmanager.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSharedConfig>
 
 #include <AkonadiCore/agenttype.h>

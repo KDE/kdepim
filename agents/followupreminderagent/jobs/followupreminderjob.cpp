@@ -23,7 +23,7 @@
 
 #include <KMime/Message>
 
-#include <KDebug>
+#include <QDebug>
 
 FollowUpReminderJob::FollowUpReminderJob(QObject *parent)
     : QObject(parent)
@@ -56,7 +56,7 @@ void FollowUpReminderJob::setItem(const Akonadi::Item &item)
 void FollowUpReminderJob::slotItemFetchJobDone(KJob* job)
 {
     if ( job->error() ) {
-        kError() << "Error while fetching item. " << job->error() << job->errorString();
+        qCritical() << "Error while fetching item. " << job->error() << job->errorString();
         deleteLater();
         return;
     }
@@ -65,12 +65,12 @@ void FollowUpReminderJob::slotItemFetchJobDone(KJob* job)
 
     const Akonadi::Item::List items = fetchJob->items();
     if ( items.isEmpty() ) {
-        kError() << "Error while fetching item: item not found";
+        qCritical() << "Error while fetching item: item not found";
         deleteLater();
         return;
     }
     if ( !items.at(0).hasPayload<KMime::Message::Ptr>() ) {
-        kError() << "Item has not payload";
+        qCritical() << "Item has not payload";
         deleteLater();
         return;
     }

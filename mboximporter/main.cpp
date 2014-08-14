@@ -17,9 +17,7 @@
 
 
 #include <kaboutdata.h>
-#include <klocale.h>
 #include <QApplication>
-#include <KFileDialog>
 #include "mboxmainwindow.h"
 
 #include <KLocalizedString>

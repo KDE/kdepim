@@ -42,13 +42,15 @@
 #include "kmail1/kmail1importdata.h"
 
 #include <kaboutapplicationdialog.h>
-#include <kglobal.h>
-#include <klocale.h>
+#include <QAction>
+#include <KAboutData>
+#include <KLocalizedString>
 #include <qdebug.h>
 #include <KMessageBox>
 #include <KHelpMenu>
 #include <AkonadiCore/control.h>
 #include <mailcommon/kernel/mailkernel.h>
+#include <QPushButton>
 
 ImportWizard::ImportWizard(QWidget *parent)
     : KAssistantDialog(parent), mSelectedPim( 0 )
@@ -137,8 +139,11 @@ ImportWizard::ImportWizard(QWidget *parent)
 
     checkModules();
     KMessageBox::information(this,i18n("Close KMail before importing data. Some plugins will modify KMail config file."));
-    //QT5 KHelpMenu *helpMenu = new KHelpMenu(this, KComponentData::mainComponent().aboutData(), true);
-    //setButtonMenu( Help, helpMenu->menu() );
+    KHelpMenu *helpMenu = new KHelpMenu(this, KAboutData::applicationData(), true);
+    //Initialize menu
+    QMenu *menu = helpMenu->menu();
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    button(QDialogButtonBox::Help)->setMenu(menu);
 }
 
 ImportWizard::~ImportWizard()

@@ -22,7 +22,6 @@
 
 #include "pimcommon/util/pimutil.h"
 
-#include <KDebug>
 #include <KFileDialog>
 
 #include <QTreeWidgetItem>

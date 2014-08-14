@@ -21,9 +21,9 @@
 #include "mailimporter/importmailswidget.h"
 
 #include <KMessageBox>
-#include <KApplication>
 
 #include <QListWidgetItem>
+#include <QApplication>
 
 MBoxImporterInfoGui::MBoxImporterInfoGui(MBoxImportWidget* parent)
     : MailImporter::FilterInfoGui(),
@@ -53,13 +53,13 @@ void MBoxImporterInfoGui::setTo( const QString& to )
 void MBoxImporterInfoGui::setCurrent( const QString& current )
 {
     mParent->mailWidget()->setCurrent(current);
-    kapp->processEvents();
+    qApp->processEvents();
 }
 
 void  MBoxImporterInfoGui::setCurrent( int percent )
 {
     mParent->mailWidget()->setCurrent(percent);
-    kapp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
+    qApp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
 }
 
 void  MBoxImporterInfoGui::setOverall( int percent )
@@ -73,7 +73,7 @@ void MBoxImporterInfoGui::addInfoLogEntry( const QString& log )
     item->setForeground(Qt::blue);
     mParent->mailWidget()->addItem( item );
     mParent->mailWidget()->setLastCurrentItem();
-    kapp->processEvents();
+    qApp->processEvents();
 }
 
 void MBoxImporterInfoGui::addErrorLogEntry( const QString& log )
@@ -82,7 +82,7 @@ void MBoxImporterInfoGui::addErrorLogEntry( const QString& log )
     item->setForeground(Qt::red);
     mParent->mailWidget()->addItem( item );
     mParent->mailWidget()->setLastCurrentItem();
-    kapp->processEvents();
+    qApp->processEvents();
 }
 
 void MBoxImporterInfoGui::clear()

@@ -22,18 +22,28 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Select Type" ) );
-    setButtons( Ok|Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n( "Select Type" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    setLayout(topLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
     setModal( true );
     QWidget *mainWidget = new QWidget( this );
     QVBoxLayout *mainLayout = new QVBoxLayout( mainWidget );
-    mainLayout->setSpacing( KDialog::spacingHint() );
-    mainLayout->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
     mainLayout->addWidget(mSelectionTreeWidget);
 
@@ -57,7 +67,8 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
 
     mainLayout->addLayout(hbox);
 
-    setMainWidget(mainWidget);
+    topLayout->addWidget(mainWidget);
+    topLayout->addWidget(buttonBox);
     readConfig();
 }
 

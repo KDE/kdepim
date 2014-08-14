@@ -80,7 +80,7 @@ void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
         id = NoteShared::NoteSharedGlobalConfig::self()->defaultFolder();
     } else {
         NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(id);
-        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        NoteShared::NoteSharedGlobalConfig::self()->save();
     }
     if (id == -1) {
         QPointer<SelectedNotefolderDialog> dlg = new SelectedNotefolderDialog(mWidget);

@@ -16,10 +16,10 @@
 */
 
 
-#include <kcmdlineargs.h>
 #include <kaboutdata.h>
-#include <klocale.h>
 #include <KDBusService>
+#include <KLocalizedString>
+#include <QApplication>
 
 #include "importwizard.h"
 

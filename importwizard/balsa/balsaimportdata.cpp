@@ -24,7 +24,7 @@
 #include "importfilterinfogui.h"
 #include "importwizard.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDir>
 

@@ -20,7 +20,6 @@
 
 #include "abstractimporter.h"
 
-#include <kapplication.h>
 #include <KAssistantDialog>
 
 class KPageWidgetItem;

@@ -26,7 +26,7 @@
 
 #include "importwizard.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDir>
 

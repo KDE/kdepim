@@ -25,7 +25,7 @@
 
 #include <mailcommon/kernel/mailkernel.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QDialogButtonBox>
 #include <KConfigGroup>
 #include <QPushButton>

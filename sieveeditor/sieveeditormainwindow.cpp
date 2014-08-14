@@ -33,7 +33,7 @@
 #include <KStandardAction>
 #include <KActionCollection>
 #include <QAction>
-#include <KStatusBar>
+#include <QStatusBar>
 #include <QIcon>
 
 #include <QPointer>

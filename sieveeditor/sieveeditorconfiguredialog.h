@@ -21,11 +21,12 @@
 #ifndef SIEVEEDITORCONFIGUREDIALOG_H
 #define SIEVEEDITORCONFIGUREDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 class QTabWidget;
 class QCheckBox;
 class SieveEditorConfigureServerWidget;
-class SieveEditorConfigureDialog : public KDialog
+class SieveEditorConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:

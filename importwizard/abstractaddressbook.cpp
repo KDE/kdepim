@@ -20,7 +20,7 @@
 
 #include <KABC/Addressee>
 #include <kabc/contactgroup.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QDebug>
 #include <AkonadiCore/ItemCreateJob>
 #include <AkonadiCore/Item>

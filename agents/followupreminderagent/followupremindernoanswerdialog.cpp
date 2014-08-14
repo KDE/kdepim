@@ -22,7 +22,6 @@
 #include <KLocalizedString>
 #include <QMenu>
 #include <KSharedConfig>
-#include <KGlobal>
 
 #include <QHBoxLayout>
 #include <QTreeWidget>
