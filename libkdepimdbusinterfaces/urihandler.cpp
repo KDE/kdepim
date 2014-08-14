@@ -34,7 +34,7 @@
 #include <kshell.h>
 #include <qdebug.h>
 #include <ktoolinvocation.h>
-#include <KUrl>
+#include <QUrl>
 #include <QObject>
 
 bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
@@ -73,15 +73,15 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
         // make sure korganizer is running or the part is shown
         KToolInvocation::startServiceByDesktopPath( QLatin1String("korganizer") );
 
-        // we must work around KUrl breakage (it doesn't know about URNs)
+        // we must work around QUrl breakage (it doesn't know about URNs)
         const QString uid = QUrl::fromPercentEncoding( uri.toLatin1() ).mid( 11 );
         OrgKdeKorganizerKorganizerInterface korganizerIface(
                     QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus() );
 
         return korganizerIface.showIncidence( uid );
     } else if ( uri.startsWith( QLatin1String( "akonadi:" ) ) ) {
-        const KUrl url( uri );
-        const QString mimeType = url.queryItem( QLatin1String( "type" ) );
+        const QUrl url( uri );
+        const QString mimeType = QUrlQuery(url).queryItemValue( QLatin1String( "type" ) );
         if ( mimeType.toLower() == QLatin1String( "message/rfc822" ) ) {
             // make sure kmail is running or the part is shown
             KToolInvocation::startServiceByDesktopPath( QLatin1String("kmail") );
