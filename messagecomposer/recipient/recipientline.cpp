@@ -21,7 +21,7 @@
 #include "recipientline.h"
 
 #include <KPIMUtils/kpimutils/email.h>
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
 #include <KCompletionBox>
 #include <QDebug>
@@ -72,7 +72,7 @@ RecipientLineNG::RecipientLineNG( QWidget* parent )
     setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
 
     QBoxLayout *topLayout = new QHBoxLayout( this );
-    topLayout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
     topLayout->setMargin( 0 );
 
     const QStringList recipientTypes = Recipient::allTypeLabels();
