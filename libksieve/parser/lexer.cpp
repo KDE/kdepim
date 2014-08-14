@@ -154,11 +154,9 @@ static inline bool isIllegal( unsigned char ch ) {
     return ch >= '~' || isOfSet( illegalMap, ch );
 }
 
-#ifndef KDE_USE_FINAL
 static inline bool is8Bit( signed char ch ) {
     return ch < 0;
 }
-#endif
 static QString removeCRLF( const QString & s ) {
     const bool CRLF = s.endsWith( QLatin1String("\r\n") );
     const bool LF = !CRLF && s.endsWith( '\n' );

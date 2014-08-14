@@ -108,10 +108,8 @@
 #include <KSharedConfig>
 #include "kjotsbrowser.h"
 
-#ifndef KDE_USE_FINAL
 Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextCursor)
-#endif
 using namespace Akonadi;
 using namespace Grantlee;
 

@@ -98,14 +98,12 @@ void GrantleeContactGroupFormatter::setGrantleeTheme(const GrantleeTheme::Theme 
     d->changeGrantleePath(theme.absolutePath());
 }
 
-#ifndef KDE_USE_FINAL
 inline static void setHashField( QVariantHash &hash, const QString &name, const QString &value )
 {
     if ( !value.isEmpty() ) {
         hash.insert( name, value );
     }
 }
-#endif
 
 static QVariantHash memberHash( const KABC::ContactGroup::Data &data )
 {
