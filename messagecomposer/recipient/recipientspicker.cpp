@@ -50,7 +50,6 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
 {
     setObjectName( QLatin1String("RecipientsPicker") );
     setWindowTitle( i18n( "Select Recipient" ) );
-    setButtons( None );
 
     QVBoxLayout *topLayout = new QVBoxLayout( mainWidget() );
     topLayout->setSpacing( KDialog::spacingHint() );
