@@ -21,7 +21,7 @@
 
 #include "notecreatorandselector.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <KMime/Message>
 

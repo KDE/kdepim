@@ -22,7 +22,7 @@
 #include "filtereditdialog_p.h"
 #include "filtermodel_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QAbstractItemModel>

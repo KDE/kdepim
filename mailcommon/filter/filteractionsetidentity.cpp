@@ -27,7 +27,7 @@
 #include <KPIMIdentities/IdentityCombo>
 #include <KPIMIdentities/IdentityManager>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QPointer>
 
 using namespace MailCommon;

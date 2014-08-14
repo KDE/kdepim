@@ -32,7 +32,7 @@
 #include <templateparser/customtemplates_kfg.h>
 
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QHBoxLayout>

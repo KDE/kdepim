@@ -26,7 +26,7 @@
 #include <messagecomposer/sender/messagesender.h>
 #include <messagecore/helpers/messagehelpers.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QDebug>
 
 using namespace MailCommon;

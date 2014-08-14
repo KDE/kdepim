@@ -19,7 +19,7 @@
 
 #include "filteractiondelete.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KColorScheme>
 
 #include <QLabel>

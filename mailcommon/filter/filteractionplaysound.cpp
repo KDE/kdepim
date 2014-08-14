@@ -23,7 +23,7 @@
 
 #include <phonon/mediaobject.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QtCore/QFile>
 #include <QPointer>

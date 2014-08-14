@@ -22,7 +22,7 @@
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <QLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QComboBox>
 #include <QHBoxLayout>

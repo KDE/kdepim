@@ -24,7 +24,7 @@ using MailCommon::RuleWidgetHandlerManager;
 #include <pimcommon/widgets/minimumcombobox.h>
 #include <QDebug>
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QPushButton>
 #include <QLineEdit>
 #include <QIcon>

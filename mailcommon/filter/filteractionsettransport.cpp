@@ -21,7 +21,7 @@
 
 #include "dialog/filteractionmissingargumentdialog.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <MailTransport/Transport>
 #include <MailTransport/TransportComboBox>
 #include <MailTransport/TransportManager>

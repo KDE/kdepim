@@ -23,11 +23,11 @@
 #include "snippetdialog_p.h"
 #include "snippetsmodel_p.h"
 #include "snippetvariabledialog_p.h"
-
+#include <KSharedConfig>
 #include <QAction>
 #include <KActionCollection>
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <QIcon>
 
