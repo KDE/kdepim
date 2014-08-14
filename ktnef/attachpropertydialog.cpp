@@ -35,21 +35,33 @@
 #include <KSharedConfig>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 AttachPropertyDialog::AttachPropertyDialog( QWidget *parent )
-  : KDialog( parent ),
+  : QDialog( parent ),
     mAttach(0)
 {
-  setButtons( User1|Close );
-  setDefaultButton( Close );
-  setButtonText(User1, i18n("Save..."));
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QPushButton *user1Button = new QPushButton;
+  buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  mainLayout->addWidget(buttonBox);
+  buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
+  user1Button->setText(i18n("Save..."));
   setModal( true );
   QWidget *mainWidget = new QWidget( this );
   mUI.setupUi( mainWidget );
   mUI.mProperties->setHeaderHidden( true );
-  setMainWidget( mainWidget );
-  connect(this, &AttachPropertyDialog::user1Clicked, this, &AttachPropertyDialog::slotSave);
+  connect(user1Button, SIGNAL(clicked()), this, SLOT(slotSave()));
   readConfig();
+  mainLayout->addWidget(mainWidget);
+  mainLayout->addWidget(buttonBox);
 }
 
 AttachPropertyDialog::~AttachPropertyDialog()

@@ -20,21 +20,30 @@
 
 #include <QHBoxLayout>
 #include <KLocalizedString>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 SelectThunderbirdProfileDialog::SelectThunderbirdProfileDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Select thunderbird profile" ) );
-    setButtons( Ok|Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n( "Select thunderbird profile" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    setLayout(topLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
     setModal( true );
-    QWidget *mainWidget = new QWidget( this );
-    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
-    mainLayout->setSpacing( KDialog::spacingHint() );
-    mainLayout->setMargin( KDialog::marginHint() );
-    setMainWidget( mainWidget );
-    mSelectProfile = new SelectThunderbirdProfileWidget(mainWidget);
-    mainLayout->addWidget(mSelectProfile);
+//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
+    mSelectProfile = new SelectThunderbirdProfileWidget(this);
+    topLayout->addWidget(mSelectProfile);
+    topLayout->addWidget(buttonBox);
 }
 
 SelectThunderbirdProfileDialog::~SelectThunderbirdProfileDialog()

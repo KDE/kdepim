@@ -19,10 +19,11 @@
 
 #include "ui_attachpropertywidgetbase.h"
 
-#include <KDialog>
+#include <QDialog>
 
 #include <QMap>
 #include <QPixmap>
+#include <KConfigGroup>
 
 namespace KTnef {
   class KTNEFAttach;
@@ -34,7 +35,7 @@ using namespace KTnef;
 class QTreeWidget;
 class QTreeWidgetItem;
 
-class AttachPropertyDialog : public KDialog
+class AttachPropertyDialog : public QDialog
 {
     Q_OBJECT
   public:
