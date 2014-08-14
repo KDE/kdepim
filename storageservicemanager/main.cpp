@@ -22,6 +22,7 @@
 #include "kdepim-version.h"
 #include "storageservicemanagermainwindow.h"
 #include <kaboutdata.h>
+#include "util/migrateconfig.h"
 
 #include <QDebug>
 #include <qcommandlineparser.h>
@@ -32,6 +33,7 @@
 
 int main( int argc, char **argv )
 {
+    PimCommon::MigrateConfig(QLatin1String("storageservicerc"));
     QApplication app(argc, argv);
 
     KAboutData aboutData(QStringLiteral("storageservicemanager"),
