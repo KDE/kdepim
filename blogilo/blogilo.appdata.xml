@@ -1,25 +1,105 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <component type="desktop">
   <id>blogilo.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
   <name>Blogilo</name>
+  <name xml:lang="ca">Blogilo</name>
+  <name xml:lang="cs">Blogilo</name>
+  <name xml:lang="nl">Blogilo</name>
+  <name xml:lang="sk">Blogilo</name>
+  <name xml:lang="sv">Blogilo</name>
+  <name xml:lang="uk">Blogilo</name>
+  <name xml:lang="x-test">xxBlogiloxx</name>
   <summary>A KDE Blogging Client</summary>
+  <summary xml:lang="ca">Un client de blogs pel KDE</summary>
+  <summary xml:lang="nl">Een KDE Blogging-client</summary>
+  <summary xml:lang="sk">KDE blogovací klient</summary>
+  <summary xml:lang="sv">En bloggklient för KDE</summary>
+  <summary xml:lang="uk">Клієнт для ведення блогів у KDE</summary>
+  <summary xml:lang="x-test">xxA KDE Blogging Clientxx</summary>
   <description>
     <p>Blogilo is a blogging client for KDE, which supports various blogging APIs.</p>
+    <p xml:lang="ca">El Blogilo és un client de blogs pel KDE, el qual és compatible amb diversos API de blogs.</p>
+    <p xml:lang="nl">Blogilo is een client voor blogging voor KDE, die verschillende blogging API's ondersteunt.</p>
+    <p xml:lang="sv">Blogilo är en bloggklient för KDE, som stöder diverse programmeringsgränssnitt för bloggar.</p>
+    <p xml:lang="uk">Blogilo — клієнт для ведення блоків у KDE, у якому передбачено різноманітні програмні інтерфейси для ведення блогів.</p>
+    <p xml:lang="x-test">xxBlogilo is a blogging client for KDE, which supports various blogging APIs.xx</p>
     <p>Features:</p>
+    <p xml:lang="ca">Característiques:</p>
+    <p xml:lang="cs">Vlastnosti:</p>
+    <p xml:lang="nl">Mogelijkheden:</p>
+    <p xml:lang="sk">Funkcie:</p>
+    <p xml:lang="sv">Funktioner:</p>
+    <p xml:lang="uk">Можливості:</p>
+    <p xml:lang="x-test">xxFeatures:xx</p>
     <ul>
       <li>A full featured WYSIWYG editor + An HTML editor</li>
+      <li xml:lang="ca">Un complet editor WYSIWYG + editor d'HTML</li>
+      <li xml:lang="nl">Een WYSIWYG-editor met volledige functies + een HTML-editor</li>
+      <li xml:lang="sv">En visuell editor med fullständig funktionalitet + en HTML-editor</li>
+      <li xml:lang="uk">повноцінний візуальний редактор та редактор коду HTML;</li>
+      <li xml:lang="x-test">xxA full featured WYSIWYG editor + An HTML editorxx</li>
       <li>Previewing your post with your blog style</li>
+      <li xml:lang="ca">Vista prèvia del vostre article amb l'estil del vostre blog</li>
+      <li xml:lang="nl">Bekijken van uw post met uw blog-stijl</li>
+      <li xml:lang="sv">Förhandsgranska inlägg med bloggens stil</li>
+      <li xml:lang="uk">попередній перегляд допису у стилі вашого блогу;</li>
+      <li xml:lang="x-test">xxPreviewing your post with your blog stylexx</li>
       <li>Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
+      <li xml:lang="ca">Implementa les API Blogger1.0, MetaWeblog, MovableType (el Wordpress implementa tots aquests!) i Google GData (usada al blog Blogspot.com)</li>
+      <li xml:lang="nl">Ondersteuning voor Blogger1.0, MetaWeblog, MovableType (Wordpress ondersteunt deze allemaal!) en Google GData (gebruikt op Blogspot.com blogs) API's</li>
+      <li xml:lang="sv">Stöd för programmeringsgränssnitten Blogger1.0, MetaWeblog, MovableType (Wordpress stöder alla dessa) och Google GData (använt för bloggar hos Blogspot.com)</li>
+      <li xml:lang="uk">підтримка програмних інтерфейсів Blogger1.0, MetaWeblog, MovableType (у Wordpress передбачено усі ці програмні інтерфейси!) та Google GData (використовується у блогах Blogspot.com);</li>
+      <li xml:lang="x-test">xxSupport for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIsxx</li>
       <li>Support for Creating/Modifying/Deleting posts.</li>
+      <li xml:lang="ca">Implementa la creació/modificació/eliminació dels articles</li>
+      <li xml:lang="nl">Ondersteuning voor maken/wijzigen/verwijderen van posts.</li>
+      <li xml:lang="sv">Stöd för att skapa, ändra och ta bort inlägg.</li>
+      <li xml:lang="uk">підтримка створення дописів, внесення до них змін та вилучення дописів;</li>
+      <li xml:lang="x-test">xxSupport for Creating/Modifying/Deleting posts.xx</li>
       <li>Support for creating drafts and scheduled posts</li>
+      <li xml:lang="ca">Implementa la creació d'esborranys i articles programats</li>
+      <li xml:lang="nl">Ondersteuning voor maken van concepten en geplande posts</li>
+      <li xml:lang="sv">Stöd för att skapa utkast och schemalagda inlägg</li>
+      <li xml:lang="uk">підтримка створення чернеток та планування дописів;</li>
+      <li xml:lang="x-test">xxSupport for creating drafts and scheduled postsxx</li>
       <li>Support for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
+      <li xml:lang="ca">Implementa la pujada de fitxers de suports al vostre blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
+      <li xml:lang="nl">Ondersteuning voor uploaden van mediabestanden naar uw blog (alleen op ondersteunde API's bijv. MetaWeblog en MovableType)</li>
+      <li xml:lang="sv">Stöd för att ladda upp mediafiler till en blogg (bara med programmeringsgränssnitt som stöder det, t.ex. MetaWeblog och MovableType)</li>
+      <li xml:lang="uk">підтримка вивантаження мультимедійних файлів до блогу (лише для відповідних програмних інтерфейсів, зокрема MetaWeblog та MovableType);</li>
+      <li xml:lang="x-test">xxSupport for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)xx</li>
       <li>Support for Fetching your recent blog entries.</li>
+      <li xml:lang="ca">Implementa l'obtenció de les vostres entrades recents al blog</li>
+      <li xml:lang="nl">Ondersteuning voor ophalen van uw recent blog-items.</li>
+      <li xml:lang="sv">Stöd för att hämta senaste blogginlägg.</li>
+      <li xml:lang="uk">підтримка отримання нещодавніх записів з вашого блогу;</li>
+      <li xml:lang="x-test">xxSupport for Fetching your recent blog entries.xx</li>
       <li>Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
+      <li xml:lang="ca">Implementa afegir imatges als articles des del vostre sistema. Les pujarà en entregar l'article al blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
+      <li xml:lang="nl">Ondersteuning voor het toevoegen van afbeeldingen aan de posts vanaf uw systeem. Deze worden geüpload bij het indienen van uw blog (alleen op ondersteunde API's bijv. MetaWeblog en MovableType)</li>
+      <li xml:lang="sv">Stöd för att lägga till bilder i inlägg från systemet. De laddas upp när ett inlägg skickas till bloggen (bara för programmeringsgränssnitt som stöder det, t.ex. MetaWeblog och MovableType)</li>
+      <li xml:lang="uk">підтримка додавання до дописів зображень з вивантаженням допису на блог (лише для відповідних програмних інтерфейсів, зокрема MetaWeblog та MovableType);</li>
+      <li xml:lang="x-test">xxSupport for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)xx</li>
       <li>Support for saving local entries before publishing.</li>
+      <li xml:lang="ca">Implementa el desat de les entrades locals abans de publicar-les</li>
+      <li xml:lang="nl">Ondersteuning voor opslaan van lokale items alvorens ze te publiceren.</li>
+      <li xml:lang="sv">Stöd för att spara inlägg lokalt innan publicering.</li>
+      <li xml:lang="uk">підтримка збереження локальних записів до оприлюднення;</li>
+      <li xml:lang="x-test">xxSupport for saving local entries before publishing.xx</li>
       <li>Saving your writing copy to prevent data loss, at configurable intervals.</li>
+      <li xml:lang="ca">Desa una còpia de l'escriptura per evitar la pèrdua de dades, a intervals configurables</li>
+      <li xml:lang="nl">Opslaan bij het schrijven om verlies van gegevens te voorkomen, op in te stellen intervals.</li>
+      <li xml:lang="sv">Sparar skriven text för att förhindra dataförlust, med inställningsbart intervall.</li>
+      <li xml:lang="uk">збереження з визначеним інтервалом часу тимчасової копії для запобігання втраті даних;</li>
+      <li xml:lang="x-test">xxSaving your writing copy to prevent data loss, at configurable intervals.xx</li>
       <li>Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
+      <li xml:lang="ca">Un corrector ortogràfic automàtic intern. (El corrector ortogràfic del KDE, usant així la majoria dels idiomes acceptats)</li>
+      <li xml:lang="nl">Interne automatische spellingcontrole. (KDE spellingcontrole wordt gebruikt zodat de meeste talen worden ondersteund)</li>
+      <li xml:lang="sv">Intern automatisk stavningskontroll (KDE:s stavningskontroll används så de flesta språk stöds).</li>
+      <li xml:lang="uk">вбудована система перевірки правопису (засіб перевірки правопису KDE, у якому передбачено підтримку багатьох поширених мов).</li>
+      <li xml:lang="x-test">xxInternal auto spell checker. (KDE spell checker used so most of languages are supported)xx</li>
     </ul>
   </description>
   <url type="homepage">http://blogilo.gnufolks.org/</url>
