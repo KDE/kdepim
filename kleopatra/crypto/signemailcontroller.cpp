@@ -58,7 +58,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include <KDebug>
+
 
 using namespace Kleo;
 using namespace Kleo::Crypto;

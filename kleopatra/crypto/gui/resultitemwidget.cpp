@@ -38,12 +38,12 @@
 
 #include <ui/messagebox.h>
 
-#include <KDebug>
+
 #include <KLocalizedString>
 #include <QPushButton>
 #include <KStandardGuiItem>
 #include <KUrl>
-
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QStringList>

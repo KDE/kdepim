@@ -47,8 +47,8 @@
 #include <kleo/checksumdefinition.h>
 
 #include <KLocalizedString>
-#include <KDebug>
 
+#include <QDebug>
 #include <QPointer>
 #include <QFileInfo>
 #include <QThread>

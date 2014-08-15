@@ -36,7 +36,7 @@
 
 #ifndef QT_NO_DIRMODEL
 
-#include <KDebug>
+
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -52,6 +52,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QHeaderView>
+#include <QDebug>
 
 #include <boost/static_assert.hpp>
 

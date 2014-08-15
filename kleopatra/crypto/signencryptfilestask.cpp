@@ -54,8 +54,8 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <KDebug>
 
+#include <QDebug>
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
 

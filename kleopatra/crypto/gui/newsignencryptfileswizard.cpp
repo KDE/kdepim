@@ -55,9 +55,10 @@
 
 #include <KLocalizedString>
 #include <QIcon>
-#include <KDebug>
+
 #include <KMessageBox>
 
+#include <QDebug>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QWizardPage>

@@ -64,10 +64,11 @@
 
 #include <gpg-error.h>
 
+#include <QDebug>
 #include <KLocalizedString>
 #include <KLocale>
 #include <KLocalizedString>
-#include <KDebug>
+
 
 #include <QByteArray>
 #include <QDateTime>

@@ -37,7 +37,7 @@
 
 #include <utils/kleo_assert.h>
 
-#include <KDebug>
+
 #include <KGuiItem>
 #include <KLocalizedString>
 #include <QPushButton>
@@ -49,6 +49,7 @@
 #include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QDebug>
 
 #include <map>
 #include <set>

@@ -47,8 +47,9 @@
 #include <utils/kleo_assert.h>
 #include <utils/archivedefinition.h>
 
-#include <KDebug>
+
 #include <KLocalizedString>
+#include <QDebug>
 
 #include <QDir>
 #include <QFile>
