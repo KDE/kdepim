@@ -37,7 +37,6 @@
 
 class CollectionLoader;
 
-class KJob;
 
 class CalendarJanitor : public QObject
 {

@@ -23,7 +23,6 @@
 class LogWidget;
 class AbstractImportExportJob;
 class KRecentFilesAction;
-class KUrl;
 class ArchiveStorage;
 class QAction;
 
