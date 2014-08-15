@@ -19,12 +19,14 @@
 #ifndef MERGECONTACTSDIALOG_H
 #define MERGECONTACTSDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include <AkonadiCore/Item>
+#include <KConfigGroup>
 class QItemSelectionModel;
+class QDialogButtonBox;
 namespace KABMergeContacts {
 class MergeContactWidget;
-class MergeContactsDialog : public KDialog
+class MergeContactsDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -40,6 +42,7 @@ private:
     void readConfig();
     void writeConfig();
     MergeContactWidget *mContactWidget;
+    QDialogButtonBox *mButtonBox;
 };
 }
 #endif // MERGECONTACTSDIALOG_H

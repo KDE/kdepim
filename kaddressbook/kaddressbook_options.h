@@ -19,7 +19,7 @@
 #define KADDRESSBOOK_OPTIONS_H
 
 #include <kcmdlineargs.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 static KCmdLineOptions kaddressbook_options()
 {

@@ -19,10 +19,8 @@
 
 #include "categoryselectwidget.h"
 
-#include <klocale.h>
 #include <qdebug.h>
-#include <kdialog.h>
-
+#include <KLocalizedString>
 #include <qtoolbutton.h>
 #include <qlayout.h>
 #include <qstandarditemmodel.h>
@@ -114,7 +112,7 @@ void CategorySelectWidgetPrivate::init()
     updateTimer->setInterval(200);
     connect(updateTimer, SIGNAL(timeout()), SLOT(slotCheckedItemsTimer()));
 
-    hbox->addSpacing(KDialog::spacingHint());
+    //PORT QT5 hbox->addSpacing(KDialog::spacingHint());
 
     QToolButton *but = new QToolButton(q);
     but ->setAutoRaise(true);

@@ -34,21 +34,28 @@
 #include <QLabel>
 #include <QSplitter>
 #include <QPointer>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace KABMergeContacts;
 MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mContactWidget(0)
 {
-    setCaption( i18n( "Select Contacts to merge" ) );
-    setButtons( Close );
+    setWindowTitle( i18n( "Select Contacts to merge" ) );
+    mButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(mButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(mButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
     readConfig();
 
     if (lst.count() < 2) {
-        setMainWidget(new QLabel(i18n("You must select at least two elements.")));
+        mainLayout->addWidget(new QLabel(i18n("You must select at least two elements.")));
     } else {
         if (!MergeContactUtil::hasSameNames(lst)) {
-            setMainWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
+           mainLayout->addWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
         } else {
             QSplitter *mainWidget = new QSplitter;
             mainWidget->setChildrenCollapsible(false);
@@ -58,9 +65,11 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
             mainWidget->addWidget(contactInfo);
             connect(mContactWidget, &MergeContactWidget::contactSelected, contactInfo, &MergeContactInfoWidget::setContact);
             connect(mContactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
-            setMainWidget(mainWidget);
+            mainLayout->addWidget(mainWidget);
         }
     }
+    mainLayout->addWidget(mButtonBox);
+
 }
 
 MergeContactsDialog::~MergeContactsDialog()
@@ -73,7 +82,7 @@ void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const
     if (lst.isEmpty()) {
         return;
     }
-    enableButton(Close, false);
+    mButtonBox->button(QDialogButtonBox::Close)->setEnabled(false);
     MergeContactsJob *job = new MergeContactsJob(this);
     connect(job, &MergeContactsJob::finished, this, &MergeContactsDialog::slotMergeContactFinished);
     job->setDestination(col);
@@ -94,7 +103,7 @@ void MergeContactsDialog::slotMergeContactFinished(const Akonadi::Item &item)
         dlg->exec();
         delete dlg;
     }
-    enableButton(Close, true);
+    mButtonBox->button(QDialogButtonBox::Close)->setEnabled(true);
 }
 
 void MergeContactsDialog::readConfig()
