@@ -49,7 +49,7 @@
 #include <KConfigGroup>
 #include <QHBoxLayout>
 #include <QIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QPushButton>
 #include <QVBoxLayout>
 

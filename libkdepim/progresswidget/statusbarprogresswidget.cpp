@@ -42,7 +42,7 @@ using KPIM::SSLLabel;
 using KPIM::ProgressItem;
 using KPIM::ProgressManager;
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIconLoader>
 
 #include <QEvent>

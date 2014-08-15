@@ -41,9 +41,9 @@
 #include <QTextCodec>
 #include <qdebug.h>
 #include <kglobal.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 // Maximum note size in chars we are going to accept,
 // to prevent "note floods".

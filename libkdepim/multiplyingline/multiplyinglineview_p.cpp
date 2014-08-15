@@ -25,7 +25,7 @@
 
 #include <QDebug>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 #include <QTimer>

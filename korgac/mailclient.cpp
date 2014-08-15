@@ -46,7 +46,7 @@
 #include <MailTransport/TransportManager>
 
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KProtocolManager>
 #include <KSystemTimeZone>
 

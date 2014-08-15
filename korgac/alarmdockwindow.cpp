@@ -32,7 +32,7 @@
 #include <QDebug>
 #include <KIconEffect>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardAction>
 #include <KToolInvocation>

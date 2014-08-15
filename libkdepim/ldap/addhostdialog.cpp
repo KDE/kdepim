@@ -26,7 +26,7 @@
 #include <kacceleratormanager.h>
 #include <kldap/ldapserver.h>
 #include <kldap/ldapconfigwidget.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QDialogButtonBox>
 #include <KConfigGroup>
 #include <QPushButton>

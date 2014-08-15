@@ -24,7 +24,7 @@
 #include "progressmanager.h"
 
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 namespace KPIM {
 

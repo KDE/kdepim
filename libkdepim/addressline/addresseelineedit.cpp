@@ -51,7 +51,7 @@
 #include <KConfigGroup>
 #include <KCompletionBox>
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardShortcut>
 #include <QUrl>
 #include <KGlobal>

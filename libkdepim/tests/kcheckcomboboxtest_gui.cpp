@@ -22,7 +22,7 @@
 #include <KAboutData>
 
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QApplication>
 #include <QCommandLineParser>

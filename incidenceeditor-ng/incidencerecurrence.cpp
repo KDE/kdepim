@@ -30,7 +30,7 @@
 
 #include <QDebug>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace IncidenceEditorNG;
 

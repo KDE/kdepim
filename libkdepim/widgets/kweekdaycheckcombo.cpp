@@ -21,7 +21,7 @@
 
 #include "kweekdaycheckcombo.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCalendarSystem>
 #include <QDebug>
 

@@ -52,7 +52,7 @@
 #include <KComboBox>
 #include <QDebug>
 #include <QHBoxLayout>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KNotification>
 #include <KSharedConfig>

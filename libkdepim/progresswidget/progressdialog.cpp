@@ -33,7 +33,7 @@
 #include "ssllabel.h"
 
 #include <KHBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIconLoader>
 
 #include <QCloseEvent>

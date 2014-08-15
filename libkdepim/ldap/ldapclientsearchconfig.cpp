@@ -24,7 +24,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 #include <kwallet.h>
 

@@ -22,7 +22,7 @@
 #include "kdatepickerpopup.h"
 
 #include <KDatePicker>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QtCore/QDateTime>
 #include <QWidgetAction>

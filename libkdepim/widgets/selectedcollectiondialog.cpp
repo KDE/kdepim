@@ -29,7 +29,7 @@
 
 #include "selectedcollectiondialog.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
 
 #include <kabc/addressee.h>

@@ -29,7 +29,7 @@
 #include <KCalendarSystem>
 
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 using namespace IncidenceEditorNG;
 
 SchedulingDialog::SchedulingDialog( const QDate &startDate, const QTime &startTime, int duration,

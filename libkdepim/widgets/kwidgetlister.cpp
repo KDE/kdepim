@@ -33,7 +33,7 @@
 #include "kwidgetlister.h"
 
 #include <QDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGuiItem>
 #include <QHBoxLayout>
 

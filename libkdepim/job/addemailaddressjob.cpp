@@ -39,7 +39,7 @@
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QPointer>

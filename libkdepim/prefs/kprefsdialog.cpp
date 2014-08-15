@@ -31,7 +31,7 @@
 #include <QDebug>
 #include <QFontDialog>
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KTimeComboBox>
 #include <KUrlRequester>

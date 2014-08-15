@@ -25,7 +25,7 @@
 #include <item.h>
 #include <itemcreatejob.h>
 #include <kabc/addressee.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 
 #include <QtCore/QPointer>

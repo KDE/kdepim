@@ -31,7 +31,7 @@
 
 #include "ssllabel.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIconLoader>
 
 #include <QLabel>

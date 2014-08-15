@@ -25,7 +25,7 @@
 #include "maillistdrag.h"
 
 #include <QDateTime>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QProgressDialog>
 #include <QUrl>
 

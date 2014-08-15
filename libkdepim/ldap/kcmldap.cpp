@@ -39,7 +39,7 @@
 #include <kgenericfactory.h>
 #include <QHBoxLayout>
 #include <kiconloader.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QVBoxLayout>
 #include <KMessageBox>
 

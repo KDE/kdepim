@@ -37,7 +37,7 @@
 #include <QStyleOptionFrameV2>
 #include <QMimeData>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KPIM;
 
