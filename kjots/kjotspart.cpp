@@ -35,7 +35,7 @@
 #include <kstandardaction.h>
 
 #include <kpluginfactory.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kstatusbar.h>
 #include <QIcon>
 #include <QtCore/QFile>

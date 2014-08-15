@@ -19,7 +19,7 @@
 
 #include "filter_evolution.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
 

@@ -36,7 +36,7 @@
 #include <KMime/Message>
 
 #include <KWindowSystem>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
 

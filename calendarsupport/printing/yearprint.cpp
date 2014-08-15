@@ -25,7 +25,7 @@
 #include <KCalendarSystem>
 #include <KDebug>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 using namespace CalendarSupport;
 
 

@@ -51,7 +51,7 @@
 #include <QPointer>
 #include <QVBoxLayout>
 #include <QHelpEvent>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KCalCore;
 using namespace EventViews;

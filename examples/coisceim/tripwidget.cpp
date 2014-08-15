@@ -28,7 +28,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "foldercontentswidget.h"
 #include "trip.h"

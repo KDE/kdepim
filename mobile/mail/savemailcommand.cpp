@@ -29,7 +29,7 @@
 #include <KUrl>
 #include <KFileDialog>
 #include <kio/jobclasses.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIO/JobUiDelegate>
 #include <kio/job.h>
 #include <KMessageBox>

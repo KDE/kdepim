@@ -34,7 +34,7 @@
 #include <QTextDocument>
 #include <QTextDocumentFragment>
 #include <boost/concept_check.hpp>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace PimPrint::Calendar;
 

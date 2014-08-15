@@ -17,7 +17,7 @@
 
 #include <klistwidgetsearchline.h>
 #include <kapplication.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kstandarddirs.h>
 #include <kiconloader.h>
 

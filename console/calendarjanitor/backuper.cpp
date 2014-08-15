@@ -32,7 +32,7 @@
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KJob>
 #include <QDebug>
 

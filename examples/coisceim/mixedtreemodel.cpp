@@ -24,7 +24,7 @@
 #include "mixedtreemodel.h"
 
 #include <KMime/Message>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCalCore/Incidence>
 #include "note.h"
 #include <KABC/Addressee>

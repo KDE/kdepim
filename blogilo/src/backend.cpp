@@ -37,7 +37,7 @@
 #include <kblog/blogmedia.h>
 #include "blogger.h"
 #include <qdebug.h>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <kio/netaccess.h>
 #include <kio/job.h>

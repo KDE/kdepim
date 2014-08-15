@@ -20,7 +20,7 @@
 #include "sieve-editor.h"
 #include "sieveeditorwidget.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QPushButton>
 #include <QKeyEvent>

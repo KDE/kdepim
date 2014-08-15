@@ -26,7 +26,7 @@
 #include <QDebug>
 
 #include <QAction>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QIcon>
 
 #include <QWebElementCollection>

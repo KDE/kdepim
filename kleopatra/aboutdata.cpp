@@ -37,7 +37,7 @@
 
 #include <utils/gnupg-helper.h>
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kiconloader.h>
 
 #include <QPixmap>

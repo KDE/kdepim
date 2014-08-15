@@ -39,7 +39,7 @@
 #include "kleo/job.h"
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QTimer>
 

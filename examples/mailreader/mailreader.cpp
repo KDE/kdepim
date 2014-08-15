@@ -18,7 +18,7 @@
 #include <QAction>
 #include <KConfigDialog>
 #include <KActionCollection>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardAction>
 #include <KStatusBar>
 #include <QIcon>

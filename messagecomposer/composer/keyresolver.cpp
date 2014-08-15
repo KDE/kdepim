@@ -55,7 +55,7 @@
 #include <Akonadi/Contact/ContactSearchJob>
 #include <AkonadiCore/itemcreatejob.h>
 #include <AkonadiCore/itemmodifyjob.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <qdebug.h>
 #include <kdebug.h>
 #include <qinputdialog.h>

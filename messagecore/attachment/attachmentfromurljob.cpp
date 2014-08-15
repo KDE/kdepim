@@ -27,7 +27,7 @@
 #include <KIO/TransferJob>
 #include <KLocalizedString>
 #include <KMimeType>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QtCore/QFileInfo>
 

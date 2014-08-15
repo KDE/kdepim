@@ -74,7 +74,7 @@ namespace Kleo {
 
 #include <QDebug>
 #include <kcmdlineargs.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kiconloader.h>
 #include <QSplashScreen>
 #include <kmessagebox.h>

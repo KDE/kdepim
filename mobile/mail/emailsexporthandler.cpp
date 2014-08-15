@@ -20,7 +20,7 @@
 #include "emailsexporthandler.h"
 
 #include <kfiledialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmbox/mbox.h>
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>

@@ -25,7 +25,7 @@
 #include <Akonadi/KMime/MessageStatus>
 
 #include <KCalendarSystem>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KFormat>
 
 inline uint qHash( const QDate &date )

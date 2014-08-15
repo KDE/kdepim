@@ -21,7 +21,7 @@
 #define KMAIL_MOBILE_OPTIONS_H
 
 #include <kcmdlineargs.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 static KCmdLineOptions kmailMobileOptions()
 {

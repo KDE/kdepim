@@ -18,7 +18,7 @@
 
 #include "filter_sylpheed.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kfiledialog.h>
 #include <qdebug.h>
 #include <QDomDocument>

@@ -67,7 +67,7 @@
 
 #include <QIcon>
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 namespace MessageList
 {

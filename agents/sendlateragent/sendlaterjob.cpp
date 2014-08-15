@@ -34,7 +34,7 @@
 
 #include <KComponentData>
 #include <KNotification>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 #include <QIcon>
 #include <KIconLoader>

@@ -33,7 +33,7 @@
 #include "konsolekalendarchange.h"
 
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QEventLoop>
 #include <QElapsedTimer>

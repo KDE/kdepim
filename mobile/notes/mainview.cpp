@@ -37,7 +37,7 @@
 
 #include <QAction>
 #include <KActionCollection>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KMime/KMimeMessage>
 

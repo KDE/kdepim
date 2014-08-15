@@ -26,7 +26,7 @@
 
 #include <QDebug>
 #include <KLocalizedString>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QTemporaryDir>
 
 #include <kmime/kmime_headers.h>

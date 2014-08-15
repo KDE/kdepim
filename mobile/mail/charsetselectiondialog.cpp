@@ -23,7 +23,7 @@
 
 #include <messageviewer/viewer/nodehelper.h>
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kcombobox.h>
 
 CharsetSelectionDialog::CharsetSelectionDialog( QWidget *parent )

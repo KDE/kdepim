@@ -23,7 +23,7 @@
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <ksieveui/util/util.h>
 #include <ksieveui/vacation/vacation.h>

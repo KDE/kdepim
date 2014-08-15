@@ -23,7 +23,7 @@
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
 #include <KCalCore/Todo>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 
 QString TasksImportHandler::fileDialogNameFilter() const

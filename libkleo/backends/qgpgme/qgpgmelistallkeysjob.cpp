@@ -40,7 +40,7 @@
 #include <gpg-error.h>
 
 #include <kmessagebox.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kdebug.h>
 
 

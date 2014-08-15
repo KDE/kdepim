@@ -31,7 +31,7 @@
 
 #include "cryptoconfigdialog.h"
 #include "cryptoconfigmodule.h"
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kacceleratormanager.h>
 #include <QDialogButtonBox>
 #include <KConfigGroup>

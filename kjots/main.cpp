@@ -31,7 +31,7 @@
 #include <kcmdlineargs.h>
 #include <kconfig.h>
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kglobal.h>
 #include <kconfiggroup.h>
 #include <KSharedConfig>

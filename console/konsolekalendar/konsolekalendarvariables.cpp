@@ -32,7 +32,7 @@
  */
 #include "konsolekalendarvariables.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <qdebug.h>
 #include <kglobal.h>
 #include <kconfig.h>

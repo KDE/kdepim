@@ -27,7 +27,7 @@
 
 #include <kconfig.h>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KSharedConfigPtr>
 #include <KGlobal>

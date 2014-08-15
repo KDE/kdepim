@@ -22,7 +22,7 @@
 
 #include <QDataStream>
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 using namespace MessageList::Core;
 

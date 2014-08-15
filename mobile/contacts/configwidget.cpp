@@ -25,7 +25,7 @@
 
 #include <kcmoduleproxy.h>
 #include <kconfigdialogmanager.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 ConfigWidget::ConfigWidget( QWidget *parent )
   : QWidget( parent )

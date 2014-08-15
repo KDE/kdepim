@@ -28,7 +28,7 @@
 #include <kstandardaction.h>
 
 #include <kpluginfactory.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>

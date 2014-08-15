@@ -59,7 +59,7 @@
 #include <gpgme++/keylistresult.h>
 
 // KDE
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kiconloader.h>
 #include <QDialog>
 #include <kdebug.h>

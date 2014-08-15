@@ -28,7 +28,7 @@
 #include <QDomDocument>
 #include <QFile>
 #include <KCalendarSystem>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QStandardPaths>
 
 using namespace PimCommon;

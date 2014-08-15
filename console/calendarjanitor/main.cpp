@@ -27,7 +27,7 @@
 #include "kdepim-version.h"
 
 #include <k4aboutdata.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCmdLineArgs>
 #include <KApplication>
 

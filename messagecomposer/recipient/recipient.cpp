@@ -25,7 +25,7 @@
 
 #include "recipient.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 using namespace KPIM;
 using namespace MessageComposer;

@@ -21,7 +21,7 @@
 
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 
 #include <QtCore/QFile>

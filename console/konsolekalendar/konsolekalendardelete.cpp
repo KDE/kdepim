@@ -36,7 +36,7 @@
 #include <iostream>
 
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QEventLoop>
 
 using namespace KCalCore;

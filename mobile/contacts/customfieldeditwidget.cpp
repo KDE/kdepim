@@ -3,7 +3,7 @@
 
 #include "customfieldeditordialog.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QCheckBox>
 #include <QDateEdit>

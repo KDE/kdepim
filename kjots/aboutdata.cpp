@@ -24,7 +24,7 @@
 
 #include "aboutdata.h"
 #include <kdepim-version.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 AboutData::AboutData()
     : K4AboutData( "kjots", 0, ki18n( "KJots" ),

@@ -61,7 +61,7 @@
 #include <gpgme++/error.h>
 #include <gpgme++/engineinfo.h>
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 
 #include <QFile>

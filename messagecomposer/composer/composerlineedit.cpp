@@ -38,7 +38,7 @@
 #include <kurl.h>
 #include <kmessagebox.h>
 #include <kcompletionbox.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <KGlobal>
 
 #include <QFile>
@@ -48,7 +48,7 @@
 #include <kabc/contactgrouptool.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <QtCore/QBuffer>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLocalizedString>
 
 using namespace MessageComposer;

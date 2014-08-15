@@ -39,7 +39,7 @@
 
 
 #include <kmessagebox.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kdebug.h>
 #include <kconfig.h>
 #include <knuminput.h>

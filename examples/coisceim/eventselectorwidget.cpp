@@ -25,7 +25,7 @@
 #include <QPushButton>
 #include <QTextBrowser>
 #include <QTreeView>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <calendarsupport/next/incidenceviewer.h>
 

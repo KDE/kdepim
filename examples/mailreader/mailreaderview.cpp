@@ -11,7 +11,7 @@
 #include <KXmlGuiWindow>
 #include <KConfigDialog>
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QDebug>

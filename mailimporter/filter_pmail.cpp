@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kfiledialog.h>
 #include <QRegExp>
 #include <QPointer>

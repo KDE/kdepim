@@ -35,7 +35,7 @@
 
 #include <qdebug.h>
 #include <kfiledialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <QVBoxLayout>
 #include <QIcon>
@@ -50,7 +50,7 @@
 
 #include <errno.h>
 #include <KSharedConfig>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QDialogButtonBox>
 #include <KConfigGroup>

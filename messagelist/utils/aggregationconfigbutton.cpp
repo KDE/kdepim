@@ -23,7 +23,7 @@
 #include "messagelist/utils/configureaggregationsdialog.h"
 #include "messagelist/core/manager.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 using namespace MessageList::Core;
 using namespace MessageList::Utils;

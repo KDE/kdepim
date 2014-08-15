@@ -50,7 +50,7 @@
 #include <kconfigskeleton.h>
 #include <kfiledialog.h>
 #include <klineedit.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QtCore/QPointer>
 #include <QtCore/QProcess>

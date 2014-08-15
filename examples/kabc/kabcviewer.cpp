@@ -25,7 +25,7 @@
 
 
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <Akonadi/Contact/ContactViewer>
 #include <QDialogButtonBox>

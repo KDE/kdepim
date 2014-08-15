@@ -31,7 +31,7 @@
 #include <kabc/addressee.h>
 #include <kcombobox.h>
 #include <kdialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 // Tries to guess the display type that is used for the passed contact
 static DisplayNameEditWidget::DisplayType guessedDisplayType( const KABC::Addressee &contact )

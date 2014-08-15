@@ -20,7 +20,7 @@
 // READ THE README FILE
 
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAboutData>
 
 #include <QApplication>

@@ -16,7 +16,7 @@
 */
 #include "archivemailinfo.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QDebug>
 #include <QDir>
 

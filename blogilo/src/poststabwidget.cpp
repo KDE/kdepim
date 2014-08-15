@@ -17,7 +17,7 @@
 
 #include "poststabwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QIcon>
 #include <QMenu>
 

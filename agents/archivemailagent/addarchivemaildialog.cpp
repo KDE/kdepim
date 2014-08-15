@@ -19,7 +19,7 @@
 
 #include <Collection>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KUrlRequester>
 #include <QSpinBox>

@@ -18,7 +18,7 @@
 
 #include "grantleecontactutils.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 void GrantleeContactUtils::insertVariableToQVariantHash(QVariantHash &contactI18n, const QString &variable)
 {

@@ -37,7 +37,7 @@
 #include <qdebug.h>
 
 #include <ksystemtimezone.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <KCalCore/Event>
 #include <Akonadi/Calendar/IncidenceChanger>

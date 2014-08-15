@@ -62,7 +62,7 @@
 #include <kconfigdialog.h>
 #include <qdebug.h>
 #include <kmessagebox.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSelectAction>
 #include <kimagefilepreview.h>
 #include <KToolInvocation>

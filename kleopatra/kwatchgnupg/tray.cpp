@@ -36,7 +36,7 @@
 #include "kwatchgnupgmainwin.h"
 
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kglobal.h>
 #include <kiconloader.h>
 

@@ -24,7 +24,7 @@
 #include "ui_messagelistsettingseditor.h"
 
 #include <kdialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QAction>
 

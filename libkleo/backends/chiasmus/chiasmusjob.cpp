@@ -39,7 +39,7 @@
 #include <gpgme++/error.h>
 
 #include <kshell.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kdebug.h>
 #include <kmessagebox.h>
 

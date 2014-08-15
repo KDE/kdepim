@@ -2,7 +2,7 @@
 
 
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>

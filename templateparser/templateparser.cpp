@@ -48,7 +48,7 @@
 #include <QWebFrame>
 #include <QWebPage>
 #include <QTextDocument>
-#include <KLocale>
+#include <KLocalizedString>
 
 namespace TemplateParser {
 

@@ -38,7 +38,7 @@
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <kcmultidialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kconfiggroup.h>
 #include <QApplication>
 #include <KSharedConfig>

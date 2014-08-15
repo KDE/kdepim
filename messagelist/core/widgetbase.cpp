@@ -50,7 +50,7 @@
 #include <QIcon>
 #include <KIconLoader>
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QMenu>
 #include <KStandardDirs>
 #include <KUrl>

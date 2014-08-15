@@ -33,7 +33,7 @@
 
 #include <QGraphicsSceneMouseEvent>
 #include <QResizeEvent>
-#include <KLocale>
+#include <KLocalizedString>
 
 static const int AUTO_REPEAT_DELAY = 600;
 

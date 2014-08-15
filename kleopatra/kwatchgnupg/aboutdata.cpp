@@ -34,7 +34,7 @@
 
 #include "aboutdata.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 static const char kwatchgnupg_version[] = "1.0";
 static const char description[] = I18N_NOOP("GnuPG log viewer");

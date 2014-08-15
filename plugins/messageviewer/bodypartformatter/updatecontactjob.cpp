@@ -19,7 +19,7 @@
 #include <Akonadi/Contact/ContactSearchJob>
 #include <AkonadiCore/itemmodifyjob.h>
 #include <kabc/addressee.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 
 

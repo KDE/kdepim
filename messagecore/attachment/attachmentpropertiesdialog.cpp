@@ -37,7 +37,7 @@
 #include <kmime/kmime_headers.h>
 
 #include <boost/shared_ptr.hpp>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KFormat>
 #include <QMimeDatabase>
 #include <QMimeType>

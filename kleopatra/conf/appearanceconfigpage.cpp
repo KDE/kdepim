@@ -37,7 +37,7 @@
 #include "appearanceconfigwidget.h"
 
 #include <kmessagebox.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kdebug.h>
 #include <kcomponentdata.h>
 

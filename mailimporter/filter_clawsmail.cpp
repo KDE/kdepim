@@ -19,7 +19,7 @@
 
 #include "filter_clawsmail.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kfiledialog.h>
 #include <qdebug.h>
 #include <QDomDocument>

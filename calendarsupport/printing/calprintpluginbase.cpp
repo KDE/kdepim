@@ -46,7 +46,7 @@
 #include <QTextDocumentFragment>
 #include <qmath.h> // qCeil krazy:exclude=camelcase since no QMath
 #include <QVBoxLayout>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace CalendarSupport;
 

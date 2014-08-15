@@ -23,7 +23,7 @@
 #include "themetemplatewidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <KConfigGroup>
 

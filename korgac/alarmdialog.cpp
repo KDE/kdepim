@@ -49,6 +49,7 @@
 #include <MailTransport/TransportManager>
 #include <KUrl>
 
+#include <KLocale>
 #include <KComboBox>
 #include <QDebug>
 #include <QHBoxLayout>

@@ -24,7 +24,7 @@
 
 #include "calprintbase.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDate>
 #include <QTime>

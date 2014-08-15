@@ -36,7 +36,7 @@
 #include <QVBoxLayout>
 #include <KTabBar>
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

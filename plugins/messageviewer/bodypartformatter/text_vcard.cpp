@@ -49,7 +49,7 @@ using MessageViewer::Interface::BodyPart;
 #include <KABC/VCardConverter>
 #include <KABC/Addressee>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KFileDialog>
 #include <KGlobal>
 #include <KUrl>

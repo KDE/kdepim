@@ -24,7 +24,7 @@
 #include <QIcon>
 #include <QMenu>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLocalizedString>
 
 static QString followUpItemPattern = QLatin1String("FollowupReminderItem \\d+");

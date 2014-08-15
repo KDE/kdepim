@@ -41,7 +41,7 @@
 #include <QDebug>
 #include <QIcon>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QMenu>
 #include <KToggleAction>
 #include <KXMLGUIClient>

@@ -38,7 +38,7 @@
 #include "kleo/cryptoconfig.h"
 
 #include <klineedit.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kdebug.h>
 #include <knuminput.h>
 #include <kiconloader.h>

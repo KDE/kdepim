@@ -40,7 +40,7 @@
 
 #include <kcmdlineargs.h>
 #include <k4aboutdata.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kglobal.h>
 #include <kconfig.h>
 

@@ -41,7 +41,7 @@
 #include <gpgme++/key.h>
 #include <gpgme++/exception.h>
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QBuffer>
 

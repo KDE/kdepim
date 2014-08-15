@@ -24,7 +24,7 @@
 #include <KCalCore/Todo>
 
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KWordWrap>
 
 using namespace PimPrint::Calendar;

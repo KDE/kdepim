@@ -26,7 +26,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QDebug>
 
 #include <QStringList>

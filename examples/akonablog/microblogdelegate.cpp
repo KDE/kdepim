@@ -20,7 +20,7 @@
 #include "microblogdelegate.h"
 
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KToolInvocation>
 
 #include <QAbstractItemView>

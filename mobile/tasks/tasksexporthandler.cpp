@@ -24,7 +24,7 @@
 #include <KCalCore/MemoryCalendar>
 #include <KCalCore/Todo>
 #include <kfiledialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 QString TasksExportHandler::dialogText() const
 {

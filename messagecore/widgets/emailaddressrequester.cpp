@@ -21,7 +21,7 @@
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 #include <kiconloader.h>
 #include <klineedit.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QIcon>
 
 #include <QHBoxLayout>

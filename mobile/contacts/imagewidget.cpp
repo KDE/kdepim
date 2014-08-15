@@ -27,7 +27,7 @@
 #include <kicon.h>
 #include <kimageio.h>
 #include <kio/netaccess.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kpixmapregionselectordialog.h>
 #include <KUrl>

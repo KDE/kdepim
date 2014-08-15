@@ -39,7 +39,7 @@
 #include <kuniqueapplication.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kdebug.h>

@@ -37,9 +37,9 @@
 #include <kdialog.h>
 #include <QHBoxLayout>
 #include <kiconloader.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "gpgme++/data.h"
 #include "gpgme++/key.h"

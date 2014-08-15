@@ -33,7 +33,7 @@
 #include <kconfiggroup.h>
 #include <qdebug.h>
 #include <kglobal.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>
 #include <mailcommon/filter/filterimporterexporter.h>
@@ -50,7 +50,7 @@
 #include <boost/bind.hpp>
 #include <errno.h>
 #include <KSharedConfig>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace MailCommon;
 

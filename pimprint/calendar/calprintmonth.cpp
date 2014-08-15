@@ -22,7 +22,7 @@
 #include "calprintmonth.h"
 
 #include <KCalendarSystem>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace PimPrint::Calendar;
 

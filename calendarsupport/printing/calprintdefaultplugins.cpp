@@ -44,7 +44,7 @@
 #include <QDateTime>
 #include <QPainter>
 #include <QPrinter>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace CalendarSupport;
 

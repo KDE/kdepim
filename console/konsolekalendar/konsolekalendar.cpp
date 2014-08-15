@@ -37,7 +37,7 @@
 #include "konsolekalendarexports.h"
 
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <ksystemtimezone.h>
 
 #include <KCalCore/Event>

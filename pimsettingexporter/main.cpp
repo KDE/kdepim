@@ -21,7 +21,7 @@
 
 #include <kcmdlineargs.h>
 #include <k4aboutdata.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <KUniqueApplication>
 #include <QDebug>
 #include "kdepim-version.h"

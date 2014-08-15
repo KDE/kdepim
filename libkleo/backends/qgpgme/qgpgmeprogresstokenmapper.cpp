@@ -32,7 +32,7 @@
 
 #include "qgpgmeprogresstokenmapper.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <KDebug>
 
 #include <QString>

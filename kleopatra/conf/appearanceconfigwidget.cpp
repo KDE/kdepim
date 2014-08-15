@@ -52,7 +52,7 @@
 #include <QIcon>
 
 #include <kconfig.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kconfiggroup.h>
 
 #include <QColor>

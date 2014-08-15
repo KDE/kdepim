@@ -24,7 +24,7 @@
 #include <agentinstance.h>
 #include <qdebug.h>
 #include <kglobal.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 
 #include <KPIMIdentities/kpimidentities/identity.h>

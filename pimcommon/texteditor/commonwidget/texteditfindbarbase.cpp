@@ -19,7 +19,7 @@
 #include "pimcommon/texteditor/commonwidget/textfindreplacewidget.h"
 
 #include <QIcon>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <klineedit.h>
 #include <KColorScheme>

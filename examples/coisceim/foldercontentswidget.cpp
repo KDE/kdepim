@@ -26,7 +26,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <AkonadiWidgets/CollectionDialog>
 #include <AkonadiCore/EntityTreeModel>

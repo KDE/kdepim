@@ -21,7 +21,7 @@
 
 #include <QRegExp>
 #include <QPointer>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
 

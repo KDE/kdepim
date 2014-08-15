@@ -22,7 +22,7 @@
 #include <libkdepim/addressline/addresseelineedit.h>
 #include <KPIMUtils/Email>
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QPushButton>
 #include <kguiitem.h>
 #include <KGuiItem>

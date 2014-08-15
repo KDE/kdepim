@@ -28,7 +28,7 @@
 #include "ui_configwidget.h"
 
 #include <kconfigdialogmanager.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <libkdepim/addressline/completionordereditor.h>
 #include <libkdepim/ldap/ldapclientsearch.h>
 #include <libkdepim/addressline/recentaddresses.h>

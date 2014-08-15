@@ -24,7 +24,7 @@
 #include <mailcommon/job/backupjob.h>
 
 #include <KNotification>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QIcon>
 #include <KIconLoader>
 #include <KComponentData>

@@ -20,7 +20,7 @@
 #include "categoryfilterproxymodel.h"
 
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/item.h>

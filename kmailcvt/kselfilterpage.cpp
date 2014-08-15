@@ -41,7 +41,7 @@
 
 // KDE includes
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 
 // Qt includes

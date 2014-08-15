@@ -20,7 +20,7 @@
 #include "sendlatertimedatewidget.h"
 #include "ui_sendlaterwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 #include <QIcon>
 

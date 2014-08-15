@@ -23,7 +23,7 @@
 #include <libkdepim/addressline/addresseelineedit.h>
 
 #include <QHBoxLayout>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <qcheckbox.h>
 #include <qlabel.h>

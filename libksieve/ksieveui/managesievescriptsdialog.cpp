@@ -21,7 +21,7 @@
 #include "editor/sieveeditor.h"
 #include "widgets/sievetreewidgetitem.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kiconloader.h>
 #include <kwindowsystem.h>
 #include <QPushButton>

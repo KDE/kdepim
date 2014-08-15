@@ -22,7 +22,7 @@
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
 #include <kfiledialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <KUrl>
 

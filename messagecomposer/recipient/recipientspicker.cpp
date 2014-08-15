@@ -30,7 +30,7 @@
 
 #include <kconfiggroup.h>
 #include <khbox.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <QLineEdit>
 #include <QPushButton>

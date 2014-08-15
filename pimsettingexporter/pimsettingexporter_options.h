@@ -19,7 +19,7 @@
 #define PIMSETTINGEXPORTER_OPTIONS_H
 
 #include <kcmdlineargs.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 static KCmdLineOptions pimsettingexporter_options()
 {

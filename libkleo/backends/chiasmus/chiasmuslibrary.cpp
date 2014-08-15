@@ -39,7 +39,7 @@
 
 #include <klibloader.h>
 #include <kdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 
 #include <QByteArray>

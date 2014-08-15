@@ -25,7 +25,7 @@
 
 #include <AkonadiWidgets/etmviewstatesaver.h>
 #include <kconfiggroup.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 
 #include <QtCore/QAbstractItemModel>

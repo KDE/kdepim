@@ -26,7 +26,7 @@
 
 #include <qdebug.h>
 #include <kglobal.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kio/job.h>
 
 #include <QtCore/QDebug>

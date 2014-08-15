@@ -73,7 +73,7 @@ using namespace KCalCore;
 #include <KToolInvocation>
 #include <KIO/NetAccess>
 #include <QIcon>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace MailTransport;
 

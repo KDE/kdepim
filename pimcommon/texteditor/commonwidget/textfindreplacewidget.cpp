@@ -17,7 +17,7 @@
 
 #include "textfindreplacewidget.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <qpushbutton.h>
 #include <klineedit.h>
 #include <KColorScheme>

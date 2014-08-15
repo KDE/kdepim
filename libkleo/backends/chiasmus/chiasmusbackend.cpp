@@ -38,7 +38,7 @@
 
 #include "kleo/cryptoconfig.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kconfig.h>
 #include <kshell.h>
 #include <kdebug.h>

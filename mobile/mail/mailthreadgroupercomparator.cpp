@@ -24,10 +24,10 @@
 #include <Akonadi/KMime/MessageFlags>
 #include <messagecore/utils/stringutil.h>
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kglobal.h>
 #include <kcalendarsystem.h>
-#include <KLocale>
+#include <KLocalizedString>
 
 MailThreadGrouperComparator::MailThreadGrouperComparator()
   : mSortingOption( SortByDateTimeMostRecent ),

@@ -30,7 +30,7 @@
 #include <KSystemTimeZones>
 
 #include <qmath.h>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace PimPrint::Calendar;
 

@@ -21,7 +21,7 @@
 
 #include "calprintweek.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 
 using namespace PimPrint::Calendar;

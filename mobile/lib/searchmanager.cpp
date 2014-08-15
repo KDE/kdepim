@@ -23,7 +23,7 @@
 
 #include <AkonadiCore/collectiondeletejob.h>
 #include <AkonadiCore/searchcreatejob.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QDebug>
 #include <QtCore/QUuid>
 

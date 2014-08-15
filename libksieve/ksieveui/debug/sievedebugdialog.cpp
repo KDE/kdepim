@@ -17,7 +17,7 @@
 
 #include <agentinstance.h>
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kmanagesieve/sievejob.h>
 #include <ksieveui/util/util.h>

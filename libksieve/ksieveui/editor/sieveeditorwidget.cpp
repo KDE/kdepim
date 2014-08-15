@@ -27,7 +27,7 @@
 #include "autocreatescripts/sievescriptparsingerrordialog.h"
 
 #include <kns3/uploaddialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <KStandardGuiItem>
 #include <QTemporaryDir>
 #include <kzip.h>

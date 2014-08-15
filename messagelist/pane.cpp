@@ -21,7 +21,7 @@
 #include <KActionCollection>
 #include <KActionMenu>
 #include <QIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QMenu>
 #include <KXMLGUIClient>
 #include <QAction>

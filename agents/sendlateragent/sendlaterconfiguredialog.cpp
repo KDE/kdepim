@@ -23,7 +23,7 @@
 #include "kdepim-version.h"
 
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KHelpMenu>
 #include <QMenu>
 #include <kaboutdata.h>

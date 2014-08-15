@@ -37,7 +37,7 @@
 
 #include "libkleo/ui/filenamerequester.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <KPluralHandlingSpinBox>

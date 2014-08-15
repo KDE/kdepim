@@ -17,7 +17,7 @@
 
 #include "filter_evolution_v2.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
 #include <QPointer>

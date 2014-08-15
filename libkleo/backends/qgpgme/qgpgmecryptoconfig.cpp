@@ -38,7 +38,7 @@
 #include <kprocess.h>
 #include <errno.h>
 #include <kmessagebox.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kshell.h>
 #include <KStandardDirs>
 

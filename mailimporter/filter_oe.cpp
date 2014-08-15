@@ -17,7 +17,7 @@
 
 // This filter was created by looking at libdbx  &liboe
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
 #include <qdebug.h>

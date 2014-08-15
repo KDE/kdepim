@@ -21,7 +21,7 @@
 
 #include <kmbox/mbox.h>
 #include <kmime/kmime_message.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 
 QString NotesImportHandler::fileDialogNameFilter() const

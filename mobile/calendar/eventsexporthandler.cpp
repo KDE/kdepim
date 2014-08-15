@@ -24,7 +24,7 @@
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
 #include <kfiledialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 QString EventsExportHandler::dialogText() const
 {

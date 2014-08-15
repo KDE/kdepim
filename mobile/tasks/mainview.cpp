@@ -60,7 +60,7 @@
 #include <kactioncollection.h>
 #include <KCalCore/Todo>
 #include <QDebug>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 

@@ -62,7 +62,7 @@
 #include <KGlobal>
 #include <QInputDialog>
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KProcess>
 #include <KRun>

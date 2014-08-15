@@ -19,7 +19,7 @@
 
 #include "filter_kmail_maildir.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kfiledialog.h>
 #include <QPointer>
 

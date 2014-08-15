@@ -27,7 +27,7 @@
 
 
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <kmessagebox.h>
 #include <KAboutData>

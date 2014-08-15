@@ -31,7 +31,7 @@
 #include <KCalCore/Todo>
 #include <KCalCore/Journal>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDateTime>
 
 #include <QList>

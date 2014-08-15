@@ -64,7 +64,7 @@
 #include <QSplitter>
 #include <QStyle>
 #include <QTimer>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace EventViews;
 

@@ -35,7 +35,7 @@
 
 #include <collection.h>
 #include <kdialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QVBoxLayout>
 
 #include <QAction>

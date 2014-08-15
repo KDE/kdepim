@@ -46,7 +46,7 @@
 #endif
 
 #include <kdialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QSaveFile>
 #include <kguiitem.h>
 #include <kdebug.h>

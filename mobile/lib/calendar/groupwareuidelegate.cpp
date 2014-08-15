@@ -26,7 +26,7 @@
 #include <AkonadiCore/session.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <ksystemtimezone.h>
 #include <QDebug>
 

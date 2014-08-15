@@ -21,7 +21,7 @@
 
 #include <AkonadiWidgets/standardactionmanager.h>
 #include <kaction.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

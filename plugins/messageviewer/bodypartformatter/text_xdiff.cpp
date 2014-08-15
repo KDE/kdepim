@@ -35,7 +35,7 @@
 #include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
 
 //#include <kglobal.h>
-//#include <klocale.h>
+//#include <KLocalizedString>
 #include <kstringhandler.h>
 #include <kiconloader.h>
 #include <qdebug.h>

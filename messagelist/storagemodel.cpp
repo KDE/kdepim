@@ -33,7 +33,7 @@
 #include <selectionproxymodel.h>
 
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include "core/messageitem.h"
 #include "core/settings.h"
 #include "messagelistutil.h"

@@ -17,7 +17,7 @@
 
 #include "filter_thunderbird.h"
 #include "selectthunderbirdprofilewidget.h"
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
 #include <KConfig>

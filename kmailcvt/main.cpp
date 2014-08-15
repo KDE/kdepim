@@ -17,7 +17,7 @@
 
 
 #include <kaboutdata.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QApplication>

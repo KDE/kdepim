@@ -36,7 +36,7 @@
 #include <qinputdialog.h>
 #include <kiconloader.h>
 #include <QIcon>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <qdebug.h>
 #include <QPushButton>
 #include <kdialog.h>
