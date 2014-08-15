@@ -48,7 +48,7 @@ using KPIMUtils::LinkLocator;
 #include <KDateTime>
 #include <QRegExp>
 
-#include <KApplication>
+#include <QApplication>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>

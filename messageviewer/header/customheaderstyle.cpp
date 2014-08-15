@@ -32,7 +32,6 @@ using KPIMUtils::LinkLocator;
 #include <KLocalizedString>
 
 
-#include <KApplication>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>

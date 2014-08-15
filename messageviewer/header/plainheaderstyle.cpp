@@ -27,8 +27,7 @@
 
 #include <qdebug.h>
 #include <KLocalizedString>
-#include <KApplication>
-
+#include <QApplication>
 #include <kmime/kmime_message.h>
 
 using namespace MessageCore;

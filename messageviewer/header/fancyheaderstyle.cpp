@@ -44,9 +44,6 @@ using KPIMUtils::LinkLocator;
 #include <QRegExp>
 #include <QFontMetrics>
 
-
-#include <KApplication>
-
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
 

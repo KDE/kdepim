@@ -29,7 +29,6 @@
 
 
 #include <KLocalizedString>
-#include <KStandardDirs>
 
 #include <grantlee/templateloader.h>
 #include <grantlee/engine.h>

@@ -40,7 +40,6 @@
 #include <KLocalizedString>
 #include <KStandardAction>
 #include <kwindowsystem.h>
-#include <kglobalsettings.h>
 #include <QTabWidget>
 #include <KFileDialog>
 #include <KMessageBox>
