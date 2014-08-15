@@ -18,7 +18,7 @@
 
 #include "filteractionunsetstatus.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 using namespace MailCommon;
 
 FilterAction* FilterActionUnsetStatus::newAction()

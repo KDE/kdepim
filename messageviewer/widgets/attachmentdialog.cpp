@@ -23,7 +23,7 @@
 
 #include <kdialog.h>
 #include <kmessagebox.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <KGlobal>
 #include <KSharedConfig>
 using namespace MessageViewer;

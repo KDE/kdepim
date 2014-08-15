@@ -31,7 +31,7 @@
 
 #include <KMime/Message>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KTar>
 #include <KZip>

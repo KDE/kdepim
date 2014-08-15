@@ -27,7 +27,7 @@ using KPIMUtils::LinkLocator;
 #include <messagecore/utils/stringutil.h>
 
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QFontMetrics>
 

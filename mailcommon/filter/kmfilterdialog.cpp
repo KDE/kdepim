@@ -45,7 +45,7 @@ using MailCommon::FilterImporterExporter;
 #include <KJob>
 #include <KKeySequenceWidget>
 #include <KListWidgetSearchLine>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <QPushButton>
 #include <QTabWidget>

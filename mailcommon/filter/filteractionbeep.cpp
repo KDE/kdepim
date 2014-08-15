@@ -19,7 +19,7 @@
 
 #include "filteractionbeep.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KNotification>
 
 using namespace MailCommon;

@@ -31,7 +31,7 @@
 
 #include <KPIMIdentities/IdentityCombo>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KUrlRequester>
 
 #include <QVBoxLayout>

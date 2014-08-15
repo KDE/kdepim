@@ -23,7 +23,7 @@
 #include <messagecore/settings/globalsettings.h>
 
 #include <KGlobalSettings>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KXMLGUIClient>
 #include <KActionMenu>
 #include <KActionCollection>

@@ -28,7 +28,7 @@
 using KABC::VCardConverter;
 using KABC::Addressee;
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <libkdepim/job/addcontactjob.h>
 #include <QDialogButtonBox>

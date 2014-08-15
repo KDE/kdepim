@@ -21,7 +21,7 @@
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KDateComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDate>
 #include <QObject>

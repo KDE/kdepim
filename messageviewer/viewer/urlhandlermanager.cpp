@@ -433,7 +433,7 @@ QString URLHandlerManager::statusBarMessage( const KUrl & url, ViewerPrivate * w
 
 #include <ui/messagebox.h>
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <QStandardPaths>
 

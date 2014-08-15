@@ -20,7 +20,7 @@
 #include "findbarbase.h"
 
 #include <qicon.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <klineedit.h>
 #include <kmessagebox.h>
 #include <KColorScheme>

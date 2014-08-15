@@ -36,7 +36,7 @@
 
 #include "messagecore/settings/globalsettings.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kconfiggroup.h>
 
 #include <QMouseEvent>

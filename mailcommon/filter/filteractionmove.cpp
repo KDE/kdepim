@@ -22,7 +22,7 @@
 
 #include "kernel/mailkernel.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace MailCommon;
 

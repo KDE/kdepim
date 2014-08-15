@@ -37,7 +37,7 @@
 #include <qdebug.h>
 #include <kascii.h>
 #include <ktemporaryfile.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kcharsets.h>
 #include <kde_file.h>
 #include <KPIMUtils/kpimutils/kfileio.h>
@@ -50,7 +50,7 @@
 #include <sstream>
 #include <algorithm>
 #include <KCharsets>
-#include <KLocale>
+#include <KLocalizedString>
 
 
 namespace MessageViewer {

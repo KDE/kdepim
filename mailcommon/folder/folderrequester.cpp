@@ -39,7 +39,7 @@
 #include <KDialog>
 #include <KIconLoader>
 #include <QLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QIcon>
 
 #include <QHBoxLayout>

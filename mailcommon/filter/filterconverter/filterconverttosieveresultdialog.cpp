@@ -23,7 +23,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/util/pimutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 

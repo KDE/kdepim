@@ -17,7 +17,7 @@
 
 #include <kactioncollection.h>
 #include <kdialog.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 using namespace MailCommon;
 

@@ -34,7 +34,7 @@
 #include <QNetworkReply>
 #include <QWebFrame>
 #include <QWebElementCollection>
-#include <KLocale>
+#include <KLocalizedString>
 
 
 #define HIDABLE_ELEMENTS   QLatin1String("audio,img,embed,object,iframe,frame,video")

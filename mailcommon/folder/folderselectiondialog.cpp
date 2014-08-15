@@ -30,7 +30,7 @@
 #include <EntityTreeModel>
 
 #include <QInputDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <QMenu>
 

@@ -24,7 +24,7 @@
 #include <kapplication.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <qdebug.h>
 
 #include <QSplitter>

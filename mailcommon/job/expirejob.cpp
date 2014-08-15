@@ -33,7 +33,7 @@
 using KPIM::BroadcastStatus;
 
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <ItemDeleteJob>
 #include <ItemModifyJob>

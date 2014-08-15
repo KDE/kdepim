@@ -36,7 +36,7 @@
 #include <KComboBox>
 #include <QDialog>
 #include <QLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QCheckBox>

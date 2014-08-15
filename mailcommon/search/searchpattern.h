@@ -24,7 +24,7 @@
 
 #include <Akonadi/KMime/MessageStatus>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QList>
 #include <QString>

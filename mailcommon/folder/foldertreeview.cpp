@@ -25,7 +25,7 @@
 
 #include <KConfigGroup>
 #include <KGuiItem>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QMenu>
 #include <KMessageBox>
 

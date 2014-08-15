@@ -24,7 +24,7 @@ using MailCommon::RegExpLineEdit;
 
 #include <QDebug>
 #include <QIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KJob>
 
 #include <Tag>

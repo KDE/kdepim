@@ -32,7 +32,7 @@
 
 #include <KDialog>
 #include <QLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KRegExpEditorInterface>
 #include <KServiceTypeTrader>
 

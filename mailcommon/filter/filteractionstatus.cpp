@@ -18,7 +18,7 @@
 
 #include "filteractionstatus.h"
 #include <Akonadi/KMime/MessageStatus>
-#include <KLocale>
+#include <KLocalizedString>
 using namespace MailCommon;
 
 Akonadi::MessageStatus MailCommon::FilterActionStatus::stati[] =

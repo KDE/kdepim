@@ -20,7 +20,7 @@
 #include "filteractionsetstatus.h"
 
 #include <Akonadi/KMime/MessageStatus>
-#include <KLocale>
+#include <KLocalizedString>
 using namespace MailCommon;
 
 FilterAction* FilterActionSetStatus::newAction()

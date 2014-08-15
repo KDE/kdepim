@@ -22,7 +22,7 @@
 #define MAILCOMMON_MAILUTIL_P_H
 
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 
 #include <QLabel>

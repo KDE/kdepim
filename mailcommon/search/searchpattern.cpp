@@ -34,7 +34,7 @@ using MailCommon::FilterLog;
 #include <kascii.h>
 #include <QDebug>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 
 #include <QDataStream>

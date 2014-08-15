@@ -28,7 +28,7 @@
 #include <KKeySequenceWidget>
 #include <KActionCollection>
 #include <QLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QIcon>
 using namespace MailCommon;
 

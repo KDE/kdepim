@@ -21,7 +21,7 @@
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KPluralHandlingSpinBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QStackedWidget>
 

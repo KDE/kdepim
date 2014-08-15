@@ -33,7 +33,7 @@
 #include <KPIMIdentities/IdentityManager>
 
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 namespace MailCommon {

@@ -47,7 +47,7 @@
 
 
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <QIcon>
 

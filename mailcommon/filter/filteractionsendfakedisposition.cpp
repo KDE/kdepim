@@ -21,7 +21,7 @@
 
 #include <messagecore/misc/mdnstateattribute.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 
 using namespace MailCommon;

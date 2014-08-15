@@ -36,7 +36,7 @@ using MailCommon::FilterLog;
 #include <AgentManager>
 
 // other KDE headers
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <qdebug.h>
 #include <kconfig.h>

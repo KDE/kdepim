@@ -22,7 +22,7 @@
 using MailCommon::RegExpLineEdit;
 
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDoubleSpinBox>
 #include <QStackedWidget>

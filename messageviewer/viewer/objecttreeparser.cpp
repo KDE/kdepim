@@ -83,7 +83,7 @@
 
 // KDE includes
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmimetype.h>
 #include <kglobal.h>
 #include <ktemporaryfile.h>
@@ -119,7 +119,7 @@
 #include <memory>
 #include <messagecore/helpers/nodehelper.h>
 #include <qtextdocument.h>
-#include <KLocale>
+#include <KLocalizedString>
 
 using KPIMUtils::LinkLocator;
 using namespace MessageViewer;

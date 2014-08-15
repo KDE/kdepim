@@ -26,7 +26,7 @@
 #include <CollectionComboBox>
 #include <KABC/Addressee>
 #include <QLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPIMUtils/Email>
 
 #include <QGridLayout>

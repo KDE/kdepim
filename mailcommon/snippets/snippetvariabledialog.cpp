@@ -20,7 +20,7 @@
 
 #include "snippetvariabledialog_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KTextEdit>
 
 #include <QCheckBox>

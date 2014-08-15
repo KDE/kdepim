@@ -28,7 +28,7 @@
 
 #include <KDialog>
 #include <KPluralHandlingSpinBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <QDebug>
 
