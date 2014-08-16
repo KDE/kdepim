@@ -132,10 +132,10 @@ void OpenComposerJob::processMail()
         QString attachParamValue = attachment->contentType()->parameter(QLatin1String("method"));
         QByteArray attachData = attachment->encodedBody();
 
-        messages << mTo << mCc << mBcc << subject << body << hidden
+        messages << mTo << mCc << mBcc << subject << body
                  << attachName << attachCte << attachData << attachType << attachSubType
                  << attachParamAttr << attachParamValue << attachContDisp << attachCharset
-                 << identity << false;
+                 << identity;
     }
     QDBusInterface kmailObj(QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QLatin1String("org.kde.kmail.kmail"));
 
