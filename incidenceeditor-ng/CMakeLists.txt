@@ -61,11 +61,12 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   categoryeditdialog.cpp
   categoryselectdialog.cpp
   categorydialog.cpp
-
-  # Individual mail
-  individualmailcomponentfactory.cpp
-  individualmaildialog.cpp
-  opencomposerjob.cpp
+  resourcemanagement.cpp
+  resourceitem.cpp
+  resourcemodel.cpp
+  ldaputils.cpp
+  attendeetablemodel.cpp
+  attendeecomboboxdelegate.cpp
 )
 
 kde4_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc)
@@ -95,13 +96,11 @@ kde4_add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_deskto
 
 target_link_libraries(incidenceeditorsng
   akonadi-calendar
-  akonadi-kmime
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   kdepim
   kdepimdbusinterfaces # For UriHandler
   calendarsupport      # For KCalPrefs
@@ -140,7 +139,6 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
 
   target_link_libraries(incidenceeditorsngmobile
     akonadi-calendar
-    akonadi-kmime
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
