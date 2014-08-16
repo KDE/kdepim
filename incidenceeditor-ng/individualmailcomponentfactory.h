@@ -20,11 +20,11 @@
 #ifndef INCIDENCEEDITOR_INDUVIDUALMAILJOBFACTORY_H
 #define INCIDENCEEDITOR_INDUVIDUALMAILJOBFACTORY_H
 
-#include "incidenceeditors_ng_export.h"
+#include "incidenceeditors-ng_export.h"
 
 #include "opencomposerjob.h"
 
-#include <MailTransport/MessageQueueJob>
+#include <mailtransport/messagequeuejob.h>
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <KPIMIdentities/Identity>
 
