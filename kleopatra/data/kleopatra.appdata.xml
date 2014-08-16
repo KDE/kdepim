@@ -6,6 +6,7 @@
   <name>Kleopatra</name>
   <name xml:lang="ca">Kleopatra</name>
   <name xml:lang="cs">Kleopatra</name>
+  <name xml:lang="nds">Kleopatra</name>
   <name xml:lang="nl">Kleopatra</name>
   <name xml:lang="sk">Kleopatra</name>
   <name xml:lang="sv">Kleopatra</name>
@@ -14,6 +15,7 @@
   <summary>Certificate Manager and Unified Crypto GUI</summary>
   <summary xml:lang="ca">Gestor de certificats i interfície gràfica d'usuari de criptografia unificada</summary>
   <summary xml:lang="cs">Správce certifikátů a rozhraní pro šifrování</summary>
+  <summary xml:lang="nds">Zertifikatenpleger un eenheitlich Verslötel-Böversiet</summary>
   <summary xml:lang="nl">Certificaatbeheerder en Unified Crypto GUI</summary>
   <summary xml:lang="sk">Správca certifikátov a unifikované šifrovacie grafické rozhranie</summary>
   <summary xml:lang="sv">Certifikathanterare och enhetligt grafiskt användargränssnitt för krypto</summary>
@@ -25,6 +27,7 @@
       It supports managing X.509 and OpenPGP certificates in the GpgSM keybox and retrieving certificates from LDAP servers.
     </p>
     <p xml:lang="ca">El Kleopatra és un gestor de certificats i interfície gràfica d'usuari de criptografia universal. Implementa la gestió dels certificats X.509 i OpenPGP a l'anell de claus GpgSM i recupera certificats des de servidors LDAP.</p>
+    <p xml:lang="nds">Kleopatra is en Zertifikatenpleger un en Böversiet för Verslötelakschonen. Du kannst dor X.509- un OpenPGP-Zertifikaten mit binnen de GpgSM-Slötelkist plegen un Zertifikaten mit vun LDAP-Servers halen.</p>
     <p xml:lang="nl">Kleopatra is een certificaatbeheerder en een universele crypto GUI. Deze ondersteunt het beheer van X.509 en OpenPGP certificaten in de GpgSM sleutelkast en haalt certificaten op van LDAP-servers.</p>
     <p xml:lang="sk">Kleopatra je správca certifikátov a univerzálne šifrovacie GUI. Podporuje správu X.509 a OpenPGP certifikátov v keyboxe GpgSM a získavanie certifikátov z LDAP serverov.</p>
     <p xml:lang="sv">Kleopatra är en certifikathanterare och ett universellt grafiskt användargränssnitt för krypto. Den stöder hantering av X.509- och OpenPGP-certifikat i GpgSM-nyckellådan och att hämta certifikat från LDAP-servrar.</p>
