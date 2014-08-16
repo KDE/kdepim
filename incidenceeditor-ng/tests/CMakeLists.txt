@@ -40,16 +40,6 @@ target_link_libraries(
   incidenceeditorsng
 )
 
-kde4_add_executable(testindividualmaildialog NOGUI TEST testindividualmaildialog.cpp ../individualmaildialog.cpp)
-target_link_libraries(testindividualmaildialog
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${KDE4_KDECORE_LIBS}
-  ${KDE4_KDEUI_LIBS}
- )
-
 set(resourcemanagement_gui_SRCS resourcemanagment_gui.cpp)
 kde4_add_executable(resourcemanagement_gui TEST ${resourcemanagement_gui_SRCS})
 target_link_libraries(resourcemanagement_gui
