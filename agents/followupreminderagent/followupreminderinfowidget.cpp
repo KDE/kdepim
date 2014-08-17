@@ -61,7 +61,7 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
     headers << i18n("To")
             << i18n("Subject")
             << i18n("Message Id")
-            << i18n("Dead Line");
+            << i18n("Deadline");
 
     mTreeWidget->setHeaderLabels(headers);
     mTreeWidget->setSortingEnabled(true);
