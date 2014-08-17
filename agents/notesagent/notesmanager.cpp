@@ -32,13 +32,11 @@
 
 #include <KMime/KMimeMessage>
 #include <KDateTime>
-#include <KComponentData>
 #include <ksocketfactory.h>
 #include <KNotification>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <QIcon>
-#include <KGlobal>
 
 #include <QTcpServer>
 #include <QTimer>
@@ -177,7 +175,7 @@ void NotesManager::slotNewNote(const QString &name, const QString &text)
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KComponentData::mainComponent().componentName());
+                          QLatin1String("akonadi_notes_agent"));
     NoteShared::CreateNewNoteJob *job = new NoteShared::CreateNewNoteJob(this, 0);
     //For the moment it doesn't support richtext.
     job->setRichText(false);

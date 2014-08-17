@@ -26,6 +26,7 @@
 #include <KGlobal>
 #include <KLocalizedString>
 #include <KLocalizedString>
+#include <KSharedConfig>
 
 static QString followUpItemPattern = QLatin1String("FollowupReminderItem \\d+");
 
@@ -97,7 +98,7 @@ void FollowUpReminderInfoWidget::save()
 {
     if (!mChanged)
         return;
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
     const QStringList filterGroups =config->groupList().filter( QRegExp( followUpItemPattern ) );

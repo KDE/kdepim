@@ -32,25 +32,31 @@
 
 #include <QPointer>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 static QString sendLaterItemPattern = QLatin1String( "SendLaterItem \\d+" );
 
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n("Configure") );
+    setWindowTitle( i18n("Configure") );
     setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
-    setButtons( Help|Ok|Cancel );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-    QWidget *mainWidget = new QWidget( this );
-    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
-    mainLayout->setSpacing( KDialog::spacingHint() );
-    mainLayout->setMargin( KDialog::marginHint() );
     mWidget = new SendLaterWidget(this);
     connect(mWidget, SIGNAL(sendNow(Akonadi::Item::Id)), SIGNAL(sendNow(Akonadi::Item::Id)));
     mainLayout->addWidget(mWidget);
-    setMainWidget( mainWidget );
-    connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
+    mainLayout->addWidget(buttonBox);
+    connect(okButton, SIGNAL(clicked()), SLOT(slotSave()));
 
     readConfig();
 
@@ -73,7 +79,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     //Initialize menu
     QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
-    setButtonMenu( Help, menu );
+    buttonBox->button(QDialogButtonBox::Help)->setMenu(menu);
 }
 
 SendLaterConfigureDialog::~SendLaterConfigureDialog()

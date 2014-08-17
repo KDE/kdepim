@@ -47,7 +47,6 @@ SendLaterAgent::SendLaterAgent(const QString &id)
 {
     mManager = new SendLaterManager(this);
     connect(mManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
-    //QT5 KLocale::global()->insertCatalog( QLatin1String("akonadi_sendlater_agent") );
     new SendLaterAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/SendLaterAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.SendLaterAgent" ) );

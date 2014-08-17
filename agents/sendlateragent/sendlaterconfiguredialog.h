@@ -18,13 +18,14 @@
 #ifndef SENDLATERCONFIGUREDIALOG_H
 #define SENDLATERCONFIGUREDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include "ui_sendlaterconfigurewidget.h"
 
 
 #include <Item>
 
 #include <QTreeWidgetItem>
+#include <KConfigGroup>
 
 namespace SendLater {
 class SendLaterInfo;
@@ -84,7 +85,7 @@ private:
 };
 
 
-class SendLaterConfigureDialog : public KDialog
+class SendLaterConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
