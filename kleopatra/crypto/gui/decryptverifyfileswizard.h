@@ -46,7 +46,6 @@ namespace Crypto {
 namespace Gui {
 
     class DecryptVerifyOperationWidget;
-    class ResultDisplayWidget;
 
     class DecryptVerifyFilesWizard : public Wizard {
         Q_OBJECT

@@ -58,7 +58,6 @@ namespace Kleo {
 
 namespace Crypto {
 
-    class AssuanCommand;
 
     class EncryptEMailController : public Controller {
         Q_OBJECT

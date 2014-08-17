@@ -34,7 +34,6 @@ Contains needed properties of each media object, like images and videos.
  @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
  @author Golnaz Nilieh <g382nilieh@gmail.com>
  */
-class KIcon;
 class BilboMedia : public QObject
 {
     Q_OBJECT

@@ -23,11 +23,6 @@
 
 #include <QtCore/QObject>
 
-class KJob;
-
-namespace MessageComposer {
-  class EncryptJob;
-}
 
 class SignEncryptTest : public QObject
 {

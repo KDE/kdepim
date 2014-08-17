@@ -37,7 +37,6 @@
 
 #include <utils/pimpl_ptr.h>
 
-class QDate;
 
 namespace GpgME {
     class Key;

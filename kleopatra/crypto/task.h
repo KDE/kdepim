@@ -42,8 +42,6 @@
 
 #include <boost/shared_ptr.hpp>
 
-class QColor;
-class QIcon;
 
 namespace Kleo {
     class AuditLog;

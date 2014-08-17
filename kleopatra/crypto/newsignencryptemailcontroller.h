@@ -49,7 +49,6 @@ namespace Types {
 }
 
 namespace GpgME {
-    class Key;
 }
 
 namespace boost {
@@ -63,7 +62,6 @@ namespace Kleo {
 
 namespace Crypto {
 
-    class AssuanCommand;
 
     class NewSignEncryptEMailController : public Controller {
         Q_OBJECT

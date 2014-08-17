@@ -42,9 +42,6 @@
 namespace GpgME {
     class SigningResult;
     class EncryptionResult;
-    class DecryptionResult;
-    class VerificationResult;
-    class Error;
 }
 
 namespace Kleo {

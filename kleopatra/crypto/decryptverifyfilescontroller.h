@@ -43,7 +43,6 @@
 
 #include <vector>
 
-class QFile;
 
 namespace GpgME {
     class VerificationResult;
@@ -52,7 +51,6 @@ namespace GpgME {
 namespace Kleo {
 namespace Crypto {
 
-class DecryptVerifyResult;
 
 class DecryptVerifyFilesController : public Controller {
     Q_OBJECT

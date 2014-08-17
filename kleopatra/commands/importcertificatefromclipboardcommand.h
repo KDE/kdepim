@@ -37,7 +37,6 @@
 
 #ifndef QT_NO_CLIPBOARD
 
-class QStringList;
 
 namespace Kleo {
 

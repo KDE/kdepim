@@ -38,7 +38,6 @@
 class QCheckBox;
 class QComboBox;
 class KPluralHandlingSpinBox;
-class KUrlRequester;
 
 namespace Kleo {
     class FileNameRequester;

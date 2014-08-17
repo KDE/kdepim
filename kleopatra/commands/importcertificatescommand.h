@@ -35,7 +35,6 @@
 
 #include "command.h"
 
-class QStringList;
 
 namespace Kleo {
 

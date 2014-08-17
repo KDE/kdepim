@@ -43,7 +43,6 @@ class QComboBox;
 class QLabel;
 class QListWidget;
 class QListWidgetItem;
-class QPushButton;
 class QStringList;
 class QToolButton;
 

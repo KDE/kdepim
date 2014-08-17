@@ -21,7 +21,6 @@
 #include <QtCore/QObject>
 
 class QString;
-class QStringList;
 template <typename T> class QList;
 
 namespace KManageSieve {

@@ -41,7 +41,6 @@
 #include <cstdio>
 
 class QIODevice;
-class QFile;
 class QString;
 
 namespace Kleo {

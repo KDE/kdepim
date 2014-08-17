@@ -48,9 +48,6 @@
 
 class QStringList;
 
-namespace KABC {
-class Addressee;
-}
 
 namespace Kleo {
 

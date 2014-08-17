@@ -55,11 +55,8 @@
 #include <vector>
 
 class QVariant;
-class QIODevice;
 class QObject;
 class QStringList;
-class QDialog;
-class QFile;
 
 struct assuan_context_s;
 

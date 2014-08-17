@@ -26,7 +26,6 @@
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 
-class KJob;
 
 namespace MessageComposer {
   class EncryptJob;

@@ -45,7 +45,6 @@ namespace GpgME {
 
 namespace Kleo {
 
-    class AbstractKeyListModel;
     class KeyFilter;
 
     class AbstractKeyListSortFilterProxyModel : public QSortFilterProxyModel, public KeyListModelInterface {

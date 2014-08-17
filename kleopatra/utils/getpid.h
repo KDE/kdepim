@@ -42,7 +42,6 @@
 # include <unistd.h>
 #endif
 
-class QString;
 
 namespace Kleo {
 

@@ -45,7 +45,6 @@
 
 #include <vector>
 
-class QFile;
 
 namespace KMime {
 namespace Types {
@@ -58,13 +57,11 @@ namespace GpgME {
 
 namespace Kleo {
 
-class AssuanCommand;
 class Input;
 class Output;
 
 namespace Crypto {
 
-class DecryptVerifyResult;
 
 class DecryptVerifyEMailController : public Controller {
     Q_OBJECT

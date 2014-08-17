@@ -35,11 +35,6 @@ class Content;
 
 }
 
-namespace GpgME {
-class Error;
-}
-
-
 namespace MessageComposer {
 
 class SignEncryptJobPrivate;

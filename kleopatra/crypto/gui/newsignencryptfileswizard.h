@@ -42,7 +42,6 @@
 
 #include <vector>
 
-class QFileInfo;
 class QStringList;
 template <typename T> class QList;
 

@@ -42,8 +42,6 @@
 #include <QHeaderView>
 #include <QIcon>
 
-class QPainter;
-class QColorGroup;
 class QFont;
 class QColor;
 

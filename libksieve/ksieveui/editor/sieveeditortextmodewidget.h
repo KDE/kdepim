@@ -22,7 +22,6 @@
 #include "sieveeditorabstractwidget.h"
 
 class QSplitter;
-class QTabWidget;
 
 namespace PimCommon {
 class PlainTextEditFindBar;
