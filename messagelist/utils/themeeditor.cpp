@@ -57,6 +57,9 @@
 #include <KTextEdit>
 
 #include <time.h> // for time_t
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 using namespace MessageList::Utils;
 using namespace MessageList::Core;
@@ -68,15 +71,23 @@ static const char * gThemeContentItemTypeDndMimeDataFormat = "application/x-kmai
 
 
 ThemeColumnPropertiesDialog::ThemeColumnPropertiesDialog( QWidget * parent, Theme::Column * column, const QString &title )
-    : KDialog( parent ), mColumn( column )
+    : QDialog( parent ), mColumn( column )
 {
     //setAttribute( Qt::WA_DeleteOnClose );
     setWindowModality( Qt::ApplicationModal ); // FIXME: Sure ?
-    setButtons( Ok | Cancel );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setWindowTitle( title );
 
     QWidget * base = new QWidget( this );
-    setMainWidget( base );
+    mainLayout->addWidget(base);
+    mainLayout->addWidget(buttonBox);
 
     QGridLayout * g = new QGridLayout( base );
 
@@ -107,7 +118,7 @@ ThemeColumnPropertiesDialog::ThemeColumnPropertiesDialog( QWidget * parent, Them
     g->setColumnStretch( 1, 1 );
     g->setRowStretch( 10, 1 );
 
-    connect( this, SIGNAL(okClicked()),
+    connect(okButton, SIGNAL(clicked()),
              SLOT(slotOkButtonClicked()) );
 
     // Display the current settings

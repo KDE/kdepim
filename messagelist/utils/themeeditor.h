@@ -29,7 +29,8 @@
 #include <QLabel>
 #include <QRect>
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 
 class QPaintDevice;
 class QCheckBox;
@@ -55,7 +56,7 @@ class ModelInvariantRowMapper;
 namespace Utils
 {
 
-class ThemeColumnPropertiesDialog : public KDialog
+class ThemeColumnPropertiesDialog : public QDialog
 {
     Q_OBJECT
 public:

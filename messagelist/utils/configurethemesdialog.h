@@ -21,11 +21,12 @@
 #ifndef __MESSAGELIST_UTILS_CONFIGURETHEMESDIALOG_H__
 #define __MESSAGELIST_UTILS_CONFIGURETHEMESDIALOG_H__
 
-#include <KDialog>
+#include <QDialog>
 
 #include <QListWidget>
 
 #include <messagelist/messagelist_export.h>
+#include <KConfigGroup>
 
 class QPushButton;
 
@@ -42,7 +43,7 @@ class Manager;
 namespace Utils
 {
 
-class MESSAGELIST_EXPORT ConfigureThemesDialog : public KDialog
+class MESSAGELIST_EXPORT ConfigureThemesDialog : public QDialog
 {
     Q_OBJECT
 

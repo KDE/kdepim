@@ -21,11 +21,12 @@
 #ifndef __MESSAGELIST_UTILS_CONFIGUREAGGREGATIONSDIALOG_H__
 #define __MESSAGELIST_UTILS_CONFIGUREAGGREGATIONSDIALOG_H__
 
-#include <KDialog>
+#include <QDialog>
 
 #include <QListWidget>
 
 #include <messagelist/messagelist_export.h>
+#include <KConfigGroup>
 
 class QPushButton;
 
@@ -48,7 +49,7 @@ namespace Utils
  * This is managed by MessageList::Manager. Take a look at it first
  * if you want to display this dialog.
  */
-class MESSAGELIST_EXPORT ConfigureAggregationsDialog : public KDialog
+class MESSAGELIST_EXPORT ConfigureAggregationsDialog : public QDialog
 {
     Q_OBJECT
 

@@ -50,7 +50,6 @@
 #include <QMenu>
 #include <KLocalizedString>
 #include <QDebug>
-#include <KGlobalSettings>
 #include <QIcon>
 #include <KLineEdit>
 
