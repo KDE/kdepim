@@ -22,7 +22,7 @@
 #include "pimcommon/storageservice/storageservicemanager.h"
 
 #include <KLocalizedString>
-#include <KStandardDirs>
+
 #include <KMessageBox>
 #include <KUrlRequester>
 #include <KUrl>

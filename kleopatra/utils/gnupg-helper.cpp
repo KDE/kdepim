@@ -39,7 +39,7 @@
 #include <gpgme++/engineinfo.h>
 
 #include <KDebug>
-#include <KStandardDirs>
+
 
 #include <QDir>
 #include <QFile>

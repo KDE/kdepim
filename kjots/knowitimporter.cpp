@@ -26,7 +26,7 @@
 #include <QFile>
 #include <QTextStream>
 
-#include <KStandardDirs>
+
 #include <KUrl>
 #include <QTemporaryFile>
 #include <KLocalizedString>
