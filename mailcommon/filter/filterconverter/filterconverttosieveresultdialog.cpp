@@ -29,29 +29,41 @@
 
 #include <errno.h>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace MailCommon;
 
 FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Convert to sieve script" ) );
-    setButtons( User1| Close );
-    setButtonText(User1, i18n("Save..."));
-    setDefaultButton( User1 );
+    setWindowTitle( i18n( "Convert to sieve script" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    setLayout(topLayout);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    user1Button->setText(i18n("Save..."));
+    user1Button->setDefault(true);
     setModal( true );
-    connect(this, SIGNAL(user1Clicked()), SLOT(slotSave()));
+    connect(user1Button, SIGNAL(clicked()), SLOT(slotSave()));
 
     QWidget *mainWidget = new QWidget( this );
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
 
-    mainLayout->setSpacing( KDialog::spacingHint() );
-    mainLayout->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mEditor = new PimCommon::PlainTextEditorWidget;
     PimCommon::SieveSyntaxHighlighter *syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter( mEditor->editor()->document() );
     syntaxHighlighter->addCapabilities(PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities());
     mainLayout->addWidget(mEditor);
-    setMainWidget( mainWidget );
+    topLayout->addWidget(mainWidget);
+    topLayout->addWidget(buttonBox);
+
     readConfig();
 }
 

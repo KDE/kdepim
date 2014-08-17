@@ -36,7 +36,7 @@
 
 #include <CollectionFetchJob>
 
-#include <KDialog>
+#include <QDialog>
 #include <KIconLoader>
 #include <QLineEdit>
 #include <KLocalizedString>
@@ -45,6 +45,7 @@
 #include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QToolButton>
+#include <KConfigGroup>
 
 namespace MailCommon {
 
@@ -53,7 +54,7 @@ FolderRequester::FolderRequester( QWidget *parent )
       mMustBeReadWrite( true ), mShowOutbox( true ), mNotCreateNewFolder( false )
 {
   QHBoxLayout *hlay = new QHBoxLayout( this );
-  hlay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   hlay->setSpacing( QDialog::spacingHint() );
   hlay->setContentsMargins( 0, 0, 0, 0 );
 
   mEdit = new QLineEdit( this );
@@ -89,7 +90,7 @@ void FolderRequester::slotOpenDialog()
     MessageViewer::AutoQPointer<FolderSelectionDialog> dlg(
                 new FolderSelectionDialog( this, options ) );
 
-    dlg->setCaption( i18n( "Select Folder" ) );
+    dlg->setWindowTitle( i18n( "Select Folder" ) );
     dlg->setModal( false );
     dlg->setSelectedCollection( mCollection );
 

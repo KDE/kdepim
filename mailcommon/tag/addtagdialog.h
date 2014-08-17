@@ -20,14 +20,16 @@
 
 #include "mailcommon_export.h"
 #include "tag.h"
-#include <KDialog>
+#include <QDialog>
 #include <AkonadiCore/tag.h>
+#include <KConfigGroup>
+class QPushButton;
 class KActionCollection;
 
 namespace MailCommon {
 class TagWidget;
 
-class MAILCOMMON_EXPORT AddTagDialog : public KDialog
+class MAILCOMMON_EXPORT AddTagDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -38,10 +40,8 @@ public:
     QString label() const;
     Akonadi::Tag tag() const;
 
-protected Q_SLOTS:
-    virtual void slotButtonClicked(int button);
-
 private Q_SLOTS:
+    void slotSave();
     void slotTagNameChanged(const QString& text);
     void onTagCreated(KJob *job);
 
@@ -51,6 +51,7 @@ private:
     MailCommon::TagWidget *mTagWidget;
     QList<MailCommon::Tag::Ptr> mTags;
     Akonadi::Tag mTag;
+    QPushButton *mOkButton;
 };
 }
 #endif // ADDTAGDIALOG_H

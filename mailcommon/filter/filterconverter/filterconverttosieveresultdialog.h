@@ -18,14 +18,15 @@
 #ifndef FILTERCONVERTTOSIEVERESULTDIALOG_H
 #define FILTERCONVERTTOSIEVERESULTDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 
 namespace PimCommon {
 class PlainTextEditorWidget;
 }
 
 namespace MailCommon {
-class FilterConvertToSieveResultDialog : public KDialog
+class FilterConvertToSieveResultDialog : public QDialog
 {
     Q_OBJECT
 public:
