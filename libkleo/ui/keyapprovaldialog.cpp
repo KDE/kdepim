@@ -42,7 +42,6 @@
 #include "kleo/cryptobackend.h"
 #include <qpushbutton.h>
 #include <KLocalizedString>
-#include <kglobalsettings.h>
 #include <kseparator.h>
 
 #include <QStringList>
