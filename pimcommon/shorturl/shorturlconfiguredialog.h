@@ -18,12 +18,13 @@
 #ifndef SHORTURLCONFIGUREDIALOG_H
 #define SHORTURLCONFIGUREDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 #include "pimcommon/pimcommon_export.h"
 
 namespace PimCommon {
 class ShortUrlConfigureWidget;
-class PIMCOMMON_EXPORT ShortUrlConfigureDialog : public KDialog
+class PIMCOMMON_EXPORT ShortUrlConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:

@@ -21,25 +21,37 @@
 #include <KLocalizedString>
 #include <KSeparator>
 #include <QVBoxLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace PimCommon;
 ShortUrlConfigureDialog::ShortUrlConfigureDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Configure engine" ) );
-    setButtons( Cancel | Ok | Default );
+    setWindowTitle( i18n( "Configure engine" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOkClicked()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), SLOT(slotDefaultClicked()));
 
     QWidget *w = new QWidget;
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
+
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
     mConfigureWidget = new ShortUrlConfigureWidget();
     mConfigureWidget->loadConfig();
     lay->addWidget(mConfigureWidget);
     lay->addWidget(new KSeparator);
-    connect(this, &ShortUrlConfigureDialog::okClicked, this, &ShortUrlConfigureDialog::slotOkClicked);
-    connect(this, &ShortUrlConfigureDialog::defaultClicked, this, &ShortUrlConfigureDialog::slotDefaultClicked);
 }
 
 

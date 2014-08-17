@@ -33,6 +33,8 @@
 #include <QListWidget>
 #include <QHBoxLayout>
 #include <QCheckBox>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 using namespace MailCommon;
 
@@ -43,14 +45,22 @@ struct InstanceStruct {
 
 
 AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
-    :KDialog(parent)
+    :QDialog(parent)
 {
-    setCaption( i18n("Edit Accounts Order") );
-    setButtons( Ok|Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n("Edit Accounts Order") );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
 
     QWidget *page = new QWidget( this );
-    setMainWidget( page );
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
 
     QVBoxLayout *vbox = new QVBoxLayout;
     page->setLayout(vbox);
@@ -96,7 +106,7 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     connect( mListAccount, SIGNAL(itemSelectionChanged()), this, SLOT(slotEnableControls()));
     connect( mListAccount->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),SLOT(slotEnableControls()) );
 
-    connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+    connect(okButton, SIGNAL(clicked()), SLOT(slotOk()) );
     readConfig();
     init();
 }
@@ -220,7 +230,7 @@ void AccountConfigOrderDialog::slotOk()
     MailCommon::MailCommonSettings::self()->setOrder(order);
     MailCommon::MailCommonSettings::self()->setEnableAccountOrder(mEnableAccountOrder->isChecked());
     MailCommon::MailCommonSettings::self()->save();
-    KDialog::accept();
+    QDialog::accept();
 }
 
 void AccountConfigOrderDialog::readConfig()

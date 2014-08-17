@@ -19,9 +19,10 @@
 #define MAILCOMMON_FILTERSELECTIONDIALOG_H
 
 
-#include <KDialog>
+#include <QDialog>
 
 #include <QList>
+#include <KConfigGroup>
 
 class QPushButton;
 
@@ -32,7 +33,7 @@ namespace MailCommon {
 
 class MailFilter;
 
-class FilterSelectionDialog : public KDialog
+class FilterSelectionDialog : public QDialog
 {
     Q_OBJECT
 
@@ -54,6 +55,7 @@ private:
     QList<MailFilter*> originalFilters;
     QPushButton *selectAllButton;
     QPushButton *unselectAllButton;
+    QPushButton *mOkButton;
 };
 
 }

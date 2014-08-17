@@ -25,21 +25,27 @@
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 
 using namespace MailCommon;
 
 FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
     setObjectName( QLatin1String("filterselection") );
     setModal( true );
-    setCaption( i18n( "Select Filters" ) );
-    setButtons( Ok | Cancel );
-    setDefaultButton( Ok );
-    showButtonSeparator( true );
-
-    QVBoxLayout *const top = new QVBoxLayout( mainWidget() );
+    setWindowTitle( i18n( "Select Filters" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *top = new QVBoxLayout;
+    setLayout(top);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mOkButton->setDefault(true);
 
     filtersListWidget = new QListWidget();
     KListWidgetSearchLine *searchLine = new KListWidgetSearchLine( this, filtersListWidget );
@@ -59,6 +65,7 @@ FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
     buttonLayout->addWidget( selectAllButton );
     unselectAllButton = new QPushButton( i18n( "Unselect All" ) );
     buttonLayout->addWidget( unselectAllButton );
+    top->addWidget(buttonBox);
 
     connect( selectAllButton, SIGNAL(clicked()), this, SLOT(slotSelectAllButton()) );
     connect( unselectAllButton, SIGNAL(clicked()), this, SLOT(slotUnselectAllButton()) );
@@ -95,7 +102,7 @@ void FilterSelectionDialog::readConfig()
 void FilterSelectionDialog::setFilters( const QList<MailFilter *> &filters )
 {
     if ( filters.isEmpty() ) {
-        enableButtonOk( false );
+        mOkButton->setEnabled( false );
         return;
     }
 

@@ -18,7 +18,8 @@
 #ifndef ACCOUNTCONFIGORDERDIALOG_H
 #define ACCOUNTCONFIGORDERDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 #include "mailcommon_export.h"
 
 class QListWidget;
@@ -26,7 +27,7 @@ class QPushButton;
 class QCheckBox;
 namespace MailCommon {
 
-class MAILCOMMON_EXPORT AccountConfigOrderDialog : public KDialog
+class MAILCOMMON_EXPORT AccountConfigOrderDialog : public QDialog
 {
     Q_OBJECT
 public:
