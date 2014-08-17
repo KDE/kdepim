@@ -24,6 +24,7 @@
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
 #include <qdebug.h>
+#include <QFileDialog>
 
 #include "filter_mailapp.h"
 
@@ -46,7 +47,7 @@ FilterMailApp::~FilterMailApp()
 
 void FilterMailApp::import()
 {
-    const QString directory = KFileDialog::getExistingDirectory( QDir::homePath(), filterInfo()->parent() );
+    const QString directory = QFileDialog::getExistingDirectory(filterInfo()->parent() , QString(),  QDir::homePath());
     importMails( directory );
 }
 

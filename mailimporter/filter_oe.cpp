@@ -21,6 +21,7 @@
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
 #include <qdebug.h>
+#include <QFileDialog>
 
 #include "filter_oe.h"
 
@@ -55,7 +56,7 @@ FilterOE::~FilterOE()
 void FilterOE::import()
 {
     // Select directory containing plain text emails
-    const QString maildir = KFileDialog::getExistingDirectory(QDir::homePath(),filterInfo()->parent());
+    const QString maildir = QFileDialog::getExistingDirectory(filterInfo()->parent(), QString(), QDir::homePath());
     importMails(maildir);
 }
 

@@ -97,7 +97,7 @@ QString FileDialog::getExistingDirectory( QWidget * parent, const QString & capt
 #ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getExistingDirectory( parent, caption, dir( dirID ) );
 #else
-    const QString fname = KFileDialog::getExistingDirectory( dir( dirID ), parent, caption );
+    const QString fname = QFileDialog::getExistingDirectory(parent, caption ,  dir( dirID ));
 #endif
     update( fname, dirID );
     return fname;

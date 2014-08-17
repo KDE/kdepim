@@ -345,7 +345,7 @@ void StorageServiceTreeWidget::slotDownloadFile()
         if (!filename.isEmpty()) {
             QString destination = StorageServiceManagerGlobalConfig::self()->downloadDirectory();
             if (destination.isEmpty()) {
-                destination = KFileDialog::getExistingDirectory(QUrl(), this);
+                destination = QFileDialog::getExistingDirectory(this, QString());
                 if (destination.isEmpty())
                     return;
             }

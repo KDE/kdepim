@@ -36,6 +36,7 @@
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QCloseEvent>
+#include <QFileDialog>
 
 using namespace PimCommon;
 
@@ -231,7 +232,7 @@ void StorageServiceDownloadDialog::downloadItem(StorageServiceTreeWidgetItem *it
     if (!filename.isEmpty()) {
         QString destination = mDefaultDownloadPath;
         if (destination.isEmpty() || !QFileInfo(mDefaultDownloadPath).isDir())
-            destination = KFileDialog::getExistingDirectory(QUrl(), this);
+            destination = QFileDialog::getExistingDirectory(this, QString());
         if (destination.isEmpty())
             return;
         QFileInfo fileInfo(destination + QLatin1Char('/') + filename);

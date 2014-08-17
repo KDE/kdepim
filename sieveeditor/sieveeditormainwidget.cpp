@@ -25,7 +25,7 @@
 #include "editor/sieveeditor.h"
 
 #include <KLocalizedString>
-
+#include <KConfigGroup>
 #include <KSharedConfig>
 #include <QTabWidget>
 #include <KGlobalSettings>

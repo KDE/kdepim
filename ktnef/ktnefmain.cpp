@@ -50,6 +50,7 @@
 #include <KSharedConfig>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QFileDialog>
 
 KTNEFMain::KTNEFMain( QWidget *parent )
   : KXmlGuiWindow( parent )
@@ -304,7 +305,7 @@ void KTNEFMain::extractFile()
 
 void KTNEFMain::extractFileTo()
 {
-  QString dir = KFileDialog::getExistingDirectory( mLastDir, this );
+  QString dir = QFileDialog::getExistingDirectory(this , QString(),  mLastDir);
   if ( !dir.isEmpty() ) {
     extractTo( dir );
     mLastDir = dir;
@@ -313,7 +314,7 @@ void KTNEFMain::extractFileTo()
 
 void KTNEFMain::extractAllFiles()
 {
-  QString dir = KFileDialog::getExistingDirectory( mLastDir, this );
+  QString dir = QFileDialog::getExistingDirectory(this , QString(),  mLastDir);
   if ( !dir.isEmpty() ) {
     mLastDir = dir;
     dir.append( QLatin1String("/") );
@@ -342,7 +343,7 @@ void KTNEFMain::propertiesFile()
 
 void KTNEFMain::optionDefaultDir()
 {
-  const QString dirname = KFileDialog::getExistingDirectory( mDefaultDir, this );
+  const QString dirname = QFileDialog::getExistingDirectory(this , QString(),  mDefaultDir);
   if ( !dirname.isEmpty() ) {
     mDefaultDir = dirname;
 

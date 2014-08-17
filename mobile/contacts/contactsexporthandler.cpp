@@ -27,6 +27,7 @@
 #include <KUrl>
 
 #include <QtCore/QFile>
+#include <QFileDialog>
 
 static QString contactFileName( const KABC::Addressee &contact )
 {
@@ -110,7 +111,7 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
                                          KGuiItem( i18n( "Export to One File" ) ) ) ) {
       case KMessageBox::Yes:
         {
-          const QString path = KFileDialog::getExistingDirectory();
+          const QString path = QFileDialog::getExistingDirectory(0, QString());
           if ( path.isEmpty() )
             return true; // user canceled export
 
