@@ -29,7 +29,6 @@
 #include <knotification.h>
 #include <KLocalizedString>
 #include <KIconLoader>
-#include <KComponentData>
 using namespace FollowUpReminder;
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
@@ -104,7 +103,7 @@ void FollowUpReminderManager::answerReceived(const QString &from)
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KComponentData::mainComponent().componentName());
+                          QLatin1String("akonadi_followupreminder_agent"));
 
 }
 

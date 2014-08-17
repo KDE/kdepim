@@ -18,10 +18,11 @@
 #ifndef FOLLOWUPREMINDERINFODIALOG_H
 #define FOLLOWUPREMINDERINFODIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 class QTreeWidget;
 class FollowUpReminderInfoWidget;
-class FollowUpReminderInfoDialog : public KDialog
+class FollowUpReminderInfoDialog : public QDialog
 {
     Q_OBJECT
 public:

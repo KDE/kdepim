@@ -27,7 +27,6 @@
 #include <KLocalizedString>
 #include <QIcon>
 #include <KIconLoader>
-#include <KComponentData>
 
 
 ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
@@ -71,7 +70,7 @@ void ArchiveJob::execute()
                                   mPixmap,
                                   0,
                                   KNotification::CloseOnTimeout,
-                                  KComponentData::mainComponent().componentName());
+                                  QLatin1String("akonadi_archivemail_agent"));
             deleteLater();
             return;
         }
@@ -91,7 +90,7 @@ void ArchiveJob::execute()
                               mPixmap,
                               0,
                               KNotification::CloseOnTimeout,
-                              KComponentData::mainComponent().componentName());
+                              QLatin1String("akonadi_archivemail_agent"));
         connect(backupJob, SIGNAL(backupDone(QString)), this, SLOT(slotBackupDone(QString)));
         connect(backupJob, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
         backupJob->start();
@@ -105,7 +104,7 @@ void ArchiveJob::slotError(const QString &error)
                           mPixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KComponentData::mainComponent().componentName());
+                          QLatin1String("akonadi_archivemail_agent"));
     mManager->backupDone(mInfo);
     deleteLater();
 }
@@ -117,7 +116,7 @@ void ArchiveJob::slotBackupDone(const QString &info)
                           mPixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KComponentData::mainComponent().componentName());
+                          QLatin1String("akonadi_archivemail_agent"));
     mManager->backupDone(mInfo);
     deleteLater();
 }

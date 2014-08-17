@@ -32,10 +32,8 @@
 #include <ItemFetchJob>
 #include <ItemDeleteJob>
 
-#include <KComponentData>
 #include <KNotification>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <QIcon>
 #include <KIconLoader>
 #include <QDebug>
@@ -146,7 +144,7 @@ void SendLaterJob::sendDone()
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KComponentData::mainComponent().componentName());
+                          QLatin1String("akonadi_sendlater_agent"));
     mManager->sendDone(mInfo);
     deleteLater();
 }
@@ -159,7 +157,7 @@ void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType t
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KComponentData::mainComponent().componentName());
+                          QLatin1String("akonadi_sendlater_agent"));
     mManager->sendError(mInfo, type);
     deleteLater();
 }
