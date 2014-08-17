@@ -19,7 +19,7 @@
 #include "templatewidgets/templatelistwidget.h"
 
 #include <KDirWatch>
-#include <KStandardDirs>
+
 #include <KConfigGroup>
 #include <KConfig>
 #include <KGlobal>

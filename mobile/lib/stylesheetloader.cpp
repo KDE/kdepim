@@ -20,7 +20,7 @@
 #include "stylesheetloader.h"
 
 #include <QDebug>
-#include <KStandardDirs>
+
 #include <QFile>
 #include <QWidget>
 #include <QApplication>

@@ -41,7 +41,7 @@
 #include <QDebug>
 #include <KDirWatch>
 #include <KProtocolInfo>
-#include <KStandardDirs>
+
 #include <kio/job.h>
 
 #include <QtCore/QPointer>

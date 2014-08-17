@@ -28,7 +28,7 @@
 #include <QTemporaryDir>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KStandardDirs>
+
 #include <QTemporaryFile>
 
 #include <QWidget>

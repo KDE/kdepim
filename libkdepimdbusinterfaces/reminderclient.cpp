@@ -24,7 +24,7 @@
 #include "korgacinterface.h"
 
 #include <QDebug>
-#include <KStandardDirs>
+
 #include <KToolInvocation>
 
 #include <QtDBus/QDBusConnection>

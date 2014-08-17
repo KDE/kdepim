@@ -40,7 +40,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 // KDE Includes
 #include <KSharedConfig>
-#include <KStandardDirs>
+
 #include <QIcon>
 #include <QDebug>
 #include <KMessageBox>

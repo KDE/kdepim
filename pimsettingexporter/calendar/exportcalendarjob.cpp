@@ -22,7 +22,7 @@
 #include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
-#include <KStandardDirs>
+
 #include <QTemporaryFile>
 #include <KConfigGroup>
 #include <KZip>

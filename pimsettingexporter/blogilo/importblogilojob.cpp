@@ -23,7 +23,7 @@
 #include <KArchive>
 #include <KLocalizedString>
 
-#include <KStandardDirs>
+
 #include <KZip>
 #include <QStandardPaths>
 

@@ -59,7 +59,7 @@
 #include <QMenu>
 #include <KMimeType>
 #include <KRun>
-#include <KStandardDirs>
+
 #include <KUrl>
 #include <QIcon>
 #include <QDebug>

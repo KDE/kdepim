@@ -21,7 +21,7 @@
 #include "import/importkmailautocorrection.h"
 #include <KGlobal>
 #include <KColorScheme>
-#include <KStandardDirs>
+
 #include <QDebug>
 #include <QTextBlock>
 #include <QTextDocument>

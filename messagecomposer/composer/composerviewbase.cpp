@@ -70,7 +70,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <krichtextwidget.h>
-#include <KStandardDirs>
+
 #include <QDebug>
 
 #include <QDir>

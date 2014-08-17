@@ -33,7 +33,7 @@
 #include <KZip>
 #include <KLocalizedString>
 #include <QTemporaryFile>
-#include <KStandardDirs>
+
 #include <KProcess>
 #include <QDebug>
 

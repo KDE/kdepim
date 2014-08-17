@@ -21,7 +21,7 @@
 #include <libkdepim/misc/broadcaststatus.h>
 
 
-#include <KStandardDirs>
+
 #include <KLocalizedString>
 
 

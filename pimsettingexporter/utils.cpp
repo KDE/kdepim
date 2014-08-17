@@ -23,7 +23,7 @@
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <KConfigGroup>
-#include <KStandardDirs>
+
 #include <KSharedConfig>
 #include <QTemporaryFile>
 #include <KLocalizedString>

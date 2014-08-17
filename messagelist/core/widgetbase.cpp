@@ -52,7 +52,7 @@
 #include <KLineEdit>
 #include <KLocalizedString>
 #include <QMenu>
-#include <KStandardDirs>
+
 #include <KUrl>
 
 #include <collection.h>

@@ -40,7 +40,7 @@
 #include <kmessagebox.h>
 #include <KLocalizedString>
 #include <kshell.h>
-#include <KStandardDirs>
+
 
 #include <gpgme++/engineinfo.h>
 #include <gpgme++/global.h>

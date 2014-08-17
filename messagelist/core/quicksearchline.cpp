@@ -25,7 +25,7 @@
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KComboBox>
-#include <KStandardDirs>
+
 #include <QIcon>
 #include <KIconLoader>
 #include <QPushButton>

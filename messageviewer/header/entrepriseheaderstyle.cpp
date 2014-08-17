@@ -28,7 +28,7 @@ using KPIMUtils::LinkLocator;
 #include <qdebug.h>
 #include <KLocalizedString>
 #include <KColorScheme>
-#include <KStandardDirs>
+
 
 
 #include <kmime/kmime_message.h>

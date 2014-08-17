@@ -48,7 +48,7 @@
 #include <KGlobalSettings>
 #include <KApplication>
 #include <KLocalizedString>
-#include <KStandardDirs>
+
 #include <QFontDatabase>
 #include <QStandardPaths>
 
