@@ -57,6 +57,7 @@ ImportWizard::ImportWizard(QWidget *parent)
 {
     setModal(true);
     setWindowTitle( i18n( "PIM Import Tool" ) );
+    setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Help);
 
     ImportWizardKernel *kernel = new ImportWizardKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
