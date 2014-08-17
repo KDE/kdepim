@@ -31,8 +31,8 @@
 #include <KStandardGuiItem>
 #include <QTemporaryDir>
 #include <kzip.h>
-#include <ktemporaryfile.h>
 #include <KIconEngine>
+#include <QTemporaryFile>
 
 #include <QPushButton>
 #include <QVBoxLayout>

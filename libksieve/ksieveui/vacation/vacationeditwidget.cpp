@@ -30,7 +30,8 @@
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
-#include <kdialog.h>
+#include <QDialog>
+#include <KConfigGroup>
 
 using KMime::Types::AddrSpecList;
 using KMime::Types::AddressList;
@@ -45,7 +46,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     int row = -1;
 
     QGridLayout * glay = new QGridLayout( this );
-    glay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     glay->setSpacing( QDialog::spacingHint() );
     glay->setMargin( 0 );
     glay->setColumnStretch( 1, 1 );
 

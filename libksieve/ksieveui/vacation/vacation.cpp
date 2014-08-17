@@ -23,7 +23,6 @@
 
 #include <agentinstance.h>
 #include <qdebug.h>
-#include <kglobal.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 

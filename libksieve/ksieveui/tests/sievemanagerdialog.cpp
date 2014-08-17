@@ -19,14 +19,15 @@
 
 #include <ksieveui/managesievescriptsdialog.h>
 
-#include <kcomponentdata.h>
 #include <QApplication>
 
 int main( int argc, char** argv )
 {
   QApplication app( argc, argv );
   app.setQuitOnLastWindowClosed( false );
-  KComponentData kcd( "sievemanager" );
+  QApplication::setApplicationName(QStringLiteral("managersievescriptsdialogtest"));
+  QApplication::setApplicationVersion(QLatin1String("1.0"));
+
   KSieveUi::ManageSieveScriptsDialog *dlg = new KSieveUi::ManageSieveScriptsDialog;
   dlg->exec();
   return 0;
