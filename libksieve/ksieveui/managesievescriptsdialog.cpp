@@ -25,8 +25,8 @@
 #include <kiconloader.h>
 #include <kwindowsystem.h>
 #include <QPushButton>
-#include <QPushButton>
 #include <kmessagebox.h>
+#include <KConfigGroup>
 
 #include <agentinstance.h>
 #include <kmanagesieve/sievejob.h>

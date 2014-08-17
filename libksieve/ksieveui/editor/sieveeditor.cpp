@@ -25,19 +25,29 @@
 #include <QPushButton>
 #include <QKeyEvent>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 using namespace KSieveUi;
 
 SieveEditor::SieveEditor( QWidget * parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( i18n( "Edit Sieve Script" ) );
-    setButtons( Ok|Cancel );
-
+    setWindowTitle( i18n( "Edit Sieve Script" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setModal( true );
     mSieveEditorWidget = new SieveEditorWidget;
     connect(mSieveEditorWidget, SIGNAL(valueChanged(bool)), this, SIGNAL(valueChanged(bool)));
-    setMainWidget(mSieveEditorWidget);
+    mainLayout->addWidget(mSieveEditorWidget);
+    mainLayout->addWidget(buttonBox);
     connect(mSieveEditorWidget, &SieveEditorWidget::enableButtonOk, this, &SieveEditor::slotEnableButtonOk);
     connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SIGNAL(checkSyntax()));
     readConfig();
@@ -62,13 +72,13 @@ bool SieveEditor::event(QEvent* e)
             return true;
         }
     }
-    return KDialog::event(e);
+    return QDialog::event(e);
 }
 
 
 void SieveEditor::slotEnableButtonOk(bool b)
 {
-    enableButtonOk(b);
+    mOkButton->setEnabled(b);
 }
 
 void SieveEditor::writeConfig()

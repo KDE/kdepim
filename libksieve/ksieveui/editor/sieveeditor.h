@@ -21,11 +21,11 @@
 
 #include "ksieveui_export.h"
 
-#include <kdialog.h>
-
+#include <QDialog>
+class QPushButton;
 namespace KSieveUi {
 class SieveEditorWidget;
-class KSIEVEUI_EXPORT SieveEditor : public KDialog
+class KSIEVEUI_EXPORT SieveEditor : public QDialog
 {
     Q_OBJECT
 public:
@@ -58,6 +58,7 @@ private:
     void writeConfig();
     void readConfig();
     SieveEditorWidget *mSieveEditorWidget;
+    QPushButton *mOkButton;
 };
 
 }
