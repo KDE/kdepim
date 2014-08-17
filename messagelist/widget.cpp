@@ -46,7 +46,7 @@
 #include <KToggleAction>
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
-#include <KUrl>
+#include <QUrl>
 
 #include "core/groupheaderitem.h"
 
@@ -119,15 +119,15 @@ bool Widget::canAcceptDrag( const QDropEvent * e )
     if ( ( target.rights() & Collection::CanCreateItem ) == 0 )
         return false; // no way to drag into
 
-    const KUrl::List urls = KUrl::List::fromMimeData( e->mimeData() );
-    foreach ( const KUrl &url, urls ) {
+    const QList<QUrl> urls = e->mimeData()->urls();
+    foreach ( const QUrl &url, urls ) {
         const Collection collection = Collection::fromUrl( url );
         if ( collection.isValid() ) { // You're not supposed to drop collections here
             return false;
         } else { // Yay, this is an item!
-            const QString type = url.queryItems()[QLatin1String( "type" )]; // But does it have the right type?
+            const QString type = url.queryItemValue(QStringLiteral("type"));
             if ( !target.contentMimeTypes().contains( type ) ) {
-                return false;
+               return false;
             }
         }
     }
@@ -411,7 +411,7 @@ void Widget::viewDropEvent( QDropEvent *e )
         return;
     }
 
-    KUrl::List urls = KUrl::List::fromMimeData( e->mimeData() );
+    QList<QUrl> urls = e->mimeData()->urls();
     if ( urls.isEmpty() ) {
         qWarning() << "Could not decode drag data!";
         e->ignore();
@@ -455,7 +455,7 @@ void Widget::viewDropEvent( QDropEvent *e )
     Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
     Collection target = collections.first();
     Item::List items;
-    foreach ( const KUrl &url, urls ) {
+    foreach ( const QUrl &url, urls ) {
         items << Item::fromUrl( url );
     }
 
@@ -490,16 +490,16 @@ void Widget::viewStartDragRequest()
         }
     }
 
-    KUrl::List urls;
+    QList<QUrl> urls;
     Q_FOREACH ( Core::MessageItem *mi, selection ) {
         const Item i = d->itemForRow( mi->currentModelIndexRow() );
-        KUrl url = i.url( Item::Item::Item::UrlWithMimeType );
+        QUrl url = i.url( Item::Item::Item::UrlWithMimeType );
         url.addQueryItem(QLatin1String("parent"), QString::number( mi->parentCollectionId() ) );
         urls << url;
     }
 
     QMimeData *mimeData = new QMimeData;
-    urls.populateMimeData( mimeData );
+    mimeData->setUrls( urls );
 
     QDrag *drag = new QDrag( view()->viewport() );
     drag->setMimeData( mimeData );

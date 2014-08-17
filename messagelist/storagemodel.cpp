@@ -37,7 +37,7 @@
 #include "core/messageitem.h"
 #include "core/settings.h"
 #include "messagelistutil.h"
-#include <KUrl>
+#include <QUrl>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
@@ -393,13 +393,13 @@ int StorageModel::rowCount( const QModelIndex &parent ) const
 QMimeData* StorageModel::mimeData( const QList< MessageList::Core::MessageItem* >& items ) const
 {
     QMimeData *data = new QMimeData();
-    KUrl::List urls;
+    QList<QUrl> urls;
     foreach ( MessageList::Core::MessageItem* mi, items ) {
         Akonadi::Item item = itemForRow( mi->currentModelIndexRow() );
         urls << item.url( Item::UrlWithMimeType );
     }
 
-    urls.populateMimeData( data );
+    data->setUrls(urls);
 
     return data;
 }

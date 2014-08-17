@@ -53,7 +53,7 @@
 #include <KLocalizedString>
 #include <QMenu>
 
-#include <KUrl>
+#include <QUrl>
 
 #include <collection.h>
 #include <Akonadi/KMime/MessageStatus>
@@ -116,7 +116,7 @@ public:
     bool mStorageUsesPrivateTheme;         ///< true if the current folder does not use the global theme
     bool mStorageUsesPrivateAggregation;   ///< true if the current folder does not use the global aggregation
     bool mStorageUsesPrivateSortOrder;     ///< true if the current folder does not use the global sort order
-    KUrl mCurrentFolderUrl;                ///< The Akonadi URL of the current folder
+    QUrl mCurrentFolderUrl;                ///< The Akonadi URL of the current folder
     Akonadi::Collection mCurrentFolder;    ///< The current folder
     int mCurrentStatusFilterIndex;
     bool mStatusFilterComboPopulationInProgress;
