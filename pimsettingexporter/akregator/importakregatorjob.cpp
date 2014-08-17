@@ -24,7 +24,6 @@
 #include <KLocalizedString>
 #include <KZip>
 
-#include <KStandardDirs>
 #include <QStandardPaths>
 
 ImportAkregatorJob::ImportAkregatorJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)

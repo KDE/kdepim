@@ -21,7 +21,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QCheckBox>
-#include <KDialog>
+#include <QDialog>
 #include <KColorCombo>
 #include <KFontRequester>
 #include <KIconButton>
@@ -30,20 +30,21 @@
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <QIcon>
+#include <KConfigGroup>
 using namespace MailCommon;
 
 TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget *parent)
     : QWidget(parent)
 {
     QGridLayout *settings = new QGridLayout;
-    settings->setMargin( KDialog::marginHint() );
-    settings->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     settings->setMargin( QDialog::marginHint() );
+//TODO PORT QT5     settings->setSpacing( QDialog::spacingHint() );
     setLayout(settings);
 
     //Stretcher layout for adding some space after the label
     QVBoxLayout *spacer = new QVBoxLayout();
     settings->addLayout( spacer, 0, 0, 1, 2 );
-    spacer->addSpacing( 2 * KDialog::spacingHint() );
+//TODO PORT QT5     spacer->addSpacing( 2 * QDialog::spacingHint() );
 
     //First row for renaming
     mTagNameLineEdit = new QLineEdit( this );

@@ -22,7 +22,6 @@
 #include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
-#include <KStandardDirs>
 #include <KZip>
 
 #include <QWidget>

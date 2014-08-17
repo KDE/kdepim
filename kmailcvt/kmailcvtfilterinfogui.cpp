@@ -17,7 +17,7 @@
 
 #include "kmailcvtfilterinfogui.h"
 #include <KMessageBox>
-#include <KApplication>
+#include <QApplication>
 
 KMailCvtFilterInfoGui::KMailCvtFilterInfoGui(KImportPage *dlg, QWidget *parent)
     : MailImporter::FilterInfoGui(),
@@ -48,13 +48,13 @@ void KMailCvtFilterInfoGui::setTo( const QString &to )
 void KMailCvtFilterInfoGui::setCurrent( const QString &current )
 {
     m_dlg->widget()->mMailImporterWidget->setCurrent( current );
-    kapp->processEvents();
+    qApp->processEvents();
 }
 
 void  KMailCvtFilterInfoGui::setCurrent( int percent )
 {
     m_dlg->widget()->mMailImporterWidget->setCurrent( percent );
-    kapp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
+    qApp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
 }
 
 void  KMailCvtFilterInfoGui::setOverall( int percent )
@@ -66,14 +66,14 @@ void KMailCvtFilterInfoGui::addInfoLogEntry( const QString &log )
 {
     m_dlg->widget()->mMailImporterWidget->addInfoLogEntry( log );
     m_dlg->widget()->mMailImporterWidget->setLastCurrentItem();
-    kapp->processEvents();
+    qApp->processEvents();
 }
 
 void KMailCvtFilterInfoGui::addErrorLogEntry( const QString &log )
 {
     m_dlg->widget()->mMailImporterWidget->addErrorLogEntry( log );
     m_dlg->widget()->mMailImporterWidget->setLastCurrentItem();
-    kapp->processEvents();
+    qApp->processEvents();
 }
 
 

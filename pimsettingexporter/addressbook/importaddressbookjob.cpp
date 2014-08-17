@@ -20,7 +20,6 @@
 
 #include "pimcommon/util/createresource.h"
 
-#include <KStandardDirs>
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KZip>

@@ -17,7 +17,6 @@
 
 #include "kimportpage.h"
 
-#include <kapplication.h>
 #include <QStandardPaths>
 
 

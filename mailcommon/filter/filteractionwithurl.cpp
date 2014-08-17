@@ -20,7 +20,7 @@
 #include "filteractionwithurl.h"
 
 #include <KUrlRequester>
-#include <KUrl>
+#include <QUrl>
 #include <QTextDocument>
 
 using namespace MailCommon;
@@ -42,7 +42,7 @@ bool FilterActionWithUrl::isEmpty() const
 QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
 {
     KUrlRequester *requester = new KUrlRequester( parent );
-    requester->setUrl( KUrl( mParameter ) );
+    requester->setUrl( QUrl::fromLocalFile( mParameter ) );
 
     connect( requester, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
 
@@ -52,14 +52,14 @@ QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
 
 void FilterActionWithUrl::applyParamWidgetValue( QWidget *paramWidget )
 {
-    const KUrl url = static_cast<KUrlRequester*>( paramWidget )->url();
+    const QUrl url = static_cast<KUrlRequester*>( paramWidget )->url();
 
     mParameter = (url.isLocalFile() ? url.toLocalFile() : url.path());
 }
 
 void FilterActionWithUrl::setParamWidgetValue( QWidget *paramWidget ) const
 {
-    static_cast<KUrlRequester*>( paramWidget )->setUrl( KUrl( mParameter ) );
+    static_cast<KUrlRequester*>( paramWidget )->setUrl( QUrl::fromLocalFile( mParameter ) );
 }
 
 void FilterActionWithUrl::clearParamWidget( QWidget *paramWidget ) const

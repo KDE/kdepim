@@ -31,8 +31,6 @@
 #include <QPushButton>
 
 #include <KAboutData>
-#include <kapplication.h>
-#include <kcomponentdata.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <qdialogbuttonbox.h>

@@ -26,7 +26,6 @@
 
 #include <CollectionModifyJob>
 
-#include <KDialog>
 #include <KPluralHandlingSpinBox>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -61,7 +60,7 @@ bool CollectionExpiryPage::canHandle( const Akonadi::Collection &col ) const
 void CollectionExpiryPage::init()
 {
     QVBoxLayout *globalVBox = new QVBoxLayout( this );
-    globalVBox->setSpacing( KDialog::spacingHint() );
+    //PORT QT5 globalVBox->setSpacing( KDialog::spacingHint() );
 
     QGridLayout *daysBox = new QGridLayout;
 
