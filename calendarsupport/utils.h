@@ -40,10 +40,6 @@
 
 #include <QModelIndex>
 
-namespace KPIMIdentities {
-class IdentityManager;
-}
-
 namespace KCalCore {
   class CalFilter;
 }
