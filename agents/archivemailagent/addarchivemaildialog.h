@@ -20,21 +20,22 @@
 
 #include "mailcommon/job/backupjob.h"
 #include "archivemailinfo.h"
-#include <kdialog.h>
+#include <QDialog>
 #include <Collection>
+#include <KConfigGroup>
 
 class KComboBox;
 class QCheckBox;
 class KUrlRequester;
 class QSpinBox;
-class QSpinBox;
+class QPushButton;
 
 namespace MailCommon {
 class FolderRequester;
 }
 
 
-class AddArchiveMailDialog : public KDialog
+class AddArchiveMailDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -75,6 +76,7 @@ private:
     QSpinBox *mMaximumArchive;
 
     ArchiveMailInfo *mInfo;
+    QPushButton *mOkButton;
 };
 
 #endif // ADDARCHIVEMAILDIALOG_H

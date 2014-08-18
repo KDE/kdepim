@@ -30,25 +30,37 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QSpinBox>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mInfo(info)
 {
     if (info)
-        setCaption( i18n( "Modify Archive Mail" ) );
+        setWindowTitle( i18n( "Modify Archive Mail" ) );
     else
-        setCaption( i18n( "Add Archive Mail" ) );
-    setButtons( Ok|Cancel );
-    setDefaultButton( Ok );
+        setWindowTitle( i18n( "Add Archive Mail" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    setLayout(topLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mOkButton->setDefault(true);
     setModal( true );
     setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
     QWidget *mainWidget = new QWidget( this );
     QGridLayout *mainLayout = new QGridLayout( mainWidget );
-    mainLayout->setSpacing( KDialog::spacingHint() );
-    mainLayout->setMargin( KDialog::marginHint() );
-    setMainWidget( mainWidget );
-
+//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
+    topLayout->addWidget(mainWidget);
+    topLayout->addWidget(buttonBox);
+    
     int row = 0;
 
     QLabel *folderLabel = new QLabel( i18n( "&Folder:" ), mainWidget );
@@ -129,7 +141,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     if (mInfo) {
         load(mInfo);
     } else {
-        enableButtonOk(false);
+        mOkButton->setEnabled(false);
     }
 
     // Make it a bit bigger, else the folder requester cuts off the text too early
@@ -170,7 +182,7 @@ ArchiveMailInfo* AddArchiveMailDialog::info()
 void AddArchiveMailDialog::slotUpdateOkButton()
 {
     const bool valid = (!mPath->url().isEmpty() && mFolderRequester->collection().isValid());
-    enableButtonOk(valid);
+    mOkButton->setEnabled(valid);
 }
 
 void AddArchiveMailDialog::slotFolderChanged(const Akonadi::Collection& collection)

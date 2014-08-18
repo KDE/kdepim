@@ -52,8 +52,6 @@ using namespace Akonadi;
 CryptoPagePlugin::CryptoPagePlugin()
   : mReadOnly( false )
 {
-  //KLocale::global()->insertCatalog( QLatin1String("libkleopatra") );
-  //KLocale::global()->insertCatalog( QLatin1String("cryptopageplugin") );
   KIconLoader::global()->addAppDir( QLatin1String("libkleopatra") );
   KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
 
