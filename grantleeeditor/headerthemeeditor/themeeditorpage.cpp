@@ -31,8 +31,7 @@
 #include <QTemporaryDir>
 #include <QDebug>
 #include <KMessageBox>
-#include <KFileDialog>
-#include <KUrl>
+#include <QUrl>
 
 #include <QHBoxLayout>
 #include <QDir>
@@ -211,7 +210,7 @@ void ThemeEditorPage::uploadTheme()
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
         dialog->setUploadName(themename);
-        dialog->setPreviewImageFile(0, KUrl(previewFileName));
+        dialog->setPreviewImageFile(0, QUrl::fromLocalFile(previewFileName));
         const QString description = mDesktopPage->description();
         dialog->setDescription(description.isEmpty() ? i18n("My favorite KMail header") : description);
         dialog->exec();

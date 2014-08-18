@@ -23,7 +23,6 @@
 #include <KTNEF/KTNEFDefs>
 
 #include <QDebug>
-#include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 

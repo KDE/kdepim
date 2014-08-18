@@ -19,7 +19,6 @@
 #include <QProcess>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KFileDialog>
 #include <QFileDialog>
 
 EvolutionAddressBook::EvolutionAddressBook(ImportWizard *parent)

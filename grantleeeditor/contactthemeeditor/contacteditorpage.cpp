@@ -31,8 +31,7 @@
 #include <QTemporaryDir>
 #include <QDebug>
 #include <KMessageBox>
-#include <KFileDialog>
-#include <KUrl>
+#include <QUrl>
 
 #include <QHBoxLayout>
 #include <QDir>
@@ -196,7 +195,7 @@ void ContactEditorPage::uploadTheme()
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("kaddressbook_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
         dialog->setUploadName(themename);
-        dialog->setPreviewImageFile(0, KUrl(previewContactFileName));
+        dialog->setPreviewImageFile(0, QUrl::fromLocalFile(previewContactFileName));
         const QString description = mDesktopPage->description();
         dialog->setDescription(description.isEmpty() ? i18n("My favorite Kaddressbook theme") : description);
         dialog->exec();

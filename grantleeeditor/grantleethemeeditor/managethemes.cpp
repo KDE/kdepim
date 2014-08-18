@@ -18,7 +18,6 @@
 #include "managethemes.h"
 
 #include <KLocalizedString>
-#include <KStandardDirs>
 #include <QPushButton>
 #include <KMessageBox>
 #include <QTemporaryDir>

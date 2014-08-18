@@ -23,17 +23,15 @@
 
 
 #include <KStandardAction>
-#include <KApplication>
+#include <QApplication>
 #include <QAction>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KFileDialog>
-#include <KStandardDirs>
 #include <KRecentFilesAction>
 #include <KLocalizedString>
 #include <KLocalizedString>
-#include <KUrl>
 #include <KConfigGroup>
 
 #include <KNS3/KNewStuffAction>
@@ -291,7 +289,7 @@ void ContactEditorMainWindow::closeEvent(QCloseEvent *e)
 void ContactEditorMainWindow::slotQuitApp()
 {
     if (saveCurrentProject(SaveAndCloseTheme))
-        kapp->quit();
+        qApp->quit();
 }
 
 void ContactEditorMainWindow::slotUpdateView()

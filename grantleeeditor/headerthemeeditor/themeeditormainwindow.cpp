@@ -29,10 +29,8 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KFileDialog>
-#include <KStandardDirs>
 #include <KRecentFilesAction>
 #include <KNS3/KNewStuffAction>
-#include <KUrl>
 #include <KConfigGroup>
 
 #include <QPointer>

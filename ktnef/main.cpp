@@ -18,7 +18,6 @@
 #include "kdepim-version.h"
 
 #include <kaboutdata.h>
-#include <KCmdLineArgs>
 #include <KLocalizedString>
 #include <QCommandLineParser>
 #include <QApplication>
