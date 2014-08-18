@@ -147,7 +147,7 @@ public:
 
     void slotExportTemplates()
     {
-        const QString templateFile = KFileDialog::getSaveFileName();
+        const QString templateFile = QFileDialog::getSaveFileName();
         if (!templateFile.isEmpty()) {
             KConfig conf(templateFile);
             saveTemplates(&conf);

@@ -38,6 +38,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QFileDialog>
 
 AttachPropertyDialog::AttachPropertyDialog( QWidget *parent )
   : QDialog( parent ),
@@ -189,7 +190,7 @@ void AttachPropertyDialog::saveProperty( QTreeWidget *lv, KTNEFPropertySet *pSet
     QVariant prop = ( tag.startsWith( QLatin1String( "attr_" ) ) ?
                         pSet->attribute( key ) :
                         pSet->property( key ) );
-    QString filename = KFileDialog::getSaveFileName( tag, QString(), parent );
+    QString filename = QFileDialog::getSaveFileName(parent , QString(), tag, QString());
     if ( !filename.isEmpty() ) {
       QFile f( filename );
       if ( f.open( QIODevice::WriteOnly ) ) {

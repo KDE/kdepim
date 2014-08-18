@@ -106,6 +106,7 @@
 #include "localresourcecreator.h"
 #include <krandom.h>
 #include <KSharedConfig>
+#include <QFileDialog>
 #include "kjotsbrowser.h"
 
 Q_DECLARE_METATYPE(QTextDocument*)
@@ -1037,7 +1038,7 @@ void KJotsWidget::exportSelectionToHtml()
   }
   m_loader->setTheme(themeName);
 
-  QString filename = KFileDialog::getSaveFileName();
+  QString filename = QFileDialog::getSaveFileName();
   if (!filename.isEmpty())
   {
     QFile exportFile ( filename );
@@ -1059,7 +1060,7 @@ void KJotsWidget::exportSelectionToPlainText()
 
   m_loader->setTheme( QLatin1String("plain_text") );
 
-  QString filename = KFileDialog::getSaveFileName();
+  QString filename = QFileDialog::getSaveFileName();
   if (!filename.isEmpty())
   {
     QFile exportFile ( filename );
@@ -1081,7 +1082,7 @@ void KJotsWidget::exportSelectionToXml()
 
   m_loader->setTheme( QLatin1String("xml_output") );
 
-  QString filename = KFileDialog::getSaveFileName();
+  QString filename = QFileDialog::getSaveFileName();
   if (!filename.isEmpty())
   {
     QFile exportFile ( filename );
