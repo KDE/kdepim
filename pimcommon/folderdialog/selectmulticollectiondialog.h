@@ -18,12 +18,13 @@
 #ifndef SELECTMULTICOLLECTIONDIALOG_H
 #define SELECTMULTICOLLECTIONDIALOG_H
 #include "pimcommon_export.h"
-#include <KDialog>
+#include <QDialog>
 #include <Collection>
+#include <KConfigGroup>
 
 namespace PimCommon {
 class SelectMultiCollectionWidget;
-class PIMCOMMON_EXPORT SelectMultiCollectionDialog : public KDialog
+class PIMCOMMON_EXPORT SelectMultiCollectionDialog : public QDialog
 {
     Q_OBJECT
 public:

@@ -21,17 +21,20 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace PimCommon;
 
 SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     initialize(mimetype, selectedCollection);
 }
 
 SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QString &mimetype, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     initialize(mimetype);
 }
@@ -43,11 +46,20 @@ SelectMultiCollectionDialog::~SelectMultiCollectionDialog()
 
 void SelectMultiCollectionDialog::initialize(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection)
 {
-    setCaption( i18n( "Select Multiple Folders" ) );
-    setButtons( Close | Ok );
+    setWindowTitle( i18n( "Select Multiple Folders" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
 
     mSelectMultiCollection = new SelectMultiCollectionWidget(mimetype, selectedCollection);
-    setMainWidget( mSelectMultiCollection );
+    mainLayout->addWidget(mSelectMultiCollection);
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 
