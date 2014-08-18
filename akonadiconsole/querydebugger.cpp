@@ -35,7 +35,7 @@
 #include <KTextEdit>
 #include <KGlobalSettings>
 #include <KLocalizedString>
-#include <KDebug>
+
 #include <QFontDatabase>
 
 Q_DECLARE_METATYPE(QList< QList<QVariant> >)

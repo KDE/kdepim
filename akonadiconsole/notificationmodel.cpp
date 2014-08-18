@@ -23,7 +23,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusConnection>
 
-#include <KDebug>
+
 #include <KLocale>
 
 #include <QDebug> 

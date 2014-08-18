@@ -20,7 +20,7 @@
 #include "monitorsmodel.h"
 #include "monitoritem.h"
 
-#include <KDebug>
+
 
 #include <AkonadiCore/servermanager.h>
 

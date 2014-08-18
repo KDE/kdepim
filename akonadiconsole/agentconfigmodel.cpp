@@ -19,11 +19,12 @@
 
 #include "agentconfigmodel.h"
 
-#include <KDebug>
+
 
 #include <QDBusInterface>
 #include <QMetaMethod>
 #include <KLocalizedString>
+#include <QDebug>
 
 AgentConfigModel::AgentConfigModel(QObject* parent): QAbstractTableModel(parent), m_interface( 0 )
 {
@@ -43,7 +44,7 @@ void AgentConfigModel::setAgentInstance(const Akonadi::AgentInstance& instance)
     QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( instance.identifier() ),
     "/Settings" );
   if ( !m_interface->isValid() ) {
-    kError() << "Unable to obtain KConfigXT D-Bus interface of agent" << instance.identifier();
+    qCritical() << "Unable to obtain KConfigXT D-Bus interface of agent" << instance.identifier();
     delete m_interface;
     return;
   }

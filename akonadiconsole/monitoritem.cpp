@@ -27,7 +27,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QVector>
 
-#include <KDebug>
+
 
 MonitorItem::MonitorItem( const QString &identifier_, MonitorsModel* model):
   QObject( model ),

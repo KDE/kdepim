@@ -22,7 +22,7 @@
 #include <AkonadiCore/attributefactory.h>
 #include <AkonadiCore/collection.h>
 
-#include <kdebug.h>
+
 #include <KLocalizedString>
 
 #include <QStandardItemModel>

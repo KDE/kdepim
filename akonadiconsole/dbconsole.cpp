@@ -21,7 +21,7 @@
 #include "dbaccess.h"
 
 #include <QAction>
-#include <KDebug>
+
 #include <KGlobalSettings>
 #include <KStandardAction>
 #include <QIcon>

@@ -30,7 +30,7 @@
 #include <AkonadiCore/control.h>
 #include <akonadi/private/notificationmessage_p.h>
 
-#include <KDebug>
+
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardGuiItem>

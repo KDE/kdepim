@@ -22,7 +22,7 @@
 #include <kaboutdata.h>
 #include <kapplication.h>
 
-#include <kdebug.h>
+
 
 #include "instanceselector.h"
 
