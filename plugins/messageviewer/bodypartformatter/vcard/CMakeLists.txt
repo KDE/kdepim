@@ -8,6 +8,8 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"messageviewer_text_vcard_plugin\")
+
 set(messageviewer_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp vcardmemento.cpp updatecontactjob.cpp)
 add_library(messageviewer_bodypartformatter_text_vcard MODULE ${messageviewer_bodypartformatter_text_vcard_PART_SRCS})
 target_link_libraries(messageviewer_bodypartformatter_text_vcard  KF5::Mime KF5::Abc kdepim messageviewer)
