@@ -17,9 +17,6 @@
 
 #include <qdebug.h>
 
-
-#include <KFileDialog>
-#include <QDebug>
 #include <QPointer>
 #include <QUrl>
 #include "xmlprintingscriptbuilder.h"

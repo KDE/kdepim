@@ -25,9 +25,6 @@ using KSieve::Parser;
 #include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
 
-#include <KFileDialog>
-
-
 #include <QUrl>
 
 #include <QDebug>

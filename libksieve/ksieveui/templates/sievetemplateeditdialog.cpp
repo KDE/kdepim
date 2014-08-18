@@ -28,21 +28,36 @@
 #include <QLabel>
 #include <QShortcut>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 
 using namespace KSieveUi;
 
 SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTemplate)
-    : KDialog(parent)
+    : QDialog(parent), mOkButton(0)
 {
-    setCaption( defaultTemplate ? i18n("Default template") : i18n("Template") );
+    setWindowTitle( defaultTemplate ? i18n("Default template") : i18n("Template") );
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    QDialogButtonBox *buttonBox = 0;
     if (defaultTemplate) {
-        setButtons( Close );
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     } else {
-        setButtons( Ok |Cancel );
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+        mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+        mOkButton->setDefault(true);
+        mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+        mOkButton->setDefault(true);
     }
-    setDefaultButton(Ok);
     QWidget *w = new QWidget;
+    mainLayout->addWidget(w);
+
+    
     QVBoxLayout *vbox = new QVBoxLayout;
 
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -71,13 +86,16 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     connect( mTextEdit, SIGNAL(findText()), SLOT(slotFind()) );
 
     w->setLayout(vbox);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
     if (!defaultTemplate) {
-        enableButtonOk(false);
+        if (mOkButton)
+           mOkButton->setEnabled(false);
         connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateChanged()));
         connect(mTextEdit, SIGNAL(textChanged()),SLOT(slotTemplateChanged()));
         mTemplateNameEdit->setFocus();
     }
+    mainLayout->addWidget(buttonBox);
+ 
     readConfig();
 }
 
@@ -113,7 +131,7 @@ void SieveTemplateEditDialog::readConfig()
 
 void SieveTemplateEditDialog::slotTemplateChanged()
 {
-    enableButtonOk(!mTemplateNameEdit->text().trimmed().isEmpty() && !mTextEdit->toPlainText().trimmed().isEmpty());
+    mOkButton->setEnabled(!mTemplateNameEdit->text().trimmed().isEmpty() && !mTextEdit->toPlainText().trimmed().isEmpty());
 }
 
 void SieveTemplateEditDialog::setScript(const QString &text)

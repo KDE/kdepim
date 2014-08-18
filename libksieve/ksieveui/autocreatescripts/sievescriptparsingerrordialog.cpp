@@ -23,19 +23,32 @@
 #include <KSharedConfig>
 
 #include <errno.h>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Sieve Parsing Error" ) );
-    setButtons( Close | User1 );
-    setButtonText(User1, i18n("Save As..."));
+    setWindowTitle( i18n( "Sieve Parsing Error" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    user1Button->setText(i18n("Save As..."));
 
     mTextEdit = new PimCommon::RichTextEditorWidget( this );
+    
     mTextEdit->setReadOnly( true );
-    setMainWidget( mTextEdit );
     readConfig();
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSaveAs()));
+    connect(user1Button, SIGNAL(clicked()), this, SLOT(slotSaveAs()));
+    mainLayout->addWidget(mTextEdit);
+    mainLayout->addWidget(buttonBox);
 }
 
 SieveScriptParsingErrorDialog::~SieveScriptParsingErrorDialog()

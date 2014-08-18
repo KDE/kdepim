@@ -18,9 +18,11 @@
 #ifndef SIEVETEMPLATEEDITDIALOG_H
 #define SIEVETEMPLATEEDITDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 
 class QLineEdit;
+class QPushButton;
 
 namespace PimCommon {
 class PlainTextEditFindBar;
@@ -29,7 +31,7 @@ class PlainTextEditFindBar;
 
 namespace KSieveUi {
 class SieveTextEdit;
-class SieveTemplateEditDialog : public KDialog
+class SieveTemplateEditDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -52,6 +54,7 @@ private:
     SieveTextEdit *mTextEdit;
     PimCommon::PlainTextEditFindBar *mFindBar;
     QLineEdit *mTemplateNameEdit;
+    QPushButton *mOkButton;
 };
 }
 

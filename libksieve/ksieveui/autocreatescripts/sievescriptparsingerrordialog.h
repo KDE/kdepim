@@ -18,11 +18,12 @@
 #ifndef SIEVESCRIPTPARSINGERRORDIALOG_H
 #define SIEVESCRIPTPARSINGERRORDIALOG_H
 #include "ksieveui_export.h"
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 namespace PimCommon {
 class RichTextEditorWidget;
 }
-class KSIEVEUI_EXPORT SieveScriptParsingErrorDialog : public KDialog
+class KSIEVEUI_EXPORT SieveScriptParsingErrorDialog : public QDialog
 {
     Q_OBJECT
 public:
