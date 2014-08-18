@@ -32,6 +32,7 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QFileDialog>
 
 NotificationMonitor::NotificationMonitor(QWidget* parent) :
   QWidget( parent )
@@ -76,7 +77,7 @@ void NotificationMonitor::contextMenu(const QPoint& pos)
 
 void NotificationMonitor::slotSaveToFile()
 {
-  const QString fileName = KFileDialog::getSaveFileName( QUrl(), QString(), 0, QString(), KFileDialog::ConfirmOverwrite );
+  const QString fileName = QFileDialog::getSaveFileName(0, QString(), QString(), QString());
   if ( fileName.isEmpty() ) {
     return;
   }

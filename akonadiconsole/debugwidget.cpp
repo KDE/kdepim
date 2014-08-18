@@ -36,6 +36,7 @@
 #include <QSplitter>
 #include <QVBoxLayout>
 #include <QCheckBox>
+#include <QFileDialog>
 
 using org::freedesktop::Akonadi::DebugInterface;
 
@@ -216,7 +217,7 @@ void DebugWidget::saveRichText()
   if ( !page )
     return;
 
-  const QString fileName = KFileDialog::getSaveFileName();
+  const QString fileName = QFileDialog::getSaveFileName();
   if ( fileName.isEmpty() )
     return;
 

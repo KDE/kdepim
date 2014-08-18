@@ -36,6 +36,7 @@
 #include <QMenu>
 #include <QPushButton>
 #include <QFile>
+#include <QFileDialog>
 
 
 class JobTrackerWidget::Private
@@ -95,7 +96,7 @@ void JobTrackerWidget::contextMenu( const QPoint &pos )
 
 void JobTrackerWidget::slotSaveToFile()
 {
-  const QString fileName = KFileDialog::getSaveFileName( QUrl(), QString(), 0, QString(), KFileDialog::ConfirmOverwrite );
+  const QString fileName = QFileDialog::getSaveFileName(0, QString(), QString(), QString());
   if ( fileName.isEmpty() ) {
     return;
   }

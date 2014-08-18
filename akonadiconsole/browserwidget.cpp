@@ -75,6 +75,7 @@
 #include <QSqlError>
 #include <KSharedConfig>
 #include <QMenu>
+#include <QFileDialog>
 
 using namespace Akonadi;
 
@@ -453,7 +454,7 @@ void BrowserWidget::dumpToXml()
   const Collection root = currentCollection();
   if ( !root.isValid() )
     return;
-  const QString fileName = KFileDialog::getSaveFileName( QUrl(), "*.xml", this, i18n( "Select XML file" ) );
+  const QString fileName = QFileDialog::getSaveFileName(this, i18n( "Select XML file" ) , QString(), "*.xml");
   if ( fileName.isEmpty() )
     return;
 #if 0 // TODO: port me, can't use XmlWriteJob here, it's in runtime, call the akonadi2xml cli tool instead
