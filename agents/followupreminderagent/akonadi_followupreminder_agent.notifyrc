@@ -58,5 +58,6 @@ Name[sr@latin]=Primljen odgovor na poruku
 Name[sv]=Uppföljningsbrev mottaget
 Name[uk]=Отримано відповідь на повідомлення
 Name[x-test]=xxMail Follow Up Receivedxx
+Name[zh_TW]=接收到回覆郵件
 Action=Popup
 
