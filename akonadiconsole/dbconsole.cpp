@@ -22,7 +22,6 @@
 
 #include <QAction>
 
-#include <KGlobalSettings>
 #include <KStandardAction>
 #include <QIcon>
 

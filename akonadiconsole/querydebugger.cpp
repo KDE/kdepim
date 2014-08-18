@@ -33,7 +33,6 @@
 #include <AkonadiCore/control.h>
 
 #include <KTextEdit>
-#include <KGlobalSettings>
 #include <KLocalizedString>
 
 #include <QFontDatabase>

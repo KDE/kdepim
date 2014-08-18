@@ -23,18 +23,20 @@
 #include <AkonadiCore/AttributeFactory>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 using namespace Akonadi;
 
 TagPropertiesDialog::TagPropertiesDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , mChanged(false)
 {
     setupUi();
 }
 
 TagPropertiesDialog::TagPropertiesDialog(const Akonadi::Tag &tag, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , mTag(tag)
     , mChanged(false)
 {
@@ -57,9 +59,19 @@ bool TagPropertiesDialog::changed() const
 
 void TagPropertiesDialog::setupUi()
 {
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotAccept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
     QWidget *widget = new QWidget(this);
     ui.setupUi(widget);
-    setMainWidget(widget);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(widget);
+    mainLayout->addWidget(buttonBox);
 
     connect(ui.addAttrButton, SIGNAL(clicked(bool)),
             this, SLOT(addAttributeClicked()));
@@ -236,13 +248,13 @@ void TagPropertiesDialog::remoteIdChanged(QStandardItem *item)
 }
 
 
-void TagPropertiesDialog::accept()
+void TagPropertiesDialog::slotAccept()
 {
     mChanged |= (mTag.type() != ui.typeEdit->text().toLatin1());
     mChanged |= (mTag.gid() != ui.gidEdit->text().toLatin1());
 
     if (!mChanged && mChangedRIDs.isEmpty() && mRemovedRIDs.isEmpty()) {
-        KDialog::accept();
+        QDialog::accept();
         return;
     }
 
@@ -375,5 +387,5 @@ void TagPropertiesDialog::accept()
         }
     }
 
-    KDialog::accept();
+    QDialog::accept();
 }

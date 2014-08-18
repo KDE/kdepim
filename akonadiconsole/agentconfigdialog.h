@@ -22,11 +22,12 @@
 
 #include "ui_agentconfigdialog.h"
 #include <AkonadiCore/AgentInstance>
-#include <kdialog.h>
+#include <QDialog>
+#include <KConfigGroup>
 
 class AgentConfigModel;
 
-class AgentConfigDialog : public KDialog
+class AgentConfigDialog : public QDialog
 {
   Q_OBJECT
   public:

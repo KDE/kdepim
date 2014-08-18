@@ -20,7 +20,7 @@
 */
 
 #include <kaboutdata.h>
-#include <kapplication.h>
+#include <qapplication.h>
 
 
 

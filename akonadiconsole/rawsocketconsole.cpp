@@ -26,7 +26,6 @@
 #include "akonadiconsole_debug.h"
 
 
-#include <KGlobalSettings>
 #include <QIcon>
 #include <KLocalizedString>
 

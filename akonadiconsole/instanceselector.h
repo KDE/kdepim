@@ -24,7 +24,8 @@
 
 #include "mainwindow.h"
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 
 namespace Ui {
   class InstanceSelector;
@@ -33,14 +34,16 @@ namespace Ui {
 /** Check if there are multiple instances of Akonadi running, and if so present
  *  a list to select the one to connect to.
  */
-class InstanceSelector : public KDialog
+class InstanceSelector : public QDialog
 {
   Q_OBJECT
   public:
     explicit InstanceSelector( const QString &remoteHost, QWidget* parent = 0, Qt::WindowFlags flags = 0 );
     virtual ~InstanceSelector();
-    virtual void accept();
-    virtual void reject();
+
+private Q_SLOTS:
+    void slotAccept();
+    void slotReject();
 
   private:
     static QStringList instances();

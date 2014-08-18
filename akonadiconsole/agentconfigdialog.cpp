@@ -21,24 +21,40 @@
 #include "agentconfigmodel.h"
 #include <KLocalizedString>
 #include <QIcon>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <KGuiItem>
+#include <QVBoxLayout>
 
 AgentConfigDialog::AgentConfigDialog(QWidget* parent) :
-  KDialog(parent),
+  QDialog(parent),
   m_model( new AgentConfigModel( this ) )
 {
-  ui.setupUi( mainWidget() );
+  QWidget *mainWidget = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(mainWidget);
+  ui.setupUi(mainWidget);
   ui.propertyView->setModel( m_model );
 
-  setButtons( User1 | User2 | Apply | Close );
-  setButtonGuiItem( User1, KGuiItem( i18n( "Save Configuration" ), QIcon::fromTheme( "document-save" ) ) );
-  setButtonGuiItem( User2, KGuiItem( i18n( "Refresh" ), QIcon::fromTheme( "view-refresh" ) ) );
-  setButtonText( Apply, i18n( "Apply Configuration" ) );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close|QDialogButtonBox::Apply);
+  QPushButton *user1Button = new QPushButton;
+  buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+  QPushButton *user2Button = new QPushButton;
+  buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  mainLayout->addWidget(buttonBox);
+  KGuiItem::assign(user1Button, KGuiItem( i18n( "Save Configuration" )));
+  KGuiItem::assign(user2Button, KGuiItem( i18n( "Refresh" )));
+  buttonBox->button(QDialogButtonBox::Apply)->setText(i18n( "Apply Configuration"  ));
 
-  setCaption( i18n( "Agent Configuration" ) );
+  setWindowTitle( i18n( "Agent Configuration" ) );
 
-  connect( this, SIGNAL(applyClicked()), SLOT(reconfigure()) );
-  connect(this, &AgentConfigDialog::user1Clicked, m_model, &AgentConfigModel::writeConfig);
-  connect(this, &AgentConfigDialog::user2Clicked, m_model, &AgentConfigModel::reload);
+  connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), SLOT(reconfigure()) );
+  connect(user1Button, &QPushButton::clicked, m_model, &AgentConfigModel::writeConfig);
+  connect(user2Button, &QPushButton::clicked, m_model, &AgentConfigModel::reload);
 }
 
 void AgentConfigDialog::setAgentInstance(const Akonadi::AgentInstance& instance)

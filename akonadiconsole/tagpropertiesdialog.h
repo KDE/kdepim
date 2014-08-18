@@ -20,15 +20,16 @@
 #ifndef TAGPROPERTIESDIALOG_H
 #define TAGPROPERTIESDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include <AkonadiCore/tag.h>
 
 #include <QStandardItemModel>
+#include <KConfigGroup>
 
 
 #include "ui_tagpropertiesdialog.h"
 
-class TagPropertiesDialog : public KDialog
+class TagPropertiesDialog : public QDialog
 {
     Q_OBJECT
 
@@ -41,7 +42,7 @@ public:
     bool changed() const;
 
 protected:
-    void accept();
+    void slotAccept();
 
 private Q_SLOTS:
     void addAttributeClicked();

@@ -31,18 +31,32 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QStandardItemModel>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, Qt::WindowFlags flags )
-  : KDialog( parent, flags ),
+  : QDialog( parent, flags ),
     ui( new Ui::InstanceSelector ),
     m_remoteHost( remoteHost ),
     mWindow( 0 )
 {
-  ui->setupUi(mainWidget());
+  QWidget *mainWidget = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(mainWidget);
+  ui->setupUi(mainWidget);
 
-  setButtons(Ok|Close);
-  setButtonIcon(Ok, QIcon::fromTheme("network-connect"));
-  setButtonText(Ok, i18n("Connect"));
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Close);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotAccept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(slotReject()));
+  mainLayout->addWidget(buttonBox);
+  okButton->setIcon(QIcon::fromTheme("network-connect"));
+  okButton->setText(i18n("Connect"));
 
   const QStringList insts = instances();
   qDebug() << "Found running Akonadi instances:" << insts;
@@ -70,7 +84,7 @@ InstanceSelector::~InstanceSelector()
   delete mWindow;
 }
 
-void InstanceSelector::accept()
+void InstanceSelector::slotAccept()
 {
   if ( ui->listView->model() ) { // there was something to select
     const QModelIndexList selection = ui->listView->selectionModel()->selectedRows();
@@ -89,7 +103,7 @@ void InstanceSelector::accept()
   mWindow->show();
 }
 
-void InstanceSelector::reject()
+void InstanceSelector::slotReject()
 {
   QDialog::reject();
   QApplication::quit();

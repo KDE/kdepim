@@ -563,7 +563,7 @@ void BrowserWidget::removeTagRequested()
 {
     if (KMessageBox::questionYesNo(this, i18n("Do you really want to remove selected tag?"),
                                    i18n("Delete tag?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
-                                   QString(), KMessageBox::Dangerous) == KDialog::No) {
+                                   QString(), KMessageBox::Dangerous) == KMessageBox::No) {
         return;
     }
 

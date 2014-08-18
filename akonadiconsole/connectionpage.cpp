@@ -21,7 +21,6 @@
 
 #include "connectionpage.h"
 
-#include <KGlobalSettings>
 #include <KTextEdit>
 
 #include <QVBoxLayout>
