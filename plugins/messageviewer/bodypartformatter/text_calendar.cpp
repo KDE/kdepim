@@ -74,6 +74,7 @@ using namespace KCalCore;
 #include <KIO/NetAccess>
 #include <QIcon>
 #include <KLocalizedString>
+#include <QFileDialog>
 
 using namespace MailTransport;
 
@@ -1100,8 +1101,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 
       // get the saveas file name
-      const QString saveAsFile =
-        KFileDialog::getSaveFileName( name, QString(), 0, i18n( "Save Invitation Attachment" ) );
+      const QString saveAsFile = QFileDialog::getSaveFileName(0, i18n( "Save Invitation Attachment" ) , name, QString());
 
       if ( saveAsFile.isEmpty() ||
            ( QFile( saveAsFile ).exists() &&
