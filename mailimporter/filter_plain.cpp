@@ -16,7 +16,6 @@
  ***************************************************************************/
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
 #include <QFileDialog>
 
 #include "filter_plain.h"

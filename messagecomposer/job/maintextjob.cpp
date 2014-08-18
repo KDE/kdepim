@@ -30,7 +30,6 @@
 
 #include <KCharsets>
 #include <QDebug>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KMessageBox>
 

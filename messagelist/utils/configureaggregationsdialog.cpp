@@ -34,7 +34,6 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KMessageBox>
-#include <KFileDialog>
 #include <QIcon>
 #include <KConfig>
 #include <QFileDialog>
@@ -450,7 +449,7 @@ void ConfigureAggregationsDialog::Private::exportAggregationButtonClicked()
     if(list.isEmpty()) {
         return;
     }
-    const QString filename = KFileDialog::getSaveFileName(QString(),QString::fromLatin1("*"),q,i18n("Export Aggregation"));
+    const QString filename = QFileDialog::getSaveFileName(q, i18n("Export Aggregation"), QString(), QString::fromLatin1("*"));
     if(!filename.isEmpty()) {
         KConfig config(filename);
 

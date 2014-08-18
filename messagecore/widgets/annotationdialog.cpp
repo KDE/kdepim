@@ -35,6 +35,10 @@
 
 #include <QLabel>
 #include <QGridLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace MessageCore;
 
@@ -55,25 +59,39 @@ public:
 };
 
 AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *parent )
-    : KDialog( parent ), d( new Private )
+    : QDialog( parent ), d( new Private )
 {
     d->mItem = item;
     //check for correct key?
     d->mHasAnnotation = item.hasAttribute<Akonadi::EntityAnnotationsAttribute>();
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotAccepted()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
     if ( d->mHasAnnotation ) {
-        setCaption( i18n( "Edit Note" ) );
-        setButtons( Ok | Cancel | User1 );
-        setButtonText( User1, i18n( "Delete Note" ) );
-        setButtonIcon( User1, QIcon::fromTheme( QLatin1String("edit-delete") ) );
+        setWindowTitle( i18n( "Edit Note" ) );
+        QPushButton *user1Button = new QPushButton;
+        buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+        user1Button->setText(i18n( "Delete Note"  ));
+        user1Button->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
+        connect(user1Button, SIGNAL(clicked()), this, SLOT(slotDeleteNote()));
     } else {
-        setCaption( i18n( "Add Note" ) );
-        setButtons( Ok | Cancel );
+        setWindowTitle( i18n( "Add Note" ) );
     }
 
-    setDefaultButton( KDialog::Ok );
+    buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
 
     QLabel *label = new QLabel( i18n( "Enter the text that should be stored as a note to the mail:" ) );
-    QVBoxLayout *vbox = new QVBoxLayout( mainWidget() );
+    QVBoxLayout *vbox = new QVBoxLayout(mainWidget);
     d->mTextEdit = new PimCommon::RichTextEditorWidget( this );
     d->mTextEdit->setAcceptRichText(false);
     vbox->addWidget( label );
@@ -99,6 +117,7 @@ AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *
             d->mTextEdit->setPlainText( item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/shared/comment") );
         }
     }
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 
@@ -108,34 +127,32 @@ AnnotationEditDialog::~AnnotationEditDialog()
     delete d;
 }
 
-void AnnotationEditDialog::slotButtonClicked( int button )
+void AnnotationEditDialog::slotAccepted()
 {
-    if ( button == KDialog::Ok ) {
-        bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
-        if ( !textIsEmpty ) {
-            d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
-            Akonadi::EntityAnnotationsAttribute *annotation = d->mItem.attribute<Akonadi::EntityAnnotationsAttribute>(Akonadi::Entity::AddIfMissing);
-            QMap<QByteArray, QByteArray> map;
-            map.insert(d->mNoteType->itemData(d->mNoteType->currentIndex()).toByteArray(), d->mTextEdit->toPlainText().toUtf8());
-            annotation->setAnnotations(map);
-            d->mItem.addAttribute(annotation);
-        } else if ( d->mHasAnnotation && textIsEmpty ) {
-            d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
-        }
-        new Akonadi::ItemModifyJob(d->mItem);
+    bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
+    if ( !textIsEmpty ) {
+        d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
+        Akonadi::EntityAnnotationsAttribute *annotation = d->mItem.attribute<Akonadi::EntityAnnotationsAttribute>(Akonadi::Entity::AddIfMissing);
+        QMap<QByteArray, QByteArray> map;
+        map.insert(d->mNoteType->itemData(d->mNoteType->currentIndex()).toByteArray(), d->mTextEdit->toPlainText().toUtf8());
+        annotation->setAnnotations(map);
+        d->mItem.addAttribute(annotation);
+    } else if ( d->mHasAnnotation && textIsEmpty ) {
+        d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
+    }
+    new Akonadi::ItemModifyJob(d->mItem);
+    accept();
+}
 
+void AnnotationEditDialog::slotDeleteNote()
+{
+    const int answer = KMessageBox::warningContinueCancel( this,
+                                                           i18n( "Do you really want to delete this note?" ),
+                                                           i18n( "Delete Note?" ), KGuiItem( i18n( "Delete" ), QLatin1String("edit-delete") ) );
+    if ( answer == KMessageBox::Continue ) {
+        d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
+        new Akonadi::ItemModifyJob(d->mItem);
         accept();
-    } else if ( button == KDialog::Cancel ) {
-        reject();
-    } else if ( button == KDialog::User1 ) {
-        const int answer = KMessageBox::warningContinueCancel( this,
-                                                               i18n( "Do you really want to delete this note?" ),
-                                                               i18n( "Delete Note?" ), KGuiItem( i18n( "Delete" ), QLatin1String("edit-delete") ) );
-        if ( answer == KMessageBox::Continue ) {
-            d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
-            new Akonadi::ItemModifyJob(d->mItem);
-            accept();
-        }
     }
 }
 

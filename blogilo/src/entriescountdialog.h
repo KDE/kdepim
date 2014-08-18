@@ -25,7 +25,8 @@
 #ifndef ENTRIESCOUNTDIALOG_H
 #define ENTRIESCOUNTDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
+#include <KConfigGroup>
 
 #include "ui_entriescountdialogbase.h"
 
@@ -33,7 +34,7 @@
  @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
  @author Golnaz Nilieh <g382nilieh@gmail.com>
  */
-class EntriesCountDialog: public KDialog
+class EntriesCountDialog: public QDialog
 {
     Q_OBJECT
 public:

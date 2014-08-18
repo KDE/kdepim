@@ -57,7 +57,6 @@
 #include <AkonadiCore/itemmodifyjob.h>
 #include <KLocalizedString>
 #include <qdebug.h>
-#include <kdebug.h>
 #include <qinputdialog.h>
 #include <kmessagebox.h>
 
@@ -1752,10 +1751,11 @@ void Kleo::KeyResolver::addKeys( const std::vector<Item> & items, CryptoMessageF
         std::remove_copy_if( it->keys.begin(), it->keys.end(),
                              std::back_inserter( si.keys ), IsNotForFormat( f ) );
         dump();
-        kWarning( si.keys.empty() )
-                << "Kleo::KeyResolver::addKeys(): Fix EncryptionFormatPreferenceCounter."
-                << "It detected a common format, but the list of such keys for recipient \""
-                << it->address << "\" is empty!";
+        if (si.keys.empty())
+          qWarning()
+                  << "Kleo::KeyResolver::addKeys(): Fix EncryptionFormatPreferenceCounter."
+                  << "It detected a common format, but the list of such keys for recipient \""
+                  << it->address << "\" is empty!";
         d->mFormatInfoMap[ f ].splitInfos.push_back( si );
     }
     dump();

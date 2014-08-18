@@ -63,7 +63,7 @@
 #include <KFileDialog>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KStatusBar>
+#include <QStatusBar>
 #include <KRecentFilesAction>
 #include <KCmdLineArgs>
 #include <QPointer>

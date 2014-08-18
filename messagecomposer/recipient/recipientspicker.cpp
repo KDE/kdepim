@@ -29,13 +29,11 @@
 #include <KPIMUtils/kpimutils/email.h>
 
 #include <kconfiggroup.h>
-#include <khbox.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QDebug>
-#include <KGlobal>
 
 #include <QKeyEvent>
 #include <QTreeView>

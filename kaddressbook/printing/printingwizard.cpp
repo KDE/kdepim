@@ -39,7 +39,7 @@
 #include "compact/compactstyle.h"
 #include "printing/grantlee/grantleeprintstyle.h"
 
-#include <KApplication>
+#include <QApplication>
 #include <QDebug>
 #include <KLocalizedString>
 
@@ -220,7 +220,7 @@ void PrintingWizard::print()
   KPageWidgetItem *progressItem = new KPageWidgetItem( mProgress, i18n( "Print Progress" ) );
   addPage( progressItem );
   setCurrentPage( progressItem );
-  kapp->processEvents();
+  qApp->processEvents();
 
   KABC::Addressee::List contacts = mSelectionPage->selectedContacts();
 

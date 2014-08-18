@@ -22,7 +22,8 @@
 
 #include "messagecore_export.h"
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 
 namespace Akonadi {
 class Item;
@@ -35,7 +36,7 @@ namespace MessageCore {
  *
  * @author Thomas McGuire <mcguire@kde.org>
  */
-class MESSAGECORE_EXPORT AnnotationEditDialog : public KDialog
+class MESSAGECORE_EXPORT AnnotationEditDialog : public QDialog
 {
     Q_OBJECT
 
@@ -54,10 +55,12 @@ public:
     ~AnnotationEditDialog();
 
 protected:
-    /// Reimplemented to handle button clicks
-    void slotButtonClicked( int button );
     void readConfig();
     void writeConfig();
+
+private Q_SLOTS:
+    void slotAccepted();
+    void slotDeleteNote();
 
 private:
     //@cond PRIVATE

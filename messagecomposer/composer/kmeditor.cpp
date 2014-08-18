@@ -40,7 +40,6 @@
 #include <QPushButton>
 #include <QTemporaryFile>
 #include <KColorScheme>
-#include <KFileDialog>
 
 #include <QApplication>
 #include <QClipboard>

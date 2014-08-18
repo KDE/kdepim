@@ -22,7 +22,7 @@
 #include "composer/composer.h"
 #include "jobbase_p.h"
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace MessageComposer;
 
@@ -52,7 +52,7 @@ GlobalPart *JobBase::globalPart()
         }
     }
 
-    kFatal() << "Job is not part of a Composer.";
+    qCritical() << "Job is not part of a Composer.";
     return 0;
 }
 

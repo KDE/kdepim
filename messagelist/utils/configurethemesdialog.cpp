@@ -34,7 +34,6 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KMessageBox>
-#include <KFileDialog>
 #include <KConfigGroup>
 #include <QIcon>
 #include <KConfig>
@@ -465,7 +464,7 @@ void ConfigureThemesDialog::Private::exportThemeButtonClicked()
     if(list.isEmpty()) {
         return;
     }
-    const QString filename = KFileDialog::getSaveFileName(QString(),QString::fromLatin1("*"),q,i18n("Export Theme"));
+    const QString filename = QFileDialog::getSaveFileName(q, i18n("Export Theme"), QString(), QString::fromLatin1("*"));
     if(!filename.isEmpty()) {
         KConfig config(filename);
 

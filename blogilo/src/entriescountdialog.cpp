@@ -26,14 +26,26 @@
 #include "settings.h"
 
 #include <qdebug.h>
-
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
+#include <QPushButton>
 
 EntriesCountDialog::EntriesCountDialog( QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
     QWidget *widget = new QWidget;
+    mainLayout->addWidget(widget);
     ui.setupUi( widget );
-    setMainWidget( widget );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
     ui.spinCount->setValue(Settings::updateEntriesCount());
 }
 

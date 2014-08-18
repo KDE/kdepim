@@ -45,8 +45,6 @@
 #include <KConfig>
 #include <QDebug>
 #include <KIconLoader>
-#include <KGlobalSettings>
-#include <KApplication>
 #include <KLocalizedString>
 
 #include <QFontDatabase>

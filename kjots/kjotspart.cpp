@@ -28,8 +28,6 @@
 
 #include <qdebug.h>
 
-#include <kaction.h>
-#include <kactioncollection.h>
 #include <kcomponentdata.h>
 #include <kfiledialog.h>
 #include <kstandardaction.h>
@@ -42,6 +40,7 @@
 #include <QtCore/QTextStream>
 #include <QTimer>
 #include <QStandardPaths>
+#include <QAction>
 #include "kjotswidget.h"
 
 const K4AboutData &createAboutData()

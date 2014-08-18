@@ -17,11 +17,10 @@
 */
 
 #include <kabc/addressee.h>
-#include <kcmultidialog.h>
+#include <kcmultidialog.h
 #include <kmessagebox.h>
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
-#include <QWidget>
 #include <KLocalizedString>
 
 using namespace KPIMIdentities;
@@ -31,8 +30,6 @@ using namespace KPIMIdentities;
 // This function is used by kate/kwrite
 extern "C" Q_DECL_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *widget, bool *ok )
 {
-  //KLocale::global()->insertCatalog( QLatin1String("ktexteditorkabcbridge_plugin") );
-
   IdentityManager manager( true, widget );
   Identity defaultIdentity = manager.defaultIdentity();
 

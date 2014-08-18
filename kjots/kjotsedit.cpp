@@ -34,7 +34,7 @@
 #include <QPointer>
 #include <QClipboard>
 
-#include <kaction.h>
+#include <QAction>
 #include <kactioncollection.h>
 #include <krun.h>
 #include <KApplication>
