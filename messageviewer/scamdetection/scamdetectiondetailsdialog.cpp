@@ -54,9 +54,9 @@ ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
     KGuiItem::assign(user1Button, KStandardGuiItem::saveAs());
     setModal( false );
     mDetails = new PimCommon::RichTextEditorWidget;
+    mainLayout->addWidget(mDetails);
     mainLayout->addWidget(buttonBox);
     mDetails->setReadOnly(true);
-    mainLayout->addWidget(mDetails);
     connect(user1Button, SIGNAL(clicked()), SLOT(slotSaveAs()));
     readConfig();
 }
