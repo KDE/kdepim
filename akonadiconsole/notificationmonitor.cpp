@@ -23,7 +23,6 @@
 #include <AkonadiCore/Control>
 
 #include <KLocalizedString>
-#include <KFileDialog>
 #include <QUrl>
 
 #include <QHeaderView>

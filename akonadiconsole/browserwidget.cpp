@@ -57,7 +57,6 @@
 #include <qdebug.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <kxmlguiwindow.h>
 #include <KToggleAction>

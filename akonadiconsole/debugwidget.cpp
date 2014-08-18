@@ -26,7 +26,6 @@
 
 #include <AkonadiCore/control.h>
 
-#include <KFileDialog>
 #include <KLocalizedString>
 #include <QTabWidget>
 #include <KTextEdit>

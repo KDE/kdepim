@@ -27,7 +27,6 @@
 #include <AkonadiCore/control.h>
 
 #include <KLocalizedString>
-#include <KFileDialog>
 #include <QUrl>
 
 #include <QTreeView>
