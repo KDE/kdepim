@@ -17,7 +17,7 @@
 */
 
 #include <kabc/addressee.h>
-#include <kcmultidialog.h
+#include <kcmultidialog.h>
 #include <kmessagebox.h>
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
