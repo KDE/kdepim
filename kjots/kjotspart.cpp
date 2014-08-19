@@ -31,6 +31,7 @@
 #include <kcomponentdata.h>
 #include <kfiledialog.h>
 #include <kstandardaction.h>
+#include <KActionCollection>
 
 #include <kpluginfactory.h>
 #include <KLocalizedString>
