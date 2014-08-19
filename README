@@ -25,14 +25,12 @@ What it is
 * kmail: the KDE mail client
 * importwizard: tool for importing mail/filter/settings/bookmarks from other programs
 * kmailcvt: tool for importing mail related data from other programs
-* knode: Usenet client
 * knotes: popup notes application
 * konsolekalendar: Command line tool for accessing calendar files.
 * kontact: Integrated PIM application
 * korgac: a daemon for handling calendar reminders.
 * korganizer: a calendar-of-events, todo-list manager, journal 
 * ksendemail: commandline email tool.
-* ktimetracker: Time tracker.
 * ktnef: Viewer for mail attachments using TNEF format
 * pimsettingexporter: Application to import/export pim config/data
 * headerthemeeditor: Application to generate grantlee header mail

@@ -64,7 +64,6 @@ address book and other &PIM; functionality.  </para></abstract>
 <keyword>groupware</keyword>
 <keyword>Outlook</keyword>
 <keyword>Evolution</keyword>
-<keyword>KTimetracker</keyword>
 </keywordset>
 
 </bookinfo>
@@ -75,8 +74,8 @@ address book and other &PIM; functionality.  </para></abstract>
 
 <para>&kontact; is the integrated solution for personal information
 management.  It combines the well-known &kde; applications for email,
-scheduling, address book, notes, and newsgroups (&kmail;, &korganizer;,
-&kaddressbook;, &knotes;, and &knode;)
+scheduling, address book, and notes (&kmail;, &korganizer;,
+&kaddressbook;, and &knotes;)
 into a single interface. Being
 based on a true component framework &kontact; provides exactly the
 same functionality as the stand-alone applications, and adds more
@@ -122,17 +121,8 @@ them stand-alone.
         <listitem><para>The &kde; sticky notes application.</para></listitem>
     </varlistentry>
     <varlistentry>
-        <term><ulink url="help:knode">&knode;</ulink></term>
-        <listitem><para>The &kde; news reader.</para></listitem>
-    </varlistentry>
-    <varlistentry>
         <term><ulink url="help:akregator">&akregator;</ulink></term>
         <listitem><para>The &kde; RSS feed reader.</para>
-            </listitem>
-    </varlistentry>
-    <varlistentry>
-        <term><ulink url="help:ktimetracker">&ktimetracker;</ulink></term>
-        <listitem><para>The &kde; time tracker tool.</para>
             </listitem>
     </varlistentry>
 </variablelist>
