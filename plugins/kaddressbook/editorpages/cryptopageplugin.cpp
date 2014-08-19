@@ -34,11 +34,9 @@
 #include <kabc/addressee.h>
 #include <kcombobox.h>
 #include <qdebug.h>
-#include <kdialog.h>
 #include <QHBoxLayout>
 #include <kiconloader.h>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KLocalizedString>
 
 #include "gpgme++/data.h"
@@ -56,8 +54,6 @@ CryptoPagePlugin::CryptoPagePlugin()
   KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
 
   QGridLayout *topLayout = new QGridLayout( this );
-  topLayout->setSpacing( KDialog::spacingHint() );
-  topLayout->setMargin( KDialog::marginHint() );
   topLayout->setColumnStretch( 1, 1 );
   topLayout->setRowStretch( 4, 1 );
 

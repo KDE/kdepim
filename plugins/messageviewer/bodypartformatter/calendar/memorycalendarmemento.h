@@ -25,8 +25,6 @@
 #include <messageviewer/viewer/viewer.h>
 
 #include <KCalCore/MemoryCalendar>
-#include <KUrl>
-
 #include <QObject>
 
 class KJob;

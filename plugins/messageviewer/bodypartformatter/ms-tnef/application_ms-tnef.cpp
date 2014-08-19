@@ -50,11 +50,9 @@
 #include <ktnef/ktnefattach.h>
 
 #include <QDebug>
-#include <KGlobal>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KSystemTimeZones>
-#include <KUrl>
 
 #include <QApplication>
 #include <QDir>
@@ -201,6 +199,5 @@ namespace {
 extern "C"
 Q_DECL_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_application_mstnef_create_bodypart_formatter_plugin() {
-  //QT5 KLocale::global()->insertCatalog( QLatin1String("messageviewer_application_mstnef_plugin") );
   return new Plugin();
 }

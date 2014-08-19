@@ -34,8 +34,6 @@
 #include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
 
-//#include <kglobal.h>
-//#include <KLocalizedString>
 #include <kstringhandler.h>
 #include <kiconloader.h>
 #include <qdebug.h>
@@ -138,6 +136,5 @@ namespace {
 extern "C"
 Q_DECL_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
-  //QT5 KLocale::global()->insertCatalog( QLatin1String("messageviewer_text_xdiff_plugin") );
   return new Plugin();
 }

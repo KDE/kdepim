@@ -61,6 +61,7 @@ using namespace KCalCore;
 #include <MailTransport/TransportManager>
 
 #include <KDBusServiceStarter>
+#include <QUrl>
 #include <QDebug>
 #include <KFileDialog>
 #include <QInputDialog>
@@ -1116,7 +1117,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       bool stat = false;
       if ( a->isUri() ) {
         // save the attachment url
-        stat = KIO::NetAccess::file_copy( a->uri(), KUrl( saveAsFile ) );
+        stat = KIO::NetAccess::file_copy( a->uri(), QUrl::fromLocalFile( saveAsFile ) );
       } else {
         // put the attachment in a temporary file and save it
         QTemporaryFile *file;
@@ -1133,7 +1134,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         file->write( QByteArray::fromBase64( a->data() ) );
         file->close();
 
-        stat = KIO::NetAccess::file_copy( KUrl( file->fileName() ), KUrl( saveAsFile ) );
+        stat = KIO::NetAccess::file_copy( QUrl::fromLocalFile( file->fileName() ), QUrl::fromLocalFile( saveAsFile ) );
 
         delete file;
       }
