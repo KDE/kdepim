@@ -175,7 +175,7 @@ public:
             q->connect(act, SIGNAL(triggered(bool)), q, SLOT(slotThemeSelected()));
         }
         if (!themeActivatedFound) {
-            if (!themesActionList.isEmpty()) {
+            if (!themesActionList.isEmpty() && !themeActivated.isEmpty()) {
                 //Activate first item if we removed theme.
                 KToggleAction *act = themesActionList.at(0);
                 act->setChecked(true);
