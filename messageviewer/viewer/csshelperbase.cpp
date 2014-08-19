@@ -34,8 +34,6 @@
 
 #include <KColorScheme>
 #include <QDebug>
-#include <KGlobal>
-#include <KGlobalSettings>
 
 #include <QApplication>
 #include <QPaintDevice>

@@ -122,5 +122,5 @@ void ScamDetectionTest::testShortUrl()
 }
 
 
-QTEST_KDEMAIN( ScamDetectionTest, GUI )
+QTEST_MAIN( ScamDetectionTest )
 

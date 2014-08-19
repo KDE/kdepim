@@ -31,9 +31,6 @@ using KPIMUtils::LinkLocator;
 
 #include <QFontMetrics>
 
-
-#include <KApplication>
-
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
 #include <QStandardPaths>

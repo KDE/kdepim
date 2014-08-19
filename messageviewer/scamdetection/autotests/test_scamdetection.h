@@ -19,7 +19,7 @@
 #define TEST_SCAMDETECTION_H
 
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QObject>
 class QWebFrame;
 class ScamDetectionTest : public QObject
