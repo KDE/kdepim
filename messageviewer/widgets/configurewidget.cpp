@@ -28,7 +28,6 @@
 #include "messagecore/settings/globalsettings.h"
 
 #include <KConfigDialogManager>
-#include <KDialog>
 #include <KLocalizedString>
 #include <QDebug>
 

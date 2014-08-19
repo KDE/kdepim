@@ -1,16 +1,18 @@
 #ifndef CHIASMUSKEYSELECTOR_H
 #define CHIASMUSKEYSELECTOR_H
 
-#include <kdialog.h>
+#include <QDialog>
+#include <KConfigGroup>
 #include "messageviewer_export.h"
 
 class QListWidget;
 class KLineEdit;
 class QLabel;
+class QPushButton;
 
 namespace MessageViewer {
 
-class MESSAGEVIEWER_EXPORT ChiasmusKeySelector : public KDialog
+class MESSAGEVIEWER_EXPORT ChiasmusKeySelector : public QDialog
 {
     Q_OBJECT
 
@@ -29,6 +31,7 @@ private:
     QLabel* mLabel;
     QListWidget* mListBox;
     KLineEdit* mOptions;
+    QPushButton *mOkButton;
 };
 
 }

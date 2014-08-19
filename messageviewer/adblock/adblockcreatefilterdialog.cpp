@@ -22,16 +22,30 @@
 
 #include <QDebug>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+
 
 using namespace MessageViewer;
 AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mCurrentType(AdBlockBlockableItemsWidget::None)
 {
+   QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+   okButton->setDefault(true);
+   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+   connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+   connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
     QWidget *w = new QWidget;
     mUi = new Ui::AdBlockCreateFilterWidget;
     mUi->setupUi(w);
-    setMainWidget(w);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     connect(mUi->filtercustom,SIGNAL(textChanged(QString)), SLOT(slotUpdateFilter()));
     connect(mUi->blockingFilter, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
     connect(mUi->exceptionFilter, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));

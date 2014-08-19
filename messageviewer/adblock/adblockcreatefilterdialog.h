@@ -20,12 +20,13 @@
 
 #include "adblockblockableitemswidget.h"
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 namespace Ui {
 class AdBlockCreateFilterWidget;
 }
 namespace MessageViewer {
-class AdBlockCreateFilterDialog : public KDialog
+class AdBlockCreateFilterDialog : public QDialog
 {
     Q_OBJECT
 public:

@@ -2096,7 +2096,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
                                                                             keys, GlobalSettings::chiasmusDecryptionKey(),
                                                                             GlobalSettings::chiasmusDecryptionOptions() ) );
 
-    if ( selectorDlg->exec() != KDialog::Accepted || !selectorDlg ) {
+    if ( selectorDlg->exec() != QDialog::Accepted || !selectorDlg ) {
         return false;
     }
     GlobalSettings::setChiasmusDecryptionOptions( selectorDlg->options() );

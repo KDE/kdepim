@@ -8,26 +8,41 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 using namespace MessageViewer;
 
 ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& caption,
                                           const QStringList& keys, const QString& currentKey,
                                           const QString& lastOptions )
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( caption );
-    setButtons( Ok | Cancel );
+    setWindowTitle( caption );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     QWidget *page = new QWidget( this );
-    setMainWidget(page);
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
+
 
     QVBoxLayout *layout = new QVBoxLayout(page);
-    layout->setSpacing(KDialog::spacingHint());
+//TODO PORT QT5     layout->setSpacing(QDialog::spacingHint());
 
     mLabel = new QLabel( i18n( "Please select the Chiasmus key file to use:" ), page );
+    mainLayout->addWidget(mLabel);
     layout->addWidget( mLabel );
 
     mListBox = new QListWidget( page );
+    mainLayout->addWidget(mListBox);
     mListBox->addItems( keys );
     const int current = keys.indexOf( currentKey );
     mListBox->setCurrentRow( qMax( 0, current ) );
@@ -35,9 +50,11 @@ ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& captio
     layout->addWidget( mListBox, 1 );
 
     QLabel* optionLabel = new QLabel( i18n( "Additional arguments for chiasmus:" ), page );
+    mainLayout->addWidget(optionLabel);
     layout->addWidget( optionLabel );
 
     mOptions = new KLineEdit( lastOptions, page );
+    mainLayout->addWidget(mOptions);
     optionLabel->setBuddy( mOptions );
     layout->addWidget( mOptions );
 
@@ -52,7 +69,7 @@ ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& captio
 
 void ChiasmusKeySelector::slotItemSelectionChanged()
 {
-    button( Ok )->setEnabled( !mListBox->selectedItems().isEmpty() );
+    mOkButton->setEnabled( !mListBox->selectedItems().isEmpty() );
 }
 
 QString ChiasmusKeySelector::key() const

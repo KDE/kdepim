@@ -34,7 +34,8 @@
 
 #include <QSyntaxHighlighter>
 #include <QPlainTextEdit>
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 class QTabWidget;
 
 namespace MessageViewer {
@@ -116,7 +117,7 @@ const QRegExp htmlTagRegExp( QLatin1String("<"
 const QString reformat( const QString &src );
 }
 
-class MailSourceViewer : public KDialog
+class MailSourceViewer : public QDialog
 {
     Q_OBJECT
 public:

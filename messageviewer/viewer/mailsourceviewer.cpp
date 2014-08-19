@@ -57,6 +57,9 @@
 #include <QDebug>
 #include <QMenu>
 #include <QFontDatabase>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace MessageViewer {
 
@@ -238,12 +241,18 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
 }
 
 MailSourceViewer::MailSourceViewer( QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
     setAttribute( Qt::WA_DeleteOnClose );
-    setButtons( Close );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-    QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
+    QVBoxLayout *layout = new QVBoxLayout(mainWidget);
     layout->setMargin( 0 );
     connect( this, SIGNAL(closeClicked()), SLOT(close()) );
 
@@ -281,6 +290,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
                                                         IconSize( KIconLoader::Small ) ) );
     new MailSourceHighlighter( mRawBrowser->textBrowser()->document() );
     mRawBrowser->textBrowser()->setFocus();
+    mainLayout->addWidget(buttonBox);
 }
 
 MailSourceViewer::~MailSourceViewer()
