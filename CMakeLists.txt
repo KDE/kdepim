@@ -127,7 +127,7 @@ configure_file(config-kdepim.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kdepim.h
 
 
 # Extra package
-find_package(KF5GAPI "4.70.0" CONFIG)
+find_package(KF5GAPI "4.71.0" CONFIG)
 
 include(GenerateExportHeader)
 

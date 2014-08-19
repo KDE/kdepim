@@ -54,7 +54,7 @@
 
 #include <ktabwidget.h>
 #include <KStatusNotifierItem>
-#include <kstatusbar.h>
+#include <qstatusbar.h>
 #include <KToggleAction>
 #include <kactioncollection.h>
 #include <KActionMenu>

@@ -40,7 +40,7 @@
 #include <KToolInvocation>
 #include <QClipboard>
 #include <QTimer>
-#include <kstatusbar.h>
+#include <qstatusbar.h>
 #include <qdebug.h>
 #include <kxmlguiwindow.h>
 #include <kmessagebox.h>
