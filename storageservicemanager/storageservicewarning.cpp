@@ -22,9 +22,8 @@
 #include "storageservicelogdialog.h"
 
 #include <KLocalizedString>
-#include <KDateTime>
-#include <KLocale>
-
+#include <QDateTime>
+#include <QLocale>
 #include <QPointer>
 
 
@@ -53,7 +52,7 @@ void StorageServiceWarning::slotShowDetails(const QString &content)
 
 void StorageServiceWarning::addLog(const QString &log)
 {
-    const QString dateTime = QString::fromLatin1("<b>[%1] </b>").arg(KLocale::global()->formatDateTime(KDateTime::currentLocalDateTime()));
+    const QString dateTime = QString::fromLatin1("<b>[%1] </b>").arg(QLocale().toString(QDateTime::currentDateTime(), QLocale::ShortFormat));
     mLogInformation.append(dateTime + log + QLatin1String("<br>"));
 }
 

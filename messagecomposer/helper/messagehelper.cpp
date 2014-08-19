@@ -25,7 +25,6 @@
 #include "messagecore/misc/mailinglist.h"
 #include "messagecore/utils/stringutil.h"
 
-#include <KDateTime>
 #include <KProtocolManager>
 #include <KMime/Message>
 #include <kmime/kmime_mdn.h>
