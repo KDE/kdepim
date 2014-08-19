@@ -39,7 +39,7 @@ WebPage::~WebPage()
 {
 }
 
-KUrl WebPage::loadingUrl() const
+QUrl WebPage::loadingUrl() const
 {
     return mLoadingUrl;
 }

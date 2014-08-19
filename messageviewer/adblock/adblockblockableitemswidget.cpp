@@ -26,7 +26,7 @@
 #include <QMenu>
 #include <KConfigGroup>
 #include <KStandardDirs>
-#include <KUrl>
+#include <QUrl>
 #include <KRun>
 
 #include <QHeaderView>
@@ -245,7 +245,7 @@ void AdBlockBlockableItemsWidget::slotOpenItem()
     QTreeWidgetItem *item = mListItems->currentItem();
     if (!item)
         return;
-    const KUrl url(item->text(Url));
+    const QUrl url(item->text(Url));
     KRun *runner = new KRun( url, this ); // will delete itself
     runner->setRunExecutables( false );
 }

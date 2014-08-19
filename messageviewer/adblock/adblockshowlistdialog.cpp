@@ -26,7 +26,7 @@
 #include <KIO/Job>
 #include <QTemporaryFile>
 #include <KSharedConfig>
-#include <KUrl>
+#include <QUrl>
 
 #include <QHBoxLayout>
 #include <QDebug>
@@ -113,9 +113,9 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
         mTemporaryFile = 0;
         return;
     }
-    KUrl subUrl(url);
+    QUrl subUrl(url);
 
-    KUrl destUrl = KUrl(mTemporaryFile->fileName());
+    QUrl destUrl = QUrl::fromLocalFile(mTemporaryFile->fileName());
 
     mProgress->start();
     KIO::FileCopyJob* job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
