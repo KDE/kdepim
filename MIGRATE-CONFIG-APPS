@@ -1,3 +1,9 @@
 Migrate configrc done:
-- sieveeditor 
-- storageservicemanager
+- sieveeditor (sieveeditorrc) 
+- storageservicemanager (storageservicemanagerrc, storageservicemanager.notifyrc)
+- headerthemeeditor (headerthemeeditorrc)
+- contactthemeeditor (contactthemeeditorrc) 
+
+
+TODO:
+Need to port uirc files too.

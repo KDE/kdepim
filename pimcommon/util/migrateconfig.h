@@ -19,13 +19,13 @@
 #define MIGRATECONFIG_H
 
 #include "pimcommon_export.h"
-#include <QString>
+#include <QStringList>
 
 namespace PimCommon {
 class PIMCOMMON_EXPORT MigrateConfig
 {
 public:
-    MigrateConfig(const QString &configFileName);
+    MigrateConfig(const QStringList &configFileNameList);
 };
 }
 

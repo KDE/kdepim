@@ -19,6 +19,7 @@
 */
 
 #include "themeeditormainwindow.h"
+#include "util/migrateconfig.h"
 
 #include "kdepim-version.h"
 
@@ -29,9 +30,11 @@
 
 #include <KDBusService>
 #include <QCommandLineOption>
+ 
 
 int main( int argc, char **argv )
 {
+    PimCommon::MigrateConfig(QStringList()<<QLatin1String("headerthemeeditorrc"));
     KLocalizedString::setApplicationDomain("headerthemeeditor");
     QApplication app(argc, argv);
     KAboutData aboutData( QStringLiteral("headerthemeeditor"), 

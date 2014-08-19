@@ -23,7 +23,7 @@
 
 using namespace PimCommon;
 
-MigrateConfig::MigrateConfig(const QString &configFileName)
+MigrateConfig::MigrateConfig(const QStringList &configFileNameList)
 {
     // Testing for kdehome
     Kdelibs4Migration migration;
@@ -31,16 +31,18 @@ MigrateConfig::MigrateConfig(const QString &configFileName)
         return;
     }
 
-    const QString newConfigLocation
-            = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
-            + QLatin1Char('/') + configFileName;
+    Q_FOREACH( const QString &configFileName, configFileNameList) {
+       const QString newConfigLocation
+              = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
+              + QLatin1Char('/') + configFileName;
 
-    if (QFile(newConfigLocation).exists()) {
-        return;
-    }
+       if (QFile(newConfigLocation).exists()) {
+          continue;
+       }
 
-    QString oldConfigFile(migration.locateLocal("config", configFileName));
-    if (!oldConfigFile.isEmpty()) {
-        QFile(oldConfigFile).copy(newConfigLocation);
+       QString oldConfigFile(migration.locateLocal("config", configFileName));
+       if (!oldConfigFile.isEmpty()) {
+           QFile(oldConfigFile).copy(newConfigLocation);
+       }
     }
 }

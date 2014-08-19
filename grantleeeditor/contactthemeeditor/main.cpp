@@ -20,6 +20,7 @@
 
 
 #include "kdepim-version.h"
+#include "util/migrateconfig.h"
 #include "contacteditormainwindow.h"
 #include <qapplication.h>
 #include <kaboutdata.h>
@@ -29,6 +30,7 @@
 
 int main( int argc, char **argv )
 {
+    PimCommon::MigrateConfig(QStringList()<<QLatin1String("contactthemeeditorrc"));
     KLocalizedString::setApplicationDomain("contactthemeeditor");
     QApplication app(argc, argv);
     KAboutData aboutData( QStringLiteral("contactthemeeditor"),

@@ -22,7 +22,6 @@
 #include "managethemes.h"
 
 #include <KStandardAction>
-#include <KApplication>
 #include <QAction>
 #include <KToggleAction>
 #include <KActionCollection>
@@ -33,6 +32,7 @@
 #include <KNS3/KNewStuffAction>
 #include <KConfigGroup>
 
+#include <QApplication>
 #include <QPointer>
 #include <QCloseEvent>
 #include <QActionGroup>
@@ -315,7 +315,7 @@ void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 void ThemeEditorMainWindow::slotQuitApp()
 {
     if (saveCurrentProject(SaveAndCloseTheme))
-        kapp->quit();
+        qApp->quit();
 }
 
 void ThemeEditorMainWindow::slotUpdateView()
