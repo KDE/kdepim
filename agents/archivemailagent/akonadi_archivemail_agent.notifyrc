@@ -201,7 +201,6 @@ Name[sr@latin]=Fascikla ne postoji
 Name[sv]=Katalog finns inte
 Name[uk]=Каталогу не існує
 Name[x-test]=xxDirectory does not existxx
-Name[zh_TW]=目錄不存在
 Action=Popup
 
 [Event/archivemailerror]
