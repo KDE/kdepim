@@ -32,7 +32,8 @@
 
 #include "mailcommon_export.h"
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 class QFormLayout;
 
 namespace MessageComposer {
@@ -71,7 +72,7 @@ private:
  *
  * @author Andreas Gungl <a.gungl@gmx.de>
  */
-class MAILCOMMON_EXPORT RedirectDialog : public KDialog
+class MAILCOMMON_EXPORT RedirectDialog : public QDialog
 {
     Q_OBJECT
 

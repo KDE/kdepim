@@ -20,9 +20,10 @@
 
 #include <QWidget>
 #include <KSharedConfig>
-#include <KDialog>
+#include <QDialog>
 
 #include <QTextEdit>
+#include <KConfigGroup>
 
 namespace PimCommon {
 class AutoCorrection;
@@ -30,7 +31,7 @@ class AutoCorrectionWidget;
 class LineEditWithAutoCorrection;
 }
 
-class ConfigureTestDialog : public KDialog
+class ConfigureTestDialog : public QDialog
 {
     Q_OBJECT
 public:

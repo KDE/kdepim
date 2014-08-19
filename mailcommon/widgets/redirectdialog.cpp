@@ -56,6 +56,10 @@
 #include <QTreeView>
 #include <QHBoxLayout>
 #include <QFormLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <KGuiItem>
+#include <QVBoxLayout>
 
 using namespace MailCommon;
 
@@ -113,7 +117,7 @@ void RedirectWidget::slotAddressSelection()
 
     mResendStr = mEdit->text();
 
-    if ( dlg->exec() != KDialog::Rejected && dlg ) {
+    if ( dlg->exec() != QDialog::Rejected && dlg ) {
         QStringList addresses;
         foreach ( const Akonadi::EmailAddressSelection &selection, dlg->selectedAddresses() ) {
             addresses << selection.quotedEmail();
@@ -160,6 +164,8 @@ public:
     RedirectDialog::SendMode mSendMode;
     KPIMIdentities::IdentityCombo *mComboboxIdentity;
     MailTransport::TransportComboBox *mTransportCombobox;
+    QPushButton *mUser1Button;
+    QPushButton *mUser2Button;
 };
 
 QString RedirectDialog::Private::redirectLabelType(TypeAddress type) const
@@ -194,19 +200,32 @@ void RedirectDialog::Private::slotUser2()
 void RedirectDialog::Private::slotAddressChanged( const QString &text )
 {
     const bool textIsNotEmpty(!text.isEmpty());
-    q->enableButton( KDialog::User1, textIsNotEmpty );
-    q->enableButton( KDialog::User2, textIsNotEmpty );
+    mUser1Button->setEnabled( textIsNotEmpty );
+    mUser2Button->setEnabled( textIsNotEmpty );
 }
 
 RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
-    : KDialog( parent ), d( new Private( this, mode ) )
+    : QDialog( parent ), d( new Private( this, mode ) )
 {
-    setCaption( i18n( "Redirect Message" ) );
-    setButtons( User1 | User2 | Cancel );
-    setDefaultButton( mode == SendNow ? User1 : User2 );
+    setWindowTitle( i18n( "Redirect Message" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    setLayout(topLayout);
+    d->mUser1Button = new QPushButton;
+    buttonBox->addButton(d->mUser1Button, QDialogButtonBox::ActionRole);
+    d->mUser2Button = new QPushButton;
+    buttonBox->addButton(d->mUser2Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    if (mode == SendNow)
+       d->mUser1Button->setDefault(true);
+    else
+       d->mUser2Button->setDefault(true);
 
     QWidget *mainWidget = new QWidget;
-    setMainWidget(mainWidget);
+    topLayout->addWidget(mainWidget);
+    topLayout->addWidget(buttonBox);
+
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainWidget->setLayout(mainLayout);
     mainLayout->setSpacing(0);
@@ -244,12 +263,12 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
     hbox->addWidget(d->mTransportCombobox);
     lab->setBuddy(d->mTransportCombobox);
 
-    setButtonGuiItem( User1, KGuiItem( i18n( "&Send Now" ), QLatin1String("mail-send") ) );
-    setButtonGuiItem( User2, KGuiItem( i18n( "Send &Later" ), QLatin1String("mail-queue") ) );
-    connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
-    connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
-    enableButton( User1, false );
-    enableButton( User2, false );
+    KGuiItem::assign(d->mUser1Button, KGuiItem( i18n( "&Send Now" )) );
+    KGuiItem::assign(d->mUser2Button, KGuiItem( i18n( "Send &Later" )) );
+    connect(d->mUser1Button, SIGNAL(clicked()), this, SLOT(slotUser1()) );
+    connect(d->mUser2Button, SIGNAL(clicked()), this, SLOT(slotUser2()) );
+    d->mUser1Button->setEnabled(false);
+    d->mUser2Button->setEnabled(false);
 }
 
 RedirectDialog::~RedirectDialog()
@@ -296,7 +315,7 @@ void RedirectDialog::accept()
                     i18n( "You cannot redirect the message without an address." ),
                     i18n( "Empty Redirection Address" ) );
     } else {
-        done( Ok );
+        done( QDialog::Accepted );
     }
 }
 

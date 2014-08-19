@@ -36,22 +36,32 @@
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 
 ConfigureTestDialog::ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( QLatin1String("Configure Autocorrection") );
-    setButtons( Ok | Cancel);
+    setWindowTitle( QLatin1String("Configure Autocorrection") );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-    setDefaultButton( KDialog::Ok );
+    buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
 
-    QHBoxLayout *lay = new QHBoxLayout( mainWidget() );
     mWidget = new PimCommon::AutoCorrectionWidget;
-    lay->addWidget(mWidget);
+    mainLayout->addWidget(mWidget);
+    mainLayout->addWidget(buttonBox);
+
     mWidget->setAutoCorrection(autoCorrection);
     mWidget->loadConfig();
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotSaveSettings()));
+    connect(okButton, SIGNAL(clicked()), this, SLOT(slotSaveSettings()));
 }
 
 ConfigureTestDialog::~ConfigureTestDialog()
