@@ -34,7 +34,7 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <qdialogbuttonbox.h>
-#include <kgenericfactory.h>
+#include <KPluginFactory>
 #include <QHBoxLayout>
 #include <kiconloader.h>
 #include <KLocalizedString>

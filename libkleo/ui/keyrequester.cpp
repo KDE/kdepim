@@ -62,7 +62,6 @@
 #include <KLocalizedString>
 #include <kiconloader.h>
 #include <QDialog>
-#include <kdebug.h>
 #include <kmessagebox.h>
 #include <qpushbutton.h>
 

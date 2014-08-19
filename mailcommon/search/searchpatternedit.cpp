@@ -23,7 +23,7 @@ using MailCommon::RuleWidgetHandlerManager;
 
 #include <pimcommon/widgets/minimumcombobox.h>
 #include <QDebug>
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
 #include <QPushButton>
 #include <QLineEdit>
@@ -34,6 +34,7 @@ using MailCommon::RuleWidgetHandlerManager;
 #include <QHBoxLayout>
 #include <QRadioButton>
 #include <QStackedWidget>
+#include <KConfigGroup>
 
 // Definition of special rule field strings
 // Note: Also see SearchRule::matches() and ruleFieldToEnglish() if
@@ -158,7 +159,7 @@ void SearchRuleWidget::setPatternEditOptions( SearchPatternEdit::SearchPatternEd
 void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
 {
     QHBoxLayout *hlay = new QHBoxLayout( this );
-    hlay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     hlay->setSpacing( QDialog::spacingHint() );
     hlay->setMargin( 0 );
 
     // initialize the header field combo box

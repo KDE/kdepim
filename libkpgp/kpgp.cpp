@@ -27,7 +27,6 @@
 #include <kconfigbase.h>
 #include <kconfiggroup.h>
 #include <kconfig.h>
-//#include <kde_file.h>
 
 #include <QLabel>
 #include <QCursor>

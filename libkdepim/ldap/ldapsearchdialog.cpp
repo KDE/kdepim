@@ -51,7 +51,6 @@
 #include <kldap/ldapobject.h>
 #include <kldap/ldapserver.h>
 #include <klineedit.h>
-#include <klocale.h>
 #include <kmessagebox.h>
 #include <QPushButton>
 

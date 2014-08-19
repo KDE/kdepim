@@ -55,7 +55,6 @@
 #include <kconfig.h>
 #include <QProgressDialog>
 #include <kwindowsystem.h>
-//#include <kglobalsettings.h>
 #include <klineedit.h>
 #include <QIcon>
 

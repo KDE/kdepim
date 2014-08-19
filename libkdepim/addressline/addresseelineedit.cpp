@@ -54,7 +54,7 @@
 #include <KLocalizedString>
 #include <KStandardShortcut>
 #include <QUrl>
-#include <KGlobal>
+#include <QMimeData>
 
 #include <solid/networking.h>
 
