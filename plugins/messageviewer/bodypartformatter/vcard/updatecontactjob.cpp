@@ -52,7 +52,7 @@ public:
       q->emitResult();
       return;
     } else if( contacts.count() > 1 ) {
-      const QString text = i18n( "There is two or more contact with same email stored in addressbook." );
+      const QString text = i18n( "There are two or more contacts with same email stored in addressbook." );
       KMessageBox::information( mParentWidget, text );
       q->setError( UserDefinedError );
       q->emitResult();
