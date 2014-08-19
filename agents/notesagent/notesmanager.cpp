@@ -115,8 +115,8 @@ void NotesManager::slotCheckAlarm()
         from.setTime_t( 0 );
     }
 
-    const KDateTime now = KDateTime::currentLocalDateTime();
-    NoteShared::NoteSharedGlobalConfig::self()->setAlarmsLastChecked( now.dateTime() );
+    const QDateTime now = QDateTime::currentDateTime();
+    NoteShared::NoteSharedGlobalConfig::self()->setAlarmsLastChecked( now );
 
 
     Akonadi::Item::List lst;
