@@ -755,6 +755,16 @@
             </spacer>
            </item>
            <item>
+            <widget class="QPushButton" name="mGroupSubstitution">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Substitute with group members</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QPushButton" name="mSelectButton">
              <property name="toolTip">
               <string comment="@info:tooltip">Select attendees from your address book.</string>

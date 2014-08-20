@@ -50,26 +50,6 @@
 
 using namespace IncidenceEditorNG;
 
-static bool compareAttendees(const KCalCore::Attendee::Ptr &newAttendee,
-                             const KCalCore::Attendee::Ptr &originalAttendee)
-{
-    KCalCore::Attendee::Ptr originalClone(new KCalCore::Attendee(*originalAttendee));
-
-    if (newAttendee->name() != originalAttendee->name()) {
-        // What you put into an IncidenceEditorNG::AttendeeLine isn't exactly what you get out.
-        // In rare situations, such as "Doe\, John <john.doe@kde.org>", AttendeeLine will normalize
-        // the name, and set "Doe, John <john.doe@kde.org>" instead.
-        // So, for isDirty() purposes, have that in mind, so we don't return that the editor is dirty
-        // when the user didn't edit anything.
-        QString dummy;
-        QString originalNameNormalized;
-        KPIMUtils::extractEmailAddressAndName(originalAttendee->fullName(), dummy, originalNameNormalized);
-        originalClone->setName(originalNameNormalized);
-    }
-
-    return *newAttendee == *originalClone;
-}
-
 #ifdef KDEPIM_MOBILE_UI
 IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTime,
                                       Ui::EventOrTodoMore *ui )
@@ -79,7 +59,6 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
 #endif
   : mUi( ui ),
     mParentWidget( parent ),
-    mAttendeeEditor( new AttendeeEditor ),
     mStateDelegate(new AttendeeComboBoxDelegate(this)),
     mRoleDelegate(new AttendeeComboBoxDelegate(this)),
     mResponseDelegate(new AttendeeComboBoxDelegate(this)),
@@ -145,12 +124,13 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
 
 #ifdef KDEPIM_MOBILE_UI
 #else
+  connect(mUi->mGroupSubstitution, SIGNAL(clicked(bool)),
+          SLOT(slotGroupSubstitutionPressed()));
+
   mUi->mAttendeeTable->setModel(filterProxyModel);
 
   mAttendeeDelegate = new AttendeeLineEditDelegate(this);
   mAttendeeDelegate->setCompletionMode( KGlobalSettings::self()->completionMode() );
-
-
 
   mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Role, roleDelegate());
   mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::FullName, attendeeDelegate());
@@ -195,13 +175,17 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
 
   slotUpdateConflictLabel( 0 ); //initialize label
 
-  connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine*)),
-           SLOT(checkIfExpansionIsNeeded(KPIM::MultiplyingLine*)) );
+  // confict resolver (should show also resources)
+  connect(mDataModel, SIGNAL(layoutChanged()), SLOT(slotConflictResolverLayoutChanged()));
+  connect(mDataModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex&, int , int)), SLOT(slotConflictResolverAttendeeRemoved(const QModelIndex&,int,int)));
+  connect(mDataModel, SIGNAL(rowsInserted(const QModelIndex&, int , int)), SLOT(slotConflictResolverAttendeeAdded(const QModelIndex&,int,int)));
+  connect(mDataModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), SLOT(slotConflictResolverAttendeeChanged(const QModelIndex&, const QModelIndex&)));
 
-  connect(mDataModel, SIGNAL(layoutChanged()), SLOT(slotAttendeeLayoutChanged()));
-  connect(mDataModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex&, int , int)), SLOT(slotAttendeeRemoved(const QModelIndex&,int,int)));
-  connect(mDataModel, SIGNAL(rowsInserted(const QModelIndex&, int , int)), SLOT(slotAttendeeAdded(const QModelIndex&,int,int)));
-  connect(mDataModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), SLOT(slotAttendeeChanged(const QModelIndex&, const QModelIndex&)));
+  //Group substitution
+  connect(filterProxyModel, SIGNAL(layoutChanged()), SLOT(slotGroupSubstitutionLayoutChanged()));
+  connect(filterProxyModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex&, int , int)), SLOT(slotGroupSubstitutionAttendeeRemoved(const QModelIndex&,int,int)));
+  connect(filterProxyModel, SIGNAL(rowsInserted(const QModelIndex&, int , int)), SLOT(slotGroupSubstitutionAttendeeAdded(const QModelIndex&,int,int)));
+  connect(filterProxyModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), SLOT(slotGroupSubstitutionAttendeeChanged(const QModelIndex&, const QModelIndex&)));
 
   connect(filterProxyModel, SIGNAL(rowsInserted(const QModelIndex&, int , int)), SLOT(updateCount()));
   connect(filterProxyModel, SIGNAL(rowsRemoved(const QModelIndex&, int , int)), SLOT(updateCount()));
@@ -384,61 +368,89 @@ void IncidenceAttendee::fillOrganizerCombo()
   mUi->mOrganizerCombo->addItems( uniqueList );
 }
 
-void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
+void IncidenceAttendee::checkIfExpansionIsNeeded(const KCalCore::Attendee::Ptr attendee )
 {
-  AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>( line->data() );
-  if ( !data ) {
-    kDebug() << "dynamic cast failed";
-    return;
-  }
+    QString fullname = attendee->fullName();
 
-  // For some reason, when pressing enter (instead of tab) the editingFinished()
-  // signal is emitted twice. Check if there is already a job running to prevent
-  // that we end up with the group members twice.
-  if ( mMightBeGroupLines.key( QWeakPointer<KPIM::MultiplyingLine>( line ) ) != 0 ) {
-    return;
-  }
+    // stop old job
+    KJob *oldJob = mMightBeGroupJobs.key(attendee);
+    if ( oldJob !=  0 ) {
+        disconnect(oldJob);
+        oldJob->deleteLater();
+        mMightBeGroupJobs.remove(oldJob);
+    }
 
-  Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
-  job->setQuery( Akonadi::ContactGroupSearchJob::Name, data->name() );
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(groupSearchResult(KJob*)) );
+    mGroupList.remove(attendee);
 
-  mMightBeGroupLines.insert( job, QWeakPointer<KPIM::MultiplyingLine>( line ) );
-}
+    if (!fullname.isEmpty()) {
+        Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
+        job->setQuery( Akonadi::ContactGroupSearchJob::Name, fullname);
+        connect( job, SIGNAL(result(KJob*)), this, SLOT(groupSearchResult(KJob*)) );
 
-void IncidenceAttendee::expandResult( KJob *job )
-{
-  Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
-  Q_ASSERT( expandJob );
-
-  const KABC::Addressee::List groupMembers = expandJob->contacts();
-  foreach ( const KABC::Addressee &member, groupMembers ) {
-    insertAttendeeFromAddressee( member );
-  }
+        mMightBeGroupJobs.insert( job, attendee );
+    }
 }
 
 void IncidenceAttendee::groupSearchResult( KJob *job )
 {
   Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
-  Q_ASSERT( searchJob );
+  Q_ASSERT(searchJob);
 
-  Q_ASSERT( mMightBeGroupLines.contains( job ) );
-  KPIM::MultiplyingLine *line = mMightBeGroupLines.take( job ).data();
+  Q_ASSERT(mMightBeGroupJobs.contains(job));
+  KCalCore::Attendee::Ptr attendee = mMightBeGroupJobs.take(job);
 
   const KABC::ContactGroup::List contactGroups = searchJob->contactGroups();
   if ( contactGroups.isEmpty() ) {
+    updateGroupExpand();
     return; // Nothing todo, probably a normal email address was entered
   }
 
   // TODO: Give the user the possibility to choose a group when there is more than one?!
   KABC::ContactGroup group = contactGroups.first();
-  if ( line ) {
-    line->slotPropagateDeletion();
-  }
 
-  Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
-  connect( expandJob, SIGNAL(result(KJob*)), this, SLOT(expandResult(KJob*)) );
-  expandJob->start();
+  mGroupList.insert(attendee,  group);
+  updateGroupExpand();
+}
+
+void IncidenceAttendee::updateGroupExpand()
+{
+#ifndef KDEPIM_MOBILE_UI
+    mUi->mGroupSubstitution->setEnabled(mGroupList.count() > 0);
+#endif
+}
+
+
+void IncidenceAttendee::slotGroupSubstitutionPressed()
+{
+    foreach (KCalCore::Attendee::Ptr attendee, mGroupList.keys()) {
+        Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( mGroupList.value(attendee), this );
+        connect( expandJob, SIGNAL(result(KJob*)), this, SLOT(expandResult(KJob*)) );
+        mExpandGroupJobs.insert(expandJob, attendee);
+        expandJob->start();
+    }
+}
+
+void IncidenceAttendee::expandResult( KJob *job )
+{
+#ifndef KDEPIM_MOBILE_UI
+  Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
+  Q_ASSERT( expandJob );
+  Q_ASSERT(mExpandGroupJobs.contains(job));
+  KCalCore::Attendee::Ptr attendee = mExpandGroupJobs.take(job);
+
+  int row = dataModel()->attendees().indexOf(attendee);
+
+  dataModel()->removeRow(row);
+  const KABC::Addressee::List groupMembers = expandJob->contacts();
+  foreach ( const KABC::Addressee &member, groupMembers ) {
+      KCalCore::Attendee::Ptr newAt(new KCalCore::Attendee(member.realName(), member.preferredEmail(),
+          attendee->RSVP(),
+          attendee->status(),
+          attendee->role(),
+          member.uid()));
+      dataModel()->insertAttendee(row, newAt);
+  }
+#endif
 }
 
 void IncidenceAttendee::slotSelectAddresses()
@@ -497,19 +509,18 @@ void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
   }
 }
 
-void IncidenceAttendee::slotAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+void IncidenceAttendee::slotConflictResolverAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
 #ifndef KDEPIM_MOBILE_UI
   if (AttendeeTableModel::FullName <= bottomRight.column() && AttendeeTableModel::FullName >= topLeft.column()) {
        for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
-           kDebug() <<  i;
-           QModelIndex index = dataModel()->index(i, AttendeeTableModel::Email);
-           KCalCore::Attendee::Ptr attendee = dataModel()->data(index,  AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
+           QModelIndex email = dataModel()->index(i, AttendeeTableModel::Email);
+           KCalCore::Attendee::Ptr attendee = dataModel()->data(email,  AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
            if (mConflictResolver->containsAttendee(attendee)) {
                mConflictResolver->removeAttendee(attendee);
            }
-           if (!dataModel()->data(index).toString().isEmpty()) {
-               mConflictResolver->insertAttendee( attendee );
+           if (!dataModel()->data(email).toString().isEmpty()) {
+               mConflictResolver->insertAttendee(attendee);
            }
        }
   }
@@ -517,7 +528,7 @@ void IncidenceAttendee::slotAttendeeChanged(const QModelIndex &topLeft, const QM
 #endif
 }
 
-void IncidenceAttendee::slotAttendeeAdded(const QModelIndex &index, int first, int last)
+void IncidenceAttendee::slotConflictResolverAttendeeAdded(const QModelIndex &index, int first, int last)
 {
     for (int i = first; i <= last; i++) {
         QModelIndex email = dataModel()->index(i, AttendeeTableModel::Email, index);
@@ -528,30 +539,28 @@ void IncidenceAttendee::slotAttendeeAdded(const QModelIndex &index, int first, i
     checkDirtyStatus();
 }
 
-void IncidenceAttendee::slotAttendeeRemoved(const QModelIndex &index, int first, int last)
+void IncidenceAttendee::slotConflictResolverAttendeeRemoved(const QModelIndex &index, int first, int last)
 {
     for (int i = first; i <= last; i++) {
-        kDebug() <<  i;
         QModelIndex email = dataModel()->index(i, AttendeeTableModel::Email, index);
         if (!dataModel()->data(email).toString().isEmpty()) {
-            mConflictResolver->removeAttendee( dataModel()->data(email, AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>() );
+            mConflictResolver->removeAttendee(dataModel()->data(email, AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>());
         }
     }
     checkDirtyStatus();
 }
 
-void IncidenceAttendee::slotAttendeeLayoutChanged()
+void IncidenceAttendee::slotConflictResolverLayoutChanged()
 {
     KCalCore::Attendee::List attendees = mDataModel->attendees();
     mConflictResolver->clearAttendees();
     foreach(KCalCore::Attendee::Ptr attendee, attendees) {
-        if (! attendee->email().isEmpty()) {
+        if (!attendee->email().isEmpty()) {
             mConflictResolver->insertAttendee(attendee);
         }
     }
     checkDirtyStatus();
 }
-
 
 void IncidenceAttendee::slotUpdateConflictLabel( int count )
 {
@@ -573,6 +582,84 @@ void IncidenceAttendee::slotUpdateConflictLabel( int count )
   }
 }
 
+void IncidenceAttendee::slotGroupSubstitutionAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+    if (AttendeeTableModel::FullName <= bottomRight.column() && AttendeeTableModel::FullName >= topLeft.column()) {
+        for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
+            QModelIndex email = dataModel()->index(i, AttendeeTableModel::Email);
+            KCalCore::Attendee::Ptr attendee = dataModel()->data(email,  AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
+            checkIfExpansionIsNeeded(attendee);
+        }
+    }
+    updateGroupExpand();
+}
+
+void IncidenceAttendee::slotGroupSubstitutionAttendeeAdded(const QModelIndex &index, int first, int last)
+{
+    Q_UNUSED(index);
+    for (int i = first; i <= last; i++) {
+        QModelIndex email = dataModel()->index(i, AttendeeTableModel::Email);
+        KCalCore::Attendee::Ptr attendee = dataModel()->data(email,  AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
+        checkIfExpansionIsNeeded(attendee);
+    }
+    updateGroupExpand();
+}
+
+void IncidenceAttendee::slotGroupSubstitutionAttendeeRemoved(const QModelIndex &index, int first, int last)
+{
+    Q_UNUSED(index);
+    for (int i = first; i <= last; i++) {
+        QModelIndex email = dataModel()->index(i, AttendeeTableModel::Email);
+        KCalCore::Attendee::Ptr attendee = dataModel()->data(email,  AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
+        KJob *job = mMightBeGroupJobs.key(attendee);
+        if (job) {
+            disconnect(job);
+            job->deleteLater();
+            mMightBeGroupJobs.remove(job);
+        }
+        job = mExpandGroupJobs.key(attendee);
+        if (job) {
+            disconnect(job);
+            job->deleteLater();
+            mExpandGroupJobs.remove(job);
+        }
+        mGroupList.remove(attendee);
+      }
+    updateGroupExpand();
+}
+
+void IncidenceAttendee::slotGroupSubstitutionLayoutChanged()
+{
+    foreach(KJob *job, mMightBeGroupJobs.keys()) {
+        disconnect(job);
+        job->deleteLater();
+    }
+    foreach(KJob *job, mExpandGroupJobs.keys()) {
+        disconnect(job);
+        job->deleteLater();
+    }
+    mMightBeGroupJobs.clear();
+    mExpandGroupJobs.clear();
+    mGroupList.clear();
+
+#ifndef KDEPIM_MOBILE_UI
+    QAbstractItemModel *model = mUi->mAttendeeTable->model();
+    if (!model ) {
+        return;
+    }
+    for(int i=0;i< model->rowCount(QModelIndex());i++) {
+        QModelIndex index = model->index(i,AttendeeTableModel::FullName);
+        if (!model->data(index).toString().isEmpty()) {
+            QModelIndex email = dataModel()->index(i, AttendeeTableModel::Email);
+            KCalCore::Attendee::Ptr attendee = dataModel()->data(email,  AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
+            checkIfExpansionIsNeeded(attendee);
+        }
+    }
+
+    updateGroupExpand();
+#endif
+}
+
 bool IncidenceAttendee::iAmOrganizer() const
 {
   if ( mLoadedIncidence ) {
@@ -583,7 +670,7 @@ bool IncidenceAttendee::iAmOrganizer() const
   return true;
 }
 
-void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee &a )
+void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee &a,  int pos/*=-1*/)
 {
   const bool sameAsOrganizer = mUi->mOrganizerCombo &&
                                KPIMUtils::compareEmail( a.preferredEmail(),
@@ -601,8 +688,11 @@ void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee &a )
                                                          partStat,
                                                          KCalCore::Attendee::ReqParticipant,
                                                          a.uid() ) );
+  if (pos < 0 ) {
+      pos = dataModel()->rowCount() - 1;
+  }
 
-  mDataModel->insertAttendee(mDataModel->rowCount(), newAt);
+  dataModel()->insertAttendee(pos, newAt);
 }
 
 void IncidenceAttendee::slotEventDurationChanged()
