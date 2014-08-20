@@ -34,13 +34,13 @@
 
 #include <QList>
 #include <QByteArray>
-#include <kdebug.h>
 #include <kprocess.h>
 #include <errno.h>
 #include <kmessagebox.h>
 #include <KLocalizedString>
 #include <kshell.h>
-
+#include <QDebug>
+#include "gpgme_backend_debug.h"
 
 #include <gpgme++/engineinfo.h>
 #include <gpgme++/global.h>
@@ -115,7 +115,7 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
     else
       reason = QString::fromLocal8Bit( strerror(rc) ); // XXX errno as an exit code?
     QString wmsg = i18n("<qt>Failed to execute gpgconf:<p>%1</p></qt>", reason);
-    kWarning(5150) << wmsg; // to see it from test_cryptoconfig.cpp
+    qCWarning(GPGPME_BACKEND_LOG) << wmsg; // to see it from test_cryptoconfig.cpp
     KMessageBox::error(0, wmsg);
   }
   mParsed = true;
@@ -131,7 +131,7 @@ void QGpgMECryptoConfig::slotCollectStdOut()
       line.chop( 1 );
     if ( line.endsWith( QLatin1Char('\r') ) )
       line.chop( 1 );
-    //kDebug(5150) <<"GOT LINE:" << line;
+    //qCDebug(GPGPME_BACKEND_LOG) <<"GOT LINE:" << line;
     // Format: NAME:DESCRIPTION
     const QStringList lst = line.split( QLatin1Char(':') );
     if ( lst.count() >= 2 ) {
@@ -139,7 +139,7 @@ void QGpgMECryptoConfig::slotCollectStdOut()
         mComponentsNaturalOrder.push_back( pair );
         mComponentsByName[pair.first] = pair.second;
     } else {
-      kWarning(5150) <<"Parse error on gpgconf --list-components output:" << line;
+      qCWarning(GPGPME_BACKEND_LOG) <<"Parse error on gpgconf --list-components output:" << line;
     }
   }
 }
@@ -205,7 +205,7 @@ void QGpgMECryptoConfigComponent::runGpgConf()
 {
   const QString gpgconf = QGpgMECryptoConfig::gpgConfPath();
   if ( gpgconf.isEmpty() ) {
-      kWarning(5150) << "Can't get path to gpgconf executable...";
+      qCWarning(GPGPME_BACKEND_LOG) << "Can't get path to gpgconf executable...";
       return;
   }
 
@@ -215,7 +215,7 @@ void QGpgMECryptoConfigComponent::runGpgConf()
   proc << QLatin1String("--list-options");
   proc << mName;
 
-  //kDebug(5150) <<"Running gpgconf --list-options" << mName;
+  //qCDebug(GPGPME_BACKEND_LOG) <<"Running gpgconf --list-options" << mName;
 
   connect( &proc, SIGNAL(readyReadStandardOutput()),
            this, SLOT(slotCollectStdOut()) );
@@ -233,7 +233,7 @@ void QGpgMECryptoConfigComponent::runGpgConf()
     rc = -1;
 
   if( rc != 0 ) // can happen when using the wrong version of gpg...
-    kWarning(5150) <<"Running 'gpgconf --list-options" << mName <<"' failed." << strerror( rc ) <<", but try that command to see the real output";
+    qCWarning(GPGPME_BACKEND_LOG) <<"Running 'gpgconf --list-options" << mName <<"' failed." << strerror( rc ) <<", but try that command to see the real output";
   else {
     if ( mCurrentGroup && !mCurrentGroup->mEntriesNaturalOrder.empty() ) { // only add non-empty groups
       mGroupsByName.insert( mCurrentGroupName, mCurrentGroup );
@@ -252,7 +252,7 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
       line.chop( 1 );
     if ( line.endsWith( QLatin1Char('\r') ) )
       line.chop( 1 );
-    //kDebug(5150) <<"GOT LINE:" << line;
+    //qCDebug(GPGPME_BACKEND_LOG) <<"GOT LINE:" << line;
     // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
     const QStringList lst = line.split( QLatin1Char(':') );
     if ( lst.count() >= 10 ) {
@@ -266,7 +266,7 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
           mGroupsNaturalOrder.push_back( std::make_pair( mCurrentGroupName, mCurrentGroup ) );
         }
         //else
-        //  kDebug(5150) <<"Discarding empty group" << mCurrentGroupName;
+        //  qCDebug(GPGPME_BACKEND_LOG) <<"Discarding empty group" << mCurrentGroupName;
         mCurrentGroup = new QGpgMECryptoConfigGroup( this, lst[0], lst[3], level );
         mCurrentGroupName = lst[0];
       } else {
@@ -284,7 +284,7 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
       // This happens on lines like
       // dirmngr[31465]: error opening `/home/dfaure/.gnupg/dirmngr_ldapservers.conf': No such file or directory
       // so let's not bother the user with it.
-      //kWarning(5150) <<"Parse error on gpgconf --list-options output:" << line;
+      //qCWarning(GPGPME_BACKEND_LOG) <<"Parse error on gpgconf --list-options output:" << line;
     }
   }
 }
@@ -353,7 +353,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   commandLine += QLatin1String(" < ");
   commandLine += KShell::quoteArg( tmpFile.fileName() );
 
-  //kDebug(5150) << commandLine;
+  //qCDebug(GPGPME_BACKEND_LOG) << commandLine;
   //system( QCString( "cat " ) + tmpFile.name().toLatin1() ); // DEBUG
 
   KProcess proc;
@@ -365,13 +365,13 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   if ( rc == -2 )
   {
     QString wmsg = i18n( "Could not start gpgconf.\nCheck that gpgconf is in the PATH and that it can be started." );
-    kWarning(5150) << wmsg;
+    qCWarning(GPGPME_BACKEND_LOG) << wmsg;
     KMessageBox::error(0, wmsg);
   }
   else if( rc != 0 ) // Happens due to bugs in gpgconf (e.g. issues 104/115)
   {
     QString wmsg = i18n( "Error from gpgconf while saving configuration: %1", QString::fromLocal8Bit( strerror( rc ) ) );
-    kWarning(5150) <<":" << strerror( rc );
+    qCWarning(GPGPME_BACKEND_LOG) <<":" << strerror( rc );
     KMessageBox::error(0, wmsg);
   }
   else
@@ -436,7 +436,7 @@ static QString urlpart_encode( const QString& str )
   QString enc( str );
   enc.replace( QLatin1Char('%'), QLatin1String("%25") ); // first!
   enc.replace( QLatin1Char(':'), QLatin1String("%3a") );
-  //kDebug(5150) <<"  urlpart_encode:" << str <<" ->" << enc;
+  //qCDebug(GPGPME_BACKEND_LOG) <<"  urlpart_encode:" << str <<" ->" << enc;
   return enc;
 }
 
@@ -487,7 +487,7 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( QGpgMECryptoConfigGroup * grou
     mArgType = knownArgType( mRealArgType, ok );
   }
   if ( !ok )
-    kWarning(5150) <<"Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
+    qCWarning(GPGPME_BACKEND_LOG) <<"Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
   ++it; // done with alt-type
   ++it; // skip argname (not useful in GUIs)
 
@@ -499,7 +499,7 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( QGpgMECryptoConfigGroup * grou
   }
   ++it; // done with DEFAULT
   ++it; // ### skip ARGDEF for now. It's only for options with an "optional arg"
-  //kDebug(5150) <<"Entry" << parsedLine[0] <<" val=" << *it;
+  //qCDebug(GPGPME_BACKEND_LOG) <<"Entry" << parsedLine[0] <<" val=" << *it;
 
   if ( !(*it).isEmpty() ) {  // a real value was set
     mSet = true;
@@ -522,7 +522,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
         bool ok = true;
         const QVariant v = str.isEmpty() ? 0U : str.toUInt( &ok ) ;
         if ( !ok )
-            kWarning(5150) << "list-of-none should have an unsigned int as value:" << str;
+            qCWarning(GPGPME_BACKEND_LOG) << "list-of-none should have an unsigned int as value:" << str;
         return v;
     }
     QList<QVariant> lst;
@@ -536,7 +536,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
         }
         else if ( unescape ) {
           if( val[0] != QLatin1Char('"') ) // see README.gpgconf
-            kWarning(5150) <<"String value should start with '\"' :" << val;
+            qCWarning(GPGPME_BACKEND_LOG) <<"String value should start with '\"' :" << val;
           val = val.mid( 1 );
         }
       }
@@ -550,7 +550,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
         return QVariant( QString() ); // not set  [ok with lists too?]
       else if ( unescape ) {
         if( val[0] != QLatin1Char('"') ) // see README.gpgconf
-          kWarning(5150) <<"String value should start with '\"' :" << val;
+          qCWarning(GPGPME_BACKEND_LOG) <<"String value should start with '\"' :" << val;
         val = val.mid( 1 );
       }
     }
@@ -562,7 +562,7 @@ QGpgMECryptoConfigEntry::~QGpgMECryptoConfigEntry()
 {
 #ifndef NDEBUG
   if ( !s_duringClear && mDirty )
-    kWarning(5150) <<"Deleting a QGpgMECryptoConfigEntry that was modified (" << mDescription <<")"
+    qCWarning(GPGPME_BACKEND_LOG) <<"Deleting a QGpgMECryptoConfigEntry that was modified (" << mDescription <<")"
                     << "You forgot to call sync() (to commit) or clear() (to discard)";
 #endif
 }
@@ -634,7 +634,7 @@ static KUrl parseURL( int mRealArgType, const QString& str )
       if ( ok )
           url.setPort( port );
       else if ( !it->isEmpty() )
-          kWarning(5150) <<"parseURL: malformed LDAP server port, ignoring: \"" << *it << "\"";
+          qCWarning(GPGPME_BACKEND_LOG) <<"parseURL: malformed LDAP server port, ignoring: \"" << *it << "\"";
 
       url.setPath( QLatin1String("/") ); // workaround KUrl parsing bug
       url.setUserName( urlpart_decode( *it++ ) );
@@ -642,7 +642,7 @@ static KUrl parseURL( int mRealArgType, const QString& str )
       url.setQuery( urlpart_decode( *it ) );
       return url;
     } else
-      kWarning(5150) <<"parseURL: malformed LDAP server:" << str;
+      qCWarning(GPGPME_BACKEND_LOG) <<"parseURL: malformed LDAP server:" << str;
   }
   // other URLs : assume wellformed URL syntax.
   return KUrl( str );
@@ -879,7 +879,7 @@ QString QGpgMECryptoConfigEntry::toString( bool escape ) const
         }
       }
       const QString res = lst.join( QLatin1String(",") );
-      //kDebug(5150) <<"toString:" << res;
+      //qCDebug(GPGPME_BACKEND_LOG) <<"toString:" << res;
       return res;
     } else { // normal string
       QString res = mValue.toString();

@@ -33,7 +33,8 @@
 #include "qgpgmeprogresstokenmapper.h"
 
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug> 
+#include "gpgme_backend_debug.h"
 
 #include <QString>
 
@@ -102,7 +103,7 @@ QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoke
   if ( token.startsWith( QLatin1String("file:") ) )
     return QString(); // gpgme's job
 
-  kDebug(5150) << token << subtoken;
+  qCDebug(GPGPME_BACKEND_LOG) << token << subtoken;
 
   for ( const _tokens * it = boost::begin( tokens ), *end = boost::end( tokens ) ; it != end ; ++it ) {
     if ( token.compare( QLatin1String( it->token ), Qt::CaseInsensitive ) == 0 ) {

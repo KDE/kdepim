@@ -37,7 +37,8 @@
 #include "gnupgprocessbase.h"
 #include "qgpgmeprogresstokenmapper.h"
 
-#include <kdebug.h>
+#include <QDebug> 
+#include "gpgme_backend_debug.h"
 
 #include <gpgme++/context.h>
 
@@ -142,18 +143,18 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
 
 
     if ( args.size() < 2 ) {
-      kDebug( 5150 ) <<"not recognising ERROR with < 2 args!";
+      qCDebug(GPGPME_BACKEND_LOG) <<"not recognising ERROR with < 2 args!";
       return;
     }
     const int source = (*++it).toInt( &ok );
     if ( !ok ) {
-      kDebug( 5150 ) <<"expected number for first ERROR arg, got something else";
+      qCDebug(GPGPME_BACKEND_LOG) <<"expected number for first ERROR arg, got something else";
       return;
     }
     ok = false;
     const int code = (*++it).toInt( &ok );
     if ( !ok ) {
-      kDebug( 5150 ) <<"expected number for second ERROR arg, got something else";
+      qCDebug(GPGPME_BACKEND_LOG) <<"expected number for second ERROR arg, got something else";
       return;
     }
     mError = GpgME::Error::fromCode( code, source );
@@ -163,26 +164,26 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
 
 
     if ( args.size() < 4 ) {
-      kDebug( 5150 ) <<"not recognising PROGRESS with < 4 args!";
+      qCDebug(GPGPME_BACKEND_LOG) <<"not recognising PROGRESS with < 4 args!";
       return;
     }
     const QString what = *++it;
     ok = false;
     const int typ = (*++it).toInt( &ok );
     if ( !ok ) {
-        kDebug( 5150 ) <<"expected number for \"type\", got something else";
+        qCDebug(GPGPME_BACKEND_LOG) <<"expected number for \"type\", got something else";
         return;
     }
     ok = false;
     const int cur = (*++it).toInt( &ok );
     if ( !ok ) {
-      kDebug( 5150 ) <<"expected number for \"cur\", got something else";
+      qCDebug(GPGPME_BACKEND_LOG) <<"expected number for \"cur\", got something else";
       return;
     }
     ok = false;
     const int total = (*++it).toInt( &ok );
     if ( !ok ) {
-      kDebug( 5150 ) <<"expected number for \"total\", got something else";
+      qCDebug(GPGPME_BACKEND_LOG) <<"expected number for \"total\", got something else";
       return;
     }
     emit progress( QGpgMEProgressTokenMapper::map( what, typ ), cur, total );

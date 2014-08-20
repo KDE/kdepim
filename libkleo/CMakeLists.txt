@@ -48,6 +48,7 @@ set(libkleo_backend_qgpgme_SRCS
     backends/qgpgme/qgpgmecryptoconfig.cpp
     backends/qgpgme/qgpgmenewcryptoconfig.cpp
     backends/qgpgme/qgpgmerefreshkeysjob.cpp
+    backends/qgpgme/gpgme_backend_debug.cpp
     )
 
 
