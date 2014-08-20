@@ -34,7 +34,9 @@
 
 int main( int argc, char **argv )
 {
-    PimCommon::MigrateConfig(QStringList()<<QLatin1String("headerthemeeditorrc"));
+    PimCommon::MigrateConfig migrate;
+    migrate.setConfigFileNameList(QStringList()<<QLatin1String("headerthemeeditorrc"));
+    migrate.start();
     KLocalizedString::setApplicationDomain("headerthemeeditor");
     QApplication app(argc, argv);
     KAboutData aboutData( QStringLiteral("headerthemeeditor"), 

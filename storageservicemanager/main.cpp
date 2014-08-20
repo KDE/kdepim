@@ -33,9 +33,10 @@
 
 int main( int argc, char **argv )
 {
-    QStringList lst;
-    lst << QLatin1String("storageservicerc") << QLatin1String("storageservicemanager.notifyrc");
-    PimCommon::MigrateConfig migration(lst);
+    PimCommon::MigrateConfig migrate;
+    migrate.setConfigFileNameList(QStringList()<<QLatin1String("storageservicerc") << QLatin1String("storageservicemanager.notifyrc"));
+    migrate.start();
+
     QApplication app(argc, argv);
 
     KAboutData aboutData(QStringLiteral("storageservicemanager"),

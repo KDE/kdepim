@@ -31,7 +31,10 @@
 
 int main( int argc, char **argv )
 {
-    PimCommon::MigrateConfig(QStringList()<<QLatin1String("sieveeditorrc"));
+    PimCommon::MigrateConfig migrate;
+    migrate.setConfigFileNameList(QStringList()<<QLatin1String("sieveeditorrc"));
+    migrate.start();
+
     KLocalizedString::setApplicationDomain("sieveeditor");
     QApplication app(argc, argv);
 
