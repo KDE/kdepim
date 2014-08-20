@@ -19,7 +19,7 @@
 */
 
 #include "themeeditormainwindow.h"
-#include "util/migrateconfig.h"
+#include "util/kdelibs4configmigrater.h"
 
 #include "kdepim-version.h"
 
@@ -34,10 +34,10 @@
 
 int main( int argc, char **argv )
 {
-    PimCommon::MigrateConfig migrate(QLatin1String("headerthemeeditor"));
-    migrate.setConfigFileNameList(QStringList()<<QLatin1String("headerthemeeditorrc"));
-    migrate.setUiFileNameList(QStringList()<<QLatin1String("headerthemeeditorui.rc"));
-    migrate.start();
+    PimCommon::Kdelibs4ConfigMigrater migrate(QLatin1String("headerthemeeditor"));
+    migrate.setConfigFiles(QStringList()<<QLatin1String("headerthemeeditorrc"));
+    migrate.setUiFiles(QStringList()<<QLatin1String("headerthemeeditorui.rc"));
+    migrate.migrate();
     KLocalizedString::setApplicationDomain("headerthemeeditor");
     QApplication app(argc, argv);
     KAboutData aboutData( QStringLiteral("headerthemeeditor"), 

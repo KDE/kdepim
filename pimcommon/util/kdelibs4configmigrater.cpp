@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "migrateconfig.h"
+#include "kdelibs4configmigrater.h"
 
 #include <QStandardPaths>
 #include <Kdelibs4Migration>
@@ -26,30 +26,49 @@
 
 using namespace PimCommon;
 
-MigrateConfig::MigrateConfig(const QString &appName)
-    : mAppName(appName)
+class Kdelibs4ConfigMigrater::Private
+{
+public:
+    Private(const QString &appName)
+        : appName(appName)
+    {
+
+    }
+
+    QStringList configFiles;
+    QStringList uiFiles;
+    QString appName;
+};
+
+Kdelibs4ConfigMigrater::Kdelibs4ConfigMigrater(const QString &appName)
+    : d(new Private(appName))
 {
 }
 
-void MigrateConfig::setConfigFileNameList(const QStringList &configFileNameList)
+Kdelibs4ConfigMigrater::~Kdelibs4ConfigMigrater()
 {
-    mConfigFileNameList = configFileNameList;
+    delete d;
 }
 
-void MigrateConfig::setUiFileNameList(const QStringList &uiFileNameList)
+void Kdelibs4ConfigMigrater::setConfigFiles(const QStringList &configFileNameList)
 {
-    mUiFileNameList = uiFileNameList;
+    d->configFiles = configFileNameList;
 }
 
-void MigrateConfig::start()
+void Kdelibs4ConfigMigrater::setUiFiles(const QStringList &uiFileNameList)
+{
+    d->uiFiles = uiFileNameList;
+}
+
+bool Kdelibs4ConfigMigrater::migrate()
 {
     // Testing for kdehome
     Kdelibs4Migration migration;
     if (!migration.kdeHomeFound()) {
-        return;
+        return false;
     }
 
-    Q_FOREACH( const QString &configFileName, mConfigFileNameList) {
+    Q_FOREACH( const QString &configFileName, d->configFiles) {
         const QString newConfigLocation
                 = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
                 + QLatin1Char('/') + configFileName;
@@ -67,23 +86,24 @@ void MigrateConfig::start()
         }
     }
 
-    if (mAppName.isEmpty()) {
+    if (d->appName.isEmpty()) {
         qCritical() <<" We can not migrate ui file. AppName is missing";
     } else {
-        Q_FOREACH( const QString &uiFileName, mUiFileNameList) {
+        Q_FOREACH( const QString &uiFileName, d->uiFiles) {
             const QString newConfigLocation
                     = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-                    QStringLiteral("/kxmlgui5/") + mAppName + QLatin1Char('/') + uiFileName;
+                    QStringLiteral("/kxmlgui5/") + d->appName + QLatin1Char('/') + uiFileName;
             if (QFile(newConfigLocation).exists()) {
                 continue;
             }
             QFileInfo fileInfo(newConfigLocation);
             QDir().mkpath(fileInfo.absolutePath());
 
-            QString oldConfigFile(migration.locateLocal("data", mAppName + QLatin1Char('/') + uiFileName));
+            QString oldConfigFile(migration.locateLocal("data", d->appName + QLatin1Char('/') + uiFileName));
             if (!oldConfigFile.isEmpty()) {
                 QFile(oldConfigFile).copy(newConfigLocation);
             }
         }
     }
+    return true;
 }

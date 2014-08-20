@@ -15,26 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MIGRATECONFIG_H
-#define MIGRATECONFIG_H
+#ifndef KDELIBS4CONFIGMIGRATER_H
+#define KDELIBS4CONFIGMIGRATER_H
 
 #include "pimcommon_export.h"
 #include <QStringList>
 
 namespace PimCommon {
-class PIMCOMMON_EXPORT MigrateConfig
+class PIMCOMMON_EXPORT Kdelibs4ConfigMigrater
 {
 public:
-    MigrateConfig(const QString &appName);
-    void start();
-    void setConfigFileNameList(const QStringList &configFileNameList);
-    void setUiFileNameList(const QStringList &uiFileNameList);
+    Kdelibs4ConfigMigrater(const QString &appName);
+    ~Kdelibs4ConfigMigrater();
+
+    bool migrate();
+    void setConfigFiles(const QStringList &configFileNameList);
+    void setUiFiles(const QStringList &uiFileNameList);
 
 private:
-    QStringList mConfigFileNameList;
-    QStringList mUiFileNameList;
-    QString mAppName;
+    class Private;
+    friend class Private;
+    Private *const d;
 };
 }
 
-#endif // MIGRATECONFIG_H
+#endif // KDELIBS4CONFIGMIGRATER_H

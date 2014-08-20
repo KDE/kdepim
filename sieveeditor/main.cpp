@@ -27,14 +27,14 @@
 #include <QApplication>
 #include <KDBusService>
 #include <QCommandLineParser>
-#include "pimcommon/util/migrateconfig.h"
+#include "pimcommon/util/kdelibs4configmigrater.h"
 
 int main( int argc, char **argv )
 {
-    PimCommon::MigrateConfig migrate(QLatin1String("sieveeditor"));
-    migrate.setConfigFileNameList(QStringList()<<QLatin1String("sieveeditorrc"));
-    migrate.setUiFileNameList(QStringList()<<QLatin1String("sieveeditorui.rc"));
-    migrate.start();
+    PimCommon::Kdelibs4ConfigMigrater migrate(QLatin1String("sieveeditor"));
+    migrate.setConfigFiles(QStringList()<<QLatin1String("sieveeditorrc"));
+    migrate.setUiFiles(QStringList()<<QLatin1String("sieveeditorui.rc"));
+    migrate.migrate();
 
     KLocalizedString::setApplicationDomain("sieveeditor");
     QApplication app(argc, argv);
