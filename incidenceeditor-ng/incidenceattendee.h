@@ -36,6 +36,7 @@ namespace KPIM {
 
 namespace KABC {
   class Addressee;
+  class ContactGroup;
 }
 
 class KJob;
@@ -82,13 +83,17 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     void declineForMe();
 
   private slots:
-    void checkIfExpansionIsNeeded( KPIM::MultiplyingLine * );
-    void expandResult( KJob *job );
+    // cheks if row is a group,  that can/should be expanded
+    void checkIfExpansionIsNeeded(KCalCore::Attendee::Ptr attendee);
+
+    // results of the group search job
     void groupSearchResult( KJob *job );
+    void expandResult( KJob *job );
     void slotSelectAddresses();
     void slotSolveConflictPressed();
     void slotUpdateConflictLabel( int );
     void slotOrganizerChanged( const QString &organizer );
+    void slotGroupSubstitutionPressed();
 
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
@@ -96,13 +101,19 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     void filterLayoutChanged();
     void updateCount();
 
-    void slotAttendeeAdded(const QModelIndex &index, int first, int last);
-    void slotAttendeeRemoved(const QModelIndex &index, int first, int last);
-    void slotAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-    void slotAttendeeLayoutChanged();
+    void slotConflictResolverAttendeeAdded(const QModelIndex &index, int first, int last);
+    void slotConflictResolverAttendeeRemoved(const QModelIndex &index, int first, int last);
+    void slotConflictResolverAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void slotConflictResolverLayoutChanged();
 
+    void slotGroupSubstitutionAttendeeAdded(const QModelIndex &index, int first, int last);
+    void slotGroupSubstitutionAttendeeRemoved(const QModelIndex &index, int first, int last);
+    void slotGroupSubstitutionAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void slotGroupSubstitutionLayoutChanged();
 
-  private:
+private:
+    void updateGroupExpand();
+
     void changeStatusForMe( KCalCore::Attendee::PartStat );
 
     /** Returns if I was the organizer of the loaded event */
@@ -113,8 +124,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
      * from the addressbook and expanding distribution lists.
      * The optional Attendee parameter can be used to pass in default values
      * to be used by the new Attendee.
+     * pos =-1 means insert attendee before empty line
      */
-    void insertAttendeeFromAddressee( const KABC::Addressee &a );
+    void insertAttendeeFromAddressee( const KABC::Addressee &a, int pos = -1);
     void fillOrganizerCombo();
     void setActions( KCalCore::Incidence::IncidenceType actions );
 
@@ -124,9 +136,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     Ui::EventOrTodoDesktop *mUi;
 #endif
     QWidget *mParentWidget;
-    AttendeeEditor *mAttendeeEditor;
     ConflictResolver *mConflictResolver;
-    QMap<KJob *,QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
+
     IncidenceDateTime *mDateTime;
     QString mOrganizer;
 
@@ -137,6 +148,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     AttendeeComboBoxDelegate *mRoleDelegate;
     AttendeeComboBoxDelegate *mResponseDelegate;
 
+    QMap<KCalCore::Attendee::Ptr, KABC::ContactGroup> mGroupList;
+    QMap<KJob *, KCalCore::Attendee::Ptr> mMightBeGroupJobs;
+    QMap<KJob *, KCalCore::Attendee::Ptr> mExpandGroupJobs;
 };
 
 }
