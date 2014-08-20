@@ -33,7 +33,8 @@
 #include "progressbar.h"
 
 #include <QTimer>
-#include <kdebug.h>
+#include <QDebug>
+#include "kleo_ui_debug.h"
 
 static const int busyTimerTickInterval = 100;
 static const int busyTimerTickIncrement = 5;
@@ -57,7 +58,7 @@ void Kleo::ProgressBar::slotProgress( const QString &, int, int cur, int tot ) {
 }
 
 void Kleo::ProgressBar::setMaximum( int total ) {
-  kDebug(5150) <<"Kleo::ProgressBar::setMaximum(" << total <<" )";
+  qCDebug(KLEO_UI_LOG) <<"Kleo::ProgressBar::setMaximum(" << total <<" )";
   if ( total == maximum() )
     return;
   QProgressBar::setMaximum( 0 );
@@ -65,7 +66,7 @@ void Kleo::ProgressBar::setMaximum( int total ) {
 }
 
 void Kleo::ProgressBar::setValue( int p ) {
-  kDebug(5150) <<"Kleo::ProgressBar::setValue(" << p <<" )";
+  qCDebug(KLEO_UI_LOG) <<"Kleo::ProgressBar::setValue(" << p <<" )";
   mRealProgress = p;
   fixup( true );
 }
@@ -85,23 +86,23 @@ void Kleo::ProgressBar::fixup( bool newValue ) {
   const int cur = QProgressBar::value();
   const int tot = QProgressBar::maximum();
 
-  kDebug(5150) <<"Kleo::ProgressBar::startStopBusyTimer() cur =" << cur <<"; tot =" << tot <<"; real =" << mRealProgress;
+  qCDebug(KLEO_UI_LOG) <<"Kleo::ProgressBar::startStopBusyTimer() cur =" << cur <<"; tot =" << tot <<"; real =" << mRealProgress;
 
   if ( ( newValue && mRealProgress < 0 ) || ( !newValue && cur < 0 ) ) {
-    kDebug(5150) <<"(new value) switch to reset";
+    qCDebug(KLEO_UI_LOG) <<"(new value) switch to reset";
     mBusyTimer->stop();
     if ( newValue )
       QProgressBar::reset();
     mRealProgress = -1;
   } else if ( tot == 0 ) {
-    kDebug(5150) <<"(new value) switch or stay in busy";
+    qCDebug(KLEO_UI_LOG) <<"(new value) switch or stay in busy";
     if ( !mBusyTimer->isActive() ) {
       mBusyTimer->start( busyTimerTickInterval );
       if ( newValue )
         QProgressBar::setValue( mRealProgress );
     }
   } else {
-    kDebug(5150) <<"(new value) normal progress";
+    qCDebug(KLEO_UI_LOG) <<"(new value) normal progress";
     mBusyTimer->stop();
     if ( QProgressBar::value() != mRealProgress )
       QProgressBar::setValue( mRealProgress );

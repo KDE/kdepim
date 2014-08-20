@@ -31,6 +31,8 @@
 */
 
 #include "progressdialog.h"
+#include <QDebug>
+#include "kleo_ui_debug.h"
 
 #ifndef QT_NO_PROGRESSDIALOG
 
@@ -79,7 +81,7 @@ void Kleo::ProgressDialog::setMinimumDuration( int ms ) {
 }
 
 void Kleo::ProgressDialog::slotProgress( const QString & what, int current, int total ) {
-  kDebug(5150) <<"Kleo::ProgressDialog::slotProgress( \"" << what <<"\","
+  qCDebug(KLEO_UI_LOG) <<"Kleo::ProgressDialog::slotProgress( \"" << what <<"\","
                 << current << "," << total << ")";
   if ( mBaseText.isEmpty() )
     setLabelText( what );
@@ -91,7 +93,7 @@ void Kleo::ProgressDialog::slotProgress( const QString & what, int current, int 
 }
 
 void Kleo::ProgressDialog::slotDone() {
-  kDebug(5150) <<"Kleo::ProgressDialog::slotDone()";
+  qCDebug(KLEO_UI_LOG) <<"Kleo::ProgressDialog::slotDone()";
   hide();
   deleteLater();
 }

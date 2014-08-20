@@ -86,6 +86,7 @@ set(libkleo_ui_common_SRCS
    ui/directoryserviceswidget.cpp
    ui/progressbar.cpp
    ui/progressdialog.cpp
+   ui/kleo_ui_debug.cpp
    )
 
 set(libkleo_ui_SRCS    # make this a separate lib.

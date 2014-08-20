@@ -33,7 +33,8 @@
 
 #include "keylistview.h"
 
-#include <kdebug.h>
+#include <QDebug>
+#include "kleo_ui_debug.h"
 
 #include <QFontMetrics>
 #include <QToolTip>
@@ -90,7 +91,7 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
   d->updateTimer->setSingleShot( true );
   connect( d->updateTimer, SIGNAL(timeout()), SLOT(slotUpdateTimeout()) );
   if ( !columnStrategy ) {
-    kWarning(5150) <<"Kleo::KeyListView: need a column strategy to work with!";
+    qCWarning(KLEO_UI_LOG) <<"Kleo::KeyListView: need a column strategy to work with!";
     return;
   }
 
@@ -126,7 +127,7 @@ Kleo::KeyListView::~KeyListView() {
 
 
 void Kleo::KeyListView::takeItem( QTreeWidgetItem * qlvi ) {
-  //kDebug(5150) <<"Kleo::KeyListView::takeItem(" << qlvi <<" )";
+  //qCDebug(KLEO_UI_LOG) <<"Kleo::KeyListView::takeItem(" << qlvi <<" )";
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     deregisterItem( item );
   takeTopLevelItem( indexOfTopLevelItem( qlvi ) );
@@ -159,7 +160,7 @@ void Kleo::KeyListView::slotUpdateTimeout() {
   const bool wasUpdatesEnabled = viewport()->updatesEnabled();
   if ( wasUpdatesEnabled )
     viewport()->setUpdatesEnabled( false );
-  kDebug( 5150 ) <<"Kleo::KeyListView::slotUpdateTimeout(): processing"
+  qCDebug(KLEO_UI_LOG) <<"Kleo::KeyListView::slotUpdateTimeout(): processing"
                   << d->keyBuffer.size() << "items en block";
   if ( hierarchical() ) {
     for ( std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin() ; it != d->keyBuffer.end() ; ++it )
@@ -183,7 +184,7 @@ void Kleo::KeyListView::clear() {
 }
 
 void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
-  //kDebug(5150) <<"registerItem(" << item <<" )";
+  //qCDebug(KLEO_UI_LOG) <<"registerItem(" << item <<" )";
   if ( !item )
     return;
   const QByteArray fpr = item->key().primaryFingerprint();
@@ -192,7 +193,7 @@ void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
 }
 
 void Kleo::KeyListView::deregisterItem( const KeyListViewItem * item ) {
-  //kDebug(5150) <<"deregisterItem( KeyLVI:" << item <<" )";
+  //qCDebug(KLEO_UI_LOG) <<"deregisterItem( KeyLVI:" << item <<" )";
   if ( !item )
     return;
   std::map<QByteArray,KeyListViewItem*>::iterator it
@@ -203,7 +204,7 @@ void Kleo::KeyListView::deregisterItem( const KeyListViewItem * item ) {
   // information when it happens.
   //Q_ASSERT( it->second == item );
   if ( it->second != item ) {
-    kWarning(5150) << "deregisterItem:"
+    qCWarning(KLEO_UI_LOG) << "deregisterItem:"
                    << "item      " << item->key().primaryFingerprint()
                    << "it->second" << (it->second ? it->second->key().primaryFingerprint() : "is null" );
     return;
@@ -400,7 +401,7 @@ bool Kleo::KeyListViewItem::operator<(const QTreeWidgetItem& other) const
 
 
 void Kleo::KeyListViewItem::takeItem( QTreeWidgetItem * qlvi ) {
-  //kDebug(5150) <<"Kleo::KeyListViewItem::takeItem(" << qlvi <<" )";
+  //qCDebug(KLEO_UI_LOG) <<"Kleo::KeyListViewItem::takeItem(" << qlvi <<" )";
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     listView()->deregisterItem( item );
   takeChild( indexOfChild( qlvi ) );

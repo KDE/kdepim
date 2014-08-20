@@ -43,6 +43,8 @@
 #include "kleo/dn.h"
 #include "kleo/keylistjob.h"
 #include "kleo/cryptobackendfactory.h"
+#include <QDebug>
+#include "kleo_ui_debug.h"
 
 // gpgme++
 #include <gpgme++/key.h>
@@ -89,49 +91,49 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
   if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys ) {
     if ( key.isInvalid() ) {
       if ( key.keyListMode() & GpgME::Validate ) {
-        kDebug(5150) << "key is invalid";
+        qCDebug(KLEO_UI_LOG) << "key is invalid";
         return false;
       } else {
-        kDebug(5150) << "key is invalid - ignoring";
+        qCDebug(KLEO_UI_LOG) << "key is invalid - ignoring";
       }
     }
     if ( key.isExpired() ) {
-      kDebug(5150) <<"key is expired";
+      qCDebug(KLEO_UI_LOG) <<"key is expired";
       return false;
     } else if ( key.isRevoked() ) {
-      kDebug(5150) <<"key is revoked";
+      qCDebug(KLEO_UI_LOG) <<"key is revoked";
       return false;
     } else if ( key.isDisabled() ) {
-      kDebug(5150) <<"key is disabled";
+      qCDebug(KLEO_UI_LOG) <<"key is disabled";
       return false;
     }
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::EncryptionKeys &&
        !key.canEncrypt() ) {
-    kDebug(5150) <<"key can't encrypt";
+    qCDebug(KLEO_UI_LOG) <<"key can't encrypt";
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::SigningKeys &&
        !key.canSign() ) {
-    kDebug(5150) <<"key can't sign";
+    qCDebug(KLEO_UI_LOG) <<"key can't sign";
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::CertificationKeys &&
        !key.canCertify() ) {
-    kDebug(5150) <<"key can't certify";
+    qCDebug(KLEO_UI_LOG) <<"key can't certify";
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::AuthenticationKeys &&
        !key.canAuthenticate() ) {
-    kDebug(5150) <<"key can't authenticate";
+    qCDebug(KLEO_UI_LOG) <<"key can't authenticate";
     return false;
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::SecretKeys &&
        !( keyUsage & Kleo::KeySelectionDialog::PublicKeys ) &&
        !key.hasSecret() ) {
-    kDebug(5150) <<"key isn't secret";
+    qCDebug(KLEO_UI_LOG) <<"key isn't secret";
     return false;
   }
 
@@ -144,7 +146,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
     for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it )
       if ( !it->isRevoked() && it->validity() >= GpgME::UserID::Marginal )
         return true;
-    kDebug(5150) <<"key has no UIDs with validity >= Marginal";
+    qCDebug(KLEO_UI_LOG) <<"key has no UIDs with validity >= Marginal";
     return false;
   }
   // X.509 keys are always trusted, else they won't be the keybox.
@@ -590,7 +592,7 @@ void Kleo::KeySelectionDialog::slotStartCertificateManager( const QString &query
                               "please check your installation." ),
                         i18n( "Certificate Manager Error" ) );
   else
-    kDebug(5150) <<"\nslotStartCertManager(): certificate manager started.";
+    qCDebug(KLEO_UI_LOG) <<"\nslotStartCertManager(): certificate manager started.";
 }
 
 #ifndef __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
@@ -689,7 +691,7 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 }
 
 void Kleo::KeySelectionDialog::slotSelectionChanged() {
-  kDebug(5150) <<"KeySelectionDialog::slotSelectionChanged()";
+  qCDebug(KLEO_UI_LOG) <<"KeySelectionDialog::slotSelectionChanged()";
 
   // (re)start the check selection timer. Checking the selection is delayed
   // because else drag-selection doesn't work very good (checking key trust
@@ -706,7 +708,7 @@ namespace {
 }
 
 void Kleo::KeySelectionDialog::slotCheckSelection( KeyListViewItem * item ) {
-  kDebug(5150) <<"KeySelectionDialog::slotCheckSelection()";
+  qCDebug(KLEO_UI_LOG) <<"KeySelectionDialog::slotCheckSelection()";
 
   mCheckSelectionTimer->stop();
 

@@ -39,7 +39,8 @@
 
 #include <klineedit.h>
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <QDebug>
+#include "kleo_ui_debug.h"
 #include <knuminput.h>
 #include <kiconloader.h>
 #include <kglobal.h>
@@ -157,7 +158,7 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
 
   const QStringList components = config->componentList();
   for ( QStringList::const_iterator it = components.begin(); it != components.end(); ++it ) {
-    //kDebug(5150) <<"Component" << (*it).toLocal8Bit() <<":";
+    //qCDebug(KLEO_UI_LOG) <<"Component" << (*it).toLocal8Bit() <<":";
     Kleo::CryptoConfigComponent* comp = config->component( *it );
     Q_ASSERT( comp );
     if ( comp->groupList().empty() )
@@ -324,7 +325,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
     Kleo::CryptoConfigEntry* entry = group->entry( *it );
     Q_ASSERT( entry );
     if ( entry->level() > CryptoConfigEntry::Level_Advanced ) {
-        kDebug(5150) << "entry" << *it << "too advanced, skipping";
+        qCDebug(KLEO_UI_LOG) << "entry" << *it << "too advanced, skipping";
         continue;
     }
     CryptoConfigEntryGUI* entryGUI =
@@ -435,12 +436,12 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
         if ( const constructor create = listWidgets[argType] )
             return create( module, entry, entryName, glay, widget );
         else
-            kWarning(5150) <<"No widget implemented for list of type" << entry->argType();
+            qCWarning(KLEO_UI_LOG) <<"No widget implemented for list of type" << entry->argType();
     else
         if ( const constructor create = scalarWidgets[argType] )
             return create( module, entry, entryName, glay, widget );
         else
-            kWarning(5150) <<"No widget implemented for type" << entry->argType();
+            qCWarning(KLEO_UI_LOG) <<"No widget implemented for type" << entry->argType();
 
     return 0;
 }

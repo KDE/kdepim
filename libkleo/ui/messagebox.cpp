@@ -33,6 +33,8 @@
 #include "messagebox.h"
 #include "messagebox_p.h"
 
+#include <QDebug>
+#include "kleo_ui_debug.h"
 #include "kleo/job.h"
 
 #include <gpgme++/signingresult.h>
@@ -334,23 +336,23 @@ void MessageBox::error( QWidget * parent, const SigningResult & sresult, const E
 // static
 bool MessageBox::showAuditLogButton( const Kleo::Job * job ) {
     if ( !job ) {
-        kDebug(5150) << "not showing audit log button (no job instance)";
+        qCDebug(KLEO_UI_LOG) << "not showing audit log button (no job instance)";
         return false;
     }
     if ( !GpgME::hasFeature( GpgME::AuditLogFeature ) ) {
-        kDebug(5150) << "not showing audit log button (gpgme too old)";
+        qCDebug(KLEO_UI_LOG) << "not showing audit log button (gpgme too old)";
         return false;
     }
     if ( !job->isAuditLogSupported() ) {
-        kDebug(5150) << "not showing audit log button (not supported)";
+        qCDebug(KLEO_UI_LOG) << "not showing audit log button (not supported)";
         return false;
     }
     if ( job->auditLogError().code() == GPG_ERR_NO_DATA ) {
-        kDebug(5150) << "not showing audit log button (GPG_ERR_NO_DATA)";
+        qCDebug(KLEO_UI_LOG) << "not showing audit log button (GPG_ERR_NO_DATA)";
         return false;
     }
     if ( !job->auditLogError() && job->auditLogAsHtml().isEmpty() ) {
-        kDebug(5150) << "not showing audit log button (success, but result empty)";
+        qCDebug(KLEO_UI_LOG) << "not showing audit log button (success, but result empty)";
         return false;
     }
     return true;
