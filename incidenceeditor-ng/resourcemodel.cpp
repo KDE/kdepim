@@ -39,7 +39,7 @@ ResourceModel::ResourceModel(const QStringList &headers,
     ldapSearchCollections.setFilter(QString::fromLatin1("&(ou=Resources,*)(objectClass=kolabGroupOfUniqueNames)(objectclass=groupofurls)(!(objectclass=nstombstone))(mail=*)"
                                     "(cn=%1)"));
     ldapSearch.setFilter(QString::fromLatin1("&(objectClass=kolabSharedFolder)(kolabFolderType=event)(mail=*)"
-                         "(|(cn=%1)(givenName=%1)(sn=%1))"));
+                                      "(|(cn=%1)(description=%1)(kolabDescAttribute=%1))"));
 
     QStringList attrs = ldapSearchCollections.attributes();
     attrs << QLatin1String("uniqueMember");
