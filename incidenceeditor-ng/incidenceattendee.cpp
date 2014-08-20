@@ -408,6 +408,10 @@ void IncidenceAttendee::groupSearchResult( KJob *job )
   // TODO: Give the user the possibility to choose a group when there is more than one?!
   KABC::ContactGroup group = contactGroups.first();
 
+  int row = dataModel()->attendees().indexOf(attendee);
+  QModelIndex index = dataModel()->index(row, AttendeeTableModel::CuType);
+  dataModel()->setData(index,  KCalCore::Attendee::Group);
+
   mGroupList.insert(attendee,  group);
   updateGroupExpand();
 }
