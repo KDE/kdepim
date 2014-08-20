@@ -40,7 +40,7 @@
 
 #include <gpgme++/key.h>
 
-#include <KDebug>
+
 #include <KMessageBox>
 #include <KLocalizedString>
 

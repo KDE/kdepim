@@ -36,8 +36,8 @@
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
-#include <KDebug>
 
+#include <QDebug>
 #include <QTimer>
 #include <QPointer>
 #include <QWidget>

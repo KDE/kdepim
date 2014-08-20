@@ -41,7 +41,7 @@
 
 #include <kleo/stl_util.h>
 
-#include <KDebug>
+
 #include <KLocalizedString>
 
 #include <QGridLayout>

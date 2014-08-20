@@ -77,7 +77,7 @@
 
 #include <KActionCollection>
 #include <KLocalizedString>
-#include <KDebug>
+
 
 #include <QAbstractItemView>
 #include <QPointer>

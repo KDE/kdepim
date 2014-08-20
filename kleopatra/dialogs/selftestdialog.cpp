@@ -38,12 +38,13 @@
 
 #include <selftest/selftest.h>
 
-#include <KDebug>
+
 #include <KLocalizedString>
 
 #include <QAbstractTableModel>
 #include <QHeaderView>
 #include <QSortFilterProxyModel>
+#include <QDebug>
 
 #include <boost/shared_ptr.hpp>
 
@@ -183,24 +184,24 @@ namespace {
                     if ( const shared_ptr<SelfTest> & t = model->at( src_row ) ) {
                         return !t->passed() ;
                     } else {
-                        kWarning() <<  "NULL test??";
+                        qWarning() <<  "NULL test??";
                     }
                 } else {
                     if ( src_parent.isValid() ) {
-                        kWarning() <<  "view asks for subitems!";
+                        qWarning() <<  "view asks for subitems!";
                     } else {
-                        kWarning() << "index " << src_row
+                        qWarning() << "index " << src_row
                                    << " is out of range [" << 0
                                    << "," <<  model->rowCount( src_parent )
                                    << "]";
                     }
                 }
             } else {
-                kWarning() << "expected a ::Model, got ";
+                qWarning() << "expected a ::Model, got ";
                 if ( !sourceModel() ) {
-                    kWarning() << "a null pointer";
+                    qWarning() << "a null pointer";
                 } else {
-                    kWarning() <<  sourceModel()->metaObject()->className();
+                    qWarning() <<  sourceModel()->metaObject()->className();
                 }
 
             }

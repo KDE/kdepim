@@ -38,7 +38,7 @@
 
 #include <QDate>
 
-#include <KDebug>
+
 
 #include <cassert>
 

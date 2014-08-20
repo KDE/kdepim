@@ -49,7 +49,7 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KDebug>
+
 
 #include <QLabel>
 #include <QPushButton>

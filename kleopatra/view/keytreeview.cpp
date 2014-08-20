@@ -43,8 +43,8 @@
 #include <kleo/stl_util.h>
 #include <kleo/keyfilter.h>
 
-#include <KDebug>
 
+#include <QDebug>
 #include <QTreeView>
 #include <QHeaderView>
 #include <QItemSelectionModel>

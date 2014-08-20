@@ -58,7 +58,7 @@
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 
-#include <KDebug>
+
 #include <KMessageBox>
 #include <KLocalizedString>
 
