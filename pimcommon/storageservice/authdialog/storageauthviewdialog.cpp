@@ -19,17 +19,31 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 using namespace PimCommon;
 
 StorageAuthViewDialog::StorageAuthViewDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Authorize" ) );
-    setButtons( Ok | Cancel );
+    setWindowTitle( i18n( "Authorize" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     mView = new StorageAuthViewWidget;
+    mainLayout->addWidget(mView);
+    mainLayout->addWidget(buttonBox);
+
     connect(mView, SIGNAL(urlChanged(QUrl)), SIGNAL(urlChanged(QUrl)));
-    setMainWidget(mView);
+    mainLayout->addWidget(mView);
     readConfig();
 }
 

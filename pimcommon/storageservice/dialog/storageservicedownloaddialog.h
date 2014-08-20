@@ -18,7 +18,8 @@
 #ifndef STORAGESERVICEDOWNLOADDIALOG_H
 #define STORAGESERVICEDOWNLOADDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 #include "pimcommon_export.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 
@@ -30,7 +31,7 @@ class StorageServiceProgressWidget;
 class StorageServiceProgressIndicator;
 class StorageServiceTreeWidgetItem;
 class StorageServiceDownloadTreeWidget;
-class PIMCOMMON_EXPORT StorageServiceDownloadDialog : public KDialog
+class PIMCOMMON_EXPORT StorageServiceDownloadDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -65,6 +66,8 @@ private:
     PimCommon::StorageServiceProgressWidget *mProgressWidget;
     PimCommon::StorageServiceProgressIndicator *mStorageServiceProgressIndicator;
     QLabel *mLabelProgressIncator;
+    QPushButton *mUser1Button;
+    QPushButton *mCloseButton;
 };
 
 class StorageServiceDownloadTreeWidget : public PimCommon::StorageServiceTreeWidget

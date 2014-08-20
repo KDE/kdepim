@@ -22,17 +22,31 @@
 
 #include <QGridLayout>
 #include <QLabel>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace PimCommon;
 
 LoginDialog::LoginDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Authorize" ) );
-    setButtons( Ok | Cancel );
-    setDefaultButton(Ok);
+    setWindowTitle( i18n( "Authorize" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mOkButton->setDefault(true);
 
     QWidget *w = new QWidget;
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
+
     QGridLayout *grid = new QGridLayout;
     w->setLayout(grid);
 
@@ -49,9 +63,9 @@ LoginDialog::LoginDialog(QWidget *parent)
     grid->addWidget(mPassword, 1, 1);
     mPassword->setEchoMode(QLineEdit::Password);
 
-    setMainWidget(w);
+    mainLayout->addWidget(w);
     connect(mUsername, SIGNAL(textChanged(QString)), this, SLOT(slotUserNameChanged(QString)));
-    enableButtonOk(false);
+    mOkButton->setEnabled(false);
     resize(300,100);
     mLabUsername->setFocus();
 }
@@ -88,5 +102,5 @@ QString LoginDialog::username() const
 
 void LoginDialog::slotUserNameChanged(const QString &name)
 {
-    enableButtonOk(!name.isEmpty());
+    mOkButton->setEnabled(!name.isEmpty());
 }

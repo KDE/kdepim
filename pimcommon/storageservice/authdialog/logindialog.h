@@ -18,12 +18,13 @@
 #ifndef LOGINDIALOG_H
 #define LOGINDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class QLineEdit;
 class QLabel;
+class QPushButton;
 namespace PimCommon {
-class LoginDialog : public KDialog
+class LoginDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -44,6 +45,7 @@ private:
     QLineEdit *mUsername;
     QLineEdit *mPassword;
     QLabel *mLabUsername;
+    QPushButton *mOkButton;
 };
 
 }
