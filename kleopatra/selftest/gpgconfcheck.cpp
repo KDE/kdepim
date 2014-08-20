@@ -39,7 +39,7 @@
 #include <utils/gnupg-helper.h>
 #include <utils/hex.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QProcess>

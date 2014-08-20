@@ -38,14 +38,14 @@
 #include <numeric>
 #include <cassert>
 
-#include <KDebug>
+#include <QDebug>
 
 //#define ENABLE_HEADERVIEW_DEBUG
 
 #ifdef ENABLE_HEADERVIEW_DEBUG
-# define hvDebug kDebug
+# define hvDebug qDebug
 #else
-# define hvDebug if ( true ) {} else kDebug
+# define hvDebug if ( true ) {} else qDebug
 #endif
 
 using namespace Kleo;

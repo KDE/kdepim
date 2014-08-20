@@ -65,7 +65,7 @@
 
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 #include <QTemporaryDir>
 #include <KMessageBox>
 #include <QIcon>

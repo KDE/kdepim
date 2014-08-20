@@ -38,7 +38,7 @@
 
 #include <gpgme++/engineinfo.h>
 
-#include <KDebug>
+#include <QDebug>
 
 
 #include <QDir>

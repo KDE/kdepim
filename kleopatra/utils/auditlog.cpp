@@ -37,7 +37,7 @@
 #include <kleo/job.h>
 
 #include <KUrl>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 using namespace Kleo;

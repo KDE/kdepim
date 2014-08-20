@@ -34,7 +34,7 @@
 
 #include "filesystemwatcher.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QFileSystemWatcher>
 #include <QString>
@@ -284,7 +284,8 @@ void FileSystemWatcher::addPaths( const QStringList& paths )
     if ( paths.empty() )
         return;
     const QStringList newPaths = paths + resolve( paths, d->m_blacklist, d->m_whitelist );
-    kDebug( !newPaths.empty() ) << "adding\n " << newPaths.join( QLatin1String("\n ") ) << "\n/end";
+    if (!newPaths.empty())
+         qDebug() << "adding\n " << newPaths.join( QLatin1String("\n ") ) << "\n/end";
     d->m_paths += newPaths;
     d->m_seenPaths.insert( newPaths.begin(), newPaths.end() );
     if ( d->m_watcher && !newPaths.empty() )

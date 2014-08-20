@@ -48,7 +48,7 @@
 
 #include <gpg-error.h>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QStringList>
 #include <QDir>

@@ -43,7 +43,7 @@
 #include <gpg-error.h>
 
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 
 #include <QFile>
 #include <QRegExp>
@@ -157,7 +157,7 @@ shared_ptr<SelfTest> Kleo::makeGpgConfEngineCheckSelfTest() {
 static bool is_version( const char * actual, int major, int minor, int patch ) {
     QRegExp rx( QLatin1String("(\\d+)\\.(\\d+)\\.(\\d+)(?:-svn\\d+)?.*") );
     if ( !rx.exactMatch( QString::fromUtf8( actual ) ) ) {
-        kDebug() << "Can't parse version " << actual;
+        qDebug() << "Can't parse version " << actual;
         return false;
     }
     bool ok;
@@ -168,7 +168,7 @@ static bool is_version( const char * actual, int major, int minor, int patch ) {
         assert( ok );
     }
 
-    kDebug() << "Parsed" << actual << "as: "
+    qDebug() << "Parsed" << actual << "as: "
              << actual_version[0] << '.'
              << actual_version[1] << '.'
              << actual_version[2] << '.' ;
@@ -178,8 +178,10 @@ static bool is_version( const char * actual, int major, int minor, int patch ) {
     // return ! ( actual_version < required_version )
     ok = !std::lexicographical_compare( begin(  actual_version  ), end(  actual_version  ),
                                         begin( required_version ), end( required_version ) );
-    kDebug( ok )  << QString::fromLatin1("%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) << "<=" << actual ;
-    kDebug( !ok ) << QString::fromLatin1( "%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) << ">" << actual ;
+    if (ok)
+       qDebug()  << QString::fromLatin1("%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) << "<=" << actual ;
+    else 
+        qDebug() << QString::fromLatin1( "%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) << ">" << actual ;
     return ok;
 }
 

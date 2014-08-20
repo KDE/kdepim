@@ -34,7 +34,7 @@
 
 #include "sessiondata.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QMutex>
 

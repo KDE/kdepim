@@ -36,7 +36,7 @@
 
 #include <utils/multivalidator.h>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QRegExp>
 #include <QUrl>

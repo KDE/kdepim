@@ -38,7 +38,7 @@
 
 #include <kmessagebox.h>
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <QDebug>
 #include <kcomponentdata.h>
 
 

@@ -38,7 +38,7 @@
 
 #include <kleo/exception.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QString>

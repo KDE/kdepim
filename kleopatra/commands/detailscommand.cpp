@@ -37,7 +37,7 @@
 
 #include <dialogs/certificatedetailsdialog.h>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <cassert>
 

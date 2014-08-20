@@ -63,7 +63,7 @@
 
 #include <kmime/kmime_header_parsing.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KWindowSystem>
 

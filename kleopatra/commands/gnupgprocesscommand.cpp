@@ -38,7 +38,7 @@
 
 #include <utils/kdlogtextwidget.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KProcess>
 #include <KLocalizedString>
 #include <KWindowSystem>

@@ -47,7 +47,7 @@
 
 #include <gpg-error.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QByteArray>

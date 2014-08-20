@@ -60,7 +60,7 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KCmdLineOptions>
-#include <KDebug>
+#include <QDebug>
 #include <KUrl>
 #include <KWindowSystem>
 
@@ -271,9 +271,10 @@ int KleopatraApplication::newInstance() {
 
     const bool openpgp = args->isSet( "openpgp" );
     const bool cms     = args->isSet( "cms" );
-
-    kDebug( openpgp ) << "found OpenPGP";
-    kDebug( cms )     << "found CMS";
+    if (openpgp )
+       qDebug() << "found OpenPGP";
+    if (cms)
+       qDebug()     << "found CMS";
 
     if ( openpgp && cms ) {
         qDebug() << "ambigious protocol: --openpgp and --cms";

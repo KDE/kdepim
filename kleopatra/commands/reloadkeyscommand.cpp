@@ -37,7 +37,7 @@
 
 #include <models/keycache.h>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <gpgme++/keylistresult.h>
 

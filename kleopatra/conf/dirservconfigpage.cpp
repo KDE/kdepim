@@ -40,7 +40,7 @@
 
 #include <kmessagebox.h>
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <QDebug>
 #include <kconfig.h>
 #include <knuminput.h>
 #include <kdialog.h>
@@ -263,7 +263,7 @@ void DirectoryServicesConfigurationPage::load()
   mTimeoutConfigEntry = configEntry( s_timeout_componentName, s_timeout_groupName, s_timeout_entryName, Kleo::CryptoConfigEntry::ArgType_UInt, false );
   if ( mTimeoutConfigEntry ) {
     QTime time = QTime().addSecs( mTimeoutConfigEntry->uintValue() );
-    //kDebug() <<"timeout:" << mTimeoutConfigEntry->uintValue() <<"  ->" << time;
+    //qDebug() <<"timeout:" << mTimeoutConfigEntry->uintValue() <<"  ->" << time;
     mTimeout->setTime( time );
   }
 

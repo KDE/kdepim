@@ -38,7 +38,6 @@
 #include <QVBoxLayout>
 #include <kmessagebox.h>
 #include <KLocalizedString>
-#include <kdebug.h>
 #include <kcomponentdata.h>
 
 

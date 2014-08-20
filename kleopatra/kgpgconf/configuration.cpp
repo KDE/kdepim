@@ -635,7 +635,7 @@ QString ConfigEntry::toString( ConfigEntry::EscapeMode mode ) const
         }
       }
       QString res = lst.join( QLatin1String(",") );
-      //kDebug(5150) <<"toString:" << res;
+      //qDebug() <<"toString:" << res;
       return res;
     } else { // normal string
       QString res = m_value.toString();

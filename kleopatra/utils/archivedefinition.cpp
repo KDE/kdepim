@@ -43,7 +43,7 @@
 #include <kleo/cryptobackendfactory.h>
 
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KConfig>
 #include <KShell>

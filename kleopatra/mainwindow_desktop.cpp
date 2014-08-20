@@ -74,7 +74,7 @@
 #include <qdebug.h>
 #include <KLineEdit>
 #include <KGlobal>
-#include <KDebug>
+#include <QDebug>
 #include <KActionMenu>
 #include <KConfigGroup>
 
@@ -428,7 +428,8 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
             QTimer::singleShot( 100, &ev, SLOT(quit()) );
             connect( &d->controller, SIGNAL(commandsExecuting(bool)), &ev, SLOT(quit()) );
             ev.exec();
-            kWarning( d->controller.hasRunningCommands() )
+            if (d->controller.hasRunningCommands())
+              qWarning()
                 << "controller still has commands running, this may crash now...";
             setEnabled( true );
         }

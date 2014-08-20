@@ -42,7 +42,7 @@
 #include <KLocalizedString>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <kdebug.h>
+#include <QDebug>
 
 class KWatchGnuPGApplication : public KUniqueApplication {
 public:
@@ -83,7 +83,7 @@ int main( int argc, char** argv )
 
 #if 0
   if (!KWatchGnuPGApplication::start()) {
-        kError() <<"KWatchGnuPG is already running!";
+        qCritical() <<"KWatchGnuPG is already running!";
         return 0;
   }
 #endif
