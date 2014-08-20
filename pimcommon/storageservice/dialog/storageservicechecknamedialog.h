@@ -19,12 +19,14 @@
 #ifndef STORAGESERVICECHECKNAMEDIALOG_H
 #define STORAGESERVICECHECKNAMEDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 #include "pimcommon_export.h"
 class QLineEdit;
 class QLabel;
+class QPushButton;
 namespace PimCommon {
-class PIMCOMMON_EXPORT StorageServiceCheckNameDialog : public KDialog
+class PIMCOMMON_EXPORT StorageServiceCheckNameDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -44,6 +46,7 @@ private:
     QRegExp mRegExp;
     QLabel *mInfo;
     QLineEdit *mName;
+    QPushButton *mOkButton;
 };
 }
 

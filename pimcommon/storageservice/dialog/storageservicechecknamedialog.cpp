@@ -25,19 +25,31 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace PimCommon;
 
 StorageServiceCheckNameDialog::StorageServiceCheckNameDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption(i18n("New name"));
-    setButtons(Ok|Cancel);
-    QVBoxLayout *lay = new QVBoxLayout;
-    QWidget *w = new QWidget;
-    w->setLayout(lay);
-    setMainWidget(w);
+    setWindowTitle(i18n("New name"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
+    QWidget *w = new QWidget;
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
+
+    QVBoxLayout *lay = new QVBoxLayout;
+    w->setLayout(lay);
     mInfo = new QLabel(i18n("Some characters are not allowed."));
     lay->addWidget(mInfo);
 
@@ -58,10 +70,10 @@ StorageServiceCheckNameDialog::~StorageServiceCheckNameDialog()
 void StorageServiceCheckNameDialog::slotNameChanged(const QString &text)
 {
     if (text.isEmpty() || text.contains(mRegExp) || text == QLatin1String(".") || text == QLatin1String("..")) {
-        enableButtonOk(false);
+        mOkButton->setEnabled(false);
         return;
     }
-    enableButtonOk(true);
+    mOkButton->setEnabled(true);
 }
 
 void StorageServiceCheckNameDialog::setDisallowedSymbols(const QRegExp &regExp)

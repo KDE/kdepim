@@ -18,22 +18,28 @@
 #include "addservicestoragedialog.h"
 #include "storageservicecombobox.h"
 
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QStackedWidget>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace PimCommon;
 
 AddServiceStorageDialog::AddServiceStorageDialog(const QList<StorageServiceAbstract::Capability> &lstCap, const QStringList &excludeService, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Add Service" ) );
+    setWindowTitle( i18n( "Add Service" ) );
     mService = new StorageServiceComboBox(lstCap, excludeService);
     mStackedWidget = new QStackedWidget;
-    setMainWidget(mStackedWidget);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mStackedWidget);
     QLabel *label = new QLabel(i18n("All services were added."));
     mStackedWidget->addWidget(label);
     mComboboxWidget = new QWidget;
@@ -43,10 +49,20 @@ AddServiceStorageDialog::AddServiceStorageDialog(const QList<StorageServiceAbstr
     mStackedWidget->addWidget(mComboboxWidget);
     if (mService->count() > 0) {
         mStackedWidget->setCurrentWidget(mComboboxWidget);
-        setButtons( Ok | Cancel );
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+        QWidget *mainWidget = new QWidget(this);
+        QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+        okButton->setDefault(true);
+        okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+        mainLayout->addWidget(buttonBox);
     } else {
         mStackedWidget->setCurrentWidget(label);
-        setButtons( Close );
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+        mainLayout->addWidget(buttonBox);
     }
 }
 

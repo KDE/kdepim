@@ -32,6 +32,9 @@
 #include <QTimer>
 #include <QHeaderView>
 #include <QVBoxLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace PimCommon;
 
@@ -68,26 +71,32 @@ void StorageServiceDeleteTreeWidget::createMenuActions(QMenu *menu)
 }
 
 StorageServiceDeleteDialog::StorageServiceDeleteDialog(DeleteType type, PimCommon::StorageServiceAbstract *storage, QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mDeleteType(type),
       mStorage(storage)
 {
     switch(mDeleteType) {
     case DeleteAll:
-        setCaption(i18n("Delete"));
+        setWindowTitle(i18n("Delete"));
         break;
     case DeleteFiles:
-        setCaption(i18n("Delete Files"));
+        setWindowTitle(i18n("Delete Files"));
         break;
     case DeleteFolders:
-        setCaption(i18n("Delete Folders"));
+        setWindowTitle(i18n("Delete Folders"));
         break;
     }
     mStorageServiceProgressIndicator = new PimCommon::StorageServiceProgressIndicator(this);
     connect(mStorageServiceProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
 
-    setButtons( User1 | Close );
-    setButtonText(User1, i18n("Delete"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mUser1Button = new QPushButton;
+    buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mUser1Button->setText(i18n("Delete"));
 
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -105,9 +114,11 @@ StorageServiceDeleteDialog::StorageServiceDeleteDialog(DeleteType type, PimCommo
     vbox->addWidget(mTreeWidget);
     connect(mTreeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
     w->setLayout(vbox);
-    setMainWidget(w);
-    enableButton(User1, false);
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDelete()));
+    mainLayout->addWidget(w);
+    mUser1Button->setEnabled(false);
+    mainLayout->addWidget(buttonBox);
+
+    connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotDelete()));
     connect(mStorage, SIGNAL(listFolderDone(QString,QVariant)), this, SLOT(slotListFolderDone(QString,QVariant)));
     connect(mStorage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
     connect(mStorage,SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)), Qt::UniqueConnection);
@@ -147,7 +158,7 @@ void StorageServiceDeleteDialog::slotActionFailed(const QString &serviceName, co
     Q_UNUSED(data);
     mStorageServiceProgressIndicator->stopAnimation();
     mTreeWidget->setEnabled(true);
-    enableButton(User1, true);
+    mUser1Button->setEnabled(true);
 }
 
 void StorageServiceDeleteDialog::slotListFolderDone(const QString &serviceName, const QVariant &data)
@@ -184,7 +195,7 @@ void StorageServiceDeleteDialog::writeConfig()
 void StorageServiceDeleteDialog::slotItemActivated(QTreeWidgetItem *item, int)
 {
     const bool canDelete = item && ((mTreeWidget->type(item) == StorageServiceTreeWidget::File) || (mTreeWidget->type(item) == StorageServiceTreeWidget::Folder));
-    enableButton(User1, canDelete);
+    mUser1Button->setEnabled(canDelete);
 }
 
 void StorageServiceDeleteDialog::slotItemDoubleClicked(QTreeWidgetItem *item, int)

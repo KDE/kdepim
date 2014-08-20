@@ -16,12 +16,13 @@
 */
 #ifndef ADDSERVICESTORAGEDIALOG_H
 #define ADDSERVICESTORAGEDIALOG_H
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 #include "storageservice/storageservicemanager.h"
 class QStackedWidget;
 namespace PimCommon {
 class StorageServiceComboBox;
-class AddServiceStorageDialog : public KDialog
+class AddServiceStorageDialog : public QDialog
 {
     Q_OBJECT
 public:

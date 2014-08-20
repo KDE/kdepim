@@ -19,19 +19,21 @@
 #define STORAGESERVICEDELETEDIALOG_H
 
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 #include "pimcommon_export.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 
 class QTreeWidgetItem;
 class QLabel;
 class QMenu;
+class QPushButton;
 namespace PimCommon {
 class StorageServiceAbstract;
 class StorageServiceProgressIndicator;
 class StorageServiceTreeWidgetItem;
 class StorageServiceDeleteTreeWidget;
-class PIMCOMMON_EXPORT StorageServiceDeleteDialog : public KDialog
+class PIMCOMMON_EXPORT StorageServiceDeleteDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -73,6 +75,7 @@ private:
     PimCommon::StorageServiceAbstract *mStorage;
     PimCommon::StorageServiceProgressIndicator *mStorageServiceProgressIndicator;
     QLabel *mLabelProgressIncator;
+    QPushButton *mUser1Button;
 };
 
 class StorageServiceDeleteTreeWidget : public PimCommon::StorageServiceTreeWidget

@@ -24,15 +24,18 @@
 #include <KSharedConfig>
 #include <QGridLayout>
 #include <QLabel>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace PimCommon;
 
 StorageServicePropertiesDialog::StorageServicePropertiesDialog(const QMap<QString, QString> &information, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption(i18n("Properties"));
+    setWindowTitle(i18n("Properties"));
 
-    setButtons( Close );
     createInformationWidget(information);
     readConfig();
 }
@@ -44,9 +47,16 @@ StorageServicePropertiesDialog::~StorageServicePropertiesDialog()
 
 void StorageServicePropertiesDialog::createInformationWidget(const QMap<QString, QString> &information)
 {
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
     QWidget *parent = new QWidget;
     QGridLayout *grid = new QGridLayout;
-    parent->setLayout(grid);
 
     QMapIterator<QString, QString> i(information);
     int row = 0;
@@ -68,7 +78,9 @@ void StorageServicePropertiesDialog::createInformationWidget(const QMap<QString,
 
         ++row;
     }
-    setMainWidget(parent);
+    mainLayout->addWidget(parent);
+    mainLayout->addWidget(buttonBox);
+
 }
 
 void StorageServicePropertiesDialog::readConfig()

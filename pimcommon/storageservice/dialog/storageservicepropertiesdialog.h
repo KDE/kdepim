@@ -21,9 +21,10 @@
 #ifndef STORAGESERVICEPROPERTIESDIALOG_H
 #define STORAGESERVICEPROPERTIESDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+#include <KConfigGroup>
 namespace PimCommon {
-class StorageServicePropertiesDialog : public KDialog
+class StorageServicePropertiesDialog : public QDialog
 {
     Q_OBJECT
 public:
