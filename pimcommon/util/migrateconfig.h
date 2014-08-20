@@ -25,12 +25,15 @@ namespace PimCommon {
 class PIMCOMMON_EXPORT MigrateConfig
 {
 public:
-    MigrateConfig();
+    MigrateConfig(const QString &appName);
     void start();
     void setConfigFileNameList(const QStringList &configFileNameList);
+    void setUiFileNameList(const QStringList &uiFileNameList);
 
 private:
     QStringList mConfigFileNameList;
+    QStringList mUiFileNameList;
+    QString mAppName;
 };
 }
 

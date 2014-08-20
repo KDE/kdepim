@@ -30,8 +30,9 @@
 
 int main( int argc, char **argv )
 {
-    PimCommon::MigrateConfig migrate;
+    PimCommon::MigrateConfig migrate(QLatin1String("contactthemeeditor"));
     migrate.setConfigFileNameList(QStringList()<<QLatin1String("contactthemeeditorrc"));
+    migrate.setUiFileNameList(QStringList()<<QLatin1String("contactthemeeditorui.rc"));
     migrate.start();
     KLocalizedString::setApplicationDomain("contactthemeeditor");
     QApplication app(argc, argv);

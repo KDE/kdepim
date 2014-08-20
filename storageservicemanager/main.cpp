@@ -33,8 +33,9 @@
 
 int main( int argc, char **argv )
 {
-    PimCommon::MigrateConfig migrate;
+    PimCommon::MigrateConfig migrate(QLatin1String("storageservice"));
     migrate.setConfigFileNameList(QStringList()<<QLatin1String("storageservicerc") << QLatin1String("storageservicemanager.notifyrc"));
+    migrate.setUiFileNameList(QStringList()<<QLatin1String("storageserviceui.rc"));
     migrate.start();
 
     QApplication app(argc, argv);

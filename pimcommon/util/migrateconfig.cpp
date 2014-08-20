@@ -20,16 +20,25 @@
 #include <QStandardPaths>
 #include <Kdelibs4Migration>
 #include <QFile>
+#include <QFileInfo>
+#include <QDir>
+#include <QDebug>
 
 using namespace PimCommon;
 
-MigrateConfig::MigrateConfig()
+MigrateConfig::MigrateConfig(const QString &appName)
+    : mAppName(appName)
 {
 }
 
 void MigrateConfig::setConfigFileNameList(const QStringList &configFileNameList)
 {
     mConfigFileNameList = configFileNameList;
+}
+
+void MigrateConfig::setUiFileNameList(const QStringList &uiFileNameList)
+{
+    mUiFileNameList = uiFileNameList;
 }
 
 void MigrateConfig::start()
@@ -48,10 +57,33 @@ void MigrateConfig::start()
         if (QFile(newConfigLocation).exists()) {
             continue;
         }
+        //Be safe
+        QFileInfo fileInfo(newConfigLocation);
+        QDir().mkpath(fileInfo.absolutePath());
 
         QString oldConfigFile(migration.locateLocal("config", configFileName));
         if (!oldConfigFile.isEmpty()) {
             QFile(oldConfigFile).copy(newConfigLocation);
+        }
+    }
+
+    if (mAppName.isEmpty()) {
+        qCritical() <<" We can not migrate ui file. AppName is missing";
+    } else {
+        Q_FOREACH( const QString &uiFileName, mUiFileNameList) {
+            const QString newConfigLocation
+                    = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+                    QStringLiteral("/kxmlgui5/") + mAppName + QLatin1Char('/') + uiFileName;
+            if (QFile(newConfigLocation).exists()) {
+                continue;
+            }
+            QFileInfo fileInfo(newConfigLocation);
+            QDir().mkpath(fileInfo.absolutePath());
+
+            QString oldConfigFile(migration.locateLocal("data", mAppName + QLatin1Char('/') + uiFileName));
+            if (!oldConfigFile.isEmpty()) {
+                QFile(oldConfigFile).copy(newConfigLocation);
+            }
         }
     }
 }
