@@ -18,12 +18,12 @@
 #ifndef TRANSLATORDEBUGDIALOG_H
 #define TRANSLATORDEBUGDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 namespace PimCommon {
 class PlainTextEditorWidget;
 }
-class TranslatorDebugDialog : public KDialog
+class TranslatorDebugDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -39,6 +39,7 @@ private:
     void readConfig();
     void writeConfig();
     PimCommon::PlainTextEditorWidget *mEdit;
+    QPushButton *mUser1Button;
 };
 
 #endif // TRANSLATORDEBUGDIALOG_H

@@ -18,12 +18,12 @@
 #ifndef SIEVETEMPLATEEDITDIALOG_H
 #define SIEVETEMPLATEEDITDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class QLineEdit;
 namespace PimCommon {
 class RichTextEditorWidget;
-class TemplateEditDialog : public KDialog
+class TemplateEditDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -44,6 +44,7 @@ private:
     void writeConfig();
     PimCommon::RichTextEditorWidget *mTextEdit;
     QLineEdit *mTemplateNameEdit;
+    QPushButton *mOkButton;
 };
 }
 

@@ -26,21 +26,37 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 
 using namespace PimCommon;
 
 TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
-    : KDialog(parent)
+    : QDialog(parent), mOkButton(0)
 {
-    setCaption( defaultTemplate ? i18n("Default template") : i18n("Template") );
+    setWindowTitle( defaultTemplate ? i18n("Default template") : i18n("Template") );
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QDialogButtonBox *buttonBox=0;
     if (defaultTemplate) {
-        setButtons( Close );
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     } else {
-        setButtons( Ok |Cancel );
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+        mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+        mOkButton->setDefault(true);
+        mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+        mOkButton->setFocus();
     }
-    setButtonFocus(Ok);
     QWidget *w = new QWidget;
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
+
     QVBoxLayout *vbox = new QVBoxLayout;
 
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -59,9 +75,9 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     vbox->addWidget(mTextEdit);
 
     w->setLayout(vbox);
-    setMainWidget(w);
     if (!defaultTemplate) {
-        enableButtonOk(false);
+        if (mOkButton)
+           mOkButton->setEnabled(false);
         connect(mTemplateNameEdit, &QLineEdit::textChanged, this, &TemplateEditDialog::slotTemplateChanged);
         connect(mTextEdit->editor(), SIGNAL(textChanged()),SLOT(slotTemplateChanged()));
         mTemplateNameEdit->setFocus();
@@ -93,7 +109,7 @@ void TemplateEditDialog::readConfig()
 
 void TemplateEditDialog::slotTemplateChanged()
 {
-    enableButtonOk(!mTemplateNameEdit->text().trimmed().isEmpty() && !mTextEdit->editor()->toPlainText().trimmed().isEmpty());
+    mOkButton->setEnabled(!mTemplateNameEdit->text().trimmed().isEmpty() && !mTextEdit->editor()->toPlainText().trimmed().isEmpty());
 }
 
 void TemplateEditDialog::setScript(const QString &text)

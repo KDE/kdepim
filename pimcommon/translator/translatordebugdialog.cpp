@@ -22,21 +22,31 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Translator Debug" ) );
-    setButtons( Close|User1 );
-    setButtonText(User1, i18n("Save As..."));
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSaveAs()));
+    setWindowTitle( i18n( "Translator Debug" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mUser1Button = new QPushButton;
+    buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mUser1Button->setText(i18n("Save As..."));
+    connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotSaveAs()));
 
     mEdit = new PimCommon::PlainTextEditorWidget;
     mEdit->setReadOnly(true);
+    mainLayout->addWidget(mEdit);
+    mainLayout->addWidget(buttonBox);
 
-    setMainWidget( mEdit );
     readConfig();
-    enableButton(User1, !mEdit->toPlainText().isEmpty());
+    mUser1Button->setEnabled(!mEdit->toPlainText().isEmpty());
 }
 
 TranslatorDebugDialog::~TranslatorDebugDialog()
@@ -47,7 +57,7 @@ TranslatorDebugDialog::~TranslatorDebugDialog()
 void TranslatorDebugDialog::setDebug(const QString &debugStr)
 {
     mEdit->setPlainText(debugStr);
-    enableButton(User1, !debugStr.isEmpty());
+    mUser1Button->setEnabled(!debugStr.isEmpty());
 }
 
 void TranslatorDebugDialog::readConfig()
