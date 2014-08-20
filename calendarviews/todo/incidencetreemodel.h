@@ -85,7 +85,7 @@ Q_SIGNALS:
    * One rowsInserted() signal from the ETM, will make IncidenceTreeModel generate
    * several rowsInserted(), layoutChanged() or rowsMoved() signals.
    *
-   * A tree view can use this signal to know when to call KViewStateSaver::restore()
+   * A tree view can use this signal to know when to call KConfigViewStateSaver::restore()
    * to restore expansion states. Listening to rowsInserted() signals would be a
    * performance problem.
    */

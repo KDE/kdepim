@@ -23,7 +23,6 @@
 
 #include <mailcommon/util/mailutil.h>
 
-#include <KLocale>
 #include <KMessageBox>
 #include <QMenu>
 #include <KRun>
@@ -36,6 +35,7 @@
 #include <QDialogButtonBox>
 #include <KConfigGroup>
 #include <QPushButton>
+#include <QLocale>
 
 
 static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
@@ -254,7 +254,7 @@ void ArchiveMailWidget::createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailIte
     item->setCheckState(ArchiveMailWidget::Name, info->isEnabled() ? Qt::Checked : Qt::Unchecked);
     item->setText(ArchiveMailWidget::StorageDirectory, info->url().toLocalFile());
     if (info->lastDateSaved().isValid()) {
-        item->setText(ArchiveMailWidget::LastArchiveDate,KLocale::global()->formatDate(info->lastDateSaved()));
+        item->setText(ArchiveMailWidget::LastArchiveDate,QLocale().toString(info->lastDateSaved()));
         updateDiffDate(item, info);
     } else {
         item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::green);
@@ -273,7 +273,7 @@ void ArchiveMailWidget::updateDiffDate(ArchiveMailItem *item, ArchiveMailInfo *i
         else
             item->setBackgroundColor(ArchiveMailWidget::NextArchive,Qt::lightGray);
     } else {
-        item->setToolTip(ArchiveMailWidget::NextArchive,i18n("Archive will be done %1",KLocale::global()->formatDate(diffDate)));
+        item->setToolTip(ArchiveMailWidget::NextArchive,i18n("Archive will be done %1",QLocale().toString(diffDate)));
     }
 }
 

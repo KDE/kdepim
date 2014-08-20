@@ -22,6 +22,7 @@
 #include "storageservicetreewidget.h"
 #include <KGlobal>
 #include <KLocale>
+#include <KFormat>
 using namespace PimCommon;
 
 StorageServiceTreeWidgetItem::StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent)
@@ -101,7 +102,7 @@ void StorageServiceTreeWidgetItem::setSize(qulonglong size)
 {
     if (mSize != size) {
         mSize = size;
-        setText(StorageServiceTreeWidget::ColumnSize, KGlobal::locale()->formatByteSize(mSize));
+        setText(StorageServiceTreeWidget::ColumnSize, KFormat().formatByteSize(mSize));
     }
 }
 

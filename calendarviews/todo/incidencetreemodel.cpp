@@ -309,7 +309,7 @@ void IncidenceTreeModel::Private::onRowsInserted( const QModelIndex &parent, int
     insertNode( node );
   }
 
-  // view can now call KViewStateSaver::restoreState(), to expand nodes.
+  // view can now call KConfigViewStateSaver::restoreState(), to expand nodes.
   if ( end > begin )
     emit q->batchInsertionFinished();
   //qDebug() << "Took " << timer.elapsed() << " to insert " << end-begin+1;

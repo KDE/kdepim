@@ -22,7 +22,6 @@
 
 #include <KConfigGroup>
 #include <KConfig>
-#include <KGlobal>
 
 #include <QDirIterator>
 #include <QStandardPaths>

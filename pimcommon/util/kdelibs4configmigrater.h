@@ -28,7 +28,8 @@ public:
     Kdelibs4ConfigMigrater(const QString &appName);
     ~Kdelibs4ConfigMigrater();
 
-    bool migrate();
+    virtual bool migrate();
+
     void setConfigFiles(const QStringList &configFileNameList);
     void setUiFiles(const QStringList &uiFileNameList);
 

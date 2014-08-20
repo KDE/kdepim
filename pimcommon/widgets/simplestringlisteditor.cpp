@@ -39,11 +39,12 @@
 #include <KLocalizedString>
 #include <qdebug.h>
 #include <QPushButton>
-#include <kdialog.h>
+#include <QDialog>
 #include <QMenu>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QListWidget>
+#include <KConfigGroup>
 
 //********************************************************
 // SimpleStringListEditor
@@ -63,7 +64,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
 {
     setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     QHBoxLayout * hlay = new QHBoxLayout( this );
-    hlay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     hlay->setSpacing( QDialog::spacingHint() );
     hlay->setMargin( 0 );
 
     mListBox = new QListWidget( this );

@@ -70,8 +70,8 @@ namespace {
 
     QString formatInputOutputLabel( const QString & input, const QString & output, bool inputDeleted, bool outputDeleted ) {
         return i18nc( "Input file --> Output file (rarr is arrow", "%1 &rarr; %2",
-                      inputDeleted ? QString::fromLatin1("<s>%1</s>").arg( input.toHtmlEscaped() ) : Qt::escape( input ),
-                      outputDeleted ? QString::fromLatin1("<s>%1</s>").arg( output.toHtmlEscaped() ) : Qt::escape( output ) );
+                      inputDeleted ? QString::fromLatin1("<s>%1</s>").arg( input.toHtmlEscaped() ) : input.toHtmlEscaped(),
+                      outputDeleted ? QString::fromLatin1("<s>%1</s>").arg( output.toHtmlEscaped() ) : output.toHtmlEscaped() );
     }
 
     class ErrorResult : public Task::Result {

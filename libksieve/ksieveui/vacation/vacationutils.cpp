@@ -24,6 +24,7 @@
 #include <KLocalizedString>
 #include <KLocale>
 #include <QDate>
+#include <QLocale>
 
 using KMime::Types::AddrSpecList;
 
@@ -45,7 +46,7 @@ QString KSieveUi::VacationUtils::defaultMessageText() {
                  "\n"
                  "Yours sincerely,\n"
                  "-- \"enter your name and email address here\"\n",
-                 KLocale::global()->formatDate( QDate::currentDate().addDays( 1 ) ) );
+                 QLocale().toString( QDate::currentDate().addDays( 1 ) ) );
 }
 
 int KSieveUi::VacationUtils::defaultNotificationInterval() {

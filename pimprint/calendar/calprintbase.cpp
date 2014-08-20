@@ -35,6 +35,7 @@
 #include <QTextDocumentFragment>
 #include <boost/concept_check.hpp>
 #include <KLocalizedString>
+#include <QLocale>
 
 using namespace PimPrint::Calendar;
 
@@ -1328,7 +1329,7 @@ void CalPrintBase::drawDayBox(QPainter &p,
 // Utility Functions that could be moved into CalendarSupport or somesuch
 int CalPrintBase::weekdayColumn(const int weekday) const
 {
-    int w = weekday + 7 - KLocale::global()->weekStartDay();
+    int w = weekday + 7 - QLocale().firstDayOfWeek();
     return w % 7;
 }
 

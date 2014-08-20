@@ -31,6 +31,7 @@
 #include <QDebug>
 
 #include <KLocalizedString>
+#include <QLocale>
 
 using namespace IncidenceEditorNG;
 
@@ -488,7 +489,7 @@ void IncidenceRecurrence::addException()
     return;
   }
 
-  const QString dateStr = KLocale::global()->formatDate( date );
+  const QString dateStr = QLocale().toString( date );
   if( mUi->mExceptionList->findItems( dateStr, Qt::MatchExactly ).isEmpty() ) {
     mExceptionDates.append( date );
     mUi->mExceptionList->addItem( dateStr );
@@ -603,7 +604,7 @@ void IncidenceRecurrence::handleEndAfterOccurrencesChange( int currentValue )
 void IncidenceRecurrence::handleExceptionDateChange( const QDate &currentDate )
 {
   const QDate date = mUi->mExceptionDateEdit->date();
-  const QString dateStr = KLocale::global()->formatDate( date );
+  const QString dateStr = QLocale().toString( date );
 
   mUi->mExceptionAddButton->setEnabled(
     currentDate >= mDateTime->startDate() &&
@@ -920,7 +921,7 @@ void IncidenceRecurrence::setExceptionDates( const KCalCore::DateList &dates )
   mExceptionDates.clear();
   KCalCore::DateList::ConstIterator dit;
   for ( dit = dates.begin(); dit != dates.end(); ++dit ) {
-    mUi->mExceptionList->addItem( KLocale::global()->formatDate(* dit ) );
+    mUi->mExceptionList->addItem( QLocale().toString(* dit ) );
     mExceptionDates.append( *dit );
   }
 }

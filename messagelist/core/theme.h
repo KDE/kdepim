@@ -31,6 +31,7 @@
 
 #include <messagelist/core/optionset.h>
 #include <messagelist/core/sortorder.h>
+#include <QFontDatabase>
 
 class QPaintDevice;
 
@@ -412,7 +413,7 @@ public:
 
         /**
      * Returns the font used by this item. It may be a custom font set by setFont()
-     * or the default application font (returned by KGlobalSettings::generalFont()).
+     * or the default application font (returned by QFontDatabase::systemFont(QFontDatabase::GeneralFont)).
      * This setting is valid as long as you have called updateFontMetrics()
      * with the appropriate paint device.
      */
@@ -421,7 +422,7 @@ public:
 
         /**
      * Returns the font key used by this item. It may be a custom font key set by setFont()
-     * or the default application font (returned by KGlobalSettings::generalFont()).
+     * or the default application font (returned by QFontDatabase::systemFont(QFontDatabase::GeneralFont)).
      * This setting is valid as long as you have called updateFontMetrics()
      * with the appropriate paint device.
      * It is primary used to avoid to calculate the key every time an item is displayed.

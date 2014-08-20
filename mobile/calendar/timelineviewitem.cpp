@@ -29,6 +29,7 @@
 #include <KLocale>
 #include <KSharedConfig>
 #include <KColorScheme>
+#include <QLocale>
 
 using namespace EventViews;
 
@@ -114,7 +115,7 @@ void TimelineViewItem::showRange( const QDate &date, int range )
     break;
   }
   case Week: {
-    int weekStartDay = KLocale::global()->weekStartDay();
+    int weekStartDay = QLocale().firstDayOfWeek();
     if ( weekStartDay > date.dayOfWeek() )
       weekStartDay = weekStartDay - 7;
     m_view->showDates( date.addDays( weekStartDay - date.dayOfWeek() ), date.addDays( weekStartDay + 6 - date.dayOfWeek() ) );

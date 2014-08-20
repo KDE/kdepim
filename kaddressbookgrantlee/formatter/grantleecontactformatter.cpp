@@ -43,6 +43,7 @@
 #include <QSet>
 #include <QRegExp>
 #include <QTextDocument>
+#include <QLocale>
 
 using namespace KAddressBookGrantlee;
 
@@ -258,7 +259,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     if ( birthday.isValid() ) {
         GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String( "birthdayi18n" ));
 
-        const QString formattedBirthday = KLocale::global()->formatDate( birthday );
+        const QString formattedBirthday = QLocale().toString( birthday );
         contactObject.insert( QLatin1String( "birthday" ), formattedBirthday );
 
         const int years = contactAge( birthday );
@@ -273,7 +274,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
                                                   QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
     if ( anniversary.isValid() ) {
         contactObject.insert( QLatin1String( "anniversary" ),
-                              KLocale::global()->formatDate( anniversary ) );
+                              QLocale().toString( anniversary ) );
         GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("anniversaryi18n") );
     }
 
@@ -466,7 +467,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
                         } else if ( descriptionType  == QLatin1String( "date" ) ) {
                             const QDate date = QDate::fromString( value, Qt::ISODate );
-                            value = KLocale::global()->formatDate( date, KLocale::ShortDate );
+                            value = QLocale().toString( date, QLocale::ShortFormat );
 
                         } else if ( descriptionType == QLatin1String( "time" ) ) {
                             const QTime time = QTime::fromString( value, Qt::ISODate );

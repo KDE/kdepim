@@ -80,7 +80,7 @@ bool Kdelibs4ConfigMigrater::migrate()
         QFileInfo fileInfo(newConfigLocation);
         QDir().mkpath(fileInfo.absolutePath());
 
-        QString oldConfigFile(migration.locateLocal("config", configFileName));
+        const QString oldConfigFile(migration.locateLocal("config", configFileName));
         if (!oldConfigFile.isEmpty()) {
             QFile(oldConfigFile).copy(newConfigLocation);
         }
@@ -99,7 +99,7 @@ bool Kdelibs4ConfigMigrater::migrate()
             QFileInfo fileInfo(newConfigLocation);
             QDir().mkpath(fileInfo.absolutePath());
 
-            QString oldConfigFile(migration.locateLocal("data", d->appName + QLatin1Char('/') + uiFileName));
+            const QString oldConfigFile(migration.locateLocal("data", d->appName + QLatin1Char('/') + uiFileName));
             if (!oldConfigFile.isEmpty()) {
                 QFile(oldConfigFile).copy(newConfigLocation);
             }

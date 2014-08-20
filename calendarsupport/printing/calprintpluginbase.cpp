@@ -47,6 +47,7 @@
 #include <qmath.h> // qCeil krazy:exclude=camelcase since no QMath
 #include <QVBoxLayout>
 #include <KLocalizedString>
+#include <QLocale>
 
 using namespace CalendarSupport;
 
@@ -2084,7 +2085,7 @@ void CalPrintPluginBase::drawTodo( int &count, const KCalCore::Todo::Ptr &todo, 
 
 int CalPrintPluginBase::weekdayColumn( int weekday )
 {
-  int w = weekday + 7 - KLocale::global()->weekStartDay();
+  int w = weekday + 7 - QLocale().firstDayOfWeek();
   return w % 7;
 }
 

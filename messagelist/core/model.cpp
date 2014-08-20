@@ -68,6 +68,7 @@
 #include <QIcon>
 #include <QDebug>
 #include <KLocalizedString>
+#include <QLocale>
 
 namespace MessageList
 {
@@ -1259,7 +1260,7 @@ void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
                    ( calendar->year( dDate ) == calendar->year( mTodayDate ) ) )
         {
             int startOfWeekDaysAgo = ( calendar->daysInWeek( mTodayDate ) + calendar->dayOfWeek( mTodayDate ) -
-                                       KLocale::global()->weekStartDay() ) % calendar->daysInWeek( mTodayDate );
+                                       QLocale().firstDayOfWeek() ) % calendar->daysInWeek( mTodayDate );
             int weeksAgo = ( ( daysAgo - startOfWeekDaysAgo ) / calendar->daysInWeek( mTodayDate ) ) + 1;
             switch( weeksAgo )
             {

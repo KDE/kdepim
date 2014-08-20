@@ -24,13 +24,14 @@
 #include <KLocalizedString>
 #include <KCalendarSystem>
 #include <QDebug>
+#include <QLocale>
 
 using namespace KPIM;
 
 KWeekdayCheckCombo::KWeekdayCheckCombo(QWidget* parent,bool first5Checked ): KCheckComboBox( parent )
 {
     const KCalendarSystem *calSys = KLocale::global()->calendar();
-    const int weekStart = KLocale::global()->weekStartDay();
+    const int weekStart = QLocale().firstDayOfWeek();
     QStringList checkedItems;
     for ( int i = 0; i < 7; ++i ) {
         // i is the nr of the combobox, not the day of week!
@@ -57,7 +58,7 @@ KWeekdayCheckCombo::~KWeekdayCheckCombo()
 QBitArray KWeekdayCheckCombo::days() const
 {
     QBitArray days( 7 );
-    const int weekStart = KLocale::global()->weekStartDay();
+    const int weekStart = QLocale().firstDayOfWeek();
 
     for ( int i = 0; i < 7; ++i ) {
         // i is the nr of the combobox, not the day of week!
@@ -72,7 +73,7 @@ int KWeekdayCheckCombo::weekdayIndex( const QDate &date ) const
 {
     if ( !date.isValid() )
         return -1;
-    const int weekStart = KLocale::global()->weekStartDay();
+    const int weekStart = QLocale().firstDayOfWeek();
     const KCalendarSystem *calSys = KLocale::global()->calendar();
     const int dayOfWeek = calSys->dayOfWeek( date ) - 1; // Values 1 - 7, we need 0 - 6
 
@@ -86,7 +87,7 @@ void KWeekdayCheckCombo::setDays( const QBitArray &days,  const QBitArray &disab
     Q_ASSERT( count() == 7 ); // The combobox must be filled.
 
     QStringList checkedDays;
-    const int weekStart = KLocale::global()->weekStartDay();
+    const int weekStart = QLocale().firstDayOfWeek();
     for ( int i = 0; i < 7; ++i ) {
         // i is the nr of the combobox, not the day of week!
         const int index = ( 1 + i +  ( 7 - weekStart ) ) % 7;

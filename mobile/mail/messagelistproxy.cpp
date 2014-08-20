@@ -27,6 +27,7 @@
 #include <KCalendarSystem>
 #include <KLocalizedString>
 #include <KFormat>
+#include <QLocale>
 
 inline uint qHash( const QDate &date )
 {
@@ -120,7 +121,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
           return KLocale::global()->calendar()->weekDayName( dDate );
         else if( calendar->month( dDate ) == calendar->month( QDate::currentDate() ) && calendar->year( dDate ) == calendar->year( QDate::currentDate() ) ) { // within this month
           const int startOfWeekDaysAgo = ( calendar->daysInWeek( QDate::currentDate() ) + calendar->dayOfWeek( QDate::currentDate() ) -
-                                           KLocale::global()->weekStartDay() ) % calendar->daysInWeek( QDate::currentDate() );
+                                           QLocale().firstDayOfWeek() ) % calendar->daysInWeek( QDate::currentDate() );
           const int weeksAgo = ( ( daysAgo - startOfWeekDaysAgo ) / calendar->daysInWeek( QDate::currentDate() ) ) + 1;
           if ( weeksAgo == 0 )
             return KLocale::global()->calendar()->weekDayName( dDate );

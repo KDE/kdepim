@@ -43,6 +43,7 @@
 #include <QToolButton>
 #include <QWheelEvent>
 #include <KLocale>
+#include <QLocale>
 
 using namespace EventViews;
 
@@ -452,7 +453,7 @@ QPair<KDateTime,KDateTime> MonthView::actualDateRange( const KDateTime &start,
 {
   KDateTime dayOne = preferredMonth.isValid() ? KDateTime( preferredMonth ) : start;
   dayOne.setDate( QDate( dayOne.date().year(), dayOne.date().month(), 1 ) );
-  const int weekdayCol = ( dayOne.date().dayOfWeek() + 7 - KLocale::global()->weekStartDay() ) % 7;
+  const int weekdayCol = ( dayOne.date().dayOfWeek() + 7 - QLocale().firstDayOfWeek() ) % 7;
   KDateTime actualStart = dayOne.addDays( -weekdayCol );
   actualStart.setTime( QTime( 0, 0, 0, 0 ) );
   KDateTime actualEnd = actualStart.addDays( 6 * 7 - 1 );
