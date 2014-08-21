@@ -23,7 +23,7 @@
 #include "journalprint.h"
 #include "utils.h"
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 
 using namespace CalendarSupport;
 

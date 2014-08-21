@@ -35,7 +35,7 @@
 
 #include <KCalUtils/Stringify>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QTemporaryFile>

@@ -41,7 +41,7 @@
 #include <KToolInvocation>
 #include <KIO/NetAccess>
 #include <KJob>
-#include <KDebug>
+#include <QDebug>
 
 
 #include <QFile>

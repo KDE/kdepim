@@ -32,7 +32,7 @@
 
 #include <KCalendarSystem>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KSystemTimeZones>
 #include <KWordWrap>
 #include <KConfig>

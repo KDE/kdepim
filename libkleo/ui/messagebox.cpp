@@ -51,7 +51,7 @@
 #include <KLocalizedString>
 #include <QSaveFile>
 #include <kguiitem.h>
-#include <kdebug.h>
+#include <QDebug>
 #include <ktextedit.h>
 
 #include <qtextstream.h>

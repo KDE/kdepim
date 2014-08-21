@@ -35,7 +35,7 @@
 #include <KEMailSettings>
 #include <KSystemTimeZone>
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace CalendarSupport;
 
@@ -137,7 +137,7 @@ void KCalPrefs::setTimeZoneDefault()
     return;
   }
 
-  kDebug () << "----- time zone:" << zone.name();
+  qDebug() << "----- time zone:" << zone.name();
 
   d->mTimeSpec = zone;
 }

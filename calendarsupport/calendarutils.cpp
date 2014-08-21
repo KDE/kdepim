@@ -34,7 +34,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KDebug>
+#include <QDebug>
 
 using namespace CalendarSupport;
 using namespace KCalCore;

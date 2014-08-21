@@ -54,7 +54,7 @@
 #include <KLocalizedString>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <kdebug.h>
+#include <QDebug>
 #include <kwindowsystem.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
@@ -194,7 +194,8 @@ namespace {
       mKeyValidPix( QLatin1String("key") ),
       mKeyUsage( keyUsage )
   {
-    kWarning( keyUsage == 0, 5150 )
+    if (keyUsage == 0)
+        qWarning( )
       << "KeySelectionDialog: keyUsage == 0. You want to use AllKeys instead.";
   }
 

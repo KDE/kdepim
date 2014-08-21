@@ -25,7 +25,7 @@
 #include <KCalCore/Period>
 #include <KCalCore/Duration>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QWidget>
 
