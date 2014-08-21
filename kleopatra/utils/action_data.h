@@ -66,7 +66,8 @@ namespace Kleo {
     }
 
     QAction * make_action_from_data( const action_data & data, QObject * parent );
-
+    QAction * make_action_from_data_with_collection( const action_data & ad, KActionCollection * coll );
+    QAction * createAction( const action_data & ad, QObject * parent );
 }
 
 #endif /* __KLEOPATRA_UTILS_ACTIONDATA_H__ */
