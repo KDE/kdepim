@@ -160,7 +160,7 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
             if (PimCommon::StorageServiceUtils::hasExactCapabilities(i.value()->capabilities(), lstCapability)) {
                 QAction *act = new QAction(/*serviceToI18n(*/i.key(), menuService);
                 act->setData(i.key());
-                const KIcon icon = i.value()->icon();
+                const QIcon icon = i.value()->icon();
                 if (!icon.isNull())
                     act->setIcon(icon);
                 switch(mainCapability) {

@@ -62,7 +62,7 @@ public:
     QMap<QString, QString> itemInformation(const QVariantMap &variantMap);
     QString fileIdentifier(const QVariantMap &variantMap);
     QString fileShareRoot(const QVariantMap &variantMap);
-    KIcon icon() const;
+    QIcon icon() const;
 
     void shutdownService();
     bool hasValidSettings() const;

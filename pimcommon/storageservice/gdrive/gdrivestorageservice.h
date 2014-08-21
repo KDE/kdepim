@@ -60,7 +60,7 @@ public:
     QString storageServiceName() const;
     QString fileIdentifier(const QVariantMap &variantMap);
     QString fileShareRoot(const QVariantMap &variantMap);
-    KIcon icon() const;
+    QIcon icon() const;
     StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder);

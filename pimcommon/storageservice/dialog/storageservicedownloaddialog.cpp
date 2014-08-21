@@ -27,9 +27,7 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KMessageBox>
-#include <KFileDialog>
 #include <QMenu>
-#include <KUrl>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QTreeWidget>

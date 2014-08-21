@@ -59,7 +59,7 @@ private slots:
 private:
     void updateButtons();
     void setDefaultLabel();
-    PimCommon::StorageListWidgetItem *createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon);
+    PimCommon::StorageListWidgetItem *createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const QIcon &icon);
     void defaultConnection(StorageServiceAbstract *storage);
     enum ServiceData {
         Name = Qt::UserRole + 1,

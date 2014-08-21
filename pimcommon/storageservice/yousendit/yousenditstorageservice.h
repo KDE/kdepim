@@ -61,7 +61,7 @@ public:
 
 
     QString storageServiceName() const;
-    KIcon icon() const;
+    QIcon icon() const;
 
     void shutdownService();
     bool hasValidSettings() const;

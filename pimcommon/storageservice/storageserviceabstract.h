@@ -20,7 +20,7 @@
 
 #include "pimcommon_export.h"
 #include <QObject>
-#include <KIcon>
+#include <QIcon>
 #include <QPointer>
 #include <QNetworkReply>
 
@@ -124,7 +124,7 @@ public:
     virtual void copyFolder(const QString &source, const QString &destination);
 
     virtual QString storageServiceName() const = 0;
-    virtual KIcon icon() const = 0;
+    virtual QIcon icon() const = 0;
     virtual void removeConfig() = 0;
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
     virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder) = 0;

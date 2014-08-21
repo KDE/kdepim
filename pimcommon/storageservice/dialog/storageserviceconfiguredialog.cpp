@@ -25,18 +25,30 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 
 using namespace PimCommon;
 
 StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Configure" ) );
-    setButtons( Cancel | Ok  );
+    setWindowTitle( i18n( "Configure" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mStorageServiceConfigureWidget = new PimCommon::StorageServiceConfigureWidget;
+
     connect(mStorageServiceConfigureWidget, SIGNAL(serviceRemoved(QString)), this, SIGNAL(serviceRemoved(QString)));
-    setMainWidget(mStorageServiceConfigureWidget);
+    mainLayout->addWidget(mStorageServiceConfigureWidget);
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 

@@ -43,7 +43,7 @@ void StorageServiceComboBox::initialize(const QList<StorageServiceAbstract::Capa
                 if (iconName.isEmpty()) {
                     addItem(PimCommon::StorageServiceManager::serviceToI18n(type), type);
                 } else {
-                    const KIcon icon = KIcon(iconName);
+                    const QIcon icon = QIcon::fromTheme(iconName);
                     addItem(icon, PimCommon::StorageServiceManager::serviceToI18n(type), type);
                 }
             }

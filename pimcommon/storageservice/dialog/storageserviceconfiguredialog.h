@@ -21,12 +21,12 @@
 #ifndef PIMCOMMON_STORAGESERVICECONFIGUREDIALOG_H
 #define PIMCOMMON_STORAGESERVICECONFIGUREDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include "pimcommon_export.h"
 namespace PimCommon {
 class StorageServiceAbstract;
 class StorageServiceConfigureWidget;
-class PIMCOMMON_EXPORT StorageServiceConfigureDialog : public KDialog
+class PIMCOMMON_EXPORT StorageServiceConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:

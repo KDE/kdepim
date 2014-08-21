@@ -547,9 +547,9 @@ QMap<QString, QString> DropBoxStorageService::itemInformation(const QVariantMap 
     return information;
 }
 
-KIcon DropBoxStorageService::icon() const
+QIcon DropBoxStorageService::icon() const
 {
-    return KIcon(iconName());
+    return QIcon::fromTheme(iconName());
 }
 
 QRegExp DropBoxStorageService::disallowedSymbols() const

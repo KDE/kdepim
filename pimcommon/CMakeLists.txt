@@ -248,8 +248,8 @@ add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
 
 if( LibKGAPI2_FOUND )
-add_subdirectory(storageservice/gdrive/tests/)
-add_subdirectory(storageservice/gdrive/icons/)
+  add_subdirectory(storageservice/gdrive/tests/)
+  add_subdirectory(storageservice/gdrive/icons/)
 endif()
 
 if (Qt5Designer_FOUND)

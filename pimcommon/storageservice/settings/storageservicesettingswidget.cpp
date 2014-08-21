@@ -197,7 +197,7 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             showItem = PimCommon::StorageServiceUtils::hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::GDrive), lstCap);
 #endif
         }
-        PimCommon::StorageListWidgetItem *item = createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
+        PimCommon::StorageListWidgetItem *item = createItem(serviceName, i.key(), type, icon.isEmpty() ? QIcon() : QIcon::fromTheme(icon));
         if (showItem) {
             defaultConnection(i.value());
         } else {
@@ -206,7 +206,7 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
     }
 }
 
-PimCommon::StorageListWidgetItem *StorageServiceSettingsWidget::createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon)
+PimCommon::StorageListWidgetItem *StorageServiceSettingsWidget::createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const QIcon &icon)
 {
     PimCommon::StorageListWidgetItem *item = new PimCommon::StorageListWidgetItem;
     item->setText(serviceName);

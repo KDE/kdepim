@@ -19,7 +19,7 @@
 #define STORAGELISTWIDGETITEM_H
 #include <QListWidgetItem>
 #include <KPixmapSequence>
-#include <KIcon>
+#include <QIcon>
 
 class QTimer;
 class QListWidget;
@@ -36,10 +36,10 @@ public:
     void resetToDefaultIcon();
     void setProgressAnimation(const QPixmap &pix);
     void setDefaultIcon(const QString &defaultIconName);    
-    void setDefaultIcon(const KIcon &icon);
+    void setDefaultIcon(const QIcon &icon);
 
 private:
-    KIcon mDefaultIcon;
+    QIcon mDefaultIcon;
     StorageListWidgetItemProgress *mProgress;
 };
 

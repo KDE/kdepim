@@ -41,13 +41,12 @@ ShortUrlConfigureDialog::ShortUrlConfigureDialog(QWidget *parent)
     connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), SLOT(slotDefaultClicked()));
 
     QWidget *w = new QWidget;
-    mainLayout->addWidget(w);
-    mainLayout->addWidget(buttonBox);
-
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
     mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
+
     mConfigureWidget = new ShortUrlConfigureWidget();
     mConfigureWidget->loadConfig();
     lay->addWidget(mConfigureWidget);

@@ -509,9 +509,9 @@ void HubicStorageService::storageServiceCopyFolder(const QString &source, const 
     }
 }
 
-KIcon HubicStorageService::icon() const
+QIcon HubicStorageService::icon() const
 {
-    return KIcon();
+    return QIcon();
 }
 
 StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const

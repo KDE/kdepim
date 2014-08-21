@@ -567,9 +567,9 @@ QString GDriveStorageService::fileShareRoot(const QVariantMap &variantMap)
     return QString();
 }
 
-KIcon GDriveStorageService::icon() const
+QIcon GDriveStorageService::icon() const
 {
-    return KIcon(iconName());
+    return QIcon::fromTheme(iconName());
 }
 
 StorageServiceAbstract::Capabilities GDriveStorageService::capabilities() const

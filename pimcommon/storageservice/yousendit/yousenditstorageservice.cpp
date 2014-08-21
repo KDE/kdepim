@@ -533,9 +533,9 @@ QString YouSendItStorageService::storageServiceName() const
     return serviceName();
 }
 
-KIcon YouSendItStorageService::icon() const
+QIcon YouSendItStorageService::icon() const
 {
-    return KIcon();
+    return QIcon();
 }
 
 #include "moc_yousenditstorageservice.cpp"

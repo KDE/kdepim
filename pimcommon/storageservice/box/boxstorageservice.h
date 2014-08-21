@@ -57,7 +57,7 @@ public:
     void storageServiceCopyFolder(const QString &source, const QString &destination);
 
     QString storageServiceName() const;
-    KIcon icon() const;
+    QIcon icon() const;
     StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder);

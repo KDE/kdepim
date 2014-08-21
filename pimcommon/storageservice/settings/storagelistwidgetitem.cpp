@@ -87,14 +87,14 @@ void StorageListWidgetItem::setProgressAnimation(const QPixmap &pix)
     setIcon(QIcon(pix));
 }
 
-void StorageListWidgetItem::setDefaultIcon(const KIcon &icon)
+void StorageListWidgetItem::setDefaultIcon(const QIcon &icon)
 {
-    //QT5 mDefaultIcon = icon;
+    mDefaultIcon = icon;
 }
 
 void StorageListWidgetItem::setDefaultIcon(const QString &defaultIconName)
 {
-    //QT5 mDefaultIcon = KIcon(defaultIconName);
+    mDefaultIcon = QIcon::fromTheme(defaultIconName);
 }
 
 void StorageListWidgetItem::resetToDefaultIcon()

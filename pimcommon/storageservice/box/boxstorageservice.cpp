@@ -492,9 +492,9 @@ QString BoxStorageService::storageServiceName() const
     return serviceName();
 }
 
-KIcon BoxStorageService::icon() const
+QIcon BoxStorageService::icon() const
 {
-    return KIcon();
+    return QIcon();
 }
 
 StorageServiceAbstract::Capabilities BoxStorageService::capabilities() const

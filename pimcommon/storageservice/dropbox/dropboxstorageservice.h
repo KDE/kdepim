@@ -60,7 +60,7 @@ public:
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder);
     QMap<QString, QString> itemInformation(const QVariantMap &variantMap);
 
-    KIcon icon() const;
+    QIcon icon() const;
     QRegExp disallowedSymbols() const;
     QString disallowedSymbolsStr() const;
     qlonglong maximumUploadFileSize() const;
