@@ -23,7 +23,6 @@
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <QMenu>
-#include <KFileDialog>
 #include <KNS3/DownloadDialog>
 #include <QIcon>
 

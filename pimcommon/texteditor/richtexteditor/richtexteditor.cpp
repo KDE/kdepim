@@ -20,12 +20,11 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardAction>
-#include <KGlobalSettings>
 #include <KCursor>
 #include <KConfigGroup>
-#include <KDialog>
 #include <QIcon>
 #include <KIconTheme>
+#include <KConfig>
 
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
@@ -108,7 +107,6 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
                 popup->insertAction( separatorAction, clearAllAction );
             }
         }
-        //Code from KTextBrowser
         KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                                            : KIconTheme::TextEditor,
                                               popup->actions() );
@@ -228,14 +226,6 @@ void RichTextEditor::slotUndoableClear()
     cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
     cursor.removeSelectedText();
     cursor.endEditBlock();
-}
-
-void RichTextEditor::wheelEvent( QWheelEvent *event )
-{
-    if ( KGlobalSettings::wheelMouseZooms() )
-        QTextEdit::wheelEvent( event );
-    else // thanks, we don't want to zoom, so skip QTextEdit's impl.
-        QAbstractScrollArea::wheelEvent( event );
 }
 
 void RichTextEditor::setReadOnly( bool readOnly )
@@ -717,11 +707,6 @@ bool RichTextEditor::overrideShortcut(const QKeyEvent* event)
         return true;
     } else if (event->matches(QKeySequence::SelectAll)) { // currently missing in QTextEdit
         return true;
-    } else if (event->modifiers() == Qt::ControlModifier &&
-               (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) &&
-               qobject_cast<KDialog*>(window()) ) {
-        // ignore Ctrl-Return so that KDialogs can close the dialog
-        return true;
     }
     return false;
 }
@@ -730,10 +715,6 @@ void RichTextEditor::keyPressEvent( QKeyEvent *event )
 {
     if (handleShortcut(event)) {
         event->accept();
-    } else if (event->modifiers() == Qt::ControlModifier &&
-            (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) &&
-              qobject_cast<KDialog*>(window()) ) {
-        event->ignore();
     } else {
         QTextEdit::keyPressEvent(event);
     }

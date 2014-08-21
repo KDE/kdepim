@@ -62,7 +62,6 @@ protected:
 
 protected:
     void contextMenuEvent( QContextMenuEvent *event );
-    void wheelEvent( QWheelEvent *event );
     bool event(QEvent* ev);    
     void keyPressEvent(QKeyEvent *event);
 

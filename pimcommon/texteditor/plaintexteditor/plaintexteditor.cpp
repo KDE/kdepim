@@ -18,14 +18,12 @@
 #include "plaintexteditor.h"
 
 #include <KLocalizedString>
-#include <KGlobalSettings>
 #include <KIconTheme>
 #include <KStandardGuiItem>
 #include <KMessageBox>
 #include <KStandardAction>
 #include <KCursor>
 #include <QIcon>
-#include <KDialog>
 
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
@@ -93,7 +91,6 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
                 popup->insertAction( separatorAction, clearAllAction );
             }
         }
-        //Code from KTextBrowser
         KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                                            : KIconTheme::TextEditor,
                                               popup->actions() );
@@ -185,14 +182,6 @@ bool PlainTextEditor::spellCheckingSupport() const
 void PlainTextEditor::setSpellCheckingSupport( bool check )
 {
     d->hasSpellCheckingSupport = check;
-}
-
-void PlainTextEditor::wheelEvent( QWheelEvent *event )
-{
-    if ( KGlobalSettings::wheelMouseZooms() )
-        QPlainTextEdit::wheelEvent( event );
-    else // thanks, we don't want to zoom, so skip PlainTextEdit's impl.
-        QAbstractScrollArea::wheelEvent( event );
 }
 
 void PlainTextEditor::setReadOnly( bool readOnly )
@@ -368,11 +357,6 @@ bool PlainTextEditor::overrideShortcut(const QKeyEvent* event)
         return true;
     } else if (event->matches(QKeySequence::SelectAll)) { // currently missing in QTextEdit
         return true;
-    } else if (event->modifiers() == Qt::ControlModifier &&
-               (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) &&
-               qobject_cast<KDialog*>(window()) ) {
-        // ignore Ctrl-Return so that KDialogs can close the dialog
-        return true;
     }
     return false;
 }
@@ -493,10 +477,6 @@ void PlainTextEditor::keyPressEvent( QKeyEvent *event )
 {
     if (handleShortcut(event)) {
         event->accept();
-    }else if (event->modifiers() == Qt::ControlModifier &&
-            (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) &&
-              qobject_cast<KDialog*>(window()) ) {
-        event->ignore();
     } else {
         QPlainTextEdit::keyPressEvent(event);
     }

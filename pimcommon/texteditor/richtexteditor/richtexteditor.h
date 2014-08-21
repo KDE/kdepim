@@ -23,7 +23,6 @@
 
 class QContextMenuEvent;
 class QMenu;
-class QWheelEvent;
 namespace Sonnet {
 class Highlighter;
 }
@@ -70,7 +69,6 @@ private Q_SLOTS:
 protected:
     virtual void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
     void contextMenuEvent( QContextMenuEvent *event );
-    void wheelEvent( QWheelEvent *event );
     void focusInEvent( QFocusEvent *event );
     bool event(QEvent* ev);
     void keyPressEvent(QKeyEvent *event);
