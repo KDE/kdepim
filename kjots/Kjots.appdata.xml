@@ -9,6 +9,7 @@
   <name xml:lang="nds">KJots</name>
   <name xml:lang="nl">KJots</name>
   <name xml:lang="pl">KJots</name>
+  <name xml:lang="pt">KJots</name>
   <name xml:lang="ro">KJots</name>
   <name xml:lang="sk">KJots</name>
   <name xml:lang="sl">KJots</name>
@@ -24,6 +25,7 @@
     <p xml:lang="nds">KJots organiseert all Dien Notizen in en Reeg Böker</p>
     <p xml:lang="nl">KJots organiseert al uw notities in separate boeken</p>
     <p xml:lang="pl">KJots grupuje wszystkie twoje notatki do osobnych katalogów</p>
+    <p xml:lang="pt">O KJots organiza todas as suas notas em livros separados</p>
     <p xml:lang="ro">KJots vă organizează notele în cărți separate</p>
     <p xml:lang="sl">KJots organizira vaša sporočilca v ločene knjige</p>
     <p xml:lang="sv">KJots organiserar alla anteckningar i separata böcker</p>
@@ -36,6 +38,7 @@
     <p xml:lang="nds">Markmalen:</p>
     <p xml:lang="nl">Mogelijkheden:</p>
     <p xml:lang="pl">Możliwości:</p>
+    <p xml:lang="pt">Funcionalidades:</p>
     <p xml:lang="ro">Caracteristici:</p>
     <p xml:lang="sk">Funkcie:</p>
     <p xml:lang="sl">Zmožnosti:</p>
@@ -49,6 +52,7 @@
       <li xml:lang="nds">Vele Böker mööglich</li>
       <li xml:lang="nl">Behandeling van meerdere boeken</li>
       <li xml:lang="pl">Obsługa wielu katalogów</li>
+      <li xml:lang="pt">Tratamento de vários livros</li>
       <li xml:lang="sl">Rokovanje z več knjigami</li>
       <li xml:lang="sv">Flera böcker hanteras</li>
       <li xml:lang="uk">можливість роботи з декількома записниками одночасно;</li>
@@ -59,6 +63,7 @@
       <li xml:lang="nds">Elkeen Book besteiht ut benöömt Sieden</li>
       <li xml:lang="nl">Elk boek heft vele genoemde pagina's</li>
       <li xml:lang="pl">Każdy katalog ma wiele nazwanych stron</li>
+      <li xml:lang="pt">Cada livro pode ter várias páginas com nome</li>
       <li xml:lang="sl">Vsaka knjiga ima več poimenovanih strani</li>
       <li xml:lang="sv">Varje bok har många namngivna sidor</li>
       <li xml:lang="uk">можливість використання довільної кількості іменованих сторінок;</li>
@@ -69,6 +74,7 @@
       <li xml:lang="nds">Böker un Sieden laat sik mit Trecken un Afleggen nieg anornen</li>
       <li xml:lang="nl">Boeken en pagina's kunnen geordend worden met slepen en loslaten</li>
       <li xml:lang="pl">Katalogi i strony można rozmieścić ponownie poprzez przeciąganie i upuszczanie</li>
+      <li xml:lang="pt">Os livros e páginas podem ser reorganizados por arrastamento</li>
       <li xml:lang="sl">Knjige in strani lahko prerazporejate z vlečenjem in spuščanjem</li>
       <li xml:lang="sv">Böcker och sidor kan arrangeras med drag och släpp.</li>
       <li xml:lang="uk">можливість перевпорядковування записників і сторінок перетягуванням зі скиданням;</li>
@@ -79,6 +85,7 @@
       <li xml:lang="nds">För vele Funkschonen gifft dat Tastkombinatschonen</li>
       <li xml:lang="nl">Sneltoetsen zijn beschikbaar voor vele functies</li>
       <li xml:lang="pl">Dla wielu funkcji dostępne są skróty klawiszowe</li>
+      <li xml:lang="pt">Estão disponíveis combinações de teclas para diversas funções</li>
       <li xml:lang="sl">Za več funkcij so na voljo tipkovne bližnjice</li>
       <li xml:lang="sv">Snabbtangenter är tillgängliga för många funktioner</li>
       <li xml:lang="uk">доступ до багатьох функціональних можливостей програми за допомогою натискання комбінацій клавіш;</li>
@@ -89,6 +96,7 @@
       <li xml:lang="nds">Automaatsch Sekern verhöödt, Di kaamt Daten weg</li>
       <li xml:lang="nl">Automatisch opslaan betekent dat uw notities veilig zijn voor verlies</li>
       <li xml:lang="pl">Samoczynne zapisywanie oznacza, że notatki są bezpieczne na wypadek awarii</li>
+      <li xml:lang="pt">A gravação automática significa que as suas notas estão a salvo de perdas</li>
       <li xml:lang="sl">Samodejno shranjevanje, ki onemogoča izgubo podatkov</li>
       <li xml:lang="sv">Anteckningarna är säkrade från förlust genom att spara automatiskt</li>
       <li xml:lang="uk">автоматичне збереження даних, що забезпечує надійне зберігання ваших даних без втрат.</li>

@@ -10,6 +10,7 @@
   <name xml:lang="nds">KAdressbook</name>
   <name xml:lang="nl">KAddressBook</name>
   <name xml:lang="pl">Książka adresowa</name>
+  <name xml:lang="pt">KAddressBook</name>
   <name xml:lang="ro">KAddressBook</name>
   <name xml:lang="sk">KAddressBook</name>
   <name xml:lang="sl">KAddressBook</name>
@@ -27,6 +28,7 @@
     <p xml:lang="nds">KAdressbook wohrt all de persöönlichen Enkelheiten över Dien Familie, Dien Frünnen un anner Kontakten.</p>
     <p xml:lang="nl">KAddressBook slaat alle persoonlijke details op van uw familie, vrienden en andere contactpersonen.</p>
     <p xml:lang="pl">Książka adresowa przechowuje wszystkie dane osobiste o twojej rodzinie, przyjaciołach i innych znajomych.</p>
+    <p xml:lang="pt">O KAddressBook guarda todos os detalhes pessoais sobre os seus familiares, amigos e outros contactos.</p>
     <p xml:lang="ro">KAddressBook păstrează toate datele personale ale familiei, prietenilor și altor contacte ale dumneavoastră.</p>
     <p xml:lang="sl">KAddressBook shranjuje vse osebne podatke vaše družine, vaših prijateljev in drugih stikov.</p>
     <p xml:lang="sr">К‑адресар складишти приватне детаље о вашој породици, пријатељима и другим контактима.</p>
@@ -43,6 +45,7 @@
     <p xml:lang="nds">Markmalen:</p>
     <p xml:lang="nl">Mogelijkheden:</p>
     <p xml:lang="pl">Możliwości:</p>
+    <p xml:lang="pt">Funcionalidades:</p>
     <p xml:lang="ro">Caracteristici:</p>
     <p xml:lang="sk">Funkcie:</p>
     <p xml:lang="sl">Zmožnosti:</p>
@@ -60,6 +63,7 @@
       <li xml:lang="nds">Importeren ut un Exporteren na meist all Adressbook-Standards.</li>
       <li xml:lang="nl">Importeert en exporteert naar bijna elke adresboekstandaard</li>
       <li xml:lang="pl">Importowanie i eksportowane do niemalże każdego standardu książki adresowej</li>
+      <li xml:lang="pt">Importa e exporta para praticamente todos formatos de livros de endereços</li>
       <li xml:lang="ro">Importă și exportă în aproape toate standardele de cărți de adrese</li>
       <li xml:lang="sl">Uvoz in izvoz skoraj vsakega imeniškega standarda</li>
       <li xml:lang="sr">Увоз и извоз за скоро сваки адресарски стандард.</li>
@@ -75,6 +79,7 @@
       <li xml:lang="nds">Leest Dateien in't VCF-Formaat un kann Daten ut vCard- un CSV-Dateien importeren un dor ok hen exporteren.</li>
       <li xml:lang="nl">Leest .vcf-formaat bestanden en kan vCards importeren en exporteren en csv-formaat bestanden</li>
       <li xml:lang="pl">Czytanie plików w postaci .vcf oraz importowanie i eksportowanie wizytówek w postaci vCard i csv</li>
+      <li xml:lang="pt">Lê os ficheiros no formato .vcf e poderá importar e exportar os formatos de ficheiros vCard e CSV</li>
       <li xml:lang="sl">Branje datotek vrste .vcf in uvoz/izvoz vizitk vCard ter datotek csv</li>
       <li xml:lang="sr">Читање в‑кард фајлова, увоз и извоз за формате в‑кард и ЦСВ.</li>
       <li xml:lang="sr-Latn">Čitanje vCard fajlova, uvoz i izvoz za formate vCard i CSV.</li>
@@ -89,6 +94,7 @@
       <li xml:lang="nds">Kann en Reeg LDAP-Servers tosamen bruken</li>
       <li xml:lang="nl">Kan meerdere LDAP-servers gebruiken</li>
       <li xml:lang="pl">Możliwość używania wielu serwerów LDAP</li>
+      <li xml:lang="pt">Poderá usar diversos servidores de LDAP</li>
       <li xml:lang="sl">Uporaba več strežnikov LDAP naenkrat</li>
       <li xml:lang="sr">Коришћење вишеструких ЛДАП сервера.</li>
       <li xml:lang="sr-Latn">Korišćenje višestrukih LDAP servera.</li>
@@ -103,6 +109,7 @@
       <li xml:lang="nds">Instellbor Filtern un en deegt Söök</li>
       <li xml:lang="nl">In te stellen filters en krachtige zoekfuncties</li>
       <li xml:lang="pl">Ustawialne filtry i zaawansowane możliwości wyszukiwania</li>
+      <li xml:lang="pt">Capacidades para filtros configuráveis e pesquisa poderosa</li>
       <li xml:lang="sl">Prilagodljivi filtri in zmogljiv iskalnik</li>
       <li xml:lang="sr">Подесиви филтери и моћне способности претраге.</li>
       <li xml:lang="sr-Latn">Podesivi filteri i moćne sposobnosti pretrage.</li>
@@ -117,6 +124,7 @@
       <li xml:lang="nds">Arbeit mit anner Kontact-Komponenten tosamen, exporteert a.B. Geboortsdag-Vöranstööt na KOrganizer.</li>
       <li xml:lang="nl">Integreert met andere componenten van Kontact, bijv. exporteren van herinneringen van verjaardagen aan KOrganizer</li>
       <li xml:lang="pl">Integracja z innymi składnikami Kontact, np. eksportowanie przypomnień o urodzinach do KOrgranizera</li>
+      <li xml:lang="pt">Integra-se com os outros componentes do Kontact, p.ex. exportar chamadas de atenção de aniversários para o KOrganizer</li>
       <li xml:lang="sl">Podpira druge sestavne dele Kontacta, npr. v KOrganizer lahko izvozite opomnike o rojstnih dnevih</li>
       <li xml:lang="sr">Уклапање у остале компоненте Контакта, нпр. извоз подсетника на рођендане у К‑организатор.</li>
       <li xml:lang="sr-Latn">Uklapanje u ostale komponente Kontacta, npr. izvoz podsetnika na rođendane u K‑organizator.</li>
@@ -131,6 +139,7 @@
       <li xml:lang="nds">Arbeit mit Arbeitkoppelprogrammen tosamen</li>
       <li xml:lang="nl">Kan met groupware integreren</li>
       <li xml:lang="pl">Możliwość integracji z oprogramowaniem groupware</li>
+      <li xml:lang="pt">Capacidades de integração em grupo</li>
       <li xml:lang="sl">Podpira programe za skupinsko delo</li>
       <li xml:lang="sr">Могуће уклапање са групвером.</li>
       <li xml:lang="sr-Latn">Moguće uklapanje sa grupverom.</li>
@@ -145,6 +154,7 @@
       <li xml:lang="nds">Akonadi arbeidt in'n Achtergrund</li>
       <li xml:lang="nl">Powered door Akonadi</li>
       <li xml:lang="pl">Napędzane przez Akonadi</li>
+      <li xml:lang="pt">Reforçado pelo Akonadi</li>
       <li xml:lang="sl">Temelji na Akonadiju</li>
       <li xml:lang="sr">Изграђено над Аконадијем.</li>
       <li xml:lang="sr-Latn">Izgrađeno nad Akonadijem.</li>
