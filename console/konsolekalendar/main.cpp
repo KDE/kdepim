@@ -72,6 +72,7 @@ static const char progURL[] = "pim.kde.org/components/konsolekalendar.php";
 
 int main( int argc, char *argv[] )
 {
+  KLocalizedString::setApplicationDomain("konsolekalendar");
   K4AboutData aboutData(
     progName, 0,                 // internal program name
     ki18n( progDisplay ),        // displayable program name.

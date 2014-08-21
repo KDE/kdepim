@@ -13,6 +13,7 @@ static const char description[] =
 
 int main(int argc, char **argv)
 {
+    KLocalizedString::setApplicationDomain("mailreader"); 
     KAboutData about(QStringLiteral("mailreader"), i18n("mailreader"), QStringLiteral("0.1"), i18n(description),
                      KAboutLicense::GPL, i18n("(C) 2007 Andras Mantia"));
     about.addAuthor( i18n("Andras Mantia"), QString(), QStringLiteral("amantia@kde.org") );

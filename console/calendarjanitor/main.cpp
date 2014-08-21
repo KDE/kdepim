@@ -74,6 +74,7 @@ static void silenceStderr()
 
 int main(int argv, char *argc[])
 {
+    KLocalizedString::setApplicationDomain("calendarjanitor");
     K4AboutData aboutData(progName, 0,                 // internal program name
                          ki18n(progDisplay),          // displayable program name.
                          progVersion,                 // version string
