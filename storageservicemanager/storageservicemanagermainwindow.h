@@ -24,7 +24,8 @@
 #include <KXmlGuiWindow>
 #include <Solid/Networking>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceManager;
 }
 

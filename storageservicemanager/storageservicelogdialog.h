@@ -18,19 +18,19 @@
 
 */
 
-
 #ifndef STORAGESERVICELOGDIALOG_H
 #define STORAGESERVICELOGDIALOG_H
 
 #include <KDialog>
-namespace PimCommon {
+namespace PimCommon
+{
 class RichTextEditorWidget;
 }
 class StorageServiceLogDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceLogDialog(QWidget *parent=0);
+    explicit StorageServiceLogDialog(QWidget *parent = 0);
     ~StorageServiceLogDialog();
 
     void setLog(const QString &log);

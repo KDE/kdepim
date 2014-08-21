@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "storageservicemanagermainwidget.h"
 #include "storageserviceconfigurestoragewidget.h"
 #include "storageservicetabwidget.h"
@@ -44,8 +43,9 @@ StorageServiceTabWidget *StorageServiceManagerMainWidget::storageServiceTabWidge
 
 void StorageServiceManagerMainWidget::slotTabCountchanged(bool hasTab)
 {
-    if (hasTab)
+    if (hasTab) {
         setCurrentWidget(mStorageServiceTabWidget);
-    else
+    } else {
         setCurrentWidget(mConfigureWidget);
+    }
 }

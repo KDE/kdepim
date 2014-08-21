@@ -29,7 +29,7 @@ class StorageServiceConfigureDialog : public PimCommon::StorageServiceConfigureD
 {
     Q_OBJECT
 public:
-    explicit StorageServiceConfigureDialog(QWidget *parent=0);
+    explicit StorageServiceConfigureDialog(QWidget *parent = 0);
     ~StorageServiceConfigureDialog();
 
     void writeSettings();

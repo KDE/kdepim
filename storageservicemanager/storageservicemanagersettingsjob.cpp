@@ -82,12 +82,10 @@ QString StorageServiceManagerSettingsJob::oauth2RedirectUrl() const
     return QLatin1String("https://bugs.kde.org/");
 }
 
-
 QString StorageServiceManagerSettingsJob::hubicScope() const
 {
     return QLatin1String("usage.r,account.r,credentials.r,links.wd");
 }
-
 
 QString StorageServiceManagerSettingsJob::gdriveClientId() const
 {

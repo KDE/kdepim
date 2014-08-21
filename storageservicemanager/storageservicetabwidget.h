@@ -29,7 +29,7 @@ class StorageServiceTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceTabWidget(QWidget *parent=0);
+    explicit StorageServiceTabWidget(QWidget *parent = 0);
     ~StorageServiceTabWidget();
 
     PimCommon::StorageServiceAbstract::Capabilities capabilities() const;

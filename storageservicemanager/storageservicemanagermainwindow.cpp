@@ -49,7 +49,6 @@
 #include <KSharedConfig>
 #include <QAction>
 
-
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     : KXmlGuiWindow(),
       mNetworkIsDown(false)
@@ -68,8 +67,8 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(selectionChanged()), this, SLOT(slotUpdateActions()));
     setCentralWidget(mStorageServiceMainWidget);
 
-    connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
-              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+    connect(Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+            this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)));
 
     setupActions();
     setupGUI(Keys | StatusBar | Save | Create);
@@ -86,11 +85,12 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
     delete mStorageServiceMainWidget;
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
-    group.writeEntry( "Size", size() );
-    qDebug()<<" StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
-    if (StorageServiceManagerGlobalConfig::self()->closeWallet())
+    KConfigGroup group = config->group(QLatin1String("StorageServiceManagerMainWindow"));
+    group.writeEntry("Size", size());
+    qDebug() << " StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
+    if (StorageServiceManagerGlobalConfig::self()->closeWallet()) {
         PimCommon::StorageServiceSettings::self()->closeWallet();
+    }
 }
 
 void StorageServiceManagerMainWindow::slotServicesChanged()
@@ -102,13 +102,13 @@ void StorageServiceManagerMainWindow::initStatusBar()
 {
     mStatusBarInfo = new QLabel;
     statusBar()->insertWidget(0, mStatusBarInfo, 4);
-    KPIM::ProgressStatusBarWidget *progressBar = new KPIM::ProgressStatusBarWidget( statusBar(), this, PimCommon::StorageServiceProgressManager::progressTypeValue() );
-    statusBar()->addPermanentWidget( progressBar->littleProgress(), 0 );
+    KPIM::ProgressStatusBarWidget *progressBar = new KPIM::ProgressStatusBarWidget(statusBar(), this, PimCommon::StorageServiceProgressManager::progressTypeValue());
+    statusBar()->addPermanentWidget(progressBar->littleProgress(), 0);
 }
 
 void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
 {
-    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+    if (status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
         mStorageServiceMainWidget->storageServiceTabWidget()->setNetworkIsDown(false);
         slotSetStatusBarMessage(i18n("Network connection is up."));
         mNetworkIsDown = false;
@@ -146,7 +146,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mAuthenticate->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0));
         mRefreshList->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0));
         mRenameItem->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity || capabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability) &&
-                (type == PimCommon::StorageServiceTreeWidget::File || type == PimCommon::StorageServiceTreeWidget::Folder));
+                                (type == PimCommon::StorageServiceTreeWidget::File || type == PimCommon::StorageServiceTreeWidget::Folder));
 
         mShowLog->setDisabled((mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0));
         mRefreshAll->setDisabled((mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0));
@@ -157,7 +157,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
 void StorageServiceManagerMainWindow::setupActions()
 {
     KActionCollection *ac = actionCollection();
-    KStandardAction::quit(this, SLOT(close()), ac );
+    KStandardAction::quit(this, SLOT(close()), ac);
 
     mAuthenticate = ac->addAction(QLatin1String("authenticate"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAuthenticate()));
     mAuthenticate->setText(i18n("Authenticate..."));
@@ -168,7 +168,7 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
-    ac->setDefaultShortcut(mRefreshList, QKeySequence( Qt::Key_F5 ));
+    ac->setDefaultShortcut(mRefreshList, QKeySequence(Qt::Key_F5));
 
     mAccountInfo = ac->addAction(QLatin1String("account_info"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAccountInfo()));
     mAccountInfo->setText(i18n("Account Info..."));
@@ -196,13 +196,13 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mRefreshAll = ac->addAction(QLatin1String("refresh_all"), this, SLOT(slotRefreshAll()));
     mRefreshAll->setText(i18n("Refresh All"));
-    ac->setDefaultShortcut(mRefreshAll,QKeySequence( Qt::CTRL + Qt::Key_F5 ));
+    ac->setDefaultShortcut(mRefreshAll, QKeySequence(Qt::CTRL + Qt::Key_F5));
 
     mRenameItem = ac->addAction(QLatin1String("rename"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRename()));
     mRenameItem->setText(i18n("Rename..."));
-    ac->setDefaultShortcut(mRenameItem,QKeySequence( Qt::Key_F2 ));
+    ac->setDefaultShortcut(mRenameItem, QKeySequence(Qt::Key_F2));
 
-    KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+    KStandardAction::preferences(this, SLOT(slotConfigure()), ac);
     KStandardAction::configureNotifications(this, SLOT(slotShowNotificationOptions()), ac); // options_configure_notifications
 }
 
@@ -250,10 +250,10 @@ void StorageServiceManagerMainWindow::slotServiceRemoved(const QString &serviceN
 void StorageServiceManagerMainWindow::readConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup group = KConfigGroup( config, "StorageServiceManagerMainWindow" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group = KConfigGroup(config, "StorageServiceManagerMainWindow");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 

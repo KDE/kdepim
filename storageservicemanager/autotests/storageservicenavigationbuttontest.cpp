@@ -252,6 +252,4 @@ void StorageServiceNavigationButtonTest::shouldMoveInfoToTopWhenClickOnBackAndAf
     QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo3"));
 }
 
-
-
-QTEST_MAIN( StorageServiceNavigationButtonTest )
+QTEST_MAIN(StorageServiceNavigationButtonTest)

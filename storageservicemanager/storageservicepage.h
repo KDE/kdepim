@@ -26,7 +26,8 @@
 #include "storageservicemanagerutil.h"
 #include "pimcommon/storageservice/widgets/storageservicetreewidget.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceAbstract;
 class StorageServiceProgressWidget;
 class StorageServiceProgressIndicator;
@@ -38,7 +39,7 @@ class StorageServicePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
+    explicit StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent = 0);
     ~StorageServicePage();
 
     void authenticate();

@@ -40,12 +40,15 @@ StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const QString &
     QVBoxLayout *vbox = new QVBoxLayout;
     grp->setLayout(vbox);
     if (accountInfo.isValid()) {
-        if (accountInfo.accountSize>=0)
-            vbox->addWidget(new QLabel(i18n("Size: %1", KFormat().formatByteSize(accountInfo.accountSize,1))));
-        if (accountInfo.quota>=0)
-            vbox->addWidget(new QLabel(i18n("Quota: %1", KFormat().formatByteSize(accountInfo.quota,1))));
-        if (accountInfo.shared>=0)
-            vbox->addWidget(new QLabel(i18n("Shared: %1", KFormat().formatByteSize(accountInfo.shared,1))));
+        if (accountInfo.accountSize >= 0) {
+            vbox->addWidget(new QLabel(i18n("Size: %1", KFormat().formatByteSize(accountInfo.accountSize, 1))));
+        }
+        if (accountInfo.quota >= 0) {
+            vbox->addWidget(new QLabel(i18n("Quota: %1", KFormat().formatByteSize(accountInfo.quota, 1))));
+        }
+        if (accountInfo.shared >= 0) {
+            vbox->addWidget(new QLabel(i18n("Shared: %1", KFormat().formatByteSize(accountInfo.shared, 1))));
+        }
     } else {
         QLabel *lab = new QLabel(i18n("Unable to get account information."));
         QFont font = lab->font();

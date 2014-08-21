@@ -18,18 +18,18 @@
 
 */
 
-
 #ifndef STORAGESERVICEMANAGERUTIL_H
 #define STORAGESERVICEMANAGERUTIL_H
 
 #include <QString>
 #include <QDebug>
-struct InformationUrl
-{
-    bool isValid() const {
+struct InformationUrl {
+    bool isValid() const
+    {
         return !currentUrl.isEmpty() && !parentUrl.isEmpty();
     }
-    bool operator ==(const InformationUrl &a) {
+    bool operator ==(const InformationUrl &a)
+    {
         return (a.currentUrl == currentUrl) && (a.parentUrl == parentUrl);
     }
 

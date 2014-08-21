@@ -20,8 +20,8 @@
 
 #include "storageservicemanagerutil.h"
 
-
-QDebug operator<<(QDebug d, const InformationUrl &info) {
-    d.nospace() << " currentUrl " << info.currentUrl<< " parentUrl "<<info.parentUrl;
+QDebug operator<<(QDebug d, const InformationUrl &info)
+{
+    d.nospace() << " currentUrl " << info.currentUrl << " parentUrl " << info.parentUrl;
     return d.space();
 }

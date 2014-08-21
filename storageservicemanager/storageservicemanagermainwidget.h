@@ -25,7 +25,7 @@ class StorageServiceManagerMainWidget : public QStackedWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceManagerMainWidget(QWidget *parent=0);
+    explicit StorageServiceManagerMainWidget(QWidget *parent = 0);
     ~StorageServiceManagerMainWidget();
 
     StorageServiceTabWidget *storageServiceTabWidget() const;

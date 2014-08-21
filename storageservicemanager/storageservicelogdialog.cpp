@@ -27,15 +27,14 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-
 StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18n("Log"));
 
-    setButtons( User2 | User1 | Close );
-    setButtonText( User1, i18n("Clear Log"));
-    setButtonText( User2, i18n("Save As..."));
+    setButtons(User2 | User1 | Close);
+    setButtonText(User1, i18n("Clear Log"));
+    setButtonText(User2, i18n("Save As..."));
     mLog = new PimCommon::RichTextEditorWidget;
     mLog->setReadOnly(true);
     readConfig();
@@ -66,7 +65,7 @@ void StorageServiceLogDialog::slotClearLog()
 
 void StorageServiceLogDialog::slotSaveAs()
 {
-    const QString filter = QLatin1String("*|") + i18n( "all files (*)" );
+    const QString filter = QLatin1String("*|") + i18n("all files (*)");
     PimCommon::Util::saveTextAs(mLog->toPlainText(), filter, this, KUrl(), i18n("Save Log"));
 }
 
@@ -79,15 +78,15 @@ void StorageServiceLogDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group( QLatin1String("StorageServiceLogDialog") );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group = config->group(QLatin1String("StorageServiceLogDialog"));
+    group.writeEntry("Size", size());
 }
 
 void StorageServiceLogDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "StorageServiceLogDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "StorageServiceLogDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }

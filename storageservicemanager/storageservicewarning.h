@@ -26,7 +26,7 @@ class StorageServiceWarning : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceWarning(QWidget *parent=0);
+    explicit StorageServiceWarning(QWidget *parent = 0);
     ~StorageServiceWarning();
 
     void addLog(const QString &log);

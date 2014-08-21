@@ -23,7 +23,8 @@
 
 #include <KDialog>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class AccountInfo;
 }
 

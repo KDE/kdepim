@@ -30,14 +30,13 @@ class StorageServiceNavigationButtons : public QToolBar
 {
     Q_OBJECT
 public:
-    explicit StorageServiceNavigationButtons(QWidget *parent=0);
+    explicit StorageServiceNavigationButtons(QWidget *parent = 0);
 
     QAction *goBack() const;
     QAction *goForward() const;
     QAction *home() const;
 
     void addNewUrl(const InformationUrl &);
-
 
     void addBackUrl(const InformationUrl &);
     void addForwadUrl(const InformationUrl &);

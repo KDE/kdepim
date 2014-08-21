@@ -37,13 +37,13 @@ StorageServiceTabWidget::~StorageServiceTabWidget()
 
 void StorageServiceTabWidget::updateListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list)
 {
-    QMapIterator<QString, PimCommon::StorageServiceAbstract*> i(list);
+    QMapIterator<QString, PimCommon::StorageServiceAbstract *> i(list);
     while (i.hasNext()) {
         i.next();
         bool foundPage = false;
         StorageServicePage *page = 0;
-        for (int nbPage=0; nbPage < count(); ++nbPage) {
-            page = static_cast<StorageServicePage*>(widget(nbPage));
+        for (int nbPage = 0; nbPage < count(); ++nbPage) {
+            page = static_cast<StorageServicePage *>(widget(nbPage));
             if (i.value()->storageServiceName() == page->serviceName()) {
                 foundPage = true;
                 break;
@@ -62,7 +62,7 @@ void StorageServiceTabWidget::updateListService(const QMap<QString, PimCommon::S
 
 void StorageServiceTabWidget::setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list)
 {
-    QMapIterator<QString, PimCommon::StorageServiceAbstract*> i(list);
+    QMapIterator<QString, PimCommon::StorageServiceAbstract *> i(list);
     while (i.hasNext()) {
         i.next();
         createPage(i.key(), i.value());
@@ -73,7 +73,7 @@ void StorageServiceTabWidget::setListStorageService(const QMap<QString, PimCommo
 void StorageServiceTabWidget::createPage(const QString &name, PimCommon::StorageServiceAbstract *service)
 {
     StorageServicePage *page = new StorageServicePage(name, service);
-    connect(page, SIGNAL(updateIcon(QIcon,StorageServicePage*)), this, SLOT(slotUpdateIcon(QIcon,StorageServicePage*)));
+    connect(page, SIGNAL(updateIcon(QIcon, StorageServicePage *)), this, SLOT(slotUpdateIcon(QIcon, StorageServicePage *)));
     connect(page, SIGNAL(updateStatusBarMessage(QString)), this, SIGNAL(updateStatusBarMessage(QString)));
     connect(page, SIGNAL(listFileWasInitialized()), this, SIGNAL(listFileWasInitialized()));
     connect(page, SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
@@ -94,8 +94,9 @@ void StorageServiceTabWidget::slotAuthenticate()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             page->authenticate();
+        }
     }
 }
 
@@ -103,8 +104,9 @@ void StorageServiceTabWidget::slotCreateFolder()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             page->createFolder();
+        }
     }
 }
 
@@ -112,8 +114,9 @@ void StorageServiceTabWidget::slotRefreshList()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             page->refreshList();
+        }
     }
 }
 
@@ -121,8 +124,9 @@ void StorageServiceTabWidget::slotAccountInfo()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             page->accountInfo();
+        }
     }
 }
 
@@ -130,8 +134,9 @@ void StorageServiceTabWidget::slotUploadFile()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             page->slotUploadFile();
+        }
     }
 }
 
@@ -139,8 +144,9 @@ void StorageServiceTabWidget::slotDelete()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             page->deleteItem();
+        }
     }
 }
 
@@ -148,8 +154,9 @@ void StorageServiceTabWidget::slotDownloadFile()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             page->downloadFile();
+        }
     }
 }
 
@@ -157,8 +164,9 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServiceTabWidget::capabil
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             return page->capabilities();
+        }
     }
     return PimCommon::StorageServiceAbstract::NoCapability;
 }
@@ -167,19 +175,21 @@ bool StorageServiceTabWidget::listFolderWasLoaded() const
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             return page->listFolderWasLoaded();
+        }
     }
     return false;
 }
 
 bool StorageServiceTabWidget::hasUploadDownloadProgress() const
 {
-    for (int i=0; i <count() ; ++i) {
+    for (int i = 0; i < count() ; ++i) {
         StorageServicePage *page = static_cast<StorageServicePage *>(widget(i));
         if (page) {
-            if (page->hasUploadDownloadProgress())
+            if (page->hasUploadDownloadProgress()) {
                 return true;
+            }
         }
     }
     return false;
@@ -187,21 +197,20 @@ bool StorageServiceTabWidget::hasUploadDownloadProgress() const
 
 void StorageServiceTabWidget::serviceRemoved(const QString &serviceName)
 {
-    for (int nbPage=0; nbPage < count(); ++nbPage) {
-        StorageServicePage *page = static_cast<StorageServicePage*>(widget(nbPage));
+    for (int nbPage = 0; nbPage < count(); ++nbPage) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(widget(nbPage));
         if (page->serviceName() == serviceName) {
             //removeTab(nbPage);
             delete widget(nbPage);
-            Q_EMIT tabCountChanged(count()>0);
+            Q_EMIT tabCountChanged(count() > 0);
             break;
         }
     }
 }
 
-
 void StorageServiceTabWidget::setNetworkIsDown(bool state)
 {
-    for (int i=0; i <count() ; ++i) {
+    for (int i = 0; i < count() ; ++i) {
         StorageServicePage *page = static_cast<StorageServicePage *>(widget(i));
         if (page) {
             page->setNetworkIsDown(state);
@@ -213,8 +222,9 @@ void StorageServiceTabWidget::slotShowLog()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             page->showLog();
+        }
     }
 }
 
@@ -222,14 +232,15 @@ void StorageServiceTabWidget::logout()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             page->logout();
+        }
     }
 }
 
 void StorageServiceTabWidget::shutdownAllServices()
 {
-    for (int i=0; i <count() ; ++i) {
+    for (int i = 0; i < count() ; ++i) {
         StorageServicePage *page = static_cast<StorageServicePage *>(widget(i));
         if (page) {
             page->logout();
@@ -239,7 +250,7 @@ void StorageServiceTabWidget::shutdownAllServices()
 
 void StorageServiceTabWidget::refreshAll()
 {
-    for (int i=0; i <count() ; ++i) {
+    for (int i = 0; i < count() ; ++i) {
         StorageServicePage *page = static_cast<StorageServicePage *>(widget(i));
         if (page) {
             page->refreshList();
@@ -251,8 +262,9 @@ PimCommon::StorageServiceTreeWidget::ItemType StorageServiceTabWidget::itemTypeS
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             return page->itemTypeSelected();
+        }
     }
     return PimCommon::StorageServiceTreeWidget::UnKnown;
 }
@@ -261,7 +273,8 @@ void StorageServiceTabWidget::slotRename()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
-        if (page)
+        if (page) {
             page->renameItem();
+        }
     }
 }

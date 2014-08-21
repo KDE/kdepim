@@ -26,7 +26,6 @@
 #include <QLocale>
 #include <QPointer>
 
-
 StorageServiceWarning::StorageServiceWarning(QWidget *parent)
     : KMessageWidget(parent)
 {

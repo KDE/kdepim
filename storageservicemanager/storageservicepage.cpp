@@ -38,7 +38,6 @@
 #include <QPointer>
 #include <QTimer>
 
-
 StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : QWidget(parent),
       mServiceName(serviceName),
@@ -58,7 +57,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mTreeWidget, &StorageServiceTreeWidget::uploadFile, this, &StorageServicePage::slotUploadFile);
     connect(mTreeWidget, &StorageServiceTreeWidget::downloadFile, this, &StorageServicePage::slotDownloadFile);
-    connect(mTreeWidget, SIGNAL(changeFolder(QString,QString)), this, SLOT(slotChangeFolder(QString,QString)));
+    connect(mTreeWidget, SIGNAL(changeFolder(QString, QString)), this, SLOT(slotChangeFolder(QString, QString)));
     connect(mTreeWidget, SIGNAL(itemSelectionChanged()), this, SIGNAL(selectionChanged()));
     vbox->addWidget(mTreeWidget);
     mProgressWidget = new PimCommon::StorageServiceProgressWidget(storageService);
@@ -96,51 +95,52 @@ void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
 void StorageServicePage::connectStorageService()
 {
     connect(mTreeWidget, SIGNAL(listFileWasInitialized()), this, SIGNAL(listFileWasInitialized()));
-    connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
+    connect(mStorageService, SIGNAL(shareLinkDone(QString, QString)), this, SLOT(slotShareLinkDone(QString, QString)));
 
     connect(mStorageService, &PimCommon::StorageServiceAbstract::authenticationDone, this, &StorageServicePage::slotAuthenticationDone);
-    connect(mStorageService, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+    connect(mStorageService, SIGNAL(authenticationFailed(QString, QString)), this, SLOT(slotAuthenticationFailed(QString, QString)));
 
-    connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
+    connect(mStorageService, SIGNAL(actionFailed(QString, QString)), this, SLOT(slotActionFailed(QString, QString)));
 
-    connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
+    connect(mStorageService, SIGNAL(accountInfoDone(QString, PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString, PimCommon::AccountInfo)));
 
     connect(mStorageService, &PimCommon::StorageServiceAbstract::inProgress, this, &StorageServicePage::slotProgressStateChanged);
 
-    connect(mStorageService, SIGNAL(listFolderDone(QString,QVariant)), this, SLOT(slotListFolderDone(QString,QVariant)));
+    connect(mStorageService, SIGNAL(listFolderDone(QString, QVariant)), this, SLOT(slotListFolderDone(QString, QVariant)));
 
-    connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(createFolderDone(QString, QString)), this, SLOT(slotCreateFolderDone(QString, QString)));
 
-    connect(mStorageService, SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(deleteFolderDone(QString, QString)), this, SLOT(slotDeleteFolderDone(QString, QString)));
 
-    connect(mStorageService, SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(deleteFileDone(QString, QString)), this, SLOT(slotDeleteFileDone(QString, QString)));
 
-    connect(mStorageService, SIGNAL(renameFolderDone(QString,QString)), this, SLOT(slotRenameFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(renameFolderDone(QString, QString)), this, SLOT(slotRenameFolderDone(QString, QString)));
 
-    connect(mStorageService, SIGNAL(renameFileDone(QString,QString)), this, SLOT(slotRenameFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(renameFileDone(QString, QString)), this, SLOT(slotRenameFileDone(QString, QString)));
 
-    connect(mStorageService, SIGNAL(moveFileDone(QString,QString)), this, SLOT(slotMoveFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(moveFileDone(QString, QString)), this, SLOT(slotMoveFileDone(QString, QString)));
 
-    connect(mStorageService, SIGNAL(moveFolderDone(QString,QString)), this, SLOT(slotMoveFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(moveFolderDone(QString, QString)), this, SLOT(slotMoveFolderDone(QString, QString)));
 
-    connect(mStorageService, SIGNAL(copyFolderDone(QString,QString)), this, SLOT(slotCopyFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(copyFolderDone(QString, QString)), this, SLOT(slotCopyFolderDone(QString, QString)));
 
-    connect(mStorageService, SIGNAL(copyFileDone(QString,QString)), this, SLOT(slotCopyFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(copyFileDone(QString, QString)), this, SLOT(slotCopyFileDone(QString, QString)));
 
-    connect(mStorageService, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownloadFileDone(QString,QString)));
-    connect(mStorageService, SIGNAL(downLoadFileFailed(QString,QString)), this, SLOT(slotDownloadFileFailed(QString,QString)));
+    connect(mStorageService, SIGNAL(downLoadFileDone(QString, QString)), this, SLOT(slotDownloadFileDone(QString, QString)));
+    connect(mStorageService, SIGNAL(downLoadFileFailed(QString, QString)), this, SLOT(slotDownloadFileFailed(QString, QString)));
 
-    connect(mStorageService, SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
-    connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
-    connect(mStorageService, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), this, SLOT(slotuploadDownloadFileProgress(QString,qint64,qint64)));
+    connect(mStorageService, SIGNAL(uploadFileFailed(QString, QString)), this, SLOT(slotUploadFileFailed(QString, QString)));
+    connect(mStorageService, SIGNAL(uploadFileDone(QString, QString)), this, SLOT(slotUploadFileDone(QString, QString)));
+    connect(mStorageService, SIGNAL(uploadDownloadFileProgress(QString, qint64, qint64)), this, SLOT(slotuploadDownloadFileProgress(QString, qint64, qint64)));
 }
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)
 {
-    if (folderName.isEmpty())
+    if (folderName.isEmpty()) {
         Q_EMIT updateStatusBarMessage(i18n("%1: Folder was renamed.", serviceName));
-    else
+    } else {
         Q_EMIT updateStatusBarMessage(i18n("%1: Folder was renamed to '%2'.", serviceName, folderName));
+    }
     updateList(serviceName);
 }
 
@@ -165,7 +165,7 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
         mProgressWidget->reset();
         mProgressWidget->hide();
         updateList(serviceName);
-        KMessageBox::information(this, fileName.isEmpty() ? i18n("Filename was correctly uploaded") : i18n("%1 was correctly uploaded",fileName), i18n("Upload File"));
+        KMessageBox::information(this, fileName.isEmpty() ? i18n("Filename was correctly uploaded") : i18n("%1 was correctly uploaded", fileName), i18n("Upload File"));
     }
 }
 
@@ -179,9 +179,9 @@ void StorageServicePage::slotuploadDownloadFileProgress(const QString &serviceNa
 void StorageServicePage::slotShareLinkDone(const QString &serviceName, const QString &link)
 {
     if (verifyService(serviceName)) {
-        QClipboard* const cb = QApplication::clipboard();
-        cb->setText( link, QClipboard::Clipboard );
-        KMessageBox::information(this, i18n("Link \'%1\' stored in clipboard",link),i18n("Shared Link"));
+        QClipboard *const cb = QApplication::clipboard();
+        cb->setText(link, QClipboard::Clipboard);
+        KMessageBox::information(this, i18n("Link \'%1\' stored in clipboard", link), i18n("Shared Link"));
     }
 }
 
@@ -203,14 +203,14 @@ void StorageServicePage::slotActionFailed(const QString &serviceName, const QStr
     if (verifyService(serviceName)) {
         mStorageServiceWarning->addLog(error);
         mStorageServiceWarning->animatedShow();
-        KNotification::event(QLatin1String("action-failed"), error, QPixmap() ,this, KNotification::CloseOnTimeout);
+        KNotification::event(QLatin1String("action-failed"), error, QPixmap() , this, KNotification::CloseOnTimeout);
     }
 }
 
 bool StorageServicePage::verifyService(const QString &serviceName)
 {
     if (serviceName != mServiceName) {
-        qDebug()<<" Error in signal/Slots";
+        qDebug() << " Error in signal/Slots";
         return false;
     }
     return true;
@@ -297,19 +297,21 @@ void StorageServicePage::slotListFolderDone(const QString &serviceName, const QV
 void StorageServicePage::slotCreateFolderDone(const QString &serviceName, const QString &folder)
 {
     updateList(serviceName);
-    if (folder.isEmpty())
+    if (folder.isEmpty()) {
         Q_EMIT updateStatusBarMessage(i18n("%1: Folder was created.", serviceName));
-    else
+    } else {
         Q_EMIT updateStatusBarMessage(i18n("%1: Folder %2 was created.", serviceName, folder));
+    }
 }
 
 void StorageServicePage::slotDeleteFolderDone(const QString &serviceName, const QString &folder)
 {
     updateList(serviceName);
-    if (folder.isEmpty())
+    if (folder.isEmpty()) {
         Q_EMIT updateStatusBarMessage(i18n("%1: Folder was deleted.", serviceName));
-    else
+    } else {
         Q_EMIT updateStatusBarMessage(i18n("%1: Folder %2 was deleted.", serviceName, folder));
+    }
 }
 
 void StorageServicePage::slotDeleteFileDone(const QString &serviceName, const QString &filename)

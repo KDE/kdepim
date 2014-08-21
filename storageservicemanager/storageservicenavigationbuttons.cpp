@@ -29,16 +29,16 @@
 StorageServiceNavigationButtons::StorageServiceNavigationButtons(QWidget *parent)
     : QToolBar(parent)
 {
-    mHome = addAction(QIcon::fromTheme(QLatin1String("go-home")),i18n("Home"), this, SIGNAL(goHome()));
+    mHome = addAction(QIcon::fromTheme(QLatin1String("go-home")), i18n("Home"), this, SIGNAL(goHome()));
 
-    mGoBack = new QAction(QIcon::fromTheme(QLatin1String("go-previous")),i18n("Back"), this);
+    mGoBack = new QAction(QIcon::fromTheme(QLatin1String("go-previous")), i18n("Back"), this);
     addAction(mGoBack);
     connect(mGoBack, &QAction::triggered, this, &StorageServiceNavigationButtons::slotGoBackClicked);
-    mGoBack->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Back) );
+    mGoBack->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Back));
     mGoBack->setEnabled(false);
 
-    mGoForward = new QAction(QIcon::fromTheme(QLatin1String("go-next")),i18n("Forward"), this);
-    mGoForward->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Forward) );
+    mGoForward = new QAction(QIcon::fromTheme(QLatin1String("go-next")), i18n("Forward"), this);
+    mGoForward->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Forward));
     connect(mGoForward, &QAction::triggered, this, &StorageServiceNavigationButtons::slotGoForwardClicked);
     addAction(mGoForward);
     mGoForward->setEnabled(false);
@@ -126,7 +126,7 @@ void StorageServiceNavigationButtons::slotGoBackClicked()
 {
     if (!mBackUrls.isEmpty()) {
         InformationUrl url = mBackUrls.takeFirst();
-        qDebug()<<" back clicked"<<url;
+        qDebug() << " back clicked" << url;
         Q_EMIT changeUrl(url);
         mForwardUrls.prepend(url);
         updateButtons();
@@ -137,7 +137,7 @@ void StorageServiceNavigationButtons::slotGoForwardClicked()
 {
     if (!mForwardUrls.isEmpty()) {
         InformationUrl url = mForwardUrls.takeFirst();
-        qDebug()<<" forward clicked"<<url;
+        qDebug() << " forward clicked" << url;
         Q_EMIT changeUrl(url);
         mBackUrls.prepend(url);
         updateButtons();

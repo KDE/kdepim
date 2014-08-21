@@ -33,7 +33,6 @@ StorageServiceConfigureStorageWidget::StorageServiceConfigureStorageWidget(QWidg
     setLayout(hbox);
 }
 
-
 StorageServiceConfigureStorageWidget::~StorageServiceConfigureStorageWidget()
 {
 

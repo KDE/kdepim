@@ -57,33 +57,33 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
 
 StorageServiceTreeWidget::~StorageServiceTreeWidget()
 {
-    qDebug()<<" StorageServiceTreeWidget::~StorageServiceTreeWidget()";
+    qDebug() << " StorageServiceTreeWidget::~StorageServiceTreeWidget()";
     writeConfig();
 }
 
 void StorageServiceTreeWidget::writeConfig()
 {
-    KConfigGroup grp( KSharedConfig::openConfig(), "StorageServiceTreeWidget" );
+    KConfigGroup grp(KSharedConfig::openConfig(), "StorageServiceTreeWidget");
     grp.writeEntry(mStorageService->storageServiceName(), header()->saveState());
 }
 
 void StorageServiceTreeWidget::readConfig()
 {
-    KConfigGroup grp( KSharedConfig::openConfig(), "StorageServiceTreeWidget" );
-    header()->restoreState( grp.readEntry( mStorageService->storageServiceName(), QByteArray() ) );
+    KConfigGroup grp(KSharedConfig::openConfig(), "StorageServiceTreeWidget");
+    header()->restoreState(grp.readEntry(mStorageService->storageServiceName(), QByteArray()));
 }
 
 void StorageServiceTreeWidget::slotGeneralPaletteChanged()
 {
     const QPalette palette = viewport()->palette();
     QColor color = palette.text().color();
-    color.setAlpha( 128 );
+    color.setAlpha(128);
     mTextColor = color;
 }
 
 void StorageServiceTreeWidget::slotGeneralFontChanged()
 {
-    setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
+    setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
 }
 
 void StorageServiceTreeWidget::setIsInitialized()
@@ -101,54 +101,66 @@ void StorageServiceTreeWidget::createMenuActions(QMenu *menu)
         const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
         if (type != StorageServiceTreeWidget::UnKnown) {
             if (type == StorageServiceTreeWidget::File) {
-                if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFileCapability)
+                if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFileCapability) {
                     menu->addAction(QIcon::fromTheme(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFile()));
-                if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFileCapability)
+                }
+                if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFileCapability) {
                     menu->addAction(QIcon::fromTheme(QLatin1String("edit-copy")), i18n("Copy"), this, SLOT(slotCopyFile()));
+                }
                 QAction *act = new QAction(menu);
                 act->setSeparator(true);
                 menu->addAction(act);
-                if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity)
+                if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity) {
                     menu->addAction(i18n("Rename File..."), this, SLOT(slotRenameFile()));
-                if (mCapabilities & PimCommon::StorageServiceAbstract::ShareLinkCapability)
+                }
+                if (mCapabilities & PimCommon::StorageServiceAbstract::ShareLinkCapability) {
                     menu->addAction(i18n("Share File"), this, SLOT(slotShareFile()));
+                }
                 act = new QAction(menu);
                 act->setSeparator(true);
                 menu->addAction(act);
-                if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
+                if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability) {
                     menu->addAction(QIcon::fromTheme(QLatin1String("download")), i18n("Download File"), this, SIGNAL(downloadFile()));
+                }
                 act = new QAction(menu);
                 act->setSeparator(true);
                 menu->addAction(act);
-                if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability)
+                if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability) {
                     menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete File"), this, SLOT(slotDeleteFile()));
+                }
             } else if (type == StorageServiceTreeWidget::Folder) {
-                if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFolderCapability)
+                if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFolderCapability) {
                     menu->addAction(QIcon::fromTheme(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFolder()));
-                if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFolderCapability)
+                }
+                if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFolderCapability) {
                     menu->addAction(QIcon::fromTheme(QLatin1String("edit-copy")), i18n("Copy"), this, SLOT(slotCopyFolder()));
+                }
                 QAction *act = new QAction(menu);
                 act->setSeparator(true);
                 menu->addAction(act);
-                if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability)
+                if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability) {
                     menu->addAction(i18n("Rename Folder..."), this, SLOT(slotRenameFolder()));
+                }
                 act = new QAction(menu);
                 act->setSeparator(true);
                 menu->addAction(act);
-                if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability)
+                if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability) {
                     menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete Folder"), this, SLOT(slotDeleteFolder()));
+                }
             }
         }
         QAction *act = new QAction(menu);
         act->setSeparator(true);
         menu->addAction(act);
-        if (mCapabilities & PimCommon::StorageServiceAbstract::UploadFileCapability)
+        if (mCapabilities & PimCommon::StorageServiceAbstract::UploadFileCapability) {
             menu->addAction(i18n("Upload File..."), this, SIGNAL(uploadFile()));
+        }
         act = new QAction(menu);
         act->setSeparator(true);
         menu->addAction(act);
-        if (mCapabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability)
+        if (mCapabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability) {
             menu->addAction(QIcon::fromTheme(QLatin1String("folder-new")), i18n("Create Folder..."), this, SLOT(slotCreateFolder()));
+        }
 
         act = new QAction(menu);
         act->setSeparator(true);
@@ -208,7 +220,7 @@ void StorageServiceTreeWidget::slotPasteFile()
 
 void StorageServiceTreeWidget::renameItem()
 {
-    switch(itemTypeSelected()) {
+    switch (itemTypeSelected()) {
     case StorageServiceTreeWidget::Folder:
         slotRenameFolder();
         break;
@@ -270,16 +282,17 @@ void StorageServiceTreeWidget::slotCreateFolder()
 {
     const QString folder = QInputDialog::getText(this, i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
-        if (!checkName(folder))
+        if (!checkName(folder)) {
             return;
-        qDebug()<<" mCurrentFolder" <<mCurrentFolder;
+        }
+        qDebug() << " mCurrentFolder" << mCurrentFolder;
         mStorageService->createFolder(folder, mCurrentFolder);
     }
 }
 
 void StorageServiceTreeWidget::deleteItem()
 {
-    switch(itemTypeSelected()) {
+    switch (itemTypeSelected()) {
     case StorageServiceTreeWidget::Folder:
         deleteFolder();
         break;
@@ -306,7 +319,7 @@ void StorageServiceTreeWidget::deleteFile()
 {
     const QString filename = itemIdentifierSelected();
     const QString name = currentItem()->text(0);
-    if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure that you want to delete \"%1\"?", name) )) {
+    if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure that you want to delete \"%1\"?", name))) {
         if (!filename.isEmpty()) {
             mStorageService->deleteFile(filename);
         }
@@ -346,8 +359,9 @@ void StorageServiceTreeWidget::slotDownloadFile()
             QString destination = StorageServiceManagerGlobalConfig::self()->downloadDirectory();
             if (destination.isEmpty()) {
                 destination = QFileDialog::getExistingDirectory(this, QString());
-                if (destination.isEmpty())
+                if (destination.isEmpty()) {
                     return;
+                }
             }
             QFileInfo fileInfo(destination + QLatin1Char('/') + filename);
             if (fileInfo.exists()) {
@@ -368,10 +382,10 @@ bool StorageServiceTreeWidget::uploadFileToService()
     if (!filename.isEmpty()) {
         const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
         const qlonglong maximumLimit =  mStorageService->maximumUploadFileSize();
-        qDebug()<<" maximumLimit"<<maximumLimit;
+        qDebug() << " maximumLimit" << maximumLimit;
         QFileInfo info(filename);
         if (maximumLimit > 0 && (info.size() > maximumLimit)) {
-            KMessageBox::error(this, i18n("File size (%1) is larger than limit (%2)", KFormat().formatByteSize(info.size(),1), KFormat().formatByteSize(maximumLimit,1)));
+            KMessageBox::error(this, i18n("File size (%1) is larger than limit (%2)", KFormat().formatByteSize(info.size(), 1), KFormat().formatByteSize(maximumLimit, 1)));
             return false;
         }
         if (filename == QLatin1String(".") || filename == QLatin1String("..")) {
@@ -411,22 +425,22 @@ void StorageServiceTreeWidget::canDownloadFile()
     }
 }
 
-void StorageServiceTreeWidget::paintEvent( QPaintEvent *event )
+void StorageServiceTreeWidget::paintEvent(QPaintEvent *event)
 {
-    if ( mInitialized ) {
+    if (mInitialized) {
         PimCommon::StorageServiceTreeWidget::paintEvent(event);
     } else {
-        QPainter p( viewport() );
+        QPainter p(viewport());
 
         QFont font = p.font();
-        font.setItalic( true );
-        p.setFont( font );
+        font.setItalic(true);
+        p.setFont(font);
 
         if (!mTextColor.isValid()) {
             slotGeneralPaletteChanged();
         }
-        p.setPen( mTextColor );
-        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n("Storage service not initialized.") );
+        p.setPen(mTextColor);
+        p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, i18n("Storage service not initialized."));
     }
 }
 

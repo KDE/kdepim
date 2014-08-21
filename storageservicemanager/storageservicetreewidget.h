@@ -18,7 +18,6 @@
 
 */
 
-
 #ifndef STORAGESERVICETREEWIDGET_H
 #define STORAGESERVICETREEWIDGET_H
 
@@ -28,7 +27,7 @@ class StorageServiceTreeWidget : public PimCommon::StorageServiceTreeWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
+    explicit StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent = 0);
     ~StorageServiceTreeWidget();
 
     void setIsInitialized();

@@ -18,7 +18,6 @@
 
 */
 
-
 #include "kdepim-version.h"
 #include "storageservicemanagermainwindow.h"
 #include <kaboutdata.h>
@@ -31,21 +30,21 @@
 #include <KLocalizedString>
 #include <QApplication>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
     PimCommon::Kdelibs4ConfigMigrater migrate(QLatin1String("storageservice"));
-    migrate.setConfigFiles(QStringList()<<QLatin1String("storageservicerc") << QLatin1String("storageservicemanager.notifyrc"));
-    migrate.setUiFiles(QStringList()<<QLatin1String("storageserviceui.rc"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("storageservicerc") << QLatin1String("storageservicemanager.notifyrc"));
+    migrate.setUiFiles(QStringList() << QLatin1String("storageserviceui.rc"));
     migrate.migrate();
 
     QApplication app(argc, argv);
 
     KAboutData aboutData(QStringLiteral("storageservicemanager"),
-                       i18n("Storage Service Manager"),
-                       QStringLiteral(KDEPIM_VERSION),
-                       i18n("Storage Service Manager"),
-                      KAboutLicense::GPL_V2,
-                       i18n("Copyright © 2013, 2014 storageservicemanager authors"));
+                         i18n("Storage Service Manager"),
+                         QStringLiteral(KDEPIM_VERSION),
+                         i18n("Storage Service Manager"),
+                         KAboutLicense::GPL_V2,
+                         i18n("Copyright © 2013, 2014 storageservicemanager authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QLatin1String("montel@kde.org"));
 
     aboutData.setProgramIconName(QLatin1String("kmail"));
@@ -57,7 +56,6 @@ int main( int argc, char **argv )
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
- 
 
     KDBusService service(KDBusService::Unique);
 
