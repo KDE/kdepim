@@ -16,19 +16,35 @@
 #include "ui_snippetdialog.h"
 
 #include <kactioncollection.h>
-#include <kdialog.h>
+#include <QDialog>
 #include <KLocalizedString>
+#include <KConfigGroup>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QDialogButtonBox>
 
 using namespace MailCommon;
 
 SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupMode, QWidget *parent )
-    : KDialog( parent ), mActionCollection( actionCollection )
+    : QDialog( parent ), mActionCollection( actionCollection )
 {
     mUi = new Ui::SnippetDialog;
-    mUi->setupUi( mainWidget() );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    mainLayout->addWidget(buttonBox);
+    mUi->setupUi(mainWidget);
 
     mUi->keyWidget->setCheckActionCollections( QList<KActionCollection*>() << actionCollection );
-    enableButton( Ok, false );
+    mOkButton->setEnabled(false);
 
     connect( mUi->nameEdit, SIGNAL(textChanged(QString)),
              this, SLOT(slotTextChanged()) );
@@ -48,7 +64,7 @@ SnippetDialog::~SnippetDialog()
 
 void SnippetDialog::slotGroupChanged()
 {
-    enableButton( Ok, snippetIsValid() );
+    mOkButton->setEnabled(snippetIsValid());
 }
 
 void SnippetDialog::setName( const QString &name )
@@ -98,7 +114,7 @@ QModelIndex SnippetDialog::groupIndex() const
 
 void SnippetDialog::slotTextChanged()
 {
-    enableButton( Ok, snippetIsValid() );
+    mOkButton->setEnabled(snippetIsValid());
 }
 
 bool SnippetDialog::snippetIsValid() const

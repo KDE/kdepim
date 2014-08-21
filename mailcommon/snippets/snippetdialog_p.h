@@ -14,7 +14,7 @@
 #ifndef MAILCOMMON_SNIPPETDIALOG_P_H
 #define MAILCOMMON_SNIPPETDIALOG_P_H
 
-#include <kdialog.h>
+#include <QDialog>
 
 namespace Ui {
 class SnippetDialog;
@@ -24,10 +24,11 @@ class KActionCollection;
 
 class QAbstractItemModel;
 class QModelIndex;
+class QPushButton;
 
 namespace MailCommon {
 
-class SnippetDialog : public KDialog
+class SnippetDialog : public QDialog
 {
     Q_OBJECT
 
@@ -58,6 +59,7 @@ private:
 
     KActionCollection *mActionCollection;
     Ui::SnippetDialog *mUi;
+    QPushButton *mOkButton;
 };
 }
 #endif
