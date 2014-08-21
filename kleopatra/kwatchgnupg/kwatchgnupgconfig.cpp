@@ -194,7 +194,6 @@ void KWatchGnuPGConfig::loadConfig()
   mWordWrapCB->setChecked( logWindow.readEntry("WordWrap", false ) );
 
   mButtonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
-  mButtonBox->button(QDialogButtonBox::Apply)->setEnabled( false );
 }
 
 void KWatchGnuPGConfig::saveConfig()
@@ -211,13 +210,11 @@ void KWatchGnuPGConfig::saveConfig()
   KSharedConfig::openConfig()->sync();
 
   mButtonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
-  mButtonBox->button(QDialogButtonBox::Apply)->setEnabled( false );
 }
 
 void KWatchGnuPGConfig::slotChanged()
 {
   mButtonBox->button(QDialogButtonBox::Ok)->setEnabled( true );
-  mButtonBox->button(QDialogButtonBox::Apply)->setEnabled( true );
 }
 
 void KWatchGnuPGConfig::slotSave()
