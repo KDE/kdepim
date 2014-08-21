@@ -26,9 +26,9 @@ class PIMCOMMON_EXPORT Kdelibs4ConfigMigrater
 {
 public:
     Kdelibs4ConfigMigrater(const QString &appName);
-    virtual ~Kdelibs4ConfigMigrater();
+    ~Kdelibs4ConfigMigrater();
 
-    virtual bool migrate();
+    bool migrate();
 
     void setConfigFiles(const QStringList &configFileNameList);
     void setUiFiles(const QStringList &uiFileNameList);

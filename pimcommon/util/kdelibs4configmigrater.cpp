@@ -86,7 +86,7 @@ bool Kdelibs4ConfigMigrater::migrate()
         }
     }
 
-    if (d->appName.isEmpty()) {
+    if (d->appName.isEmpty() && !d->uiFiles.isEmpty()) {
         qCritical() <<" We can not migrate ui file. AppName is missing";
     } else {
         Q_FOREACH( const QString &uiFileName, d->uiFiles) {
