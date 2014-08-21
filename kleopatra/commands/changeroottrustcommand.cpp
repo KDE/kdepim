@@ -261,7 +261,7 @@ QString change_trust_file( const QString & trustListFile, const QString & key, K
 
 
     KFixedSaveFile out( trustListFile );
-    if ( !out.open(QIODevice::ReadWrite) )
+    if ( !out.open(QIODevice::WriteOnly) )
         return i18n("Cannot open file \"%1\" for reading and writing: %2",
                     out.fileName() /*sic!*/, out.errorString() );
 
