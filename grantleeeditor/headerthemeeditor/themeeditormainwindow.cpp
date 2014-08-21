@@ -139,9 +139,10 @@ void ThemeEditorMainWindow::setupActions()
     actionCollection()->addAction( QLatin1String( "manage_themes" ), mManageTheme );
 
     mUpdateView = new QAction(i18n("Update view"), this);
-    mUpdateView->setShortcut(QKeySequence( Qt::Key_F5 ));
+    actionCollection()->setDefaultShortcut(mUpdateView,QKeySequence( Qt::Key_F5 ));
     connect(mUpdateView, &QAction::triggered, this, &ThemeEditorMainWindow::slotUpdateView);
     actionCollection()->addAction( QLatin1String( "update_view" ), mUpdateView );
+    
 }
 
 void ThemeEditorMainWindow::slotManageTheme()
