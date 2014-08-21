@@ -73,6 +73,7 @@ int KWatchGnuPGApplication::newInstance()
 
 int main( int argc, char** argv )
 {
+  KLocalizedString::setApplicationDomain("kwatchgnupg");   
   AboutData aboutData;
 
   KCmdLineArgs::init(argc, argv, &aboutData);

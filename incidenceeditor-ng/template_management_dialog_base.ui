@@ -20,7 +20,7 @@
       <enum>QFrame::NoFrame</enum>
      </property>
      <property name="text">
-      <string comment="@label/rich">Select a template and click &lt;interface&gt;Apply&lt;/interface&gt; to apply it to this item. Click &lt;interface&gt;New&lt;/interface&gt; to create a new template based on the current item settings.</string>
+      <string comment="@label">Select a template and click &lt;i&gt;Apply&lt;/i&gt; to apply it to this item. Click &lt;i&gt;New&lt;/i&gt; to create a new template based on the current item settings.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

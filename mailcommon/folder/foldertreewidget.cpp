@@ -107,7 +107,7 @@ FolderTreeWidget::FolderTreeWidget(
 
     d->filterFolderLineEdit->setClearButtonEnabled( true );
     d->filterFolderLineEdit->setPlaceholderText(
-                i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
+                i18nc( "@info Displayed grayed-out inside the textbox, verb to search",
                        "Search" ) );
     lay->addWidget( d->filterFolderLineEdit );
 

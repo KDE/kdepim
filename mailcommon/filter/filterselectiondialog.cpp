@@ -50,7 +50,7 @@ FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
     filtersListWidget = new QListWidget();
     KListWidgetSearchLine *searchLine = new KListWidgetSearchLine( this, filtersListWidget );
     searchLine->setPlaceholderText(
-                i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
+                i18nc( "@info Displayed grayed-out inside the textbox, verb to search",
                        "Search" ) );
 
     top->addWidget( searchLine );

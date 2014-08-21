@@ -194,6 +194,8 @@ static void fillKeyCache( SplashScreen * splash, Kleo::UiServer * server ) {
 
 int main( int argc, char** argv )
 {
+    KLocalizedString::setApplicationDomain("kleopatra");
+
     QTime timer;
     timer.start();
 
@@ -205,6 +207,7 @@ int main( int argc, char** argv )
   }
 
   AboutData aboutData;
+
 
   KCmdLineArgs::init(argc, argv, &aboutData);
 
