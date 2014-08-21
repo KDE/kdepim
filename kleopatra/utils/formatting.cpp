@@ -50,6 +50,7 @@
 #include <QStringList>
 #include <QDateTime>
 #include <QTextDocument> // for Qt::escape
+#include <QLocale>
 
 using namespace GpgME;
 using namespace Kleo;
@@ -238,7 +239,7 @@ namespace {
     static QString time_t2string( time_t t ) {
         QDateTime dt;
         dt.setTime_t( t );
-        return KLocale::global()->formatDateTime( dt, KLocale::ShortDate );
+        return QLocale().toString( dt, QLocale::ShortFormat );
     }
 
     static QString make_red( const QString & txt ) {
@@ -330,7 +331,7 @@ namespace {
         return dt.date();
     }
     static QString date2string( const QDate & date ) {
-        return KLocale::global()->formatDate( date, KLocale::ShortDate );
+        return QLocale().toString( date, QLocale::ShortFormat );
     }
 
     template <typename T>

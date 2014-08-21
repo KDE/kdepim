@@ -475,7 +475,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
                         } else if ( descriptionType == QLatin1String( "datetime" ) ) {
                             const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
-                            value = KLocale::global()->formatDateTime( dateTime, KLocale::ShortDate );
+                            value = QLocale().toString( dateTime, QLocale::ShortFormat );
                         } else if ( descriptionType == QLatin1String("url") ) {
                             value = KStringHandler::tagUrls( value.toHtmlEscaped() );
                             addUrl = true;

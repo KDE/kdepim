@@ -43,6 +43,7 @@
 #include <QDialogButtonBox>
 #include <KConfigGroup>
 #include <QPushButton>
+#include <QLocale>
 
 NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     : QDialog(parent)
@@ -64,7 +65,7 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     w->setLayout(vbox);
 
     mCurrentDateTime = new QLabel;
-    mCurrentDateTime->setText(KLocale::global()->formatDateTime(QDateTime::currentDateTime()));
+    mCurrentDateTime->setText(QLocale().toString((QDateTime::currentDateTime()), QLocale::ShortFormat));
     vbox->addWidget(mCurrentDateTime);
 
     QLabel *lab = new QLabel(i18n("The following notes triggered alarms:"));
@@ -134,7 +135,7 @@ void NotesAgentAlarmDialog::writeConfig()
 void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
 {
     mListWidget->setNotes(lstAlarm);
-    mCurrentDateTime->setText(KLocale::global()->formatDateTime(QDateTime::currentDateTime()));
+    mCurrentDateTime->setText(QLocale().toString((QDateTime::currentDateTime()), QLocale::ShortFormat));
 }
 
 void NotesAgentAlarmDialog::slotItemDoubleClicked(QListWidgetItem *item)
