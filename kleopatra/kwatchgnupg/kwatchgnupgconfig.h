@@ -33,17 +33,17 @@
 #ifndef KWATCHGNUPGCONFIG_H
 #define KWATCHGNUPGCONFIG_H
 
-#include <kdialog.h>
+#include <QDialog>
 
 class QCheckBox;
 class QComboBox;
 class KPluralHandlingSpinBox;
-
+class QDialogButtonBox;
 namespace Kleo {
     class FileNameRequester;
 }
 
-class KWatchGnuPGConfig : public KDialog {
+class KWatchGnuPGConfig : public QDialog {
   Q_OBJECT
 public:
   explicit KWatchGnuPGConfig( QWidget * parent=0 );
@@ -66,6 +66,7 @@ private:
   QComboBox* mLogLevelCB;
   KPluralHandlingSpinBox* mLoglenSB;
   QCheckBox* mWordWrapCB;
+  QDialogButtonBox *mButtonBox;
 };
 
 #endif /* KWATCHGNUPGCONFIG_H */

@@ -46,7 +46,7 @@
 #include <kmessagebox.h>
 #include <KLocalizedString>
 #include <kapplication.h>
-#include <kaction.h>
+#include <qaction.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
 #include <kprocess.h>
@@ -55,6 +55,7 @@
 #include <kshortcutsdialog.h>
 #include <kglobal.h>
 #include <QIcon>
+#include <KConfigGroup>
 
 #include <QEventLoop>
 #include <QTextStream>

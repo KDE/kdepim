@@ -49,6 +49,8 @@
 #include <QPushButton>
 #include <QGroupBox>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 static const char* log_levels[] = { "none", "basic", "advanced", "expert", "guru" };
 
@@ -71,28 +73,35 @@ static int log_level_to_int( const QString& loglevel )
 }
 
 KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setCaption( i18n("Configure KWatchGnuPG") );
-  setButtons( Ok|Cancel );
-  setDefaultButton( Ok );
+  setWindowTitle( i18n("Configure KWatchGnuPG") );
+  mButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QPushButton *okButton = mButtonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(mButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  okButton->setDefault(true);
 
   // tmp vars:
   QGridLayout * glay;
   QGroupBox * group;
 
   QWidget * top = new QWidget;
-  setMainWidget( top ); 
+  mainLayout->addWidget(top);
+  mainLayout->addWidget(mButtonBox);
 
   QVBoxLayout * vlay = new QVBoxLayout( top );
-  vlay->setSpacing( spacingHint() );
+  //QT5 vlay->setSpacing( spacingHint() );
   vlay->setMargin( 0 );
   
   group = new QGroupBox( i18n("WatchGnuPG"), top );
   vlay->addWidget(group);
 
   glay = new QGridLayout( group );
-  glay->setSpacing( spacingHint() );
+  //QT5 glay->setSpacing( spacingHint() );
   glay->setColumnStretch( 1, 1 );
 
   int row = -1;
@@ -134,7 +143,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
   vlay->addWidget(group);
 
   glay = new QGridLayout( group );
-  glay->setSpacing( spacingHint() );
+  //QT5 glay->setSpacing( spacingHint() );
   glay->setColumnStretch( 1, 1 );
 
   row = -1;
@@ -164,7 +173,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
 
   vlay->addStretch( 1 );
 
-  connect( this, SIGNAL(okClicked()), SLOT(slotSave()) );
+  connect(okButton, SIGNAL(clicked()), SLOT(slotSave()) );
 }
 
 KWatchGnuPGConfig::~KWatchGnuPGConfig() {}
@@ -184,8 +193,8 @@ void KWatchGnuPGConfig::loadConfig()
   mLoglenSB->setValue( logWindow.readEntry( "MaxLogLen", 10000 ) );
   mWordWrapCB->setChecked( logWindow.readEntry("WordWrap", false ) );
 
-  enableButtonOk( false );
-  enableButtonApply( false );
+  mButtonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
+  mButtonBox->button(QDialogButtonBox::Apply)->setEnabled( false );
 }
 
 void KWatchGnuPGConfig::saveConfig()
@@ -201,19 +210,20 @@ void KWatchGnuPGConfig::saveConfig()
 
   KSharedConfig::openConfig()->sync();
 
-  enableButtonOk( false );
-  enableButtonApply( false );
+  mButtonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
+  mButtonBox->button(QDialogButtonBox::Apply)->setEnabled( false );
 }
 
 void KWatchGnuPGConfig::slotChanged()
 {
-  enableButtonOk( true );
-  enableButtonApply( true );
+  mButtonBox->button(QDialogButtonBox::Ok)->setEnabled( true );
+  mButtonBox->button(QDialogButtonBox::Apply)->setEnabled( true );
 }
 
 void KWatchGnuPGConfig::slotSave()
 {
   saveConfig();
   emit reconfigure();
+  accept();
 }
 
