@@ -25,7 +25,6 @@
 
 
 // KDE includes
-#include <kaboutapplicationdialog.h>
 #include <KLocalizedString>
 #include <qdebug.h>
 #include <KHelpMenu>

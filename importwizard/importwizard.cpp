@@ -41,7 +41,6 @@
 #include "trojita/trojitaimportdata.h"
 #include "kmail1/kmail1importdata.h"
 
-#include <kaboutapplicationdialog.h>
 #include <QAction>
 #include <KAboutData>
 #include <KLocalizedString>

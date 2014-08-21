@@ -84,7 +84,7 @@ public:
 private:
     void slotAbout() {
         if ( !aboutDialog ) {
-            //QT5 aboutDialog = new KAboutApplicationDialog( KComponentData::mainComponent().aboutData() );
+            aboutDialog = new KAboutApplicationDialog( KAboutData::applicationData() );
             aboutDialog->setAttribute( Qt::WA_DeleteOnClose );
         }
 
