@@ -51,7 +51,7 @@ ScamCheckShortUrl::~ScamCheckShortUrl()
 {
 }
 
-void ScamCheckShortUrl::expandedUrl(const KUrl &url)
+void ScamCheckShortUrl::expandedUrl(const QUrl &url)
 {
     if (!mNetworkUp) {
         KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "No network connection detected, we cannot expand url.") );
@@ -67,7 +67,7 @@ void ScamCheckShortUrl::expandedUrl(const KUrl &url)
 
 void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
 {
-    KUrl shortUrl;
+    QUrl shortUrl;
     if (!reply->property("shortUrl").isNull()) {
         shortUrl.setUrl(reply->property("shortUrl").toString());
     }
@@ -85,13 +85,13 @@ void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
         return;
     }
 
-    KUrl longUrl;
+    QUrl longUrl;
     if (map.contains(QLatin1String("long-url"))) {
         longUrl.setUrl(map.value(QLatin1String("long-url")).toString());
     } else {
         return;
     }
-    KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Short url \'%1\' redirects to \'%2\'.", shortUrl.url(), longUrl.prettyUrl() ) );
+    KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Short url \'%1\' redirects to \'%2\'.", shortUrl.url(), longUrl.toDisplayString() ) );
 #endif
 }
 
@@ -100,7 +100,7 @@ void ScamCheckShortUrl::slotError(QNetworkReply::NetworkError error)
     Q_EMIT expandUrlError(error);
 }
 
-bool ScamCheckShortUrl::isShortUrl(const KUrl &url)
+bool ScamCheckShortUrl::isShortUrl(const QUrl &url)
 {
     if (!url.path().isEmpty() && QString::compare(url.path(),QLatin1String("/")) && sSupportedServices.contains(url.host())) {
         return true;

@@ -646,12 +646,12 @@ void MailWebView::openBlockableItemsDialog()
     delete dlg;
 }
 
-void MailWebView::expandUrl(const KUrl &url)
+void MailWebView::expandUrl(const QUrl &url)
 {
     mScamDetection->scamCheckShortUrl()->expandedUrl(url);
 }
 
-bool MailWebView::isAShortUrl(const KUrl &url) const
+bool MailWebView::isAShortUrl(const QUrl &url) const
 {
     return mScamDetection->scamCheckShortUrl()->isShortUrl(url);
 }

@@ -41,7 +41,6 @@
 #include <KStandardAction>
 #include <kwindowsystem.h>
 #include <QTabWidget>
-#include <KFileDialog>
 #include <KMessageBox>
 #include <QAction>
 #include <QIcon>

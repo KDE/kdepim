@@ -45,7 +45,6 @@ using KPIMUtils::LinkLocator;
 #include <KLocalizedString>
 
 
-#include <KDateTime>
 #include <QRegExp>
 
 #include <QApplication>

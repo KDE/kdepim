@@ -20,7 +20,6 @@
 #include "KPIMUtils/ProgressIndicatorLabel"
 #include <qdebug.h>
 
-#include <KFileDialog>
 
 #include <KLocalizedString>
 #include <QUrl>

@@ -55,8 +55,8 @@
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
 
-#include <KUrl>
-#include <kaction.h>
+#include <QUrl>
+#include <QAction>
 #include <kactioncollection.h>
 #include <KCalCore/Todo>
 #include <QDebug>
@@ -182,7 +182,7 @@ void MainView::newTask()
     //       This method should somehow depend on the calendar selected to which
     //       the incidence is added.
     if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() )
-      defaults.setGroupWareDomain( KUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
+      defaults.setGroupWareDomain( QUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
 
     // make it due one day from now
     const KDateTime now = KDateTime::currentLocalDateTime();

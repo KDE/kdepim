@@ -23,7 +23,7 @@
 
 #include <QObject>
 
-#include <KUrl>
+#include <QUrl>
 
 #include <QStringList>
 #include <QNetworkReply>
@@ -39,9 +39,9 @@ public:
     explicit ScamCheckShortUrl(QObject *parent=0);
     ~ScamCheckShortUrl();
 
-    static bool isShortUrl(const KUrl &url);
+    static bool isShortUrl(const QUrl &url);
 
-    void expandedUrl(const KUrl &url);
+    void expandedUrl(const QUrl &url);
 
     static void loadLongUrlServices();
 

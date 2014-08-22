@@ -36,7 +36,6 @@ using KPIMUtils::LinkLocator;
 #include <kcodecs.h>
 #include <KColorScheme>
 
-#include <KDateTime>
 #include <QBuffer>
 #include <QBitmap>
 #include <QImage>
