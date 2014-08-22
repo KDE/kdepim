@@ -19,7 +19,6 @@
 #include <kaboutdata.h>
 #include <KLocalizedString>
 #include <QCommandLineParser>
-#include <QCommandLineOption>
 #include <QApplication>
 #include "kmailcvt.h"
 #include "kdepim-version.h"

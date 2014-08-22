@@ -21,7 +21,6 @@
 #include "kdepim-version.h"
 #include "sieveeditormainwindow.h"
 #include <kaboutdata.h>
-#include <QDebug>
 #include <KLocalizedString>
 #include <QApplication>
 #include <KDBusService>
