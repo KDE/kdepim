@@ -18,7 +18,6 @@
 
 #include <qdebug.h>
 #include <kiconloader.h>
-#include <KLocalizedString>
 #include <kmime/kmime_header_parsing.h>
 #include <kwindowsystem.h>
 #include <KSeparator>

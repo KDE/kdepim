@@ -20,7 +20,6 @@
 #include <KLocalizedString>
 #include <QPushButton>
 #include <KMessageBox>
-#include <QTemporaryDir>
 #include <KSharedConfig>
 
 #include <QLabel>

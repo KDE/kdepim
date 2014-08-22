@@ -20,12 +20,8 @@
 #include "followupreminderinfowidget.h"
 
 #include <KLocalizedString>
-#include <QMenu>
 #include <KSharedConfig>
 
-#include <QHBoxLayout>
-#include <QTreeWidget>
-#include <QHeaderView>
 #include <QLabel>
 #include <QDialogButtonBox>
 #include <KConfigGroup>

@@ -19,7 +19,6 @@
 #define SIEVETEMPLATEEDITDIALOG_H
 
 #include <QDialog>
-#include <KConfigGroup>
 
 class QLineEdit;
 class QPushButton;

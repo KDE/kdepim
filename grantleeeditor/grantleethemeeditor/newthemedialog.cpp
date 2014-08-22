@@ -26,7 +26,6 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 #include <QPushButton>
 
 using namespace GrantleeThemeEditor;

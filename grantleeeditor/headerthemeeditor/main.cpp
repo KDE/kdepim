@@ -29,7 +29,6 @@
 #include <KLocalizedString>
 
 #include <KDBusService>
-#include <QCommandLineOption>
 
 int main(int argc, char **argv)
 {

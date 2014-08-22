@@ -24,7 +24,6 @@
 #include <QHBoxLayout>
 #include <QPointer>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 #include <QVBoxLayout>
 
 using namespace KSieveUi;

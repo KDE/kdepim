@@ -19,7 +19,6 @@
 #define SIEVESCRIPTPARSINGERRORDIALOG_H
 #include "ksieveui_export.h"
 #include <QDialog>
-#include <KConfigGroup>
 namespace PimCommon {
 class RichTextEditorWidget;
 }

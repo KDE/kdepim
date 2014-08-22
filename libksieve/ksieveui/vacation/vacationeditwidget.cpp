@@ -31,7 +31,6 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QDialog>
-#include <KConfigGroup>
 
 using KMime::Types::AddrSpecList;
 using KMime::Types::AddressList;

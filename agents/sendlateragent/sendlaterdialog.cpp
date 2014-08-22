@@ -27,7 +27,6 @@
 #include <QVBoxLayout>
 #include <QCheckBox>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 #include <QPushButton>
 
 using namespace SendLater;

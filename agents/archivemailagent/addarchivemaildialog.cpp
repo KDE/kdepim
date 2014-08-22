@@ -30,7 +30,6 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QSpinBox>
-#include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>

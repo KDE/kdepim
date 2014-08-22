@@ -22,7 +22,6 @@
 #include "archivemailinfo.h"
 #include <QDialog>
 #include <Collection>
-#include <KConfigGroup>
 
 class KComboBox;
 class QCheckBox;

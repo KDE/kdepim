@@ -18,7 +18,6 @@
 #include <qdebug.h>
 
 #include <QPointer>
-#include <QUrl>
 #include "xmlprintingscriptbuilder.h"
 #include "parsingresultdialog.h"
 

@@ -26,7 +26,6 @@
 #include <QMenu>
 #include <QIcon>
 
-#include <QHBoxLayout>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
