@@ -213,7 +213,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     d->mXmlGuiClient = xmlGuiClient;
 
     KToggleAction * const showHideQuicksearch = new KToggleAction( i18n( "Show Quick Search Bar" ), this );
-    showHideQuicksearch->setShortcut( Qt::CTRL + Qt::Key_H );
+    d->mXmlGuiClient->actionCollection()->setDefaultShortcut(showHideQuicksearch, Qt::CTRL + Qt::Key_H );
     showHideQuicksearch->setChecked( Core::Settings::showQuickSearch() );
 
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "show_quick_search" ), showHideQuicksearch );
