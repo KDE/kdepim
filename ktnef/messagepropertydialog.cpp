@@ -42,12 +42,12 @@ MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg
   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &MessagePropertyDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &MessagePropertyDialog::reject);
   mainLayout->addWidget(buttonBox);
   QPushButton *user1Button = new QPushButton;
   buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-  connect(user1Button, SIGNAL(clicked()), this, SLOT(slotSaveProperty()));
+  connect(user1Button, &QPushButton::clicked, this, &MessagePropertyDialog::slotSaveProperty);
 
   const QStringList headerLabels =
     ( QStringList( i18nc( "@title:column property name", "Name" ) )
