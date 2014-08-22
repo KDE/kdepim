@@ -24,10 +24,16 @@
 #include "importwizard.h"
 
 #include "kdepim-version.h"
+#include "pimcommon/util/kdelibs4configmigrator.h"
+
 #include <stdio.h>
 
 int main(int argc, char *argv[])
 {
+    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("importwizard"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("importwizardrc"));
+    migrate.migrate();
+
     KLocalizedString::setApplicationDomain("importwizard");
     //FIXME: "wizards" are "assistents" in new KDE slang
     KAboutData aboutData( QStringLiteral("importwizard"), 
