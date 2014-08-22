@@ -229,7 +229,7 @@ void SpellCheckLineEdit::insertLanguageMenu(QMenu* contextMenu)
                 && d->speller->defaultLanguage() == i.value()));
             languageAction->setData(i.value());
             languageAction->setActionGroup(languagesGroup);
-            connect(languageAction, SIGNAL(triggered(bool)), this, SLOT(languageSelected()));
+            connect(languageAction, &QAction::triggered, this, &SpellCheckLineEdit::languageSelected);
         }
 
         contextMenu->insertMenu(spellCheckAction, languagesMenu);

@@ -36,7 +36,7 @@ TagWidget::TagWidget(QWidget* parent)
 :   QWidget(parent)
 {
     mTagWidget = new Akonadi::TagWidget(this);
-    connect(mTagWidget, SIGNAL(selectionChanged(Akonadi::Tag::List)), this, SLOT(onSelectionChanged(Akonadi::Tag::List)));
+    connect(mTagWidget, &Akonadi::TagWidget::selectionChanged, this, &TagWidget::onSelectionChanged);
     QHBoxLayout *l = new QHBoxLayout;
     l->addWidget(mTagWidget);
     setLayout(l);
@@ -60,7 +60,7 @@ void TagWidget::setSelection(const QStringList &tagNames)
       //TODO fetch by GID instead, we don't really want to create tags here
       Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(name), this);
       tagCreateJob->setMergeIfExisting(true);
-      connect(tagCreateJob, SIGNAL(result(KJob*)), this, SLOT(onTagCreated(KJob*)));
+      connect(tagCreateJob, &Akonadi::TagCreateJob::result, this, &TagWidget::onTagCreated);
     }
 }
 
@@ -94,7 +94,7 @@ void TagSelectionDialog::setSelection(const QStringList &tagNames)
       //TODO fetch by GID instead, we don't really want to create tags here
       Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(name), this);
       tagCreateJob->setMergeIfExisting(true);
-      connect(tagCreateJob, SIGNAL(result(KJob*)), this, SLOT(onTagCreated(KJob*)));
+      connect(tagCreateJob, &Akonadi::TagCreateJob::result, this, &TagSelectionDialog::onTagCreated);
     }
 }
 
