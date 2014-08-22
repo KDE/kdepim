@@ -1,5 +1,5 @@
 /*
- *  Copyright 2014 David Faure <faure@kde.org>
+ *  Copyright 2014 Montel Laurent <montel@kde.org>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Library General Public
@@ -17,7 +17,7 @@
  */
 
 // test object
-#include "kdelibs4configmigrater.h"
+#include "kdelibs4configmigrator.h"
 // Qt
 #include <QObject>
 #include <QFile>
@@ -25,7 +25,9 @@
 #include <QTest>
 #include <QDebug>
 
-class Kdelibs4ConfigMigraterTest : public QObject
+using namespace PimCommon;
+
+class Kdelibs4ConfigMigratorTest : public QObject
 {
     Q_OBJECT
 
@@ -36,24 +38,24 @@ private Q_SLOTS:
     void shouldMigrateUiFiles();
 };
 
-void Kdelibs4ConfigMigraterTest::shouldNotMigrateIfKde4HomeDirDoesntExist()
+void Kdelibs4ConfigMigratorTest::shouldNotMigrateIfKde4HomeDirDoesntExist()
 {
     qputenv("KDEHOME", "");
-    PimCommon::Kdelibs4ConfigMigrater migration(QLatin1String("foo"));
+    Kdelibs4ConfigMigrator migration(QLatin1String("foo"));
     QCOMPARE(migration.migrate(), false);
 }
 
-void Kdelibs4ConfigMigraterTest::shouldMigrateIfKde4HomeDirExist()
+void Kdelibs4ConfigMigratorTest::shouldMigrateIfKde4HomeDirExist()
 {
     QTemporaryDir kdehomeDir;
     QVERIFY(kdehomeDir.isValid());
     const QString kdehome = kdehomeDir.path();
     qputenv("KDEHOME", QFile::encodeName(kdehome));
-    PimCommon::Kdelibs4ConfigMigrater migration(QLatin1String("foo"));
+    Kdelibs4ConfigMigrator migration(QLatin1String("foo"));
     QCOMPARE(migration.migrate(), true);
 }
 
-void Kdelibs4ConfigMigraterTest::shouldMigrateConfigFiles()
+void Kdelibs4ConfigMigratorTest::shouldMigrateConfigFiles()
 {
     QTemporaryDir kdehomeDir;
     const QString kdehome = kdehomeDir.path();
@@ -67,7 +69,7 @@ void Kdelibs4ConfigMigraterTest::shouldMigrateConfigFiles()
     QStringList listConfig;
     listConfig << QLatin1String("foorc") << QLatin1String("foo1rc");
     Q_FOREACH (const QString &config, listConfig) {
-        QFile fooConfigFile(QLatin1String(KDELIBS4CONFIGMIGRATER_DATA_DIR) + QLatin1Char('/') + config);
+        QFile fooConfigFile(QLatin1String(KDELIBS4CONFIGMIGRATOR_DATA_DIR) + QLatin1Char('/') + config);
         QVERIFY(fooConfigFile.exists());
         const QString storedConfigFilePath = configPath + QLatin1Char('/') + config;
         QVERIFY(QFile::copy(fooConfigFile.fileName(), storedConfigFilePath));
@@ -78,7 +80,7 @@ void Kdelibs4ConfigMigraterTest::shouldMigrateConfigFiles()
     QVERIFY(xdgConfigDir.isValid());
     qputenv("XDG_CONFIG_HOME", QFile::encodeName(xdgConfighome));
 
-    PimCommon::Kdelibs4ConfigMigrater migration(QLatin1String("foo"));
+    Kdelibs4ConfigMigrator migration(QLatin1String("foo"));
     migration.setConfigFiles(QStringList() << listConfig);
     QVERIFY(migration.migrate());
 
@@ -88,7 +90,7 @@ void Kdelibs4ConfigMigraterTest::shouldMigrateConfigFiles()
     }
 }
 
-void Kdelibs4ConfigMigraterTest::shouldMigrateUiFiles()
+void Kdelibs4ConfigMigratorTest::shouldMigrateUiFiles()
 {
     QTemporaryDir kdehomeDir;
     const QString kdehome = kdehomeDir.path();
@@ -104,7 +106,7 @@ void Kdelibs4ConfigMigraterTest::shouldMigrateUiFiles()
     QStringList listUi;
     listUi << QLatin1String("appuirc") << QLatin1String("appui1rc");
     Q_FOREACH (const QString &config, listUi) {
-        QFile fooConfigFile(QLatin1String(KDELIBS4CONFIGMIGRATER_DATA_DIR) + QLatin1Char('/') + config);
+        QFile fooConfigFile(QLatin1String(KDELIBS4CONFIGMIGRATOR_DATA_DIR) + QLatin1Char('/') + config);
         QVERIFY(fooConfigFile.exists());
         QDir().mkpath(dataPath + QLatin1Char('/') + appName);
         const QString storedConfigFilePath = dataPath + QLatin1Char('/') + appName + QLatin1Char('/') + config;
@@ -116,7 +118,7 @@ void Kdelibs4ConfigMigraterTest::shouldMigrateUiFiles()
     QVERIFY(xdgDataDir.isValid());
     qputenv("XDG_DATA_HOME", QFile::encodeName(xdgDatahome));
 
-    PimCommon::Kdelibs4ConfigMigrater migration(appName);
+    Kdelibs4ConfigMigrator migration(appName);
     migration.setUiFiles(QStringList() << listUi);
     QVERIFY(migration.migrate());
 
@@ -127,7 +129,7 @@ void Kdelibs4ConfigMigraterTest::shouldMigrateUiFiles()
 
 }
 
-QTEST_MAIN(Kdelibs4ConfigMigraterTest)
+QTEST_MAIN(Kdelibs4ConfigMigratorTest)
 
-#include "kdelibs4configmigratertest.moc"
+#include "kdelibs4configmigratortest.moc"
 

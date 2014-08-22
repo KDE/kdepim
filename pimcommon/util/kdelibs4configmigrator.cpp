@@ -1,21 +1,24 @@
-/*
-  Copyright (c) 2014 Montel Laurent <montel@kde.org>
+/*  This file is part of the KDE Frameworks
 
-  This program is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License, version 2, as
-  published by the Free Software Foundation.
+    Copyright 2014 Montel Laurent <montel@kde.org>
 
-  This program is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  General Public License for more details.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
 
-  You should have received a copy of the GNU General Public License along
-  with this program; if not, write to the Free Software Foundation, Inc.,
-  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
 */
 
-#include "kdelibs4configmigrater.h"
+#include "kdelibs4configmigrator.h"
 
 #include <QStandardPaths>
 #include <Kdelibs4Migration>
@@ -26,7 +29,7 @@
 
 using namespace PimCommon;
 
-class Kdelibs4ConfigMigrater::Private
+class Kdelibs4ConfigMigrator::Private
 {
 public:
     Private(const QString &appName)
@@ -40,27 +43,27 @@ public:
     QString appName;
 };
 
-Kdelibs4ConfigMigrater::Kdelibs4ConfigMigrater(const QString &appName)
+Kdelibs4ConfigMigrator::Kdelibs4ConfigMigrator(const QString &appName)
     : d(new Private(appName))
 {
 }
 
-Kdelibs4ConfigMigrater::~Kdelibs4ConfigMigrater()
+Kdelibs4ConfigMigrator::~Kdelibs4ConfigMigrator()
 {
     delete d;
 }
 
-void Kdelibs4ConfigMigrater::setConfigFiles(const QStringList &configFileNameList)
+void Kdelibs4ConfigMigrator::setConfigFiles(const QStringList &configFileNameList)
 {
     d->configFiles = configFileNameList;
 }
 
-void Kdelibs4ConfigMigrater::setUiFiles(const QStringList &uiFileNameList)
+void Kdelibs4ConfigMigrator::setUiFiles(const QStringList &uiFileNameList)
 {
     d->uiFiles = uiFileNameList;
 }
 
-bool Kdelibs4ConfigMigrater::migrate()
+bool Kdelibs4ConfigMigrator::migrate()
 {
     // Testing for kdehome
     Kdelibs4Migration migration;

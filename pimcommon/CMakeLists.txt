@@ -170,7 +170,7 @@ set(libpimcommon_SRCS
   util/createresource.cpp
   util/pimutil.cpp
   util/editorutil.cpp
-  util/kdelibs4configmigrater.cpp
+  util/kdelibs4configmigrator.cpp
   settings/pimcommonsettings.cpp
   ${libpimcommon_texteditor_SRCS}
   ${libpimcommon_shorturl_SRCS}

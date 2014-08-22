@@ -19,7 +19,7 @@
 */
 
 #include "kdepim-version.h"
-#include "util/kdelibs4configmigrater.h"
+#include "util/kdelibs4configmigrator.h"
 #include "contacteditormainwindow.h"
 #include <qapplication.h>
 #include <kaboutdata.h>
@@ -29,7 +29,7 @@
 
 int main(int argc, char **argv)
 {
-    PimCommon::Kdelibs4ConfigMigrater migrate(QLatin1String("contactthemeeditor"));
+    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("contactthemeeditor"));
     migrate.setConfigFiles(QStringList() << QLatin1String("contactthemeeditorrc"));
     migrate.setUiFiles(QStringList() << QLatin1String("contactthemeeditorui.rc"));
     migrate.migrate();
