@@ -49,14 +49,14 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SendLaterConfigureDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SendLaterConfigureDialog::reject);
 
     mWidget = new SendLaterWidget(this);
     connect(mWidget, SIGNAL(sendNow(Akonadi::Item::Id)), SIGNAL(sendNow(Akonadi::Item::Id)));
     mainLayout->addWidget(mWidget);
     mainLayout->addWidget(buttonBox);
-    connect(okButton, SIGNAL(clicked()), SLOT(slotSave()));
+    connect(okButton, &QPushButton::clicked, this, &SendLaterConfigureDialog::slotSave);
 
     readConfig();
 
@@ -164,10 +164,10 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(customContextMenuRequested(QPoint)));
 
-    connect(mWidget->removeItem, SIGNAL(clicked(bool)), SLOT(slotRemoveItem()));
-    connect(mWidget->modifyItem, SIGNAL(clicked(bool)), SLOT(slotModifyItem()));
-    connect(mWidget->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
-    connect(mWidget->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(slotModifyItem()));
+    connect(mWidget->removeItem, &QPushButton::clicked, this, &SendLaterWidget::slotRemoveItem);
+    connect(mWidget->modifyItem, &QPushButton::clicked, this, &SendLaterWidget::slotModifyItem);
+    connect(mWidget->treeWidget, &PimCommon::CustomTreeView::itemSelectionChanged, this, &SendLaterWidget::updateButtons);
+    connect(mWidget->treeWidget, &PimCommon::CustomTreeView::itemDoubleClicked, this, &SendLaterWidget::slotModifyItem);
     load();
     updateButtons();
 }

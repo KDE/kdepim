@@ -46,10 +46,10 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &NotesAgentSettingsDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &NotesAgentSettingsDialog::reject);
     okButton->setDefault(true);
-    connect(okButton, SIGNAL(clicked()), this, SLOT(slotOkClicked()));
+    connect(okButton, &QPushButton::clicked, this, &NotesAgentSettingsDialog::slotOkClicked);
 
     setModal( true );
     QWidget *mainWidget = new QWidget( this );

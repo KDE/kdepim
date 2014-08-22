@@ -55,8 +55,8 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mainLayout->addWidget(mainWidget);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &NotesAgentAlarmDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &NotesAgentAlarmDialog::reject);
     setAttribute(Qt::WA_DeleteOnClose);
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
     
@@ -72,7 +72,7 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     vbox->addWidget(lab);
     mListWidget = new NoteShared::NoteListWidget;
     mListWidget->setContextMenuPolicy( Qt::CustomContextMenu );
-    connect(mListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotItemDoubleClicked(QListWidgetItem*)));
+    connect(mListWidget, &NoteShared::NoteListWidget::itemDoubleClicked, this, &NotesAgentAlarmDialog::slotItemDoubleClicked);
     connect( mListWidget, SIGNAL(customContextMenuRequested(QPoint)),
              this, SLOT(slotCustomContextMenuRequested(QPoint)) );
 
@@ -102,11 +102,11 @@ void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
     Q_UNUSED(pos);
     QMenu *entriesContextMenu = new QMenu;
     QAction *removeAlarm = new QAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Remove Alarm"), entriesContextMenu);
-    connect(removeAlarm, SIGNAL(triggered()), this, SLOT(slotRemoveAlarm()));
+    connect(removeAlarm, &QAction::triggered, this, &NotesAgentAlarmDialog::slotRemoveAlarm);
     QAction *showNote = new QAction(i18n("Show Note..."), entriesContextMenu);
-    connect(showNote, SIGNAL(triggered()), this, SLOT(slotShowNote()));
+    connect(showNote, &QAction::triggered, this, &NotesAgentAlarmDialog::slotShowNote);
     QAction *modifyAlarm = new QAction(i18n("Modify Alarm..."), entriesContextMenu);
-    connect(modifyAlarm, SIGNAL(triggered()), this, SLOT(slotModifyAlarm()));
+    connect(modifyAlarm, &QAction::triggered, this, &NotesAgentAlarmDialog::slotModifyAlarm);
     entriesContextMenu->addAction( showNote );
     entriesContextMenu->addAction( modifyAlarm );
 
@@ -164,7 +164,7 @@ void NotesAgentAlarmDialog::slotRemoveAlarm()
             Akonadi::Item item(id);
             Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
             job->fetchScope().fetchAttribute<NoteShared::NoteAlarmAttribute>();
-            connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchItem(KJob*)) );
+            connect(job, &Akonadi::ItemFetchJob::result, this, &NotesAgentAlarmDialog::slotFetchItem);
         }
     }
 }
@@ -181,7 +181,7 @@ void NotesAgentAlarmDialog::slotFetchItem(KJob *job)
         Akonadi::Item item = items.first();
         item.removeAttribute<NoteShared::NoteAlarmAttribute>();
         Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(item);
-        connect( modify, SIGNAL(result(KJob*)), SLOT(slotModifyItem(KJob*)) );
+        connect(modify, &Akonadi::ItemModifyJob::result, this, &NotesAgentAlarmDialog::slotModifyItem);
     }
 }
 
@@ -201,7 +201,7 @@ void NotesAgentAlarmDialog::slotModifyAlarm()
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
         job->fetchScope().fetchFullPayload( true );
         job->fetchScope().fetchAttribute<NoteShared::NoteAlarmAttribute>();
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchAlarmItem(KJob*)) );
+        connect(job, &Akonadi::ItemFetchJob::result, this, &NotesAgentAlarmDialog::slotFetchAlarmItem);
     }
 }
 
@@ -235,7 +235,7 @@ void NotesAgentAlarmDialog::slotFetchAlarmItem(KJob *job)
                     item.removeAttribute<NoteShared::NoteAlarmAttribute>();
                 }
                 Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(item);
-                connect(modify, SIGNAL(result(KJob*)), SLOT(slotModifyItem(KJob*)));
+                connect(modify, &Akonadi::ItemModifyJob::result, this, &NotesAgentAlarmDialog::slotModifyItem);
             }
             delete dlg;
         }

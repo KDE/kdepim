@@ -43,8 +43,8 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &NotesAgentNoteDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &NotesAgentNoteDialog::reject);
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
     QWidget *w = new QWidget;
@@ -74,7 +74,7 @@ void NotesAgentNoteDialog::setNoteId(Akonadi::Item::Id id)
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
     job->fetchScope().fetchFullPayload( true );
     job->fetchScope().fetchAttribute< NoteShared::NoteDisplayAttribute >();
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchItem(KJob*)) );
+    connect(job, &Akonadi::ItemFetchJob::result, this, &NotesAgentNoteDialog::slotFetchItem);
 }
 
 void NotesAgentNoteDialog::slotFetchItem(KJob* job)
