@@ -68,10 +68,10 @@ bool Kdelibs4ConfigMigrater::migrate()
         return false;
     }
 
-    Q_FOREACH( const QString &configFileName, d->configFiles) {
+    Q_FOREACH (const QString &configFileName, d->configFiles) {
         const QString newConfigLocation
-                = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
-                + QLatin1Char('/') + configFileName;
+            = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
+              + QLatin1Char('/') + configFileName;
 
         if (QFile(newConfigLocation).exists()) {
             continue;
@@ -87,12 +87,12 @@ bool Kdelibs4ConfigMigrater::migrate()
     }
 
     if (d->appName.isEmpty() && !d->uiFiles.isEmpty()) {
-        qCritical() <<" We can not migrate ui file. AppName is missing";
+        qCritical() << " We can not migrate ui file. AppName is missing";
     } else {
-        Q_FOREACH( const QString &uiFileName, d->uiFiles) {
+        Q_FOREACH (const QString &uiFileName, d->uiFiles) {
             const QString newConfigLocation
-                    = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-                    QStringLiteral("/kxmlgui5/") + d->appName + QLatin1Char('/') + uiFileName;
+                = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+                  QStringLiteral("/kxmlgui5/") + d->appName + QLatin1Char('/') + uiFileName;
             if (QFile(newConfigLocation).exists()) {
                 continue;
             }

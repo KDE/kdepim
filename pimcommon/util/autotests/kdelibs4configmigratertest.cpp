@@ -63,28 +63,28 @@ void Kdelibs4ConfigMigraterTest::shouldMigrateConfigFiles()
     const QString configPath = kdehome + QLatin1Char('/') + QLatin1String("share/config/");
     QDir().mkpath(configPath);
     QVERIFY(QDir(configPath).exists());
-   
+
     QStringList listConfig;
     listConfig << QLatin1String("foorc") << QLatin1String("foo1rc");
-    Q_FOREACH(const QString &config, listConfig) {
-       QFile fooConfigFile(QLatin1String(KDELIBS4CONFIGMIGRATER_DATA_DIR) + QLatin1Char('/') + config);
-       QVERIFY(fooConfigFile.exists());
-       const QString storedConfigFilePath = configPath + QLatin1Char('/') + config;
-       QVERIFY(QFile::copy(fooConfigFile.fileName(), storedConfigFilePath));
+    Q_FOREACH (const QString &config, listConfig) {
+        QFile fooConfigFile(QLatin1String(KDELIBS4CONFIGMIGRATER_DATA_DIR) + QLatin1Char('/') + config);
+        QVERIFY(fooConfigFile.exists());
+        const QString storedConfigFilePath = configPath + QLatin1Char('/') + config;
+        QVERIFY(QFile::copy(fooConfigFile.fileName(), storedConfigFilePath));
     }
- 
+
     QTemporaryDir xdgConfigDir;
     const QString xdgConfighome = xdgConfigDir.path();
     QVERIFY(xdgConfigDir.isValid());
     qputenv("XDG_CONFIG_HOME", QFile::encodeName(xdgConfighome));
 
     PimCommon::Kdelibs4ConfigMigrater migration(QLatin1String("foo"));
-    migration.setConfigFiles(QStringList()<<listConfig);
+    migration.setConfigFiles(QStringList() << listConfig);
     QVERIFY(migration.migrate());
 
-    Q_FOREACH(const QString &config, listConfig) {
-       const QString xdgConfigFile = xdgConfighome + QLatin1Char('/') + config;
-       QVERIFY(QFile(xdgConfigFile).exists());
+    Q_FOREACH (const QString &config, listConfig) {
+        const QString xdgConfigFile = xdgConfighome + QLatin1Char('/') + config;
+        QVERIFY(QFile(xdgConfigFile).exists());
     }
 }
 
@@ -103,12 +103,12 @@ void Kdelibs4ConfigMigraterTest::shouldMigrateUiFiles()
 
     QStringList listUi;
     listUi << QLatin1String("appuirc") << QLatin1String("appui1rc");
-    Q_FOREACH(const QString &config, listUi) {
-       QFile fooConfigFile(QLatin1String(KDELIBS4CONFIGMIGRATER_DATA_DIR) + QLatin1Char('/') + config);
-       QVERIFY(fooConfigFile.exists());
-       QDir().mkpath(dataPath + QLatin1Char('/') + appName );
-       const QString storedConfigFilePath = dataPath + QLatin1Char('/') + appName + QLatin1Char('/') + config;
-       QVERIFY(QFile::copy(fooConfigFile.fileName(), storedConfigFilePath));
+    Q_FOREACH (const QString &config, listUi) {
+        QFile fooConfigFile(QLatin1String(KDELIBS4CONFIGMIGRATER_DATA_DIR) + QLatin1Char('/') + config);
+        QVERIFY(fooConfigFile.exists());
+        QDir().mkpath(dataPath + QLatin1Char('/') + appName);
+        const QString storedConfigFilePath = dataPath + QLatin1Char('/') + appName + QLatin1Char('/') + config;
+        QVERIFY(QFile::copy(fooConfigFile.fileName(), storedConfigFilePath));
     }
 
     QTemporaryDir xdgDataDir;
@@ -116,14 +116,13 @@ void Kdelibs4ConfigMigraterTest::shouldMigrateUiFiles()
     QVERIFY(xdgDataDir.isValid());
     qputenv("XDG_DATA_HOME", QFile::encodeName(xdgDatahome));
 
-
     PimCommon::Kdelibs4ConfigMigrater migration(appName);
-    migration.setUiFiles(QStringList()<<listUi);
+    migration.setUiFiles(QStringList() << listUi);
     QVERIFY(migration.migrate());
 
-    Q_FOREACH(const QString &uifile, listUi) {
-       const QString xdgUiFile = xdgDatahome + QLatin1String("/kxmlgui5/") + appName + QLatin1Char('/') + uifile;
-       QVERIFY(QFile(xdgUiFile).exists());
+    Q_FOREACH (const QString &uifile, listUi) {
+        const QString xdgUiFile = xdgDatahome + QLatin1String("/kxmlgui5/") + appName + QLatin1Char('/') + uifile;
+        QVERIFY(QFile(xdgUiFile).exists());
     }
 
 }

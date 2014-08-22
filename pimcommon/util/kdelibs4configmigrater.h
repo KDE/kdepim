@@ -21,7 +21,8 @@
 #include "pimcommon_export.h"
 #include <QStringList>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT Kdelibs4ConfigMigrater
 {
 public:
