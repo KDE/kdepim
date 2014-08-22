@@ -25,7 +25,6 @@
 #include <AkonadiCore/session.h>
 
 #include <qdebug.h>
-#include <kglobal.h>
 #include <KLocalizedString>
 #include <kio/job.h>
 

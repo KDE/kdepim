@@ -24,7 +24,7 @@
 #include <QPushButton>
 
 #include "trip.h"
-#include <KIcon>
+#include <QIcon>
 
 CreateFolderContentsWidget::CreateFolderContentsWidget(Trip *trip, int role, const QString &type, QWidget* parent)
   : QStackedWidget(parent), m_trip(trip), m_role(role)
@@ -45,7 +45,7 @@ CreateFolderContentsWidget::CreateFolderContentsWidget(Trip *trip, int role, con
     iconName = QLatin1String("korg-todo");
     break;
   }
-  KIcon icon(iconName);
+  QIcon icon = QIcon::fromTheme(iconName);
   button->setIcon(icon);
   button->setIconSize(QSize(128, 128));
   addWidget(button);

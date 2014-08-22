@@ -35,7 +35,6 @@
 
 #include <KMime/Message>
 
-#include "klocale.h"
 
 using namespace Akonadi;
 

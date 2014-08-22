@@ -24,7 +24,7 @@
 
 #include <AkonadiCore/item.h>
 
-#include "kdialog.h"
+#include <QDialog>
 
 namespace Akonadi {
   class ContactViewer;

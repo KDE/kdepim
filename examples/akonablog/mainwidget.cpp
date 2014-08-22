@@ -34,7 +34,6 @@
 #include <QTreeView>
 
 #include <QVBoxLayout>
-#include <KTabBar>
 #include <QDebug>
 #include <KLocalizedString>
 

@@ -28,7 +28,6 @@
 #include <kstandardaction.h>
 
 #include <kpluginfactory.h>
-#include <KLocalizedString>
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
