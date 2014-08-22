@@ -38,7 +38,7 @@
 #include <KStandardAction>
 #include <KStandardDirs>
 #include <QTemporaryFile>
-#include <KUrl>
+#include <QUrl>
 #include <QIcon>
 
 #include <KRecentFilesAction>
@@ -225,7 +225,7 @@ void KTNEFMain::openFile()
 {
     QString filename =
         KFileDialog::getOpenFileName(
-            KUrl(),
+            QUrl(),
             QString(),
             this,
             i18nc("@title:window", "Open TNEF File"));
@@ -251,7 +251,7 @@ void KTNEFMain::viewFile()
 {
     if (!mView->getSelection().isEmpty()) {
         KTNEFAttach *attach = mView->getSelection().first();
-        QUrl url(QLatin1String("file:") + extractTemp(attach));
+        QUrl url = QUrl::fromLocalFile(extractTemp(attach));
         QString mimename(attach->mimeTag());
 
         if (mimename.isEmpty() || mimename == QLatin1String("application/octet-stream")) {
@@ -284,8 +284,8 @@ QString KTNEFMain::extractTemp(KTNEFAttach *att)
 void KTNEFMain::viewFileAs()
 {
     if (!mView->getSelection().isEmpty()) {
-        KUrl::List list;
-        list.append(KUrl(extractTemp(mView->getSelection().first())));
+        QList<QUrl> list;
+        list.append(QUrl::fromLocalFile(extractTemp(mView->getSelection().first())));
 
         if (!list.isEmpty()) {
             KRun::displayOpenWithDialog(list, this);
@@ -473,16 +473,16 @@ void KTNEFMain::viewDoubleClicked(QTreeWidgetItem *item)
 
 void KTNEFMain::viewDragRequested(const QList<KTNEFAttach *> &list)
 {
-    KUrl::List urlList;
+    QList<QUrl> urlList;
     QList<KTNEFAttach *>::ConstIterator end(list.constEnd());
     for (QList<KTNEFAttach *>::ConstIterator it = list.constBegin();
             it != end; ++it) {
-        urlList << KUrl(extractTemp(*it));
+        urlList << QUrl::fromLocalFile(extractTemp(*it));
     }
 
     if (!list.isEmpty()) {
         QMimeData *mimeData = new QMimeData;
-        urlList.populateMimeData(mimeData);
+        mimeData->setUrls(urlList);
 
         QDrag *drag = new QDrag(this);
         drag->setMimeData(mimeData);
