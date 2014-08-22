@@ -23,15 +23,48 @@
 
 namespace PimCommon
 {
+/**
+ * \file kdelibs4configmigrater.h
+ */
+
+/**
+  * Kdelibs4ConfigMigrater migrates specific config file and ui file
+  * from KDE SC 4.0 to new QStandardPath.
+  *
+  * @short Class for migration of config files and ui file from KDE SC4
+  * @since 5.2
+  */
+
 class PIMCOMMON_EXPORT Kdelibs4ConfigMigrater
 {
 public:
+    /**
+     * Constructs a Kdelibs4ConfigMigrater
+     *
+     * @param appName The application name of KDE SC 4.0
+     */
     Kdelibs4ConfigMigrater(const QString &appName);
+
+    /**
+     * Destructor
+     */
     ~Kdelibs4ConfigMigrater();
 
+    /**
+     * Return true if migrate was done. If we found kdehome directory
+     */
     bool migrate();
 
+    /**
+     * Set list of config files we need to migrate for application
+     * @param configFileNameList list of config file
+     */
     void setConfigFiles(const QStringList &configFileNameList);
+
+    /**
+     * Set list of ui files to migrate
+     * @param uiFileNameList list of ui file.
+     */
     void setUiFiles(const QStringList &uiFileNameList);
 
 private:
