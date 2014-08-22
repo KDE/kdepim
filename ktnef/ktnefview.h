@@ -19,33 +19,34 @@
 
 #include <QTreeWidget>
 
-namespace KTnef {
-  class KTNEFAttach;
+namespace KTnef
+{
+class KTNEFAttach;
 }
 using namespace KTnef;
 
 class KTNEFView : public QTreeWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit KTNEFView( QWidget *parent = 0 );
+public:
+    explicit KTNEFView(QWidget *parent = 0);
     ~KTNEFView();
 
-    void setAttachments(const QList<KTNEFAttach *> &list );
+    void setAttachments(const QList<KTNEFAttach *> &list);
     QList<KTNEFAttach *> getSelection();
 
-  signals:
-    void dragRequested( const QList<KTNEFAttach *> &list );
+signals:
+    void dragRequested(const QList<KTNEFAttach *> &list);
 
-  protected:
-    void resizeEvent( QResizeEvent *e );
-    void startDrag( Qt::DropActions dropAction );
+protected:
+    void resizeEvent(QResizeEvent *e);
+    void startDrag(Qt::DropActions dropAction);
 
-  private slots:
+private slots:
     void adjustColumnWidth();
 
-  private:
+private:
     QList<KTNEFAttach *> mAttachments;
 };
 

@@ -22,7 +22,7 @@
 #include <QCommandLineParser>
 #include <QApplication>
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
     KLocalizedString::setApplicationDomain("ktnef");
     QApplication app(argc, argv);
@@ -34,17 +34,15 @@ int main( int argc, char *argv[] )
                          KAboutLicense::GPL,
                          i18n("Copyright 2000 Michael Goffioul\nCopyright 2012  Allen Winter"));
 
-
+    aboutData.addAuthor(
+        i18n("Michael Goffioul"),
+        i18n("Author"),
+        QLatin1String("kdeprint@swing.be"));
 
     aboutData.addAuthor(
-                i18n( "Michael Goffioul" ),
-                i18n( "Author" ),
-                QLatin1String("kdeprint@swing.be"));
-
-    aboutData.addAuthor(
-                i18n( "Allen Winter" ),
-                i18n( "Author, Ported to Qt4/KDE4" ),
-                QLatin1String("winter@kde.org"));
+        i18n("Allen Winter"),
+        i18n("Author, Ported to Qt4/KDE4"),
+        QLatin1String("winter@kde.org"));
 
     KAboutData::setApplicationData(aboutData);
 
@@ -62,8 +60,8 @@ int main( int argc, char *argv[] )
     tnef->show();
     const QStringList &args = parser.positionalArguments();
 
-    if ( !args.isEmpty() ) {
-        tnef->loadFile( args.first() );
+    if (!args.isEmpty()) {
+        tnef->loadFile(args.first());
     }
 
     return app.exec();

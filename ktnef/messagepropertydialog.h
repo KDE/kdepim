@@ -20,8 +20,9 @@
 #include <QDialog>
 #include <KConfigGroup>
 
-namespace KTnef {
-  class KTNEFMessage;
+namespace KTnef
+{
+class KTNEFMessage;
 }
 using namespace KTnef;
 
@@ -29,14 +30,14 @@ class QTreeWidget;
 
 class MessagePropertyDialog : public QDialog
 {
-  Q_OBJECT
-  public:
-    explicit MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg );
+    Q_OBJECT
+public:
+    explicit MessagePropertyDialog(QWidget *parent, KTNEFMessage *msg);
 
-  private slots:
+private slots:
     void slotSaveProperty();
 
-  private:
+private:
     KTNEFMessage *mMessage;
     QTreeWidget *mListView;
 };

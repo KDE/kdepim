@@ -28,43 +28,43 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg )
-  : QDialog( parent )
+MessagePropertyDialog::MessagePropertyDialog(QWidget *parent, KTNEFMessage *msg)
+    : QDialog(parent)
 {
-  mMessage = msg;
+    mMessage = msg;
 
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  setWindowTitle(i18n( "Message Properties" ));
-  mListView = new QTreeWidget( this );
-  mainLayout->addWidget(mListView); 
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-  okButton->setDefault(true);
-  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &MessagePropertyDialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &MessagePropertyDialog::reject);
-  mainLayout->addWidget(buttonBox);
-  QPushButton *user1Button = new QPushButton;
-  buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-  connect(user1Button, &QPushButton::clicked, this, &MessagePropertyDialog::slotSaveProperty);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    setWindowTitle(i18n("Message Properties"));
+    mListView = new QTreeWidget(this);
+    mainLayout->addWidget(mListView);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &MessagePropertyDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &MessagePropertyDialog::reject);
+    mainLayout->addWidget(buttonBox);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(user1Button, &QPushButton::clicked, this, &MessagePropertyDialog::slotSaveProperty);
 
-  const QStringList headerLabels =
-    ( QStringList( i18nc( "@title:column property name", "Name" ) )
-        << i18nc( "@title:column property value", "Value" ) );
-  mListView->setHeaderLabels( headerLabels );
-  mListView->setAllColumnsShowFocus( true );
-  mListView->setWordWrap( true );
-  mListView->setAllColumnsShowFocus( true );
-  mListView->setRootIsDecorated( false );     
+    const QStringList headerLabels =
+        (QStringList(i18nc("@title:column property name", "Name"))
+         << i18nc("@title:column property value", "Value"));
+    mListView->setHeaderLabels(headerLabels);
+    mListView->setAllColumnsShowFocus(true);
+    mListView->setWordWrap(true);
+    mListView->setAllColumnsShowFocus(true);
+    mListView->setRootIsDecorated(false);
 
-  KGuiItem::assign(user1Button, KStandardGuiItem::save());
-  AttachPropertyDialog::formatPropertySet( mMessage, mListView );
-  
+    KGuiItem::assign(user1Button, KStandardGuiItem::save());
+    AttachPropertyDialog::formatPropertySet(mMessage, mListView);
+
 }
 
 void MessagePropertyDialog::slotSaveProperty()
 {
-  AttachPropertyDialog::saveProperty( mListView, mMessage, this );
+    AttachPropertyDialog::saveProperty(mListView, mMessage, this);
 }
 

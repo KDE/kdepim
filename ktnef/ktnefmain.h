@@ -24,9 +24,10 @@ class QTreeWidgetItem;
 class KRecentFilesAction;
 class QUrl;
 
-namespace KTnef {
-  class KTNEFParser;
-  class KTNEFAttach;
+namespace KTnef
+{
+class KTNEFParser;
+class KTNEFAttach;
 }
 using namespace KTnef;
 
@@ -34,19 +35,19 @@ class KTNEFView;
 
 class KTNEFMain : public KXmlGuiWindow
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit KTNEFMain( QWidget *parent = 0 );
+public:
+    explicit KTNEFMain(QWidget *parent = 0);
     ~KTNEFMain();
 
-    void loadFile( const QString &filename );
+    void loadFile(const QString &filename);
 
-  protected:
+protected:
     /** @reimp */
-    void contextMenuEvent( QContextMenuEvent *event );
+    void contextMenuEvent(QContextMenuEvent *event);
 
-  protected slots:
+protected slots:
     void openFile();
     void viewFile();
     void viewFileAs();
@@ -62,27 +63,27 @@ class KTNEFMain : public KXmlGuiWindow
     void slotSaveMessageText();
 
     void viewSelectionChanged();
-    void viewDoubleClicked( QTreeWidgetItem * );
-    void viewDragRequested( const QList<KTNEFAttach *> &list );
+    void viewDoubleClicked(QTreeWidgetItem *);
+    void viewDragRequested(const QList<KTNEFAttach *> &list);
     void slotConfigureKeys();
-    void openRecentFile(const QUrl&);
+    void openRecentFile(const QUrl &);
 
 //  protected:
 //    void closeEvent( QCloseEvent *e );
 
-  private:
+private:
     void addRecentFile(const QUrl &url);
     void setupStatusbar();
     void setupActions();
     void setupTNEF();
-    void enableExtractAll( bool on = true );
-    void enableSingleAction( bool on = true );
+    void enableExtractAll(bool on = true);
+    void enableSingleAction(bool on = true);
     void cleanup();
 
-    void extractTo( const QString &dirname );
-    QString extractTemp( KTNEFAttach *att );
+    void extractTo(const QString &dirname);
+    QString extractTemp(KTNEFAttach *att);
 
-  private:
+private:
     KTNEFView *mView;
     KTNEFParser *mParser;
     QString mFilename;
