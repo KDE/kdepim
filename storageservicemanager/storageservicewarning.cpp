@@ -34,7 +34,7 @@ StorageServiceWarning::StorageServiceWarning(QWidget *parent)
     setMessageType(Error);
     setWordWrap(true);
     setText(i18n("Actions failed. <a href=\"actionfailed\">(Details...)</a>"));
-    connect(this, SIGNAL(linkActivated(QString)), SLOT(slotShowDetails(QString)));
+    connect(this, &StorageServiceWarning::linkActivated, this, &StorageServiceWarning::slotShowDetails);
 }
 
 StorageServiceWarning::~StorageServiceWarning()

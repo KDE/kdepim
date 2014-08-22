@@ -22,7 +22,6 @@
 #define SIEVEEDITORCONFIGUREDIALOG_H
 
 #include <QDialog>
-#include <KConfigGroup>
 class QTabWidget;
 class QCheckBox;
 class SieveEditorConfigureServerWidget;

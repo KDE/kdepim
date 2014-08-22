@@ -211,7 +211,7 @@ void Widget::fillMessageTagCombo()
 {
     Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
     fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
-    connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotTagsFetched(KJob*)));
+    connect(fetchJob, &Akonadi::TagFetchJob::result, this, &Widget::slotTagsFetched);
 }
 
 void Widget::slotTagsFetched(KJob *job)

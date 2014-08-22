@@ -24,7 +24,6 @@
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 #include <QPushButton>
 
 ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
