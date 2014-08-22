@@ -23,9 +23,14 @@
 #include <QApplication>
 #include "kmailcvt.h"
 #include "kdepim-version.h"
+#include "pimcommon/util/kdelibs4configmigrater.h"
 
 int main(int argc, char *argv[])
 {
+    PimCommon::Kdelibs4ConfigMigrater migrate(QLatin1String("kmailcvt"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("kmailcvtrc"));
+    migrate.migrate();
+
     QApplication app(argc, argv);
     KLocalizedString::setApplicationDomain("kmailcvt");
 

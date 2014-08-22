@@ -4,6 +4,5 @@ Migrate configrc done:
 - headerthemeeditor (headerthemeeditorrc)
 - contactthemeeditor (contactthemeeditorrc) 
 - ktnef ( ktnefui.rc , ktnefrc )
+- kmailcvt (kmailcvtrc)
 
-TODO:
-Need to port uirc files too.
