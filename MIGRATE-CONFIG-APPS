@@ -3,7 +3,7 @@ Migrate configrc done:
 - storageservicemanager (storageservicemanagerrc, storageservicemanager.notifyrc)
 - headerthemeeditor (headerthemeeditorrc)
 - contactthemeeditor (contactthemeeditorrc) 
-
+- ktnef ( ktnefui.rc , ktnefrc )
 
 TODO:
 Need to port uirc files too.

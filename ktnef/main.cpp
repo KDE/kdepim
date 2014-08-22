@@ -16,6 +16,7 @@
 
 #include "ktnefmain.h"
 #include "kdepim-version.h"
+#include "pimcommon/util/kdelibs4configmigrater.h"
 
 #include <kaboutdata.h>
 #include <KLocalizedString>
@@ -24,6 +25,11 @@
 
 int main(int argc, char *argv[])
 {
+    PimCommon::Kdelibs4ConfigMigrater migrate(QLatin1String("ktnef"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("ktnefrc"));
+    migrate.setUiFiles(QStringList() << QLatin1String("ktnefui.rc"));
+    migrate.migrate();
+
     KLocalizedString::setApplicationDomain("ktnef");
     QApplication app(argc, argv);
 
