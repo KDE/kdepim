@@ -21,27 +21,33 @@
 #include <KLocalizedString>
 
 #include <QHBoxLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace MailCommon;
 
 SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(QWidget *parent)
-    :KDialog(parent)
+    :QDialog(parent)
 {
-    setCaption( i18n( "Select thunderbird filter files" ) );
-    setButtons( Ok|Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n( "Select thunderbird filter files" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
     setModal( true );
-    QWidget *mainWidget = new QWidget( this );
-    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
-    mainLayout->setSpacing( KDialog::spacingHint() );
-    mainLayout->setMargin( KDialog::marginHint() );
-    setMainWidget( mainWidget );
-
-    mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(mainWidget);
-    connect(mSelectFilterFilesWidget, SIGNAL(enableOkButton(bool)), this, SLOT(enableButtonOk(bool)));
+    mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(this);
+    connect(mSelectFilterFilesWidget, SIGNAL(enableOkButton(bool)), this, SLOT(okButton->setEnabled(bool)));
     mainLayout->addWidget(mSelectFilterFilesWidget);
+    mainLayout->addWidget(buttonBox);
     readConfig();
-    enableButtonOk(false);
+    okButton->setEnabled(false);
 }
 
 SelectThunderbirdFilterFilesDialog::~SelectThunderbirdFilterFilesDialog()

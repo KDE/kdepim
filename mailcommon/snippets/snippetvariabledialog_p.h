@@ -21,14 +21,14 @@
 #ifndef MAILCOMMON_SNIPPETVARIABLEDIALOG_P_H
 #define MAILCOMMON_SNIPPETVARIABLEDIALOG_P_H
 
-#include <KDialog>
+#include <QDialog>
 
 class KTextEdit;
 class QCheckBox;
 
 namespace MailCommon {
 
-class SnippetVariableDialog : public KDialog
+class SnippetVariableDialog : public QDialog
 {
     Q_OBJECT
 
@@ -40,8 +40,8 @@ public:
     QString variableValue() const;
     bool saveVariableIsChecked() const;
 
-protected:
-    virtual void slotButtonClicked( int button );
+private Q_SLOTS:
+    void slotAccepted();
 
 private:
     QString mVariableName;

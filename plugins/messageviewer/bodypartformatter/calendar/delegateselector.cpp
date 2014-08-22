@@ -28,33 +28,44 @@
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 DelegateSelector::DelegateSelector(QWidget * parent)
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setCaption( i18n("Select delegate") );
-  setButtons( Ok|Cancel );
-  setDefaultButton( Ok );
+  setWindowTitle( i18n("Select delegate") );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+  mOkButton->setDefault(true);
+  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  mOkButton->setDefault(true);
 
-  QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
-
-  QWidget *delegateBox = new QWidget( mainWidget() );
+  QWidget *delegateBox = new QWidget(this);
   QHBoxLayout *delegateBoxHBoxLayout = new QHBoxLayout(delegateBox);
   delegateBoxHBoxLayout->setMargin(0);
   new QLabel( i18n("Delegate:"), delegateBox );
   mDelegate = new KPIM::AddresseeLineEdit( delegateBox );
   connect( mDelegate, SIGNAL(textChanged(QString)), SLOT(slotTextChanged(QString)) );
-  mRsvp = new QCheckBox( i18n("Keep me informed about status changes of this incidence."), mainWidget() );
+  mRsvp = new QCheckBox( i18n("Keep me informed about status changes of this incidence."), this );
   mRsvp->setChecked( true );
 
-  layout->addWidget( delegateBox );
-  layout->addWidget( mRsvp );
-  enableButtonOk( false );
+  mainLayout->addWidget( delegateBox );
+  mainLayout->addWidget( mRsvp );
+  mainLayout->addWidget(buttonBox);
+
+  mOkButton->setEnabled( false );
 }
 
 void DelegateSelector::slotTextChanged( const QString& text )
 {
-  enableButtonOk( !text.isEmpty() );
+  mOkButton->setEnabled( !text.isEmpty() );
 }
 
 QString DelegateSelector::delegate() const

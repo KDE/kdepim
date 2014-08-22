@@ -21,8 +21,8 @@
 #ifndef DELEGATESELECTOR_H
 #define DELEGATESELECTOR_H
 
-#include <kdialog.h>
-
+#include <QDialog>
+class QPushButton;
 namespace KPIM {
   class AddresseeLineEdit;
 }
@@ -32,7 +32,7 @@ class QCheckBox;
 /**
   Selection dialog for a delegate.
 */
-class DelegateSelector : public KDialog
+class DelegateSelector : public QDialog
 {
   Q_OBJECT
 
@@ -46,6 +46,7 @@ class DelegateSelector : public KDialog
   private:
     KPIM::AddresseeLineEdit *mDelegate;
     QCheckBox *mRsvp;
+    QPushButton *mOkButton;
 };
 
 #endif

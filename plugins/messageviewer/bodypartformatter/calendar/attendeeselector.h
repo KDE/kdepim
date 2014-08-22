@@ -20,13 +20,14 @@
 #ifndef ATTENDEESELECTOR_H_H
 #define ATTENDEESELECTOR_H_H
 
-#include <kdialog.h>
+#include <QDialog>
+#include <QPushButton>
 #include "ui_attendeeselector.h"
 
 /**
   Dialog to select a set off attendees.
 */
-class AttendeeSelector : public KDialog
+class AttendeeSelector : public QDialog
 {
   Q_OBJECT
   public:
@@ -42,6 +43,7 @@ class AttendeeSelector : public KDialog
 
   private:
     Ui::AttendeeSelectorWidget ui;
+    QPushButton *mOkButton;
 };
 
 

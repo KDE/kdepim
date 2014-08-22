@@ -26,18 +26,31 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace MailCommon;
 
 SnippetVariableDialog::SnippetVariableDialog( const QString &variableName,
                                               QMap<QString, QString> *variables,
                                               QWidget *parent )
-    : KDialog( parent ), mVariableName( variableName ), mVariables( variables )
+    : QDialog( parent ), mVariableName( variableName ), mVariables( variables )
 {
     setWindowTitle( i18n( "Enter Values for Variables" ) );
-    setButtons( Ok | Cancel );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotAccepted()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
 
-    QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
+    QVBoxLayout *layout = new QVBoxLayout(mainWidget);
 
     QLabel *label = new QLabel;
     label->setText( i18n( "Enter the replacement values for '%1':", variableName ) );
@@ -79,20 +92,15 @@ bool SnippetVariableDialog::saveVariableIsChecked() const
     return mSaveVariable->isChecked();
 }
 
-void SnippetVariableDialog::slotButtonClicked( int button )
+void SnippetVariableDialog::slotAccepted()
 {
-    if ( button == KDialog::Ok ) {
-        if ( mSaveVariable->isChecked() ) {
-            mVariables->insert( mVariableName, mVariableValueText->toPlainText() );
-        } else {
-            mVariables->remove( mVariableName );
-        }
-
-        accept();
-        return;
+    if ( mSaveVariable->isChecked() ) {
+        mVariables->insert( mVariableName, mVariableValueText->toPlainText() );
+    } else {
+        mVariables->remove( mVariableName );
     }
 
-    KDialog::slotButtonClicked( button );
+   accept();
 }
 
 #include "moc_snippetvariabledialog_p.cpp"

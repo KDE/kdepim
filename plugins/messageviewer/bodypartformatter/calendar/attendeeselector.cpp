@@ -27,14 +27,27 @@
 #include <kguiitem.h>
 #include <KGuiItem>
 #include <KStandardGuiItem>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 AttendeeSelector::AttendeeSelector(QWidget * parent)
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setCaption( i18n("Select Attendees") );
-  setButtons( Ok|Cancel );
+  setWindowTitle( i18n("Select Attendees") );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QWidget *mainWidget = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(mainWidget);
+  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+  mOkButton->setDefault(true);
+  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  mainLayout->addWidget(buttonBox);
 
-  ui.setupUi( mainWidget() );
+  ui.setupUi(mainWidget);
 
   KGuiItem::assign(ui.addButton, KStandardGuiItem::add() );
   connect( ui.addButton, SIGNAL(clicked()), SLOT(addClicked()) );
@@ -46,7 +59,7 @@ AttendeeSelector::AttendeeSelector(QWidget * parent)
   connect( ui.attendeeEdit, SIGNAL(returnPressed(QString)), SLOT(addClicked()) );
 
   connect( ui.attendeeList, SIGNAL(itemSelectionChanged()), SLOT(selectionChanged()) );
-  enableButtonOk( false );
+  mOkButton->setEnabled( false );
 }
 
 QStringList AttendeeSelector::attendees() const
@@ -70,13 +83,13 @@ void AttendeeSelector::addClicked()
   if ( !ui.attendeeEdit->text().isEmpty() )
     ui.attendeeList->addItem( ui.attendeeEdit->text() );
   ui.attendeeEdit->clear();
-  enableButtonOk( true );
+  mOkButton->setEnabled( true );
 }
 
 void AttendeeSelector::removeClicked()
 {
   delete ui.attendeeList->takeItem( ui.attendeeList->currentRow() );
-  enableButtonOk( ( ui.attendeeList->count()>0 ) );
+  mOkButton->setEnabled( ( ui.attendeeList->count()>0 ) );
 }
 
 void AttendeeSelector::textChanged( const QString &text )

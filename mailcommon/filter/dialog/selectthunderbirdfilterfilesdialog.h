@@ -18,12 +18,12 @@
 #ifndef SELECTTHUNDERBIRDFILTERFILESDIALOG_H
 #define SELECTTHUNDERBIRDFILTERFILESDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 class KUrl;
 class SelectThunderbirdFilterFilesWidget;
 
 namespace MailCommon {
-class SelectThunderbirdFilterFilesDialog : public KDialog
+class SelectThunderbirdFilterFilesDialog : public QDialog
 {
 public:
     explicit SelectThunderbirdFilterFilesDialog(QWidget *parent);
