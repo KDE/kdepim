@@ -19,8 +19,6 @@
 #include "templatessyntaxhighlighter.h"
 #include "templatesutil.h"
 
-#include <KGlobalSettings>
-
 #include <QCompleter>
 #include <QKeyEvent>
 #include <QScrollBar>

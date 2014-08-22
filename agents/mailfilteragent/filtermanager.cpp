@@ -51,6 +51,7 @@
 #include <errno.h>
 #include <KSharedConfig>
 #include <KLocalizedString>
+#include <QLocale>
 
 using namespace MailCommon;
 
@@ -257,7 +258,7 @@ bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
         const QString subject = msg->subject()->asUnicodeString();
         const QString from = msg->from()->asUnicodeString();
         const QDateTime dateTime = msg->date()->dateTime();
-        const QString date = KLocale::global()->formatDateTime( dateTime, KLocale::LongDate );
+        const QString date = QLocale().toString( dateTime, QLocale::LongFormat );
         const QString logText( i18n( "<b>Begin filtering on message \"%1\" from \"%2\" at \"%3\" :</b>",
                                      subject, from, date ) );
         FilterLog::instance()->add( logText, FilterLog::PatternDescription );
