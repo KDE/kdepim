@@ -23,7 +23,8 @@
 
 class QListWidget;
 class QPushButton;
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 
 class GRANTLEETHEMEEDITOR_EXPORT ManageThemes : public QDialog
 {

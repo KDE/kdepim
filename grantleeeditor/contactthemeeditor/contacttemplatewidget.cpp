@@ -51,7 +51,6 @@ ContactTemplateWidget::ContactTemplateWidget(const QString &title, QWidget *pare
     setLayout(lay);
 }
 
-
 ContactTemplateWidget::~ContactTemplateWidget()
 {
 }

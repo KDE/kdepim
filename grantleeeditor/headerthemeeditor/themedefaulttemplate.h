@@ -20,7 +20,8 @@
 
 #include <pimcommon/templatewidgets/templatelistwidget.h>
 
-namespace ThemeDefaultTemplate {
+namespace ThemeDefaultTemplate
+{
 
 QList<PimCommon::defaultTemplate> defaultTemplates();
 

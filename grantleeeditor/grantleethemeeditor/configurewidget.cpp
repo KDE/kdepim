@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "configurewidget.h"
 #include "ui_configurewidget.h"
 #include "globalsettings_base.h"
@@ -57,5 +56,4 @@ void ConfigureWidget::setDefault()
     ui->authorEmail->clear();
     ui->author->clear();
 }
-
 

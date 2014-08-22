@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "newthemedialog.h"
 #include "globalsettings_base.h"
 
@@ -34,7 +33,7 @@ using namespace GrantleeThemeEditor;
 NewThemeDialog::NewThemeDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "New Theme" ) );
+    setWindowTitle(i18n("New Theme"));
 
     QWidget *w = new QWidget;
 
@@ -51,7 +50,7 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     lay->addWidget(lab);
 
     mUrlRequester = new KUrlRequester;
-    mUrlRequester->setMode(KFile::Directory|KFile::LocalOnly);
+    mUrlRequester->setMode(KFile::Directory | KFile::LocalOnly);
     connect(mUrlRequester->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(slotUpdateOkButton()));
     lay->addWidget(mUrlRequester);
 
@@ -61,7 +60,7 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     setLayout(mainLayout);
     mainLayout->addWidget(w);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -72,7 +71,7 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     mOkButton->setFocus();
 
     mOkButton->setEnabled(false);
-    resize(300,150);
+    resize(300, 150);
     mThemeName->setFocus();
     readConfig();
 }

@@ -55,8 +55,8 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
     mEditor = new ContactEditorWidget;
 
     if (mType == MainPage) {
-        KConfigGroup group( KSharedConfig::openConfig(), QLatin1String("Global"));
-        mEditor->setPlainText(group.readEntry("defaultTemplate",QString()));
+        KConfigGroup group(KSharedConfig::openConfig(), QLatin1String("Global"));
+        mEditor->setPlainText(group.readEntry("defaultTemplate", QString()));
     }
     mMainSplitter->addWidget(mEditor);
     mMainSplitter->setChildrenCollapsible(false);
@@ -66,13 +66,12 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
 
     connect(mEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
 
-
     if (mType == MainPage) {
-        KConfigGroup group( KSharedConfig::openConfig(), "EditorPage" );
+        KConfigGroup group(KSharedConfig::openConfig(), "EditorPage");
         QList<int> size;
         size << 400 << 100;
-        mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
-        mWidgetSplitter->setSizes(group.readEntry( "widgetSplitter", size));
+        mMainSplitter->setSizes(group.readEntry("mainSplitter", size));
+        mWidgetSplitter->setSizes(group.readEntry("widgetSplitter", size));
     }
     setLayout(lay);
 }
@@ -80,8 +79,8 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
 EditorPage::~EditorPage()
 {
     if (mType == MainPage) {
-        KConfigGroup group( KSharedConfig::openConfig(), "EditorPage" );
-        group.writeEntry( "mainSplitter", mMainSplitter->sizes());
+        KConfigGroup group(KSharedConfig::openConfig(), "EditorPage");
+        group.writeEntry("mainSplitter", mMainSplitter->sizes());
         group.writeEntry("widgetSplitter", mWidgetSplitter->sizes());
     }
 }

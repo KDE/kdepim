@@ -32,7 +32,7 @@ class SieveEditorMainWidget : public QSplitter
 {
     Q_OBJECT
 public:
-    explicit SieveEditorMainWidget(QWidget *parent=0);
+    explicit SieveEditorMainWidget(QWidget *parent = 0);
     ~SieveEditorMainWidget();
 
     void createNewScript();

@@ -18,7 +18,6 @@
 
 */
 
-
 #include "kdepim-version.h"
 #include "util/kdelibs4configmigrater.h"
 #include "contacteditormainwindow.h"
@@ -28,20 +27,20 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
     PimCommon::Kdelibs4ConfigMigrater migrate(QLatin1String("contactthemeeditor"));
-    migrate.setConfigFiles(QStringList()<<QLatin1String("contactthemeeditorrc"));
-    migrate.setUiFiles(QStringList()<<QLatin1String("contactthemeeditorui.rc"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("contactthemeeditorrc"));
+    migrate.setUiFiles(QStringList() << QLatin1String("contactthemeeditorui.rc"));
     migrate.migrate();
     KLocalizedString::setApplicationDomain("contactthemeeditor");
     QApplication app(argc, argv);
-    KAboutData aboutData( QStringLiteral("contactthemeeditor"),
-                          i18n("Contact Theme Editor"),
-                          QLatin1String(KDEPIM_VERSION),
-                          i18n("Contact Theme Editor"),
-                          KAboutLicense::GPL_V2,
-                          i18n("Copyright © 2013-2014 contactthemeeditor authors"));
+    KAboutData aboutData(QStringLiteral("contactthemeeditor"),
+                         i18n("Contact Theme Editor"),
+                         QLatin1String(KDEPIM_VERSION),
+                         i18n("Contact Theme Editor"),
+                         KAboutLicense::GPL_V2,
+                         i18n("Copyright © 2013-2014 contactthemeeditor authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     aboutData.setProgramIconName(QLatin1String("kaddressbook"));
     aboutData.setOrganizationDomain(QByteArray("kde.org"));

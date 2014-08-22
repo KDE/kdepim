@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SIEVEEDITORCENTRALWIDGET_H
 #define SIEVEEDITORCENTRALWIDGET_H
 
@@ -26,7 +25,7 @@ class SieveEditorCentralWidget : public QStackedWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorCentralWidget(QWidget *parent=0);
+    explicit SieveEditorCentralWidget(QWidget *parent = 0);
     ~SieveEditorCentralWidget();
 
     SieveEditorMainWidget *sieveEditorMainWidget() const;

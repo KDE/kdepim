@@ -22,14 +22,11 @@
 
 #include <kwallet.h>
 
-
-
-
 class SieveServerSettingsPrivate
 {
 public:
     SieveServerSettingsPrivate()
-        : sieveServerSettings( new SieveServerSettings )
+        : sieveServerSettings(new SieveServerSettings)
     {
     }
 
@@ -41,8 +38,7 @@ public:
     SieveServerSettings *sieveServerSettings;
 };
 
-Q_GLOBAL_STATIC( SieveServerSettingsPrivate, sInstance )
-
+Q_GLOBAL_STATIC(SieveServerSettingsPrivate, sInstance)
 
 SieveServerSettings::SieveServerSettings(QObject *parent)
     : QObject(parent),
@@ -57,13 +53,13 @@ SieveServerSettings::~SieveServerSettings()
 
 SieveServerSettings *SieveServerSettings::self()
 {
-  return sInstance->sieveServerSettings; //will create it
+    return sInstance->sieveServerSettings; //will create it
 }
 
 KWallet::Wallet *SieveServerSettings::wallet()
 {
     if (!mWallet) {
-        mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
+        mWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
         if (mWallet) {
             connect(mWallet, &KWallet::Wallet::walletClosed, this, &SieveServerSettings::slotWalletClosed);
         }

@@ -15,12 +15,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef PREVIEWWIDGET_H
 #define PREVIEWWIDGET_H
 
 #include "grantleethemeeditor/previewwidget.h"
-namespace MessageViewer {
+namespace MessageViewer
+{
 class Viewer;
 class GrantleeHeaderTestStyle;
 }
@@ -36,7 +36,6 @@ public:
     void loadConfig();
     void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
     void updateViewer();
-
 
 public Q_SLOTS:
     void slotMainFileNameChanged(const QString &);

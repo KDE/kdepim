@@ -21,7 +21,8 @@
 #define SieveServerSettings_H
 
 #include <QObject>
-namespace KWallet {
+namespace KWallet
+{
 class Wallet;
 }
 class SieveServerSettings : public QObject
@@ -38,7 +39,7 @@ private slots:
     void slotWalletClosed();
 
 private:
-    explicit SieveServerSettings(QObject *parent=0);
+    explicit SieveServerSettings(QObject *parent = 0);
     friend class SieveServerSettingsPrivate;
     KWallet::Wallet *mWallet;
 };

@@ -30,7 +30,7 @@ class SieveEditorConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SieveEditorConfigureDialog(QWidget *parent=0);
+    explicit SieveEditorConfigureDialog(QWidget *parent = 0);
     ~SieveEditorConfigureDialog();
 
     void saveServerSieveConfig();

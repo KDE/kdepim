@@ -39,7 +39,7 @@ public:
     ~ThemeTemplateWidget();
 
 Q_SIGNALS:
-    void insertTemplate(const QString&);
+    void insertTemplate(const QString &);
 
 private:
     ThemeTemplateListWidget *mListTemplate;

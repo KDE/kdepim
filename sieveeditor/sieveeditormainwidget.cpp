@@ -32,7 +32,6 @@
 #include <KColorScheme>
 #include <KMessageBox>
 
-
 #include <QSplitter>
 #include <QTabBar>
 
@@ -44,8 +43,8 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     connect(mTabWidget, &SieveEditorTabWidget::tabRemoveAllExclude, this, &SieveEditorMainWidget::slotTabRemoveAllExclude);
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
-    connect(mScriptManagerWidget, SIGNAL(createScriptPage(QUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(QUrl,QStringList,bool)));
-    connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
+    connect(mScriptManagerWidget, SIGNAL(createScriptPage(QUrl, QStringList, bool)), this, SLOT(slotCreateScriptPage(QUrl, QStringList, bool)));
+    connect(mScriptManagerWidget, SIGNAL(updateButtons(bool, bool, bool, bool)), SIGNAL(updateButtons(bool, bool, bool, bool)));
     connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::scriptDeleted, this, &SieveEditorMainWidget::slotScriptDeleted);
     connect(mScriptManagerWidget, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));
     connect(this, &SieveEditorMainWidget::updateScriptList, mScriptManagerWidget, &SieveEditorScriptManagerWidget::slotRefreshList);
@@ -53,21 +52,21 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     setChildrenCollapsible(false);
     QList<int> splitterSizes;
     splitterSizes << 80 << 20;
-    KConfigGroup myGroup( KSharedConfig::openConfig(), "SieveEditorMainWidget" );
-    setSizes(myGroup.readEntry( "mainSplitter", splitterSizes));
+    KConfigGroup myGroup(KSharedConfig::openConfig(), "SieveEditorMainWidget");
+    setSizes(myGroup.readEntry("mainSplitter", splitterSizes));
     connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &SieveEditorMainWidget::slotGeneralPaletteChanged);
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
 {
-    KConfigGroup myGroup( KSharedConfig::openConfig(), "SieveEditorMainWidget" );
-    myGroup.writeEntry( "mainSplitter", sizes());
+    KConfigGroup myGroup(KSharedConfig::openConfig(), "SieveEditorMainWidget");
+    myGroup.writeEntry("mainSplitter", sizes());
     myGroup.sync();
 }
 
 QWidget *SieveEditorMainWidget::hasExistingPage(const QUrl &url)
 {
-    for (int i=0; i < mTabWidget->count(); ++i) {
+    for (int i = 0; i < mTabWidget->count(); ++i) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mTabWidget->widget(i));
         if (page) {
             if (page->currentUrl() == url) {
@@ -95,14 +94,15 @@ void SieveEditorMainWidget::slotCreateScriptPage(const QUrl &url, const QStringL
     } else {
         SieveEditorPageWidget *editor = new SieveEditorPageWidget;
         connect(editor, SIGNAL(refreshList()), this, SIGNAL(updateScriptList()));
-        connect(editor, SIGNAL(scriptModified(bool,SieveEditorPageWidget*)), this, SLOT(slotScriptModified(bool,SieveEditorPageWidget*)));
+        connect(editor, SIGNAL(scriptModified(bool, SieveEditorPageWidget *)), this, SLOT(slotScriptModified(bool, SieveEditorPageWidget *)));
         connect(editor, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)));
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
         mTabWidget->addTab(editor, url.fileName());
         mTabWidget->setCurrentWidget(editor);
-        if (isNewScript)
+        if (isNewScript) {
             editor->saveScript(false, true);
+        }
     }
 }
 
@@ -150,12 +150,13 @@ void SieveEditorMainWidget::saveScript()
 bool SieveEditorMainWidget::needToSaveScript()
 {
     bool scriptSaved = false;
-    for (int i=0; i < mTabWidget->count(); ++i) {
+    for (int i = 0; i < mTabWidget->count(); ++i) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mTabWidget->widget(i));
         if (page) {
             const bool result = page->needToSaveScript();
-            if (result)
+            if (result) {
                 scriptSaved = true;
+            }
         }
     }
     return scriptSaved;
@@ -177,7 +178,7 @@ void SieveEditorMainWidget::slotGoToLine()
     }
 }
 
-void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
+void SieveEditorMainWidget::slotScriptModified(bool modified, SieveEditorPageWidget *page)
 {
     const int index = mTabWidget->indexOf(page);
     if (index >= 0) {
@@ -194,8 +195,8 @@ void SieveEditorMainWidget::slotGeneralPaletteChanged()
     mScriptColor = pal.text().color();
     mModifiedScriptColor = pal.text().color();
 
-    const KColorScheme scheme( QPalette::Active, KColorScheme::View );
-    mModifiedScriptColor = scheme.foreground( KColorScheme::NegativeText ).color();
+    const KColorScheme scheme(QPalette::Active, KColorScheme::View);
+    mModifiedScriptColor = scheme.foreground(KColorScheme::NegativeText).color();
 }
 
 void SieveEditorMainWidget::slotTabCloseRequested(int index)
@@ -217,7 +218,7 @@ void SieveEditorMainWidget::slotTabCloseRequested(int index)
 
 void SieveEditorMainWidget::slotTabRemoveAllExclude(int index)
 {
-    for(int i = mTabWidget->count()-1; i >=0; --i) {
+    for (int i = mTabWidget->count() - 1; i >= 0; --i) {
         if (i == index) {
             continue;
         }

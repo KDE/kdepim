@@ -15,23 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef CONFIGUREWIDGET_H
 #define CONFIGUREWIDGET_H
 
 #include "grantleethemeeditor_export.h"
 #include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class ConfigureWidget;
 }
 
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 class GRANTLEETHEMEEDITOR_EXPORT ConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConfigureWidget(QWidget *parent=0);
+    explicit ConfigureWidget(QWidget *parent = 0);
     ~ConfigureWidget();
 
     void readConfig();

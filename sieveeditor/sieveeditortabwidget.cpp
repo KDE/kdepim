@@ -33,9 +33,9 @@ SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
     setMovable(true);
     setTabsClosable(true);
     connect(this, SIGNAL(tabCloseRequested(int)), SIGNAL(tabCloseRequestedIndex(int)));
-    setContextMenuPolicy( Qt::CustomContextMenu );
-    connect( this, SIGNAL(customContextMenuRequested(QPoint)),
-             this, SLOT(slotTabContextMenuRequest(QPoint)) );
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(slotTabContextMenuRequest(QPoint)));
 }
 
 SieveEditorTabWidget::~SieveEditorTabWidget()
@@ -46,24 +46,26 @@ SieveEditorTabWidget::~SieveEditorTabWidget()
 void SieveEditorTabWidget::slotTabContextMenuRequest(const QPoint &pos)
 {
     QTabBar *bar = tabBar();
-    if ( count() < 1 )
+    if (count() < 1) {
         return;
+    }
 
-    const int indexBar = bar->tabAt( bar->mapFrom( this, pos ) );
-    if ( indexBar == -1 )
+    const int indexBar = bar->tabAt(bar->mapFrom(this, pos));
+    if (indexBar == -1) {
         return;
+    }
 
-    QMenu menu( this );
-    QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-    closeTab->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
+    QMenu menu(this);
+    QAction *closeTab = menu.addAction(i18nc("@action:inmenu", "Close Tab"));
+    closeTab->setIcon(QIcon::fromTheme(QLatin1String("tab-close")));
 
-    QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
-    allOther->setEnabled( count() > 1 );
-    allOther->setIcon( QIcon::fromTheme( QLatin1String( "tab-close-other" ) ) );
+    QAction *allOther = menu.addAction(i18nc("@action:inmenu", "Close All Other Tabs"));
+    allOther->setEnabled(count() > 1);
+    allOther->setIcon(QIcon::fromTheme(QLatin1String("tab-close-other")));
 
-    QAction *action = menu.exec( mapToGlobal( pos ) );
+    QAction *action = menu.exec(mapToGlobal(pos));
 
-    if ( action == allOther ) { // Close all other tabs
+    if (action == allOther) {   // Close all other tabs
         Q_EMIT tabRemoveAllExclude(indexBar);
     } else if (action == closeTab) {
         Q_EMIT tabCloseRequestedIndex(indexBar);

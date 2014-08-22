@@ -53,11 +53,11 @@ ContactPreviewWidget::ContactPreviewWidget(const QString &projectDirectory, QWid
 
     mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
 
-    mContactViewer->setContactFormatter( mFormatter );
+    mContactViewer->setContactFormatter(mFormatter);
 
     mGroupFormatter = new KAddressBookGrantlee::GrantleeContactGroupFormatter;
 
-    mGroupViewer->setContactGroupFormatter( mGroupFormatter );
+    mGroupViewer->setContactGroupFormatter(mGroupFormatter);
 
     loadConfig();
     if (!projectDirectory.isEmpty()) {
@@ -79,7 +79,7 @@ void ContactPreviewWidget::updateViewer()
 
 void ContactPreviewWidget::createScreenShot(const QStringList &fileName)
 {
-    for (int i = 0; i <fileName.count();++i) {
+    for (int i = 0; i < fileName.count(); ++i) {
         if (i == 0) {
             QImage image(mContactViewer->size(), QImage::Format_ARGB32_Premultiplied);
             image.fill(Qt::transparent);
@@ -112,17 +112,17 @@ void ContactPreviewWidget::loadConfig()
 
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
-        const QString defaultContact = group.readEntry("defaultContact",contacteditorutil::defaultContact());
+        const QString defaultContact = group.readEntry("defaultContact", contacteditorutil::defaultContact());
         if (!defaultContact.isEmpty()) {
             KABC::VCardConverter converter;
-            mContact = converter.parseVCard( defaultContact.toUtf8() );
+            mContact = converter.parseVCard(defaultContact.toUtf8());
         } else {
             mContact = KABC::Addressee();
         }
     } else {
         if (!contacteditorutil::defaultContact().isEmpty()) {
             KABC::VCardConverter converter;
-            mContact = converter.parseVCard( contacteditorutil::defaultContact().toUtf8() );
+            mContact = converter.parseVCard(contacteditorutil::defaultContact().toUtf8());
         } else {
             mContact = KABC::Addressee();
         }

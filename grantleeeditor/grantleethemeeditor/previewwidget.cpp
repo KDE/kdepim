@@ -19,7 +19,6 @@
 
 using namespace GrantleeThemeEditor;
 
-
 PreviewWidget::PreviewWidget(QWidget *parent)
     : QWidget(parent),
       mPrinting(false)
@@ -70,5 +69,4 @@ void PreviewWidget::slotExtraHeaderDisplayChanged(const QStringList &headers)
 {
 
 }
-
 

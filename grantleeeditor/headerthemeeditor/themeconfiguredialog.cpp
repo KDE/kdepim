@@ -37,7 +37,7 @@
 ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Configure" ) );
+    setWindowTitle(i18n("Configure"));
     QTabWidget *tab = new QTabWidget;
 
     QWidget *w = new QWidget;
@@ -64,7 +64,7 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     setLayout(mainLayout);
     mainLayout->addWidget(tab);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -82,8 +82,8 @@ ThemeConfigureDialog::~ThemeConfigureDialog()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group( QLatin1String("ThemeConfigureDialog") );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group = config->group(QLatin1String("ThemeConfigureDialog"));
+    group.writeEntry("Size", size());
 }
 
 void ThemeConfigureDialog::slotDefaultClicked()
@@ -104,16 +104,16 @@ void ThemeConfigureDialog::readConfig()
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
         mConfigureWidget->readConfig();
-        mDefaultEmail->setPlainText(group.readEntry("defaultEmail",themeeditorutil::defaultMail()));
-        mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate",QString()));
+        mDefaultEmail->setPlainText(group.readEntry("defaultEmail", themeeditorutil::defaultMail()));
+        mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate", QString()));
     } else {
         mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
     }
 
-    KConfigGroup group = KConfigGroup( config, "ThemeConfigureDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group = KConfigGroup(config, "ThemeConfigureDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(600, 400));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 

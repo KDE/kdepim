@@ -21,10 +21,12 @@
 #include <QDialog>
 class KTextEdit;
 
-namespace PimCommon {
+namespace PimCommon
+{
 class RichTextEditorWidget;
 }
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 class ConfigureWidget;
 }
 

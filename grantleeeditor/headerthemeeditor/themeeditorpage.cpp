@@ -54,7 +54,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (header.html)"));
 
     GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
-    opt |=GrantleeThemeEditor::DesktopFilePage::ExtraDisplayVariables;
+    opt |= GrantleeThemeEditor::DesktopFilePage::ExtraDisplayVariables;
     opt |= GrantleeThemeEditor::DesktopFilePage::SpecifyFileName;
 
     mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("header.html"), opt);
@@ -79,8 +79,9 @@ ThemeEditorPage::~ThemeEditorPage()
 
 void ThemeEditorPage::slotCurrentWidgetChanged(int index)
 {
-    if (index < 0)
-       return;
+    if (index < 0) {
+        return;
+    }
     GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(mTabWidget->widget(index));
     Q_EMIT canInsertFile(page);
 }
@@ -100,9 +101,9 @@ void ThemeEditorPage::slotExtraHeaderDisplayChanged(const QStringList &extraHead
     mEditorPage->preview()->slotExtraHeaderDisplayChanged(extraHeaders);
 
     QStringList result;
-    Q_FOREACH(QString var, extraHeaders) {
+    Q_FOREACH (QString var, extraHeaders) {
         var = QLatin1String("header.") + var.remove(QLatin1Char('-'));
-        result <<var;
+        result << var;
     }
 
     mEditorPage->editor()->createCompleterList(result);
@@ -141,9 +142,10 @@ void ThemeEditorPage::slotCloseTab(int index)
 void ThemeEditorPage::insertFile()
 {
     QWidget *w = mTabWidget->currentWidget();
-    if (!w)
+    if (!w) {
         return;
-    GrantleeThemeEditor::EditorPage * page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    }
+    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
     if (page) {
         const QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), QLatin1String("*"));
         if (!fileName.isEmpty()) {
@@ -216,7 +218,7 @@ void ThemeEditorPage::uploadTheme()
         dialog->exec();
         delete dialog;
     } else {
-        qDebug()<<" We can't open in zip write mode";
+        qDebug() << " We can't open in zip write mode";
     }
     delete zip;
 }
@@ -268,8 +270,9 @@ void ThemeEditorPage::storeTheme(const QString &directory)
     mDesktopPage->saveTheme(themeDirectory);
     mThemeSession->setMainPageFileName(mDesktopPage->filename());
     mThemeSession->writeSession(directory);
-    if (directory.isEmpty())
+    if (directory.isEmpty()) {
         setChanged(false);
+    }
 }
 
 bool ThemeEditorPage::saveTheme(bool withConfirmation)
@@ -298,7 +301,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
         mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
 
         const QStringList lstExtraPages = mThemeSession->extraPages();
-        Q_FOREACH(const QString &page, lstExtraPages) {
+        Q_FOREACH (const QString &page, lstExtraPages) {
             EditorPage *extraPage = createExtraPage(page);
             extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
         }

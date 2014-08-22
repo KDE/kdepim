@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef DESKTOPFILEPAGE_H
 #define DESKTOPFILEPAGE_H
 
@@ -24,11 +23,13 @@
 class QLineEdit;
 class KZip;
 
-namespace PimCommon {
+namespace PimCommon
+{
 class SimpleStringListEditor;
 class RichTextEditorWidget;
 }
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 class GRANTLEETHEMEEDITOR_EXPORT DesktopFilePage : public QWidget
 {
     Q_OBJECT

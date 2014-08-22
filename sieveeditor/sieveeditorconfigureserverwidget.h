@@ -23,7 +23,8 @@
 
 #include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class SieveEditorConfigureServerWidget;
 }
 

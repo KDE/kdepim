@@ -39,7 +39,7 @@ public:
     ~ContactTemplateWidget();
 
 Q_SIGNALS:
-    void insertTemplate(const QString&);
+    void insertTemplate(const QString &);
 
 private:
     ContactTemplateListWidget *mListTemplate;

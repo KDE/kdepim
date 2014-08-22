@@ -15,9 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "contactdefaulttemplate.h"
-
 
 QList<PimCommon::defaultTemplate> ContactDefaultTemplate::contactTemplates()
 {

@@ -23,7 +23,8 @@
 
 class KZip;
 
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 class EditorWidget;
 class PreviewWidget;
 class GRANTLEETHEMEEDITOR_EXPORT EditorPage : public QWidget
@@ -35,7 +36,7 @@ public:
         SecondPage,
         ExtraPage
     };
-    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, QWidget *parent=0);
+    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, QWidget *parent = 0);
     ~EditorPage();
 
     EditorPage::PageType pageType() const;

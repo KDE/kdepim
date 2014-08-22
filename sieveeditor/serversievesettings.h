@@ -24,7 +24,8 @@
 #include <QWidget>
 #include "sieveeditorutil.h"
 
-namespace Ui {
+namespace Ui
+{
 class ServerSieveSettings;
 }
 

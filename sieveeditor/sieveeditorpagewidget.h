@@ -23,10 +23,12 @@
 #include <QWidget>
 #include <QUrl>
 #include "ksieveui/editor/sieveeditorwidget.h"
-namespace KManageSieve {
+namespace KManageSieve
+{
 class SieveJob;
 }
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditorWidget;
 }
 
@@ -34,7 +36,7 @@ class SieveEditorPageWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorPageWidget(QWidget *parent=0);
+    explicit SieveEditorPageWidget(QWidget *parent = 0);
     ~SieveEditorPageWidget();
 
     void loadScript(const QUrl &url, const QStringList &capabilities);

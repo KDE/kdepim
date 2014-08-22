@@ -20,7 +20,8 @@
 
 #include "grantleethemeeditor_export.h"
 #include <QTabWidget>
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 class GRANTLEETHEMEEDITOR_EXPORT ThemeEditorTabWidget : public QTabWidget
 {
     Q_OBJECT
@@ -32,7 +33,7 @@ public Q_SLOTS:
     void slotMainFileNameChanged(const QString &fileName);
 
 private Q_SLOTS:
-    void slotTabContextMenuRequest( const QPoint &pos );
+    void slotTabContextMenuRequest(const QPoint &pos);
 };
 }
 #endif // THEMEEDITORTABWIDGET_H

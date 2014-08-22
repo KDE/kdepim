@@ -30,22 +30,21 @@
 
 #include <KDBusService>
 #include <QCommandLineOption>
- 
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
     PimCommon::Kdelibs4ConfigMigrater migrate(QLatin1String("headerthemeeditor"));
-    migrate.setConfigFiles(QStringList()<<QLatin1String("headerthemeeditorrc"));
-    migrate.setUiFiles(QStringList()<<QLatin1String("headerthemeeditorui.rc"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("headerthemeeditorrc"));
+    migrate.setUiFiles(QStringList() << QLatin1String("headerthemeeditorui.rc"));
     migrate.migrate();
     KLocalizedString::setApplicationDomain("headerthemeeditor");
     QApplication app(argc, argv);
-    KAboutData aboutData( QStringLiteral("headerthemeeditor"), 
-                          i18n("Header Theme Editor"), 
-                          QLatin1String(KDEPIM_VERSION),
-                          i18n("Messageviewer Header Theme Editor"),
-                          KAboutLicense::GPL_V2,
-                          i18n("Copyright © 2013, 2014 headerthemeeditor authors"));
+    KAboutData aboutData(QStringLiteral("headerthemeeditor"),
+                         i18n("Header Theme Editor"),
+                         QLatin1String(KDEPIM_VERSION),
+                         i18n("Messageviewer Header Theme Editor"),
+                         KAboutLicense::GPL_V2,
+                         i18n("Copyright © 2013, 2014 headerthemeeditor authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     aboutData.setProgramIconName(QLatin1String("kmail"));
     aboutData.setOrganizationDomain(QByteArray("kde.org"));

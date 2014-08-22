@@ -30,7 +30,7 @@
 ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Add Server Sieve" ) );
+    setWindowTitle(i18n("Add Server Sieve"));
 
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
@@ -42,8 +42,8 @@ ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mainLayout->addWidget(w);
-    
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -51,7 +51,7 @@ ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ServerSieveSettingsDialog::reject);
     mainLayout->addWidget(buttonBox);
 
-    resize(400,300);
+    resize(400, 300);
     mOkButton->setEnabled(false);
 }
 
@@ -62,7 +62,7 @@ ServerSieveSettingsDialog::~ServerSieveSettingsDialog()
 
 void ServerSieveSettingsDialog::slotEnableButtonOk(bool b)
 {
-   mOkButton->setEnabled(b);
+    mOkButton->setEnabled(b);
 }
 
 QString ServerSieveSettingsDialog::serverName() const

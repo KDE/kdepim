@@ -30,12 +30,12 @@ class SieveEditorScriptManagerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorScriptManagerWidget(QWidget *parent=0);
+    explicit SieveEditorScriptManagerWidget(QWidget *parent = 0);
     ~SieveEditorScriptManagerWidget();
 
     void updateServerList();
     void editScript();
-    void desactivateScript();    
+    void desactivateScript();
     void refreshList();
 
 Q_SIGNALS:

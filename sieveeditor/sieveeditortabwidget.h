@@ -26,7 +26,7 @@ class SieveEditorTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorTabWidget(QWidget *parent=0);
+    explicit SieveEditorTabWidget(QWidget *parent = 0);
     ~SieveEditorTabWidget();
 
 Q_SIGNALS:

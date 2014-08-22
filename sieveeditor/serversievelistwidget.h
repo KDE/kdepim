@@ -27,7 +27,7 @@
 class ServerSieveListWidgetItem : public QListWidgetItem
 {
 public:
-    ServerSieveListWidgetItem(QListWidget *parent=0);
+    ServerSieveListWidgetItem(QListWidget *parent = 0);
     ~ServerSieveListWidgetItem();
 
     SieveEditorUtil::SieveServerConfig serverConfig() const;
@@ -41,7 +41,7 @@ class ServerSieveListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit ServerSieveListWidget(QWidget *parent=0);
+    explicit ServerSieveListWidget(QWidget *parent = 0);
     ~ServerSieveListWidget();
 
     void readConfig();

@@ -80,7 +80,7 @@ bool ThemeSession::loadSession(const QString &session)
         mExtraPage = global.readEntry(QLatin1String("extraPagesName"), QStringList());
         return true;
     } else {
-        qDebug()<<QString::fromLatin1("\"%1\" is not a session file").arg(session);
+        qDebug() << QString::fromLatin1("\"%1\" is not a session file").arg(session);
         return false;
     }
 }

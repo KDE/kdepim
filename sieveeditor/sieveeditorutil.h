@@ -25,7 +25,8 @@
 #include <QUrl>
 #include <MailTransport/mailtransport/transport.h>
 
-namespace SieveEditorUtil {
+namespace SieveEditorUtil
+{
 struct SieveServerConfig {
     SieveServerConfig()
         : authenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN),

@@ -24,12 +24,14 @@
 
 class QTabWidget;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class ContactViewer;
 class ContactGroupViewer;
 }
 
-namespace KAddressBookGrantlee {
+namespace KAddressBookGrantlee
+{
 class GrantleeContactFormatter;
 class GrantleeContactGroupFormatter;
 }
@@ -38,7 +40,7 @@ class ContactPreviewWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ContactPreviewWidget(const QString &projectDirectory, QWidget *parent=0);
+    explicit ContactPreviewWidget(const QString &projectDirectory, QWidget *parent = 0);
     ~ContactPreviewWidget();
 
     void updateViewer();

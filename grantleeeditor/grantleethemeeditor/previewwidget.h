@@ -20,7 +20,8 @@
 #include <QWidget>
 #include "grantleethemeeditor_export.h"
 
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 class GRANTLEETHEMEEDITOR_EXPORT PreviewWidget : public QWidget
 {
     Q_OBJECT

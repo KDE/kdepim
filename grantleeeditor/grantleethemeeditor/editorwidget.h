@@ -21,7 +21,8 @@
 #include "grantleethemeeditor_export.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 class GRANTLEETHEMEEDITOR_EXPORT EditorWidget : public PimCommon::PlainTextEditorWidget
 {
     Q_OBJECT

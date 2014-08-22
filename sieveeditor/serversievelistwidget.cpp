@@ -50,8 +50,8 @@ void ServerSieveListWidget::readConfig()
 void ServerSieveListWidget::writeConfig()
 {
     QList<SieveEditorUtil::SieveServerConfig> lstServerConfig;
-    for (int i=0; i <count(); ++i) {
-        ServerSieveListWidgetItem *serverSieveItem = static_cast<ServerSieveListWidgetItem*>(item(i));
+    for (int i = 0; i < count(); ++i) {
+        ServerSieveListWidgetItem *serverSieveItem = static_cast<ServerSieveListWidgetItem *>(item(i));
         if (serverSieveItem) {
             lstServerConfig.append(serverSieveItem->serverConfig());
         }
@@ -59,12 +59,12 @@ void ServerSieveListWidget::writeConfig()
     SieveEditorUtil::writeServerSieveConfig(lstServerConfig);
 }
 
-
 void ServerSieveListWidget::modifyServerConfig()
 {
     QListWidgetItem *item = currentItem();
-    if (!item)
+    if (!item) {
         return;
+    }
 
     ServerSieveListWidgetItem *serverSieveListItem = static_cast<ServerSieveListWidgetItem *>(item);
 

@@ -43,17 +43,17 @@
 SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow(),
       mNetworkIsDown(false)
-{    
+{
     mMainWidget = new SieveEditorCentralWidget;
     connect(mMainWidget, &SieveEditorCentralWidget::configureClicked, this, &SieveEditorMainWindow::slotConfigure);
-    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(updateButtons(bool,bool,bool,bool)), this, SLOT(slotUpdateButtons(bool,bool,bool,bool)));
+    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(updateButtons(bool, bool, bool, bool)), this, SLOT(slotUpdateButtons(bool, bool, bool, bool)));
     setCentralWidget(mMainWidget);
     setupActions();
     setupGUI();
     readConfig();
     initStatusBar();
-    connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
-              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+    connect(Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+            this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)));
     connect(mMainWidget->sieveEditorMainWidget()->tabWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
     connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SLOT(slotUpdateActions()));
     const Solid::Networking::Status status = Solid::Networking::status();
@@ -65,10 +65,11 @@ SieveEditorMainWindow::~SieveEditorMainWindow()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group( QLatin1String("SieveEditorMainWindow") );
-    group.writeEntry( "Size", size() );
-    if (SieveEditorGlobalConfig::self()->closeWallet())
+    KConfigGroup group = config->group(QLatin1String("SieveEditorMainWindow"));
+    group.writeEntry("Size", size());
+    if (SieveEditorGlobalConfig::self()->closeWallet()) {
         SieveServerSettings::self()->closeWallet();
+    }
 }
 
 void SieveEditorMainWindow::initStatusBar()
@@ -79,7 +80,7 @@ void SieveEditorMainWindow::initStatusBar()
 
 void SieveEditorMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
 {
-    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+    if (status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
         mNetworkIsDown = false;
         mStatusBarInfo->setText(i18n("Network is Up."));
     } else {
@@ -101,20 +102,20 @@ void SieveEditorMainWindow::slotUpdateButtons(bool newScriptAction, bool editScr
 void SieveEditorMainWindow::readConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup group = KConfigGroup( config, "SieveEditorMainWindow" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group = KConfigGroup(config, "SieveEditorMainWindow");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void SieveEditorMainWindow::setupActions()
 {
-    KActionCollection* ac=actionCollection();
+    KActionCollection *ac = actionCollection();
 
-    KStandardAction::quit(this, SLOT(close()), ac );
-    KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
-    mSaveScript = KStandardAction::save( this, SLOT(slotSaveScript()), ac );
+    KStandardAction::quit(this, SLOT(close()), ac);
+    KStandardAction::preferences(this, SLOT(slotConfigure()), ac);
+    mSaveScript = KStandardAction::save(this, SLOT(slotSaveScript()), ac);
     mSaveScript->setEnabled(false);
 
     QAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
@@ -122,11 +123,11 @@ void SieveEditorMainWindow::setupActions()
 
     mDeleteScript = ac->addAction(QLatin1String("delete_script"), this, SLOT(slotDeleteScript()));
     mDeleteScript->setText(i18n("Delete Script"));
-    ac->setDefaultShortcut(mDeleteScript, QKeySequence( Qt::Key_Delete ));
+    ac->setDefaultShortcut(mDeleteScript, QKeySequence(Qt::Key_Delete));
     mDeleteScript->setEnabled(false);
 
     mNewScript = ac->addAction(QLatin1String("create_new_script"), this, SLOT(slotCreateNewScript()));
-    ac->setDefaultShortcut(mNewScript,QKeySequence( Qt::CTRL + Qt::Key_N ));
+    ac->setDefaultShortcut(mNewScript, QKeySequence(Qt::CTRL + Qt::Key_N));
     mNewScript->setText(i18n("Create New Script..."));
     mNewScript->setEnabled(false);
 
@@ -141,19 +142,20 @@ void SieveEditorMainWindow::setupActions()
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), this, SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
     mRefreshList->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
-    ac->setDefaultShortcut(mRefreshList,QKeySequence( Qt::Key_F5 ));
+    ac->setDefaultShortcut(mRefreshList, QKeySequence(Qt::Key_F5));
 
     mGoToLine = ac->addAction(QLatin1String("gotoline"), mMainWidget->sieveEditorMainWidget(), SLOT(slotGoToLine()));
     mGoToLine->setText(i18n("Go to Line"));
     mGoToLine->setIcon(QIcon::fromTheme(QLatin1String("go-jump")));
-    ac->setDefaultShortcut(mGoToLine,QKeySequence( Qt::CTRL + Qt::Key_G ));
+    ac->setDefaultShortcut(mGoToLine, QKeySequence(Qt::CTRL + Qt::Key_G));
     mGoToLine->setEnabled(false);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
 {
-    if (!mNetworkIsDown)
+    if (!mNetworkIsDown) {
         mMainWidget->sieveEditorMainWidget()->refreshList();
+    }
 }
 
 void SieveEditorMainWindow::slotSaveScript()
@@ -214,7 +216,7 @@ void SieveEditorMainWindow::slotAddServerSieve()
 
 void SieveEditorMainWindow::slotUpdateActions()
 {
-    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count() > 0);
     mSaveScript->setEnabled(hasPage);
     mGoToLine->setEnabled(hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
     mSaveScript->setEnabled(hasPage && !mNetworkIsDown);

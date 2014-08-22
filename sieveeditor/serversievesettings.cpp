@@ -26,9 +26,9 @@
 #include <QDebug>
 
 /** static helper functions **/
-static QString authenticationModeString( MailTransport::Transport::EnumAuthenticationType::type mode )
+static QString authenticationModeString(MailTransport::Transport::EnumAuthenticationType::type mode)
 {
-    switch ( mode ) {
+    switch (mode) {
     case  MailTransport::Transport::EnumAuthenticationType::LOGIN:
         return QLatin1String("LOGIN");
     case MailTransport::Transport::EnumAuthenticationType::PLAIN:
@@ -42,40 +42,40 @@ static QString authenticationModeString( MailTransport::Transport::EnumAuthentic
     case MailTransport::Transport::EnumAuthenticationType::NTLM:
         return QLatin1String("NTLM");
     case MailTransport::Transport::EnumAuthenticationType::CLEAR:
-        return i18nc( "Authentication method", "Clear text" );
+        return i18nc("Authentication method", "Clear text");
     case MailTransport::Transport::EnumAuthenticationType::ANONYMOUS:
-        return i18nc( "Authentication method", "Anonymous" );
+        return i18nc("Authentication method", "Anonymous");
     default:
         break;
     }
     return QString();
 }
 
-static void addAuthenticationItem( QComboBox* authCombo, MailTransport::Transport::EnumAuthenticationType::type authtype )
+static void addAuthenticationItem(QComboBox *authCombo, MailTransport::Transport::EnumAuthenticationType::type authtype)
 {
     //qDebug() << "adding auth item " << authenticationModeString( authtype );
-    authCombo->addItem( authenticationModeString( authtype ), QVariant( authtype ) );
+    authCombo->addItem(authenticationModeString(authtype), QVariant(authtype));
 }
 
-static MailTransport::Transport::EnumAuthenticationType::type getCurrentAuthMode( QComboBox* authCombo )
+static MailTransport::Transport::EnumAuthenticationType::type getCurrentAuthMode(QComboBox *authCombo)
 {
-    MailTransport::Transport::EnumAuthenticationType::type authtype = (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData( authCombo->currentIndex() ).toInt();
+    MailTransport::Transport::EnumAuthenticationType::type authtype = (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData(authCombo->currentIndex()).toInt();
     //qDebug() << "current auth mode: " << authenticationModeString( authtype );
     return authtype;
 }
 
-
-static void setCurrentAuthMode( QComboBox* authCombo, MailTransport::Transport::EnumAuthenticationType::type authtype )
+static void setCurrentAuthMode(QComboBox *authCombo, MailTransport::Transport::EnumAuthenticationType::type authtype)
 {
     //qDebug() << "setting authcombo: " << authenticationModeString( authtype );
-    int index = authCombo->findData( authtype );
-    if ( index == -1 )
+    int index = authCombo->findData(authtype);
+    if (index == -1) {
         qWarning() << "desired authmode not in the combo";
+    }
     //qDebug() << "found corresponding index: " << index << "with data" << authenticationModeString( (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData( index ).toInt() );
-    authCombo->setCurrentIndex( index );
-    MailTransport::Transport::EnumAuthenticationType::type t = (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData( authCombo->currentIndex() ).toInt();
+    authCombo->setCurrentIndex(index);
+    MailTransport::Transport::EnumAuthenticationType::type t = (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData(authCombo->currentIndex()).toInt();
     //qDebug() << "selected auth mode:" << authenticationModeString( t );
-    Q_ASSERT( t == authtype );
+    Q_ASSERT(t == authtype);
 }
 
 ServerSieveSettings::ServerSieveSettings(QWidget *parent) :
@@ -96,14 +96,14 @@ ServerSieveSettings::~ServerSieveSettings()
 void ServerSieveSettings::populateDefaultAuthenticationOptions()
 {
     ui->authenticationCombo->clear();
-    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::CLEAR);
-    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::LOGIN );
-    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::PLAIN );
-    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::CRAM_MD5 );
-    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5 );
-    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::NTLM );
-    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::GSSAPI );
-    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::ANONYMOUS );
+    addAuthenticationItem(ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::CLEAR);
+    addAuthenticationItem(ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::LOGIN);
+    addAuthenticationItem(ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::PLAIN);
+    addAuthenticationItem(ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
+    addAuthenticationItem(ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5);
+    addAuthenticationItem(ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::NTLM);
+    addAuthenticationItem(ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::GSSAPI);
+    addAuthenticationItem(ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::ANONYMOUS);
 }
 
 void ServerSieveSettings::slotUserServerNameChanged()
@@ -157,7 +157,7 @@ void ServerSieveSettings::setServerSieveConfig(const SieveEditorUtil::SieveServe
     setPort(conf.port);
     setServerName(conf.serverName);
     setUserName(conf.userName);
-    setCurrentAuthMode( ui->authenticationCombo, conf.authenticationType );
+    setCurrentAuthMode(ui->authenticationCombo, conf.authenticationType);
 }
 
 SieveEditorUtil::SieveServerConfig ServerSieveSettings::serverSieveConfig() const
@@ -167,7 +167,7 @@ SieveEditorUtil::SieveServerConfig ServerSieveSettings::serverSieveConfig() cons
     conf.port = port();
     conf.serverName = serverName();
     conf.userName = userName();
-    const MailTransport::Transport::EnumAuthenticationType::type authtype = getCurrentAuthMode( ui->authenticationCombo );
+    const MailTransport::Transport::EnumAuthenticationType::type authtype = getCurrentAuthMode(ui->authenticationCombo);
     conf.authenticationType = authtype;
     return conf;
 }

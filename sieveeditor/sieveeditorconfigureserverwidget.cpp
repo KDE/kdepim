@@ -25,7 +25,6 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-
 SieveEditorConfigureServerWidget::SieveEditorConfigureServerWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SieveEditorConfigureServerWidget)
@@ -66,8 +65,9 @@ void SieveEditorConfigureServerWidget::slotAddServer()
 void SieveEditorConfigureServerWidget::slotDeleteServer()
 {
     QListWidgetItem *item = ui->serverSieveListWidget->currentItem();
-    if (!item)
+    if (!item) {
         return;
+    }
     if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to remove this server \'%1\'?", item->text()), i18n("Remove Server Sieve"))) {
         delete item;
         slotItemSelectionChanged();

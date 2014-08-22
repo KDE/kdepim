@@ -23,7 +23,6 @@
 #include <QTemporaryDir>
 #include <KSharedConfig>
 
-
 #include <QLabel>
 #include <QListWidget>
 #include <QVBoxLayout>
@@ -39,7 +38,7 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
     : QDialog(parent)
 {
     mLocalDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativeThemePath;
-    setWindowTitle( i18n( "Manage Theme" ) );
+    setWindowTitle(i18n("Manage Theme"));
     QWidget *w = new QWidget;
 
     QVBoxLayout *lay = new QVBoxLayout;
@@ -79,25 +78,25 @@ ManageThemes::~ManageThemes()
 
 void ManageThemes::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "ManageThemesDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(300, 150) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "ManageThemesDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(300, 150));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void ManageThemes::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "ManageThemesDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "ManageThemesDialog");
+    group.writeEntry("Size", size());
 }
 
 void ManageThemes::slotDeleteTheme()
 {
-    QList<QListWidgetItem *> selectItems = mListThemes->selectedItems ();
+    QList<QListWidgetItem *> selectItems = mListThemes->selectedItems();
     if (!selectItems.isEmpty()) {
         if (KMessageBox::questionYesNo(this, i18np("Do you want to remove selected theme?", "Do you want to remove %1 selected themes?", selectItems.count()), i18n("Remove theme")) == KMessageBox::Yes) {
-            Q_FOREACH(QListWidgetItem *item, selectItems) {
+            Q_FOREACH (QListWidgetItem *item, selectItems) {
                 if (QDir((mLocalDirectory + QDir::separator() + item->text())).removeRecursively()) {
                     delete item;
                 } else {
@@ -112,8 +111,8 @@ void ManageThemes::initialize()
 {
     QDir dir(mLocalDirectory);
     if (dir.exists()) {
-        QDirIterator dirIt( mLocalDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
-        while ( dirIt.hasNext() ) {
+        QDirIterator dirIt(mLocalDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot);
+        while (dirIt.hasNext()) {
             dirIt.next();
             const QString dirName = dirIt.fileName();
             new QListWidgetItem(dirName, mListThemes);

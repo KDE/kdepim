@@ -66,7 +66,6 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
-
     connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::changed, this, &ContactEditorPage::slotChanged);
     connect(mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::tabCloseRequested, this, &ContactEditorPage::slotCloseTab);
     setLayout(lay);
@@ -114,9 +113,10 @@ void ContactEditorPage::slotCloseTab(int index)
 void ContactEditorPage::insertFile()
 {
     QWidget *w = mTabWidget->currentWidget();
-    if (!w)
+    if (!w) {
         return;
-    GrantleeThemeEditor::EditorPage * page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    }
+    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
     if (page) {
         const QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), QLatin1String("*"));
         if (!fileName.isEmpty()) {
@@ -149,7 +149,6 @@ void ContactEditorPage::installTheme(const QString &themePath)
     mEditorGroupPage->installTheme(newPath);
     mEditorGroupEmbeddedPage->installTheme(newPath);
     mEditorEmbeddedPage->installTheme(newPath);
-
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->installTheme(newPath);
@@ -201,7 +200,7 @@ void ContactEditorPage::uploadTheme()
         dialog->exec();
         delete dialog;
     } else {
-        qDebug()<<" We can't open in zip write mode";
+        qDebug() << " We can't open in zip write mode";
     }
     delete zip;
 }
@@ -212,7 +211,6 @@ void ContactEditorPage::createZip(const QString &themeName, KZip *zip)
     mEditorGroupPage->createZip(themeName, zip);
     mEditorGroupEmbeddedPage->createZip(themeName, zip);
     mEditorEmbeddedPage->createZip(themeName, zip);
-
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->createZip(themeName, zip);
@@ -242,7 +240,6 @@ EditorPage *ContactEditorPage::createCustomPage(const QString &filename)
     return customPage;
 }
 
-
 EditorPage *ContactEditorPage::createExtraPage(const QString &filename)
 {
     EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
@@ -263,15 +260,15 @@ void ContactEditorPage::storeTheme(const QString &directory)
     mEditorGroupEmbeddedPage->saveTheme(themeDirectory);
     mEditorEmbeddedPage->saveTheme(themeDirectory);
 
-
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->saveTheme(themeDirectory);
     }
     mDesktopPage->saveTheme(themeDirectory);
     mThemeSession->setMainPageFileName(mEditorPage->pageFileName());
     mThemeSession->writeSession(themeDirectory);
-    if (directory.isEmpty())
+    if (directory.isEmpty()) {
         setChanged(false);
+    }
 }
 
 bool ContactEditorPage::saveTheme(bool withConfirmation)
@@ -301,12 +298,11 @@ void ContactEditorPage::loadTheme(const QString &filename)
         mEditorGroupEmbeddedPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contactgroup_embedded.html"));
         mEditorEmbeddedPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contact_embedded.html"));
 
-
         mEditorPage->loadTheme(projectDirectory + QDir::separator() + mThemeSession->mainPageFileName());
         mEditorPage->preview()->setThemePath(projectDirectory, mThemeSession->mainPageFileName());
 
         const QStringList lstExtraPages = mThemeSession->extraPages();
-        Q_FOREACH(const QString &page, lstExtraPages) {
+        Q_FOREACH (const QString &page, lstExtraPages) {
             EditorPage *extraPage = createExtraPage(page);
             extraPage->loadTheme(projectDirectory + QDir::separator() + page);
         }
@@ -327,9 +323,10 @@ QString ContactEditorPage::projectDirectory() const
 
 void ContactEditorPage::slotCurrentWidgetChanged(int index)
 {
-    if (index < 0)
-       return;
-    
+    if (index < 0) {
+        return;
+    }
+
     GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(mTabWidget->widget(index));
     Q_EMIT canInsertFile(page);
 }

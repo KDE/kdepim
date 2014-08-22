@@ -20,7 +20,6 @@
 
 #include <kpimtextedit/htmlhighlighter.h>
 
-
 using namespace GrantleeThemeEditor;
 
 EditorWidget::EditorWidget(QWidget *parent)
@@ -35,9 +34,9 @@ EditorWidget::~EditorWidget()
 void EditorWidget::insertFile(const QString &filename)
 {
     if (!filename.isEmpty()) {
-        QFile file( filename );
+        QFile file(filename);
 
-        if ( file.open( QIODevice::ReadOnly ) ) {
+        if (file.open(QIODevice::ReadOnly)) {
             const QByteArray data = file.readAll();
             const QString str = QString::fromUtf8(data);
             editor()->insertPlainText(str);
@@ -64,5 +63,4 @@ void EditorWidget::clear()
 {
     editor()->clear();
 }
-
 

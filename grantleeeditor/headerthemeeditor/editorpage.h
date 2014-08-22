@@ -15,17 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef EDITORPAGE_H
 #define EDITORPAGE_H
 
 #include "grantleethemeeditor/editorpage.h"
 
-
 class ThemeTemplateWidget;
 class EditorWidget;
 class QSplitter;
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 class EditorWidget;
 class PreviewWidget;
 }

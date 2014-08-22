@@ -20,16 +20,18 @@
 
 #include <QDialog>
 
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 class ConfigureWidget;
 }
 
-namespace Akonadi {
+namespace Akonadi
+{
 class ContactEditor;
 }
 
-
-namespace PimCommon {
+namespace PimCommon
+{
 class RichTextEditorWidget;
 }
 class ContactConfigureDialog : public QDialog

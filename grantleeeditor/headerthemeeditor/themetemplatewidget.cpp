@@ -51,7 +51,6 @@ ThemeTemplateWidget::ThemeTemplateWidget(const QString &title, QWidget *parent)
     setLayout(lay);
 }
 
-
 ThemeTemplateWidget::~ThemeTemplateWidget()
 {
 }

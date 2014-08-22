@@ -27,7 +27,6 @@
 #include <QTextStream>
 #include <QDir>
 
-
 using namespace GrantleeThemeEditor;
 
 EditorPage::EditorPage(PageType type, QWidget *parent)
@@ -65,18 +64,20 @@ GrantleeThemeEditor::EditorWidget *EditorPage::editor() const
 
 void EditorPage::insertFile(const QString &filename)
 {
-    if (mEditor)
+    if (mEditor) {
         mEditor->insertFile(filename);
+    }
 }
 
 void EditorPage::loadTheme(const QString &path)
 {
-    if (!mEditor)
+    if (!mEditor) {
         return;
+    }
 
     mEditor->clear();
     QFile file(path);
-    if (file.open(QIODevice::Text|QIODevice::ReadOnly)) {
+    if (file.open(QIODevice::Text | QIODevice::ReadOnly)) {
         const QByteArray data = file.readAll();
         const QString str = QString::fromUtf8(data);
         file.close();
@@ -86,8 +87,9 @@ void EditorPage::loadTheme(const QString &path)
 
 void EditorPage::saveTheme(const QString &path)
 {
-    if (!mEditor)
+    if (!mEditor) {
         return;
+    }
 
     const QString filename = path + QDir::separator() + mPageFileName;
     saveAsFilename(filename);
@@ -96,7 +98,7 @@ void EditorPage::saveTheme(const QString &path)
 void EditorPage::saveAsFilename(const QString &filename)
 {
     QFile file(filename);
-    if (file.open(QIODevice::WriteOnly|QIODevice::Text)) {
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream out(&file);
         out.setCodec("UTF-8");
         out << mEditor->toPlainText();
@@ -122,7 +124,4 @@ void EditorPage::installTheme(const QString &themePath)
     const QString filename = themePath + QDir::separator() + mPageFileName;
     saveAsFilename(filename);
 }
-
-
-
 

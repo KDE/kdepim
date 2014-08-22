@@ -18,7 +18,6 @@
 
 */
 
-
 #include "kdepim-version.h"
 #include "sieveeditormainwindow.h"
 #include <kaboutdata.h>
@@ -29,22 +28,22 @@
 #include <QCommandLineParser>
 #include "pimcommon/util/kdelibs4configmigrater.h"
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
     PimCommon::Kdelibs4ConfigMigrater migrate(QLatin1String("sieveeditor"));
-    migrate.setConfigFiles(QStringList()<<QLatin1String("sieveeditorrc"));
-    migrate.setUiFiles(QStringList()<<QLatin1String("sieveeditorui.rc"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("sieveeditorrc"));
+    migrate.setUiFiles(QStringList() << QLatin1String("sieveeditorui.rc"));
     migrate.migrate();
 
     KLocalizedString::setApplicationDomain("sieveeditor");
     QApplication app(argc, argv);
 
     KAboutData aboutData(QStringLiteral("sieveeditor"),
-                       i18n("KSieve Editor"),
-                       QStringLiteral(KDEPIM_VERSION),
-                       i18n("Sieve Editor"),
-                      KAboutLicense::GPL_V2,
-                       i18n("Copyright © 2013, 2014 sieveeditor authors"));
+                         i18n("KSieve Editor"),
+                         QStringLiteral(KDEPIM_VERSION),
+                         i18n("Sieve Editor"),
+                         KAboutLicense::GPL_V2,
+                         i18n("Copyright © 2013, 2014 sieveeditor authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QLatin1String("montel@kde.org"));
 
     aboutData.setProgramIconName(QLatin1String("kmail"));
@@ -57,9 +56,7 @@ int main( int argc, char **argv )
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-
     KDBusService service(KDBusService::Unique);
-
 
     SieveEditorMainWindow *mw = new SieveEditorMainWindow();
     mw->show();

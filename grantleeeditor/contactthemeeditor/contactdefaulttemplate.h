@@ -20,7 +20,8 @@
 
 #include <pimcommon/templatewidgets/templatelistwidget.h>
 
-namespace ContactDefaultTemplate {
+namespace ContactDefaultTemplate
+{
 
 QList<PimCommon::defaultTemplate> contactTemplates();
 

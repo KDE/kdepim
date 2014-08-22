@@ -33,7 +33,6 @@ SieveEditorConfigureServerPage::SieveEditorConfigureServerPage(QWidget *parent)
     setLayout(hbox);
 }
 
-
 SieveEditorConfigureServerPage::~SieveEditorConfigureServerPage()
 {
 

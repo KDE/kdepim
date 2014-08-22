@@ -22,8 +22,8 @@ QStringList DefaultCompletion::defaultCompetion()
     //TODO add to highlighter
     QStringList lst;
 
-    lst << QLatin1String( "<div>" )
-        << QLatin1String( "contact.birthday")
+    lst << QLatin1String("<div>")
+        << QLatin1String("contact.birthday")
         << QLatin1String("contact.birthdayi18n")
         << QLatin1String("contact.phoneNumbers")
         << QLatin1String("phoneNumber.smsLink")
@@ -75,6 +75,6 @@ QStringList DefaultCompletion::defaultCompetion()
 QStringList DefaultCompletion::defaultOptions()
 {
     QStringList lst;
-    lst <<QLatin1String( "Safe" );
+    lst << QLatin1String("Safe");
     return lst;
 }

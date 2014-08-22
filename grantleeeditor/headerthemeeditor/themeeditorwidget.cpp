@@ -34,6 +34,6 @@ void ThemeEditorWidget::createCompleterList(const QStringList &extraCompletion)
     listWord << DefaultCompletion::defaultCompetion();
     listWord << DefaultCompletion::defaultOptions();
     listWord << extraCompletion;
-    GrantleeThemeEditor::EditorWidget::createCompleterList( listWord );
+    GrantleeThemeEditor::EditorWidget::createCompleterList(listWord);
 }
 

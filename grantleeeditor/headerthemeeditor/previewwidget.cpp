@@ -25,7 +25,6 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 
-
 #include <QVBoxLayout>
 #include <KSharedConfig>
 
@@ -80,7 +79,7 @@ void PreviewWidget::loadConfig()
 void PreviewWidget::updateViewer()
 {
     KMime::Message *msg = new KMime::Message;
-    msg->setContent( mDefaultEmail );
+    msg->setContent(mDefaultEmail);
     msg->parse();
     mViewer->setPrinting(mPrinting);
     mViewer->setMessage(KMime::Message::Ptr(msg));

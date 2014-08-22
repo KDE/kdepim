@@ -30,8 +30,8 @@ SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
     mTreeView = new SieveEditorManageSieveWidget;
-    connect(mTreeView, SIGNAL(newScript(QUrl,QStringList)), this, SLOT(slotNewScript(QUrl,QStringList)));
-    connect(mTreeView, SIGNAL(editScript(QUrl,QStringList)), this, SLOT(slotEditScript(QUrl,QStringList)));
+    connect(mTreeView, SIGNAL(newScript(QUrl, QStringList)), this, SLOT(slotNewScript(QUrl, QStringList)));
+    connect(mTreeView, SIGNAL(editScript(QUrl, QStringList)), this, SLOT(slotEditScript(QUrl, QStringList)));
     connect(mTreeView, &SieveEditorManageSieveWidget::updateButtons, this, &SieveEditorScriptManagerWidget::slotUpdateButtons);
     connect(mTreeView, SIGNAL(scriptDeleted(QUrl)), this, SIGNAL(scriptDeleted(QUrl)));
     connect(mTreeView, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));

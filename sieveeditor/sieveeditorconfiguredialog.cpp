@@ -27,7 +27,6 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
-
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QCheckBox>
@@ -38,8 +37,8 @@
 SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Configure" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Configure"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -88,16 +87,16 @@ void SieveEditorConfigureDialog::saveServerSieveConfig()
 
 void SieveEditorConfigureDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditorConfigureDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveEditorConfigureDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void SieveEditorConfigureDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditorConfigureDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveEditorConfigureDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }

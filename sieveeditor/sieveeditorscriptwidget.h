@@ -22,14 +22,15 @@
 #define SIEVEEDITORSCRIPTWIDGET_H
 
 #include <QWidget>
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditor;
 }
 class SieveEditorScriptWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorScriptWidget(QWidget *parent=0);
+    explicit SieveEditorScriptWidget(QWidget *parent = 0);
     ~SieveEditorScriptWidget();
 
     void setScript(const QString &script);

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef CONTACTEDITORUTIL_H
 #define CONTACTEDITORUTIL_H
 
@@ -23,7 +22,7 @@
 
 namespace contacteditorutil
 {
-    QString defaultContact();
+QString defaultContact();
 }
 
 #endif

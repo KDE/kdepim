@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sieveeditorcentralwidget.h"
 #include "sieveeditormainwidget.h"
 #include "sieveeditorconfigureserverpage.h"
@@ -39,10 +38,11 @@ SieveEditorCentralWidget::~SieveEditorCentralWidget()
 
 void SieveEditorCentralWidget::slotServerSieveFound(bool hasServer)
 {
-    if (hasServer)
+    if (hasServer) {
         setCurrentWidget(mSieveEditorMainWidget);
-    else
+    } else {
         setCurrentWidget(mConfigureWidget);
+    }
 }
 
 SieveEditorMainWidget *SieveEditorCentralWidget::sieveEditorMainWidget() const

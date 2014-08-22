@@ -47,23 +47,23 @@ bool SieveEditorManageSieveWidget::refreshList()
     SieveTreeWidgetItem *last = 0;
 
     const QList<SieveEditorUtil::SieveServerConfig> listConfig = SieveEditorUtil::readServerSieveConfig();
-    Q_FOREACH ( const SieveEditorUtil::SieveServerConfig &conf, listConfig) {
-        last = new SieveTreeWidgetItem( treeView(), last );
-        last->setText( 0, conf.serverName + QString::fromLatin1(" (%1)").arg(conf.userName) );
-        last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
+    Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, listConfig) {
+        last = new SieveTreeWidgetItem(treeView(), last);
+        last->setText(0, conf.serverName + QString::fromLatin1(" (%1)").arg(conf.userName));
+        last->setIcon(0, SmallIcon(QLatin1String("network-server")));
 
         const QUrl u = conf.url();
-        if ( u.isEmpty() ) {
-            QTreeWidgetItem *item = new QTreeWidgetItem( last );
-            item->setText( 0, i18n( "No Sieve URL configured" ) );
-            item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
-            treeView()->expandItem( last );
+        if (u.isEmpty()) {
+            QTreeWidgetItem *item = new QTreeWidgetItem(last);
+            item->setText(0, i18n("No Sieve URL configured"));
+            item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+            treeView()->expandItem(last);
         } else {
-            KManageSieve::SieveJob * job = KManageSieve::SieveJob::list( u );
-            connect( job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
-                     this, SLOT(slotGotList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
-            mJobs.insert( job, last );
-            mUrls.insert( last, u );
+            KManageSieve::SieveJob *job = KManageSieve::SieveJob::list(u);
+            connect(job, SIGNAL(gotList(KManageSieve::SieveJob *, bool, QStringList, QString)),
+                    this, SLOT(slotGotList(KManageSieve::SieveJob *, bool, QStringList, QString)));
+            mJobs.insert(job, last);
+            mUrls.insert(last, u);
             last->startAnimation();
         }
         noImapFound = false;

@@ -24,7 +24,8 @@
 class QLineEdit;
 class KUrlRequester;
 class QPushButton;
-namespace GrantleeThemeEditor {
+namespace GrantleeThemeEditor
+{
 class GRANTLEETHEMEEDITOR_EXPORT NewThemeDialog : public QDialog
 {
     Q_OBJECT
