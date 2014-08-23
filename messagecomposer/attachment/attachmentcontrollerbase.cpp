@@ -769,13 +769,39 @@ void AttachmentControllerBase::attachmentProperties( AttachmentPart::Ptr part )
 void AttachmentControllerBase::showAddAttachmentDialog()
 {
 #ifndef KDEPIM_MOBILE_UI
+    KEncodingFileDialog::Result result = KEncodingFileDialog::getOpenUrlsAndEncoding(QString(),
+            QUrl(),
+            QString(),
+            d->wParent,
+            i18n( "Attach File" ));
+    if (!result.URLs.isEmpty()) {
+        const QString encoding = MessageViewer::NodeHelper::fixEncoding( result.encoding );
+        const int numberOfFiles(result.URLs.count());
+        for (int i=0; i<numberOfFiles; ++i) {
+            const QUrl url = result.URLs.at( i );
+            QUrl urlWithEncoding = url;
+            //QT4 urlWithEncoding.setFileEncoding( encoding );
+            if ( KMimeType::findByUrl( urlWithEncoding )->name() == QLatin1String( "inode/directory" ) ) {
+                const int rc = KMessageBox::warningYesNo( d->wParent,i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile() ),i18n( "Attach directory" ) );
+                if ( rc == KMessageBox::Yes ) {
+                    addAttachment( urlWithEncoding );
+                }
+            } else {
+                addAttachment( urlWithEncoding );
+            }
+        }
+
+    }
+
+
+
 #if 0 //QT5
     QPointer<KEncodingFileDialog> dialog = new KEncodingFileDialog(
-                QString( /*startDir*/ ), QString( /*encoding*/ ), QString( /*filter*/ ),
-                i18n( "Attach File" ), KFileDialog::Other, d->wParent );
+                QUrl( /*startDir*/ ), QString( /*encoding*/ ), QString( /*filter*/ ),
+                i18n( "Attach File" ), QFileDialog::Other, d->wParent );
 
-    dialog->okButton()->setGuiItem( KGuiItem( i18n("&Attach"), QLatin1String( "document-open" ) ) );
-    dialog->setMode( KFile::Files|KFile::Directory );
+    //dialog->okButton()->setGuiItem( KGuiItem( i18n("&Attach"), QLatin1String( "document-open" ) ) );
+    //dialog->setMode( KFile::Files|KFile::Directory );
     if( dialog->exec() == KDialog::Accepted && dialog ) {
         const KUrl::List files = dialog->selectedUrls();
         const QString encoding = MessageViewer::NodeHelper::fixEncoding( dialog->selectedEncoding() );
