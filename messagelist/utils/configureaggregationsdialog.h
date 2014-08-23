@@ -59,6 +59,9 @@ public:
 
     void selectAggregation( const QString &aggregationId );
 
+Q_SIGNALS:
+    void okClicked();
+
 private:
     Q_PRIVATE_SLOT(d, void aggregationListItemClicked(QListWidgetItem* cur))
     Q_PRIVATE_SLOT(d, void newAggregationButtonClicked())

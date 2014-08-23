@@ -53,6 +53,9 @@ public:
 
     void selectTheme( const QString &themeId );
 
+Q_SIGNALS:
+    void okClicked();
+
 private:
     Q_PRIVATE_SLOT(d, void themeListItemClicked(QListWidgetItem*))
     Q_PRIVATE_SLOT(d, void newThemeButtonClicked())

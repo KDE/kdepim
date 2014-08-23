@@ -102,7 +102,6 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ConfigureThemesDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ConfigureThemesDialog::reject);
     setWindowTitle( i18n( "Customize Themes" ) );
 
@@ -165,8 +164,7 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
     d->mDeleteThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     g->addWidget( d->mDeleteThemeButton, 6, 1 );
 
-    connect( d->mDeleteThemeButton, SIGNAL(clicked()),
-             SLOT(deleteThemeButtonClicked()) );
+    connect( d->mDeleteThemeButton, SIGNAL(clicked()), SLOT(deleteThemeButtonClicked()) );
 
     d->mEditor = new ThemeEditor( base );
     g->addWidget( d->mEditor, 8, 0, 1, 2 );
@@ -177,8 +175,7 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
     g->setColumnStretch( 0, 1 );
     g->setRowStretch( 4, 1 );
 
-    connect(okButton, SIGNAL(clicked()),
-             SLOT(okButtonClicked()) );
+    connect(okButton, SIGNAL(clicked()), SLOT(okButtonClicked()) );
 
     d->fillThemeList();
 }
@@ -217,7 +214,7 @@ void ConfigureThemesDialog::Private::okButtonClicked()
     }
 
     Manager::instance()->themesConfigurationCompleted();
-
+    Q_EMIT q->okClicked();
     q->close(); // this will delete too
 }
 

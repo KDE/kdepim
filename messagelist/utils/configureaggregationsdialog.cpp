@@ -107,7 +107,6 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ConfigureAggregationsDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ConfigureAggregationsDialog::reject);
     setWindowTitle( i18n( "Customize Message Aggregation Modes" ) );
 
@@ -223,7 +222,7 @@ void ConfigureAggregationsDialog::Private::okButtonClicked()
 
         Manager::instance()->aggregationsConfigurationCompleted();
     }
-
+    Q_EMIT q->okClicked();
     q->close(); // this will delete too
 }
 
