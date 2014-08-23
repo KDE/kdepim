@@ -42,8 +42,8 @@ SelectFileIntoDialog::SelectFileIntoDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SelectFileIntoDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectFileIntoDialog::reject);
     //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     okButton->setFocus();
@@ -71,7 +71,7 @@ SelectFileIntoWidget::SelectFileIntoWidget(QWidget *parent)
     connect(mLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mLineEdit);
     QPushButton *selectFileInfo = new QPushButton(i18n("..."));
-    connect(selectFileInfo, SIGNAL(clicked(bool)), SLOT(slotSelectFolder()));
+    connect(selectFileInfo, &QPushButton::clicked, this, &SelectFileIntoWidget::slotSelectFolder);
     lay->addWidget(selectFileInfo);
     setLayout(lay);
 }

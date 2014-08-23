@@ -40,7 +40,7 @@ DbBrowser::DbBrowser(QWidget* parent) :
   }
 
   ui.refreshButton->setIcon( QIcon::fromTheme( "view-refresh" ) );
-  connect( ui.refreshButton, SIGNAL(clicked()), SLOT(refreshClicked()) );
+  connect(ui.refreshButton, &QPushButton::clicked, this, &DbBrowser::refreshClicked);
 }
 
 void DbBrowser::refreshClicked()

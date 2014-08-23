@@ -36,8 +36,8 @@ CollectionAttributePage::CollectionAttributePage(QWidget * parent) :
   setPageTitle( i18n( "Attributes" ) );
   ui.setupUi( this );
 
-  connect( ui.addButton, SIGNAL(clicked()), SLOT(addAttribute()) );
-  connect( ui.deleteButton, SIGNAL(clicked()), SLOT(delAttribute()) );
+  connect(ui.addButton, &QPushButton::clicked, this, &CollectionAttributePage::addAttribute);
+  connect(ui.deleteButton, &QPushButton::clicked, this, &CollectionAttributePage::delAttribute);
 }
 
 void CollectionAttributePage::load(const Collection & col)

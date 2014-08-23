@@ -42,8 +42,8 @@ SelectFlagsListDialog::SelectFlagsListDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SelectFlagsListDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectFlagsListDialog::reject);
     mainLayout->addWidget(buttonBox);
     okButton->setFocus();
 }
@@ -127,7 +127,7 @@ SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
     connect(mEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mEdit);
     QPushButton *selectFlags = new QPushButton(i18n("..."));
-    connect(selectFlags, SIGNAL(clicked(bool)), this, SLOT(slotSelectFlags()));
+    connect(selectFlags, &QPushButton::clicked, this, &SelectFlagsWidget::slotSelectFlags);
     lay->addWidget(selectFlags);
     setLayout(lay);
 }

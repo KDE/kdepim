@@ -131,7 +131,7 @@ void SieveActionWidget::initWidget()
 
     mHelpButton = new SieveHelpButton;
     mHelpButton->setEnabled(false);
-    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    connect(mHelpButton, &SieveHelpButton::clicked, this, &SieveActionWidget::slotHelp);
     mLayout->addWidget( mHelpButton, 1, 0 );
 
     mCommentButton = new QToolButton;
@@ -139,7 +139,7 @@ void SieveActionWidget::initWidget()
     mCommentButton->setEnabled(false);
     mLayout->addWidget( mCommentButton, 1, 1 );
     mCommentButton->setIcon( QIcon::fromTheme( QLatin1String("view-pim-notes") ) );
-    connect(mCommentButton, SIGNAL(clicked()), this, SLOT(slotAddComment()));
+    connect(mCommentButton, &QToolButton::clicked, this, &SieveActionWidget::slotAddComment);
 
 
     mComboBox->addItem(QLatin1String(""));

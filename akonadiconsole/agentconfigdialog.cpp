@@ -43,8 +43,8 @@ AgentConfigDialog::AgentConfigDialog(QWidget* parent) :
   buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
   QPushButton *user2Button = new QPushButton;
   buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &AgentConfigDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &AgentConfigDialog::reject);
   mainLayout->addWidget(buttonBox);
   KGuiItem::assign(user1Button, KGuiItem( i18n( "Save Configuration" )));
   KGuiItem::assign(user2Button, KGuiItem( i18n( "Refresh" )));
@@ -52,7 +52,7 @@ AgentConfigDialog::AgentConfigDialog(QWidget* parent) :
 
   setWindowTitle( i18n( "Agent Configuration" ) );
 
-  connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), SLOT(reconfigure()) );
+  connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &AgentConfigDialog::reconfigure);
   connect(user1Button, &QPushButton::clicked, m_model, &AgentConfigModel::writeConfig);
   connect(user2Button, &QPushButton::clicked, m_model, &AgentConfigModel::reload);
 }

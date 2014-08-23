@@ -52,8 +52,8 @@ InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, 
   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotAccept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(slotReject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &InstanceSelector::slotAccept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &InstanceSelector::slotReject);
   mainLayout->addWidget(buttonBox);
   okButton->setIcon(QIcon::fromTheme("network-connect"));
   okButton->setText(i18n("Connect"));

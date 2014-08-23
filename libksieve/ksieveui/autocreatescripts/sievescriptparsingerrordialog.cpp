@@ -37,8 +37,8 @@ SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
     setLayout(mainLayout);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveScriptParsingErrorDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveScriptParsingErrorDialog::reject);
     mainLayout->addWidget(buttonBox);
     user1Button->setText(i18n("Save As..."));
 
@@ -46,7 +46,7 @@ SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
     
     mTextEdit->setReadOnly( true );
     readConfig();
-    connect(user1Button, SIGNAL(clicked()), this, SLOT(slotSaveAs()));
+    connect(user1Button, &QPushButton::clicked, this, &SieveScriptParsingErrorDialog::slotSaveAs);
     mainLayout->addWidget(mTextEdit);
     mainLayout->addWidget(buttonBox);
 }

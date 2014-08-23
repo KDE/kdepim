@@ -41,7 +41,7 @@ DbConsole::DbConsole(QWidget* parent) :
   ui.resultView->addAction( copyAction );
 
   ui.execButton->setIcon( QIcon::fromTheme( "application-x-executable" ) );
-  connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
+  connect(ui.execButton, &QPushButton::clicked, this, &DbConsole::execClicked);
 
   ui.queryEdit->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
   ui.errorView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
