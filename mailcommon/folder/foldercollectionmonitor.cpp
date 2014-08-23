@@ -114,7 +114,7 @@ void FolderCollectionMonitor::expunge( const Akonadi::Collection & col, bool syn
 {
     if ( col.isValid() ) {
         Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( col, this );
-        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotDeleteJob(KJob*)) );
+        connect(job, &Akonadi::ItemDeleteJob::result, this, &FolderCollectionMonitor::slotDeleteJob);
         if ( sync ) {
             job->exec();
         }

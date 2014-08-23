@@ -108,7 +108,7 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
     enableButton( KDialog::Ok, false );
     if ( !d->mNotAllowToCreateNewFolder ) {
         enableButton( KDialog::User1, false );
-        connect( this, SIGNAL(user1Clicked()), this, SLOT(slotAddChildFolder()) );
+        connect(this, &FolderSelectionDialog::user1Clicked, this, &FolderSelectionDialog::slotAddChildFolder);
         d->folderTreeWidget->folderTreeView()->setContextMenuPolicy(Qt::CustomContextMenu);
         connect( d->folderTreeWidget->folderTreeView(), SIGNAL(customContextMenuRequested(QPoint)),
                  SLOT(slotFolderTreeWidgetContextMenuRequested(QPoint)) );
@@ -208,7 +208,7 @@ void FolderSelectionDialog::slotAddChildFolder()
         col.setName( name );
         col.parentCollection().setId( parentCol.id() );
         Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( col );
-        connect( job, SIGNAL(result(KJob*)), this, SLOT(collectionCreationResult(KJob*)) );
+        connect(job, &Akonadi::CollectionCreateJob::result, this, &FolderSelectionDialog::collectionCreationResult);
     }
 }
 

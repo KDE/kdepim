@@ -35,10 +35,10 @@ TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
     setLayout(mainLayout);
     mUser1Button = new QPushButton;
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &TranslatorDebugDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &TranslatorDebugDialog::reject);
     mUser1Button->setText(i18n("Save As..."));
-    connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotSaveAs()));
+    connect(mUser1Button, &QPushButton::clicked, this, &TranslatorDebugDialog::slotSaveAs);
 
     mEdit = new PimCommon::PlainTextEditorWidget;
     mEdit->setReadOnly(true);

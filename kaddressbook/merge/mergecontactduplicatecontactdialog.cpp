@@ -42,8 +42,8 @@ MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Ako
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &MergeContactDuplicateContactDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &MergeContactDuplicateContactDialog::reject);
     mStackedWidget = new QStackedWidget(this);
     mStackedWidget->setObjectName(QLatin1String("stackedwidget"));
 

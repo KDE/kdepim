@@ -67,7 +67,7 @@ FolderRequester::FolderRequester( QWidget *parent )
   button->setIcon( QIcon::fromTheme( QLatin1String("folder") ) );
   button->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   hlay->addWidget( button );
-  connect( button, SIGNAL(clicked()), this, SLOT(slotOpenDialog()) );
+  connect(button, &QToolButton::clicked, this, &FolderRequester::slotOpenDialog);
 
   setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
         QSizePolicy::Fixed ) );

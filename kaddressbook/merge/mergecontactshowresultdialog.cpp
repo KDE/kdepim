@@ -39,8 +39,8 @@ MergeContactShowResultDialog::MergeContactShowResultDialog(QWidget *parent)
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &MergeContactShowResultDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &MergeContactShowResultDialog::reject);
     readConfig();
     mTabWidget = new MergeContactShowResultTabWidget(this);
     mTabWidget->setObjectName(QLatin1String("tabwidget"));

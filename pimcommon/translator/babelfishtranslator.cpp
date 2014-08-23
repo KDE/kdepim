@@ -148,7 +148,7 @@ void BabelFishTranslator::translate()
   KIO::StoredTransferJob *job = KIO::storedHttpPost(postData,geturl);
   job->addMetaData( "content-type", "Content-Type: application/x-www-form-urlencoded" );
   job->addMetaData( "referrer", "http://babelfish.yahoo.com/translate_txt" );
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotJobDone(KJob*)) );
+  connect(job, &result, this, &BabelFishTranslator::slotJobDone);
 }
 
 void BabelFishTranslator::slotJobDone ( KJob *job )

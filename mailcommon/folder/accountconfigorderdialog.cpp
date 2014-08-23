@@ -54,8 +54,8 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AccountConfigOrderDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AccountConfigOrderDialog::reject);
     okButton->setDefault(true);
 
     QWidget *page = new QWidget( this );
@@ -66,7 +66,7 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     page->setLayout(vbox);
 
     mEnableAccountOrder = new QCheckBox(i18n("Use custom order"));
-    connect(mEnableAccountOrder, SIGNAL(clicked(bool)), this, SLOT(slotEnableAccountOrder(bool)));
+    connect(mEnableAccountOrder, &QCheckBox::clicked, this, &AccountConfigOrderDialog::slotEnableAccountOrder);
     vbox->addWidget(mEnableAccountOrder);
 
     QHBoxLayout * vlay = new QHBoxLayout;
@@ -101,12 +101,12 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     vlay->addWidget( upDownBox );
 
 
-    connect( mUpButton, SIGNAL(clicked()), this, SLOT(slotMoveUp()) );
-    connect( mDownButton, SIGNAL(clicked()), this, SLOT(slotMoveDown()) );
-    connect( mListAccount, SIGNAL(itemSelectionChanged()), this, SLOT(slotEnableControls()));
+    connect(mUpButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotMoveUp);
+    connect(mDownButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotMoveDown);
+    connect(mListAccount, &QListWidget::itemSelectionChanged, this, &AccountConfigOrderDialog::slotEnableControls);
     connect( mListAccount->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),SLOT(slotEnableControls()) );
 
-    connect(okButton, SIGNAL(clicked()), SLOT(slotOk()) );
+    connect(okButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotOk);
     readConfig();
     init();
 }
