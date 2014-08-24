@@ -21,7 +21,7 @@
 #ifndef KJOTSLINKDIALOG_H
 #define KJOTSLINKDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class QLabel;
 class QAbstractItemModel;
@@ -32,7 +32,7 @@ class QTreeView;
 class KComboBox;
 class QLineEdit;
 
-class KJotsLinkDialog : public KDialog
+class KJotsLinkDialog : public QDialog
 {
     Q_OBJECT
 public:

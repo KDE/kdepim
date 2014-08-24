@@ -37,15 +37,25 @@
 #include "kjotsbookshelfentryvalidator.h"
 #include <kdescendantsproxymodel.h>
 #include <AkonadiCore/EntityTreeModel>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 KJotsLinkDialog::KJotsLinkDialog( QAbstractItemModel *kjotsModel, QWidget *parent)
-  : KDialog(parent), m_kjotsModel(kjotsModel)
+  : QDialog(parent), m_kjotsModel(kjotsModel)
 {
-    setCaption(i18n("Manage Link"));
-    setButtons(Ok | Cancel);
-    setDefaultButton(Ok);
+    setWindowTitle(i18n("Manage Link"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
     setModal(true);
-    showButtonSeparator(true);
 
     KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( this );
     proxyModel->setSourceModel( kjotsModel );
@@ -100,8 +110,8 @@ KJotsLinkDialog::KJotsLinkDialog( QAbstractItemModel *kjotsModel, QWidget *paren
     layout->addWidget(linkUrlLabel, 1, 0);
     layout->addLayout( linkLayout, 1, 1 );
 
-    setMainWidget(entries);
-
+    mainLayout->addWidget(entries);
+    mainLayout->addWidget(buttonBox);
     textLineEdit->setFocus();
 
     connect( hrefCombo, SIGNAL(editTextChanged(QString)),
