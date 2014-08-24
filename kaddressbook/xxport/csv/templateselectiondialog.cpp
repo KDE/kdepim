@@ -35,6 +35,8 @@
 #include <QListView>
 #include <QMouseEvent>
 #include <QStyledItemDelegate>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 typedef struct {
   QString displayName;
@@ -201,15 +203,21 @@ class TemplateSelectionDelegate : public QStyledItemDelegate
 };
 
 TemplateSelectionDialog::TemplateSelectionDialog( QWidget *parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setCaption( i18nc( "@title:window", "Template Selection" ) );
-  setButtons( Ok | Cancel );
+  setWindowTitle( i18nc( "@title:window", "Template Selection" ) );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+  mOkButton->setDefault(true);
+  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
   QWidget *wdg = new QWidget( this );
   QVBoxLayout *wdgVBoxLayout = new QVBoxLayout(wdg);
   wdgVBoxLayout->setMargin(0);
-  setMainWidget( wdg );
 
   new QLabel( i18nc( "@info", "Please select a template, that matches the CSV file:" ), wdg );
 
@@ -219,7 +227,9 @@ TemplateSelectionDialog::TemplateSelectionDialog( QWidget *parent )
   mView->setModel( new TemplatesModel( this ) );
   mView->setItemDelegate( new TemplateSelectionDelegate( this ) );
 
-  button( Ok )->setEnabled( false );
+  mOkButton->setEnabled( false );
+  mainLayout->addWidget(wdg);
+  mainLayout->addWidget(buttonBox);
   connect( mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(updateButtons()) );
 }
@@ -239,6 +249,6 @@ QString TemplateSelectionDialog::selectedTemplate() const
 
 void TemplateSelectionDialog::updateButtons()
 {
-  button( Ok )->setEnabled( mView->currentIndex().isValid() );
+  mOkButton->setEnabled( mView->currentIndex().isValid() );
 }
 

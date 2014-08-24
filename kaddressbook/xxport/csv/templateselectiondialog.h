@@ -20,11 +20,11 @@
 #ifndef TEMPLATESELECTIONDIALOG_H
 #define TEMPLATESELECTIONDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class QListView;
-
-class TemplateSelectionDialog : public KDialog
+class QPushButton;
+class TemplateSelectionDialog : public QDialog
 {
     Q_OBJECT
 
@@ -40,6 +40,7 @@ private Q_SLOTS:
 
 private:
     QListView *mView;
+    QPushButton *mOkButton;
 };
 
 #endif
