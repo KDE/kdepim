@@ -19,7 +19,7 @@
 #include "simplestringlisteditor.h"
 
 #include <KLocalizedString>
-#include <KDialog>
+#include <QDialog>
 #include <KUrlRequester>
 
 #include <QWidget>
@@ -32,6 +32,7 @@
 #include <QRadioButton>
 #include <QSpinBox>
 #include <QComboBox>
+#include <KConfigGroup>
 
 using namespace PimCommon;
 
@@ -56,7 +57,7 @@ void ConfigureImmutableWidgetUtils::populateButtonGroup( QGroupBox * box, QButto
     } else {
         box->setLayout( new QVBoxLayout() );
     }
-    box->layout()->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     box->layout()->setSpacing( QDialog::spacingHint() );
     const int numberChoices(e->choices().size());
     for (int i = 0; i < numberChoices; ++i) {
         QRadioButton *button = new QRadioButton( e->choices().at(i).label, box );

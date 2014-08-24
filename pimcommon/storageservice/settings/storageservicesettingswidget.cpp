@@ -29,7 +29,6 @@
 #include "storageservice/webdav/webdavstorageservice.h"
 #include "settings/pimcommonsettings.h"
 #include <KLocalizedString>
-#include <KLocale>
 #include <KMessageBox>
 #include <QTextBrowser>
 

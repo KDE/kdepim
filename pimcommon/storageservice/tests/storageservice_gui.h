@@ -19,7 +19,7 @@
 #define TEST_STORAGESERVICE_GUI_H
 
 #include <QWidget>
-#include <KDialog>
+#include <QDialog>
 class QTextEdit;
 namespace PimCommon {
 class StorageServiceManager;
@@ -27,7 +27,7 @@ class StorageServiceSettingsWidget;
 class StorageServiceAbstract;
 }
 
-class StorageServiceSettingsDialog : public KDialog
+class StorageServiceSettingsDialog : public QDialog
 {
     Q_OBJECT
 public:

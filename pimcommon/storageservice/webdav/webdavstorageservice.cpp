@@ -525,9 +525,9 @@ QString WebDavStorageService::storageServiceName() const
     return serviceName();
 }
 
-KIcon WebDavStorageService::icon() const
+QIcon WebDavStorageService::icon() const
 {
-    return KIcon(WebDavStorageService::iconName());
+    return QIcon::fromTheme(WebDavStorageService::iconName());
 }
 
 void WebDavStorageService::shutdownService()

@@ -25,7 +25,6 @@
 
 #include <QIcon>
 #include <KLocalizedString>
-#include <KLocale>
 
 #include <QMenu>
 #include <QDateTime>

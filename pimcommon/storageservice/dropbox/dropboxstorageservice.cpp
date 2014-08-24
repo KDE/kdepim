@@ -29,7 +29,6 @@
 
 
 #include <KLocalizedString>
-#include <KLocale>
 
 #include <QDebug>
 #include <KFormat>

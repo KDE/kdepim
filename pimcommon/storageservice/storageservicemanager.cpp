@@ -35,7 +35,6 @@
 #include "gdrive/gdrivestorageservice.h"
 #endif
 #include <KLocalizedString>
-#include <KFileDialog>
 #include <KActionMenu>
 #include <KMessageBox>
 

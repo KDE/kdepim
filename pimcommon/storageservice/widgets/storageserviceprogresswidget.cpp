@@ -20,7 +20,6 @@
 #include "storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
-#include <KLocale>
 #include <QIcon>
 
 #include <QProgressBar>

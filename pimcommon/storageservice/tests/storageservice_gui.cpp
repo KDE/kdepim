@@ -26,7 +26,7 @@
 
 
 #include <KLocalizedString>
-#include <KDialog>
+#include <QDialog>
 #include <KActionMenu>
 
 #include <QVBoxLayout>
@@ -37,13 +37,25 @@
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 StorageServiceSettingsDialog::StorageServiceSettingsDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setButtons(Ok|Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mSettings = new PimCommon::StorageServiceSettingsWidget;
-    setMainWidget(mSettings);
+    mainLayout->addWidget(mSettings);
+    mainLayout->addWidget(buttonBox);
+
 }
 
 QMap<QString, PimCommon::StorageServiceAbstract *> StorageServiceSettingsDialog::listService() const

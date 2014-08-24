@@ -30,7 +30,6 @@
 #include <kwallet.h>
 
 #include <KLocalizedString>
-#include <KLocale>
 
 #include <QDebug>
 #include <KFormat>
