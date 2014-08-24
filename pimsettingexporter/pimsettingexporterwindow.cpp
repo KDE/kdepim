@@ -71,6 +71,7 @@
 #include <KLocale>
 #include <QStandardPaths>
 #include <QLocale>
+#include <QFileDialog>
 
 PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     : KXmlGuiWindow(parent),
@@ -178,7 +179,7 @@ void PimSettingExporterWindow::slotRestoreFile(const QUrl &url)
 
 void PimSettingExporterWindow::slotShowArchiveInformations()
 {
-    const QString filename = KFileDialog::getOpenFileName(KUrl("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"), this, i18n("Select Archive"));
+    const QString filename = QFileDialog::getOpenFileName(this, i18n("Select Archive"), QLatin1String("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"));
     if (filename.isEmpty())
         return;
 
@@ -203,7 +204,7 @@ void PimSettingExporterWindow::slotBackupData()
     if (KMessageBox::warningYesNo(this,i18n("Before to backup data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
         return;
 
-    const QString filename = KFileDialog::getSaveFileName( QUrl(QLatin1String("kfiledialog:///pimsettingexporter")),QLatin1String("*.zip"),this,i18n("Create backup"),KFileDialog::ConfirmOverwrite);
+    const QString filename = QFileDialog::getSaveFileName(this, i18n("Create backup"), QLatin1String("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"));
     if (filename.isEmpty())
         return;
     mRecentFilesAction->addUrl(QUrl(filename));
@@ -345,7 +346,7 @@ void PimSettingExporterWindow::slotAddEndLine()
 
 void PimSettingExporterWindow::slotRestoreData()
 {
-    const QString filename = KFileDialog::getOpenFileName(KUrl("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"), this, i18n("Restore backup"));
+    const QString filename = QFileDialog::getOpenFileName(this, i18n("Restore backup"), QLatin1String("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"));
     if (filename.isEmpty())
         return;
     loadData(filename);
