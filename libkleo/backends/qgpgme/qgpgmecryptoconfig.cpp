@@ -46,7 +46,7 @@
 #include <gpgme++/global.h>
 
 #include <cassert>
-#include <ktemporaryfile.h>
+#include <QTemporaryFile>
 #include <QFile>
 #include <cstdlib>
 #include <iterator>

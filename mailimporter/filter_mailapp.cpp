@@ -21,7 +21,7 @@
 
 
 #include <KLocalizedString>
-#include <ktemporaryfile.h>
+#include <qtemporaryfile.h>
 #include <qdebug.h>
 #include <QFileDialog>
 

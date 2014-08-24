@@ -30,7 +30,6 @@
 
 #include <kiconloader.h>
 #include <krun.h>
-#include <kapplication.h>
 #include <kshell.h>
 #include <qdebug.h>
 #include <ktoolinvocation.h>

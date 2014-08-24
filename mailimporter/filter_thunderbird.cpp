@@ -19,7 +19,7 @@
 #include "selectthunderbirdprofilewidget.h"
 #include <KLocalizedString>
 #include <kfiledialog.h>
-#include <ktemporaryfile.h>
+#include <QTemporaryFile>
 #include <KConfig>
 #include <QFile>
 #include <QPointer>

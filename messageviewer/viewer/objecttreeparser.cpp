@@ -86,7 +86,7 @@
 #include <KLocalizedString>
 #include <kmimetype.h>
 #include <kglobal.h>
-#include <ktemporaryfile.h>
+#include <QTemporaryFile>
 
 #include <kiconloader.h>
 #include <kcodecs.h>

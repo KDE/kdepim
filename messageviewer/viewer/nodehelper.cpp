@@ -36,12 +36,13 @@
 #include <kmimetype.h>
 #include <qdebug.h>
 #include <kascii.h>
-#include <ktemporaryfile.h>
+#include <QTemporaryFile>
 #include <KLocalizedString>
 #include <kcharsets.h>
 #include <kde_file.h>
 #include <KPIMUtils/kpimutils/kfileio.h>
 #include <KUrl>
+#include <KLocale>
 
 #include <QDir>
 #include <QTextCodec>

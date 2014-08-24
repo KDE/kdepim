@@ -19,7 +19,7 @@
 #include <kfiledialog.h>
 #include <QRegExp>
 #include <QPointer>
-#include <ktemporaryfile.h>
+#include <QTemporaryFile>
 #include <qdebug.h>
 
 #include "filter_pmail.h"

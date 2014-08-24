@@ -32,7 +32,7 @@
 
 #include "symcryptrunprocessbase.h"
 
-#include <ktemporaryfile.h>
+#include <QTemporaryFile>
 #include <kdebug.h>
 #include <kshell.h>
 

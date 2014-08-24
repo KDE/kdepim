@@ -23,7 +23,7 @@
 #include <QPointer>
 #include <KLocalizedString>
 #include <kfiledialog.h>
-#include <ktemporaryfile.h>
+#include <QTemporaryFile>
 
 
 using namespace MailImporter;
