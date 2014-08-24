@@ -41,12 +41,12 @@
 #include <KLocalizedString>
 #include <QDebug>
 #include "kleo_ui_debug.h"
-#include <knuminput.h>
 #include <kiconloader.h>
 #include <kglobal.h>
 #include <kcomponentdata.h>
 #include <qicon.h>
 #include <KDialog>
+#include <QSpinBox>
 #ifndef KDEPIM_ONLY_KLEO
 # include <kurlrequester.h>
 #endif

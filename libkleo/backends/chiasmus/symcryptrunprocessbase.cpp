@@ -33,7 +33,6 @@
 #include "symcryptrunprocessbase.h"
 
 #include <QTemporaryFile>
-#include <kdebug.h>
 #include <kshell.h>
 
 #include <QStringList>

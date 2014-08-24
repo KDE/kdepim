@@ -30,7 +30,6 @@
 #include <entityannotationsattribute.h>
 
 #include <KComboBox>
-#include <KGlobal>
 #include <QIcon>
 
 #include <QLabel>
