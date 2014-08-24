@@ -63,7 +63,7 @@
 #include <calendarviews/eventview.h>
 #include <calendarviews/agenda/agendaview.h>
 #include <calendarviews/month/monthview.h>
-#include <kaction.h>
+#include <QAction>
 #include <kactioncollection.h>
 #include <KCalCore/Event>
 #include <KCalCore/Todo>

@@ -31,7 +31,7 @@
 #include <ktexteditor/view.h>
 #include <ktexteditor/configpage.h>
 #include <ktexteditor/configinterface.h>
-#include <kaction.h>
+#include <QAction>
 #include <klocalizedstring.h>
 
 #include <QDebug>

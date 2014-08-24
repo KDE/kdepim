@@ -45,7 +45,7 @@
 #include <incidenceeditor-ng/editorconfig.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
-#include <kaction.h>
+#include <QAction>
 #include <kactioncollection.h>
 #include <kconfigskeleton.h>
 #include <kfiledialog.h>

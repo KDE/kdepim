@@ -21,7 +21,7 @@
 
 #include "coisceimpart.h"
 
-#include <kaction.h>
+#include <QAction>
 #include <kactioncollection.h>
 #include <kcomponentdata.h>
 #include <kfiledialog.h>

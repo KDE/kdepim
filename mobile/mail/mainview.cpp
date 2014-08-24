@@ -81,7 +81,7 @@
 #include <Akonadi/KMime/StandardMailActionManager>
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <akonadibreadcrumbnavigationfactory.h>
-#include <kaction.h>
+#include <QAction>
 #include <kactioncollection.h>
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>

@@ -20,7 +20,7 @@
 */
 
 #include <AkonadiWidgets/standardactionmanager.h>
-#include <kaction.h>
+#include <QAction>
 #include <KLocalizedString>
 
 using namespace Akonadi;

@@ -21,7 +21,7 @@
 
 #include "vacationmanager.h"
 
-#include <kaction.h>
+#include <QAction>
 #include <kactioncollection.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
