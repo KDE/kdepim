@@ -33,6 +33,7 @@
 
 #include <QDebug>
 #include <KFormat>
+#include <QLocale>
 
 
 using namespace PimCommon;
@@ -535,11 +536,11 @@ QMap<QString, QString> DropBoxStorageService::itemInformation(const QVariantMap 
     }
     if (variantMap.contains(QLatin1String("client_mtime"))) {
         const QString tmp = variantMap.value(QLatin1String("client_mtime")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KLocale::global()->formatDateTime(PimCommon::DropBoxUtil::convertToDateTime( tmp )));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((PimCommon::DropBoxUtil::convertToDateTime( tmp )), QLocale::ShortFormat));
     }
     if (variantMap.contains(QLatin1String("modified"))) {
         const QString tmp = variantMap.value(QLatin1String("modified")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KLocale::global()->formatDateTime(PimCommon::DropBoxUtil::convertToDateTime( tmp )));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((PimCommon::DropBoxUtil::convertToDateTime( tmp )), QLocale::ShortFormat));
     }
     if (variantMap.contains(QLatin1String("root"))) {
         information.insert(i18n("Storage path:"), variantMap.value(QLatin1String("root")).toString());

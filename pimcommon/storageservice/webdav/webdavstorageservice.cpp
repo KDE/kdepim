@@ -35,6 +35,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <KFormat>
+#include <QLocale>
 
 using namespace PimCommon;
 
@@ -385,10 +386,10 @@ QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(variantMap.value(QLatin1String("getcontentlength")).toString().toLongLong() ));
     }
     if (variantMap.contains(QLatin1String("lastmodified"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KLocale::global()->formatDateTime(QDateTime::fromString(variantMap.value(QLatin1String("lastmodified")).toString())));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((QDateTime::fromString(variantMap.value(QLatin1String("lastmodified")).toString())), QLocale::ShortFormat));
     }
     if (variantMap.contains(QLatin1String("creationdate"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KLocale::global()->formatDateTime(QDateTime::fromString(variantMap.value(QLatin1String("creationdate")).toString())));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((QDateTime::fromString(variantMap.value(QLatin1String("creationdate")).toString())), QLocale::ShortFormat));
     }
     //qDebug()<<" information"<<information;
     return information;

@@ -34,6 +34,7 @@
 
 #include <QDebug>
 #include <KFormat>
+#include <QLocale>
 
 using namespace PimCommon;
 
@@ -584,11 +585,11 @@ QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &var
     }
     if (variantMap.contains(QLatin1String("created_at"))) {
         const QString tmp = variantMap.value(QLatin1String("created_at")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KLocale::global()->formatDateTime(PimCommon::BoxUtil::convertToDateTime( tmp )));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((PimCommon::BoxUtil::convertToDateTime( tmp )), QLocale::ShortFormat));
     }
     if (variantMap.contains(QLatin1String("modified_at"))) {
         const QString tmp = variantMap.value(QLatin1String("modified_at")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KLocale::global()->formatDateTime(PimCommon::BoxUtil::convertToDateTime( tmp )));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((PimCommon::BoxUtil::convertToDateTime( tmp )), QLocale::ShortFormat));
     }
     return information;
 }

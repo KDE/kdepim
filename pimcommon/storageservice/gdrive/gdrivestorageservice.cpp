@@ -33,6 +33,7 @@
 
 #include <QDebug>
 #include <KFormat>
+#include <QLocale>
 
 using namespace PimCommon;
 
@@ -404,8 +405,8 @@ QMap<QString, QString> GDriveStorageService::itemInformation(const QVariantMap &
             information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(file->fileSize()));
         }
 
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KLocale::global()->formatDateTime(file->createdDate()));
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KLocale::global()->formatDateTime(file->modifiedDate()));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((file->createdDate()), QLocale::ShortFormat));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((file->modifiedDate()), QLocale::ShortFormat));
         //TODO more infos
 
     }
