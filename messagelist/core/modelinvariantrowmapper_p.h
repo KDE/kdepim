@@ -26,7 +26,6 @@
 #include <QTimer>
 #include <QTime>
 
-#include <QDebug>
 
 namespace MessageList
 {

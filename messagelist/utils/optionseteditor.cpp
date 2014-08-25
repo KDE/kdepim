@@ -23,7 +23,6 @@
 
 #include <QLabel>
 #include <QGridLayout>
-#include <QComboBox>
 
 #include <KLineEdit>
 #include <KLocalizedString>

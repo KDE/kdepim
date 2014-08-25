@@ -18,7 +18,6 @@
 #define MESSAGEPROPERTYDIALOG_H
 
 #include <QDialog>
-#include <KConfigGroup>
 
 namespace KTnef
 {

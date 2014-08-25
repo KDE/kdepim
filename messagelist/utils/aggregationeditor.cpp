@@ -22,17 +22,15 @@
 #include "core/aggregation.h"
 #include "utils/comboboxutils.h"
 
+#include <KLineEdit>
+#include <KTextEdit>
 #include <QLabel>
 #include <QGridLayout>
-#include <QTreeWidget>
-#include <QGroupBox>
 #include <QPushButton>
 #include <QCheckBox>
 
 #include <KComboBox>
-#include <KLineEdit>
 #include <KLocalizedString>
-#include <KTextEdit>
 
 using namespace MessageList::Utils;
 using namespace MessageList::Core;

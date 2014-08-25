@@ -36,14 +36,11 @@
 #include <QDropEvent>
 #include <QMimeData>
 
-#include <KActionCollection>
-#include <KComboBox>
 #include <QDebug>
 #include <QIcon>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <QMenu>
-#include <KToggleAction>
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
 #include <QUrl>

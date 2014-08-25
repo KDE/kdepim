@@ -23,7 +23,6 @@
 
 #include <QMap>
 #include <QPixmap>
-#include <KConfigGroup>
 
 namespace KTnef
 {

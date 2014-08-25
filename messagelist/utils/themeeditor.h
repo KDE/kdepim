@@ -30,7 +30,6 @@
 #include <QRect>
 
 #include <QDialog>
-#include <KConfigGroup>
 
 class QPaintDevice;
 class QCheckBox;

@@ -25,8 +25,6 @@
 #include <QList>
 #include <QHash>
 #include <QMultiHash>
-#include <QDate>
-#include <QTimer>
 
 #include <messagelist/core/aggregation.h>
 #include <messagelist/core/enums.h>

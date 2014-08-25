@@ -59,8 +59,8 @@
 #include <AkonadiCore/Control>
 
 #include <KStandardAction>
+#include <KConfigGroup>
 #include <KActionCollection>
-#include <KFileDialog>
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <QStatusBar>

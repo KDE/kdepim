@@ -24,8 +24,6 @@
 #include <collection.h>
 #include <item.h>
 
-#include <QColor>
-#include <QFont>
 
 #include <kmime/kmime_message.h>
 

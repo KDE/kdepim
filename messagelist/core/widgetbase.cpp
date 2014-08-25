@@ -35,20 +35,16 @@
 #include "utils/configureaggregationsdialog.h"
 #include "utils/configurethemesdialog.h"
 
+#include <QVBoxLayout>
+#include <QToolButton>
 #include <QActionGroup>
-#include <QBoxLayout>
-#include <QGridLayout>
 #include <QHeaderView>
 #include <QTimer>
-#include <QToolButton>
 #include <QVariant>
 
 #include <QAction>
 #include <KComboBox>
-#include <KConfig>
 #include <QDebug>
-#include <QIcon>
-#include <KIconLoader>
 #include <KLineEdit>
 #include <KLocalizedString>
 #include <QMenu>

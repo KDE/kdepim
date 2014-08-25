@@ -26,7 +26,6 @@
 #include <QListWidget>
 
 #include <messagelist/messagelist_export.h>
-#include <KConfigGroup>
 
 class QPushButton;
 

@@ -25,8 +25,6 @@
 #include <QPair>
 #include <QString>
 #include <QFont>
-#include <QFontMetrics>
-#include <QSize>
 #include <QColor>
 
 #include <messagelist/core/optionset.h>

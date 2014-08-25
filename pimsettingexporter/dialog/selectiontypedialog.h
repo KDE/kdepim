@@ -19,7 +19,6 @@
 #define SELECTIONTYPEDIALOG_H
 
 #include <QDialog>
-#include <KConfigGroup>
 #include "utils.h"
 
 class SelectionTypeTreeWidget;

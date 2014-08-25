@@ -27,11 +27,9 @@
 #include <QMenu>
 #include <QInputDialog>
 #include <KLocalizedString>
-#include <KFileDialog>
 #include <KGlobalSettings>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KUrl>
 #include <KGlobal>
 
 #include <QPainter>

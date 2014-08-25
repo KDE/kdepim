@@ -33,7 +33,6 @@
 
 #include <KLocalizedString>
 #include <KIconLoader>
-#include <KMessageBox>
 #include <QIcon>
 #include <KConfig>
 #include <QFileDialog>

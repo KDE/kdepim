@@ -23,7 +23,6 @@
 
 #include <QList>
 #include <QString>
-#include <QDate>
 
 #include <time.h> // for time_t
 

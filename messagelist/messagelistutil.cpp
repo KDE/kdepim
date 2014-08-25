@@ -17,7 +17,6 @@
 */
 #include "messagelistutil.h"
 #include "core/settings.h"
-#include <QTextDocument>
 
 #include <KConfigGroup>
 #include <QMenu>

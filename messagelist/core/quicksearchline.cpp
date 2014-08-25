@@ -35,7 +35,6 @@
 #include <QPushButton>
 #include <QButtonGroup>
 #include <QLabel>
-#include <QKeyEvent>
 #include <QSignalMapper>
 #include <QStandardPaths>
 

@@ -23,7 +23,6 @@
 #include <kaboutdata.h>
 #include "util/kdelibs4configmigrator.h"
 
-#include <QDebug>
 #include <qcommandlineparser.h>
 #include <qcommandlineoption.h>
 #include <KDBusService>

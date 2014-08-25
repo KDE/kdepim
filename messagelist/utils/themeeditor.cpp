@@ -28,6 +28,8 @@
 
 #include <Akonadi/KMime/MessageStatus>
 
+#include <KTextEdit>
+
 #include <QActionGroup>
 #include <QCheckBox>
 #include <QCursor>
@@ -42,7 +44,6 @@
 #include <QPaintEvent>
 #include <QPixmap>
 #include <QPushButton>
-#include <QSpinBox>
 #include <QStringList>
 #include <QMimeData>
 
@@ -54,10 +55,8 @@
 #include <QMenu>
 #include <KIconLoader>
 #include <KPluralHandlingSpinBox>
-#include <KTextEdit>
 
 #include <time.h> // for time_t
-#include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 

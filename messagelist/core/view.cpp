@@ -36,13 +36,12 @@
 
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
+#include <KLineEdit>
 #include <Item>
 #include <QHelpEvent>
 #include <QToolTip>
 #include <QHeaderView>
 #include <QTimer>
-#include <QPaintEvent>
-#include <QTextDocument>
 #include <QApplication>
 #include <QScrollBar>
 #include <QSignalMapper>
@@ -50,8 +49,6 @@
 #include <QMenu>
 #include <KLocalizedString>
 #include <QDebug>
-#include <QIcon>
-#include <KLineEdit>
 
 using namespace MessageList::Core;
 

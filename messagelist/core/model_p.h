@@ -23,7 +23,7 @@
 
 #include "model.h"
 #include <config-messagelist.h>
-
+#include <QTimer>
 namespace MessageList
 {
 

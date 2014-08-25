@@ -42,6 +42,7 @@
 #include <QIcon>
 
 #include <KRecentFilesAction>
+#include <KConfigGroup>
 
 #include <QContextMenuEvent>
 #include <QDir>
