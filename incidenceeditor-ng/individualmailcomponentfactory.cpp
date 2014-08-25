@@ -26,8 +26,6 @@
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
-#include <QDBusInterface>
-#include <QDBusReply>
 
 using namespace IncidenceEditorNG;
 
