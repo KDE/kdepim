@@ -39,15 +39,14 @@
 #include <KLocalizedString>
 
 #include <QVBoxLayout>
-#include <QLineEdit>
 #include <dnssd/servicemodel.h>
 #include <dnssd/servicebrowser.h>
 
+#include <QLineEdit>
 #include <QLabel>
 #include <QString>
 #include <QTreeView>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 #include <QPushButton>
 
 using namespace NoteShared;

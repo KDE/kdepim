@@ -20,8 +20,10 @@
 
 #include "categoryconfig.h"
 
-#include <KConfigSkeleton>
 #include <KLocalizedString>
+#include <KConfigGroup>
+#include <KCoreConfigSkeleton>
+#include <QColor>
 
 using namespace CalendarSupport;
 

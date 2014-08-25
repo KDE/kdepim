@@ -28,7 +28,6 @@
 #include <KMime/KMimeMessage>
 
 #include <QPointer>
-#include <QTextDocument>
 #include <QApplication>
 
 bool NoteShared::NoteUtils::sendToMail(QWidget *parent, const QString &title, const QString &message)

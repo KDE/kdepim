@@ -47,7 +47,6 @@
 #include <QFile>
 #include <QPointer>
 #include <QMimeDatabase>
-#include <QMimeType>
 
 using namespace KCalCore;
 using namespace Akonadi;

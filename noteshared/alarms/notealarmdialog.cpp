@@ -37,13 +37,13 @@
 #include <QVBoxLayout>
 #include <KDateTime>
 
+#include <QDateTime>
 #include <QButtonGroup>
 #include <QGroupBox>
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 #include <QPushButton>
 
 using namespace NoteShared;
