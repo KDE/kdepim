@@ -39,7 +39,6 @@
 #include <kmessagebox.h>
 #include <QPushButton>
 #include <KStandardGuiItem>
-#include <kglobalsettings.h>
 
 #include <QLabel>
 #include <qtextedit.h>

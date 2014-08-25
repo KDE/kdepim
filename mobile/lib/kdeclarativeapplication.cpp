@@ -20,7 +20,6 @@
 #include "kdeclarativeapplication.h"
 #include "stylesheetloader.h"
 
-#include <kglobalsettings.h>
 #include <QDebug>
 #include <QFont>
 #include <KCmdLineArgs>

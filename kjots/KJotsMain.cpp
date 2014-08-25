@@ -29,7 +29,6 @@
 #include <QAction>
 #include <kactioncollection.h>
 #include <qdebug.h>
-#include <kglobalsettings.h>
 #include <kstandardaction.h>
 #include <kstatusbar.h>
 

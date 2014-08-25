@@ -23,7 +23,6 @@
 
 #include <kabc/addressee.h>
 #include <kfiledialog.h>
-#include <kglobalsettings.h>
 #include <qicon.h>
 #include <kimageio.h>
 #include <kio/netaccess.h>

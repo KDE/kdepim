@@ -39,7 +39,6 @@
 #include <QTextBrowser>
 #include <KLocalizedString>
 #include <KIconLoader>
-#include <KGlobalSettings>
 #include <QDebug>
 
 #include <QEvent>

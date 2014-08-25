@@ -26,7 +26,6 @@
 #include "prefs.h"
 #include "prefs_base.h"
 
-#include <KGlobalSettings>
 #include <KSystemTimeZone>
 #include <QDebug>
 #include <QFontDatabase>
