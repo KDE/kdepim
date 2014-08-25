@@ -34,16 +34,25 @@
 #include <KAboutData>
 #include <KLocalizedString>
 #include <QCommandLineParser>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 Dialog::Dialog( QWidget *parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setCaption( i18n("Contact Editor") );
-  setButtons( Close );
+  setWindowTitle( i18n("Contact Editor") );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-  showButtonSeparator( true );
 
   QWidget *wdg = new QWidget( this );
+  mainLayout->addWidget(wdg);
+  mainLayout->addWidget(buttonBox);
+
   QGridLayout *layout = new QGridLayout( wdg );
 
   mEditor = new Akonadi::ContactEditor( Akonadi::ContactEditor::EditMode, wdg );
@@ -64,8 +73,6 @@ Dialog::Dialog( QWidget *parent )
   layout->addWidget( button, 2, 2 );
 
   connect(button, &QPushButton::clicked, this, &Dialog::save);
-
-  setMainWidget( wdg );
 }
 
 Dialog::~Dialog()

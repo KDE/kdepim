@@ -30,7 +30,7 @@ namespace Akonadi {
   class ContactEditor;
 }
 
-class Dialog : public KDialog
+class Dialog : public QDialog
 {
   Q_OBJECT
 
