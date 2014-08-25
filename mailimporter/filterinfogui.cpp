@@ -16,7 +16,6 @@
 */
 
 #include "filterinfogui.h"
-#include <KMessageBox>
 
 using namespace MailImporter;
 

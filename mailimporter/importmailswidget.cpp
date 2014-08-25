@@ -18,9 +18,7 @@
 #include "importmailswidget.h"
 #include "ui_importmailswidget.h"
 
-#include <QTextDocument>
 #include <QAbstractTextDocumentLayout>
-#include <QPainter>
 
 using namespace MailImporter;
 

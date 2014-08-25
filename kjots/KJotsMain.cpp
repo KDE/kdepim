@@ -26,7 +26,6 @@
 #include "KJotsMain.h"
 
 
-#include <QAction>
 #include <kactioncollection.h>
 #include <qdebug.h>
 #include <kstandardaction.h>

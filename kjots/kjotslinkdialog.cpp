@@ -37,7 +37,6 @@
 #include "kjotsbookshelfentryvalidator.h"
 #include <kdescendantsproxymodel.h>
 #include <AkonadiCore/EntityTreeModel>
-#include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>

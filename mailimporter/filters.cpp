@@ -36,7 +36,6 @@
 #include <QUrl>
 #include <KLocalizedString>
 #include <QDebug>
-#include <KMessageBox>
 
 #include <QScopedPointer>
 

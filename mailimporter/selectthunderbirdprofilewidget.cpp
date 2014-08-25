@@ -18,9 +18,7 @@
 #include "selectthunderbirdprofilewidget.h"
 #include "ui_selectthunderbirdprofilewidget.h"
 
-#include <QHBoxLayout>
 #include <KLocalizedString>
-#include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>

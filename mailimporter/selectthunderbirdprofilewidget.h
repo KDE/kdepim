@@ -22,7 +22,6 @@
 #include <QDialog>
 
 #include <QMap>
-#include <KConfigGroup>
 
 namespace Ui {
 class SelectThunderbirdProfileWidget;
