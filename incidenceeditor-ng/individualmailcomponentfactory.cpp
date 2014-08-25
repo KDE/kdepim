@@ -89,6 +89,7 @@ void IndividualMessageQueueJob::startQueueJob(const QStringList &to, const QStri
     msg->cc()->fromUnicodeString(cc.join(QLatin1String(", ")), "utf-8");
     msg->assemble();
 
+    mQueueJob = new MailTransport::MessageQueueJob(this);
     mQueueJob->setMessage(msg);
     mQueueJob->transportAttribute().setTransportId(transportAttribute().transportId());
     mQueueJob->sentBehaviourAttribute().setSentBehaviour(sentBehaviourAttribute().sentBehaviour());
@@ -97,7 +98,6 @@ void IndividualMessageQueueJob::startQueueJob(const QStringList &to, const QStri
     mQueueJob->addressAttribute().setCc(cc);
     mQueueJob->addressAttribute().setBcc(addressAttribute().bcc());
 
-    mQueueJob = new MailTransport::MessageQueueJob(this);
     connect(mQueueJob, SIGNAL(finished(KJob*)), SLOT(handleJobFinished(KJob*)));
     mQueueJob->start();
 }
@@ -115,7 +115,7 @@ void IndividualMessageQueueJob::handleJobFinished(KJob *job)
         if (job == mQueueJob && mComposerJob) {
             mComposerJob->kill();
             mComposerJob = 0;
-        } else if (mComposerJob) {
+        } else if (job == mComposerJob && mQueueJob) {
             mQueueJob->kill();
             mQueueJob = 0;
         }
