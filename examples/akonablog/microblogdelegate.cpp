@@ -29,85 +29,84 @@
 
 #include "blogmodel.h"
 
-MicroblogDelegate::MicroblogDelegate( QAbstractItemView *itemView, QObject * parent )
-        : KWidgetItemDelegate( itemView, parent ), m_parent( itemView )
+MicroblogDelegate::MicroblogDelegate(QAbstractItemView *itemView, QObject *parent)
+    : KWidgetItemDelegate(itemView, parent), m_parent(itemView)
 {
 }
 
-QList<QWidget*> MicroblogDelegate::createItemWidgets(const QModelIndex &index) const
+QList<QWidget *> MicroblogDelegate::createItemWidgets(const QModelIndex &index) const
 {
-    QList<QWidget*> list;
+    QList<QWidget *> list;
 
-    QWebView * infoLabel = new QWebView();
-    infoLabel->setBackgroundRole( QPalette::NoRole );
+    QWebView *infoLabel = new QWebView();
+    infoLabel->setBackgroundRole(QPalette::NoRole);
     connect(infoLabel, &QWebView::linkClicked, this, &MicroblogDelegate::slotLinkClicked);
     list << infoLabel;
     return list;
 }
 
-void MicroblogDelegate::updateItemWidgets( const QList<QWidget*> widgets,
+void MicroblogDelegate::updateItemWidgets(const QList<QWidget *> widgets,
         const QStyleOptionViewItem &option,
-        const QPersistentModelIndex &index ) const
+        const QPersistentModelIndex &index) const
 {
-    Q_UNUSED( option );
-    if ( !index.isValid() ) {
+    Q_UNUSED(option);
+    if (!index.isValid()) {
         return;
     }
 
-    const BlogModel* model = static_cast<const BlogModel*>( index.model() );
+    const BlogModel *model = static_cast<const BlogModel *>(index.model());
     int row = index.row();
 
-    QWebView *edit = static_cast<QWebView*>( widgets[0] );
-    edit->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
-    edit->move( 5, 5 );
-    edit->resize( 400,200 );
+    QWebView *edit = static_cast<QWebView *>(widgets[0]);
+    edit->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    edit->move(5, 5);
+    edit->resize(400, 200);
 
     QString text;
-    text.append( QLatin1String("<table><tr><td><img src=\"") + this->getData( model, row, BlogModel::Picture ).toString() + QLatin1String("\"></td>") );
-    text.append( QLatin1String("<td>") + getData( model, row, BlogModel::Date ).toString() );
-    text.append( QLatin1String("<Br>") + getData( model, row, BlogModel::User ).toString() );
-    text.append( QLatin1String("</td></tr></table>") );
-    text.append( QLatin1String("<Br>") + getData( model, row, BlogModel::Text ).toString() );
+    text.append(QLatin1String("<table><tr><td><img src=\"") + this->getData(model, row, BlogModel::Picture).toString() + QLatin1String("\"></td>"));
+    text.append(QLatin1String("<td>") + getData(model, row, BlogModel::Date).toString());
+    text.append(QLatin1String("<Br>") + getData(model, row, BlogModel::User).toString());
+    text.append(QLatin1String("</td></tr></table>"));
+    text.append(QLatin1String("<Br>") + getData(model, row, BlogModel::Text).toString());
     //qDebug() << text;
-    edit->setHtml( text );
+    edit->setHtml(text);
 }
 
-void MicroblogDelegate::slotLinkClicked( const QUrl &url )
+void MicroblogDelegate::slotLinkClicked(const QUrl &url)
 {
-    KToolInvocation::invokeBrowser( url.toString() );
+    KToolInvocation::invokeBrowser(url.toString());
 }
 
-QVariant MicroblogDelegate::getData( const BlogModel* model, int row, int data ) const
+QVariant MicroblogDelegate::getData(const BlogModel *model, int row, int data) const
 {
-    return model->data( model->index( row, 0 ), data );
+    return model->data(model->index(row, 0), data);
 }
 
-void MicroblogDelegate::paint( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+void MicroblogDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     painter->save();
 
-    if ( option.state & QStyle::State_Selected ) {
-        painter->fillRect( option.rect, option.palette.highlight() );
+    if (option.state & QStyle::State_Selected) {
+        painter->fillRect(option.rect, option.palette.highlight());
     } else {
-        painter->fillRect( option.rect, ( index.row() % 2 == 0 ? option.palette.base() : option.palette.alternateBase() ) );
-        painter->setPen( QPen( option.palette.window().color() ) );
-        painter->drawRect( option.rect );
+        painter->fillRect(option.rect, (index.row() % 2 == 0 ? option.palette.base() : option.palette.alternateBase()));
+        painter->setPen(QPen(option.palette.window().color()));
+        painter->drawRect(option.rect);
     }
 
-    if ( option.state & QStyle::State_Selected ) {
-        painter->setPen( QPen( option.palette.highlightedText().color() ) );
+    if (option.state & QStyle::State_Selected) {
+        painter->setPen(QPen(option.palette.highlightedText().color()));
     } else {
-        painter->setPen( QPen( option.palette.text().color() ) );
+        painter->setPen(QPen(option.palette.text().color()));
     }
 
     painter->restore();
 }
 
-
-QSize MicroblogDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
+QSize MicroblogDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    Q_UNUSED( option );
-    Q_UNUSED( index );
+    Q_UNUSED(option);
+    Q_UNUSED(index);
 
-    return QSize( 410, 210 );
+    return QSize(410, 210);
 }

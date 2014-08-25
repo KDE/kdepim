@@ -39,79 +39,78 @@
 
 using namespace Akonadi;
 
-UnreadMailsTree::UnreadMailsTree(QObject* parent)
-  : KRecursiveFilterProxyModel(parent)
+UnreadMailsTree::UnreadMailsTree(QObject *parent)
+    : KRecursiveFilterProxyModel(parent)
 {
 
 }
 
-bool UnreadMailsTree::acceptRow(int sourceRow, const QModelIndex& sourceParent) const
+bool UnreadMailsTree::acceptRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-  QModelIndex idx = sourceModel()->index(sourceRow, 0, sourceParent);
+    QModelIndex idx = sourceModel()->index(sourceRow, 0, sourceParent);
     Collection col = idx.data(EntityTreeModel::CollectionRole).value<Collection>();
-  qDebug() << sourceRow << sourceParent << col.statistics().unreadCount() << idx.data().toString();
+    qDebug() << sourceRow << sourceParent << col.statistics().unreadCount() << idx.data().toString();
     return col.statistics().unreadCount() > 0;
 }
-
 
 class UnreadMailsTreeWidget : public EntityTreeWidget
 {
 public:
-  UnreadMailsTreeWidget(QWidget* parent = 0)
-    : EntityTreeWidget(parent)
-  {
-  }
+    UnreadMailsTreeWidget(QWidget *parent = 0)
+        : EntityTreeWidget(parent)
+    {
+    }
 
-  /* reimp */ void connectTreeToModel(QTreeView* tree, Akonadi::EntityTreeModel* model)
-  {
-    m_collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
-    m_collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
-    m_collectionFilter->setSourceModel(model);
-    m_collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
+    /* reimp */ void connectTreeToModel(QTreeView *tree, Akonadi::EntityTreeModel *model)
+    {
+        m_collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+        m_collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
+        m_collectionFilter->setSourceModel(model);
+        m_collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
 
-    m_unreadFilter = new UnreadMailsTree(this);
-    m_unreadFilter->setSourceModel( m_collectionFilter );
+        m_unreadFilter = new UnreadMailsTree(this);
+        m_unreadFilter->setSourceModel(m_collectionFilter);
 
-    tree->setModel(m_unreadFilter);
-  }
+        tree->setModel(m_unreadFilter);
+    }
 
-  /* reimp */ QModelIndex mapToSource(const QModelIndex &idx)
-  {
-    return m_collectionFilter->mapToSource(m_unreadFilter->mapToSource(idx));
-  }
+    /* reimp */ QModelIndex mapToSource(const QModelIndex &idx)
+    {
+        return m_collectionFilter->mapToSource(m_unreadFilter->mapToSource(idx));
+    }
 
 private:
-  Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
-  UnreadMailsTree *m_unreadFilter;
+    Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
+    UnreadMailsTree *m_unreadFilter;
 
 };
 
-UnreadMailsWidget::UnreadMailsWidget(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f)
+UnreadMailsWidget::UnreadMailsWidget(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f)
 {
 
-  QHBoxLayout *layout = new QHBoxLayout(this);
-  QSplitter *splitter = new QSplitter(this);
-  layout->addWidget(splitter);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    QSplitter *splitter = new QSplitter(this);
+    layout->addWidget(splitter);
 
-  m_etw = new UnreadMailsTreeWidget(splitter);
-  m_etw->init();
+    m_etw = new UnreadMailsTreeWidget(splitter);
+    m_etw->init();
 
-  QSplitter *rhsContainer = new QSplitter( Qt::Vertical, splitter);
+    QSplitter *rhsContainer = new QSplitter(Qt::Vertical, splitter);
 
-  m_itemView = new QTreeView(rhsContainer);
+    m_itemView = new QTreeView(rhsContainer);
 
-  KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(m_etw->view()->selectionModel(), this);
-  selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
-  selectionProxy->setSourceModel(m_etw->model());
+    KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(m_etw->view()->selectionModel(), this);
+    selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
+    selectionProxy->setSourceModel(m_etw->model());
 
-  Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
-  itemFilter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
-  itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
-  itemFilter->setSourceModel(selectionProxy);
+    Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+    itemFilter->setHeaderGroup(Akonadi::EntityTreeModel::ItemListHeaders);
+    itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
+    itemFilter->setSourceModel(selectionProxy);
 
-  m_itemView->setModel(itemFilter);
+    m_itemView->setModel(itemFilter);
 
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
+    ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
 
 }

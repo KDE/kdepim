@@ -33,11 +33,11 @@ class MainWidget: public QWidget
     Q_OBJECT
 
 public:
-    MainWidget( MainWindow *parent = 0 );
+    MainWidget(MainWindow *parent = 0);
 
 private slots:
-    void slotCurrentResourceChanged( const QModelIndex& );
-    void slotCurrentTabChanged( const Akonadi::Collection& );
+    void slotCurrentResourceChanged(const QModelIndex &);
+    void slotCurrentTabChanged(const Akonadi::Collection &);
 
 private:
     BlogModel *mMessageModel;

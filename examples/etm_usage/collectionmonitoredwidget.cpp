@@ -33,40 +33,40 @@
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/CollectionFetchScope>
 
-CollectionMonitoredWidget::CollectionMonitoredWidget(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f)
+CollectionMonitoredWidget::CollectionMonitoredWidget(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f)
 {
-  QSplitter *splitter = new QSplitter(this);
-  QHBoxLayout *layout = new QHBoxLayout(this);
-  layout->addWidget(splitter);
+    QSplitter *splitter = new QSplitter(this);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->addWidget(splitter);
 
-  m_etw = new EntityTreeWidget( splitter );
-  m_etw->init();
-  connect( m_etw->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
+    m_etw = new EntityTreeWidget(splitter);
+    m_etw->init();
+    connect(m_etw->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), SLOT(selectionChanged(QItemSelection, QItemSelection)));
 
-  m_oneCollectionChangeRecorder = new Akonadi::ChangeRecorder(this);
+    m_oneCollectionChangeRecorder = new Akonadi::ChangeRecorder(this);
 
+    Akonadi::EntityTreeModel *oneCollectionEtm = new Akonadi::EntityTreeModel(m_oneCollectionChangeRecorder, this);
 
-  Akonadi::EntityTreeModel *oneCollectionEtm = new Akonadi::EntityTreeModel(m_oneCollectionChangeRecorder, this);
-
-  m_oneCollectionView = new Akonadi::EntityTreeView( splitter );
-  m_oneCollectionView->setModel( oneCollectionEtm );
+    m_oneCollectionView = new Akonadi::EntityTreeView(splitter);
+    m_oneCollectionView->setModel(oneCollectionEtm);
 }
 
-void CollectionMonitoredWidget::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+void CollectionMonitoredWidget::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-  QModelIndex index = selected.indexes().first();
-  if (!index.isValid())
-    return;
+    QModelIndex index = selected.indexes().first();
+    if (!index.isValid()) {
+        return;
+    }
 
-  Akonadi::Collection col = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    Akonadi::Collection col = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 
-  if (!col.isValid())
-    return;
+    if (!col.isValid()) {
+        return;
+    }
 
-  foreach ( const Akonadi::Collection &oldCol, m_oneCollectionChangeRecorder->collectionsMonitored() )
-  {
-    m_oneCollectionChangeRecorder->setCollectionMonitored( oldCol, false );
-  }
-  m_oneCollectionChangeRecorder->setCollectionMonitored( col, true );
+    foreach (const Akonadi::Collection &oldCol, m_oneCollectionChangeRecorder->collectionsMonitored()) {
+        m_oneCollectionChangeRecorder->setCollectionMonitored(oldCol, false);
+    }
+    m_oneCollectionChangeRecorder->setCollectionMonitored(col, true);
 }

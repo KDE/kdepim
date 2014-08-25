@@ -31,17 +31,16 @@ class QTreeView;
 
 class DescTabWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  DescTabWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    DescTabWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 public slots:
-  void connectProxy();
+    void connectProxy();
 
 private:
-  EntityTreeWidget *m_etw;
-  QTreeView* m_descView;
-
+    EntityTreeWidget *m_etw;
+    QTreeView *m_descView;
 
 };
 

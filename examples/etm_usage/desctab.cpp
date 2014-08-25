@@ -35,37 +35,36 @@
 
 #include <QTimer>
 
-DescTabWidget::DescTabWidget(QWidget* parent, Qt::WindowFlags f)
+DescTabWidget::DescTabWidget(QWidget *parent, Qt::WindowFlags f)
 {
-  QHBoxLayout *layout = new QHBoxLayout(this);
-  QSplitter *splitter = new QSplitter(this);
-  layout->addWidget(splitter);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    QSplitter *splitter = new QSplitter(this);
+    layout->addWidget(splitter);
 
-  m_etw = new EntityTreeWidget(splitter);
+    m_etw = new EntityTreeWidget(splitter);
 
+    m_etw->init();
 
-  m_etw->init();
+    m_descView = new QTreeView(splitter);
 
-  m_descView = new QTreeView(splitter);
-
-  QTimer::singleShot( 5000, this, SLOT(connectProxy()));
+    QTimer::singleShot(5000, this, SLOT(connectProxy()));
 
 }
 
 void DescTabWidget::connectProxy()
 {
 
-  m_etw->dumpTree();
+    m_etw->dumpTree();
 
-  KDescendantsProxyModel *descProxy = new KDescendantsProxyModel(this);
+    KDescendantsProxyModel *descProxy = new KDescendantsProxyModel(this);
 
-  Akonadi::EntityRightsFilterModel *collectionFilter = new Akonadi::EntityRightsFilterModel( this );
-  collectionFilter->setSourceModel( m_etw->model() );
+    Akonadi::EntityRightsFilterModel *collectionFilter = new Akonadi::EntityRightsFilterModel(this);
+    collectionFilter->setSourceModel(m_etw->model());
 
-  qDebug() << descProxy;
-  descProxy->setSourceModel( collectionFilter );
+    qDebug() << descProxy;
+    descProxy->setSourceModel(collectionFilter);
 
 //  new ModelTest(descProxy, this);
 
-  m_descView->setModel(descProxy);
+    m_descView->setModel(descProxy);
 }

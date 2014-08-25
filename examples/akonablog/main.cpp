@@ -19,8 +19,6 @@
     USA.
 */
 
-
-
 #include <QApplication>
 #include <KAboutData>
 #include <KLocalizedString>
@@ -28,10 +26,10 @@
 
 #include "mainwindow.h"
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("akonablog"), i18n( "Akonablog" ), QLatin1String("1.0" ));
-    aboutData.setShortDescription( i18n( "The blog client Proof-Of-Concept for Akonadi" ) );
+    KAboutData aboutData(QLatin1String("akonablog"), i18n("Akonablog"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("The blog client Proof-Of-Concept for Akonadi"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);

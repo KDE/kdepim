@@ -26,21 +26,22 @@
 
 #include <QDialog>
 
-namespace Akonadi {
-  class ContactViewer;
+namespace Akonadi
+{
+class ContactViewer;
 }
 
 class Dialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    Dialog( QWidget *parent = 0 );
+public:
+    Dialog(QWidget *parent = 0);
     ~Dialog();
 
-    void loadUid( Akonadi::Item::Id uid );
+    void loadUid(Akonadi::Item::Id uid);
 
-  private:
+private:
     Akonadi::ContactViewer *mBrowser;
 };
 

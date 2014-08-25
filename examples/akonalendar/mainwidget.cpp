@@ -24,74 +24,73 @@
 
 #include <QSortFilterProxyModel>
 
-MainWidget::MainWidget( MainWindow* parent )
-    : QWidget( parent ), mMainWindow( parent )
+MainWidget::MainWidget(MainWindow *parent)
+    : QWidget(parent), mMainWindow(parent)
 {
     // Layout
-    QHBoxLayout *layout = new QHBoxLayout( this );
-    QSplitter *topSplitter = new QSplitter( Qt::Vertical, this );
-    layout->addWidget( topSplitter );
-    QSplitter *splitter = new QSplitter( Qt::Horizontal,  this );
-    topSplitter->addWidget( splitter );
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    QSplitter *topSplitter = new QSplitter(Qt::Vertical, this);
+    layout->addWidget(topSplitter);
+    QSplitter *splitter = new QSplitter(Qt::Horizontal,  this);
+    topSplitter->addWidget(splitter);
 
     /*
      * Views
      */
     // Calendar listview
     mCollectionList = new Akonadi::CollectionView();
-    splitter->addWidget( mCollectionList );
+    splitter->addWidget(mCollectionList);
 
     // Event listview
-    mIncidenceList = new QTreeView( this );
-    mIncidenceList->setDragEnabled( this );
-    mIncidenceList->setRootIsDecorated( false );
-    splitter->addWidget( mIncidenceList );
+    mIncidenceList = new QTreeView(this);
+    mIncidenceList->setDragEnabled(this);
+    mIncidenceList->setRootIsDecorated(false);
+    splitter->addWidget(mIncidenceList);
 
     // Event view
-    mIncidenceViewer = new CalendarSupport::IncidenceViewer( this );
-    topSplitter->addWidget( mIncidenceViewer );
-
+    mIncidenceViewer = new CalendarSupport::IncidenceViewer(this);
+    topSplitter->addWidget(mIncidenceViewer);
 
     /*
      * Models
      */
     // Calendar model
-    mCollectionModel = new Akonadi::CollectionModel( this );
-    mCollectionProxyModel = new Akonadi::CollectionFilterProxyModel( this );
-    mCollectionProxyModel->setSourceModel( mCollectionModel );
-    mCollectionProxyModel->addMimeTypeFilter( QString::fromLatin1( "text/calendar" ) );
+    mCollectionModel = new Akonadi::CollectionModel(this);
+    mCollectionProxyModel = new Akonadi::CollectionFilterProxyModel(this);
+    mCollectionProxyModel->setSourceModel(mCollectionModel);
+    mCollectionProxyModel->addMimeTypeFilter(QString::fromLatin1("text/calendar"));
 
     // display collections sorted
-    QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( this );
-    sortModel->setDynamicSortFilter( true );
-    sortModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-    sortModel->setSourceModel( mCollectionProxyModel );
+    QSortFilterProxyModel *sortModel = new QSortFilterProxyModel(this);
+    sortModel->setDynamicSortFilter(true);
+    sortModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+    sortModel->setSourceModel(mCollectionProxyModel);
 
     // Calendar view (list of incidences)
-    mIncidenceModel = new CalendarSupport::KCalModel( this );
+    mIncidenceModel = new CalendarSupport::KCalModel(this);
 
     /*
      * Connexion between views and models
      */
-    mIncidenceList->setModel( mIncidenceModel );
-    mCollectionList->setModel( sortModel );
+    mIncidenceList->setModel(mIncidenceModel);
+    mCollectionList->setModel(sortModel);
 
     /*
      * React to user orders
      */
-    connect( mCollectionList, SIGNAL(clicked(Akonadi::Collection)),
-             SLOT(collectionClicked(Akonadi::Collection)) );
+    connect(mCollectionList, SIGNAL(clicked(Akonadi::Collection)),
+            SLOT(collectionClicked(Akonadi::Collection)));
     connect(mIncidenceList, &QTreeView::clicked, this, &MainWidget::itemActivated);
 }
 
-void MainWidget::collectionClicked( const Akonadi::Collection& collection )
+void MainWidget::collectionClicked(const Akonadi::Collection &collection)
 {
-    mIncidenceModel->setCollection( collection );
+    mIncidenceModel->setCollection(collection);
 }
 
-void MainWidget::itemActivated( const QModelIndex& index )
+void MainWidget::itemActivated(const QModelIndex &index)
 {
-    const Akonadi::Item item = mIncidenceModel->itemForIndex( index );
-    mIncidenceViewer->setItem( item );
+    const Akonadi::Item item = mIncidenceModel->itemForIndex(index);
+    mIncidenceViewer->setItem(item);
 }
 

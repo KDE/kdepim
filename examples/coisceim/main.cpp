@@ -19,7 +19,6 @@
     USA.
 */
 
-
 #include <KAboutData>
 
 #include <QApplication>
@@ -30,9 +29,9 @@
 
 int main(int argc, char **argv)
 {
-  const QString ba( QLatin1String("coisceim") );
-  const QString name = i18n( "Coisceim application" );
-  KAboutData aboutData( ba, name, name );
+    const QString ba(QLatin1String("coisceim"));
+    const QString name = i18n("Coisceim application");
+    KAboutData aboutData(ba, name, name);
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
@@ -42,8 +41,8 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-  CoisceimWidget *mw = new CoisceimWidget;
-  mw->show();
+    CoisceimWidget *mw = new CoisceimWidget;
+    mw->show();
 
-  return app.exec();
+    return app.exec();
 }

@@ -41,60 +41,59 @@
 
 using namespace Akonadi;
 
-FolderContentsWidget::FolderContentsWidget(Trip *trip, int role, const QString &type, QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f), m_type(type), m_trip(trip), m_role(role)
+FolderContentsWidget::FolderContentsWidget(Trip *trip, int role, const QString &type, QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f), m_type(type), m_trip(trip), m_role(role)
 {
-  QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  QPushButton *confButton = new QPushButton(type);
-  layout->addWidget(confButton);
-  connect(confButton, &QPushButton::clicked, this, &FolderContentsWidget::configure);
+    QPushButton *confButton = new QPushButton(type);
+    layout->addWidget(confButton);
+    connect(confButton, &QPushButton::clicked, this, &FolderContentsWidget::configure);
 
-  m_view = new EntityTreeView;
-  layout->addWidget(m_view);
+    m_view = new EntityTreeView;
+    layout->addWidget(m_view);
 
-  switch(role) {
-  case Trip::MailCollectionRole:
-    m_view->setModel(m_trip->mailModel());
-    break;
-  case Trip::TodoCollectionRole:
-    m_view->setModel(m_trip->todoModel());
-    break;
-  case Trip::NotesCollectionRole:
-    m_view->setModel(m_trip->notesModel());
-    break;
-  }
+    switch (role) {
+    case Trip::MailCollectionRole:
+        m_view->setModel(m_trip->mailModel());
+        break;
+    case Trip::TodoCollectionRole:
+        m_view->setModel(m_trip->todoModel());
+        break;
+    case Trip::NotesCollectionRole:
+        m_view->setModel(m_trip->notesModel());
+        break;
+    }
 }
 
-QItemSelectionModel* FolderContentsWidget::selectionModel() const
+QItemSelectionModel *FolderContentsWidget::selectionModel() const
 {
-  return m_view->selectionModel();
+    return m_view->selectionModel();
 }
 
 static QString getMimeType(int role)
 {
-  switch(role) {
-  case Trip::MailCollectionRole: return KMime::Message::mimeType();
-  case Trip::TodoCollectionRole: return KCalCore::Todo::todoMimeType();
-  case Trip::NotesCollectionRole: return Akonotes::Note::mimeType();
-  }
-  return QString();
+    switch (role) {
+    case Trip::MailCollectionRole: return KMime::Message::mimeType();
+    case Trip::TodoCollectionRole: return KCalCore::Todo::todoMimeType();
+    case Trip::NotesCollectionRole: return Akonotes::Note::mimeType();
+    }
+    return QString();
 }
 
 void FolderContentsWidget::configure()
 {
-  CollectionDialog dlg;
+    CollectionDialog dlg;
 
-  dlg.setMimeTypeFilter( QStringList() << getMimeType(m_role) );
-  dlg.setDescription( i18n( "Select a folder for this trip" ) );
-  if ( dlg.exec() ) {
-    m_trip->setCollection(m_role, dlg.selectedCollection());
-  }
+    dlg.setMimeTypeFilter(QStringList() << getMimeType(m_role));
+    dlg.setDescription(i18n("Select a folder for this trip"));
+    if (dlg.exec()) {
+        m_trip->setCollection(m_role, dlg.selectedCollection());
+    }
 }
 
-Trip* FolderContentsWidget::trip() const
+Trip *FolderContentsWidget::trip() const
 {
-  return m_trip;
+    return m_trip;
 }
-
 

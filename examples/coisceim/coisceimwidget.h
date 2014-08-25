@@ -29,15 +29,15 @@ class TripModel;
 
 class COISCEIM_WIDGET_EXPORT CoisceimWidget : public QWidget
 {
-  Q_OBJECT
-  Q_CLASSINFO("D-Bus Interface", "org.kde.coisceim.CoisceimWidget")
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.coisceim.CoisceimWidget")
 public:
-  CoisceimWidget(QWidget *parent = 0);
+    CoisceimWidget(QWidget *parent = 0);
 
-  Q_INVOKABLE void createTrip();
+    Q_INVOKABLE void createTrip();
 
 private:
-  TripModel *m_tripModel;
+    TripModel *m_tripModel;
 };
 
 #endif

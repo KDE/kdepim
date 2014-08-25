@@ -23,8 +23,6 @@
 
 #include <QVBoxLayout>
 
-
-
 #include <KLocalizedString>
 
 #include <Akonadi/Contact/ContactViewer>
@@ -37,35 +35,35 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
-Dialog::Dialog( QWidget *parent )
-  : QDialog( parent )
+Dialog::Dialog(QWidget *parent)
+    : QDialog(parent)
 {
-  setWindowTitle( i18n("Contact Viewer") );
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &Dialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &Dialog::reject);
+    setWindowTitle(i18n("Contact Viewer"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &Dialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &Dialog::reject);
 
-  mBrowser = new Akonadi::ContactViewer( this );
-  mainLayout->addWidget(mBrowser);
-  mainLayout->addWidget(buttonBox);
-  resize( 520, 580 );
+    mBrowser = new Akonadi::ContactViewer(this);
+    mainLayout->addWidget(mBrowser);
+    mainLayout->addWidget(buttonBox);
+    resize(520, 580);
 }
 
 Dialog::~Dialog()
 {
 }
 
-void Dialog::loadUid( Akonadi::Item::Id uid )
+void Dialog::loadUid(Akonadi::Item::Id uid)
 {
-  mBrowser->setContact( Akonadi::Item( uid ) );
+    mBrowser->setContact(Akonadi::Item(uid));
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( QLatin1String("kabcviewer"), i18n("KABC Viewer"), QLatin1String("1.0" ));
-  aboutData.setShortDescription( i18n("A contact viewer for Akonadi"));
+    KAboutData aboutData(QLatin1String("kabcviewer"), i18n("KABC Viewer"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("A contact viewer for Akonadi"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
@@ -76,18 +74,17 @@ int main( int argc, char **argv )
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("uid"), i18n( "Uid of the Akonadi contact" ), QLatin1String("uid")));
+    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("uid"), i18n("Uid of the Akonadi contact"), QLatin1String("uid")));
 
+    Dialog dlg;
+    if (!parser.isSet(QLatin1String("uid"))) {
+        parser.showHelp();
+        return 1;
+    }
 
-  Dialog dlg;
-  if ( !parser.isSet( QLatin1String("uid") ) ) {
-    parser.showHelp();
-    return 1;
-  }
+    dlg.loadUid(parser.value(QLatin1String("uid")).toLongLong());
+    dlg.exec();
 
-  dlg.loadUid( parser.value( QLatin1String("uid") ).toLongLong() );
-  dlg.exec();
-
-  return 0;
+    return 0;
 }
 

@@ -26,11 +26,11 @@
 
 class MainWindow : public QMainWindow
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    MainWindow( QWidget *parent = 0 );
-  private slots:
+public:
+    MainWindow(QWidget *parent = 0);
+private slots:
     void configure();
 };
 

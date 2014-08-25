@@ -35,21 +35,20 @@
 
 #include <KMime/Message>
 
-
 using namespace Akonadi;
 
-NoteViewer::NoteViewer(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f)
+NoteViewer::NoteViewer(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f)
 {
-  QVBoxLayout *layout = new QVBoxLayout(this);
-  m_titleEdit = new QLineEdit(this);
-  m_titleEdit->installEventFilter(this);
-  m_contentEdit = new QTextEdit(this);
-  m_contentEdit->installEventFilter(this);
-  layout->addWidget(m_titleEdit);
-  layout->addWidget(m_contentEdit);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    m_titleEdit = new QLineEdit(this);
+    m_titleEdit->installEventFilter(this);
+    m_contentEdit = new QTextEdit(this);
+    m_contentEdit->installEventFilter(this);
+    layout->addWidget(m_titleEdit);
+    layout->addWidget(m_contentEdit);
 
-  Collection noteResource = Collection(6);
+    Collection noteResource = Collection(6);
 
 //   Item newItem;
 //   newItem.setMimeType( "text/x-vnd.akonadi.note" );
@@ -75,77 +74,77 @@ NoteViewer::NoteViewer(QWidget* parent, Qt::WindowFlags f)
 
 }
 
-void NoteViewer::setIndex(const QPersistentModelIndex& index)
+void NoteViewer::setIndex(const QPersistentModelIndex &index)
 {
-  m_persistentIndex = index;
-  connect(m_persistentIndex.model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)));
-  populateWidget(m_persistentIndex);
+    m_persistentIndex = index;
+    connect(m_persistentIndex.model(), SIGNAL(dataChanged(QModelIndex, QModelIndex)), SLOT(dataChanged(QModelIndex, QModelIndex)));
+    populateWidget(m_persistentIndex);
 }
 
-void NoteViewer::dataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+void NoteViewer::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
-  QModelIndex idx = topLeft;
-  while(idx.isValid())
-  {
-    if (idx == m_persistentIndex)
-    {
-      populateWidget(idx);
-      return;
+    QModelIndex idx = topLeft;
+    while (idx.isValid()) {
+        if (idx == m_persistentIndex) {
+            populateWidget(idx);
+            return;
+        }
+        if (idx.column() == bottomRight.column()) {
+            return;
+        }
+        idx.sibling(idx.row() + 1, idx.column());
     }
-    if (idx.column() == bottomRight.column())
-      return;
-    idx.sibling(idx.row() + 1, idx.column());
-  }
 }
 
-void NoteViewer::populateWidget(const QModelIndex& index)
+void NoteViewer::populateWidget(const QModelIndex &index)
 {
-  Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
-  if (!item.hasPayload<KMime::Message::Ptr>())
-    return;
-  KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+    Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
+    if (!item.hasPayload<KMime::Message::Ptr>()) {
+        return;
+    }
+    KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
 
-  if (!note)
-    return;
+    if (!note) {
+        return;
+    }
 
-  m_titleEdit->setText( note->subject()->asUnicodeString() );
+    m_titleEdit->setText(note->subject()->asUnicodeString());
 
-  m_contentEdit->setText( note->mainBodyPart()->decodedText() );
+    m_contentEdit->setText(note->mainBodyPart()->decodedText());
 }
 
-bool NoteViewer::eventFilter(QObject* watched, QEvent* event)
+bool NoteViewer::eventFilter(QObject *watched, QEvent *event)
 {
-  if ( ( event->type() == QEvent::FocusOut )
-    && ( m_contentEdit->document()->isModified() || m_titleEdit->isModified() )
-    && ( watched == m_contentEdit || watched == m_titleEdit ) )
-  {
-    Item item = m_persistentIndex.data(EntityTreeModel::ItemRole).value<Item>();
-    if ( !item.hasPayload<KMime::Message::Ptr>() )
-      return false;
+    if ((event->type() == QEvent::FocusOut)
+            && (m_contentEdit->document()->isModified() || m_titleEdit->isModified())
+            && (watched == m_contentEdit || watched == m_titleEdit)) {
+        Item item = m_persistentIndex.data(EntityTreeModel::ItemRole).value<Item>();
+        if (!item.hasPayload<KMime::Message::Ptr>()) {
+            return false;
+        }
 
-    KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+        KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
 
-    QByteArray encoding = "utf-8";
+        QByteArray encoding = "utf-8";
 
-    msg->subject()->fromUnicodeString( m_titleEdit->text(), encoding );
-    msg->mainBodyPart()->fromUnicodeString( m_contentEdit->toPlainText() );
-    msg->assemble();
-    item.setPayload( msg );
+        msg->subject()->fromUnicodeString(m_titleEdit->text(), encoding);
+        msg->mainBodyPart()->fromUnicodeString(m_contentEdit->toPlainText());
+        msg->assemble();
+        item.setPayload(msg);
 
-    ItemModifyJob *modifyJob = new ItemModifyJob(item, this);
-    connect(modifyJob, &ItemModifyJob::result, this, &NoteViewer::modifyDone);
+        ItemModifyJob *modifyJob = new ItemModifyJob(item, this);
+        connect(modifyJob, &ItemModifyJob::result, this, &NoteViewer::modifyDone);
 
-    m_contentEdit->document()->setModified( false );
-    m_titleEdit->setModified( false );
-  }
-  return QObject::eventFilter(watched,event);
+        m_contentEdit->document()->setModified(false);
+        m_titleEdit->setModified(false);
+    }
+    return QObject::eventFilter(watched, event);
 }
 
-void NoteViewer::modifyDone( KJob *job )
+void NoteViewer::modifyDone(KJob *job)
 {
-  if ( job->error() )
-  {
-    qDebug() << job->errorString();
-  }
+    if (job->error()) {
+        qDebug() << job->errorString();
+    }
 }
 

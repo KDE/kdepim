@@ -31,7 +31,7 @@
 
     Example:
     @code
-    
+
     m_tabBar = new AkonadiTabBar( box );
     connect( m_tabBar, SIGNAL( currentChanged( const Akonadi::Collection& ) ),
              SLOT( slotCurrentTabChanged( const Akonadi::Collection& ) ) );
@@ -50,29 +50,29 @@ class AkonadiTabBar : public QTabBar
     Q_OBJECT
 
 public:
-    /** Constructor */    
-    AkonadiTabBar( QWidget* parent );
+    /** Constructor */
+    AkonadiTabBar(QWidget *parent);
     /** Destructor */
     ~AkonadiTabBar();
     /**
-     * Set the resource identifier which you want to use. The current tabs are removed and the new 
+     * Set the resource identifier which you want to use. The current tabs are removed and the new
      * top-level folders of that resource are added again. If the 4th tab was selected previously, this
-     * will be the one selected after the new tabs are created. In any case, the 
-     * currentChanged( Akonadi::Collection ) will be emitted after this call. 
+     * will be the one selected after the new tabs are created. In any case, the
+     * currentChanged( Akonadi::Collection ) will be emitted after this call.
      */
-    void setResource( const QString& );
+    void setResource(const QString &);
 
 signals:
-    /** 
-     * Signal emitted synchronisly with the currentChanged( int ) signal of KTabBar. This signal will 
-     * also be emitted in all cases when setResource() has been called 
+    /**
+     * Signal emitted synchronisly with the currentChanged( int ) signal of KTabBar. This signal will
+     * also be emitted in all cases when setResource() has been called
      */
-    void currentChanged( Akonadi::Collection );
+    void currentChanged(Akonadi::Collection);
 
 private:
     class Private;
-    Private* d;
-    Q_PRIVATE_SLOT( d, void slotCurrentChanged( int ) )
+    Private *d;
+    Q_PRIVATE_SLOT(d, void slotCurrentChanged(int))
 };
 
 #endif

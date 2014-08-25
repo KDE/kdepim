@@ -36,38 +36,37 @@
 #include <KGlobal>
 #include "createtripwidget.h"
 
-
 using namespace Akonadi;
 
 CoisceimWidget::CoisceimWidget(QWidget *parent)
-  : QWidget(parent)
+    : QWidget(parent)
 {
 //   new CoisceimWidgetAdaptor(this);
-  QHBoxLayout *layout = new QHBoxLayout(this);
-  QSplitter *splitter = new QSplitter;
-  layout->addWidget(splitter);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    QSplitter *splitter = new QSplitter;
+    layout->addWidget(splitter);
 
-  ChangeRecorder *tripRec = new ChangeRecorder(this);
-  tripRec->itemFetchScope().fetchFullPayload(true);
-  m_tripModel = new TripModel(tripRec, this);
+    ChangeRecorder *tripRec = new ChangeRecorder(this);
+    tripRec->itemFetchScope().fetchFullPayload(true);
+    m_tripModel = new TripModel(tripRec, this);
 
-  QListView *list = new QListView;
-  list->setViewMode(QListView::IconMode);
-  list->setFlow(QListView::TopToBottom);
-  list->setUniformItemSizes(true);
-  list->setModel(m_tripModel);
+    QListView *list = new QListView;
+    list->setViewMode(QListView::IconMode);
+    list->setFlow(QListView::TopToBottom);
+    list->setUniformItemSizes(true);
+    list->setModel(m_tripModel);
 
-  splitter->addWidget(list);
+    splitter->addWidget(list);
 
-  StackedWidgetView *stack = new StackedWidgetView(TripModel::WidgetRole);
-  splitter->addWidget(stack);
+    StackedWidgetView *stack = new StackedWidgetView(TripModel::WidgetRole);
+    splitter->addWidget(stack);
 
-  stack->setModel(m_tripModel);
-  stack->setSelectionModel(list->selectionModel());
+    stack->setModel(m_tripModel);
+    stack->setSelectionModel(list->selectionModel());
 }
 
 void CoisceimWidget::createTrip()
 {
-  qDebug() << "CREATE";
+    qDebug() << "CREATE";
 }
 

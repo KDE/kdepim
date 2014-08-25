@@ -29,96 +29,89 @@
 #include "note.h"
 #include <KABC/Addressee>
 
-MixedTreeModel::MixedTreeModel(Akonadi::ChangeRecorder* monitor, QObject* parent)
-  : EntityTreeModel(monitor, parent)
+MixedTreeModel::MixedTreeModel(Akonadi::ChangeRecorder *monitor, QObject *parent)
+    : EntityTreeModel(monitor, parent)
 {
 
 }
 
 int MixedTreeModel::entityColumnCount(Akonadi::EntityTreeModel::HeaderGroup headerGroup) const
 {
-  if (headerGroup == CollectionTreeHeaders)
-    return 1;
+    if (headerGroup == CollectionTreeHeaders) {
+        return 1;
+    }
 
-  if (headerGroup == ItemListHeaders)
-    return 2;
-  return 1;
+    if (headerGroup == ItemListHeaders) {
+        return 2;
+    }
+    return 1;
 }
 
 QVariant MixedTreeModel::entityHeaderData(int section, Qt::Orientation orientation, int role, Akonadi::EntityTreeModel::HeaderGroup headerGroup) const
 {
-  if (headerGroup == CollectionTreeHeaders || role != Qt::DisplayRole || orientation == Qt::Vertical)
-    return Akonadi::EntityTreeModel::entityHeaderData(section, orientation, role, headerGroup);
+    if (headerGroup == CollectionTreeHeaders || role != Qt::DisplayRole || orientation == Qt::Vertical) {
+        return Akonadi::EntityTreeModel::entityHeaderData(section, orientation, role, headerGroup);
+    }
 
-  switch (section)
-  {
-  case 0:
-    return i18n("Name/Subject");
-  case 1:
-    return i18n("Detail");
-  default:
-    return QVariant();
-  }
+    switch (section) {
+    case 0:
+        return i18n("Name/Subject");
+    case 1:
+        return i18n("Detail");
+    default:
+        return QVariant();
+    }
 }
 
-
-QVariant MixedTreeModel::entityData(const Akonadi::Item& item, int column, int role) const
+QVariant MixedTreeModel::entityData(const Akonadi::Item &item, int column, int role) const
 {
-  if (role == Qt::DisplayRole)
-  {
-    if (item.hasPayload<KMime::Message::Ptr>())
-    {
-      KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-      switch(column)
-      {
-      case 0:
-        return message->subject()->asUnicodeString();
-      case 1:
-      {
-        if (item.mimeType() == KMime::Message::mimeType())
-          return message->from()->asUnicodeString();
-        else
-          return QString(message->mainBodyPart()->decodedText().mid(0, 30) + QLatin1String("..." ));
-      }
-      default:
-        return QVariant();
-      }
-    }
+    if (role == Qt::DisplayRole) {
+        if (item.hasPayload<KMime::Message::Ptr>()) {
+            KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+            switch (column) {
+            case 0:
+                return message->subject()->asUnicodeString();
+            case 1: {
+                if (item.mimeType() == KMime::Message::mimeType()) {
+                    return message->from()->asUnicodeString();
+                } else {
+                    return QString(message->mainBodyPart()->decodedText().mid(0, 30) + QLatin1String("..."));
+                }
+            }
+            default:
+                return QVariant();
+            }
+        }
 
-    if (item.hasPayload<KABC::Addressee>())
-    {
-      KABC::Addressee addressee = item.payload<KABC::Addressee>();
-      switch(column)
-      {
-      case 0:
-        return addressee.name();
-      case 1:
-        return addressee.preferredEmail();
-      default:
-        return QVariant();
-      }
-    }
+        if (item.hasPayload<KABC::Addressee>()) {
+            KABC::Addressee addressee = item.payload<KABC::Addressee>();
+            switch (column) {
+            case 0:
+                return addressee.name();
+            case 1:
+                return addressee.preferredEmail();
+            default:
+                return QVariant();
+            }
+        }
 
-    if (item.hasPayload<KCalCore::Incidence::Ptr>()) {
-      KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-      switch(column) {
-      case 0:
-        return incidence->summary();
-      case 1:
-        return incidence->description();
-      default:
-        return QVariant();
-      }
+        if (item.hasPayload<KCalCore::Incidence::Ptr>()) {
+            KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+            switch (column) {
+            case 0:
+                return incidence->summary();
+            case 1:
+                return incidence->description();
+            default:
+                return QVariant();
+            }
+        }
     }
-  }
-  return EntityTreeModel::entityData(item, column, role);
+    return EntityTreeModel::entityData(item, column, role);
 }
 
-QVariant MixedTreeModel::entityData(const Akonadi::Collection& collection, int column, int role) const
+QVariant MixedTreeModel::entityData(const Akonadi::Collection &collection, int column, int role) const
 {
-  return Akonadi::EntityTreeModel::entityData(collection, column, role);
+    return Akonadi::EntityTreeModel::entityData(collection, column, role);
 }
-
-
-
 

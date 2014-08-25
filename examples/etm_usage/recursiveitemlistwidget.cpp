@@ -36,25 +36,25 @@
 #include <KABC/Addressee>
 #include <AkonadiCore/ItemFetchScope>
 
-RecursiveItemListWidget::RecursiveItemListWidget(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f)
+RecursiveItemListWidget::RecursiveItemListWidget(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f)
 {
 
-  Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder(this);
-  changeRecorder->setAllMonitored( true );
-  changeRecorder->setMimeTypeMonitored( KABC::Addressee::mimeType() );
-  changeRecorder->itemFetchScope().fetchFullPayload( true );
-  m_etm = new Akonadi::ContactsTreeModel(changeRecorder, this);
+    Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder(this);
+    changeRecorder->setAllMonitored(true);
+    changeRecorder->setMimeTypeMonitored(KABC::Addressee::mimeType());
+    changeRecorder->itemFetchScope().fetchFullPayload(true);
+    m_etm = new Akonadi::ContactsTreeModel(changeRecorder, this);
 
-  m_etm->setCollectionFetchStrategy( Akonadi::EntityTreeModel::InvisibleCollectionFetch );
+    m_etm->setCollectionFetchStrategy(Akonadi::EntityTreeModel::InvisibleCollectionFetch);
 
-  Akonadi::EntityMimeTypeFilterModel *list = new Akonadi::EntityMimeTypeFilterModel( this );
-  list->setSourceModel(m_etm);
-  list->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
+    Akonadi::EntityMimeTypeFilterModel *list = new Akonadi::EntityMimeTypeFilterModel(this);
+    list->setSourceModel(m_etm);
+    list->setHeaderGroup(Akonadi::EntityTreeModel::ItemListHeaders);
 
-  m_listView = new Akonadi::EntityTreeView;
-  m_listView->setModel( list );
-  QHBoxLayout *layout = new QHBoxLayout(this);
-  layout->addWidget( m_listView );
+    m_listView = new Akonadi::EntityTreeView;
+    m_listView->setModel(list);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->addWidget(m_listView);
 
 }

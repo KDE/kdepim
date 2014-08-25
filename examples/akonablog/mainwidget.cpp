@@ -39,71 +39,70 @@
 
 using namespace Akonadi;
 
-MainWidget::MainWidget( MainWindow * parent ) :
-        QWidget( parent ), mMainWindow( parent )
+MainWidget::MainWidget(MainWindow *parent) :
+    QWidget(parent), mMainWindow(parent)
 {
-    QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-    QSplitter *splitter = new QSplitter( Qt::Vertical, this );
-    layout->addWidget( splitter );
-
+    QSplitter *splitter = new QSplitter(Qt::Vertical, this);
+    layout->addWidget(splitter);
 
     // Accounts
-    Akonadi::AgentInstanceModel *model = new Akonadi::AgentInstanceModel( this );
-    m_resourcesView = new QListView( splitter );
-    m_resourcesView->setModel( model );
-    connect( m_resourcesView, SIGNAL(clicked(QModelIndex)),
-             SLOT(slotCurrentResourceChanged(QModelIndex)) );
-    splitter->addWidget( m_resourcesView );
-    
+    Akonadi::AgentInstanceModel *model = new Akonadi::AgentInstanceModel(this);
+    m_resourcesView = new QListView(splitter);
+    m_resourcesView->setModel(model);
+    connect(m_resourcesView, SIGNAL(clicked(QModelIndex)),
+            SLOT(slotCurrentResourceChanged(QModelIndex)));
+    splitter->addWidget(m_resourcesView);
+
     // Filter the collection to only show the blogs
-    Akonadi::AgentFilterProxyModel* proxy = new Akonadi::AgentFilterProxyModel( this );
-    proxy->addMimeTypeFilter( QLatin1String("application/x-vnd.kde.microblog") );
-    proxy->setSourceModel( model );
-    m_resourcesView->setModel( proxy );
+    Akonadi::AgentFilterProxyModel *proxy = new Akonadi::AgentFilterProxyModel(this);
+    proxy->addMimeTypeFilter(QLatin1String("application/x-vnd.kde.microblog"));
+    proxy->setSourceModel(model);
+    m_resourcesView->setModel(proxy);
 
     // Bottom part
-    QWidget* box = new QWidget( splitter );
+    QWidget *box = new QWidget(splitter);
     QVBoxLayout *boxVBoxLayout = new QVBoxLayout(box);
     boxVBoxLayout->setMargin(0);
 
     // Folders
-    m_tabBar = new AkonadiTabBar( box );
+    m_tabBar = new AkonadiTabBar(box);
     boxVBoxLayout->addWidget(m_tabBar);
-    connect( m_tabBar, SIGNAL(currentChanged(Akonadi::Collection)),
-             SLOT(slotCurrentTabChanged(Akonadi::Collection)) );
+    connect(m_tabBar, SIGNAL(currentChanged(Akonadi::Collection)),
+            SLOT(slotCurrentTabChanged(Akonadi::Collection)));
 
-    mMessageList = new QTreeView( box );
+    mMessageList = new QTreeView(box);
     boxVBoxLayout->addWidget(mMessageList);
-    mMessageList->setRootIsDecorated( false );
-    mMessageList->setDragEnabled( false );
-    mMessageList->setSelectionMode( QAbstractItemView::ExtendedSelection );
-    mMessageList->setSortingEnabled( true );
+    mMessageList->setRootIsDecorated(false);
+    mMessageList->setDragEnabled(false);
+    mMessageList->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    mMessageList->setSortingEnabled(true);
 
-    MicroblogDelegate *delegate = new MicroblogDelegate( mMessageList, this );
-    mMessageList->setItemDelegate( delegate );
+    MicroblogDelegate *delegate = new MicroblogDelegate(mMessageList, this);
+    mMessageList->setItemDelegate(delegate);
 
-    mMessageModel = new BlogModel( this );
+    mMessageModel = new BlogModel(this);
 
-    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel( this );
-    proxyModel->setSortRole( Qt::EditRole );
-    proxyModel->setDynamicSortFilter( true );
-    proxyModel->setSourceModel( mMessageModel );
+    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSortRole(Qt::EditRole);
+    proxyModel->setDynamicSortFilter(true);
+    proxyModel->setSourceModel(mMessageModel);
 
-    mMessageList->setModel( proxyModel );
-    splitter->addWidget( box );
+    mMessageList->setModel(proxyModel);
+    splitter->addWidget(box);
 
-    splitter->setSizes( QList<int>() << 30 << 470 );
+    splitter->setSizes(QList<int>() << 30 << 470);
 }
 
-void MainWidget::slotCurrentResourceChanged( const QModelIndex &index )
+void MainWidget::slotCurrentResourceChanged(const QModelIndex &index)
 {
-    const Akonadi::AgentInstanceModel *model = static_cast<const AgentInstanceModel*>( m_resourcesView->model() );
-    const QString identifier = model->data( index, AgentInstanceModel::InstanceIdentifierRole ).toString();
-    m_tabBar->setResource( identifier );
+    const Akonadi::AgentInstanceModel *model = static_cast<const AgentInstanceModel *>(m_resourcesView->model());
+    const QString identifier = model->data(index, AgentInstanceModel::InstanceIdentifierRole).toString();
+    m_tabBar->setResource(identifier);
 }
 
-void MainWidget::slotCurrentTabChanged( const Akonadi::Collection& col )
+void MainWidget::slotCurrentTabChanged(const Akonadi::Collection &col)
 {
-    mMessageModel->setCollection( col );
+    mMessageModel->setCollection(col);
 }

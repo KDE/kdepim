@@ -26,39 +26,38 @@
 #include "trip.h"
 #include <QIcon>
 
-CreateFolderContentsWidget::CreateFolderContentsWidget(Trip *trip, int role, const QString &type, QWidget* parent)
-  : QStackedWidget(parent), m_trip(trip), m_role(role)
+CreateFolderContentsWidget::CreateFolderContentsWidget(Trip *trip, int role, const QString &type, QWidget *parent)
+    : QStackedWidget(parent), m_trip(trip), m_role(role)
 {
-  QPushButton *button = new QPushButton(QLatin1String("Select ") + type);
+    QPushButton *button = new QPushButton(QLatin1String("Select ") + type);
 
-  QString iconName;
+    QString iconName;
 
-  switch (role)
-  {
-  case Trip::MailCollectionRole:
-    iconName = QLatin1String("kmail");
-    break;
-  case Trip::NotesCollectionRole:
-    iconName = QLatin1String("knotes");
-    break;
-  case Trip::TodoCollectionRole:
-    iconName = QLatin1String("korg-todo");
-    break;
-  }
-  QIcon icon = QIcon::fromTheme(iconName);
-  button->setIcon(icon);
-  button->setIconSize(QSize(128, 128));
-  addWidget(button);
-  m_widget = new FolderContentsWidget(trip, role, type);
-  addWidget(m_widget);
+    switch (role) {
+    case Trip::MailCollectionRole:
+        iconName = QLatin1String("kmail");
+        break;
+    case Trip::NotesCollectionRole:
+        iconName = QLatin1String("knotes");
+        break;
+    case Trip::TodoCollectionRole:
+        iconName = QLatin1String("korg-todo");
+        break;
+    }
+    QIcon icon = QIcon::fromTheme(iconName);
+    button->setIcon(icon);
+    button->setIconSize(QSize(128, 128));
+    addWidget(button);
+    m_widget = new FolderContentsWidget(trip, role, type);
+    addWidget(m_widget);
 
-  connect(button, SIGNAL(clicked(bool)), m_widget, SLOT(configure()));
-  connect(m_trip, SIGNAL(monitoredCollectionsChanged()), SLOT(collectionSelected()));
+    connect(button, SIGNAL(clicked(bool)), m_widget, SLOT(configure()));
+    connect(m_trip, SIGNAL(monitoredCollectionsChanged()), SLOT(collectionSelected()));
 }
 
 void CreateFolderContentsWidget::collectionSelected()
 {
-  setCurrentIndex(m_trip->collection(m_role).isValid() ? 1 : 0);
+    setCurrentIndex(m_trip->collection(m_role).isValid() ? 1 : 0);
 }
 
 void CreateFolderContentsWidget::clear()

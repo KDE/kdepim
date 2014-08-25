@@ -40,27 +40,27 @@
 
 using namespace Akonadi;
 
-MobileMainview::MobileMainview(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f)
+MobileMainview::MobileMainview(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f)
 {
-  resize(800, 480);
-  QHBoxLayout *layout = new QHBoxLayout(this);
+    resize(800, 480);
+    QHBoxLayout *layout = new QHBoxLayout(this);
 
-  ChangeRecorder *tripRec = new ChangeRecorder(this);
-  tripRec->itemFetchScope().fetchFullPayload(true);
-  TripModel *tripModel = new TripModel(tripRec, this);
+    ChangeRecorder *tripRec = new ChangeRecorder(this);
+    tripRec->itemFetchScope().fetchFullPayload(true);
+    TripModel *tripModel = new TripModel(tripRec, this);
 
-  qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
-  qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
+    qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>("org.kde.kcal", 4, 5, "IncidenceView");
+    qmlRegisterType<MessageViewer::MessageViewItem>("org.kde.messageviewer", 4, 5, "MessageView");
 
-  QDeclarativeView *view = new QDeclarativeView;
-  view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    QDeclarativeView *view = new QDeclarativeView;
+    view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
 
-  QDeclarativeContext *context = view->engine()->rootContext();
+    QDeclarativeContext *context = view->engine()->rootContext();
 
-  context->setContextProperty(QLatin1String("_tripModel"), tripModel);
+    context->setContextProperty(QLatin1String("_tripModel"), tripModel);
 
-  view->setSource(QUrl(QStandardPaths::locate(QStandardPaths::DataLocation, QLatin1String("main.qml") )));
+    view->setSource(QUrl(QStandardPaths::locate(QStandardPaths::DataLocation, QLatin1String("main.qml"))));
 
-  layout->addWidget(view);
+    layout->addWidget(view);
 }

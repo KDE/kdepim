@@ -26,35 +26,38 @@
 
 #include <KontactInterface/UniqueAppHandler>
 
-namespace KontactInterface {
-  class Plugin;
+namespace KontactInterface
+{
+class Plugin;
 }
 
 class CoisceimUniqueAppHandler : public KontactInterface::UniqueAppHandler
 {
-  public:
-    CoisceimUniqueAppHandler( KontactInterface::Plugin *plugin )
-      : KontactInterface::UniqueAppHandler( plugin ) {}
+public:
+    CoisceimUniqueAppHandler(KontactInterface::Plugin *plugin)
+        : KontactInterface::UniqueAppHandler(plugin) {}
     virtual void loadCommandLineOptions();
     virtual int newInstance();
 };
 
 class CoisceimPlugin : public KontactInterface::Plugin
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    CoisceimPlugin( KontactInterface::Core *core, const QVariantList & );
+public:
+    CoisceimPlugin(KontactInterface::Core *core, const QVariantList &);
     ~CoisceimPlugin();
-    int weight() const { return 600; }
+    int weight() const
+    {
+        return 600;
+    }
     virtual bool isRunningStandalone() const;
 
-
-  private slots:
+private slots:
     void createTrip();
     org::kde::coisceim::CoisceimWidget *interface();
 
-  protected:
+protected:
     KParts::ReadOnlyPart *createPart();
     KontactInterface::UniqueAppWatcher *mUniqueAppWatcher;
     org::kde::coisceim::CoisceimWidget *m_interface;

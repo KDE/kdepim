@@ -35,106 +35,110 @@
 #include <QLabel>
 #include <QSortFilterProxyModel>
 
-FindingETW::FindingETW(QWidget* parent)
-  : EntityTreeWidget(parent)
+FindingETW::FindingETW(QWidget *parent)
+    : EntityTreeWidget(parent)
 {
 
 }
 
-void FindingETW::connectTreeToModel(QTreeView* tree, Akonadi::EntityTreeModel* model)
+void FindingETW::connectTreeToModel(QTreeView *tree, Akonadi::EntityTreeModel *model)
 {
-  QSortFilterProxyModel *proxy1 = new QSortFilterProxyModel(this);
-  proxy1->setSourceModel( model );
-  QSortFilterProxyModel *proxy2 = new QSortFilterProxyModel(this);
-  proxy2->setSourceModel( proxy1 );
-  QSortFilterProxyModel *proxy3 = new QSortFilterProxyModel(this);
-  proxy3->setSourceModel( proxy2 );
-  tree->setModel(proxy3);
-  emit initialized();
+    QSortFilterProxyModel *proxy1 = new QSortFilterProxyModel(this);
+    proxy1->setSourceModel(model);
+    QSortFilterProxyModel *proxy2 = new QSortFilterProxyModel(this);
+    proxy2->setSourceModel(proxy1);
+    QSortFilterProxyModel *proxy3 = new QSortFilterProxyModel(this);
+    proxy3->setSourceModel(proxy2);
+    tree->setModel(proxy3);
+    emit initialized();
 }
 
-EntityFindingWidget::EntityFindingWidget(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f)
+EntityFindingWidget::EntityFindingWidget(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f)
 {
-  QGridLayout *gridLayout = new QGridLayout( this );
+    QGridLayout *gridLayout = new QGridLayout(this);
 
-  QLabel *collectionIdLabel = new QLabel(QLatin1String("Collection Id :"));
-  QLabel *itemIdLabel = new QLabel(QLatin1String("Item Id :"));
+    QLabel *collectionIdLabel = new QLabel(QLatin1String("Collection Id :"));
+    QLabel *itemIdLabel = new QLabel(QLatin1String("Item Id :"));
 
-  m_collectionIdInput = new QLineEdit;
-  m_itemIdInput = new QLineEdit;
+    m_collectionIdInput = new QLineEdit;
+    m_itemIdInput = new QLineEdit;
 
-  collectionIdLabel->setBuddy( m_collectionIdInput );
-  itemIdLabel->setBuddy( m_itemIdInput );
+    collectionIdLabel->setBuddy(m_collectionIdInput);
+    itemIdLabel->setBuddy(m_itemIdInput);
 
-  connect(m_collectionIdInput, &QLineEdit::returnPressed, this, &EntityFindingWidget::findCollection);
-  connect(m_itemIdInput, &QLineEdit::returnPressed, this, &EntityFindingWidget::findItem);
+    connect(m_collectionIdInput, &QLineEdit::returnPressed, this, &EntityFindingWidget::findCollection);
+    connect(m_itemIdInput, &QLineEdit::returnPressed, this, &EntityFindingWidget::findItem);
 
-  QSplitter *splitter = new QSplitter;
-  m_etw = new FindingETW();
+    QSplitter *splitter = new QSplitter;
+    m_etw = new FindingETW();
 
-  m_etw->init();
+    m_etw->init();
 
-  connect(m_etw, &FindingETW::initialized, this, &EntityFindingWidget::initWidget);
+    connect(m_etw, &FindingETW::initialized, this, &EntityFindingWidget::initWidget);
 
-  m_selectionView = new QListView;
+    m_selectionView = new QListView;
 
-  splitter->addWidget( m_etw );
-  splitter->addWidget( m_selectionView );
+    splitter->addWidget(m_etw);
+    splitter->addWidget(m_selectionView);
 
-  gridLayout->addWidget( collectionIdLabel, 0, 0 );
-  gridLayout->addWidget( m_collectionIdInput, 0, 1 );
-  gridLayout->addWidget( itemIdLabel, 0, 2 );
-  gridLayout->addWidget( m_itemIdInput, 0, 3 );
-  gridLayout->addWidget( splitter, 1, 0, 1, 4 );
+    gridLayout->addWidget(collectionIdLabel, 0, 0);
+    gridLayout->addWidget(m_collectionIdInput, 0, 1);
+    gridLayout->addWidget(itemIdLabel, 0, 2);
+    gridLayout->addWidget(m_itemIdInput, 0, 3);
+    gridLayout->addWidget(splitter, 1, 0, 1, 4);
 }
 
 void EntityFindingWidget::initWidget()
 {
-  Akonadi::EntityTreeModel *etm = m_etw->model();
-  QItemSelectionModel *itemSelectionModel = new QItemSelectionModel( etm );
-  m_etw->view()->setSelectionModel( itemSelectionModel );
+    Akonadi::EntityTreeModel *etm = m_etw->model();
+    QItemSelectionModel *itemSelectionModel = new QItemSelectionModel(etm);
+    m_etw->view()->setSelectionModel(itemSelectionModel);
 
-  KSelectionProxyModel *selProxy = new KSelectionProxyModel( itemSelectionModel );
-  selProxy->setFilterBehavior( KSelectionProxyModel::ExactSelection );
-  selProxy->setSourceModel( m_etw->model() );
+    KSelectionProxyModel *selProxy = new KSelectionProxyModel(itemSelectionModel);
+    selProxy->setFilterBehavior(KSelectionProxyModel::ExactSelection);
+    selProxy->setSourceModel(m_etw->model());
 
-  m_selectionView->setModel( selProxy );
+    m_selectionView->setModel(selProxy);
 }
 
 void EntityFindingWidget::findCollection()
 {
-  bool ok;
-  Akonadi::Entity::Id id =  m_collectionIdInput->text().toULongLong( &ok );
-  if ( !ok )
-    return;
-  QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( m_etw->view()->model(), Akonadi::Collection( id ) );
-  qDebug() << idx.data();
-  if ( !idx.isValid() )
-    return;
+    bool ok;
+    Akonadi::Entity::Id id =  m_collectionIdInput->text().toULongLong(&ok);
+    if (!ok) {
+        return;
+    }
+    QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection(m_etw->view()->model(), Akonadi::Collection(id));
+    qDebug() << idx.data();
+    if (!idx.isValid()) {
+        return;
+    }
 
-  m_etw->view()->selectionModel()->select( idx, QItemSelectionModel::ClearAndSelect );
-  m_etw->view()->expandAll();
-  m_etw->view()->scrollTo( idx );
+    m_etw->view()->selectionModel()->select(idx, QItemSelectionModel::ClearAndSelect);
+    m_etw->view()->expandAll();
+    m_etw->view()->scrollTo(idx);
 }
 
 void EntityFindingWidget::findItem()
 {
-  bool ok;
-  Akonadi::Entity::Id id =  m_itemIdInput->text().toULongLong( &ok );
-  if ( !ok )
-    return;
+    bool ok;
+    Akonadi::Entity::Id id =  m_itemIdInput->text().toULongLong(&ok);
+    if (!ok) {
+        return;
+    }
 
-  QModelIndexList list = Akonadi::EntityTreeModel::modelIndexesForItem( m_etw->view()->model(), Akonadi::Item( id ) );
-  if ( list.isEmpty() )
-    return;
-  QModelIndex idx = list.first();
-  if ( !idx.isValid() )
-    return;
+    QModelIndexList list = Akonadi::EntityTreeModel::modelIndexesForItem(m_etw->view()->model(), Akonadi::Item(id));
+    if (list.isEmpty()) {
+        return;
+    }
+    QModelIndex idx = list.first();
+    if (!idx.isValid()) {
+        return;
+    }
 
-  m_etw->view()->selectionModel()->select( idx, QItemSelectionModel::ClearAndSelect );
-  m_etw->view()->expandAll();
-  m_etw->view()->scrollTo( idx );
+    m_etw->view()->selectionModel()->select(idx, QItemSelectionModel::ClearAndSelect);
+    m_etw->view()->expandAll();
+    m_etw->view()->scrollTo(idx);
 }
-
 

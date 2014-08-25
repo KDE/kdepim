@@ -32,19 +32,19 @@ class Trip;
 
 class CreateFolderContentsWidget : public QStackedWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit CreateFolderContentsWidget(Trip *trip, int role, const QString &type, QWidget* parent = 0);
+    explicit CreateFolderContentsWidget(Trip *trip, int role, const QString &type, QWidget *parent = 0);
 
-  void clear();
+    void clear();
 
 private slots:
-  void collectionSelected();
+    void collectionSelected();
 
 private:
-  FolderContentsWidget *m_widget;
-  Trip *m_trip;
-  int m_role;
+    FolderContentsWidget *m_widget;
+    Trip *m_trip;
+    int m_role;
 };
 
 #endif

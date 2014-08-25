@@ -30,28 +30,28 @@ using namespace Akonadi;
 class AkonadiTabBar::Private
 {
 public:
-    Private( AkonadiTabBar* parent );
-    QHash<int,Collection> tabs;
-    AkonadiTabBar* q;
+    Private(AkonadiTabBar *parent);
+    QHash<int, Collection> tabs;
+    AkonadiTabBar *q;
 
 public slots:
-    void slotCurrentChanged( int );
+    void slotCurrentChanged(int);
 };
 
-AkonadiTabBar::Private::Private( AkonadiTabBar* parent ) : q( parent )
+AkonadiTabBar::Private::Private(AkonadiTabBar *parent) : q(parent)
 {
 }
 
-void AkonadiTabBar::Private::slotCurrentChanged( int index )
+void AkonadiTabBar::Private::slotCurrentChanged(int index)
 {
-    q->emit currentChanged( tabs.value( index ) );
+    q->emit currentChanged(tabs.value(index));
 }
 
-AkonadiTabBar::AkonadiTabBar( QWidget* parent )
-        :  QTabBar( parent ), d( new Private( this ) )
+AkonadiTabBar::AkonadiTabBar(QWidget *parent)
+    :  QTabBar(parent), d(new Private(this))
 {
-    connect( this, SIGNAL(currentChanged(int)),
-             SLOT(slotCurrentChanged(int)) );
+    connect(this, SIGNAL(currentChanged(int)),
+            SLOT(slotCurrentChanged(int)));
 }
 
 AkonadiTabBar::~AkonadiTabBar()
@@ -59,36 +59,37 @@ AkonadiTabBar::~AkonadiTabBar()
     delete d;
 }
 
-void AkonadiTabBar::setResource( const QString &resource )
+void AkonadiTabBar::setResource(const QString &resource)
 {
     // save it for later.
     int pastIndex = currentIndex();
 
     // remote old tabs.
-    while ( count() > 0 )
-        removeTab( 0 );
+    while (count() > 0) {
+        removeTab(0);
+    }
     d->tabs.clear();
 
     // fetching all collections recursive, starting at the root collection
     Collection col;
-    CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-    job->fetchScope().setResource( resource );
-    if ( job->exec() ) {
+    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
+    job->fetchScope().setResource(resource);
+    if (job->exec()) {
         Collection::List collections = job->collections();
-        foreach( const Collection &collection, collections ) {
-            if ( collection.parentCollection() != Collection::root() ) {
-                int tab = addTab( collection.name() );
+        foreach (const Collection &collection, collections) {
+            if (collection.parentCollection() != Collection::root()) {
+                int tab = addTab(collection.name());
                 d->tabs[ tab ] = collection;
             }
         }
     }
 
     // setCurrent would not result in the emission of the signal, as that is already the current one.
-    if ( pastIndex <= 0 )
-        emit currentChanged( d->tabs.value( 0 ) );
-    else
-        setCurrentIndex( pastIndex );
+    if (pastIndex <= 0) {
+        emit currentChanged(d->tabs.value(0));
+    } else {
+        setCurrentIndex(pastIndex);
+    }
 }
-
 
 #include "moc_akonaditabbar.cpp"

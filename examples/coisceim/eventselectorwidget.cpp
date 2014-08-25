@@ -38,62 +38,63 @@
 
 using namespace Akonadi;
 
-EventSelectorDialog::EventSelectorDialog(QWidget* parent, Qt::WindowFlags f)
-  : KDialog(parent, f)
+EventSelectorDialog::EventSelectorDialog(QWidget *parent, Qt::WindowFlags f)
+    : KDialog(parent, f)
 {
-  QHBoxLayout *layout = new QHBoxLayout(mainWidget());
-  m_view = new QTreeView;
-  layout->addWidget(m_view);
+    QHBoxLayout *layout = new QHBoxLayout(mainWidget());
+    m_view = new QTreeView;
+    layout->addWidget(m_view);
 
-  ChangeRecorder *recorder = new ChangeRecorder;
-  recorder->setMimeTypeMonitored(KCalCore::Event::eventMimeType());
-  recorder->itemFetchScope().fetchFullPayload(true);
-  MixedTreeModel *model = new MixedTreeModel(recorder);
-  model->setCollectionFetchStrategy(MixedTreeModel::InvisibleCollectionFetch);
+    ChangeRecorder *recorder = new ChangeRecorder;
+    recorder->setMimeTypeMonitored(KCalCore::Event::eventMimeType());
+    recorder->itemFetchScope().fetchFullPayload(true);
+    MixedTreeModel *model = new MixedTreeModel(recorder);
+    model->setCollectionFetchStrategy(MixedTreeModel::InvisibleCollectionFetch);
 
-  m_view->setModel(model);
+    m_view->setModel(model);
 
 }
 
 Item EventSelectorDialog::selectedItem()
 {
-  const QModelIndexList list = m_view->selectionModel()->selectedRows();
-  if (!list.size() == 1)
-    return Item();
-  return list.first().data(MixedTreeModel::ItemRole).value<Item>();
+    const QModelIndexList list = m_view->selectionModel()->selectedRows();
+    if (!list.size() == 1) {
+        return Item();
+    }
+    return list.first().data(MixedTreeModel::ItemRole).value<Item>();
 }
 
-EventSelectorWidget::EventSelectorWidget(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f)
+EventSelectorWidget::EventSelectorWidget(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f)
 {
-  QVBoxLayout *layout = new QVBoxLayout(this);
-  QHBoxLayout *hLayout = new QHBoxLayout;
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    QHBoxLayout *hLayout = new QHBoxLayout;
 
-  QPushButton *change = new QPushButton(i18n("Select trip"));
-  connect(change, &QPushButton::clicked, this, &EventSelectorWidget::selectTrip);
+    QPushButton *change = new QPushButton(i18n("Select trip"));
+    connect(change, &QPushButton::clicked, this, &EventSelectorWidget::selectTrip);
 
-  hLayout->addWidget(change);
+    hLayout->addWidget(change);
 
-  layout->addLayout(hLayout);
+    layout->addLayout(hLayout);
 
-  m_browser = new CalendarSupport::IncidenceViewer;
-  layout->addWidget(m_browser);
+    m_browser = new CalendarSupport::IncidenceViewer;
+    layout->addWidget(m_browser);
 }
 
 void EventSelectorWidget::selectTrip()
 {
-  EventSelectorDialog dlg;
-  if (dlg.exec()) {
-    Item item = dlg.selectedItem();
-    if (item.isValid()) {
-      emit selected(item);
-      m_browser->setItem(item);
+    EventSelectorDialog dlg;
+    if (dlg.exec()) {
+        Item item = dlg.selectedItem();
+        if (item.isValid()) {
+            emit selected(item);
+            m_browser->setItem(item);
+        }
     }
-  }
 }
 
 void EventSelectorWidget::clear()
 {
-  m_browser->setItem(Item());
+    m_browser->setItem(Item());
 }
 

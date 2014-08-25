@@ -38,70 +38,70 @@
 using namespace Akonadi;
 
 TripWidget::TripWidget(Trip *trip, QWidget *parent)
-  : QWidget(parent), m_trip(trip)
+    : QWidget(parent), m_trip(trip)
 {
-  QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  QSplitter *vSplitter = new QSplitter(Qt::Vertical);
+    QSplitter *vSplitter = new QSplitter(Qt::Vertical);
 
-  m_eventName = new QLabel;
-  m_eventBrowser = new QTextBrowser;
+    m_eventName = new QLabel;
+    m_eventBrowser = new QTextBrowser;
 
-  layout->addWidget(m_eventName);
-  layout->addWidget(m_eventBrowser);
+    layout->addWidget(m_eventName);
+    layout->addWidget(m_eventBrowser);
 
-  updateDescription();
-  updateName();
+    updateDescription();
+    updateName();
 
-  connect(trip, SIGNAL(eventDescriptionChanged()), SLOT(updateDescription()));
-  connect(trip, SIGNAL(eventNameChanged()), SLOT(updateName()));
+    connect(trip, SIGNAL(eventDescriptionChanged()), SLOT(updateDescription()));
+    connect(trip, SIGNAL(eventNameChanged()), SLOT(updateName()));
 
-  QLineEdit *filterLine = new QLineEdit;
-  layout->addWidget(filterLine);
-  connect(filterLine, SIGNAL(textChanged(QString)), m_trip, SLOT(setComponentFilter(QString)));
+    QLineEdit *filterLine = new QLineEdit;
+    layout->addWidget(filterLine);
+    connect(filterLine, SIGNAL(textChanged(QString)), m_trip, SLOT(setComponentFilter(QString)));
 
-  layout->addWidget(vSplitter);
+    layout->addWidget(vSplitter);
 
-  QSplitter *splitter = new QSplitter;
+    QSplitter *splitter = new QSplitter;
 
-  vSplitter->addWidget(splitter);
+    vSplitter->addWidget(splitter);
 
-  FolderContentsWidget *mailWidget = createView(QLatin1String("Mail"), Trip::MailCollectionRole);
-  FolderContentsWidget *todoWidget = createView(QLatin1String("Todos"), Trip::TodoCollectionRole);
-  FolderContentsWidget *notesWidget = createView(QLatin1String("Notes"), Trip::NotesCollectionRole);
+    FolderContentsWidget *mailWidget = createView(QLatin1String("Mail"), Trip::MailCollectionRole);
+    FolderContentsWidget *todoWidget = createView(QLatin1String("Todos"), Trip::TodoCollectionRole);
+    FolderContentsWidget *notesWidget = createView(QLatin1String("Notes"), Trip::NotesCollectionRole);
 
-  ItemSelection *itemSelection = new ItemSelection(mailWidget->selectionModel(),
-                                                   todoWidget->selectionModel(),
-                                                   notesWidget->selectionModel(), this);
+    ItemSelection *itemSelection = new ItemSelection(mailWidget->selectionModel(),
+            todoWidget->selectionModel(),
+            notesWidget->selectionModel(), this);
 
-  splitter->addWidget(mailWidget);
-  splitter->addWidget(todoWidget);
-  splitter->addWidget(notesWidget);
+    splitter->addWidget(mailWidget);
+    splitter->addWidget(todoWidget);
+    splitter->addWidget(notesWidget);
 
-  ItemViewerWidget *browser = new ItemViewerWidget(itemSelection, this);
-  vSplitter->addWidget(browser);
+    ItemViewerWidget *browser = new ItemViewerWidget(itemSelection, this);
+    vSplitter->addWidget(browser);
 
-  QPushButton *deleteButton = new QPushButton(i18n("Delete"));
-  connect(deleteButton, &QPushButton::clicked, this, &TripWidget::doDeleteThis);
-  layout->addWidget(deleteButton);
+    QPushButton *deleteButton = new QPushButton(i18n("Delete"));
+    connect(deleteButton, &QPushButton::clicked, this, &TripWidget::doDeleteThis);
+    layout->addWidget(deleteButton);
 }
 
-FolderContentsWidget* TripWidget::createView(const QString &type, int role)
+FolderContentsWidget *TripWidget::createView(const QString &type, int role)
 {
-  return new FolderContentsWidget(m_trip, role, type);
+    return new FolderContentsWidget(m_trip, role, type);
 }
 
 void TripWidget::doDeleteThis()
 {
-  const_cast<QAbstractItemModel*>(m_trip->index().model())->removeRow(m_trip->index().row());
+    const_cast<QAbstractItemModel *>(m_trip->index().model())->removeRow(m_trip->index().row());
 }
 
 void TripWidget::updateDescription()
 {
-  m_eventBrowser->setText(m_trip->eventDescription());
+    m_eventBrowser->setText(m_trip->eventDescription());
 }
 
 void TripWidget::updateName()
 {
-  m_eventName->setText(m_trip->eventName());
+    m_eventName->setText(m_trip->eventName());
 }

@@ -26,17 +26,17 @@
 
 class TodoCheckableProxyModel : public KCheckableProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  TodoCheckableProxyModel(QObject* parent = 0);
+    TodoCheckableProxyModel(QObject *parent = 0);
 
-  virtual void setSourceModel(QAbstractItemModel* sourceModel);
+    virtual void setSourceModel(QAbstractItemModel *sourceModel);
 
 private slots:
-  void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
-  void setChecked(const QItemSelection &selection, bool checked);
+    void setChecked(const QItemSelection &selection, bool checked);
 };
 
 #endif

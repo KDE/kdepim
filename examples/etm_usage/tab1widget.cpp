@@ -30,13 +30,13 @@
 #include "entitytreewidget.h"
 #include "itemviewerwidget.h"
 
-Tab1Widget::Tab1Widget(QWidget* parent, Qt::WindowFlags f)
+Tab1Widget::Tab1Widget(QWidget *parent, Qt::WindowFlags f)
 {
-  QHBoxLayout *layout = new QHBoxLayout(this);
-  QSplitter *splitter = new QSplitter(this);
-  layout->addWidget(splitter);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    QSplitter *splitter = new QSplitter(this);
+    layout->addWidget(splitter);
 
-  EntityTreeWidget *etw = new EntityTreeWidget(splitter);
-  etw->init();
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(etw->view()->selectionModel(), splitter);
+    EntityTreeWidget *etw = new EntityTreeWidget(splitter);
+    etw->init();
+    ItemViewerWidget *viewerWidget = new ItemViewerWidget(etw->view()->selectionModel(), splitter);
 }

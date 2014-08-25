@@ -39,59 +39,58 @@
 
 using namespace Akonadi;
 
-Checkable2::Checkable2(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f)
+Checkable2::Checkable2(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f)
 {
-  QHBoxLayout *layout = new QHBoxLayout(this);
-  QSplitter *splitter = new QSplitter(this);
-  layout->addWidget(splitter);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    QSplitter *splitter = new QSplitter(this);
+    layout->addWidget(splitter);
 
-  ChangeRecorder *changeRecorder = new ChangeRecorder( this );
+    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
 
-  changeRecorder->setCollectionMonitored( Collection::root() );
-  changeRecorder->fetchCollection( true );
-  changeRecorder->setAllMonitored( true );
-  changeRecorder->itemFetchScope().fetchFullPayload( true );
-  changeRecorder->itemFetchScope().fetchAllAttributes( true );
+    changeRecorder->setCollectionMonitored(Collection::root());
+    changeRecorder->fetchCollection(true);
+    changeRecorder->setAllMonitored(true);
+    changeRecorder->itemFetchScope().fetchFullPayload(true);
+    changeRecorder->itemFetchScope().fetchAllAttributes(true);
 
-  EntityTreeModel *etm = new EntityTreeModel( changeRecorder, this );
+    EntityTreeModel *etm = new EntityTreeModel(changeRecorder, this);
 
-  Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+    Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
 
-  collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
-  collectionFilter->setSourceModel(etm);
-  collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
+    collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
+    collectionFilter->setSourceModel(etm);
+    collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
 
-  KCheckableProxyModel *checkablePM = new KCheckableProxyModel(this);
+    KCheckableProxyModel *checkablePM = new KCheckableProxyModel(this);
 
-  QItemSelectionModel *checkSelection = new QItemSelectionModel(collectionFilter, this);
+    QItemSelectionModel *checkSelection = new QItemSelectionModel(collectionFilter, this);
 
-  checkablePM->setSelectionModel(checkSelection);
-  checkablePM->setSourceModel(collectionFilter);
+    checkablePM->setSelectionModel(checkSelection);
+    checkablePM->setSourceModel(collectionFilter);
 
-  QTreeView *treeView = new QTreeView(splitter);
-  treeView->setModel(checkablePM);
+    QTreeView *treeView = new QTreeView(splitter);
+    treeView->setModel(checkablePM);
 
-  KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(checkSelection, this);
-  selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
-  selectionProxy->setSourceModel(etm);
+    KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(checkSelection, this);
+    selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
+    selectionProxy->setSourceModel(etm);
 
-  QTreeView *allChildrenView = new QTreeView(splitter);
-  allChildrenView->setModel(selectionProxy);
+    QTreeView *allChildrenView = new QTreeView(splitter);
+    allChildrenView->setModel(selectionProxy);
 
-  Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
-  itemFilter->setObjectName(QLatin1String("itemFilter"));
-  itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
-  itemFilter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
-  itemFilter->setSourceModel(selectionProxy);
+    Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+    itemFilter->setObjectName(QLatin1String("itemFilter"));
+    itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
+    itemFilter->setHeaderGroup(Akonadi::EntityTreeModel::ItemListHeaders);
+    itemFilter->setSourceModel(selectionProxy);
 
-  QSplitter *rhsContainer = new QSplitter(Qt::Vertical, splitter);
+    QSplitter *rhsContainer = new QSplitter(Qt::Vertical, splitter);
 
-  m_itemView = new QTreeView(rhsContainer);
+    m_itemView = new QTreeView(rhsContainer);
 
-  m_itemView->setModel(itemFilter);
+    m_itemView->setModel(itemFilter);
 
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
+    ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
 }
-
 

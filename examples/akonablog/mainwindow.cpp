@@ -26,8 +26,8 @@
 
 #include <AkonadiCore/control.h>
 
-MainWindow::MainWindow( QWidget *parent )
-        : QMainWindow( parent )
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
 {
     /*
         QToolBar *toolBar = new QToolBar( QLatin1String( "Main toolbar" ), this );
@@ -35,7 +35,7 @@ MainWindow::MainWindow( QWidget *parent )
         addToolBar( toolBar );
     */
 
-    Akonadi::Control::start( this );
-    setCentralWidget( new MainWidget( this ) );
-    resize( 440, 500 );
+    Akonadi::Control::start(this);
+    setCentralWidget(new MainWidget(this));
+    resize(440, 500);
 }

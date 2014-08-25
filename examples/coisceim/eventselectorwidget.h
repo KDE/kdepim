@@ -27,38 +27,39 @@
 
 class QTreeView;
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 class IncidenceViewer;
 }
 
 class EventSelectorDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit EventSelectorDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit EventSelectorDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-  Akonadi::Item selectedItem();
+    Akonadi::Item selectedItem();
 
 private:
-  QTreeView *m_view;
+    QTreeView *m_view;
 };
 
 class EventSelectorWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit EventSelectorWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit EventSelectorWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-  void clear();
+    void clear();
 
 signals:
-  void selected(const Akonadi::Item &item);
+    void selected(const Akonadi::Item &item);
 
 private slots:
-  void selectTrip();
+    void selectTrip();
 
 private:
-  CalendarSupport::IncidenceViewer *m_browser;
+    CalendarSupport::IncidenceViewer *m_browser;
 };
 
 #endif

@@ -39,58 +39,56 @@
 class Tab3TreeWidget : public EntityTreeWidget
 {
 public:
-  Tab3TreeWidget(QWidget* parent = 0)
-    : EntityTreeWidget(parent)
-  {
-  }
+    Tab3TreeWidget(QWidget *parent = 0)
+        : EntityTreeWidget(parent)
+    {
+    }
 
-  /* reimp */ void connectTreeToModel(QTreeView* tree, Akonadi::EntityTreeModel* model)
-  {
-    m_collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
-    m_collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
-    m_collectionFilter->setSourceModel(model);
-    m_collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
-    tree->setModel(m_collectionFilter);
-  }
+    /* reimp */ void connectTreeToModel(QTreeView *tree, Akonadi::EntityTreeModel *model)
+    {
+        m_collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+        m_collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
+        m_collectionFilter->setSourceModel(model);
+        m_collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
+        tree->setModel(m_collectionFilter);
+    }
 
-  /* reimp */ QModelIndex mapToSource(const QModelIndex &idx)
-  {
-    return m_collectionFilter->mapToSource(idx);
-  }
+    /* reimp */ QModelIndex mapToSource(const QModelIndex &idx)
+    {
+        return m_collectionFilter->mapToSource(idx);
+    }
 
-  /* reimp */ Akonadi::EntityTreeModel* getETM()
-  {
-    return new MixedTreeModel(changeRecorder(), this);
-  }
-
+    /* reimp */ Akonadi::EntityTreeModel *getETM()
+    {
+        return new MixedTreeModel(changeRecorder(), this);
+    }
 
 private:
-  Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
+    Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
 
 };
 
-Tab3Widget::Tab3Widget(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f)
+Tab3Widget::Tab3Widget(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f)
 {
-  QHBoxLayout *layout = new QHBoxLayout(this);
+    QHBoxLayout *layout = new QHBoxLayout(this);
 
-  QSplitter *splitter = new QSplitter(this);
-  layout->addWidget(splitter);
+    QSplitter *splitter = new QSplitter(this);
+    layout->addWidget(splitter);
 
-  m_etw = new Tab3TreeWidget(splitter);
-  m_etw->init();
+    m_etw = new Tab3TreeWidget(splitter);
+    m_etw->init();
 
-  QSplitter *rhsContainer = new QSplitter(Qt::Vertical, splitter);
+    QSplitter *rhsContainer = new QSplitter(Qt::Vertical, splitter);
 
-  m_itemView = new QTreeView(rhsContainer);
+    m_itemView = new QTreeView(rhsContainer);
 
-  KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(m_etw->view()->selectionModel(), this);
-  selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
-  selectionProxy->setSourceModel(m_etw->model());
+    KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(m_etw->view()->selectionModel(), this);
+    selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
+    selectionProxy->setSourceModel(m_etw->model());
 
-  m_itemView->setModel(selectionProxy);
+    m_itemView->setModel(selectionProxy);
 
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
+    ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
 }
-
 

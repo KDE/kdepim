@@ -32,35 +32,35 @@ class QListView;
 
 class FindingETW : public EntityTreeWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  FindingETW(QWidget* parent = 0);
+    FindingETW(QWidget *parent = 0);
 
-  virtual void connectTreeToModel(QTreeView* tree, Akonadi::EntityTreeModel* model);
+    virtual void connectTreeToModel(QTreeView *tree, Akonadi::EntityTreeModel *model);
 
 signals:
-  void initialized();
+    void initialized();
 
 };
 
 class EntityFindingWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  EntityFindingWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    EntityFindingWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 private slots:
 
-  void initWidget();
+    void initWidget();
 
-  void findCollection();
-  void findItem();
+    void findCollection();
+    void findItem();
 
 private:
-  FindingETW *m_etw;
-  QListView *m_selectionView;
-  QLineEdit *m_collectionIdInput;
-  QLineEdit *m_itemIdInput;
+    FindingETW *m_etw;
+    QListView *m_selectionView;
+    QLineEdit *m_collectionIdInput;
+    QLineEdit *m_itemIdInput;
 
 };
 

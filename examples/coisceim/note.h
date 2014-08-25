@@ -32,7 +32,7 @@ class Note
 {
 public:
 
-  static QString mimeType();
+    static QString mimeType();
 
 };
 

@@ -37,24 +37,24 @@ class EventSelectorWidget;
 
 class CreateTripWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit CreateTripWidget(Trip *trip, Akonadi::ChangeRecorder* monitor, QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit CreateTripWidget(Trip *trip, Akonadi::ChangeRecorder *monitor, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 private slots:
-  void tripSelected(const Akonadi::Item &item);
-  void create();
+    void tripSelected(const Akonadi::Item &item);
+    void create();
 
 private:
-  CreateFolderContentsWidget* createView(const QString &type, int role);
+    CreateFolderContentsWidget *createView(const QString &type, int role);
 
-  Trip *m_trip;
-  Akonadi::ChangeRecorder* m_monitor;
-  Akonadi::Item m_tripItem;
-  CreateFolderContentsWidget *m_mailWidget;
-  CreateFolderContentsWidget *m_todoWidget;
-  CreateFolderContentsWidget *m_notesWidget;
-  EventSelectorWidget *m_eventSelector;
+    Trip *m_trip;
+    Akonadi::ChangeRecorder *m_monitor;
+    Akonadi::Item m_tripItem;
+    CreateFolderContentsWidget *m_mailWidget;
+    CreateFolderContentsWidget *m_todoWidget;
+    CreateFolderContentsWidget *m_notesWidget;
+    EventSelectorWidget *m_eventSelector;
 };
 
 #endif

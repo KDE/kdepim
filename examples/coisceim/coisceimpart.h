@@ -37,7 +37,7 @@ public:
     /**
      * Default constructor
      */
-    CoisceimPart(QWidget *parentWidget,QObject *parent, const QVariantList &);
+    CoisceimPart(QWidget *parentWidget, QObject *parent, const QVariantList &);
 
     /**
      * Destructor

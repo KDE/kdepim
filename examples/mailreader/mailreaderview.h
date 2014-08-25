@@ -13,12 +13,14 @@
 class QPainter;
 class KUrl;
 
-namespace MessageViewer {
-  class Viewer;
+namespace MessageViewer
+{
+class Viewer;
 }
 
-namespace Akonadi {
-  class Item;
+namespace Akonadi
+{
+class Item;
 }
 
 /**
@@ -45,7 +47,7 @@ public:
      */
     virtual ~mailreaderView();
 
-    void showItem(const Akonadi::Item& item);
+    void showItem(const Akonadi::Item &item);
     void showAboutPage();
 
 private:
@@ -61,17 +63,17 @@ signals:
     /**
      * Use this signal to change the content of the statusbar
      */
-    void signalChangeStatusbar(const QString& text);
+    void signalChangeStatusbar(const QString &text);
 
     /**
      * Use this signal to change the content of the caption
      */
-    void signalChangeCaption(const QString& text);
+    void signalChangeCaption(const QString &text);
 
 private slots:
     void switchColors();
     void settingsChanged();
-    void urlClicked( const Akonadi::Item &, const KUrl& );
+    void urlClicked(const Akonadi::Item &, const KUrl &);
 };
 
 #endif // mailreaderVIEW_H

@@ -39,25 +39,25 @@ class MainWidget : public QWidget
 {
     Q_OBJECT
 
-    public:
-      MainWidget( MainWindow* parent = 0 );
+public:
+    MainWidget(MainWindow *parent = 0);
 
-    private slots:
-      void collectionClicked( const Akonadi::Collection& collection );
-      void itemActivated( const QModelIndex& index );
+private slots:
+    void collectionClicked(const Akonadi::Collection &collection);
+    void itemActivated(const QModelIndex &index);
 
-    private:
-      MainWindow *mMainWindow;
+private:
+    MainWindow *mMainWindow;
 
-      // Views
-      Akonadi::CollectionView *mCollectionList;
-      QTreeView *mIncidenceList;
-      CalendarSupport::IncidenceViewer *mIncidenceViewer;
+    // Views
+    Akonadi::CollectionView *mCollectionList;
+    QTreeView *mIncidenceList;
+    CalendarSupport::IncidenceViewer *mIncidenceViewer;
 
-      // Models
-      Akonadi::CollectionModel *mCollectionModel;
-      Akonadi::CollectionFilterProxyModel *mCollectionProxyModel;
-      CalendarSupport::KCalModel *mIncidenceModel;
+    // Models
+    Akonadi::CollectionModel *mCollectionModel;
+    Akonadi::CollectionFilterProxyModel *mCollectionProxyModel;
+    CalendarSupport::KCalModel *mIncidenceModel;
 
 };
 

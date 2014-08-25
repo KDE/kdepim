@@ -23,6 +23,6 @@ using namespace Akonotes;
 
 QString Note::mimeType()
 {
-  return QString::fromLatin1( "text/x-vnd.akonadi.note" );
+    return QString::fromLatin1("text/x-vnd.akonadi.note");
 }
 

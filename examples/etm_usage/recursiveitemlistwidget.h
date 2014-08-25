@@ -35,13 +35,13 @@ class EntityTreeModel;
 
 class RecursiveItemListWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  RecursiveItemListWidget( QWidget* parent = 0, Qt::WindowFlags f = 0 );
+    RecursiveItemListWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 private:
-  QAbstractItemView *m_listView;
-  Akonadi::EntityTreeModel *m_etm;
+    QAbstractItemView *m_listView;
+    Akonadi::EntityTreeModel *m_etm;
 
 };
 

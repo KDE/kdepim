@@ -28,31 +28,32 @@
 class CategorisedEntityModel : public MixedTreeModel
 {
 public:
-  CategorisedEntityModel(Akonadi::ChangeRecorder* monitor, QObject* parent = 0)
-    : MixedTreeModel(monitor, parent)
-  {
-
-  }
-
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const
-  {
-    if (role == KCategorizedSortFilterProxyModel::CategorySortRole)
+    CategorisedEntityModel(Akonadi::ChangeRecorder *monitor, QObject *parent = 0)
+        : MixedTreeModel(monitor, parent)
     {
-      return index.data(MimeTypeRole);
-    }
-    if (role == KCategorizedSortFilterProxyModel::CategoryDisplayRole)
-    {
-      QString mimetype = index.data(MimeTypeRole).toString();
-      if (mimetype == QLatin1String("message/rfc822"))
-        return QLatin1String("Email");
-      if (mimetype == QLatin1String("text/directory"))
-        return QLatin1String("Addressee");
-      if (mimetype == QLatin1String("text/x-vnd.akonadi.note"))
-        return QLatin1String("Note");
 
     }
-    return Akonadi::EntityTreeModel::data(index, role);
-  }
+
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
+    {
+        if (role == KCategorizedSortFilterProxyModel::CategorySortRole) {
+            return index.data(MimeTypeRole);
+        }
+        if (role == KCategorizedSortFilterProxyModel::CategoryDisplayRole) {
+            QString mimetype = index.data(MimeTypeRole).toString();
+            if (mimetype == QLatin1String("message/rfc822")) {
+                return QLatin1String("Email");
+            }
+            if (mimetype == QLatin1String("text/directory")) {
+                return QLatin1String("Addressee");
+            }
+            if (mimetype == QLatin1String("text/x-vnd.akonadi.note")) {
+                return QLatin1String("Note");
+            }
+
+        }
+        return Akonadi::EntityTreeModel::data(index, role);
+    }
 };
 
 #endif

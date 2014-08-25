@@ -38,16 +38,16 @@ class EntityTreeModel;
 
 class Tab7Widget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  Tab7Widget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    Tab7Widget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 private slots:
-  void initModel(Akonadi::EntityTreeModel *model);
+    void initModel(Akonadi::EntityTreeModel *model);
 
 private:
-  KCategorizedView *m_itemView;
-  EntityTreeWidget *m_etw;
+    KCategorizedView *m_itemView;
+    EntityTreeWidget *m_etw;
 
 };
 

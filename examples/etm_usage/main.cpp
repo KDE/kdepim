@@ -19,7 +19,6 @@
 
 // READ THE README FILE
 
-
 #include <KLocalizedString>
 #include <KAboutData>
 
@@ -31,14 +30,14 @@
 
 int main(int argc, char *argv[])
 {
-  KAboutData aboutData( QLatin1String("etm_usage"),
-                        i18n( "ETM Test application" ),
-                        QLatin1String("0.99"),
-                        i18n( "Test app for EntityTreeModel" ),
-                        KAboutLicense::GPL,
-                        QLatin1String("http://pim.kde.org/akonadi/") );
-  aboutData.setProgramIconName( QLatin1String("akonadi") );
-  aboutData.addAuthor( i18n( "Stephen Kelly" ), i18n( "Author" ), QLatin1String("steveire@gmail.com") );
+    KAboutData aboutData(QLatin1String("etm_usage"),
+                         i18n("ETM Test application"),
+                         QLatin1String("0.99"),
+                         i18n("Test app for EntityTreeModel"),
+                         KAboutLicense::GPL,
+                         QLatin1String("http://pim.kde.org/akonadi/"));
+    aboutData.setProgramIconName(QLatin1String("akonadi"));
+    aboutData.addAuthor(i18n("Stephen Kelly"), i18n("Author"), QLatin1String("steveire@gmail.com"));
 
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -48,10 +47,10 @@ int main(int argc, char *argv[])
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-  app.setQuitOnLastWindowClosed(true);
+    app.setQuitOnLastWindowClosed(true);
 
-  MainWindow mainWindow;
-  mainWindow.show();
+    MainWindow mainWindow;
+    mainWindow.show();
 
-  return app.exec();
+    return app.exec();
 }

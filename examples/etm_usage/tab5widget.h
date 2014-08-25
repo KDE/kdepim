@@ -33,13 +33,13 @@ class EntityTreeWidget;
 
 class Tab5Widget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  Tab5Widget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    Tab5Widget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 private:
-  KCategorizedView *m_itemView;
-  EntityTreeWidget *m_etw;
+    KCategorizedView *m_itemView;
+    EntityTreeWidget *m_etw;
 
 };
 

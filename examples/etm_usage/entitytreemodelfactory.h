@@ -28,23 +28,23 @@
 
 class EntityTreeModelFactory : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  EntityTreeModelFactory(QObject* parent = 0);
+    EntityTreeModelFactory(QObject *parent = 0);
 
-  void createFromRemoteId(const QString &remoteId);
+    void createFromRemoteId(const QString &remoteId);
 
 signals:
-  void modelCreated(Akonadi::EntityTreeModel *model);
+    void modelCreated(Akonadi::EntityTreeModel *model);
 
 protected:
-  virtual Akonadi::EntityTreeModel* getModel(Akonadi::ChangeRecorder *changeRecorder, QObject *parent);
+    virtual Akonadi::EntityTreeModel *getModel(Akonadi::ChangeRecorder *changeRecorder, QObject *parent);
 
 private slots:
-  void collectionsFetched(const Akonadi::Collection::List &list);
+    void collectionsFetched(const Akonadi::Collection::List &list);
 
 private:
-  Akonadi::ChangeRecorder *m_changeRecorder;
+    Akonadi::ChangeRecorder *m_changeRecorder;
 
 };
 

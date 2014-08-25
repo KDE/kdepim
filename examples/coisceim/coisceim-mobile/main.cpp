@@ -25,16 +25,15 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 
-
 #include "mobile_mainview.h"
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  const QString ba( QLatin1String("coisceim-mobile") );
-  const QString name = i18n( "Kontact Touch Trips" );
+    const QString ba(QLatin1String("coisceim-mobile"));
+    const QString name = i18n("Kontact Touch Trips");
 
-  KAboutData aboutData( ba, name, name );
-  aboutData.setProductName( "Coisceim Mobile" );
+    KAboutData aboutData(ba, name, name);
+    aboutData.setProductName("Coisceim Mobile");
 
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -45,9 +44,9 @@ int main( int argc, char **argv )
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-  MobileMainview view;
-  view.show();
+    MobileMainview view;
+    view.show();
 
-  return app.exec();
+    return app.exec();
 }
 

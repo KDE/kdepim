@@ -31,19 +31,19 @@ class MailModelPrivate;
 
 class MailModel : public EntityTreeModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
 
-  explicit MailModel( ChangeRecorder *monitor, QObject *parent = 0);
-  virtual ~MailModel();
+    explicit MailModel(ChangeRecorder *monitor, QObject *parent = 0);
+    virtual ~MailModel();
 
-  virtual QVariant entityData(const Item &item, int column, int role=Qt::DisplayRole) const;
+    virtual QVariant entityData(const Item &item, int column, int role = Qt::DisplayRole) const;
 
-  virtual QVariant entityData(const Collection &collection, int column, int role=Qt::DisplayRole) const;
+    virtual QVariant entityData(const Collection &collection, int column, int role = Qt::DisplayRole) const;
 
-  virtual int columnCount(const QModelIndex &index = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &index = QModelIndex()) const;
 
-  virtual QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const;
+    virtual QVariant entityHeaderData(int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup) const;
 
 private:
     Q_DECLARE_PRIVATE(MailModel)

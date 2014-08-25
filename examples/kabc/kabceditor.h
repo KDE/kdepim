@@ -26,23 +26,24 @@
 
 class QLineEdit;
 
-namespace Akonadi {
-  class ContactEditor;
+namespace Akonadi
+{
+class ContactEditor;
 }
 
 class Dialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    Dialog( QWidget *parent = 0 );
+public:
+    Dialog(QWidget *parent = 0);
     ~Dialog();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void load();
     void save();
 
-  private:
+private:
     Akonadi::ContactEditor *mEditor;
     QLineEdit *mId;
 };

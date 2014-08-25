@@ -33,26 +33,26 @@ class FolderContentsWidget;
 
 class TripWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  TripWidget(Trip *trip, QWidget *parent = 0);
+    TripWidget(Trip *trip, QWidget *parent = 0);
 
-  QString eventName() const;
+    QString eventName() const;
 
 signals:
-  void deleteThis(TripWidget*);
+    void deleteThis(TripWidget *);
 
 private slots:
-  void doDeleteThis();
-  void updateName();
-  void updateDescription();
+    void doDeleteThis();
+    void updateName();
+    void updateDescription();
 
 private:
-  FolderContentsWidget* createView(const QString &type, int role);
+    FolderContentsWidget *createView(const QString &type, int role);
 
-  Trip * const m_trip;
-  QTextBrowser *m_eventBrowser;
-  QLabel *m_eventName;
+    Trip *const m_trip;
+    QTextBrowser *m_eventBrowser;
+    QLabel *m_eventName;
 };
 
 #endif

@@ -30,24 +30,24 @@ class QModelIndex;
 
 class StackedWidgetView : public QStackedWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit StackedWidgetView(int widgetRole, QWidget* parent = 0);
+    explicit StackedWidgetView(int widgetRole, QWidget *parent = 0);
 
-  void setModel(QAbstractItemModel *model);
-  void setSelectionModel(QItemSelectionModel *selectionModel);
+    void setModel(QAbstractItemModel *model);
+    void setSelectionModel(QItemSelectionModel *selectionModel);
 
 private slots:
-  void insertRows(const QModelIndex &parent, int start, int end);
-  void removeRows(const QModelIndex &parent, int start, int end);
-  void refill();
+    void insertRows(const QModelIndex &parent, int start, int end);
+    void removeRows(const QModelIndex &parent, int start, int end);
+    void refill();
 
-  void updateCurrentWidget();
+    void updateCurrentWidget();
 
 private:
-  QAbstractItemModel *m_model;
-  QItemSelectionModel *m_selectionModel;
-  const int m_widgetRole;
+    QAbstractItemModel *m_model;
+    QItemSelectionModel *m_selectionModel;
+    const int m_widgetRole;
 };
 
 #endif

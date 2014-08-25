@@ -34,56 +34,56 @@
 #include "todocheckableproxymodel.h"
 #include "mixedtreemodel.h"
 
-Akonadi::ChangeRecorder* TripComponentFactory::createMailChangeRecorder(QObject *parent)
+Akonadi::ChangeRecorder *TripComponentFactory::createMailChangeRecorder(QObject *parent)
 {
-  Akonadi::ChangeRecorder* chRec = new Akonadi::ChangeRecorder(parent);
-  chRec->setMimeTypeMonitored(KMime::Message::mimeType());
-  chRec->itemFetchScope().fetchFullPayload(true);
-  return chRec;
+    Akonadi::ChangeRecorder *chRec = new Akonadi::ChangeRecorder(parent);
+    chRec->setMimeTypeMonitored(KMime::Message::mimeType());
+    chRec->itemFetchScope().fetchFullPayload(true);
+    return chRec;
 }
 
-Akonadi::ChangeRecorder* TripComponentFactory::createNotesChangeRecorder(QObject *parent)
+Akonadi::ChangeRecorder *TripComponentFactory::createNotesChangeRecorder(QObject *parent)
 {
-  Akonadi::ChangeRecorder* chRec = new Akonadi::ChangeRecorder(parent);
-  chRec->setMimeTypeMonitored(Akonotes::Note::mimeType());
-  chRec->itemFetchScope().fetchFullPayload(true);
-  return chRec;
+    Akonadi::ChangeRecorder *chRec = new Akonadi::ChangeRecorder(parent);
+    chRec->setMimeTypeMonitored(Akonotes::Note::mimeType());
+    chRec->itemFetchScope().fetchFullPayload(true);
+    return chRec;
 }
 
-Akonadi::ChangeRecorder* TripComponentFactory::createTodoChangeRecorder(QObject *parent)
+Akonadi::ChangeRecorder *TripComponentFactory::createTodoChangeRecorder(QObject *parent)
 {
-  Akonadi::ChangeRecorder* chRec = new Akonadi::ChangeRecorder(parent);
-  chRec->setMimeTypeMonitored(KCalCore::Todo::todoMimeType());
-  chRec->itemFetchScope().fetchFullPayload(true);
-  return chRec;
+    Akonadi::ChangeRecorder *chRec = new Akonadi::ChangeRecorder(parent);
+    chRec->setMimeTypeMonitored(KCalCore::Todo::todoMimeType());
+    chRec->itemFetchScope().fetchFullPayload(true);
+    return chRec;
 }
 
-QAbstractItemModel* TripComponentFactory::createMailModel(Akonadi::ChangeRecorder *changeRecorder)
+QAbstractItemModel *TripComponentFactory::createMailModel(Akonadi::ChangeRecorder *changeRecorder)
 {
-  MixedTreeModel *model = new MixedTreeModel(changeRecorder);
-  model->setCollectionFetchStrategy(MixedTreeModel::FetchNoCollections);
-  return model;
+    MixedTreeModel *model = new MixedTreeModel(changeRecorder);
+    model->setCollectionFetchStrategy(MixedTreeModel::FetchNoCollections);
+    return model;
 }
 
-QAbstractItemModel* TripComponentFactory::createNotesModel(Akonadi::ChangeRecorder *changeRecorder)
+QAbstractItemModel *TripComponentFactory::createNotesModel(Akonadi::ChangeRecorder *changeRecorder)
 {
-  MixedTreeModel *model = new MixedTreeModel(changeRecorder);
-  model->setCollectionFetchStrategy(MixedTreeModel::FetchNoCollections);
-  return model;
+    MixedTreeModel *model = new MixedTreeModel(changeRecorder);
+    model->setCollectionFetchStrategy(MixedTreeModel::FetchNoCollections);
+    return model;
 }
 
-QAbstractItemModel* TripComponentFactory::createTodoModel(Akonadi::ChangeRecorder *changeRecorder)
+QAbstractItemModel *TripComponentFactory::createTodoModel(Akonadi::ChangeRecorder *changeRecorder)
 {
-  MixedTreeModel *model = new MixedTreeModel(changeRecorder);
-  model->setCollectionFetchStrategy(MixedTreeModel::FetchNoCollections);
+    MixedTreeModel *model = new MixedTreeModel(changeRecorder);
+    model->setCollectionFetchStrategy(MixedTreeModel::FetchNoCollections);
 
-  Akonadi::EntityMimeTypeFilterModel *filterModel = new Akonadi::EntityMimeTypeFilterModel(changeRecorder);
-  filterModel->addMimeTypeInclusionFilter(KCalCore::Todo::todoMimeType());
-  filterModel->setHeaderGroup(MixedTreeModel::ItemListHeaders);
-  filterModel->setSourceModel(model);
+    Akonadi::EntityMimeTypeFilterModel *filterModel = new Akonadi::EntityMimeTypeFilterModel(changeRecorder);
+    filterModel->addMimeTypeInclusionFilter(KCalCore::Todo::todoMimeType());
+    filterModel->setHeaderGroup(MixedTreeModel::ItemListHeaders);
+    filterModel->setSourceModel(model);
 
-  TodoCheckableProxyModel *checkableProxy = new TodoCheckableProxyModel(model);
-  checkableProxy->setSourceModel(filterModel);
+    TodoCheckableProxyModel *checkableProxy = new TodoCheckableProxyModel(model);
+    checkableProxy->setSourceModel(filterModel);
 
-  return checkableProxy;
+    return checkableProxy;
 }

@@ -37,7 +37,7 @@
 
 K_PLUGIN_FACTORY(CoisceimPartFactory, registerPlugin<CoisceimPart>();)
 
-CoisceimPart::CoisceimPart( QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/ )
+CoisceimPart::CoisceimPart(QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/)
     : KParts::ReadOnlyPart(parent)
 {
     // we need an instance

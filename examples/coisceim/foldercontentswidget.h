@@ -35,23 +35,23 @@ class Trip;
 
 class FolderContentsWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit FolderContentsWidget(Trip *trip, int role, const QString &type, QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit FolderContentsWidget(Trip *trip, int role, const QString &type, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-  QItemSelectionModel* selectionModel() const;
+    QItemSelectionModel *selectionModel() const;
 
 protected:
-  Trip* trip() const;
+    Trip *trip() const;
 
 private slots:
-  void configure();
+    void configure();
 
 private:
-  const QString m_type;
-  Trip *m_trip;
-  int m_role;
-  Akonadi::EntityTreeView *m_view;
+    const QString m_type;
+    Trip *m_trip;
+    int m_role;
+    Akonadi::EntityTreeView *m_view;
 };
 
 #endif

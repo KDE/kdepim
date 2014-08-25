@@ -28,49 +28,49 @@ class QItemSelectionModel;
 
 class ItemSelection : public QObject
 {
-  Q_OBJECT
-  Q_PROPERTY(qint64 id READ id NOTIFY idChanged)
-  Q_PROPERTY(ItemType type READ itemType NOTIFY idChanged)
-  Q_PROPERTY(QString noteTitle READ noteTitle NOTIFY idChanged)
-  Q_PROPERTY(QString noteContent READ noteContent NOTIFY idChanged)
-  Q_ENUMS(ItemType)
+    Q_OBJECT
+    Q_PROPERTY(qint64 id READ id NOTIFY idChanged)
+    Q_PROPERTY(ItemType type READ itemType NOTIFY idChanged)
+    Q_PROPERTY(QString noteTitle READ noteTitle NOTIFY idChanged)
+    Q_PROPERTY(QString noteContent READ noteContent NOTIFY idChanged)
+    Q_ENUMS(ItemType)
 public:
-  enum ItemType {
-    InvalidType,
-    MailType,
-    TodoType,
-    NotesType
-  };
-  explicit ItemSelection(QItemSelectionModel *selModel1, QItemSelectionModel *selModel2, QItemSelectionModel *selModel3, QObject* parent = 0);
+    enum ItemType {
+        InvalidType,
+        MailType,
+        TodoType,
+        NotesType
+    };
+    explicit ItemSelection(QItemSelectionModel *selModel1, QItemSelectionModel *selModel2, QItemSelectionModel *selModel3, QObject *parent = 0);
 
-  QModelIndex index() const;
+    QModelIndex index() const;
 
-  qint64 id();
-  ItemType itemType() const;
+    qint64 id();
+    ItemType itemType() const;
 
-  QString noteTitle() const;
-  QString noteContent() const;
+    QString noteTitle() const;
+    QString noteContent() const;
 
-  Q_INVOKABLE void clear();
+    Q_INVOKABLE void clear();
 
 signals:
-  void selectionChanged(const QModelIndex &index);
-  void idChanged();
+    void selectionChanged(const QModelIndex &index);
+    void idChanged();
 
 private slots:
-  void modelSelectionChanged();
+    void modelSelectionChanged();
 
 private:
-  void clearOrUpdate(QItemSelectionModel *selModel, QObject *sender_);
-  void connectSignals();
-  void disconnectSignals();
+    void clearOrUpdate(QItemSelectionModel *selModel, QObject *sender_);
+    void connectSignals();
+    void disconnectSignals();
 
 private:
-  QItemSelectionModel *m_selModel1;
-  QItemSelectionModel *m_selModel2;
-  QItemSelectionModel *m_selModel3;
-  QPersistentModelIndex m_index;
-  qint64 m_id;
+    QItemSelectionModel *m_selModel1;
+    QItemSelectionModel *m_selModel2;
+    QItemSelectionModel *m_selModel3;
+    QPersistentModelIndex m_index;
+    qint64 m_id;
 };
 
 #endif

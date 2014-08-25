@@ -33,50 +33,48 @@
 
 using namespace Akonadi;
 
-EntityTreeModelFactory::EntityTreeModelFactory(QObject* parent)
-  : QObject(parent)
+EntityTreeModelFactory::EntityTreeModelFactory(QObject *parent)
+    : QObject(parent)
 {
 
 }
 
-void EntityTreeModelFactory::createFromRemoteId(const QString& remoteId)
+void EntityTreeModelFactory::createFromRemoteId(const QString &remoteId)
 {
-  Session *session = new Session("TEST", this);
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel, session);
-  job->setProperty(WANTED_REMOTE_ID, remoteId);
-  connect(job, &CollectionFetchJob::collectionsReceived, this, &EntityTreeModelFactory::collectionsFetched);
+    Session *session = new Session("TEST", this);
+    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel, session);
+    job->setProperty(WANTED_REMOTE_ID, remoteId);
+    connect(job, &CollectionFetchJob::collectionsReceived, this, &EntityTreeModelFactory::collectionsFetched);
 }
 
-void EntityTreeModelFactory::collectionsFetched(const Akonadi::Collection::List& list)
+void EntityTreeModelFactory::collectionsFetched(const Akonadi::Collection::List &list)
 {
-  QObject *job = sender();
-  if (!job)
-    return;
-  QString wantedRemoteId = job->property(WANTED_REMOTE_ID).toString();
-  if (!wantedRemoteId.isEmpty())
-  {
-    foreach(const Collection &col, list)
-    {
-      if (col.remoteId() == wantedRemoteId)
-      {
-        ChangeRecorder *changeRecorder = new ChangeRecorder(this);
-        changeRecorder->setCollectionMonitored(col, true);
-        changeRecorder->fetchCollection(true);
-        changeRecorder->setAllMonitored(true);
-        changeRecorder->itemFetchScope().fetchFullPayload();
-
-        EntityTreeModel *etm = getModel(changeRecorder, parent());
-
-        emit modelCreated(etm);
+    QObject *job = sender();
+    if (!job) {
         return;
-      }
     }
-    return;
-  }
+    QString wantedRemoteId = job->property(WANTED_REMOTE_ID).toString();
+    if (!wantedRemoteId.isEmpty()) {
+        foreach (const Collection &col, list) {
+            if (col.remoteId() == wantedRemoteId) {
+                ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+                changeRecorder->setCollectionMonitored(col, true);
+                changeRecorder->fetchCollection(true);
+                changeRecorder->setAllMonitored(true);
+                changeRecorder->itemFetchScope().fetchFullPayload();
+
+                EntityTreeModel *etm = getModel(changeRecorder, parent());
+
+                emit modelCreated(etm);
+                return;
+            }
+        }
+        return;
+    }
 }
 
-EntityTreeModel* EntityTreeModelFactory::getModel(ChangeRecorder *changeRecorder, QObject *parent)
+EntityTreeModel *EntityTreeModelFactory::getModel(ChangeRecorder *changeRecorder, QObject *parent)
 {
-  return new EntityTreeModel(changeRecorder, parent);
+    return new EntityTreeModel(changeRecorder, parent);
 }
 

@@ -34,25 +34,25 @@ class KJob;
 
 class NoteViewer : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  NoteViewer(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    NoteViewer(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-  void setIndex(const QPersistentModelIndex &index);
+    void setIndex(const QPersistentModelIndex &index);
 
 protected:
-  virtual bool eventFilter( QObject* watched, QEvent* event );
+    virtual bool eventFilter(QObject *watched, QEvent *event);
 
 private slots:
-  void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-  void modifyDone( KJob *job );
+    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void modifyDone(KJob *job);
 
 private:
-  void populateWidget(const QModelIndex &index);
+    void populateWidget(const QModelIndex &index);
 private:
-  QPersistentModelIndex m_persistentIndex;
-  QLineEdit *m_titleEdit;
-  QTextEdit *m_contentEdit;
+    QPersistentModelIndex m_persistentIndex;
+    QLineEdit *m_titleEdit;
+    QTextEdit *m_contentEdit;
 
 };
 

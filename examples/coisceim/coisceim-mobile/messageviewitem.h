@@ -25,52 +25,54 @@
 class QSortFilterProxyModel;
 class KUrl;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Item;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class Viewer;
 
 class MessageViewItem : public DeclarativeAkonadiItem
 {
-  Q_OBJECT
-  Q_PROPERTY( QString splashMessage READ splashMessage WRITE setSplashMessage )
-  Q_PROPERTY( QObject* attachmentModel READ attachmentModel CONSTANT )
-  Q_PROPERTY( QString messagePath READ messagePath WRITE setMessagePath )
+    Q_OBJECT
+    Q_PROPERTY(QString splashMessage READ splashMessage WRITE setSplashMessage)
+    Q_PROPERTY(QObject *attachmentModel READ attachmentModel CONSTANT)
+    Q_PROPERTY(QString messagePath READ messagePath WRITE setMessagePath)
 
-  public:
-    explicit MessageViewItem( QDeclarativeItem *parent = 0 );
+public:
+    explicit MessageViewItem(QDeclarativeItem *parent = 0);
     ~MessageViewItem();
 
     QString splashMessage() const;
-    void setSplashMessage( const QString &message );
+    void setSplashMessage(const QString &message);
 
     QString messagePath() const;
-    void setMessagePath( const QString &messagePath );
+    void setMessagePath(const QString &messagePath);
 
-    QObject* attachmentModel() const;
+    QObject *attachmentModel() const;
 
     Viewer *viewer();
 
     virtual qint64 itemId() const;
-    virtual void setItemId( qint64 id );
-    virtual void setItem( const Akonadi::Item &item );
+    virtual void setItemId(qint64 id);
+    virtual void setItem(const Akonadi::Item &item);
 
-    virtual void scrollDown( int dist );
-    virtual void scrollUp( int dist );
+    virtual void scrollDown(int dist);
+    virtual void scrollUp(int dist);
 
-  public slots:
+public slots:
     void saveAllAttachments();
     void copyAllToClipboard();
 
-  signals:
+signals:
     /** Emitted for urls not handled by MessageViewer::Viewer. */
-    void urlClicked( const Akonadi::Item &item, const KUrl &url );
+    void urlClicked(const Akonadi::Item &item, const KUrl &url);
     void mailRemoved();
 
-  private:
+private:
     Viewer *m_viewer;
     QSortFilterProxyModel *m_attachmentProxy;
 };

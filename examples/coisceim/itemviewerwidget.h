@@ -49,22 +49,21 @@ class IncidenceViewer;
 
 class ItemViewerWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  ItemViewerWidget( ItemSelection *selectionModel, QWidget* parent = 0, Qt::WindowFlags f = 0 );
+    ItemViewerWidget(ItemSelection *selectionModel, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 private slots:
-  void selectionChanged( const QModelIndex &index );
+    void selectionChanged(const QModelIndex &index);
 
 private:
-  ItemSelection *m_itemSelection;
-  QStackedWidget *m_widgetStack;
-  MessageViewer::Viewer *m_mailViewer;
-  Akonadi::ContactViewer *m_contactViewer;
-  NoteViewer *m_noteViewer;
-  CalendarSupport::IncidenceViewer *m_incidenceViewer;
+    ItemSelection *m_itemSelection;
+    QStackedWidget *m_widgetStack;
+    MessageViewer::Viewer *m_mailViewer;
+    Akonadi::ContactViewer *m_contactViewer;
+    NoteViewer *m_noteViewer;
+    CalendarSupport::IncidenceViewer *m_incidenceViewer;
 };
 
 #endif
-
 

@@ -24,63 +24,67 @@
 #include <QAbstractItemModel>
 #include <QItemSelectionModel>
 
-StackedWidgetView::StackedWidgetView(int widgetRole, QWidget* parent)
-  : QStackedWidget(parent), m_model(0), m_selectionModel(0), m_widgetRole(widgetRole)
+StackedWidgetView::StackedWidgetView(int widgetRole, QWidget *parent)
+    : QStackedWidget(parent), m_model(0), m_selectionModel(0), m_widgetRole(widgetRole)
 {
 
 }
 
-void StackedWidgetView::setModel(QAbstractItemModel* model)
+void StackedWidgetView::setModel(QAbstractItemModel *model)
 {
-  m_model = model;
+    m_model = model;
 
-  refill();
+    refill();
 
-  connect(model, SIGNAL(modelReset()), SLOT(refill()));
-  connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(insertRows(QModelIndex,int,int)));
-  connect(model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(removeRows(QModelIndex,int,int)));
+    connect(model, SIGNAL(modelReset()), SLOT(refill()));
+    connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), SLOT(insertRows(QModelIndex, int, int)));
+    connect(model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)), SLOT(removeRows(QModelIndex, int, int)));
 }
 
-void StackedWidgetView::setSelectionModel(QItemSelectionModel* selectionModel)
+void StackedWidgetView::setSelectionModel(QItemSelectionModel *selectionModel)
 {
-  m_selectionModel = selectionModel;
+    m_selectionModel = selectionModel;
 
-  connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateCurrentWidget()));
+    connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), SLOT(updateCurrentWidget()));
 }
 
 void StackedWidgetView::refill()
 {
-  for (int i = m_model->rowCount() - 1; i >= 0; --i) {
-    QWidget *w = m_model->index(i, 0).data(m_widgetRole).value<QWidget*>();
-    if (w)
-      insertWidget(0, w);
-  }
+    for (int i = m_model->rowCount() - 1; i >= 0; --i) {
+        QWidget *w = m_model->index(i, 0).data(m_widgetRole).value<QWidget *>();
+        if (w) {
+            insertWidget(0, w);
+        }
+    }
 }
-void StackedWidgetView::insertRows(const QModelIndex& parent, int start, int end)
+void StackedWidgetView::insertRows(const QModelIndex &parent, int start, int end)
 {
-  for (int i = start; i <= end; ++i) {
-    QWidget *w = m_model->index(i, 0, parent).data(m_widgetRole).value<QWidget*>();
-    if (w)
-      insertWidget(i, w);
-  }
+    for (int i = start; i <= end; ++i) {
+        QWidget *w = m_model->index(i, 0, parent).data(m_widgetRole).value<QWidget *>();
+        if (w) {
+            insertWidget(i, w);
+        }
+    }
 }
 
-void StackedWidgetView::removeRows(const QModelIndex& parent, int start, int end)
+void StackedWidgetView::removeRows(const QModelIndex &parent, int start, int end)
 {
-  for (int i = start; i <= end; ++i) {
-    QWidget *w = m_model->index(i, 0, parent).data(m_widgetRole).value<QWidget*>();
-    if (w)
-      removeWidget(w);
-  }
+    for (int i = start; i <= end; ++i) {
+        QWidget *w = m_model->index(i, 0, parent).data(m_widgetRole).value<QWidget *>();
+        if (w) {
+            removeWidget(w);
+        }
+    }
 }
 
 void StackedWidgetView::updateCurrentWidget()
 {
-  const QModelIndexList list = m_selectionModel->selectedRows();
+    const QModelIndexList list = m_selectionModel->selectedRows();
 
-  if (list.isEmpty())
-    return;
+    if (list.isEmpty()) {
+        return;
+    }
 
-  const QModelIndex first = list.first();
-  setCurrentIndex(first.row());
+    const QModelIndex first = list.first();
+    setCurrentIndex(first.row());
 }

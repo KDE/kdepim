@@ -29,7 +29,6 @@
 #include <Akonadi/Contact/ContactEditor>
 #include <AkonadiCore/item.h>
 
-
 #include <QApplication>
 #include <KAboutData>
 #include <KLocalizedString>
@@ -38,41 +37,40 @@
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 
-Dialog::Dialog( QWidget *parent )
-  : QDialog( parent )
+Dialog::Dialog(QWidget *parent)
+    : QDialog(parent)
 {
-  setWindowTitle( i18n("Contact Editor") );
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    setWindowTitle(i18n("Contact Editor"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
+    QWidget *wdg = new QWidget(this);
+    mainLayout->addWidget(wdg);
+    mainLayout->addWidget(buttonBox);
 
-  QWidget *wdg = new QWidget( this );
-  mainLayout->addWidget(wdg);
-  mainLayout->addWidget(buttonBox);
+    QGridLayout *layout = new QGridLayout(wdg);
 
-  QGridLayout *layout = new QGridLayout( wdg );
+    mEditor = new Akonadi::ContactEditor(Akonadi::ContactEditor::EditMode, wdg);
+    layout->addWidget(mEditor, 0, 0, 1, 3);
 
-  mEditor = new Akonadi::ContactEditor( Akonadi::ContactEditor::EditMode, wdg );
-  layout->addWidget( mEditor, 0, 0, 1, 3 );
+    QLabel *label = new QLabel(i18n("Item Id:"), wdg);
+    layout->addWidget(label, 1, 0);
 
-  QLabel *label = new QLabel( i18n("Item Id:"), wdg );
-  layout->addWidget( label, 1, 0 );
+    mId = new QLineEdit(wdg);
+    layout->addWidget(mId, 1, 1);
 
-  mId = new QLineEdit( wdg );
-  layout->addWidget( mId, 1, 1 );
+    QPushButton *button = new QPushButton(i18n("Load"), wdg);
+    layout->addWidget(button, 1, 2);
 
-  QPushButton *button = new QPushButton( i18n("Load"), wdg );
-  layout->addWidget( button, 1, 2 );
+    connect(button, &QPushButton::clicked, this, &Dialog::load);
 
-  connect(button, &QPushButton::clicked, this, &Dialog::load);
+    button = new QPushButton(i18n("Save"), wdg);
+    layout->addWidget(button, 2, 2);
 
-  button = new QPushButton( i18n("Save"), wdg );
-  layout->addWidget( button, 2, 2 );
-
-  connect(button, &QPushButton::clicked, this, &Dialog::save);
+    connect(button, &QPushButton::clicked, this, &Dialog::save);
 }
 
 Dialog::~Dialog()
@@ -81,18 +79,18 @@ Dialog::~Dialog()
 
 void Dialog::load()
 {
-  mEditor->loadContact( Akonadi::Item( mId->text().toLongLong() ) );
+    mEditor->loadContact(Akonadi::Item(mId->text().toLongLong()));
 }
 
 void Dialog::save()
 {
-  mEditor->saveContactInAddressBook();
+    mEditor->saveContactInAddressBook();
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( QLatin1String("kabceditor"), i18n("KABC Editor"), QLatin1String("1.0" ));
-  aboutData.setShortDescription( i18n("A contact editor for Akonadi"));
+    KAboutData aboutData(QLatin1String("kabceditor"), i18n("KABC Editor"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("A contact editor for Akonadi"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
@@ -102,9 +100,9 @@ int main( int argc, char **argv )
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-  Dialog dlg;
-  dlg.exec();
+    Dialog dlg;
+    dlg.exec();
 
-  return 0;
+    return 0;
 }
 

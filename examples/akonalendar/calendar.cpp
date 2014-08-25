@@ -19,8 +19,6 @@
     USA.
 */
 
-
-
 #include <QApplication>
 #include <KAboutData>
 #include <KLocalizedString>
@@ -28,10 +26,10 @@
 
 #include "mainwindow.h"
 
-int main(  int argc,  char **argv )
+int main(int argc,  char **argv)
 {
-    KAboutData aboutData( QLatin1String("akonalendar"), i18n( "Akonalendar" ), QLatin1String("0.1"));
-    aboutData.setShortDescription( i18n( "A calendar demo application" ) );
+    KAboutData aboutData(QLatin1String("akonalendar"), i18n("Akonalendar"), QLatin1String("0.1"));
+    aboutData.setShortDescription(i18n("A calendar demo application"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);

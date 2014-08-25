@@ -38,100 +38,99 @@
 
 using namespace MessageViewer;
 
-MessageViewItem::MessageViewItem( QDeclarativeItem* parent )
-  : DeclarativeAkonadiItem( parent )
+MessageViewItem::MessageViewItem(QDeclarativeItem *parent)
+    : DeclarativeAkonadiItem(parent)
 {
-  m_viewer = new Viewer( 0 );
-  m_viewer->setHeaderStyleAndStrategy( HeaderStyle::mobile(), HeaderStrategy::all() );
-  m_viewer->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
-  m_viewer->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
-  m_viewer->addMessageLoadedHandler( new MessageViewer::MarkMessageReadHandler( this ) );
-  setWidget( m_viewer );
+    m_viewer = new Viewer(0);
+    m_viewer->setHeaderStyleAndStrategy(HeaderStyle::mobile(), HeaderStrategy::all());
+    m_viewer->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
+    m_viewer->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
+    m_viewer->addMessageLoadedHandler(new MessageViewer::MarkMessageReadHandler(this));
+    setWidget(m_viewer);
 
-  KDescendantsProxyModel *flatProxy = new KDescendantsProxyModel( this );
-  flatProxy->setSourceModel( m_viewer->messageTreeModel() );
+    KDescendantsProxyModel *flatProxy = new KDescendantsProxyModel(this);
+    flatProxy->setSourceModel(m_viewer->messageTreeModel());
 
 //   m_attachmentProxy = new AttachmentProxyModel( this );
 //   m_attachmentProxy->setSourceModel( flatProxy );
 
-  connect( m_viewer, SIGNAL(urlClicked(Akonadi::Item,KUrl)), SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
-  connect( m_viewer, SIGNAL(itemRemoved()), SIGNAL(mailRemoved()) );
+    connect(m_viewer, SIGNAL(urlClicked(Akonadi::Item, KUrl)), SIGNAL(urlClicked(Akonadi::Item, KUrl)));
+    connect(m_viewer, SIGNAL(itemRemoved()), SIGNAL(mailRemoved()));
 }
 
 MessageViewItem::~MessageViewItem()
 {
-  delete m_viewer;
+    delete m_viewer;
 }
 
 qint64 MessageViewItem::itemId() const
 {
-  return m_viewer->messageItem().id();
+    return m_viewer->messageItem().id();
 }
 
-void MessageViewItem::setItemId( qint64 id )
+void MessageViewItem::setItemId(qint64 id)
 {
-  m_viewer->setMessageItem( Akonadi::Item( id ) );
+    m_viewer->setMessageItem(Akonadi::Item(id));
 }
 
-void MessageViewItem::setItem( const Akonadi::Item &item )
+void MessageViewItem::setItem(const Akonadi::Item &item)
 {
-  m_viewer->setMessageItem( item );
+    m_viewer->setMessageItem(item);
 }
 
 QString MessageViewItem::splashMessage() const
 {
-  return QString(); // TODO
+    return QString(); // TODO
 }
 
-void MessageViewItem::setSplashMessage(const QString& message)
+void MessageViewItem::setSplashMessage(const QString &message)
 {
-  if ( message.isEmpty() )
-    m_viewer->enableMessageDisplay();
-  else
-    m_viewer->displaySplashPage( message );
+    if (message.isEmpty()) {
+        m_viewer->enableMessageDisplay();
+    } else {
+        m_viewer->displaySplashPage(message);
+    }
 }
 
 QString MessageViewItem::messagePath() const
 {
-  return m_viewer->messagePath();
+    return m_viewer->messagePath();
 }
 
-void MessageViewItem::setMessagePath( const QString& messagePath )
+void MessageViewItem::setMessagePath(const QString &messagePath)
 {
-  m_viewer->setMessagePath( messagePath );
+    m_viewer->setMessagePath(messagePath);
 }
 
-QObject* MessageViewItem::attachmentModel() const
+QObject *MessageViewItem::attachmentModel() const
 {
-  return 0;
+    return 0;
 }
 
-void MessageViewItem::scrollDown( int dist )
+void MessageViewItem::scrollDown(int dist)
 {
-  m_viewer->slotScrollDown( dist );
+    m_viewer->slotScrollDown(dist);
 }
 
-
-void MessageViewItem::scrollUp( int dist )
+void MessageViewItem::scrollUp(int dist)
 {
-  m_viewer->slotScrollUp( dist );
+    m_viewer->slotScrollUp(dist);
 }
 
-Viewer* MessageViewItem::viewer()
+Viewer *MessageViewItem::viewer()
 {
     return m_viewer;
 }
 
 void MessageViewItem::saveAllAttachments()
 {
-  m_viewer->slotAttachmentSaveAll();
+    m_viewer->slotAttachmentSaveAll();
 }
 
 void MessageViewItem::copyAllToClipboard()
 {
-  m_viewer->selectAll();
-  m_viewer->copySelectionToClipboard();
-  m_viewer->clearSelection();
+    m_viewer->selectAll();
+    m_viewer->copySelectionToClipboard();
+    m_viewer->clearSelection();
 }
-
 

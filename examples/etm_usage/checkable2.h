@@ -31,12 +31,12 @@ class QTreeView;
 
 class Checkable2 : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  Checkable2(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    Checkable2(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 private:
-  QTreeView *m_itemView;
+    QTreeView *m_itemView;
 
 };
 

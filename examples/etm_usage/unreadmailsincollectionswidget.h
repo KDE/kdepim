@@ -39,32 +39,30 @@ class EntityTreeModel;
 
 class UnreadMailsInCollectionsProxy : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  UnreadMailsInCollectionsProxy(QObject* parent = 0);
+    UnreadMailsInCollectionsProxy(QObject *parent = 0);
 protected:
-  virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
 };
-
 
 class UnreadMailsInCollectionsWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  UnreadMailsInCollectionsWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
-  virtual ~UnreadMailsInCollectionsWidget();
+    UnreadMailsInCollectionsWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    virtual ~UnreadMailsInCollectionsWidget();
 
 private slots:
-  void configure();
-  void saveCheckState();
-  void restoreCheckState();
+    void configure();
+    void saveCheckState();
+    void restoreCheckState();
 
 private:
-  Akonadi::ChangeRecorder *m_changeRecorder;
-  Akonadi::EntityTreeModel *m_etm;
-  QItemSelectionModel *m_checkedItemModel;
-  KCheckableProxyModel *m_checkableProxy;
-
+    Akonadi::ChangeRecorder *m_changeRecorder;
+    Akonadi::EntityTreeModel *m_etm;
+    QItemSelectionModel *m_checkedItemModel;
+    KCheckableProxyModel *m_checkableProxy;
 
 };
 

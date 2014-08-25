@@ -28,30 +28,29 @@
 
 #include <krecursivefilterproxymodel.h>
 
-
 class QTreeView;
 class EntityTreeWidget;
 
 class UnreadMailsTree : public KRecursiveFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  UnreadMailsTree(QObject* parent = 0);
+    UnreadMailsTree(QObject *parent = 0);
 
 protected:
-  /* reimp */ bool acceptRow(int sourceRow, const QModelIndex& sourceParent) const;
+    /* reimp */ bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 };
 
 class UnreadMailsWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  UnreadMailsWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    UnreadMailsWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 private:
-  QTreeView *m_itemView;
-  EntityTreeWidget *m_etw;
+    QTreeView *m_itemView;
+    EntityTreeWidget *m_etw;
 };
 
 #endif

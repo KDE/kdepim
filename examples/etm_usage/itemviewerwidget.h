@@ -43,21 +43,20 @@ class ContactViewer;
 
 class ItemViewerWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  ItemViewerWidget( QItemSelectionModel *selectionModel, QWidget* parent = 0, Qt::WindowFlags f = 0 );
+    ItemViewerWidget(QItemSelectionModel *selectionModel, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 private slots:
-  void selectionChanged( const QItemSelection selected, const QItemSelection &deselected );
+    void selectionChanged(const QItemSelection selected, const QItemSelection &deselected);
 
 private:
-  QItemSelectionModel *m_itemSelectionModel;
-  QStackedWidget *m_widgetStack;
-  MessageViewer::Viewer *m_mailViewer;
-  Akonadi::ContactViewer *m_contactViewer;
-  NoteViewer *m_noteViewer;
+    QItemSelectionModel *m_itemSelectionModel;
+    QStackedWidget *m_widgetStack;
+    MessageViewer::Viewer *m_mailViewer;
+    Akonadi::ContactViewer *m_contactViewer;
+    NoteViewer *m_noteViewer;
 };
 
 #endif
-
 

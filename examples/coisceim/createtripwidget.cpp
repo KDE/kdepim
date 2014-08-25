@@ -41,91 +41,92 @@
 
 using namespace Akonadi;
 
-CreateTripWidget::CreateTripWidget(Trip *trip, Akonadi::ChangeRecorder* monitor, QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f), m_trip(trip), m_monitor(monitor)
+CreateTripWidget::CreateTripWidget(Trip *trip, Akonadi::ChangeRecorder *monitor, QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f), m_trip(trip), m_monitor(monitor)
 {
-  QVBoxLayout *layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  m_eventSelector = new EventSelectorWidget;
-  connect(m_eventSelector, &EventSelectorWidget::selected, this, &CreateTripWidget::tripSelected);
+    m_eventSelector = new EventSelectorWidget;
+    connect(m_eventSelector, &EventSelectorWidget::selected, this, &CreateTripWidget::tripSelected);
 
-  layout->addWidget(m_eventSelector);
+    layout->addWidget(m_eventSelector);
 
-  QHBoxLayout *configureLayout = new QHBoxLayout;
+    QHBoxLayout *configureLayout = new QHBoxLayout;
 
-  layout->addLayout(configureLayout);
+    layout->addLayout(configureLayout);
 
-  m_mailWidget = createView(QLatin1String("Mail"), Trip::MailCollectionRole);
-  m_todoWidget = createView(QLatin1String("Todos"), Trip::TodoCollectionRole);
-  m_notesWidget = createView(QLatin1String("Notes"), Trip::NotesCollectionRole);
+    m_mailWidget = createView(QLatin1String("Mail"), Trip::MailCollectionRole);
+    m_todoWidget = createView(QLatin1String("Todos"), Trip::TodoCollectionRole);
+    m_notesWidget = createView(QLatin1String("Notes"), Trip::NotesCollectionRole);
 
-  configureLayout->addWidget(m_mailWidget);
-  configureLayout->addWidget(m_todoWidget);
-  configureLayout->addWidget(m_notesWidget);
+    configureLayout->addWidget(m_mailWidget);
+    configureLayout->addWidget(m_todoWidget);
+    configureLayout->addWidget(m_notesWidget);
 
-  QPushButton *goButton = new QPushButton(i18n("Go!"));
-  connect(goButton, &QPushButton::clicked, this, &CreateTripWidget::create);
+    QPushButton *goButton = new QPushButton(i18n("Go!"));
+    connect(goButton, &QPushButton::clicked, this, &CreateTripWidget::create);
 
-  layout->addWidget(goButton);
+    layout->addWidget(goButton);
 }
 
-CreateFolderContentsWidget* CreateTripWidget::createView(const QString &type, int role)
+CreateFolderContentsWidget *CreateTripWidget::createView(const QString &type, int role)
 {
-  return new CreateFolderContentsWidget(m_trip, role, type);
+    return new CreateFolderContentsWidget(m_trip, role, type);
 }
 
-void CreateTripWidget::tripSelected(const Akonadi::Item& item)
+void CreateTripWidget::tripSelected(const Akonadi::Item &item)
 {
-  m_tripItem = item;
+    m_tripItem = item;
 }
 
 void addTrip(QVariantList *list, Item::Id newId)
 {
-  bool found = false;
-  foreach(const QVariant &id, *list) {
-    if (id.toLongLong() == newId)
-      found = true;
-  }
-  if (!found)
-    list->append(newId);
+    bool found = false;
+    foreach (const QVariant &id, *list) {
+        if (id.toLongLong() == newId) {
+            found = true;
+        }
+    }
+    if (!found) {
+        list->append(newId);
+    }
 }
 
 void CreateTripWidget::create()
 {
-  if (!m_tripItem.isValid())
-  {
-    KMessageBox::error(this, i18n("You need to select an event first"));
-    return;
-  }
-  KSharedConfigPtr config = KSharedConfig::openConfig();
+    if (!m_tripItem.isValid()) {
+        KMessageBox::error(this, i18n("You need to select an event first"));
+        return;
+    }
+    KSharedConfigPtr config = KSharedConfig::openConfig();
 
-  KConfigGroup generalGroup( config, "General" );
+    KConfigGroup generalGroup(config, "General");
 
-  QVariantList trips = generalGroup.readEntry<QVariantList>("trips", QVariantList());
+    QVariantList trips = generalGroup.readEntry<QVariantList>("trips", QVariantList());
 
-  addTrip(&trips, m_tripItem.id());
+    addTrip(&trips, m_tripItem.id());
 
-  generalGroup.writeEntry("trips", trips);
+    generalGroup.writeEntry("trips", trips);
 
-  KConfigGroup tripsGroup( config, "Trips" );
+    KConfigGroup tripsGroup(config, "Trips");
 
-  QList<Collection::Id> ids;
+    QList<Collection::Id> ids;
 
-  ids << m_trip->collection(Trip::MailCollectionRole).id();
-  ids << m_trip->collection(Trip::TodoCollectionRole).id();
-  ids << m_trip->collection(Trip::NotesCollectionRole).id();
+    ids << m_trip->collection(Trip::MailCollectionRole).id();
+    ids << m_trip->collection(Trip::TodoCollectionRole).id();
+    ids << m_trip->collection(Trip::NotesCollectionRole).id();
 
-  tripsGroup.writeEntry(QString::number(m_tripItem.id()), ids);
+    tripsGroup.writeEntry(QString::number(m_tripItem.id()), ids);
 
-  config->sync();
+    config->sync();
 
-  m_monitor->setItemMonitored(m_tripItem, true);
+    m_monitor->setItemMonitored(m_tripItem, true);
 
-  m_trip->setCollection(Trip::MailCollectionRole, Collection());
-  m_trip->setCollection(Trip::TodoCollectionRole, Collection());
-  m_trip->setCollection(Trip::NotesCollectionRole, Collection());
+    m_trip->setCollection(Trip::MailCollectionRole, Collection());
+    m_trip->setCollection(Trip::TodoCollectionRole, Collection());
+    m_trip->setCollection(Trip::NotesCollectionRole, Collection());
 
-  m_eventSelector->clear();
+    m_eventSelector->clear();
 
-  m_tripItem = Item();
+    m_tripItem = Item();
 }

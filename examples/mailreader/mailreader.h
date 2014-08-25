@@ -6,7 +6,6 @@
 #ifndef MAILREADER_H
 #define MAILREADER_H
 
-
 #include <kxmlguiwindow.h>
 
 #include <AkonadiCore/collection.h>
@@ -21,7 +20,7 @@ class KJob;
 
 namespace MessageList
 {
-    class Pane;
+class Pane;
 }
 
 /**
@@ -50,7 +49,7 @@ private slots:
     void slotMessageSelected(const Akonadi::Item &item);
     void slotPreviousMessage();
     void slotNextMessage();
-    void itemsReceived( const Akonadi::Item::List &list );
+    void itemsReceived(const Akonadi::Item::List &list);
     void itemFetchDone(KJob *job);
 
 private:

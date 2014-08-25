@@ -46,7 +46,7 @@ public:
 
       @param parent The parent object.
     */
-    explicit BlogModel( QObject* parent = 0 );
+    explicit BlogModel(QObject *parent = 0);
 
     /**
       Deletes the message model.
@@ -56,21 +56,21 @@ public:
     /**
       Reimplemented from QAbstractItemModel.
      */
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
     /**
       Reimplemented from QAbstractItemModel.
      */
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     /**
       Reimplemented from QAbstractItemModel.
      */
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 #endif

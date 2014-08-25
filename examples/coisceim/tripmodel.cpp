@@ -39,206 +39,217 @@
 
 using namespace Akonadi;
 
-TripModel::TripModel(Akonadi::ChangeRecorder* monitor, QObject* parent)
-  : MixedTreeModel(monitor, parent), m_monitor(monitor)
+TripModel::TripModel(Akonadi::ChangeRecorder *monitor, QObject *parent)
+    : MixedTreeModel(monitor, parent), m_monitor(monitor)
 {
-  setCollectionFetchStrategy(MixedTreeModel::FetchNoCollections);
+    setCollectionFetchStrategy(MixedTreeModel::FetchNoCollections);
 
-  TripComponentFactory factory;
-  Trip *create = new Trip(createIndex(0, 0), monitor, &factory);
-  m_createWidget = new CreateTripWidget(create, monitor);
+    TripComponentFactory factory;
+    Trip *create = new Trip(createIndex(0, 0), monitor, &factory);
+    m_createWidget = new CreateTripWidget(create, monitor);
 
-  QTimer::singleShot(0, this, SLOT(repopulate()));
+    QTimer::singleShot(0, this, SLOT(repopulate()));
 
-  connect(this, SIGNAL(modelReset()), SLOT(thisModelReset()));
+    connect(this, SIGNAL(modelReset()), SLOT(thisModelReset()));
 
-  QHash<int, QByteArray> roleNames_ = roleNames();
-  roleNames_.insert(TripRole, "trip");
-  setRoleNames(roleNames_);
+    QHash<int, QByteArray> roleNames_ = roleNames();
+    roleNames_.insert(TripRole, "trip");
+    setRoleNames(roleNames_);
 }
 
-QModelIndex TripModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex TripModel::index(int row, int column, const QModelIndex &parent) const
 {
-  if (row == rowCount() - 1)
-    return createIndex(row, column);
-  return MixedTreeModel::index(row, column, parent);
+    if (row == rowCount() - 1) {
+        return createIndex(row, column);
+    }
+    return MixedTreeModel::index(row, column, parent);
 }
 
-int TripModel::columnCount(const QModelIndex& parent) const
+int TripModel::columnCount(const QModelIndex &parent) const
 {
-  Q_UNUSED(parent)
-  return 1;
+    Q_UNUSED(parent)
+    return 1;
 }
 
-int TripModel::rowCount(const QModelIndex& parent) const
+int TripModel::rowCount(const QModelIndex &parent) const
 {
-  return MixedTreeModel::rowCount(parent) + 1;
+    return MixedTreeModel::rowCount(parent) + 1;
 }
 
-static const char* icons[] = {
-  "akonadi",
-  "nepomuk",
-  "plasma"
+static const char *icons[] = {
+    "akonadi",
+    "nepomuk",
+    "plasma"
 };
 
-QVariant TripModel::data(const QModelIndex& index, int role) const
+QVariant TripModel::data(const QModelIndex &index, int role) const
 {
-  if (role == Qt::SizeHintRole && index.column() == 0)
-    return QSize(180, 60);
-  if (index.row() == rowCount() - 1) {
-    if (role == Qt::DisplayRole)
-      return QLatin1String("CREATE");
+    if (role == Qt::SizeHintRole && index.column() == 0) {
+        return QSize(180, 60);
+    }
+    if (index.row() == rowCount() - 1) {
+        if (role == Qt::DisplayRole) {
+            return QLatin1String("CREATE");
+        }
+        if (role == WidgetRole) {
+            return QVariant::fromValue<QWidget *>(m_createWidget);
+        }
+        if (role == Qt::DecorationRole) {
+            return KIcon(QLatin1String("list-add-new"));
+        }
+        return QVariant();
+    }
     if (role == WidgetRole) {
-      return QVariant::fromValue<QWidget*>(m_createWidget);
+        const Item::Id id = MixedTreeModel::data(index, MixedTreeModel::ItemIdRole).toLongLong();
+        if (!m_tripWidgets.contains(id)) {
+            createWidget(index, id);
+        }
+        return QVariant::fromValue<QWidget *>(m_tripWidgets.value(id));
+    } else if (role == TripRole) {
+        const Item::Id id = MixedTreeModel::data(index, MixedTreeModel::ItemIdRole).toLongLong();
+        if (!m_trips.contains(id)) {
+            createTrip(index, id);
+        }
+        return QVariant::fromValue<QObject *>(m_trips.value(id));
     }
+
     if (role == Qt::DecorationRole) {
-      return KIcon(QLatin1String("list-add-new"));
+        const int iconsSize = sizeof(icons) / sizeof(*icons);
+        return KIcon(QLatin1String(*(icons + (index.row() % iconsSize))));
     }
-    return QVariant();
-  }
-  if (role == WidgetRole) {
-    const Item::Id id = MixedTreeModel::data(index, MixedTreeModel::ItemIdRole).toLongLong();
-    if (!m_tripWidgets.contains(id))
-      createWidget(index, id);
-    return QVariant::fromValue<QWidget*>(m_tripWidgets.value(id));
-  } else if (role == TripRole) {
-    const Item::Id id = MixedTreeModel::data(index, MixedTreeModel::ItemIdRole).toLongLong();
-    if (!m_trips.contains(id))
-      createTrip(index, id);
-    return QVariant::fromValue<QObject*>(m_trips.value(id));
-  }
 
-  if (role == Qt::DecorationRole) {
-    const int iconsSize = sizeof(icons) / sizeof(*icons);
-    return KIcon(QLatin1String(*(icons + (index.row() % iconsSize))));
-  }
-
-  return MixedTreeModel::data(index, role);
+    return MixedTreeModel::data(index, role);
 }
 
-QModelIndex TripModel::parent(const QModelIndex& index) const
+QModelIndex TripModel::parent(const QModelIndex &index) const
 {
-  Q_UNUSED(index);
-  return QModelIndex();
+    Q_UNUSED(index);
+    return QModelIndex();
 }
 
-Qt::ItemFlags TripModel::flags(const QModelIndex& index) const
+Qt::ItemFlags TripModel::flags(const QModelIndex &index) const
 {
-  if (index.row() == rowCount() - 1)
-    return QAbstractItemModel::flags( index );
-  return MixedTreeModel::flags(index);
+    if (index.row() == rowCount() - 1) {
+        return QAbstractItemModel::flags(index);
+    }
+    return MixedTreeModel::flags(index);
 }
 
-bool TripModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool TripModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-  if (index.row() == rowCount() - 1)
-    return false;
-  return MixedTreeModel::setData(index, value, role);
+    if (index.row() == rowCount() - 1) {
+        return false;
+    }
+    return MixedTreeModel::setData(index, value, role);
 }
 
 Q_DECLARE_METATYPE(QList<Collection::Id>)
 
-Trip* TripModel::createTrip(const QModelIndex &index, Akonadi::Item::Id id) const
+Trip *TripModel::createTrip(const QModelIndex &index, Akonadi::Item::Id id) const
 {
-  if (m_trips.contains(id))
-    return m_trips.value(id);
+    if (m_trips.contains(id)) {
+        return m_trips.value(id);
+    }
 
-  TripComponentFactory factory;
+    TripComponentFactory factory;
 
-  Trip *trip = new Trip(index, m_monitor, &factory);
+    Trip *trip = new Trip(index, m_monitor, &factory);
 
-  KSharedConfigPtr config = KSharedConfig::openConfig();
+    KSharedConfigPtr config = KSharedConfig::openConfig();
 
-  KConfigGroup tripsGroup( config, "Trips" );
+    KConfigGroup tripsGroup(config, "Trips");
 
-  QVariantList ids = tripsGroup.readEntry<QVariantList>(QString::number(id), QVariantList());
+    QVariantList ids = tripsGroup.readEntry<QVariantList>(QString::number(id), QVariantList());
 
-  if (ids.size() == 3) {
-    trip->setCollection(Trip::MailCollectionRole, Collection(ids.takeFirst().toLongLong()));
-    trip->setCollection(Trip::TodoCollectionRole, Collection(ids.takeFirst().toLongLong()));
-    trip->setCollection(Trip::NotesCollectionRole, Collection(ids.takeFirst().toLongLong()));
-  }
+    if (ids.size() == 3) {
+        trip->setCollection(Trip::MailCollectionRole, Collection(ids.takeFirst().toLongLong()));
+        trip->setCollection(Trip::TodoCollectionRole, Collection(ids.takeFirst().toLongLong()));
+        trip->setCollection(Trip::NotesCollectionRole, Collection(ids.takeFirst().toLongLong()));
+    }
 
-  m_trips.insert(id, trip);
-  return trip;
+    m_trips.insert(id, trip);
+    return trip;
 }
 
 void TripModel::createWidget(const QModelIndex &index, Akonadi::Item::Id id) const
 {
-  if (m_tripWidgets.contains(id))
-    return;
+    if (m_tripWidgets.contains(id)) {
+        return;
+    }
 
-  Trip *trip = createTrip(index, id);
+    Trip *trip = createTrip(index, id);
 
-  TripWidget *w = new TripWidget(trip);
+    TripWidget *w = new TripWidget(trip);
 
-  m_tripWidgets.insert(id, w);
+    m_tripWidgets.insert(id, w);
 }
 
-bool TripModel::removeRows(int row, int count, const QModelIndex& parent)
+bool TripModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-  Q_UNUSED(count)
-  const QModelIndex idx = index(row, 0, parent);
-  const Item item = idx.data(MixedTreeModel::ItemRole).value<Item>();
+    Q_UNUSED(count)
+    const QModelIndex idx = index(row, 0, parent);
+    const Item item = idx.data(MixedTreeModel::ItemRole).value<Item>();
 
-  KSharedConfigPtr config = KSharedConfig::openConfig();
+    KSharedConfigPtr config = KSharedConfig::openConfig();
 
-  KConfigGroup generalGroup( config, "General" );
+    KConfigGroup generalGroup(config, "General");
 
-  QVariantList trips = generalGroup.readEntry<QVariantList>("trips", QVariantList());
+    QVariantList trips = generalGroup.readEntry<QVariantList>("trips", QVariantList());
 
-  QVariantList::iterator it = trips.begin();
+    QVariantList::iterator it = trips.begin();
 
-  while (it != trips.end()) {
-    const Item::Id eventId = it->toLongLong();
-    if (eventId > 0 && eventId == item.id())
-      trips.erase(it);
-    else
-      ++it;
-  }
-  generalGroup.writeEntry("trips", trips);
-  generalGroup.sync();
+    while (it != trips.end()) {
+        const Item::Id eventId = it->toLongLong();
+        if (eventId > 0 && eventId == item.id()) {
+            trips.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    generalGroup.writeEntry("trips", trips);
+    generalGroup.sync();
 
-  KConfigGroup tripsGroup(config, "Trips" );
-  tripsGroup.deleteEntry(QString::number(item.id()));
+    KConfigGroup tripsGroup(config, "Trips");
+    tripsGroup.deleteEntry(QString::number(item.id()));
 
-  config->sync();
+    config->sync();
 
-  m_monitor->setItemMonitored(item, false);
-  return false;
+    m_monitor->setItemMonitored(item, false);
+    return false;
 }
 
 void TripModel::repopulate()
 {
-  KSharedConfigPtr config = KSharedConfig::openConfig();
+    KSharedConfigPtr config = KSharedConfig::openConfig();
 
-  KConfigGroup generalGroup( config, "General" );
+    KConfigGroup generalGroup(config, "General");
 
-  const QVariantList trips = generalGroup.readEntry<QVariantList>("trips", QVariantList());
+    const QVariantList trips = generalGroup.readEntry<QVariantList>("trips", QVariantList());
 
-  foreach(const QVariant &trip, trips) {
-    const Item::Id eventId = trip.toLongLong();
-    if (eventId > 0)
-      m_monitor->setItemMonitored(Item(eventId), true);
-  }
+    foreach (const QVariant &trip, trips) {
+        const Item::Id eventId = trip.toLongLong();
+        if (eventId > 0) {
+            m_monitor->setItemMonitored(Item(eventId), true);
+        }
+    }
 
 }
 
 void TripModel::thisModelReset()
 {
-  qDeleteAll(m_trips);
-  qDeleteAll(m_tripWidgets);
-  m_trips.clear();
-  m_tripWidgets.clear();
+    qDeleteAll(m_trips);
+    qDeleteAll(m_tripWidgets);
+    m_trips.clear();
+    m_tripWidgets.clear();
 }
 
-void TripModel::thisRowsRemoved(const QModelIndex& index, int start, int end)
+void TripModel::thisRowsRemoved(const QModelIndex &index, int start, int end)
 {
-  Q_UNUSED(index)
-  Q_UNUSED(start)
-  Q_UNUSED(end)
-  qDeleteAll(m_trips);
-  qDeleteAll(m_tripWidgets);
-  m_trips.clear();
-  m_tripWidgets.clear();
+    Q_UNUSED(index)
+    Q_UNUSED(start)
+    Q_UNUSED(end)
+    qDeleteAll(m_trips);
+    qDeleteAll(m_tripWidgets);
+    m_trips.clear();
+    m_tripWidgets.clear();
 }

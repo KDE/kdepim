@@ -38,17 +38,17 @@ class EntityTreeView;
 
 class CollectionMonitoredWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  CollectionMonitoredWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    CollectionMonitoredWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
 private slots:
-  void selectionChanged(const QItemSelection &selected,const QItemSelection &deselected);
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
-  EntityTreeWidget *m_etw;
-  Akonadi::ChangeRecorder *m_oneCollectionChangeRecorder;
-  Akonadi::EntityTreeView *m_oneCollectionView;
+    EntityTreeWidget *m_etw;
+    Akonadi::ChangeRecorder *m_oneCollectionChangeRecorder;
+    Akonadi::EntityTreeView *m_oneCollectionView;
 
 };
 

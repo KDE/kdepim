@@ -26,9 +26,9 @@
 
 class MobileMainview : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit MobileMainview(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit MobileMainview(QWidget *parent = 0, Qt::WindowFlags f = 0);
 };
 
 #endif

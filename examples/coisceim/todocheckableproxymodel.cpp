@@ -27,36 +27,37 @@
 
 using namespace Akonadi;
 
-TodoCheckableProxyModel::TodoCheckableProxyModel(QObject* parent)
-  : KCheckableProxyModel(parent)
+TodoCheckableProxyModel::TodoCheckableProxyModel(QObject *parent)
+    : KCheckableProxyModel(parent)
 {
 }
 
-void TodoCheckableProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
+void TodoCheckableProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
-  KCheckableProxyModel::setSourceModel(sourceModel);
+    KCheckableProxyModel::setSourceModel(sourceModel);
 
-  QItemSelectionModel *selectionModel = new QItemSelectionModel(sourceModel, this);
-  setSelectionModel(selectionModel);
-  connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
+    QItemSelectionModel *selectionModel = new QItemSelectionModel(sourceModel, this);
+    setSelectionModel(selectionModel);
+    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
 }
 
-void TodoCheckableProxyModel::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+void TodoCheckableProxyModel::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-  setChecked(deselected, false);
-  setChecked(selected, true);
+    setChecked(deselected, false);
+    setChecked(selected, true);
 }
 
 void TodoCheckableProxyModel::setChecked(const QItemSelection &selection, bool checked)
 {
-  foreach(const QModelIndex &index, selection.indexes()) {
-    if (index.column() == 0) {
-      Item item = sourceModel()->data(index, Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-      if (!item.hasPayload<KCalCore::Todo::Ptr>())
-        continue;
-      KCalCore::Todo::Ptr incidence = item.payload<KCalCore::Todo::Ptr>();
-      incidence->setCompleted(checked);
-      sourceModel()->setData(index, QVariant::fromValue(item), Akonadi::EntityTreeModel::ItemRole );
+    foreach (const QModelIndex &index, selection.indexes()) {
+        if (index.column() == 0) {
+            Item item = sourceModel()->data(index, Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+            if (!item.hasPayload<KCalCore::Todo::Ptr>()) {
+                continue;
+            }
+            KCalCore::Todo::Ptr incidence = item.payload<KCalCore::Todo::Ptr>();
+            incidence->setCompleted(checked);
+            sourceModel()->setData(index, QVariant::fromValue(item), Akonadi::EntityTreeModel::ItemRole);
+        }
     }
-  }
 }

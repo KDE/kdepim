@@ -38,92 +38,100 @@ class BlogModel::Private
 public:
 };
 
-BlogModel::BlogModel( QObject *parent ) :
-        ItemModel( parent ),
-        d( new Private() )
+BlogModel::BlogModel(QObject *parent) :
+    ItemModel(parent),
+    d(new Private())
 {
     fetchScope().fetchFullPayload();
 }
 
-BlogModel::~BlogModel( )
+BlogModel::~BlogModel()
 {
     delete d;
 }
 
-int BlogModel::columnCount( const QModelIndex & parent ) const
+int BlogModel::columnCount(const QModelIndex &parent) const
 {
-    if ( !parent.isValid() )
+    if (!parent.isValid()) {
         return 1;
+    }
 
     return 0;
 }
 
-QVariant BlogModel::data( const QModelIndex & index, int role ) const
+QVariant BlogModel::data(const QModelIndex &index, int role) const
 {
-    if ( role != Qt::DisplayRole && role != Qt::EditRole && role < Qt::UserRole )
+    if (role != Qt::DisplayRole && role != Qt::EditRole && role < Qt::UserRole) {
         return QVariant();
+    }
 
-    if ( !index.isValid() )
+    if (!index.isValid()) {
         return QVariant();
+    }
 
-    if ( index.row() >= rowCount() )
+    if (index.row() >= rowCount()) {
         return QVariant();
+    }
 
-    Item item = itemForIndex( index );
-    if ( !item.hasPayload<StatusItem>() )
+    Item item = itemForIndex(index);
+    if (!item.hasPayload<StatusItem>()) {
         return QVariant();
+    }
 
     StatusItem msg = item.payload<StatusItem>();
     Collection col = collection();
 
-    if ( role == Qt::EditRole ) {
+    if (role == Qt::EditRole) {
         return msg.date();
     }
 
-    if ( role == Qt::DisplayRole )
+    if (role == Qt::DisplayRole) {
         return msg.id();
+    }
 
-    switch ( role ) {
+    switch (role) {
     case Date:
         return msg.date().toString();
     case User:
-        if ( role == Qt::UserRole+1 ) {
-            if ( col.remoteId() == QLatin1String("home") || col.remoteId() == QLatin1String("replies") ||
-                    col.remoteId() == QLatin1String("favorites" ))
-                return msg.value( QLatin1String("user_-_screen_name") );
-            else if ( col.remoteId() == QLatin1String("inbox") )
-                return msg.value( QLatin1String("sender_screen_name") );
-            else if ( col.remoteId() == QLatin1String("outbox") )
-                return msg.value( QLatin1String("recipient_screen_name") );
-            else
+        if (role == Qt::UserRole + 1) {
+            if (col.remoteId() == QLatin1String("home") || col.remoteId() == QLatin1String("replies") ||
+                    col.remoteId() == QLatin1String("favorites")) {
+                return msg.value(QLatin1String("user_-_screen_name"));
+            } else if (col.remoteId() == QLatin1String("inbox")) {
+                return msg.value(QLatin1String("sender_screen_name"));
+            } else if (col.remoteId() == QLatin1String("outbox")) {
+                return msg.value(QLatin1String("recipient_screen_name"));
+            } else {
                 return QVariant();
+            }
         }
     case Text:
         return msg.text();
     case Picture:
-        if ( role == Qt::UserRole+3 ) {
-            if ( col.remoteId() == QLatin1String("home") || col.remoteId() == QLatin1String("replies") ||
-                    col.remoteId() == QLatin1String("favorites") )
-                return msg.value( QLatin1String("user_-_profile_image_url") );
-            else if ( col.remoteId() == QLatin1String("inbox") )
-                return msg.value( QLatin1String("sender_-_profile_image_url") );
-            else if ( col.remoteId() == QLatin1String("outbox") )
-                return msg.value( QLatin1String("recipient_-_profile_image_url") );
-            else
+        if (role == Qt::UserRole + 3) {
+            if (col.remoteId() == QLatin1String("home") || col.remoteId() == QLatin1String("replies") ||
+                    col.remoteId() == QLatin1String("favorites")) {
+                return msg.value(QLatin1String("user_-_profile_image_url"));
+            } else if (col.remoteId() == QLatin1String("inbox")) {
+                return msg.value(QLatin1String("sender_-_profile_image_url"));
+            } else if (col.remoteId() == QLatin1String("outbox")) {
+                return msg.value(QLatin1String("recipient_-_profile_image_url"));
+            } else {
                 return QVariant();
+            }
         }
     default:
         return QVariant();
     }
 
-    return ItemModel::data( index, role );
+    return ItemModel::data(index, role);
 }
 
-QVariant BlogModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant BlogModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
-        return i18nc( "@title:column, item id", "Blogs by date" );
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        return i18nc("@title:column, item id", "Blogs by date");
     }
-    return ItemModel::headerData( section, orientation, role );
+    return ItemModel::headerData(section, orientation, role);
 }
 

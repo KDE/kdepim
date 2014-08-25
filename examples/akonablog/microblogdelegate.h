@@ -29,24 +29,23 @@ class MicroblogDelegate : public KWidgetItemDelegate
     Q_OBJECT
 
 public:
-    MicroblogDelegate( QAbstractItemView *itemView, QObject * parent );
+    MicroblogDelegate(QAbstractItemView *itemView, QObject *parent);
 
-    QList<QWidget*> createItemWidgets(const QModelIndex &index) const;
+    QList<QWidget *> createItemWidgets(const QModelIndex &index) const;
 
-    void updateItemWidgets( const QList<QWidget*> widgets,
-                            const QStyleOptionViewItem &option,
-                            const QPersistentModelIndex &index ) const;
+    void updateItemWidgets(const QList<QWidget *> widgets,
+                           const QStyleOptionViewItem &option,
+                           const QPersistentModelIndex &index) const;
 
-    void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-    QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 private slots:
-    void slotLinkClicked( const QUrl &url );
+    void slotLinkClicked(const QUrl &url);
 
 private:
-    QVariant getData( const BlogModel*, int row, int column ) const;
-    QWidget* m_parent;
+    QVariant getData(const BlogModel *, int row, int column) const;
+    QWidget *m_parent;
 };
 
 #endif
