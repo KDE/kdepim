@@ -36,10 +36,7 @@
 #include <messagecore/helpers/nodehelper.h>
 
 #include <QDebug>
-#include <QDir>
-#include <QFile>
 #include <QtTest>
-
 #include <stdlib.h>
 #include <gpgme++/keylistresult.h>
 #include <messagecore/autotests/util.h>

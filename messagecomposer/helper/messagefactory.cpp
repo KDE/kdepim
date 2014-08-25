@@ -39,7 +39,6 @@
 #include "templateparser/templateparser.h"
 #include <KLocalizedString>
 #include <QDebug>
-#include <KGlobal>
 #include <kcharsets.h>
 #include <QTextCodec>
 #include <KCharsets>

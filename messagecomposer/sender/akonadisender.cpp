@@ -19,7 +19,6 @@
 
 #include "akonadisender.h"
 
-#include <KLocalizedString>
 #include <QDebug>
 
 #include "helper/messagehelper.h"

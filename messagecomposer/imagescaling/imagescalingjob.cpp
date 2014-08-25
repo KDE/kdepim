@@ -17,8 +17,6 @@
 #include "imagescalingjob.h"
 #include "settings/messagecomposersettings.h"
 
-#include <QBuffer>
-#include <QImage>
 
 using namespace MessageComposer;
 

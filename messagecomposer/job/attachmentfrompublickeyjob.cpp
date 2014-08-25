@@ -25,7 +25,6 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <QDebug>
 #include <kdialogjobuidelegate.h> //krazy:exclude=camelcase TODO wait for kdelibs4.10
 #include <KLocalizedString>
 

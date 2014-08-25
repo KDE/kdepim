@@ -21,10 +21,8 @@
 
 
 #include <KLocalizedString>
+#include <QHBoxLayout>
 
-
-#include <QPointer>
-#include <QVBoxLayout>
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>

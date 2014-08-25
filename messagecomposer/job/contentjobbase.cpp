@@ -20,10 +20,8 @@
 #include "contentjobbase.h"
 #include "contentjobbase_p.h"
 
-#include <QTimer>
 
 #include <QDebug>
-#include <KLocalizedString>
 
 #include <kmime/kmime_content.h>
 

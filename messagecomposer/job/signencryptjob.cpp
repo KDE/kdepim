@@ -31,7 +31,6 @@
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
-#include <QBuffer>
 
 #include <gpgme++/global.h>
 #include <gpgme++/signingresult.h>

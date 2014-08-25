@@ -39,7 +39,6 @@
 #include <kmessagebox.h>
 #include <kcompletionbox.h>
 #include <KLocalizedString>
-#include <KGlobal>
 
 #include <QFile>
 #include <QCursor>

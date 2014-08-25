@@ -62,7 +62,6 @@
 
 #include <QStringList>
 #include <QPointer>
-#include <QTextDocument>
 
 #include <algorithm>
 #include <cassert>

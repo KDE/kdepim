@@ -33,7 +33,6 @@
 #include <KAboutData>
 
 #include <QPushButton>
-#include <QLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QTextEdit>
