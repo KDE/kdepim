@@ -22,7 +22,8 @@ add_library( followupreminder ${LIBRARY_TYPE} ${followupreminderlib_SRCS} )
 generate_export_header(followupreminder BASE_NAME followupreminder)
 target_link_libraries( followupreminder KF5::AkonadiCore )
 
-set_target_properties( followupreminder PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties( followupreminder PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
+
 
 install( TARGETS followupreminder ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
