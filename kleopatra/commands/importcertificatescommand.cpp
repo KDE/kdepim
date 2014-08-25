@@ -50,7 +50,6 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <QDebug>
 
 #include <QByteArray>
 #include <QString>

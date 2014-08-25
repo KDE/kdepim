@@ -34,7 +34,6 @@
 
 #include "ui_directoryserviceswidget.h"
 
-#include <QDebug>
 #include <KLocalizedString>
 
 #include <QItemDelegate>

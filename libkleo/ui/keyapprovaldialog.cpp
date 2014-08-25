@@ -58,7 +58,6 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 
 static Kleo::EncryptionPreference cb2pref( int i ) {
   switch ( i ) {

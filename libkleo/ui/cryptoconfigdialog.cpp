@@ -34,7 +34,6 @@
 #include <KLocalizedString>
 #include <kacceleratormanager.h>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 #include <QPushButton>
 #include <KGuiItem>
 #include <QVBoxLayout>

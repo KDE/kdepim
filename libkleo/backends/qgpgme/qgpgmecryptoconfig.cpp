@@ -39,7 +39,6 @@
 #include <kmessagebox.h>
 #include <KLocalizedString>
 #include <kshell.h>
-#include <QDebug>
 #include "gpgme_backend_debug.h"
 
 #include <gpgme++/engineinfo.h>

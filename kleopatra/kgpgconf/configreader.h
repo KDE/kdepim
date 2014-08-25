@@ -33,7 +33,6 @@
 #ifndef KGPGCONF_CONFIGREADER_H
 #define KGPGCONF_CONFIGREADER_H
 
-#include <QString>
 
 
 class Config;

@@ -53,7 +53,6 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 #include <QDialogButtonBox>
-#include <KConfigGroup>
 #include <QPushButton>
 #include <KGuiItem>
 #include <QVBoxLayout>

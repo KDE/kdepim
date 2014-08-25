@@ -42,7 +42,6 @@
 
 #include "utils/kdlogtextwidget.h"
 
-#include <QDebug>
 #include <kmessagebox.h>
 #include <KLocalizedString>
 #include <kapplication.h>

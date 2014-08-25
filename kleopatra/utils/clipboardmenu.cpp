@@ -31,7 +31,6 @@
 #include <KActionMenu>
 
 #include <QAction>
-#include <QMenu>
 #include <QApplication>
 #include <QClipboard>
 

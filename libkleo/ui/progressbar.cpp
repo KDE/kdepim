@@ -33,7 +33,6 @@
 #include "progressbar.h"
 
 #include <QTimer>
-#include <QDebug>
 #include "kleo_ui_debug.h"
 
 static const int busyTimerTickInterval = 100;

@@ -33,7 +33,6 @@
 
 #include "keylistview.h"
 
-#include <QDebug>
 #include "kleo_ui_debug.h"
 
 #include <QFontMetrics>

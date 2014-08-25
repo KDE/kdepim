@@ -37,8 +37,6 @@
 #include "appearanceconfigwidget.h"
 
 #include <kmessagebox.h>
-#include <KLocalizedString>
-#include <QDebug>
 #include <kcomponentdata.h>
 
 

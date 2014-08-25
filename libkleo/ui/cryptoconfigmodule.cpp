@@ -39,7 +39,6 @@
 
 #include <klineedit.h>
 #include <KLocalizedString>
-#include <QDebug>
 #include "kleo_ui_debug.h"
 #include <kiconloader.h>
 #include <kglobal.h>

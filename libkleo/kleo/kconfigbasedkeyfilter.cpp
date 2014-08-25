@@ -35,7 +35,6 @@
 
 #include <kconfigbase.h>
 #include <kconfiggroup.h>
-#include <KLocalizedString>
 
 #include <boost/mem_fn.hpp>
 #include <algorithm>

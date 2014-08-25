@@ -42,7 +42,6 @@
 
 #include <kconfig.h>
 #include <kglobal.h>
-#include <KLocalizedString>
 #include <kconfiggroup.h>
 
 #include <QLayout>

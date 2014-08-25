@@ -39,7 +39,6 @@
 
 #include <kmessagebox.h>
 #include <KLocalizedString>
-#include <QDebug>
 
 #include <QStringList>
 

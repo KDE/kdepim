@@ -68,7 +68,6 @@
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KStandardAction>
-#include <QAction>
 #include <K4AboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
