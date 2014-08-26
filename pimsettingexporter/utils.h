@@ -92,6 +92,7 @@ QString addressbookPath();
 QString alarmPath();
 QString jotPath();
 QString infoPath();
+QString notePath();
 QString prefixAkonadiConfigFile();
 QString akonadiAgentName(KSharedConfig::Ptr config);
 

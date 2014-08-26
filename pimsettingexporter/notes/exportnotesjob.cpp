@@ -120,6 +120,34 @@ void ExportNotesJob::backupData()
     }
 #endif
     const QString notesThemeDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/knotes/print/" ) ;
+
+    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+    const Akonadi::AgentInstance::List list = manager->instances();
+    foreach( const Akonadi::AgentInstance &agent, list ) {
+        const QString identifier = agent.identifier();
+        if (identifier.contains(QLatin1String("akonadi_akonotes_resource_"))) {
+            const QString archivePath = Utils::notePath() + identifier + QDir::separator();
+            KUrl url = Utils::resourcePath(agent);
+            if (!url.isEmpty()) {
+                const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("notes.zip"));
+                if (fileAdded) {
+                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                    if (!errorStr.isEmpty())
+                        Q_EMIT error(errorStr);
+                    url = Utils::akonadiAgentConfigPath(identifier);
+                    if (!url.isEmpty()) {
+                        const QString filename = url.fileName();
+                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                        if (fileAdded)
+                            Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                        else
+                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                    }
+                }
+            }
+        }
+    }
+
     QDir notesThemeDirectory( notesThemeDir );
     if (notesThemeDirectory.exists()) {
         const bool notesDirAdded = archive()->addLocalDirectory(notesThemeDir, Utils::dataPath() +  QLatin1String( "/knotes/print" ));
