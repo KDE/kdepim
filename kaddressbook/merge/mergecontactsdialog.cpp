@@ -64,7 +64,7 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
             MergeContactInfoWidget *contactInfo = new MergeContactInfoWidget;
             mainWidget->addWidget(contactInfo);
             connect(mContactWidget, &MergeContactWidget::contactSelected, contactInfo, &MergeContactInfoWidget::setContact);
-            connect(mContactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
+            connect(mContactWidget, &MergeContactWidget::mergeContact, this, &MergeContactsDialog::slotMergeContact);
             mainLayout->addWidget(mainWidget);
         }
     }
