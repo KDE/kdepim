@@ -32,7 +32,6 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <qdebug.h>
-#include <kglobal.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>

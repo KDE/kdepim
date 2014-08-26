@@ -1,6 +1,5 @@
 #include "dummykernel.h"
 
-#include <kglobal.h>
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <messagecomposer/sender/akonadisender.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
