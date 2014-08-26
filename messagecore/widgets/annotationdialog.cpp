@@ -73,8 +73,8 @@ AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotAccepted()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AnnotationEditDialog::slotAccepted);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AnnotationEditDialog::reject);
 
     if ( d->mHasAnnotation ) {
         setWindowTitle( i18n( "Edit Note" ) );
@@ -82,7 +82,7 @@ AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *
         buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
         user1Button->setText(i18n( "Delete Note"  ));
         user1Button->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
-        connect(user1Button, SIGNAL(clicked()), this, SLOT(slotDeleteNote()));
+        connect(user1Button, &QPushButton::clicked, this, &AnnotationEditDialog::slotDeleteNote);
     } else {
         setWindowTitle( i18n( "Add Note" ) );
     }
