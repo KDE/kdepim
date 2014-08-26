@@ -30,8 +30,8 @@ using namespace KSieveUi;
 SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Description" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Description"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -43,7 +43,7 @@ SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
     mEdit->setAcceptRichText(false);
     mainLayout->addWidget(mEdit);
     mainLayout->addWidget(buttonBox);
-    
+
     readConfig();
     mEdit->setFocus();
 }
@@ -65,17 +65,16 @@ QString SieveScriptDescriptionDialog::description() const
 
 void SieveScriptDescriptionDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveScriptDescriptionDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveScriptDescriptionDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void SieveScriptDescriptionDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveScriptDescriptionDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveScriptDescriptionDialog");
+    group.writeEntry("Size", size());
 }
-
 

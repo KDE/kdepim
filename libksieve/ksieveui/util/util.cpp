@@ -36,7 +36,6 @@
 **
 *******************************************************************************/
 
-
 #include "util.h"
 #include "pimcommon/util/pimutil.h"
 #include "imapresourcesettings.h"
@@ -49,39 +48,40 @@
 
 using namespace KSieveUi;
 
-QUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
+QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
 {
-    QScopedPointer<OrgKdeAkonadiImapSettingsInterface> interface( PimCommon::Util::createImapSettingsInterface(identifier) );
+    QScopedPointer<OrgKdeAkonadiImapSettingsInterface> interface(PimCommon::Util::createImapSettingsInterface(identifier));
 
-    if ( !interface->sieveSupport() )
+    if (!interface->sieveSupport()) {
         return QUrl();
+    }
 
-    if ( interface->sieveReuseConfig() ) {
+    if (interface->sieveReuseConfig()) {
         // assemble Sieve url from the settings of the account:
         QUrl u;
-        u.setScheme( QLatin1String("sieve") );
+        u.setScheme(QLatin1String("sieve"));
         QString server;
         QDBusReply<QString> reply = interface->imapServer();
-        if ( reply.isValid() ) {
+        if (reply.isValid()) {
             server = reply;
-            server = server.section( QLatin1Char(':'), 0, 0 );
+            server = server.section(QLatin1Char(':'), 0, 0);
         } else {
             return QUrl();
         }
-        u.setHost( server );
-        u.setUserName( interface->userName() );
+        u.setHost(server);
+        u.setUserName(interface->userName());
 
-        QDBusInterface resourceSettings( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet") );
+        QDBusInterface resourceSettings(QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet"));
 
         QString pwd;
-        QDBusReply<QString> replyPass = resourceSettings.call( QLatin1String("password") );
-        if ( replyPass.isValid() ) {
+        QDBusReply<QString> replyPass = resourceSettings.call(QLatin1String("password"));
+        if (replyPass.isValid()) {
             pwd = replyPass;
         }
-        u.setPassword( pwd );
-        u.setPort( interface->sievePort() );
+        u.setPassword(pwd);
+        u.setPort(interface->sievePort());
         QString authStr;
-        switch( interface->authentication() ) {
+        switch (interface->authentication()) {
         case MailTransport::Transport::EnumAuthenticationType::CLEAR:
         case MailTransport::Transport::EnumAuthenticationType::PLAIN:
             authStr = QLatin1String("PLAIN");
@@ -105,41 +105,43 @@ QUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
             authStr = QLatin1String("PLAIN");
             break;
         }
-        u.addQueryItem( QLatin1String("x-mech"), authStr );
+        u.addQueryItem(QLatin1String("x-mech"), authStr);
         const QString resultSafety = interface->safety();
-        if ( resultSafety == QLatin1String("None"))
-            u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
+        if (resultSafety == QLatin1String("None")) {
+            u.addQueryItem(QLatin1String("x-allow-unencrypted"), QLatin1String("true"));
+        }
         u = u.adjusted(QUrl::RemoveFilename);
         u.setPath(u.path() + QString(interface->sieveVacationFilename()));
         return u;
     } else {
-        QUrl u( interface->sieveAlternateUrl() );
+        QUrl u(interface->sieveAlternateUrl());
         const QString resultSafety = interface->safety();
-        if ( u.scheme().toLower() == QLatin1String("sieve") && ( resultSafety ==  QLatin1String("None") ) && QUrlQuery(u).queryItemValue(QLatin1String("x-allow-unencrypted")).isEmpty() )
-            u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
+        if (u.scheme().toLower() == QLatin1String("sieve") && (resultSafety ==  QLatin1String("None")) && QUrlQuery(u).queryItemValue(QLatin1String("x-allow-unencrypted")).isEmpty()) {
+            u.addQueryItem(QLatin1String("x-allow-unencrypted"), QLatin1String("true"));
+        }
 
         const QString resultCustomAuthentication = interface->sieveCustomAuthentification();
         if (resultCustomAuthentication == QLatin1String("ImapUserPassword")) {
-            u.setUserName( interface->userName() );
-            QDBusInterface resourceSettings( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet") );
+            u.setUserName(interface->userName());
+            QDBusInterface resourceSettings(QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet"));
             QString pwd;
-            QDBusReply<QString> replyPass = resourceSettings.call( QLatin1String("password") );
-            if ( replyPass.isValid() ) {
+            QDBusReply<QString> replyPass = resourceSettings.call(QLatin1String("password"));
+            if (replyPass.isValid()) {
                 pwd = replyPass;
             }
-            u.setPassword( pwd );
+            u.setPassword(pwd);
         } else if (resultCustomAuthentication == QLatin1String("CustomUserPassword")) {
-            QDBusInterface resourceSettings( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet") );
+            QDBusInterface resourceSettings(QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet"));
             QString pwd;
-            QDBusReply<QString> replyPass = resourceSettings.call( QLatin1String("sieveCustomPassword") );
-            if ( replyPass.isValid() ) {
+            QDBusReply<QString> replyPass = resourceSettings.call(QLatin1String("sieveCustomPassword"));
+            if (replyPass.isValid()) {
                 pwd = replyPass;
             }
-            u.setPassword( pwd );
-            u.setUserName( interface->sieveCustomUsername() );
+            u.setPassword(pwd);
+            u.setUserName(interface->sieveCustomUsername());
         }
         u = u.adjusted(QUrl::RemoveFilename);
-        u.setPath(u.path() + QString(interface->sieveVacationFilename()) );
+        u.setPath(u.path() + QString(interface->sieveVacationFilename()));
         return u;
     }
 }
@@ -147,13 +149,14 @@ QUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
 Akonadi::AgentInstance::List KSieveUi::Util::imapAgentInstances()
 {
     Akonadi::AgentInstance::List relevantInstances;
-    foreach ( const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances() ) {
-        if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) &&
-             instance.type().capabilities().contains( QLatin1String("Resource") ) &&
-             !instance.type().capabilities().contains( QLatin1String("Virtual") ) ) {
+    foreach (const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances()) {
+        if (instance.type().mimeTypes().contains(KMime::Message::mimeType()) &&
+                instance.type().capabilities().contains(QLatin1String("Resource")) &&
+                !instance.type().capabilities().contains(QLatin1String("Virtual"))) {
 
-            if ( PimCommon::Util::isImapResource(instance.identifier()) )
+            if (PimCommon::Util::isImapResource(instance.identifier())) {
                 relevantInstances << instance;
+            }
         }
     }
     return relevantInstances;

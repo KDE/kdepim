@@ -20,7 +20,8 @@
 
 #include <QLineEdit>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 
 class AddressLineEdit : public QLineEdit
 {

@@ -35,35 +35,37 @@
 
 #include "ksieve_export.h"
 
-namespace KSieve {
+namespace KSieve
+{
 
-  class ScriptBuilder;
-  class Error;
+class ScriptBuilder;
+class Error;
 
-  /** @short Parser for the Sieve grammar.
-      @author Marc Mutz <mutz@kde.org>
-  **/
-  class KSIEVE_EXPORT Parser {
-  public:
+/** @short Parser for the Sieve grammar.
+    @author Marc Mutz <mutz@kde.org>
+**/
+class KSIEVE_EXPORT Parser
+{
+public:
 
-    Parser( const char * scursor, const char * const send, int options=0 );
+    Parser(const char *scursor, const char *const send, int options = 0);
     ~Parser();
 
-    void setScriptBuilder( ScriptBuilder * builder );
-    ScriptBuilder * scriptBuilder() const;
+    void setScriptBuilder(ScriptBuilder *builder);
+    ScriptBuilder *scriptBuilder() const;
 
     bool parse();
 
-    const Error & error() const;
+    const Error &error() const;
 
     class Impl;
-  private:
-    Impl * i;
+private:
+    Impl *i;
 
-  private:
-    const Parser & operator=( const Parser & );
-    Parser( const Parser & );
-  };
+private:
+    const Parser &operator=(const Parser &);
+    Parser(const Parser &);
+};
 
 } // namespace KSieve
 

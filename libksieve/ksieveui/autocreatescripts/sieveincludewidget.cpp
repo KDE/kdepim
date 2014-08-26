@@ -34,7 +34,8 @@
 #include <QDomNode>
 #include <QDebug>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 static int MINIMUMINCLUDEACTION = 1;
 static int MAXIMUMINCLUDEACTION = 20;
 
@@ -98,12 +99,12 @@ void SieveIncludeActionWidget::loadScript(const QDomElement &element, QString &e
                 } else if (tagValue == QLatin1String("once")) {
                     mOnce->setChecked(true);
                 } else {
-                    qDebug()<<" SieveIncludeActionWidget::loadScript unknown tagValue "<<tagValue;
+                    qDebug() << " SieveIncludeActionWidget::loadScript unknown tagValue " << tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
                 mIncludeName->setText(e.text());
             } else {
-                qDebug()<<" SieveIncludeActionWidget::loadScript unknown tagName "<<tagName;
+                qDebug() << " SieveIncludeActionWidget::loadScript unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -113,8 +114,9 @@ void SieveIncludeActionWidget::loadScript(const QDomElement &element, QString &e
 void SieveIncludeActionWidget::generatedScript(QString &script)
 {
     const QString includeName = mIncludeName->text();
-    if (includeName.isEmpty())
+    if (includeName.isEmpty()) {
         return;
+    }
     script += QLatin1String("include ");
     script += mLocation->code() + QLatin1Char(' ');
     if (mOptional->isChecked()) {
@@ -129,55 +131,55 @@ void SieveIncludeActionWidget::generatedScript(QString &script)
 void SieveIncludeActionWidget::initWidget()
 {
     mLayout = new QGridLayout(this);
-    mLayout->setContentsMargins( 0, 0, 0, 0 );
+    mLayout->setContentsMargins(0, 0, 0, 0);
 
     QLabel *lab = new QLabel(i18n("Include:"));
-    mLayout->addWidget( lab, 1, 0 );
+    mLayout->addWidget(lab, 1, 0);
     mLocation = new SieveIncludeLocation;
     connect(mLocation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
-    mLayout->addWidget( mLocation, 1, 1 );
+    mLayout->addWidget(mLocation, 1, 1);
 
     lab = new QLabel(i18n("Name:"));
-    mLayout->addWidget( lab, 1, 2 );
+    mLayout->addWidget(lab, 1, 2);
 
     mIncludeName = new QLineEdit;
     connect(mIncludeName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
-    mLayout->addWidget( mIncludeName, 1, 3 );
+    mLayout->addWidget(mIncludeName, 1, 3);
 
     mOptional = new QCheckBox(i18n("Optional"));
     connect(mOptional, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
-    mLayout->addWidget( mOptional, 1, 4 );
+    mLayout->addWidget(mOptional, 1, 4);
 
     mOnce = new QCheckBox(i18n("Once"));
     connect(mOnce, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
-    mLayout->addWidget( mOnce, 1, 5 );
+    mLayout->addWidget(mOnce, 1, 5);
 
-    mAdd = new QPushButton( this );
-    mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-    mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    mAdd = new QPushButton(this);
+    mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mAdd->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
-    mRemove = new QPushButton( this );
-    mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
-    mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    mLayout->addWidget( mAdd, 1, 6 );
-    mLayout->addWidget( mRemove, 1, 7 );
+    mRemove = new QPushButton(this);
+    mRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    mRemove->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    mLayout->addWidget(mAdd, 1, 6);
+    mLayout->addWidget(mRemove, 1, 7);
 
-    connect( mAdd, SIGNAL(clicked()),
-             this, SLOT(slotAddWidget()) );
-    connect( mRemove, SIGNAL(clicked()),
-             this, SLOT(slotRemoveWidget()) );
+    connect(mAdd, SIGNAL(clicked()),
+            this, SLOT(slotAddWidget()));
+    connect(mRemove, SIGNAL(clicked()),
+            this, SLOT(slotRemoveWidget()));
 }
 
 void SieveIncludeActionWidget::slotAddWidget()
 {
     Q_EMIT valueChanged();
-    Q_EMIT addWidget( this );
+    Q_EMIT addWidget(this);
 }
 
 void SieveIncludeActionWidget::slotRemoveWidget()
 {
     Q_EMIT valueChanged();
-    Q_EMIT removeWidget( this );
+    Q_EMIT removeWidget(this);
 }
 
 bool SieveIncludeActionWidget::isInitialized() const
@@ -185,7 +187,7 @@ bool SieveIncludeActionWidget::isInitialized() const
     return !mIncludeName->text().isEmpty();
 }
 
-void SieveIncludeActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
+void SieveIncludeActionWidget::updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled)
 {
     mAdd->setEnabled(addButtonEnabled);
     mRemove->setEnabled(removeButtonEnabled);
@@ -196,12 +198,12 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mHelpButton = new SieveHelpButton;
-    lay->addWidget( mHelpButton );
+    lay->addWidget(mHelpButton);
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveIncludeWidgetLister;
     connect(mIncludeLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
-    lay->addWidget(mIncludeLister,0, Qt::AlignTop);
+    lay->addWidget(mIncludeLister, 0, Qt::AlignTop);
     setPageType(KSieveUi::SieveScriptBlockWidget::Include);
     setLayout(lay);
 }
@@ -214,8 +216,8 @@ void SieveIncludeWidget::slotHelp()
 {
     const QString help = i18n("The \"include\" command takes an optional \"location\" parameter, an optional \":once\" parameter, an optional \":optional\" parameter, and a single string argument representing the name of the script to include for processing at that point.");
     const QString href = QLatin1String("http://tools.ietf.org/html/rfc6609#page-4");
-    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
-    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help, href);
+    QWhatsThis::showText(QCursor::pos(), fullWhatsThis, mHelpButton);
 }
 
 void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
@@ -246,75 +248,75 @@ SieveIncludeWidgetLister::~SieveIncludeWidgetLister()
 
 }
 
-void SieveIncludeWidgetLister::slotAddWidget( QWidget *w )
+void SieveIncludeWidgetLister::slotAddWidget(QWidget *w)
 {
-    addWidgetAfterThisWidget( w );
+    addWidgetAfterThisWidget(w);
     updateAddRemoveButton();
 }
 
-void SieveIncludeWidgetLister::slotRemoveWidget( QWidget *w )
+void SieveIncludeWidgetLister::slotRemoveWidget(QWidget *w)
 {
-    removeWidget( w );
+    removeWidget(w);
     updateAddRemoveButton();
 }
 
 void SieveIncludeWidgetLister::updateAddRemoveButton()
 {
-    QList<QWidget*> widgetList = widgets();
-    const int numberOfWidget( widgetList.count() );
+    QList<QWidget *> widgetList = widgets();
+    const int numberOfWidget(widgetList.count());
     bool addButtonEnabled = false;
     bool removeButtonEnabled = false;
-    if ( numberOfWidget <= widgetsMinimum() ) {
+    if (numberOfWidget <= widgetsMinimum()) {
         addButtonEnabled = true;
         removeButtonEnabled = false;
-    } else if ( numberOfWidget >= widgetsMaximum() ) {
+    } else if (numberOfWidget >= widgetsMaximum()) {
         addButtonEnabled = false;
         removeButtonEnabled = true;
     } else {
         addButtonEnabled = true;
         removeButtonEnabled = true;
     }
-    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
-    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
-    for ( ; wIt != wEnd ;++wIt ) {
-        SieveIncludeActionWidget *w = qobject_cast<SieveIncludeActionWidget*>( *wIt );
-        w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
+    QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
+    for (; wIt != wEnd ; ++wIt) {
+        SieveIncludeActionWidget *w = qobject_cast<SieveIncludeActionWidget *>(*wIt);
+        w->updateAddRemoveButton(addButtonEnabled, removeButtonEnabled);
     }
 }
 
 void SieveIncludeWidgetLister::generatedScript(QString &script, QStringList &requires)
 {
     requires << QLatin1String("include");
-    const QList<QWidget*> widgetList = widgets();
-    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
-    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
-    for ( ; wIt != wEnd ;++wIt ) {
-        SieveIncludeActionWidget *w = qobject_cast<SieveIncludeActionWidget*>( *wIt );
+    const QList<QWidget *> widgetList = widgets();
+    QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
+    for (; wIt != wEnd ; ++wIt) {
+        SieveIncludeActionWidget *w = qobject_cast<SieveIncludeActionWidget *>(*wIt);
         w->generatedScript(script);
     }
 }
 
-void SieveIncludeWidgetLister::reconnectWidget(SieveIncludeActionWidget *w )
+void SieveIncludeWidgetLister::reconnectWidget(SieveIncludeActionWidget *w)
 {
-    connect( w, SIGNAL(addWidget(QWidget*)),
-             this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
-    connect( w, SIGNAL(removeWidget(QWidget*)),
-             this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
-    connect( w, SIGNAL(valueChanged()),
-             this, SIGNAL(valueChanged()), Qt::UniqueConnection );
+    connect(w, SIGNAL(addWidget(QWidget *)),
+            this, SLOT(slotAddWidget(QWidget *)), Qt::UniqueConnection);
+    connect(w, SIGNAL(removeWidget(QWidget *)),
+            this, SLOT(slotRemoveWidget(QWidget *)), Qt::UniqueConnection);
+    connect(w, SIGNAL(valueChanged()),
+            this, SIGNAL(valueChanged()), Qt::UniqueConnection);
 }
 
-void SieveIncludeWidgetLister::clearWidget( QWidget *aWidget )
+void SieveIncludeWidgetLister::clearWidget(QWidget *aWidget)
 {
     //TODO
     Q_UNUSED(aWidget);
     Q_EMIT valueChanged();
 }
 
-QWidget *SieveIncludeWidgetLister::createWidget( QWidget *parent )
+QWidget *SieveIncludeWidgetLister::createWidget(QWidget *parent)
 {
-    SieveIncludeActionWidget *w = new SieveIncludeActionWidget( parent);
-    reconnectWidget( w );
+    SieveIncludeActionWidget *w = new SieveIncludeActionWidget(parent);
+    reconnectWidget(w);
     return w;
 }
 

@@ -18,8 +18,7 @@
 #include "ksieveui/managescriptsjob/parseuserscriptjob.h"
 #include <qtest.h>
 
-
-QTEST_MAIN( ParseUserTest )
+QTEST_MAIN(ParseUserTest)
 
 void ParseUserTest::testParseEmptyUserJob()
 {
@@ -101,5 +100,4 @@ void ParseUserTest::testParseUserErrorScriptJob()
     QCOMPARE(lst.count(), 0);
     QCOMPARE(result, false);
 }
-
 

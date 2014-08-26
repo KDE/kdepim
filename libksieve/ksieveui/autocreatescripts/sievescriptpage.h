@@ -21,8 +21,8 @@
 #include <QWidget>
 #include "sievescriptblockwidget.h"
 
-
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveScriptBlockWidget;
 class SieveScriptTabWidget;
 class SieveIncludeWidget;
@@ -48,7 +48,7 @@ Q_SIGNALS:
     void valueChanged();
 
 private Q_SLOTS:
-    void slotAddNewBlock(QWidget* widget,KSieveUi::SieveWidgetPageAbstract::PageType type);
+    void slotAddNewBlock(QWidget *widget, KSieveUi::SieveWidgetPageAbstract::PageType type);
     void slotCloseTab(int);
 
 private:

@@ -21,15 +21,17 @@
 #include <QObject>
 #include <QStringList>
 #include <QUrl>
-namespace KManageSieve {
+namespace KManageSieve
+{
 class SieveJob;
 }
-namespace KSieveUi {
+namespace KSieveUi
+{
 class GenerateGlobalScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit GenerateGlobalScriptJob(const QUrl &url, QObject *parent=0);
+    explicit GenerateGlobalScriptJob(const QUrl &url, QObject *parent = 0);
     ~GenerateGlobalScriptJob();
 
     void start();
@@ -41,8 +43,8 @@ Q_SIGNALS:
     void error(const QString &msgError);
 
 private Q_SLOTS:
-    void slotPutMasterResult( KManageSieve::SieveJob *, bool success );
-    void slotPutUserResult( KManageSieve::SieveJob *, bool success );
+    void slotPutMasterResult(KManageSieve::SieveJob *, bool success);
+    void slotPutUserResult(KManageSieve::SieveJob *, bool success);
 
 private:
     void disableAllOtherScripts();

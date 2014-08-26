@@ -19,7 +19,8 @@
 #define SELECTADDHEADERPOSITIONCOMBOBOX_H
 #include <KComboBox>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SelectAddHeaderPositionCombobox : public KComboBox
 {
     Q_OBJECT

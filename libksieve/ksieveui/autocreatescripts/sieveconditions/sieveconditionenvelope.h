@@ -15,13 +15,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SIEVECONDITIONENVELOPE_H
 #define SIEVECONDITIONENVELOPE_H
 
 #include "sievecondition.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveConditionEnvelope : public SieveCondition
 {
     Q_OBJECT
@@ -30,7 +30,7 @@ public:
 
     static SieveCondition *newAction();
 
-    QWidget *createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
 
     QString code(QWidget *w) const;
 
@@ -42,7 +42,7 @@ public:
 
     QString help() const;
 
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error);
 
     QString href() const;
 };

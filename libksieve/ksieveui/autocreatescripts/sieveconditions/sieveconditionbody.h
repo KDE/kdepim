@@ -18,10 +18,10 @@
 #ifndef SIEVECONDITIONBODY_H
 #define SIEVECONDITIONBODY_H
 
-
 #include "sievecondition.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveConditionBody : public SieveCondition
 {
     Q_OBJECT
@@ -29,7 +29,7 @@ public:
     SieveConditionBody(QObject *parent = 0);
     static SieveCondition *newAction();
 
-    QWidget *createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
 
     QString code(QWidget *parent) const;
 
@@ -41,7 +41,7 @@ public:
 
     QString help() const;
 
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error);
 
     QString href() const;
 };

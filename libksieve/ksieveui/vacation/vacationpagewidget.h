@@ -21,11 +21,13 @@
 #include <QWidget>
 #include <QUrl>
 class QStackedWidget;
-namespace KManageSieve {
+namespace KManageSieve
+{
 class SieveJob;
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class VacationEditWidget;
 class VacationWarningWidget;
 class VacationCreateScriptJob;
@@ -33,7 +35,7 @@ class VacationPageWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit VacationPageWidget(QWidget *parent=0);
+    explicit VacationPageWidget(QWidget *parent = 0);
     ~VacationPageWidget();
 
     void setServerUrl(const QUrl &url);

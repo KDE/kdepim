@@ -19,16 +19,17 @@
 #define SIEVEACTIONADDHEADER_H
 
 #include "sieveactionabstracteditheader.h"
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionAddHeader : public SieveActionAbstractEditHeader
 {
     Q_OBJECT
 public:
     SieveActionAddHeader(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
     QString code(QWidget *w) const;
-    QWidget *createParamWidget( QWidget *parent ) const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    QWidget *createParamWidget(QWidget *parent) const;
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
     QString help() const;
     QString href() const;
 };

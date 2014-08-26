@@ -25,7 +25,6 @@ using KSieve::Parser;
 #include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
 
-
 #include <QDebug>
 #include <QFileDialog>
 #include <QApplication>
@@ -34,9 +33,9 @@ using KSieve::Parser;
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("scriptsieveparsing"), i18n("ScriptSieveParsingTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("scriptsieveparsing"), i18n("ScriptSieveParsingTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for script sieve parsing"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -48,8 +47,6 @@ int main( int argc, char** argv )
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-
-
 
     QByteArray script;
 
@@ -69,14 +66,15 @@ int main( int argc, char** argv )
     }
     //qDebug() << "scriptUtf8 = \"" + script +"\"";
 
-    KSieve::Parser sieveParser( script.begin(),
-                           script.begin() + script.length() );
+    KSieve::Parser sieveParser(script.begin(),
+                               script.begin() + script.length());
     KSieveUi::XMLPrintingScriptBuilder psb;
-    sieveParser.setScriptBuilder( &psb );
-    if ( sieveParser.parse() )
+    sieveParser.setScriptBuilder(&psb);
+    if (sieveParser.parse()) {
         qDebug() << "ok";
-    else
+    } else {
         qDebug() << "bad";
+    }
     KSieveUi::ParsingResultDialog dlg;
     dlg.setResultParsing(psb.toDom().toString());
 

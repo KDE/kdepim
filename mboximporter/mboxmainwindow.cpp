@@ -34,7 +34,7 @@ MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
     : QDialog(parent),
       mFileName(filename)
 {
-    setWindowTitle( i18n( "Import mbox file" ) );
+    setWindowTitle(i18n("Import mbox file"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -43,16 +43,16 @@ MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
 
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
 
-    MBoxImporterKernel *kernel = new MBoxImporterKernel( this );
-    CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
-    CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+    MBoxImporterKernel *kernel = new MBoxImporterKernel(this);
+    CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
 
     mImportWidget = new MBoxImportWidget;
     mainLayout->addWidget(mImportWidget);
     mainLayout->addWidget(buttonBox);
 
     connect(mImportWidget, &MBoxImportWidget::importMailsClicked, this, &MBoxMainWindow::slotImportMBox);
-    resize( 800, 600 );
+    resize(800, 600);
 }
 
 MBoxMainWindow::~MBoxMainWindow()
@@ -64,14 +64,14 @@ void MBoxMainWindow::slotImportMBox()
     MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
     MBoxImporterInfoGui *infoGui = new MBoxImporterInfoGui(mImportWidget);
     info->setFilterInfoGui(infoGui);
-    info->setRootCollection( mImportWidget->selectedCollection() );
+    info->setRootCollection(mImportWidget->selectedCollection());
     info->clear(); // Clear info from last time
 
     info->setStatusMessage(i18n("Import in progress"));
     MailImporter::FilterMBox mbox;
-    mbox.setFilterInfo( info );
+    mbox.setFilterInfo(info);
     info->clear();
-    mbox.importMails(QStringList()<<mFileName);
+    mbox.importMails(QStringList() << mFileName);
     info->setStatusMessage(i18n("Import finished"));
     delete info;
 }

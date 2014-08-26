@@ -30,7 +30,8 @@
 
 #include <QVBoxLayout>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 SieveScriptPage::SieveScriptPage(QWidget *parent)
     : QWidget(parent),
       mIncludeWidget(0),
@@ -77,11 +78,10 @@ SieveScriptBlockWidget *SieveScriptPage::addScriptBlock(KSieveUi::SieveWidgetPag
     return blockWidget;
 }
 
-
 SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type)
 {
     SieveScriptBlockWidget *blockWidget = new SieveScriptBlockWidget;
-    connect(blockWidget, SIGNAL(addNewBlock(QWidget*,KSieveUi::SieveWidgetPageAbstract::PageType)), SLOT(slotAddNewBlock(QWidget*,KSieveUi::SieveWidgetPageAbstract::PageType)));
+    connect(blockWidget, SIGNAL(addNewBlock(QWidget *, KSieveUi::SieveWidgetPageAbstract::PageType)), SLOT(slotAddNewBlock(QWidget *, KSieveUi::SieveWidgetPageAbstract::PageType)));
     connect(blockWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     blockWidget->setPageType(type);
     return blockWidget;
@@ -91,29 +91,31 @@ bool SieveScriptPage::hasAnElseBlock() const
 {
     const int numberOfTab(mTabWidget->count());
     for (int i = 0; i < numberOfTab; ++i) {
-        if (static_cast<SieveWidgetPageAbstract*>(mTabWidget->widget(i))->pageType() == SieveScriptBlockWidget::BlockElse)
+        if (static_cast<SieveWidgetPageAbstract *>(mTabWidget->widget(i))->pageType() == SieveScriptBlockWidget::BlockElse) {
             return true;
+        }
     }
     return false;
 }
 
-void SieveScriptPage::slotAddNewBlock(QWidget* widget, KSieveUi::SieveWidgetPageAbstract::PageType type)
+void SieveScriptPage::slotAddNewBlock(QWidget *widget, KSieveUi::SieveWidgetPageAbstract::PageType type)
 {
-    if ( (type == KSieveUi::SieveScriptBlockWidget::BlockElse) && hasAnElseBlock() ) {
+    if ((type == KSieveUi::SieveScriptBlockWidget::BlockElse) && hasAnElseBlock()) {
         KMessageBox::error(this, i18n("Script should always have just one \"Else\" block. We cannot add another one."));
         return;
     }
     SieveScriptBlockWidget *blockWidget = createScriptBlock(type);
-    if (type == KSieveUi::SieveScriptBlockWidget::BlockElse) //Insert at the end of tabwidget
+    if (type == KSieveUi::SieveScriptBlockWidget::BlockElse) { //Insert at the end of tabwidget
         mTabWidget->insertTab(mTabWidget->count(), blockWidget, blockName(type));
-    else
-        mTabWidget->insertTab(mTabWidget->indexOf(widget)+1, blockWidget, blockName(type));
+    } else {
+        mTabWidget->insertTab(mTabWidget->indexOf(widget) + 1, blockWidget, blockName(type));
+    }
     mTabWidget->setCurrentWidget(blockWidget);
 }
 
 QString SieveScriptPage::blockName(KSieveUi::SieveWidgetPageAbstract::PageType type) const
 {
-    switch(type) {
+    switch (type) {
     case KSieveUi::SieveScriptBlockWidget::BlockIf:
         return i18n("Main block");
     case KSieveUi::SieveScriptBlockWidget::BlockElsIf:
@@ -139,8 +141,8 @@ void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
     }
     const int numberOfTab(mTabWidget->count());
     for (int i = 0; i < numberOfTab; ++i) {
-        SieveWidgetPageAbstract* page = static_cast<SieveWidgetPageAbstract*>(mTabWidget->widget(i));
-        if (page->pageType() != KSieveUi::SieveScriptBlockWidget::ForEveryPart ) {
+        SieveWidgetPageAbstract *page = static_cast<SieveWidgetPageAbstract *>(mTabWidget->widget(i));
+        if (page->pageType() != KSieveUi::SieveScriptBlockWidget::ForEveryPart) {
             page->generatedScript(script, requires);
         }
     }

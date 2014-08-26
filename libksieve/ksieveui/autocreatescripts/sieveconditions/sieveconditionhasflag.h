@@ -20,7 +20,8 @@
 
 #include "sievecondition.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveConditionHasFlag : public SieveCondition
 {
     Q_OBJECT
@@ -29,7 +30,7 @@ public:
 
     static SieveCondition *newAction();
 
-    QWidget *createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
 
     QString code(QWidget *parent) const;
 
@@ -41,7 +42,7 @@ public:
 
     QString help() const;
 
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error);
     QString href() const;
 private:
     bool hasVariableSupport;

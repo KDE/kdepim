@@ -25,7 +25,8 @@
 
 class QLineEdit;
 class QPushButton;
-namespace KSieveUi {
+namespace KSieveUi
+{
 
 class SelectHeadersWidget : public QListWidget
 {
@@ -66,7 +67,6 @@ private:
     QLineEdit *mNewHeader;
     QPushButton *mAddNewHeader;
 };
-
 
 class SelectHeaderTypeComboBox : public KComboBox
 {

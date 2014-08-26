@@ -39,14 +39,12 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
                                    "}\n");
     lst << tmp;
 
-
     tmp.name = i18n("Filter on Spamassassin");
     tmp.text = QString::fromLatin1("require \"fileinto\";\n"
                                    "if header :contains \"X-Spam-Level\" \"*********\" { \n"
                                    "    fileinto \"Spam\";\n"
                                    "}\n");
     lst << tmp;
-
 
     tmp.name = i18n("Flag messages");
     tmp.text = QString::fromLatin1("require [\"imap4flags\"];\n"
@@ -68,7 +66,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
                                    "    redirect :copy \"other@example.net\";\n"
                                    "    fileinto \"Forwarded Messages\"; \n"
                                    "}\n");
-    lst <<tmp;
+    lst << tmp;
 
     tmp.name = i18n("Destroy mail posted by...");
     tmp.text = QString::fromLatin1("if header :contains [\"from\",\"cc\"]\n"
@@ -89,7 +87,6 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
                                    "vacation :addresses [ \"me@example.net\", \"other@example.net\" ] :days 7 text: \n%1"
                                    "\n.\n;\n").arg(VacationUtils::defaultMessageText());
     lst << tmp;
-
 
     return lst;
 }

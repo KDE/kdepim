@@ -23,26 +23,27 @@
 
 #include <QDialog>
 class QPushButton;
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditorWidget;
 class KSIEVEUI_EXPORT SieveEditor : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SieveEditor( QWidget * parent=0 );
+    explicit SieveEditor(QWidget *parent = 0);
     ~SieveEditor();
 
     QString script() const;
     QString originalScript() const;
-    void setScript( const QString &script );
-    void setDebugScript( const QString &debug );
+    void setScript(const QString &script);
+    void setDebugScript(const QString &debug);
     void addFailedMessage(const QString &err);
     void addOkMessage(const QString &msg);
-    void setScriptName( const QString &name );
+    void setScriptName(const QString &name);
 
     void resultDone();
 
-    void setSieveCapabilities( const QStringList &capabilities );
+    void setSieveCapabilities(const QStringList &capabilities);
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);

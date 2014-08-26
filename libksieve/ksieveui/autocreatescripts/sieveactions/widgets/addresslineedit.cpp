@@ -26,7 +26,7 @@ AddressLineEdit::AddressLineEdit(QWidget *parent)
       mIncorrectEmail(false)
 {
     setClearButtonEnabled(true);
-    connect(this, SIGNAL(textChanged(QString)),SLOT(slotTextChanged()));
+    connect(this, SIGNAL(textChanged(QString)), SLOT(slotTextChanged()));
 }
 
 AddressLineEdit::~AddressLineEdit()
@@ -53,8 +53,9 @@ void AddressLineEdit::verifyAddress()
             KStatefulBrush bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeText);
             mNegativeBackground = QString::fromLatin1("QLineEdit{ color:%1 }").arg(bgBrush.brush(this).color().name());
         }
-        if (mIncorrectEmail)
+        if (mIncorrectEmail) {
             styleSheet = mNegativeBackground;
+        }
     }
     setStyleSheet(styleSheet);
 #endif

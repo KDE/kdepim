@@ -88,5 +88,3 @@ void SelectBodyTypeWidget::setCode(const QString &type, const QString &content, 
     mBodyLineEdit->setText(content);
 }
 
-
-

@@ -39,7 +39,7 @@ SieveCondition *SieveConditionBody::newAction()
     return new SieveConditionBody;
 }
 
-QWidget *SieveConditionBody::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionBody::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -67,13 +67,13 @@ QWidget *SieveConditionBody::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionBody::code(QWidget *w) const
 {
-    const SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
+    const SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget *>(QLatin1String("bodytype"));
     const QString bodyValue = bodyType->code();
-    const SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
+    const SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
     bool isNegative = false;
     const QString matchValue = matchType->code(isNegative);
 
-    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
+    QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
     const QString editValue = edit->text();
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("body %1 %2 \"%3\"").arg(bodyValue).arg(matchValue).arg(editValue);
 }
@@ -113,16 +113,16 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (index == 0) {
-                    tagValueList<<AutoCreateScriptUtil::tagValue(tagValue);
+                    tagValueList << AutoCreateScriptUtil::tagValue(tagValue);
                 } else if (index == 1) {
-                    tagValueList<<AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition);
+                    tagValueList << AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition);
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug()<<" SieveConditionBody::setParamWidgetValue too many argument "<<index;
+                    qDebug() << " SieveConditionBody::setParamWidgetValue too many argument " << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("str")) {
-                strValue<<e.text();
+                strValue << e.text();
                 ++indexStr;
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -130,25 +130,25 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveConditionBody::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveConditionBody::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
     }
 
     if (strValue.count() == 1) {
-        SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
+        SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget *>(QLatin1String("bodytype"));
         bodyType->setCode(tagValueList.at(0), QString(), name(), error);
-        SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
+        SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
         matchType->setCode(tagValueList.at(1), name(), error);
-        QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
+        QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
         edit->setText(AutoCreateScriptUtil::quoteStr(strValue.at(0)));
     } else if (strValue.count() == 2) {
-        SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
+        SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget *>(QLatin1String("bodytype"));
         bodyType->setCode(tagValueList.at(0), indexStr == 2 ? strValue.at(0) : QString(), name(), error);
-        SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
+        SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
         matchType->setCode(tagValueList.at(1), name(), error);
-        QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
+        QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
         edit->setText(indexStr == 1 ? AutoCreateScriptUtil::quoteStr(strValue.at(0)) : AutoCreateScriptUtil::quoteStr(strValue.at(1)));
     }
     return true;
@@ -158,5 +158,4 @@ QString SieveConditionBody::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
-
 

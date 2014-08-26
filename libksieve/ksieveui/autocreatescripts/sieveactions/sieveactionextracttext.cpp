@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sieveactionextracttext.h"
 #include "editor/sieveeditorutil.h"
 
@@ -34,12 +33,12 @@ SieveActionExtractText::SieveActionExtractText(QObject *parent)
 {
 }
 
-SieveAction* SieveActionExtractText::newAction()
+SieveAction *SieveActionExtractText::newAction()
 {
     return new SieveActionExtractText;
 }
 
-QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionExtractText::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QGridLayout *grid = new QGridLayout;
@@ -77,10 +76,10 @@ bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWi
             if (tagName == QLatin1String("tag")) {
                 //TODO ?
             } else if (tagName == QLatin1String("num")) {
-                QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));
+                QSpinBox *numberOfCharacters = w->findChild<QSpinBox *>(QLatin1String("numberOfCharacters"));
                 numberOfCharacters->setValue(e.text().toInt());
             } else if (tagName == QLatin1String("str")) {
-                QLineEdit *variableName = w->findChild<QLineEdit*>(QLatin1String("variablename"));
+                QLineEdit *variableName = w->findChild<QLineEdit *>(QLatin1String("variablename"));
                 variableName->setText(e.text());
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -88,7 +87,7 @@ bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWi
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveActionExtractText::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveActionExtractText::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -98,16 +97,15 @@ bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWi
 
 QString SieveActionExtractText::code(QWidget *w) const
 {
-    const QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));
+    const QSpinBox *numberOfCharacters = w->findChild<QSpinBox *>(QLatin1String("numberOfCharacters"));
     const QString numberOfCharactersStr = QString::number(numberOfCharacters->value());
 
-    const QLineEdit *variableName = w->findChild<QLineEdit*>(QLatin1String("variablename"));
+    const QLineEdit *variableName = w->findChild<QLineEdit *>(QLatin1String("variablename"));
     const QString variableNameStr = variableName->text();
 
     const QString result = QString::fromLatin1("extracttext :first %1 \"%2\";").arg(numberOfCharactersStr).arg(variableNameStr);
     return result;
 }
-
 
 QStringList SieveActionExtractText::needRequires(QWidget *parent) const
 {

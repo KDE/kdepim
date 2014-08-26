@@ -20,13 +20,14 @@
 
 #include "sieveaction.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionStop : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionStop(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
     QString code(QWidget *) const;
     QString help() const;
     QString href() const;

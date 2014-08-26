@@ -19,14 +19,15 @@
 #define SIEVESCRIPTPARSINGERRORDIALOG_H
 #include "ksieveui_export.h"
 #include <QDialog>
-namespace PimCommon {
+namespace PimCommon
+{
 class RichTextEditorWidget;
 }
 class KSIEVEUI_EXPORT SieveScriptParsingErrorDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SieveScriptParsingErrorDialog(QWidget *parent=0);
+    explicit SieveScriptParsingErrorDialog(QWidget *parent = 0);
     ~SieveScriptParsingErrorDialog();
 
     void setError(QString script, QString);

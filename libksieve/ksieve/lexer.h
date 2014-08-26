@@ -37,20 +37,22 @@
 
 class QString;
 
-namespace KSieve {
+namespace KSieve
+{
 
-  class Error;
+class Error;
 
-  class KSIEVE_EXPORT Lexer {
-  public:
+class KSIEVE_EXPORT Lexer
+{
+public:
     enum Options {
-      IncludeComments = 0,
-      IgnoreComments = 1,
-      IncludeLineFeeds = 0,
-      IgnoreLineFeeds = 2
+        IncludeComments = 0,
+        IgnoreComments = 1,
+        IncludeLineFeeds = 0,
+        IgnoreLineFeeds = 2
     };
 
-    Lexer( const char * scursor, const char * send, int options=0 );
+    Lexer(const char *scursor, const char *send, int options = 0);
     ~Lexer();
 
     /** Return whether comments are returned by @ref
@@ -70,40 +72,40 @@ namespace KSieve {
     **/
     bool ignoreLineFeeds() const;
 
-    const Error & error() const;
+    const Error &error() const;
 
     bool atEnd() const;
     int column() const;
     int line() const;
 
     enum Token {
-      None = 0,
-      Number,          // 1, 100, 1M, 10k, 1G, 2g, 3m
-      Identifier,      // atom
-      Tag,             // :tag
-      Special,         // {} [] () ,;
-      QuotedString,    // "foo\"bar" -> foo"bar
-      MultiLineString, // text: \nfoo\n. -> foo
-      HashComment,     // # foo
-      BracketComment,  // /* foo */
-      LineFeeds        // the number of line feeds encountered
+        None = 0,
+        Number,          // 1, 100, 1M, 10k, 1G, 2g, 3m
+        Identifier,      // atom
+        Tag,             // :tag
+        Special,         // {} [] () ,;
+        QuotedString,    // "foo\"bar" -> foo"bar
+        MultiLineString, // text: \nfoo\n. -> foo
+        HashComment,     // # foo
+        BracketComment,  // /* foo */
+        LineFeeds        // the number of line feeds encountered
     };
 
     /** Parse the next token and return it's type. @p result will contain
         the value of the token. */
-    Token nextToken( QString & result );
+    Token nextToken(QString &result);
 
     void save();
     void restore();
 
     class Impl;
-  private:
-    Impl * i;
+private:
+    Impl *i;
 
-  private:
-    const Lexer & operator=( const Lexer & );
-    Lexer( const Lexer & );
-  };
+private:
+    const Lexer &operator=(const Lexer &);
+    Lexer(const Lexer &);
+};
 
 } // namespace KSieve
 

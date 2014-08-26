@@ -32,14 +32,13 @@
 
 using namespace KSieveUi;
 
-static const char selectMultipleHeaders[] = I18N_NOOP( "Select multiple headers..." );
-
+static const char selectMultipleHeaders[] = I18N_NOOP("Select multiple headers...");
 
 SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Headers" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Headers"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -64,14 +63,13 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     mNewHeader = new QLineEdit;
     mNewHeader->setClearButtonEnabled(true);
     //QT5 mNewHeader->setTrapReturnKey(true);
-    connect(mNewHeader,SIGNAL(returnPressed()), SLOT(slotAddNewHeader()));
+    connect(mNewHeader, SIGNAL(returnPressed()), SLOT(slotAddNewHeader()));
     mNewHeader->setClearButtonEnabled(true);
-
 
     mAddNewHeader = new QPushButton;
     mAddNewHeader->setEnabled(false);
-    mAddNewHeader->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-    mAddNewHeader->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    mAddNewHeader->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mAddNewHeader->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     connect(mAddNewHeader, SIGNAL(clicked(bool)), SLOT(slotAddNewHeader()));
     connect(mNewHeader, SIGNAL(textChanged(QString)), this, SLOT(slotNewHeaderTextChanged(QString)));
     hbox->addWidget(mAddNewHeader);
@@ -91,21 +89,19 @@ SelectHeadersDialog::~SelectHeadersDialog()
 
 void SelectHeadersDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SelectHeadersDialog" );
-    const QSize size = group.readEntry( "Size", QSize(400,300) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectHeadersDialog");
+    const QSize size = group.readEntry("Size", QSize(400, 300));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void SelectHeadersDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SelectHeadersDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectHeadersDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }
-
-
 
 void SelectHeadersDialog::slotNewHeaderTextChanged(const QString &text)
 {
@@ -261,7 +257,7 @@ void SelectHeaderTypeComboBox::initialize(bool onlyEnvelopType)
 
 QString SelectHeaderTypeComboBox::code() const
 {
-    QString str = (currentIndex()> -1) ? itemData(currentIndex()).toString() : QString();
+    QString str = (currentIndex() > -1) ? itemData(currentIndex()).toString() : QString();
     if (str.isEmpty()) {
         str = currentText();
         if (str == i18n(selectMultipleHeaders)) {
@@ -290,7 +286,7 @@ void SelectHeaderTypeComboBox::setCode(const QString &code)
     }
     //If not found select last combobox item
     if (!foundHeaders) {
-        setCurrentIndex(count()-1);
+        setCurrentIndex(count() - 1);
         lineEdit()->setText(code);
     }
     mCode = code;

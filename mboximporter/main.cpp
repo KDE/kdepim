@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include <kaboutdata.h>
 #include <QApplication>
 #include "mboxmainwindow.h"
@@ -31,12 +30,12 @@ int main(int argc, char *argv[])
     KLocalizedString::setApplicationDomain("mboximporter");
 
     QApplication app(argc, argv);
-    KAboutData aboutData( QStringLiteral("mboximporter"),
-                          i18n("MBox importer tool"),
-                          QLatin1String(KDEPIM_VERSION),
-                          i18n("Messageviewer Header Theme Editor"),
-                          KAboutLicense::GPL_V2,
-                          i18n("Copyright © 2013 MBoxImporter authors"));
+    KAboutData aboutData(QStringLiteral("mboximporter"),
+                         i18n("MBox importer tool"),
+                         QLatin1String(KDEPIM_VERSION),
+                         i18n("Messageviewer Header Theme Editor"),
+                         KAboutLicense::GPL_V2,
+                         i18n("Copyright © 2013 MBoxImporter authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
 
     aboutData.setProgramIconName(QLatin1String("kmail"));
@@ -60,7 +59,7 @@ int main(int argc, char *argv[])
     if (!args.isEmpty()) {
         fileName = args.first();
     } else {
-        fileName = QFileDialog::getOpenFileName(); 
+        fileName = QFileDialog::getOpenFileName();
     }
     if (fileName.isEmpty()) {
         return 0;

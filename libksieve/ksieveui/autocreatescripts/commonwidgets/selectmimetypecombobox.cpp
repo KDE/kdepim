@@ -58,4 +58,3 @@ void SelectMimeTypeComboBox::setCode(const QString &code, const QString &name, Q
     }
 }
 
-

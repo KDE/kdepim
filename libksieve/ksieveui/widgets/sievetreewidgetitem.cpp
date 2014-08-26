@@ -41,8 +41,9 @@ void SieveTreeWidgetProgress::slotTimerDone()
 {
     mItem->setProgressAnimation(mProgressPix.frameAt(mProgressCount));
     ++mProgressCount;
-    if (mProgressCount == 8)
+    if (mProgressCount == 8) {
         mProgressCount = 0;
+    }
 
     mProgressTimer->start(300);
 }
@@ -55,8 +56,9 @@ void SieveTreeWidgetProgress::startAnimation()
 
 void SieveTreeWidgetProgress::stopAnimation()
 {
-    if (mProgressTimer->isActive())
+    if (mProgressTimer->isActive()) {
         mProgressTimer->stop();
+    }
     mItem->setDefaultIcon();
 }
 
@@ -81,13 +83,13 @@ void SieveTreeWidgetItem::stopAnimation()
     mProgress->stopAnimation();
 }
 
-void SieveTreeWidgetItem::setProgressAnimation(const QPixmap& pix)
+void SieveTreeWidgetItem::setProgressAnimation(const QPixmap &pix)
 {
     setIcon(0, QIcon(pix));
 }
 
 void SieveTreeWidgetItem::setDefaultIcon()
 {
-    setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
+    setIcon(0, SmallIcon(QLatin1String("network-server")));
 }
 

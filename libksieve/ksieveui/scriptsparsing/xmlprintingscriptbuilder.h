@@ -23,19 +23,20 @@
 
 #include <QDomDocument>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class KSIEVEUI_EXPORT XMLPrintingScriptBuilder : public KSieve::ScriptBuilder
 {
 public:
     explicit XMLPrintingScriptBuilder();
     ~XMLPrintingScriptBuilder();
 
-    void taggedArgument( const QString &tag );
-    void stringArgument( const QString &string, bool multiLine, const QString & /*fixme*/ );
-    void numberArgument( unsigned long number, char quantifier );
-    void commandStart( const QString &identifier );
+    void taggedArgument(const QString &tag);
+    void stringArgument(const QString &string, bool multiLine, const QString & /*fixme*/);
+    void numberArgument(unsigned long number, char quantifier);
+    void commandStart(const QString &identifier);
     void commandEnd();
-    void testStart( const QString &identifier );
+    void testStart(const QString &identifier);
     void testEnd();
     void testListStart();
     void testListEnd();
@@ -43,12 +44,12 @@ public:
     void blockEnd();
     void stringListArgumentStart();
     void stringListArgumentEnd();
-    void stringListEntry( const QString &string, bool multiline, const QString &hashComment );
-    void hashComment( const QString &comment );
-    void bracketComment( const QString &comment );
+    void stringListEntry(const QString &string, bool multiline, const QString &hashComment);
+    void hashComment(const QString &comment);
+    void bracketComment(const QString &comment);
 
     void lineFeed();
-    void error( const KSieve::Error &error );
+    void error(const KSieve::Error &error);
     void finished();
 
     QString result() const;
@@ -60,9 +61,9 @@ public:
     QDomDocument toDom() const;
 
 private:
-    void write( const QString &msg );
-    void write( const QString &key, const QString &value );
-    void write( const QString &key, const QString &attribute, const QString & value );
+    void write(const QString &msg);
+    void write(const QString &key, const QString &value);
+    void write(const QString &key, const QString &attribute, const QString &value);
 
     QString mResult;
     QString mError;

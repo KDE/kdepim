@@ -31,7 +31,7 @@
 SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Sieve Parsing Error" ) );
+    setWindowTitle(i18n("Sieve Parsing Error"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -42,9 +42,9 @@ SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
     mainLayout->addWidget(buttonBox);
     user1Button->setText(i18n("Save As..."));
 
-    mTextEdit = new PimCommon::RichTextEditorWidget( this );
-    
-    mTextEdit->setReadOnly( true );
+    mTextEdit = new PimCommon::RichTextEditorWidget(this);
+
+    mTextEdit->setReadOnly(true);
     readConfig();
     connect(user1Button, &QPushButton::clicked, this, &SieveScriptParsingErrorDialog::slotSaveAs);
     mainLayout->addWidget(mTextEdit);
@@ -68,23 +68,22 @@ void SieveScriptParsingErrorDialog::setError(QString script, QString error)
 
 void SieveScriptParsingErrorDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveScriptParsingErrorDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveScriptParsingErrorDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void SieveScriptParsingErrorDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveScriptParsingErrorDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveScriptParsingErrorDialog");
+    group.writeEntry("Size", size());
 }
 
 void SieveScriptParsingErrorDialog::slotSaveAs()
 {
-    const QString filter = i18n( "all files (*)" );
+    const QString filter = i18n("all files (*)");
     PimCommon::Util::saveTextAs(mTextEdit->toPlainText(), filter, this, QUrl(), i18n("Save Log To File"));
 }
-
 

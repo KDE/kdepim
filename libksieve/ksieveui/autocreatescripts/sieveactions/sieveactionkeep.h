@@ -18,18 +18,19 @@
 #ifndef SIEVEACTIONKEEP_H
 #define SIEVEACTIONKEEP_H
 #include "sieveaction.h"
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionKeep : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionKeep(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
 
     QString code(QWidget *) const;
     QString help() const;
-    QWidget *createParamWidget( QWidget *parent ) const;
-    bool setParamWidgetValue( const QDomElement &element, QWidget *w, QString &error );
+    QWidget *createParamWidget(QWidget *parent) const;
+    bool setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error);
     QStringList needRequires(QWidget *) const;
     QString href() const;
 

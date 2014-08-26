@@ -24,11 +24,11 @@ using namespace KSieveUi;
 ManageSieveTreeView::ManageSieveTreeView(QWidget *parent)
     : PimCommon::CustomTreeView(parent)
 {
-    setDefaultText(i18n( "No IMAP server configured..." ));
-    setRootIsDecorated( true );
-    setAlternatingRowColors( true );
-    setSelectionMode( QAbstractItemView::SingleSelection );
-    setHeaderLabel( i18n( "Available Scripts" ) );
+    setDefaultText(i18n("No IMAP server configured..."));
+    setRootIsDecorated(true);
+    setAlternatingRowColors(true);
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    setHeaderLabel(i18n("Available Scripts"));
     setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
@@ -39,7 +39,7 @@ ManageSieveTreeView::~ManageSieveTreeView()
 void ManageSieveTreeView::setNoImapFound(bool found)
 {
     if (mShowDefaultText != found) {
-        setDefaultText(i18n( "No IMAP server configured..." ));
+        setDefaultText(i18n("No IMAP server configured..."));
         mShowDefaultText = found;
         update();
     }

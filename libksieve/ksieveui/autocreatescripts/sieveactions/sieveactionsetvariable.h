@@ -19,20 +19,21 @@
 #define SIEVEACTIONSETVARIABLE_H
 
 #include "sieveaction.h"
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionSetVariable : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionSetVariable(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
     QString code(QWidget *) const;
     QString help() const;
     QStringList needRequires(QWidget *parent) const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;
-    QWidget *createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
     QString href() const;
 private:
     bool mHasRegexCapability;

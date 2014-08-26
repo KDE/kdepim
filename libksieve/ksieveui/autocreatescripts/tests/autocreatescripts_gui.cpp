@@ -17,7 +17,6 @@
 
 #include <qdebug.h>
 
-
 #include <QDebug>
 #include <QApplication>
 #include <KAboutData>
@@ -27,9 +26,9 @@
 #include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("autocreatescripts_gui"), i18n("AutoCreateScripttest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("autocreatescripts_gui"), i18n("AutoCreateScripttest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for autocreate script dialog"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -43,10 +42,10 @@ int main (int argc, char **argv)
     QStringList capabilities = PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities();
     //Add all capabilities for testing
     dialog->setSieveCapabilities(capabilities);
-    if (dialog->exec() ) {
+    if (dialog->exec()) {
         QString requires;
         const QString script = dialog->script(requires);
-        qDebug()<<" generated script :\n"<<requires<<"\n"<<script;
+        qDebug() << " generated script :\n" << requires << "\n" << script;
     }
     delete dialog;
     return 0;

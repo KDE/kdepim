@@ -27,7 +27,8 @@ class QTimer;
 class QTreeWidget;
 class QTreeWidgetItem;
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveTreeWidgetProgress;
 class KSIEVEUI_EXPORT SieveTreeWidgetItem : public QTreeWidgetItem
 {
@@ -38,7 +39,7 @@ public:
     void startAnimation();
     void stopAnimation();
     void setDefaultIcon();
-    void setProgressAnimation(const QPixmap& pix);
+    void setProgressAnimation(const QPixmap &pix);
 
 private:
     SieveTreeWidgetProgress *mProgress;
@@ -64,6 +65,5 @@ private:
     SieveTreeWidgetItem *mItem;
 };
 }
-
 
 #endif // SIEVETREEWIDGETITEM_H

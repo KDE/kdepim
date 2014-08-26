@@ -37,21 +37,20 @@ extern "C" {
 inline bool initSASL()
 {
 #ifdef Q_OS_WIN
-  QByteArray libInstallPath( QFile::encodeName(QDir::toNativeSeparators(KGlobal::dirs()->installPath("lib")+QLatin1String("sasl2"))) );
-  QByteArray configPath( QFile::encodeName(QDir::toNativeSeparators(KGlobal::dirs()->installPath("config")+QLatin1String("sasl2"))) );
-  if ( sasl_set_path(SASL_PATH_TYPE_PLUGIN, libInstallPath.data()) != SASL_OK
-    || sasl_set_path(SASL_PATH_TYPE_CONFIG, configPath.data()) != SASL_OK )
-  {
-    fprintf(stderr, "SASL path initialization failed!\n");
-    return false;
-  }
+    QByteArray libInstallPath(QFile::encodeName(QDir::toNativeSeparators(KGlobal::dirs()->installPath("lib") + QLatin1String("sasl2"))));
+    QByteArray configPath(QFile::encodeName(QDir::toNativeSeparators(KGlobal::dirs()->installPath("config") + QLatin1String("sasl2"))));
+    if (sasl_set_path(SASL_PATH_TYPE_PLUGIN, libInstallPath.data()) != SASL_OK
+            || sasl_set_path(SASL_PATH_TYPE_CONFIG, configPath.data()) != SASL_OK) {
+        fprintf(stderr, "SASL path initialization failed!\n");
+        return false;
+    }
 #endif
 
-  if ( sasl_client_init( NULL ) != SASL_OK ) {
-    fprintf(stderr, "SASL library initialization failed!\n");
-    return false;
-  }
-  return true;
+    if (sasl_client_init(NULL) != SASL_OK) {
+        fprintf(stderr, "SASL library initialization failed!\n");
+        return false;
+    }
+    return true;
 }
 
 #endif

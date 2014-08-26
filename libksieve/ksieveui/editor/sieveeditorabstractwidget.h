@@ -21,23 +21,24 @@
 
 #include <QWidget>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditorAbstractWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorAbstractWidget(QWidget *parent=0);
+    explicit SieveEditorAbstractWidget(QWidget *parent = 0);
     ~SieveEditorAbstractWidget();
 
     virtual QString currentscript();
-    virtual void setImportScript( const QString & );
+    virtual void setImportScript(const QString &);
     void saveAs(const QString &defaultName);
 
 public Q_SLOTS:
     void slotImport();
 
 private:
-    bool loadFromFile( const QString &filename );
+    bool loadFromFile(const QString &filename);
 };
 }
 

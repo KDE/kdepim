@@ -20,8 +20,8 @@
 using namespace KSieveUi;
 VacationDataExtractor::VacationDataExtractor()
     : KSieve::ScriptBuilder(),
-      mContext( None ),
-      mNotificationInterval( 0 )
+      mContext(None),
+      mNotificationInterval(0)
 {
     qDebug();
 }
@@ -31,20 +31,23 @@ VacationDataExtractor::~VacationDataExtractor()
 
 }
 
-void VacationDataExtractor::commandStart( const QString & identifier ) {
-    qDebug() << "( \"" << identifier <<"\" )";
-    if ( identifier != QLatin1String("vacation") )
+void VacationDataExtractor::commandStart(const QString &identifier)
+{
+    qDebug() << "( \"" << identifier << "\" )";
+    if (identifier != QLatin1String("vacation")) {
         return;
+    }
     reset();
     mContext = VacationCommand;
 }
 
-void VacationDataExtractor::commandEnd() {
+void VacationDataExtractor::commandEnd()
+{
     qDebug();
     mContext = None;
 }
 
-void VacationDataExtractor::error( const KSieve::Error & e )
+void VacationDataExtractor::error(const KSieve::Error &e)
 {
     qDebug() << e.asString() << "@" << e.line() << "," << e.column();
 }
@@ -54,38 +57,42 @@ void VacationDataExtractor::finished()
 
 }
 
-void VacationDataExtractor::taggedArgument( const QString & tag )
+void VacationDataExtractor::taggedArgument(const QString &tag)
 {
-    qDebug() << "( \"" << tag <<"\" )";
-    if ( mContext != VacationCommand )
+    qDebug() << "( \"" << tag << "\" )";
+    if (mContext != VacationCommand) {
         return;
-    if ( tag == QLatin1String("days") )
+    }
+    if (tag == QLatin1String("days")) {
         mContext = Days;
-    else if ( tag == QLatin1String("addresses") )
+    } else if (tag == QLatin1String("addresses")) {
         mContext = Addresses;
+    }
 }
 
-void VacationDataExtractor::stringArgument( const QString & string, bool, const QString & )
+void VacationDataExtractor::stringArgument(const QString &string, bool, const QString &)
 {
-    qDebug() << "( \"" << string <<"\" )";
-    if ( mContext == Addresses ) {
-        mAliases.push_back( string );
+    qDebug() << "( \"" << string << "\" )";
+    if (mContext == Addresses) {
+        mAliases.push_back(string);
         mContext = VacationCommand;
-    } else if ( mContext == VacationCommand ) {
+    } else if (mContext == VacationCommand) {
         mMessageText = string;
         mContext = VacationCommand;
     }
 }
 
-void VacationDataExtractor::numberArgument( unsigned long number, char )
+void VacationDataExtractor::numberArgument(unsigned long number, char)
 {
-    qDebug() << "( \"" << number <<"\" )";
-    if ( mContext != Days )
+    qDebug() << "( \"" << number << "\" )";
+    if (mContext != Days) {
         return;
-    if ( number > INT_MAX )
+    }
+    if (number > INT_MAX) {
         mNotificationInterval = INT_MAX;
-    else
+    } else {
         mNotificationInterval = number;
+    }
     mContext = VacationCommand;
 }
 
@@ -93,19 +100,21 @@ void VacationDataExtractor::stringListArgumentStart()
 {
 
 }
-void VacationDataExtractor::stringListEntry( const QString & string, bool, const QString & )
+void VacationDataExtractor::stringListEntry(const QString &string, bool, const QString &)
 {
-    qDebug() << "( \"" << string <<"\" )";
-    if ( mContext != Addresses )
+    qDebug() << "( \"" << string << "\" )";
+    if (mContext != Addresses) {
         return;
-    mAliases.push_back( string );
+    }
+    mAliases.push_back(string);
 }
 
 void VacationDataExtractor::stringListArgumentEnd()
 {
     qDebug();
-    if ( mContext != Addresses )
+    if (mContext != Addresses) {
         return;
+    }
     mContext = VacationCommand;
 }
 

@@ -34,8 +34,8 @@ using namespace KSieveUi;
 AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Create sieve filter" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Create sieve filter"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -72,24 +72,24 @@ QString AutoCreateScriptDialog::script(QString &requires) const
 
 void AutoCreateScriptDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AutoCreateScriptDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "AutoCreateScriptDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void AutoCreateScriptDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AutoCreateScriptDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "AutoCreateScriptDialog");
+    group.writeEntry("Size", size());
 }
 
-bool AutoCreateScriptDialog::event(QEvent* e)
+bool AutoCreateScriptDialog::event(QEvent *e)
 {
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
-        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+    if (shortCutOverride || e->type() == QEvent::KeyPress) {
+        QKeyEvent *kev = static_cast<QKeyEvent * >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->ignore();
             return true;

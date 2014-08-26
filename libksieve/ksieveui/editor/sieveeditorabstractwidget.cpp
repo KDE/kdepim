@@ -16,7 +16,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-
 #include "sieveeditorabstractwidget.h"
 #include "pimcommon/util/pimutil.h"
 
@@ -42,7 +41,7 @@ SieveEditorAbstractWidget::~SieveEditorAbstractWidget()
 
 void SieveEditorAbstractWidget::saveAs(const QString &defaultName)
 {
-    const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
+    const QString filter = i18n("*.siv|sieve files (*.siv)\n*|all files (*)");
     PimCommon::Util::saveTextAs(currentscript(), filter, this, defaultName, i18n("Save Script"));
 }
 
@@ -51,55 +50,57 @@ QString SieveEditorAbstractWidget::currentscript()
     return QString();
 }
 
-void SieveEditorAbstractWidget::setImportScript( const QString & )
+void SieveEditorAbstractWidget::setImportScript(const QString &)
 {
 
 }
 
 void SieveEditorAbstractWidget::slotImport()
 {
-    if ( !currentscript().isEmpty() ) {
-        if ( KMessageBox::warningYesNo(this, i18n( "You will overwrite script. Do you want to continue?" ), i18n( "Import Script" ) ) == KMessageBox::No )
+    if (!currentscript().isEmpty()) {
+        if (KMessageBox::warningYesNo(this, i18n("You will overwrite script. Do you want to continue?"), i18n("Import Script")) == KMessageBox::No) {
             return;
+        }
     }
     QUrl url;
-    const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
-    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
+    const QString filter = i18n("*.siv|sieve files (*.siv)\n*|all files (*)");
+    QPointer<KFileDialog> fdlg(new KFileDialog(url, filter, this));
     fdlg->setWindowTitle(i18n("Import Script Sieve"));
-    fdlg->setMode( KFile::File );
-    fdlg->setOperationMode( KFileDialog::Opening );
-    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
+    fdlg->setMode(KFile::File);
+    fdlg->setOperationMode(KFileDialog::Opening);
+    if (fdlg->exec() == QDialog::Accepted && fdlg) {
         const QString fileName = fdlg->selectedFile();
-        if ( !loadFromFile( fileName ) ) {
-            KMessageBox::error( this,
-                                i18n( "Could not load the file %1:\n"
-                                      "\"%2\" is the detailed error description.",
-                                      fileName,
-                                      QString::fromLocal8Bit( strerror( errno ) ) ),
-                                i18n( "Sieve Editor Error" ) );
+        if (!loadFromFile(fileName)) {
+            KMessageBox::error(this,
+                               i18n("Could not load the file %1:\n"
+                                    "\"%2\" is the detailed error description.",
+                                    fileName,
+                                    QString::fromLocal8Bit(strerror(errno))),
+                               i18n("Sieve Editor Error"));
         }
     }
     delete fdlg;
 }
 
-bool SieveEditorAbstractWidget::loadFromFile( const QString &filename )
+bool SieveEditorAbstractWidget::loadFromFile(const QString &filename)
 {
-    QFile file( filename );
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         return false;
+    }
 
     QTextStream in(&file);
     QString line = in.readLine();
     QString scriptText;
     while (!line.isNull()) {
-        if ( scriptText.isEmpty() )
+        if (scriptText.isEmpty()) {
             scriptText = line;
-        else
-            scriptText += QLatin1Char( '\n' ) + line;
+        } else {
+            scriptText += QLatin1Char('\n') + line;
+        }
         line = in.readLine();
     }
-    setImportScript( scriptText );
+    setImportScript(scriptText);
     return true;
 }
-
 

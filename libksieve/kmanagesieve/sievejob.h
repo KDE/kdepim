@@ -24,13 +24,15 @@
 #include <kio/global.h>
 #include <kio/udsentry.h>
 
-namespace KIO {
+namespace KIO
+{
 class Job;
 }
 
 class KJob;
 
-namespace KManageSieve {
+namespace KManageSieve
+{
 
 class Session;
 
@@ -53,45 +55,45 @@ public:
      * @param makeActive If @c true, the script will be marked as active.
      * @param wasActive If @c true, the script will be marked as inactive.
      */
-    static SieveJob* put( const QUrl &destination, const QString &script,
-                          bool makeActive, bool wasActive );
+    static SieveJob *put(const QUrl &destination, const QString &script,
+                         bool makeActive, bool wasActive);
 
     /**
      * Gets a sieve script from an IMAP server.
      *
      * @param source The sieve URL that describes the source.
      */
-    static SieveJob* get( const QUrl &source );
+    static SieveJob *get(const QUrl &source);
 
     /**
      * Lists all available scripts at the given sieve @p url.
      */
-    static SieveJob* list( const QUrl &url );
+    static SieveJob *list(const QUrl &url);
 
     /**
      * Deletes the script with the given sieve @p url.
      */
-    static SieveJob* del( const QUrl &url );
+    static SieveJob *del(const QUrl &url);
 
     /**
      * Activates the script with the given sieve @p url.
      */
-    static SieveJob* activate( const QUrl &url );
+    static SieveJob *activate(const QUrl &url);
 
     /**
      * Deactivates the script with the given sieve @p url.
      */
-    static SieveJob* deactivate( const QUrl &url );
+    static SieveJob *deactivate(const QUrl &url);
 
     /**
      * Kills the sieve job.
      */
-    void kill( KJob::KillVerbosity verbosity = KJob::Quietly );
+    void kill(KJob::KillVerbosity verbosity = KJob::Quietly);
 
     /**
      * Sets whether the sieve job shall be interactive.
      */
-    void setInteractive( bool interactive );
+    void setInteractive(bool interactive);
 
     /**
      * Returns the sieve capabilities of the IMAP server.
@@ -113,8 +115,8 @@ Q_SIGNALS:
      * @param script The downloaded sieve script.
      * @param active Whether the script is active on the server.
      */
-    void gotScript( KManageSieve::SieveJob *job, bool success,
-                    const QString &script, bool active );
+    void gotScript(KManageSieve::SieveJob *job, bool success,
+                   const QString &script, bool active);
 
     /**
      * This signal is emitted when a list job has finished.
@@ -125,8 +127,8 @@ Q_SIGNALS:
      * @param activeScript The filename of the active script, or an
      *                     empty string if no script is active.
      */
-    void gotList( KManageSieve::SieveJob *job, bool success,
-                  const QStringList &scriptList, const QString &activeScript );
+    void gotList(KManageSieve::SieveJob *job, bool success,
+                 const QStringList &scriptList, const QString &activeScript);
 
     /**
      * This signal is emitted for all kind of jobs when they have finished.
@@ -137,11 +139,11 @@ Q_SIGNALS:
      * @param active The filename of the active script, or an
      * @param active Whether the script is active on the server.
      */
-    void result( KManageSieve::SieveJob *job, bool success,
-                 const QString &script, bool active);
+    void result(KManageSieve::SieveJob *job, bool success,
+                const QString &script, bool active);
 
-    void errorMessage( KManageSieve::SieveJob *job, bool success,
-                       const QString& errMsg );
+    void errorMessage(KManageSieve::SieveJob *job, bool success,
+                      const QString &errMsg);
     /**
      * This signal is emitted for each result entry of a list job.
      *
@@ -149,15 +151,15 @@ Q_SIGNALS:
      * @param filename The filename of the sieve script on the server.
      * @param active Whether the script is active on the server.
      */
-    void item( KManageSieve::SieveJob *job, const QString &filename, bool active );
+    void item(KManageSieve::SieveJob *job, const QString &filename, bool active);
 
 private:
     //@cond PRIVATE
-    SieveJob( QObject *parent = 0 );
+    SieveJob(QObject *parent = 0);
     ~SieveJob();
 
     class Private;
-    Private* const d;
+    Private *const d;
     friend class Session;
     //@endcond
 };

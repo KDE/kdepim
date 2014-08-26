@@ -40,60 +40,70 @@
 
 #include <QStack>
 
-namespace KSieve {
+namespace KSieve
+{
 
-  class Lexer::Impl {
-  public:
-    Impl( const char * scursor, const char * send, int options );
+class Lexer::Impl
+{
+public:
+    Impl(const char *scursor, const char *send, int options);
 
-    bool ignoreComments() const {
-      return mIgnoreComments;
+    bool ignoreComments() const
+    {
+        return mIgnoreComments;
     }
 
-    bool ignoreLineFeeds() const {
-      return mIgnoreLF;
+    bool ignoreLineFeeds() const
+    {
+        return mIgnoreLF;
     }
 
-    const Error & error() const {
-      return mState.error;
+    const Error &error() const
+    {
+        return mState.error;
     }
 
-    bool atEnd() const {
-      return mState.cursor >= mEnd;
+    bool atEnd() const
+    {
+        return mState.cursor >= mEnd;
     }
 
-    int column() const {
-      return mState.cursor - mState.beginOfLine;
+    int column() const
+    {
+        return mState.cursor - mState.beginOfLine;
     }
 
-    int line() const {
-      return mState.line;
+    int line() const
+    {
+        return mState.line;
     }
 
-    void save() {
-      mStateStack.push( mState );
+    void save()
+    {
+        mStateStack.push(mState);
     }
 
-    void restore() {
-      mState = mStateStack.pop();
+    void restore()
+    {
+        mState = mStateStack.pop();
     }
 
-    Lexer::Token nextToken( QString & tokenValue );
+    Lexer::Token nextToken(QString &tokenValue);
 
-  private:
+private:
     /** Cursor must be positioned on the \r or the \n. */
     bool eatCRLF();
 
     /** Cursor must be positioned after the opening hash (#). If
         parsing is successful, cursor is positioned behind the CRLF
         that ended the comment's line (or past the end). */
-    bool parseHashComment( QString & result, bool reallySave=false );
+    bool parseHashComment(QString &result, bool reallySave = false);
 
     /** Cursor must be positioned after the opening slash-asterisk */
-    bool parseBracketComment( QString & result, bool reallySave=false );
+    bool parseBracketComment(QString &result, bool reallySave = false);
 
     /** Cursor must be positioned on the opening '/'or '#' */
-    bool parseComment( QString & result, bool reallySave=false );
+    bool parseComment(QString &result, bool reallySave = false);
 
     /** Eats whitespace, but not comments */
     bool eatWS();
@@ -102,86 +112,105 @@ namespace KSieve {
     bool eatCWS();
 
     /** Cursor must be positioned on the first character */
-    bool parseIdentifier( QString & result );
+    bool parseIdentifier(QString &result);
 
     /** Cursor must be positioned after the initial ':' */
-    bool parseTag( QString & result );
+    bool parseTag(QString &result);
 
     /** Cursor must be positioned on the first digit */
-    bool parseNumber( QString & result );
+    bool parseNumber(QString &result);
 
     /** Cursor must be positioned after the "text:" token. */
-    bool parseMultiLine( QString & result );
+    bool parseMultiLine(QString &result);
 
     /** Cursor must be positioned after the initial " */
-    bool parseQuotedString( QString & result );
+    bool parseQuotedString(QString &result);
 
     struct State {
-      State( const char * s=0 )
-        : cursor( s ), line( 0 ), beginOfLine( s ), error() {}
-      const char * cursor;
-      int line;
-      const char * beginOfLine;
-      Error error;
+        State(const char *s = 0)
+            : cursor(s), line(0), beginOfLine(s), error() {}
+        const char *cursor;
+        int line;
+        const char *beginOfLine;
+        Error error;
     } mState;
 
-    const char * const mEnd;
+    const char *const mEnd;
     const bool mIgnoreComments : 1;
     const bool mIgnoreLF : 1;
     QStack<State> mStateStack;
 
-    const char * beginOfLine() const { return mState.beginOfLine; }
-
-    int _strnicmp( const char * left, const char * right, size_t len ) const {
-      return charsLeft() >= len ? qstrnicmp( left, right, len ) : 1 ;
+    const char *beginOfLine() const
+    {
+        return mState.beginOfLine;
     }
 
-    void clearErrors() { mState.error = Error(); }
+    int _strnicmp(const char *left, const char *right, size_t len) const
+    {
+        return charsLeft() >= len ? qstrnicmp(left, right, len) : 1 ;
+    }
 
-    unsigned int charsLeft() const {
-      return mEnd - mState.cursor < 0 ? 0 : mEnd - mState.cursor ;
+    void clearErrors()
+    {
+        mState.error = Error();
     }
-    void makeError( Error::Type e ) {
-      makeError( e, line(), column() );
+
+    unsigned int charsLeft() const
+    {
+        return mEnd - mState.cursor < 0 ? 0 : mEnd - mState.cursor ;
     }
-    void makeError( Error::Type e, int errorLine, int errorCol ) {
-      mState.error = Error( e, errorLine, errorCol );
+    void makeError(Error::Type e)
+    {
+        makeError(e, line(), column());
     }
-    void makeIllegalCharError( char ch );
-    void makeIllegalCharError() {
-      makeIllegalCharError( *mState.cursor );
+    void makeError(Error::Type e, int errorLine, int errorCol)
+    {
+        mState.error = Error(e, errorLine, errorCol);
+    }
+    void makeIllegalCharError(char ch);
+    void makeIllegalCharError()
+    {
+        makeIllegalCharError(*mState.cursor);
     }
     /** Defines the current char to end a line.
         Warning: increases @p mCursor!
     **/
-    void newLine() {
-      ++mState.line;
-      mState.beginOfLine = ++mState.cursor;
+    void newLine()
+    {
+        ++mState.line;
+        mState.beginOfLine = ++mState.cursor;
     }
-    bool skipTo( char c, bool acceptEnd=false ) {
-      while( !atEnd() ) {
-        if ( *mState.cursor == '\n' || *mState.cursor == '\r' ) {
-          if ( !eatCRLF() ) return false;
-        } else if ( *mState.cursor == c ) {
-          return true;
-        } else {
-          ++mState.cursor;
+    bool skipTo(char c, bool acceptEnd = false)
+    {
+        while (!atEnd()) {
+            if (*mState.cursor == '\n' || *mState.cursor == '\r') {
+                if (!eatCRLF()) {
+                    return false;
+                }
+            } else if (*mState.cursor == c) {
+                return true;
+            } else {
+                ++mState.cursor;
+            }
         }
-      }
-      return acceptEnd;
+        return acceptEnd;
     }
-    bool skipToCRLF( bool acceptEnd=true ) {
-      for ( ; !atEnd() ; ++mState.cursor )
-        if ( *mState.cursor == '\n' || *mState.cursor == '\r' )
-          return eatCRLF();
-      return acceptEnd;
+    bool skipToCRLF(bool acceptEnd = true)
+    {
+        for (; !atEnd() ; ++mState.cursor)
+            if (*mState.cursor == '\n' || *mState.cursor == '\r') {
+                return eatCRLF();
+            }
+        return acceptEnd;
     }
-    void skipTo8BitEnd() {
-      while ( !atEnd() && (signed char)*mState.cursor < 0 )
-        ++mState.cursor;
+    void skipTo8BitEnd()
+    {
+        while (!atEnd() && (signed char)*mState.cursor < 0) {
+            ++mState.cursor;
+        }
     }
     void skipToDelim();
-  };
+};
 
 }
 

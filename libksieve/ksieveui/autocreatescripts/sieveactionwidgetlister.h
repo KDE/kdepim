@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SIEVEACTIONWIDGETLISTER_H
 #define SIEVEACTIONWIDGETLISTER_H
 
@@ -27,11 +26,13 @@ class QGridLayout;
 class QToolButton;
 class QDomElement;
 
-namespace PimCommon {
+namespace PimCommon
+{
 class MinimumComboBox;
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveAction;
 class SieveHelpButton;
 class SieveActionWidget : public QWidget
@@ -41,7 +42,7 @@ public:
     explicit SieveActionWidget(QWidget *parent);
     ~SieveActionWidget();
 
-    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled);
     void generatedScript(QString &script, QStringList &requires, bool onlyActions);
     bool setAction(const QString &actionName, const QDomElement &element, const QString &comment, QString &error);
     bool isConfigurated() const;
@@ -60,9 +61,9 @@ Q_SIGNALS:
     void valueChanged();
 
 private:
-    void setFilterAction( QWidget *widget );
+    void setFilterAction(QWidget *widget);
     void initWidget();
-    QList<KSieveUi::SieveAction*> mActionList;
+    QList<KSieveUi::SieveAction *> mActionList;
     QPushButton *mAdd;
     QPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
@@ -70,7 +71,6 @@ private:
     SieveHelpButton *mHelpButton;
     QToolButton *mCommentButton;
 };
-
 
 class SieveActionWidgetLister : public KPIM::KWidgetLister
 {
@@ -85,17 +85,17 @@ public:
     int actionNumber() const;
 
 public Q_SLOTS:
-    void slotAddWidget( QWidget *w );
-    void slotRemoveWidget( QWidget *w );
+    void slotAddWidget(QWidget *w);
+    void slotRemoveWidget(QWidget *w);
 
 Q_SIGNALS:
     void valueChanged();
 
 protected:
-    void clearWidget( QWidget *aWidget );
-    QWidget *createWidget( QWidget *parent );
+    void clearWidget(QWidget *aWidget);
+    QWidget *createWidget(QWidget *parent);
 private:
-    void reconnectWidget(SieveActionWidget *w );
+    void reconnectWidget(SieveActionWidget *w);
     void updateAddRemoveButton();
 };
 }

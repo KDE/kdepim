@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef MANAGESIEVEWIDGET_H
 #define MANAGESIEVEWIDGET_H
 #include "ksieveui_export.h"
@@ -29,11 +28,13 @@
 
 class QTreeWidgetItem;
 
-namespace KManageSieve {
+namespace KManageSieve
+{
 class SieveJob;
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class ManageSieveTreeView;
 class KSIEVEUI_EXPORT ManageSieveWidget : public QWidget
 {
@@ -43,7 +44,7 @@ public:
         NormalEditorMode = 0,
         Kep14EditorMode
     };
-    explicit ManageSieveWidget(QWidget *parent=0);
+    explicit ManageSieveWidget(QWidget *parent = 0);
     ~ManageSieveWidget();
 
     ManageSieveTreeView *treeView() const;
@@ -63,7 +64,7 @@ private Q_SLOTS:
     void slotItemChanged(QTreeWidgetItem *item, int col);
     void slotContextMenuRequested(const QPoint &p);
     void slotUpdateButtons();
-    void slotDoubleClicked(QTreeWidgetItem *item);    
+    void slotDoubleClicked(QTreeWidgetItem *item);
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
     void slotCheckNetworkStatus();
 
@@ -76,15 +77,14 @@ public Q_SLOTS:
     void slotRefresh();
 
 protected:
-    QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
-    QMap<QTreeWidgetItem*,QUrl> mUrls;
+    QMap<KManageSieve::SieveJob *, QTreeWidgetItem *> mJobs;
+    QMap<QTreeWidgetItem *, QUrl> mUrls;
 
 private:
-    enum sieveServerStatus
-    {
-        SIEVE_SERVER_ERROR = Qt::UserRole +1,
-        SIEVE_SERVER_CAPABILITIES = Qt::UserRole +2,
-        SIEVE_SERVER_MODE = Qt::UserRole +3
+    enum sieveServerStatus {
+        SIEVE_SERVER_ERROR = Qt::UserRole + 1,
+        SIEVE_SERVER_CAPABILITIES = Qt::UserRole + 2,
+        SIEVE_SERVER_MODE = Qt::UserRole + 3
     };
     bool serverHasError(QTreeWidgetItem *item) const;
     void killAllJobs();
@@ -94,9 +94,8 @@ private:
     void changeActiveScript(QTreeWidgetItem *item, bool activate);
     bool isProtectedName(const QString &name);
 
-
     // Maps top-level items to their child which has the radio button selection
-    QMap<QTreeWidgetItem*,QTreeWidgetItem*> mSelectedItems;
+    QMap<QTreeWidgetItem *, QTreeWidgetItem *> mSelectedItems;
     ManageSieveTreeView *mTreeView;
     bool mClearAll : 1;
     bool mBlockSignal : 1;

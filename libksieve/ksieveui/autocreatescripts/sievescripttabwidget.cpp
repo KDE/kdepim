@@ -24,47 +24,49 @@
 
 #include <QTabBar>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 
 SieveScriptTabWidget::SieveScriptTabWidget(QWidget *parent)
     : QTabWidget(parent)
 {
-    setElideMode( Qt::ElideRight );
-    tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
+    setElideMode(Qt::ElideRight);
+    tabBar()->setSelectionBehaviorOnRemove(QTabBar::SelectPreviousTab);
     setDocumentMode(true);
-    setContextMenuPolicy( Qt::CustomContextMenu );
-    connect( this, SIGNAL(customContextMenuRequested(QPoint)),
-             this, SLOT(slotTabContextMenuRequest(QPoint)) );
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(slotTabContextMenuRequest(QPoint)));
 }
 
 SieveScriptTabWidget::~SieveScriptTabWidget()
 {
 }
 
-void SieveScriptTabWidget::slotTabContextMenuRequest( const QPoint &pos )
+void SieveScriptTabWidget::slotTabContextMenuRequest(const QPoint &pos)
 {
     QTabBar *bar = tabBar();
-    const int indexBar = bar->tabAt( bar->mapFrom( this, pos ) );
+    const int indexBar = bar->tabAt(bar->mapFrom(this, pos));
     QWidget *w = widget(indexBar);
-    if (!w)
+    if (!w) {
         return;
+    }
 
-    SieveWidgetPageAbstract *page = dynamic_cast<SieveWidgetPageAbstract*>(w);
-    if (!page)
+    SieveWidgetPageAbstract *page = dynamic_cast<SieveWidgetPageAbstract *>(w);
+    if (!page) {
         return;
+    }
     if ((page->pageType() == SieveWidgetPageAbstract::BlockElsIf) || page->pageType() == SieveWidgetPageAbstract::BlockElse) {
-        QMenu menu( this );
-        QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-        closeTab->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
+        QMenu menu(this);
+        QAction *closeTab = menu.addAction(i18nc("@action:inmenu", "Close Tab"));
+        closeTab->setIcon(QIcon::fromTheme(QLatin1String("tab-close")));
 
-        QAction *action = menu.exec( mapToGlobal( pos ) );
+        QAction *action = menu.exec(mapToGlobal(pos));
 
         if (action == closeTab) {
             Q_EMIT tabCloseRequested(indexBar);
         }
     }
 }
-
 
 }
 

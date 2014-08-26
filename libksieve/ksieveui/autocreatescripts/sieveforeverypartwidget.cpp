@@ -32,7 +32,8 @@
 #include <QDomNode>
 #include <QDebug>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
@@ -44,13 +45,12 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     w->setLayout(lay);
 
     mHelpButton = new SieveHelpButton;
-    topLayout->addWidget( mHelpButton );
+    topLayout->addWidget(mHelpButton);
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
     connect(mForLoop, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
     topLayout->addWidget(mForLoop);
-
 
     QLabel *lab = new QLabel(i18n("Name (optional):"));
     lay->addWidget(lab);
@@ -60,7 +60,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     mName->setEnabled(false);
     lay->addWidget(mName);
 
-    topLayout->addWidget(w,0, Qt::AlignTop);
+    topLayout->addWidget(w, 0, Qt::AlignTop);
 
     connect(mForLoop, SIGNAL(clicked(bool)), mName, SLOT(setEnabled(bool)));
     setPageType(KSieveUi::SieveScriptBlockWidget::ForEveryPart);
@@ -75,8 +75,8 @@ void SieveForEveryPartWidget::slotHelp()
 {
     const QString help = i18n("\"foreverypart\", which is an iterator that walks though every MIME part of a message, including nested parts, depth first, and applies the commands in the specified block to each of them.");
     const QString href = KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::ForEveryPart);
-    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
-    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help, href);
+    QWhatsThis::showText(QCursor::pos(), fullWhatsThis, mHelpButton);
 }
 
 void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requires)
@@ -104,13 +104,13 @@ void SieveForEveryPartWidget::loadScript(const QDomElement &element, QString &er
                 mName->setText(AutoCreateScriptUtil::strValue(e));
             } else {
                 error += i18n("Unknown tagValue \"%1\" during loading loop \"for\"", tagValue);
-                qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagValue "<<tagValue;
+                qDebug() << " SieveForEveryPartWidget::loadScript unknown tagValue " << tagValue;
             }
             mForLoop->setChecked(true);
             mName->setEnabled(true);
         } else {
             error += i18n("Unknown tag \"%1\" during loading loop \"for\"", tagName);
-            qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagName "<<tagName;
+            qDebug() << " SieveForEveryPartWidget::loadScript unknown tagName " << tagName;
         }
     }
 }

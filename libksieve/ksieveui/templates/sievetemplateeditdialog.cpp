@@ -32,13 +32,12 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-
 using namespace KSieveUi;
 
 SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTemplate)
     : QDialog(parent), mOkButton(0)
 {
-    setWindowTitle( defaultTemplate ? i18n("Default template") : i18n("Template") );
+    setWindowTitle(defaultTemplate ? i18n("Default template") : i18n("Template"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QDialogButtonBox *buttonBox = 0;
     if (defaultTemplate) {
@@ -46,7 +45,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
         connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveTemplateEditDialog::accept);
         connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveTemplateEditDialog::reject);
     } else {
-        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
         mOkButton = buttonBox->button(QDialogButtonBox::Ok);
         mOkButton->setDefault(true);
         mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -57,7 +56,6 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     QWidget *w = new QWidget;
     mainLayout->addWidget(w);
 
-    
     QVBoxLayout *vbox = new QVBoxLayout;
 
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -77,25 +75,26 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
-    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, this );
+    mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, this);
     vbox->addWidget(mFindBar);
 
-    QShortcut *shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::Key_F+Qt::CTRL );
+    QShortcut *shortcut = new QShortcut(this);
+    shortcut->setKey(Qt::Key_F + Qt::CTRL);
     connect(shortcut, &QShortcut::activated, this, &SieveTemplateEditDialog::slotFind);
     connect(mTextEdit, &SieveTextEdit::findText, this, &SieveTemplateEditDialog::slotFind);
 
     w->setLayout(vbox);
     mainLayout->addWidget(w);
     if (!defaultTemplate) {
-        if (mOkButton)
-           mOkButton->setEnabled(false);
+        if (mOkButton) {
+            mOkButton->setEnabled(false);
+        }
         connect(mTemplateNameEdit, &QLineEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
         connect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
         mTemplateNameEdit->setFocus();
     }
     mainLayout->addWidget(buttonBox);
- 
+
     readConfig();
 }
 
@@ -106,26 +105,26 @@ SieveTemplateEditDialog::~SieveTemplateEditDialog()
 
 void SieveTemplateEditDialog::slotFind()
 {
-    if ( mTextEdit->textCursor().hasSelection() )
-        mFindBar->setText( mTextEdit->textCursor().selectedText() );
+    if (mTextEdit->textCursor().hasSelection()) {
+        mFindBar->setText(mTextEdit->textCursor().selectedText());
+    }
     mTextEdit->moveCursor(QTextCursor::Start);
     mFindBar->show();
     mFindBar->focusAndSetCursor();
 }
 
-
 void SieveTemplateEditDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveTemplateEditDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveTemplateEditDialog");
+    group.writeEntry("Size", size());
 }
 
 void SieveTemplateEditDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveTemplateEditDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveTemplateEditDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(600, 400));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 

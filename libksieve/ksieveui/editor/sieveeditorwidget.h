@@ -27,14 +27,15 @@
 class QStackedWidget;
 class QLineEdit;
 class QAction;
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditorTextModeWidget;
 class SieveEditorGraphicalModeWidget;
 class KSIEVEUI_EXPORT SieveEditorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorWidget(QWidget *parent=0);
+    explicit SieveEditorWidget(QWidget *parent = 0);
     ~SieveEditorWidget();
     enum EditorMode {
         Unknown = -1,
@@ -44,13 +45,13 @@ public:
 
     QString script() const;
     QString originalScript() const;
-    void setScript( const QString &script );
-    void setDebugScript( const QString &debug );
-    void setScriptName( const QString &name );
+    void setScript(const QString &script);
+    void setDebugScript(const QString &debug);
+    void setScriptName(const QString &name);
 
     void resultDone();
 
-    void setSieveCapabilities( const QStringList &capabilities );
+    void setSieveCapabilities(const QStringList &capabilities);
 
     void addFailedMessage(const QString &err);
     void addOkMessage(const QString &msg);

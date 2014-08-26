@@ -59,12 +59,11 @@ void SelectSizeWidget::setCode(qlonglong value, const QString &identifier, const
     if (identifier == QLatin1String("K")) {
         value /= 1024;
     } else if (identifier == QLatin1String("M")) {
-        value /= (1024*1024);
+        value /= (1024 * 1024);
     } else if (identifier == QLatin1String("G")) {
-        value /= (1024*1024*1024);
+        value /= (1024 * 1024 * 1024);
     }
     mSelectSizeType->setCode(identifier, name, error);
     mSpinBoxSize->setValue(value);
 }
-
 

@@ -20,20 +20,21 @@
 
 #include "sievecondition.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveConditionConvert : public SieveCondition
 {
     Q_OBJECT
 public:
     SieveConditionConvert(QObject *parent = 0);
-    static SieveCondition* newAction();
+    static SieveCondition *newAction();
     QString code(QWidget *) const;
-    QWidget *createParamWidget( QWidget *parent ) const;
-    QStringList needRequires(QWidget*) const;
+    QWidget *createParamWidget(QWidget *parent) const;
+    QStringList needRequires(QWidget *) const;
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;
     QString help() const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error);
 };
 }
 

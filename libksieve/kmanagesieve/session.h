@@ -32,7 +32,8 @@
 class QTimer;
 class KTcpSocket;
 
-namespace KManageSieve {
+namespace KManageSieve
+{
 
 class SieveJob;
 
@@ -43,19 +44,19 @@ class Session : public QObject
 {
     Q_OBJECT
 public:
-    explicit Session( QObject *parent = 0 );
+    explicit Session(QObject *parent = 0);
     ~Session();
 
-    void connectToHost( const QUrl &url );
-    void disconnectFromHost( bool sendLogout = true );
+    void connectToHost(const QUrl &url);
+    void disconnectFromHost(bool sendLogout = true);
 
-    void scheduleJob( SieveJob *job );
-    void killJob( SieveJob *job );
-    void sendData( const QByteArray &data );
-    void feedBack( const QByteArray &data );
+    void scheduleJob(SieveJob *job);
+    void killJob(SieveJob *job);
+    void sendData(const QByteArray &data);
+    void feedBack(const QByteArray &data);
 
     QString errorMessage() const;
-    void setErrorMessage( const QString &msg );
+    void setErrorMessage(const QString &msg);
 
     QStringList sieveExtensions() const;
 
@@ -64,9 +65,9 @@ private:
     void startAuthentication();
     QStringList requestedSaslMethod() const;
     bool allowUnencrypted() const;
-    bool saslInteract( void *in );
-    bool saslClientStep( const QByteArray &challenge );
-    void processResponse( const Response &response, const QByteArray &data );
+    bool saslInteract(void *in);
+    bool saslClientStep(const QByteArray &challenge);
+    void processResponse(const Response &response, const QByteArray &data);
 
 private slots:
     void dataReceived();
@@ -83,8 +84,8 @@ private:
     KTcpSocket *m_socket;
     sasl_conn_t *m_sasl_conn;
     sasl_interact_t *m_sasl_client_interact;
-    QQueue<SieveJob*> m_jobs;
-    SieveJob* m_currentJob;
+    QQueue<SieveJob *> m_jobs;
+    SieveJob *m_currentJob;
     QStringList m_sieveExtensions;
     QStringList m_saslMethods;
     QString m_implementation;

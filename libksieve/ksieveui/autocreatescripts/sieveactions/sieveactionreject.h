@@ -19,19 +19,20 @@
 #define SIEVEACTIONREJECT_H
 
 #include "sieveaction.h"
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionReject : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionReject(QObject *parent = 0);
 
-    static SieveAction* newAction();
+    static SieveAction *newAction();
 
-    QWidget *createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
     QString code(QWidget *) const;
     QStringList needRequires(QWidget *parent) const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
 
     bool needCheckIfServerHasCapability() const;
 

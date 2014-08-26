@@ -19,13 +19,14 @@
 #define SIEVEACTIONRETURN_H
 
 #include "sieveaction.h"
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionReturn : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionReturn(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
     QString help() const;
     QStringList needRequires(QWidget *parent) const;
     bool needCheckIfServerHasCapability() const;
@@ -34,6 +35,5 @@ public:
     QString href() const;
 };
 }
-
 
 #endif // SIEVEACTIONRETURN_H

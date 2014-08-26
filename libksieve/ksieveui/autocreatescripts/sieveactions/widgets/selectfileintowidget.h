@@ -22,7 +22,8 @@
 
 class QLineEdit;
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 
 class SelectFileIntoDialog : public QDialog
 {

@@ -32,8 +32,8 @@
 #include <QLabel>
 #include <QDebug>
 
-
-namespace KSieveUi {
+namespace KSieveUi
+{
 SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent),
       mMatchCondition(AndCondition)
@@ -43,38 +43,38 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     mConditions = new QGroupBox(i18n("Conditions"));
     QVBoxLayout *vbox = new QVBoxLayout;
 
-    mAllMessageRBtn = new QRadioButton( i18n( "Match all messages" ), this );
-    mMatchAll = new QRadioButton( i18n( "Match a&ll of the following" ), this );
-    mMatchAny = new QRadioButton( i18n( "Match an&y of the following" ), this );
+    mAllMessageRBtn = new QRadioButton(i18n("Match all messages"), this);
+    mMatchAll = new QRadioButton(i18n("Match a&ll of the following"), this);
+    mMatchAny = new QRadioButton(i18n("Match an&y of the following"), this);
 
     vbox->addWidget(mMatchAll);
     vbox->addWidget(mMatchAny);
     vbox->addWidget(mAllMessageRBtn);
-    mMatchAll->setChecked( true );
-    mMatchAny->setChecked( false );
-    mAllMessageRBtn->setChecked( false );
+    mMatchAll->setChecked(true);
+    mMatchAny->setChecked(false);
+    mAllMessageRBtn->setChecked(false);
 
-    QButtonGroup *bg = new QButtonGroup( this );
-    bg->addButton( mMatchAll );
-    bg->addButton( mMatchAny );
+    QButtonGroup *bg = new QButtonGroup(this);
+    bg->addButton(mMatchAll);
+    bg->addButton(mMatchAny);
     bg->addButton(mAllMessageRBtn);
 
-    connect( bg, SIGNAL(buttonClicked(QAbstractButton*)),
-             this, SLOT(slotRadioClicked(QAbstractButton*)) );
+    connect(bg, SIGNAL(buttonClicked(QAbstractButton *)),
+            this, SLOT(slotRadioClicked(QAbstractButton *)));
     mConditions->setLayout(vbox);
 
     mScriptConditionLister = new SieveConditionWidgetLister;
     connect(mScriptConditionLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     vbox->addWidget(mScriptConditionLister);
 
-    topLayout->addWidget(mConditions,0, Qt::AlignTop);
+    topLayout->addWidget(mConditions, 0, Qt::AlignTop);
 
     QGroupBox *actions = new QGroupBox(i18n("Actions"));
     vbox = new QVBoxLayout;
     actions->setLayout(vbox);
     mScriptActionLister = new SieveActionWidgetLister;
     connect(mScriptActionLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
-    vbox->addWidget(mScriptActionLister,0, Qt::AlignTop);
+    vbox->addWidget(mScriptActionLister, 0, Qt::AlignTop);
     topLayout->addWidget(actions);
 
     QHBoxLayout *newBlockLayout = new QHBoxLayout;
@@ -86,8 +86,8 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     mNewBlockType->addItem(i18n("\"else\" block"));
 
     mAddBlockType = new QPushButton;
-    mAddBlockType->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-    mAddBlockType->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    mAddBlockType->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mAddBlockType->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     newBlockLayout->addWidget(mAddBlockType);
     connect(mAddBlockType, SIGNAL(clicked(bool)), SLOT(slotAddBlock()));
 
@@ -103,7 +103,7 @@ SieveScriptBlockWidget::~SieveScriptBlockWidget()
 void SieveScriptBlockWidget::slotAddBlock()
 {
     KSieveUi::SieveWidgetPageAbstract::PageType type = BlockElsIf;
-    switch(mNewBlockType->currentIndex()) {
+    switch (mNewBlockType->currentIndex()) {
     case 0:
         type = BlockElsIf;
         break;
@@ -121,7 +121,7 @@ void SieveScriptBlockWidget::setPageType(PageType type)
 
     if (pageType() != type) {
         SieveWidgetPageAbstract::setPageType(type);
-        switch(type) {
+        switch (type) {
         case BlockIf:
             mAllMessageRBtn->show();
             mConditions->show();
@@ -146,13 +146,12 @@ void SieveScriptBlockWidget::setPageType(PageType type)
     }
 }
 
-
 SieveScriptBlockWidget::MatchCondition SieveScriptBlockWidget::matchCondition() const
 {
     return mMatchCondition;
 }
 
-void SieveScriptBlockWidget::slotRadioClicked(QAbstractButton* button)
+void SieveScriptBlockWidget::slotRadioClicked(QAbstractButton *button)
 {
     if (button == mMatchAll) {
         mMatchCondition = AndCondition;
@@ -214,10 +213,11 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
         } else {
             script += filterStr + conditionStr;
         }
-        if (hasUniqCondition)
+        if (hasUniqCondition) {
             script += QLatin1String("{\n");
-        else
+        } else {
             script += QLatin1String(")\n{\n");
+        }
     }
     mScriptActionLister->generatedScript(script, requires, onlyActions);
     if (!onlyActions) {
@@ -227,7 +227,7 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
 
 void SieveScriptBlockWidget::updateCondition()
 {
-    switch(mMatchCondition) {
+    switch (mMatchCondition) {
     case AndCondition:
         mMatchAll->setChecked(true);
         break;
@@ -275,8 +275,9 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyAct
                 } else if (tagName == QLatin1String("block")) {
                     mScriptActionLister->loadScript(e, false, error);
                 } else {
-                    if (tagName != QLatin1String("crlf"))
-                        qDebug()<<" e.tag"<<tagName;
+                    if (tagName != QLatin1String("crlf")) {
+                        qDebug() << " e.tag" << tagName;
+                    }
                 }
             }
             node = node.nextSibling();

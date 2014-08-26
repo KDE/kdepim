@@ -31,11 +31,11 @@
 
 using namespace KSieveUi;
 
-SieveDebugDialog::SieveDebugDialog( QWidget *parent )
-    : QDialog( parent ),
-      mSieveJob( 0 )
+SieveDebugDialog::SieveDebugDialog(QWidget *parent)
+    : QDialog(parent),
+      mSieveJob(0)
 {
-    setWindowTitle( i18n( "Sieve Diagnostics" ) );
+    setWindowTitle(i18n("Sieve Diagnostics"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -44,26 +44,26 @@ SieveDebugDialog::SieveDebugDialog( QWidget *parent )
 
     // Collect all accounts
     const Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
-    foreach ( const Akonadi::AgentInstance& type, lst ) {
+    foreach (const Akonadi::AgentInstance &type, lst) {
         mResourceIdentifier << type.identifier();
     }
 
-    mEdit = new PimCommon::PlainTextEditorWidget( this );
-    mEdit->setReadOnly( true );
+    mEdit = new PimCommon::PlainTextEditorWidget(this);
+    mEdit->setReadOnly(true);
     mainLayout->addWidget(mEdit);
     mainLayout->addWidget(buttonBox);
 
-    mEdit->editor()->setPlainText( i18n( "Collecting diagnostic information about Sieve support...\n\n" ) );
+    mEdit->editor()->setPlainText(i18n("Collecting diagnostic information about Sieve support...\n\n"));
 
-
-    if ( !mResourceIdentifier.isEmpty() )
-        QTimer::singleShot( 0, this, SLOT(slotDiagNextAccount()) );
+    if (!mResourceIdentifier.isEmpty()) {
+        QTimer::singleShot(0, this, SLOT(slotDiagNextAccount()));
+    }
     readConfig();
 }
 
 SieveDebugDialog::~SieveDebugDialog()
 {
-    if ( mSieveJob ) {
+    if (mSieveJob) {
         mSieveJob->kill();
         mSieveJob = 0;
     }
@@ -73,40 +73,40 @@ SieveDebugDialog::~SieveDebugDialog()
 
 void SieveDebugDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveDebugDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(640, 480) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveDebugDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(640, 480));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void SieveDebugDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveDebugDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveDebugDialog");
+    group.writeEntry("Size", size());
 }
-
 
 void SieveDebugDialog::slotDiagNextAccount()
 {
-    if ( mResourceIdentifier.isEmpty() )
+    if (mResourceIdentifier.isEmpty()) {
         return;
+    }
     QString ident = mResourceIdentifier.first();
 
-    mEdit->editor()->appendPlainText( i18n( "Collecting data for account '%1'...\n", ident ) );
-    mEdit->editor()->appendPlainText( i18n( "------------------------------------------------------------\n" ) );
+    mEdit->editor()->appendPlainText(i18n("Collecting data for account '%1'...\n", ident));
+    mEdit->editor()->appendPlainText(i18n("------------------------------------------------------------\n"));
 
     // Detect URL for this IMAP account
-    const QUrl url = KSieveUi::Util::findSieveUrlForAccount( ident );
-    if ( !url.isValid() ) {
-        mEdit->editor()->appendPlainText( i18n( "(Account does not support Sieve)\n\n" ) );
+    const QUrl url = KSieveUi::Util::findSieveUrlForAccount(ident);
+    if (!url.isValid()) {
+        mEdit->editor()->appendPlainText(i18n("(Account does not support Sieve)\n\n"));
     } else {
         mUrl = url;
 
-        mSieveJob = KManageSieve::SieveJob::list( mUrl );
+        mSieveJob = KManageSieve::SieveJob::list(mUrl);
 
-        connect( mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
-                 SLOT(slotGetScriptList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
+        connect(mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob *, bool, QStringList, QString)),
+                SLOT(slotGetScriptList(KManageSieve::SieveJob *, bool, QStringList, QString)));
 
         // Bypass the singleShot timer -- it's fired when we get our data
         return;
@@ -114,37 +114,37 @@ void SieveDebugDialog::slotDiagNextAccount()
 
     // Handle next account async
     mResourceIdentifier.pop_front();
-    QTimer::singleShot( 0, this, SLOT(slotDiagNextAccount()) );
+    QTimer::singleShot(0, this, SLOT(slotDiagNextAccount()));
 }
 
 void SieveDebugDialog::slotDiagNextScript()
 {
-    if ( mScriptList.isEmpty() ) {
+    if (mScriptList.isEmpty()) {
         // Continue handling accounts instead
         mScriptList.clear();
         mResourceIdentifier.pop_front();
-        QTimer::singleShot( 0, this, SLOT(slotDiagNextAccount()) );
+        QTimer::singleShot(0, this, SLOT(slotDiagNextAccount()));
         return;
     }
 
     QString scriptFile = mScriptList.first();
     mScriptList.pop_front();
 
-    mEdit->editor()->appendPlainText( i18n( "Contents of script '%1':\n", scriptFile ) );
+    mEdit->editor()->appendPlainText(i18n("Contents of script '%1':\n", scriptFile));
 
-    mUrl = KSieveUi::Util::findSieveUrlForAccount( mResourceIdentifier.first() );
+    mUrl = KSieveUi::Util::findSieveUrlForAccount(mResourceIdentifier.first());
 
     mUrl = mUrl.adjusted(QUrl::RemoveFilename);
     mUrl.setPath(mUrl.path() + scriptFile);
 
-    mSieveJob = KManageSieve::SieveJob::get( mUrl );
+    mSieveJob = KManageSieve::SieveJob::get(mUrl);
 
-    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
-             SLOT(slotGetScript(KManageSieve::SieveJob*,bool,QString,bool)) );
+    connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob *, bool, QString, bool)),
+            SLOT(slotGetScript(KManageSieve::SieveJob *, bool, QString, bool)));
 }
 
-void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool success,
-                                      const QString &script, bool active )
+void SieveDebugDialog::slotGetScript(KManageSieve::SieveJob * /* job */, bool success,
+                                     const QString &script, bool active)
 {
     qDebug() << "( ??," << success
              << ", ?," << active << ")" << endl
@@ -152,51 +152,53 @@ void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool s
              << script;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
-    if ( script.isEmpty() ) {
-        mEdit->editor()->appendPlainText( i18n( "(This script is empty.)\n\n" ) );
+    if (script.isEmpty()) {
+        mEdit->editor()->appendPlainText(i18n("(This script is empty.)\n\n"));
     } else {
-        mEdit->editor()->appendPlainText( i18n(
-                           "------------------------------------------------------------\n"
-                           "%1\n"
-                           "------------------------------------------------------------\n\n", script ) );
+        mEdit->editor()->appendPlainText(i18n(
+                                             "------------------------------------------------------------\n"
+                                             "%1\n"
+                                             "------------------------------------------------------------\n\n", script));
     }
 
     // Fetch next script
-    QTimer::singleShot( 0, this, SLOT(slotDiagNextScript()) );
+    QTimer::singleShot(0, this, SLOT(slotDiagNextScript()));
 }
 
-void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool success,
-                                          const QStringList &scriptList, const QString &activeScript )
+void SieveDebugDialog::slotGetScriptList(KManageSieve::SieveJob *job, bool success,
+        const QStringList &scriptList, const QString &activeScript)
 {
-    qDebug() << "Success:" << success <<", List:" << scriptList.join(QLatin1String(",") ) <<
-                ", active:" << activeScript;
+    qDebug() << "Success:" << success << ", List:" << scriptList.join(QLatin1String(",")) <<
+             ", active:" << activeScript;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
-    mEdit->editor()->appendPlainText( i18n( "Sieve capabilities:\n" ) );
+    mEdit->editor()->appendPlainText(i18n("Sieve capabilities:\n"));
     const QStringList caps = job->sieveCapabilities();
-    if ( caps.isEmpty() ) {
-        mEdit->editor()->appendPlainText( i18n( "(No special capabilities available)" ) );
+    if (caps.isEmpty()) {
+        mEdit->editor()->appendPlainText(i18n("(No special capabilities available)"));
     } else {
         QStringList::const_iterator end = caps.constEnd();
-        for ( QStringList::const_iterator it = caps.constBegin(); it !=end; ++it )
-            mEdit->editor()->appendPlainText( QLatin1String("* ") + *it + QLatin1Char('\n') );
-        mEdit->editor()->appendPlainText( QLatin1String("\n") );
+        for (QStringList::const_iterator it = caps.constBegin(); it != end; ++it) {
+            mEdit->editor()->appendPlainText(QLatin1String("* ") + *it + QLatin1Char('\n'));
+        }
+        mEdit->editor()->appendPlainText(QLatin1String("\n"));
     }
 
-    mEdit->editor()->appendPlainText( i18n( "Available Sieve scripts:\n" ) );
+    mEdit->editor()->appendPlainText(i18n("Available Sieve scripts:\n"));
 
-    if ( scriptList.isEmpty() ) {
-        mEdit->editor()->appendPlainText( i18n( "(No Sieve scripts available on this server)\n\n" ) );
+    if (scriptList.isEmpty()) {
+        mEdit->editor()->appendPlainText(i18n("(No Sieve scripts available on this server)\n\n"));
     } else {
         mScriptList = scriptList;
         QStringList::const_iterator end = scriptList.constEnd();
-        for ( QStringList::const_iterator it = scriptList.constBegin(); it != end; ++it )
-            mEdit->editor()->appendPlainText( QLatin1String("* ") + *it + QLatin1Char('\n') );
-        mEdit->editor()->appendPlainText( QLatin1String("\n") );
-        mEdit->editor()->appendPlainText( i18n( "Active script: %1\n\n", activeScript ) );
+        for (QStringList::const_iterator it = scriptList.constBegin(); it != end; ++it) {
+            mEdit->editor()->appendPlainText(QLatin1String("* ") + *it + QLatin1Char('\n'));
+        }
+        mEdit->editor()->appendPlainText(QLatin1String("\n"));
+        mEdit->editor()->appendPlainText(i18n("Active script: %1\n\n", activeScript));
     }
 
     // Handle next job: dump scripts for this server
-    QTimer::singleShot( 0, this, SLOT(slotDiagNextScript()) );
+    QTimer::singleShot(0, this, SLOT(slotDiagNextScript()));
 }
 

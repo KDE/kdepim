@@ -23,9 +23,9 @@
 
 #include <QPointer>
 
-
 class QWidget;
-namespace KSieveUi {
+namespace KSieveUi
+{
 class MultiImapVacationManager;
 class MultiImapVacationDialog;
 class KSIEVEUI_EXPORT VacationManager : public QObject
@@ -41,7 +41,7 @@ public Q_SLOTS:
     void slotEditVacation(const QString &serverName);
 
 Q_SIGNALS:
-    void updateVacationScriptStatus(bool, const QString&);
+    void updateVacationScriptStatus(bool, const QString &);
     void editVacation();
 
 private slots:

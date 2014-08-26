@@ -15,15 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef MANAGESIEVETREEVIEW_H
 #define MANAGESIEVETREEVIEW_H
-
 
 #include "pimcommon/widgets/customtreeview.h"
 #include "ksieveui_export.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class KSIEVEUI_EXPORT ManageSieveTreeView : public PimCommon::CustomTreeView
 {
     Q_OBJECT
@@ -31,7 +30,7 @@ public:
     explicit ManageSieveTreeView(QWidget *parent = 0);
     ~ManageSieveTreeView();
 
-    void setNoImapFound(bool found);    
+    void setNoImapFound(bool found);
     void setNetworkDown(bool state);
 };
 }

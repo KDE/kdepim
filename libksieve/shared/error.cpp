@@ -36,76 +36,79 @@
 
 #include <climits> // UINT_MAX
 
-namespace KSieve {
+namespace KSieve
+{
 
-const char * Error::typeToString( Type t ) {
-    switch ( t ) {
+const char *Error::typeToString(Type t)
+{
+    switch (t) {
 #define CASE(x) case x: return #x
-    CASE( None );
-    CASE( Custom );
+        CASE(None);
+        CASE(Custom);
 
-    CASE( CRWithoutLF );
-    CASE( SlashWithoutAsterisk );
-    CASE( IllegalCharacter );
-    CASE( UnexpectedCharacter );
-    CASE( NoLeadingDigits );
-    CASE( NonCWSAfterTextColon );
+        CASE(CRWithoutLF);
+        CASE(SlashWithoutAsterisk);
+        CASE(IllegalCharacter);
+        CASE(UnexpectedCharacter);
+        CASE(NoLeadingDigits);
+        CASE(NonCWSAfterTextColon);
 
-    CASE( NumberOutOfRange );
-    CASE( InvalidUTF8 );
+        CASE(NumberOutOfRange);
+        CASE(InvalidUTF8);
 
-    CASE( UnfinishedBracketComment );
-    CASE( PrematureEndOfMultiLine );
-    CASE( PrematureEndOfQuotedString );
-    CASE( PrematureEndOfStringList );
-    CASE( PrematureEndOfTestList );
-    CASE( PrematureEndOfBlock );
-    CASE( MissingWhitespace );
-    CASE( MissingSemicolonOrBlock );
+        CASE(UnfinishedBracketComment);
+        CASE(PrematureEndOfMultiLine);
+        CASE(PrematureEndOfQuotedString);
+        CASE(PrematureEndOfStringList);
+        CASE(PrematureEndOfTestList);
+        CASE(PrematureEndOfBlock);
+        CASE(MissingWhitespace);
+        CASE(MissingSemicolonOrBlock);
 
-    CASE( ExpectedBlockOrSemicolon );
-    CASE( ExpectedCommand );
-    CASE( ConsecutiveCommasInStringList );
-    CASE( ConsecutiveCommasInTestList );
-    CASE( MissingCommaInTestList );
-    CASE( MissingCommaInStringList );
-    CASE( NonStringInStringList );
-    CASE( NonCommandInCommandList );
-    CASE( NonTestInTestList );
+        CASE(ExpectedBlockOrSemicolon);
+        CASE(ExpectedCommand);
+        CASE(ConsecutiveCommasInStringList);
+        CASE(ConsecutiveCommasInTestList);
+        CASE(MissingCommaInTestList);
+        CASE(MissingCommaInStringList);
+        CASE(NonStringInStringList);
+        CASE(NonCommandInCommandList);
+        CASE(NonTestInTestList);
 
-    CASE( RequireNotFirst );
-    CASE( RequireMissingForCommand );
-    CASE( RequireMissingForTest );
-    CASE( RequireMissingForComparator );
-    CASE( UnsupportedCommand );
-    CASE( UnsupportedTest );
-    CASE( UnsupportedComparator );
-    CASE( TestNestingTooDeep );
-    CASE( BlockNestingTooDeep );
-    CASE( InvalidArgument );
-    CASE( ConflictingArguments );
-    CASE( ArgumentsRepeated );
-    CASE( CommandOrderingConstraintViolation );
+        CASE(RequireNotFirst);
+        CASE(RequireMissingForCommand);
+        CASE(RequireMissingForTest);
+        CASE(RequireMissingForComparator);
+        CASE(UnsupportedCommand);
+        CASE(UnsupportedTest);
+        CASE(UnsupportedComparator);
+        CASE(TestNestingTooDeep);
+        CASE(BlockNestingTooDeep);
+        CASE(InvalidArgument);
+        CASE(ConflictingArguments);
+        CASE(ArgumentsRepeated);
+        CASE(CommandOrderingConstraintViolation);
 
-    CASE( IncompatibleActionsRequested );
-    CASE( MailLoopDetected );
-    CASE( TooManyActions );
+        CASE(IncompatibleActionsRequested);
+        CASE(MailLoopDetected);
+        CASE(TooManyActions);
 #undef CASE
     default:
         return "<unknown>";
     }
 }
 
-QString Error::asString() const {
+QString Error::asString() const
+{
 
     QString err;
-    switch( type() ) {
+    switch (type()) {
     case None:
         return QString();
     case Custom:
         return mStringOne;
 
-        // Parse errors:
+    // Parse errors:
     case CRWithoutLF:
         err = i18n("Parse error: Carriage Return (CR) without Line Feed (LF)");
         break;
@@ -181,7 +184,7 @@ QString Error::asString() const {
         err = i18n("Parse error: Only Tests allowed in Test Lists");
         break;
 
-        // validity errors:
+    // validity errors:
     case RequireNotFirst:
         err = i18n("\"require\" must be first command");
         break;
@@ -204,10 +207,10 @@ QString Error::asString() const {
         err = i18n("Comparator \"%1\" not supported", mStringOne);
         break;
     case TestNestingTooDeep:
-        err = i18n("Site Policy Limit Violation: Test nesting too deep (max. %1)", mStringOne.toUInt() );
+        err = i18n("Site Policy Limit Violation: Test nesting too deep (max. %1)", mStringOne.toUInt());
         break;
     case BlockNestingTooDeep:
-        err = i18n("Site Policy Limit Violation: Block nesting too deep (max. %1)", mStringOne.toUInt() );
+        err = i18n("Site Policy Limit Violation: Block nesting too deep (max. %1)", mStringOne.toUInt());
         break;
     case InvalidArgument:
         err = i18n("Invalid Argument \"%1\" to \"%2\"", mStringOne, mStringTwo);
@@ -222,7 +225,7 @@ QString Error::asString() const {
         err = i18n("Command \"%1\" violates command ordering constraints", mStringOne);
         break;
 
-        // runtime errors:
+    // runtime errors:
     case IncompatibleActionsRequested:
         err = i18n("Incompatible Actions \"%1\" and \"%2\" requested", mStringOne, mStringTwo);
         break;
@@ -230,7 +233,7 @@ QString Error::asString() const {
         err = i18n("Mail Loop detected");
         break;
     case TooManyActions:
-        err = i18n("Site Policy Limit Violation: Too many Actions requested (max. %1)", mStringOne.toUInt() );
+        err = i18n("Site Policy Limit Violation: Too many Actions requested (max. %1)", mStringOne.toUInt());
         break;
     default:
         err = i18n("Unknown error");
@@ -239,7 +242,6 @@ QString Error::asString() const {
 
     return err;
 }
-
 
 } // namespace KSieve
 

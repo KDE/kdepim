@@ -20,14 +20,13 @@
 
 #include <KLocalizedString>
 
-
 using namespace KSieveUi;
 SieveActionReturn::SieveActionReturn(QObject *parent)
     : SieveAction(QLatin1String("return"), i18n("Return"), parent)
 {
 }
 
-SieveAction* SieveActionReturn::newAction()
+SieveAction *SieveActionReturn::newAction()
 {
     return new SieveActionReturn;
 }
@@ -61,5 +60,4 @@ QString SieveActionReturn::serverNeedsCapability() const
 {
     return QLatin1String("include");
 }
-
 

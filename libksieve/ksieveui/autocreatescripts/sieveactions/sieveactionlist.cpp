@@ -40,7 +40,7 @@
 
 QList<KSieveUi::SieveAction *> KSieveUi::SieveActionList::actionList()
 {
-    QList<KSieveUi::SieveAction*> list;
+    QList<KSieveUi::SieveAction *> list;
     list.append(new KSieveUi::SieveActionDiscard);
     list.append(new KSieveUi::SieveActionStop);
     list.append(new KSieveUi::SieveActionSetFlags);

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sieveconditionmailboxexists.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "editor/sieveeditorutil.h"
@@ -38,7 +37,7 @@ SieveCondition *SieveConditionMailboxExists::newAction()
     return new SieveConditionMailboxExists;
 }
 
-QWidget *SieveConditionMailboxExists::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionMailboxExists::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -56,7 +55,7 @@ QWidget *SieveConditionMailboxExists::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionMailboxExists::code(QWidget *w) const
 {
-    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
     const QString editValue = edit->text();
     return QString::fromLatin1("mailboxexists \"%1\"").arg(editValue);
 }
@@ -90,7 +89,7 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
+                QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
                 edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -98,7 +97,7 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveConditionMailboxExists::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveConditionMailboxExists::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

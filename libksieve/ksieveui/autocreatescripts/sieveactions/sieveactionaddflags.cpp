@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sieveactionaddflags.h"
 #include "editor/sieveeditorutil.h"
 
@@ -27,7 +26,7 @@ SieveActionAddFlags::SieveActionAddFlags(QObject *parent)
 {
 }
 
-SieveAction* SieveActionAddFlags::newAction()
+SieveAction *SieveActionAddFlags::newAction()
 {
     return new SieveActionAddFlags;
 }

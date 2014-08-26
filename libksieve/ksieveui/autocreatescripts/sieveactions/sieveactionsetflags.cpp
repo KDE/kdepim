@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sieveactionsetflags.h"
 #include "editor/sieveeditorutil.h"
 #include "pimcommon/widgets/minimumcombobox.h"
@@ -28,7 +27,7 @@ SieveActionSetFlags::SieveActionSetFlags(QObject *parent)
 {
 }
 
-SieveAction* SieveActionSetFlags::newAction()
+SieveAction *SieveActionSetFlags::newAction()
 {
     return new SieveActionSetFlags;
 }

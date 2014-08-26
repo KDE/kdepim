@@ -20,13 +20,14 @@
 
 #include "sieveactionabstractflags.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionRemoveFlags : public SieveActionAbstractFlags
 {
     Q_OBJECT
 public:
     SieveActionRemoveFlags(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
     QString flagsCode() const;
     QString help() const;
     QString href() const;

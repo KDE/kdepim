@@ -20,9 +20,11 @@
 
 #include <QList>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveCondition;
-namespace SieveConditionList {
+namespace SieveConditionList
+{
 QList<KSieveUi::SieveCondition *> conditionList();
 }
 }

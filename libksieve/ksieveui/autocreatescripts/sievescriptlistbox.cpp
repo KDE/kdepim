@@ -39,8 +39,8 @@ static QString defaultScriptName = QLatin1String("SCRIPTNAME: ");
 
 using namespace KSieveUi;
 
-SieveScriptListItem::SieveScriptListItem( const QString &text, QListWidget *parent )
-    : QListWidgetItem( text, parent ),
+SieveScriptListItem::SieveScriptListItem(const QString &text, QListWidget *parent)
+    : QListWidgetItem(text, parent),
       mScriptPage(0)
 {
 }
@@ -49,7 +49,7 @@ SieveScriptListItem::~SieveScriptListItem()
 {
 }
 
-void SieveScriptListItem::setDescription(const QString & desc)
+void SieveScriptListItem::setDescription(const QString &desc)
 {
     mDescription = desc;
 }
@@ -92,84 +92,82 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     layout->addWidget(mSieveListScript);
 
     //----------- the first row of buttons
-    QWidget *hb = new QWidget( this );
+    QWidget *hb = new QWidget(this);
     QHBoxLayout *hbHBoxLayout = new QHBoxLayout(hb);
     hbHBoxLayout->setMargin(0);
-    hbHBoxLayout->setSpacing( 4 );
+    hbHBoxLayout->setSpacing(4);
 
-    mBtnTop = new QPushButton( QString(), hb );
+    mBtnTop = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnTop);
-    mBtnTop->setIcon( QIcon::fromTheme( QLatin1String("go-top") ) );
-    mBtnTop->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    mBtnTop->setMinimumSize( mBtnTop->sizeHint() * 1.2 );
+    mBtnTop->setIcon(QIcon::fromTheme(QLatin1String("go-top")));
+    mBtnTop->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
+    mBtnTop->setMinimumSize(mBtnTop->sizeHint() * 1.2);
 
-    mBtnUp = new QPushButton( QString(), hb );
+    mBtnUp = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnUp);
-    mBtnUp->setAutoRepeat( true );
-    mBtnUp->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
-    mBtnUp->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    mBtnUp->setMinimumSize( mBtnUp->sizeHint() * 1.2 );
-    mBtnDown = new QPushButton( QString(), hb );
+    mBtnUp->setAutoRepeat(true);
+    mBtnUp->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
+    mBtnUp->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
+    mBtnUp->setMinimumSize(mBtnUp->sizeHint() * 1.2);
+    mBtnDown = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnDown);
-    mBtnDown->setAutoRepeat( true );
-    mBtnDown->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
-    mBtnDown->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    mBtnDown->setMinimumSize( mBtnDown->sizeHint() * 1.2 );
+    mBtnDown->setAutoRepeat(true);
+    mBtnDown->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
+    mBtnDown->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
+    mBtnDown->setMinimumSize(mBtnDown->sizeHint() * 1.2);
 
-    mBtnBottom = new QPushButton( QString(), hb );
+    mBtnBottom = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnBottom);
-    mBtnBottom->setIcon( QIcon::fromTheme( QLatin1String("go-bottom") ) );
-    mBtnBottom->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    mBtnBottom->setMinimumSize( mBtnBottom->sizeHint() * 1.2 );
+    mBtnBottom->setIcon(QIcon::fromTheme(QLatin1String("go-bottom")));
+    mBtnBottom->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
+    mBtnBottom->setMinimumSize(mBtnBottom->sizeHint() * 1.2);
 
-    mBtnUp->setToolTip( i18nc( "Move selected filter up.", "Up" ) );
-    mBtnDown->setToolTip( i18nc( "Move selected filter down.", "Down" ) );
-    mBtnTop->setToolTip( i18nc( "Move selected filter to the top.", "Top" ) );
-    mBtnBottom->setToolTip( i18nc( "Move selected filter to the bottom.", "Bottom" ) );
+    mBtnUp->setToolTip(i18nc("Move selected filter up.", "Up"));
+    mBtnDown->setToolTip(i18nc("Move selected filter down.", "Down"));
+    mBtnTop->setToolTip(i18nc("Move selected filter to the top.", "Top"));
+    mBtnBottom->setToolTip(i18nc("Move selected filter to the bottom.", "Bottom"));
 
-    layout->addWidget( hb );
+    layout->addWidget(hb);
 
-    hb = new QWidget( this );
+    hb = new QWidget(this);
     hbHBoxLayout = new QHBoxLayout(hb);
     hbHBoxLayout->setMargin(0);
-    hbHBoxLayout->setSpacing( 4 );
+    hbHBoxLayout->setSpacing(4);
 
-    mBtnNew = new QPushButton( QString(), hb );
+    mBtnNew = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnNew);
-    mBtnNew->setIcon( QIcon::fromTheme( QLatin1String("document-new") ) );
-    mBtnNew->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    mBtnNew->setMinimumSize( mBtnNew->sizeHint() * 1.2 );
+    mBtnNew->setIcon(QIcon::fromTheme(QLatin1String("document-new")));
+    mBtnNew->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
+    mBtnNew->setMinimumSize(mBtnNew->sizeHint() * 1.2);
 
-    mBtnDelete = new QPushButton( QString(), hb );
+    mBtnDelete = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnDelete);
-    mBtnDelete->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
-    mBtnDelete->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    mBtnDelete->setMinimumSize( mBtnDelete->sizeHint() * 1.2 );
+    mBtnDelete->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
+    mBtnDelete->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
+    mBtnDelete->setMinimumSize(mBtnDelete->sizeHint() * 1.2);
 
-    mBtnRename = new QPushButton( i18n( "Rename..." ), hb );
+    mBtnRename = new QPushButton(i18n("Rename..."), hb);
     hbHBoxLayout->addWidget(mBtnRename);
 
-    mBtnDescription = new QPushButton( i18n( "Edit description..." ), hb );
+    mBtnDescription = new QPushButton(i18n("Edit description..."), hb);
     hbHBoxLayout->addWidget(mBtnDescription);
 
+    layout->addWidget(hb);
+    setLayout(layout);
 
-    layout->addWidget( hb );
-    setLayout( layout );
+    connect(mBtnNew, SIGNAL(clicked()), this, SLOT(slotNew()));
+    connect(mBtnDelete, SIGNAL(clicked()), this, SLOT(slotDelete()));
+    connect(mBtnRename, SIGNAL(clicked()), this, SLOT(slotRename()));
+    connect(mBtnDescription, SIGNAL(clicked()), this, SLOT(slotEditDescription()));
 
-    connect( mBtnNew, SIGNAL(clicked()), this, SLOT(slotNew()));
-    connect( mBtnDelete, SIGNAL(clicked()), this, SLOT(slotDelete()));
-    connect( mBtnRename, SIGNAL(clicked()), this, SLOT(slotRename()));
-    connect( mBtnDescription, SIGNAL(clicked()), this, SLOT(slotEditDescription()));
+    connect(mBtnUp, SIGNAL(clicked()), this, SLOT(slotUp()));
+    connect(mBtnDown, SIGNAL(clicked()), this, SLOT(slotDown()));
+    connect(mBtnTop, SIGNAL(clicked()), this, SLOT(slotTop()));
+    connect(mBtnBottom, SIGNAL(clicked()), this, SLOT(slotBottom()));
 
-    connect( mBtnUp, SIGNAL(clicked()), this, SLOT(slotUp()) );
-    connect( mBtnDown, SIGNAL(clicked()), this, SLOT(slotDown()) );
-    connect( mBtnTop, SIGNAL(clicked()), this, SLOT(slotTop()) );
-    connect( mBtnBottom, SIGNAL(clicked()), this, SLOT(slotBottom()) );
-
-
-    connect( mSieveListScript, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
-    connect( mSieveListScript, SIGNAL(itemActivated(QListWidgetItem*)), SLOT(slotItemActived(QListWidgetItem*)));
-    connect( mSieveListScript, SIGNAL(itemDoubleClicked(QListWidgetItem*)), SLOT(slotEditDescription()));
+    connect(mSieveListScript, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
+    connect(mSieveListScript, SIGNAL(itemActivated(QListWidgetItem *)), SLOT(slotItemActived(QListWidgetItem *)));
+    connect(mSieveListScript, SIGNAL(itemDoubleClicked(QListWidgetItem *)), SLOT(slotEditDescription()));
     updateButtons();
 }
 
@@ -177,10 +175,10 @@ SieveScriptListBox::~SieveScriptListBox()
 {
 }
 
-void SieveScriptListBox::slotItemActived(QListWidgetItem* item)
+void SieveScriptListBox::slotItemActived(QListWidgetItem *item)
 {
     if (item) {
-        SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
+        SieveScriptListItem *itemScript = static_cast<SieveScriptListItem *>(item);
         Q_EMIT activatePage(itemScript->scriptPage());
     }
 }
@@ -188,11 +186,11 @@ void SieveScriptListBox::slotItemActived(QListWidgetItem* item)
 void SieveScriptListBox::updateButtons()
 {
     const int currentIndex = mSieveListScript->currentRow();
-    const bool theFirst = ( currentIndex == 0 );
-    const int numberOfElement( mSieveListScript->count() );
-    const bool theLast = ( currentIndex >= numberOfElement - 1 );
+    const bool theFirst = (currentIndex == 0);
+    const int numberOfElement(mSieveListScript->count());
+    const bool theLast = (currentIndex >= numberOfElement - 1);
 
-    const QList<QListWidgetItem*> lst = mSieveListScript->selectedItems();
+    const QList<QListWidgetItem *> lst = mSieveListScript->selectedItems();
     mBtnDelete->setEnabled(!lst.isEmpty());
     mBtnRename->setEnabled(lst.count() == 1);
     mBtnDescription->setEnabled(lst.count() == 1);
@@ -229,10 +227,10 @@ void SieveScriptListBox::slotDelete()
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
         if (KMessageBox::warningYesNo(this, i18n("Do you want to delete \"%1\" script?", item->text()), i18n("Delete script")) == KMessageBox::Yes) {
-            SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
+            SieveScriptListItem *itemScript = static_cast<SieveScriptListItem *>(item);
             Q_EMIT removePage(itemScript->scriptPage());
             delete item;
-            Q_EMIT enableButtonOk(mSieveListScript->count()>0);
+            Q_EMIT enableButtonOk(mSieveListScript->count() > 0);
             updateButtons();
             Q_EMIT valueChanged();
         }
@@ -255,7 +253,7 @@ void SieveScriptListBox::slotEditDescription()
 {
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
-        SieveScriptListItem *sieveItem = static_cast<SieveScriptListItem*>(item);
+        SieveScriptListItem *sieveItem = static_cast<SieveScriptListItem *>(item);
         QPointer<SieveScriptDescriptionDialog> dlg = new SieveScriptDescriptionDialog(this);
         dlg->setDescription(sieveItem->description());
         if (dlg->exec()) {
@@ -272,8 +270,8 @@ void SieveScriptListBox::slotTop()
     if (item) {
         const int currentIndex = mSieveListScript->currentRow();
         if (currentIndex != 0) {
-            item = mSieveListScript->takeItem( currentIndex );
-            mSieveListScript->insertItem( 0, item );
+            item = mSieveListScript->takeItem(currentIndex);
+            mSieveListScript->insertItem(0, item);
             mSieveListScript->setCurrentItem(item);
             Q_EMIT valueChanged();
         }
@@ -285,9 +283,9 @@ void SieveScriptListBox::slotBottom()
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
         const int currentIndex = mSieveListScript->currentRow();
-        if (currentIndex != mSieveListScript->count() - 1 ) {
-            item = mSieveListScript->takeItem( currentIndex );
-            mSieveListScript->insertItem( mSieveListScript->count() , item );
+        if (currentIndex != mSieveListScript->count() - 1) {
+            item = mSieveListScript->takeItem(currentIndex);
+            mSieveListScript->insertItem(mSieveListScript->count() , item);
             mSieveListScript->setCurrentItem(item);
             Q_EMIT valueChanged();
         }
@@ -299,9 +297,9 @@ void SieveScriptListBox::slotDown()
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
         const int currentIndex = mSieveListScript->currentRow();
-        if (currentIndex < mSieveListScript->count() - 1 ) {
-            item = mSieveListScript->takeItem( currentIndex );
-            mSieveListScript->insertItem( currentIndex + 1, item );
+        if (currentIndex < mSieveListScript->count() - 1) {
+            item = mSieveListScript->takeItem(currentIndex);
+            mSieveListScript->insertItem(currentIndex + 1, item);
             mSieveListScript->setCurrentItem(item);
             Q_EMIT valueChanged();
         }
@@ -313,9 +311,9 @@ void SieveScriptListBox::slotUp()
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
         const int currentIndex = mSieveListScript->currentRow();
-        if (currentIndex >= 1 ) {
-            item = mSieveListScript->takeItem( currentIndex );
-            mSieveListScript->insertItem( currentIndex - 1, item );
+        if (currentIndex >= 1) {
+            item = mSieveListScript->takeItem(currentIndex);
+            mSieveListScript->insertItem(currentIndex - 1, item);
             mSieveListScript->setCurrentItem(item);
             Q_EMIT valueChanged();
         }
@@ -327,10 +325,11 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
     QString resultScript;
     QStringList lstRequires;
     const int numberOfScripts(mSieveListScript->count());
-    for (int i = 0; i< numberOfScripts; ++i) {
-        SieveScriptListItem* item = static_cast<SieveScriptListItem*>(mSieveListScript->item(i));
-        if (i != 0)
+    for (int i = 0; i < numberOfScripts; ++i) {
+        SieveScriptListItem *item = static_cast<SieveScriptListItem *>(mSieveListScript->item(i));
+        if (i != 0) {
             resultScript += QLatin1String("\n\n");
+        }
         resultScript += QLatin1Char('#') + defaultScriptName + item->text() + QLatin1Char('\n');
         resultScript += item->generatedScript(lstRequires);
     }
@@ -377,22 +376,24 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
             //qDebug()<<" tagName "<<tagName;
             if (tagName == QLatin1String("control")) {
                 //Create a new page when before it was "onlyactions"
-                if (typeBlock == TypeBlockAction)
+                if (typeBlock == TypeBlockAction) {
                     currentPage = 0;
+                }
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString controlType = e.attribute(QLatin1String("name"));
                     //qDebug()<<" controlType"<<controlType;
                     if (controlType == QLatin1String("if")) {
                         typeBlock = TypeBlockIf;
-                        if (!currentPage || hasCreatedAIfBlock)
+                        if (!currentPage || hasCreatedAIfBlock) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                        }
                         hasCreatedAIfBlock = true;
                         comment.clear();
                         currentPage->blockIfWidget()->loadScript(e, false, error);
                     } else if (controlType == QLatin1String("elsif")) {
                         typeBlock = TypeBlockElsif;
                         if (!currentPage) {
-                            qDebug() <<" script is not correct missing if block";
+                            qDebug() << " script is not correct missing if block";
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                         }
                         SieveScriptBlockWidget *blockWidget = currentPage->addScriptBlock(KSieveUi::SieveWidgetPageAbstract::BlockElsIf);
@@ -403,7 +404,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                         typeBlock = TypeBlockElse;
                         if (!currentPage) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
-                            qDebug() <<" script is not correct missing if block";
+                            qDebug() << " script is not correct missing if block";
                         }
                         SieveScriptBlockWidget *blockWidget = currentPage->addScriptBlock(KSieveUi::SieveWidgetPageAbstract::BlockElse);
                         if (blockWidget) {
@@ -428,7 +429,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                     } else if (controlType == QLatin1String("require")) {
                         //Nothing. autogenerated
                     } else {
-                        qDebug()<<" unknown controlType :"<<controlType;
+                        qDebug() << " unknown controlType :" << controlType;
                     }
                 }
             } else if (tagName == QLatin1String("comment")) {
@@ -436,8 +437,9 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                 if (str.contains(defaultScriptName)) {
                     scriptName = str.remove(defaultScriptName);
                 } else {
-                    if (!comment.isEmpty())
+                    if (!comment.isEmpty()) {
                         comment += QLatin1Char('\n');
+                    }
                     comment += e.text();
                 }
             } else if (tagName == QLatin1String("action")) {
@@ -452,7 +454,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                         if (currentPage->includeWidget()) {
                             currentPage->includeWidget()->loadScript(e, error);
                         } else {
-                            qDebug()<<" include not supported";
+                            qDebug() << " include not supported";
                         }
                     } else if (actionName == QLatin1String("global")) {
                         if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
@@ -463,13 +465,13 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                         if (currentPage->globalVariableWidget()) {
                             currentPage->globalVariableWidget()->loadScript(e, error);
                         } else {
-                            qDebug()<<" globalVariable not supported";
+                            qDebug() << " globalVariable not supported";
                         }
                     } else if (actionName == QLatin1String("set") && (typeBlock == TypeBlockGlobal)) {
                         if (currentPage->globalVariableWidget()) {
                             currentPage->globalVariableWidget()->loadSetVariable(e, error);
                         } else {
-                            qDebug()<<" globalVariable not supported";
+                            qDebug() << " globalVariable not supported";
                         }
                     } else {
                         if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
@@ -484,7 +486,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
-                qDebug()<<" unknown tagname"<<tagName;
+                qDebug() << " unknown tagname" << tagName;
             }
         }
         n = n.nextSibling();

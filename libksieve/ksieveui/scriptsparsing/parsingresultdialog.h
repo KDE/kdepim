@@ -19,15 +19,17 @@
 #include "ksieveui_export.h"
 #include <QDialog>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditorWidget;
 }
-namespace KSieveUi {
+namespace KSieveUi
+{
 class KSIEVEUI_EXPORT ParsingResultDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ParsingResultDialog(QWidget *parent=0);
+    explicit ParsingResultDialog(QWidget *parent = 0);
     ~ParsingResultDialog();
 
     void setResultParsing(const QString &result);

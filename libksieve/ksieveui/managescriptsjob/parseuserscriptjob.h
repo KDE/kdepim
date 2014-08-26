@@ -23,16 +23,18 @@
 #include "ksieveui_export.h"
 class QDomDocument;
 class QDomElement;
-namespace KManageSieve {
+namespace KManageSieve
+{
 class SieveJob;
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class KSIEVEUI_EXPORT ParseUserScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit ParseUserScriptJob(QObject *parent=0);
+    explicit ParseUserScriptJob(QObject *parent = 0);
     ~ParseUserScriptJob();
 
     void start();
@@ -40,9 +42,8 @@ public:
     void scriptUrl(const QUrl &url);
     static QStringList parsescript(const QString &script, bool &result);
 
-
 private Q_SLOTS:
-    void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );
+    void slotGetResult(KManageSieve::SieveJob *, bool, const QString &, bool);
 
 Q_SIGNALS:
     void success(const QStringList &activeScriptList);

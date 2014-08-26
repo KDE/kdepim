@@ -23,12 +23,13 @@
 class QLineEdit;
 class QPushButton;
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditFindBar;
 }
 
-
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveTextEdit;
 class SieveTemplateEditDialog : public QDialog
 {

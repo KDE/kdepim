@@ -32,9 +32,9 @@ SelectFileIntoDialog::SelectFileIntoDialog(QWidget *parent)
     : QDialog(parent)
 {
 
-    setWindowTitle( i18n( "Select folder" ) );
+    setWindowTitle(i18n("Select folder"));
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -60,7 +60,6 @@ QString SelectFileIntoDialog::selectedFolder() const
     //TODO
     return QString();
 }
-
 
 SelectFileIntoWidget::SelectFileIntoWidget(QWidget *parent)
     : QWidget(parent)

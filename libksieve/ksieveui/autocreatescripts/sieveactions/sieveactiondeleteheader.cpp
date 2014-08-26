@@ -36,12 +36,12 @@ SieveActionDeleteHeader::SieveActionDeleteHeader(QObject *parent)
 {
 }
 
-SieveAction* SieveActionDeleteHeader::newAction()
+SieveAction *SieveActionDeleteHeader::newAction()
 {
     return new SieveActionDeleteHeader;
 }
 
-QWidget *SieveActionDeleteHeader::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionDeleteHeader::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QGridLayout *grid = new QGridLayout;
@@ -71,7 +71,7 @@ QWidget *SieveActionDeleteHeader::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
+bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -81,20 +81,20 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("test")) {
                 QDomNode testNode = e.toElement();
-                return setParamWidgetValue(testNode.toElement(), w, error );
+                return setParamWidgetValue(testNode.toElement(), w, error);
             } else if (tagName == QLatin1String("tag")) {
-                SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
+                SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
                 combo->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
-                    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("headeredit") );
+                    QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("headeredit"));
                     edit->setText(e.text());
                 } else if (index == 1) {
-                    QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("valueedit") );
+                    QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("valueedit"));
                     value->setText(e.text());
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug()<<" SieveActionAddHeader::setParamWidgetValue too many argument :"<<index;
+                    qDebug() << " SieveActionAddHeader::setParamWidgetValue too many argument :" << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("crlf")) {
@@ -103,7 +103,7 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<"SieveActionAddHeader::setParamWidgetValue unknown tag "<<tagName;
+                qDebug() << "SieveActionAddHeader::setParamWidgetValue unknown tag " << tagName;
             }
         }
         node = node.nextSibling();
@@ -113,17 +113,17 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
 
 QString SieveActionDeleteHeader::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
+    const SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
     bool isNegative = false;
     const QString matchTypeStr = combo->code(isNegative);
 
-    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("headeredit") );
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("headeredit"));
     const QString headerStr = edit->text();
 
-    const QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("valueedit") );
+    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("valueedit"));
     const QString valueStr = value->text();
 
-    return QString::fromLatin1("deleteheader %1 \"%2\" \"%3\";").arg((isNegative ? QLatin1String("not ") + matchTypeStr : matchTypeStr )).arg(headerStr).arg(valueStr);
+    return QString::fromLatin1("deleteheader %1 \"%2\" \"%3\";").arg((isNegative ? QLatin1String("not ") + matchTypeStr : matchTypeStr)).arg(headerStr).arg(valueStr);
 }
 
 QString SieveActionDeleteHeader::help() const

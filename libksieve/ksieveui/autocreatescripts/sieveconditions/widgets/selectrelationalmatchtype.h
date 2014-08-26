@@ -20,7 +20,8 @@
 
 #include <QWidget>
 class KComboBox;
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SelectRelationalMatchType : public QWidget
 {
     Q_OBJECT
@@ -40,6 +41,5 @@ private:
     KComboBox *mMatch;
 };
 }
-
 
 #endif // SELECTRELATIONALMATCHTYPE_H

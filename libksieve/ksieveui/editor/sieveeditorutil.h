@@ -20,8 +20,10 @@
 
 #include <QString>
 
-namespace KSieveUi {
-namespace SieveEditorUtil {
+namespace KSieveUi
+{
+namespace SieveEditorUtil
+{
 
 enum HelpVariableName {
     UnknownHelp,

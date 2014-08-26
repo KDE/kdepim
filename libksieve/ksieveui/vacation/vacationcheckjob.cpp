@@ -25,23 +25,25 @@ VacationCheckJob::VacationCheckJob(const QUrl &url, const QString &serverName, Q
       mServerName(serverName),
       mUrl(url)
 {
-    mSieveJob = KManageSieve::SieveJob::get( mUrl );
-    mSieveJob->setInteractive( false );
-    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
-             SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
+    mSieveJob = KManageSieve::SieveJob::get(mUrl);
+    mSieveJob->setInteractive(false);
+    connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob *, bool, QString, bool)),
+            SLOT(slotGetResult(KManageSieve::SieveJob *, bool, QString, bool)));
 }
 
 VacationCheckJob::~VacationCheckJob()
 {
-    if ( mSieveJob )
+    if (mSieveJob) {
         mSieveJob->kill();
+    }
     mSieveJob = 0;
 }
 
 void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool success, const QString &/*script*/, bool active)
 {
     mSieveJob = 0;
-    if ( !success )
-        active = false; // default to inactive
-    emit scriptActive( active, mServerName );
+    if (!success) {
+        active = false;    // default to inactive
+    }
+    emit scriptActive(active, mServerName);
 }

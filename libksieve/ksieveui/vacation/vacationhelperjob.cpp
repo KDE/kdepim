@@ -35,7 +35,7 @@ VacationHelperJob::~VacationHelperJob()
 
 void VacationHelperJob::killJob()
 {
-    if ( mSieveJob ) {
+    if (mSieveJob) {
         mSieveJob->kill();
         mSieveJob = 0;
     }
@@ -45,17 +45,17 @@ void VacationHelperJob::searchActiveJob()
 {
     killJob();
 
-    if ( !mUrl.isValid() ) {
+    if (!mUrl.isValid()) {
         Q_EMIT resourceHasNotSieveSupport();
     } else {
-        mSieveJob = KManageSieve::SieveJob::list( mUrl );
+        mSieveJob = KManageSieve::SieveJob::list(mUrl);
 
-        connect( mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
-                 SLOT(slotGetScriptList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
+        connect(mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob *, bool, QStringList, QString)),
+                SLOT(slotGetScriptList(KManageSieve::SieveJob *, bool, QStringList, QString)));
     }
 }
 
-void VacationHelperJob::slotGetScriptList( KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript )
+void VacationHelperJob::slotGetScriptList(KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript)
 {
     mSieveJob = 0;
     if (success) {

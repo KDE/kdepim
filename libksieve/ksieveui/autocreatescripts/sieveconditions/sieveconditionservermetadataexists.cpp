@@ -36,7 +36,7 @@ SieveCondition *SieveConditionServerMetaDataExists::newAction()
     return new SieveConditionServerMetaDataExists;
 }
 
-QWidget *SieveConditionServerMetaDataExists::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionServerMetaDataExists::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -56,7 +56,7 @@ QWidget *SieveConditionServerMetaDataExists::createParamWidget( QWidget *parent 
 
 QString SieveConditionServerMetaDataExists::code(QWidget *w) const
 {
-    const QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
+    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
     const QString valueStr = value->text();
     return QString::fromLatin1("servermetadataexists \"%1\"").arg(valueStr);
 }
@@ -90,7 +90,7 @@ bool SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
+                QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
                 value->setText(tagValue);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -98,7 +98,7 @@ bool SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

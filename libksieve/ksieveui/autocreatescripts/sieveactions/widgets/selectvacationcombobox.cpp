@@ -19,7 +19,8 @@
 
 #include <KLocalizedString>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 SelectVacationComboBox::SelectVacationComboBox(QWidget *parent)
     : KComboBox(parent)
 {

@@ -34,14 +34,13 @@ using KSieve::Parser;
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
-
 #include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
 #include "libksieve/ksieveui/autocreatescripts/sievescriptparsingerrordialog.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("parsingscript_gui"), i18n("ParsingScriptTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("parsingscript_gui"), i18n("ParsingScriptTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for parsing script dialog"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -65,21 +64,22 @@ int main (int argc, char **argv)
     if (!fileName.isEmpty()) {
         QFile file(fileName);
         if (file.open(QIODevice::ReadOnly)) {
-           script = file.readAll();
+            script = file.readAll();
         }
     } else {
-       return 0;
+        return 0;
     }
     //qDebug() << "scriptUtf8 = \"" + script +"\"";
 
-    KSieve::Parser sieveParser( script.begin(),
-                           script.begin() + script.length() );
+    KSieve::Parser sieveParser(script.begin(),
+                               script.begin() + script.length());
     KSieveUi::XMLPrintingScriptBuilder psb;
-    sieveParser.setScriptBuilder( &psb );
-    if ( sieveParser.parse() )
+    sieveParser.setScriptBuilder(&psb);
+    if (sieveParser.parse()) {
         qDebug() << "ok";
-    else
+    } else {
         qDebug() << "bad";
+    }
     KSieveUi::ParsingResultDialog dlg;
     dlg.setResultParsing(psb.toDom().toString());
     dlg.show();

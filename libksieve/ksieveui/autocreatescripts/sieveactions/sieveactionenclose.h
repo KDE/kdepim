@@ -19,16 +19,17 @@
 #define SIEVEACTIONENCLOSE_H
 #include "sieveaction.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionEnclose : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionEnclose(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
     QString code(QWidget *) const;
-    QWidget *createParamWidget( QWidget *parent ) const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    QWidget *createParamWidget(QWidget *parent) const;
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
     QStringList needRequires(QWidget *parent) const;
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;

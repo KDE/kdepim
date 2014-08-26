@@ -33,12 +33,12 @@ SieveActionConvert::SieveActionConvert(QObject *parent)
 {
 }
 
-SieveAction* SieveActionConvert::newAction()
+SieveAction *SieveActionConvert::newAction()
 {
     return new SieveActionConvert;
 }
 
-QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionConvert::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QGridLayout *lay = new QGridLayout;
@@ -72,7 +72,7 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w ,QString &error )
+bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -82,26 +82,26 @@ bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 if (index == 0) {
-                    SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
+                    SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("from"));
                     fromMimeType->setCode(e.text(), name(), error);
                 } else if (index == 1) {
-                    SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
+                    SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("to"));
                     toMimeType->setCode(e.text(), name(), error);
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug()<<" SieveActionConvert::setParamWidgetValue too many argument :"<<index;
+                    qDebug() << " SieveActionConvert::setParamWidgetValue too many argument :" << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("list")) {
-               SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
-               params->setCode(AutoCreateScriptUtil::listValue(e), error);
+                SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QLatin1String("params"));
+                params->setCode(AutoCreateScriptUtil::listValue(e), error);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<"SieveActionConvert::setParamWidgetValue unknown tag "<<tagName;
+                qDebug() << "SieveActionConvert::setParamWidgetValue unknown tag " << tagName;
             }
         }
         node = node.nextSibling();
@@ -112,15 +112,15 @@ bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
 QString SieveActionConvert::code(QWidget *w) const
 {
     QString result = QLatin1String("convert ");
-    const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
+    const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("from"));
     const QString fromMimeTypeStr = fromMimeType->code();
     result += QString::fromLatin1("%1 ").arg(fromMimeTypeStr);
 
-    const SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
+    const SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("to"));
     const QString toMimeTypeStr = toMimeType->code();
     result += QString::fromLatin1("%1 ").arg(toMimeTypeStr);
 
-    const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
+    const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QLatin1String("params"));
     const QString paramsStr = params->code();
     if (!paramsStr.isEmpty()) {
         result += paramsStr;
@@ -128,7 +128,6 @@ QString SieveActionConvert::code(QWidget *w) const
     result += QLatin1Char(';');
     return result;
 }
-
 
 QStringList SieveActionConvert::needRequires(QWidget *) const
 {

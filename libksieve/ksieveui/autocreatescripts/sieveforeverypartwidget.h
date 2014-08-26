@@ -23,7 +23,8 @@ class QCheckBox;
 class QLineEdit;
 class QDomElement;
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveHelpButton;
 class SieveForEveryPartWidget : public SieveWidgetPageAbstract
 {
@@ -44,6 +45,5 @@ private:
     SieveHelpButton *mHelpButton;
 };
 }
-
 
 #endif // SIEVEFOREVERYPARTWIDGET_H

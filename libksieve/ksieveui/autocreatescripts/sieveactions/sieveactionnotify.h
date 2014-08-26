@@ -15,25 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SIEVEACTIONNOTIFY_H
 #define SIEVEACTIONNOTIFY_H
 
-
 #include "sieveaction.h"
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionNotify : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionNotify(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
 
-    QWidget *createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
     QString code(QWidget *) const;
     QString serverNeedsCapability() const;
     bool needCheckIfServerHasCapability() const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
     QString help() const;
     QStringList needRequires(QWidget *) const;
     QString href() const;

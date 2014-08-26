@@ -20,7 +20,8 @@
 
 #include <KComboBox>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SelectMatchTypeComboBox : public KComboBox
 {
     Q_OBJECT

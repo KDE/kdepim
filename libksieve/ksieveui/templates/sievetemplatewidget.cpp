@@ -26,7 +26,8 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 
 SieveTemplateListWidget::SieveTemplateListWidget(const QString &configName, QWidget *parent)
     : PimCommon::TemplateListWidget(configName, parent),
@@ -76,7 +77,6 @@ bool SieveTemplateListWidget::modifyTemplate(QString &templateName, QString &tem
     return result;
 }
 
-
 SieveTemplateWidget::SieveTemplateWidget(const QString &title, QWidget *parent)
     : QWidget(parent)
 {
@@ -89,7 +89,6 @@ SieveTemplateWidget::SieveTemplateWidget(const QString &title, QWidget *parent)
     lay->addWidget(mListTemplate);
     setLayout(lay);
 }
-
 
 SieveTemplateWidget::~SieveTemplateWidget()
 {

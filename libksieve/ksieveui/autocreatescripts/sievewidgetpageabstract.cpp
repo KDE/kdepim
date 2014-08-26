@@ -17,7 +17,8 @@
 
 #include "sievewidgetpageabstract.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 SieveWidgetPageAbstract::SieveWidgetPageAbstract(QWidget *parent)
     : QWidget(parent),
       mType(BlockIf)

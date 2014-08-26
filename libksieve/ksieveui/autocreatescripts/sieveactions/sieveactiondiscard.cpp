@@ -25,7 +25,7 @@ SieveActionDiscard::SieveActionDiscard(QObject *parent)
 {
 }
 
-SieveAction* SieveActionDiscard::newAction()
+SieveAction *SieveActionDiscard::newAction()
 {
     return new SieveActionDiscard;
 }

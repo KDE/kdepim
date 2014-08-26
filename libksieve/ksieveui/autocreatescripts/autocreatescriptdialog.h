@@ -24,7 +24,8 @@
 
 class QDomDocument;
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditorGraphicalModeWidget;
 class KSIEVEUI_EXPORT AutoCreateScriptDialog : public QDialog
 {

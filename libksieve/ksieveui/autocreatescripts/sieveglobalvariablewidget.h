@@ -27,7 +27,8 @@ class QGridLayout;
 class QCheckBox;
 class QDomElement;
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveHelpButton;
 class SieveGlobalVariableWidget;
 
@@ -39,7 +40,7 @@ public:
     ~SieveGlobalVariableActionWidget();
 
     void generatedScript(QString &script);
-    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled);
     bool isInitialized() const;
     void loadScript(const QDomElement &element, QString &error);
     void setVariableValue(const QString &name);
@@ -79,17 +80,16 @@ Q_SIGNALS:
     void valueChanged();
 
 public Q_SLOTS:
-    void slotAddWidget( QWidget *w );
-    void slotRemoveWidget( QWidget *w );
+    void slotAddWidget(QWidget *w);
+    void slotRemoveWidget(QWidget *w);
 
 protected:
-    void clearWidget( QWidget *aWidget );
-    QWidget *createWidget( QWidget *parent );
+    void clearWidget(QWidget *aWidget);
+    QWidget *createWidget(QWidget *parent);
 private:
-    void reconnectWidget(SieveGlobalVariableActionWidget *w );
+    void reconnectWidget(SieveGlobalVariableActionWidget *w);
     void updateAddRemoveButton();
 };
-
 
 class SieveGlobalVariableWidget : public SieveWidgetPageAbstract
 {

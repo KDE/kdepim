@@ -20,7 +20,8 @@
 
 #include "sieveaction.h"
 #include <QStringList>
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionAbstractEditHeader : public SieveAction
 {
     Q_OBJECT

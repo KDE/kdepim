@@ -34,7 +34,7 @@ SieveActionFileInto::SieveActionFileInto(QObject *parent)
     mHasMailBoxSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("mailbox"));
 }
 
-SieveAction* SieveActionFileInto::newAction()
+SieveAction *SieveActionFileInto::newAction()
 {
     return new SieveActionFileInto;
 }
@@ -42,22 +42,24 @@ SieveAction* SieveActionFileInto::newAction()
 QString SieveActionFileInto::code(QWidget *w) const
 {
     QString result = QString::fromLatin1("fileinto ");
-    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("fileintolineedit") );
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("fileintolineedit"));
     const QString text = edit->text();
     if (mHasCopySupport) {
-        const QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
-        if (copy->isChecked())
+        const QCheckBox *copy = w->findChild<QCheckBox *>(QLatin1String("copy"));
+        if (copy->isChecked()) {
             result += QLatin1String(":copy ");
+        }
     }
     if (mHasMailBoxSupport) {
-        const QCheckBox *create = w->findChild<QCheckBox*>( QLatin1String("create") );
-        if (create->isChecked())
+        const QCheckBox *create = w->findChild<QCheckBox *>(QLatin1String("create"));
+        if (create->isChecked()) {
             result += QLatin1String(":create ");
+        }
     }
     return result + QString::fromLatin1("\"%1\";").arg(text);
 }
 
-bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
+bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -68,24 +70,24 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("copy")) {
                     if (mHasCopySupport) {
-                        QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
+                        QCheckBox *copy = w->findChild<QCheckBox *>(QLatin1String("copy"));
                         copy->setChecked(true);
                     } else {
                         error += i18n("Action \"fileinto\" has \"copy\" argument but current server does not support it") + QLatin1Char('\n');
-                        qDebug()<<"SieveActionFileInto::setParamWidgetValue has not copy support ";
+                        qDebug() << "SieveActionFileInto::setParamWidgetValue has not copy support ";
                     }
                 } else if (tagValue == QLatin1String("create")) {
                     if (mHasMailBoxSupport) {
-                        QCheckBox *create = w->findChild<QCheckBox*>( QLatin1String("create") );
+                        QCheckBox *create = w->findChild<QCheckBox *>(QLatin1String("create"));
                         create->setChecked(true);
                     } else {
                         serverDoesNotSupportFeatures(QLatin1String("fileinto"), error);
-                        qDebug()<<"SieveActionFileInto::setParamWidgetValue server has not create support ";
+                        qDebug() << "SieveActionFileInto::setParamWidgetValue server has not create support ";
                     }
                 }
             } else if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("fileintolineedit") );
+                QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("fileintolineedit"));
                 edit->setText(tagValue);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -93,7 +95,7 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveActionFileInto::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveActionFileInto::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -101,7 +103,7 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
     return true;
 }
 
-QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionFileInto::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -135,14 +137,16 @@ QStringList SieveActionFileInto::needRequires(QWidget *parent) const
     QStringList lst;
     lst << QLatin1String("fileinto");
     if (mHasCopySupport) {
-        const QCheckBox *copy = parent->findChild<QCheckBox*>( QLatin1String("copy") );
-        if (copy->isChecked())
+        const QCheckBox *copy = parent->findChild<QCheckBox *>(QLatin1String("copy"));
+        if (copy->isChecked()) {
             lst << QLatin1String("copy");
+        }
     }
     if (mHasMailBoxSupport) {
-        const QCheckBox *create = parent->findChild<QCheckBox*>( QLatin1String("create") );
-        if (create->isChecked())
+        const QCheckBox *create = parent->findChild<QCheckBox *>(QLatin1String("create"));
+        if (create->isChecked()) {
             lst << QLatin1String("mailbox");
+        }
     }
     return lst;
 }
@@ -168,8 +172,6 @@ QString SieveActionFileInto::help() const
     }
     return helpStr;
 }
-
-
 
 QString KSieveUi::SieveActionFileInto::href() const
 {

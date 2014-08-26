@@ -28,7 +28,7 @@ class XMLPrintingSyntaxHighLighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
-    explicit XMLPrintingSyntaxHighLighter( QTextDocument *doc );
+    explicit XMLPrintingSyntaxHighLighter(QTextDocument *doc);
     ~XMLPrintingSyntaxHighLighter();
 
     void highlightBlock(const QString &text);
@@ -39,13 +39,12 @@ private:
         QRegExp pattern;
         QTextCharFormat format;
 
-        Rule( const QRegExp &r, const QTextCharFormat &f )
+        Rule(const QRegExp &r, const QTextCharFormat &f)
             : pattern(r), format(f) {}
     };
 
     QList<Rule> m_rules;
 
 };
-
 
 #endif // XMLPRINTINGSYNTAXHIGHLIGHTER_H

@@ -27,7 +27,7 @@ SieveActionRemoveFlags::SieveActionRemoveFlags(QObject *parent)
 {
 }
 
-SieveAction* SieveActionRemoveFlags::newAction()
+SieveAction *SieveActionRemoveFlags::newAction()
 {
     return new SieveActionRemoveFlags;
 }

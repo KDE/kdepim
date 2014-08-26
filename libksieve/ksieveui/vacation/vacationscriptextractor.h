@@ -33,35 +33,37 @@
 #include <set>
 #include <vector>
 
-namespace KSieveExt {
+namespace KSieveExt
+{
 
-class MultiScriptBuilder : public KSieve::ScriptBuilder {
-    std::vector<KSieve::ScriptBuilder*> mBuilders;
+class MultiScriptBuilder : public KSieve::ScriptBuilder
+{
+    std::vector<KSieve::ScriptBuilder *> mBuilders;
 public:
     MultiScriptBuilder() : KSieve::ScriptBuilder() {}
-    MultiScriptBuilder( KSieve::ScriptBuilder * sb1 )
-        : KSieve::ScriptBuilder(), mBuilders( 1 )
+    MultiScriptBuilder(KSieve::ScriptBuilder *sb1)
+        : KSieve::ScriptBuilder(), mBuilders(1)
     {
         mBuilders[0] = sb1;
-        assert( sb1 );
+        assert(sb1);
     }
-    MultiScriptBuilder( KSieve::ScriptBuilder * sb1,
-                        KSieve::ScriptBuilder * sb2 )
-        : KSieve::ScriptBuilder(), mBuilders( 2 )
+    MultiScriptBuilder(KSieve::ScriptBuilder *sb1,
+                       KSieve::ScriptBuilder *sb2)
+        : KSieve::ScriptBuilder(), mBuilders(2)
     {
         mBuilders[0] = sb1;
         mBuilders[1] = sb2;
-        assert( sb1 ); assert( sb2 );
+        assert(sb1); assert(sb2);
     }
-    MultiScriptBuilder( KSieve::ScriptBuilder * sb1,
-                        KSieve::ScriptBuilder * sb2,
-                        KSieve::ScriptBuilder * sb3 )
-        : KSieve::ScriptBuilder(), mBuilders( 3 )
+    MultiScriptBuilder(KSieve::ScriptBuilder *sb1,
+                       KSieve::ScriptBuilder *sb2,
+                       KSieve::ScriptBuilder *sb3)
+        : KSieve::ScriptBuilder(), mBuilders(3)
     {
         mBuilders[0] = sb1;
         mBuilders[1] = sb2;
         mBuilders[2] = sb3;
-        assert( sb1 ); assert( sb2 ); assert( sb3 );
+        assert(sb1); assert(sb2); assert(sb3);
     }
     ~MultiScriptBuilder() {}
 private:
@@ -69,33 +71,92 @@ private:
 #undef FOREACH
 #endif
 #define FOREACH for ( std::vector<KSieve::ScriptBuilder*>::const_iterator it = mBuilders.begin(), end = mBuilders.end() ; it != end ; ++it ) (*it)->
-    void commandStart( const QString & identifier ) { FOREACH commandStart( identifier ); }
-    void commandEnd() { FOREACH commandEnd(); }
-    void testStart( const QString & identifier ) { FOREACH testStart( identifier ); }
-    void testEnd() { FOREACH testEnd(); }
-    void testListStart() { FOREACH testListStart(); }
-    void testListEnd() { FOREACH testListEnd(); }
-    void blockStart() { FOREACH blockStart(); }
-    void blockEnd() { FOREACH blockEnd(); }
-    void hashComment( const QString & comment ) { FOREACH hashComment( comment ); }
-    void bracketComment( const QString & comment ) { FOREACH bracketComment( comment ); }
-    void lineFeed() { FOREACH lineFeed(); }
-    void error( const KSieve::Error & e ) { FOREACH error( e ); }
-    void finished() { FOREACH finished(); }
-    void taggedArgument( const QString & tag ) { FOREACH taggedArgument( tag ); }
-    void stringArgument( const QString & string, bool multiline, const QString & fixme ) { FOREACH stringArgument( string, multiline, fixme ); }
-    void numberArgument( unsigned long number, char quantifier ) { FOREACH numberArgument( number, quantifier ); }
-    void stringListArgumentStart() { FOREACH stringListArgumentStart(); }
-    void stringListEntry( const QString & string, bool multiline, const QString & fixme) { FOREACH stringListEntry( string, multiline, fixme ); }
-    void stringListArgumentEnd() { FOREACH stringListArgumentEnd(); }
+    void commandStart(const QString &identifier)
+    {
+        FOREACH commandStart(identifier);
+    }
+    void commandEnd()
+    {
+        FOREACH commandEnd();
+    }
+    void testStart(const QString &identifier)
+    {
+        FOREACH testStart(identifier);
+    }
+    void testEnd()
+    {
+        FOREACH testEnd();
+    }
+    void testListStart()
+    {
+        FOREACH testListStart();
+    }
+    void testListEnd()
+    {
+        FOREACH testListEnd();
+    }
+    void blockStart()
+    {
+        FOREACH blockStart();
+    }
+    void blockEnd()
+    {
+        FOREACH blockEnd();
+    }
+    void hashComment(const QString &comment)
+    {
+        FOREACH hashComment(comment);
+    }
+    void bracketComment(const QString &comment)
+    {
+        FOREACH bracketComment(comment);
+    }
+    void lineFeed()
+    {
+        FOREACH lineFeed();
+    }
+    void error(const KSieve::Error &e)
+    {
+        FOREACH error(e);
+    }
+    void finished()
+    {
+        FOREACH finished();
+    }
+    void taggedArgument(const QString &tag)
+    {
+        FOREACH taggedArgument(tag);
+    }
+    void stringArgument(const QString &string, bool multiline, const QString &fixme)
+    {
+        FOREACH stringArgument(string, multiline, fixme);
+    }
+    void numberArgument(unsigned long number, char quantifier)
+    {
+        FOREACH numberArgument(number, quantifier);
+    }
+    void stringListArgumentStart()
+    {
+        FOREACH stringListArgumentStart();
+    }
+    void stringListEntry(const QString &string, bool multiline, const QString &fixme)
+    {
+        FOREACH stringListEntry(string, multiline, fixme);
+    }
+    void stringListArgumentEnd()
+    {
+        FOREACH stringListArgumentEnd();
+    }
 #undef FOREACH
 };
 
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 
-class GenericInformationExtractor : public KSieve::ScriptBuilder {
+class GenericInformationExtractor : public KSieve::ScriptBuilder
+{
 public:
     enum BuilderMethod {
         Any,
@@ -119,76 +180,156 @@ public:
         // expectation:
         int depth;
         BuilderMethod method;
-        const char * string;
+        const char *string;
         // actions:
         int if_found;
         int if_not_found;
-        const char * save_tag;
+        const char *save_tag;
     };
 
     const std::vector<StateNode> mNodes;
-    std::map<QString,QString> mResults;
+    std::map<QString, QString> mResults;
     std::set<unsigned int> mRecursionGuard;
     unsigned int mState;
     int mNestingDepth;
 
 public:
-    GenericInformationExtractor( const std::vector<StateNode> & nodes )
-        : KSieve::ScriptBuilder(), mNodes( nodes ), mState( 0 ), mNestingDepth( 0 ) {}
+    GenericInformationExtractor(const std::vector<StateNode> &nodes)
+        : KSieve::ScriptBuilder(), mNodes(nodes), mState(0), mNestingDepth(0) {}
 
-    const std::map<QString,QString> & results() const { return mResults; }
+    const std::map<QString, QString> &results() const
+    {
+        return mResults;
+    }
 
 private:
-    void process( BuilderMethod method, const QString & string=QString() ) {
-        doProcess( method, string );
+    void process(BuilderMethod method, const QString &string = QString())
+    {
+        doProcess(method, string);
         mRecursionGuard.clear();
     }
-    void doProcess( BuilderMethod method, const QString & string ) {
-        mRecursionGuard.insert( mState );
+    void doProcess(BuilderMethod method, const QString &string)
+    {
+        mRecursionGuard.insert(mState);
         bool found = true;
-        const StateNode & expected = mNodes[mState];
-        if ( expected.depth != -1 && mNestingDepth != expected.depth )
+        const StateNode &expected = mNodes[mState];
+        if (expected.depth != -1 && mNestingDepth != expected.depth) {
             found = false;
-        if ( expected.method != Any && method != expected.method )
+        }
+        if (expected.method != Any && method != expected.method) {
             found = false;
-        if ( const char * str = expected.string )
-            if ( string.toLower() != QString::fromUtf8( str ).toLower() )
+        }
+        if (const char *str = expected.string)
+            if (string.toLower() != QString::fromUtf8(str).toLower()) {
                 found = false;
-        qDebug() << ( found ?"found:" :"not found:" )
+            }
+        qDebug() << (found ? "found:" : "not found:")
                  << mState << "->"
-                 << ( found ? expected.if_found : expected.if_not_found );
+                 << (found ? expected.if_found : expected.if_not_found);
         mState = found ? expected.if_found : expected.if_not_found ;
-        assert( mState < mNodes.size() );
-        if ( found )
-            if ( const char * save_tag = expected.save_tag )
+        assert(mState < mNodes.size());
+        if (found)
+            if (const char *save_tag = expected.save_tag) {
                 mResults[QString::fromLatin1(save_tag)] = string;
-        if ( !found && !mRecursionGuard.count( mState ) ) {
-            doProcess( method, string );
+            }
+        if (!found && !mRecursionGuard.count(mState)) {
+            doProcess(method, string);
         }
     }
-    void commandStart( const QString & identifier ) { qDebug() ; process( CommandStart, identifier ); }
-    void commandEnd() { qDebug() ; process( CommandEnd ); }
-    void testStart( const QString & identifier ) { qDebug() ; process( TestStart, identifier ); }
-    void testEnd() { qDebug() ; process( TestEnd ); }
-    void testListStart() { qDebug() ; process( TestListStart ); }
-    void testListEnd() { qDebug() ; process( TestListEnd ); }
-    void blockStart() { qDebug() ; process( BlockStart ); ++mNestingDepth; }
-    void blockEnd() { qDebug() ; --mNestingDepth; process( BlockEnd ); }
-    void hashComment( const QString & ) { qDebug() ; }
-    void bracketComment( const QString & ) { qDebug() ; }
-    void lineFeed() { qDebug() ; }
-    void error( const KSieve::Error & ) {
+    void commandStart(const QString &identifier)
+    {
+        qDebug() ;
+        process(CommandStart, identifier);
+    }
+    void commandEnd()
+    {
+        qDebug() ;
+        process(CommandEnd);
+    }
+    void testStart(const QString &identifier)
+    {
+        qDebug() ;
+        process(TestStart, identifier);
+    }
+    void testEnd()
+    {
+        qDebug() ;
+        process(TestEnd);
+    }
+    void testListStart()
+    {
+        qDebug() ;
+        process(TestListStart);
+    }
+    void testListEnd()
+    {
+        qDebug() ;
+        process(TestListEnd);
+    }
+    void blockStart()
+    {
+        qDebug() ;
+        process(BlockStart);
+        ++mNestingDepth;
+    }
+    void blockEnd()
+    {
+        qDebug() ;
+        --mNestingDepth;
+        process(BlockEnd);
+    }
+    void hashComment(const QString &)
+    {
+        qDebug() ;
+    }
+    void bracketComment(const QString &)
+    {
+        qDebug() ;
+    }
+    void lineFeed()
+    {
+        qDebug() ;
+    }
+    void error(const KSieve::Error &)
+    {
         qDebug() ;
         mState = 0;
     }
-    void finished() { qDebug() ; }
+    void finished()
+    {
+        qDebug() ;
+    }
 
-    void taggedArgument( const QString & tag ) { qDebug() ; process( TaggedArgument, tag ); }
-    void stringArgument( const QString & string, bool, const QString & ) { qDebug() ; process( StringArgument, string ); }
-    void numberArgument( unsigned long number, char ) { qDebug(); process( NumberArgument, QString::number( number ) ); }
-    void stringListArgumentStart() { qDebug() ; process( StringListArgumentStart ); }
-    void stringListEntry( const QString & string, bool, const QString & ) { qDebug() ; process( StringListEntry, string ); }
-    void stringListArgumentEnd() { qDebug() ; process( StringListArgumentEnd ); }
+    void taggedArgument(const QString &tag)
+    {
+        qDebug() ;
+        process(TaggedArgument, tag);
+    }
+    void stringArgument(const QString &string, bool, const QString &)
+    {
+        qDebug() ;
+        process(StringArgument, string);
+    }
+    void numberArgument(unsigned long number, char)
+    {
+        qDebug();
+        process(NumberArgument, QString::number(number));
+    }
+    void stringListArgumentStart()
+    {
+        qDebug() ;
+        process(StringListArgumentStart);
+    }
+    void stringListEntry(const QString &string, bool, const QString &)
+    {
+        qDebug() ;
+        process(StringListEntry, string);
+    }
+    void stringListArgumentEnd()
+    {
+        qDebug() ;
+        process(StringListArgumentEnd);
+    }
 };
 
 typedef GenericInformationExtractor GIE;
@@ -225,18 +366,20 @@ static const GenericInformationExtractor::StateNode spamNodes[] = {
 };
 static const unsigned int numSpamNodes = sizeof spamNodes / sizeof *spamNodes ;
 
-class SpamDataExtractor : public GenericInformationExtractor {
+class SpamDataExtractor : public GenericInformationExtractor
+{
 public:
     SpamDataExtractor()
-        : GenericInformationExtractor( std::vector<StateNode>( spamNodes, spamNodes + numSpamNodes ) )
+        : GenericInformationExtractor(std::vector<StateNode>(spamNodes, spamNodes + numSpamNodes))
     {
 
     }
 
-    bool found() const {
-        return mResults.count( QLatin1String("x-spam-flag") ) &&
-                mResults.count( QLatin1String("spam-flag-yes") ) &&
-                mResults.count( QLatin1String("stop") ) ;
+    bool found() const
+    {
+        return mResults.count(QLatin1String("x-spam-flag")) &&
+               mResults.count(QLatin1String("spam-flag-yes")) &&
+               mResults.count(QLatin1String("stop")) ;
     }
 };
 
@@ -281,21 +424,24 @@ static const GenericInformationExtractor::StateNode domainNodes[] = {
 };
 static const unsigned int numDomainNodes = sizeof domainNodes / sizeof *domainNodes ;
 
-class DomainRestrictionDataExtractor : public GenericInformationExtractor {
+class DomainRestrictionDataExtractor : public GenericInformationExtractor
+{
 public:
     DomainRestrictionDataExtractor()
-        : GenericInformationExtractor( std::vector<StateNode>( domainNodes, domainNodes+numDomainNodes ) )
+        : GenericInformationExtractor(std::vector<StateNode>(domainNodes, domainNodes + numDomainNodes))
     {
 
     }
 
-    QString domainName() /*not const, since map::op[] isn't const*/ {
-        return mResults.count( QLatin1String("stop") ) && mResults.count( QLatin1String("from") )
-                ? mResults[QLatin1String("domainName")] : QString();
+    QString domainName() /*not const, since map::op[] isn't const*/
+    {
+        return mResults.count(QLatin1String("stop")) && mResults.count(QLatin1String("from"))
+               ? mResults[QLatin1String("domainName")] : QString();
     }
 };
 
-class VacationDataExtractor : public KSieve::ScriptBuilder {
+class VacationDataExtractor : public KSieve::ScriptBuilder
+{
     enum Context {
         None = 0,
         // command itself:
@@ -307,35 +453,44 @@ public:
     VacationDataExtractor();
     virtual ~VacationDataExtractor();
 
-    int notificationInterval() const { return mNotificationInterval; }
-    const QString & messageText() const { return mMessageText; }
-    const QStringList & aliases() const { return mAliases; }
+    int notificationInterval() const
+    {
+        return mNotificationInterval;
+    }
+    const QString &messageText() const
+    {
+        return mMessageText;
+    }
+    const QStringList &aliases() const
+    {
+        return mAliases;
+    }
 
 private:
-    void commandStart( const QString & identifier );
+    void commandStart(const QString &identifier);
 
     void commandEnd();
 
-    void testStart( const QString & ) {}
+    void testStart(const QString &) {}
     void testEnd() {}
     void testListStart() {}
     void testListEnd() {}
     void blockStart() {}
     void blockEnd() {}
-    void hashComment( const QString & ) {}
-    void bracketComment( const QString & ) {}
+    void hashComment(const QString &) {}
+    void bracketComment(const QString &) {}
     void lineFeed() {}
-    void error( const KSieve::Error & e );
+    void error(const KSieve::Error &e);
     void finished();
 
-    void taggedArgument( const QString & tag );
+    void taggedArgument(const QString &tag);
 
-    void stringArgument( const QString & string, bool, const QString & );
+    void stringArgument(const QString &string, bool, const QString &);
 
-    void numberArgument( unsigned long number, char );
+    void numberArgument(unsigned long number, char);
 
     void stringListArgumentStart();
-    void stringListEntry( const QString & string, bool, const QString & );
+    void stringListEntry(const QString &string, bool, const QString &);
     void stringListArgumentEnd();
 
 private:
@@ -348,6 +503,5 @@ private:
 };
 
 }
-
 
 #endif // VACATIONSCRIPTEXTRACTOR_H

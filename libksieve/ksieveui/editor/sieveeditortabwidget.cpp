@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sieveeditortabwidget.h"
 #include "ksieveui/editor/sieveeditorhelphtmlwidget.h"
 
@@ -54,14 +53,14 @@ void SieveEditorTabWidget::slotAddHelpPage(const QString &variableName, const QS
         }
     }
     SieveEditorHelpHtmlWidget *htmlPage = new SieveEditorHelpHtmlWidget;
-    connect(htmlPage, SIGNAL(titleChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QString)), this, SLOT(slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QString)));
-    connect(htmlPage, SIGNAL(progressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QPixmap)), this, SLOT(slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QPixmap)));
-    connect(htmlPage, SIGNAL(loadFinished(KSieveUi::SieveEditorHelpHtmlWidget*,bool)), this, SLOT(slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget*,bool)));
+    connect(htmlPage, SIGNAL(titleChanged(KSieveUi::SieveEditorHelpHtmlWidget *, QString)), this, SLOT(slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget *, QString)));
+    connect(htmlPage, SIGNAL(progressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *, QPixmap)), this, SLOT(slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *, QPixmap)));
+    connect(htmlPage, SIGNAL(loadFinished(KSieveUi::SieveEditorHelpHtmlWidget *, bool)), this, SLOT(slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget *, bool)));
     htmlPage->setHelp(variableName, url);
     addTab(htmlPage, i18n("Help"));
 }
 
-void SieveEditorTabWidget::slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget* widget, bool success)
+void SieveEditorTabWidget::slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget *widget, bool success)
 {
     const int index = indexOf(widget);
     if (index != -1) {
@@ -72,7 +71,7 @@ void SieveEditorTabWidget::slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget*
     }
 }
 
-void SieveEditorTabWidget::slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget* widget, const QPixmap &pixmap)
+void SieveEditorTabWidget::slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QPixmap &pixmap)
 {
     const int index = indexOf(widget);
     if (index != -1) {
@@ -98,7 +97,7 @@ void SieveEditorTabWidget::tabRemoved(int index)
 
 void SieveEditorTabWidget::tabInserted(int index)
 {
-    if (count()>1) {
+    if (count() > 1) {
         tabBar()->show();
     }
     QTabWidget::tabInserted(index);

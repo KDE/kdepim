@@ -51,25 +51,25 @@ SieveConditionWidget::~SieveConditionWidget()
     mConditionList.clear();
 }
 
-void SieveConditionWidget::setFilterCondition( QWidget *widget )
+void SieveConditionWidget::setFilterCondition(QWidget *widget)
 {
-    if ( mLayout->itemAtPosition( 1, 2 ) ) {
-        delete mLayout->itemAtPosition( 1, 2 )->widget();
+    if (mLayout->itemAtPosition(1, 2)) {
+        delete mLayout->itemAtPosition(1, 2)->widget();
     }
 
-    if ( widget ) {
-        mLayout->addWidget( widget, 1, 2 );
+    if (widget) {
+        mLayout->addWidget(widget, 1, 2);
     } else {
-        mLayout->addWidget( new QLabel( i18n( "Please select an condition." ), this ), 1, 2 );
+        mLayout->addWidget(new QLabel(i18n("Please select an condition."), this), 1, 2);
     }
 }
 
 void SieveConditionWidget::generatedScript(QString &script, QStringList &requires)
 {
     const int index = mComboBox->currentIndex();
-    if (index != mComboBox->count()-1) {
+    if (index != mComboBox->count() - 1) {
         KSieveUi::SieveCondition *widgetCondition = mConditionList.at(mComboBox->currentIndex());
-        QWidget *currentWidget = mLayout->itemAtPosition( 1, 2 )->widget();
+        QWidget *currentWidget = mLayout->itemAtPosition(1, 2)->widget();
         const QStringList lstRequires = widgetCondition->needRequires(currentWidget);
         Q_FOREACH (const QString &r, lstRequires) {
             if (!requires.contains(r)) {
@@ -83,69 +83,69 @@ void SieveConditionWidget::generatedScript(QString &script, QStringList &require
 void SieveConditionWidget::initWidget()
 {
     mLayout = new QGridLayout(this);
-    mLayout->setContentsMargins( 0, 0, 0, 0 );
+    mLayout->setContentsMargins(0, 0, 0, 0);
 
     mComboBox = new PimCommon::MinimumComboBox;
-    mComboBox->setEditable( false );
+    mComboBox->setEditable(false);
 
-    const QList<KSieveUi::SieveCondition*> list = KSieveUi::SieveConditionList::conditionList();
-    QList<KSieveUi::SieveCondition*>::const_iterator it;
-    QList<KSieveUi::SieveCondition*>::const_iterator end( list.constEnd() );
+    const QList<KSieveUi::SieveCondition *> list = KSieveUi::SieveConditionList::conditionList();
+    QList<KSieveUi::SieveCondition *>::const_iterator it;
+    QList<KSieveUi::SieveCondition *>::const_iterator end(list.constEnd());
     int index = 0;
-    for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {        
+    for (index = 0, it = list.constBegin(); it != end; ++it, ++index) {
         if ((*it)->needCheckIfServerHasCapability()) {
             if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
-                mConditionList.append( *it );
+                mConditionList.append(*it);
                 connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
                 // add (i18n-ized) name to combo box
-                mComboBox->addItem( (*it)->label(),(*it)->name() );
+                mComboBox->addItem((*it)->label(), (*it)->name());
             } else {
-                delete (*it);
+                delete(*it);
             }
         } else {
             // append to the list of actions:
-            mConditionList.append( *it );
+            mConditionList.append(*it);
             connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
             // add (i18n-ized) name to combo box
-            mComboBox->addItem( (*it)->label(),(*it)->name() );
+            mComboBox->addItem((*it)->label(), (*it)->name());
         }
     }
 
     mHelpButton = new SieveHelpButton;
     mHelpButton->setEnabled(false);
-    mLayout->addWidget( mHelpButton, 1, 0 );
+    mLayout->addWidget(mHelpButton, 1, 0);
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mComboBox->addItem(QLatin1String(""));
-    mComboBox->setCurrentIndex(mComboBox->count()-1);
+    mComboBox->setCurrentIndex(mComboBox->count() - 1);
     mLayout->addWidget(mComboBox, 1, 1);
-    connect( mComboBox, SIGNAL(activated(int)),
-             this, SLOT(slotConditionChanged(int)) );
+    connect(mComboBox, SIGNAL(activated(int)),
+            this, SLOT(slotConditionChanged(int)));
 
-    mComboBox->setMaxCount( mComboBox->count() );
-    mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
-    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    mComboBox->setMaxCount(mComboBox->count());
+    mComboBox->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
     mComboBox->adjustSize();
 
-    mAdd = new QPushButton( this );
-    mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-    mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    mAdd = new QPushButton(this);
+    mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mAdd->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
-    mRemove = new QPushButton( this );
-    mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
-    mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    mRemove = new QPushButton(this);
+    mRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    mRemove->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
-    mLayout->addWidget( mAdd, 1, 3 );
-    mLayout->addWidget( mRemove, 1, 4 );
+    mLayout->addWidget(mAdd, 1, 3);
+    mLayout->addWidget(mRemove, 1, 4);
 
     // redirect focus to the filter action combo box
-    setFocusProxy( mComboBox );
+    setFocusProxy(mComboBox);
 
-    connect( mAdd, SIGNAL(clicked()),
-             this, SLOT(slotAddWidget()) );
-    connect( mRemove, SIGNAL(clicked()),
-             this, SLOT(slotRemoveWidget()) );
+    connect(mAdd, SIGNAL(clicked()),
+            this, SLOT(slotAddWidget()));
+    connect(mRemove, SIGNAL(clicked()),
+            this, SLOT(slotRemoveWidget()));
     setFilterCondition(0);
 }
 
@@ -153,22 +153,22 @@ void SieveConditionWidget::slotHelp()
 {
     const int index = mComboBox->currentIndex();
     if (index < mConditionList.count()) {
-        KSieveUi::SieveCondition* condition = mConditionList.at( index );
+        KSieveUi::SieveCondition *condition = mConditionList.at(index);
         const QString help = condition->help();
         const QString href = condition->href();
-        const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
-        QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
+        const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help, href);
+        QWhatsThis::showText(QCursor::pos(), fullWhatsThis, mHelpButton);
     }
 }
 
 void SieveConditionWidget::slotConditionChanged(int index)
 {
     if (index < mConditionList.count()) {
-        KSieveUi::SieveCondition* condition = mConditionList.at( index );
+        KSieveUi::SieveCondition *condition = mConditionList.at(index);
         mHelpButton->setEnabled(!condition->help().isEmpty());
-        setFilterCondition( condition->createParamWidget(this) );
+        setFilterCondition(condition->createParamWidget(this));
     } else {
-        setFilterCondition( 0 );
+        setFilterCondition(0);
         mHelpButton->setEnabled(false);
     }
     Q_EMIT valueChanged();
@@ -176,13 +176,13 @@ void SieveConditionWidget::slotConditionChanged(int index)
 
 void SieveConditionWidget::slotAddWidget()
 {
-    emit addWidget( this );
+    emit addWidget(this);
     Q_EMIT valueChanged();
 }
 
 void SieveConditionWidget::slotRemoveWidget()
 {
-    emit removeWidget( this );
+    emit removeWidget(this);
     Q_EMIT valueChanged();
 }
 
@@ -191,7 +191,7 @@ void SieveConditionWidget::reset()
     //TODO
 }
 
-void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
+void SieveConditionWidget::updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled)
 {
     mAdd->setEnabled(addButtonEnabled);
     mRemove->setEnabled(removeButtonEnabled);
@@ -203,7 +203,7 @@ void SieveConditionWidget::setCondition(const QString &conditionName, const QDom
     if (index != -1) {
         mComboBox->setCurrentIndex(index);
         slotConditionChanged(index);
-        KSieveUi::SieveCondition* condition = mConditionList.at( index );
+        KSieveUi::SieveCondition *condition = mConditionList.at(index);
         condition->setParamWidgetValue(element, this, notCondition, error);
     }
 }
@@ -220,76 +220,75 @@ SieveConditionWidgetLister::~SieveConditionWidgetLister()
 
 }
 
-void SieveConditionWidgetLister::slotAddWidget( QWidget *w )
+void SieveConditionWidgetLister::slotAddWidget(QWidget *w)
 {
-    addWidgetAfterThisWidget( w );
+    addWidgetAfterThisWidget(w);
     updateAddRemoveButton();
 }
 
-void SieveConditionWidgetLister::slotRemoveWidget( QWidget *w )
+void SieveConditionWidgetLister::slotRemoveWidget(QWidget *w)
 {
-    removeWidget( w );
+    removeWidget(w);
     updateAddRemoveButton();
 }
-
 
 void SieveConditionWidgetLister::updateAddRemoveButton()
 {
-    QList<QWidget*> widgetList = widgets();
-    const int numberOfWidget( widgetList.count() );
+    QList<QWidget *> widgetList = widgets();
+    const int numberOfWidget(widgetList.count());
     bool addButtonEnabled = false;
     bool removeButtonEnabled = false;
-    if ( numberOfWidget <= widgetsMinimum() ) {
+    if (numberOfWidget <= widgetsMinimum()) {
         addButtonEnabled = true;
         removeButtonEnabled = false;
-    } else if ( numberOfWidget >= widgetsMaximum() ) {
+    } else if (numberOfWidget >= widgetsMaximum()) {
         addButtonEnabled = false;
         removeButtonEnabled = true;
     } else {
         addButtonEnabled = true;
         removeButtonEnabled = true;
     }
-    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
-    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
-    for ( ; wIt != wEnd ;++wIt ) {
-        SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( *wIt );
-        w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
+    QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
+    for (; wIt != wEnd ; ++wIt) {
+        SieveConditionWidget *w = qobject_cast<SieveConditionWidget *>(*wIt);
+        w->updateAddRemoveButton(addButtonEnabled, removeButtonEnabled);
     }
 }
 
-void SieveConditionWidgetLister::reconnectWidget( SieveConditionWidget *w )
+void SieveConditionWidgetLister::reconnectWidget(SieveConditionWidget *w)
 {
-    connect( w, SIGNAL(addWidget(QWidget*)),
-             this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
-    connect( w, SIGNAL(removeWidget(QWidget*)),
-             this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
-    connect( w, SIGNAL(valueChanged()),
-             this, SIGNAL(valueChanged()), Qt::UniqueConnection );
+    connect(w, SIGNAL(addWidget(QWidget *)),
+            this, SLOT(slotAddWidget(QWidget *)), Qt::UniqueConnection);
+    connect(w, SIGNAL(removeWidget(QWidget *)),
+            this, SLOT(slotRemoveWidget(QWidget *)), Qt::UniqueConnection);
+    connect(w, SIGNAL(valueChanged()),
+            this, SIGNAL(valueChanged()), Qt::UniqueConnection);
 }
 
-void SieveConditionWidgetLister::clearWidget( QWidget *aWidget )
+void SieveConditionWidgetLister::clearWidget(QWidget *aWidget)
 {
     //TODO
     Q_UNUSED(aWidget);
     Q_EMIT valueChanged();
 }
 
-QWidget *SieveConditionWidgetLister::createWidget( QWidget *parent )
+QWidget *SieveConditionWidgetLister::createWidget(QWidget *parent)
 {
     SieveConditionWidget *w = new SieveConditionWidget(parent);
-    reconnectWidget( w );
+    reconnectWidget(w);
     return w;
 }
 
 void SieveConditionWidgetLister::generatedScript(QString &script, int &numberOfCondition, QStringList &requires)
 {
-    const QList<QWidget*> widgetList = widgets();
-    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
-    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
+    const QList<QWidget *> widgetList = widgets();
+    QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
     bool wasFirst = true;
-    for ( ; wIt != wEnd ;++wIt ) {
+    for (; wIt != wEnd ; ++wIt) {
         QString condition;
-        SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( *wIt );
+        SieveConditionWidget *w = qobject_cast<SieveConditionWidget *>(*wIt);
         w->generatedScript(condition, requires);
         if (!condition.isEmpty()) {
             if (!wasFirst) {
@@ -318,7 +317,7 @@ void SieveConditionWidgetLister::loadTest(const QDomElement &element, bool notCo
     }
     if (testElement.hasAttribute(QLatin1String("name"))) {
         const QString conditionName = testElement.attribute(QLatin1String("name"));
-        SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
+        SieveConditionWidget *w = qobject_cast<SieveConditionWidget *>(widgets().last());
         w->setCondition(conditionName, testElement, notCondition, error);
     }
 }
@@ -355,7 +354,7 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
                                     } else {
                                         addWidgetAfterThisWidget(widgets().last());
                                     }
-                                    SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
+                                    SieveConditionWidget *w = qobject_cast<SieveConditionWidget *>(widgets().last());
                                     if (conditionName == QLatin1String("not")) {
                                         notCondition = true;
                                         QDomNode notNode = testElement.firstChild();
@@ -372,7 +371,7 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
                             } else if (testTagName == QLatin1String("crlf")) {
                                 //nothing
                             } else {
-                                qDebug()<<" SieveConditionWidgetLister::loadScript unknown condition tag: "<<testTagName;
+                                qDebug() << " SieveConditionWidgetLister::loadScript unknown condition tag: " << testTagName;
                             }
                         }
                         testNode = testNode.nextSibling();

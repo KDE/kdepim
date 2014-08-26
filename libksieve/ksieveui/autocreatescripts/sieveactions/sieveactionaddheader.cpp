@@ -35,12 +35,12 @@ SieveActionAddHeader::SieveActionAddHeader(QObject *parent)
 {
 }
 
-SieveAction* SieveActionAddHeader::newAction()
+SieveAction *SieveActionAddHeader::newAction()
 {
     return new SieveActionAddHeader;
 }
 
-QWidget *SieveActionAddHeader::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionAddHeader::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QGridLayout *grid = new QGridLayout;
@@ -80,18 +80,18 @@ bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
-                SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox*>(QLatin1String("selectposition"));
+                SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox *>(QLatin1String("selectposition"));
                 combo->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
-                    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("headeredit") );
+                    QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("headeredit"));
                     edit->setText(e.text());
                 } else if (index == 1) {
-                    QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("valueedit") );
+                    QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("valueedit"));
                     value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug()<<" SieveActionAddHeader::setParamWidgetValue too many argument :"<<index;
+                    qDebug() << " SieveActionAddHeader::setParamWidgetValue too many argument :" << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("crlf")) {
@@ -100,7 +100,7 @@ bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<"SieveActionAddHeader::setParamWidgetValue unknown tag "<<tagName;
+                qDebug() << "SieveActionAddHeader::setParamWidgetValue unknown tag " << tagName;
             }
         }
         node = node.nextSibling();
@@ -110,13 +110,13 @@ bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
 
 QString SieveActionAddHeader::code(QWidget *w) const
 {
-    const SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox*>(QLatin1String("selectposition"));
+    const SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox *>(QLatin1String("selectposition"));
     const QString position = combo->code();
 
-    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("headeredit") );
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("headeredit"));
     const QString headerStr = edit->text();
 
-    const QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("valueedit") );
+    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("valueedit"));
     const QString valueStr = value->text();
 
     return QString::fromLatin1("addheader %1 \"%2\" \"%3\";").arg(position).arg(headerStr).arg(valueStr);

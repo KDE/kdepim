@@ -19,7 +19,8 @@
 
 #include <KComboBox>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SelectSizeTypeComboBox : public KComboBox
 {
     Q_OBJECT

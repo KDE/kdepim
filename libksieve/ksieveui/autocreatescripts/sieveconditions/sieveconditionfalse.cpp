@@ -35,7 +35,7 @@ SieveCondition *SieveConditionFalse::newAction()
     return new SieveConditionFalse;
 }
 
-QWidget *SieveConditionFalse::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionFalse::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;

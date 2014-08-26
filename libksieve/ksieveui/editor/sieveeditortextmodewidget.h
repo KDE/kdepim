@@ -23,13 +23,15 @@
 
 class QSplitter;
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditFindBar;
 class PlainTextEditor;
 class TextGoToLineWidget;
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveInfoWidget;
 class SieveTextEdit;
 class SieveEditorWarning;
@@ -39,19 +41,18 @@ class SieveEditorTextModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorTextModeWidget(QWidget *parent=0);
+    explicit SieveEditorTextModeWidget(QWidget *parent = 0);
     ~SieveEditorTextModeWidget();
 
-
-    void setSieveCapabilities( const QStringList &capabilities );
+    void setSieveCapabilities(const QStringList &capabilities);
 
     QString script() const;
-    void setScript( const QString &script );
+    void setScript(const QString &script);
 
-    void setDebugScript( const QString &debug );
+    void setDebugScript(const QString &debug);
 
     QString currentscript();
-    void setImportScript( const QString &script );
+    void setImportScript(const QString &script);
 
     void autoGenerateScripts();
     void generateXml();
@@ -64,23 +65,23 @@ public:
     void setParsingEditorWarningError(const QString &script, const QString &error);
     void goToLine();
 Q_SIGNALS:
-    void enableButtonOk( bool );
+    void enableButtonOk(bool);
     void switchToGraphicalMode();
     void valueChanged();
 
 private slots:
     void slotTextChanged();
     void slotFind();
-    void slotReplace();    
+    void slotReplace();
     void slotGoToLine(int line);
     void slotShowGoToLine();
 private:
     void readConfig();
     void writeConfig();
-    bool loadFromFile( const QString &filename );
+    bool loadFromFile(const QString &filename);
     QString mOriginalScript;
     QStringList mSieveCapabilities;
-    SieveTextEdit * mTextEdit;
+    SieveTextEdit *mTextEdit;
     PimCommon::PlainTextEditor *mDebugTextEdit;
     PimCommon::PlainTextEditFindBar *mFindBar;
     SieveInfoWidget *mSieveInfo;

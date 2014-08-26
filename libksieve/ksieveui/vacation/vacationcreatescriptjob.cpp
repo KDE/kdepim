@@ -52,17 +52,17 @@ void VacationCreateScriptJob::setServerName(const QString &servername)
 void VacationCreateScriptJob::start()
 {
     if (mUrl.isEmpty()) {
-        qDebug()<<" server url is empty";
+        qDebug() << " server url is empty";
         deleteLater();
         return;
     }
-    mSieveJob = KManageSieve::SieveJob::put( mUrl, mScript, mActivate, mWasActive );
-    if ( mActivate )
-        connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
-                 SLOT(slotPutActiveResult(KManageSieve::SieveJob*,bool)) );
+    mSieveJob = KManageSieve::SieveJob::put(mUrl, mScript, mActivate, mWasActive);
+    if (mActivate)
+        connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob *, bool, QString, bool)),
+                SLOT(slotPutActiveResult(KManageSieve::SieveJob *, bool)));
     else
-        connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
-                 SLOT(slotPutInactiveResult(KManageSieve::SieveJob*,bool)) );
+        connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob *, bool, QString, bool)),
+                SLOT(slotPutInactiveResult(KManageSieve::SieveJob *, bool)));
 }
 
 void VacationCreateScriptJob::setServerUrl(const QUrl &url)
@@ -75,28 +75,28 @@ void VacationCreateScriptJob::setScript(const QString &script)
     mScript = script;
 }
 
-void VacationCreateScriptJob::slotPutActiveResult( KManageSieve::SieveJob * job, bool success )
+void VacationCreateScriptJob::slotPutActiveResult(KManageSieve::SieveJob *job, bool success)
 {
-    handlePutResult( job, success, true );
+    handlePutResult(job, success, true);
 }
 
-void VacationCreateScriptJob::slotPutInactiveResult( KManageSieve::SieveJob * job, bool success )
+void VacationCreateScriptJob::slotPutInactiveResult(KManageSieve::SieveJob *job, bool success)
 {
-    handlePutResult( job, success, false );
+    handlePutResult(job, success, false);
 }
 
-void VacationCreateScriptJob::handlePutResult( KManageSieve::SieveJob *, bool success, bool activated )
+void VacationCreateScriptJob::handlePutResult(KManageSieve::SieveJob *, bool success, bool activated)
 {
-    if ( success )
-        KMessageBox::information( 0, activated
-                                  ? i18n("Sieve script installed successfully on the server \'%1\'.\n"
-                                         "Out of Office reply is now active.", mServerName)
-                                  : i18n("Sieve script installed successfully on the server \'%1\'.\n"
-                                         "Out of Office reply has been deactivated.", mServerName) );
+    if (success)
+        KMessageBox::information(0, activated
+                                 ? i18n("Sieve script installed successfully on the server \'%1\'.\n"
+                                        "Out of Office reply is now active.", mServerName)
+                                 : i18n("Sieve script installed successfully on the server \'%1\'.\n"
+                                        "Out of Office reply has been deactivated.", mServerName));
 
     qDebug() << "( ???," << success << ", ? )";
     mSieveJob = 0; // job deletes itself after returning from this slot!
-    Q_EMIT result( success );
-    Q_EMIT scriptActive( activated, mServerName );
+    Q_EMIT result(success);
+    Q_EMIT scriptActive(activated, mServerName);
     deleteLater();
 }

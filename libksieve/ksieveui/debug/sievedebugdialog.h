@@ -21,13 +21,16 @@
 
 class QStringList;
 
-namespace KManageSieve {
+namespace KManageSieve
+{
 class SieveJob;
 }
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditorWidget;
 }
-namespace KSieveUi {
+namespace KSieveUi
+{
 
 /**
  * Diagnostic info for Sieve. Only compiled when debug is enabled, it is
@@ -35,18 +38,17 @@ namespace KSieveUi {
  */
 class KSIEVEUI_EXPORT SieveDebugDialog : public QDialog
 {
-    Q_OBJECT    
+    Q_OBJECT
 public:
-    explicit SieveDebugDialog( QWidget *parent = 0 );
+    explicit SieveDebugDialog(QWidget *parent = 0);
     ~SieveDebugDialog();
 
-
 Q_SIGNALS:
-    void result( bool success );
+    void result(bool success);
 
 private Q_SLOTS:
-    void slotGetScript( KManageSieve::SieveJob *job, bool success, const QString &script, bool active );
-    void slotGetScriptList( KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript );
+    void slotGetScript(KManageSieve::SieveJob *job, bool success, const QString &script, bool active);
+    void slotGetScriptList(KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript);
 
     void slotDiagNextAccount();
     void slotDiagNextScript();
@@ -57,7 +59,7 @@ private:
     KManageSieve::SieveJob *mSieveJob;
     QUrl mUrl;
 
-    PimCommon::PlainTextEditorWidget * mEdit;
+    PimCommon::PlainTextEditorWidget *mEdit;
     QStringList mResourceIdentifier;
     QStringList mScriptList;
 };

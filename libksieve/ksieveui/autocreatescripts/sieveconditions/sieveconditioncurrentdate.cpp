@@ -39,7 +39,7 @@ SieveCondition *SieveConditionCurrentDate::newAction()
     return new SieveConditionCurrentDate;
 }
 
-QWidget *SieveConditionCurrentDate::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionCurrentDate::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -61,11 +61,11 @@ QWidget *SieveConditionCurrentDate::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionCurrentDate::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtype"));
+    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
     bool isNegative = false;
     const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
-    const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
+    const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget *>(QLatin1String("datewidget"));
     const QString dateWidgetStr = dateWidget->code();
 
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("currentdate %1 %2").arg(matchTypeStr).arg(dateWidgetStr);
@@ -108,11 +108,11 @@ bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
                     value = e.text();
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug()<<" SieveConditionCurrentDate::setParamWidgetValue too many argument :"<<index;
+                    qDebug() << " SieveConditionCurrentDate::setParamWidgetValue too many argument :" << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("tag")) {
-                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtype"));
+                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
                 selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -120,12 +120,12 @@ bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<"SieveConditionCurrentDate::setParamWidgetValue unknown tag "<<tagName;
+                qDebug() << "SieveConditionCurrentDate::setParamWidgetValue unknown tag " << tagName;
             }
         }
         node = node.nextSibling();
     }
-    SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
+    SelectDateWidget *dateWidget = w->findChild<SelectDateWidget *>(QLatin1String("datewidget"));
     dateWidget->setCode(type, value);
     return true;
 }

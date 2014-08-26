@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sieveconditionihave.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "editor/sieveeditorutil.h"
@@ -39,7 +38,7 @@ SieveCondition *SieveConditionIhave::newAction()
     return new SieveConditionIhave;
 }
 
-QWidget *SieveConditionIhave::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionIhave::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -58,7 +57,7 @@ QWidget *SieveConditionIhave::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionIhave::code(QWidget *w) const
 {
-    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
     const QString editValue = edit->text();
     return QString::fromLatin1("ihave %1").arg(AutoCreateScriptUtil::createList(editValue, QLatin1Char(',')));
 }
@@ -92,7 +91,7 @@ bool SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidge
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
+                QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
                 edit->setText(tagValue);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -100,7 +99,7 @@ bool SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidge
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveConditionIhave::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveConditionIhave::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

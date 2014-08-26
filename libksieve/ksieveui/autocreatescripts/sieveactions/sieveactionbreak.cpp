@@ -33,12 +33,12 @@ SieveActionBreak::SieveActionBreak(QObject *parent)
 {
 }
 
-SieveAction* SieveActionBreak::newAction()
+SieveAction *SieveActionBreak::newAction()
 {
     return new SieveActionBreak;
 }
 
-QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionBreak::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -65,11 +65,11 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("name")) {
-                    QLineEdit *name = w->findChild<QLineEdit*>(QLatin1String("name"));
+                    QLineEdit *name = w->findChild<QLineEdit *>(QLatin1String("name"));
                     name->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug()<<" SieveActionBreak::setParamWidgetValue unknown tagValue "<<tagValue;
+                    qDebug() << " SieveActionBreak::setParamWidgetValue unknown tagValue " << tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
                 //Nothing
@@ -79,7 +79,7 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<"SieveActionBreak::setParamWidgetValue unknown tag "<<tagName;
+                qDebug() << "SieveActionBreak::setParamWidgetValue unknown tag " << tagName;
             }
         }
         node = node.nextSibling();
@@ -94,7 +94,7 @@ QString SieveActionBreak::href() const
 
 QString SieveActionBreak::code(QWidget *w) const
 {
-    const QLineEdit *name = w->findChild<QLineEdit*>(QLatin1String("name"));
+    const QLineEdit *name = w->findChild<QLineEdit *>(QLatin1String("name"));
     const QString nameStr = name->text();
     if (!nameStr.isEmpty()) {
         return QString::fromLatin1("break :name \"%1\";").arg(nameStr);
@@ -121,5 +121,4 @@ QString SieveActionBreak::serverNeedsCapability() const
 {
     return QLatin1String("foreverypart");
 }
-
 

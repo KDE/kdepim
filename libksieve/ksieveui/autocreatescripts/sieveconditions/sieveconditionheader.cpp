@@ -40,7 +40,7 @@ SieveCondition *SieveConditionHeader::newAction()
     return new SieveConditionHeader;
 }
 
-QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionHeader::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -72,14 +72,14 @@ QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionHeader::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtypecombobox") );
+    const SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtypecombobox"));
     bool isNegative = false;
     const QString matchString = matchTypeCombo->code(isNegative);
 
-    const SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
+    const SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headertype"));
     const QString headerStr = headerType->code();
 
-    const QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
+    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
     QString valueStr = value->text();
 
     valueStr = AutoCreateScriptUtil::fixListValue(valueStr);
@@ -101,31 +101,31 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
-                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtypecombobox"));
                 selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
-                    SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
+                    SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headertype"));
                     headerType->setCode(e.text());
                 } else if (index == 1) {
-                    QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
+                    QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
                     value->setText(e.text().replace(QLatin1String("\""), QLatin1String("\\\"")));
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
+                    qDebug() << " SieveConditionHeader::setParamWidgetValue too many argument " << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("list")) {
                 //Header list
                 if (index == 0) {
-                    SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
+                    SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headertype"));
                     headerType->setCode(AutoCreateScriptUtil::listValueToStr(e));
                 } else if (index == 1) {
-                    QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value") );
+                    QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
                     value->setText(AutoCreateScriptUtil::listValueToStr(e));
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
+                    qDebug() << " SieveConditionHeader::setParamWidgetValue too many argument " << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("crlf")) {
@@ -134,7 +134,7 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveConditionHeader::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveConditionHeader::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

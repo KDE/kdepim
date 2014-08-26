@@ -42,14 +42,14 @@ QString SieveAction::label() const
     return mLabel;
 }
 
-SieveAction* SieveAction::newAction()
+SieveAction *SieveAction::newAction()
 {
     return 0;
 }
 
-QWidget* SieveAction::createParamWidget( QWidget *parent ) const
+QWidget *SieveAction::createParamWidget(QWidget *parent) const
 {
-    return new QWidget( parent );
+    return new QWidget(parent);
 }
 
 QString SieveAction::code(QWidget *) const
@@ -77,7 +77,7 @@ QString SieveAction::help() const
     return QString();
 }
 
-bool SieveAction::setParamWidgetValue( const QDomElement &, QWidget *, QString & )
+bool SieveAction::setParamWidgetValue(const QDomElement &, QWidget *, QString &)
 {
     return true;
 }

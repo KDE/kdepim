@@ -23,11 +23,13 @@
 class QString;
 template <typename T> class QList;
 
-namespace KManageSieve {
+namespace KManageSieve
+{
 class SieveJob;
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 
 class VacationDialog;
 
@@ -36,39 +38,44 @@ class KSIEVEUI_EXPORT Vacation : public QObject
     Q_OBJECT
 
 public:
-    explicit Vacation( QObject * parent=0, bool checkonly = false, const QUrl &url = QUrl() );
+    explicit Vacation(QObject *parent = 0, bool checkonly = false, const QUrl &url = QUrl());
     virtual ~Vacation();
 
-    bool isUsable() const { return !mUrl.isEmpty(); }
-    QString serverName() const { return mServerName; }
+    bool isUsable() const
+    {
+        return !mUrl.isEmpty();
+    }
+    QString serverName() const
+    {
+        return mServerName;
+    }
 
     void showVacationDialog();
 
 protected:
     QUrl findURL(QString &serverName) const;
-    void handlePutResult( KManageSieve::SieveJob * job, bool success, bool );
-
+    void handlePutResult(KManageSieve::SieveJob *job, bool success, bool);
 
 signals:
-    void result( bool success );
+    void result(bool success);
     // indicates if the vacation script is active or not
-    void scriptActive( bool active, const QString &serverName );
+    void scriptActive(bool active, const QString &serverName);
     void requestEditVacation();
 
 protected slots:
-    void slotGetResult( KManageSieve::SieveJob * job, bool success,
-                        const QString & script, bool active );
+    void slotGetResult(KManageSieve::SieveJob *job, bool success,
+                       const QString &script, bool active);
     void slotDialogOk();
     void slotDialogCancel();
-    void slotPutActiveResult( KManageSieve::SieveJob *, bool );
-    void slotPutInactiveResult( KManageSieve::SieveJob *, bool );
+    void slotPutActiveResult(KManageSieve::SieveJob *, bool);
+    void slotPutInactiveResult(KManageSieve::SieveJob *, bool);
 protected:
     // IO:
-    KManageSieve::SieveJob * mSieveJob;
+    KManageSieve::SieveJob *mSieveJob;
     QUrl mUrl;
     QString mServerName;
     // GUI:
-    VacationDialog * mDialog;
+    VacationDialog *mDialog;
     bool mWasActive;
     bool mCheckOnly;
 };

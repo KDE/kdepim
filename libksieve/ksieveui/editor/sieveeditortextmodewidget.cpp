@@ -36,7 +36,6 @@
 #include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
 
-
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -56,29 +55,28 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
-    setLayout( lay );
+    setLayout(lay);
 
     mMainSplitter = new QSplitter;
-    mMainSplitter->setOrientation( Qt::Vertical );
-    lay->addWidget( mMainSplitter );
+    mMainSplitter->setOrientation(Qt::Vertical);
+    lay->addWidget(mMainSplitter);
 
     mTemplateSplitter = new QSplitter;
-    mTemplateSplitter->setOrientation( Qt::Horizontal );
+    mTemplateSplitter->setOrientation(Qt::Horizontal);
     //
     SieveTemplateWidget *sieveTemplateWidget = new SieveTemplateWidget(i18n("Sieve Template:"));
 
     mSieveInfo = new SieveInfoWidget;
 
     mExtraSplitter = new QSplitter;
-    mExtraSplitter->setOrientation( Qt::Vertical );
+    mExtraSplitter->setOrientation(Qt::Vertical);
 
     mExtraSplitter->addWidget(sieveTemplateWidget);
     mExtraSplitter->addWidget(mSieveInfo);
     mExtraSplitter->setChildrenCollapsible(false);
 
-
     QWidget *textEditWidget = new QWidget;
-    QVBoxLayout * textEditLayout = new QVBoxLayout;
+    QVBoxLayout *textEditLayout = new QVBoxLayout;
     textEditLayout->setMargin(0);
 
     mTabWidget = new SieveEditorTabWidget;
@@ -88,14 +86,14 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTabWidget->addTab(mTextEdit, i18n("Editor"));
     mTabWidget->tabBar()->hide();
     textEditLayout->addWidget(mTabWidget);
-    connect(mTextEdit, SIGNAL(openHelp(QString,QString)), mTabWidget, SLOT(slotAddHelpPage(QString,QString)));
+    connect(mTextEdit, SIGNAL(openHelp(QString, QString)), mTabWidget, SLOT(slotAddHelpPage(QString, QString)));
 
     mGoToLine = new PimCommon::TextGoToLineWidget;
     mGoToLine->hide();
     textEditLayout->addWidget(mGoToLine);
     connect(mGoToLine, SIGNAL(goToLine(int)), this, SLOT(slotGoToLine(int)));
 
-    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, textEditWidget );
+    mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, textEditWidget);
     textEditLayout->addWidget(mFindBar);
 
     mSieveEditorWarning = new SieveEditorWarning;
@@ -114,23 +112,23 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect(sieveTemplateWidget, SIGNAL(insertTemplate(QString)), mTextEdit, SLOT(insertPlainText(QString)));
 
     //
-    QShortcut *shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::Key_F+Qt::CTRL );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
-    connect( mTextEdit, SIGNAL(findText()), SLOT(slotFind()) );
+    QShortcut *shortcut = new QShortcut(this);
+    shortcut->setKey(Qt::Key_F + Qt::CTRL);
+    connect(shortcut, SIGNAL(activated()), SLOT(slotFind()));
+    connect(mTextEdit, SIGNAL(findText()), SLOT(slotFind()));
 
-    shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::Key_R+Qt::CTRL );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
-    connect( mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()) );
+    shortcut = new QShortcut(this);
+    shortcut->setKey(Qt::Key_R + Qt::CTRL);
+    connect(shortcut, SIGNAL(activated()), SLOT(slotReplace()));
+    connect(mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()));
 
     mDebugTextEdit = new PimCommon::PlainTextEditor;
     mDebugTextEdit->setSearchSupport(false);
-    mDebugTextEdit->setReadOnly( true );
-    mMainSplitter->addWidget( mTemplateSplitter );
-    mMainSplitter->addWidget( mDebugTextEdit );
+    mDebugTextEdit->setReadOnly(true);
+    mMainSplitter->addWidget(mTemplateSplitter);
+    mMainSplitter->addWidget(mDebugTextEdit);
     mMainSplitter->setChildrenCollapsible(false);
-    connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
+    connect(mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()));
 
     readConfig();
 
@@ -144,21 +142,21 @@ SieveEditorTextModeWidget::~SieveEditorTextModeWidget()
 
 void SieveEditorTextModeWidget::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
-    group.writeEntry( "mainSplitter", mMainSplitter->sizes());
-    group.writeEntry( "extraSplitter", mExtraSplitter->sizes());
-    group.writeEntry( "templateSplitter", mTemplateSplitter->sizes());
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveEditor");
+    group.writeEntry("mainSplitter", mMainSplitter->sizes());
+    group.writeEntry("extraSplitter", mExtraSplitter->sizes());
+    group.writeEntry("templateSplitter", mTemplateSplitter->sizes());
 }
 
 void SieveEditorTextModeWidget::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveEditor");
     QList<int> size;
     size << 400 << 100;
 
-    mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
-    mExtraSplitter->setSizes(group.readEntry( "extraSplitter", size));
-    mTemplateSplitter->setSizes(group.readEntry( "templateSplitter", size));
+    mMainSplitter->setSizes(group.readEntry("mainSplitter", size));
+    mExtraSplitter->setSizes(group.readEntry("extraSplitter", size));
+    mTemplateSplitter->setSizes(group.readEntry("templateSplitter", size));
 }
 
 void SieveEditorTextModeWidget::slotGoToLine(int line)
@@ -167,7 +165,7 @@ void SieveEditorTextModeWidget::slotGoToLine(int line)
         QTextCursor cursor = mTextEdit->textCursor();
         cursor.beginEditBlock();
         cursor.movePosition(QTextCursor::Start);
-        cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, (line-1));
+        cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, (line - 1));
         cursor.endEditBlock();
         mTextEdit->setTextCursor(cursor);
         mTextEdit->setFocus();
@@ -183,10 +181,10 @@ void SieveEditorTextModeWidget::generateXml()
 {
 #if !defined(NDEBUG)
     const QByteArray script = mTextEdit->toPlainText().toUtf8();
-    KSieve::Parser parser( script.begin(),
-                           script.begin() + script.length() );
+    KSieve::Parser parser(script.begin(),
+                          script.begin() + script.length());
     KSieveUi::XMLPrintingScriptBuilder psb;
-    parser.setScriptBuilder( &psb );
+    parser.setScriptBuilder(&psb);
     const bool result = parser.parse();
     QPointer<ParsingResultDialog> dlg = new ParsingResultDialog(this);
     if (result) {
@@ -203,7 +201,7 @@ void SieveEditorTextModeWidget::autoGenerateScripts()
 {
     QPointer<AutoCreateScriptDialog> dlg = new AutoCreateScriptDialog(this);
     dlg->setSieveCapabilities(mSieveCapabilities);
-    if ( dlg->exec()) {
+    if (dlg->exec()) {
         QString requires;
         const QString script = dlg->script(requires);
         QString newPlainText = mTextEdit->toPlainText() + script;
@@ -217,8 +215,9 @@ void SieveEditorTextModeWidget::autoGenerateScripts()
 
 void SieveEditorTextModeWidget::slotFind()
 {
-    if ( mTextEdit->textCursor().hasSelection() )
-        mFindBar->setText( mTextEdit->textCursor().selectedText() );
+    if (mTextEdit->textCursor().hasSelection()) {
+        mFindBar->setText(mTextEdit->textCursor().selectedText());
+    }
     mTextEdit->moveCursor(QTextCursor::Start);
     mFindBar->showFind();
     mFindBar->focusAndSetCursor();
@@ -235,15 +234,15 @@ QString SieveEditorTextModeWidget::currentscript()
     return mTextEdit->toPlainText();
 }
 
-void SieveEditorTextModeWidget::setImportScript( const QString &script )
+void SieveEditorTextModeWidget::setImportScript(const QString &script)
 {
-    mTextEdit->setPlainText( script );
+    mTextEdit->setPlainText(script);
 }
 
 void SieveEditorTextModeWidget::slotTextChanged()
 {
     const bool enabled = !script().isEmpty();
-    Q_EMIT enableButtonOk( enabled );
+    Q_EMIT enableButtonOk(enabled);
 }
 
 QString SieveEditorTextModeWidget::script() const
@@ -251,18 +250,18 @@ QString SieveEditorTextModeWidget::script() const
     return mTextEdit->toPlainText();
 }
 
-void SieveEditorTextModeWidget::setScript( const QString &script )
+void SieveEditorTextModeWidget::setScript(const QString &script)
 {
-    mTextEdit->setPlainText( script );
+    mTextEdit->setPlainText(script);
 }
 
-void SieveEditorTextModeWidget::setDebugScript( const QString &debug )
+void SieveEditorTextModeWidget::setDebugScript(const QString &debug)
 {
     mDebugTextEdit->clear();
-    mDebugTextEdit->appendHtml( debug );
+    mDebugTextEdit->appendHtml(debug);
 }
 
-void SieveEditorTextModeWidget::setSieveCapabilities( const QStringList &capabilities )
+void SieveEditorTextModeWidget::setSieveCapabilities(const QStringList &capabilities)
 {
     mSieveCapabilities = capabilities;
     mTextEdit->setSieveCapabilities(mSieveCapabilities);

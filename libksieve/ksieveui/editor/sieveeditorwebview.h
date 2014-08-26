@@ -20,16 +20,17 @@
 
 #include <QWebView>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditorWebView : public QWebView
 {
     Q_OBJECT
 public:
-    explicit SieveEditorWebView(QWidget *parent=0);
+    explicit SieveEditorWebView(QWidget *parent = 0);
     ~SieveEditorWebView();
 
 protected:
-    void contextMenuEvent( QContextMenuEvent * ev );
+    void contextMenuEvent(QContextMenuEvent *ev);
 };
 }
 

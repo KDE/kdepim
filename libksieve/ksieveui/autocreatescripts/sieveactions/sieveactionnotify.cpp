@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sieveactionnotify.h"
 #include "editor/sieveeditorutil.h"
 #include "widgets/selectimportancecombobox.h"
@@ -23,7 +22,6 @@
 
 #include <KLocalizedString>
 #include <QLineEdit>
-
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -37,12 +35,12 @@ SieveActionNotify::SieveActionNotify(QObject *parent)
 {
 }
 
-SieveAction* SieveActionNotify::newAction()
+SieveAction *SieveActionNotify::newAction()
 {
     return new SieveActionNotify;
 }
 
-QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionNotify::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -70,11 +68,10 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
     lay->addWidget(method);
     connect(method, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
 
-
     return w;
 }
 
-bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
+bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -86,29 +83,29 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
                 if (tagValue == QLatin1String("message")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
-                        QLineEdit *message = w->findChild<QLineEdit*>( QLatin1String("message") );
+                        QLineEdit *message = w->findChild<QLineEdit *>(QLatin1String("message"));
                         message->setText(AutoCreateScriptUtil::quoteStr(strValue));
                     }
                 } else if (tagValue == QLatin1String("importance")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
-                        SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
+                        SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox *>(QLatin1String("importancecombo"));
                         importance->setCode(strValue, name(), error);
                     }
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug()<<" SieveActionNotify::setParamWidgetValue unknown tagValue"<<tagValue;
+                    qDebug() << " SieveActionNotify::setParamWidgetValue unknown tagValue" << tagValue;
                 }
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else if (tagName == QLatin1String("str")) {
-                QLineEdit *method = w->findChild<QLineEdit*>( QLatin1String("method") );
+                QLineEdit *method = w->findChild<QLineEdit *>(QLatin1String("method"));
                 method->setText(AutoCreateScriptUtil::quoteStr(e.text()));
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveActionNotify::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveActionNotify::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -119,19 +116,19 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
 QString SieveActionNotify::code(QWidget *w) const
 {
     QString result = QLatin1String("notify");
-    const SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
+    const SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox *>(QLatin1String("importancecombo"));
     const QString importanceStr = importance->code();
     if (!importanceStr.isEmpty()) {
         result += QString::fromLatin1(" :importance \"%1\"").arg(importanceStr);
     }
 
-    const QLineEdit *message = w->findChild<QLineEdit*>( QLatin1String("message") );
+    const QLineEdit *message = w->findChild<QLineEdit *>(QLatin1String("message"));
     const QString messageStr = message->text();
     if (!messageStr.isEmpty()) {
         result += QString::fromLatin1(" :message \"%2\"").arg(messageStr);
     }
 
-    const QLineEdit *method = w->findChild<QLineEdit*>( QLatin1String("method") );
+    const QLineEdit *method = w->findChild<QLineEdit *>(QLatin1String("method"));
     const QString methodStr = method->text();
     result += QString::fromLatin1(" \"%3\";").arg(methodStr);
 

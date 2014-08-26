@@ -53,8 +53,9 @@ QString SelectMatchTypeComboBox::code(bool &negative) const
 {
     QString value = itemData(currentIndex()).toString();
     negative = value.startsWith(QLatin1String("[NOT]"));
-    if (negative)
+    if (negative) {
         value = value.remove(QLatin1String("[NOT]"));
+    }
     return value;
 }
 
@@ -68,5 +69,4 @@ void SelectMatchTypeComboBox::setCode(const QString &code, const QString &name, 
         setCurrentIndex(0);
     }
 }
-
 

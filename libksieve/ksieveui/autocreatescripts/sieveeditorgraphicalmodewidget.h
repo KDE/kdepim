@@ -16,7 +16,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef SIEVEEDITORGRAPHICALMODEWIDGET_H
 #define SIEVEEDITORGRAPHICALMODEWIDGET_H
 
@@ -26,7 +25,8 @@ class QSplitter;
 class QStackedWidget;
 class QDomDocument;
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveScriptPage;
 class SieveScriptListBox;
 class SieveEditorParsingMissingFeatureWarning;
@@ -34,18 +34,18 @@ class SieveEditorGraphicalModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorGraphicalModeWidget(QWidget *parent=0);
+    explicit SieveEditorGraphicalModeWidget(QWidget *parent = 0);
     ~SieveEditorGraphicalModeWidget();
 
     QString script(QString &requires) const;
 
-    static void setSieveCapabilities( const QStringList &capabilities );
+    static void setSieveCapabilities(const QStringList &capabilities);
     static QStringList sieveCapabilities();
 
     void loadScript(const QDomDocument &doc, QString &error);
 
     QString currentscript();
-    void setImportScript( const QString & );
+    void setImportScript(const QString &);
 
 Q_SIGNALS:
     void enableButtonOk(bool);

@@ -27,7 +27,7 @@ SieveActionStop::SieveActionStop(QObject *parent)
 {
 }
 
-SieveAction* SieveActionStop::newAction()
+SieveAction *SieveActionStop::newAction()
 {
     return new SieveActionStop;
 }

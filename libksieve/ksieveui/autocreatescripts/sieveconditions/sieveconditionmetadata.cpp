@@ -39,7 +39,7 @@ SieveCondition *SieveConditionMetaData::newAction()
     return new SieveConditionMetaData;
 }
 
-QWidget *SieveConditionMetaData::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionMetaData::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -84,24 +84,23 @@ QWidget *SieveConditionMetaData::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionMetaData::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("selecttype"));
+    const SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("selecttype"));
     bool isNegative = false;
     const QString matchString = selectType->code(isNegative);
 
     QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("metadata %1 ").arg(matchString);
 
-
-    const QLineEdit *mailbox = w->findChild<QLineEdit*>( QLatin1String("mailbox"));
+    const QLineEdit *mailbox = w->findChild<QLineEdit *>(QLatin1String("mailbox"));
     const QString mailboxStr = mailbox->text();
 
     result += QString::fromLatin1("\"%1\" ").arg(mailboxStr);
 
-    const QLineEdit *annotation = w->findChild<QLineEdit*>( QLatin1String("annotation"));
+    const QLineEdit *annotation = w->findChild<QLineEdit *>(QLatin1String("annotation"));
     const QString annotationStr = annotation->text();
 
     result += QString::fromLatin1("\"%1\" ").arg(annotationStr);
 
-    const QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value"));
+    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
     const QString valueStr = value->text();
 
     result += QString::fromLatin1("\"%1\"").arg(valueStr);
@@ -128,7 +127,7 @@ QString SieveConditionMetaData::help() const
     return i18n("This test retrieves the value of the mailbox annotation \"annotation-name\" for the mailbox \"mailbox\". The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
 }
 
-bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error )
+bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error)
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -138,31 +137,31 @@ bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                switch(index) {
+                switch (index) {
                 case 0: {
-                    QLineEdit *mailbox = w->findChild<QLineEdit*>( QLatin1String("mailbox"));
+                    QLineEdit *mailbox = w->findChild<QLineEdit *>(QLatin1String("mailbox"));
                     mailbox->setText(tagValue);
                     break;
                 }
                 case 1: {
-                    QLineEdit *annotation = w->findChild<QLineEdit*>( QLatin1String("annotation"));
+                    QLineEdit *annotation = w->findChild<QLineEdit *>(QLatin1String("annotation"));
                     annotation->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                     break;
                 }
                 case 2: {
-                    QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value"));
+                    QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
                     value->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                     break;
                 }
                 default: {
                     tooManyArgument(tagName, index, 3, error);
-                    qDebug()<<" SieveConditionMetaData::setParamWidgetValue too many argument "<<index;
+                    qDebug() << " SieveConditionMetaData::setParamWidgetValue too many argument " << index;
                     break;
                 }
                 }
                 ++index;
             } else if (tagName == QLatin1String("tag")) {
-                SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("selecttype"));
+                SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("selecttype"));
                 selectType->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -170,7 +169,7 @@ bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveConditionMetaData::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveConditionMetaData::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

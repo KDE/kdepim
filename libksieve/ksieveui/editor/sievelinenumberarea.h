@@ -21,7 +21,8 @@
 
 #include <QWidget>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 
 class SieveTextEdit;
 

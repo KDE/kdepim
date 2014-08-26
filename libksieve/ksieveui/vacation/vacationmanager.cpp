@@ -20,7 +20,6 @@
 #include "ksieveui/vacation/multiimapvacationdialog.h"
 #include "ksieveui/vacation/vacationcreatescriptjob.h"
 
-
 #include <QWidget>
 
 using namespace KSieveUi;
@@ -39,15 +38,15 @@ void VacationManager::checkVacation()
 {
     delete mCheckVacation;
 
-    mCheckVacation = new KSieveUi::MultiImapVacationManager( this );
-    connect( mCheckVacation, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)) );
-    connect( mCheckVacation, SIGNAL(requestEditVacation()), SIGNAL(editVacation()) );
+    mCheckVacation = new KSieveUi::MultiImapVacationManager(this);
+    connect(mCheckVacation, SIGNAL(scriptActive(bool, QString)), SIGNAL(updateVacationScriptStatus(bool, QString)));
+    connect(mCheckVacation, SIGNAL(requestEditVacation()), SIGNAL(editVacation()));
     mCheckVacation->checkVacation();
 }
 
 void VacationManager::slotEditVacation(const QString &serverName)
 {
-    if ( mMultiImapVacationDialog ) {
+    if (mMultiImapVacationDialog) {
         mMultiImapVacationDialog->show();
         mMultiImapVacationDialog->raise();
         mMultiImapVacationDialog->activateWindow();
@@ -58,8 +57,8 @@ void VacationManager::slotEditVacation(const QString &serverName)
     }
 
     mMultiImapVacationDialog = new KSieveUi::MultiImapVacationDialog(mWidget);
-    connect( mMultiImapVacationDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()) );
-    connect( mMultiImapVacationDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCanceled()) );
+    connect(mMultiImapVacationDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()));
+    connect(mMultiImapVacationDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCanceled()));
     mMultiImapVacationDialog->show();
     if (!serverName.isEmpty()) {
         mMultiImapVacationDialog->switchToServerNamePage(serverName);
@@ -77,7 +76,7 @@ void VacationManager::slotDialogOk()
 {
     QList<KSieveUi::VacationCreateScriptJob *> listJob = mMultiImapVacationDialog->listCreateJob();
     Q_FOREACH (KSieveUi::VacationCreateScriptJob *job, listJob) {
-        connect(job, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)));
+        connect(job, SIGNAL(scriptActive(bool, QString)), SIGNAL(updateVacationScriptStatus(bool, QString)));
         job->start();
     }
     mMultiImapVacationDialog->delayedDestruct();

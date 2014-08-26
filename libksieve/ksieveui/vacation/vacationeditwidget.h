@@ -22,56 +22,60 @@
 class QSpinBox;
 class QLineEdit;
 
-namespace PimCommon {
+namespace PimCommon
+{
 class RichTextEditorWidget;
 }
 
 class QCheckBox;
 template <typename T> class QList;
 
-namespace KMime {
-namespace Types {
+namespace KMime
+{
+namespace Types
+{
 struct AddrSpec;
 typedef QList<AddrSpec> AddrSpecList;
 }
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class VacationEditWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit VacationEditWidget(QWidget *parent=0);
+    explicit VacationEditWidget(QWidget *parent = 0);
     ~VacationEditWidget();
 
-    void enableDomainAndSendForSpam( bool enable = true );
+    void enableDomainAndSendForSpam(bool enable = true);
 
     bool activateVacation() const;
-    void setActivateVacation( bool activate );
+    void setActivateVacation(bool activate);
 
     bool domainCheck() const;
-    void setDomainCheck( bool check );
+    void setDomainCheck(bool check);
 
     QString messageText() const;
-    void setMessageText( const QString &text );
+    void setMessageText(const QString &text);
 
     int notificationInterval() const;
-    void setNotificationInterval( int days );
+    void setNotificationInterval(int days);
 
     KMime::Types::AddrSpecList mailAliases() const;
-    void setMailAliases( const KMime::Types::AddrSpecList & aliases );
-    void setMailAliases( const QString &aliases );
+    void setMailAliases(const KMime::Types::AddrSpecList &aliases);
+    void setMailAliases(const QString &aliases);
 
     QString domainName() const;
-    void setDomainName( const QString &domain );
+    void setDomainName(const QString &domain);
 
     bool sendForSpam() const;
-    void setSendForSpam( bool enable );
+    void setSendForSpam(bool enable);
 
     void setDefault();
 
 private Q_SLOTS:
-    void slotIntervalSpinChanged( int value );
+    void slotIntervalSpinChanged(int value);
 
 protected:
     QCheckBox *mActiveCheck;

@@ -43,7 +43,7 @@ SieveCondition *SieveConditionSpamTest::newAction()
     return new SieveConditionSpamTest;
 }
 
-QWidget *SieveConditionSpamTest::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionSpamTest::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QVBoxLayout *lay = new QVBoxLayout;
@@ -80,17 +80,17 @@ QString SieveConditionSpamTest::code(QWidget *w) const
 {
     QString percentStr;
     if (mHasSpamTestPlusSupport) {
-        const QCheckBox *checkbox = w->findChild<QCheckBox*>( QLatin1String("percent") );
+        const QCheckBox *checkbox = w->findChild<QCheckBox *>(QLatin1String("percent"));
         percentStr = checkbox->isChecked() ? QLatin1String(":percent") : QString();
     }
 
-    const SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );
+    const SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType *>(QLatin1String("relation"));
     const QString relationStr = relation->code();
 
-    const SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
+    const SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox *>(QLatin1String("comparator"));
     const QString comparatorStr = comparator->code();
 
-    const QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
+    const QSpinBox *spinbox = w->findChild<QSpinBox *>(QLatin1String("value"));
     const QString value = QString::number(spinbox->value());
 
     return QString::fromLatin1("spamtest %1 %2 %3 \"%4\"").arg(percentStr).arg(relationStr).arg(comparatorStr).arg(value);
@@ -108,7 +108,7 @@ QString SieveConditionSpamTest::serverNeedsCapability() const
 
 QStringList SieveConditionSpamTest::needRequires(QWidget *w) const
 {
-    const SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
+    const SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox *>(QLatin1String("comparator"));
     QStringList lst;
     lst << QLatin1String("spamtest") << QLatin1String("relational") << comparator->require();
     if (mHasSpamTestPlusSupport) {
@@ -122,7 +122,7 @@ QString SieveConditionSpamTest::help() const
     return i18n("Sieve implementations that implement the \"spamtest\" test use an identifier of either \"spamtest\" or \"spamtestplus\" for use with the capability mechanism.");
 }
 
-bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/, QString &error )
+bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -137,7 +137,7 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                         QDomElement relationalElement = node.toElement();
                         if (!relationalElement.isNull()) {
                             if (relationalElement.tagName() == QLatin1String("str")) {
-                                SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );
+                                SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType *>(QLatin1String("relation"));
                                 relation->setCode(AutoCreateScriptUtil::tagValue(tagValue), relationalElement.text(), name(), error);
                             }
                         }
@@ -148,25 +148,25 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                         QDomElement comparatorElement = node.toElement();
                         if (!comparatorElement.isNull()) {
                             if (comparatorElement.tagName() == QLatin1String("str")) {
-                                SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
+                                SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox *>(QLatin1String("comparator"));
                                 comparator->setCode(comparatorElement.text(), name(), error);
                             }
                         }
                     }
                 } else if (tagValue == QLatin1String("percent")) {
                     if (mHasSpamTestPlusSupport) {
-                        QCheckBox *checkbox = w->findChild<QCheckBox*>( QLatin1String("percent") );
+                        QCheckBox *checkbox = w->findChild<QCheckBox *>(QLatin1String("percent"));
                         checkbox->setChecked(true);
                     } else {
                         serverDoesNotSupportFeatures(QLatin1String("percent"), error);
-                        qDebug()<<" SieveConditionSpamTest::setParamWidgetValue server has not percent support";
+                        qDebug() << " SieveConditionSpamTest::setParamWidgetValue server has not percent support";
                     }
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug()<<" SieveConditionSpamTest::setParamWidgetValue unknown tagvalue "<<tagValue;
+                    qDebug() << " SieveConditionSpamTest::setParamWidgetValue unknown tagvalue " << tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
-                QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
+                QSpinBox *spinbox = w->findChild<QSpinBox *>(QLatin1String("value"));
                 spinbox->setValue(e.text().toInt());
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -174,7 +174,7 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveSpamTest::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveSpamTest::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

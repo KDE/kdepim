@@ -43,7 +43,7 @@ SieveAction *SieveActionRedirect::newAction()
     return new SieveActionRedirect;
 }
 
-QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionRedirect::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -76,28 +76,28 @@ bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
-                QLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
+                QLineEdit *edit = w->findChild<AddressLineEdit *>(QLatin1String("RedirectEdit"));
                 const QString tagValue = e.text();
                 edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
             } else if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("copy")) {
                     if (mHasCopySupport) {
-                        QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
+                        QCheckBox *copy = w->findChild<QCheckBox *>(QLatin1String("copy"));
                         copy->setChecked(true);
                     } else {
                         serverDoesNotSupportFeatures(QLatin1String("copy"), error);
                     }
                 } else if (tagValue == QLatin1String("list")) {
                     if (mHasListSupport) {
-                        QCheckBox *list = w->findChild<QCheckBox*>( QLatin1String("list") );
+                        QCheckBox *list = w->findChild<QCheckBox *>(QLatin1String("list"));
                         list->setChecked(true);
                     } else {
                         serverDoesNotSupportFeatures(QLatin1String("list"), error);
                     }
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug()<<" SieveActionRedirect::setParamWidgetValue tagValue unknown"<<tagValue;
+                    qDebug() << " SieveActionRedirect::setParamWidgetValue tagValue unknown" << tagValue;
                 }
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -105,7 +105,7 @@ bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveActionRedirect::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveActionRedirect::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -116,19 +116,21 @@ bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
 QString SieveActionRedirect::code(QWidget *w) const
 {
     QString result = QLatin1String("redirect ");
-    const QLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
+    const QLineEdit *edit = w->findChild<AddressLineEdit *>(QLatin1String("RedirectEdit"));
     const QString text = edit->text();
 
     if (mHasCopySupport) {
-        const QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
-        if (copy->isChecked())
+        const QCheckBox *copy = w->findChild<QCheckBox *>(QLatin1String("copy"));
+        if (copy->isChecked()) {
             result += QLatin1String(":copy ");
+        }
     }
 
     if (mHasListSupport) {
-        const QCheckBox *list = w->findChild<QCheckBox*>( QLatin1String("list") );
-        if (list->isChecked())
+        const QCheckBox *list = w->findChild<QCheckBox *>(QLatin1String("list"));
+        if (list->isChecked()) {
             result += QLatin1String(":list ");
+        }
     }
 
     return result + QString::fromLatin1("\"%1\";").arg(text);
@@ -138,14 +140,16 @@ QStringList SieveActionRedirect::needRequires(QWidget *parent) const
 {
     QStringList lst;
     if (mHasCopySupport) {
-        const QCheckBox *copy = parent->findChild<QCheckBox*>( QLatin1String("copy") );
-        if (copy->isChecked())
-            lst <<QLatin1String("copy");
+        const QCheckBox *copy = parent->findChild<QCheckBox *>(QLatin1String("copy"));
+        if (copy->isChecked()) {
+            lst << QLatin1String("copy");
+        }
     }
     if (mHasListSupport) {
-        const QCheckBox *list = parent->findChild<QCheckBox*>( QLatin1String("list") );
-        if (list->isChecked())
-            lst <<QLatin1String("extlists");
+        const QCheckBox *list = parent->findChild<QCheckBox *>(QLatin1String("list"));
+        if (list->isChecked()) {
+            lst << QLatin1String("extlists");
+        }
     }
     return lst;
 }

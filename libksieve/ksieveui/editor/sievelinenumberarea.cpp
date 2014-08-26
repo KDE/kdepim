@@ -22,8 +22,8 @@
 using namespace KSieveUi;
 
 SieveLineNumberArea::SieveLineNumberArea(SieveTextEdit *editor)
-    : QWidget( editor ),
-      m_sieveTextEdit( editor )
+    : QWidget(editor),
+      m_sieveTextEdit(editor)
 {
 }
 

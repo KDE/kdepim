@@ -42,7 +42,6 @@ static int MINIMUMACTION = 1;
 static int MAXIMUMACTION = 8;
 static QString INDENTACTION = QLatin1String("    ");
 
-
 SieveActionWidget::SieveActionWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -57,28 +56,28 @@ SieveActionWidget::~SieveActionWidget()
 
 bool SieveActionWidget::isConfigurated() const
 {
-    return (mComboBox->currentIndex() != (mComboBox->count()-1));
+    return (mComboBox->currentIndex() != (mComboBox->count() - 1));
 }
 
-void SieveActionWidget::setFilterAction( QWidget *widget )
+void SieveActionWidget::setFilterAction(QWidget *widget)
 {
-    if ( mLayout->itemAtPosition( 1, 3 ) ) {
-        delete mLayout->itemAtPosition( 1, 3 )->widget();
+    if (mLayout->itemAtPosition(1, 3)) {
+        delete mLayout->itemAtPosition(1, 3)->widget();
     }
 
-    if ( widget ) {
-        mLayout->addWidget( widget, 1, 3 );
+    if (widget) {
+        mLayout->addWidget(widget, 1, 3);
     } else {
-        mLayout->addWidget( new QLabel( i18n( "Please select an action." ), this ), 1, 3 );
+        mLayout->addWidget(new QLabel(i18n("Please select an action."), this), 1, 3);
     }
 }
 
 void SieveActionWidget::generatedScript(QString &script, QStringList &requires, bool onlyActions)
 {
     const int index = mComboBox->currentIndex();
-    if (index != mComboBox->count()-1) {
+    if (index != mComboBox->count() - 1) {
         KSieveUi::SieveAction *widgetAction = mActionList.at(mComboBox->currentIndex());
-        QWidget *currentWidget = mLayout->itemAtPosition( 1, 3 )->widget();
+        QWidget *currentWidget = mLayout->itemAtPosition(1, 3)->widget();
         const QStringList lstRequires = widgetAction->needRequires(currentWidget);
         Q_FOREACH (const QString &r, lstRequires) {
             if (!requires.contains(r)) {
@@ -96,97 +95,94 @@ void SieveActionWidget::generatedScript(QString &script, QStringList &requires, 
 void SieveActionWidget::initWidget()
 {
     mLayout = new QGridLayout(this);
-    mLayout->setContentsMargins( 0, 0, 0, 0 );
+    mLayout->setContentsMargins(0, 0, 0, 0);
 
     mComboBox = new PimCommon::MinimumComboBox;
-    mComboBox->setEditable( false );
-    const QList<KSieveUi::SieveAction*> list = KSieveUi::SieveActionList::actionList();
-    QList<KSieveUi::SieveAction*>::const_iterator it;
-    QList<KSieveUi::SieveAction*>::const_iterator end( list.constEnd() );
+    mComboBox->setEditable(false);
+    const QList<KSieveUi::SieveAction *> list = KSieveUi::SieveActionList::actionList();
+    QList<KSieveUi::SieveAction *>::const_iterator it;
+    QList<KSieveUi::SieveAction *>::const_iterator end(list.constEnd());
     int index = 0;
     QStringList listCapabilities = SieveEditorGraphicalModeWidget::sieveCapabilities();
     //imapflags was old name of imap4flags but still used.
     if (listCapabilities.contains(QLatin1String("imap4flags"))) {
         listCapabilities.append(QLatin1String("imapflags"));
     }
-    for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {
+    for (index = 0, it = list.constBegin(); it != end; ++it, ++index) {
         if ((*it)->needCheckIfServerHasCapability()) {
             if (listCapabilities.contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
-                mActionList.append( *it );
+                mActionList.append(*it);
                 connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
                 // add (i18n-ized) name to combo box
-                mComboBox->addItem( (*it)->label(),(*it)->name() );
+                mComboBox->addItem((*it)->label(), (*it)->name());
             } else {
-                delete (*it);
+                delete(*it);
             }
         } else {
             // append to the list of actions:
-            mActionList.append( *it );
+            mActionList.append(*it);
             connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
             // add (i18n-ized) name to combo box
-            mComboBox->addItem( (*it)->label(),(*it)->name() );
+            mComboBox->addItem((*it)->label(), (*it)->name());
         }
     }
 
     mHelpButton = new SieveHelpButton;
     mHelpButton->setEnabled(false);
     connect(mHelpButton, &SieveHelpButton::clicked, this, &SieveActionWidget::slotHelp);
-    mLayout->addWidget( mHelpButton, 1, 0 );
+    mLayout->addWidget(mHelpButton, 1, 0);
 
     mCommentButton = new QToolButton;
     mCommentButton->setToolTip(i18n("Add comment"));
     mCommentButton->setEnabled(false);
-    mLayout->addWidget( mCommentButton, 1, 1 );
-    mCommentButton->setIcon( QIcon::fromTheme( QLatin1String("view-pim-notes") ) );
+    mLayout->addWidget(mCommentButton, 1, 1);
+    mCommentButton->setIcon(QIcon::fromTheme(QLatin1String("view-pim-notes")));
     connect(mCommentButton, &QToolButton::clicked, this, &SieveActionWidget::slotAddComment);
 
-
     mComboBox->addItem(QLatin1String(""));
-    mComboBox->setCurrentIndex(mComboBox->count()-1);
+    mComboBox->setCurrentIndex(mComboBox->count() - 1);
 
-    mComboBox->setMaxCount( mComboBox->count() );
-    mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
-    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    mComboBox->setMaxCount(mComboBox->count());
+    mComboBox->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
     mComboBox->adjustSize();
     mLayout->addWidget(mComboBox, 1, 2);
 
     updateGeometry();
 
-    connect( mComboBox, SIGNAL(activated(int)),
-             this, SLOT(slotActionChanged(int)) );
+    connect(mComboBox, SIGNAL(activated(int)),
+            this, SLOT(slotActionChanged(int)));
 
+    mAdd = new QPushButton(this);
+    mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mAdd->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
-    mAdd = new QPushButton( this );
-    mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-    mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-
-    mRemove = new QPushButton( this );
-    mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
-    mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    mLayout->addWidget( mAdd, 1, 4 );
-    mLayout->addWidget( mRemove, 1, 5 );
+    mRemove = new QPushButton(this);
+    mRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    mRemove->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    mLayout->addWidget(mAdd, 1, 4);
+    mLayout->addWidget(mRemove, 1, 5);
 
     // redirect focus to the filter action combo box
-    setFocusProxy( mComboBox );
+    setFocusProxy(mComboBox);
 
-    connect( mAdd, SIGNAL(clicked()),
-             this, SLOT(slotAddWidget()) );
-    connect( mRemove, SIGNAL(clicked()),
-             this, SLOT(slotRemoveWidget()) );
+    connect(mAdd, SIGNAL(clicked()),
+            this, SLOT(slotAddWidget()));
+    connect(mRemove, SIGNAL(clicked()),
+            this, SLOT(slotRemoveWidget()));
     setFilterAction(0);
 }
-
 
 void SieveActionWidget::slotHelp()
 {
     const int index = mComboBox->currentIndex();
     if (index < mActionList.count()) {
-        KSieveUi::SieveAction* action = mActionList.at( index );
+        KSieveUi::SieveAction *action = mActionList.at(index);
         const QString help = action->help();
         const QString href = action->href();
-        const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
-        QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
+        const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help, href);
+        QWhatsThis::showText(QCursor::pos(), fullWhatsThis, mHelpButton);
     }
 }
 
@@ -194,7 +190,7 @@ void SieveActionWidget::slotAddComment()
 {
     const int index = mComboBox->currentIndex();
     if (index < mActionList.count()) {
-        KSieveUi::SieveAction* action = mActionList.at( index );
+        KSieveUi::SieveAction *action = mActionList.at(index);
         const QString comment = action->comment();
         QPointer<SieveScriptDescriptionDialog> dlg = new SieveScriptDescriptionDialog;
         dlg->setDescription(comment);
@@ -209,17 +205,17 @@ void SieveActionWidget::slotAddComment()
 void SieveActionWidget::slotActionChanged(int index)
 {
     if (index < mActionList.count()) {
-        KSieveUi::SieveAction* action = mActionList.at( index );
+        KSieveUi::SieveAction *action = mActionList.at(index);
         mHelpButton->setEnabled(!action->help().isEmpty());
         mCommentButton->setEnabled(true);
-        setFilterAction( action->createParamWidget(this) );
+        setFilterAction(action->createParamWidget(this));
         //All actions after stop will not execute => don't allow to add more actions.
         const bool enableAddAction = (action->name() != QLatin1String("stop"));
         mAdd->setEnabled(enableAddAction);
     } else {
         mAdd->setEnabled(true);
         mCommentButton->setEnabled(false);
-        setFilterAction( 0 );
+        setFilterAction(0);
         mHelpButton->setEnabled(false);
     }
     Q_EMIT valueChanged();
@@ -228,16 +224,16 @@ void SieveActionWidget::slotActionChanged(int index)
 void SieveActionWidget::slotAddWidget()
 {
     Q_EMIT valueChanged();
-    emit addWidget( this );
+    emit addWidget(this);
 }
 
 void SieveActionWidget::slotRemoveWidget()
 {
     Q_EMIT valueChanged();
-    emit removeWidget( this );
+    emit removeWidget(this);
 }
 
-void SieveActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
+void SieveActionWidget::updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled)
 {
     mAdd->setEnabled(addButtonEnabled);
     mRemove->setEnabled(removeButtonEnabled);
@@ -250,7 +246,7 @@ bool SieveActionWidget::setAction(const QString &actionName, const QDomElement &
     if (index != -1) {
         mComboBox->setCurrentIndex(index);
         slotActionChanged(index);
-        KSieveUi::SieveAction* action = mActionList.at( index );
+        KSieveUi::SieveAction *action = mActionList.at(index);
         result = action->setParamWidgetValue(element, this, error);
         action->setComment(comment);
     }
@@ -269,74 +265,73 @@ SieveActionWidgetLister::~SieveActionWidgetLister()
 
 }
 
-void SieveActionWidgetLister::slotAddWidget( QWidget *w )
+void SieveActionWidgetLister::slotAddWidget(QWidget *w)
 {
-    addWidgetAfterThisWidget( w );
+    addWidgetAfterThisWidget(w);
     updateAddRemoveButton();
 }
 
-void SieveActionWidgetLister::slotRemoveWidget( QWidget *w )
+void SieveActionWidgetLister::slotRemoveWidget(QWidget *w)
 {
-    removeWidget( w );
+    removeWidget(w);
     updateAddRemoveButton();
 }
-
 
 void SieveActionWidgetLister::updateAddRemoveButton()
 {
-    QList<QWidget*> widgetList = widgets();
-    const int numberOfWidget( widgetList.count() );
+    QList<QWidget *> widgetList = widgets();
+    const int numberOfWidget(widgetList.count());
     bool addButtonEnabled = false;
     bool removeButtonEnabled = false;
-    if ( numberOfWidget <= widgetsMinimum() ) {
+    if (numberOfWidget <= widgetsMinimum()) {
         addButtonEnabled = true;
         removeButtonEnabled = false;
-    } else if ( numberOfWidget >= widgetsMaximum() ) {
+    } else if (numberOfWidget >= widgetsMaximum()) {
         addButtonEnabled = false;
         removeButtonEnabled = true;
     } else {
         addButtonEnabled = true;
         removeButtonEnabled = true;
     }
-    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
-    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
-    for ( ; wIt != wEnd ;++wIt ) {
-        SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
-        w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
+    QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
+    for (; wIt != wEnd ; ++wIt) {
+        SieveActionWidget *w = qobject_cast<SieveActionWidget *>(*wIt);
+        w->updateAddRemoveButton(addButtonEnabled, removeButtonEnabled);
     }
 }
 
 void SieveActionWidgetLister::generatedScript(QString &script, QStringList &requires, bool onlyActions)
 {
-    const QList<QWidget*> widgetList = widgets();
-    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
-    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
-    for ( ; wIt != wEnd ;++wIt ) {
-        SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
+    const QList<QWidget *> widgetList = widgets();
+    QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
+    for (; wIt != wEnd ; ++wIt) {
+        SieveActionWidget *w = qobject_cast<SieveActionWidget *>(*wIt);
         w->generatedScript(script, requires, onlyActions);
     }
 }
 
-void SieveActionWidgetLister::reconnectWidget( SieveActionWidget *w )
+void SieveActionWidgetLister::reconnectWidget(SieveActionWidget *w)
 {
-    connect( w, SIGNAL(addWidget(QWidget*)),
-             this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
-    connect( w, SIGNAL(removeWidget(QWidget*)),
-             this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
-    connect( w, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()), Qt::UniqueConnection);
+    connect(w, SIGNAL(addWidget(QWidget *)),
+            this, SLOT(slotAddWidget(QWidget *)), Qt::UniqueConnection);
+    connect(w, SIGNAL(removeWidget(QWidget *)),
+            this, SLOT(slotRemoveWidget(QWidget *)), Qt::UniqueConnection);
+    connect(w, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()), Qt::UniqueConnection);
 }
 
-void SieveActionWidgetLister::clearWidget( QWidget *aWidget )
+void SieveActionWidgetLister::clearWidget(QWidget *aWidget)
 {
     Q_UNUSED(aWidget);
     Q_EMIT valueChanged();
     //TODO
 }
 
-QWidget *SieveActionWidgetLister::createWidget( QWidget *parent )
+QWidget *SieveActionWidgetLister::createWidget(QWidget *parent)
 {
-    SieveActionWidget *w = new SieveActionWidget( parent);
-    reconnectWidget( w );
+    SieveActionWidget *w = new SieveActionWidget(parent);
+    reconnectWidget(w);
     return w;
 }
 
@@ -354,17 +349,17 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
             if (tagName == QLatin1String("action")) {
                 if (element.hasAttribute(QLatin1String("name"))) {
                     const QString actionName = element.attribute(QLatin1String("name"));
-                    SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
+                    SieveActionWidget *w = qobject_cast<SieveActionWidget *>(widgets().last());
                     if (w->isConfigurated()) {
                         addWidgetAfterThisWidget(widgets().last());
-                        w = qobject_cast<SieveActionWidget*>( widgets().last() );
+                        w = qobject_cast<SieveActionWidget *>(widgets().last());
                     }
                     w->setAction(actionName, element, comment, error);
                     //comment.clear();
                 } else if (tagName == QLatin1String("crlf")) {
                     //nothing
                 } else {
-                    qDebug()<<" SieveActionWidgetLister::loadScript don't have name attribute "<<tagName;
+                    qDebug() << " SieveActionWidgetLister::loadScript don't have name attribute " << tagName;
                 }
             }
         }
@@ -379,7 +374,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                     if (e.hasAttribute(QLatin1String("name"))) {
                         const QString actionName = e.attribute(QLatin1String("name"));
                         if (tagName == QLatin1String("control") && actionName == QLatin1String("if")) {
-                            qDebug()<<"We found an loop if in a loop if. Not supported";
+                            qDebug() << "We found an loop if in a loop if. Not supported";
                             error += QLatin1Char('\n') + i18n("We detected a loop if in a loop if. It's not supported") + QLatin1Char('\n');
                         }
                         if (firstAction) {
@@ -387,11 +382,11 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                         } else {
                             addWidgetAfterThisWidget(widgets().last());
                         }
-                        SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
+                        SieveActionWidget *w = qobject_cast<SieveActionWidget *>(widgets().last());
                         w->setAction(actionName, e, comment, error);
                         comment.clear();
                     } else {
-                        qDebug()<<" SieveActionWidgetLister::loadScript don't have name attribute "<<tagName;
+                        qDebug() << " SieveActionWidgetLister::loadScript don't have name attribute " << tagName;
                     }
                 } else if (tagName == QLatin1String("comment")) {
                     if (!comment.isEmpty()) {
@@ -401,13 +396,11 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                 } else if (tagName == QLatin1String("crlf")) {
                     //nothing
                 } else {
-                    qDebug()<<" SieveActionWidgetLister::loadScript unknown tagName "<<tagName;
+                    qDebug() << " SieveActionWidgetLister::loadScript unknown tagName " << tagName;
                 }
             }
             node = node.nextSibling();
         }
     }
 }
-
-
 

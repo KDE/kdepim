@@ -42,14 +42,14 @@ QString SieveCondition::label() const
     return mLabel;
 }
 
-SieveCondition* SieveCondition::newAction()
+SieveCondition *SieveCondition::newAction()
 {
     return 0;
 }
 
-QWidget* SieveCondition::createParamWidget( QWidget *parent ) const
+QWidget *SieveCondition::createParamWidget(QWidget *parent) const
 {
-    return new QWidget( parent );
+    return new QWidget(parent);
 }
 
 QString SieveCondition::code(QWidget *parent) const

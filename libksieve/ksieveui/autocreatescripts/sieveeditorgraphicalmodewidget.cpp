@@ -34,7 +34,6 @@
 #include <QDomDocument>
 #include <QDebug>
 
-
 using namespace KSieveUi;
 
 QStringList SieveEditorGraphicalModeWidget::sCapabilities = QStringList();
@@ -47,18 +46,17 @@ SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
 
     mSplitter = new QSplitter;
     mSplitter->setChildrenCollapsible(false);
-    mSieveScript = new SieveScriptListBox( i18n("Sieve Script"));
+    mSieveScript = new SieveScriptListBox(i18n("Sieve Script"));
     connect(mSieveScript, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
-    connect(mSieveScript, SIGNAL(addNewPage(KSieveUi::SieveScriptPage*)), SLOT(slotAddScriptPage(KSieveUi::SieveScriptPage*)));
-    connect(mSieveScript, SIGNAL(removePage(QWidget*)), SLOT(slotRemoveScriptPage(QWidget*)));
-    connect(mSieveScript, SIGNAL(activatePage(QWidget*)), SLOT(slotActivateScriptPage(QWidget*)));
+    connect(mSieveScript, SIGNAL(addNewPage(KSieveUi::SieveScriptPage *)), SLOT(slotAddScriptPage(KSieveUi::SieveScriptPage *)));
+    connect(mSieveScript, SIGNAL(removePage(QWidget *)), SLOT(slotRemoveScriptPage(QWidget *)));
+    connect(mSieveScript, SIGNAL(activatePage(QWidget *)), SLOT(slotActivateScriptPage(QWidget *)));
     connect(mSieveScript, SIGNAL(enableButtonOk(bool)), SIGNAL(enableButtonOk(bool)));
     mSplitter->addWidget(mSieveScript);
     vlay->addWidget(mSplitter);
 
     mStackWidget = new QStackedWidget;
     mSplitter->addWidget(mStackWidget);
-
 
     mSieveParsingWarning = new SieveEditorParsingMissingFeatureWarning(SieveEditorParsingMissingFeatureWarning::GraphicEditor);
     connect(mSieveParsingWarning, SIGNAL(switchToTextMode()), SLOT(slotSwitchToTextMode()));
@@ -75,7 +73,7 @@ SieveEditorGraphicalModeWidget::~SieveEditorGraphicalModeWidget()
 
 void SieveEditorGraphicalModeWidget::loadScript(const QDomDocument &doc, QString &error)
 {
-    for (int i = mStackWidget->count(); i>=0; --i) {
+    for (int i = mStackWidget->count(); i >= 0; --i) {
         mStackWidget->removeWidget(mStackWidget->widget(i));
     }
     mSieveScript->loadScript(doc, error);
@@ -83,19 +81,19 @@ void SieveEditorGraphicalModeWidget::loadScript(const QDomDocument &doc, QString
 
 void SieveEditorGraphicalModeWidget::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AutoCreateScriptDialog" );
+    KConfigGroup group(KSharedConfig::openConfig(), "AutoCreateScriptDialog");
     QList<int> size;
     size << 100 << 400;
-    mSplitter->setSizes(group.readEntry( "mainSplitter", size));
+    mSplitter->setSizes(group.readEntry("mainSplitter", size));
 }
 
 void SieveEditorGraphicalModeWidget::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AutoCreateScriptDialog" );
-    group.writeEntry( "mainSplitter", mSplitter->sizes());
+    KConfigGroup group(KSharedConfig::openConfig(), "AutoCreateScriptDialog");
+    group.writeEntry("mainSplitter", mSplitter->sizes());
 }
 
-void SieveEditorGraphicalModeWidget::setSieveCapabilities( const QStringList &capabilities )
+void SieveEditorGraphicalModeWidget::setSieveCapabilities(const QStringList &capabilities)
 {
     sCapabilities = capabilities;
 }
@@ -137,7 +135,7 @@ QString SieveEditorGraphicalModeWidget::currentscript()
     return script;
 }
 
-void SieveEditorGraphicalModeWidget::setImportScript( const QString &script )
+void SieveEditorGraphicalModeWidget::setImportScript(const QString &script)
 {
     bool result = false;
     const QDomDocument doc = ParsingUtil::parseScript(script, result);
@@ -153,7 +151,7 @@ void SieveEditorGraphicalModeWidget::setImportScript( const QString &script )
         if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Error during importing script. Do you want to switch to text mode?"))) {
             Q_EMIT switchTextMode(script);
         }
-        qDebug()<<" cannot import script";
+        qDebug() << " cannot import script";
     }
 }
 

@@ -20,28 +20,32 @@
 #include <QStringList>
 #include <QString>
 
-namespace KMime {
-namespace Types {
+namespace KMime
+{
+namespace Types
+{
 struct AddrSpec;
 typedef QList<AddrSpec> AddrSpecList;
 }
 }
 
-namespace KSieveUi {
-namespace VacationUtils {
+namespace KSieveUi
+{
+namespace VacationUtils
+{
 QString defaultMessageText();
 int defaultNotificationInterval();
 QStringList defaultMailAliases();
 bool defaultSendForSpam();
 QString defaultDomainName();
 
-QString composeScript( const QString & messageText,
-                              int notificationInterval,
-                              const KMime::Types::AddrSpecList & aliases,
-                              bool sendForSpam, const QString & excludeDomain );
-bool parseScript( const QString & script, QString & messageText,
-                         int & notificationInterval, QStringList & aliases,
-                         bool & sendForSpam, QString & domainName );
+QString composeScript(const QString &messageText,
+                      int notificationInterval,
+                      const KMime::Types::AddrSpecList &aliases,
+                      bool sendForSpam, const QString &excludeDomain);
+bool parseScript(const QString &script, QString &messageText,
+                 int &notificationInterval, QStringList &aliases,
+                 bool &sendForSpam, QString &domainName);
 
 }
 }

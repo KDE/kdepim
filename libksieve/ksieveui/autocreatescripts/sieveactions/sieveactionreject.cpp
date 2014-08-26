@@ -38,7 +38,7 @@ SieveAction *SieveActionReject::newAction()
     return new SieveActionReject;
 }
 
-QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionReject::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -49,7 +49,7 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
 
     MultiLineEdit *edit = new MultiLineEdit;
     connect(edit, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
-    edit->setObjectName( QLatin1String("rejectmessage") );
+    edit->setObjectName(QLatin1String("rejectmessage"));
     lay->addWidget(edit);
     return w;
 }
@@ -63,7 +63,7 @@ bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget 
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("rejectmessage") );
+                MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QLatin1String("rejectmessage"));
                 edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -71,7 +71,7 @@ bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget 
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveActionReject::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveActionReject::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -81,7 +81,7 @@ bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget 
 
 QString SieveActionReject::code(QWidget *w) const
 {
-    const MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("rejectmessage") );
+    const MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QLatin1String("rejectmessage"));
     const QString text = edit->toPlainText();
 
     return QString::fromLatin1("reject text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));

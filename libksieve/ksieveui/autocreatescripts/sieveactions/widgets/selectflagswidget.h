@@ -22,7 +22,8 @@
 #include <QListWidget>
 class QLineEdit;
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 
 class SelectFlagsListWidget : public QListWidget
 {
@@ -31,16 +32,15 @@ public:
     explicit SelectFlagsListWidget(QWidget *parent = 0);
     ~SelectFlagsListWidget();
 
-    void setFlags(const QStringList& list);
+    void setFlags(const QStringList &list);
     QStringList flags() const;
 
 private:
     enum Type {
-        FlagsRealName = Qt::UserRole+1
+        FlagsRealName = Qt::UserRole + 1
     };
     void init();
 };
-
 
 class SelectFlagsListDialog : public QDialog
 {
@@ -49,14 +49,12 @@ public:
     explicit SelectFlagsListDialog(QWidget *parent = 0);
     ~SelectFlagsListDialog();
 
-    void setFlags(const QStringList& list);
+    void setFlags(const QStringList &list);
     QStringList flags() const;
 
 private:
     SelectFlagsListWidget *mListWidget;
 };
-
-
 
 class SelectFlagsWidget : public QWidget
 {

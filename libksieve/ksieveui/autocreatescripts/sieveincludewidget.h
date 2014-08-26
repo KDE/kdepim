@@ -27,7 +27,8 @@ class QLineEdit;
 class QGridLayout;
 class QCheckBox;
 class QDomElement;
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveHelpButton;
 class SieveIncludeLocation : public KComboBox
 {
@@ -54,7 +55,7 @@ public:
     ~SieveIncludeActionWidget();
 
     void generatedScript(QString &script);
-    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled);
     void loadScript(const QDomElement &element, QString &error);
     bool isInitialized() const;
 
@@ -92,17 +93,16 @@ Q_SIGNALS:
     void valueChanged();
 
 public Q_SLOTS:
-    void slotAddWidget( QWidget *w );
-    void slotRemoveWidget( QWidget *w );
+    void slotAddWidget(QWidget *w);
+    void slotRemoveWidget(QWidget *w);
 
 protected:
-    void clearWidget( QWidget *aWidget );
-    QWidget *createWidget( QWidget *parent );
+    void clearWidget(QWidget *aWidget);
+    QWidget *createWidget(QWidget *parent);
 private:
-    void reconnectWidget(SieveIncludeActionWidget *w );
+    void reconnectWidget(SieveIncludeActionWidget *w);
     void updateAddRemoveButton();
 };
-
 
 class SieveIncludeWidget : public SieveWidgetPageAbstract
 {

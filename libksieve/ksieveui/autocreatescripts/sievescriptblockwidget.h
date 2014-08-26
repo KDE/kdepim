@@ -27,7 +27,8 @@ class KComboBox;
 class QPushButton;
 class QDomElement;
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveConditionWidgetLister;
 class SieveActionWidgetLister;
 
@@ -56,7 +57,7 @@ Q_SIGNALS:
     void addNewBlock(QWidget *widget, KSieveUi::SieveWidgetPageAbstract::PageType type);
 
 private Q_SLOTS:
-    void slotRadioClicked(QAbstractButton*);
+    void slotRadioClicked(QAbstractButton *);
     void slotAddBlock();
 
 private:

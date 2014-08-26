@@ -15,19 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SIEVEEDITORTABWIDGET_H
 #define SIEVEEDITORTABWIDGET_H
 
 #include <QTabWidget>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditorHelpHtmlWidget;
 class SieveEditorTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorTabWidget(QWidget *parent=0);
+    explicit SieveEditorTabWidget(QWidget *parent = 0);
     ~SieveEditorTabWidget();
 
 public Q_SLOTS:

@@ -20,7 +20,8 @@
 
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class MultiLineEdit : public PimCommon::RichTextEditor
 {
     Q_OBJECT

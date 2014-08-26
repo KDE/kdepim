@@ -24,21 +24,22 @@
 #include <qdialog.h>
 #include <QUrl>
 
-
 class QTreeWidgetItem;
 class QPushButton;
 
-namespace KManageSieve {
+namespace KManageSieve
+{
 class SieveJob;
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditor;
 class CustomManageSieveWidget : public KSieveUi::ManageSieveWidget
 {
     Q_OBJECT
 public:
-    explicit CustomManageSieveWidget(QWidget *parent=0);
+    explicit CustomManageSieveWidget(QWidget *parent = 0);
     virtual ~CustomManageSieveWidget();
 
 protected:
@@ -50,13 +51,13 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ManageSieveScriptsDialog( QWidget *parent=0 );
+    explicit ManageSieveScriptsDialog(QWidget *parent = 0);
     ~ManageSieveScriptsDialog();
 
 private slots:
-    void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );
-    void slotPutResult( KManageSieve::SieveJob *, bool );
-    void slotPutResultDebug(KManageSieve::SieveJob *, bool success ,const QString &errorMsg);
+    void slotGetResult(KManageSieve::SieveJob *, bool, const QString &, bool);
+    void slotPutResult(KManageSieve::SieveJob *, bool);
+    void slotPutResultDebug(KManageSieve::SieveJob *, bool success , const QString &errorMsg);
 
     void slotSieveEditorOkClicked();
     void slotSieveEditorCancelClicked();
@@ -66,15 +67,15 @@ private slots:
     void slotNewScript(const QUrl &u, const QStringList &capabilities);
 
 private:
-    void changeActiveScript( QTreeWidgetItem *, bool activate = true );
+    void changeActiveScript(QTreeWidgetItem *, bool activate = true);
 
     void updateButtons(QTreeWidgetItem *item);
     void disableManagerScriptsDialog(bool disable);
 
 private:
 
-    CustomManageSieveWidget* mTreeView;
-    SieveEditor * mSieveEditor;
+    CustomManageSieveWidget *mTreeView;
+    SieveEditor *mSieveEditor;
 
     QUrl mCurrentURL;
     QStringList mCurrentCapabilities;

@@ -33,8 +33,8 @@
 #include <QDebug>
 #include <QDomNode>
 
-
-namespace KSieveUi {
+namespace KSieveUi
+{
 static int MINIMUMGLOBALVARIABLEACTION = 1;
 static int MAXIMUMGLOBALVARIABLEACTION = 15;
 
@@ -52,8 +52,9 @@ SieveGlobalVariableActionWidget::~SieveGlobalVariableActionWidget()
 void SieveGlobalVariableActionWidget::generatedScript(QString &script)
 {
     const QString variableName = mVariableName->text();
-    if (variableName.isEmpty())
+    if (variableName.isEmpty()) {
         return;
+    }
     script += QLatin1String("global ");
     script += QString::fromLatin1("\"%1\";\n").arg(variableName);
     if (mSetValueTo->isChecked() && !mVariableValue->text().isEmpty()) {
@@ -64,41 +65,41 @@ void SieveGlobalVariableActionWidget::generatedScript(QString &script)
 void SieveGlobalVariableActionWidget::initWidget()
 {
     mLayout = new QGridLayout(this);
-    mLayout->setContentsMargins( 0, 0, 0, 0 );
+    mLayout->setContentsMargins(0, 0, 0, 0);
 
     QLabel *lab = new QLabel(i18n("Variable name:"));
-    mLayout->addWidget( lab, 1, 0 );
+    mLayout->addWidget(lab, 1, 0);
 
     mVariableName = new QLineEdit;
     connect(mVariableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
-    mLayout->addWidget( mVariableName, 1, 1 );
+    mLayout->addWidget(mVariableName, 1, 1);
 
     mSetValueTo = new QCheckBox(i18n("Set value to:"));
     connect(mSetValueTo, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
-    mLayout->addWidget( mSetValueTo, 1, 2 );
+    mLayout->addWidget(mSetValueTo, 1, 2);
     mSetValueTo->setChecked(false);
 
     mVariableValue = new QLineEdit;
     connect(mVariableValue, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mVariableValue->setEnabled(false);
-    mLayout->addWidget( mVariableValue, 1, 3 );
+    mLayout->addWidget(mVariableValue, 1, 3);
 
     connect(mSetValueTo, SIGNAL(clicked(bool)), mVariableValue, SLOT(setEnabled(bool)));
 
-    mAdd = new QPushButton( this );
-    mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-    mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    mAdd = new QPushButton(this);
+    mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mAdd->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
-    mRemove = new QPushButton( this );
-    mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
-    mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    mLayout->addWidget( mAdd, 1, 4 );
-    mLayout->addWidget( mRemove, 1, 5 );
+    mRemove = new QPushButton(this);
+    mRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    mRemove->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    mLayout->addWidget(mAdd, 1, 4);
+    mLayout->addWidget(mRemove, 1, 5);
 
-    connect( mAdd, SIGNAL(clicked()),
-             this, SLOT(slotAddWidget()) );
-    connect( mRemove, SIGNAL(clicked()),
-             this, SLOT(slotRemoveWidget()) );
+    connect(mAdd, SIGNAL(clicked()),
+            this, SLOT(slotAddWidget()));
+    connect(mRemove, SIGNAL(clicked()),
+            this, SLOT(slotRemoveWidget()));
 }
 
 bool SieveGlobalVariableActionWidget::isInitialized() const
@@ -129,7 +130,7 @@ void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element, QSt
                 mVariableName->setText(e.text());
             } else {
                 error += i18n("Unknown tag \"%1\" during loading of variables.");
-                qDebug()<<" SieveGlobalVariableActionWidget::loadScript unknown tagName "<<tagName;
+                qDebug() << " SieveGlobalVariableActionWidget::loadScript unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -138,17 +139,17 @@ void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element, QSt
 
 void SieveGlobalVariableActionWidget::slotAddWidget()
 {
-    emit addWidget( this );
+    emit addWidget(this);
     Q_EMIT valueChanged();
 }
 
 void SieveGlobalVariableActionWidget::slotRemoveWidget()
 {
-    emit removeWidget( this );
+    emit removeWidget(this);
     Q_EMIT valueChanged();
 }
 
-void SieveGlobalVariableActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
+void SieveGlobalVariableActionWidget::updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled)
 {
     mAdd->setEnabled(addButtonEnabled);
     mRemove->setEnabled(removeButtonEnabled);
@@ -159,12 +160,12 @@ SieveGlobalVariableWidget::SieveGlobalVariableWidget(QWidget *parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mHelpButton = new SieveHelpButton;
-    lay->addWidget( mHelpButton );
+    lay->addWidget(mHelpButton);
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveGlobalVariableLister;
     connect(mIncludeLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
-    lay->addWidget(mIncludeLister,0, Qt::AlignTop);
+    lay->addWidget(mIncludeLister, 0, Qt::AlignTop);
     setPageType(KSieveUi::SieveScriptBlockWidget::GlobalVariable);
     setLayout(lay);
 }
@@ -177,8 +178,8 @@ void SieveGlobalVariableWidget::slotHelp()
 {
     const QString help = i18n("A variable has global scope in all scripts that have declared it with the \"global\" command.  If a script uses that variable name without declaring it global, the name specifies a separate, non-global variable within that script.");
     const QString href = KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::GlobalVariable);
-    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
-    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help, href);
+    QWhatsThis::showText(QCursor::pos(), fullWhatsThis, mHelpButton);
 }
 
 void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &requires)
@@ -214,76 +215,75 @@ SieveGlobalVariableLister::~SieveGlobalVariableLister()
 
 }
 
-void SieveGlobalVariableLister::slotAddWidget( QWidget *w )
+void SieveGlobalVariableLister::slotAddWidget(QWidget *w)
 {
-    addWidgetAfterThisWidget( w );
+    addWidgetAfterThisWidget(w);
     updateAddRemoveButton();
 }
 
-void SieveGlobalVariableLister::slotRemoveWidget( QWidget *w )
+void SieveGlobalVariableLister::slotRemoveWidget(QWidget *w)
 {
-    removeWidget( w );
+    removeWidget(w);
     updateAddRemoveButton();
 }
-
 
 void SieveGlobalVariableLister::updateAddRemoveButton()
 {
-    QList<QWidget*> widgetList = widgets();
-    const int numberOfWidget( widgetList.count() );
+    QList<QWidget *> widgetList = widgets();
+    const int numberOfWidget(widgetList.count());
     bool addButtonEnabled = false;
     bool removeButtonEnabled = false;
-    if ( numberOfWidget <= widgetsMinimum() ) {
+    if (numberOfWidget <= widgetsMinimum()) {
         addButtonEnabled = true;
         removeButtonEnabled = false;
-    } else if ( numberOfWidget >= widgetsMaximum() ) {
+    } else if (numberOfWidget >= widgetsMaximum()) {
         addButtonEnabled = false;
         removeButtonEnabled = true;
     } else {
         addButtonEnabled = true;
         removeButtonEnabled = true;
     }
-    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
-    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
-    for ( ; wIt != wEnd ;++wIt ) {
-        SieveGlobalVariableActionWidget *w = qobject_cast<SieveGlobalVariableActionWidget*>( *wIt );
-        w->updateAddRemoveButton( addButtonEnabled, removeButtonEnabled );
+    QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
+    for (; wIt != wEnd ; ++wIt) {
+        SieveGlobalVariableActionWidget *w = qobject_cast<SieveGlobalVariableActionWidget *>(*wIt);
+        w->updateAddRemoveButton(addButtonEnabled, removeButtonEnabled);
     }
 }
 
 void SieveGlobalVariableLister::generatedScript(QString &script, QStringList &requires)
 {
     requires << QLatin1String("include");
-    const QList<QWidget*> widgetList = widgets();
-    QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
-    QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
-    for ( ; wIt != wEnd ;++wIt ) {
-        SieveGlobalVariableActionWidget *w = qobject_cast<SieveGlobalVariableActionWidget*>( *wIt );
+    const QList<QWidget *> widgetList = widgets();
+    QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
+    QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
+    for (; wIt != wEnd ; ++wIt) {
+        SieveGlobalVariableActionWidget *w = qobject_cast<SieveGlobalVariableActionWidget *>(*wIt);
         w->generatedScript(script);
     }
 }
 
-void SieveGlobalVariableLister::reconnectWidget(SieveGlobalVariableActionWidget *w )
+void SieveGlobalVariableLister::reconnectWidget(SieveGlobalVariableActionWidget *w)
 {
-    connect( w, SIGNAL(addWidget(QWidget*)),
-             this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
-    connect( w, SIGNAL(removeWidget(QWidget*)),
-             this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
-    connect( w, SIGNAL(valueChanged()),
-             this, SIGNAL(valueChanged()), Qt::UniqueConnection );
+    connect(w, SIGNAL(addWidget(QWidget *)),
+            this, SLOT(slotAddWidget(QWidget *)), Qt::UniqueConnection);
+    connect(w, SIGNAL(removeWidget(QWidget *)),
+            this, SLOT(slotRemoveWidget(QWidget *)), Qt::UniqueConnection);
+    connect(w, SIGNAL(valueChanged()),
+            this, SIGNAL(valueChanged()), Qt::UniqueConnection);
 }
 
-void SieveGlobalVariableLister::clearWidget( QWidget *aWidget )
+void SieveGlobalVariableLister::clearWidget(QWidget *aWidget)
 {
     Q_UNUSED(aWidget);
     //TODO
     Q_EMIT valueChanged();
 }
 
-QWidget *SieveGlobalVariableLister::createWidget( QWidget *parent )
+QWidget *SieveGlobalVariableLister::createWidget(QWidget *parent)
 {
-    SieveGlobalVariableActionWidget *w = new SieveGlobalVariableActionWidget( parent);
-    reconnectWidget( w );
+    SieveGlobalVariableActionWidget *w = new SieveGlobalVariableActionWidget(parent);
+    reconnectWidget(w);
     return w;
 }
 
@@ -313,11 +313,11 @@ void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element, QStr
                 } else if (index == 1) {
                     variableValue = e.text();
                 } else {
-                    qDebug()<<" SieveGlobalVariableLister::loadSetVariable too many argument:"<<index;
+                    qDebug() << " SieveGlobalVariableLister::loadSetVariable too many argument:" << index;
                 }
                 ++index;
             } else {
-                qDebug()<<" SieveGlobalVariableLister::loadSetVariable unknown tagName "<<tagName;
+                qDebug() << " SieveGlobalVariableLister::loadSetVariable unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

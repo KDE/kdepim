@@ -20,9 +20,11 @@
 
 #include <QList>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveAction;
-namespace SieveActionList {
+namespace SieveActionList
+{
 QList<KSieveUi::SieveAction *> actionList();
 }
 }

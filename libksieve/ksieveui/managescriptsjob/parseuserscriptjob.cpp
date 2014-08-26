@@ -15,13 +15,11 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "parseuserscriptjob.h"
 #include "ksieveui/scriptsparsing/parsingutil.h"
 #include <kmanagesieve/sievejob.h>
 
 #include <KLocalizedString>
-
 
 using namespace KSieveUi;
 ParseUserScriptJob::ParseUserScriptJob(QObject *parent)
@@ -32,8 +30,9 @@ ParseUserScriptJob::ParseUserScriptJob(QObject *parent)
 
 ParseUserScriptJob::~ParseUserScriptJob()
 {
-    if ( mSieveJob )
+    if (mSieveJob) {
         mSieveJob->kill();
+    }
     mSieveJob = 0;
 }
 
@@ -48,14 +47,15 @@ void ParseUserScriptJob::start()
         Q_EMIT error(i18n("Path is not specified."));
         return;
     }
-    if ( mSieveJob )
+    if (mSieveJob) {
         mSieveJob->kill();
-    mSieveJob = KManageSieve::SieveJob::get( mCurrentUrl );
-    connect( mSieveJob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-             this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
+    }
+    mSieveJob = KManageSieve::SieveJob::get(mCurrentUrl);
+    connect(mSieveJob, SIGNAL(result(KManageSieve::SieveJob *, bool, QString, bool)),
+            this, SLOT(slotGetResult(KManageSieve::SieveJob *, bool, QString, bool)));
 }
 
-void ParseUserScriptJob::slotGetResult( KManageSieve::SieveJob *, bool, const QString & script, bool )
+void ParseUserScriptJob::slotGetResult(KManageSieve::SieveJob *, bool, const QString &script, bool)
 {
     mSieveJob = 0;
     if (script.isEmpty()) {
@@ -64,10 +64,11 @@ void ParseUserScriptJob::slotGetResult( KManageSieve::SieveJob *, bool, const QS
     }
     bool result;
     const QStringList lst = parsescript(script, result);
-    if (result)
+    if (result) {
         Q_EMIT success(lst);
-    else
+    } else {
         Q_EMIT error(i18n("Script parsing error"));
+    }
 }
 
 QStringList ParseUserScriptJob::parsescript(const QString &script, bool &result)

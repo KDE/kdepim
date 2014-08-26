@@ -20,15 +20,17 @@
 
 #include <QDialog>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class RichTextEditorWidget;
 }
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveScriptDescriptionDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SieveScriptDescriptionDialog(QWidget *parent=0);
+    explicit SieveScriptDescriptionDialog(QWidget *parent = 0);
     ~SieveScriptDescriptionDialog();
 
     void setDescription(const QString &desc);

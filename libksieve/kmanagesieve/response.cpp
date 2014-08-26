@@ -64,19 +64,19 @@ bool KManageSieve::Response::parseResponse(const QByteArray &line)
 {
     clear();
 
-    switch( line.at( 0 ) ) {
-    case '{':
-    {
+    switch (line.at(0)) {
+    case '{': {
         // expecting {quantity}
         int start = 0;
-        int end = line.indexOf( "+}", start + 1 );
+        int end = line.indexOf("+}", start + 1);
         // some older versions of Cyrus enclose the literal size just in { } instead of { +}
-        if ( end == -1 )
-            end = line.indexOf( '}', start + 1 );
+        if (end == -1) {
+            end = line.indexOf('}', start + 1);
+        }
 
         bool ok = false;
         m_type = Quantity;
-        m_quantity = line.mid( start + 1, end - start - 1 ).toUInt( &ok );
+        m_quantity = line.mid(start + 1, end - start - 1).toUInt(&ok);
         if (!ok) {
             //         disconnect();
             //         error(ERR_INTERNAL_SERVER, i18n("A protocol error occurred."));
@@ -97,42 +97,44 @@ bool KManageSieve::Response::parseResponse(const QByteArray &line)
     }
 
     int start = 0;
-    int end = line.indexOf( '"', start + 1 );
-    if ( end == -1 ) {
+    int end = line.indexOf('"', start + 1);
+    if (end == -1) {
         qDebug() << "Invalid protocol in:" << line;
-        m_key = line.right( line.length() - start );
+        m_key = line.right(line.length() - start);
         return true;
     }
-    m_key = line.mid( start + 1, end - start - 1 );
+    m_key = line.mid(start + 1, end - start - 1);
 
-    start = line.indexOf( '"', end + 1 );
+    start = line.indexOf('"', end + 1);
     if (start == -1) {
-        if ( line.length() > end )
+        if (line.length() > end)
             // skip " and space
-            m_extra = line.right( line.length() - end - 2 );
+        {
+            m_extra = line.right(line.length() - end - 2);
+        }
         return true;
     }
 
-    end = line.indexOf( '"', start + 1 );
-    if ( end == -1 ) {
+    end = line.indexOf('"', start + 1);
+    if (end == -1) {
         qDebug() << "Invalid protocol in:" << line;
-        m_value = line.right( line.length() - start );
+        m_value = line.right(line.length() - start);
         return true;
     }
 
-    m_value = line.mid( start + 1, end - start - 1 );
+    m_value = line.mid(start + 1, end - start - 1);
     return true;
 }
 
 KManageSieve::Response::Result KManageSieve::Response::operationResult() const
 {
-    if ( m_type == Action ) {
-        const QByteArray response = m_key.left( 2 );
-        if ( response == "OK" ) {
+    if (m_type == Action) {
+        const QByteArray response = m_key.left(2);
+        if (response == "OK") {
             return Ok;
-        } else if ( response == "NO" ) {
+        } else if (response == "NO") {
             return No;
-        } else if ( response == "BY"/*E*/ ) {
+        } else if (response == "BY"/*E*/) {
             return Bye;
         }
     }

@@ -20,7 +20,8 @@
 
 #include <QObject>
 class QDomElement;
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveCondition : public QObject
 {
     Q_OBJECT
@@ -36,7 +37,7 @@ public:
      */
     static SieveCondition *newAction();
 
-    virtual QWidget *createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget(QWidget *parent) const;
 
     virtual QString code(QWidget *parent) const;
 
@@ -49,7 +50,7 @@ public:
     virtual QString help() const;
     virtual QString href() const;
 
-    virtual bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error );
+    virtual bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error);
 
     void unknownTag(const QString &tag, QString &error);
     void unknowTagValue(const QString &tagValue, QString &error);

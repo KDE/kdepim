@@ -48,33 +48,34 @@ class QString;
 
 namespace KSieveUi
 {
-  /**
-   * The Util namespace contains a collection of helper functions use in
-   * various places.
-   */
-namespace Util {
+/**
+ * The Util namespace contains a collection of helper functions use in
+ * various places.
+ */
+namespace Util
+{
 
-    /**
-     * Returns the sieve url for the account with the given @p identifier.
-     */
-    KSIEVEUI_EXPORT QUrl findSieveUrlForAccount( const QString &identifier );
+/**
+ * Returns the sieve url for the account with the given @p identifier.
+ */
+KSIEVEUI_EXPORT QUrl findSieveUrlForAccount(const QString &identifier);
 
-    /**
-     * Returns the list of configured IMAP agent instances.
-     */
-    KSIEVEUI_EXPORT Akonadi::AgentInstance::List imapAgentInstances();
+/**
+ * Returns the list of configured IMAP agent instances.
+ */
+KSIEVEUI_EXPORT Akonadi::AgentInstance::List imapAgentInstances();
 
-    /**
-     * Returns whether the availability of a vacation sieve script shall
-     * be checked at the start up of an application.
-     */
-    KSIEVEUI_EXPORT bool checkOutOfOfficeOnStartup();
+/**
+ * Returns whether the availability of a vacation sieve script shall
+ * be checked at the start up of an application.
+ */
+KSIEVEUI_EXPORT bool checkOutOfOfficeOnStartup();
 
-    /**
-     * Returns whether the functionality of vacation sieve script editing shall
-     * be available at all.
-     */
-    KSIEVEUI_EXPORT bool allowOutOfOfficeSettings();
+/**
+ * Returns whether the functionality of vacation sieve script editing shall
+ * be available at all.
+ */
+KSIEVEUI_EXPORT bool allowOutOfOfficeSettings();
 }
 
 }

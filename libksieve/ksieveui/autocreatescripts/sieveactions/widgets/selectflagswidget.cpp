@@ -32,8 +32,8 @@ using namespace KSieveUi;
 SelectFlagsListDialog::SelectFlagsListDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Flags" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Flags"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mListWidget = new SelectFlagsListWidget;
@@ -52,7 +52,7 @@ SelectFlagsListDialog::~SelectFlagsListDialog()
 {
 }
 
-void SelectFlagsListDialog::setFlags(const QStringList& list)
+void SelectFlagsListDialog::setFlags(const QStringList &list)
 {
     mListWidget->setFlags(list);
 }
@@ -93,7 +93,7 @@ void SelectFlagsListWidget::init()
     item->setCheckState(Qt::Unchecked);
 }
 
-void SelectFlagsListWidget::setFlags(const QStringList& list)
+void SelectFlagsListWidget::setFlags(const QStringList &list)
 {
     const int numberOfItem = count();
     for (int i = 0; i < numberOfItem; ++i) {
@@ -111,7 +111,7 @@ QStringList SelectFlagsListWidget::flags() const
     for (int i = 0; i < numberOfItem; ++i) {
         QListWidgetItem *it = item(i);
         if (it->checkState() == Qt::Checked) {
-            result<<it->data(FlagsRealName).toString();
+            result << it->data(FlagsRealName).toString();
         }
     }
     return result;

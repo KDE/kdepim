@@ -21,7 +21,6 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
-
 #include <KLocalizedString>
 #include <QLabel>
 #include <QHBoxLayout>
@@ -36,7 +35,7 @@ SieveActionKeep::SieveActionKeep(QObject *parent)
     mHasFlagSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imapflags")) || mHasImapFlag4Support;
 }
 
-SieveAction* SieveActionKeep::newAction()
+SieveAction *SieveActionKeep::newAction()
 {
     return new SieveActionKeep;
 }
@@ -44,7 +43,7 @@ SieveAction* SieveActionKeep::newAction()
 QString SieveActionKeep::code(QWidget *w) const
 {
     if (mHasFlagSupport) {
-        const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
+        const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
         const QString flagCode = flagsWidget->code();
         if (flagCode.isEmpty()) {
             return QLatin1String("keep;");
@@ -61,7 +60,7 @@ QString SieveActionKeep::help() const
     return i18n("The \"keep\" action is whatever action is taken in lieu of all other actions, if no filtering happens at all; generally, this simply means to file the message into the user's main mailbox.");
 }
 
-QWidget *SieveActionKeep::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionKeep::createParamWidget(QWidget *parent) const
 {
     if (mHasFlagSupport) {
         QWidget *w = new QWidget(parent);
@@ -81,7 +80,7 @@ QWidget *SieveActionKeep::createParamWidget( QWidget *parent ) const
     }
 }
 
-bool SieveActionKeep::setParamWidgetValue( const QDomElement &element, QWidget *w, QString &error )
+bool SieveActionKeep::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     if (mHasFlagSupport) {
         QDomNode node = element.firstChild();
@@ -90,11 +89,11 @@ bool SieveActionKeep::setParamWidgetValue( const QDomElement &element, QWidget *
             if (!e.isNull()) {
                 const QString tagName = e.tagName();
                 if (tagName == QLatin1String("list")) {
-                    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
+                    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
                     flagsWidget->setFlags(AutoCreateScriptUtil::listValue(e));
                 } else if (tagName == QLatin1String("str")) {
-                    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
-                    flagsWidget->setFlags(QStringList()<<e.text());
+                    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
+                    flagsWidget->setFlags(QStringList() << e.text());
                 } else if (tagName == QLatin1String("tag") && e.text() == QLatin1String("flags")) {
                     //nothing :)
                 } else if (tagName == QLatin1String("crlf")) {
@@ -103,13 +102,13 @@ bool SieveActionKeep::setParamWidgetValue( const QDomElement &element, QWidget *
                     //implement in the future ?
                 } else {
                     unknownTag(tagName, error);
-                    qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;
+                    qDebug() << " SieveActionAbstractFlags::setParamWidgetValue unknown tag :" << tagName;
                 }
             }
             node = node.nextSibling();
         }
     } else {
-        qDebug()<<" Server doesn't support imapflags";
+        qDebug() << " Server doesn't support imapflags";
     }
     return true;
 }
@@ -117,10 +116,11 @@ bool SieveActionKeep::setParamWidgetValue( const QDomElement &element, QWidget *
 QStringList SieveActionKeep::needRequires(QWidget *) const
 {
     QStringList requiresLst;
-    if (mHasImapFlag4Support)
+    if (mHasImapFlag4Support) {
         requiresLst << QLatin1String("imap4flags");
-    else if (mHasFlagSupport)
+    } else if (mHasFlagSupport) {
         requiresLst << QLatin1String("imapflags");
+    }
     return requiresLst;
 }
 

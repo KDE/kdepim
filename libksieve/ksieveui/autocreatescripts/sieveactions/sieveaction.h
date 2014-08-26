@@ -20,7 +20,8 @@
 
 #include <QObject>
 class QDomElement;
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveAction : public QObject
 {
     Q_OBJECT
@@ -36,11 +37,11 @@ public:
      */
     static SieveAction *newAction();
 
-    virtual QWidget *createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget(QWidget *parent) const;
 
-    virtual bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    virtual bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
 
-    virtual QString code( QWidget *) const;
+    virtual QString code(QWidget *) const;
 
     virtual QStringList needRequires(QWidget *parent) const;
 

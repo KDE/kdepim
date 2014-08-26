@@ -34,7 +34,7 @@ QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separa
 {
     const QStringList list = str.trimmed().split(separator);
     const int count = list.count();
-    switch(count) {
+    switch (count) {
     case 0:
         return QString();
     case 1:
@@ -75,11 +75,11 @@ QStringList AutoCreateScriptUtil::createListFromString(QString str)
 {
     QStringList lst;
     if (str.startsWith(QLatin1Char('[')) && str.endsWith(QLatin1String("];"))) {
-        str.remove(0,1);
-        str.remove(str.length()-2, 2);
+        str.remove(0, 1);
+        str.remove(str.length() - 2, 2);
     } else if (str.startsWith(QLatin1Char('[')) && str.endsWith(QLatin1String("]"))) {
-        str.remove(0,1);
-        str.remove(str.length()-1, 1);
+        str.remove(0, 1);
+        str.remove(str.length() - 1, 1);
     } else {
         return lst;
     }
@@ -87,7 +87,7 @@ QStringList AutoCreateScriptUtil::createListFromString(QString str)
     QStringList resultLst;
     Q_FOREACH (QString s, lst) {
         s.remove(QLatin1String("\""));
-        resultLst<<s.trimmed();
+        resultLst << s.trimmed();
     }
     lst = resultLst;
     return lst;
@@ -95,11 +95,11 @@ QStringList AutoCreateScriptUtil::createListFromString(QString str)
 
 QString AutoCreateScriptUtil::createAddressList(const QString &str, bool addSemiColon)
 {
-    if (str.trimmed().startsWith(QLatin1Char('[')) && str.trimmed().endsWith(QLatin1Char(']')))
+    if (str.trimmed().startsWith(QLatin1Char('[')) && str.trimmed().endsWith(QLatin1Char(']'))) {
         return str;
+    }
     return createList(str, QLatin1Char(';'), addSemiColon);
 }
-
 
 QString AutoCreateScriptUtil::negativeString(bool isNegative)
 {
@@ -155,7 +155,7 @@ QStringList AutoCreateScriptUtil::listValue(const QDomElement &element)
 
 QString AutoCreateScriptUtil::fixListValue(QString valueStr)
 {
-    if (! (valueStr.startsWith(QLatin1Char('[')) && valueStr.endsWith(QLatin1Char(']')))) {
+    if (!(valueStr.startsWith(QLatin1Char('[')) && valueStr.endsWith(QLatin1Char(']')))) {
         valueStr = QString::fromLatin1("\"%1\"").arg(valueStr);
     }
 

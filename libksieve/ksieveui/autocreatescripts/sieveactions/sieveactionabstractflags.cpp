@@ -24,14 +24,13 @@
 #include <QDomNode>
 #include <QDebug>
 
-
 using namespace KSieveUi;
 SieveActionAbstractFlags::SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent)
     : SieveAction(name, label, parent)
 {
 }
 
-QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
+QWidget *SieveActionAbstractFlags::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -44,7 +43,7 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-bool SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, QWidget *w, QString &error )
+bool SieveActionAbstractFlags::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -52,18 +51,18 @@ bool SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, 
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("list")) {
-                SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
+                SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
                 flagsWidget->setFlags(AutoCreateScriptUtil::listValue(e));
             } else if (tagName == QLatin1String("str")) {
-                SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
-                flagsWidget->setFlags(QStringList()<<e.text());
+                SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
+                flagsWidget->setFlags(QStringList() << e.text());
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;
+                qDebug() << " SieveActionAbstractFlags::setParamWidgetValue unknown tag :" << tagName;
             }
         }
         node = node.nextSibling();
@@ -73,7 +72,7 @@ bool SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, 
 
 QString SieveActionAbstractFlags::code(QWidget *w) const
 {
-    const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
+    const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
     const QString flagCode = flagsWidget->code();
     const QString str = flagsCode();
     return str + QLatin1Char(' ') + (flagCode.isEmpty() ? QLatin1String(";") : flagCode);
@@ -81,10 +80,11 @@ QString SieveActionAbstractFlags::code(QWidget *w) const
 
 QStringList SieveActionAbstractFlags::needRequires(QWidget *) const
 {
-    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags"))) {
         return QStringList() << QLatin1String("imap4flags");
-    else
+    } else {
         return QStringList() << QLatin1String("imapflags");
+    }
 }
 
 bool SieveActionAbstractFlags::needCheckIfServerHasCapability() const
@@ -94,9 +94,10 @@ bool SieveActionAbstractFlags::needCheckIfServerHasCapability() const
 
 QString SieveActionAbstractFlags::serverNeedsCapability() const
 {
-    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags"))) {
         return QLatin1String("imap4flags");
-    else
+    } else {
         return QLatin1String("imapflags");
+    }
 }
 

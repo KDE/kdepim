@@ -25,15 +25,16 @@ class QDomDocument;
 class QDomNode;
 class QPushButton;
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveScriptPage;
 class SieveScriptListItem : public QListWidgetItem
 {
 public:
-    SieveScriptListItem( const QString &text, QListWidget *parent );
+    SieveScriptListItem(const QString &text, QListWidget *parent);
     ~SieveScriptListItem();
 
-    void setDescription(const QString & desc);
+    void setDescription(const QString &desc);
     QString description() const;
 
     SieveScriptPage *scriptPage() const;
@@ -69,7 +70,7 @@ private Q_SLOTS:
     void slotRename();
     void updateButtons();
     void slotEditDescription();
-    void slotItemActived(QListWidgetItem*);
+    void slotItemActived(QListWidgetItem *);
     void slotTop();
     void slotBottom();
     void slotDown();

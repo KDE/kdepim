@@ -15,26 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SIEVEACTIONVACATION_H
 #define SIEVEACTIONVACATION_H
 
 #include "sieveaction.h"
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionVacation : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionVacation(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
 
-    QWidget *createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
     QString code(QWidget *) const;
     QString serverNeedsCapability() const;
     bool needCheckIfServerHasCapability() const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
     QStringList needRequires(QWidget *parent) const;
-    QString help() const;    
+    QString help() const;
     QString href() const;
 private:
     bool mHasVacationSecondsSupport;

@@ -17,7 +17,6 @@
 
 #include "sieveeditorutil.h"
 
-
 QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariableName type)
 {
     switch (type) {
@@ -123,7 +122,6 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
     return QString();
 }
 
-
 KSieveUi::SieveEditorUtil::HelpVariableName KSieveUi::SieveEditorUtil::strToVariableName(const QString &str)
 {
     if (str == QLatin1String("address")) {
@@ -195,7 +193,7 @@ KSieveUi::SieveEditorUtil::HelpVariableName KSieveUi::SieveEditorUtil::strToVari
     } else if (str == QLatin1String("stop")) {
         return StopAction;
     } else if (str == QLatin1String("vacation")) {
-         return VacationAction;
+        return VacationAction;
     } else if (str == QLatin1String("include")) {
         return Includes;
     } else if (str == QLatin1String("globalvariable")) {

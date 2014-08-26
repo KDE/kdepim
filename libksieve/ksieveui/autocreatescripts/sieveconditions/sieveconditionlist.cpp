@@ -46,7 +46,7 @@
 
 QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
 {
-    QList<KSieveUi::SieveCondition*> list;
+    QList<KSieveUi::SieveCondition *> list;
     list.append(new KSieveUi::SieveConditionHeader);
     list.append(new KSieveUi::SieveConditionAddress);
     list.append(new KSieveUi::SieveConditionSize);

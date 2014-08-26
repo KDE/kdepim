@@ -25,23 +25,23 @@
 #include <changerecorder.h>
 #include <KSharedConfig>
 
-MBoxImporterKernel::MBoxImporterKernel( QObject *parent )
-    : QObject( parent )
+MBoxImporterKernel::MBoxImporterKernel(QObject *parent)
+    : QObject(parent)
 {
-    mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
-    Akonadi::Session *session = new Akonadi::Session( "MBox importer Kernel ETM", this );
-    mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
+    mIdentityManager = new KPIMIdentities::IdentityManager(false, this);
+    Akonadi::Session *session = new Akonadi::Session("MBox importer Kernel ETM", this);
+    mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor(session, this);
 
-    mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
-    mEntityTreeModel->setIncludeUnsubscribed( false );
-    mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+    mEntityTreeModel = new Akonadi::EntityTreeModel(folderCollectionMonitor(), this);
+    mEntityTreeModel->setIncludeUnsubscribed(false);
+    mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
-    mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
-    mCollectionModel->setSourceModel( mEntityTreeModel );
-    mCollectionModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-    mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-    mCollectionModel->setDynamicSortFilter( true );
-    mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+    mCollectionModel = new Akonadi::EntityMimeTypeFilterModel(this);
+    mCollectionModel->setSourceModel(mEntityTreeModel);
+    mCollectionModel->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
+    mCollectionModel->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
+    mCollectionModel->setDynamicSortFilter(true);
+    mCollectionModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 }
 
 KPIMIdentities::IdentityManager *MBoxImporterKernel::identityManager()
@@ -66,12 +66,12 @@ KSharedConfig::Ptr MBoxImporterKernel::config()
 
 void MBoxImporterKernel::syncConfig()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
 }
 
-MailCommon::JobScheduler* MBoxImporterKernel::jobScheduler() const
+MailCommon::JobScheduler *MBoxImporterKernel::jobScheduler() const
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return 0;
 }
 
@@ -82,7 +82,7 @@ Akonadi::ChangeRecorder *MBoxImporterKernel::folderCollectionMonitor() const
 
 void MBoxImporterKernel::updateSystemTray()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
 }
 
 bool MBoxImporterKernel::showPopupAfterDnD()
@@ -97,19 +97,19 @@ qreal MBoxImporterKernel::closeToQuotaThreshold()
 
 QStringList MBoxImporterKernel::customTemplates()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return QStringList();
 }
 
 bool MBoxImporterKernel::excludeImportantMailFromExpiry()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return true;
 }
 
 Akonadi::Entity::Id MBoxImporterKernel::lastSelectedFolder()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return Akonadi::Entity::Id();
 }
 

@@ -15,28 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SIEVEACTIONEXTRACTTEXT_H
 #define SIEVEACTIONEXTRACTTEXT_H
 
 #include "sieveaction.h"
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionExtractText : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionExtractText(QObject *parent = 0);
-    static SieveAction* newAction();
-    QWidget *createParamWidget( QWidget *parent ) const;
+    static SieveAction *newAction();
+    QWidget *createParamWidget(QWidget *parent) const;
     QString code(QWidget *) const;
     QStringList needRequires(QWidget *parent) const;
     bool needCheckIfServerHasCapability() const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
     QString serverNeedsCapability() const;
     QString help() const;
     QString href() const;
 };
 }
-
 
 #endif // SIEVEACTIONEXTRACTTEXT_H

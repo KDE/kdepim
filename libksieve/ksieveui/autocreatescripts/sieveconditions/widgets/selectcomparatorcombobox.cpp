@@ -47,8 +47,9 @@ void SelectComparatorComboBox::initialize()
 
 QString SelectComparatorComboBox::require() const
 {
-    if (currentIndex()<2)
+    if (currentIndex() < 2) {
         return QString();
+    }
     return itemData(currentIndex()).toString();
 }
 

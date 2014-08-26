@@ -31,11 +31,11 @@
 
 using namespace KSieveUi;
 
-SieveEditor::SieveEditor( QWidget * parent )
-    : QDialog( parent )
+SieveEditor::SieveEditor(QWidget *parent)
+    : QDialog(parent)
 {
-    setWindowTitle( i18n( "Edit Sieve Script" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Edit Sieve Script"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -43,7 +43,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    setModal( true );
+    setModal(true);
     mSieveEditorWidget = new SieveEditorWidget;
     connect(mSieveEditorWidget, SIGNAL(valueChanged(bool)), this, SIGNAL(valueChanged(bool)));
     mainLayout->addWidget(mSieveEditorWidget);
@@ -58,15 +58,15 @@ SieveEditor::~SieveEditor()
     writeConfig();
 }
 
-bool SieveEditor::event(QEvent* e)
+bool SieveEditor::event(QEvent *e)
 {
     // Close the bar when pressing Escape.
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
-        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+    if (shortCutOverride || e->type() == QEvent::KeyPress) {
+        QKeyEvent *kev = static_cast<QKeyEvent * >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->ignore();
             return true;
@@ -75,7 +75,6 @@ bool SieveEditor::event(QEvent* e)
     return QDialog::event(e);
 }
 
-
 void SieveEditor::slotEnableButtonOk(bool b)
 {
     mOkButton->setEnabled(b);
@@ -83,16 +82,16 @@ void SieveEditor::slotEnableButtonOk(bool b)
 
 void SieveEditor::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveEditor");
+    group.writeEntry("Size", size());
 }
 
 void SieveEditor::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "SieveEditor");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
@@ -106,27 +105,27 @@ QString SieveEditor::originalScript() const
     return mSieveEditorWidget->originalScript();
 }
 
-void SieveEditor::setScript( const QString &script )
+void SieveEditor::setScript(const QString &script)
 {
     mSieveEditorWidget->setScript(script);
 }
 
-void SieveEditor::setDebugScript( const QString &debug )
+void SieveEditor::setDebugScript(const QString &debug)
 {
     mSieveEditorWidget->setDebugScript(debug);
 }
 
-void SieveEditor::setScriptName( const QString &name )
+void SieveEditor::setScriptName(const QString &name)
 {
     mSieveEditorWidget->setScriptName(name);
-}  
+}
 
 void SieveEditor::resultDone()
 {
     mSieveEditorWidget->resultDone();
 }
 
-void SieveEditor::setSieveCapabilities( const QStringList &capabilities )
+void SieveEditor::setSieveCapabilities(const QStringList &capabilities)
 {
     mSieveEditorWidget->setSieveCapabilities(capabilities);
 }

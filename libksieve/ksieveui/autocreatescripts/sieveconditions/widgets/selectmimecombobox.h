@@ -19,7 +19,8 @@
 #define SELECTMIMECOMBOBOX_H
 #include <KComboBox>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SelectMimeComboBox : public KComboBox
 {
     Q_OBJECT

@@ -43,7 +43,7 @@ SieveCondition *SieveConditionEnvelope::newAction()
     return new SieveConditionEnvelope;
 }
 
-QWidget *SieveConditionEnvelope::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionEnvelope::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -84,25 +84,24 @@ QWidget *SieveConditionEnvelope::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionEnvelope::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtypecombobox"));
     bool isNegative = false;
     const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
-    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox *>(QLatin1String("addresspartcombobox"));
     const QString selectAddressPartStr = selectAddressPart->code();
 
-    const SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+    const SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headertypecombobox"));
     const QString selectHeaderTypeStr = selectHeaderType->code();
 
-
-    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("editaddress") );
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("editaddress"));
     const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed(), false);
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("envelope %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
 
 QStringList SieveConditionEnvelope::needRequires(QWidget *w) const
 {
-    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox *>(QLatin1String("addresspartcombobox"));
     return QStringList() << QLatin1String("envelope") << selectAddressPart->extraRequire();
 }
 
@@ -133,34 +132,34 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (indexTag == 0) {
-                    SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+                    SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox *>(QLatin1String("addresspartcombobox"));
                     selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(tagValue), name(), error);
                 } else if (indexTag == 1) {
-                    SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+                    SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtypecombobox"));
                     selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition), name(), error);
                 } else {
                     tooManyArgument(tagName, indexTag, 2, error);
-                    qDebug()<<"SieveConditionEnvelope::setParamWidgetValue too many argument :"<<indexTag;
+                    qDebug() << "SieveConditionEnvelope::setParamWidgetValue too many argument :" << indexTag;
                 }
                 ++indexTag;
             } else if (tagName == QLatin1String("str")) {
                 if (indexStr == 0) {
-                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headertypecombobox"));
                     selectHeaderType->setCode(e.text());
                 } else if (indexStr == 1) {
-                    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("editaddress") );
+                    QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("editaddress"));
                     edit->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     tooManyArgument(tagName, indexStr, 2, error);
-                    qDebug()<<"SieveConditionEnvelope::setParamWidgetValue too many argument indexStr "<<indexStr;
+                    qDebug() << "SieveConditionEnvelope::setParamWidgetValue too many argument indexStr " << indexStr;
                 }
                 ++indexStr;
             } else if (tagName == QLatin1String("list")) {
                 if (indexStr == 0) {
-                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headertypecombobox"));
                     selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
                 } else if (indexStr == 1) {
-                    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("editaddress") );
+                    QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("editaddress"));
                     edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 }
                 ++indexStr;
@@ -170,14 +169,13 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveConditionEnvelope::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveConditionEnvelope::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
     }
     return true;
 }
-
 
 QString KSieveUi::SieveConditionEnvelope::href() const
 {

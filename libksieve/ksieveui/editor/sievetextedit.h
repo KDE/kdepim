@@ -25,32 +25,33 @@
 
 class QCompleter;
 class QMenu;
-namespace PimCommon {
+namespace PimCommon
+{
 class SieveSyntaxHighlighter;
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 
 class SieveLineNumberArea;
-
 
 class KSIEVEUI_EXPORT SieveTextEdit : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
 
 public:
-    explicit SieveTextEdit( QWidget *parent = 0 );
+    explicit SieveTextEdit(QWidget *parent = 0);
     ~SieveTextEdit();
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth() const;
 
-    void setSieveCapabilities( const QStringList &capabilities );
+    void setSieveCapabilities(const QStringList &capabilities);
 
     void setShowHelpMenu(bool b);
 
 private Q_SLOTS:
-    void slotInsertCompletion( const QString& );
+    void slotInsertCompletion(const QString &);
     void slotUpdateLineNumberAreaWidth(int newBlockCount);
     void slotUpdateLineNumberArea(const QRect &, int);
     void slotHelp();
@@ -58,8 +59,8 @@ private Q_SLOTS:
 protected:
     QString wordUnderCursor() const;
     void initCompleter();
-    void keyPressEvent(QKeyEvent* e);
-    void resizeEvent(QResizeEvent *event);    
+    void keyPressEvent(QKeyEvent *e);
+    void resizeEvent(QResizeEvent *event);
     void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
 
 Q_SIGNALS:

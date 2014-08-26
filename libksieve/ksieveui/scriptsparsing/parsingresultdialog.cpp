@@ -33,7 +33,7 @@ using namespace KSieveUi;
 ParsingResultDialog::ParsingResultDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Sieve Parsing" ) );
+    setWindowTitle(i18n("Sieve Parsing"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -44,9 +44,9 @@ ParsingResultDialog::ParsingResultDialog(QWidget *parent)
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     user1Button->setText(i18n("Save As..."));
 
-    mTextEdit = new PimCommon::PlainTextEditorWidget( this );
+    mTextEdit = new PimCommon::PlainTextEditorWidget(this);
     new XMLPrintingSyntaxHighLighter(mTextEdit->editor()->document());
-    mTextEdit->setReadOnly( true );
+    mTextEdit->setReadOnly(true);
     mainLayout->addWidget(mTextEdit);
     mainLayout->addWidget(buttonBox);
 
@@ -66,22 +66,22 @@ void ParsingResultDialog::setResultParsing(const QString &result)
 
 void ParsingResultDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "ParsingResultDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "ParsingResultDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void ParsingResultDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "ParsingResultDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "ParsingResultDialog");
+    group.writeEntry("Size", size());
 }
 
 void ParsingResultDialog::slotSaveAs()
 {
-    const QString filter = i18n( "*.xml|xml files (*.xml)\n*|all files (*)" );
+    const QString filter = i18n("*.xml|xml files (*.xml)\n*|all files (*)");
     PimCommon::Util::saveTextAs(mTextEdit->toPlainText(), filter, this);
 }
 

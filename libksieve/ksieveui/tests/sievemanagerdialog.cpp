@@ -21,14 +21,14 @@
 
 #include <QApplication>
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-  QApplication app( argc, argv );
-  app.setQuitOnLastWindowClosed( false );
-  QApplication::setApplicationName(QStringLiteral("managersievescriptsdialogtest"));
-  QApplication::setApplicationVersion(QLatin1String("1.0"));
+    QApplication app(argc, argv);
+    app.setQuitOnLastWindowClosed(false);
+    QApplication::setApplicationName(QStringLiteral("managersievescriptsdialogtest"));
+    QApplication::setApplicationVersion(QLatin1String("1.0"));
 
-  KSieveUi::ManageSieveScriptsDialog *dlg = new KSieveUi::ManageSieveScriptsDialog;
-  dlg->exec();
-  return 0;
+    KSieveUi::ManageSieveScriptsDialog *dlg = new KSieveUi::ManageSieveScriptsDialog;
+    dlg->exec();
+    return 0;
 }

@@ -20,7 +20,8 @@
 
 #include <QTabWidget>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveScriptTabWidget : public QTabWidget
 {
     Q_OBJECT

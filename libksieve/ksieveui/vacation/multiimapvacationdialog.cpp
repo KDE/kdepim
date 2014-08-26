@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "multiimapvacationdialog.h"
 #include "vacationpagewidget.h"
 #include "ksieveui/util/util.h"
@@ -35,14 +34,13 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-
 using namespace KSieveUi;
 MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
     : KDialog(parent)
 {
-    setCaption( i18n("Configure \"Out of Office\" Replies") );
+    setCaption(i18n("Configure \"Out of Office\" Replies"));
 
-    KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
+    KWindowSystem::setIcons(winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop), IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small), IconSize(KIconLoader::Small)));
 
     mStackedWidget = new QStackedWidget;
     setMainWidget(mStackedWidget);
@@ -74,7 +72,7 @@ MultiImapVacationDialog::~MultiImapVacationDialog()
 
 void MultiImapVacationDialog::switchToServerNamePage(const QString &serverName)
 {
-    for (int i=0; i < mTabWidget->count(); ++i) {
+    for (int i = 0; i < mTabWidget->count(); ++i) {
         if (mTabWidget->tabText(i) == serverName) {
             mTabWidget->setCurrentIndex(i);
             break;
@@ -91,26 +89,28 @@ void MultiImapVacationDialog::init()
 {
     bool foundOneImap = false;
     const Akonadi::AgentInstance::List instances = KSieveUi::Util::imapAgentInstances();
-    foreach ( const Akonadi::AgentInstance &instance, instances ) {
-        if ( instance.status() == Akonadi::AgentInstance::Broken )
+    foreach (const Akonadi::AgentInstance &instance, instances) {
+        if (instance.status() == Akonadi::AgentInstance::Broken) {
             continue;
+        }
 
-        const QUrl url = KSieveUi::Util::findSieveUrlForAccount( instance.identifier() );
-        if ( !url.isEmpty() ) {
+        const QUrl url = KSieveUi::Util::findSieveUrlForAccount(instance.identifier());
+        if (!url.isEmpty()) {
             const QString serverName = instance.name();
             createPage(serverName, url);
             foundOneImap = true;
         }
     }
     if (foundOneImap) {
-        setButtons( Ok | Cancel | Default );
-        setDefaultButton( Ok );
+        setButtons(Ok | Cancel | Default);
+        setDefaultButton(Ok);
     } else {
         mStackedWidget->setCurrentIndex(1);
-        setButtons( Close );
+        setButtons(Close);
     }
-    if (mTabWidget->count() <= 1)
+    if (mTabWidget->count() <= 1) {
         mTabWidget->tabBar()->hide();
+    }
 }
 
 void MultiImapVacationDialog::createPage(const QString &serverName, const QUrl &url)
@@ -123,36 +123,37 @@ void MultiImapVacationDialog::createPage(const QString &serverName, const QUrl &
 
 void MultiImapVacationDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "MultiImapVacationDialog" );
-    const QSize size = group.readEntry( "Size", QSize() );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "MultiImapVacationDialog");
+    const QSize size = group.readEntry("Size", QSize());
+    if (size.isValid()) {
+        resize(size);
     } else {
-        resize( sizeHint().width(), sizeHint().height() );
+        resize(sizeHint().width(), sizeHint().height());
     }
 }
 
 void MultiImapVacationDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "MultiImapVacationDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "MultiImapVacationDialog");
+    group.writeEntry("Size", size());
 }
 
 void MultiImapVacationDialog::slotOkClicked()
 {
-    for (int i=0; i < mTabWidget->count(); ++i) {
+    for (int i = 0; i < mTabWidget->count(); ++i) {
         VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(mTabWidget->widget(i));
         if (vacationPage) {
             VacationCreateScriptJob *job = vacationPage->writeScript();
-            if (job)
+            if (job) {
                 mListCreateJob.append(job);
+            }
         }
     }
 }
 
 void MultiImapVacationDialog::slotDefaultClicked()
 {
-    for (int i=0; i < mTabWidget->count(); ++i) {
+    for (int i = 0; i < mTabWidget->count(); ++i) {
         VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(mTabWidget->widget(i));
         if (vacationPage) {
             vacationPage->setDefault();

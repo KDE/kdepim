@@ -24,13 +24,14 @@
 
 class QTabWidget;
 class QStackedWidget;
-namespace KSieveUi {
+namespace KSieveUi
+{
 class VacationCreateScriptJob;
 class KSIEVEUI_EXPORT MultiImapVacationDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit MultiImapVacationDialog(QWidget *parent=0);
+    explicit MultiImapVacationDialog(QWidget *parent = 0);
     ~MultiImapVacationDialog();
 
     QList<VacationCreateScriptJob *> listCreateJob() const;
@@ -38,7 +39,7 @@ public:
     void switchToServerNamePage(const QString &serverName);
 
 private slots:
-    void slotOkClicked();    
+    void slotOkClicked();
     void slotDefaultClicked();
 
 private:

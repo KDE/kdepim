@@ -19,15 +19,16 @@
 #define SIEVEACTIONABSTRACTFLAGS_H
 
 #include "sieveaction.h"
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionAbstractFlags : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent = 0);
 
-    QWidget *createParamWidget( QWidget *parent ) const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    QWidget *createParamWidget(QWidget *parent) const;
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
     QString code(QWidget *) const;
     QStringList needRequires(QWidget *parent) const;
 
@@ -38,6 +39,5 @@ public:
     QString serverNeedsCapability() const;
 };
 }
-
 
 #endif // SIEVEACTIONABSTRACTFLAGS_H

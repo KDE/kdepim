@@ -23,7 +23,8 @@
 
 #include <QByteArray>
 
-namespace KManageSieve {
+namespace KManageSieve
+{
 
 /** A response from a managesieve server.
  * @internal
@@ -39,8 +40,8 @@ public:
     };
 
     Response()
-        : m_type( None ),
-          m_quantity( 0 )
+        : m_type(None),
+          m_quantity(0)
     {
     }
     Type type() const;
@@ -61,7 +62,7 @@ public:
     bool operationSuccessful() const;
 
     void clear();
-    bool parseResponse( const QByteArray &line );
+    bool parseResponse(const QByteArray &line);
 
 private:
     Type m_type;

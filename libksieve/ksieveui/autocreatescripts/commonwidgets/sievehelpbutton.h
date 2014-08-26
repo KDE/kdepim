@@ -20,12 +20,13 @@
 
 #include <QToolButton>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveHelpButton : public QToolButton
 {
     Q_OBJECT
 public:
-    explicit SieveHelpButton(QWidget *parent=0);
+    explicit SieveHelpButton(QWidget *parent = 0);
     ~SieveHelpButton();
 
 protected:

@@ -23,7 +23,8 @@
 class KComboBox;
 class QLineEdit;
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SelectBodyTypeWidget : public QWidget
 {
     Q_OBJECT

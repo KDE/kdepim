@@ -15,22 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SIEVEACTIONFILEINTO_H
 #define SIEVEACTIONFILEINTO_H
 #include "sieveaction.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionFileInto : public SieveAction
 {
     Q_OBJECT
 public:
     SieveActionFileInto(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
     QString code(QWidget *) const;
-    QWidget *createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
     QStringList needRequires(QWidget *parent) const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;
     QString help() const;

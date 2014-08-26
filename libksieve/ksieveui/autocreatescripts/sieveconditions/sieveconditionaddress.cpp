@@ -42,13 +42,12 @@ SieveCondition *SieveConditionAddress::newAction()
     return new SieveConditionAddress;
 }
 
-QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionAddress::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
-
 
     SelectAddressPartComboBox *selectAddressPart = new SelectAddressPartComboBox;
     connect(selectAddressPart, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
@@ -82,24 +81,24 @@ QWidget *SieveConditionAddress::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionAddress::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtypecombobox"));
     bool isNegative = false;
     const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
-    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox *>(QLatin1String("addresspartcombobox"));
     const QString selectAddressPartStr = selectAddressPart->code();
 
-    const SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+    const SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headertypecombobox"));
     const QString selectHeaderTypeStr = selectHeaderType->code();
 
-    const QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("editaddress") );
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("editaddress"));
     const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed(), false);
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("address %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
 
 QStringList SieveConditionAddress::needRequires(QWidget *w) const
 {
-    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox *>(QLatin1String("addresspartcombobox"));
     return QStringList() << selectAddressPart->extraRequire();
 }
 
@@ -108,7 +107,7 @@ QString SieveConditionAddress::help() const
     return i18n("The \"address\" test matches Internet addresses in structured headers that contain addresses.  It returns true if any header contains any key in the specified part of the address, as modified by the comparator and the match keyword.");
 }
 
-bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error )
+bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error)
 {
     int index = 0;
     int indexStr = 0;
@@ -123,26 +122,26 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                 ++index;
             } else if (tagName == QLatin1String("str")) {
                 if (indexStr == 0) {
-                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headertypecombobox"));
                     selectHeaderType->setCode(e.text());
                 } else if (indexStr == 1) {
-                    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("editaddress") );
+                    QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("editaddress"));
                     edit->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     tooManyArgument(tagName, indexStr, 2, error);
-                    qDebug()<<" SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
+                    qDebug() << " SieveConditionAddress::setParamWidgetValue too many argument :" << index;
                 }
                 ++indexStr;
             } else if (tagName == QLatin1String("list")) {
                 if (indexStr == 0) {
-                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headertypecombobox"));
                     selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
                 } else if (indexStr == 1) {
-                    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("editaddress") );
+                    QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("editaddress"));
                     edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 } else {
                     tooManyArgument(tagName, indexStr, 2, error);
-                    qDebug()<<" SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
+                    qDebug() << " SieveConditionAddress::setParamWidgetValue too many argument :" << index;
                 }
                 ++indexStr;
             } else if (tagName == QLatin1String("crlf")) {
@@ -151,27 +150,27 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveConditionAddress::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveConditionAddress::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
     }
     if (lstTagValue.count() == 1) {
         QString specificError;
-        SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+        SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtypecombobox"));
         selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(lstTagValue.at(0), notCondition), name(), specificError);
         if (!specificError.isEmpty()) { //Test if default match type == is
-            SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+            SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox *>(QLatin1String("addresspartcombobox"));
             selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(lstTagValue.at(0)), name(), error);
         }
     } else if (lstTagValue.count() == 2) {
-        SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+        SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox *>(QLatin1String("addresspartcombobox"));
         selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(lstTagValue.at(0)), name(), error);
-        SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+        SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtypecombobox"));
         selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(lstTagValue.at(1), notCondition), name(), error);
     } else if (lstTagValue.count() > 2) {
         tooManyArgument(QLatin1String("tag"), lstTagValue.count(), 2, error);
-        qDebug()<<"SieveConditionAddress::setParamWidgetValue too many argument :"<<lstTagValue.count();
+        qDebug() << "SieveConditionAddress::setParamWidgetValue too many argument :" << lstTagValue.count();
     }
     return true;
 }

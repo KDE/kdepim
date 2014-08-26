@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SIEVECONDITIONWIDGETLISTER_H
 #define SIEVECONDITIONWIDGETLISTER_H
 
@@ -25,11 +24,13 @@ class QPushButton;
 class QGridLayout;
 class QDomElement;
 
-namespace PimCommon {
+namespace PimCommon
+{
 class MinimumComboBox;
 }
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveCondition;
 class SieveHelpButton;
 class SieveConditionWidget : public QWidget
@@ -39,7 +40,7 @@ public:
     explicit SieveConditionWidget(QWidget *parent);
     ~SieveConditionWidget();
 
-    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled);
     void generatedScript(QString &script, QStringList &requires);
     void setCondition(const QString &conditionName, const QDomElement &element, bool notCondition, QString &error);
 
@@ -56,9 +57,9 @@ Q_SIGNALS:
 
 private:
     void initWidget();
-    void setFilterCondition( QWidget *widget );
+    void setFilterCondition(QWidget *widget);
     void reset();
-    QList<KSieveUi::SieveCondition*> mConditionList;
+    QList<KSieveUi::SieveCondition *> mConditionList;
     QPushButton *mAdd;
     QPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
@@ -81,16 +82,16 @@ Q_SIGNALS:
     void valueChanged();
 
 public Q_SLOTS:
-    void slotAddWidget( QWidget *w );
-    void slotRemoveWidget( QWidget *w );
+    void slotAddWidget(QWidget *w);
+    void slotRemoveWidget(QWidget *w);
 
 protected:
-    void clearWidget( QWidget *aWidget );
-    QWidget *createWidget( QWidget *parent );
+    void clearWidget(QWidget *aWidget);
+    QWidget *createWidget(QWidget *parent);
 
 private:
     void loadTest(const QDomElement &e, bool notCondition, QString &error);
-    void reconnectWidget(SieveConditionWidget *w );
+    void reconnectWidget(SieveConditionWidget *w);
     void updateAddRemoveButton();
 };
 }

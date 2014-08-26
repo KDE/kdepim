@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sieveeditorwebview.h"
 #include <QMenu>
 #include <QWebPage>
@@ -36,11 +35,13 @@ void SieveEditorWebView::contextMenuEvent(QContextMenuEvent *ev)
 {
     QMenu menu;
     QAction *act = pageAction(QWebPage::Back);
-    if (act->isEnabled())
+    if (act->isEnabled()) {
         menu.addAction(act);
+    }
     act = pageAction(QWebPage::Forward);
-    if (act->isEnabled())
+    if (act->isEnabled()) {
         menu.addAction(act);
+    }
 
     if (menu.actions().count() > 0) {
         QAction *separator = new QAction(&menu);
@@ -49,8 +50,9 @@ void SieveEditorWebView::contextMenuEvent(QContextMenuEvent *ev)
     }
 
     act = pageAction(QWebPage::CopyLinkToClipboard);
-    if (act->isEnabled())
+    if (act->isEnabled()) {
         menu.addAction(act);
+    }
 
     if (menu.actions().count() > 0) {
         QAction *separator = new QAction(&menu);
@@ -58,8 +60,9 @@ void SieveEditorWebView::contextMenuEvent(QContextMenuEvent *ev)
         menu.addAction(separator);
     }
     act = pageAction(QWebPage::Reload);
-    if (act->isEnabled())
+    if (act->isEnabled()) {
         menu.addAction(act);
+    }
     menu.exec(ev->globalPos());
 }
 

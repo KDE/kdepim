@@ -28,7 +28,7 @@ SieveHelpButton::SieveHelpButton(QWidget *parent)
     : QToolButton(parent)
 {
     setToolTip(i18n("Help"));
-    setIcon( QIcon::fromTheme( QLatin1String("help-hint") ) );
+    setIcon(QIcon::fromTheme(QLatin1String("help-hint")));
 }
 
 SieveHelpButton::~SieveHelpButton()
@@ -36,13 +36,11 @@ SieveHelpButton::~SieveHelpButton()
 
 }
 
-
-bool SieveHelpButton::event(QEvent* event)
+bool SieveHelpButton::event(QEvent *event)
 {
-    if (event->type() == QEvent::WhatsThisClicked)
-    {
-        QWhatsThisClickedEvent* clicked = static_cast<QWhatsThisClickedEvent*>(event);
-        new KRun( clicked->href(), this );
+    if (event->type() == QEvent::WhatsThisClicked) {
+        QWhatsThisClickedEvent *clicked = static_cast<QWhatsThisClickedEvent *>(event);
+        new KRun(clicked->href(), this);
         QWhatsThis::hideText();
         return true;
     }

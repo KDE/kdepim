@@ -29,9 +29,9 @@ QDomDocument ParsingUtil::parseScript(const QString &scriptStr, bool &result)
 {
     const QByteArray script = scriptStr.toUtf8();
 
-    KSieve::Parser parser( script.begin(), script.begin() + script.length() );
+    KSieve::Parser parser(script.begin(), script.begin() + script.length());
     KSieveUi::XMLPrintingScriptBuilder psb;
-    parser.setScriptBuilder( &psb );
+    parser.setScriptBuilder(&psb);
     if (parser.parse()) {
         result = true;
         return psb.toDom();

@@ -47,24 +47,24 @@ static sasl_callback_t callbacks[] = {
 
 using namespace KManageSieve;
 
-Session::Session( QObject *parent ) :
-    QObject( parent ),
-    m_socket( new KTcpSocket( this ) ),
-    m_sasl_conn( 0 ),
-    m_sasl_client_interact( 0 ),
-    m_currentJob( 0 ),
+Session::Session(QObject *parent) :
+    QObject(parent),
+    m_socket(new KTcpSocket(this)),
+    m_sasl_conn(0),
+    m_sasl_client_interact(0),
+    m_currentJob(0),
     m_sslCheck(0),
-    m_state( None ),
-    m_pendingQuantity( -1 ),
-    m_supportsStartTls( false )
+    m_state(None),
+    m_pendingQuantity(-1),
+    m_supportsStartTls(false)
 {
     qDebug();
-    connect( m_socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
-    connect( m_socket, SIGNAL(error(KTcpSocket::Error)), SLOT(socketError()) );
-    connect( m_socket, SIGNAL(disconnected()), SLOT(socketError()) );
+    connect(m_socket, SIGNAL(readyRead()), SLOT(dataReceived()));
+    connect(m_socket, SIGNAL(error(KTcpSocket::Error)), SLOT(socketError()));
+    connect(m_socket, SIGNAL(disconnected()), SLOT(socketError()));
 
     static bool saslInitialized = false;
-    if ( !saslInitialized ) {
+    if (!saslInitialized) {
         initSASL();
         saslInitialized = true;
     }
@@ -73,126 +73,129 @@ Session::Session( QObject *parent ) :
 Session::~Session()
 {
     qDebug();
-    disconnectFromHost( false );
+    disconnectFromHost(false);
     delete m_socket;
     delete m_sslCheck;
 }
 
-void Session::connectToHost( const QUrl &url )
+void Session::connectToHost(const QUrl &url)
 {
     qDebug() << url;
-    if ( m_socket->state() == KTcpSocket::ConnectedState || m_socket->state() == KTcpSocket::ConnectingState )
+    if (m_socket->state() == KTcpSocket::ConnectedState || m_socket->state() == KTcpSocket::ConnectingState) {
         return;
+    }
 
     m_url = url;
-    m_socket->connectToHost( url.host(), url.port() ? url.port() : 4190 );
+    m_socket->connectToHost(url.host(), url.port() ? url.port() : 4190);
     m_state = PreTlsCapabilities;
 }
 
-void Session::disconnectFromHost( bool sendLogout )
+void Session::disconnectFromHost(bool sendLogout)
 {
-    if ( sendLogout )
-        sendData( "LOGOUT" );
+    if (sendLogout) {
+        sendData("LOGOUT");
+    }
     m_socket->disconnectFromHost();
-    if ( m_currentJob )
-        killJob( m_currentJob );
-    foreach ( SieveJob* job, m_jobs )
-        killJob( job );
+    if (m_currentJob) {
+        killJob(m_currentJob);
+    }
+    foreach (SieveJob *job, m_jobs) {
+        killJob(job);
+    }
     deleteLater();
 }
 
 void Session::dataReceived()
 {
-    if ( m_pendingQuantity > 0 ) {
-        const QByteArray buffer = m_socket->read( qMin( m_pendingQuantity, m_socket->bytesAvailable() ) );
+    if (m_pendingQuantity > 0) {
+        const QByteArray buffer = m_socket->read(qMin(m_pendingQuantity, m_socket->bytesAvailable()));
         m_data += buffer;
         m_pendingQuantity -= buffer.size();
-        if ( m_pendingQuantity <= 0 ) {
+        if (m_pendingQuantity <= 0) {
             qDebug() << "S: " << m_data.trimmed();
-            processResponse( m_lastResponse, m_data );
+            processResponse(m_lastResponse, m_data);
         }
     }
 
-    while ( m_socket->canReadLine() ) {
+    while (m_socket->canReadLine()) {
         QByteArray line = m_socket->readLine();
-        if ( line.endsWith( "\r\n" ) ) { //krazy:exclude=strings
-            line.chop( 2 );
+        if (line.endsWith("\r\n")) {     //krazy:exclude=strings
+            line.chop(2);
         }
-        if ( line.isEmpty() ) {
+        if (line.isEmpty()) {
             continue; // ignore CRLF after data blocks
         }
         qDebug() << "S: " << line;
         Response r;
-        if ( !r.parseResponse( line ) ) {
+        if (!r.parseResponse(line)) {
             qDebug() << "protocol violation!";
-            disconnectFromHost( false );
+            disconnectFromHost(false);
         }
         qDebug() << r.type() << r.key() << r.value() << r.extra() << r.quantity();
 
         m_lastResponse = r;
-        if ( r.type() == Response::Quantity ) {
+        if (r.type() == Response::Quantity) {
             m_data.clear();
             m_pendingQuantity = r.quantity();
             dataReceived(); // in case the data block is already completely in the buffer
             return;
-        } else if ( r.operationResult() == Response::Bye ) {
-            disconnectFromHost( false );
+        } else if (r.operationResult() == Response::Bye) {
+            disconnectFromHost(false);
             return;
         }
-        processResponse( r, QByteArray() );
+        processResponse(r, QByteArray());
     }
 }
 
 void Session::feedBack(const QByteArray &data)
 {
     Response response;
-    if ( !response.parseResponse( data ) ) {
-        m_errorMsg = KIO::buildErrorString( KIO::ERR_UNKNOWN, i18n( "Syntax error." ) );
+    if (!response.parseResponse(data)) {
+        m_errorMsg = KIO::buildErrorString(KIO::ERR_UNKNOWN, i18n("Syntax error."));
         disconnectFromHost();
         return;
     }
     m_lastResponse = response;
 
-    if ( response.type() == Response::Quantity ) {
+    if (response.type() == Response::Quantity) {
         m_data.clear();
         m_pendingQuantity = response.quantity();
         dataReceived();
         return;
     } else {
-        processResponse( response, QByteArray() );
+        processResponse(response, QByteArray());
     }
 }
 
 void Session::processResponse(const KManageSieve::Response &response, const QByteArray &data)
 {
-    switch ( m_state ) {
+    switch (m_state) {
     // should probably be refactored into a capability job
     case PreTlsCapabilities:
     case PostTlsCapabilities:
-        if ( response.type() == Response::Action ) {
-            if ( response.operationSuccessful() ) {
+        if (response.type() == Response::Action) {
+            if (response.operationSuccessful()) {
                 qDebug() << "Sieve server ready & awaiting authentication.";
-                if ( m_state == PreTlsCapabilities ) {
-                    if ( !allowUnencrypted() && !QSslSocket::supportsSsl() ) {
-                        m_errorMsg = KIO::buildErrorString( KIO::ERR_SLAVE_DEFINED, i18n("Cannot use TLS since the underlying Qt library does not support it.") );
+                if (m_state == PreTlsCapabilities) {
+                    if (!allowUnencrypted() && !QSslSocket::supportsSsl()) {
+                        m_errorMsg = KIO::buildErrorString(KIO::ERR_SLAVE_DEFINED, i18n("Cannot use TLS since the underlying Qt library does not support it."));
                         disconnectFromHost();
                         return;
                     }
-                    if ( !allowUnencrypted() && QSslSocket::supportsSsl() && !m_supportsStartTls &&
-                         KMessageBox::warningContinueCancel( 0,
-                                                             i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
-                                                                  "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
-                                                             i18n("Server Does Not Advertise TLS"), KGuiItem(i18n("&Start TLS nonetheless")), KStandardGuiItem::cancel(),
-                                                             QString::fromLatin1( "ask_starttls_%1" ).arg(m_url.host() )  ) != KMessageBox::Continue )
-                    {
-                        m_errorMsg = KIO::buildErrorString( KIO::ERR_USER_CANCELED, i18n("TLS encryption requested, but not supported by server.") );
+                    if (!allowUnencrypted() && QSslSocket::supportsSsl() && !m_supportsStartTls &&
+                            KMessageBox::warningContinueCancel(0,
+                                    i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
+                                         "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
+                                    i18n("Server Does Not Advertise TLS"), KGuiItem(i18n("&Start TLS nonetheless")), KStandardGuiItem::cancel(),
+                                    QString::fromLatin1("ask_starttls_%1").arg(m_url.host())) != KMessageBox::Continue) {
+                        m_errorMsg = KIO::buildErrorString(KIO::ERR_USER_CANCELED, i18n("TLS encryption requested, but not supported by server."));
                         disconnectFromHost();
                         return;
                     }
 
-                    if ( m_supportsStartTls && QSslSocket::supportsSsl() ) {
+                    if (m_supportsStartTls && QSslSocket::supportsSsl()) {
                         m_state = StartTls;
-                        sendData( "STARTTLS" );
+                        sendData("STARTTLS");
                     } else {
                         m_state = Authenticating;
                         startAuthentication();
@@ -204,15 +207,15 @@ void Session::processResponse(const KManageSieve::Response &response, const QByt
             } else {
                 qDebug() << "Unknown action " << response.action() << ".";
             }
-        } else if ( response.key() == "IMPLEMENTATION" ) {
-            m_implementation = QString::fromLatin1( response.value() );
+        } else if (response.key() == "IMPLEMENTATION") {
+            m_implementation = QString::fromLatin1(response.value());
             qDebug() << "Connected to Sieve server: " << response.value();
-        } else if ( response.key() == "SASL") {
-            m_saslMethods = QString::fromLatin1( response.value() ).split( ' ', QString::SkipEmptyParts );
+        } else if (response.key() == "SASL") {
+            m_saslMethods = QString::fromLatin1(response.value()).split(' ', QString::SkipEmptyParts);
             qDebug() << "Server SASL authentication methods: " << m_saslMethods;
-        } else if ( response.key() == "SIEVE" ) {
+        } else if (response.key() == "SIEVE") {
             // Save script capabilities
-            m_sieveExtensions = QString::fromLatin1( response.value() ).split( ' ', QString::SkipEmptyParts );
+            m_sieveExtensions = QString::fromLatin1(response.value()).split(' ', QString::SkipEmptyParts);
             qDebug() << "Server script capabilities: " << m_sieveExtensions;
         } else if (response.key() == "STARTTLS") {
             qDebug() << "Server supports TLS";
@@ -222,45 +225,45 @@ void Session::processResponse(const KManageSieve::Response &response, const QByt
         }
         break;
     case StartTls:
-        if ( response.operationSuccessful() ) {
-            QMetaObject::invokeMethod( this, "startSsl", Qt::QueuedConnection ); // queued to avoid deadlock with waitForEncrypted
+        if (response.operationSuccessful()) {
+            QMetaObject::invokeMethod(this, "startSsl", Qt::QueuedConnection);   // queued to avoid deadlock with waitForEncrypted
             m_state = None;
         } else {
-            m_errorMsg = KIO::buildErrorString( KIO::ERR_SLAVE_DEFINED, i18n("The server does not seem to support TLS. Disable TLS if you want to connect without encryption.") );
+            m_errorMsg = KIO::buildErrorString(KIO::ERR_SLAVE_DEFINED, i18n("The server does not seem to support TLS. Disable TLS if you want to connect without encryption."));
             disconnectFromHost();
         }
         break;
     case Authenticating:
-        if ( response.operationResult() == Response::Other ) {
-            if ( !saslClientStep( data ) ) {
-                m_errorMsg = KIO::buildErrorString( KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8( sasl_errdetail( m_sasl_conn ) ) );
+        if (response.operationResult() == Response::Other) {
+            if (!saslClientStep(data)) {
+                m_errorMsg = KIO::buildErrorString(KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8(sasl_errdetail(m_sasl_conn)));
                 disconnectFromHost();
                 return;
             }
         } else {
             m_state = None;
-            sasl_dispose( &m_sasl_conn );
-            if ( response.operationSuccessful() ) {
+            sasl_dispose(&m_sasl_conn);
+            if (response.operationSuccessful()) {
                 qDebug() << "Authentication complete.";
-                QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
+                QMetaObject::invokeMethod(this, "executeNextJob", Qt::QueuedConnection);
             } else {
-                KIO::buildErrorString( KIO::ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1", QString::fromLatin1( response.action() ) ) );
+                KIO::buildErrorString(KIO::ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1", QString::fromLatin1(response.action())));
                 disconnectFromHost();
                 return;
             }
         }
         break;
     default:
-        if ( m_currentJob ) {
-            if ( m_currentJob->d->handleResponse( response, data ) ) {
+        if (m_currentJob) {
+            if (m_currentJob->d->handleResponse(response, data)) {
                 m_currentJob = 0;
-                QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
+                QMetaObject::invokeMethod(this, "executeNextJob", Qt::QueuedConnection);
             }
             break;
         } else {
             // we can get here in the kill current job case
-            if ( response.operationResult() != Response::Other ) {
-                QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
+            if (response.operationResult() != Response::Other) {
+                QMetaObject::invokeMethod(this, "executeNextJob", Qt::QueuedConnection);
                 return;
             }
         }
@@ -271,34 +274,35 @@ void Session::processResponse(const KManageSieve::Response &response, const QByt
 void Session::socketError()
 {
     qDebug() << m_socket->errorString();
-    disconnectFromHost( false );
+    disconnectFromHost(false);
 }
 
 void Session::scheduleJob(SieveJob *job)
 {
     qDebug() << job;
-    m_jobs.enqueue( job );
-    QMetaObject::invokeMethod( this, "executeNextJob", Qt::QueuedConnection );
+    m_jobs.enqueue(job);
+    QMetaObject::invokeMethod(this, "executeNextJob", Qt::QueuedConnection);
 }
 
-void Session::killJob(SieveJob* job)
+void Session::killJob(SieveJob *job)
 {
     qDebug() << job;
-    if ( m_currentJob == job ) {
+    if (m_currentJob == job) {
         m_currentJob->d->killed();
         m_currentJob = 0;
     } else {
-        m_jobs.removeAll( job );
+        m_jobs.removeAll(job);
         job->d->killed();
     }
 }
 
 void Session::executeNextJob()
 {
-    if ( m_socket->state() != KTcpSocket::ConnectedState || m_state != None || m_currentJob || m_jobs.isEmpty() )
+    if (m_socket->state() != KTcpSocket::ConnectedState || m_state != None || m_currentJob || m_jobs.isEmpty()) {
         return;
+    }
     m_currentJob = m_jobs.dequeue();
-    m_currentJob->d->run( this );
+    m_currentJob->d->run(this);
 }
 
 QStringList Session::sieveExtensions() const
@@ -311,13 +315,13 @@ bool Session::requestCapabilitiesAfterStartTls() const
     // Cyrus didn't send CAPABILITIES after STARTTLS until 2.3.11, which is
     // not standard conform, but we need to support that anyway.
     // m_implementation looks like this 'Cyrus timsieved v2.2.12' for Cyrus btw.
-    QRegExp regExp( "Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)", Qt::CaseInsensitive );
-    if ( regExp.indexIn( m_implementation ) >= 0 ) {
-        const int major = regExp.cap( 1 ).toInt();
-        const int minor = regExp.cap( 2 ).toInt();
-        const int patch = regExp.cap( 3 ).toInt();
-        const QString vendor = regExp.cap( 4 );
-        if ( major < 2 || (major == 2 && (minor < 3 || (minor == 3 && patch < 11))) || (vendor == "-kolab-nocaps") ) {
+    QRegExp regExp("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)", Qt::CaseInsensitive);
+    if (regExp.indexIn(m_implementation) >= 0) {
+        const int major = regExp.cap(1).toInt();
+        const int minor = regExp.cap(2).toInt();
+        const int patch = regExp.cap(3).toInt();
+        const QString vendor = regExp.cap(4);
+        if (major < 2 || (major == 2 && (minor < 3 || (minor == 3 && patch < 11))) || (vendor == "-kolab-nocaps")) {
             qDebug() << "Enabling compat mode for Cyrus < 2.3.11 or Cyrus marked as \"kolab-nocaps\"";
             return true;
         }
@@ -334,23 +338,23 @@ void Session::slotEncryptedDone()
 void Session::sslResult(bool encrypted)
 {
     const KSslCipher cipher = m_socket->sessionCipher();
-    if ( !encrypted || m_socket->sslErrors().count() > 0 || m_socket->encryptionMode() != KTcpSocket::SslClientMode
-         || cipher.isNull() || cipher.usedBits() == 0 )
-    {
+    if (!encrypted || m_socket->sslErrors().count() > 0 || m_socket->encryptionMode() != KTcpSocket::SslClientMode
+            || cipher.isNull() || cipher.usedBits() == 0) {
         qDebug() << "Initial SSL handshake failed. cipher.isNull() is" << cipher.isNull()
                  << ", cipher.usedBits() is" << cipher.usedBits()
                  << ", the socket says:" <<  m_socket->errorString()
                  << "and the list of SSL errors contains"
                  << m_socket->sslErrors().count() << "items.";
 
-        if ( !KIO::SslUi::askIgnoreSslErrors( m_socket ) ) {
+        if (!KIO::SslUi::askIgnoreSslErrors(m_socket)) {
             disconnectFromHost();
             return;
         }
     }
     qDebug() << "TLS negotiation done.";
-    if ( requestCapabilitiesAfterStartTls() )
-        sendData( "CAPABILITY" );
+    if (requestCapabilitiesAfterStartTls()) {
+        sendData("CAPABILITY");
+    }
     m_state = PostTlsCapabilities;
 }
 
@@ -365,21 +369,21 @@ void Session::startSsl()
     qDebug();
     if (!m_sslCheck) {
         m_sslCheck = new QTimer;
-        m_sslCheck->setInterval(60*1000);
+        m_sslCheck->setInterval(60 * 1000);
         connect(m_sslCheck, SIGNAL(timeout()), this, SLOT(slotSslTimeout()));
     }
-    m_socket->setAdvertisedSslVersion( KTcpSocket::TlsV1 );
+    m_socket->setAdvertisedSslVersion(KTcpSocket::TlsV1);
     m_socket->ignoreSslErrors();
     connect(m_socket, SIGNAL(encrypted()), SLOT(slotEncryptedDone()));
     m_sslCheck->start();
     m_socket->startClientEncryption();
 }
 
-void Session::sendData(const QByteArray& data)
+void Session::sendData(const QByteArray &data)
 {
     qDebug() << "C: " << data;
-    m_socket->write( data );
-    m_socket->write( "\r\n" );
+    m_socket->write(data);
+    m_socket->write("\r\n");
 }
 
 void Session::startAuthentication()
@@ -391,28 +395,28 @@ void Session::startAuthentication()
     uint outlen;
     const char *mechusing = NULL;
 
-    result = sasl_client_new( "sieve", m_url.host().toLatin1(), 0, 0, callbacks, 0, &m_sasl_conn );
-    if ( result != SASL_OK ) {
-        m_errorMsg = KIO::buildErrorString( KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8( sasl_errdetail( m_sasl_conn ) ) );
+    result = sasl_client_new("sieve", m_url.host().toLatin1(), 0, 0, callbacks, 0, &m_sasl_conn);
+    if (result != SASL_OK) {
+        m_errorMsg = KIO::buildErrorString(KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8(sasl_errdetail(m_sasl_conn)));
         disconnectFromHost();
         return;
     }
 
     do {
-        result = sasl_client_start( m_sasl_conn, requestedSaslMethod().join(" ").toLatin1(), &m_sasl_client_interact, &out, &outlen, &mechusing);
-        if ( result == SASL_INTERACT ) {
-            if ( !saslInteract( m_sasl_client_interact ) ) {
-                m_errorMsg = KIO::buildErrorString( KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8( sasl_errdetail( m_sasl_conn ) ) );
-                sasl_dispose( &m_sasl_conn );
+        result = sasl_client_start(m_sasl_conn, requestedSaslMethod().join(" ").toLatin1(), &m_sasl_client_interact, &out, &outlen, &mechusing);
+        if (result == SASL_INTERACT) {
+            if (!saslInteract(m_sasl_client_interact)) {
+                m_errorMsg = KIO::buildErrorString(KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8(sasl_errdetail(m_sasl_conn)));
+                sasl_dispose(&m_sasl_conn);
                 disconnectFromHost();
                 return;
             }
         }
-    } while ( result == SASL_INTERACT );
+    } while (result == SASL_INTERACT);
 
-    if ( result != SASL_CONTINUE && result != SASL_OK ) {
-        m_errorMsg = KIO::buildErrorString( KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8( sasl_errdetail( m_sasl_conn ) ) );
-        sasl_dispose( &m_sasl_conn );
+    if (result != SASL_CONTINUE && result != SASL_OK) {
+        m_errorMsg = KIO::buildErrorString(KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8(sasl_errdetail(m_sasl_conn)));
+        sasl_dispose(&m_sasl_conn);
         disconnectFromHost();
         return;
     }
@@ -420,27 +424,28 @@ void Session::startAuthentication()
     qDebug() << "Preferred authentication method is " << mechusing << ".";
 
     QByteArray authCommand = "AUTHENTICATE \"" + QByteArray(mechusing) + QByteArray("\"");
-    const QByteArray challenge = QByteArray::fromRawData( out, outlen ).toBase64();
-    if ( !challenge.isEmpty() ) {
+    const QByteArray challenge = QByteArray::fromRawData(out, outlen).toBase64();
+    if (!challenge.isEmpty()) {
         authCommand += " \"";
         authCommand += challenge;
         authCommand += '\"';
     }
-    sendData( authCommand );
+    sendData(authCommand);
 }
 
 QStringList Session::requestedSaslMethod() const
 {
     const QString m = QUrlQuery(m_url).queryItemValue(QLatin1String("x-mech"));
-    if ( !m.isEmpty() )
-        return QStringList( m );
+    if (!m.isEmpty()) {
+        return QStringList(m);
+    }
     return m_saslMethods;
 }
 
-bool Session::saslInteract(void* in)
+bool Session::saslInteract(void *in)
 {
     qDebug();
-    sasl_interact_t *interact = ( sasl_interact_t * ) in;
+    sasl_interact_t *interact = (sasl_interact_t *) in;
 
     KIO::AuthInfo ai;
     ai.url = m_url;
@@ -453,31 +458,31 @@ bool Session::saslInteract(void* in)
 
     //some mechanisms do not require username && pass, so it doesn't need a popup
     //window for getting this info
-    for ( ; interact->id != SASL_CB_LIST_END; interact++ ) {
-        if ( interact->id == SASL_CB_AUTHNAME || interact->id == SASL_CB_PASS ) {
-            if ( ai.username.isEmpty() || ai.password.isEmpty()) {
+    for (; interact->id != SASL_CB_LIST_END; interact++) {
+        if (interact->id == SASL_CB_AUTHNAME || interact->id == SASL_CB_PASS) {
+            if (ai.username.isEmpty() || ai.password.isEmpty()) {
 
                 QPointer<KPasswordDialog> dlg =
-                        new KPasswordDialog(
-                            0,
-                            KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword
-                            );
-                dlg->setUsername( ai.username );
-                dlg->setPassword( ai.password );
-                dlg->setKeepPassword( ai.keepPassword );
-                dlg->setPrompt( ai.prompt );
-                dlg->setUsernameReadOnly( ai.readOnly );
-                dlg->setWindowTitle( ai.caption );
-                dlg->addCommentLine( ai.commentLabel, ai.comment );
+                    new KPasswordDialog(
+                    0,
+                    KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword
+                );
+                dlg->setUsername(ai.username);
+                dlg->setPassword(ai.password);
+                dlg->setKeepPassword(ai.keepPassword);
+                dlg->setPrompt(ai.prompt);
+                dlg->setUsernameReadOnly(ai.readOnly);
+                dlg->setWindowTitle(ai.caption);
+                dlg->addCommentLine(ai.commentLabel, ai.comment);
 
                 bool gotIt = false;
-                if ( dlg->exec() ) {
-                    m_url.setUserName( dlg->username() );
-                    m_url.setPassword( dlg->password() );
+                if (dlg->exec()) {
+                    m_url.setUserName(dlg->username());
+                    m_url.setPassword(dlg->password());
                     gotIt = true;
                 }
                 delete dlg;
-                if ( !gotIt ) {
+                if (!gotIt) {
                     return false;
                 }
             }
@@ -485,26 +490,28 @@ bool Session::saslInteract(void* in)
         }
     }
 
-    interact = ( sasl_interact_t * ) in;
-    while( interact->id != SASL_CB_LIST_END ) {
+    interact = (sasl_interact_t *) in;
+    while (interact->id != SASL_CB_LIST_END) {
         qDebug() << "SASL_INTERACT id: " << interact->id;
-        switch( interact->id ) {
+        switch (interact->id) {
         case SASL_CB_USER:
         case SASL_CB_AUTHNAME:
             qDebug() << "SASL_CB_[AUTHNAME|USER]: '" << m_url.userName() << "'";
-            interact->result = strdup( m_url.userName().toUtf8() );
-            if (interact->result )
-                interact->len = strlen( (const char *) interact->result );
-            else
+            interact->result = strdup(m_url.userName().toUtf8());
+            if (interact->result) {
+                interact->len = strlen((const char *) interact->result);
+            } else {
                 interact->len = 0;
+            }
             break;
         case SASL_CB_PASS:
             qDebug() << "SASL_CB_PASS: [hidden] ";
-            interact->result = strdup( m_url.password().toUtf8() );
-            if (interact->result )
-                interact->len = strlen( (const char *) interact->result );
-            else
+            interact->result = strdup(m_url.password().toUtf8());
+            if (interact->result) {
+                interact->len = strlen((const char *) interact->result);
+            } else {
                 interact->len = 0;
+            }
             break;
         default:
             interact->result = NULL;
@@ -522,30 +529,30 @@ bool Session::saslClientStep(const QByteArray &challenge)
     const char *out = NULL;
     uint outlen;
 
-    const QByteArray challenge_decoded = QByteArray::fromBase64( challenge );
+    const QByteArray challenge_decoded = QByteArray::fromBase64(challenge);
     do {
         result =
-                sasl_client_step( m_sasl_conn,
-                                  challenge_decoded.isEmpty() ? 0 : challenge_decoded.data(),
-                                  challenge_decoded.size(),
-                                  &m_sasl_client_interact,
-                                  &out, &outlen );
-        if ( result == SASL_INTERACT ) {
-            if ( !saslInteract( m_sasl_client_interact ) ) {
-                sasl_dispose( &m_sasl_conn );
+            sasl_client_step(m_sasl_conn,
+                             challenge_decoded.isEmpty() ? 0 : challenge_decoded.data(),
+                             challenge_decoded.size(),
+                             &m_sasl_client_interact,
+                             &out, &outlen);
+        if (result == SASL_INTERACT) {
+            if (!saslInteract(m_sasl_client_interact)) {
+                sasl_dispose(&m_sasl_conn);
                 return false;
             }
         }
-    } while ( result == SASL_INTERACT );
+    } while (result == SASL_INTERACT);
 
     qDebug() << "sasl_client_step: " << result;
-    if ( result != SASL_CONTINUE && result != SASL_OK ) {
-        qDebug() << "sasl_client_step failed with: " << result << QString::fromUtf8( sasl_errdetail( m_sasl_conn ) );
-        sasl_dispose( &m_sasl_conn );
+    if (result != SASL_CONTINUE && result != SASL_OK) {
+        qDebug() << "sasl_client_step failed with: " << result << QString::fromUtf8(sasl_errdetail(m_sasl_conn));
+        sasl_dispose(&m_sasl_conn);
         return false;
     }
 
-    sendData('\"' + QByteArray::fromRawData( out, outlen ).toBase64() + '\"');
+    sendData('\"' + QByteArray::fromRawData(out, outlen).toBase64() + '\"');
     return true;
 }
 
@@ -554,7 +561,7 @@ QString Session::errorMessage() const
     return m_errorMsg;
 }
 
-void Session::setErrorMessage(const QString& msg)
+void Session::setErrorMessage(const QString &msg)
 {
     m_errorMsg = msg;
 }

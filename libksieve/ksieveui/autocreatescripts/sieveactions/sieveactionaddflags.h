@@ -15,19 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SIEVEACTIONADDFLAGS_H
 #define SIEVEACTIONADDFLAGS_H
 
 #include "sieveactionabstractflags.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveActionAddFlags : public SieveActionAbstractFlags
 {
     Q_OBJECT
 public:
     SieveActionAddFlags(QObject *parent = 0);
-    static SieveAction* newAction();
+    static SieveAction *newAction();
     QString flagsCode() const;
     QString help() const;
     QString href() const;

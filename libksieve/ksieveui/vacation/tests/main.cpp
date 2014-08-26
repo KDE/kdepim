@@ -22,13 +22,12 @@
 
 #include "vacation/multiimapvacationdialog.h"
 
-
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData( QStringLiteral("vacationmultiscripttest"), 
-                          i18n("VacationMultiScriptTest_Gui"), 
-                          QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("vacationmultiscripttest"),
+                         i18n("VacationMultiScriptTest_Gui"),
+                         QLatin1String("1.0"));
 
     KAboutData::setApplicationData(aboutData);
 
@@ -40,7 +39,7 @@ int main( int argc, char** argv )
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    app.setQuitOnLastWindowClosed( false );
+    app.setQuitOnLastWindowClosed(false);
 
     KSieveUi::MultiImapVacationDialog dlg;
 

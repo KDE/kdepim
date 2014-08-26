@@ -40,7 +40,7 @@ SieveCondition *SieveConditionEnvironment::newAction()
     return new SieveConditionEnvironment;
 }
 
-QWidget *SieveConditionEnvironment::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionEnvironment::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QGridLayout *grid = new QGridLayout;
@@ -80,10 +80,10 @@ QWidget *SieveConditionEnvironment::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionEnvironment::code(QWidget *w) const
 {
-    const QLineEdit *item =  w->findChild<QLineEdit*>( QLatin1String("item") );
+    const QLineEdit *item =  w->findChild<QLineEdit *>(QLatin1String("item"));
     const QString itemStr = item->text();
 
-    const QLineEdit *value =  w->findChild<QLineEdit*>( QLatin1String("value") );
+    const QLineEdit *value =  w->findChild<QLineEdit *>(QLatin1String("value"));
     const QString valueStr = value->text();
 
     return QString::fromLatin1("environment \"%1\" \"%2\"").arg(itemStr).arg(valueStr);
@@ -119,14 +119,14 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 if (index == 0) {
-                    QLineEdit *item =  w->findChild<QLineEdit*>( QLatin1String("item") );
+                    QLineEdit *item =  w->findChild<QLineEdit *>(QLatin1String("item"));
                     item->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else if (index == 1) {
-                    QLineEdit *value =  w->findChild<QLineEdit*>( QLatin1String("value") );
+                    QLineEdit *value =  w->findChild<QLineEdit *>(QLatin1String("value"));
                     value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug()<<" SieveConditionEnvironment::setParamWidgetValue to many argument "<<index;
+                    qDebug() << " SieveConditionEnvironment::setParamWidgetValue to many argument " << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("crlf")) {
@@ -135,15 +135,13 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveActionSetVariable::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
     }
     return true;
 }
-
-
 
 QString KSieveUi::SieveConditionEnvironment::href() const
 {

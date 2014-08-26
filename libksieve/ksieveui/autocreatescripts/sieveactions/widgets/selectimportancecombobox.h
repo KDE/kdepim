@@ -19,7 +19,8 @@
 
 #include <KComboBox>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SelectImportanceCombobox : public KComboBox
 {
     Q_OBJECT

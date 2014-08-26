@@ -21,36 +21,37 @@
 #include <QUrl>
 #include <QtCore/QPointer>
 
-namespace KManageSieve {
+namespace KManageSieve
+{
 
 class SieveJob::Private
 {
-  public:
-    Private( SieveJob *qq )
-      : q( qq ), mFileExists( DontKnow ), mInteractive( true )
+public:
+    Private(SieveJob *qq)
+        : q(qq), mFileExists(DontKnow), mInteractive(true)
     {
     }
 
     enum Command {
-      Get,
-      Put,
-      Activate,
-      Deactivate,
-      SearchActive,
-      List,
-      Delete
+        Get,
+        Put,
+        Activate,
+        Deactivate,
+        SearchActive,
+        List,
+        Delete
     };
 
     enum Existence {
-      DontKnow,
-      Yes,
-      No
+        DontKnow,
+        Yes,
+        No
     };
 
-    static Session* sessionForUrl( const QUrl &url );
+    static Session *sessionForUrl(const QUrl &url);
 
-    void run( Session *session );
-    bool handleResponse( const Response &response, const QByteArray &data );
+    void run(Session *session);
+    bool handleResponse(const Response &response, const QByteArray &data);
     void killed();
 
     SieveJob *q;

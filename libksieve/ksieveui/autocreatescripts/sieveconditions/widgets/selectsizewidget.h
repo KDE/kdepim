@@ -21,13 +21,14 @@
 #include <QWidget>
 
 class QSpinBox;
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SelectSizeTypeComboBox;
 class SelectSizeWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SelectSizeWidget(QWidget *parent=0);
+    explicit SelectSizeWidget(QWidget *parent = 0);
     ~SelectSizeWidget();
 
     QString code() const;

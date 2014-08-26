@@ -44,8 +44,9 @@ void SieveEditorLoadProgressIndicator::startAnimation()
 
 void SieveEditorLoadProgressIndicator::stopAnimation(bool success)
 {
-    if (mProgressTimer->isActive())
+    if (mProgressTimer->isActive()) {
         mProgressTimer->stop();
+    }
     Q_EMIT loadFinished(success);
 }
 
@@ -53,8 +54,9 @@ void SieveEditorLoadProgressIndicator::slotTimerDone()
 {
     Q_EMIT pixmapChanged(mProgressPix.frameAt(mProgressCount));
     ++mProgressCount;
-    if (mProgressCount == 8)
+    if (mProgressCount == 8) {
         mProgressCount = 0;
+    }
 
     mProgressTimer->start(300);
 }

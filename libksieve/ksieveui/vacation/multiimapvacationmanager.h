@@ -22,12 +22,13 @@
 
 #include "ksieveui_export.h"
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class KSIEVEUI_EXPORT MultiImapVacationManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit MultiImapVacationManager(QObject *parent=0);
+    explicit MultiImapVacationManager(QObject *parent = 0);
     ~MultiImapVacationManager();
 
     void checkVacation();

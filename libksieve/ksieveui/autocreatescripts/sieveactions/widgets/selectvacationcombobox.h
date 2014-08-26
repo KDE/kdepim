@@ -19,7 +19,8 @@
 #define SELECTVACATIONCOMBOBOX_H
 #include <KComboBox>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SelectVacationComboBox : public KComboBox
 {
     Q_OBJECT

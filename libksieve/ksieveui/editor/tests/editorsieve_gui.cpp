@@ -26,13 +26,12 @@
 #include <kaboutdata.h>
 #include <KLocalizedString>
 
-
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData( QStringLiteral("editorsieve_gui"), 
-                          i18n("EditorSievetest_Gui"), 
-                          QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("editorsieve_gui"),
+                         i18n("EditorSievetest_Gui"),
+                         QLatin1String("1.0"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;
@@ -43,19 +42,16 @@ int main (int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-
     SieveEditorTestWidget *dialog = new SieveEditorTestWidget;
     const QStringList capabilities = PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities();
     //Add all capabilities for testing
     dialog->setSieveCapabilities(capabilities);
-    if (dialog->exec() ) {
-        qDebug()<<" generated script :\n"<<dialog->script()<<"\n";
+    if (dialog->exec()) {
+        qDebug() << " generated script :\n" << dialog->script() << "\n";
     }
     delete dialog;
     return 0;
 }
-
-
 
 SieveEditorTestWidget::SieveEditorTestWidget(QWidget *parent)
     : KSieveUi::SieveEditor(parent)
@@ -70,6 +66,6 @@ SieveEditorTestWidget::~SieveEditorTestWidget()
 
 void SieveEditorTestWidget::slotValueChanged(bool changed)
 {
-    qDebug()<<" value changed :"<<changed;
+    qDebug() << " value changed :" << changed;
 }
 

@@ -15,18 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef VACATIONWARNINGWIDGET_H
 #define VACATIONWARNINGWIDGET_H
 
 #include <KMessageWidget>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class VacationWarningWidget : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit VacationWarningWidget(QWidget *parent=0);
+    explicit VacationWarningWidget(QWidget *parent = 0);
     ~VacationWarningWidget();
 };
 }

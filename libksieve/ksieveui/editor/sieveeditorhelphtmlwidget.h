@@ -20,14 +20,15 @@
 
 #include <QWidget>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditorWebView;
 class SieveEditorLoadProgressIndicator;
 class SieveEditorHelpHtmlWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorHelpHtmlWidget(QWidget *parent=0);
+    explicit SieveEditorHelpHtmlWidget(QWidget *parent = 0);
     ~SieveEditorHelpHtmlWidget();
 
     void setHelp(const QString &variableName, const QString &url);

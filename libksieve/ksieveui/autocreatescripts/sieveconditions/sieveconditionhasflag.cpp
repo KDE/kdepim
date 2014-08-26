@@ -42,7 +42,7 @@ SieveCondition *SieveConditionHasFlag::newAction()
     return new SieveConditionHasFlag;
 }
 
-QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
+QWidget *SieveConditionHasFlag::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -52,7 +52,6 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
     selecttype->setObjectName(QLatin1String("matchtype"));
     connect(selecttype, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     lay->addWidget(selecttype);
-
 
     QGridLayout *grid = new QGridLayout;
     grid->setMargin(0);
@@ -82,20 +81,20 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionHasFlag::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
+    const SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
     bool isNegative = false;
     const QString matchString = matchTypeCombo->code(isNegative);
 
     QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("hasflag %1").arg(matchString);
 
     if (hasVariableSupport) {
-        const QLineEdit *variableName = w->findChild<QLineEdit*>(QLatin1String("variablename"));
+        const QLineEdit *variableName = w->findChild<QLineEdit *>(QLatin1String("variablename"));
         const QString variableNameStr = variableName->text();
         if (!variableNameStr.isEmpty()) {
             result += QLatin1String(" \"") + variableNameStr + QLatin1Char('"');
         }
 
-        const QLineEdit *value = w->findChild<QLineEdit*>(QLatin1String("value"));
+        const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
         const QString valueStr = value->text();
         result += QLatin1String(" \"") + valueStr + QLatin1Char('"');
     }
@@ -105,12 +104,14 @@ QString SieveConditionHasFlag::code(QWidget *w) const
 QStringList SieveConditionHasFlag::needRequires(QWidget *) const
 {
     QStringList lst;
-    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags"))) {
         lst << QLatin1String("imap4flags");
-    else
+    } else {
         lst << QLatin1String("imapflags");
-    if (hasVariableSupport)
+    }
+    if (hasVariableSupport) {
         lst << QLatin1String("variables");
+    }
     return lst;
 }
 
@@ -121,10 +122,11 @@ bool SieveConditionHasFlag::needCheckIfServerHasCapability() const
 
 QString SieveConditionHasFlag::serverNeedsCapability() const
 {
-    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags"))) {
         return QLatin1String("imap4flags");
-    else
+    } else {
         return QLatin1String("imapflags");
+    }
 }
 
 QString SieveConditionHasFlag::help() const
@@ -141,7 +143,7 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
-                SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
+                SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
                 matchTypeCombo->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 strList << e.text();
@@ -151,30 +153,30 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug()<<" SieveConditionExists::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug() << " SieveConditionExists::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
     }
     switch (strList.count()) {
     case 1: {
-        QLineEdit *value = w->findChild<QLineEdit*>(QLatin1String("value"));
+        QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
         value->setText(strList.at(0));
         break;
     }
     case 2: {
         if (hasVariableSupport) {
-            QLineEdit *variableName = w->findChild<QLineEdit*>(QLatin1String("variablename"));
+            QLineEdit *variableName = w->findChild<QLineEdit *>(QLatin1String("variablename"));
             variableName->setText(strList.at(0));
-            QLineEdit *value = w->findChild<QLineEdit*>(QLatin1String("value"));
+            QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
             value->setText(strList.at(1));
         } else {
-            qDebug()<<" SieveConditionHasFlag has not variable support";
+            qDebug() << " SieveConditionHasFlag has not variable support";
         }
         break;
     }
     default:
-        qDebug()<<" SieveConditionHasFlag::setParamWidgetValue str list count not correct :"<<strList.count();
+        qDebug() << " SieveConditionHasFlag::setParamWidgetValue str list count not correct :" << strList.count();
         break;
     }
     return true;
@@ -184,6 +186,4 @@ QString SieveConditionHasFlag::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
-
-
 

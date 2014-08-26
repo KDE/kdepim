@@ -23,7 +23,7 @@ MBoxImportWidget::MBoxImportWidget(QWidget *parent) :
     ui(new Ui::MBoxImportWidget)
 {
     ui->setupUi(this);
-    connect(ui->importMails,SIGNAL(clicked()),SIGNAL(importMailsClicked()));
+    connect(ui->importMails, SIGNAL(clicked()), SIGNAL(importMailsClicked()));
     connect(ui->mCollectionRequestor, &MailCommon::FolderRequester::folderChanged, this, &MBoxImportWidget::collectionChanged);
 }
 
@@ -37,16 +37,15 @@ MailImporter::ImportMailsWidget *MBoxImportWidget::mailWidget()
     return ui->mMailImporterWidget;
 }
 
-void MBoxImportWidget::collectionChanged(const Akonadi::Collection& collection)
+void MBoxImportWidget::collectionChanged(const Akonadi::Collection &collection)
 {
-    ui->importMails->setEnabled( collection.isValid() );
+    ui->importMails->setEnabled(collection.isValid());
 }
 
 Akonadi::Collection MBoxImportWidget::selectedCollection() const
 {
     return ui->mCollectionRequestor->collection();
 }
-
 
 void MBoxImportWidget::setImportButtonEnabled(bool enabled)
 {

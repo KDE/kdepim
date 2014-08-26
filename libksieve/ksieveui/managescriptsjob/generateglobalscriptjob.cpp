@@ -32,10 +32,12 @@ GenerateGlobalScriptJob::GenerateGlobalScriptJob(const QUrl &url, QObject *paren
 
 GenerateGlobalScriptJob::~GenerateGlobalScriptJob()
 {
-    if (mMasterjob)
+    if (mMasterjob) {
         mMasterjob->kill();
-    if (mUserJob)
+    }
+    if (mUserJob) {
         mUserJob->kill();
+    }
 }
 
 void GenerateGlobalScriptJob::addUserActiveScripts(const QStringList &lstScript)
@@ -55,37 +57,37 @@ void GenerateGlobalScriptJob::start()
 void GenerateGlobalScriptJob::writeMasterScript()
 {
     const QString masterScript = QLatin1String("# MASTER\n"
-                                               "#\n"
-                                               "# This file is authoritative for your system and MUST BE KEPT ACTIVE.\n"
-                                               "#\n"
-                                               "# Altering it is likely to render your account dysfunctional and may\n"
-                                               "# be violating your organizational or corporate policies.\n"
-                                               "# \n"
-                                               "# For more information on the mechanism and the conventions behind\n"
-                                               "# this script, see http://wiki.kolab.org/KEP:14\n"
-                                               "#\n"
-                                               "\n"
-                                               "require [\"include\"];\n"
-                                               "\n"
-                                               "# OPTIONAL: Includes for all or a group of users\n"
-                                               "# include :global \"all-users\";\n"
-                                               "# include :global \"this-group-of-users\";\n"
-                                               "\n"
-                                               "# The script maintained by the general management system\n"
-                                               "include :personal :optional \"MANAGEMENT\";\n"
-                                               "\n"
-                                               "# The script(s) maintained by one or more editors available to the user\n"
-                                               "include :personal :optional \"USER\";\n");
+                                 "#\n"
+                                 "# This file is authoritative for your system and MUST BE KEPT ACTIVE.\n"
+                                 "#\n"
+                                 "# Altering it is likely to render your account dysfunctional and may\n"
+                                 "# be violating your organizational or corporate policies.\n"
+                                 "# \n"
+                                 "# For more information on the mechanism and the conventions behind\n"
+                                 "# this script, see http://wiki.kolab.org/KEP:14\n"
+                                 "#\n"
+                                 "\n"
+                                 "require [\"include\"];\n"
+                                 "\n"
+                                 "# OPTIONAL: Includes for all or a group of users\n"
+                                 "# include :global \"all-users\";\n"
+                                 "# include :global \"this-group-of-users\";\n"
+                                 "\n"
+                                 "# The script maintained by the general management system\n"
+                                 "include :personal :optional \"MANAGEMENT\";\n"
+                                 "\n"
+                                 "# The script(s) maintained by one or more editors available to the user\n"
+                                 "include :personal :optional \"USER\";\n");
 
     QUrl url(mCurrentUrl);
     url = url.adjusted(QUrl::RemoveFilename);
     url.setPath(url.path() + QLatin1String("MASTER"));
-    mMasterjob = KManageSieve::SieveJob::put(url, masterScript, true, true );
-    connect( mMasterjob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-             this, SLOT(slotPutMasterResult(KManageSieve::SieveJob*,bool)) );
+    mMasterjob = KManageSieve::SieveJob::put(url, masterScript, true, true);
+    connect(mMasterjob, SIGNAL(result(KManageSieve::SieveJob *, bool, QString, bool)),
+            this, SLOT(slotPutMasterResult(KManageSieve::SieveJob *, bool)));
 }
 
-void GenerateGlobalScriptJob::slotPutMasterResult( KManageSieve::SieveJob *, bool success )
+void GenerateGlobalScriptJob::slotPutMasterResult(KManageSieve::SieveJob *, bool success)
 {
     if (!success) {
         Q_EMIT error(i18n("Error when we wrote \"MASTER\" script on server."));
@@ -114,12 +116,12 @@ void GenerateGlobalScriptJob::writeUserScript()
     QUrl url(mCurrentUrl);
     url = url.adjusted(QUrl::RemoveFilename);
     url.setPath(url.path() + QLatin1String("USER"));
-    mUserJob = KManageSieve::SieveJob::put(url, userScript, false, false );
-    connect( mUserJob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-             this, SLOT(slotPutUserResult(KManageSieve::SieveJob*,bool)) );
+    mUserJob = KManageSieve::SieveJob::put(url, userScript, false, false);
+    connect(mUserJob, SIGNAL(result(KManageSieve::SieveJob *, bool, QString, bool)),
+            this, SLOT(slotPutUserResult(KManageSieve::SieveJob *, bool)));
 }
 
-void GenerateGlobalScriptJob::slotPutUserResult( KManageSieve::SieveJob *, bool success )
+void GenerateGlobalScriptJob::slotPutUserResult(KManageSieve::SieveJob *, bool success)
 {
     mUserJob = 0;
     if (!success) {

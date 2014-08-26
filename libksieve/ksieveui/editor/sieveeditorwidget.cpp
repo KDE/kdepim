@@ -45,7 +45,6 @@
 #include <QPointer>
 #include <QDir>
 
-
 using namespace KSieveUi;
 
 SieveEditorWidget::SieveEditorWidget(QWidget *parent)
@@ -77,22 +76,20 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
 #endif
 
     QStringList overlays;
-    overlays <<QLatin1String("list-add");
-    mUpload = new QAction(QIcon( new KIconEngine( QLatin1String( "get-hot-new-stuff" ), 0, overlays)), i18n("Upload..."), this);
+    overlays << QLatin1String("list-add");
+    mUpload = new QAction(QIcon(new KIconEngine(QLatin1String("get-hot-new-stuff"), 0, overlays)), i18n("Upload..."), this);
     connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
     bar->addAction(mUpload);
 
     lay->addWidget(bar);
 
-
     QHBoxLayout *nameLayout = new QHBoxLayout;
-    QLabel *label = new QLabel( i18n( "Script name:" ) );
-    nameLayout->addWidget( label );
+    QLabel *label = new QLabel(i18n("Script name:"));
+    nameLayout->addWidget(label);
     mScriptName = new QLineEdit;
-    mScriptName->setReadOnly( true );
-    nameLayout->addWidget( mScriptName );
-    lay->addLayout( nameLayout );
-
+    mScriptName->setReadOnly(true);
+    nameLayout->addWidget(mScriptName);
+    lay->addLayout(nameLayout);
 
     lay->setMargin(0);
     setLayout(lay);
@@ -188,10 +185,11 @@ void SieveEditorWidget::changeMode(EditorMode mode)
 #if !defined(NDEBUG)
         mGenerateXml->setEnabled((mMode == TextMode));
 #endif
-        if (mMode == GraphicMode)
+        if (mMode == GraphicMode) {
             mCheckSyntax->setEnabled(false);
-        else
+        } else {
             mCheckSyntax->setEnabled(!mTextModeWidget->currentscript().isEmpty());
+        }
         Q_EMIT modeEditorChanged(mode);
     }
 }
@@ -218,7 +216,7 @@ QString SieveEditorWidget::script() const
         currentScript = mGraphicalModeWidget->currentscript();
         break;
     case Unknown:
-        qDebug()<<" Unknown Mode!";
+        qDebug() << " Unknown Mode!";
         break;
     }
     return currentScript;
@@ -229,40 +227,40 @@ QString SieveEditorWidget::originalScript() const
     return mOriginalScript;
 }
 
-void SieveEditorWidget::setScript( const QString &script )
+void SieveEditorWidget::setScript(const QString &script)
 {
-    mTextModeWidget->setScript( script );
+    mTextModeWidget->setScript(script);
     mOriginalScript = script;
 }
 
 void SieveEditorWidget::addFailedMessage(const QString &err)
 {
-    addMessageEntry( err, QColor( Qt::darkRed ) );
+    addMessageEntry(err, QColor(Qt::darkRed));
 }
 
 void SieveEditorWidget::addOkMessage(const QString &msg)
 {
-    addMessageEntry( msg, QColor( Qt::darkGreen ) );
+    addMessageEntry(msg, QColor(Qt::darkGreen));
 }
 
-void SieveEditorWidget::addMessageEntry( const QString &errorMsg, const QColor &color )
+void SieveEditorWidget::addMessageEntry(const QString &errorMsg, const QColor &color)
 {
     QString msg = errorMsg;
     msg.replace(QLatin1Char('\n'), QLatin1String("<br>"));
-    const QString logText = QString::fromLatin1( "<font color=%1>%2</font>" )
-           .arg( color.name() ).arg(msg);
+    const QString logText = QString::fromLatin1("<font color=%1>%2</font>")
+                            .arg(color.name()).arg(msg);
 
-    setDebugScript( logText );
+    setDebugScript(logText);
 }
 
-void SieveEditorWidget::setDebugScript( const QString &debug )
+void SieveEditorWidget::setDebugScript(const QString &debug)
 {
-    mTextModeWidget->setDebugScript( debug );
+    mTextModeWidget->setDebugScript(debug);
 }
 
-void SieveEditorWidget::setScriptName( const QString &name )
+void SieveEditorWidget::setScriptName(const QString &name)
 {
-    mScriptName->setText( name );
+    mScriptName->setText(name);
 }
 
 void SieveEditorWidget::resultDone()
@@ -270,7 +268,7 @@ void SieveEditorWidget::resultDone()
     mCheckSyntax->setEnabled(true);
 }
 
-void SieveEditorWidget::setSieveCapabilities( const QStringList &capabilities )
+void SieveEditorWidget::setSieveCapabilities(const QStringList &capabilities)
 {
     mTextModeWidget->setSieveCapabilities(capabilities);
     mGraphicalModeWidget->setSieveCapabilities(capabilities);
@@ -325,7 +323,7 @@ void SieveEditorWidget::slotSaveAs()
         mGraphicalModeWidget->saveAs(mScriptName->text());
         break;
     case Unknown:
-        qDebug()<<" Unknown mode";
+        qDebug() << " Unknown mode";
         break;
     }
 }
@@ -340,7 +338,7 @@ void SieveEditorWidget::slotImport()
         mGraphicalModeWidget->slotImport();
         break;
     case Unknown:
-        qDebug()<<" Unknown mode";
+        qDebug() << " Unknown mode";
         break;
     }
 }
@@ -380,7 +378,7 @@ void SieveEditorWidget::slotSwitchMode()
         break;
     }
     case Unknown:
-        qDebug()<<" Unknown mode";
+        qDebug() << " Unknown mode";
         break;
     }
 }
@@ -390,5 +388,4 @@ void SieveEditorWidget::slotSwitchTextMode(const QString &script)
     changeMode(TextMode);
     mTextModeWidget->setScript(script);
 }
-
 
