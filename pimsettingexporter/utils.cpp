@@ -92,6 +92,12 @@ QString Utils::jotPath()
     return QLatin1String("jot/");
 }
 
+QString Utils::notePath()
+{
+    return QLatin1String("note/");
+}
+
+
 QString Utils::prefixAkonadiConfigFile()
 {
     return QLatin1String("agent_config_");
