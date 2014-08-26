@@ -82,7 +82,7 @@ void SignatureController::suspend()
 void SignatureController::resume()
 {
     if ( m_identityCombo )
-        connect( m_identityCombo, SIGNAL(identityChanged(uint)), this, SLOT(identityChanged(uint)) );
+        connect(m_identityCombo, &KPIMIdentities::IdentityCombo::identityChanged, this, &SignatureController::identityChanged);
 }
 
 void SignatureController::appendSignature()

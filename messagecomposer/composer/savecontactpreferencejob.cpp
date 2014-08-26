@@ -46,7 +46,7 @@ SaveContactPreferenceJob::~SaveContactPreferenceJob()
 void SaveContactPreferenceJob::start()
 {
     Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob(this);
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotSearchContact(KJob*)) );
+    connect(job, &Akonadi::ContactSearchJob::result, this, &SaveContactPreferenceJob::slotSearchContact);
     job->setLimit( 1 );
     job->setQuery( Akonadi::ContactSearchJob::Email, mEmail );
     job->start();
@@ -89,7 +89,7 @@ void SaveContactPreferenceJob::slotSearchContact(KJob* job)
         item.setPayload<KABC::Addressee>( contact );
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, targetCollection );
-        connect(job, SIGNAL(result(KJob*)), SLOT(slotModifyCreateItem(KJob*)));
+        connect(job, &Akonadi::ContactSearchJob::result, this, &SaveContactPreferenceJob::slotModifyCreateItem);
     } else {
         Akonadi::Item item = items.first();
 
@@ -99,7 +99,7 @@ void SaveContactPreferenceJob::slotSearchContact(KJob* job)
         item.setPayload<KABC::Addressee>( contact );
 
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( item );
-        connect(job, SIGNAL(result(KJob*)), SLOT(slotModifyCreateItem(KJob*)));
+        connect(job, &Akonadi::ContactSearchJob::result, this, &SaveContactPreferenceJob::slotModifyCreateItem);
         job->start();
     }
 }
