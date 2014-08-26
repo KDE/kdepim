@@ -6,3 +6,5 @@ Migrate configrc done:
 - ktnef ( ktnefui.rc , ktnefrc )
 - kmailcvt (kmailcvtrc)
 - importwizard (importwizardrc)
+- agent/noteagents (akonadi_notes_agentrc, akonadi_notes_agent.notifyrc)
+- agent/sendlateragent ( akonadi_sendlater_agentrc, akonadi_sendlater_agent.notifyrc )
