@@ -89,7 +89,7 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     mAddBlockType->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
     mAddBlockType->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     newBlockLayout->addWidget(mAddBlockType);
-    connect(mAddBlockType, SIGNAL(clicked(bool)), SLOT(slotAddBlock()));
+    connect(mAddBlockType, &QPushButton::clicked, this, &SieveScriptBlockWidget::slotAddBlock);
 
     topLayout->addLayout(newBlockLayout);
 

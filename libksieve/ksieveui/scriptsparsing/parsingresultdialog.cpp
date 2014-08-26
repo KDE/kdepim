@@ -40,8 +40,8 @@ ParsingResultDialog::ParsingResultDialog(QWidget *parent)
     setLayout(mainLayout);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ParsingResultDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ParsingResultDialog::reject);
     user1Button->setText(i18n("Save As..."));
 
     mTextEdit = new PimCommon::PlainTextEditorWidget(this);
@@ -50,7 +50,7 @@ ParsingResultDialog::ParsingResultDialog(QWidget *parent)
     mainLayout->addWidget(mTextEdit);
     mainLayout->addWidget(buttonBox);
 
-    connect(user1Button, SIGNAL(clicked()), this, SLOT(slotSaveAs()));
+    connect(user1Button, &QPushButton::clicked, this, &ParsingResultDialog::slotSaveAs);
     readConfig();
 }
 

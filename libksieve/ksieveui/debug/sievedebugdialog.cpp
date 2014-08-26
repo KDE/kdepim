@@ -39,8 +39,8 @@ SieveDebugDialog::SieveDebugDialog(QWidget *parent)
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveDebugDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveDebugDialog::reject);
 
     // Collect all accounts
     const Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();

@@ -199,7 +199,7 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     mHelpButton = new SieveHelpButton;
     lay->addWidget(mHelpButton);
-    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    connect(mHelpButton, &SieveHelpButton::clicked, this, &SieveIncludeWidget::slotHelp);
 
     mIncludeLister = new SieveIncludeWidgetLister;
     connect(mIncludeLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));

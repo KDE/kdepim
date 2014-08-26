@@ -32,7 +32,7 @@ SieveEditorParsingMissingFeatureWarning::SieveEditorParsingMissingFeatureWarning
     setCloseButtonVisible(false);
     setMessageType(Error);
     setText(i18n("Some errors were found during parsing. <a href=\"sieveerrordetails\">(Details...)</a>"));
-    connect(this, SIGNAL(linkActivated(QString)), SLOT(slotShowDetails(QString)));
+    connect(this, &SieveEditorParsingMissingFeatureWarning::linkActivated, this, &SieveEditorParsingMissingFeatureWarning::slotShowDetails);
 
     switch (type) {
     case TextEditor: {
