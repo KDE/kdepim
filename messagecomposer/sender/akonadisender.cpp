@@ -168,7 +168,7 @@ void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, Mess
     message->assemble();
 
     // Queue the message.
-    connect( qjob, SIGNAL(result(KJob*)), this, SLOT(queueJobResult(KJob*)) );
+    connect(qjob, &MessageQueueJob::result, this, &AkonadiSender::queueJobResult);
     mPendingJobs.insert( qjob );
     qjob->start();
     qDebug() << "QueueJob started.";

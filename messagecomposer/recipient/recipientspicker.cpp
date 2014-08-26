@@ -69,7 +69,7 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
              SLOT(slotPicked()) );
 
     QPushButton *searchLDAPButton = new QPushButton( i18n("Search &Directory Service"), this );
-    connect( searchLDAPButton, SIGNAL(clicked()), SLOT(slotSearchLDAP()) );
+    connect(searchLDAPButton, &QPushButton::clicked, this, &RecipientsPicker::slotSearchLDAP);
     mainLayout->addWidget( searchLDAPButton );
 
     KConfig config( QLatin1String("kabldaprc") );
@@ -85,15 +85,15 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
     mUser3Button = new QPushButton;
     buttonBox->addButton(mUser3Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &RecipientsPicker::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &RecipientsPicker::reject);
     mainLayout->addWidget(buttonBox);
     mUser3Button->setText(i18n("Add as &To" ));
     mUser2Button->setText(i18n("Add as CC" ));
     mUser1Button->setText(i18n("Add as &BCC" ));
-    connect(mUser1Button,SIGNAL(clicked()),this,SLOT(slotBccClicked()));
-    connect(mUser2Button,SIGNAL(clicked()),this,SLOT(slotCcClicked()));
-    connect(mUser3Button,SIGNAL(clicked()),this,SLOT(slotToClicked()));
+    connect(mUser1Button, &QPushButton::clicked, this, &RecipientsPicker::slotBccClicked);
+    connect(mUser2Button, &QPushButton::clicked, this, &RecipientsPicker::slotCcClicked);
+    connect(mUser3Button, &QPushButton::clicked, this, &RecipientsPicker::slotToClicked);
 
     mView->searchLineEdit()->setFocus();
 

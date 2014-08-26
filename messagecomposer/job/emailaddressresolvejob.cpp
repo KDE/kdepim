@@ -70,27 +70,27 @@ void EmailAddressResolveJob::start()
     if ( containsAliases( mFrom ) ) {
         AliasesExpandJob *job = new AliasesExpandJob( mFrom, mDefaultDomainName, this );
         job->setProperty( "id", QLatin1String( "infoPartFrom" ) );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotAliasExpansionDone(KJob*)) );
+        connect(job, &AliasesExpandJob::result, this, &EmailAddressResolveJob::slotAliasExpansionDone);
         jobs << job;
     }
     if ( containsAliases( mTo ) ) {
         AliasesExpandJob *job = new AliasesExpandJob( mTo.join( QLatin1String( ", " ) ), mDefaultDomainName, this );
         job->setProperty( "id", QLatin1String( "infoPartTo" ) );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotAliasExpansionDone(KJob*)) );
+        connect(job, &AliasesExpandJob::result, this, &EmailAddressResolveJob::slotAliasExpansionDone);
         jobs << job;
     }
 
     if ( containsAliases( mCc ) ) {
         AliasesExpandJob *job = new AliasesExpandJob( mCc.join( QLatin1String( ", " ) ), mDefaultDomainName, this );
         job->setProperty( "id", QLatin1String( "infoPartCc" ) );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotAliasExpansionDone(KJob*)) );
+        connect(job, &AliasesExpandJob::result, this, &EmailAddressResolveJob::slotAliasExpansionDone);
         jobs << job;
     }
 
     if ( containsAliases( mBcc ) ) {
         AliasesExpandJob *job = new AliasesExpandJob( mBcc.join( QLatin1String( ", " ) ), mDefaultDomainName, this );
         job->setProperty( "id", QLatin1String( "infoPartBcc" ) );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotAliasExpansionDone(KJob*)) );
+        connect(job, &AliasesExpandJob::result, this, &EmailAddressResolveJob::slotAliasExpansionDone);
         jobs << job;
     }
 

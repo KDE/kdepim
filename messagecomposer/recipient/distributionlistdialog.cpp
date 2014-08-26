@@ -114,8 +114,8 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
     mainLayout->addWidget(topFrame);
     mUser1Button = new QPushButton;
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &DistributionListDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &DistributionListDialog::reject);
     //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     mUser1Button->setDefault(true);
@@ -176,7 +176,7 @@ void DistributionListDialog::setRecipients( const Recipient::List &recipients )
                 job->setQuery( Akonadi::ContactSearchJob::Email, email.toLower(), Akonadi::ContactSearchJob::ExactMatch );
                 job->setProperty( "name", name );
                 job->setProperty( "email", email );
-                connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedSetRecipients(KJob*)) );
+                connect(job, &Akonadi::ContactSearchJob::result, this, &DistributionListDialog::slotDelayedSetRecipients);
             }
         }
     }
@@ -272,7 +272,7 @@ void DistributionListDialog::slotUser1()
     Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
     job->setQuery( Akonadi::ContactGroupSearchJob::Name, name );
     job->setProperty( "name", name );
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedUser1(KJob*)) );
+    connect(job, &Akonadi::ContactSearchJob::result, this, &DistributionListDialog::slotDelayedUser1);
 }
 
 void DistributionListDialog::slotDelayedUser1( KJob *job )
@@ -320,7 +320,7 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
         groupItem.setPayload<KABC::ContactGroup>( group );
 
         Akonadi::Job *createJob = new Akonadi::ItemCreateJob( groupItem, targetCollection );
-        connect( createJob, SIGNAL(result(KJob*)), this, SLOT(slotContactGroupCreateJobResult(KJob*)) );
+        connect(createJob, &Akonadi::ItemCreateJob::result, this, &DistributionListDialog::slotContactGroupCreateJobResult);
     }
 
     delete dlg;

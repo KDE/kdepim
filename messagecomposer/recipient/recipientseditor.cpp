@@ -78,8 +78,8 @@ RecipientsEditor::RecipientsEditor( QWidget* parent )
     //   connect( mView, SIGNAL(focusRight()),
     //     mSideWidget, SLOT(setFocus()) );
 
-    connect( this, SIGNAL(lineAdded(KPIM::MultiplyingLine*)), SLOT(slotLineAdded(KPIM::MultiplyingLine*)) );
-    connect( this, SIGNAL(lineDeleted(int)), SLOT(slotLineDeleted(int)) );
+    connect(this, &RecipientsEditor::lineAdded, this, &RecipientsEditor::slotLineAdded);
+    connect(this, &RecipientsEditor::lineDeleted, this, &RecipientsEditor::slotLineDeleted);
 
     addData(); // one defaut line
 }
@@ -234,7 +234,7 @@ void RecipientsEditor::slotLineAdded( MultiplyingLine* line )
         }
         line->fixTabOrder( lines().last()->tabOut() );
     }
-    connect( rec, SIGNAL(countChanged()), SLOT(slotCalculateTotal()) );
+    connect(rec, &RecipientLineNG::countChanged, this, &RecipientsEditor::slotCalculateTotal);
     //   connect( rec->mEdit, SIGNAL(textChanged(QString)),
     //            SLOT(slotCalculateTotal()) );
 }
