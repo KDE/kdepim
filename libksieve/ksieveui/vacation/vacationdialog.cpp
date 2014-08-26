@@ -44,8 +44,8 @@ VacationDialog::VacationDialog(const QString &caption, QWidget *parent,
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotAccepted()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(slotRejected()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &VacationDialog::slotAccepted);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &VacationDialog::slotRejected);
     okButton->setDefault(true);
     setModal(modal);
     QWidget *w = new QWidget;
@@ -64,7 +64,7 @@ VacationDialog::VacationDialog(const QString &caption, QWidget *parent,
 
     KWindowSystem::setIcons(winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop), IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small), IconSize(KIconLoader::Small)));
     readConfig();
-    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(slotDialogDefaults()));
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &VacationDialog::slotDialogDefaults);
 }
 
 VacationDialog::~VacationDialog()

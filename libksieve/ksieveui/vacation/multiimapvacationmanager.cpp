@@ -58,7 +58,7 @@ void MultiImapVacationManager::checkVacation()
             const QString serverName = instance.name();
             ++mNumberOfJobs;
             VacationCheckJob *job = new VacationCheckJob(url, serverName, this);
-            connect(job, SIGNAL(scriptActive(bool, QString)), this, SLOT(slotScriptActive(bool, QString)));
+            connect(job, &VacationCheckJob::scriptActive, this, &MultiImapVacationManager::slotScriptActive);
         }
     }
 }

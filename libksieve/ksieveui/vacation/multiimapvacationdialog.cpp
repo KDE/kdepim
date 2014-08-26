@@ -61,8 +61,8 @@ MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
     mStackedWidget->setCurrentIndex(0);
     init();
     readConfig();
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
-    connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
+    connect(this, &MultiImapVacationDialog::okClicked, this, &MultiImapVacationDialog::slotOkClicked);
+    connect(this, &MultiImapVacationDialog::defaultClicked, this, &MultiImapVacationDialog::slotDefaultClicked);
 }
 
 MultiImapVacationDialog::~MultiImapVacationDialog()

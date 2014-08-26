@@ -134,8 +134,8 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
         mDialog->setDomainName(domainName);
         mDialog->enableDomainAndSendForSpam(!VacationSettings::allowOutOfOfficeUploadButNoSettings());
 
-        connect(mDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()));
-        connect(mDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCancel()));
+        connect(mDialog, &VacationDialog::okClicked, this, &Vacation::slotDialogOk);
+        connect(mDialog, &VacationDialog::cancelClicked, this, &Vacation::slotDialogCancel);
         mDialog->show();
     }
 
