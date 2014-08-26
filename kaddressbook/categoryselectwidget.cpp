@@ -110,7 +110,7 @@ void CategorySelectWidgetPrivate::init()
     updateTimer = new QTimer(this);
     updateTimer->setSingleShot(true);
     updateTimer->setInterval(200);
-    connect(updateTimer, SIGNAL(timeout()), SLOT(slotCheckedItemsTimer()));
+    connect(updateTimer, &QTimer::timeout, this, &CategorySelectWidgetPrivate::slotCheckedItemsTimer);
 
     //PORT QT5 hbox->addSpacing(KDialog::spacingHint());
 
@@ -118,14 +118,14 @@ void CategorySelectWidgetPrivate::init()
     but ->setAutoRaise(true);
     but->setIcon(QIcon::fromTheme(QLatin1String("edit-undo")));
     but->setToolTip(i18nc("@action:button", "Reset category filter"));
-    connect(but, SIGNAL(clicked(bool)), SLOT(slotSelectAll()));
+    connect(but, &QToolButton::clicked, this, &CategorySelectWidgetPrivate::slotSelectAll);
     hbox->addWidget(but);
 
     but = new QToolButton(q);
     but->setAutoRaise(true);
     but->setIcon(QIcon::fromTheme(QLatin1String("edit-clear")));
     but->setToolTip(i18nc("@action:button", "Clear category filter"));
-    connect(but, SIGNAL(clicked(bool)), SLOT(slotSelectNone()));
+    connect(but, &QToolButton::clicked, this, &CategorySelectWidgetPrivate::slotSelectNone);
     hbox->addWidget(but);
 
     QStandardItem *item = new QStandardItem(i18n("(Untagged)"));

@@ -43,15 +43,15 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     QDialogButtonBox *buttonBox = 0;
     if (defaultTemplate) {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+        connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveTemplateEditDialog::accept);
+        connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveTemplateEditDialog::reject);
     } else {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
         mOkButton = buttonBox->button(QDialogButtonBox::Ok);
         mOkButton->setDefault(true);
         mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+        connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveTemplateEditDialog::accept);
+        connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveTemplateEditDialog::reject);
         mOkButton->setDefault(true);
     }
     QWidget *w = new QWidget;
@@ -82,16 +82,16 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
 
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
-    connect( mTextEdit, SIGNAL(findText()), SLOT(slotFind()) );
+    connect(shortcut, &QShortcut::activated, this, &SieveTemplateEditDialog::slotFind);
+    connect(mTextEdit, &SieveTextEdit::findText, this, &SieveTemplateEditDialog::slotFind);
 
     w->setLayout(vbox);
     mainLayout->addWidget(w);
     if (!defaultTemplate) {
         if (mOkButton)
            mOkButton->setEnabled(false);
-        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateChanged()));
-        connect(mTextEdit, SIGNAL(textChanged()),SLOT(slotTemplateChanged()));
+        connect(mTemplateNameEdit, &QLineEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
+        connect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
         mTemplateNameEdit->setFocus();
     }
     mainLayout->addWidget(buttonBox);
