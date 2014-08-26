@@ -129,10 +129,9 @@ void CopyFolderJob::slotCopyNextChild( bool success )
     mNextChildFolder->close( "copyfolder" ); // refcount
   // previous sibling failed
   if ( !success ) {
-    kdDebug(5006) << "Failed to copy one subfolder, let's not continue:  " << mNewFolder->prettyURL() << endl;
+    kdDebug(5006) << "Failed to copy one subfolder, aborting copy:  " << mNewFolder->prettyURL() << endl;
     rollback();
-    emit folderCopyComplete( false );
-    deleteLater();
+    return;
   }
 
   KMFolderNode* node = mChildFolderNodeIterator.current();
