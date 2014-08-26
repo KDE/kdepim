@@ -44,8 +44,8 @@ VacationDialog::VacationDialog(const QString &caption, QWidget *parent,
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotAccepted()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(slotRejected()));
     okButton->setDefault(true);
     setModal(modal);
     QWidget *w = new QWidget;
@@ -72,6 +72,17 @@ VacationDialog::~VacationDialog()
     qDebug() << "~VacationDialog()";
     writeConfig();
 }
+
+void VacationDialog::slotAccepted()
+{
+    Q_EMIT okClicked();
+}
+
+void VacationDialog::slotRejected()
+{
+    Q_EMIT cancelClicked();
+}
+
 
 void VacationDialog::writeConfig()
 {

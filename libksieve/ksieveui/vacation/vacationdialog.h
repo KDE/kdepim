@@ -63,9 +63,15 @@ public:
     bool sendForSpam() const;
     void setSendForSpam(bool enable);
 
+Q_SIGNALS:
+    void okClicked();
+    void cancelClicked();
+
 private slots:
     void slotDialogDefaults();
 
+    void slotAccepted();
+    void slotRejected();
 private:
     void writeConfig();
     void readConfig();
