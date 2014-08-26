@@ -75,8 +75,8 @@ MailFilterAgent::MailFilterAgent( const QString &id )
 
     m_filterManager = new FilterManager( this );
 
-    connect(m_filterManager, SIGNAL(percent(int)), this, SLOT(emitProgress(int)));
-    connect(m_filterManager, SIGNAL(progressMessage(QString)), this, SLOT(emitProgressMessage(QString)));
+    connect(m_filterManager, &FilterManager::percent, this, &MailFilterAgent::emitProgress);
+    connect(m_filterManager, &FilterManager::progressMessage, this, &MailFilterAgent::emitProgressMessage);
 
     Akonadi::Monitor *collectionMonitor = new Akonadi::Monitor( this );
     collectionMonitor->fetchCollection( true );
@@ -138,7 +138,7 @@ void MailFilterAgent::initializeCollections()
 
     Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive, this );
     job->fetchScope().setContentMimeTypes( QStringList() << KMime::Message::mimeType() );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(initialCollectionFetchingDone(KJob*)) );
+    connect(job, &Akonadi::CollectionFetchJob::result, this, &MailFilterAgent::initialCollectionFetchingDone);
 }
 
 void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
