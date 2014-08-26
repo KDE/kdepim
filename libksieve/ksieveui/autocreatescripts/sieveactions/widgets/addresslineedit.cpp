@@ -26,7 +26,7 @@ AddressLineEdit::AddressLineEdit(QWidget *parent)
       mIncorrectEmail(false)
 {
     setClearButtonEnabled(true);
-    connect(this, SIGNAL(textChanged(QString)), SLOT(slotTextChanged()));
+    connect(this, &AddressLineEdit::textChanged, this, &AddressLineEdit::slotTextChanged);
 }
 
 AddressLineEdit::~AddressLineEdit()

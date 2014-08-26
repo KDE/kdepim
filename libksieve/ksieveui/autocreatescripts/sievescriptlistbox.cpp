@@ -155,19 +155,19 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     layout->addWidget(hb);
     setLayout(layout);
 
-    connect(mBtnNew, SIGNAL(clicked()), this, SLOT(slotNew()));
-    connect(mBtnDelete, SIGNAL(clicked()), this, SLOT(slotDelete()));
-    connect(mBtnRename, SIGNAL(clicked()), this, SLOT(slotRename()));
-    connect(mBtnDescription, SIGNAL(clicked()), this, SLOT(slotEditDescription()));
+    connect(mBtnNew, &QPushButton::clicked, this, &SieveScriptListBox::slotNew);
+    connect(mBtnDelete, &QPushButton::clicked, this, &SieveScriptListBox::slotDelete);
+    connect(mBtnRename, &QPushButton::clicked, this, &SieveScriptListBox::slotRename);
+    connect(mBtnDescription, &QPushButton::clicked, this, &SieveScriptListBox::slotEditDescription);
 
-    connect(mBtnUp, SIGNAL(clicked()), this, SLOT(slotUp()));
-    connect(mBtnDown, SIGNAL(clicked()), this, SLOT(slotDown()));
-    connect(mBtnTop, SIGNAL(clicked()), this, SLOT(slotTop()));
-    connect(mBtnBottom, SIGNAL(clicked()), this, SLOT(slotBottom()));
+    connect(mBtnUp, &QPushButton::clicked, this, &SieveScriptListBox::slotUp);
+    connect(mBtnDown, &QPushButton::clicked, this, &SieveScriptListBox::slotDown);
+    connect(mBtnTop, &QPushButton::clicked, this, &SieveScriptListBox::slotTop);
+    connect(mBtnBottom, &QPushButton::clicked, this, &SieveScriptListBox::slotBottom);
 
-    connect(mSieveListScript, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
-    connect(mSieveListScript, SIGNAL(itemActivated(QListWidgetItem *)), SLOT(slotItemActived(QListWidgetItem *)));
-    connect(mSieveListScript, SIGNAL(itemDoubleClicked(QListWidgetItem *)), SLOT(slotEditDescription()));
+    connect(mSieveListScript, &QListWidget::itemSelectionChanged, this, &SieveScriptListBox::updateButtons);
+    connect(mSieveListScript, &QListWidget::itemActivated, this, &SieveScriptListBox::slotItemActived);
+    connect(mSieveListScript, &QListWidget::itemDoubleClicked, this, &SieveScriptListBox::slotEditDescription);
     updateButtons();
 }
 

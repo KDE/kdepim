@@ -115,7 +115,7 @@ void SieveConditionWidget::initWidget()
     mHelpButton = new SieveHelpButton;
     mHelpButton->setEnabled(false);
     mLayout->addWidget(mHelpButton, 1, 0);
-    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    connect(mHelpButton, &SieveHelpButton::clicked, this, &SieveConditionWidget::slotHelp);
 
     mComboBox->addItem(QLatin1String(""));
     mComboBox->setCurrentIndex(mComboBox->count() - 1);

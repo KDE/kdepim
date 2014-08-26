@@ -48,9 +48,9 @@ SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
     mSplitter->setChildrenCollapsible(false);
     mSieveScript = new SieveScriptListBox(i18n("Sieve Script"));
     connect(mSieveScript, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
-    connect(mSieveScript, SIGNAL(addNewPage(KSieveUi::SieveScriptPage *)), SLOT(slotAddScriptPage(KSieveUi::SieveScriptPage *)));
-    connect(mSieveScript, SIGNAL(removePage(QWidget *)), SLOT(slotRemoveScriptPage(QWidget *)));
-    connect(mSieveScript, SIGNAL(activatePage(QWidget *)), SLOT(slotActivateScriptPage(QWidget *)));
+    connect(mSieveScript, &SieveScriptListBox::addNewPage, this, &SieveEditorGraphicalModeWidget::slotAddScriptPage);
+    connect(mSieveScript, &SieveScriptListBox::removePage, this, &SieveEditorGraphicalModeWidget::slotRemoveScriptPage);
+    connect(mSieveScript, &SieveScriptListBox::activatePage, this, &SieveEditorGraphicalModeWidget::slotActivateScriptPage);
     connect(mSieveScript, SIGNAL(enableButtonOk(bool)), SIGNAL(enableButtonOk(bool)));
     mSplitter->addWidget(mSieveScript);
     vlay->addWidget(mSplitter);
@@ -59,7 +59,7 @@ SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
     mSplitter->addWidget(mStackWidget);
 
     mSieveParsingWarning = new SieveEditorParsingMissingFeatureWarning(SieveEditorParsingMissingFeatureWarning::GraphicEditor);
-    connect(mSieveParsingWarning, SIGNAL(switchToTextMode()), SLOT(slotSwitchToTextMode()));
+    connect(mSieveParsingWarning, &SieveEditorParsingMissingFeatureWarning::switchToTextMode, this, &SieveEditorGraphicalModeWidget::slotSwitchToTextMode);
     vlay->addWidget(mSieveParsingWarning);
 
     setLayout(vlay);
