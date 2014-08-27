@@ -64,7 +64,7 @@ void StorageServiceWarning::slotClearLog()
 void StorageServiceWarning::showLog()
 {
     QPointer<StorageServiceLogDialog> dlg = new StorageServiceLogDialog(this);
-    connect(dlg, SIGNAL(clearLog()), this, SLOT(slotClearLog()));
+    connect(dlg.data(), &StorageServiceLogDialog::clearLog, this, &StorageServiceWarning::slotClearLog);
     dlg->setLog(mLogInformation);
     dlg->exec();
     delete dlg;
