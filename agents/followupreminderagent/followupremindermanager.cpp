@@ -75,7 +75,7 @@ void FollowUpReminderManager::load()
 void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col)
 {
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
-    connect(job, SIGNAL(finished(QString)), SLOT(slotCheckFollowUpFinished(QString)));
+    connect(job, &FollowUpReminderJob::finished, this, &FollowUpReminderManager::slotCheckFollowUpFinished);
     job->setItem(item);
     job->start();
 }

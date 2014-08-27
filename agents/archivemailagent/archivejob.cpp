@@ -91,8 +91,8 @@ void ArchiveJob::execute()
                               0,
                               KNotification::CloseOnTimeout,
                               QLatin1String("akonadi_archivemail_agent"));
-        connect(backupJob, SIGNAL(backupDone(QString)), this, SLOT(slotBackupDone(QString)));
-        connect(backupJob, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
+        connect(backupJob, &MailCommon::BackupJob::backupDone, this, &ArchiveJob::slotBackupDone);
+        connect(backupJob, &MailCommon::BackupJob::error, this, &ArchiveJob::slotError);
         backupJob->start();
     }
 }
