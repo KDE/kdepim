@@ -43,8 +43,8 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     mainLayout->addWidget(mainWidget);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ShowArchiveStructureDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ShowArchiveStructureDialog::reject);
     setModal( true );
     mTreeWidget = new QTreeWidget;
     mTreeWidget->header()->hide();
@@ -56,7 +56,7 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     readConfig();
     user1Button->setText(i18n("Save As Text..."));
     user1Button->setEnabled(result);
-    connect(user1Button, SIGNAL(clicked()), SLOT(slotExportAsLogFile()));
+    connect(user1Button, &QPushButton::clicked, this, &ShowArchiveStructureDialog::slotExportAsLogFile);
 }
 
 ShowArchiveStructureDialog::~ShowArchiveStructureDialog()

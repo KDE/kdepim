@@ -55,7 +55,7 @@ void SynchronizeResourceJob::nextSync()
         qDebug()<<" resource.name"<<resource.name();
         Akonadi::ResourceSynchronizationJob *job = new Akonadi::ResourceSynchronizationJob(resource);
         job->setCollectionTreeOnly(true);
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotSynchronizationFinished(KJob*)) );
+        connect(job, &Akonadi::ResourceSynchronizationJob::result, this, &SynchronizeResourceJob::slotSynchronizationFinished);
         job->start();
     } else {
         Q_EMIT synchronizationFinished();

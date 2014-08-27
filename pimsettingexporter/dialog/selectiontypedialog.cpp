@@ -36,8 +36,8 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SelectionTypeDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectionTypeDialog::reject);
     okButton->setDefault(true);
     setModal( true );
     QWidget *mainWidget = new QWidget( this );
@@ -49,19 +49,19 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
 
     QHBoxLayout *hbox = new QHBoxLayout;
     QPushButton *selectAll = new QPushButton(i18n("Select All"));
-    connect(selectAll, SIGNAL(clicked()), this, SLOT(slotSelectAll()));
+    connect(selectAll, &QPushButton::clicked, this, &SelectionTypeDialog::slotSelectAll);
     hbox->addWidget(selectAll);
 
     QPushButton *unselectAll = new QPushButton(i18n("Unselect All"));
-    connect(unselectAll, SIGNAL(clicked()), this, SLOT(slotUnselectAll()));
+    connect(unselectAll, &QPushButton::clicked, this, &SelectionTypeDialog::slotUnselectAll);
     hbox->addWidget(unselectAll);
 
     QPushButton *saveTemplate = new QPushButton(i18n("Save as Template..."));
-    connect(saveTemplate, SIGNAL(clicked()), this, SLOT(slotSaveAsTemplate()));
+    connect(saveTemplate, &QPushButton::clicked, this, &SelectionTypeDialog::slotSaveAsTemplate);
     hbox->addWidget(saveTemplate);
 
     QPushButton *loadTemplate = new QPushButton(i18n("Load Template..."));
-    connect(loadTemplate, SIGNAL(clicked()), this, SLOT(slotLoadTemplate()));
+    connect(loadTemplate, &QPushButton::clicked, this, &SelectionTypeDialog::slotLoadTemplate);
     hbox->addWidget(loadTemplate);
 
 

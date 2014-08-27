@@ -42,10 +42,10 @@ RawSocketConsole::RawSocketConsole(QWidget* parent) :
 {
   ui.setupUi( this );
   ui.execButton->setIcon( QIcon::fromTheme( "application-x-executable" ) );
-  connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
-  connect( ui.commandEdit, SIGNAL(returnPressed()), SLOT(execClicked()) );
-  connect( ui.connectButton, SIGNAL(clicked()), SLOT(connectClicked()) );
-  connect( ui.clearButton, SIGNAL(clicked()), ui.protocolView, SLOT(clear()) );
+  connect(ui.execButton, &QPushButton::clicked, this, &RawSocketConsole::execClicked);
+  connect(ui.commandEdit, &QLineEdit::returnPressed, this, &RawSocketConsole::execClicked);
+  connect(ui.connectButton, &QPushButton::clicked, this, &RawSocketConsole::connectClicked);
+  connect(ui.clearButton, &QPushButton::clicked, ui.protocolView, &KTextEdit::clear);
   ui.protocolView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
 
   connect(mSocket, &QLocalSocket::readyRead, this, &RawSocketConsole::dataReceived);
