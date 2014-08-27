@@ -57,7 +57,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mTreeWidget, &StorageServiceTreeWidget::uploadFile, this, &StorageServicePage::slotUploadFile);
     connect(mTreeWidget, &StorageServiceTreeWidget::downloadFile, this, &StorageServicePage::slotDownloadFile);
-    connect(mTreeWidget, SIGNAL(changeFolder(QString, QString)), this, SLOT(slotChangeFolder(QString, QString)));
+    connect(mTreeWidget, &StorageServiceTreeWidget::changeFolder, this, &StorageServicePage::slotChangeFolder);
     connect(mTreeWidget, SIGNAL(itemSelectionChanged()), this, SIGNAL(selectionChanged()));
     vbox->addWidget(mTreeWidget);
     mProgressWidget = new PimCommon::StorageServiceProgressWidget(storageService);
@@ -95,43 +95,43 @@ void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
 void StorageServicePage::connectStorageService()
 {
     connect(mTreeWidget, SIGNAL(listFileWasInitialized()), this, SIGNAL(listFileWasInitialized()));
-    connect(mStorageService, SIGNAL(shareLinkDone(QString, QString)), this, SLOT(slotShareLinkDone(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::shareLinkDone, this, &StorageServicePage::slotShareLinkDone);
 
     connect(mStorageService, &PimCommon::StorageServiceAbstract::authenticationDone, this, &StorageServicePage::slotAuthenticationDone);
-    connect(mStorageService, SIGNAL(authenticationFailed(QString, QString)), this, SLOT(slotAuthenticationFailed(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::authenticationFailed, this, &StorageServicePage::slotAuthenticationFailed);
 
-    connect(mStorageService, SIGNAL(actionFailed(QString, QString)), this, SLOT(slotActionFailed(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::actionFailed, this, &StorageServicePage::slotActionFailed);
 
-    connect(mStorageService, SIGNAL(accountInfoDone(QString, PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString, PimCommon::AccountInfo)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::accountInfoDone, this, &StorageServicePage::slotAccountInfoDone);
 
     connect(mStorageService, &PimCommon::StorageServiceAbstract::inProgress, this, &StorageServicePage::slotProgressStateChanged);
 
-    connect(mStorageService, SIGNAL(listFolderDone(QString, QVariant)), this, SLOT(slotListFolderDone(QString, QVariant)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::listFolderDone, this, &StorageServicePage::slotListFolderDone);
 
-    connect(mStorageService, SIGNAL(createFolderDone(QString, QString)), this, SLOT(slotCreateFolderDone(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::createFolderDone, this, &StorageServicePage::slotCreateFolderDone);
 
-    connect(mStorageService, SIGNAL(deleteFolderDone(QString, QString)), this, SLOT(slotDeleteFolderDone(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::deleteFolderDone, this, &StorageServicePage::slotDeleteFolderDone);
 
-    connect(mStorageService, SIGNAL(deleteFileDone(QString, QString)), this, SLOT(slotDeleteFileDone(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::deleteFileDone, this, &StorageServicePage::slotDeleteFileDone);
 
-    connect(mStorageService, SIGNAL(renameFolderDone(QString, QString)), this, SLOT(slotRenameFolderDone(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::renameFolderDone, this, &StorageServicePage::slotRenameFolderDone);
 
-    connect(mStorageService, SIGNAL(renameFileDone(QString, QString)), this, SLOT(slotRenameFileDone(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::renameFileDone, this, &StorageServicePage::slotRenameFileDone);
 
-    connect(mStorageService, SIGNAL(moveFileDone(QString, QString)), this, SLOT(slotMoveFileDone(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::moveFileDone, this, &StorageServicePage::slotMoveFileDone);
 
-    connect(mStorageService, SIGNAL(moveFolderDone(QString, QString)), this, SLOT(slotMoveFolderDone(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::moveFolderDone, this, &StorageServicePage::slotMoveFolderDone);
 
-    connect(mStorageService, SIGNAL(copyFolderDone(QString, QString)), this, SLOT(slotCopyFolderDone(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::copyFolderDone, this, &StorageServicePage::slotCopyFolderDone);
 
-    connect(mStorageService, SIGNAL(copyFileDone(QString, QString)), this, SLOT(slotCopyFileDone(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::copyFileDone, this, &StorageServicePage::slotCopyFileDone);
 
-    connect(mStorageService, SIGNAL(downLoadFileDone(QString, QString)), this, SLOT(slotDownloadFileDone(QString, QString)));
-    connect(mStorageService, SIGNAL(downLoadFileFailed(QString, QString)), this, SLOT(slotDownloadFileFailed(QString, QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::downLoadFileDone, this, &StorageServicePage::slotDownloadFileDone);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::downLoadFileFailed, this, &StorageServicePage::slotDownloadFileFailed);
 
-    connect(mStorageService, SIGNAL(uploadFileFailed(QString, QString)), this, SLOT(slotUploadFileFailed(QString, QString)));
-    connect(mStorageService, SIGNAL(uploadFileDone(QString, QString)), this, SLOT(slotUploadFileDone(QString, QString)));
-    connect(mStorageService, SIGNAL(uploadDownloadFileProgress(QString, qint64, qint64)), this, SLOT(slotuploadDownloadFileProgress(QString, qint64, qint64)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::uploadFileFailed, this, &StorageServicePage::slotUploadFileFailed);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::uploadFileDone, this, &StorageServicePage::slotUploadFileDone);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::uploadDownloadFileProgress, this, &StorageServicePage::slotuploadDownloadFileProgress);
 }
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)

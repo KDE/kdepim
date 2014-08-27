@@ -43,7 +43,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     connect(mTabWidget, &SieveEditorTabWidget::tabRemoveAllExclude, this, &SieveEditorMainWidget::slotTabRemoveAllExclude);
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
-    connect(mScriptManagerWidget, SIGNAL(createScriptPage(QUrl, QStringList, bool)), this, SLOT(slotCreateScriptPage(QUrl, QStringList, bool)));
+    connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::createScriptPage, this, &SieveEditorMainWidget::slotCreateScriptPage);
     connect(mScriptManagerWidget, SIGNAL(updateButtons(bool, bool, bool, bool)), SIGNAL(updateButtons(bool, bool, bool, bool)));
     connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::scriptDeleted, this, &SieveEditorMainWidget::slotScriptDeleted);
     connect(mScriptManagerWidget, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));
@@ -94,7 +94,7 @@ void SieveEditorMainWidget::slotCreateScriptPage(const QUrl &url, const QStringL
     } else {
         SieveEditorPageWidget *editor = new SieveEditorPageWidget;
         connect(editor, SIGNAL(refreshList()), this, SIGNAL(updateScriptList()));
-        connect(editor, SIGNAL(scriptModified(bool, SieveEditorPageWidget *)), this, SLOT(slotScriptModified(bool, SieveEditorPageWidget *)));
+        connect(editor, &SieveEditorPageWidget::scriptModified, this, &SieveEditorMainWidget::slotScriptModified);
         connect(editor, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)));
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
