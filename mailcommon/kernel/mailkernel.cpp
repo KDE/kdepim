@@ -29,8 +29,8 @@
 #include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
 #include <Akonadi/KMime/SpecialMailCollectionsDiscoveryJob>
 
-#include <KPIMIdentities/Identity>
-#include <KPIMIdentities/IdentityManager>
+#include <KIdentityManagement/Identity>
+#include <KIdentityManagement/IdentityManager>
 
 #include <QDebug>
 #include <KLocalizedString>
@@ -251,9 +251,9 @@ bool Kernel::folderIsDrafts( const Akonadi::Collection &col )
     }
 
     // search the identities if the folder matches the drafts-folder
-    const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
-    KPIMIdentities::IdentityManager::ConstIterator end( im->end() );
-    for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != end; ++it ) {
+    const KIdentityManagement::IdentityManager * im = KernelIf->identityManager();
+    KIdentityManagement::IdentityManager::ConstIterator end( im->end() );
+    for ( KIdentityManagement::IdentityManager::ConstIterator it = im->begin(); it != end; ++it ) {
         if ( (*it).drafts() == idString ) {
             return true;
         }
@@ -272,9 +272,9 @@ bool Kernel::folderIsTemplates( const Akonadi::Collection &col )
     }
 
     // search the identities if the folder matches the templates-folder
-    const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
-    KPIMIdentities::IdentityManager::ConstIterator end( im->end() );
-    for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != end; ++it ) {
+    const KIdentityManagement::IdentityManager * im = KernelIf->identityManager();
+    KIdentityManagement::IdentityManager::ConstIterator end( im->end() );
+    for ( KIdentityManagement::IdentityManager::ConstIterator it = im->begin(); it != end; ++it ) {
         if ( (*it).templates() == idString ) {
             return true;
         }
@@ -319,9 +319,9 @@ bool Kernel::folderIsSentMailFolder( const Akonadi::Collection &col )
     }
 
     // search the identities if the folder matches the sent-folder
-    const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
-    KPIMIdentities::IdentityManager::ConstIterator end( im->end() );
-    for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != end; ++it ) {
+    const KIdentityManagement::IdentityManager * im = KernelIf->identityManager();
+    KIdentityManagement::IdentityManager::ConstIterator end( im->end() );
+    for ( KIdentityManagement::IdentityManager::ConstIterator it = im->begin(); it != end; ++it ) {
         if ( (*it).fcc() == idString ) {
             return true;
         }

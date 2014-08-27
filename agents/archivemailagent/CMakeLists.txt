@@ -34,7 +34,7 @@ add_executable(akonadi_archivemail_agent ${archivemailagent_SRCS})
 
 target_link_libraries(akonadi_archivemail_agent
   KF5::AkonadiCore
-  KF5::PimIdentities
+  KF5::IdentityManagement
   KF5::Mime
   KF5::AkonadiMime
   KF5::KIOCore

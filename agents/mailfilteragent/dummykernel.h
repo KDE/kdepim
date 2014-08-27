@@ -17,7 +17,7 @@ class DummyKernel : public QObject, public MailCommon::IKernel, public MailCommo
 public:
     explicit DummyKernel( QObject *parent = 0 );
 
-    virtual KPIMIdentities::IdentityManager *identityManager();
+    virtual KIdentityManagement::IdentityManager *identityManager();
     virtual MessageComposer::MessageSender *msgSender();
 
     virtual Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
@@ -36,7 +36,7 @@ public:
     
 
 private:
-    KPIMIdentities::IdentityManager *mIdentityManager;
+    KIdentityManagement::IdentityManager *mIdentityManager;
     MessageComposer::MessageSender *mMessageSender;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;

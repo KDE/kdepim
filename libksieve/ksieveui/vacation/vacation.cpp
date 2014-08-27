@@ -26,8 +26,8 @@
 #include <KLocalizedString>
 #include <kmessagebox.h>
 
-#include <KPIMIdentities/kpimidentities/identity.h>
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 
 using namespace KSieveUi;
 

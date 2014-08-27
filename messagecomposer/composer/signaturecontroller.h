@@ -27,9 +27,9 @@
 
 #include "messagecomposer_export.h"
 #include <QtCore/QObject>
-#include <KPIMIdentities/kpimidentities/signature.h>
+#include <KIdentityManagement/kidentitymanagement/signature.h>
 
-namespace KPIMIdentities
+namespace KIdentityManagement
 {
 class IdentityCombo;
 }
@@ -48,7 +48,7 @@ public:
     explicit SignatureController( QObject* parent = 0 );
 
     void setEditor( MessageComposer::KMeditor* editor );
-    void setIdentityCombo( KPIMIdentities::IdentityCombo* combo );
+    void setIdentityCombo( KIdentityManagement::IdentityCombo* combo );
 
     /** Temporarily disable identity tracking, useful for initial loading for example. */
     void suspend();
@@ -57,7 +57,7 @@ public:
 
     /** Adds the given signature to the editor, taking user preferences into account.
     */
-    void applySignature( const KPIMIdentities::Signature& signature );
+    void applySignature( const KIdentityManagement::Signature& signature );
 
     /** Applys the currently selected signature according to user preferences. */
     void applyCurrentSignature();
@@ -93,14 +93,14 @@ private:
      * in the editor, connecting slot functions to KMeditor::insertSignature().
      * @param placement the position of the signature
      */
-    void insertSignatureHelper( KPIMIdentities::Signature::Placement placement );
+    void insertSignatureHelper( KIdentityManagement::Signature::Placement placement );
 
 private slots:
     void identityChanged ( uint id );
 
 private:
     MessageComposer::KMeditor* m_editor;
-    KPIMIdentities::IdentityCombo* m_identityCombo;
+    KIdentityManagement::IdentityCombo* m_identityCombo;
     uint m_currentIdentityId;
 };
 

@@ -34,7 +34,7 @@ class KMailCVTKernel : public QObject, public MailCommon::IKernel, public MailCo
   public:
     explicit  KMailCVTKernel( QObject *parent = 0 );
 
-    KPIMIdentities::IdentityManager *identityManager();
+    KIdentityManagement::IdentityManager *identityManager();
     MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
@@ -53,7 +53,7 @@ class KMailCVTKernel : public QObject, public MailCommon::IKernel, public MailCo
     
 
   private:
-    KPIMIdentities::IdentityManager *mIdentityManager;
+    KIdentityManagement::IdentityManager *mIdentityManager;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;

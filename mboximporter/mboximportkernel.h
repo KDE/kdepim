@@ -36,7 +36,7 @@ class MBoxImporterKernel : public QObject, public MailCommon::IKernel, public Ma
 public:
     explicit MBoxImporterKernel(QObject *parent = 0);
 
-    KPIMIdentities::IdentityManager *identityManager();
+    KIdentityManagement::IdentityManager *identityManager();
     MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
@@ -54,7 +54,7 @@ public:
     bool showPopupAfterDnD();
 
 private:
-    KPIMIdentities::IdentityManager *mIdentityManager;
+    KIdentityManagement::IdentityManager *mIdentityManager;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;

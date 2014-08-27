@@ -23,8 +23,8 @@
 #undef protected
 #include "messageviewer/viewer/objecttreeparser.h"
 #include "messageviewer/viewer/objecttreeemptysource.h"
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
-#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
 #include "qwebpage.h"
 #include "qwebframe.h"
 #include "qtest.h"
@@ -154,7 +154,7 @@ void TemplateParserTester::test_processWithTemplatesForBody()
     msg->parse();
     TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::Reply );
     parser.setSelection( selection );
-    KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+    KIdentityManagement::IdentityManager* identMan = new KIdentityManagement::IdentityManager;
     parser.setIdentityManager( identMan );
     parser.setAllowDecryption( true );
     parser.mOrigMsg = msg;
@@ -203,7 +203,7 @@ void TemplateParserTester::test_processWithTemplatesForContent()
     msg->parse();
 
     TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::Reply );
-    KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+    KIdentityManagement::IdentityManager* identMan = new KIdentityManagement::IdentityManager;
     parser.setIdentityManager( identMan );
     parser.setAllowDecryption( false );
     parser.mOrigMsg = msg;

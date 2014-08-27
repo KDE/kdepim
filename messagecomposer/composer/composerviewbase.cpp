@@ -62,8 +62,8 @@
 #include <AkonadiCore/collectionfetchjob.h>
 #include <AkonadiWidgets/collectioncombobox.h>
 
-#include <KPIMIdentities/kpimidentities/identitycombo.h>
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identitycombo.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <KPIMUtils/kpimutils/email.h>
 
 #include <QSaveFile>
@@ -236,7 +236,7 @@ void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::S
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 #endif
 
-    const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+    const KIdentityManagement::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
 
     if(identity.attachVcard() && m_attachmentController->attachOwnVcard()) {
         const QString vcardFileName = identity.vCardFile();
@@ -331,7 +331,7 @@ void MessageComposer::ComposerViewBase::readyForSending()
 
     // first, expand all addresses
     MessageComposer::EmailAddressResolveJob *job = new MessageComposer::EmailAddressResolveJob( this );
-    const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+    const KIdentityManagement::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
     if (!identity.isNull()) {
         job->setDefaultDomainName(identity.defaultDomainName());
     }
@@ -537,7 +537,7 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
                                                              encryptChainCertNearExpiryWarningThresholdInDays(),
                                                              signingChainCertNearExpiryWarningThresholdInDays() );
 
-    const KPIMIdentities::Identity &id = m_identMan->identityForUoidOrDefault( m_identityCombo->currentIdentity() );
+    const KIdentityManagement::Identity &id = m_identMan->identityForUoidOrDefault( m_identityCombo->currentIdentity() );
 
     QStringList encryptToSelfKeys;
     QStringList signKeys;
@@ -1070,7 +1070,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Messag
 void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message, MessageComposer::MessageSender::SaveIn saveIn )
 {
     Akonadi::Collection target;
-    const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+    const KIdentityManagement::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
     message->date()->setDateTime( QDateTime::currentDateTime() );
     message->assemble();
 
@@ -1310,17 +1310,17 @@ MessageComposer::SignatureController* MessageComposer::ComposerViewBase::signatu
     return m_signatureController;
 }
 
-void MessageComposer::ComposerViewBase::setIdentityCombo ( KPIMIdentities::IdentityCombo* identCombo )
+void MessageComposer::ComposerViewBase::setIdentityCombo ( KIdentityManagement::IdentityCombo* identCombo )
 {
     m_identityCombo = identCombo;
 }
 
-KPIMIdentities::IdentityCombo* MessageComposer::ComposerViewBase::identityCombo()
+KIdentityManagement::IdentityCombo* MessageComposer::ComposerViewBase::identityCombo()
 {
     return m_identityCombo;
 }
 
-void MessageComposer::ComposerViewBase::updateRecipients( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, MessageComposer::Recipient::Type type )
+void MessageComposer::ComposerViewBase::updateRecipients( const KIdentityManagement::Identity &ident, const KIdentityManagement::Identity &oldIdent, MessageComposer::Recipient::Type type )
 {
     QString oldIdentList;
     QString newIdentList;
@@ -1351,14 +1351,14 @@ void MessageComposer::ComposerViewBase::updateRecipients( const KPIMIdentities::
     }
 }
 
-void MessageComposer::ComposerViewBase::identityChanged ( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, bool msgCleared )
+void MessageComposer::ComposerViewBase::identityChanged ( const KIdentityManagement::Identity &ident, const KIdentityManagement::Identity &oldIdent, bool msgCleared )
 {
     updateRecipients( ident, oldIdent, MessageComposer::Recipient::Bcc );
     updateRecipients( ident, oldIdent, MessageComposer::Recipient::Cc );
 
-    KPIMIdentities::Signature oldSig = const_cast<KPIMIdentities::Identity&>
+    KIdentityManagement::Signature oldSig = const_cast<KIdentityManagement::Identity&>
             ( oldIdent ).signature();
-    KPIMIdentities::Signature newSig = const_cast<KPIMIdentities::Identity&>
+    KIdentityManagement::Signature newSig = const_cast<KIdentityManagement::Identity&>
             ( ident ).signature();
     //replace existing signatures
     const bool replaced = editor()->replaceSignature( oldSig, newSig );
@@ -1409,12 +1409,12 @@ MailTransport::TransportComboBox* MessageComposer::ComposerViewBase::transportCo
 }
 
 
-void MessageComposer::ComposerViewBase::setIdentityManager ( KPIMIdentities::IdentityManager* identMan )
+void MessageComposer::ComposerViewBase::setIdentityManager ( KIdentityManagement::IdentityManager* identMan )
 {
     m_identMan = identMan;
 }
 
-KPIMIdentities::IdentityManager* MessageComposer::ComposerViewBase::identityManager()
+KIdentityManagement::IdentityManager* MessageComposer::ComposerViewBase::identityManager()
 {
     return m_identMan;
 }

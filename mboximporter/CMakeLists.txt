@@ -22,7 +22,7 @@ add_executable(mboximporter ${mboximporter_SRCS})
 target_link_libraries(mboximporter
   KF5::KIOCore
   KF5::AkonadiCore
-  KF5::PimIdentities
+  KF5::IdentityManagement
   mailimporter
   mailcommon
 )

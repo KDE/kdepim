@@ -70,7 +70,7 @@ target_link_libraries(
   KF5::AkonadiContact
   KF5::AkonadiMime
   KF5::Mime
-  KF5::PimIdentities
+  KF5::IdentityManagement
   KF5::PimUtils
   KF5::Holidays
   KF5::MailTransport

@@ -29,8 +29,8 @@
 
 #include <MailTransport/mailtransport/transportmanager.h>
 
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
-#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KStandardDirs>
 #include <KLocalizedString>
 #include <KProcess>
@@ -893,7 +893,7 @@ void ImportMailJob::restoreIdentity()
                 }
                 QString name =  group.readEntry(QLatin1String("Name"));
 
-                KPIMIdentities::Identity* identity = &mIdentityManager->newFromScratch( uniqueIdentityName(name) );
+                KIdentityManagement::Identity* identity = &mIdentityManager->newFromScratch( uniqueIdentityName(name) );
                 group.writeEntry(QLatin1String("Name"), name);
                 group.sync();
 

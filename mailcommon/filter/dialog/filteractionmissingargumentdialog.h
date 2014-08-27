@@ -38,7 +38,7 @@ class FolderRequester;
 class AccountList;
 }
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class IdentityCombo;
 }
 
@@ -93,7 +93,7 @@ public:
 private:
     void writeConfig();
     void readConfig();
-    KPIMIdentities::IdentityCombo *mComboBoxIdentity;
+    KIdentityManagement::IdentityCombo *mComboBoxIdentity;
 };
 
 class FilterActionMissingTransportDialog : public KDialog

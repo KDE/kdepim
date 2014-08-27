@@ -20,8 +20,8 @@
 #include <MailTransport/mailtransport/transportmanager.h>
 #include "mailcommon/util/mailutil.h"
 
-#include <KPIMIdentities/kpimidentities/identity.h>
-#include <KPIMIdentities/kpimidentities/signature.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
+#include <KIdentityManagement/kidentitymanagement/signature.h>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -258,21 +258,21 @@ QString SylpheedSettings::convertToKmailTemplate(const QString& templateStr)
     return newTemplate;
 }
 
-void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIdentities::Identity* identity )
+void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KIdentityManagement::Identity* identity )
 {
-    KPIMIdentities::Signature signature;
+    KIdentityManagement::Signature signature;
     const int signatureType = accountConfig.readEntry("signature_type", 0 );
     switch( signatureType ) {
     case 0: //File
-        signature.setType( KPIMIdentities::Signature::FromFile );
+        signature.setType( KIdentityManagement::Signature::FromFile );
         signature.setUrl( accountConfig.readEntry("signature_path" ),false );
         break;
     case 1: //Output
-        signature.setType( KPIMIdentities::Signature::FromCommand );
+        signature.setType( KIdentityManagement::Signature::FromCommand );
         signature.setUrl( accountConfig.readEntry("signature_path" ),true );
         break;
     case 2: //Text
-        signature.setType( KPIMIdentities::Signature::Inlined );
+        signature.setType( KIdentityManagement::Signature::Inlined );
         signature.setText( accountConfig.readEntry("signature_text" ) );
         break;
     default:
@@ -458,7 +458,7 @@ void SylpheedSettings::readAccount(const KConfigGroup& accountConfig , bool chec
 void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
 {
     QString name = accountConfig.readEntry( QLatin1String( "name" ) );
-    KPIMIdentities::Identity* identity  = createIdentity(name);
+    KIdentityManagement::Identity* identity  = createIdentity(name);
 
     identity->setFullName( name );
     identity->setIdentityName( name );

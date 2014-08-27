@@ -30,11 +30,11 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 #include "messagecomposer/helper/messagefactory.h"
 
 #include <AkonadiCore/ItemFetchJob>
-#include <kpimidentities/identitymanager.h>
+#include <kidentitymanagement/identitymanager.h>
 
 #include "receivermodel.h"
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class IdentityManager;
 }
 
@@ -113,7 +113,7 @@ private:
     QString m_bcc;
     ReceiverModel *m_receiverModel;
 
-    KPIMIdentities::IdentityManager *m_IdentityManager;
+    KIdentityManagement::IdentityManager *m_IdentityManager;
 
 };
 

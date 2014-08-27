@@ -21,8 +21,8 @@
 #include <MailTransport/mailtransport/transportmanager.h>
 #include "mailcommon/util/mailutil.h"
 
-#include <KPIMIdentities/kpimidentities/identity.h>
-#include <KPIMIdentities/kpimidentities/signature.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
+#include <KIdentityManagement/kidentitymanagement/signature.h>
 
 
 #include <KConfig>
@@ -58,7 +58,7 @@ void PMailSettings::readIdentity( const KConfigGroup& group )
         personalName = group.readEntry(personalNameStr);
         personalName.remove(0,1); //Remove first space
     }
-    KPIMIdentities::Identity* newIdentity = createIdentity(personalName);
+    KIdentityManagement::Identity* newIdentity = createIdentity(personalName);
     newIdentity->setFullName( personalName );
     newIdentity->setIdentityName( personalName );
 

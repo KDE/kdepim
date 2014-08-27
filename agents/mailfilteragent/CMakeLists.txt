@@ -48,7 +48,7 @@ target_link_libraries(akonadi_mailfilter_agent
   
   
   KF5::Mime
-  KF5::PimIdentities
+  KF5::IdentityManagement
 )
 
 install(TARGETS akonadi_mailfilter_agent ${INSTALL_TARGETS_DEFAULT_ARGS})

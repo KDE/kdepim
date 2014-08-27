@@ -28,7 +28,7 @@
 #include <KPIMTextEdit/TextEdit>
 #include <KUrl>
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class Signature;
 }
 namespace PimCommon {
@@ -155,7 +155,7 @@ public:
      *
      * @param sig text inside this signature will not be cleaned
      */
-    void cleanWhitespace( const KPIMIdentities::Signature &sig );
+    void cleanWhitespace( const KIdentityManagement::Signature &sig );
 
     /**
      * Replaces all occurrences of the old signature with the new signature.
@@ -169,8 +169,8 @@ public:
      * @param newSig the new signature
      * @return @p true if oldSig was found (and replaced) at least once
      */
-    bool replaceSignature( const KPIMIdentities::Signature &oldSig,
-                           const KPIMIdentities::Signature &newSig );
+    bool replaceSignature( const KIdentityManagement::Signature &oldSig,
+                           const KIdentityManagement::Signature &newSig );
 
     /**
      * Fill the given composer MessageComposer::TextPart with what's in the editor currently.

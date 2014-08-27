@@ -33,7 +33,7 @@ class ImportWizardKernel : public QObject, public MailCommon::IKernel, public Ma
 public:
     explicit ImportWizardKernel( QObject *parent = 0 );
 
-    KPIMIdentities::IdentityManager *identityManager();
+    KIdentityManagement::IdentityManager *identityManager();
     MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
@@ -52,7 +52,7 @@ public:
     
 
 private:
-    KPIMIdentities::IdentityManager *mIdentityManager;
+    KIdentityManagement::IdentityManager *mIdentityManager;
     MessageComposer::MessageSender *mMessageSender;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;

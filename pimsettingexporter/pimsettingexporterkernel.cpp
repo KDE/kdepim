@@ -22,7 +22,7 @@
 
 #include <kalarmcal/kacalendar.h>
 #include <kglobal.h>
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <messagecomposer/sender/akonadisender.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <AkonadiCore/session.h>
@@ -35,7 +35,7 @@ PimSettingExporterKernel::PimSettingExporterKernel( QObject *parent )
     : QObject( parent )
 {
     mMessageSender = new MessageComposer::AkonadiSender( this );
-    mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
+    mIdentityManager = new KIdentityManagement::IdentityManager( false, this );
     Akonadi::Session *session = new Akonadi::Session( "Backup Mail Kernel ETM", this );
 
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
@@ -57,7 +57,7 @@ PimSettingExporterKernel::PimSettingExporterKernel( QObject *parent )
     mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
-KPIMIdentities::IdentityManager *PimSettingExporterKernel::identityManager()
+KIdentityManagement::IdentityManager *PimSettingExporterKernel::identityManager()
 {
     return mIdentityManager;
 }

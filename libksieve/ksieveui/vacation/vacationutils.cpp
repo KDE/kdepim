@@ -18,8 +18,8 @@
 #include "vacationutils.h"
 #include "vacationscriptextractor.h"
 #include "sieve-vacation.h"
-#include <KPIMIdentities/IdentityManager>
-#include <KPIMIdentities/Identity>
+#include <KIdentityManagement/IdentityManager>
+#include <KIdentityManagement/Identity>
 
 #include <KLocalizedString>
 #include <KLocale>
@@ -60,9 +60,9 @@ int KSieveUi::VacationUtils::defaultNotificationInterval()
 QStringList KSieveUi::VacationUtils::defaultMailAliases()
 {
     QStringList sl;
-    KPIMIdentities::IdentityManager manager(true);
-    KPIMIdentities::IdentityManager::ConstIterator end(manager.end());
-    for (KPIMIdentities::IdentityManager::ConstIterator it = manager.begin(); it != end ; ++it) {
+    KIdentityManagement::IdentityManager manager(true);
+    KIdentityManagement::IdentityManager::ConstIterator end(manager.end());
+    for (KIdentityManagement::IdentityManager::ConstIterator it = manager.begin(); it != end ; ++it) {
         if (!(*it).primaryEmailAddress().isEmpty()) {
             sl.push_back((*it).primaryEmailAddress());
         }

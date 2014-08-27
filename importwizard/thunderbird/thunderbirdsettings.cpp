@@ -20,8 +20,8 @@
 #include "mailcommon/util/mailutil.h"
 #include "importwizardutil.h"
 
-#include <KPIMIdentities/kpimidentities/identity.h>
-#include <KPIMIdentities/kpimidentities/signature.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
+#include <KIdentityManagement/kidentitymanagement/signature.h>
 
 #include <QUrl>
 #include <KABC/VCardConverter>
@@ -751,7 +751,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
 {
     const QString identity = QString::fromLatin1( "mail.identity.%1" ).arg( account );
     QString fullName = mHashConfig.value( identity + QLatin1String( ".fullName" ) ).toString();
-    KPIMIdentities::Identity* newIdentity = createIdentity(fullName);
+    KIdentityManagement::Identity* newIdentity = createIdentity(fullName);
 
 
     const QString smtpServer = mHashConfig.value( identity + QLatin1String( ".smtpServer" ) ).toString();
@@ -784,7 +784,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const QString replyTo = mHashConfig.value(identity + QLatin1String( ".reply_to")).toString();
     newIdentity->setReplyToAddr( replyTo );
 
-    KPIMIdentities::Signature signature;
+    KIdentityManagement::Signature signature;
     const bool signatureHtml = mHashConfig.value(identity + QLatin1String( ".htmlSigFormat" )).toBool();
     if (signatureHtml) {
         signature.setInlinedHtml( true );
@@ -793,12 +793,12 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     const bool attachSignature = mHashConfig.value(identity + QLatin1String( ".attach_signature" )).toBool();
     if ( attachSignature ) {
         const QString fileSignature = mHashConfig.value(identity + QLatin1String( ".sig_file")).toString();
-        signature.setType( KPIMIdentities::Signature::FromFile );
+        signature.setType( KIdentityManagement::Signature::FromFile );
         signature.setUrl( fileSignature,false );
     }
     else {
         const QString textSignature = mHashConfig.value(identity + QLatin1String( ".htmlSigText" ) ).toString();
-        signature.setType( KPIMIdentities::Signature::Inlined );
+        signature.setType( KIdentityManagement::Signature::Inlined );
         signature.setText( textSignature );
     }
 

@@ -28,7 +28,7 @@
 namespace MessageComposer {
 class AkonadiSender;
 }
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class IdentityManager;
 }
 
@@ -59,7 +59,7 @@ public:
     /*reimp*/ MailCommon::JobScheduler* jobScheduler() const { return mJobScheduler; }
     /*reimp*/ KSharedConfig::Ptr config();
     /*reimp*/ void syncConfig();
-    /*reimp*/ KPIMIdentities::IdentityManager* identityManager();
+    /*reimp*/ KIdentityManagement::IdentityManager* identityManager();
     /*reimp*/ Akonadi::EntityMimeTypeFilterModel* collectionModel() const { return mCollectionModel; }
     /*reimp*/ MessageComposer::MessageSender* msgSender();
 
@@ -83,7 +83,7 @@ private:
 
     MailCommon::JobScheduler *mJobScheduler;
     Akonadi::ChangeRecorder *mMonitor;
-    KPIMIdentities::IdentityManager *mIdentityManager;
+    KIdentityManagement::IdentityManager *mIdentityManager;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
     MessageComposer::AkonadiSender *mMessageSender;
     KSharedConfig::Ptr mConfig;

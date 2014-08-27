@@ -30,8 +30,8 @@
 #include <kmime/kmime_mdn.h>
 #include <kmime/kmime_dateformatter.h>
 #include <kmime/kmime_headers.h>
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
+#include <kidentitymanagement/identitymanager.h>
+#include <kidentitymanagement/identity.h>
 #include <KPIMUtils/Email>
 #include <QDebug>
 
@@ -39,7 +39,7 @@ using namespace MessageCore;
 
 namespace MessageHelper {
 
-void initHeader( const KMime::Message::Ptr &message, const KPIMIdentities::IdentityManager* identMan, uint id )
+void initHeader( const KMime::Message::Ptr &message, const KIdentityManagement::IdentityManager* identMan, uint id )
 {
     applyIdentity( message, identMan, id );
     message->to()->clear();
@@ -62,7 +62,7 @@ void initHeader( const KMime::Message::Ptr &message, const KPIMIdentities::Ident
 
 
 void initFromMessage( const KMime::Message::Ptr &msg, const KMime::Message::Ptr &origMsg,
-                      KPIMIdentities::IdentityManager* identMan, uint id, bool idHeaders )
+                      KIdentityManagement::IdentityManager* identMan, uint id, bool idHeaders )
 {
     if ( idHeaders )
         MessageHelper::initHeader( msg, identMan, id );
@@ -81,9 +81,9 @@ void initFromMessage( const KMime::Message::Ptr &msg, const KMime::Message::Ptr 
 }
 
 
-void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::IdentityManager* identMan, uint id )
+void applyIdentity( const KMime::Message::Ptr &message, const KIdentityManagement::IdentityManager* identMan, uint id )
 {
-    const KPIMIdentities::Identity & ident =
+    const KIdentityManagement::Identity & ident =
             identMan->identityForUoidOrDefault( id );
 
     if ( ident.fullEmailAddr().isEmpty() )

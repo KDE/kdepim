@@ -38,7 +38,7 @@ class IncidenceChanger;
 class ITIPHandler;
 }
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class IdentityManager;
 }
 
@@ -125,7 +125,7 @@ class MainView : public KDeclarativeMainView
     Akonadi::ETMCalendar::Ptr m_calendar;
     CalendarInterface* m_calendarIface;
     QHash<QObject*, Akonadi::Entity::Id> m_openItemEditors;
-    KPIMIdentities::IdentityManager* m_identityManager;
+    KIdentityManagement::IdentityManager* m_identityManager;
     Akonadi::IncidenceChanger *m_changer;
     static EventViews::PrefsPtr m_calendarPrefs;
     Akonadi::StandardCalendarActionManager *mActionManager;

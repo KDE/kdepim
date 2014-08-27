@@ -36,7 +36,7 @@ void IdentityManager::createDefaultIdentity( QString &fullName, QString &emailAd
 
 Q_GLOBAL_STATIC( CalendarSupport::IdentityManager, globalIdentityManager )
 
-KPIMIdentities::IdentityManager *CalendarSupport::identityManager()
+KIdentityManagement::IdentityManager *CalendarSupport::identityManager()
 {
   return globalIdentityManager;
 }

@@ -19,7 +19,7 @@
 #define EVOLUTIONSETTINGS_H
 
 #include "abstractsettings.h"
-#include <KPIMIdentities/kpimidentities/signature.h>
+#include <KIdentityManagement/kidentitymanagement/signature.h>
 #include <QString>
 
 
@@ -43,7 +43,7 @@ private:
     QString getAuthMethod( const QString& path, bool & found);
     void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString& userName);
 
-    QMap<QString, KPIMIdentities::Signature> mMapSignature;
+    QMap<QString, KIdentityManagement::Signature> mMapSignature;
 };
 
 #endif /* EVOLUTIONSETTINGS_H */

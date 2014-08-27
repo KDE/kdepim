@@ -35,7 +35,7 @@
  * Theres probably non calendaring-specific APIs to send e-mails, so I'd like to keep
  * MailClient private in kdepimlibs.
  */
-namespace KPIMIdentities {
+namespace KIdentityManagement {
   class Identity;
 }
 
@@ -49,18 +49,18 @@ class MailClient : public QObject
     ~MailClient();
 
     bool mailAttendees( const KCalCore::IncidenceBase::Ptr &,
-                        const KPIMIdentities::Identity &identity,
+                        const KIdentityManagement::Identity &identity,
                         bool bccMe, const QString &attachment=QString(),
                         const QString &mailTransport = QString() );
 
     bool mailOrganizer( const KCalCore::IncidenceBase::Ptr &,
-                        const KPIMIdentities::Identity &identity,
+                        const KIdentityManagement::Identity &identity,
                         const QString &from, bool bccMe,
                         const QString &attachment=QString(),
                         const QString &sub=QString(),
                         const QString &mailTransport = QString() );
 
-    bool mailTo( const KCalCore::IncidenceBase::Ptr &, const KPIMIdentities::Identity &identity,
+    bool mailTo( const KCalCore::IncidenceBase::Ptr &, const KIdentityManagement::Identity &identity,
                  const QString &from, bool bccMe, const QString &recipients,
                  const QString &attachment=QString(), const QString &mailTransport = QString() );
 
@@ -81,7 +81,7 @@ class MailClient : public QObject
       @param mailTransport defines the mail transport method. See here the
       kdepimlibs/mailtransport library.
     */
-    bool send( const KPIMIdentities::Identity &identity, const QString &from, const QString &to,
+    bool send( const KIdentityManagement::Identity &identity, const QString &from, const QString &to,
                const QString &cc, const QString &subject, const QString &body,
                bool hidden=false, bool bccMe=false, const QString &attachment=QString(),
                const QString &mailTransport = QString() );

@@ -94,7 +94,7 @@ target_link_libraries(kdepim
   KF5::Abc
   KF5::PimUtils
   KF5::Ldap
-  KF5::PimIdentities
+  KF5::IdentityManagement
   KF5::KCMUtils
   KF5::Mime
   KF5::PimTextEdit
@@ -114,7 +114,7 @@ target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   KF5::Abc
   KF5::PimUtils
   KF5::Ldap
-  KF5::PimIdentities
+  KF5::IdentityManagement
   KF5::PimTextEdit
   KF5::AkonadiCore
   KF5::AkonadiContact

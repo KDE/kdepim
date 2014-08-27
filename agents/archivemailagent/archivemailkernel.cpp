@@ -18,7 +18,7 @@
 #include "archivemailkernel.h"
 
 #include <kglobal.h>
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <mailcommon/job/jobscheduler.h>
 #include <AkonadiCore/session.h>
@@ -30,7 +30,7 @@
 ArchiveMailKernel::ArchiveMailKernel( QObject *parent )
     : QObject( parent )
 {
-    mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
+    mIdentityManager = new KIdentityManagement::IdentityManager( false, this );
     Akonadi::Session *session = new Akonadi::Session( "Archive Mail Kernel ETM", this );
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
 
@@ -49,7 +49,7 @@ ArchiveMailKernel::ArchiveMailKernel( QObject *parent )
     mJobScheduler = new MailCommon::JobScheduler(this);
 }
 
-KPIMIdentities::IdentityManager *ArchiveMailKernel::identityManager()
+KIdentityManagement::IdentityManager *ArchiveMailKernel::identityManager()
 {
     return mIdentityManager;
 }

@@ -26,7 +26,7 @@
 #include <KMime/Message>
 
 
-namespace KPIMIdentities
+namespace KIdentityManagement
 {
   class IdentityCombo;
 }
@@ -57,7 +57,7 @@ class ComposerView : public KDeclarativeFullScreenView
   public:
     explicit ComposerView(QWidget* parent = 0);
 
-    void setIdentityCombo( KPIMIdentities::IdentityCombo* combo );
+    void setIdentityCombo( KIdentityManagement::IdentityCombo* combo );
 
     void setEditor( MessageComposer::KMeditor* editor );
     void setRecipientsEditor( MessageComposer::RecipientsEditor *editor );

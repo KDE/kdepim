@@ -23,7 +23,7 @@
 #include <mailcommon/filter/filteraction.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/job/jobscheduler.h>
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <messagecomposer/sender/akonadisender.h>
 
 using namespace MailCommon;
@@ -35,7 +35,7 @@ MobileKernel::MobileKernel() : mMonitor( 0 ), mCollectionModel( 0 ), mMessageSen
   CommonKernel; //init
 
   mJobScheduler = new JobScheduler(0);
-  mIdentityManager = new KPIMIdentities::IdentityManager( false, 0, "mIdentityManager" );
+  mIdentityManager = new KIdentityManagement::IdentityManager( false, 0, "mIdentityManager" );
   mAutoCorrection = new PimCommon::AutoCorrection();
   mMessageSender = new MessageComposer::AkonadiSender;
   CommonKernel->registerKernelIf( this ); //register KernelIf early, it is used by the Filter classes
@@ -86,7 +86,7 @@ KSharedConfig::Ptr MobileKernel::config()
   return mConfig;
 }
 
-KPIMIdentities::IdentityManager* MobileKernel::identityManager()
+KIdentityManagement::IdentityManager* MobileKernel::identityManager()
 {
   return mIdentityManager;
 }

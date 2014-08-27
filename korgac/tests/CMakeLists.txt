@@ -30,7 +30,7 @@ target_link_libraries(testalarmdlg
   KF5::AkonadiCore
   KF5::CalendarCore
   KF5::CalendarUtils
-  KF5::PimIdentities
+  KF5::IdentityManagement
   KF5::MailTransport
   Phonon::phonon4qt5  
 )

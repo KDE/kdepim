@@ -29,7 +29,7 @@ class QCheckBox;
 
 template <typename T> class QSharedPointer;
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class IdentityCombo;
 }
 
@@ -85,7 +85,7 @@ private:
     QCheckBox   *mHideInSelectionDialogCheckBox;
     QCheckBox   *mUseDefaultIdentityCheckBox;
     QLineEdit   *mNameEdit;
-    KPIMIdentities::IdentityCombo *mIdentityComboBox;
+    KIdentityManagement::IdentityCombo *mIdentityComboBox;
     QSharedPointer<MailCommon::FolderCollection> mFolderCollection;
     bool mIsLocalSystemFolder;
     bool mIsResourceFolder;

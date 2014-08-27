@@ -17,7 +17,7 @@
 
 #include "mboximportkernel.h"
 
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <AkonadiCore/session.h>
 #include <entitytreemodel.h>
@@ -28,7 +28,7 @@
 MBoxImporterKernel::MBoxImporterKernel(QObject *parent)
     : QObject(parent)
 {
-    mIdentityManager = new KPIMIdentities::IdentityManager(false, this);
+    mIdentityManager = new KIdentityManagement::IdentityManager(false, this);
     Akonadi::Session *session = new Akonadi::Session("MBox importer Kernel ETM", this);
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor(session, this);
 
@@ -44,7 +44,7 @@ MBoxImporterKernel::MBoxImporterKernel(QObject *parent)
     mCollectionModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 }
 
-KPIMIdentities::IdentityManager *MBoxImporterKernel::identityManager()
+KIdentityManagement::IdentityManager *MBoxImporterKernel::identityManager()
 {
     return mIdentityManager;
 }

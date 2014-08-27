@@ -50,7 +50,7 @@ class TransportComboBox;
 class MessageQueueJob;
 }
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class IdentityCombo;
 class Identity;
 class IdentityManager;
@@ -138,11 +138,11 @@ public:
     void setSignatureController( MessageComposer::SignatureController* sigController );
     MessageComposer::SignatureController* signatureController();
 
-    void setIdentityCombo( KPIMIdentities::IdentityCombo* identCombo );
-    KPIMIdentities::IdentityCombo* identityCombo();
+    void setIdentityCombo( KIdentityManagement::IdentityCombo* identCombo );
+    KIdentityManagement::IdentityCombo* identityCombo();
 
-    void setIdentityManager( KPIMIdentities::IdentityManager* identMan );
-    KPIMIdentities::IdentityManager* identityManager();
+    void setIdentityManager( KIdentityManagement::IdentityManager* identMan );
+    KIdentityManagement::IdentityManager* identityManager();
 
     void setEditor( MessageComposer::KMeditor* editor );
     MessageComposer::KMeditor* editor();
@@ -212,7 +212,7 @@ public:
 
 public slots:
 
-    void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, bool msgCleared = false);
+    void identityChanged( const KIdentityManagement::Identity &ident, const KIdentityManagement::Identity &oldIdent, bool msgCleared = false);
 
     /**
    * Save the message.
@@ -276,7 +276,7 @@ private:
     void fillQueueJobHeaders( MailTransport::MessageQueueJob* qjob, KMime::Message::Ptr message, const MessageComposer::InfoPart* infoPart );
     QStringList cleanEmailList( const QStringList& emails );
     void saveRecentAddresses( KMime::Message::Ptr ptr );
-    void updateRecipients( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, MessageComposer::Recipient::Type type );
+    void updateRecipients( const KIdentityManagement::Identity &ident, const KIdentityManagement::Identity &oldIdent, MessageComposer::Recipient::Type type );
 
     void markAllAttachmentsForSigning(bool sign);
     void markAllAttachmentsForEncryption(bool encrypt);
@@ -306,8 +306,8 @@ private:
     MessageComposer::AttachmentModel* m_attachmentModel;
     MessageComposer::SignatureController* m_signatureController;
     MessageComposer::RecipientsEditor * m_recipientsEditor;
-    KPIMIdentities::IdentityCombo *m_identityCombo;
-    KPIMIdentities::IdentityManager* m_identMan;
+    KIdentityManagement::IdentityCombo *m_identityCombo;
+    KIdentityManagement::IdentityManager* m_identMan;
     MessageComposer::KMeditor* m_editor;
     MailTransport::TransportComboBox* m_transport;
     Akonadi::CollectionComboBox* m_fccCombo;

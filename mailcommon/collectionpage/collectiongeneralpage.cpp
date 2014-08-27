@@ -30,7 +30,7 @@
 #include <CollectionModifyJob>
 #include <EntityDisplayAttribute>
 
-#include <KPIMIdentities/IdentityCombo>
+#include <KIdentityManagement/IdentityCombo>
 
 #include <KColorScheme>
 #include <KComboBox>
@@ -338,7 +338,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     ++row;
     label = new QLabel( i18n( "&Sender identity:" ), this );
     gl->addWidget( label, row, 0 );
-    mIdentityComboBox = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), this );
+    mIdentityComboBox = new KIdentityManagement::IdentityCombo( KernelIf->identityManager(), this );
     label->setBuddy( mIdentityComboBox );
     gl->addWidget( mIdentityComboBox, row, 1 );
     mIdentityComboBox->setWhatsThis(

@@ -37,9 +37,9 @@
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
 #include <KPIMUtils/Email>
-#include <KPIMIdentities/Identity>
-#include <KPIMIdentities/IdentityCombo>
-#include <KPIMIdentities/IdentityManager>
+#include <KIdentityManagement/Identity>
+#include <KIdentityManagement/IdentityCombo>
+#include <KIdentityManagement/IdentityManager>
 
 #include <MailTransport/Transport>
 #include <MailTransport/TransportComboBox>
@@ -162,7 +162,7 @@ public:
     RedirectWidget *mEditBcc;
 
     RedirectDialog::SendMode mSendMode;
-    KPIMIdentities::IdentityCombo *mComboboxIdentity;
+    KIdentityManagement::IdentityCombo *mComboboxIdentity;
     MailTransport::TransportComboBox *mTransportCombobox;
     QPushButton *mUser1Button;
     QPushButton *mUser2Button;
@@ -251,7 +251,7 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
     mainLayout->addLayout(hbox);
     QLabel *lab = new QLabel(i18n("Identity:"));
     hbox->addWidget(lab);
-    d->mComboboxIdentity = new KPIMIdentities::IdentityCombo(KernelIf->identityManager());
+    d->mComboboxIdentity = new KIdentityManagement::IdentityCombo(KernelIf->identityManager());
     hbox->addWidget(d->mComboboxIdentity);
     lab->setBuddy(d->mComboboxIdentity);
 

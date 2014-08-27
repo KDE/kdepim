@@ -23,7 +23,7 @@
 
 #include "pimcommon/util/createresource.h"
 
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <KZip>
 #include <QTemporaryDir>
 #include <KLocalizedString>
@@ -43,7 +43,7 @@ AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage
     : QObject(parent),
       mTypeSelected(typeSelected),
       mArchiveStorage(archiveStorage),
-      mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
+      mIdentityManager(new KIdentityManagement::IdentityManager( false, this, "mIdentityManager" )),
       mParent(parent),
       mTempDir(0),
       mProgressDialog(0),

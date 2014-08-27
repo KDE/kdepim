@@ -34,7 +34,7 @@ namespace MessageViewer {
 class ObjectTreeParser;
 }
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class IdentityManager;
 }
 
@@ -200,7 +200,7 @@ public:
     /**
      * Set the identity manager to be used when creating the template.
      */
-    void setIdentityManager( KPIMIdentities::IdentityManager *ident );
+    void setIdentityManager( KIdentityManagement::IdentityManager *ident );
 
     /**
      * Sets the list of charsets to try to use to encode the resulting text.
@@ -245,7 +245,7 @@ protected:
     bool mDebug;
     QString mQuoteString;
     QString mTo, mCC;
-    KPIMIdentities::IdentityManager *m_identityManager;
+    KIdentityManagement::IdentityManager *m_identityManager;
     bool mWrap;
     int mColWrap;
     QStringList m_charsets;
@@ -333,7 +333,7 @@ private:
 
     /** @return the UOID of the identity for this message.
      * Searches the "x-kmail-identity" header and if that fails,
-     * searches with KPIMIdentities::IdentityManager::identityForAddress()
+     * searches with KIdentityManagement::IdentityManager::identityForAddress()
      */
     uint identityUoid( const KMime::Message::Ptr &msg ) const;
 

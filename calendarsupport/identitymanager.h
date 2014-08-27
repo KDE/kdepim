@@ -24,21 +24,21 @@
 #define CALENDARSUPPORT_IDENTITYMANAGER_H
 
 #include "calendarsupport_export.h"
-#include <KPIMIdentities/IdentityManager>
+#include <KIdentityManagement/IdentityManager>
 
 namespace CalendarSupport {
 
-class CALENDARSUPPORT_EXPORT IdentityManager : public KPIMIdentities::IdentityManager
+class CALENDARSUPPORT_EXPORT IdentityManager : public KIdentityManagement::IdentityManager
 {
   public:
     explicit IdentityManager( QObject *parent=0, const char *name=0 )
-      : KPIMIdentities::IdentityManager( true/*readonly*/, parent, name ) {}
+      : KIdentityManagement::IdentityManager( true/*readonly*/, parent, name ) {}
 
   protected:
     virtual void createDefaultIdentity( QString &fullName, QString &emailAddress );
 };
 
-KPIMIdentities::IdentityManager *identityManager();
+KIdentityManagement::IdentityManager *identityManager();
 
 }
 

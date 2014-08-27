@@ -93,8 +93,8 @@
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>
 #include <kmimetype.h>
-#include <KPIMIdentities/kpimidentities/identity.h>
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <kselectionproxymodel.h>
 
 #include <mailcommon/filter/filteraction.h>
@@ -1109,7 +1109,7 @@ void MainView::dataChanged()
 void MainView::configureIdentity()
 {
   KCMultiDialog dlg;
-  dlg.addModule( QLatin1String("kcm_kpimidentities") );
+  dlg.addModule( QLatin1String("kcm_kidentitymanagement") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
   dlg.setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Cancel ); 
   dlg.exec();
@@ -1246,8 +1246,8 @@ bool MainView::folderIsDrafts( const Collection &collection )
     return false;
 #if 0 //QT5
   // search the identities if the folder matches the drafts-folder
-  const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
-  for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
+  const KIdentityManagement::IdentityManager *im = MobileKernel::self()->identityManager();
+  for ( KIdentityManagement::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).drafts() == idString )
       return true;
   }
@@ -1269,8 +1269,8 @@ bool MainView::folderIsTemplates( const Collection &collection )
     return false;
 #if 0 //QT5
   // search the identities if the folder matches the drafts-folder
-  const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
-  for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
+  const KIdentityManagement::IdentityManager *im = MobileKernel::self()->identityManager();
+  for ( KIdentityManagement::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).templates() == idString )
       return true;
   }

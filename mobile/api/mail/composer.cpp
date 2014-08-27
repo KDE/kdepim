@@ -24,7 +24,7 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 Composer::Composer( QObject *parent )
     : QObject( parent )
     , m_receiverModel ( new ReceiverModel (this) )
-    , m_IdentityManager ( new KPIMIdentities::IdentityManager( false, this ) )
+    , m_IdentityManager ( new KIdentityManagement::IdentityManager( false, this ) )
 {
 
 }

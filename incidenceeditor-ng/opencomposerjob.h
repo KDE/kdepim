@@ -20,7 +20,7 @@
 #ifndef INCIDENCEEDITOR_OPENCOMPOSERJOB_H
 #define INCIDENCEEDITOR_OPENCOMPOSERJOB_H
 
-#include <KPIMIdentities/Identity>
+#include <KIdentityManagement/Identity>
 #include <kmime/kmime_message.h>
 
 #include <KJob>
@@ -34,7 +34,7 @@ class OpenComposerJob : public KJob
 public:
     explicit OpenComposerJob(QObject *parent,
                              const QString &to, const QString &cc, const QString &bcc,
-                             const KMime::Message::Ptr &message, const KPIMIdentities::Identity &identity);
+                             const KMime::Message::Ptr &message, const KIdentityManagement::Identity &identity);
     virtual ~OpenComposerJob();
 
     virtual void start();
@@ -49,7 +49,7 @@ private:
     QString mError;
     QString mTo, mCc, mBcc;
     KMime::Message::Ptr mMessage;
-    KPIMIdentities::Identity mIdentity;
+    KIdentityManagement::Identity mIdentity;
     bool mSuccess;
 };
 

@@ -28,7 +28,7 @@ macro(add_templateparser_unittest _source)
     KF5::KIOCore
     KF5::Mime
     KF5::AkonadiCore
-    KF5::PimIdentities
+    KF5::IdentityManagement
   )
 endmacro()
 

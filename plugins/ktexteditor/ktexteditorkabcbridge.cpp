@@ -19,11 +19,11 @@
 #include <kabc/addressee.h>
 #include <kcmultidialog.h>
 #include <kmessagebox.h>
-#include <KPIMIdentities/kpimidentities/identity.h>
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <KLocalizedString>
 
-using namespace KPIMIdentities;
+using namespace KIdentityManagement;
 
 // extern "C" is needed here because this function must be located using
 // QLibrary resolve() that only knows how to resolve C functions

@@ -41,8 +41,8 @@
 #include <KCalCore/Todo>
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KPIMIdentities/Identity>
-#include <KPIMIdentities/IdentityManager>
+#include <KIdentityManagement/Identity>
+#include <KIdentityManagement/IdentityManager>
 
 #include <AkonadiCore/Item>
 
@@ -69,7 +69,7 @@
 #include <QTreeWidget>
 #include <QVBoxLayout>
 
-using namespace KPIMIdentities;
+using namespace KIdentityManagement;
 using namespace KCalCore;
 using namespace KCalUtils;
 

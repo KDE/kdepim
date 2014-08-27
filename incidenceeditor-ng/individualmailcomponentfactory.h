@@ -26,7 +26,7 @@
 
 #include <MailTransport/MessageQueueJob>
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <KPIMIdentities/Identity>
+#include <KIdentityManagement/Identity>
 
 namespace IncidenceEditorNG {
 
@@ -36,7 +36,7 @@ class IndividualMessageQueueJob : public MailTransport::MessageQueueJob
 {
     Q_OBJECT
 public:
-    explicit IndividualMessageQueueJob(const KPIMIdentities::Identity &identity, const KCalCore::Attendee::List &update, const KCalCore::Attendee::List &edit, QObject *parent);
+    explicit IndividualMessageQueueJob(const KIdentityManagement::Identity &identity, const KCalCore::Attendee::List &update, const KCalCore::Attendee::List &edit, QObject *parent);
 
     virtual void start();
 private slots:
@@ -47,7 +47,7 @@ private slots:
 private:
     KCalCore::Attendee::List mUpdate;
     KCalCore::Attendee::List mEdit;
-    KPIMIdentities::Identity mIdentity;
+    KIdentityManagement::Identity mIdentity;
     MailTransport::MessageQueueJob *mQueueJob;
     OpenComposerJob *mComposerJob;
 };
@@ -99,7 +99,7 @@ class INCIDENCEEDITORS_NG_EXPORT IndividualMailComponentFactory : public Akonadi
 public:
     explicit IndividualMailComponentFactory(QObject *parent = 0);
     virtual MailTransport::MessageQueueJob *createMessageQueueJob(const KCalCore::IncidenceBase::Ptr &incidence,
-            const KPIMIdentities::Identity &identity, QObject *parent);
+            const KIdentityManagement::Identity &identity, QObject *parent);
 
     virtual Akonadi::ITIPHandlerDialogDelegate *createITIPHanderDialogDelegate(const KCalCore::Incidence::Ptr &incidence,
             KCalCore::iTIPMethod method, QWidget *parent);

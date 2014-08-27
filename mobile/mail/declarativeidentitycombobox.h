@@ -23,11 +23,11 @@
 #include "declarativewidgetbase.h"
 #include "composerview.h"
 
-#include <KPIMIdentities/kpimidentities/identitycombo.h>
+#include <KIdentityManagement/kidentitymanagement/identitycombo.h>
 
 class QDeclarativeItem;
 
-class DeclarativeIdentityComboBox : public DeclarativeWidgetBase<KPIMIdentities::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
+class DeclarativeIdentityComboBox : public DeclarativeWidgetBase<KIdentityManagement::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
 {
   Q_OBJECT
   public:

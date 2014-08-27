@@ -31,7 +31,7 @@
 #include <Akonadi/KMime/MessageStatus>
 #include <messagecore/misc/mdnstateattribute.h>
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class IdentityManager;
 }
 
@@ -147,7 +147,7 @@ public:
    * Required to be set before create* is called, otherwise the created messages
    *  might have the wrong identity data.
    */
-    void setIdentityManager( KPIMIdentities::IdentityManager* ident );
+    void setIdentityManager( KIdentityManagement::IdentityManager* ident );
 
     /**
    * Required to link created messages properly with original message.
@@ -240,7 +240,7 @@ public:
 private:
     /** @return the UOID of the identity for this message.
       Searches the "x-kmail-identity" header and if that fails,
-      searches with KPIMIdentities::IdentityManager::identityForAddress()
+      searches with KIdentityManagement::IdentityManager::identityForAddress()
    **/
     uint identityUoid(const KMime::Message::Ptr &msg );
 
@@ -257,7 +257,7 @@ private:
     KMime::Content *createForwardAttachmentMessage(const KMime::Message::Ptr& fwdMsg);
 
     // TODO move IdentityManager used in KMail to kdepimlibs when not in freeze
-    KPIMIdentities::IdentityManager* m_identityManager;
+    KIdentityManagement::IdentityManager* m_identityManager;
     // Required parts to create messages
     KMime::Message::Ptr m_origMsg;
     Akonadi::Entity::Id m_origId;

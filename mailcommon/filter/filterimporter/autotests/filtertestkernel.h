@@ -33,7 +33,7 @@ class FilterTestKernel : public QObject, public MailCommon::IKernel, public Mail
 public:
     explicit FilterTestKernel( QObject *parent = 0 );
 
-    KPIMIdentities::IdentityManager *identityManager();
+    KIdentityManagement::IdentityManager *identityManager();
     MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
@@ -52,7 +52,7 @@ public:
     
 
 private:
-    KPIMIdentities::IdentityManager *mIdentityManager;
+    KIdentityManagement::IdentityManager *mIdentityManager;
     MessageComposer::MessageSender *mMessageSender;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;

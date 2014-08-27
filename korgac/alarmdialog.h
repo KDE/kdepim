@@ -37,7 +37,7 @@ namespace Akonadi {
   class Item;
 }
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
   class IdentityManager;
 }
 
@@ -127,7 +127,7 @@ class AlarmDialog : public KDialog
     Akonadi::ETMCalendar::Ptr mCalendar;
     QTreeWidget *mIncidenceTree;
     CalendarSupport::IncidenceViewer *mDetailView;
-    KPIMIdentities::IdentityManager *mIdentityManager;
+    KIdentityManagement::IdentityManager *mIdentityManager;
 
     QPoint mPos;
     QSpinBox *mSuspendSpin;

@@ -18,8 +18,8 @@
 #include "importwizard.h"
 #include "importsettingpage.h"
 
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
-#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <MailTransport/mailtransport/transportmanager.h>
 
 #include <KLocalizedString>
@@ -36,7 +36,7 @@ using namespace Akonadi;
 AbstractSettings::AbstractSettings(ImportWizard *parent)
     :mImportWizard(parent)
 {
-    mManager = new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" );
+    mManager = new KIdentityManagement::IdentityManager( false, this, "mIdentityManager" );
     mKmailConfig = KSharedConfig::openConfig( QLatin1String( "kmail2rc" ) );
 }
 
@@ -46,15 +46,15 @@ AbstractSettings::~AbstractSettings()
     delete mManager;
 }
 
-KPIMIdentities::Identity* AbstractSettings::createIdentity(QString& name)
+KIdentityManagement::Identity* AbstractSettings::createIdentity(QString& name)
 {
     name = uniqueIdentityName(name);
-    KPIMIdentities::Identity* identity = &mManager->newFromScratch( name );
+    KIdentityManagement::Identity* identity = &mManager->newFromScratch( name );
     addImportInfo(i18n("Setting up identity..."));
     return identity;
 }
 
-void AbstractSettings::storeIdentity(KPIMIdentities::Identity* identity)
+void AbstractSettings::storeIdentity(KIdentityManagement::Identity* identity)
 {
     mManager->setAsDefault( identity->uoid() );
     mManager->commit();

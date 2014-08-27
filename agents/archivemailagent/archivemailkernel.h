@@ -35,7 +35,7 @@ class ArchiveMailKernel : public QObject, public MailCommon::IKernel, public Mai
 public:
     explicit  ArchiveMailKernel( QObject *parent = 0 );
 
-    KPIMIdentities::IdentityManager *identityManager();
+    KIdentityManagement::IdentityManager *identityManager();
     MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
@@ -54,7 +54,7 @@ public:
     
 
 private:
-    KPIMIdentities::IdentityManager *mIdentityManager;
+    KIdentityManagement::IdentityManager *mIdentityManager;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;

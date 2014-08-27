@@ -33,7 +33,7 @@ class PimSettingExporterKernel : public QObject, public MailCommon::IKernel, pub
 public:
     explicit PimSettingExporterKernel( QObject *parent = 0 );
 
-    KPIMIdentities::IdentityManager *identityManager();
+    KIdentityManagement::IdentityManager *identityManager();
     MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
@@ -51,7 +51,7 @@ public:
     bool showPopupAfterDnD();
 
 private:
-    KPIMIdentities::IdentityManager *mIdentityManager;
+    KIdentityManagement::IdentityManager *mIdentityManager;
     MessageComposer::MessageSender *mMessageSender;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;

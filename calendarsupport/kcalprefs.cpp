@@ -27,8 +27,8 @@
 
 #include <KMime/HeaderParsing>
 
-#include <KPIMIdentities/Identity>
-#include <KPIMIdentities/IdentityManager>
+#include <KIdentityManagement/Identity>
+#include <KIdentityManagement/IdentityManager>
 
 #include <KPIMUtils/Email>
 
@@ -253,9 +253,9 @@ QStringList KCalPrefs::fullEmails()
 
   QStringList::Iterator it;
   // Grab emails from the email identities
-  KPIMIdentities::IdentityManager *idmanager = CalendarSupport::identityManager();
+  KIdentityManagement::IdentityManager *idmanager = CalendarSupport::identityManager();
   QStringList lst = idmanager->identities();
-  KPIMIdentities::IdentityManager::ConstIterator it1;
+  KIdentityManagement::IdentityManager::ConstIterator it1;
   for ( it1 = idmanager->begin(); it1 != idmanager->end(); ++it1 ) {
     fullEmails << (*it1).fullEmailAddr();
   }

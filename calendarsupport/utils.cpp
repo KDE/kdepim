@@ -63,7 +63,7 @@
 
 #include <boost/bind.hpp>
 #include <KMessageBox>
-#include <KPIMIdentities/IdentityManager>
+#include <KIdentityManagement/IdentityManager>
 #include <KFileDialog>
 #include <KIO/NetAccess>
 #include <QDebug>

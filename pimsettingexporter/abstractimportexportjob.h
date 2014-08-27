@@ -31,7 +31,7 @@ class KZip;
 class KArchiveFile;
 class KArchiveEntry;
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class Identity;
 class IdentityManager;
 }
@@ -108,7 +108,7 @@ protected:
     QString mTempDirName;
     Utils::StoredTypes mTypeSelected;
     ArchiveStorage *mArchiveStorage;
-    KPIMIdentities::IdentityManager *mIdentityManager;
+    KIdentityManagement::IdentityManager *mIdentityManager;
     QWidget *mParent;
     QTemporaryDir *mTempDir;
     QProgressDialog *mProgressDialog;

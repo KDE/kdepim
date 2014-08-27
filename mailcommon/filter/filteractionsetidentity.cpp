@@ -23,9 +23,9 @@
 #include "kernel/mailkernel.h"
 #include "dialog/filteractionmissingargumentdialog.h"
 
-#include <KPIMIdentities/Identity>
-#include <KPIMIdentities/IdentityCombo>
-#include <KPIMIdentities/IdentityManager>
+#include <KIdentityManagement/Identity>
+#include <KIdentityManagement/IdentityCombo>
+#include <KIdentityManagement/IdentityManager>
 
 #include <KLocalizedString>
 #include <QPointer>
@@ -63,7 +63,7 @@ bool FilterActionSetIdentity::argsFromStringInteractive( const QString &argsStr,
 
 FilterAction::ReturnCode FilterActionSetIdentity::process(ItemContext &context , bool applyOnOutbound) const
 {
-    const KPIMIdentities::Identity & ident =
+    const KIdentityManagement::Identity & ident =
       KernelIf->identityManager()->identityForUoid( mParameter );
 
     if ( ident.isNull() )
@@ -98,7 +98,7 @@ SearchRule::RequiredPart FilterActionSetIdentity::requiredPart() const
 
 QWidget* FilterActionSetIdentity::createParamWidget( QWidget *parent ) const
 {
-    KPIMIdentities::IdentityCombo *comboBox = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), parent );
+    KIdentityManagement::IdentityCombo *comboBox = new KIdentityManagement::IdentityCombo( KernelIf->identityManager(), parent );
     comboBox->setCurrentIdentity( mParameter );
 
     connect( comboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(filterActionModified()) );
@@ -108,7 +108,7 @@ QWidget* FilterActionSetIdentity::createParamWidget( QWidget *parent ) const
 
 void FilterActionSetIdentity::applyParamWidgetValue( QWidget *paramWidget )
 {
-    const KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+    const KIdentityManagement::IdentityCombo *comboBox = dynamic_cast<KIdentityManagement::IdentityCombo*>( paramWidget );
     Q_ASSERT( comboBox );
 
     mParameter = comboBox->currentIdentity();
@@ -116,7 +116,7 @@ void FilterActionSetIdentity::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionSetIdentity::clearParamWidget( QWidget *paramWidget ) const
 {
-    KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+    KIdentityManagement::IdentityCombo *comboBox = dynamic_cast<KIdentityManagement::IdentityCombo*>( paramWidget );
     Q_ASSERT( comboBox );
 
     comboBox->setCurrentIndex( 0 );
@@ -124,7 +124,7 @@ void FilterActionSetIdentity::clearParamWidget( QWidget *paramWidget ) const
 
 void FilterActionSetIdentity::setParamWidgetValue( QWidget *paramWidget ) const
 {
-    KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+    KIdentityManagement::IdentityCombo *comboBox = dynamic_cast<KIdentityManagement::IdentityCombo*>( paramWidget );
     Q_ASSERT( comboBox );
 
     comboBox->setCurrentIdentity( mParameter );

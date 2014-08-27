@@ -30,7 +30,7 @@ using namespace IncidenceEditorNG;
 
 OpenComposerJob::OpenComposerJob(QObject *parent,
                                  const QString &to, const QString &cc, const QString &bcc,
-                                 const KMime::Message::Ptr &message, const KPIMIdentities::Identity &identity)
+                                 const KMime::Message::Ptr &message, const KIdentityManagement::Identity &identity)
     : KJob(parent)
     , mTo(to)
     , mCc(cc)

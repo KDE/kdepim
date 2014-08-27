@@ -43,8 +43,8 @@
 #include "qtest_messagecomposer.h"
 #include <kmime/kmime_dateformatter.h>
 
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
-#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <qtest.h>
 #include <QDateTime>
 #include <KCharsets>
@@ -116,7 +116,7 @@ QTEST_MAIN( MessageFactoryTest )
 void MessageFactoryTest::testCreateReply()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
-  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+  KIdentityManagement::IdentityManager* identMan = new KIdentityManagement::IdentityManager;
 
   MessageFactory factory( msg, 0 );
   factory.setIdentityManager( identMan );
@@ -137,7 +137,7 @@ void MessageFactoryTest::testCreateReply()
 void MessageFactoryTest::testCreateReplyHtml()
 {
   KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("html_utf8_encoded.mbox") );
-  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+  KIdentityManagement::IdentityManager* identMan = new KIdentityManagement::IdentityManager;
 
   qDebug() << "html message:" << msg->encodedContent();
 
@@ -162,7 +162,7 @@ void MessageFactoryTest::testCreateReplyHtml()
 void MessageFactoryTest::testCreateReplyUTF16Base64()
 {
   KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("plain_utf16.mbox") );
-  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+  KIdentityManagement::IdentityManager* identMan = new KIdentityManagement::IdentityManager;
 
 //   qDebug() << "plain base64 msg message:" << msg->encodedContent();
 
@@ -187,8 +187,8 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
 void MessageFactoryTest::testCreateForward()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
-  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
-  KPIMIdentities::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
+  KIdentityManagement::IdentityManager* identMan = new KIdentityManagement::IdentityManager;
+  KIdentityManagement::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
   ident.setFullName( QLatin1String( "another" ) );
   ident.setPrimaryEmailAddress( QLatin1String( "another@another.com" ) );
   identMan->commit();
@@ -236,8 +236,8 @@ void MessageFactoryTest::testCreateForward()
 void MessageFactoryTest::testCreateRedirect()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
-  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
-  KPIMIdentities::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
+  KIdentityManagement::IdentityManager* identMan = new KIdentityManagement::IdentityManager;
+  KIdentityManagement::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
   ident.setFullName( QLatin1String( "another" ) );
   ident.setPrimaryEmailAddress( QLatin1String( "another@another.com" ) );
   identMan->commit();
@@ -294,8 +294,8 @@ void MessageFactoryTest::testCreateRedirect()
 void MessageFactoryTest::testCreateResend()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
-  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
-  KPIMIdentities::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
+  KIdentityManagement::IdentityManager* identMan = new KIdentityManagement::IdentityManager;
+  KIdentityManagement::Identity &ident = identMan->modifyIdentityForUoid( identMan->identityForUoidOrDefault( 0 ).uoid() );
   ident.setFullName( QLatin1String( "another" ) );
   ident.setPrimaryEmailAddress( QLatin1String( "another@another.com" ) );
   identMan->commit();
@@ -346,7 +346,7 @@ void MessageFactoryTest::testCreateResend()
 void MessageFactoryTest::testCreateMDN()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
-  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+  KIdentityManagement::IdentityManager* identMan = new KIdentityManagement::IdentityManager;
 
   MessageFactory factory( msg, 0 );
   
@@ -451,7 +451,7 @@ void MessageFactoryTest::test_multipartAlternative()
   origMsg->setContent( mailData );
   origMsg->parse();
 
-  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+  KIdentityManagement::IdentityManager* identMan = new KIdentityManagement::IdentityManager;
 
   MessageFactory factory( origMsg, 0 );
   factory.setIdentityManager( identMan );

@@ -48,7 +48,7 @@ target_link_libraries(templateparser
   KF5::Mime
   KF5::AkonadiCore
   KF5::PimTextEdit
-  KF5::PimIdentities
+  KF5::IdentityManagement
   messagecore
   kleo
   kpgp

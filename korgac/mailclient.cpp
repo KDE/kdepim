@@ -37,7 +37,7 @@
 
 #include <KMime/Message>
 
-#include <KPIMIdentities/Identity>
+#include <KIdentityManagement/Identity>
 
 #include <KPIMUtils/Email>
 
@@ -61,7 +61,7 @@ MailClient::~MailClient()
 }
 
 bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
-                                const KPIMIdentities::Identity &identity,
+                                const KIdentityManagement::Identity &identity,
                                 bool bccMe, const QString &attachment,
                                 const QString &mailTransport )
 {
@@ -138,7 +138,7 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
 }
 
 bool MailClient::mailOrganizer( const KCalCore::IncidenceBase::Ptr &incidence,
-                                const KPIMIdentities::Identity &identity,
+                                const KIdentityManagement::Identity &identity,
                                 const QString &from, bool bccMe,
                                 const QString &attachment,
                                 const QString &sub, const QString &mailTransport )
@@ -162,7 +162,7 @@ bool MailClient::mailOrganizer( const KCalCore::IncidenceBase::Ptr &incidence,
 }
 
 bool MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
-                         const KPIMIdentities::Identity &identity,
+                         const KIdentityManagement::Identity &identity,
                          const QString &from, bool bccMe,
                          const QString &recipients, const QString &attachment,
                          const QString &mailTransport )
@@ -194,7 +194,7 @@ QStringList extractEmailAndNormalize( const QString& email )
   return normalizedEmail;
 }
 
-bool MailClient::send( const KPIMIdentities::Identity &identity,
+bool MailClient::send( const KIdentityManagement::Identity &identity,
                        const QString &from, const QString &_to,
                        const QString &cc, const QString &subject,
                        const QString &body, bool hidden, bool bccMe,

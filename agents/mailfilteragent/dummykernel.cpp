@@ -1,6 +1,6 @@
 #include "dummykernel.h"
 
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <messagecomposer/sender/akonadisender.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <AkonadiCore/session.h>
@@ -13,7 +13,7 @@ DummyKernel::DummyKernel( QObject *parent )
     : QObject( parent )
 {
     mMessageSender = new MessageComposer::AkonadiSender( this );
-    mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
+    mIdentityManager = new KIdentityManagement::IdentityManager( false, this );
     Akonadi::Session *session = new Akonadi::Session( "MailFilter Kernel ETM", this );
 
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
@@ -30,7 +30,7 @@ DummyKernel::DummyKernel( QObject *parent )
     mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
-KPIMIdentities::IdentityManager *DummyKernel::identityManager()
+KIdentityManagement::IdentityManager *DummyKernel::identityManager()
 {
     return mIdentityManager;
 }

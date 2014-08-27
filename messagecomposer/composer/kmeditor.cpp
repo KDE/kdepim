@@ -29,7 +29,7 @@
 #include <kmacroexpander.h>
 #include <KShell>
 
-#include <KPIMIdentities/Signature>
+#include <KIdentityManagement/Signature>
 
 #include <grantlee/plaintextmarkupbuilder.h>
 
@@ -92,7 +92,7 @@ public:
      * Text inside quotes or the given signature will be ignored.
      */
     void cleanWhitespaceHelper( const QRegExp &regExp, const QString &newText,
-                                const KPIMIdentities::Signature &sig );
+                                const KIdentityManagement::Signature &sig );
 
     /**
      * Returns a list of all occurrences of the given signature.
@@ -102,7 +102,7 @@ public:
      * @param sig this signature will be searched for
      * @return a list of pairs of start and end positions of the signature
      */
-    QList< QPair<int,int> > signaturePositions( const KPIMIdentities::Signature &sig ) const;
+    QList< QPair<int,int> > signaturePositions( const KIdentityManagement::Signature &sig ) const;
 
     void slotAddAutoCorrect(const QString&, const QString&);
     // Data members
@@ -604,7 +604,7 @@ void KMeditor::ensureCursorVisible()
 
 void KMeditorPrivate::cleanWhitespaceHelper( const QRegExp &regExp,
                                              const QString &newText,
-                                             const KPIMIdentities::Signature &sig )
+                                             const KIdentityManagement::Signature &sig )
 {
     int currentSearchPosition = 0;
 
@@ -652,7 +652,7 @@ void KMeditorPrivate::cleanWhitespaceHelper( const QRegExp &regExp,
     }
 }
 
-void KMeditor::cleanWhitespace( const KPIMIdentities::Signature &sig )
+void KMeditor::cleanWhitespace( const KIdentityManagement::Signature &sig )
 {
     QTextCursor cursor( document() );
     cursor.beginEditBlock();
@@ -677,7 +677,7 @@ void KMeditor::cleanWhitespace( const KPIMIdentities::Signature &sig )
 }
 
 QList< QPair<int,int> >
-KMeditorPrivate::signaturePositions( const KPIMIdentities::Signature &sig ) const
+KMeditorPrivate::signaturePositions( const KIdentityManagement::Signature &sig ) const
 {
     QList< QPair<int,int> > signaturePositions;
     if ( !sig.rawText().isEmpty() ) {
@@ -702,8 +702,8 @@ KMeditorPrivate::signaturePositions( const KPIMIdentities::Signature &sig ) cons
     return signaturePositions;
 }
 
-bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
-                                 const KPIMIdentities::Signature &newSig )
+bool KMeditor::replaceSignature( const KIdentityManagement::Signature &oldSig,
+                                 const KIdentityManagement::Signature &newSig )
 {
     bool found = false;
     QString oldSigText = oldSig.toPlainText();
@@ -748,8 +748,8 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
         // Remove the old and insert the new signature
         cursor.removeSelectedText();
         setTextCursor( cursor );
-        newSig.insertIntoTextEdit( KPIMIdentities::Signature::AtCursor,
-                                   KPIMIdentities::Signature::AddNothing, this );
+        newSig.insertIntoTextEdit( KIdentityManagement::Signature::AtCursor,
+                                   KIdentityManagement::Signature::AddNothing, this );
         found = true;
 
         currentSearchPosition += newSig.toPlainText().length();

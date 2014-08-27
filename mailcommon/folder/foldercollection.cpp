@@ -29,8 +29,8 @@
 
 using namespace Akonadi;
 
-#include <KPIMIdentities/IdentityManager>
-#include <KPIMIdentities/Identity>
+#include <KIdentityManagement/IdentityManager>
+#include <KIdentityManagement/Identity>
 
 #include <QDebug>
 

@@ -20,8 +20,8 @@
 
 #include <MailTransport/mailtransport/transportmanager.h>
 
-#include <KPIMIdentities/kpimidentities/identity.h>
-#include <KPIMIdentities/kpimidentities/signature.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
+#include <KIdentityManagement/kidentitymanagement/signature.h>
 
 
 KMail1Settings::KMail1Settings(const QString& filename,ImportWizard *parent)

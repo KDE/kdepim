@@ -24,7 +24,7 @@
 
 class ImportWizard;
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
 class Identity;
 class IdentityManager;
 }
@@ -49,13 +49,13 @@ protected:
 
     QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
 
-    KPIMIdentities::Identity* createIdentity(QString& name);
+    KIdentityManagement::Identity* createIdentity(QString& name);
 
     MailTransport::Transport *createTransport();
 
     void storeTransport(MailTransport::Transport * mt, bool isDefault = false );
 
-    void storeIdentity(KPIMIdentities::Identity* identity);
+    void storeIdentity(KIdentityManagement::Identity* identity);
 
     void addKmailConfig( const QString& groupName, const QString& key, const QString& value);
     void addKmailConfig( const QString& groupName, const QString& key, bool value);
@@ -72,7 +72,7 @@ protected:
     int readKmailSettings( const QString&groupName, const QString& key);
 
     ImportWizard *mImportWizard;
-    KPIMIdentities::IdentityManager *mManager;
+    KIdentityManagement::IdentityManager *mManager;
     KSharedConfigPtr mKmailConfig;
 };
 

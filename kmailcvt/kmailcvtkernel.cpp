@@ -17,7 +17,7 @@
 
 #include "kmailcvtkernel.h"
 
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <messagecomposer/sender/akonadisender.h>
 #include <AkonadiCore/session.h>
@@ -29,7 +29,7 @@
 KMailCVTKernel::KMailCVTKernel( QObject *parent )
     : QObject( parent )
 {
-    mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
+    mIdentityManager = new KIdentityManagement::IdentityManager( false, this );
     Akonadi::Session *session = new Akonadi::Session( "KMailCVT Kernel ETM", this );
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
 
@@ -45,7 +45,7 @@ KMailCVTKernel::KMailCVTKernel( QObject *parent )
     mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
-KPIMIdentities::IdentityManager *KMailCVTKernel::identityManager()
+KIdentityManagement::IdentityManager *KMailCVTKernel::identityManager()
 {
     return mIdentityManager;
 }

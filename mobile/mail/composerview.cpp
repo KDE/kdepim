@@ -28,9 +28,9 @@
 #include "settings.h"
 #include "snippetseditor.h"
 
-#include <KPIMIdentities/kpimidentities/identity.h>
-#include <KPIMIdentities/kpimidentities/identitycombo.h>
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
+#include <KIdentityManagement/kidentitymanagement/identitycombo.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <MailTransport/mailtransport/messagequeuejob.h>
 #include <MailTransport/mailtransport/transportcombobox.h>
 #include <MailTransport/mailtransport/transportmanager.h>
@@ -103,7 +103,7 @@ void ComposerView::doDelayedInit()
 {
   qDebug();
   qmlRegisterType<DeclarativeEditor>( "org.kde.messagecomposer", 4, 5, "Editor" );
-  qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
+  qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kidentitymanagement", 4, 5, "IdentityComboBox" );
   qmlRegisterType<DeclarativeRecipientsEditor>( "org.kde.messagecomposer", 4, 5, "RecipientsEditor" );
 
   engine()->rootContext()->setContextProperty( QLatin1String("application"), QVariant::fromValue( static_cast<QObject*>( this ) ) );
@@ -236,7 +236,7 @@ void ComposerView::doDelayedInit()
   actionCollection()->action( QLatin1String("composer_insert_signature") )->setText( i18n( "Insert Signature at Cursor Position" ) );
 }
 
-void ComposerView::setIdentityCombo( KPIMIdentities::IdentityCombo* combo )
+void ComposerView::setIdentityCombo( KIdentityManagement::IdentityCombo* combo )
 {
   m_composerBase->setIdentityCombo( combo );
 
@@ -352,7 +352,7 @@ void ComposerView::send( MessageComposer::MessageSender::SendMethod method, Mess
 
   setBusy(true);
 
-  const KPIMIdentities::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
+  const KIdentityManagement::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
   m_composerBase->setFrom( identity.fullEmailAddr() );
   m_composerBase->setReplyTo( identity.replyToAddr() );
   if ( !identity.fcc().isEmpty() ) {
@@ -408,7 +408,7 @@ QObject* ComposerView::getAction( const QString &name ) const
 void ComposerView::configureIdentity()
 {
   KCMultiDialog dlg;
-  dlg.addModule( QLatin1String("kcm_kpimidentities") );
+  dlg.addModule( QLatin1String("kcm_kidentitymanagement") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
   dlg.setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
   dlg.exec();
@@ -465,8 +465,8 @@ void ComposerView::transportsChanged()
 
 void ComposerView::identityChanged( uint newIdentity )
 {
-  const KPIMIdentities::Identity identity = MobileKernel::self()->identityManager()->identityForUoid( newIdentity );
-  const KPIMIdentities::Identity oldIdentity = MobileKernel::self()->identityManager()->identityForUoid( m_currentIdentity );
+  const KIdentityManagement::Identity identity = MobileKernel::self()->identityManager()->identityForUoid( newIdentity );
+  const KIdentityManagement::Identity oldIdentity = MobileKernel::self()->identityManager()->identityForUoid( m_currentIdentity );
   m_composerBase->identityChanged( identity, oldIdentity );
 
   if ( !identity.isNull() && !identity.transport().isEmpty() ) {

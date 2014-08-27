@@ -32,7 +32,7 @@ namespace Akonadi {
   class EntityMimeTypeFilterModel;
 }
 
-namespace KPIMIdentities {
+namespace KIdentityManagement {
   class IdentityManager;
 }
 
@@ -55,7 +55,7 @@ class IKernel
     /**
      * Return the pointer to the identity manager.
      */
-    virtual KPIMIdentities::IdentityManager *identityManager() = 0;
+    virtual KIdentityManagement::IdentityManager *identityManager() = 0;
 
     virtual KSharedConfig::Ptr config() = 0;
     virtual void syncConfig() = 0;

@@ -29,7 +29,7 @@
 #include <MailTransport/Transport>
 #include <MailTransport/TransportManager>
 
-#include <KPIMIdentities/IdentityCombo>
+#include <KIdentityManagement/IdentityCombo>
 
 #include <KLocalizedString>
 #include <KUrlRequester>
@@ -211,7 +211,7 @@ FilterActionMissingIdentityDialog::FilterActionMissingIdentityDialog( const QStr
                           filtername ) );
     label->setWordWrap(true);
     lay->addWidget( label );
-    mComboBoxIdentity = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), this );
+    mComboBoxIdentity = new KIdentityManagement::IdentityCombo( KernelIf->identityManager(), this );
     lay->addWidget( mComboBoxIdentity );
     readConfig();
 }

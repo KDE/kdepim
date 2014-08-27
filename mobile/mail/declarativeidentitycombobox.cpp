@@ -19,13 +19,13 @@
 #include "declarativeidentitycombobox.h"
 #include "mobilekernel.h"
 
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 
 #include <QDeclarativeItem>
 
 DeclarativeIdentityComboBox::DeclarativeIdentityComboBox ( QDeclarativeItem* parent ) :
-  DeclarativeWidgetBase< KPIMIdentities::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
-    ( new KPIMIdentities::IdentityCombo( MobileKernel::self()->identityManager(), 0 ), parent )
+  DeclarativeWidgetBase< KIdentityManagement::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
+    ( new KIdentityManagement::IdentityCombo( MobileKernel::self()->identityManager(), 0 ), parent )
 {
 }
 

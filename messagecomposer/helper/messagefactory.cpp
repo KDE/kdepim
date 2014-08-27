@@ -26,8 +26,8 @@
 #ifndef QT_NO_CURSOR
 #include <messageviewer/utils/kcursorsaver.h>
 #endif
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
-#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KIdentityManagement/kidentitymanagement/identitymanager.h>
+#include <KIdentityManagement/kidentitymanagement/identity.h>
 
 #include <Akonadi/KMime/MessageStatus>
 #include <kmime/kmime_dateformatter.h>
@@ -59,7 +59,7 @@ static bool operator==( const KMime::Types::Mailbox &left, const KMime::Types::M
  * Strips all the user's addresses from an address list. This is used
  * when replying.
  */
-static KMime::Types::Mailbox::List stripMyAddressesFromAddressList( const KMime::Types::Mailbox::List& list, const KPIMIdentities::IdentityManager *manager )
+static KMime::Types::Mailbox::List stripMyAddressesFromAddressList( const KMime::Types::Mailbox::List& list, const KIdentityManagement::IdentityManager *manager )
 {
     KMime::Types::Mailbox::List addresses( list );
     for ( KMime::Types::Mailbox::List::Iterator it = addresses.begin(); it != addresses.end(); ) {
@@ -502,7 +502,7 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, const 
         if ( !strId.isEmpty())
             id = strId.toUInt();
     }
-    const KPIMIdentities::Identity & ident =
+    const KIdentityManagement::Identity & ident =
             m_identityManager->identityForUoidOrDefault( id );
 
     // X-KMail-Redirect-From: content
@@ -756,7 +756,7 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
 }
 
 
-void MessageFactory::setIdentityManager( KPIMIdentities::IdentityManager* ident)
+void MessageFactory::setIdentityManager( KIdentityManagement::IdentityManager* ident)
 {
     m_identityManager = ident;
 }
