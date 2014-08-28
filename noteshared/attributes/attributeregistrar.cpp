@@ -22,16 +22,17 @@
 
 #include <AkonadiCore/attributefactory.h>
 
-namespace {
+namespace
+{
 
 // Anonymous namespace; function is invisible outside this file.
 bool dummy()
 {
-  Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteDisplayAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteAlarmAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteLockAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<NoteShared::ShowFolderNotesAttribute>();
-  return true;
+    Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteDisplayAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteAlarmAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteLockAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<NoteShared::ShowFolderNotesAttribute>();
+    return true;
 }
 
 // Called when this library is loaded.

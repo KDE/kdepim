@@ -25,7 +25,7 @@ class KMail1ImportData : public AbstractImporter
 public:
     explicit KMail1ImportData(ImportWizard *parent);
     ~KMail1ImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

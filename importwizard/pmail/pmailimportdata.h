@@ -25,7 +25,7 @@ class PMailImportData : public AbstractImporter
 public:
     explicit PMailImportData(ImportWizard *parent);
     ~PMailImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

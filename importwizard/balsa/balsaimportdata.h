@@ -25,7 +25,7 @@ class BalsaImportData : public AbstractImporter
 public:
     explicit BalsaImportData(ImportWizard *parent);
     ~BalsaImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

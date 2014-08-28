@@ -21,11 +21,13 @@
 
 class ImportWizard;
 
-namespace MailImporter {
+namespace MailImporter
+{
 class FilterInfo;
 }
 
-namespace MailCommon {
+namespace MailCommon
+{
 class MailFilter;
 class FilterImporterExporter;
 }
@@ -33,8 +35,7 @@ class FilterImporterExporter;
 class AbstractImporter
 {
 public:
-    enum TypeSupportedOption
-    {
+    enum TypeSupportedOption {
         None = 0,
         Mails = 1,
         Settings = 2,
@@ -43,23 +44,23 @@ public:
         Calendars = 16
     };
 
-    Q_DECLARE_FLAGS(TypeSupportedOptions, TypeSupportedOption )
+    Q_DECLARE_FLAGS(TypeSupportedOptions, TypeSupportedOption)
 
     explicit AbstractImporter(ImportWizard *parent);
     virtual ~AbstractImporter();
 
     /**
-   * Return true if mail found on system
-   */
-    virtual bool foundMailer() const= 0;
+    * Return true if mail found on system
+    */
+    virtual bool foundMailer() const = 0;
 
     /**
-   * Return type of data that we can import
-   */
+    * Return type of data that we can import
+    */
     virtual TypeSupportedOptions supportedOption() = 0;
     /**
-   * Return name for plugins
-   */
+    * Return name for plugins
+    */
     virtual QString name() const = 0;
 
     virtual bool importSettings();
@@ -69,18 +70,17 @@ public:
     virtual bool importCalendar();
 
 protected:
-    void appendFilters( const QList<MailCommon::MailFilter*> &filters );
-    MailImporter::FilterInfo* initializeInfo();
-    void addImportFilterInfo( const QString &log );
-    void addImportFilterError( const QString &log );
-    bool addFilters( const QString &filterPath, MailCommon::FilterImporterExporter::FilterType type );
+    void appendFilters(const QList<MailCommon::MailFilter *> &filters);
+    MailImporter::FilterInfo *initializeInfo();
+    void addImportFilterInfo(const QString &log);
+    void addImportFilterError(const QString &log);
+    bool addFilters(const QString &filterPath, MailCommon::FilterImporterExporter::FilterType type);
     void addImportSettingsInfo(const QString &log);
     void addImportCalendarInfo(const QString &log);
 
     QString mPath;
     ImportWizard *mImportWizard;
 };
-
 
 #endif /* AbstractImporter_H */
 

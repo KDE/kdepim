@@ -25,7 +25,7 @@ class MailAppImportData : public AbstractImporter
 public:
     explicit MailAppImportData(ImportWizard *parent);
     ~MailAppImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

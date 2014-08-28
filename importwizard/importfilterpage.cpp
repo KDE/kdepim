@@ -22,7 +22,7 @@ ImportFilterPage::ImportFilterPage(QWidget *parent) :
     ui(new Ui::ImportFilterPage)
 {
     ui->setupUi(this);
-    connect( ui->importFilters, SIGNAL(clicked()), SIGNAL(importFiltersClicked()));
+    connect(ui->importFilters, SIGNAL(clicked()), SIGNAL(importFiltersClicked()));
 }
 
 ImportFilterPage::~ImportFilterPage()
@@ -30,14 +30,14 @@ ImportFilterPage::~ImportFilterPage()
     delete ui;
 }
 
-void ImportFilterPage::addImportInfo( const QString& log )
+void ImportFilterPage::addImportInfo(const QString &log)
 {
-    ui->logFilters->addInfoLogEntry( log );
+    ui->logFilters->addInfoLogEntry(log);
 }
 
-void ImportFilterPage::addImportError( const QString& log )
+void ImportFilterPage::addImportError(const QString &log)
 {
-    ui->logFilters->addErrorLogEntry( log );
+    ui->logFilters->addErrorLogEntry(log);
 }
 
 void ImportFilterPage::setImportButtonEnabled(bool enabled)

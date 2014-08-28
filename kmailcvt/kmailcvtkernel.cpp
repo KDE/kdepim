@@ -26,23 +26,23 @@
 #include <AkonadiCore/changerecorder.h>
 #include <KSharedConfig>
 
-KMailCVTKernel::KMailCVTKernel( QObject *parent )
-    : QObject( parent )
+KMailCVTKernel::KMailCVTKernel(QObject *parent)
+    : QObject(parent)
 {
-    mIdentityManager = new KIdentityManagement::IdentityManager( false, this );
-    Akonadi::Session *session = new Akonadi::Session( "KMailCVT Kernel ETM", this );
-    mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
+    mIdentityManager = new KIdentityManagement::IdentityManager(false, this);
+    Akonadi::Session *session = new Akonadi::Session("KMailCVT Kernel ETM", this);
+    mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor(session, this);
 
-    mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
-    mEntityTreeModel->setIncludeUnsubscribed( false );
-    mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+    mEntityTreeModel = new Akonadi::EntityTreeModel(folderCollectionMonitor(), this);
+    mEntityTreeModel->setIncludeUnsubscribed(false);
+    mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
-    mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
-    mCollectionModel->setSourceModel( mEntityTreeModel );
-    mCollectionModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-    mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-    mCollectionModel->setDynamicSortFilter( true );
-    mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+    mCollectionModel = new Akonadi::EntityMimeTypeFilterModel(this);
+    mCollectionModel->setSourceModel(mEntityTreeModel);
+    mCollectionModel->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
+    mCollectionModel->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
+    mCollectionModel->setDynamicSortFilter(true);
+    mCollectionModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 }
 
 KIdentityManagement::IdentityManager *KMailCVTKernel::identityManager()
@@ -67,12 +67,12 @@ KSharedConfig::Ptr KMailCVTKernel::config()
 
 void KMailCVTKernel::syncConfig()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
 }
 
-MailCommon::JobScheduler* KMailCVTKernel::jobScheduler() const
+MailCommon::JobScheduler *KMailCVTKernel::jobScheduler() const
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return 0;
 }
 
@@ -83,7 +83,7 @@ Akonadi::ChangeRecorder *KMailCVTKernel::folderCollectionMonitor() const
 
 void KMailCVTKernel::updateSystemTray()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
 }
 
 bool KMailCVTKernel::showPopupAfterDnD()
@@ -98,13 +98,13 @@ qreal KMailCVTKernel::closeToQuotaThreshold()
 
 QStringList KMailCVTKernel::customTemplates()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return QStringList();
 }
 
 bool KMailCVTKernel::excludeImportantMailFromExpiry()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return true;
 }
 
@@ -113,9 +113,8 @@ Akonadi::Entity::Id KMailCVTKernel::lastSelectedFolder()
     return Akonadi::Entity::Id();
 }
 
-void KMailCVTKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
+void KMailCVTKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
 {
-    Q_UNUSED( col );
+    Q_UNUSED(col);
 }
-
 

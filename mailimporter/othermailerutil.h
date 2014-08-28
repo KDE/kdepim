@@ -21,7 +21,8 @@
 #include <QString>
 #include "mailimporter_export.h"
 
-namespace MailImporter {
+namespace MailImporter
+{
 namespace OtherMailerUtil
 {
 MAILIMPORTER_EXPORT QString trojitaDefaultPath();

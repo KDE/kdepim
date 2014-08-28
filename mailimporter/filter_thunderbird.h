@@ -25,7 +25,8 @@
  * Imports Thinderbird mail folder recursively, keeping the folder structure.
  * @author Danny Kukawka
  */
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterThunderbird : public Filter
 {
 public:
@@ -33,16 +34,16 @@ public:
     ~FilterThunderbird();
 
     void import();
-    void importMails( const QString & maildir );
+    void importMails(const QString &maildir);
 
     static QString defaultSettingsPath();
     static QString defaultProfile(QWidget *parent = 0);
-    static QMap<QString, QString> listProfile(QString&currentProfile);
+    static QMap<QString, QString> listProfile(QString &currentProfile);
 
 private:
-    void importDirContents(const QString&, const QString&, const QString&);
-    void importMBox(const QString&, const QString&, const QString&);
-    bool excludeFiles( const QString & file );
+    void importDirContents(const QString &, const QString &, const QString &);
+    void importMBox(const QString &, const QString &, const QString &);
+    bool excludeFiles(const QString &file);
 };
 }
 

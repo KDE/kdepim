@@ -26,7 +26,8 @@
  * Imports The Bat! mail folder recursively, recreating the folder structure.
  * @author Danny Kukawka
  */
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterTheBat : public Filter
 {
 
@@ -35,12 +36,12 @@ public:
     ~FilterTheBat();
 
     void import();
-    void importMails( const QString &maildir );
+    void importMails(const QString &maildir);
 
 private:
-    void importDirContents( const QString &);
-    void importFiles( const QString &);
-    void processDirectory( const QString &path);
+    void importDirContents(const QString &);
+    void importFiles(const QString &);
+    void processDirectory(const QString &path);
     int mImportDirDone;
     int mTotalDir;
 

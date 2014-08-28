@@ -25,7 +25,7 @@ class OeImportData : public AbstractImporter
 public:
     explicit OeImportData(ImportWizard *parent);
     ~OeImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

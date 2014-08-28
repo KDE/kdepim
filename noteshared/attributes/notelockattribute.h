@@ -24,7 +24,8 @@
 
 #include "noteshared_export.h"
 #include <AkonadiCore/Attribute>
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT NoteLockAttribute : public Akonadi::Attribute
 {
 public:
@@ -33,11 +34,11 @@ public:
 
     QByteArray type() const;
 
-    NoteLockAttribute* clone() const;
+    NoteLockAttribute *clone() const;
 
     QByteArray serialized() const;
 
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 };
 }
 

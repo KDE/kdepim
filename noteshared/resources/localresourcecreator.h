@@ -22,12 +22,13 @@
 #include <QObject>
 
 class KJob;
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT LocalResourceCreator : public QObject
 {
     Q_OBJECT
 public:
-    explicit LocalResourceCreator(QObject* parent = 0);
+    explicit LocalResourceCreator(QObject *parent = 0);
 
     void createIfMissing();
 
@@ -40,8 +41,8 @@ private:
     void createInstance();
 
 private Q_SLOTS:
-    void slotInstanceCreated( KJob *job );
-    void slotSyncDone( KJob *job );
+    void slotInstanceCreated(KJob *job);
+    void slotSyncDone(KJob *job);
 };
 }
 

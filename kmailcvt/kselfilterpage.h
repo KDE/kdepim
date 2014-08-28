@@ -20,7 +20,8 @@
 
 #include "ui_kselfilterpagedlg.h"
 #include <QList>
-namespace MailImporter {
+namespace MailImporter
+{
 class Filter;
 }
 
@@ -28,7 +29,7 @@ class KSelFilterPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KSelFilterPage(QWidget *parent=0);
+    explicit KSelFilterPage(QWidget *parent = 0);
     ~KSelFilterPage();
 
     void  addFilter(MailImporter::Filter *f);
@@ -42,7 +43,7 @@ private Q_SLOTS:
 
 private:
     Ui::KSelFilterPageDlg *mWidget;
-    QList<MailImporter::Filter*> mFilterList;
+    QList<MailImporter::Filter *> mFilterList;
 
 };
 

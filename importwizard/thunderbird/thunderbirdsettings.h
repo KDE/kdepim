@@ -28,11 +28,11 @@ class ImportWizard;
 class ThunderbirdSettings : public AbstractSettings
 {
 public:
-    explicit ThunderbirdSettings(const QString& filename, ImportWizard *parent );
+    explicit ThunderbirdSettings(const QString &filename, ImportWizard *parent);
     ~ThunderbirdSettings();
 private:
     void readAccount();
-    void readIdentity( const QString& account );
+    void readIdentity(const QString &account);
     void readTransport();
     void readGlobalSettings();
     void readLdapSettings();
@@ -40,9 +40,9 @@ private:
     void readExtensionsSettings();
     int adaptAutoResizeResolution(int index, const QString &configStrList);
 
-    void insertIntoMap( const QString& line );
+    void insertIntoMap(const QString &line);
 
-    void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName );
+    void addAuth(QMap<QString, QVariant> &settings, const QString &argument, const QString &accountName);
 
     void addNewMailNotifier(const QString &group, const QString &key, bool value);
 

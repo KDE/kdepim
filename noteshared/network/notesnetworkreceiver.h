@@ -40,23 +40,23 @@
 class QTcpSocket;
 class QTimer;
 
-
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT NotesNetworkReceiver : public QObject
 {
     Q_OBJECT
 public:
-    explicit NotesNetworkReceiver( QTcpSocket * );
+    explicit NotesNetworkReceiver(QTcpSocket *);
     ~NotesNetworkReceiver();
 
 signals:
-    void sigNoteReceived( const QString &, const QString & );
+    void sigNoteReceived(const QString &, const QString &);
 
 private slots:
     void slotDataAvailable();
     void slotReceptionTimeout();
     void slotConnectionClosed();
-    void slotError( QAbstractSocket::SocketError );
+    void slotError(QAbstractSocket::SocketError);
 
 private:
     QTimer *m_timer;       // to avoid memory and connection floods

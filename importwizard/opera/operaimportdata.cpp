@@ -27,9 +27,8 @@
 
 #include <QDir>
 
-
-OperaImportData::OperaImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+OperaImportData::OperaImportData(ImportWizard *parent)
+    : AbstractImporter(parent)
 {
     mPath = MailImporter::FilterOpera::defaultSettingsPath();
 }
@@ -38,12 +37,12 @@ OperaImportData::~OperaImportData()
 {
 }
 
-
 bool OperaImportData::foundMailer() const
 {
-    QDir directory( mPath );
-    if ( directory.exists() )
+    QDir directory(mPath);
+    if (directory.exists()) {
         return true;
+    }
     return false;
 }
 
@@ -57,14 +56,15 @@ bool OperaImportData::importMails()
     MailImporter::FilterInfo *info = initializeInfo();
 
     MailImporter::FilterOpera opera;
-    opera.setFilterInfo( info );
+    opera.setFilterInfo(info);
     info->setStatusMessage(i18n("Import in progress"));
-    const QString mailPath(mPath+ QLatin1String("mail/store/"));
+    const QString mailPath(mPath + QLatin1String("mail/store/"));
     QDir directory(mailPath);
-    if(directory.exists())
+    if (directory.exists()) {
         opera.importMails(mailPath);
-    else
+    } else {
         opera.import();
+    }
     info->setStatusMessage(i18n("Import finished"));
 
     delete info;
@@ -73,23 +73,23 @@ bool OperaImportData::importMails()
 
 bool OperaImportData::importAddressBook()
 {
-    const QString addressbookFile(mPath+QLatin1String("bookmarks.adr"));
-    OperaAddressBook addressbook(addressbookFile,mImportWizard);
+    const QString addressbookFile(mPath + QLatin1String("bookmarks.adr"));
+    OperaAddressBook addressbook(addressbookFile, mImportWizard);
     return true;
 }
 
 bool OperaImportData::importSettings()
 {
-    const QString settingFile(mPath+QLatin1String("mail/accounts.ini"));
-    OperaSettings settings(settingFile,mImportWizard);
+    const QString settingFile(mPath + QLatin1String("mail/accounts.ini"));
+    OperaSettings settings(settingFile, mImportWizard);
     return true;
 }
 
 AbstractImporter::TypeSupportedOptions OperaImportData::supportedOption()
 {
     TypeSupportedOptions options;
-    options |=AbstractImporter::Mails;
-    options |=AbstractImporter::AddressBooks;
-    options |=AbstractImporter::Settings;
+    options |= AbstractImporter::Mails;
+    options |= AbstractImporter::AddressBooks;
+    options |= AbstractImporter::Settings;
     return options;
 }

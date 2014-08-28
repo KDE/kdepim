@@ -28,9 +28,8 @@
 
 #include <QDir>
 
-
-ClawsMailImportData::ClawsMailImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+ClawsMailImportData::ClawsMailImportData(ImportWizard *parent)
+    : AbstractImporter(parent)
 {
     mPath = MailImporter::FilterClawsMail::defaultSettingsPath();
 }
@@ -39,12 +38,12 @@ ClawsMailImportData::~ClawsMailImportData()
 {
 }
 
-
 bool ClawsMailImportData::foundMailer() const
 {
-    QDir directory( mPath );
-    if ( directory.exists() )
+    QDir directory(mPath);
+    if (directory.exists()) {
         return true;
+    }
     return false;
 }
 
@@ -58,16 +57,16 @@ bool ClawsMailImportData::importMails()
     MailImporter::FilterInfo *info = initializeInfo();
 
     MailImporter::FilterClawsMail clawsMail;
-    clawsMail.setFilterInfo( info );
+    clawsMail.setFilterInfo(info);
     info->setStatusMessage(i18n("Import in progress"));
     const QString mailsPath = clawsMail.localMailDirPath();
     QDir directory(mailsPath);
-    if (directory.exists())
+    if (directory.exists()) {
         clawsMail.importMails(mailsPath);
-    else
+    } else {
         clawsMail.import();
+    }
     info->setStatusMessage(i18n("Import finished"));
-
 
     delete info;
     return true;
@@ -76,15 +75,15 @@ bool ClawsMailImportData::importMails()
 bool ClawsMailImportData::importAddressBook()
 {
     const QDir addressbookDir(mPath + QLatin1String("addrbook/"));
-    ClawsMailAddressBook account( addressbookDir, mImportWizard );
+    ClawsMailAddressBook account(addressbookDir, mImportWizard);
     return true;
 }
 
 bool ClawsMailImportData::importSettings()
 {
     const QString accountFile = mPath + QLatin1String("accountrc");
-    if ( QFile( accountFile ).exists() ) {
-        ClawsMailSettings account( mImportWizard );
+    if (QFile(accountFile).exists()) {
+        ClawsMailSettings account(mImportWizard);
         account.importSettings(accountFile, mPath);
     } else {
         addImportSettingsInfo(i18n("Claws Mail settings not found."));
@@ -95,16 +94,15 @@ bool ClawsMailImportData::importSettings()
 bool ClawsMailImportData::importFilters()
 {
     const QString filterPath(mPath + QLatin1String("matcherrc"));
-    return addFilters( filterPath, MailCommon::FilterImporterExporter::ClawsMailFilter );
+    return addFilters(filterPath, MailCommon::FilterImporterExporter::ClawsMailFilter);
 }
-
 
 AbstractImporter::TypeSupportedOptions ClawsMailImportData::supportedOption()
 {
     TypeSupportedOptions options;
-    options |=AbstractImporter::Mails;
-    options |=AbstractImporter::AddressBooks;
-    options |=AbstractImporter::Settings;
-    options |=AbstractImporter::Filters;
+    options |= AbstractImporter::Mails;
+    options |= AbstractImporter::AddressBooks;
+    options |= AbstractImporter::Settings;
+    options |= AbstractImporter::Filters;
     return options;
 }

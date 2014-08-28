@@ -26,7 +26,8 @@
  * Imports Evolution mboxes recursively, keeping the folder structure.
  * @author Simon MARTIN
  */
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterEvolution : public Filter
 {
 public:
@@ -34,11 +35,11 @@ public:
     ~FilterEvolution();
 
     void import();
-    void importMails( const QString& maildir );
+    void importMails(const QString &maildir);
     static QString defaultSettingsPath();
 private:
-    void importDirContents(const QString&, const QString&, const QString&);
-    void importMBox(const QString&, const QString&, const QString&);
+    void importDirContents(const QString &, const QString &, const QString &);
+    void importMBox(const QString &, const QString &, const QString &);
 };
 }
 

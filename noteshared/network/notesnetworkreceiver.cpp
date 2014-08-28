@@ -57,31 +57,31 @@
 #define SBSIZE 512
 using namespace NoteShared;
 
-NotesNetworkReceiver::NotesNetworkReceiver( QTcpSocket *s )
+NotesNetworkReceiver::NotesNetworkReceiver(QTcpSocket *s)
     : QObject(),
-      m_buffer( new QByteArray() ),
-      m_sock( s )
+      m_buffer(new QByteArray()),
+      m_sock(s)
 {
     const QString date =
-            KLocale::global()->formatDateTime( QDateTime::currentDateTime(),
-                                               KLocale::ShortDate, false );
+        KLocale::global()->formatDateTime(QDateTime::currentDateTime(),
+                                          KLocale::ShortDate, false);
 
     // Add the remote IP or hostname and the date to the title, to help the
     // user guess who wrote it.
-    m_titleAddon = QString::fromLatin1( " [%1, %2]" )
-            .arg( m_sock->peerAddress().toString() )
-            .arg( date );
+    m_titleAddon = QString::fromLatin1(" [%1, %2]")
+                   .arg(m_sock->peerAddress().toString())
+                   .arg(date);
 
     // Setup the communications
-    connect( m_sock, SIGNAL(readyRead()), SLOT(slotDataAvailable()) );
-    connect( m_sock, SIGNAL(disconnected()), SLOT(slotConnectionClosed()) );
-    connect( m_sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotError(QAbstractSocket::SocketError)));
+    connect(m_sock, SIGNAL(readyRead()), SLOT(slotDataAvailable()));
+    connect(m_sock, SIGNAL(disconnected()), SLOT(slotConnectionClosed()));
+    connect(m_sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotError(QAbstractSocket::SocketError)));
 
     // Setup the timer
-    m_timer = new QTimer( this );
-    m_timer->setSingleShot( true );
-    connect( m_timer, SIGNAL(timeout()), SLOT(slotReceptionTimeout()) );
-    m_timer->start( MAXTIME );
+    m_timer = new QTimer(this);
+    m_timer->setSingleShot(true);
+    connect(m_timer, SIGNAL(timeout()), SLOT(slotReceptionTimeout()));
+    m_timer->start(MAXTIME);
 }
 
 NotesNetworkReceiver::~NotesNetworkReceiver()
@@ -99,22 +99,22 @@ void NotesNetworkReceiver::slotDataAvailable()
         // Append to "big buffer" only if we have some space left.
         int curLen = m_buffer->count();
 
-        smallBufferLen = m_sock->read( smallBuffer, SBSIZE );
+        smallBufferLen = m_sock->read(smallBuffer, SBSIZE);
 
         // Limit max transfer over buffer, to avoid overflow.
-        smallBufferLen = qMin( smallBufferLen, MAXBUFFER - curLen );
+        smallBufferLen = qMin(smallBufferLen, MAXBUFFER - curLen);
 
-        if ( smallBufferLen > 0 ) {
-            m_buffer->resize( curLen + smallBufferLen );
-            memcpy( m_buffer->data() + curLen, smallBuffer, smallBufferLen );
+        if (smallBufferLen > 0) {
+            m_buffer->resize(curLen + smallBufferLen);
+            memcpy(m_buffer->data() + curLen, smallBuffer, smallBufferLen);
         }
-    } while ( smallBufferLen == SBSIZE );
+    } while (smallBufferLen == SBSIZE);
 
     // If we are overflowing, close connection.
-    if ( m_buffer->count() == MAXBUFFER ) {
+    if (m_buffer->count() == MAXBUFFER) {
         m_sock->close();
     } else {
-        m_timer->start( MAXTIME );
+        m_timer->start(MAXTIME);
     }
 }
 
@@ -127,25 +127,25 @@ void NotesNetworkReceiver::slotConnectionClosed()
 {
     QTextCodec *codec = QTextCodec::codecForLocale();
 
-    if ( m_timer->isActive() ) {
-        QString noteText = QString( codec->toUnicode( *m_buffer ) ).trimmed();
+    if (m_timer->isActive()) {
+        QString noteText = QString(codec->toUnicode(*m_buffer)).trimmed();
 
         // First line is the note title or, in case of ATnotes, the id
-        const int pos = noteText.indexOf( QRegExp( QLatin1String("[\r\n]") ) );
-        const QString noteTitle = noteText.left( pos ).trimmed() + m_titleAddon;
+        const int pos = noteText.indexOf(QRegExp(QLatin1String("[\r\n]")));
+        const QString noteTitle = noteText.left(pos).trimmed() + m_titleAddon;
 
-        noteText = noteText.mid( pos ).trimmed();
+        noteText = noteText.mid(pos).trimmed();
 
-        if ( !noteText.isEmpty() ) {
-            emit sigNoteReceived( noteTitle, noteText );
+        if (!noteText.isEmpty()) {
+            emit sigNoteReceived(noteTitle, noteText);
         }
     }
 
     deleteLater();
 }
 
-void NotesNetworkReceiver::slotError( QAbstractSocket::SocketError error )
+void NotesNetworkReceiver::slotError(QAbstractSocket::SocketError error)
 {
-    qWarning() <<"error type :"<< ( int ) error <<" error string : "<<m_sock->errorString();
+    qWarning() << "error type :" << (int) error << " error string : " << m_sock->errorString();
 }
 

@@ -21,7 +21,8 @@
 #include <AkonadiWidgets/CollectionDialog>
 #include "noteshared_export.h"
 
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT SelectedNotefolderDialog : public Akonadi::CollectionDialog
 {
     Q_OBJECT

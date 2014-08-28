@@ -25,7 +25,7 @@ class OperaImportData : public AbstractImporter
 public:
     explicit OperaImportData(ImportWizard *parent);
     ~OperaImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

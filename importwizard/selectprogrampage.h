@@ -22,7 +22,8 @@
 
 class QListWidgetItem;
 
-namespace Ui {
+namespace Ui
+{
 class SelectProgramPage;
 }
 
@@ -34,15 +35,15 @@ public:
     explicit SelectProgramPage(QWidget *parent = 0);
     ~SelectProgramPage();
 
-    void setFoundProgram(const QStringList& list);
+    void setFoundProgram(const QStringList &list);
     void disableSelectProgram();
 
 private Q_SLOTS:
     void slotItemSelectionChanged();
-    void slotItemDoubleClicked( QListWidgetItem*item );
+    void slotItemDoubleClicked(QListWidgetItem *item);
 
 Q_SIGNALS:
-    void programSelected(const QString&);
+    void programSelected(const QString &);
     void doubleClicked();
 
 private:

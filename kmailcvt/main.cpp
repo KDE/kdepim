@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-
 #include <kaboutdata.h>
 #include <KLocalizedString>
 #include <Kdelibs4ConfigMigrator>
@@ -33,12 +32,12 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     KLocalizedString::setApplicationDomain("kmailcvt");
 
-    KAboutData aboutData( QStringLiteral("kmailcvt"), i18n("KMailCVT"),
-                          QStringLiteral(KDEPIM_VERSION), i18n("Mail Import Tool"), KAboutLicense::GPL_V2,
-                          i18n("Copyright © 2000–2014 KMailCVT authors"));
+    KAboutData aboutData(QStringLiteral("kmailcvt"), i18n("KMailCVT"),
+                         QStringLiteral(KDEPIM_VERSION), i18n("Mail Import Tool"), KAboutLicense::GPL_V2,
+                         i18n("Copyright © 2000–2014 KMailCVT authors"));
 
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer & New filter & cleanups"), QLatin1String("montel@kde.org"));
-    aboutData.addAuthor(i18n("Hans Dijkema"),i18n("Original author"), QLatin1String("kmailcvt@hum.org"));
+    aboutData.addAuthor(i18n("Hans Dijkema"), i18n("Original author"), QLatin1String("kmailcvt@hum.org"));
     aboutData.addAuthor(i18n("Danny Kukawka"), i18n("Previous Maintainer & New filters"), QLatin1String("danny.kukawka@web.de"));
     aboutData.addAuthor(i18n("Laurence Anderson"), i18n("New GUI & cleanups"), QLatin1String("l.d.anderson@warwick.ac.uk"));
     aboutData.addCredit(i18n("Daniel Molkentin"), i18n("New GUI & cleanups"), QLatin1String("molkentin@kde.org"));

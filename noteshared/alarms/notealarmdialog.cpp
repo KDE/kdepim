@@ -47,11 +47,11 @@
 #include <QPushButton>
 
 using namespace NoteShared;
-NoteAlarmDialog::NoteAlarmDialog( const QString &caption, QWidget *parent )
-    : QDialog( parent )
+NoteAlarmDialog::NoteAlarmDialog(const QString &caption, QWidget *parent)
+    : QDialog(parent)
 {
-    setWindowTitle( caption );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(caption);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -60,41 +60,41 @@ NoteAlarmDialog::NoteAlarmDialog( const QString &caption, QWidget *parent )
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mainLayout->addWidget(buttonBox);
-    QWidget *page = new QWidget( this );
+    QWidget *page = new QWidget(this);
     QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
     pageVBoxLayout->setMargin(0);
 
-    m_buttons = new QButtonGroup( this );
-    QGroupBox *group = new QGroupBox( i18n( "Scheduled Alarm" ), page );
+    m_buttons = new QButtonGroup(this);
+    QGroupBox *group = new QGroupBox(i18n("Scheduled Alarm"), page);
     pageVBoxLayout->addWidget(group);
     QVBoxLayout *layout = new QVBoxLayout;
-    QRadioButton *none = new QRadioButton( i18n( "&No alarm" ) );
-    layout->addWidget( none );
-    m_buttons->addButton( none, 0 );
+    QRadioButton *none = new QRadioButton(i18n("&No alarm"));
+    layout->addWidget(none);
+    m_buttons->addButton(none, 0);
 
-    group->setLayout( layout );
+    group->setLayout(layout);
 
     QWidget *at = new QWidget;
     QHBoxLayout *atHBoxLayout = new QHBoxLayout(at);
     atHBoxLayout->setMargin(0);
-    QRadioButton *label_at = new QRadioButton( i18n( "Alarm &at:" ), at );
+    QRadioButton *label_at = new QRadioButton(i18n("Alarm &at:"), at);
     atHBoxLayout->addWidget(label_at);
-    m_atDate = new KDateComboBox( at );
+    m_atDate = new KDateComboBox(at);
     atHBoxLayout->addWidget(m_atDate);
-    m_atTime = new KTimeComboBox( at );
+    m_atTime = new KTimeComboBox(at);
     atHBoxLayout->addWidget(m_atTime);
     const QDateTime dateTime = QDateTime::currentDateTime();
     m_atDate->setMinimumDate(dateTime.date());
     m_atTime->setMinimumTime(dateTime.time());
-    atHBoxLayout->setStretchFactor( m_atDate, 1 );
-    layout->addWidget( at );
-    m_buttons->addButton( label_at, 1 );
+    atHBoxLayout->setStretchFactor(m_atDate, 1);
+    layout->addWidget(at);
+    m_buttons->addButton(label_at, 1);
 
-    connect( m_buttons, SIGNAL(buttonClicked(int)),
-             SLOT(slotButtonChanged(int)) );
-    connect(okButton, SIGNAL(clicked()), SLOT(accept()) );
-    m_buttons->button( 0 )->setChecked( true );
-    slotButtonChanged( m_buttons->checkedId() );
+    connect(m_buttons, SIGNAL(buttonClicked(int)),
+            SLOT(slotButtonChanged(int)));
+    connect(okButton, SIGNAL(clicked()), SLOT(accept()));
+    m_buttons->button(0)->setChecked(true);
+    slotButtonChanged(m_buttons->checkedId());
     mainLayout->addWidget(page);
     mainLayout->addWidget(buttonBox);
 }
@@ -102,33 +102,33 @@ NoteAlarmDialog::NoteAlarmDialog( const QString &caption, QWidget *parent )
 void NoteAlarmDialog::setAlarm(const KDateTime &dateTime)
 {
     if (dateTime.isValid()) {
-        m_buttons->button( 1 )->setChecked( true );
-        m_atDate->setDate( dateTime.date() );
-        m_atTime->setTime( dateTime.time() );
+        m_buttons->button(1)->setChecked(true);
+        m_atDate->setDate(dateTime.date());
+        m_atTime->setTime(dateTime.time());
     } else {
-        m_buttons->button( 0 )->setChecked( true );
+        m_buttons->button(0)->setChecked(true);
     }
-    slotButtonChanged( m_buttons->checkedId() );
+    slotButtonChanged(m_buttons->checkedId());
 }
 
-void NoteAlarmDialog::slotButtonChanged( int id )
+void NoteAlarmDialog::slotButtonChanged(int id)
 {
-    switch ( id ) {
+    switch (id) {
     case 0:
-        m_atDate->setEnabled( false );
-        m_atTime->setEnabled( false );
+        m_atDate->setEnabled(false);
+        m_atTime->setEnabled(false);
         break;
     case 1:
-        m_atDate->setEnabled( true );
-        m_atTime->setEnabled( true );
+        m_atDate->setEnabled(true);
+        m_atTime->setEnabled(true);
         break;
     }
 }
 
 KDateTime NoteAlarmDialog::alarm() const
 {
-    if ( m_buttons->checkedId() == 1 ) {
-        return KDateTime( m_atDate->date(), m_atTime->time(), KDateTime::LocalZone );
+    if (m_buttons->checkedId() == 1) {
+        return KDateTime(m_atDate->date(), m_atTime->time(), KDateTime::LocalZone);
     } else {
         return KDateTime();
     }

@@ -21,13 +21,12 @@
 
 using namespace MailImporter;
 
-
 class FilterInfo::Private
 {
 public:
     Private()
-        : m_removeDupMsg( false ),
-          m_filterInfoGui( 0 )
+        : m_removeDupMsg(false),
+          m_filterInfoGui(0)
     {
     }
     ~Private()
@@ -42,11 +41,10 @@ public:
 
 };
 
-
 bool FilterInfo::Private::s_terminateASAP = false;
 
 FilterInfo::FilterInfo()
-    : d( new Private )
+    : d(new Private)
 {
     Private::s_terminateASAP = false;
 }
@@ -56,71 +54,80 @@ FilterInfo::~FilterInfo()
     delete d;
 }
 
-void FilterInfo::setFilterInfoGui( FilterInfoGui *filterinfogui )
+void FilterInfo::setFilterInfoGui(FilterInfoGui *filterinfogui)
 {
     delete d->m_filterInfoGui;
     d->m_filterInfoGui = filterinfogui;
 }
 
-void FilterInfo::setStatusMessage( const QString &status )
+void FilterInfo::setStatusMessage(const QString &status)
 {
-    if ( d->m_filterInfoGui )
-        d->m_filterInfoGui->setStatusMessage( status );
+    if (d->m_filterInfoGui) {
+        d->m_filterInfoGui->setStatusMessage(status);
+    }
 }
 
-void FilterInfo::setFrom( const QString &from )
+void FilterInfo::setFrom(const QString &from)
 {
-    if ( d->m_filterInfoGui )
-        d->m_filterInfoGui->setFrom( from );
+    if (d->m_filterInfoGui) {
+        d->m_filterInfoGui->setFrom(from);
+    }
 }
 
-void FilterInfo::setTo( const QString &to )
+void FilterInfo::setTo(const QString &to)
 {
-    if ( d->m_filterInfoGui )
-        d->m_filterInfoGui->setTo(to );
+    if (d->m_filterInfoGui) {
+        d->m_filterInfoGui->setTo(to);
+    }
 }
 
-void FilterInfo::setCurrent( const QString &current )
+void FilterInfo::setCurrent(const QString &current)
 {
-    if ( d->m_filterInfoGui )
-        d->m_filterInfoGui->setCurrent( current );
+    if (d->m_filterInfoGui) {
+        d->m_filterInfoGui->setCurrent(current);
+    }
 }
 
-void  FilterInfo::setCurrent( int percent )
+void  FilterInfo::setCurrent(int percent)
 {
-    if ( d->m_filterInfoGui )
-        d->m_filterInfoGui->setCurrent( percent );
+    if (d->m_filterInfoGui) {
+        d->m_filterInfoGui->setCurrent(percent);
+    }
 }
 
-void  FilterInfo::setOverall( int percent )
+void  FilterInfo::setOverall(int percent)
 {
-    if ( d->m_filterInfoGui )
-        d->m_filterInfoGui->setOverall(percent );
+    if (d->m_filterInfoGui) {
+        d->m_filterInfoGui->setOverall(percent);
+    }
 }
 
-void FilterInfo::addInfoLogEntry( const QString &log )
+void FilterInfo::addInfoLogEntry(const QString &log)
 {
-    if ( d->m_filterInfoGui )
-        d->m_filterInfoGui->addInfoLogEntry( log );
+    if (d->m_filterInfoGui) {
+        d->m_filterInfoGui->addInfoLogEntry(log);
+    }
 }
 
-void FilterInfo::addErrorLogEntry( const QString &log )
+void FilterInfo::addErrorLogEntry(const QString &log)
 {
-    if ( d->m_filterInfoGui )
-        d->m_filterInfoGui->addErrorLogEntry( log );
+    if (d->m_filterInfoGui) {
+        d->m_filterInfoGui->addErrorLogEntry(log);
+    }
 }
-
 
 void FilterInfo::clear()
 {
-    if ( d->m_filterInfoGui )
+    if (d->m_filterInfoGui) {
         d->m_filterInfoGui->clear();
+    }
 }
 
-void FilterInfo::alert( const QString &message )
+void FilterInfo::alert(const QString &message)
 {
-    if ( d->m_filterInfoGui )
-        d->m_filterInfoGui->alert( message );
+    if (d->m_filterInfoGui) {
+        d->m_filterInfoGui->alert(message);
+    }
 }
 
 void FilterInfo::terminateASAP()
@@ -138,12 +145,12 @@ Akonadi::Collection FilterInfo::rootCollection() const
     return d->m_rootCollection;
 }
 
-void FilterInfo::setRootCollection( const Akonadi::Collection &collection )
+void FilterInfo::setRootCollection(const Akonadi::Collection &collection)
 {
     d->m_rootCollection = collection;
 }
 
-void FilterInfo::setRemoveDupMessage( bool removeDupMessage )
+void FilterInfo::setRemoveDupMessage(bool removeDupMessage)
 {
     d->m_removeDupMsg = removeDupMessage;
 }
@@ -153,10 +160,11 @@ bool FilterInfo::removeDupMessage() const
     return d->m_removeDupMsg;
 }
 
-QWidget* FilterInfo::parent()
+QWidget *FilterInfo::parent()
 {
-    if ( d->m_filterInfoGui )
+    if (d->m_filterInfoGui) {
         return d->m_filterInfoGui->parent();
+    }
     return 0;
 }
 

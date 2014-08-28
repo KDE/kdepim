@@ -23,12 +23,10 @@
 #include "importfilterinfogui.h"
 #include "importwizard.h"
 
-
 #include <QDir>
 
-
-TrojitaImportData::TrojitaImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+TrojitaImportData::TrojitaImportData(ImportWizard *parent)
+    : AbstractImporter(parent)
 {
     mPath = MailImporter::OtherMailerUtil::trojitaDefaultPath();
 }
@@ -37,12 +35,12 @@ TrojitaImportData::~TrojitaImportData()
 {
 }
 
-
 bool TrojitaImportData::foundMailer() const
 {
-    QDir directory( mPath );
-    if ( directory.exists() )
+    QDir directory(mPath);
+    if (directory.exists()) {
         return true;
+    }
     return false;
 }
 
@@ -71,12 +69,11 @@ bool TrojitaImportData::importAddressBook()
     return true;
 }
 
-
 AbstractImporter::TypeSupportedOptions TrojitaImportData::supportedOption()
 {
     TypeSupportedOptions options;
     //options |=AbstractImporter::Mails;
-    options |=AbstractImporter::Settings;
-    options |=AbstractImporter::AddressBooks;
+    options |= AbstractImporter::Settings;
+    options |= AbstractImporter::AddressBooks;
     return options;
 }

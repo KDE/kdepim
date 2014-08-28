@@ -38,17 +38,18 @@ class KDateComboBox;
 class KTimeComboBox;
 class QButtonGroup;
 class KDateTime;
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT NoteAlarmDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit NoteAlarmDialog( const QString &caption, QWidget *parent = 0 );
+    explicit NoteAlarmDialog(const QString &caption, QWidget *parent = 0);
     void setAlarm(const KDateTime &dateTime);
     KDateTime alarm() const;
 
 private slots:
-    void slotButtonChanged( int );
+    void slotButtonChanged(int);
 
 private:
     KDateComboBox *m_atDate;

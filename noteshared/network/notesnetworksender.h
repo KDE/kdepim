@@ -36,23 +36,24 @@
 
 #include <QTcpSocket>
 #include "noteshared_export.h"
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT NotesNetworkSender : public QObject
 {
     Q_OBJECT
 public:
-    explicit NotesNetworkSender(  QTcpSocket *socket );
+    explicit NotesNetworkSender(QTcpSocket *socket);
     ~NotesNetworkSender();
-    
-    void setSenderId( const QString &sender );
-    void setNote( const QString &title, const QString &text );
-    
+
+    void setSenderId(const QString &sender);
+    void setNote(const QString &title, const QString &text);
+
 protected slots:
     void slotConnected();
     void slotError();
     void slotClosed();
-    void slotWritten( qint64 );
-    
+    void slotWritten(qint64);
+
 private:
     QTcpSocket *m_socket;
     QByteArray m_note;

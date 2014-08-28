@@ -27,13 +27,12 @@ SelectProgramPage::SelectProgramPage(QWidget *parent) :
     connect(ui->listProgramFound, &QListWidget::itemDoubleClicked, this, &SelectProgramPage::slotItemDoubleClicked);
 }
 
-
 SelectProgramPage::~SelectProgramPage()
 {
     delete ui;
 }
 
-void SelectProgramPage::setFoundProgram(const QStringList& list)
+void SelectProgramPage::setFoundProgram(const QStringList &list)
 {
     ui->listProgramFound->addItems(list);
 }
@@ -45,15 +44,15 @@ void SelectProgramPage::slotItemSelectionChanged()
     }
 }
 
-void SelectProgramPage::slotItemDoubleClicked( QListWidgetItem*item )
+void SelectProgramPage::slotItemDoubleClicked(QListWidgetItem *item)
 {
-    if ( item ) {
+    if (item) {
         Q_EMIT doubleClicked();
     }
 }
 
 void SelectProgramPage::disableSelectProgram()
 {
-    ui->listProgramFound->setEnabled( false );
+    ui->listProgramFound->setEnabled(false);
 }
 

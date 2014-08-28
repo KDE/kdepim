@@ -18,7 +18,8 @@
  *imports mbox archives messages into KMail
  *@author Chris Howells
  */
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterMailApp : public Filter
 {
 public:
@@ -26,7 +27,7 @@ public:
     ~FilterMailApp();
 
     void import();
-    void importMails( const QString & maildir );
+    void importMails(const QString &maildir);
 private:
     QStringList mMboxFiles;
     void traverseDirectory(const QString &);

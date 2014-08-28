@@ -17,7 +17,6 @@
 
 #include "notealarmattribute.h"
 
-
 #include <QDataStream>
 #include <QByteArray>
 
@@ -33,23 +32,23 @@ NoteAlarmAttribute::~NoteAlarmAttribute()
 
 }
 
-NoteAlarmAttribute* NoteAlarmAttribute::clone() const
+NoteAlarmAttribute *NoteAlarmAttribute::clone() const
 {
     NoteAlarmAttribute *attr = new NoteAlarmAttribute();
     attr->setDateTime(dateTime());
     return attr;
 }
 
-void NoteAlarmAttribute::deserialize(const QByteArray& data)
+void NoteAlarmAttribute::deserialize(const QByteArray &data)
 {
-    QDataStream s( data );
+    QDataStream s(data);
     s >> mDateTime;
 }
 
 QByteArray NoteAlarmAttribute::serialized() const
 {
     QByteArray result;
-    QDataStream s( &result, QIODevice::WriteOnly );
+    QDataStream s(&result, QIODevice::WriteOnly);
     s << mDateTime;
     return result;
 }
@@ -68,5 +67,4 @@ KDateTime NoteAlarmAttribute::dateTime() const
 {
     return mDateTime;
 }
-
 

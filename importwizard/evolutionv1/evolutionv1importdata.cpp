@@ -24,9 +24,8 @@
 
 #include <QDir>
 
-
 Evolutionv1ImportData::Evolutionv1ImportData(ImportWizard *parent)
-    :AbstractImporter(parent)
+    : AbstractImporter(parent)
 {
     mPath = MailImporter::FilterEvolution::defaultSettingsPath();
 }
@@ -35,12 +34,12 @@ Evolutionv1ImportData::~Evolutionv1ImportData()
 {
 }
 
-
 bool Evolutionv1ImportData::foundMailer() const
 {
-    QDir directory( mPath );
-    if ( directory.exists() )
+    QDir directory(mPath);
+    if (directory.exists()) {
         return true;
+    }
     return false;
 }
 
@@ -53,14 +52,15 @@ bool Evolutionv1ImportData::importMails()
 {
     MailImporter::FilterInfo *info = initializeInfo();
     MailImporter::FilterEvolution evolution;
-    evolution.setFilterInfo( info );
+    evolution.setFilterInfo(info);
     info->setStatusMessage(i18n("Import in progress"));
     const QString mailsPath = mPath;
     QDir directory(mailsPath);
-    if (directory.exists())
+    if (directory.exists()) {
         evolution.importMails(mailsPath);
-    else
+    } else {
         evolution.import();
+    }
     info->setStatusMessage(i18n("Import finished"));
 
     delete info;
@@ -70,6 +70,6 @@ bool Evolutionv1ImportData::importMails()
 AbstractImporter::TypeSupportedOptions Evolutionv1ImportData::supportedOption()
 {
     TypeSupportedOptions options;
-    options |=AbstractImporter::Mails;
+    options |= AbstractImporter::Mails;
     return options;
 }

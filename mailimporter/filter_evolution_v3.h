@@ -28,15 +28,15 @@ public:
     ~FilterEvolution_v3();
 
     void import();
-    void importMails( const QString& maildir );
+    void importMails(const QString &maildir);
     static QString defaultSettingsPath();
 
 private:
-    void importDirContents(const QString&);
-    void importFiles(const QString&);
-    void processDirectory( const QString& path);
+    void importDirContents(const QString &);
+    void importFiles(const QString &);
+    void processDirectory(const QString &path);
 
-    Akonadi::MessageStatus statusFromFile( const QString& filename);
+    Akonadi::MessageStatus statusFromFile(const QString &filename);
     int mImportDirDone;
     int mTotalDir;
 

@@ -45,8 +45,8 @@ void NoteListWidget::addNotes(const Akonadi::Item::List &notes)
 
 void NoteListWidget::removeNote(const Akonadi::Item &note)
 {
-    for (int i=0; i <count(); ++i) {
-        if (item(i)->data(AkonadiId)==note.id()) {
+    for (int i = 0; i < count(); ++i) {
+        if (item(i)->data(AkonadiId) == note.id()) {
             delete item(i);
             mNotes.removeAll(note);
             break;
@@ -66,13 +66,15 @@ void NoteListWidget::setNotes(const Akonadi::Item::List &notes)
 void NoteListWidget::createItem(const Akonadi::Item &note)
 {
     KMime::Message::Ptr noteMessage = note.payload<KMime::Message::Ptr>();
-    if (!noteMessage)
+    if (!noteMessage) {
         return;
-    QListWidgetItem *item =new QListWidgetItem(this);
+    }
+    QListWidgetItem *item = new QListWidgetItem(this);
 
-    const KMime::Headers::Subject * const subject = noteMessage->subject(false);
-    if (subject)
+    const KMime::Headers::Subject *const subject = noteMessage->subject(false);
+    if (subject) {
         item->setText(subject->asUnicodeString());
+    }
 
     item->setToolTip(NoteShared::NoteUtils::createToolTip(note));
     item->setData(AkonadiId, note.id());

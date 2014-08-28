@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "noteeditorutils.h"
 
 #include <KLocale>
@@ -25,15 +24,14 @@
 #include <QTextEdit>
 #include <QDateTime>
 
-
-void NoteShared::NoteEditorUtils::addCheckmark( QTextCursor &cursor )
+void NoteShared::NoteEditorUtils::addCheckmark(QTextCursor &cursor)
 {
     static const QChar unicode[] = {0x2713};
     const int size = sizeof(unicode) / sizeof(QChar);
-    cursor.insertText( QString::fromRawData(unicode, size) );
+    cursor.insertText(QString::fromRawData(unicode, size));
 }
 
-void NoteShared::NoteEditorUtils::insertDate( QTextEdit *editor )
+void NoteShared::NoteEditorUtils::insertDate(QTextEdit *editor)
 {
     editor->insertPlainText(KLocale::global()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + QLatin1Char(' '));
 }

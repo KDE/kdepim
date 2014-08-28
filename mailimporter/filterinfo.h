@@ -1,7 +1,6 @@
 #ifndef FILTERINFO_H
 #define FILTERINFO_H
 
-
 /***************************************************************************
                           filters.h  -  description
                              -------------------
@@ -23,7 +22,8 @@
 #include <Collection>
 
 #include "mailimporter_export.h"
-namespace MailImporter {
+namespace MailImporter
+{
 
 class FilterInfoGui;
 
@@ -33,26 +33,26 @@ public:
     explicit FilterInfo();
     ~FilterInfo();
 
-    void setFilterInfoGui( FilterInfoGui *filterinfogui );
+    void setFilterInfoGui(FilterInfoGui *filterinfogui);
 
-    void setStatusMessage( const QString& status );
-    void setFrom( const QString& from );
-    void setTo( const QString& to );
-    void setCurrent( const QString& current );
-    void setCurrent( int percent = 0 );
-    void setOverall( int percent = 0 );
-    void addInfoLogEntry( const QString& log );
-    void addErrorLogEntry( const QString& log );
+    void setStatusMessage(const QString &status);
+    void setFrom(const QString &from);
+    void setTo(const QString &to);
+    void setCurrent(const QString &current);
+    void setCurrent(int percent = 0);
+    void setOverall(int percent = 0);
+    void addInfoLogEntry(const QString &log);
+    void addErrorLogEntry(const QString &log);
     void clear();
-    void alert( const QString& message );
+    void alert(const QString &message);
 
     static void terminateASAP();
     bool shouldTerminate() const;
     Akonadi::Collection rootCollection() const;
-    void setRootCollection( const Akonadi::Collection &collection );
+    void setRootCollection(const Akonadi::Collection &collection);
 
     QWidget *parent();
-    void setRemoveDupMessage( bool removeDupMessage );
+    void setRemoveDupMessage(bool removeDupMessage);
     bool removeDupMessage() const;
 
 private:

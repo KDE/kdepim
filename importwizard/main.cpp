@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include <kaboutdata.h>
 #include <KDBusService>
 #include <KLocalizedString>
@@ -36,12 +35,12 @@ int main(int argc, char *argv[])
 
     KLocalizedString::setApplicationDomain("importwizard");
     //FIXME: "wizards" are "assistents" in new KDE slang
-    KAboutData aboutData( QStringLiteral("importwizard"), 
-                          i18n("PIM Import Tool"), 
-                          QLatin1String(KDEPIM_VERSION),
-                          i18n("PIM Import Tool"),
-                          KAboutLicense::GPL_V2,
-                          i18n("Copyright © 2012-2013-2014 importwizard authors"));
+    KAboutData aboutData(QStringLiteral("importwizard"),
+                         i18n("PIM Import Tool"),
+                         QLatin1String(KDEPIM_VERSION),
+                         i18n("PIM Import Tool"),
+                         KAboutLicense::GPL_V2,
+                         i18n("Copyright © 2012-2013-2014 importwizard authors"));
 
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     aboutData.setProgramIconName(QLatin1String("kontact-import-wizard"));

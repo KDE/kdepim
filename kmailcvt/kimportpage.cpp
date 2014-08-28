@@ -19,12 +19,11 @@
 
 #include <QStandardPaths>
 
-
-KImportPage::KImportPage(QWidget *parent )
+KImportPage::KImportPage(QWidget *parent)
     : QWidget(parent)
 {
     mWidget = new Ui::KImportPageDlg;
-    mWidget->setupUi( this );
+    mWidget->setupUi(this);
     mWidget->mIntroSidebar->setPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kmailcvt/pics/step1.png")));
 }
 
@@ -37,5 +36,4 @@ Ui::KImportPageDlg *KImportPage::widget()
 {
     return mWidget;
 }
-
 

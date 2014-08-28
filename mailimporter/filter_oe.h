@@ -27,7 +27,8 @@
  *@author Laurence Anderson
  */
 #include "mailimporter_utils.h"
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterOE : public Filter
 {
 public:
@@ -35,18 +36,18 @@ public:
     ~FilterOE();
 
     void import();
-    void importMails(const QString & maildir);
+    void importMails(const QString &maildir);
 
 protected:
-    void importMailBox( const QString& fileName);
-    void mbxImport( QDataStream& ds);
-    void dbxImport( QDataStream& ds);
-    void dbxReadIndex( QDataStream& ds, int filePos);
-    void dbxReadDataBlock( QDataStream& ds, int filePos);
-    void dbxReadEmail( QDataStream& ds, int filePos);
-    
+    void importMailBox(const QString &fileName);
+    void mbxImport(QDataStream &ds);
+    void dbxImport(QDataStream &ds);
+    void dbxReadIndex(QDataStream &ds, int filePos);
+    void dbxReadDataBlock(QDataStream &ds, int filePos);
+    void dbxReadEmail(QDataStream &ds, int filePos);
+
     /** helperfunctions for folder structure support */
-    QString parseFolderString( QDataStream& ds, int filePos);
+    QString parseFolderString(QDataStream &ds, int filePos);
     QString getFolderName(const QString &filename);
 
 private: // Private methods
@@ -73,7 +74,7 @@ private: // Private methods
       2. filename
       3. ID of current folder
       4. ID of parent folder
-  */
+    */
     typedef FolderStructureBase<4> FolderStructure;
     /** matrix with information about the folder structure*/
     QList<FolderStructure> folderStructure;

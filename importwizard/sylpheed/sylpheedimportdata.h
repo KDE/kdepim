@@ -25,7 +25,7 @@ class SylpheedImportData : public AbstractImporter
 public:
     explicit SylpheedImportData(ImportWizard *parent);
     ~SylpheedImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

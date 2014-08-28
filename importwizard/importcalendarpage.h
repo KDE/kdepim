@@ -20,7 +20,8 @@
 
 #include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class ImportCalendarPage;
 }
 
@@ -32,8 +33,8 @@ public:
     explicit ImportCalendarPage(QWidget *parent = 0);
     ~ImportCalendarPage();
 
-    void addImportInfo( const QString& log );
-    void addImportError( const QString& log );
+    void addImportInfo(const QString &log);
+    void addImportError(const QString &log);
     void setImportButtonEnabled(bool enabled);
 
 Q_SIGNALS:

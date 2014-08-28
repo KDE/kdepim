@@ -20,7 +20,8 @@
 
 #include "filters.h"
 
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterMailmanGzip : public Filter
 {
 public:

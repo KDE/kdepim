@@ -23,7 +23,7 @@ ImportMailPage::ImportMailPage(QWidget *parent) :
     ui(new Ui::ImportMailPage)
 {
     ui->setupUi(this);
-    connect(ui->importMails,SIGNAL(clicked()),SIGNAL(importMailsClicked()));
+    connect(ui->importMails, SIGNAL(clicked()), SIGNAL(importMailsClicked()));
     connect(ui->mCollectionRequestor, &MailCommon::FolderRequester::folderChanged, this, &ImportMailPage::collectionChanged);
 }
 
@@ -37,16 +37,15 @@ MailImporter::ImportMailsWidget *ImportMailPage::mailWidget()
     return ui->mMailImporterWidget;
 }
 
-void ImportMailPage::collectionChanged(const Akonadi::Collection& collection)
+void ImportMailPage::collectionChanged(const Akonadi::Collection &collection)
 {
-    ui->importMails->setEnabled( collection.isValid() );
+    ui->importMails->setEnabled(collection.isValid());
 }
 
 Akonadi::Collection ImportMailPage::selectedCollection() const
 {
     return ui->mCollectionRequestor->collection();
 }
-
 
 void ImportMailPage::setImportButtonEnabled(bool enabled)
 {

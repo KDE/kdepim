@@ -18,27 +18,25 @@
 
 #include "filter_thebat.h"
 
-
 #include <QRegExp>
 #include <QPointer>
 #include <KLocalizedString>
 #include <kfiledialog.h>
 #include <QTemporaryFile>
 
-
 using namespace MailImporter;
 
 /** Default constructor. */
 FilterTheBat::FilterTheBat() :
-    Filter( i18n( "Import The Bat! Mails and Folder Structure" ),
-            "Danny Kukawka",
-            i18n( "<p><b>The Bat! import filter</b></p>"
-                  "<p>Select the base directory of the \'The Bat!\' local mailfolder you "
-                  "want to import.</p>"
-                  "<p><b>Note:</b> This filter imports the *.tbb-files from \'The Bat!\' "
-                  "local folder, e.g. from POP accounts, and not from IMAP/DIMAP accounts.</p>"
-                  "<p>Since it is possible to recreate the folder structure, the folders "
-                  "will be stored under: \"TheBat-Import\" in your local account.</p>" ) )
+    Filter(i18n("Import The Bat! Mails and Folder Structure"),
+           "Danny Kukawka",
+           i18n("<p><b>The Bat! import filter</b></p>"
+                "<p>Select the base directory of the \'The Bat!\' local mailfolder you "
+                "want to import.</p>"
+                "<p><b>Note:</b> This filter imports the *.tbb-files from \'The Bat!\' "
+                "local folder, e.g. from POP accounts, and not from IMAP/DIMAP accounts.</p>"
+                "<p>Since it is possible to recreate the folder structure, the folders "
+                "will be stored under: \"TheBat-Import\" in your local account.</p>"))
 {
 }
 
@@ -52,59 +50,61 @@ void FilterTheBat::import()
 {
     const QString _homeDir = QDir::homePath();
 
-    QPointer<KFileDialog> kfd = new KFileDialog( _homeDir, "", 0 );
-    kfd->setMode( KFile::Directory | KFile::LocalOnly );
+    QPointer<KFileDialog> kfd = new KFileDialog(_homeDir, "", 0);
+    kfd->setMode(KFile::Directory | KFile::LocalOnly);
     if (kfd->exec()) {
         const QString maildir = kfd->selectedFile();
-        importMails( maildir );
+        importMails(maildir);
     }
     delete kfd;
 }
 
-void FilterTheBat::processDirectory( const QString &path)
+void FilterTheBat::processDirectory(const QString &path)
 {
     QDir dir(path);
     const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
     QStringList::ConstIterator end = rootSubDirs.constEnd();
-    for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename ) {
-        if(filterInfo()->shouldTerminate())
+    for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename) {
+        if (filterInfo()->shouldTerminate()) {
             break;
+        }
         importDirContents(dir.filePath(*filename));
-        filterInfo()->setOverall((mTotalDir > 0) ? (int) ((float) mImportDirDone / mTotalDir * 100) : 0);
+        filterInfo()->setOverall((mTotalDir > 0) ? (int)((float) mImportDirDone / mTotalDir * 100) : 0);
         ++mImportDirDone;
     }
 }
 
-void FilterTheBat::importMails( const QString  &maildir )
+void FilterTheBat::importMails(const QString  &maildir)
 {
     setMailDir(maildir);
-    if ( mailDir().isEmpty() ) {
-        filterInfo()->alert( i18n( "No directory selected." ) );
+    if (mailDir().isEmpty()) {
+        filterInfo()->alert(i18n("No directory selected."));
         return;
     }
     /**
-   * If the user only select homedir no import needed because
-   * there should be no files and we surely import wrong files.
-   */
-    else if ( mailDir() == QDir::homePath() || mailDir() == ( QDir::homePath() + '/' ) ) {
-        filterInfo()->addErrorLogEntry( i18n( "No files found for import." ) );
+    * If the user only select homedir no import needed because
+    * there should be no files and we surely import wrong files.
+    */
+    else if (mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + '/')) {
+        filterInfo()->addErrorLogEntry(i18n("No files found for import."));
     } else {
         filterInfo()->setOverall(0);
         mImportDirDone = 0;
 
         /** Recursive import of the MailFolders */
         QDir dir(mailDir());
-        mTotalDir = Filter::countDirectory( dir, false );
+        mTotalDir = Filter::countDirectory(dir, false);
 
-        processDirectory( mailDir() );
+        processDirectory(mailDir());
 
-        filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
+        filterInfo()->addInfoLogEntry(i18n("Finished importing emails from %1", mailDir()));
         if (countDuplicates() > 0) {
-            filterInfo()->addInfoLogEntry( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
+            filterInfo()->addInfoLogEntry(i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
         }
     }
-    if (filterInfo()->shouldTerminate())
-        filterInfo()->addInfoLogEntry( i18n("Finished import, canceled by user."));
+    if (filterInfo()->shouldTerminate()) {
+        filterInfo()->addInfoLogEntry(i18n("Finished import, canceled by user."));
+    }
 
     setCountDuplicates(0);
     filterInfo()->setCurrent(100);
@@ -118,22 +118,25 @@ void FilterTheBat::importMails( const QString  &maildir )
  */
 void FilterTheBat::importDirContents(const QString &dirName)
 {
-    if(filterInfo()->shouldTerminate()) return;
+    if (filterInfo()->shouldTerminate()) {
+        return;
+    }
 
     /** Here Import all archives in the current dir */
     QDir dir(dirName);
-    QDir importDir (dirName);
+    QDir importDir(dirName);
     const QStringList files = importDir.entryList(QStringList("*.[tT][bB][bB]"), QDir::Files, QDir::Name);
     QStringList::ConstIterator end = files.constEnd();
-    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
+    for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
         QString temp_mailfile = *mailFile;
         importFiles((dirName + '/' + temp_mailfile));
-        if(filterInfo()->shouldTerminate())
+        if (filterInfo()->shouldTerminate()) {
             return;
+        }
     }
 
     /** If there are subfolders, we import them one by one */
-    processDirectory( dirName );
+    processDirectory(dirName);
 }
 
 /**
@@ -141,7 +144,7 @@ void FilterTheBat::importDirContents(const QString &dirName)
  * @param info Information storage for the operation.
  * @param dirName The name of the directory to import.
  */
-void FilterTheBat::importFiles( const QString &FileName)
+void FilterTheBat::importFiles(const QString &FileName)
 {
 
     // Format of a tbb-file from The Bat! 3.x
@@ -155,7 +158,7 @@ void FilterTheBat::importFiles( const QString &FileName)
     // ----------------------------------------
 
     long l = 0;
-    QByteArray input(50,'\0');
+    QByteArray input(50, '\0');
     QRegExp regexp("!.p.0");
     QFile tbb(FileName);
     int iFound = 0;
@@ -175,20 +178,21 @@ void FilterTheBat::importFiles( const QString &FileName)
         //      never get QFile::atEnd() == true in some cases. This looks
         //      like a bug in Qt3 maybe fixed in Qt4.
         //
-        while((l = tbb.read(input.data(),50)) ) {
-            if(filterInfo()->shouldTerminate()) {
+        while ((l = tbb.read(input.data(), 50))) {
+            if (filterInfo()->shouldTerminate()) {
                 tbb.close();
                 return;
             }
             QString _tmp = input.data();
 
-            if (tbb.atEnd())
+            if (tbb.atEnd()) {
                 break;
+            }
 
             iFound = _tmp.count(regexp);
-            if(!iFound) {
+            if (!iFound) {
                 iFound = _tmp.lastIndexOf("!");
-                if (iFound >= 0 &&((l-iFound) < 5) ) {
+                if (iFound >= 0 && ((l - iFound) < 5)) {
                     int _i = tbb.pos();
                     tbb.seek((_i - iFound));
                 }
@@ -201,7 +205,7 @@ void FilterTheBat::importFiles( const QString &FileName)
         // filterInfo()->addInfoLogEntry(i18n("--COUNTED: %1").arg(count));
 
         // IMPORT the messages:
-        if(!offsets.empty() || (offsets.empty() &&(tbb.size() > 3128))) {
+        if (!offsets.empty() || (offsets.empty() && (tbb.size() > 3128))) {
             offsets.append(tbb.size());
             tbb.seek(3128);
             long lastPos = 3128;
@@ -210,35 +214,36 @@ void FilterTheBat::importFiles( const QString &FileName)
             QString _path = i18nc("Define folder where we will import thebat mails", "TheBat-Import") + QLatin1Char('/');
             QString _tmp = FileName;
             _tmp = _tmp.remove(_tmp.length() - 13, 13);
-            _path += _tmp.remove( mailDir(), Qt::CaseSensitive );
+            _path += _tmp.remove(mailDir(), Qt::CaseSensitive);
             QString _info = _path;
-            filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info.remove(0,14)));
+            filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info.remove(0, 14)));
             filterInfo()->setTo(_path);
             filterInfo()->setFrom("../" + _info + "/messages.tbb");
 
             QList<long>::Iterator end = offsets.end();
             for (QList<long>::Iterator it = offsets.begin() ; it != end ; ++it) {
-                if(filterInfo()->shouldTerminate()) {
+                if (filterInfo()->shouldTerminate()) {
                     tbb.close();
                     return;
                 }
                 endPos = *it;
-                QByteArray input(endPos-lastPos,'\0');
-                tbb.read(input.data(), endPos-lastPos);
+                QByteArray input(endPos - lastPos, '\0');
+                tbb.read(input.data(), endPos - lastPos);
 
                 QTemporaryFile tmp;
                 tmp.open();
-                tmp.write( input, endPos-lastPos );
+                tmp.write(input, endPos - lastPos);
                 tmp.flush();
 
-                if(filterInfo()->removeDupMessage())
-                    addMessage( _path, tmp.fileName() );
-                else
-                    addMessage_fastImport( _path, tmp.fileName() );
+                if (filterInfo()->removeDupMessage()) {
+                    addMessage(_path, tmp.fileName());
+                } else {
+                    addMessage_fastImport(_path, tmp.fileName());
+                }
 
                 lastPos = endPos + 48;
                 tbb.seek(lastPos);
-                filterInfo()->setCurrent( (int) ( ( (float) tbb.pos() / tbb.size() ) * 100 ));
+                filterInfo()->setCurrent((int)(((float) tbb.pos() / tbb.size()) * 100));
             }
 
         }

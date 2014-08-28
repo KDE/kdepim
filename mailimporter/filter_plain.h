@@ -23,7 +23,8 @@
  *imports Plain text messages into KMail
  *@author laurence
  */
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterPlain : public Filter
 {
 public:

@@ -25,7 +25,7 @@ class ClawsMailImportData : public AbstractImporter
 public:
     explicit ClawsMailImportData(ImportWizard *parent);
     ~ClawsMailImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

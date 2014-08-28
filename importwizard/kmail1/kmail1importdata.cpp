@@ -22,10 +22,8 @@
 
 #include <QStandardPaths>
 
-
-
-KMail1ImportData::KMail1ImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+KMail1ImportData::KMail1ImportData(ImportWizard *parent)
+    : AbstractImporter(parent)
 {
     mPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1String("/kmailrc") ;
 }
@@ -34,15 +32,15 @@ KMail1ImportData::~KMail1ImportData()
 {
 }
 
-
 bool KMail1ImportData::foundMailer() const
 {
     //TODO uncomment when implemented.
     return false;
 
-    QFile file( mPath );
-    if ( file.exists() )
+    QFile file(mPath);
+    if (file.exists()) {
         return true;
+    }
     return false;
 }
 
@@ -66,12 +64,11 @@ bool KMail1ImportData::importAddressBook()
     return true;
 }
 
-
 AbstractImporter::TypeSupportedOptions KMail1ImportData::supportedOption()
 {
     TypeSupportedOptions options;
-    options |=AbstractImporter::Mails;
-    options |=AbstractImporter::Settings;
+    options |= AbstractImporter::Mails;
+    options |= AbstractImporter::Settings;
     //options |=AbstractImporter::AddressBooks;
     return options;
 }

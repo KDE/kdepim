@@ -26,7 +26,8 @@
  * Imports Sylpheed mail folder with maildir format recursively, recreating the folder structure.
  * @author Danny Kukawka
  */
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterSylpheed : public Filter
 {
 
@@ -37,20 +38,20 @@ public:
     static QString defaultSettingsPath();
 
     virtual void import();
-    virtual void importMails( const QString& maildir );
+    virtual void importMails(const QString &maildir);
 
     /* return local mail dir from folderlist.xml*/
     virtual QString localMailDirPath();
-    virtual bool excludeFile(const QString& file);
+    virtual bool excludeFile(const QString &file);
     virtual QString defaultInstallFolder() const;
     virtual QString markFile() const;
 private:
 
-    void importDirContents(const QString&);
-    void importFiles(const QString&);
-    void processDirectory( const QString& path);
+    void importDirContents(const QString &);
+    void importFiles(const QString &);
+    void processDirectory(const QString &path);
 
-    void readMarkFile( const QString&, QHash<QString,unsigned long>&);
+    void readMarkFile(const QString &, QHash<QString, unsigned long> &);
     Akonadi::MessageStatus msgFlagsToString(unsigned long flags);
     int mImportDirDone;
     int mTotalDir;

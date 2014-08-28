@@ -50,11 +50,11 @@
 #include <QPushButton>
 
 using namespace NoteShared;
-NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
-    : QDialog( parent )
+NoteHostDialog::NoteHostDialog(const QString &caption, QWidget *parent)
+    : QDialog(parent)
 {
-    setWindowTitle( caption );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(caption);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -62,54 +62,54 @@ NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &NoteHostDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &NoteHostDialog::reject);
-    QWidget *page = new QWidget( this );
+    QWidget *page = new QWidget(this);
     QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
     pageVBoxLayout->setMargin(0);
     mainLayout->addWidget(page);
     mainLayout->addWidget(buttonBox);
 
-    ( void ) new QLabel( i18n("Select recipient:"), page );
+    (void) new QLabel(i18n("Select recipient:"), page);
 
-    m_servicesView = new QTreeView( page );
+    m_servicesView = new QTreeView(page);
     pageVBoxLayout->addWidget(m_servicesView);
     m_servicesView->setRootIsDecorated(false);
-    KDNSSD::ServiceModel* mdl = new KDNSSD::ServiceModel( new KDNSSD::ServiceBrowser( QLatin1String("_knotes._tcp"), true ), this );
-    m_servicesView->setModel( mdl );
-    m_servicesView->setSelectionBehavior( QAbstractItemView::SelectRows );
-    m_servicesView->hideColumn( KDNSSD::ServiceModel::Port );
-    connect( m_servicesView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-             SLOT(serviceSelected(QModelIndex)) );
-    connect( m_servicesView, SIGNAL(activated(QModelIndex)),
-             SLOT(serviceSelected(QModelIndex)) );
-    connect( m_servicesView, SIGNAL(clicked(QModelIndex)),
-             SLOT(serviceSelected(QModelIndex)) );
-    connect( m_servicesView, SIGNAL(doubleClicked(QModelIndex)),
-             SLOT(slotServiceDoubleClicked(QModelIndex)) );
+    KDNSSD::ServiceModel *mdl = new KDNSSD::ServiceModel(new KDNSSD::ServiceBrowser(QLatin1String("_knotes._tcp"), true), this);
+    m_servicesView->setModel(mdl);
+    m_servicesView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_servicesView->hideColumn(KDNSSD::ServiceModel::Port);
+    connect(m_servicesView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+            SLOT(serviceSelected(QModelIndex)));
+    connect(m_servicesView, SIGNAL(activated(QModelIndex)),
+            SLOT(serviceSelected(QModelIndex)));
+    connect(m_servicesView, SIGNAL(clicked(QModelIndex)),
+            SLOT(serviceSelected(QModelIndex)));
+    connect(m_servicesView, SIGNAL(doubleClicked(QModelIndex)),
+            SLOT(slotServiceDoubleClicked(QModelIndex)));
 
-    ( void ) new QLabel( i18n("Hostname or IP address:"), page );
+    (void) new QLabel(i18n("Hostname or IP address:"), page);
 
-    m_hostCombo = new KHistoryComboBox( true, page );
+    m_hostCombo = new KHistoryComboBox(true, page);
     pageVBoxLayout->addWidget(m_hostCombo);
-    m_hostCombo->setMinimumWidth( fontMetrics().maxWidth() * 15 );
-    m_hostCombo->setDuplicatesEnabled( false );
+    m_hostCombo->setMinimumWidth(fontMetrics().maxWidth() * 15);
+    m_hostCombo->setDuplicatesEnabled(false);
 
     // Read known hosts from configfile
-    m_hostCombo->setHistoryItems( NoteShared::NoteSharedGlobalConfig::knownHosts(), true );
+    m_hostCombo->setHistoryItems(NoteShared::NoteSharedGlobalConfig::knownHosts(), true);
     m_hostCombo->setFocus();
-    connect( m_hostCombo->lineEdit(), SIGNAL(textChanged(QString)),
-             this, SLOT(slotTextChanged(QString)) );
-    slotTextChanged( m_hostCombo->lineEdit()->text() );
+    connect(m_hostCombo->lineEdit(), SIGNAL(textChanged(QString)),
+            this, SLOT(slotTextChanged(QString)));
+    slotTextChanged(m_hostCombo->lineEdit()->text());
     readConfig();
 }
 
 NoteHostDialog::~NoteHostDialog()
 {
-    if ( result() == Accepted ) {
-        m_hostCombo->addToHistory( m_hostCombo->currentText().trimmed() );
+    if (result() == Accepted) {
+        m_hostCombo->addToHistory(m_hostCombo->currentText().trimmed());
     }
 
     // Write known hosts to configfile
-    NoteShared::NoteSharedGlobalConfig::setKnownHosts( m_hostCombo->historyItems() );
+    NoteShared::NoteSharedGlobalConfig::setKnownHosts(m_hostCombo->historyItems());
     NoteShared::NoteSharedGlobalConfig::setNoteHostDialogSize(size());
     NoteShared::NoteSharedGlobalConfig::self()->save();
 }
@@ -117,35 +117,35 @@ NoteHostDialog::~NoteHostDialog()
 void NoteHostDialog::readConfig()
 {
     const QSize size = NoteShared::NoteSharedGlobalConfig::noteHostDialogSize();
-    if ( size.isValid() ) {
-        resize( size );
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
-void NoteHostDialog::slotTextChanged( const QString &text )
+void NoteHostDialog::slotTextChanged(const QString &text)
 {
     mOkButton->setEnabled(!text.isEmpty());
 }
 
-void NoteHostDialog::serviceSelected( const QModelIndex& idx )
+void NoteHostDialog::serviceSelected(const QModelIndex &idx)
 {
-    KDNSSD::RemoteService::Ptr srv=idx.data( KDNSSD::ServiceModel::ServicePtrRole ).value<KDNSSD::RemoteService::Ptr>();
-    m_hostCombo->lineEdit()->setText( srv->hostName() + QLatin1String(":") + QString::number( srv->port() ) );
+    KDNSSD::RemoteService::Ptr srv = idx.data(KDNSSD::ServiceModel::ServicePtrRole).value<KDNSSD::RemoteService::Ptr>();
+    m_hostCombo->lineEdit()->setText(srv->hostName() + QLatin1String(":") + QString::number(srv->port()));
 }
 
 QString NoteHostDialog::host() const
 {
-    return m_hostCombo->currentText().section( QLatin1Char(':'), 0, 0 );
+    return m_hostCombo->currentText().section(QLatin1Char(':'), 0, 0);
 }
 
 quint16 NoteHostDialog::port() const
 {
-    return m_hostCombo->currentText().section( QLatin1Char(':'), 1 ).toUShort();
+    return m_hostCombo->currentText().section(QLatin1Char(':'), 1).toUShort();
 }
 
 void NoteHostDialog::slotServiceDoubleClicked(const QModelIndex &idx)
 {
-    KDNSSD::RemoteService::Ptr srv = idx.data( KDNSSD::ServiceModel::ServicePtrRole ).value<KDNSSD::RemoteService::Ptr>();
-    m_hostCombo->lineEdit()->setText( srv->hostName() + QLatin1String(":") + QString::number( srv->port() ) );
+    KDNSSD::RemoteService::Ptr srv = idx.data(KDNSSD::ServiceModel::ServicePtrRole).value<KDNSSD::RemoteService::Ptr>();
+    m_hostCombo->lineEdit()->setText(srv->hostName() + QLatin1String(":") + QString::number(srv->port()));
     accept();
 }

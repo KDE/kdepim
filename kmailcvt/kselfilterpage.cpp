@@ -54,11 +54,11 @@
 
 using namespace MailImporter;
 
-KSelFilterPage::KSelFilterPage(QWidget *parent )
+KSelFilterPage::KSelFilterPage(QWidget *parent)
     : QWidget(parent)
 {
     mWidget = new Ui::KSelFilterPageDlg;
-    mWidget->setupUi( this );
+    mWidget->setupUi(this);
     mWidget->mIntroSidebar->setPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kmailcvt/pics/step1.png")));
     connect(mWidget->mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
@@ -88,7 +88,8 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
     mWidget->mCollectionRequestor->setMustBeReadWrite(true);
 }
 
-KSelFilterPage::~KSelFilterPage() {
+KSelFilterPage::~KSelFilterPage()
+{
     qDeleteAll(mFilterList);
     mFilterList.clear();
     delete mWidget;
@@ -98,8 +99,9 @@ void KSelFilterPage::filterSelected(int i)
 {
     QString info = mFilterList.at(i)->info();
     const QString author = mFilterList.at(i)->author();
-    if(!author.isEmpty())
+    if (!author.isEmpty()) {
         info += i18n("<p><i>Written by %1.</i></p>", author);
+    }
     mWidget->mDesc->setText(info);
 }
 
@@ -107,8 +109,9 @@ void KSelFilterPage::addFilter(Filter *f)
 {
     mFilterList.append(f);
     mWidget->mFilterCombo->addItem(f->name());
-    if (mWidget->mFilterCombo->count() == 1)
-        filterSelected(0); // Setup description box with fist filter selected
+    if (mWidget->mFilterCombo->count() == 1) {
+        filterSelected(0);    // Setup description box with fist filter selected
+    }
 }
 
 bool KSelFilterPage::removeDupMsg_checked() const
@@ -125,5 +128,4 @@ Ui::KSelFilterPageDlg *KSelFilterPage::widget()
 {
     return mWidget;
 }
-
 

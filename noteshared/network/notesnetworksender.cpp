@@ -38,21 +38,21 @@
 
 #include <QTextCodec>
 using namespace NoteShared;
-NotesNetworkSender::NotesNetworkSender( QTcpSocket *socket )
+NotesNetworkSender::NotesNetworkSender(QTcpSocket *socket)
     : QObject(),
-      m_socket( socket ),
+      m_socket(socket),
       m_note(),
       m_title(),
       m_sender()
 {
     // QObject:: prefix needed, otherwise the KStreamSocket::connect()
     // method is called!!!
-    QObject::connect( m_socket, SIGNAL(connected()), SLOT(slotConnected()) );
-    QObject::connect( m_socket, SIGNAL(error(QAbstractSocket::SocketError)),
-                      SLOT(slotError()) );
-    QObject::connect( m_socket, SIGNAL(disconnected()), SLOT(slotClosed()) );
-    QObject::connect( m_socket, SIGNAL(bytesWritten(qint64)),
-                      SLOT(slotWritten(qint64)) );
+    QObject::connect(m_socket, SIGNAL(connected()), SLOT(slotConnected()));
+    QObject::connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)),
+                     SLOT(slotError()));
+    QObject::connect(m_socket, SIGNAL(disconnected()), SLOT(slotClosed()));
+    QObject::connect(m_socket, SIGNAL(bytesWritten(qint64)),
+                     SLOT(slotWritten(qint64)));
 }
 
 NotesNetworkSender::~NotesNetworkSender()
@@ -60,42 +60,42 @@ NotesNetworkSender::~NotesNetworkSender()
     delete m_socket;
 }
 
-void NotesNetworkSender::setSenderId( const QString &sender )
+void NotesNetworkSender::setSenderId(const QString &sender)
 {
     QTextCodec *codec = QTextCodec::codecForLocale();
-    m_sender = codec->fromUnicode( sender );
+    m_sender = codec->fromUnicode(sender);
 }
 
-void NotesNetworkSender::setNote( const QString &title, const QString &text )
+void NotesNetworkSender::setNote(const QString &title, const QString &text)
 {
     QTextCodec *codec = QTextCodec::codecForLocale();
-    m_title = codec->fromUnicode( title );
-    m_note = codec->fromUnicode( text );
+    m_title = codec->fromUnicode(title);
+    m_note = codec->fromUnicode(text);
 }
 
 void NotesNetworkSender::slotConnected()
 {
-    if ( m_sender.isEmpty() ) {
-        m_note.prepend( m_title + "\n" );
+    if (m_sender.isEmpty()) {
+        m_note.prepend(m_title + "\n");
     } else {
-        m_note.prepend( m_title + " (" + m_sender + ")\n" );
+        m_note.prepend(m_title + " (" + m_sender + ")\n");
     }
 
-    m_socket->write( m_note );
+    m_socket->write(m_note);
 }
 
-void NotesNetworkSender::slotWritten( qint64 )
+void NotesNetworkSender::slotWritten(qint64)
 {
     // If end of text reached, close connection
-    if ( m_socket->bytesToWrite() == 0 ) {
+    if (m_socket->bytesToWrite() == 0) {
         m_socket->close();
     }
 }
 
 void NotesNetworkSender::slotError()
 {
-    KMessageBox::sorry( 0, i18n( "Communication error: %1",
-                                 m_socket->errorString() ) );
+    KMessageBox::sorry(0, i18n("Communication error: %1",
+                               m_socket->errorString()));
     slotClosed();
 }
 

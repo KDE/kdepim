@@ -15,14 +15,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef TrojitaAddressBook_H
 #define TrojitaAddressBook_H
 
 #include "abstractaddressbook.h"
 #include <QHash>
 class QSettings;
-
 
 class ImportWizard;
 

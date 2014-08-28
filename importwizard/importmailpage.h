@@ -20,15 +20,18 @@
 
 #include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class ImportMailPage;
 }
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Collection;
 }
 
-namespace MailImporter{
+namespace MailImporter
+{
 class ImportMailsWidget;
 }
 
@@ -43,7 +46,7 @@ public:
     void setImportButtonEnabled(bool enabled);
 
 private Q_SLOTS:
-    void collectionChanged(const Akonadi::Collection& collection);
+    void collectionChanged(const Akonadi::Collection &collection);
 
 Q_SIGNALS:
     void importMailsClicked();

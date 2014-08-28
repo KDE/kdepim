@@ -22,7 +22,8 @@
 
 #include "filters.h"
 #include "mailimporter_utils.h"
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterPMail : public Filter
 {
 public:
@@ -30,22 +31,22 @@ public:
     ~FilterPMail();
 
     void import();
-    void importMails( const QString & chosenDir );
+    void importMails(const QString &chosenDir);
 
 protected:
     /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-    void processFiles(const QString& mask,  void(FilterPMail::* workFunc)(const QString&) );
+    void processFiles(const QString &mask,  void(FilterPMail::* workFunc)(const QString &));
     /** this function imports one *.CNM message */
-    void importNewMessage(const QString& file);
+    void importNewMessage(const QString &file);
     /** this function imports one mail folder file (*.PMM) */
-    void importMailFolder(const QString& file);
+    void importMailFolder(const QString &file);
     /** imports a 'unix' format mail folder (*.MBX) */
-    void importUnixMailFolder(const QString& file);
+    void importUnixMailFolder(const QString &file);
     /** this function recreate the folder structure */
-    bool parseFolderMatrix(const QString& chosenDir);
+    bool parseFolderMatrix(const QString &chosenDir);
     /** this function parse the folder structure */
-    QString getFolderName(const QString& ID);
-    
+    QString getFolderName(const QString &ID);
+
 private:
     /** the working directory */
     QDir dir;
@@ -58,17 +59,17 @@ private:
       3. "ID:flag:filename" of folder/archiv
       4. "ID:name" of parent folder
       5. name of folder/archiv
-  */
+    */
     QList<FolderStructure> folderMatrix;
     typedef QList<FolderStructure>::Iterator FolderStructureIterator;
 
     bool folderParsed;
-    
+
     /** which file (of totalFiles) is now in the work? */
     int currentFile;
     /** total number of files that get imported */
     int totalFiles;
-    
+
 };
 }
 #endif

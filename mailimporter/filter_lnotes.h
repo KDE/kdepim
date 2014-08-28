@@ -22,7 +22,8 @@
 /**imports Lotus Notes Structured Text Archives and archvies messages into KMail
  *@author Robert Rockers
  */
-namespace MailImporter{
+namespace MailImporter
+{
 
 class MAILIMPORTER_EXPORT FilterLNotes : public Filter
 {
@@ -41,11 +42,11 @@ private:
     int totalFiles;
 
     /**
-   * This is were all the real action is gonna be handled.
-   * Gets called once for EACH file imported
-   */
-    void ImportLNotes(const QString& file );
-    
+    * This is were all the real action is gonna be handled.
+    * Gets called once for EACH file imported
+    */
+    void ImportLNotes(const QString &file);
+
 };
 }
 

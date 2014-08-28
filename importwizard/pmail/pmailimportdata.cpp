@@ -26,9 +26,8 @@
 
 #include <QDir>
 
-
-PMailImportData::PMailImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+PMailImportData::PMailImportData(ImportWizard *parent)
+    : AbstractImporter(parent)
 {
     mPath = QDir::homePath();
 }
@@ -37,14 +36,14 @@ PMailImportData::~PMailImportData()
 {
 }
 
-
 bool PMailImportData::foundMailer() const
 {
 #ifdef Q_OS_WIN
     //TODO find a method to search it. Perhaps look at binary.
-    QDir directory( mPath );
-    if ( directory.exists() )
+    QDir directory(mPath);
+    if (directory.exists()) {
         return true;
+    }
 #endif
     return false;
 }
@@ -58,13 +57,14 @@ bool PMailImportData::importMails()
 {
     MailImporter::FilterInfo *info = initializeInfo();
     MailImporter::FilterPMail pmail;
-    pmail.setFilterInfo( info );
+    pmail.setFilterInfo(info);
     info->setStatusMessage(i18n("Import in progress"));
     QDir directory(mPath);
-    if(directory.exists())
+    if (directory.exists()) {
         pmail.importMails(mPath);
-    else
+    } else {
         pmail.import();
+    }
     info->setStatusMessage(i18n("Import finished"));
 
     delete info;
@@ -74,16 +74,15 @@ bool PMailImportData::importMails()
 bool PMailImportData::importSettings()
 {
     //TODO verify path
-    const QString settingFile(mPath+QLatin1String("pmail.ini"));
-    PMailSettings settings(settingFile,mImportWizard);
+    const QString settingFile(mPath + QLatin1String("pmail.ini"));
+    PMailSettings settings(settingFile, mImportWizard);
     return true;
 }
-
 
 AbstractImporter::TypeSupportedOptions PMailImportData::supportedOption()
 {
     TypeSupportedOptions options;
-    options |=AbstractImporter::Mails;
+    options |= AbstractImporter::Mails;
     //options |=AbstractImporter::Settings;
     return options;
 }

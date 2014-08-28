@@ -25,9 +25,8 @@
 
 #include <QDir>
 
-
-OeImportData::OeImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+OeImportData::OeImportData(ImportWizard *parent)
+    : AbstractImporter(parent)
 {
     mPath = QDir::homePath();
 }
@@ -36,14 +35,14 @@ OeImportData::~OeImportData()
 {
 }
 
-
 bool OeImportData::foundMailer() const
 {
 #ifdef Q_OS_WIN
     //TODO find a method to search it. Perhaps look at binary.
-    QDir directory( mPath );
-    if ( directory.exists() )
+    QDir directory(mPath);
+    if (directory.exists()) {
         return true;
+    }
 #endif
     return false;
 }
@@ -58,13 +57,14 @@ bool OeImportData::importMails()
     MailImporter::FilterInfo *info = initializeInfo();
 
     MailImporter::FilterOE opera;
-    opera.setFilterInfo( info );
+    opera.setFilterInfo(info);
     info->setStatusMessage(i18n("Import in progress"));
     QDir directory(mPath);
-    if (directory.exists())
+    if (directory.exists()) {
         opera.importMails(mPath);
-    else
+    } else {
         opera.import();
+    }
     info->setStatusMessage(i18n("Import finished"));
 
     delete info;
@@ -74,6 +74,6 @@ bool OeImportData::importMails()
 AbstractImporter::TypeSupportedOptions OeImportData::supportedOption()
 {
     TypeSupportedOptions options;
-    options |=AbstractImporter::Mails;
+    options |= AbstractImporter::Mails;
     return options;
 }

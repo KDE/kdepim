@@ -28,9 +28,8 @@
 
 #include <QDir>
 
-
-BalsaImportData::BalsaImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+BalsaImportData::BalsaImportData(ImportWizard *parent)
+    : AbstractImporter(parent)
 {
     mPath = MailImporter::FilterBalsa::defaultSettingsPath();
 }
@@ -39,12 +38,12 @@ BalsaImportData::~BalsaImportData()
 {
 }
 
-
 bool BalsaImportData::foundMailer() const
 {
-    QDir directory( mPath );
-    if ( directory.exists() )
+    QDir directory(mPath);
+    if (directory.exists()) {
         return true;
+    }
     return false;
 }
 
@@ -58,13 +57,14 @@ bool BalsaImportData::importMails()
     MailImporter::FilterInfo *info = initializeInfo();
 
     MailImporter::FilterBalsa balsa;
-    balsa.setFilterInfo( info );
+    balsa.setFilterInfo(info);
     info->setStatusMessage(i18n("Import in progress"));
     QDir directory(balsa.localMailDirPath());
-    if (directory.exists())
+    if (directory.exists()) {
         balsa.importMails(directory.absolutePath());
-    else
+    } else {
         balsa.import();
+    }
     info->setStatusMessage(i18n("Import finished"));
 
     delete info;
@@ -73,31 +73,30 @@ bool BalsaImportData::importMails()
 
 bool BalsaImportData::importAddressBook()
 {
-    const QString addressbookFile(mPath+QLatin1String("config"));
-    BalsaAddressBook addressbook(addressbookFile,mImportWizard);
+    const QString addressbookFile(mPath + QLatin1String("config"));
+    BalsaAddressBook addressbook(addressbookFile, mImportWizard);
     return true;
 }
 
 bool BalsaImportData::importSettings()
 {
-    const QString settingFile(mPath+QLatin1String("config"));
-    BalsaSettings settings(settingFile,mImportWizard);
+    const QString settingFile(mPath + QLatin1String("config"));
+    BalsaSettings settings(settingFile, mImportWizard);
     return true;
 }
 
 bool BalsaImportData::importFilters()
 {
     const QString filterPath = mPath + QLatin1String("config");
-    return addFilters( filterPath, MailCommon::FilterImporterExporter::BalsaFilter );
+    return addFilters(filterPath, MailCommon::FilterImporterExporter::BalsaFilter);
 }
-
 
 AbstractImporter::TypeSupportedOptions BalsaImportData::supportedOption()
 {
     TypeSupportedOptions options;
-    options |=AbstractImporter::Mails;
-    options |=AbstractImporter::AddressBooks;
-    options |=AbstractImporter::Settings;
-    options |=AbstractImporter::Filters;
+    options |= AbstractImporter::Mails;
+    options |= AbstractImporter::AddressBooks;
+    options |= AbstractImporter::Settings;
+    options |= AbstractImporter::Filters;
     return options;
 }

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef CREATENEWNOTEJOB_H
 #define CREATENEWNOTEJOB_H
 
@@ -24,12 +23,13 @@
 #include "noteshared_export.h"
 class KJob;
 
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT CreateNewNoteJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit CreateNewNoteJob(QObject *parent = 0, QWidget *widget=0);
+    explicit CreateNewNoteJob(QObject *parent = 0, QWidget *widget = 0);
     ~CreateNewNoteJob();
 
     void setNote(const QString &name, const QString &text);

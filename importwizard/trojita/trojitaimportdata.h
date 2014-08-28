@@ -25,7 +25,7 @@ class TrojitaImportData : public AbstractImporter
 public:
     explicit TrojitaImportData(ImportWizard *parent);
     ~TrojitaImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

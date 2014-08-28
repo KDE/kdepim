@@ -23,7 +23,7 @@ ImportSettingPage::ImportSettingPage(QWidget *parent) :
     ui(new Ui::ImportSettingPage)
 {
     ui->setupUi(this);
-    connect( ui->importSettings, SIGNAL(clicked()), SIGNAL(importSettingsClicked()));
+    connect(ui->importSettings, SIGNAL(clicked()), SIGNAL(importSettingsClicked()));
 }
 
 ImportSettingPage::~ImportSettingPage()
@@ -31,14 +31,14 @@ ImportSettingPage::~ImportSettingPage()
     delete ui;
 }
 
-void ImportSettingPage::addImportInfo( const QString& log )
+void ImportSettingPage::addImportInfo(const QString &log)
 {
-    ui->logSettings->addInfoLogEntry( log );
+    ui->logSettings->addInfoLogEntry(log);
 }
 
-void ImportSettingPage::addImportError( const QString& log )
+void ImportSettingPage::addImportError(const QString &log)
 {
-    ui->logSettings->addErrorLogEntry( log );
+    ui->logSettings->addErrorLogEntry(log);
 }
 
 void ImportSettingPage::setImportButtonEnabled(bool enabled)

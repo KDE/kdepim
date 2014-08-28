@@ -37,20 +37,19 @@ SelectComponentPage::~SelectComponentPage()
 
 void SelectComponentPage::slotComponentClicked()
 {
-    const bool componentSelected = ( ui->addressbooks->isChecked() || ui->filters->isChecked() || ui->mails->isChecked() || ui->settings->isChecked()|| ui->calendars->isChecked() || ui->everything->isChecked() );
+    const bool componentSelected = (ui->addressbooks->isChecked() || ui->filters->isChecked() || ui->mails->isChecked() || ui->settings->isChecked() || ui->calendars->isChecked() || ui->everything->isChecked());
     Q_EMIT atLeastOneComponentSelected(componentSelected);
 }
 
-void SelectComponentPage::slotEverythingClicked( bool clicked )
+void SelectComponentPage::slotEverythingClicked(bool clicked)
 {
-    ui->addressbooks->setEnabled( !clicked && (mOptions & AbstractImporter::AddressBooks));
-    ui->filters->setEnabled( !clicked && (mOptions & AbstractImporter::Filters));
-    ui->mails->setEnabled( !clicked && (mOptions & AbstractImporter::Mails));
-    ui->settings->setEnabled( !clicked && (mOptions & AbstractImporter::Settings));
-    ui->calendars->setEnabled( !clicked && (mOptions & AbstractImporter::Calendars));
+    ui->addressbooks->setEnabled(!clicked && (mOptions & AbstractImporter::AddressBooks));
+    ui->filters->setEnabled(!clicked && (mOptions & AbstractImporter::Filters));
+    ui->mails->setEnabled(!clicked && (mOptions & AbstractImporter::Mails));
+    ui->settings->setEnabled(!clicked && (mOptions & AbstractImporter::Settings));
+    ui->calendars->setEnabled(!clicked && (mOptions & AbstractImporter::Calendars));
     slotComponentClicked();
 }
-
 
 void SelectComponentPage::setEnabledComponent(AbstractImporter::TypeSupportedOptions options)
 {
@@ -60,24 +59,24 @@ void SelectComponentPage::setEnabledComponent(AbstractImporter::TypeSupportedOpt
 
 AbstractImporter::TypeSupportedOptions SelectComponentPage::selectedComponents() const
 {
-    if ( ui->everything->isChecked() ) {
+    if (ui->everything->isChecked()) {
         return mOptions;
     } else {
         AbstractImporter::TypeSupportedOptions newOptions;
         if (ui->addressbooks->isChecked()) {
-            newOptions|=AbstractImporter::AddressBooks;
+            newOptions |= AbstractImporter::AddressBooks;
         }
         if (ui->filters->isChecked()) {
-            newOptions|=AbstractImporter::Filters;
+            newOptions |= AbstractImporter::Filters;
         }
         if (ui->mails->isChecked()) {
-            newOptions|=AbstractImporter::Mails;
+            newOptions |= AbstractImporter::Mails;
         }
         if (ui->settings->isChecked()) {
-            newOptions|=AbstractImporter::Settings;
+            newOptions |= AbstractImporter::Settings;
         }
         if (ui->calendars->isChecked()) {
-            newOptions|=AbstractImporter::Calendars;
+            newOptions |= AbstractImporter::Calendars;
         }
 
         return newOptions;

@@ -27,29 +27,29 @@
 #include <QWhatsThis>
 using namespace NoteShared;
 
-NoteActionConfig::NoteActionConfig( QWidget *parent )
-    :KCModule( parent )
+NoteActionConfig::NoteActionConfig(QWidget *parent)
+    : KCModule(parent)
 {
-    QVBoxLayout *lay = new QVBoxLayout( this );
-    QWidget * w =  new QWidget( this );
-    lay->addWidget( w );
-    QGridLayout *layout = new QGridLayout( w );
+    QVBoxLayout *lay = new QVBoxLayout(this);
+    QWidget *w =  new QWidget(this);
+    lay->addWidget(w);
+    QGridLayout *layout = new QGridLayout(w);
 //TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
-    layout->setMargin( 0 );
+    layout->setMargin(0);
 
-    QLabel *label_MailAction = new QLabel( i18n( "&Mail action:" ), this );
-    layout->addWidget( label_MailAction, 0, 0 );
+    QLabel *label_MailAction = new QLabel(i18n("&Mail action:"), this);
+    layout->addWidget(label_MailAction, 0, 0);
 
-    QLineEdit *kcfg_MailAction = new QLineEdit( this );
-    kcfg_MailAction->setObjectName( QLatin1String("kcfg_MailAction") );
-    label_MailAction->setBuddy( kcfg_MailAction );
-    layout->addWidget( kcfg_MailAction, 0, 1 );
+    QLineEdit *kcfg_MailAction = new QLineEdit(this);
+    kcfg_MailAction->setObjectName(QLatin1String("kcfg_MailAction"));
+    label_MailAction->setBuddy(kcfg_MailAction);
+    layout->addWidget(kcfg_MailAction, 0, 1);
 
-    QLabel *howItWorks = new QLabel(i18n( "<a href=\"whatsthis\">How does this work?</a>" ));
+    QLabel *howItWorks = new QLabel(i18n("<a href=\"whatsthis\">How does this work?</a>"));
     connect(howItWorks, &QLabel::linkActivated, this, &NoteActionConfig::slotHelpLinkClicked);
-    layout->addWidget( howItWorks, 1, 0 );
+    layout->addWidget(howItWorks, 1, 0);
 
-    addConfig( NoteShared::NoteSharedGlobalConfig::self(), w );
+    addConfig(NoteShared::NoteSharedGlobalConfig::self(), w);
     lay->addStretch();
     load();
 }
@@ -57,16 +57,16 @@ NoteActionConfig::NoteActionConfig( QWidget *parent )
 void NoteActionConfig::slotHelpLinkClicked(const QString &)
 {
     const QString help =
-            i18n( "<qt>"
-                  "<p>You can customize command line. "
-                  "You can use:</p>"
-                  "<ul>"
-                  "<li>%t returns current note title</li>"
-                  "<li>%f returns current note text</li>"
-                  "</ul>"
-                  "</qt>" );
+        i18n("<qt>"
+             "<p>You can customize command line. "
+             "You can use:</p>"
+             "<ul>"
+             "<li>%t returns current note title</li>"
+             "<li>%f returns current note text</li>"
+             "</ul>"
+             "</qt>");
 
-    QWhatsThis::showText( QCursor::pos(), help );
+    QWhatsThis::showText(QCursor::pos(), help);
 }
 
 void NoteActionConfig::save()

@@ -24,7 +24,8 @@
  * Imports KMail mail folder with maildir format recursively, recreating the folder structure.
  * @author Danny Kukawka
  */
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterKMail_maildir : public Filter
 {
 public:
@@ -32,13 +33,13 @@ public:
     ~FilterKMail_maildir();
 
     void import();
-    void importMails( const QString& maildir );
+    void importMails(const QString &maildir);
 
 private:
-    void processDirectory( const QString& path);
+    void processDirectory(const QString &path);
 
-    void importDirContents(const QString&);
-    void importFiles(const QString&);
+    void importDirContents(const QString &);
+    void importFiles(const QString &);
     int mImportDirDone;
     int mTotalDir;
 };

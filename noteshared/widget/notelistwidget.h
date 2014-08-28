@@ -22,11 +22,12 @@
 #include <QListWidget>
 #include <AkonadiCore/Item>
 
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT NoteListWidget : public QListWidget
 {
 public:
-    explicit NoteListWidget(QWidget *parent=0);
+    explicit NoteListWidget(QWidget *parent = 0);
     ~NoteListWidget();
 
     void setNotes(const Akonadi::Item::List &notes);

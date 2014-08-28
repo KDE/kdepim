@@ -24,7 +24,8 @@
  *imports opera account-archives into KMail
  *@author Danny Kukawka
  */
-namespace MailImporter {
+namespace MailImporter
+{
 class MAILIMPORTER_EXPORT FilterOpera : public Filter
 {
 public:
@@ -32,12 +33,12 @@ public:
     ~FilterOpera();
 
     void import();
-    void importMails( const QString &maildir );
+    void importMails(const QString &maildir);
     static QString defaultSettingsPath();
 
 private:
-    void importBox( const QDir & importDir, const QStringList & , const QString & accountName = QString());
-    void importRecursive(const QDir& maildir, const QString &accountName = QString() );
+    void importBox(const QDir &importDir, const QStringList &, const QString &accountName = QString());
+    void importRecursive(const QDir &maildir, const QString &accountName = QString());
 };
 }
 

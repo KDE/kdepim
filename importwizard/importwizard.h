@@ -33,32 +33,33 @@ class ImportFinishPage;
 class ImportCalendarPage;
 class AbstractImporter;
 
-class ImportWizard : public KAssistantDialog {
+class ImportWizard : public KAssistantDialog
+{
     Q_OBJECT
 public:
-    explicit ImportWizard( QWidget* parent=0);
+    explicit ImportWizard(QWidget *parent = 0);
     ~ImportWizard();
 
     void next();
     void reject();
     void back();
 
-    ImportMailPage* importMailPage() const;
-    ImportFilterPage* importFilterPage() const;
+    ImportMailPage *importMailPage() const;
+    ImportFilterPage *importFilterPage() const;
     ImportAddressbookPage *importAddressBookPage() const;
     ImportSettingPage *importSettingPage() const;
     ImportFinishPage *importFinishPage() const;
     ImportCalendarPage *importCalendarPage() const;
 
-    void addFinishInfo( const QString& log );
-    void addFinishError( const QString& log );
+    void addFinishInfo(const QString &log);
+    void addFinishError(const QString &log);
 
 private Q_SLOTS:
-    void slotProgramSelected(const QString& program);
+    void slotProgramSelected(const QString &program);
     void slotImportMailsClicked();
     void slotImportFiltersClicked();
     void slotProgramDoubleClicked();
-    void slotAtLeastOneComponentSelected( bool b );
+    void slotAtLeastOneComponentSelected(bool b);
     void slotImportSettingsClicked();
     void slotImportAddressbookClicked();
     void slotImportCalendarClicked();
@@ -69,7 +70,7 @@ private:
     void setAppropriatePage(AbstractImporter::TypeSupportedOptions options);
     void enableAllImportButton();
 
-    QMap<QString, AbstractImporter*> mlistImport;
+    QMap<QString, AbstractImporter *> mlistImport;
 
     AbstractImporter *mSelectedPim;
 

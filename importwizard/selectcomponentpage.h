@@ -20,7 +20,8 @@
 #include <QWidget>
 #include "abstractimporter.h"
 
-namespace Ui {
+namespace Ui
+{
 class SelectComponentPage;
 }
 
@@ -36,7 +37,7 @@ public:
     AbstractImporter::TypeSupportedOptions selectedComponents() const;
 
 private Q_SLOTS:
-    void slotEverythingClicked( bool clicked );
+    void slotEverythingClicked(bool clicked);
     void slotComponentClicked();
 
 Q_SIGNALS:

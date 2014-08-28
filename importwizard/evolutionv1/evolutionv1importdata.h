@@ -25,7 +25,7 @@ class Evolutionv1ImportData : public AbstractImporter
 public:
     explicit Evolutionv1ImportData(ImportWizard *parent);
     ~Evolutionv1ImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

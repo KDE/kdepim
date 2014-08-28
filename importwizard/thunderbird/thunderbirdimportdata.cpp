@@ -25,14 +25,12 @@
 #include "mailcommon/filter/filterimporterexporter.h"
 #include "importwizard.h"
 
-
 #include <KLocalizedString>
 
 #include <QDir>
 
-
-ThunderbirdImportData::ThunderbirdImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+ThunderbirdImportData::ThunderbirdImportData(ImportWizard *parent)
+    : AbstractImporter(parent)
 {
     mPath = MailImporter::FilterThunderbird::defaultSettingsPath();
 }
@@ -51,16 +49,17 @@ QString ThunderbirdImportData::defaultProfile()
 
 bool ThunderbirdImportData::foundMailer() const
 {
-    QDir directory( mPath );
-    if ( directory.exists() )
+    QDir directory(mPath);
+    if (directory.exists()) {
         return true;
+    }
     return false;
 }
 
 bool ThunderbirdImportData::importAddressBook()
 {
-    const QDir addressbookDir(mPath+defaultProfile());
-    ThunderBirdAddressBook account( addressbookDir, mImportWizard );
+    const QDir addressbookDir(mPath + defaultProfile());
+    ThunderBirdAddressBook account(addressbookDir, mImportWizard);
     return true;
 }
 
@@ -72,8 +71,8 @@ QString ThunderbirdImportData::name() const
 bool ThunderbirdImportData::importSettings()
 {
     const QString accountFile = mPath + defaultProfile() + QLatin1String("/prefs.js");
-    if ( QFile( accountFile ).exists() ) {
-        ThunderbirdSettings account( accountFile, mImportWizard );
+    if (QFile(accountFile).exists()) {
+        ThunderbirdSettings account(accountFile, mImportWizard);
     } else {
         addImportSettingsInfo(i18n("Thunderbird settings not found."));
     }
@@ -85,17 +84,17 @@ bool ThunderbirdImportData::importMails()
     //* This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
     MailImporter::FilterInfo *info = initializeInfo();
 
-
     MailImporter::FilterThunderbird thunderbird;
-    thunderbird.setFilterInfo( info );
+    thunderbird.setFilterInfo(info);
     info->clear();
     info->setStatusMessage(i18n("Import in progress"));
     const QString mailsPath = mPath + defaultProfile() + QLatin1String("/Mail/Local Folders/");
     QDir directory(mailsPath);
-    if (directory.exists())
+    if (directory.exists()) {
         thunderbird.importMails(mailsPath);
-    else
+    } else {
         thunderbird.import();
+    }
     info->setStatusMessage(i18n("Import finished"));
 
     delete info;
@@ -107,27 +106,29 @@ bool ThunderbirdImportData::importFilters()
     const QString path(mPath + defaultProfile());
     QDir dir(path);
     bool filtersAdded = false;
-    const QStringList subDir = dir.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
-    if (subDir.isEmpty())
+    const QStringList subDir = dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot, QDir::Name);
+    if (subDir.isEmpty()) {
         return true;
+    }
 
-    Q_FOREACH ( const QString& mailPath, subDir ) {
+    Q_FOREACH (const QString &mailPath, subDir) {
         const QString subMailPath(path + QLatin1Char('/') + mailPath);
         QDir dirMail(subMailPath);
-        const QStringList subDirMail = dirMail.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
+        const QStringList subDirMail = dirMail.entryList(QDir::AllDirs | QDir::NoDotAndDotDot, QDir::Name);
         bool foundFilterFile = false;
-        Q_FOREACH ( const QString& file, subDirMail ) {
-            const QString filterFile(subMailPath +QLatin1Char('/')+ file + QLatin1String("/msgFilterRules.dat"));
+        Q_FOREACH (const QString &file, subDirMail) {
+            const QString filterFile(subMailPath + QLatin1Char('/') + file + QLatin1String("/msgFilterRules.dat"));
             if (QFile(filterFile).exists()) {
                 foundFilterFile = true;
-                const bool added = addFilters( filterFile, MailCommon::FilterImporterExporter::ThunderBirdFilter );
+                const bool added = addFilters(filterFile, MailCommon::FilterImporterExporter::ThunderBirdFilter);
                 if (!filtersAdded && added) {
                     filtersAdded = true;
                 }
             }
         }
-        if (!foundFilterFile)
+        if (!foundFilterFile) {
             return true;
+        }
     }
     return filtersAdded;
 }
@@ -135,9 +136,9 @@ bool ThunderbirdImportData::importFilters()
 AbstractImporter::TypeSupportedOptions ThunderbirdImportData::supportedOption()
 {
     TypeSupportedOptions options;
-    options |=AbstractImporter::Mails;
-    options |=AbstractImporter::Filters;
-    options |=AbstractImporter::Settings;
-    options |=AbstractImporter::AddressBooks;
+    options |= AbstractImporter::Mails;
+    options |= AbstractImporter::Filters;
+    options |= AbstractImporter::Settings;
+    options |= AbstractImporter::AddressBooks;
     return options;
 }

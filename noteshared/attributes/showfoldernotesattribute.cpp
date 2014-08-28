@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "showfoldernotesattribute.h"
 
 #include <QByteArray>
@@ -35,7 +34,7 @@ ShowFolderNotesAttribute *ShowFolderNotesAttribute::clone() const
 
 QByteArray ShowFolderNotesAttribute::type() const
 {
-    static const QByteArray sType( "showfoldernotesattribute" );
+    static const QByteArray sType("showfoldernotesattribute");
     return sType;
 }
 
@@ -44,7 +43,7 @@ QByteArray ShowFolderNotesAttribute::serialized() const
     return "-";
 }
 
-void ShowFolderNotesAttribute::deserialize( const QByteArray &data )
+void ShowFolderNotesAttribute::deserialize(const QByteArray &data)
 {
-    Q_UNUSED( data );
+    Q_UNUSED(data);
 }

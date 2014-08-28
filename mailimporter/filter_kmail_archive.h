@@ -24,7 +24,8 @@
 class KArchiveFile;
 class KArchiveDirectory;
 
-namespace MailImporter {
+namespace MailImporter
+{
 
 class MAILIMPORTER_EXPORT FilterKMailArchive : public Filter
 {
@@ -33,14 +34,14 @@ public:
     ~FilterKMailArchive();
 
     void import();
-    void importMails( const QString & archiveFile );
+    void importMails(const QString &archiveFile);
 private:
 
-    bool importDirectory( const KArchiveDirectory *directory, const QString &folderPath );
-    bool importFolder( const KArchiveDirectory *folder, const QString &folderPath );
-    bool importMessage( const KArchiveFile *file, const QString &folderPath );
+    bool importDirectory(const KArchiveDirectory *directory, const QString &folderPath);
+    bool importFolder(const KArchiveDirectory *folder, const QString &folderPath);
+    bool importMessage(const KArchiveFile *file, const QString &folderPath);
 
-    int countFiles( const KArchiveDirectory *directory ) const;
+    int countFiles(const KArchiveDirectory *directory) const;
 
     int mTotalFiles;
     int mFilesDone;

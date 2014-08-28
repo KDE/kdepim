@@ -25,7 +25,7 @@ class ThunderbirdImportData : public AbstractImporter
 public:
     explicit ThunderbirdImportData(ImportWizard *parent);
     ~ThunderbirdImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

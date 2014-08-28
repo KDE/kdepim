@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef NOTENETWORKCONFIG_H
 #define NOTENETWORKCONFIG_H
 #include "noteshared_export.h"
@@ -23,13 +22,14 @@
 class QLineEdit;
 class QCheckBox;
 class QSpinBox;
-namespace NoteShared {
+namespace NoteShared
+{
 
 class NOTESHARED_EXPORT NoteNetworkConfigWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit NoteNetworkConfigWidget( QWidget *parent = 0);
+    explicit NoteNetworkConfigWidget(QWidget *parent = 0);
     ~NoteNetworkConfigWidget();
 
     void save();
@@ -40,12 +40,11 @@ private:
     QSpinBox *kcfg_Port;
 };
 
-
 class NOTESHARED_EXPORT NoteNetworkConfig : public KCModule
 {
     Q_OBJECT
 public:
-    NoteNetworkConfig( QWidget *parent );
+    NoteNetworkConfig(QWidget *parent);
     /** Reimplemented from KCModule. */
     virtual void load();
     virtual void save();

@@ -31,7 +31,7 @@
 
 using namespace NoteShared;
 
-LocalResourceCreator::LocalResourceCreator(QObject* parent)
+LocalResourceCreator::LocalResourceCreator(QObject *parent)
     : QObject(parent)
 {
 
@@ -46,7 +46,7 @@ void LocalResourceCreator::createIfMissing()
 {
     Akonadi::AgentInstance::List instances = Akonadi::AgentManager::self()->instances();
     bool found = false;
-    foreach ( const Akonadi::AgentInstance& instance, instances ) {
+    foreach (const Akonadi::AgentInstance &instance, instances) {
         if (instance.type().identifier() == akonadiNotesInstanceName()) {
             found = true;
             break;
@@ -61,16 +61,16 @@ void LocalResourceCreator::createIfMissing()
 
 void LocalResourceCreator::createInstance()
 {
-    Akonadi::AgentType notesType = Akonadi::AgentManager::self()->type( akonadiNotesInstanceName() );
+    Akonadi::AgentType notesType = Akonadi::AgentManager::self()->type(akonadiNotesInstanceName());
 
-    Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( notesType );
-    connect( job, SIGNAL(result(KJob*)),
-             this, SLOT(slotInstanceCreated(KJob*)) );
+    Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(notesType);
+    connect(job, SIGNAL(result(KJob *)),
+            this, SLOT(slotInstanceCreated(KJob *)));
 
     job->start();
 }
 
-void LocalResourceCreator::slotInstanceCreated( KJob *job )
+void LocalResourceCreator::slotInstanceCreated(KJob *job)
 {
     if (job->error()) {
         qWarning() << job->errorString();
@@ -78,17 +78,17 @@ void LocalResourceCreator::slotInstanceCreated( KJob *job )
         return;
     }
 
-    Akonadi::AgentInstanceCreateJob *createJob = qobject_cast<Akonadi::AgentInstanceCreateJob*>(job);
+    Akonadi::AgentInstanceCreateJob *createJob = qobject_cast<Akonadi::AgentInstanceCreateJob *>(job);
     Akonadi::AgentInstance instance = createJob->instance();
 
-    instance.setName( i18nc( "Default name for resource holding notes", "Local Notes" ) );
+    instance.setName(i18nc("Default name for resource holding notes", "Local Notes"));
 #if 0 //QT5
     OrgKdeAkonadiMaildirSettingsInterface *iface = new OrgKdeAkonadiMaildirSettingsInterface(
-                QLatin1String("org.freedesktop.Akonadi.Resource.") + instance.identifier(),
-                QLatin1String("/Settings"), QDBusConnection::sessionBus(), this );
+        QLatin1String("org.freedesktop.Akonadi.Resource.") + instance.identifier(),
+        QLatin1String("/Settings"), QDBusConnection::sessionBus(), this);
 
     // TODO: Make errors user-visible.
-    if (!iface->isValid() ) {
+    if (!iface->isValid()) {
         qWarning() << "Failed to obtain D-Bus interface for remote configuration.";
         delete iface;
         deleteLater();
@@ -99,13 +99,13 @@ void LocalResourceCreator::slotInstanceCreated( KJob *job )
     instance.reconfigure();
 
     Akonadi::ResourceSynchronizationJob *syncJob = new Akonadi::ResourceSynchronizationJob(instance, this);
-    connect( syncJob, SIGNAL(result(KJob*)), SLOT(slotSyncDone(KJob*)));
+    connect(syncJob, SIGNAL(result(KJob *)), SLOT(slotSyncDone(KJob *)));
     syncJob->start();
 }
 
-void LocalResourceCreator::slotSyncDone(KJob* job)
+void LocalResourceCreator::slotSyncDone(KJob *job)
 {
-    if ( job->error() ) {
+    if (job->error()) {
         qWarning() << "Synchronizing the resource failed:" << job->errorString();
         deleteLater();
         return;

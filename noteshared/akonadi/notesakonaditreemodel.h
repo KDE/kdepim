@@ -20,7 +20,8 @@
 
 #include <AkonadiCore/EntityTreeModel>
 #include "noteshared_export.h"
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT NotesAkonadiTreeModel : public Akonadi::EntityTreeModel
 {
     Q_OBJECT

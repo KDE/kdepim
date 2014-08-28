@@ -25,7 +25,7 @@ class TheBatImportData : public AbstractImporter
 public:
     explicit TheBatImportData(ImportWizard *parent);
     ~TheBatImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

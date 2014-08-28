@@ -26,7 +26,8 @@
 #include <QFont>
 #include <QPoint>
 
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT NoteDisplayAttribute : public Akonadi::Attribute
 {
 public:
@@ -35,11 +36,11 @@ public:
 
     QByteArray type() const;
 
-    NoteDisplayAttribute* clone() const;
+    NoteDisplayAttribute *clone() const;
 
     QByteArray serialized() const;
 
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
     void setBackgroundColor(const QColor &color);
     QColor backgroundColor() const;
@@ -53,7 +54,6 @@ public:
     void setRememberDesktop(bool b);
     void setTabSize(int value);
     int tabSize() const;
-
 
     void setFont(const QFont &f);
     QFont font() const;

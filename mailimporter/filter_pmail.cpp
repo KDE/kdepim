@@ -42,19 +42,19 @@ FilterPMail::~FilterPMail()
 void FilterPMail::import()
 {
     // Select directory from where I have to import files
-    QPointer<KFileDialog> kfd = new KFileDialog( QDir::homePath(), QString(), 0 );
+    QPointer<KFileDialog> kfd = new KFileDialog(QDir::homePath(), QString(), 0);
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     if (kfd->exec()) {
         const QString maildir = kfd->selectedFile();
 
-        importMails( maildir );
+        importMails(maildir);
     }
     delete kfd;
 }
 
-void FilterPMail::importMails( const QString  &chosenDir )
+void FilterPMail::importMails(const QString  &chosenDir)
 {
-    setMailDir( chosenDir );
+    setMailDir(chosenDir);
     if (mailDir().isEmpty()) {
         filterInfo()->alert(i18n("No directory selected."));
         return;
@@ -62,13 +62,13 @@ void FilterPMail::importMails( const QString  &chosenDir )
 
     // Count total number of files to be processed
     filterInfo()->addInfoLogEntry(i18n("Counting files..."));
-    dir.setPath (mailDir());
-    const QStringList files = dir.entryList(QStringList()<<QLatin1String("*.[cC][nN][mM]")<<QLatin1String("*.[pP][mM][mM]")<<QLatin1String("*.[mM][bB][xX]"), QDir::Files, QDir::Name);
+    dir.setPath(mailDir());
+    const QStringList files = dir.entryList(QStringList() << QLatin1String("*.[cC][nN][mM]") << QLatin1String("*.[pP][mM][mM]") << QLatin1String("*.[mM][bB][xX]"), QDir::Files, QDir::Name);
     totalFiles = files.count();
     currentFile = 0;
-    qDebug() <<"Count is" << totalFiles;
+    qDebug() << "Count is" << totalFiles;
 
-    if(!(folderParsed = parseFolderMatrix(mailDir()))) {
+    if (!(folderParsed = parseFolderMatrix(mailDir()))) {
         filterInfo()->addErrorLogEntry(i18n("Cannot parse the folder structure; continuing import without subfolder support."));
     }
 
@@ -79,21 +79,22 @@ void FilterPMail::importMails( const QString  &chosenDir )
     filterInfo()->addInfoLogEntry(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
     processFiles(QLatin1String("*.[mM][bB][xX]"), &FilterPMail::importUnixMailFolder);
 
-    filterInfo()->addInfoLogEntry( i18n("Finished importing emails from %1", mailDir() ));
+    filterInfo()->addInfoLogEntry(i18n("Finished importing emails from %1", mailDir()));
     filterInfo()->setCurrent(100);
     filterInfo()->setOverall(100);
 }
 
 /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-void FilterPMail::processFiles(const QString &mask, void(FilterPMail::* workFunc)(const QString&) )
+void FilterPMail::processFiles(const QString &mask, void(FilterPMail::* workFunc)(const QString &))
 {
-    if (filterInfo()->shouldTerminate())
+    if (filterInfo()->shouldTerminate()) {
         return;
+    }
 
     const QStringList files = dir.entryList(QStringList(mask), QDir::Files, QDir::Name);
     //qDebug() <<"Mask is" << mask <<" count is" << files.count();
     QStringList::ConstIterator end = files.constEnd();
-    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile ) {
+    for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
         // Notify current file
         QFileInfo mailfilem_filterInfoo(*mailFile);
         filterInfo()->setFrom(mailfilem_filterInfoo.fileName());
@@ -106,12 +107,13 @@ void FilterPMail::processFiles(const QString &mask, void(FilterPMail::* workFunc
         // call worker function, increase progressbar
         (this->*workFunc)(dir.filePath(*mailFile));
         ++currentFile;
-        filterInfo()->setOverall( (int) ((float) currentFile / totalFiles * 100));
-        filterInfo()->setCurrent( 100 );
-        if (filterInfo()->shouldTerminate()) return;
+        filterInfo()->setOverall((int)((float) currentFile / totalFiles * 100));
+        filterInfo()->setCurrent(100);
+        if (filterInfo()->shouldTerminate()) {
+            return;
+        }
     }
 }
-
 
 /** this function imports one *.CNM message */
 void FilterPMail::importNewMessage(const QString &file)
@@ -120,15 +122,15 @@ void FilterPMail::importNewMessage(const QString &file)
     filterInfo()->setTo(destFolder);
 
     /* comment by Danny Kukawka:
-   * addMessage() == old function, need more time and check for duplicates
-   * addMessage_fastImport == new function, faster and no check for duplicates
-   */
-    if(filterInfo()->removeDupMessage())
-        addMessage( destFolder, file );
-    else
-        addMessage_fastImport( destFolder, file );
+    * addMessage() == old function, need more time and check for duplicates
+    * addMessage_fastImport == new function, faster and no check for duplicates
+    */
+    if (filterInfo()->removeDupMessage()) {
+        addMessage(destFolder, file);
+    } else {
+        addMessage_fastImport(destFolder, file);
+    }
 }
-
 
 /** this function imports one mail folder file (*.PMM) */
 void FilterPMail::importMailFolder(const QString &file)
@@ -171,51 +173,52 @@ void FilterPMail::importMailFolder(const QString &file)
     } else {
         // Get folder name
         l = f.read((char *) &pmm_head, sizeof(pmm_head));
-        QString folder(i18nc("define folder name when we will import pegasus mail","PegasusMail-Import") + QLatin1Char('/'));
-        if(folderParsed)
+        QString folder(i18nc("define folder name when we will import pegasus mail", "PegasusMail-Import") + QLatin1Char('/'));
+        if (folderParsed) {
             folder.append(getFolderName(QString::fromLatin1(pmm_head.id)));
-        else
+        } else {
             folder.append(QString::fromLatin1(pmm_head.folder));
+        }
         filterInfo()->setTo(folder);
         filterInfo()->addInfoLogEntry(i18n("Importing %1", QString::fromLatin1("../") + QString::fromLatin1(pmm_head.folder)));
 
-        QByteArray input(MAX_LINE,'\0');
+        QByteArray input(MAX_LINE, '\0');
         bool first_msg = true;
 
         while (!f.atEnd()) {
             QTemporaryFile tempfile;
             tempfile.open();
-            filterInfo()->setCurrent( (int) ( ( (float) f.pos() / f.size() ) * 100 ) );
+            filterInfo()->setCurrent((int)(((float) f.pos() / f.size()) * 100));
 
-            if(!first_msg) {
+            if (!first_msg) {
                 // set the filepos back to last line minus the separate char (0x1a)
                 f.seek(f.pos() - l + 1);
             }
 
             // no problem to loose the last line in file. This only contains a separate char
-            while ( ! f.atEnd() && (l = f.readLine(input.data(),MAX_LINE))) {
-                if (filterInfo()->shouldTerminate()){
+            while (! f.atEnd() && (l = f.readLine(input.data(), MAX_LINE))) {
+                if (filterInfo()->shouldTerminate()) {
                     return;
                 }
-                if ( input.at( 0 ) == 0x1a ) {
+                if (input.at(0) == 0x1a) {
                     break;
                 } else {
-                    tempfile.write( input, l );
+                    tempfile.write(input, l);
                 }
             }
             tempfile.flush();
 
-            if(filterInfo()->removeDupMessage())
-                addMessage( folder, tempfile.fileName() );
-            else
-                addMessage_fastImport( folder, tempfile.fileName() );
+            if (filterInfo()->removeDupMessage()) {
+                addMessage(folder, tempfile.fileName());
+            } else {
+                addMessage_fastImport(folder, tempfile.fileName());
+            }
 
             first_msg = false;
         }
     }
     f.close();
 }
-
 
 /** imports a 'unix' format mail folder (*.MBX) */
 void FilterPMail::importUnixMailFolder(const QString &file)
@@ -227,24 +230,25 @@ void FilterPMail::importUnixMailFolder(const QString &file)
 
     QFile f;
     QString folder(QLatin1String("PegasusMail-Import/")), s(file), separate;
-    QByteArray line(MAX_LINE,'\0');
+    QByteArray line(MAX_LINE, '\0');
     int n = 0, l = 0;
 
     /** Get the folder name */
-    s.replace( QRegExp(QLatin1String("mbx$")), QLatin1String("pmg"));
-    s.replace( QRegExp(QLatin1String("MBX$")), QLatin1String("PMG"));
+    s.replace(QRegExp(QLatin1String("mbx$")), QLatin1String("pmg"));
+    s.replace(QRegExp(QLatin1String("MBX$")), QLatin1String("PMG"));
     f.setFileName(s);
-    if (! f.open( QIODevice::ReadOnly ) ) {
-        filterInfo()->alert( i18n("Unable to open %1, skipping", s ) );
+    if (! f.open(QIODevice::ReadOnly)) {
+        filterInfo()->alert(i18n("Unable to open %1, skipping", s));
         return;
     } else {
         f.read((char *) &pmg_head, sizeof(pmg_head));
         f.close();
 
-        if(folderParsed)
+        if (folderParsed) {
             folder.append(getFolderName(QString::fromLatin1(pmg_head.id)));
-        else
+        } else {
             folder.append(QString::fromLatin1(pmg_head.folder));
+        }
 
         filterInfo()->setTo(folder);
         filterInfo()->setTo(folder);
@@ -252,64 +256,67 @@ void FilterPMail::importUnixMailFolder(const QString &file)
 
     /** Read in the mbox */
     f.setFileName(file);
-    if (! f.open( QIODevice::ReadOnly ) ) {
-        filterInfo()->alert( i18n("Unable to open %1, skipping", s ) );
+    if (! f.open(QIODevice::ReadOnly)) {
+        filterInfo()->alert(i18n("Unable to open %1, skipping", s));
     } else {
         filterInfo()->addInfoLogEntry(i18n("Importing %1", QLatin1String("../") + QString::fromLatin1(pmg_head.folder)));
-        l = f.readLine( line.data(),MAX_LINE); // read the first line which is unneeded
-        while ( ! f.atEnd() ) {
+        l = f.readLine(line.data(), MAX_LINE); // read the first line which is unneeded
+        while (! f.atEnd()) {
             QTemporaryFile tempfile;
             tempfile.open();
 
             // we lost the last line, which is the first line of the new message in
             // this lopp, but this is ok, because this is the separate line with
             // "From ???@???" and we can forget them
-            while ( ! f.atEnd() && (l = f.readLine(line.data(),MAX_LINE)) &&((separate = QString::fromLatin1(line.data())).left(5) != QLatin1String("From "))) {
+            while (! f.atEnd() && (l = f.readLine(line.data(), MAX_LINE)) && ((separate = QString::fromLatin1(line.data())).left(5) != QLatin1String("From "))) {
                 tempfile.write(line.data(), l);
-                if (filterInfo()->shouldTerminate()){
+                if (filterInfo()->shouldTerminate()) {
                     return;
                 }
             }
             tempfile.flush();
-            if(filterInfo()->removeDupMessage())
-                addMessage( folder, tempfile.fileName() );
-            else
-                addMessage_fastImport( folder, tempfile.fileName() );
+            if (filterInfo()->removeDupMessage()) {
+                addMessage(folder, tempfile.fileName());
+            } else {
+                addMessage_fastImport(folder, tempfile.fileName());
+            }
 
             n++;
             filterInfo()->setCurrent(i18n("Message %1", n));
-            filterInfo()->setCurrent( (int) ( ( (float) f.pos() / f.size() ) * 100 ) );
+            filterInfo()->setCurrent((int)(((float) f.pos() / f.size()) * 100));
         }
     }
     f.close();
 }
 
 /** Parse the m_filterInfoormation about folderstructure to folderMatrix */
-bool FilterPMail::parseFolderMatrix( const QString  &chosendir )
+bool FilterPMail::parseFolderMatrix(const QString  &chosendir)
 {
-    qDebug() <<"Start parsing the foldermatrix.";
+    qDebug() << "Start parsing the foldermatrix.";
     filterInfo()->addInfoLogEntry(i18n("Parsing the folder structure..."));
 
     QFile hierarch(chosendir + QLatin1String("/hierarch.pm"));
-    if (! hierarch.open( QIODevice::ReadOnly ) ) {
-        filterInfo()->alert( i18n("Unable to open %1, skipping",chosendir + QLatin1String("hierarch.pm") ) );
+    if (! hierarch.open(QIODevice::ReadOnly)) {
+        filterInfo()->alert(i18n("Unable to open %1, skipping", chosendir + QLatin1String("hierarch.pm")));
         return false;
     } else {
         QStringList tmpList;
         QByteArray tmpRead;
-        while ( !hierarch.atEnd() ) {
+        while (!hierarch.atEnd()) {
             tmpRead = hierarch.readLine();
-            if ( tmpRead.isEmpty() )
+            if (tmpRead.isEmpty()) {
                 break;
+            }
             QString tmpArray[5];
-            tmpRead.remove(tmpRead.length() -2,2);
+            tmpRead.remove(tmpRead.length() - 2, 2);
             QStringList tmpList = QString::fromLatin1(tmpRead).split(QLatin1Char(','), QString::SkipEmptyParts);
             int i = 0;
-            QStringList::ConstIterator end( tmpList.constEnd() );
-            for ( QStringList::ConstIterator it = tmpList.constBegin(); it != end; ++it, ++i) {
+            QStringList::ConstIterator end(tmpList.constEnd());
+            for (QStringList::ConstIterator it = tmpList.constBegin(); it != end; ++it, ++i) {
                 QString _tmp = *it;
-                if(i < 5) tmpArray[i] = _tmp.remove(QLatin1Char('\"'));
-                else {
+                if (i < 5) {
+                    tmpArray[i] = _tmp.remove(QLatin1Char('\"'));
+                } else {
                     hierarch.close();
                     return false;
                 }
@@ -328,20 +335,18 @@ QString FilterPMail::getFolderName(const QString &ID)
     QString folder;
     QString search = ID;
 
-    while (!found)
-    {
-        FolderStructureIterator end( folderMatrix.end() );
-        for ( FolderStructureIterator it = folderMatrix.begin(); it != end; ++it) {
+    while (!found) {
+        FolderStructureIterator end(folderMatrix.end());
+        for (FolderStructureIterator it = folderMatrix.begin(); it != end; ++it) {
             FolderStructure tmp = *it;
 
             QString _ID = tmp[2];
-            if(_ID == search) {
+            if (_ID == search) {
                 QString _type = tmp[0] + tmp[1];
-                if(( _type == QLatin1String("21"))) {
+                if ((_type == QLatin1String("21"))) {
                     found = true;
                     break;
-                }
-                else {
+                } else {
                     folder.prepend((tmp[4] + QLatin1Char('/')));
                     search = tmp[3];
                 }

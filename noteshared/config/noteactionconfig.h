@@ -19,12 +19,13 @@
 #define NOTEACTIONCONFIG_H
 #include "noteshared_export.h"
 #include <KCModule>
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT NoteActionConfig : public KCModule
 {
     Q_OBJECT
 public:
-    NoteActionConfig( QWidget *parent );
+    NoteActionConfig(QWidget *parent);
     /** Reimplemented from KCModule. */
     virtual void load();
     virtual void save();

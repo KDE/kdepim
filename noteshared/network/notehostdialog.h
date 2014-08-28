@@ -40,28 +40,28 @@ class QTreeView;
 class QModelIndex;
 class QPushButton;
 
-
 /**
  * A dialog that allows to select network service or request a hostname or IP address.
  */
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT NoteHostDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit NoteHostDialog( const QString &caption, QWidget *parent = 0 );
+    explicit NoteHostDialog(const QString &caption, QWidget *parent = 0);
     ~NoteHostDialog();
-    
+
     QString host() const;
     /**
      * Returns 0 if port was not specified
      */
     quint16 port() const;
-    
+
 private slots:
-    void slotTextChanged( const QString & );
-    void serviceSelected( const QModelIndex& );
-    
+    void slotTextChanged(const QString &);
+    void serviceSelected(const QModelIndex &);
+
     void slotServiceDoubleClicked(const QModelIndex &idx);
 private:
     void readConfig();

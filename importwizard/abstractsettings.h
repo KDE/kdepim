@@ -24,12 +24,14 @@
 
 class ImportWizard;
 
-namespace KIdentityManagement {
+namespace KIdentityManagement
+{
 class Identity;
 class IdentityManager;
 }
 
-namespace MailTransport {
+namespace MailTransport
+{
 class Transport;
 }
 
@@ -40,36 +42,35 @@ public:
     ~AbstractSettings();
 
 protected:
-    void addImportInfo( const QString& log );
-    void addImportError( const QString& log );
+    void addImportInfo(const QString &log);
+    void addImportError(const QString &log);
 
     void syncKmailConfig();
 
-    QString uniqueIdentityName(const QString& name);
+    QString uniqueIdentityName(const QString &name);
 
-    QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
+    QString createResource(const QString &resources , const QString &name, const QMap<QString, QVariant> &settings);
 
-    KIdentityManagement::Identity* createIdentity(QString& name);
+    KIdentityManagement::Identity *createIdentity(QString &name);
 
     MailTransport::Transport *createTransport();
 
-    void storeTransport(MailTransport::Transport * mt, bool isDefault = false );
+    void storeTransport(MailTransport::Transport *mt, bool isDefault = false);
 
-    void storeIdentity(KIdentityManagement::Identity* identity);
+    void storeIdentity(KIdentityManagement::Identity *identity);
 
-    void addKmailConfig( const QString& groupName, const QString& key, const QString& value);
-    void addKmailConfig( const QString& groupName, const QString& key, bool value);
-    void addKmailConfig( const QString& groupName, const QString& key, int value);
+    void addKmailConfig(const QString &groupName, const QString &key, const QString &value);
+    void addKmailConfig(const QString &groupName, const QString &key, bool value);
+    void addKmailConfig(const QString &groupName, const QString &key, int value);
 
-    void addComposerHeaderGroup( const QString& groupName, const QString& name, const QString& value );
+    void addComposerHeaderGroup(const QString &groupName, const QString &name, const QString &value);
 
-    void addKNodeConfig(const QString& groupName, const QString& key, bool value);
-    void addAkregatorConfig(const QString& groupName, const QString& key, bool value);
+    void addKNodeConfig(const QString &groupName, const QString &key, bool value);
+    void addAkregatorConfig(const QString &groupName, const QString &key, bool value);
 
-
-    void addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup);
-    void addToManualCheck(const QString& agentIdentifyName,bool manualCheck);
-    int readKmailSettings( const QString&groupName, const QString& key);
+    void addCheckMailOnStartup(const QString &agentIdentifyName, bool loginAtStartup);
+    void addToManualCheck(const QString &agentIdentifyName, bool manualCheck);
+    int readKmailSettings(const QString &groupName, const QString &key);
 
     ImportWizard *mImportWizard;
     KIdentityManagement::IdentityManager *mManager;

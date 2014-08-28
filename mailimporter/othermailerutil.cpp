@@ -19,7 +19,8 @@
 
 #include <QDir>
 
-namespace MailImporter {
+namespace MailImporter
+{
 QString OtherMailerUtil::trojitaDefaultPath()
 {
     const QString path = QDir::homePath() + QLatin1String("/.config/flaska.net/");

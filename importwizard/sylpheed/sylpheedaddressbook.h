@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SYLPHEEDADDRESSBOOK_H
 #define SYLPHEEDADDRESSBOOK_H
 
@@ -23,7 +22,6 @@
 #include <QHash>
 class QDir;
 class QString;
-
 
 class ImportWizard;
 
@@ -34,7 +32,7 @@ public:
     ~SylpheedAddressBook();
 
 private:
-    void readAddressBook( const QString& filename );
+    void readAddressBook(const QString &filename);
     QHash<QString, QStringList > mAddressBookUid;
 };
 

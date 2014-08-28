@@ -98,14 +98,14 @@ void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
     } else {
         col = Akonadi::Collection(id);
     }
-    Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( col, Akonadi::CollectionFetchJob::Base );
+    Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base);
     connect(fetchCollection, &Akonadi::CollectionFetchJob::result, this, &CreateNewNoteJob::slotFetchCollection);
 }
 
-void CreateNewNoteJob::slotFetchCollection(KJob* job)
+void CreateNewNoteJob::slotFetchCollection(KJob *job)
 {
     if (job->error()) {
-        qDebug()<<" Error during fetch: "<<job->errorString();
+        qDebug() << " Error during fetch: " << job->errorString();
         if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("An error occurred during fetching. Do you want select a new default collection?"))) {
             Q_EMIT selectNewCollection();
         } else {
@@ -113,9 +113,9 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
         }
         return;
     }
-    Akonadi::CollectionFetchJob *fetchCollection = qobject_cast<Akonadi::CollectionFetchJob*>(job);
+    Akonadi::CollectionFetchJob *fetchCollection = qobject_cast<Akonadi::CollectionFetchJob *>(job);
     if (fetchCollection->collections().isEmpty()) {
-        qDebug()<<"No collection fetched";
+        qDebug() << "No collection fetched";
         if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("An error occurred during fetching. Do you want select a new default collection?"))) {
             Q_EMIT selectNewCollection();
         } else {
@@ -128,47 +128,46 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
         if (!col.hasAttribute<NoteShared::ShowFolderNotesAttribute>()) {
             if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("Collection is hidden. New note will stored but not displaying. Do you want to show collection?"))) {
                 col.addAttribute(new NoteShared::ShowFolderNotesAttribute());
-                Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( col );
+                Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob(col);
                 connect(job, &Akonadi::CollectionModifyJob::result, this, &CreateNewNoteJob::slotCollectionModifyFinished);
             }
         }
         Akonadi::Item newItem;
-        newItem.setMimeType( Akonotes::Note::mimeType() );
+        newItem.setMimeType(Akonotes::Note::mimeType());
 
-        KMime::Message::Ptr newPage = KMime::Message::Ptr( new KMime::Message() );
+        KMime::Message::Ptr newPage = KMime::Message::Ptr(new KMime::Message());
 
         QString title;
         if (mTitle.isEmpty()) {
             const QDateTime currentDateTime = QDateTime::currentDateTime();
             title = NoteShared::NoteSharedGlobalConfig::self()->defaultTitle();
-            title.replace(QLatin1String("%t"), KLocale::global()->formatTime( currentDateTime.time()));
-            title.replace(QLatin1String("%d"), KLocale::global()->formatDate( currentDateTime.date(), KLocale::ShortDate));
-            title.replace(QLatin1String("%l"), KLocale::global()->formatDate( currentDateTime.date(), KLocale::LongDate));
+            title.replace(QLatin1String("%t"), KLocale::global()->formatTime(currentDateTime.time()));
+            title.replace(QLatin1String("%d"), KLocale::global()->formatDate(currentDateTime.date(), KLocale::ShortDate));
+            title.replace(QLatin1String("%l"), KLocale::global()->formatDate(currentDateTime.date(), KLocale::LongDate));
         } else {
             title = mTitle;
         }
-        QByteArray encoding( "utf-8" );
+        QByteArray encoding("utf-8");
 
-        newPage->subject( true )->fromUnicodeString( title, encoding );
-        newPage->contentType( true )->setMimeType( mRichText ? "text/html" : "text/plain" );
+        newPage->subject(true)->fromUnicodeString(title, encoding);
+        newPage->contentType(true)->setMimeType(mRichText ? "text/html" : "text/plain");
         newPage->contentType()->setCharset("utf-8");
         newPage->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
-        newPage->date( true )->setDateTime( QDateTime::currentDateTime() );
-        newPage->from( true )->fromUnicodeString( QString::fromLatin1( "knotes@kde4" ), encoding );
+        newPage->date(true)->setDateTime(QDateTime::currentDateTime());
+        newPage->from(true)->fromUnicodeString(QString::fromLatin1("knotes@kde4"), encoding);
         // Need a non-empty body part so that the serializer regards this as a valid message.
-        newPage->mainBodyPart()->fromUnicodeString( mText.isEmpty() ? QString::fromLatin1( " " ) : mText);
+        newPage->mainBodyPart()->fromUnicodeString(mText.isEmpty() ? QString::fromLatin1(" ") : mText);
 
         newPage->assemble();
 
-        newItem.setPayload( newPage );
+        newItem.setPayload(newPage);
 
         Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
 
-
-        eda->setIconName( QString::fromLatin1( "text-plain" ) );
+        eda->setIconName(QString::fromLatin1("text-plain"));
         newItem.addAttribute(eda);
 
-        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
+        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(newItem, col, this);
         connect(job, &Akonadi::ItemCreateJob::result, this, &CreateNewNoteJob::slotNoteCreationFinished);
     } else {
         deleteLater();

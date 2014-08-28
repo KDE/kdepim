@@ -23,7 +23,7 @@ ImportAddressbookPage::ImportAddressbookPage(QWidget *parent) :
     ui(new Ui::ImportAddressbookPage)
 {
     ui->setupUi(this);
-    connect( ui->importAddressBook, SIGNAL(clicked()), SIGNAL(importAddressbookClicked()));
+    connect(ui->importAddressBook, SIGNAL(clicked()), SIGNAL(importAddressbookClicked()));
 }
 
 ImportAddressbookPage::~ImportAddressbookPage()
@@ -31,14 +31,14 @@ ImportAddressbookPage::~ImportAddressbookPage()
     delete ui;
 }
 
-void ImportAddressbookPage::addImportInfo( const QString& log )
+void ImportAddressbookPage::addImportInfo(const QString &log)
 {
-    ui->logAddressbook->addInfoLogEntry( log );
+    ui->logAddressbook->addInfoLogEntry(log);
 }
 
-void ImportAddressbookPage::addImportError( const QString& log )
+void ImportAddressbookPage::addImportError(const QString &log)
 {
-    ui->logAddressbook->addErrorLogEntry( log );
+    ui->logAddressbook->addErrorLogEntry(log);
 }
 
 void ImportAddressbookPage::setImportButtonEnabled(bool enabled)

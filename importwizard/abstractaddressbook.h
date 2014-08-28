@@ -23,7 +23,8 @@
 
 class ImportWizard;
 
-namespace KABC {
+namespace KABC
+{
 class Addressee;
 class ContactGroup;
 }
@@ -38,19 +39,19 @@ public:
     ~AbstractAddressBook();
 
 protected:
-    void createGroup(const KABC::ContactGroup& group);
-    void createContact( const KABC::Addressee& address );
+    void createGroup(const KABC::ContactGroup &group);
+    void createContact(const KABC::Addressee &address);
 
-    void addImportInfo( const QString& log );
-    void addImportError( const QString& log );
+    void addImportInfo(const QString &log);
+    void addImportError(const QString &log);
 
-    void addAddressBookImportInfo( const QString& log );
-    void addAddressBookImportError( const QString& log );
+    void addAddressBookImportInfo(const QString &log);
+    void addAddressBookImportError(const QString &log);
     void cleanUp();
     void addImportNote(KABC::Addressee &address, const QString &applicationName);
 
 private Q_SLOTS:
-    void slotStoreDone(KJob*job);
+    void slotStoreDone(KJob *job);
 
 protected:
     ImportWizard *mImportWizard;

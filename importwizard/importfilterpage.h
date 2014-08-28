@@ -20,7 +20,8 @@
 
 #include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class ImportFilterPage;
 }
 
@@ -31,8 +32,8 @@ public:
     explicit ImportFilterPage(QWidget *parent = 0);
     ~ImportFilterPage();
 
-    void addImportInfo( const QString& log );
-    void addImportError( const QString& log );
+    void addImportInfo(const QString &log);
+    void addImportError(const QString &log);
     void setImportButtonEnabled(bool enabled);
 
 Q_SIGNALS:

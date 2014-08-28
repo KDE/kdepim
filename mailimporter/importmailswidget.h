@@ -20,30 +20,32 @@
 #include <QWidget>
 #include "mailimporter_export.h"
 class QListWidgetItem;
-namespace Ui {
+namespace Ui
+{
 class ImportMailsWidget;
 }
-namespace MailImporter {
+namespace MailImporter
+{
 
 class MAILIMPORTER_EXPORT ImportMailsWidget : public QWidget
 {
     Q_OBJECT
-    
+
 public:
     explicit ImportMailsWidget(QWidget *parent = 0);
     ~ImportMailsWidget();
 
-    void setStatusMessage( const QString& status );
-    void setFrom( const QString& from );
-    void setTo( const QString& to );
-    void setCurrent( const QString& current );
-    void setCurrent( int percent );
-    void setOverall( int percent );
-    void addItem( QListWidgetItem* item );
+    void setStatusMessage(const QString &status);
+    void setFrom(const QString &from);
+    void setTo(const QString &to);
+    void setCurrent(const QString &current);
+    void setCurrent(int percent);
+    void setOverall(int percent);
+    void addItem(QListWidgetItem *item);
     void setLastCurrentItem();
     void clear();
-    void addInfoLogEntry( const QString& log );
-    void addErrorLogEntry( const QString& log );
+    void addInfoLogEntry(const QString &log);
+    void addErrorLogEntry(const QString &log);
 
 private:
     Ui::ImportMailsWidget *ui;

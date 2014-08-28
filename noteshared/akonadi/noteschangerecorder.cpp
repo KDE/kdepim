@@ -32,18 +32,18 @@ NotesChangeRecorder::NotesChangeRecorder(QObject *parent)
     : QObject(parent)
 {
     Akonadi::ItemFetchScope scope;
-    scope.fetchFullPayload( true ); // Need to have full item when adding it to the internal data structure
+    scope.fetchFullPayload(true);   // Need to have full item when adding it to the internal data structure
     scope.fetchAttribute< NoteShared::NoteLockAttribute >();
     scope.fetchAttribute< NoteShared::NoteDisplayAttribute >();
     scope.fetchAttribute< NoteShared::NoteAlarmAttribute >();
 
-    mChangeRecorder = new Akonadi::ChangeRecorder( this );
-    mChangeRecorder->setItemFetchScope( scope );
-    mChangeRecorder->fetchCollection( true );
-    mChangeRecorder->fetchCollectionStatistics( true );
-    mChangeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
-    mChangeRecorder->collectionFetchScope().setIncludeStatistics( true );    
-    mChangeRecorder->setMimeTypeMonitored( Akonotes::Note::mimeType() );
+    mChangeRecorder = new Akonadi::ChangeRecorder(this);
+    mChangeRecorder->setItemFetchScope(scope);
+    mChangeRecorder->fetchCollection(true);
+    mChangeRecorder->fetchCollectionStatistics(true);
+    mChangeRecorder->setCollectionMonitored(Akonadi::Collection::root());
+    mChangeRecorder->collectionFetchScope().setIncludeStatistics(true);
+    mChangeRecorder->setMimeTypeMonitored(Akonotes::Note::mimeType());
 }
 
 Akonadi::ChangeRecorder *NotesChangeRecorder::changeRecorder() const

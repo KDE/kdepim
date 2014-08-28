@@ -22,11 +22,10 @@
 
 #include <QSettings>
 
-
-TrojitaAddressBook::TrojitaAddressBook(const QString& filename, ImportWizard *parent)
-  : AbstractAddressBook( parent )
+TrojitaAddressBook::TrojitaAddressBook(const QString &filename, ImportWizard *parent)
+    : AbstractAddressBook(parent)
 {
-    settings = new QSettings(filename,QSettings::IniFormat,this);
+    settings = new QSettings(filename, QSettings::IniFormat, this);
     settings->setIniCodec("UTF-8");
     readAddressBook();
 }
@@ -44,25 +43,26 @@ void TrojitaAddressBook::readAddressBook()
         settings->beginGroup(contact);
         contactABC.setEmails(QStringList() << settings->value(QLatin1String("email")).toStringList());
 
-        KABC::Address homeAddr = KABC::Address( KABC::Address::Home );
+        KABC::Address homeAddr = KABC::Address(KABC::Address::Home);
         homeAddr.setLocality(settings->value(QLatin1String("city")).toString());
         homeAddr.setRegion(settings->value(QLatin1String("state")).toString());
         homeAddr.setPostalCode(settings->value(QLatin1String("zip")).toString());
         homeAddr.setCountry(settings->value(QLatin1String("country")).toString());
         homeAddr.setStreet(settings->value(QLatin1String("address")).toString());
-        if (!homeAddr.isEmpty())
+        if (!homeAddr.isEmpty()) {
             contactABC.insertAddress(homeAddr);
+        }
 
-        contactABC.insertPhoneNumber( KABC::PhoneNumber( settings->value(QLatin1String("phone")).toString(), KABC::PhoneNumber::Home ) );
-        contactABC.insertPhoneNumber( KABC::PhoneNumber( settings->value(QLatin1String("workphone")).toString(), KABC::PhoneNumber::Work ) );
-        contactABC.insertPhoneNumber( KABC::PhoneNumber( settings->value(QLatin1String("fax")).toString(), KABC::PhoneNumber::Fax ) );
-        contactABC.insertPhoneNumber( KABC::PhoneNumber( settings->value(QLatin1String("mobile")).toString(), KABC::PhoneNumber::Cell ) );
+        contactABC.insertPhoneNumber(KABC::PhoneNumber(settings->value(QLatin1String("phone")).toString(), KABC::PhoneNumber::Home));
+        contactABC.insertPhoneNumber(KABC::PhoneNumber(settings->value(QLatin1String("workphone")).toString(), KABC::PhoneNumber::Work));
+        contactABC.insertPhoneNumber(KABC::PhoneNumber(settings->value(QLatin1String("fax")).toString(), KABC::PhoneNumber::Fax));
+        contactABC.insertPhoneNumber(KABC::PhoneNumber(settings->value(QLatin1String("mobile")).toString(), KABC::PhoneNumber::Cell));
         contactABC.setNickName(settings->value(QLatin1String("nick")).toString());
         contactABC.setUrl(QUrl(settings->value(QLatin1String("url")).toString()));
 
-        const QDateTime birthDate( QDate::fromString(settings->value(QLatin1String("anniversary")).toString()));
+        const QDateTime birthDate(QDate::fromString(settings->value(QLatin1String("anniversary")).toString()));
         if (birthDate.isValid()) {
-            contactABC.setBirthday( birthDate );
+            contactABC.setBirthday(birthDate);
         }
         //TODO
         //ADD(Photo, "photo");

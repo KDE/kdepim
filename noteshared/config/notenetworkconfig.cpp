@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "notenetworkconfig.h"
 
 #include "notesharedglobalconfig.h"
@@ -36,47 +35,47 @@ using namespace NoteShared;
 NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QVBoxLayout *lay = new QVBoxLayout( this );
-    QWidget * w =  new QWidget( this );
-    lay->addWidget( w );
-    QVBoxLayout *layout = new QVBoxLayout( w );
+    QVBoxLayout *lay = new QVBoxLayout(this);
+    QWidget *w =  new QWidget(this);
+    lay->addWidget(w);
+    QVBoxLayout *layout = new QVBoxLayout(w);
 //TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
-    layout->setMargin( 0 );
+    layout->setMargin(0);
 
-    QGroupBox *incoming = new QGroupBox( i18n( "Incoming Notes" ) );
+    QGroupBox *incoming = new QGroupBox(i18n("Incoming Notes"));
     QHBoxLayout *tmpLayout = new QHBoxLayout;
 
-    mTmpChkB=new QCheckBox( i18n( "Accept incoming notes" ) );
-    mTmpChkB->setObjectName( QLatin1String("kcfg_ReceiveNotes") );
-    tmpLayout->addWidget( mTmpChkB );
-    incoming->setLayout( tmpLayout );
-    layout->addWidget( incoming );
+    mTmpChkB = new QCheckBox(i18n("Accept incoming notes"));
+    mTmpChkB->setObjectName(QLatin1String("kcfg_ReceiveNotes"));
+    tmpLayout->addWidget(mTmpChkB);
+    incoming->setLayout(tmpLayout);
+    layout->addWidget(incoming);
 
-    QGroupBox *outgoing = new QGroupBox( i18n( "Outgoing Notes" ) );
+    QGroupBox *outgoing = new QGroupBox(i18n("Outgoing Notes"));
     tmpLayout = new QHBoxLayout;
 
-    QLabel *label_SenderID = new QLabel( i18n( "&Sender ID:" ) );
+    QLabel *label_SenderID = new QLabel(i18n("&Sender ID:"));
     kcfg_SenderID = new QLineEdit;
     kcfg_SenderID->setClearButtonEnabled(true);
-    kcfg_SenderID->setObjectName( QLatin1String("kcfg_SenderID") );
-    label_SenderID->setBuddy( kcfg_SenderID );
-    tmpLayout->addWidget( label_SenderID );
-    tmpLayout->addWidget( kcfg_SenderID );
-    outgoing->setLayout( tmpLayout );
-    layout->addWidget( outgoing );
+    kcfg_SenderID->setObjectName(QLatin1String("kcfg_SenderID"));
+    label_SenderID->setBuddy(kcfg_SenderID);
+    tmpLayout->addWidget(label_SenderID);
+    tmpLayout->addWidget(kcfg_SenderID);
+    outgoing->setLayout(tmpLayout);
+    layout->addWidget(outgoing);
 
     tmpLayout = new QHBoxLayout;
 
-    QLabel *label_Port = new QLabel( i18n( "&Port:" ) );
+    QLabel *label_Port = new QLabel(i18n("&Port:"));
 
-    tmpLayout->addWidget( label_Port );
+    tmpLayout->addWidget(label_Port);
 
     kcfg_Port = new QSpinBox;
-    kcfg_Port->setObjectName( QLatin1String("kcfg_Port") );
-    kcfg_Port->setRange( 0, 65535 );
-    label_Port->setBuddy( kcfg_Port );
-    tmpLayout->addWidget( kcfg_Port );
-    layout->addLayout( tmpLayout );
+    kcfg_Port->setObjectName(QLatin1String("kcfg_Port"));
+    kcfg_Port->setRange(0, 65535);
+    label_Port->setBuddy(kcfg_Port);
+    tmpLayout->addWidget(kcfg_Port);
+    layout->addLayout(tmpLayout);
     lay->addStretch();
 }
 
@@ -100,15 +99,14 @@ void NoteNetworkConfigWidget::load()
     kcfg_Port->setValue(NoteShared::NoteSharedGlobalConfig::self()->port());
 }
 
-
-NoteNetworkConfig::NoteNetworkConfig( QWidget *parent )
-    :KCModule( parent )
+NoteNetworkConfig::NoteNetworkConfig(QWidget *parent)
+    : KCModule(parent)
 {
-    QVBoxLayout *lay = new QVBoxLayout( this );
+    QVBoxLayout *lay = new QVBoxLayout(this);
     lay->setMargin(0);
     NoteNetworkConfigWidget *widget = new NoteNetworkConfigWidget(this);
-    lay->addWidget( widget );
-    addConfig( NoteShared::NoteSharedGlobalConfig::self(), widget );
+    lay->addWidget(widget);
+    addConfig(NoteShared::NoteSharedGlobalConfig::self(), widget);
     load();
 }
 

@@ -21,7 +21,8 @@
 #include <AkonadiCore/attribute.h>
 #include "noteshared_export.h"
 
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT ShowFolderNotesAttribute : public Akonadi::Attribute
 {
 public:
@@ -32,7 +33,7 @@ public:
     ShowFolderNotesAttribute *clone() const;
     QByteArray type() const;
     QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 };
 }
 

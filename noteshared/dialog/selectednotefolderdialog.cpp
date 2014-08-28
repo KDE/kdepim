@@ -26,15 +26,15 @@
 using namespace NoteShared;
 
 SelectedNotefolderDialog::SelectedNotefolderDialog(QWidget *parent)
-    : Akonadi::CollectionDialog (parent)
+    : Akonadi::CollectionDialog(parent)
 {
-    const QStringList mimeTypes( Akonotes::Note::mimeType() );
-    setMimeTypeFilter( mimeTypes );
+    const QStringList mimeTypes(Akonotes::Note::mimeType());
+    setMimeTypeFilter(mimeTypes);
     //setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    setCaption( i18nc( "@title:window", "Select Note Folder" ) );
-    setDescription( i18nc( "@info",
-                       "Select the folder where the note will be saved:" ) );
-    changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
+    setCaption(i18nc("@title:window", "Select Note Folder"));
+    setDescription(i18nc("@info",
+                         "Select the folder where the note will be saved:"));
+    changeCollectionDialogOptions(Akonadi::CollectionDialog::KeepTreeExpanded);
     setUseFolderByDefault(false);
     readConfig();
 }
@@ -46,16 +46,16 @@ SelectedNotefolderDialog::~SelectedNotefolderDialog()
 
 void SelectedNotefolderDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SelectedNotefolderDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectedNotefolderDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void SelectedNotefolderDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SelectedNotefolderDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectedNotefolderDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }

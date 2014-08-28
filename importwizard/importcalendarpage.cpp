@@ -23,7 +23,7 @@ ImportCalendarPage::ImportCalendarPage(QWidget *parent) :
     ui(new Ui::ImportCalendarPage)
 {
     ui->setupUi(this);
-    connect( ui->importCalendar, SIGNAL(clicked()), SIGNAL(importCalendarClicked()));
+    connect(ui->importCalendar, SIGNAL(clicked()), SIGNAL(importCalendarClicked()));
 }
 
 ImportCalendarPage::~ImportCalendarPage()
@@ -31,19 +31,18 @@ ImportCalendarPage::~ImportCalendarPage()
     delete ui;
 }
 
-void ImportCalendarPage::addImportInfo( const QString& log )
+void ImportCalendarPage::addImportInfo(const QString &log)
 {
-    ui->logCalendar->addInfoLogEntry( log );
+    ui->logCalendar->addInfoLogEntry(log);
 }
 
-void ImportCalendarPage::addImportError( const QString& log )
+void ImportCalendarPage::addImportError(const QString &log)
 {
-    ui->logCalendar->addErrorLogEntry( log );
+    ui->logCalendar->addErrorLogEntry(log);
 }
 
 void ImportCalendarPage::setImportButtonEnabled(bool enabled)
 {
     ui->importCalendar->setEnabled(enabled);
 }
-
 

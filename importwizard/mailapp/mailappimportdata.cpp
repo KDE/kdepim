@@ -25,9 +25,8 @@
 
 #include <QDir>
 
-
-MailAppImportData::MailAppImportData(ImportWizard*parent)
-    :AbstractImporter(parent)
+MailAppImportData::MailAppImportData(ImportWizard *parent)
+    : AbstractImporter(parent)
 {
     mPath = QDir::homePath();
 }
@@ -36,14 +35,14 @@ MailAppImportData::~MailAppImportData()
 {
 }
 
-
 bool MailAppImportData::foundMailer() const
 {
 #ifdef Q_OS_MAC
     //TODO find a method to search it. Perhaps look at binary.
-    QDir directory( mPath );
-    if ( directory.exists() )
+    QDir directory(mPath);
+    if (directory.exists()) {
         return true;
+    }
 #endif
     return false;
 }
@@ -58,13 +57,14 @@ bool MailAppImportData::importMails()
     MailImporter::FilterInfo *info = initializeInfo();
 
     MailImporter::FilterMailApp mailapp;
-    mailapp.setFilterInfo( info );
+    mailapp.setFilterInfo(info);
     info->setStatusMessage(i18n("Import in progress"));
     QDir directory(mPath);
-    if (directory.exists())
+    if (directory.exists()) {
         mailapp.importMails(mPath);
-    else
+    } else {
         mailapp.import();
+    }
     info->setStatusMessage(i18n("Import finished"));
 
     delete info;
@@ -74,6 +74,6 @@ bool MailAppImportData::importMails()
 AbstractImporter::TypeSupportedOptions MailAppImportData::supportedOption()
 {
     TypeSupportedOptions options;
-    options |=AbstractImporter::Mails;
+    options |= AbstractImporter::Mails;
     return options;
 }

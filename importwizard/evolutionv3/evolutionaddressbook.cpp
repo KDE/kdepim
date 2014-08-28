@@ -22,7 +22,7 @@
 #include <QFileDialog>
 
 EvolutionAddressBook::EvolutionAddressBook(ImportWizard *parent)
-    : AbstractAddressBook( parent )
+    : AbstractAddressBook(parent)
 {
     exportEvolutionAddressBook();
 }
@@ -34,7 +34,7 @@ EvolutionAddressBook::~EvolutionAddressBook()
 
 void EvolutionAddressBook::exportEvolutionAddressBook()
 {
-    KMessageBox::information(mImportWizard,i18n("Evolution address book will be exported as vCard. Import vCard in KAddressBook."),i18n("Export Evolution Address Book"));
+    KMessageBox::information(mImportWizard, i18n("Evolution address book will be exported as vCard. Import vCard in KAddressBook."), i18n("Export Evolution Address Book"));
 
     const QString directory = QFileDialog::getExistingDirectory(mImportWizard, i18n("Select the directory where vCards will be stored."));
     if (directory.isEmpty()) {
@@ -42,7 +42,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
     }
     QFile evolutionFile;
     bool found = false;
-    for(int i=0;i<9; ++i) {
+    for (int i = 0; i < 9; ++i) {
         evolutionFile.setFileName(QString::fromLatin1("/usr/lib/evolution/3.%1/evolution-addressbook-export").arg(i));
         if (evolutionFile.exists()) {
             found = true;
@@ -51,46 +51,47 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
     }
     if (found) {
         QStringList arguments;
-        arguments<<QLatin1String("-l");
+        arguments << QLatin1String("-l");
         QProcess proc;
         proc.start(evolutionFile.fileName(), arguments);
-        if (!proc.waitForFinished())
+        if (!proc.waitForFinished()) {
             return;
+        }
         QByteArray result = proc.readAll();
         proc.close();
         if (!result.isEmpty()) {
-            result = result.replace('\n',',');
+            result = result.replace('\n', ',');
             const QString value(result.trimmed());
             const QStringList listAddressBook = value.split(QLatin1Char(','));
             //qDebug()<<" listAddressBook"<<listAddressBook;
             int i = 0;
             QString name;
             QString displayname;
-            Q_FOREACH (const QString&arg, listAddressBook) {
-                switch(i) {
+            Q_FOREACH (const QString &arg, listAddressBook) {
+                switch (i) {
                 case 0:
                     name = arg;
-                    name = name.remove(0,1);
-                    name = name.remove(name.length()-1,1);
+                    name = name.remove(0, 1);
+                    name = name.remove(name.length() - 1, 1);
                     ++i;
                     //name
                     break;
                 case 1:
                     displayname = arg;
-                    displayname = displayname.remove(0,1);
-                    displayname = displayname.remove(displayname.length()-1,1);
+                    displayname = displayname.remove(0, 1);
+                    displayname = displayname.remove(displayname.length() - 1, 1);
                     //display name
                     ++i;
                     break;
                 case 2:
-                    if (!displayname.isEmpty()&&!name.isEmpty()) {
+                    if (!displayname.isEmpty() && !name.isEmpty()) {
                         arguments.clear();
-                        arguments<<QLatin1String("--format=vcard")<<name<<QString::fromLatin1("--output=%1/%2.vcard").arg(directory).arg(displayname);
-                        proc.start(evolutionFile.fileName(),arguments);
+                        arguments << QLatin1String("--format=vcard") << name << QString::fromLatin1("--output=%1/%2.vcard").arg(directory).arg(displayname);
+                        proc.start(evolutionFile.fileName(), arguments);
                         if (proc.waitForFinished()) {
-                            addAddressBookImportInfo(i18n("Address book \"%1\" exported.",displayname));
+                            addAddressBookImportInfo(i18n("Address book \"%1\" exported.", displayname));
                         } else {
-                            addAddressBookImportError(i18n("Failed to export address book \"%1\".",displayname));
+                            addAddressBookImportError(i18n("Failed to export address book \"%1\".", displayname));
                         }
                     }
                     i = 0; //reset
@@ -100,6 +101,4 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
         }
     }
 }
-
-
 

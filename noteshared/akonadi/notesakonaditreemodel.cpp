@@ -21,7 +21,7 @@ using namespace NoteShared;
 NotesAkonadiTreeModel::NotesAkonadiTreeModel(Akonadi::ChangeRecorder *changeRecorder, QObject *parent)
     : Akonadi::EntityTreeModel(changeRecorder, parent)
 {
-    setItemPopulationStrategy( Akonadi::EntityTreeModel::ImmediatePopulation );
+    setItemPopulationStrategy(Akonadi::EntityTreeModel::ImmediatePopulation);
 }
 
 NotesAkonadiTreeModel::~NotesAkonadiTreeModel()

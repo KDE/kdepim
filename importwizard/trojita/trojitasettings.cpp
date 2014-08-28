@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -27,10 +27,10 @@
 
 #include <QSettings>
 
-TrojitaSettings::TrojitaSettings(const QString& filename,ImportWizard *parent)
-  :AbstractSettings( parent )
+TrojitaSettings::TrojitaSettings(const QString &filename, ImportWizard *parent)
+    : AbstractSettings(parent)
 {
-    settings = new QSettings(filename,QSettings::IniFormat,this);
+    settings = new QSettings(filename, QSettings::IniFormat, this);
     readImapAccount();
     readTransport();
     readIdentity();
@@ -49,32 +49,33 @@ void TrojitaSettings::readImapAccount()
 
     if (settings->contains(QLatin1String("imap.host"))) {
         name = settings->value(QLatin1String("imap.host")).toString();
-        newSettings.insert(QLatin1String("ImapServer"),name);
+        newSettings.insert(QLatin1String("ImapServer"), name);
     }
 
     if (settings->contains(QLatin1String("imap.port"))) {
         int port = settings->value(QLatin1String("imap.port")).toInt();
-        newSettings.insert( QLatin1String( "ImapPort" ), port );
+        newSettings.insert(QLatin1String("ImapPort"), port);
     }
 
     if (settings->contains(QLatin1String("imap.starttls"))) {
         const bool useTLS = settings->value(QLatin1String("imap.starttls")).toBool();
         if (useTLS) {
-            newSettings.insert( QLatin1String( "Safety" ), QLatin1String( "STARTTLS" ) );
+            newSettings.insert(QLatin1String("Safety"), QLatin1String("STARTTLS"));
         }
     }
 
     if (settings->contains(QLatin1String("imap.auth.user"))) {
         const QString userName = settings->value(QLatin1String("imap.auth.user")).toString();
         if (!userName.isEmpty()) {
-            newSettings.insert( QLatin1String( "Username" ), userName );
+            newSettings.insert(QLatin1String("Username"), userName);
         }
     }
 
     if (settings->contains(QLatin1String("imap.auth.pass"))) {
         const QString password = settings->value(QLatin1String("imap.auth.pass")).toString();
-        if (!password.isEmpty())
-            newSettings.insert( QLatin1String( "Password" ), password );
+        if (!password.isEmpty()) {
+            newSettings.insert(QLatin1String("Password"), password);
+        }
     }
 
     if (settings->contains(QLatin1String("imap.process"))) {
@@ -101,7 +102,7 @@ void TrojitaSettings::readImapAccount()
     }
 
     if (!name.isEmpty()) {
-        const QString agentIdentifyName = AbstractBase::createResource( "akonadi_imap_resource", name, newSettings );
+        const QString agentIdentifyName = AbstractBase::createResource("akonadi_imap_resource", name, newSettings);
         //Check by default
         addCheckMailOnStartup(agentIdentifyName, true);
     }
@@ -135,7 +136,7 @@ void TrojitaSettings::readTransport()
 
             if (settings->contains(QLatin1String("msa.smtp.starttls"))) {
                 if (settings->value(QLatin1String("msa.smtp.starttls")).toBool()) {
-                    mt->setEncryption( MailTransport::Transport::EnumEncryption::TLS );
+                    mt->setEncryption(MailTransport::Transport::EnumEncryption::TLS);
                 }
             }
             mt->setType(MailTransport::Transport::EnumType::SMTP);
@@ -145,9 +146,9 @@ void TrojitaSettings::readTransport()
                 mt->setHost(settings->value(QLatin1String("msa.sendmail")).toString());
             }
         } else {
-            qWarning()<<" smtpMethod unknown "<<smtpMethod;
+            qWarning() << " smtpMethod unknown " << smtpMethod;
         }
-        storeTransport( mt, true ); //only one smtp for the moment
+        storeTransport(mt, true);   //only one smtp for the moment
     }
     settings->endGroup();
 }
@@ -155,12 +156,12 @@ void TrojitaSettings::readTransport()
 void TrojitaSettings::readIdentity()
 {
     const int size = settings->beginReadArray(QLatin1String("identities"));
-    for (int i=0; i<size; ++i) {
+    for (int i = 0; i < size; ++i) {
         settings->setArrayIndex(i);
         QString realName = settings->value(QLatin1String("realName")).toString();
-        KIdentityManagement::Identity* identity  = createIdentity(realName);
-        identity->setFullName( realName );
-        identity->setIdentityName( realName );
+        KIdentityManagement::Identity *identity  = createIdentity(realName);
+        identity->setFullName(realName);
+        identity->setIdentityName(realName);
         const QString address = settings->value(QLatin1String("address")).toString();
         identity->setPrimaryEmailAddress(address);
         const QString organisation = settings->value(QLatin1String("organisation")).toString();
@@ -168,16 +169,15 @@ void TrojitaSettings::readIdentity()
         QString signatureStr = settings->value(QLatin1String("signature")).toString();
         if (!signatureStr.isEmpty()) {
             KIdentityManagement::Signature signature;
-            signature.setType( KIdentityManagement::Signature::Inlined );
-            signature.setText( signatureStr );
-            identity->setSignature( signature );
+            signature.setType(KIdentityManagement::Signature::Inlined);
+            signature.setText(signatureStr);
+            identity->setSignature(signature);
         }
-        qDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signatureStr;
+        qDebug() << " realName :" << realName << " address : " << address << " organisation : " << organisation << " signature: " << signatureStr;
         storeIdentity(identity);
     }
     settings->endArray();
 }
-
 
 void TrojitaSettings::readGlobalSettings()
 {

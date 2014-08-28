@@ -19,7 +19,8 @@
 
 #include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class ImportFinishPage;
 }
 
@@ -30,9 +31,9 @@ public:
     explicit ImportFinishPage(QWidget *parent = 0);
     ~ImportFinishPage();
 
-    void addImportInfo( const QString& log );
-    void addImportError( const QString& log );
-    
+    void addImportInfo(const QString &log);
+    void addImportError(const QString &log);
+
 private:
     Ui::ImportFinishPage *ui;
 };

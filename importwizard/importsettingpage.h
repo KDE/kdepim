@@ -20,7 +20,8 @@
 
 #include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class ImportSettingPage;
 }
 
@@ -30,8 +31,8 @@ class ImportSettingPage : public QWidget
 public:
     explicit ImportSettingPage(QWidget *parent = 0);
     ~ImportSettingPage();
-    void addImportInfo( const QString& log );
-    void addImportError( const QString& log );
+    void addImportInfo(const QString &log);
+    void addImportError(const QString &log);
     void setImportButtonEnabled(bool enabled);
 
 Q_SIGNALS:
