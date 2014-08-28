@@ -121,7 +121,7 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenClearLineEdit()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::keyClick(searchLine.searchEdit(), 'F');
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
     QTest::qWaitForWindowShown(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
 
@@ -133,7 +133,7 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilter()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::keyClick(searchLine.searchEdit(), 'F');
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
     QTest::qWaitForWindowShown(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
 
