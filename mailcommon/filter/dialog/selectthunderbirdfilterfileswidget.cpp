@@ -47,8 +47,8 @@ SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(QWidget *
     ui->profiles->setEnabled(false);
     ui->listFiles->setEnabled(false);
     slotProfileChanged(0);
-    connect(ui->fileUrl, SIGNAL(textChanged(QString)), SLOT(slotUrlChanged(QString)));
-    connect(ui->listFiles, SIGNAL(itemSelectionChanged()), SLOT(slotItemSelectionChanged()));
+    connect(ui->fileUrl, &KUrlRequester::textChanged, this, &SelectThunderbirdFilterFilesWidget::slotUrlChanged);
+    connect(ui->listFiles, &QListWidget::itemSelectionChanged, this, &SelectThunderbirdFilterFilesWidget::slotItemSelectionChanged);
     Q_EMIT enableOkButton(false);
 }
 

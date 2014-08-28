@@ -38,12 +38,12 @@ SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(QWidget *
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SelectThunderbirdFilterFilesDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectThunderbirdFilterFilesDialog::reject);
     okButton->setDefault(true);
     setModal( true );
     mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(this);
-    connect(mSelectFilterFilesWidget, SIGNAL(enableOkButton(bool)), okButton, SLOT(setEnabled(bool)));
+    connect(mSelectFilterFilesWidget, &SelectThunderbirdFilterFilesWidget::enableOkButton, okButton, &QPushButton::setEnabled);
     mainLayout->addWidget(mSelectFilterFilesWidget);
     mainLayout->addWidget(buttonBox);
     readConfig();
