@@ -43,7 +43,7 @@ SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(QWidget *
     okButton->setDefault(true);
     setModal( true );
     mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(this);
-    connect(mSelectFilterFilesWidget, SIGNAL(enableOkButton(bool)), this, SLOT(okButton->setEnabled(bool)));
+    connect(mSelectFilterFilesWidget, SIGNAL(enableOkButton(bool)), okButton, SLOT(setEnabled(bool)));
     mainLayout->addWidget(mSelectFilterFilesWidget);
     mainLayout->addWidget(buttonBox);
     readConfig();
