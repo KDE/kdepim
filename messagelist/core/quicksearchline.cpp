@@ -227,7 +227,7 @@ void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
             mExtraOption->hide();
         }
     } else {
-        mExtraOption->hide();
+        slotClearButtonClicked();
     }
 }
 
