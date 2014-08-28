@@ -187,8 +187,7 @@ CategorySelectDialog::CategorySelectDialog( CategoryConfig *cc, QWidget *parent 
   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &CategorySelectDialog::reject);
 
 
   QWidget *page = new QWidget;
@@ -208,8 +207,8 @@ CategorySelectDialog::CategorySelectDialog( CategoryConfig *cc, QWidget *parent 
 
   connect( mWidgets, SIGNAL(editCategories()), SIGNAL(editCategories()) );
 
-  connect(okButton, SIGNAL(clicked()), this, SLOT(slotOk()) );
-  connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(slotApply()) );
+  connect(okButton, &QPushButton::clicked, this, &CategorySelectDialog::slotOk);
+  connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &CategorySelectDialog::slotApply);
 }
 
 CategorySelectDialog::~CategorySelectDialog()
