@@ -120,7 +120,7 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenClearLineEdit()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::keyClick(searchLine.searchEdit(), 'F');
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
     QTest::qWaitForWindowShown(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
 
@@ -132,7 +132,7 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilter()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::keyClick(searchLine.searchEdit(), 'F');
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
     QTest::qWaitForWindowShown(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
 
@@ -373,6 +373,22 @@ void QuickSearchLineTest::shouldRestoreDefaultSearchOptionWhenTextIsEmpied()
     QCOMPARE(subjectButton->isChecked(), false);
     QCOMPARE(fromOrToButton->isChecked(), false);
     QCOMPARE(bccButton->isChecked(), false);
+
+}
+
+void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilterWhenSetEmptyText()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
+    QTest::qWaitForWindowShown(&searchLine);
+    QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
+
+    QVERIFY(widget->isVisible());
+
+    searchLine.searchEdit()->clear();
+    QVERIFY(!widget->isVisible());
 
 }
 
