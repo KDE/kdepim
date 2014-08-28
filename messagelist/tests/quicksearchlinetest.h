@@ -48,6 +48,7 @@ private Q_SLOTS:
     void shouldHideShowWidgetWhenWeChangeVisibility();
     void shouldNotShowComboboxWhenWeAddNewItemWhenWeHiddedQuickSearchBarWidget();
     void shouldRestoreDefaultSearchOptionWhenTextIsEmpied();
+    void shouldHideExtraOptionWidgetWhenResetFilterWhenSetEmptyText();
 };
 
 #endif // QUICKSEARCHLINETEST_H

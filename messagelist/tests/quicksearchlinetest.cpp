@@ -377,6 +377,22 @@ void QuickSearchLineTest::shouldRestoreDefaultSearchOptionWhenTextIsEmpied()
 
 }
 
+void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilterWhenSetEmptyText()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
+    QTest::qWaitForWindowShown(&searchLine);
+    QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
+
+    QVERIFY(widget->isVisible());
+
+    searchLine.searchEdit()->clear();
+    QVERIFY(!widget->isVisible());
+
+}
+
 
 
 
