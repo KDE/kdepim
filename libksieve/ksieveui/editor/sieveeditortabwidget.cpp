@@ -53,9 +53,9 @@ void SieveEditorTabWidget::slotAddHelpPage(const QString &variableName, const QS
         }
     }
     SieveEditorHelpHtmlWidget *htmlPage = new SieveEditorHelpHtmlWidget;
-    connect(htmlPage, SIGNAL(titleChanged(KSieveUi::SieveEditorHelpHtmlWidget *, QString)), this, SLOT(slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget *, QString)));
-    connect(htmlPage, SIGNAL(progressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *, QPixmap)), this, SLOT(slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *, QPixmap)));
-    connect(htmlPage, SIGNAL(loadFinished(KSieveUi::SieveEditorHelpHtmlWidget *, bool)), this, SLOT(slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget *, bool)));
+    connect(htmlPage, &SieveEditorHelpHtmlWidget::titleChanged, this, &SieveEditorTabWidget::slotTitleChanged);
+    connect(htmlPage, &SieveEditorHelpHtmlWidget::progressIndicatorPixmapChanged, this, &SieveEditorTabWidget::slotProgressIndicatorPixmapChanged);
+    connect(htmlPage, &SieveEditorHelpHtmlWidget::loadFinished, this, &SieveEditorTabWidget::slotLoadFinished);
     htmlPage->setHelp(variableName, url);
     addTab(htmlPage, i18n("Help"));
 }

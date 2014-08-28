@@ -46,8 +46,8 @@ SieveTextEdit::SieveTextEdit(QWidget *parent)
     m_syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter(document());
     m_sieveLineNumberArea = new SieveLineNumberArea(this);
 
-    connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(slotUpdateLineNumberAreaWidth(int)));
-    connect(this, SIGNAL(updateRequest(QRect, int)), this, SLOT(slotUpdateLineNumberArea(QRect, int)));
+    connect(this, &SieveTextEdit::blockCountChanged, this, &SieveTextEdit::slotUpdateLineNumberAreaWidth);
+    connect(this, &SieveTextEdit::updateRequest, this, &SieveTextEdit::slotUpdateLineNumberArea);
 
     slotUpdateLineNumberAreaWidth(0);
 
@@ -154,7 +154,7 @@ void SieveTextEdit::initCompleter()
     m_completer->setWidget(this);
     m_completer->setCompletionMode(QCompleter::PopupCompletion);
 
-    connect(m_completer, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)));
+    connect(m_completer, static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated), this, &SieveTextEdit::slotInsertCompletion);
 }
 
 void SieveTextEdit::slotInsertCompletion(const QString &completion)
@@ -266,7 +266,7 @@ void SieveTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
             searchAction->setShortcut(Qt::Key_F1);
             searchAction->setIcon(QIcon::fromTheme(QLatin1String("help-hint")));
             searchAction->setData(word);
-            connect(searchAction, SIGNAL(triggered()), SLOT(slotHelp()));
+            connect(searchAction, &QAction::triggered, this, &SieveTextEdit::slotHelp);
             menu->insertAction(menu->actions().at(0), searchAction);
         }
     }

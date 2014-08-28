@@ -57,8 +57,8 @@ void VacationManager::slotEditVacation(const QString &serverName)
     }
 
     mMultiImapVacationDialog = new KSieveUi::MultiImapVacationDialog(mWidget);
-    connect(mMultiImapVacationDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()));
-    connect(mMultiImapVacationDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCanceled()));
+    connect(mMultiImapVacationDialog.data(), &KSieveUi::MultiImapVacationDialog::okClicked, this, &VacationManager::slotDialogOk);
+    connect(mMultiImapVacationDialog.data(), &KSieveUi::MultiImapVacationDialog::cancelClicked, this, &VacationManager::slotDialogCanceled);
     mMultiImapVacationDialog->show();
     if (!serverName.isEmpty()) {
         mMultiImapVacationDialog->switchToServerNamePage(serverName);
