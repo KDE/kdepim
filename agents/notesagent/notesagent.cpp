@@ -32,15 +32,15 @@
 #include <CollectionFetchScope>
 
 #include <KWindowSystem>
+#include <Kdelibs4ConfigMigrator>
 
 #include <QPointer>
 
-#include "pimcommon/util/kdelibs4configmigrator.h"
 
 NotesAgent::NotesAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
-    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("notesagent"));
+    Kdelibs4ConfigMigrator migrate(QLatin1String("notesagent"));
     migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_notes_agentrc") << QLatin1String("akonadi_notes_agent.notifyrc"));
     migrate.migrate();
 

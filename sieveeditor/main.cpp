@@ -22,14 +22,14 @@
 #include "sieveeditormainwindow.h"
 #include <kaboutdata.h>
 #include <KLocalizedString>
+#include <Kdelibs4ConfigMigrator>
 #include <QApplication>
 #include <KDBusService>
 #include <QCommandLineParser>
-#include "pimcommon/util/kdelibs4configmigrator.h"
 
 int main(int argc, char **argv)
 {
-    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("sieveeditor"));
+    Kdelibs4ConfigMigrator migrate(QLatin1String("sieveeditor"));
     migrate.setConfigFiles(QStringList() << QLatin1String("sieveeditorrc"));
     migrate.setUiFiles(QStringList() << QLatin1String("sieveeditorui.rc"));
     migrate.migrate();

@@ -18,15 +18,15 @@
 
 #include <kaboutdata.h>
 #include <KLocalizedString>
+#include <Kdelibs4ConfigMigrator>
 #include <QCommandLineParser>
 #include <QApplication>
 #include "kmailcvt.h"
 #include "kdepim-version.h"
-#include "pimcommon/util/kdelibs4configmigrator.h"
 
 int main(int argc, char *argv[])
 {
-    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("kmailcvt"));
+    Kdelibs4ConfigMigrator migrate(QLatin1String("kmailcvt"));
     migrate.setConfigFiles(QStringList() << QLatin1String("kmailcvtrc"));
     migrate.migrate();
 

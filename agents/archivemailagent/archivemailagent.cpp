@@ -32,14 +32,14 @@
 #include <QTimer>
 #include <QPointer>
 
-#include "pimcommon/util/kdelibs4configmigrator.h"
+#include <kdelibs4configmigrator.h>
 
 //#define DEBUG_ARCHIVEMAILAGENT 1
 
 ArchiveMailAgent::ArchiveMailAgent( const QString &id )
     : Akonadi::AgentBase( id )
 {
-    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("archivemailagent"));
+    Kdelibs4ConfigMigrator migrate(QLatin1String("archivemailagent"));
     migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_archivemail_agentrc") << QLatin1String("akonadi_archivemail_agent.notifyrc"));
     migrate.migrate();
 

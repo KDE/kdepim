@@ -16,8 +16,8 @@
 
 #include "ktnefmain.h"
 #include "kdepim-version.h"
-#include "pimcommon/util/kdelibs4configmigrator.h"
 
+#include <Kdelibs4ConfigMigrator>
 #include <kaboutdata.h>
 #include <KLocalizedString>
 #include <QCommandLineParser>
@@ -25,7 +25,7 @@
 
 int main(int argc, char *argv[])
 {
-    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("ktnef"));
+    Kdelibs4ConfigMigrator migrate(QLatin1String("ktnef"));
     migrate.setConfigFiles(QStringList() << QLatin1String("ktnefrc"));
     migrate.setUiFiles(QStringList() << QLatin1String("ktnefui.rc"));
     migrate.migrate();

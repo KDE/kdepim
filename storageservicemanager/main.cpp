@@ -21,7 +21,7 @@
 #include "kdepim-version.h"
 #include "storageservicemanagermainwindow.h"
 #include <kaboutdata.h>
-#include "util/kdelibs4configmigrator.h"
+#include <Kdelibs4ConfigMigrator>
 
 #include <qcommandlineparser.h>
 #include <qcommandlineoption.h>
@@ -31,7 +31,7 @@
 
 int main(int argc, char **argv)
 {
-    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("storageservice"));
+    Kdelibs4ConfigMigrator migrate(QLatin1String("storageservice"));
     migrate.setConfigFiles(QStringList() << QLatin1String("storageservicerc") << QLatin1String("storageservicemanager.notifyrc"));
     migrate.setUiFiles(QStringList() << QLatin1String("storageserviceui.rc"));
     migrate.migrate();

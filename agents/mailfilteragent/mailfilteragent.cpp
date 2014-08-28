@@ -51,7 +51,7 @@
 #include <QtCore/QTimer>
 #include <KSharedConfig>
 
-#include "pimcommon/util/kdelibs4configmigrator.h"
+#include <kdelibs4configmigrator.h>
 
 static bool isFilterableCollection( const Akonadi::Collection &collection )
 {
@@ -64,7 +64,7 @@ MailFilterAgent::MailFilterAgent( const QString &id )
     : Akonadi::AgentBase( id ),
       m_filterLogDialog( 0 )
 {
-    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("mailfilteragent"));
+    Kdelibs4ConfigMigrator migrate(QLatin1String("mailfilteragent"));
     migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_mailfilter_agentrc"));
     migrate.migrate();
 

@@ -170,7 +170,6 @@ set(libpimcommon_SRCS
   util/createresource.cpp
   util/pimutil.cpp
   util/editorutil.cpp
-  util/kdelibs4configmigrator.cpp
   settings/pimcommonsettings.cpp
   ${libpimcommon_texteditor_SRCS}
   ${libpimcommon_shorturl_SRCS}
@@ -230,7 +229,6 @@ target_link_libraries(pimcommon
 set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory(util/autotests)
 add_subdirectory(translator/tests)
 add_subdirectory(texteditor/plaintexteditor/tests)
 add_subdirectory(texteditor/richtexteditor/tests)

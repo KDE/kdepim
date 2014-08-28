@@ -36,17 +36,16 @@
 #include <KMime/Message>
 
 #include <KWindowSystem>
+#include <Kdelibs4ConfigMigrator>
 
 #include <QPointer>
-
-#include "pimcommon/util/kdelibs4configmigrator.h"
 
 //#define DEBUG_SENDLATERAGENT 1
 
 SendLaterAgent::SendLaterAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
-    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("sendlateragent"));
+    Kdelibs4ConfigMigrator migrate(QLatin1String("sendlateragent"));
     migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_sendlater_agentrc") << QLatin1String("akonadi_sendlater_agent.notifyrc"));
     migrate.migrate();
 

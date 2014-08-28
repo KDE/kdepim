@@ -19,7 +19,6 @@
 */
 
 #include "themeeditormainwindow.h"
-#include "util/kdelibs4configmigrator.h"
 
 #include "kdepim-version.h"
 
@@ -27,12 +26,13 @@
 #include <QCommandLineParser>
 #include <kaboutdata.h>
 #include <KLocalizedString>
+#include <Kdelibs4ConfigMigrator>
 
 #include <KDBusService>
 
 int main(int argc, char **argv)
 {
-    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("headerthemeeditor"));
+    Kdelibs4ConfigMigrator migrate(QLatin1String("headerthemeeditor"));
     migrate.setConfigFiles(QStringList() << QLatin1String("headerthemeeditorrc"));
     migrate.setUiFiles(QStringList() << QLatin1String("headerthemeeditorui.rc"));
     migrate.migrate();

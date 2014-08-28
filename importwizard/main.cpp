@@ -19,18 +19,18 @@
 #include <kaboutdata.h>
 #include <KDBusService>
 #include <KLocalizedString>
+#include <Kdelibs4ConfigMigrator>
 #include <QApplication>
 
 #include "importwizard.h"
 
 #include "kdepim-version.h"
-#include "pimcommon/util/kdelibs4configmigrator.h"
 
 #include <stdio.h>
 
 int main(int argc, char *argv[])
 {
-    PimCommon::Kdelibs4ConfigMigrator migrate(QLatin1String("importwizard"));
+    Kdelibs4ConfigMigrator migrate(QLatin1String("importwizard"));
     migrate.setConfigFiles(QStringList() << QLatin1String("importwizardrc"));
     migrate.migrate();
 
