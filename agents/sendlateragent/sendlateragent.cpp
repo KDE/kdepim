@@ -129,8 +129,8 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );
 #endif
     }
-    connect(this, SIGNAL(needUpdateConfigDialogBox()), dialog, SLOT(slotNeedToReloadConfig()));
-    connect(dialog, SIGNAL(sendNow(Akonadi::Item::Id)), this, SLOT(slotSendNow(Akonadi::Item::Id)));
+    connect(this, &SendLaterAgent::needUpdateConfigDialogBox, dialog.data(), &SendLaterConfigureDialog::slotNeedToReloadConfig);
+    connect(dialog.data(), &SendLaterConfigureDialog::sendNow, this, &SendLaterAgent::slotSendNow);
     if (dialog->exec()) {
         mManager->load();
         QList<Akonadi::Item::Id> listMessage = dialog->messagesToRemove();

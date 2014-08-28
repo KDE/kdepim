@@ -42,8 +42,8 @@ AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget *parent )
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AddHostDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AddHostDialog::reject);
     mOkButton->setDefault(true);
     setModal( true );
 
@@ -108,8 +108,8 @@ AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget *parent )
     mCfg->setMech( mServer->mech() );
 
     KAcceleratorManager::manage( this );
-    connect(mCfg, SIGNAL(hostNameChanged(QString)), this, SLOT(slotHostEditChanged(QString)));
-    connect(mOkButton, SIGNAL(clicked()), SLOT(slotOk()) );
+    connect(mCfg, &KLDAP::LdapConfigWidget::hostNameChanged, this, &AddHostDialog::slotHostEditChanged);
+    connect(mOkButton, &QPushButton::clicked, this, &AddHostDialog::slotOk);
     mOkButton->setEnabled(!mServer->host().isEmpty());
 }
 

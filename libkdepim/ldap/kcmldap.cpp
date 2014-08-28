@@ -101,8 +101,8 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
     connect( mHostListView, SIGNAL(itemClicked(QListWidgetItem*)),
              this, SLOT(slotItemClicked(QListWidgetItem*)) );
 
-    connect( mUpButton, SIGNAL(clicked()), this, SLOT(slotMoveUp()) );
-    connect( mDownButton, SIGNAL(clicked()), this, SLOT(slotMoveDown()) );
+    connect(mUpButton, &QToolButton::clicked, this, &KCMLdap::slotMoveUp);
+    connect(mDownButton, &QToolButton::clicked, this, &KCMLdap::slotMoveDown);
 }
 
 KCMLdap::~KCMLdap()
@@ -351,14 +351,14 @@ void KCMLdap::initGUI()
     QDialogButtonBox *buttons = new QDialogButtonBox( this );
     QPushButton *add = buttons->addButton( i18n( "&Add Host..." ),
                         QDialogButtonBox::ActionRole);
-    connect(add, SIGNAL(clicked()), this, SLOT(slotAddHost()) );
+    connect(add, &QPushButton::clicked, this, &KCMLdap::slotAddHost);
     mEditButton = buttons->addButton( i18n( "&Edit Host..." ),
                                       QDialogButtonBox::ActionRole);
-    connect(mEditButton, SIGNAL(clicked()), this, SLOT(slotEditHost()) );
+    connect(mEditButton, &QPushButton::clicked, this, &KCMLdap::slotEditHost);
     mEditButton->setEnabled( false );
     mRemoveButton = buttons->addButton( i18n( "&Remove Host" ),
                                         QDialogButtonBox::ActionRole);
-    connect(mRemoveButton, SIGNAL(clicked()), this, SLOT(slotRemoveHost()) );
+    connect(mRemoveButton, &QPushButton::clicked, this, &KCMLdap::slotRemoveHost);
     mRemoveButton->setEnabled( false );
     buttons->layout();
 
