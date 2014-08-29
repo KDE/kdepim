@@ -44,7 +44,7 @@ void MailList::loadCollection( const QUrl &url )
     Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob( collection );
     fetchJob->fetchScope().fetchPayloadPart(Akonadi::MessagePart::Header);
 
-    connect( fetchJob, SIGNAL( itemsReceived( Akonadi::Item::List )), this, SLOT( slotItemsReceived( Akonadi::Item::List )));
+    connect( fetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotItemsReceived(Akonadi::Item::List)));
 }
 
 void MailList::slotItemsReceived( const Akonadi::Item::List& itemList )

@@ -41,16 +41,16 @@ QModelIndex ItemSelection::index() const
 
 void ItemSelection::connectSignals()
 {
-    connect(m_selModel1, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), SLOT(modelSelectionChanged()));
-    connect(m_selModel2, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), SLOT(modelSelectionChanged()));
-    connect(m_selModel3, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), SLOT(modelSelectionChanged()));
+    connect(m_selModel1, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(modelSelectionChanged()));
+    connect(m_selModel2, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(modelSelectionChanged()));
+    connect(m_selModel3, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(modelSelectionChanged()));
 }
 
 void ItemSelection::disconnectSignals()
 {
-    disconnect(m_selModel1, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(modelSelectionChanged()));
-    disconnect(m_selModel2, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(modelSelectionChanged()));
-    disconnect(m_selModel3, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(modelSelectionChanged()));
+    disconnect(m_selModel1, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(modelSelectionChanged()));
+    disconnect(m_selModel2, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(modelSelectionChanged()));
+    disconnect(m_selModel3, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(modelSelectionChanged()));
 }
 
 void ItemSelection::modelSelectionChanged()

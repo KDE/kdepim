@@ -258,10 +258,10 @@ void SieveConditionWidgetLister::updateAddRemoveButton()
 
 void SieveConditionWidgetLister::reconnectWidget(SieveConditionWidget *w)
 {
-    connect(w, SIGNAL(addWidget(QWidget *)),
-            this, SLOT(slotAddWidget(QWidget *)), Qt::UniqueConnection);
-    connect(w, SIGNAL(removeWidget(QWidget *)),
-            this, SLOT(slotRemoveWidget(QWidget *)), Qt::UniqueConnection);
+    connect(w, SIGNAL(addWidget(QWidget*)),
+            this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection);
+    connect(w, SIGNAL(removeWidget(QWidget*)),
+            this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection);
     connect(w, SIGNAL(valueChanged()),
             this, SIGNAL(valueChanged()), Qt::UniqueConnection);
 }

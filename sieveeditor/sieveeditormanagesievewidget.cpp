@@ -60,8 +60,8 @@ bool SieveEditorManageSieveWidget::refreshList()
             treeView()->expandItem(last);
         } else {
             KManageSieve::SieveJob *job = KManageSieve::SieveJob::list(u);
-            connect(job, SIGNAL(gotList(KManageSieve::SieveJob *, bool, QStringList, QString)),
-                    this, SLOT(slotGotList(KManageSieve::SieveJob *, bool, QStringList, QString)));
+            connect(job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
+                    this, SLOT(slotGotList(KManageSieve::SieveJob*,bool,QStringList,QString)));
             mJobs.insert(job, last);
             mUrls.insert(last, u);
             last->startAnimation();

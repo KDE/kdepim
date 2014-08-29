@@ -50,7 +50,7 @@ ItemViewerWidget::ItemViewerWidget(QItemSelectionModel *itemSelectionModel, QWid
     m_widgetStack->addWidget(m_contactViewer);
     m_widgetStack->addWidget(m_noteViewer);
 
-    connect(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), SLOT(selectionChanged(QItemSelection, QItemSelection)));
+    connect(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)));
 }
 
 void ItemViewerWidget::selectionChanged(const QItemSelection selected, const QItemSelection &deselected)

@@ -83,8 +83,8 @@ void GenerateGlobalScriptJob::writeMasterScript()
     url = url.adjusted(QUrl::RemoveFilename);
     url.setPath(url.path() + QLatin1String("MASTER"));
     mMasterjob = KManageSieve::SieveJob::put(url, masterScript, true, true);
-    connect(mMasterjob, SIGNAL(result(KManageSieve::SieveJob *, bool, QString, bool)),
-            this, SLOT(slotPutMasterResult(KManageSieve::SieveJob *, bool)));
+    connect(mMasterjob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+            this, SLOT(slotPutMasterResult(KManageSieve::SieveJob*,bool)));
 }
 
 void GenerateGlobalScriptJob::slotPutMasterResult(KManageSieve::SieveJob *, bool success)
@@ -117,8 +117,8 @@ void GenerateGlobalScriptJob::writeUserScript()
     url = url.adjusted(QUrl::RemoveFilename);
     url.setPath(url.path() + QLatin1String("USER"));
     mUserJob = KManageSieve::SieveJob::put(url, userScript, false, false);
-    connect(mUserJob, SIGNAL(result(KManageSieve::SieveJob *, bool, QString, bool)),
-            this, SLOT(slotPutUserResult(KManageSieve::SieveJob *, bool)));
+    connect(mUserJob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+            this, SLOT(slotPutUserResult(KManageSieve::SieveJob*,bool)));
 }
 
 void GenerateGlobalScriptJob::slotPutUserResult(KManageSieve::SieveJob *, bool success)

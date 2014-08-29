@@ -38,7 +38,7 @@ void TodoCheckableProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 
     QItemSelectionModel *selectionModel = new QItemSelectionModel(sourceModel, this);
     setSelectionModel(selectionModel);
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
+    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
 }
 
 void TodoCheckableProxyModel::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)

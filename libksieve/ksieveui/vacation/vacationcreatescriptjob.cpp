@@ -58,11 +58,11 @@ void VacationCreateScriptJob::start()
     }
     mSieveJob = KManageSieve::SieveJob::put(mUrl, mScript, mActivate, mWasActive);
     if (mActivate)
-        connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob *, bool, QString, bool)),
-                SLOT(slotPutActiveResult(KManageSieve::SieveJob *, bool)));
+        connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+                SLOT(slotPutActiveResult(KManageSieve::SieveJob*,bool)));
     else
-        connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob *, bool, QString, bool)),
-                SLOT(slotPutInactiveResult(KManageSieve::SieveJob *, bool)));
+        connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+                SLOT(slotPutInactiveResult(KManageSieve::SieveJob*,bool)));
 }
 
 void VacationCreateScriptJob::setServerUrl(const QUrl &url)

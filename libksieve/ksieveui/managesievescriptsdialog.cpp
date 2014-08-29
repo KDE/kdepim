@@ -77,8 +77,8 @@ bool CustomManageSieveWidget::refreshList()
         } else {
             serverName += QString::fromLatin1(" (%1)").arg(u.userName());
             KManageSieve::SieveJob *job = KManageSieve::SieveJob::list(u);
-            connect(job, SIGNAL(gotList(KManageSieve::SieveJob *, bool, QStringList, QString)),
-                    this, SLOT(slotGotList(KManageSieve::SieveJob *, bool, QStringList, QString)));
+            connect(job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
+                    this, SLOT(slotGotList(KManageSieve::SieveJob*,bool,QStringList,QString)));
             mJobs.insert(job, last);
             mUrls.insert(last, u);
             last->startAnimation();
@@ -108,9 +108,9 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog(QWidget *parent)
     vlay->setMargin(0);
 
     mTreeView = new CustomManageSieveWidget(frame);
-    connect(mTreeView, SIGNAL(editScript(QUrl, QStringList)), SLOT(slotEditScript(QUrl, QStringList)));
-    connect(mTreeView, SIGNAL(newScript(QUrl, QStringList)), SLOT(slotNewScript(QUrl, QStringList)));
-    connect(mTreeView, SIGNAL(updateButtons(QTreeWidgetItem *)), SLOT(slotUpdateButtons(QTreeWidgetItem *)));
+    connect(mTreeView, SIGNAL(editScript(QUrl,QStringList)), SLOT(slotEditScript(QUrl,QStringList)));
+    connect(mTreeView, SIGNAL(newScript(QUrl,QStringList)), SLOT(slotNewScript(QUrl,QStringList)));
+    connect(mTreeView, SIGNAL(updateButtons(QTreeWidgetItem*)), SLOT(slotUpdateButtons(QTreeWidgetItem*)));
     vlay->addWidget(mTreeView);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -174,8 +174,8 @@ void ManageSieveScriptsDialog::slotEditScript(const QUrl &url, const QStringList
     mCurrentCapabilities = capabilities;
     mIsNewScript = false;
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::get(url);
-    connect(job, SIGNAL(result(KManageSieve::SieveJob *, bool, QString, bool)),
-            this, SLOT(slotGetResult(KManageSieve::SieveJob *, bool, QString, bool)));
+    connect(job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+            this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)));
 }
 
 void ManageSieveScriptsDialog::slotNewScript(const QUrl &url, const QStringList &capabilities)
@@ -215,8 +215,8 @@ void ManageSieveScriptsDialog::slotSieveEditorCheckSyntaxClicked()
     }
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditor->script(), mWasActive, mWasActive);
     job->setInteractive(false);
-    connect(job, SIGNAL(errorMessage(KManageSieve::SieveJob *, bool, QString)),
-            this, SLOT(slotPutResultDebug(KManageSieve::SieveJob *, bool, QString)));
+    connect(job, SIGNAL(errorMessage(KManageSieve::SieveJob*,bool,QString)),
+            this, SLOT(slotPutResultDebug(KManageSieve::SieveJob*,bool,QString)));
 }
 
 void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
@@ -226,8 +226,8 @@ void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
     }
     disableManagerScriptsDialog(false);
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditor->script(), mWasActive, mWasActive);
-    connect(job, SIGNAL(result(KManageSieve::SieveJob *, bool, QString, bool)),
-            this, SLOT(slotPutResult(KManageSieve::SieveJob *, bool)));
+    connect(job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+            this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)));
 }
 
 void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()

@@ -86,7 +86,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTabWidget->addTab(mTextEdit, i18n("Editor"));
     mTabWidget->tabBar()->hide();
     textEditLayout->addWidget(mTabWidget);
-    connect(mTextEdit, SIGNAL(openHelp(QString, QString)), mTabWidget, SLOT(slotAddHelpPage(QString, QString)));
+    connect(mTextEdit, SIGNAL(openHelp(QString,QString)), mTabWidget, SLOT(slotAddHelpPage(QString,QString)));
 
     mGoToLine = new PimCommon::TextGoToLineWidget;
     mGoToLine->hide();

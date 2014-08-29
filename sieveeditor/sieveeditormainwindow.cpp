@@ -46,7 +46,7 @@ SieveEditorMainWindow::SieveEditorMainWindow()
 {
     mMainWidget = new SieveEditorCentralWidget;
     connect(mMainWidget, &SieveEditorCentralWidget::configureClicked, this, &SieveEditorMainWindow::slotConfigure);
-    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(updateButtons(bool, bool, bool, bool)), this, SLOT(slotUpdateButtons(bool, bool, bool, bool)));
+    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(updateButtons(bool,bool,bool,bool)), this, SLOT(slotUpdateButtons(bool,bool,bool,bool)));
     setCentralWidget(mMainWidget);
     setupActions();
     setupGUI();

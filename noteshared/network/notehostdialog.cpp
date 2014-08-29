@@ -77,7 +77,7 @@ NoteHostDialog::NoteHostDialog(const QString &caption, QWidget *parent)
     m_servicesView->setModel(mdl);
     m_servicesView->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_servicesView->hideColumn(KDNSSD::ServiceModel::Port);
-    connect(m_servicesView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+    connect(m_servicesView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             SLOT(serviceSelected(QModelIndex)));
     connect(m_servicesView, SIGNAL(activated(QModelIndex)),
             SLOT(serviceSelected(QModelIndex)));

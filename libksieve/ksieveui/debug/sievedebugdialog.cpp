@@ -105,8 +105,8 @@ void SieveDebugDialog::slotDiagNextAccount()
 
         mSieveJob = KManageSieve::SieveJob::list(mUrl);
 
-        connect(mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob *, bool, QStringList, QString)),
-                SLOT(slotGetScriptList(KManageSieve::SieveJob *, bool, QStringList, QString)));
+        connect(mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
+                SLOT(slotGetScriptList(KManageSieve::SieveJob*,bool,QStringList,QString)));
 
         // Bypass the singleShot timer -- it's fired when we get our data
         return;
@@ -139,8 +139,8 @@ void SieveDebugDialog::slotDiagNextScript()
 
     mSieveJob = KManageSieve::SieveJob::get(mUrl);
 
-    connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob *, bool, QString, bool)),
-            SLOT(slotGetScript(KManageSieve::SieveJob *, bool, QString, bool)));
+    connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+            SLOT(slotGetScript(KManageSieve::SieveJob*,bool,QString,bool)));
 }
 
 void SieveDebugDialog::slotGetScript(KManageSieve::SieveJob * /* job */, bool success,

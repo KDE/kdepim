@@ -32,8 +32,8 @@ mailreaderView::mailreaderView(QWidget *parent)
     setLayout(layout);
     setAutoFillBackground(true);
     displayAboutPage();
-    connect(m_readerWin, SIGNAL(urlClicked(Akonadi::Item, KUrl)), this,
-            SLOT(urlClicked(Akonadi::Item, KUrl)));
+    connect(m_readerWin, SIGNAL(urlClicked(Akonadi::Item,KUrl)), this,
+            SLOT(urlClicked(Akonadi::Item,KUrl)));
 }
 
 mailreaderView::~mailreaderView()

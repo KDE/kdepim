@@ -39,7 +39,7 @@ void VacationManager::checkVacation()
     delete mCheckVacation;
 
     mCheckVacation = new KSieveUi::MultiImapVacationManager(this);
-    connect(mCheckVacation, SIGNAL(scriptActive(bool, QString)), SIGNAL(updateVacationScriptStatus(bool, QString)));
+    connect(mCheckVacation, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)));
     connect(mCheckVacation, SIGNAL(requestEditVacation()), SIGNAL(editVacation()));
     mCheckVacation->checkVacation();
 }
@@ -76,7 +76,7 @@ void VacationManager::slotDialogOk()
 {
     QList<KSieveUi::VacationCreateScriptJob *> listJob = mMultiImapVacationDialog->listCreateJob();
     Q_FOREACH (KSieveUi::VacationCreateScriptJob *job, listJob) {
-        connect(job, SIGNAL(scriptActive(bool, QString)), SIGNAL(updateVacationScriptStatus(bool, QString)));
+        connect(job, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)));
         job->start();
     }
     mMultiImapVacationDialog->delayedDestruct();

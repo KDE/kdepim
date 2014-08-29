@@ -27,13 +27,13 @@
 QMLListSelectionModel::QMLListSelectionModel(QItemSelectionModel *selectionModel, QObject *parent)
     : QObject(parent), m_selectionModel(selectionModel)
 {
-    connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), SIGNAL(selectionChanged()));
+    connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(selectionChanged()));
 }
 
 QMLListSelectionModel::QMLListSelectionModel(QAbstractItemModel *model, QObject *parent)
     : QObject(parent), m_selectionModel(new QItemSelectionModel(model, this))
 {
-    connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), SIGNAL(selectionChanged()));
+    connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(selectionChanged()));
 }
 
 QItemSelectionModel *QMLListSelectionModel::selectionModel() const

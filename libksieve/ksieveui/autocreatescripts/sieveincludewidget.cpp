@@ -298,10 +298,10 @@ void SieveIncludeWidgetLister::generatedScript(QString &script, QStringList &req
 
 void SieveIncludeWidgetLister::reconnectWidget(SieveIncludeActionWidget *w)
 {
-    connect(w, SIGNAL(addWidget(QWidget *)),
-            this, SLOT(slotAddWidget(QWidget *)), Qt::UniqueConnection);
-    connect(w, SIGNAL(removeWidget(QWidget *)),
-            this, SLOT(slotRemoveWidget(QWidget *)), Qt::UniqueConnection);
+    connect(w, SIGNAL(addWidget(QWidget*)),
+            this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection);
+    connect(w, SIGNAL(removeWidget(QWidget*)),
+            this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection);
     connect(w, SIGNAL(valueChanged()),
             this, SIGNAL(valueChanged()), Qt::UniqueConnection);
 }

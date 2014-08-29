@@ -40,10 +40,10 @@ Trip::Trip(const QPersistentModelIndex &index, Akonadi::ChangeRecorder *changeRe
     : QObject(parent), m_index(index), m_changeRecorder(changeRecorder)
 {
     QAbstractItemModel *model = const_cast<QAbstractItemModel *>(m_index.model());
-    connect(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)), SLOT(dataChanged(QModelIndex, QModelIndex)));
+    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)));
     connect(model, SIGNAL(modelReset()), SLOT(modelReset()));
     connect(model, SIGNAL(layoutChanged()), SLOT(layoutChanged()));
-    connect(model, SIGNAL(rowsRemoved(QModelIndex, int, int)), SLOT(rowsRemoved(QModelIndex, int, int)));
+    connect(model, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(rowsRemoved(QModelIndex,int,int)));
 
     m_mailChangeRecorder = factory->createMailChangeRecorder(this);
     m_todoChangeRecorder = factory->createTodoChangeRecorder(this);

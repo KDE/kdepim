@@ -59,8 +59,8 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     bg->addButton(mMatchAny);
     bg->addButton(mAllMessageRBtn);
 
-    connect(bg, SIGNAL(buttonClicked(QAbstractButton *)),
-            this, SLOT(slotRadioClicked(QAbstractButton *)));
+    connect(bg, SIGNAL(buttonClicked(QAbstractButton*)),
+            this, SLOT(slotRadioClicked(QAbstractButton*)));
     mConditions->setLayout(vbox);
 
     mScriptConditionLister = new SieveConditionWidgetLister;

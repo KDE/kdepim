@@ -27,8 +27,8 @@ VacationCheckJob::VacationCheckJob(const QUrl &url, const QString &serverName, Q
 {
     mSieveJob = KManageSieve::SieveJob::get(mUrl);
     mSieveJob->setInteractive(false);
-    connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob *, bool, QString, bool)),
-            SLOT(slotGetResult(KManageSieve::SieveJob *, bool, QString, bool)));
+    connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+            SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)));
 }
 
 VacationCheckJob::~VacationCheckJob()

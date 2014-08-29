@@ -190,8 +190,8 @@ void KTNEFMain::setupTNEF()
     connect(mView, SIGNAL(itemSelectionChanged()),
             SLOT(viewSelectionChanged()));
 
-    connect(mView, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),
-            SLOT(viewDoubleClicked(QTreeWidgetItem *)));
+    connect(mView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+            SLOT(viewDoubleClicked(QTreeWidgetItem*)));
 
 //PORTME:  connect( mView, SIGNAL(dragRequested(QList<KTNEFAttach*>)),
 //PORTME:           SLOT(viewDragRequested(QList<KTNEFAttach*>)) );

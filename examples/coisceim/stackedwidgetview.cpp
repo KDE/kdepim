@@ -37,15 +37,15 @@ void StackedWidgetView::setModel(QAbstractItemModel *model)
     refill();
 
     connect(model, SIGNAL(modelReset()), SLOT(refill()));
-    connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), SLOT(insertRows(QModelIndex, int, int)));
-    connect(model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)), SLOT(removeRows(QModelIndex, int, int)));
+    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(insertRows(QModelIndex,int,int)));
+    connect(model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(removeRows(QModelIndex,int,int)));
 }
 
 void StackedWidgetView::setSelectionModel(QItemSelectionModel *selectionModel)
 {
     m_selectionModel = selectionModel;
 
-    connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), SLOT(updateCurrentWidget()));
+    connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateCurrentWidget()));
 }
 
 void StackedWidgetView::refill()

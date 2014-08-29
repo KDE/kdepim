@@ -50,8 +50,8 @@ void VacationHelperJob::searchActiveJob()
     } else {
         mSieveJob = KManageSieve::SieveJob::list(mUrl);
 
-        connect(mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob *, bool, QStringList, QString)),
-                SLOT(slotGetScriptList(KManageSieve::SieveJob *, bool, QStringList, QString)));
+        connect(mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
+                SLOT(slotGetScriptList(KManageSieve::SieveJob*,bool,QStringList,QString)));
     }
 }
 
