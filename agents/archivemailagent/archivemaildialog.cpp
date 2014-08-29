@@ -64,7 +64,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &ArchiveMailDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ArchiveMailDialog::reject);
-    connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(slotSave()));
+    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ArchiveMailDialog::slotSave);
 
     vlay->addWidget(buttonBox);
     okButton->setDefault(true);
@@ -170,9 +170,9 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
             this, SLOT(customContextMenuRequested(QPoint)));
 
     load();
-    connect(mWidget->removeItem, SIGNAL(clicked(bool)), SLOT(slotRemoveItem()));
-    connect(mWidget->modifyItem, SIGNAL(clicked(bool)), SLOT(slotModifyItem()));
-    connect(mWidget->addItem, SIGNAL(clicked(bool)), SLOT(slotAddItem()));
+    connect(mWidget->removeItem, &QPushButton::clicked, this, &ArchiveMailWidget::slotRemoveItem);
+    connect(mWidget->modifyItem, &QPushButton::clicked, this, &ArchiveMailWidget::slotModifyItem);
+    connect(mWidget->addItem, &QPushButton::clicked, this, &ArchiveMailWidget::slotAddItem);
     connect(mWidget->treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(slotItemChanged(QTreeWidgetItem*,int)));
     connect(mWidget->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
     connect(mWidget->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(slotModifyItem()));
