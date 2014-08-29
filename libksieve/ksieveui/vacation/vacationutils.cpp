@@ -22,7 +22,6 @@
 #include <KIdentityManagement/Identity>
 
 #include <KLocalizedString>
-#include <KLocale>
 #include <QDate>
 #include <QLocale>
 

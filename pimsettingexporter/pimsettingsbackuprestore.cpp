@@ -43,7 +43,6 @@
 #include "blogilo/importblogilojob.h"
 
 #include <KLocalizedString>
-#include <KLocale>
 #include <KMessageBox>
 
 #include <QDebug>

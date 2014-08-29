@@ -28,7 +28,6 @@
 #include <ItemModifyJob>
 
 #include <KLocalizedString>
-#include <KLocale>
 #include <KDateTime>
 #include <QMenu>
 #include <QAction>

@@ -68,7 +68,6 @@
 #include <KCmdLineArgs>
 #include <QPointer>
 #include <KSharedConfig>
-#include <KLocale>
 #include <QStandardPaths>
 #include <QLocale>
 #include <QFileDialog>
