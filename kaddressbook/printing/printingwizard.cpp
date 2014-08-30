@@ -66,7 +66,7 @@ PrintingWizard::PrintingWizard( QPrinter *printer, QItemSelectionModel *selectio
   setAppropriate( mSelectionPageItem, true );
 
   mStylePage = new StylePage( this );
-  connect( mStylePage, SIGNAL(styleChanged(int)), SLOT(slotStyleSelected(int)) );
+  connect(mStylePage, &StylePage::styleChanged, this, &PrintingWizard::slotStyleSelected);
   addPage( mStylePage, i18n( "Choose Printing Style" ) );
 
   registerStyles();
