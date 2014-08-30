@@ -110,7 +110,7 @@ void StorageServiceTreeWidgetItem::setDateCreated(const QDateTime &date)
 {
     if (date != mCreateDate) {
         mCreateDate = date;
-        setText(StorageServiceTreeWidget::ColumnCreated, KGlobal::locale()->formatDateTime(mCreateDate));
+        setText(StorageServiceTreeWidget::ColumnCreated, KLocale::global()->formatDateTime(mCreateDate));
     }
 }
 
@@ -118,7 +118,7 @@ void StorageServiceTreeWidgetItem::setLastModification(const QDateTime &date)
 {
     if (date != mLastModificationDate) {
         mLastModificationDate = date;
-        setText(StorageServiceTreeWidget::ColumnLastModification, KGlobal::locale()->formatDateTime(mLastModificationDate));
+        setText(StorageServiceTreeWidget::ColumnLastModification, KLocale::global()->formatDateTime(mLastModificationDate));
     }
 }
 

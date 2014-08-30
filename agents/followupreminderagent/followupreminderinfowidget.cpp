@@ -89,7 +89,7 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
         item->setText(To, info->to());
         item->setText(MessageId, info->messageId());
         item->setText(Subject, info->subject());
-        const QString date = KGlobal::locale()->formatDateTime( info->followUpReminderDate(), KLocale::LongDate );
+        const QString date = KLocale::global()->formatDateTime( info->followUpReminderDate(), KLocale::LongDate );
         item->setText(DeadLine, date);
     }
 }
