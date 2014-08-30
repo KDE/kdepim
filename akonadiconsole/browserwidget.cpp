@@ -189,7 +189,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemUi.modelBox->addItem( "Mail" );
   itemUi.modelBox->addItem( "Contacts" );
   itemUi.modelBox->addItem( "Calendar" );
-  connect( itemUi.modelBox, SIGNAL(activated(int)), SLOT(modelChanged()) );
+  connect(itemUi.modelBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &BrowserWidget::modelChanged);
   QTimer::singleShot( 0, this, SLOT(modelChanged()) );
 
   itemUi.itemView->setXmlGuiClient( xmlGuiWindow );
@@ -197,20 +197,21 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemUi.itemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   connect( itemUi.itemView, SIGNAL(activated(QModelIndex)), SLOT(itemActivated(QModelIndex)) );
   connect( itemUi.itemView, SIGNAL(clicked(QModelIndex)), SLOT(itemActivated(QModelIndex)) );
+
   splitter3->addWidget( itemViewParent );
   itemViewParent->layout()->setMargin( 0 );
 
   QWidget *contentViewParent = new QWidget( this );
   contentUi.setupUi( contentViewParent );
   contentUi.saveButton->setEnabled( false );
-  connect( contentUi.saveButton, SIGNAL(clicked()), SLOT(save()) );
+  connect(contentUi.saveButton, &QPushButton::clicked, this, &BrowserWidget::save);
   splitter3->addWidget( contentViewParent );
 
-  connect( contentUi.attrAddButton, SIGNAL(clicked()), SLOT(addAttribute()) );
-  connect( contentUi.attrDeleteButton, SIGNAL(clicked()), SLOT(delAttribute()) );
-  connect( contentUi.flags, SIGNAL(changed()), SLOT(contentViewChanged()) );
-  connect( contentUi.tags, SIGNAL(changed()), SLOT(contentViewChanged()) );
-  connect( contentUi.remoteId, SIGNAL(textChanged(QString)), SLOT(contentViewChanged()) );
+  connect(contentUi.attrAddButton, &QPushButton::clicked, this, &BrowserWidget::addAttribute);
+  connect(contentUi.attrDeleteButton, &QPushButton::clicked, this, &BrowserWidget::delAttribute);
+  connect(contentUi.flags, &KEditListWidget::changed, this, &BrowserWidget::contentViewChanged);
+  connect(contentUi.tags, &KEditListWidget::changed, this, &BrowserWidget::contentViewChanged);
+  connect(contentUi.remoteId, &QLineEdit::textChanged, this, &BrowserWidget::contentViewChanged);
 
   CollectionPropertiesDialog::registerPage( new CollectionAclPageFactory() );
   CollectionPropertiesDialog::registerPage( new CollectionAttributePageFactory() );

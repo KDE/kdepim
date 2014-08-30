@@ -69,9 +69,9 @@ SearchWidget::SearchWidget( QWidget *parent )
   mQueryCombo->addItem( "Contacts by name" );
   mQueryCombo->addItem( "Email by From/Full Name" );
 
-  connect( button, SIGNAL(clicked()), this, SLOT(search()) );
-  connect( mQueryCombo, SIGNAL(activated(int)), this, SLOT(querySelected(int)) );
-  connect( mResultView, SIGNAL(activated(QModelIndex)), this, SLOT(fetchItem(QModelIndex)) );
+  connect(button, &QPushButton::clicked, this, &SearchWidget::search);
+  connect(mQueryCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &SearchWidget::querySelected);
+  connect(mResultView, &QListView::activated, this, &SearchWidget::fetchItem);
 
   mResultModel = new QStringListModel( this );
   mResultView->setModel( mResultModel );
@@ -84,7 +84,7 @@ SearchWidget::~SearchWidget()
 void SearchWidget::search()
 {
   Akonadi::ItemSearchJob *job = new Akonadi::ItemSearchJob( mQueryWidget->toPlainText() );
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(searchFinished(KJob*)) );
+  connect(job, &Akonadi::ItemSearchJob::result, this, &SearchWidget::searchFinished);
 }
 
 void SearchWidget::searchFinished( KJob *job )
@@ -141,7 +141,7 @@ void SearchWidget::fetchItem( const QModelIndex &index )
   const QString uid = index.data( Qt::DisplayRole ).toString();
   Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob( Akonadi::Item( uid.toLongLong() ) );
   fetchJob->fetchScope().fetchFullPayload();
-  connect( fetchJob, SIGNAL(result(KJob*)), this, SLOT(itemFetched(KJob*)) );
+  connect(fetchJob, &Akonadi::ItemFetchJob::result, this, &SearchWidget::itemFetched);
 }
 
 void SearchWidget::itemFetched( KJob *job )
