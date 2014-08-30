@@ -50,8 +50,8 @@ ConfigureTestDialog::ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrecti
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ConfigureTestDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ConfigureTestDialog::reject);
 
     buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
 
@@ -61,7 +61,7 @@ ConfigureTestDialog::ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrecti
 
     mWidget->setAutoCorrection(autoCorrection);
     mWidget->loadConfig();
-    connect(okButton, SIGNAL(clicked()), this, SLOT(slotSaveSettings()));
+    connect(okButton, &QPushButton::clicked, this, &ConfigureTestDialog::slotSaveSettings);
 }
 
 ConfigureTestDialog::~ConfigureTestDialog()
@@ -117,7 +117,7 @@ AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
     bar->addAction(QLatin1String("Configure..."), this, SLOT(slotConfigure()));
     QAction *richText = new QAction(QLatin1String("HTML mode"), this);
     richText->setCheckable(true);
-    connect(richText, SIGNAL(toggled(bool)), this, SLOT(slotChangeMode(bool)));
+    connect(richText, &QAction::toggled, this, &AutocorrectionTestWidget::slotChangeMode);
     bar->addAction(richText);
 
     mSubject = new PimCommon::LineEditWithAutoCorrection(this, QLatin1String("autocorrectionguirc"));

@@ -46,7 +46,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
 
     mHelpButton = new SieveHelpButton;
     topLayout->addWidget(mHelpButton);
-    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    connect(mHelpButton, &SieveHelpButton::clicked, this, &SieveForEveryPartWidget::slotHelp);
 
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
     connect(mForLoop, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
@@ -62,7 +62,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
 
     topLayout->addWidget(w, 0, Qt::AlignTop);
 
-    connect(mForLoop, SIGNAL(clicked(bool)), mName, SLOT(setEnabled(bool)));
+    connect(mForLoop, &QCheckBox::clicked, mName, &QLineEdit::setEnabled);
     setPageType(KSieveUi::SieveScriptBlockWidget::ForEveryPart);
     setLayout(topLayout);
 }

@@ -44,10 +44,10 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent)
     mStackedWidget->addWidget(mTranslatorWidget);
 
     connect(mShortUrlWidget, &ShortUrlWidget::shortUrlWasClosed, this, &CustomToolsWidget::slotHideTools);
-    connect(mShortUrlWidget->toggleAction(), SIGNAL(triggered(bool)), this,SLOT(slotVisibleShortUrlTools(bool)));
+    connect(mShortUrlWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleShortUrlTools);
 
     connect(mTranslatorWidget, &TranslatorWidget::translatorWasClosed, this, &CustomToolsWidget::slotHideTools);
-    connect(mTranslatorWidget->toggleAction(), SIGNAL(triggered(bool)), this,SLOT(slotVisibleTranslatorTools(bool)));
+    connect(mTranslatorWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleTranslatorTools);
 
     connect(mShortUrlWidget, SIGNAL(shortUrlWasClosed()), this, SIGNAL(shortUrlWasClosed()));
     connect(mShortUrlWidget, SIGNAL(insertShortUrl(QString)), this, SIGNAL(insertShortUrl(QString)));

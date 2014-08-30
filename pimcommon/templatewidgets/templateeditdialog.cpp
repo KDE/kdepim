@@ -42,15 +42,15 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     QDialogButtonBox *buttonBox=0;
     if (defaultTemplate) {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+        connect(buttonBox, &QDialogButtonBox::accepted, this, &TemplateEditDialog::accept);
+        connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateEditDialog::reject);
     } else {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
         mOkButton = buttonBox->button(QDialogButtonBox::Ok);
         mOkButton->setDefault(true);
         mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+        connect(buttonBox, &QDialogButtonBox::accepted, this, &TemplateEditDialog::accept);
+        connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateEditDialog::reject);
         mOkButton->setFocus();
     }
     QWidget *w = new QWidget;

@@ -31,12 +31,12 @@ ShortUrlMainWidget::ShortUrlMainWidget(QWidget *parent)
     lay->addWidget(mConfigWidget);
 
     QPushButton *saveConfig = new QPushButton(QLatin1String("Save config"));
-    connect(saveConfig, SIGNAL(clicked()), this, SLOT(slotSaveConfig()));
+    connect(saveConfig, &QPushButton::clicked, this, &ShortUrlMainWidget::slotSaveConfig);
     lay->addWidget(saveConfig);
 
     mShortUrlWidget = new PimCommon::ShortUrlWidget();
     lay->addWidget(mShortUrlWidget);
-    connect(mConfigWidget, SIGNAL(settingsChanged()), mShortUrlWidget, SLOT(settingsUpdated()));
+    connect(mConfigWidget, &PimCommon::ShortUrlConfigureWidget::settingsChanged, mShortUrlWidget, &PimCommon::ShortUrlWidget::settingsUpdated);
 }
 
 void ShortUrlMainWidget::slotSaveConfig()

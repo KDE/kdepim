@@ -139,7 +139,7 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
     d->nameEdit->setText(url.fileName());
     d->suggestNewName = new QPushButton(i18n("Suggest New &Name"), this);
     renameLayout->addWidget(d->suggestNewName);
-    connect(d->suggestNewName, SIGNAL(clicked()), this, SLOT(slotSuggestNewNamePressed()));
+    connect(d->suggestNewName, &QPushButton::clicked, this, &RenameFileDialog::slotSuggestNewNamePressed);
 
 
     QPushButton *overWrite = new QPushButton(i18n("&Overwrite"),this);
@@ -149,7 +149,7 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
     connect(ignore, &QPushButton::clicked, this, &RenameFileDialog::slotIgnorePressed);
 
     d->rename = new QPushButton(i18n("&Rename"),this);
-    connect(d->rename,SIGNAL(clicked()),this,SLOT(slotRenamePressed()));
+    connect(d->rename, &QPushButton::clicked, this, &RenameFileDialog::slotRenamePressed);
 
     KSeparator* separator = new KSeparator(this);
     pLayout->addWidget(separator);
@@ -159,7 +159,7 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
 
     if (multiFiles){
         d->applyAll = new QCheckBox(i18n("Appl&y to All"), this);
-        connect(d->applyAll, SIGNAL(clicked()), this, SLOT(slotApplyAllPressed()));
+        connect(d->applyAll, &QCheckBox::clicked, this, &RenameFileDialog::slotApplyAllPressed);
         layout->addWidget(d->applyAll);
         slotApplyAllPressed();
     }

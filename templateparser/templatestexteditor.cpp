@@ -59,7 +59,7 @@ void TemplatesTextEditor::initCompleter()
     m_completer->setWidget( this );
     m_completer->setCompletionMode( QCompleter::PopupCompletion );
 
-    connect( m_completer, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)) );
+    connect(m_completer, static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated), this, &TemplatesTextEditor::slotInsertCompletion);
 }
 
 void TemplatesTextEditor::slotInsertCompletion( const QString &completion )

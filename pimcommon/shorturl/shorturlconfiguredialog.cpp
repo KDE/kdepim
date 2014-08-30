@@ -36,9 +36,9 @@ ShortUrlConfigureDialog::ShortUrlConfigureDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOkClicked()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), SLOT(slotDefaultClicked()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ShortUrlConfigureDialog::slotOkClicked);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ShortUrlConfigureDialog::reject);
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &ShortUrlConfigureDialog::slotDefaultClicked);
 
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;

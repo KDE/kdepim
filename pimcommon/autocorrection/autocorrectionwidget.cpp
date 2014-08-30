@@ -76,8 +76,8 @@ AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
     connect(ui->addButton, &QPushButton::clicked, this, &AutoCorrectionWidget::addAutocorrectEntry);
     connect(ui->removeButton, &QPushButton::clicked, this, &AutoCorrectionWidget::removeAutocorrectEntry);
     connect(ui->treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(setFindReplaceText(QTreeWidgetItem*,int)));
-    connect(ui->treeWidget,SIGNAL(deleteSelectedItems()),SLOT(removeAutocorrectEntry()));
-    connect(ui->treeWidget,SIGNAL(itemSelectionChanged()),SLOT(updateAddRemoveButton()));
+    connect(ui->treeWidget, &PimCommon::AutoCorrectionTreeWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeAutocorrectEntry);
+    connect(ui->treeWidget, &PimCommon::AutoCorrectionTreeWidget::itemSelectionChanged, this, &AutoCorrectionWidget::updateAddRemoveButton);
     connect(ui->find, &KLineEdit::textChanged, this, &AutoCorrectionWidget::enableAddRemoveButton);
     connect(ui->replace, &KLineEdit::textChanged, this, &AutoCorrectionWidget::enableAddRemoveButton);
     connect(ui->abbreviation, &KLineEdit::textChanged, this, &AutoCorrectionWidget::abbreviationChanged);
@@ -88,14 +88,14 @@ AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
     connect(ui->remove2, &QPushButton::clicked, this, &AutoCorrectionWidget::removeTwoUpperLetterEntry);
     connect(ui->typographicDoubleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
     connect(ui->typographicSingleQuotes,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->abbreviationList,SIGNAL(itemSelectionChanged()),SLOT(slotEnableDisableAbreviationList()));
-    connect(ui->abbreviationList,SIGNAL(deleteSelectedItems()),SLOT(removeAbbreviationEntry()));
-    connect(ui->twoUpperLetterList,SIGNAL(itemSelectionChanged()),SLOT(slotEnableDisableTwoUpperEntry()));
-    connect(ui->twoUpperLetterList,SIGNAL(deleteSelectedItems()),SLOT(removeTwoUpperLetterEntry()));
+    connect(ui->abbreviationList, &PimCommon::AutoCorrectionListWidget::itemSelectionChanged, this, &AutoCorrectionWidget::slotEnableDisableAbreviationList);
+    connect(ui->abbreviationList, &PimCommon::AutoCorrectionListWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeAbbreviationEntry);
+    connect(ui->twoUpperLetterList, &PimCommon::AutoCorrectionListWidget::itemSelectionChanged, this, &AutoCorrectionWidget::slotEnableDisableTwoUpperEntry);
+    connect(ui->twoUpperLetterList, &PimCommon::AutoCorrectionListWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeTwoUpperLetterEntry);
     connect(ui->autocorrectionLanguage,SIGNAL(activated(int)),SLOT(changeLanguage(int)));
     connect(ui->addNonBreakingSpaceInFrench,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->twoUpperLetter, SIGNAL(returnPressed()), SLOT(addTwoUpperLetterEntry()));
-    connect(ui->abbreviation, SIGNAL(returnPressed()), SLOT(addAbbreviationEntry()));
+    connect(ui->twoUpperLetter, &KLineEdit::returnPressed, this, &AutoCorrectionWidget::addTwoUpperLetterEntry);
+    connect(ui->abbreviation, &KLineEdit::returnPressed, this, &AutoCorrectionWidget::addAbbreviationEntry);
     slotEnableDisableAbreviationList();
     slotEnableDisableTwoUpperEntry();
 
@@ -112,7 +112,7 @@ AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
 
     connect(menu, &QMenu::triggered, this, &AutoCorrectionWidget::slotImportAutoCorrection);
 
-    connect(ui->exportAutoCorrection,SIGNAL(clicked()),SLOT(slotExportAutoCorrection()));
+    connect(ui->exportAutoCorrection, &QPushButton::clicked, this, &AutoCorrectionWidget::slotExportAutoCorrection);
 }
 
 AutoCorrectionWidget::~AutoCorrectionWidget()
