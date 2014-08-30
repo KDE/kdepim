@@ -29,7 +29,7 @@ SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(QWidget *
 {
     ui->setupUi(this);
     connect(ui->buttonGroup,SIGNAL(buttonClicked(QAbstractButton*)),SLOT(slotButtonClicked(QAbstractButton*)));
-    connect(ui->profiles,SIGNAL(currentIndexChanged(int)),SLOT(slotProfileChanged(int)));
+    connect(ui->profiles, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &SelectThunderbirdFilterFilesWidget::slotProfileChanged);
 
     ui->listFiles->setSelectionMode(QAbstractItemView::MultiSelection);
     QString defaultProfile;

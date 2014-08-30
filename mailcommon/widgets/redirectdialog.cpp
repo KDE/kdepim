@@ -87,7 +87,7 @@ RedirectWidget::RedirectWidget(QWidget *parent)
                                "where you can select recipients out "
                                "of all available addresses." ) );
     hbox->addWidget(BtnTo);
-    connect( BtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()) );
+    connect(BtnTo, &QPushButton::clicked, this, &RedirectWidget::slotAddressSelection);
 
     connect( mEdit, SIGNAL(textChanged(QString)), SIGNAL(addressChanged(QString)) );
 }
@@ -215,8 +215,8 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
     buttonBox->addButton(d->mUser1Button, QDialogButtonBox::ActionRole);
     d->mUser2Button = new QPushButton;
     buttonBox->addButton(d->mUser2Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &RedirectDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &RedirectDialog::reject);
     if (mode == SendNow)
        d->mUser1Button->setDefault(true);
     else
@@ -267,6 +267,7 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
     KGuiItem::assign(d->mUser2Button, KGuiItem( i18n( "Send &Later" )) );
     connect(d->mUser1Button, SIGNAL(clicked()), this, SLOT(slotUser1()) );
     connect(d->mUser2Button, SIGNAL(clicked()), this, SLOT(slotUser2()) );
+
     d->mUser1Button->setEnabled(false);
     d->mUser2Button->setEnabled(false);
 }

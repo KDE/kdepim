@@ -57,8 +57,8 @@ NoteAlarmDialog::NoteAlarmDialog(const QString &caption, QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &NoteAlarmDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &NoteAlarmDialog::reject);
     mainLayout->addWidget(buttonBox);
     QWidget *page = new QWidget(this);
     QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
@@ -92,7 +92,7 @@ NoteAlarmDialog::NoteAlarmDialog(const QString &caption, QWidget *parent)
 
     connect(m_buttons, SIGNAL(buttonClicked(int)),
             SLOT(slotButtonChanged(int)));
-    connect(okButton, SIGNAL(clicked()), SLOT(accept()));
+    connect(okButton, &QPushButton::clicked, this, &NoteAlarmDialog::accept);
     m_buttons->button(0)->setChecked(true);
     slotButtonChanged(m_buttons->checkedId());
     mainLayout->addWidget(page);

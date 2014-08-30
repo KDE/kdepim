@@ -73,14 +73,14 @@ NotesNetworkReceiver::NotesNetworkReceiver(QTcpSocket *s)
                    .arg(date);
 
     // Setup the communications
-    connect(m_sock, SIGNAL(readyRead()), SLOT(slotDataAvailable()));
-    connect(m_sock, SIGNAL(disconnected()), SLOT(slotConnectionClosed()));
+    connect(m_sock, &QTcpSocket::readyRead, this, &NotesNetworkReceiver::slotDataAvailable);
+    connect(m_sock, &QTcpSocket::disconnected, this, &NotesNetworkReceiver::slotConnectionClosed);
     connect(m_sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotError(QAbstractSocket::SocketError)));
 
     // Setup the timer
     m_timer = new QTimer(this);
     m_timer->setSingleShot(true);
-    connect(m_timer, SIGNAL(timeout()), SLOT(slotReceptionTimeout()));
+    connect(m_timer, &QTimer::timeout, this, &NotesNetworkReceiver::slotReceptionTimeout);
     m_timer->start(MAXTIME);
 }
 

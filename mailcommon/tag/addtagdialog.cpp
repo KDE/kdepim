@@ -44,9 +44,11 @@ AddTagDialog::AddTagDialog(const QList<KActionCollection *>& actions, QWidget *p
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotSave()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AddTagDialog::slotSave);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AddTagDialog::reject);
     mOkButton->setDefault(true);
+
+    mTagWidget = new MailCommon::TagWidget(actions,this);
 
     connect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)), SLOT(slotTagNameChanged(QString)));
     mOkButton->setEnabled(false);
@@ -86,7 +88,7 @@ void AddTagDialog::slotSave()
     MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
     const Akonadi::Tag akonadiTag = tag->saveToAkonadi( saveFlags );
     Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(akonadiTag, this);
-    connect(createJob, SIGNAL(result(KJob*)), this, SLOT(onTagCreated(KJob*)));
+    connect(createJob, &Akonadi::TagCreateJob::result, this, &AddTagDialog::onTagCreated);
 
     mLabel = name;
 }
