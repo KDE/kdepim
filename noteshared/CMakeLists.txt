@@ -32,6 +32,7 @@ set(libnoteshared_SRCS
     dialog/selectednotefolderdialog.cpp
     widget/notelistwidget.cpp
     alarms/notealarmdialog.cpp
+    settings/globalsettings.cpp
     ${libnoteshared_akonadi_SRCS}
 )
 

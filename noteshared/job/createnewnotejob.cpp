@@ -18,6 +18,7 @@
 #include "createnewnotejob.h"
 #include "notesharedglobalconfig.h"
 #include "noteshared/attributes/showfoldernotesattribute.h"
+#include "noteshared/settings/globalsettings.h"
 #include "dialog/selectednotefolderdialog.h"
 
 #include "akonadi_next/note.h"
@@ -80,7 +81,7 @@ void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
         id = NoteShared::NoteSharedGlobalConfig::self()->defaultFolder();
     } else {
         NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(id);
-        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        NoteShared::GlobalSettings::self()->requestSync();
     }
     if (id == -1) {
         QPointer<SelectedNotefolderDialog> dlg = new SelectedNotefolderDialog(mWidget);
@@ -92,7 +93,7 @@ void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
         }
         if (dlg->useFolderByDefault()) {
             NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(col.id());
-            NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+            NoteShared::GlobalSettings::self()->requestSync();
         }
         delete dlg;
     } else {
@@ -180,7 +181,7 @@ void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
     if (job->error()) {
         kWarning() << job->errorString();
         NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(-1);
-        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        NoteShared::GlobalSettings::self()->requestSync();
         KMessageBox::error(mWidget, i18n("Note was not created."), i18n("Create new note"));
     }
     deleteLater();
