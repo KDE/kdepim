@@ -57,7 +57,6 @@
 
 #include <kcharsets.h>
 #include <KFileDialog>
-#include <kglobal.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kio/netaccess.h>

@@ -19,7 +19,6 @@
 
 #include "iconnamecache.h"
 
-#include <KGlobal>
 #include <KIconLoader>
 
 namespace MessageViewer {

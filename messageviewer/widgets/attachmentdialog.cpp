@@ -24,7 +24,6 @@
 #include <kdialog.h>
 #include <kmessagebox.h>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KSharedConfig>
 using namespace MessageViewer;
 

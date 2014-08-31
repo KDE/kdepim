@@ -37,7 +37,6 @@
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kapplication.h>
 #include <KColorScheme>
 
 #include <QColor>

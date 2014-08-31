@@ -38,7 +38,6 @@
 #include <KStandardDirs>
 #include <KNotification>
 #include <KLocalizedString>
-#include <KComponentData>
 // Qt Includes
 #include <QUrl>
 #include <QTimer>

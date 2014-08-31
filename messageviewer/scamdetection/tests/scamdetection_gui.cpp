@@ -20,8 +20,6 @@
 #include "scamdetection/scamdetection.h"
 #include <qdebug.h>
 
-#include <KFileDialog>
-
 #include <KLocalizedString>
 
 #include <QUrl>
