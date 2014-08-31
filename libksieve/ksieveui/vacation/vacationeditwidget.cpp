@@ -76,7 +76,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     mIntervalSpin->setValue(defDayInterval);
     mIntervalSpin->setObjectName(QLatin1String("mIntervalSpin"));
     mIntervalSpin->setSuffix(i18np(" day", " days", defDayInterval));
-    connect(mIntervalSpin, SIGNAL(valueChanged(int)), SLOT(slotIntervalSpinChanged(int)));
+    connect(mIntervalSpin, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &VacationEditWidget::slotIntervalSpinChanged);
     QLabel *label = new QLabel(i18n("&Resend notification only after:"), this);
     label->setBuddy(mIntervalSpin);
     glay->addWidget(label, row, 0);
@@ -111,8 +111,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     mDomainEdit->setValidator(new QRegExpValidator(QRegExp(QLatin1String("[a-zA-Z0-9+-]+(?:\\.[a-zA-Z0-9+-]+)*")), mDomainEdit));
     glay->addWidget(mDomainCheck, row, 0);
     glay->addWidget(mDomainEdit, row, 1);
-    connect(mDomainCheck, SIGNAL(toggled(bool)),
-            mDomainEdit, SLOT(setEnabled(bool)));
+    connect(mDomainCheck, &QCheckBox::toggled, mDomainEdit, &QLineEdit::setEnabled);
 }
 
 VacationEditWidget::~VacationEditWidget()
