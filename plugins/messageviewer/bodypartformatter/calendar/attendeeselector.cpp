@@ -43,22 +43,22 @@ AttendeeSelector::AttendeeSelector(QWidget * parent)
   mOkButton = buttonBox->button(QDialogButtonBox::Ok);
   mOkButton->setDefault(true);
   mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &AttendeeSelector::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &AttendeeSelector::reject);
   mainLayout->addWidget(buttonBox);
 
   ui.setupUi(mainWidget);
 
   KGuiItem::assign(ui.addButton, KStandardGuiItem::add() );
-  connect( ui.addButton, SIGNAL(clicked()), SLOT(addClicked()) );
+  connect(ui.addButton, &QPushButton::clicked, this, &AttendeeSelector::addClicked);
   KGuiItem::assign(ui.removeButton, KStandardGuiItem::remove() );
-  connect( ui.removeButton, SIGNAL(clicked()), SLOT(removeClicked()) );
+  connect(ui.removeButton, &QPushButton::clicked, this, &AttendeeSelector::removeClicked);
 
   ui.attendeeEdit->setPlaceholderText( i18n("Click to add a new attendee") );
-  connect( ui.attendeeEdit, SIGNAL(textChanged(QString)), SLOT(textChanged(QString)) );
-  connect( ui.attendeeEdit, SIGNAL(returnPressed(QString)), SLOT(addClicked()) );
+  connect(ui.attendeeEdit, &KPIM::AddresseeLineEdit::textChanged, this, &AttendeeSelector::textChanged);
+  connect(ui.attendeeEdit, &KPIM::AddresseeLineEdit::returnPressed, this, &AttendeeSelector::addClicked);
 
-  connect( ui.attendeeList, SIGNAL(itemSelectionChanged()), SLOT(selectionChanged()) );
+  connect(ui.attendeeList, &QListWidget::itemSelectionChanged, this, &AttendeeSelector::selectionChanged);
   mOkButton->setEnabled( false );
 }
 

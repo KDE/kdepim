@@ -43,8 +43,8 @@ DelegateSelector::DelegateSelector(QWidget * parent)
   mOkButton = buttonBox->button(QDialogButtonBox::Ok);
   mOkButton->setDefault(true);
   mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &DelegateSelector::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &DelegateSelector::reject);
   mOkButton->setDefault(true);
 
   QWidget *delegateBox = new QWidget(this);
@@ -52,7 +52,7 @@ DelegateSelector::DelegateSelector(QWidget * parent)
   delegateBoxHBoxLayout->setMargin(0);
   new QLabel( i18n("Delegate:"), delegateBox );
   mDelegate = new KPIM::AddresseeLineEdit( delegateBox );
-  connect( mDelegate, SIGNAL(textChanged(QString)), SLOT(slotTextChanged(QString)) );
+  connect(mDelegate, &KPIM::AddresseeLineEdit::textChanged, this, &DelegateSelector::slotTextChanged);
   mRsvp = new QCheckBox( i18n("Keep me informed about status changes of this incidence."), this );
   mRsvp->setChecked( true );
 
