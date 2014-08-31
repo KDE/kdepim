@@ -25,6 +25,10 @@
 #include <KSystemTimeZone>
 #include <KLocalizedString>
 #include <QIcon>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace EventViews;
 
@@ -76,17 +80,25 @@ static QString tzWithUTC( KTimeZones::ZoneMap::ConstIterator it )
 }
 
 TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidget *parent )
-  : KDialog( parent ), d( new Private( this, preferences ) )
+  : QDialog( parent ), d( new Private( this, preferences ) )
 {
-  setCaption( i18n( "Timezone" ) );
-  setButtons( Ok | Cancel );
-  setDefaultButton( Ok );
+  setWindowTitle( i18n( "Timezone" ) );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  okButton->setDefault(true);
   setModal( true );
-  showButtonSeparator( false );
 
   QWidget *mainwidget = new QWidget( this );
   setupUi( mainwidget );
-  setMainWidget( mainwidget );
+  
+  mainLayout->addWidget(mainwidget);
+  mainLayout->addWidget(buttonBox);
 
   QStringList shownTimeZones( d->mPreferences->timeSpec().timeZone().name() );
   shownTimeZones += d->mPreferences->timeScaleTimezones();
@@ -119,8 +131,8 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   connect( upButton, SIGNAL(clicked()), SLOT(up()) );
   connect( downButton, SIGNAL(clicked()), SLOT(down()) );
 
-  connect( this, SIGNAL(okClicked()), SLOT(okClicked()) );
-  connect( this, SIGNAL(cancelClicked()), SLOT(reject()) );
+  connect(okButton, SIGNAL(clicked()), SLOT(okClicked()) );
+  connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(reject()) );
 
   Q_FOREACH(const TimeZoneNamePair& item, selList) {
     QListWidgetItem* widgetItem = new QListWidgetItem(item.first);

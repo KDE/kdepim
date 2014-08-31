@@ -25,7 +25,7 @@
 #include "eventviews_export.h"
 #include "ui_timescaleedit_base.h"
 
-#include <KDialog>
+#include <QDialog>
 
 #include <boost/shared_ptr.hpp>
 
@@ -34,7 +34,7 @@ namespace EventViews {
 class Prefs;
 typedef boost::shared_ptr<Prefs> PrefsPtr;
 
-class EVENTVIEWS_EXPORT TimeScaleConfigDialog : public KDialog, private Ui::TimeScaleEditWidget
+class EVENTVIEWS_EXPORT TimeScaleConfigDialog : public QDialog, private Ui::TimeScaleEditWidget
 {
   Q_OBJECT
 
