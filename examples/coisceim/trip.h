@@ -91,7 +91,7 @@ private slots:
     void layoutChanged();
     void modelReset();
     void rowsRemoved(const QModelIndex &parent, int start, int end);
-
+public slots:
     void setComponentFilter(const QString &filter);
 
 private:

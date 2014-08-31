@@ -53,12 +53,12 @@ TripWidget::TripWidget(Trip *trip, QWidget *parent)
     updateDescription();
     updateName();
 
-    connect(trip, SIGNAL(eventDescriptionChanged()), SLOT(updateDescription()));
-    connect(trip, SIGNAL(eventNameChanged()), SLOT(updateName()));
+    connect(trip, &Trip::eventDescriptionChanged, this, &TripWidget::updateDescription);
+    connect(trip, &Trip::eventNameChanged, this, &TripWidget::updateName);
 
     QLineEdit *filterLine = new QLineEdit;
     layout->addWidget(filterLine);
-    connect(filterLine, SIGNAL(textChanged(QString)), m_trip, SLOT(setComponentFilter(QString)));
+    connect(filterLine, &QLineEdit::textChanged, m_trip, &Trip::setComponentFilter);
 
     layout->addWidget(vSplitter);
 
