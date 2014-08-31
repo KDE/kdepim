@@ -34,7 +34,7 @@
 #include "imapaclattribute.h"
 
 #include <collection.h>
-#include <kdialog.h>
+#include <QDialog>
 #include <KLocalizedString>
 #include <QVBoxLayout>
 
@@ -43,6 +43,7 @@
 #include <QHBoxLayout>
 #include <QListView>
 #include <QPushButton>
+#include <KConfigGroup>
 
 using namespace PimCommon;
 /**
@@ -62,7 +63,7 @@ public:
     {
         if ( !actions().contains( action ) ) {
             addAction( action );
-            connect( this, SIGNAL(clicked()), action, SLOT(trigger()) );
+            connect(this, &ActionButton::clicked, action, &QAction::trigger);
         }
 
         setText( action->text() );
@@ -116,7 +117,7 @@ void CollectionAclPage::init()
     QWidget *buttonBox = new QWidget;
     QVBoxLayout *buttonBoxVBoxLayout = new QVBoxLayout(buttonBox);
     buttonBoxVBoxLayout->setMargin(0);
-    buttonBoxVBoxLayout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     buttonBoxVBoxLayout->setSpacing( QDialog::spacingHint() );
     layout->addWidget( buttonBox );
 
     ActionButton *button = new ActionButton( buttonBox );

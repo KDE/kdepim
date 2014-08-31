@@ -33,6 +33,8 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QVBoxLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 using namespace PimCommon;
 
@@ -55,11 +57,12 @@ public:
     KPIM::AddresseeLineEdit *mUserIdLineEdit;
     QVBoxLayout *mButtonLayout;
     KIMAP::Acl::Rights mCustomPermissions;
+    QPushButton *mOkButton;
 };
 
 void AclEntryDialog::Private::slotChanged()
 {
-    q->enableButtonOk( !mUserIdLineEdit->text().isEmpty() && mButtonGroup->checkedButton() != 0 );
+    mOkButton->setEnabled( !mUserIdLineEdit->text().isEmpty() && mButtonGroup->checkedButton() != 0 );
 }
 
 void AclEntryDialog::Private::slotSelectAddresses()
@@ -78,15 +81,23 @@ void AclEntryDialog::Private::slotSelectAddresses()
 }
 
 AclEntryDialog::AclEntryDialog( QWidget *parent )
-    : KDialog( parent ), d( new Private( this ) )
+    : QDialog( parent ), d( new Private( this ) )
 {
-    setButtons( Ok | Cancel );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->mOkButton->setDefault(true);
+    d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AclEntryDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AclEntryDialog::reject);
 
     QWidget *page = new QWidget( this );
-    setMainWidget( page );
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
 
     QGridLayout *layout = new QGridLayout( page );
-    layout->setSpacing( spacingHint() );
+    //QT5 port layout->setSpacing( spacingHint() );
     layout->setMargin( 0 );
 
     QLabel *label = new QLabel( i18n( "&User identifier:" ), page );
@@ -130,12 +141,13 @@ AclEntryDialog::AclEntryDialog( QWidget *parent )
     connect( d->mUserIdLineEdit, SIGNAL(textChanged(QString)), SLOT(slotChanged()) );
     connect( button, SIGNAL(clicked()), SLOT(slotSelectAddresses()) );
     connect( d->mButtonGroup, SIGNAL(buttonClicked(int)), SLOT(slotChanged()) );
-    enableButtonOk( false );
+
+    d->mOkButton->setEnabled( false );
 
     d->mUserIdLineEdit->setFocus();
 
     // Ensure the lineedit is rather wide so that email addresses can be read in it
-    incrementInitialSize( QSize( 200, 0 ) );
+    //QT5 port incrementInitialSize( QSize( 200, 0 ) );
 }
 
 AclEntryDialog::~AclEntryDialog()
@@ -147,7 +159,7 @@ void AclEntryDialog::setUserId( const QString &userId )
 {
     d->mUserIdLineEdit->setText( userId );
 
-    enableButtonOk( !userId.isEmpty() );
+    d->mOkButton->setEnabled( !userId.isEmpty() );
 }
 
 QString AclEntryDialog::userId() const

@@ -19,11 +19,12 @@
 #ifndef WEBDAVSETTINGSDIALOG_H
 #define WEBDAVSETTINGSDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class QLineEdit;
+class QPushButton;
 namespace PimCommon {
-class WebDavSettingsDialog : public KDialog
+class WebDavSettingsDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -40,6 +41,7 @@ private slots:
 private:
     QLineEdit *mServiceLocation;
     QLineEdit *mPublicLocation;
+    QPushButton *mOkButton;
 };
 }
 

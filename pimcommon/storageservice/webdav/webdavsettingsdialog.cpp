@@ -23,15 +23,26 @@
 
 #include <QLabel>
 #include <QVBoxLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace PimCommon;
 
 WebDavSettingsDialog::WebDavSettingsDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "WebDav Settings" ) );
-    setButtons( Ok | Cancel );
+    setWindowTitle( i18n( "WebDav Settings" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     QWidget *w = new QWidget;
+   
     QVBoxLayout *lay = new QVBoxLayout;
 
     QLabel *lab = new QLabel(i18n("Service Location (e.g. https://dav.example.com/)"));
@@ -51,9 +62,10 @@ WebDavSettingsDialog::WebDavSettingsDialog(QWidget *parent)
     lay->addWidget(mPublicLocation);
 
     w->setLayout(lay);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     connect(mServiceLocation, SIGNAL(textChanged(QString)), this, SLOT(slotServiceLocationChanged(QString)));
-    enableButtonOk(false);
+    mOkButton->setEnabled(false);
 }
 
 WebDavSettingsDialog::~WebDavSettingsDialog()
@@ -63,7 +75,7 @@ WebDavSettingsDialog::~WebDavSettingsDialog()
 
 void WebDavSettingsDialog::slotServiceLocationChanged(const QString &text)
 {
-    enableButtonOk(!text.isEmpty() && (text.startsWith(QLatin1String("http://")) || text.startsWith(QLatin1String("https://"))));
+    mOkButton->setEnabled(!text.isEmpty() && (text.startsWith(QLatin1String("http://")) || text.startsWith(QLatin1String("https://"))));
 }
 
 QString WebDavSettingsDialog::serviceLocation() const
@@ -75,3 +87,4 @@ QString WebDavSettingsDialog::publicLocation() const
 {
     return mPublicLocation->text().trimmed();
 }
+

@@ -22,14 +22,14 @@
 
 #include <KImap/kimap/Acl>
 
-#include <KDialog>
+#include <QDialog>
 
 namespace PimCommon {
 
 /**
  * @short A dialog for editing an IMAP ACL entry.
  */
-class AclEntryDialog : public KDialog
+class AclEntryDialog : public QDialog
 {
   Q_OBJECT
 
