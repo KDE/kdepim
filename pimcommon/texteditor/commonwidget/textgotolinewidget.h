@@ -34,7 +34,7 @@ public:
     void goToLine();
 
 Q_SIGNALS:
-    void goToLine(int);
+    void moveToLine(int);
 
 
 protected:

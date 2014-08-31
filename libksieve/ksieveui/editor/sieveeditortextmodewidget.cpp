@@ -91,7 +91,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mGoToLine = new PimCommon::TextGoToLineWidget;
     mGoToLine->hide();
     textEditLayout->addWidget(mGoToLine);
-    connect(mGoToLine, SIGNAL(goToLine(int)), this, SLOT(slotGoToLine(int)));
+    connect(mGoToLine, SIGNAL(moveToLine(int)), this, SLOT(slotGoToLine(int)));
 
     mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, textEditWidget);
     textEditLayout->addWidget(mFindBar);

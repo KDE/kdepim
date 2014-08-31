@@ -61,7 +61,7 @@ void TextGoToLineWidgetTest::shouldEmitGoToLineSignalCorrectValueWhenPressOnButt
     QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
     line->setValue(5);
     QCOMPARE(line->value(), 5);
-    QSignalSpy spy(&edit, SIGNAL(goToLine(int)));
+    QSignalSpy spy(&edit, SIGNAL(moveToLine(int)));
     QTest::mouseClick(gotolinebutton, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toInt(), 5);
@@ -96,7 +96,7 @@ void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenSpinboxHasFocusAndWePre
     line->setFocus();
     QVERIFY(line->hasFocus());
     line->setValue(5);
-    QSignalSpy spy(&edit, SIGNAL(goToLine(int)));
+    QSignalSpy spy(&edit, SIGNAL(moveToLine(int)));
     QTest::keyPress(line, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toInt(), 5);

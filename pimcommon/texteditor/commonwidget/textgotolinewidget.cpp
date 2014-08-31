@@ -79,7 +79,7 @@ void TextGoToLineWidget::goToLine()
 
 void TextGoToLineWidget::slotGoToLine()
 {
-    Q_EMIT goToLine(mSpinbox->value());
+    Q_EMIT moveToLine(mSpinbox->value());
 }
 
 void TextGoToLineWidget::showEvent(QShowEvent *e)
