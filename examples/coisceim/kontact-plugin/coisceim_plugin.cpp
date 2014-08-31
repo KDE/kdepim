@@ -43,7 +43,7 @@ CoisceimPlugin::CoisceimPlugin(KontactInterface::Core *core, const QVariantList 
     actionCollection()->addAction("new_trip", action);
     //action->setHelpText(
     //  i18nc( "@info:status", "Create a new trip" ) );
-    connect(action, SIGNAL(triggered(bool)), SLOT(createTrip()));
+    connect(action, &QAction::triggered, this, &CoisceimPlugin::createTrip);
     insertNewAction(action);
 
     mUniqueAppWatcher = new KontactInterface::UniqueAppWatcher(

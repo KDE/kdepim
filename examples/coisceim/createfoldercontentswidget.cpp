@@ -51,8 +51,8 @@ CreateFolderContentsWidget::CreateFolderContentsWidget(Trip *trip, int role, con
     m_widget = new FolderContentsWidget(trip, role, type);
     addWidget(m_widget);
 
-    connect(button, SIGNAL(clicked(bool)), m_widget, SLOT(configure()));
-    connect(m_trip, SIGNAL(monitoredCollectionsChanged()), SLOT(collectionSelected()));
+    connect(button, &QPushButton::clicked, m_widget, &FolderContentsWidget::configure);
+    connect(m_trip, &Trip::monitoredCollectionsChanged, this, &CreateFolderContentsWidget::collectionSelected);
 }
 
 void CreateFolderContentsWidget::collectionSelected()
