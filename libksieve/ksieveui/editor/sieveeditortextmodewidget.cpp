@@ -86,12 +86,12 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTabWidget->addTab(mTextEdit, i18n("Editor"));
     mTabWidget->tabBar()->hide();
     textEditLayout->addWidget(mTabWidget);
-    connect(mTextEdit, SIGNAL(openHelp(QString,QString)), mTabWidget, SLOT(slotAddHelpPage(QString,QString)));
+    connect(mTextEdit, &SieveTextEdit::openHelp, mTabWidget, &SieveEditorTabWidget::slotAddHelpPage);
 
     mGoToLine = new PimCommon::TextGoToLineWidget;
     mGoToLine->hide();
     textEditLayout->addWidget(mGoToLine);
-    connect(mGoToLine, SIGNAL(moveToLine(int)), this, SLOT(slotGoToLine(int)));
+    connect(mGoToLine, &PimCommon::TextGoToLineWidget::moveToLine, this, &SieveEditorTextModeWidget::slotGoToLine);
 
     mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, textEditWidget);
     textEditLayout->addWidget(mFindBar);
@@ -109,18 +109,18 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTemplateSplitter->addWidget(mExtraSplitter);
     mTemplateSplitter->setChildrenCollapsible(false);
 
-    connect(sieveTemplateWidget, SIGNAL(insertTemplate(QString)), mTextEdit, SLOT(insertPlainText(QString)));
+    connect(sieveTemplateWidget, &SieveTemplateWidget::insertTemplate, mTextEdit, &SieveTextEdit::insertPlainText);
 
     //
     QShortcut *shortcut = new QShortcut(this);
     shortcut->setKey(Qt::Key_F + Qt::CTRL);
-    connect(shortcut, SIGNAL(activated()), SLOT(slotFind()));
-    connect(mTextEdit, SIGNAL(findText()), SLOT(slotFind()));
+    connect(shortcut, &QShortcut::activated, this, &SieveEditorTextModeWidget::slotFind);
+    connect(mTextEdit, &SieveTextEdit::findText, this, &SieveEditorTextModeWidget::slotFind);
 
     shortcut = new QShortcut(this);
     shortcut->setKey(Qt::Key_R + Qt::CTRL);
-    connect(shortcut, SIGNAL(activated()), SLOT(slotReplace()));
-    connect(mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()));
+    connect(shortcut, &QShortcut::activated, this, &SieveEditorTextModeWidget::slotReplace);
+    connect(mTextEdit, &SieveTextEdit::replaceText, this, &SieveEditorTextModeWidget::slotReplace);
 
     mDebugTextEdit = new PimCommon::PlainTextEditor;
     mDebugTextEdit->setSearchSupport(false);
@@ -128,7 +128,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mMainSplitter->addWidget(mTemplateSplitter);
     mMainSplitter->addWidget(mDebugTextEdit);
     mMainSplitter->setChildrenCollapsible(false);
-    connect(mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()));
+    connect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveEditorTextModeWidget::slotTextChanged);
 
     readConfig();
 
