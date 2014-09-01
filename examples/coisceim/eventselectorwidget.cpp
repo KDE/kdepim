@@ -33,17 +33,33 @@
 #include <AkonadiCore/ItemFetchScope>
 
 #include <KCalCore/Event>
+#include <KConfigGroup>
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 #include "mixedtreemodel.h"
 
 using namespace Akonadi;
 
 EventSelectorDialog::EventSelectorDialog(QWidget *parent, Qt::WindowFlags f)
-    : KDialog(parent, f)
+    : QDialog(parent, f)
 {
-    QHBoxLayout *layout = new QHBoxLayout(mainWidget());
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QHBoxLayout *layout = new QHBoxLayout(mainWidget);
     m_view = new QTreeView;
     layout->addWidget(m_view);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(mainWidget);
+    mainLayout->addWidget(buttonBox);
 
     ChangeRecorder *recorder = new ChangeRecorder;
     recorder->setMimeTypeMonitored(KCalCore::Event::eventMimeType());

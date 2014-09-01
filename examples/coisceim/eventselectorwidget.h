@@ -22,7 +22,7 @@
 #ifndef EVENTSELECTORWIDGET_H
 #define EVENTSELECTORWIDGET_H
 
-#include <KDialog>
+#include <QDialog>
 #include <AkonadiCore/Item>
 
 class QTreeView;
@@ -32,7 +32,7 @@ namespace CalendarSupport
 class IncidenceViewer;
 }
 
-class EventSelectorDialog : public KDialog
+class EventSelectorDialog : public QDialog
 {
     Q_OBJECT
 public:
