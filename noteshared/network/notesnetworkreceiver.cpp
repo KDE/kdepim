@@ -75,7 +75,7 @@ NotesNetworkReceiver::NotesNetworkReceiver(QTcpSocket *s)
     // Setup the communications
     connect(m_sock, &QTcpSocket::readyRead, this, &NotesNetworkReceiver::slotDataAvailable);
     connect(m_sock, &QTcpSocket::disconnected, this, &NotesNetworkReceiver::slotConnectionClosed);
-    connect(m_sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotError(QAbstractSocket::SocketError)));
+    connect(m_sock, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error), this, &NotesNetworkReceiver::slotError);
 
     // Setup the timer
     m_timer = new QTimer(this);

@@ -64,8 +64,7 @@ void LocalResourceCreator::createInstance()
     Akonadi::AgentType notesType = Akonadi::AgentManager::self()->type(akonadiNotesInstanceName());
 
     Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(notesType);
-    connect(job, SIGNAL(result(KJob*)),
-            this, SLOT(slotInstanceCreated(KJob*)));
+    connect(job, &Akonadi::AgentInstanceCreateJob::result, this, &LocalResourceCreator::slotInstanceCreated);
 
     job->start();
 }
@@ -99,7 +98,7 @@ void LocalResourceCreator::slotInstanceCreated(KJob *job)
     instance.reconfigure();
 
     Akonadi::ResourceSynchronizationJob *syncJob = new Akonadi::ResourceSynchronizationJob(instance, this);
-    connect(syncJob, SIGNAL(result(KJob*)), SLOT(slotSyncDone(KJob*)));
+    connect(syncJob, &Akonadi::ResourceSynchronizationJob::result, this, &LocalResourceCreator::slotSyncDone);
     syncJob->start();
 }
 
