@@ -70,6 +70,8 @@ public:
     void setTo( const QString &to );
     QString to() const;
 
+    bool operator ==(const SendLaterInfo &other) const;
+
 private:
     QString mTo;
     QString mSubject;
