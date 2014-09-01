@@ -12,7 +12,7 @@ include_directories(
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_sendlater_agent\")
 
 add_subdirectory(tests)
-
+add_subdirectory(autotests)
 set(sendlaterlib_SRCS 
     sendlaterinfo.cpp
     sendlaterdialog.cpp

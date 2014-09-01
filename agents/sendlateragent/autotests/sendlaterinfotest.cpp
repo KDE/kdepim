@@ -20,6 +20,7 @@
 #include <qtest.h>
 #include <QDateTime>
 #include <KConfigGroup>
+#include <KGlobal>
 
 SendLaterInfoTest::SendLaterInfoTest()
 {
