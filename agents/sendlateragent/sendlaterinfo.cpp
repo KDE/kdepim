@@ -138,6 +138,18 @@ QString SendLaterInfo::to() const
     return mTo;
 }
 
+bool SendLaterInfo::operator ==(const SendLaterInfo &other) const
+{
+    return (itemId() == other.itemId()) &&
+            (recurrenceUnit() == other.recurrenceUnit()) &&
+            (recurrenceEachValue() == other.recurrenceEachValue()) &&
+            (isRecurrence() == other.isRecurrence()) &&
+            (dateTime() == other.dateTime()) &&
+            (lastDateTimeSend() == other.lastDateTimeSend()) &&
+            (subject() == other.subject()) &&
+            (to() == other.to());
+}
+
 void SendLaterInfo::readConfig(const KConfigGroup &config)
 {
     if (config.hasKey(QLatin1String("lastDateTimeSend"))) {

@@ -18,6 +18,8 @@
 #include "sendlaterinfotest.h"
 #include "../sendlaterinfo.h"
 #include <qtest_kde.h>
+#include <QDateTime>
+#include <KConfigGroup>
 
 SendLaterInfoTest::SendLaterInfoTest()
 {
@@ -35,6 +37,28 @@ void SendLaterInfoTest::shouldHaveDefaultValue()
     QVERIFY(!info.isValid());
     QCOMPARE(info.recurrenceUnit(), SendLater::SendLaterInfo::Days);
     QCOMPARE(info.recurrenceEachValue(), 1);
+}
+
+void SendLaterInfoTest::shouldRestoreFromSettings()
+{
+    SendLater::SendLaterInfo info;
+    const QString to = QLatin1String("kde.org");
+    info.setTo(to);
+    info.setItemId(Akonadi::Item::Id(42));
+    info.setSubject(QLatin1String("Subject"));
+    info.setRecurrence(true);
+    info.setRecurrenceEachValue(5);
+    info.setRecurrenceUnit(SendLater::SendLaterInfo::Years);
+    const QDate date(2014,1,1);
+    info.setDateTime(QDateTime(date));
+    info.setLastDateTimeSend(QDateTime(date));
+
+    KConfigGroup grp(KGlobal::config(), "testsettings");
+    info.writeConfig(grp);
+
+    SendLater::SendLaterInfo restoreInfo(grp);
+    QCOMPARE(info, restoreInfo);
+
 }
 
 QTEST_KDEMAIN(SendLaterInfoTest, NoGUI)
