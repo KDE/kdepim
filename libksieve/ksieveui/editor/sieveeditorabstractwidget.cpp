@@ -21,7 +21,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KFileDialog>
+#include <QFileDialog>
 
 #include <QTextStream>
 #include <QPointer>
@@ -62,19 +62,16 @@ void SieveEditorAbstractWidget::slotImport()
             return;
         }
     }
-    QUrl url;
     const QString filter = i18n("*.siv|sieve files (*.siv)\n*|all files (*)");
-    QPointer<KFileDialog> fdlg(new KFileDialog(url, filter, this));
-    fdlg->setWindowTitle(i18n("Import Script Sieve"));
-    fdlg->setMode(KFile::File);
-    fdlg->setOperationMode(KFileDialog::Opening);
+    QPointer<QFileDialog> fdlg(new QFileDialog(this, i18n("Import Script Sieve"), QString(), filter));
+    fdlg->setFileMode(QFileDialog::ExistingFile);
     if (fdlg->exec() == QDialog::Accepted && fdlg) {
-        const QString fileName = fdlg->selectedFile();
-        if (!loadFromFile(fileName)) {
+        const QStringList fileNames = fdlg->selectedFiles();
+        if (!loadFromFile(fileNames.at(0))) {
             KMessageBox::error(this,
                                i18n("Could not load the file %1:\n"
                                     "\"%2\" is the detailed error description.",
-                                    fileName,
+                                    fileNames.at(0),
                                     QString::fromLocal8Bit(strerror(errno))),
                                i18n("Sieve Editor Error"));
         }
