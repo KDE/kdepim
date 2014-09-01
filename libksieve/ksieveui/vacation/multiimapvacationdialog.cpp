@@ -33,36 +33,20 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace KSieveUi;
 MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption(i18n("Configure \"Out of Office\" Replies"));
+    setWindowTitle(i18n("Configure \"Out of Office\" Replies"));
 
     KWindowSystem::setIcons(winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop), IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small), IconSize(KIconLoader::Small)));
 
-    mStackedWidget = new QStackedWidget;
-    setMainWidget(mStackedWidget);
-    mTabWidget = new QTabWidget;
-    mStackedWidget->addWidget(mTabWidget);
-    QWidget *w = new QWidget;
-    QVBoxLayout *vbox = new QVBoxLayout;
-    w->setLayout(vbox);
-    QLabel *lab = new QLabel(i18n("KMail's Out of Office Reply functionality relies on "
-                                  "server-side filtering. You have not yet configured an "
-                                  "IMAP server for this. "
-                                  "You can do this on the \"Filtering\" tab of the IMAP "
-                                  "account configuration."));
-    vbox->addWidget(lab);
-    vbox->addStretch();
-    lab->setWordWrap(true);
-    mStackedWidget->addWidget(w);
-    mStackedWidget->setCurrentIndex(0);
     init();
     readConfig();
-    connect(this, &MultiImapVacationDialog::okClicked, this, &MultiImapVacationDialog::slotOkClicked);
-    connect(this, &MultiImapVacationDialog::defaultClicked, this, &MultiImapVacationDialog::slotDefaultClicked);
 }
 
 MultiImapVacationDialog::~MultiImapVacationDialog()
@@ -87,6 +71,25 @@ QList<VacationCreateScriptJob *> MultiImapVacationDialog::listCreateJob() const
 
 void MultiImapVacationDialog::init()
 {
+    mStackedWidget = new QStackedWidget;
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mStackedWidget);
+    mTabWidget = new QTabWidget;
+    mStackedWidget->addWidget(mTabWidget);
+    QWidget *w = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    w->setLayout(vbox);
+    QLabel *lab = new QLabel(i18n("KMail's Out of Office Reply functionality relies on "
+                                  "server-side filtering. You have not yet configured an "
+                                  "IMAP server for this. "
+                                  "You can do this on the \"Filtering\" tab of the IMAP "
+                                  "account configuration."));
+    vbox->addWidget(lab);
+    vbox->addStretch();
+    lab->setWordWrap(true);
+    mStackedWidget->addWidget(w);
+    mStackedWidget->setCurrentIndex(0);
     bool foundOneImap = false;
     const Akonadi::AgentInstance::List instances = KSieveUi::Util::imapAgentInstances();
     foreach (const Akonadi::AgentInstance &instance, instances) {
@@ -101,16 +104,31 @@ void MultiImapVacationDialog::init()
             foundOneImap = true;
         }
     }
+    QDialogButtonBox *buttonBox = 0;
     if (foundOneImap) {
-        setButtons(Ok | Cancel | Default);
-        setDefaultButton(Ok);
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+        QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+        okButton->setDefault(true);
+        okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOkClicked()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(slotCanceled()));
+        connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(slotDefaultClicked));
+        okButton->setDefault(true);
     } else {
         mStackedWidget->setCurrentIndex(1);
-        setButtons(Close);
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOkClicked()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(slotCanceled()));
     }
+    mainLayout->addWidget(buttonBox);
     if (mTabWidget->count() <= 1) {
         mTabWidget->tabBar()->hide();
     }
+}
+
+void MultiImapVacationDialog::slotCanceled()
+{
+    Q_EMIT cancelClicked();
 }
 
 void MultiImapVacationDialog::createPage(const QString &serverName, const QUrl &url)
@@ -149,6 +167,7 @@ void MultiImapVacationDialog::slotOkClicked()
             }
         }
     }
+    Q_EMIT okClicked();
 }
 
 void MultiImapVacationDialog::slotDefaultClicked()
@@ -160,3 +179,4 @@ void MultiImapVacationDialog::slotDefaultClicked()
         }
     }
 }
+

@@ -18,7 +18,7 @@
 #ifndef MULTIIMAPVACATIONDIALOG_H
 #define MULTIIMAPVACATIONDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include <QUrl>
 #include "ksieveui_export.h"
 
@@ -27,7 +27,7 @@ class QStackedWidget;
 namespace KSieveUi
 {
 class VacationCreateScriptJob;
-class KSIEVEUI_EXPORT MultiImapVacationDialog : public KDialog
+class KSIEVEUI_EXPORT MultiImapVacationDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -38,9 +38,14 @@ public:
 
     void switchToServerNamePage(const QString &serverName);
 
+Q_SIGNALS:
+    void okClicked();
+    void cancelClicked();
+
 private slots:
     void slotOkClicked();
     void slotDefaultClicked();
+    void slotCanceled();
 
 private:
     void createPage(const QString &serverName, const QUrl &url);

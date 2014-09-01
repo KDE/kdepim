@@ -68,7 +68,11 @@ void VacationManager::slotEditVacation(const QString &serverName)
 
 void VacationManager::slotDialogCanceled()
 {
-    mMultiImapVacationDialog->delayedDestruct();
+    if (mMultiImapVacationDialog->isVisible()) {
+        mMultiImapVacationDialog->hide();
+    }
+
+    mMultiImapVacationDialog->deleteLater();
     mMultiImapVacationDialog = 0;
 }
 
@@ -79,6 +83,11 @@ void VacationManager::slotDialogOk()
         connect(job, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)));
         job->start();
     }
-    mMultiImapVacationDialog->delayedDestruct();
+    if (mMultiImapVacationDialog->isVisible()) {
+        mMultiImapVacationDialog->hide();
+    }
+
+    mMultiImapVacationDialog->deleteLater();
+
     mMultiImapVacationDialog = 0;
 }
