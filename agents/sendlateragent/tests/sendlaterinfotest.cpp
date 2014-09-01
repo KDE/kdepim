@@ -17,7 +17,7 @@
 
 #include "sendlaterinfotest.h"
 #include "../sendlaterinfo.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QDateTime>
 #include <KConfigGroup>
 
@@ -61,4 +61,4 @@ void SendLaterInfoTest::shouldRestoreFromSettings()
 
 }
 
-QTEST_KDEMAIN(SendLaterInfoTest, NoGUI)
+QTEST_MAIN(SendLaterInfoTest)
