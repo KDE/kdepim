@@ -47,6 +47,8 @@ SendLaterInfo::SendLaterInfo(const SendLaterInfo &info)
     mRecurrence = info.isRecurrence();
     mSubject = info.subject();
     mTo = info.to();
+    mDateTime = info.dateTime();
+    mLastDateTimeSend = info.lastDateTimeSend();
 }
 
 SendLaterInfo::~SendLaterInfo()
