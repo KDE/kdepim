@@ -31,6 +31,7 @@ private Q_SLOTS:
     void shoudBeNotValid();
     void shoudBeValidEvenIfSubjectIsEmpty();
     void shouldRestoreFromSettings();
+    void shouldCopyReminderInfo();
 };
 
 #endif // FOLLOWUPREMINDERINFOTEST_H
