@@ -34,8 +34,7 @@ SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
     setTabsClosable(true);
     connect(this, SIGNAL(tabCloseRequested(int)), SIGNAL(tabCloseRequestedIndex(int)));
     setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(slotTabContextMenuRequest(QPoint)));
+    connect(this, &SieveEditorTabWidget::customContextMenuRequested, this, &SieveEditorTabWidget::slotTabContextMenuRequest);
 }
 
 SieveEditorTabWidget::~SieveEditorTabWidget()
