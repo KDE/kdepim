@@ -32,6 +32,9 @@
 #include <QtSvg/QSvgRenderer>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace Kleo::KioAvoidance;
 
@@ -267,24 +270,20 @@ class KIconDialog::KIconDialogPrivate
  */
 
 KIconDialog::KIconDialog(QWidget *parent)
-    : KDialog(parent), d(new KIconDialogPrivate(this))
+    : QDialog(parent), d(new KIconDialogPrivate(this))
 {
     setModal( true );
-    setCaption( i18n("Select Icon") );
-    setButtons( Ok | Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n("Select Icon") );
 
     d->mpLoader = KIconLoader::global();
     d->init();
 }
 
 KIconDialog::KIconDialog(KIconLoader *loader, QWidget *parent)
-    : KDialog(parent), d(new KIconDialogPrivate(this))
+    : QDialog(parent), d(new KIconDialogPrivate(this))
 {
     setModal( true );
-    setCaption( i18n("Select Icon") );
-    setButtons( Ok | Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n("Select Icon") );
 
     d->mpLoader = loader;
     d->init();
@@ -292,12 +291,25 @@ KIconDialog::KIconDialog(KIconLoader *loader, QWidget *parent)
 
 void KIconDialog::KIconDialogPrivate::init()
 {
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
+
     mGroupOrSize = KIconLoader::Desktop;
     mContext = KIconLoader::Any;
     mFileList = KGlobal::dirs()->findAllResources("appicon", QLatin1String("*.png"));
 
     QWidget *main = new QWidget(q);
-    q->setMainWidget(main);
+    mainLayout->addWidget(main);
+    mainLayout->addWidget(buttonBox);
+
 
     QVBoxLayout *top = new QVBoxLayout(main);
     top->setMargin(0);
@@ -310,7 +322,7 @@ void KIconDialog::KIconDialogPrivate::init()
     top->addWidget(bgroup);
 
     QGridLayout *grid = new QGridLayout();
-    grid->setSpacing(KDialog::spacingHint());
+//TODO PORT QT5     grid->setSpacing(QDialog::spacingHint());
     bgroup->layout()->addItem(grid);
 
     mpSystemIcons = new QRadioButton(i18n("S&ystem icons:"), bgroup);
@@ -333,7 +345,7 @@ void KIconDialog::KIconDialogPrivate::init()
     //
     QHBoxLayout *searchLayout = new QHBoxLayout();
     searchLayout->setMargin(0);
-    searchLayout->setSpacing(KDialog::spacingHint());
+//TODO PORT QT5     searchLayout->setSpacing(QDialog::spacingHint());
     top->addLayout(searchLayout);
 
     QLabel *searchLabel = new QLabel(i18n("&Search:"), main);
@@ -412,7 +424,7 @@ void KIconDialog::KIconDialogPrivate::init()
 
     // Make the dialog a little taller
     q->incrementInitialSize(QSize(0,100));
-    connect(q, SIGNAL(okClicked()), q, SLOT(slotOk()));
+    connect(q, SIGNAL(clicked()), q, SLOT(slotOk()));
 }
 
 
@@ -424,7 +436,7 @@ KIconDialog::~KIconDialog()
 void KIconDialog::KIconDialogPrivate::_k_slotAcceptIcons()
 {
     custom.clear();
-    q->slotOk();
+    q->accept();
 }
 
 void KIconDialog::KIconDialogPrivate::showIcons()
@@ -564,7 +576,7 @@ void KIconDialog::slotOk()
     }
 
     emit newIconName(name);
-    KDialog::accept();
+    QDialog::accept();
 }
 
 QString KIconDialog::getIcon(KIconLoader::Group group, KIconLoader::Context context,
@@ -574,7 +586,7 @@ QString KIconDialog::getIcon(KIconLoader::Group group, KIconLoader::Context cont
     KIconDialog dlg(parent);
     dlg.setup( group, context, strictIconSize, iconSize, user );
     if (!caption.isNull())
-        dlg.setCaption(caption);
+        dlg.setWindowTitle(caption);
 
     return dlg.openDialog();
 }

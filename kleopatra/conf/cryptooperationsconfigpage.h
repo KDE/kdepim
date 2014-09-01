@@ -34,7 +34,6 @@
 #define KLEOPATRA_CONFIG_CRYPTOOPERATIONSCONFIGPAGE_H
 
 #include <kcmodule.h>
-class KComponentData;
 namespace Kleo {
 namespace Config {
 
@@ -46,7 +45,7 @@ namespace Config {
     class CryptoOperationsConfigurationPage : public KCModule {
         Q_OBJECT
     public:
-        explicit CryptoOperationsConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
+        explicit CryptoOperationsConfigurationPage( QWidget *parent=0, const QVariantList &args=QVariantList() );
 
         /* reimp */ void load();
         /* reimp */ void save();

@@ -42,7 +42,7 @@
 #include <KAboutData>
 
 #include <kmessagebox.h>
-#include <kdebug.h>
+#include <QDebug>
 
 #include <QLineEdit>
 #include <QLabel>
@@ -131,7 +131,7 @@ void KeyGenerator::slotStartKeyGeneration() {
     proto = Kleo::CryptoBackendFactory::instance()->smime();
   assert( proto );
 
-  kDebug(5150) <<"Using protocol" << proto->name();
+  qDebug() <<"Using protocol" << proto->name();
 
   Kleo::KeyGenerationJob * job = proto->keyGenerationJob();
   assert( job );

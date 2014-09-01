@@ -50,8 +50,8 @@ Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidge
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
   QPushButton *user1Button = new QPushButton;
   mButtonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-  connect(mButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(mButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(mButtonBox, &QDialogButtonBox::accepted, this, &CryptoConfigDialog::accept);
+  connect(mButtonBox, &QDialogButtonBox::rejected, this, &CryptoConfigDialog::reject);
   okButton->setDefault(true);
   setModal( true );
   KGuiItem::assign(user1Button, KGuiItem(i18n("&Reset")));
@@ -61,7 +61,7 @@ Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidge
   mainLayout->addWidget(mMainWidget);
   mainLayout->addWidget(mButtonBox);
 
-  connect( mMainWidget, SIGNAL(changed()), SLOT(slotChanged()) );
+  connect(mMainWidget, &CryptoConfigModule::changed, this, &CryptoConfigDialog::slotChanged);
   mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
   if ( mMainWidget->hasError() ) {
       mButtonBox->button(QDialogButtonBox::RestoreDefaults)->setVisible(false);
@@ -72,11 +72,11 @@ Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidge
 
   // Automatically assign accelerators
   KAcceleratorManager::manage( this );
-  connect(user1Button,SIGNAL(clicked()),this,SLOT(slotUser1()));
-  connect(mButtonBox->button(QDialogButtonBox::Cancel),SIGNAL(clicked()),this,SLOT(slotCancel()));
-  connect(okButton,SIGNAL(clicked()),this,SLOT(slotOk()));
-  connect(mButtonBox->button(QDialogButtonBox::RestoreDefaults),SIGNAL(clicked()),this,SLOT(slotDefault()));
-  connect(this,SIGNAL(applyClicked()),this,SLOT(slotApply()));
+  connect(user1Button, &QPushButton::clicked, this, &CryptoConfigDialog::slotUser1);
+  connect(mButtonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &CryptoConfigDialog::slotCancel);
+  connect(okButton, &QPushButton::clicked, this, &CryptoConfigDialog::slotOk);
+  connect(mButtonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &CryptoConfigDialog::slotDefault);
+  connect(mButtonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &CryptoConfigDialog::slotApply);
 }
 
 void Kleo::CryptoConfigDialog::slotOk()

@@ -40,7 +40,6 @@
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
 #include <KLocalizedString>
-#include <kglobal.h>
 #include <kiconloader.h>
 #include <QDebug>
 

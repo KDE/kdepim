@@ -38,7 +38,7 @@
 #include <KAboutData>
 
 #include <kmessagebox.h>
-#include <kdebug.h>
+#include <QDebug>
 
 #include <QStringList>
 #include <QApplication>
@@ -115,7 +115,7 @@ void GnuPGViewer::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatu
 
 int main( int argc, char** argv ) {
   if ( argc < 3 ) {
-    kDebug(5150) <<"Need at least two arguments";
+    qDebug() <<"Need at least two arguments";
     return 1;
   }
   KAboutData aboutData( QLatin1String("test_gnupgprocessbase"), i18n("GnuPGProcessBase Test"), QLatin1String("0.1") );

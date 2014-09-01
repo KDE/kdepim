@@ -116,8 +116,8 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &KeyApprovalDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &KeyApprovalDialog::reject);
   okButton->setDefault(true);
   assert( !recipients.empty() );
 
@@ -176,7 +176,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
     cb->addItems( prefs );
     glay->addWidget( cb, row, 1 );
     cb->setCurrentIndex( pref2cb( it->pref ) );
-    connect( cb, SIGNAL(activated(int)), SLOT(slotPrefsChanged()) );
+    connect(cb, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &KeyApprovalDialog::slotPrefsChanged);
     d->preferences.push_back( cb );
   }
 

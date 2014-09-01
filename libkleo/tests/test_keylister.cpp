@@ -40,7 +40,7 @@
 
 #include <KAboutData>
 
-#include <kdebug.h>
+#include <QDebug>
 
 #include <QMessageBox>
 #include <QStringList>
@@ -101,7 +101,7 @@ CertListView::CertListView( QWidget * parent, Qt::WindowFlags f )
 CertListView::~CertListView() {}
 
 void CertListView::slotResult( const GpgME::KeyListResult & result ) {
-  kDebug(5150) <<"CertListView::slotResult()";
+  qDebug() <<"CertListView::slotResult()";
   if ( result.isNull() )
     QMessageBox::information( this, "Key Listing Result", "KeyListResult is null!" );
   else if ( result.error() )
@@ -114,7 +114,7 @@ void CertListView::slotResult( const GpgME::KeyListResult & result ) {
 }
 
 void CertListView::slotStart() {
-  kDebug(5150) <<"CertListView::slotStart()";
+  qDebug() <<"CertListView::slotStart()";
   Kleo::KeyListJob * job = Kleo::CryptoBackendFactory::instance()->smime()->keyListJob( false );
   assert( job );
   QObject::connect( job, SIGNAL(nextKey(GpgME::Key)),

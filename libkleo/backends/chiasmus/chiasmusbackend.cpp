@@ -41,7 +41,7 @@
 #include <KLocalizedString>
 #include <kconfig.h>
 #include <kshell.h>
-#include <kdebug.h>
+#include <QDebug>
 #include <kconfiggroup.h>
 
 #include <QStringList>
@@ -409,7 +409,7 @@ public:
       return new ChiasmusJob( ChiasmusJob::Encrypt );
     if ( qstricmp( type, "x-decrypt" ) == 0 && args.size() == 0 )
       return new ChiasmusJob( ChiasmusJob::Decrypt );
-    kDebug(5150) <<"ChiasmusBackend::Protocol: tried to instantiate unknown job type \""
+    qDebug() <<"ChiasmusBackend::Protocol: tried to instantiate unknown job type \""
                   << type << "\"";
 
     return 0;

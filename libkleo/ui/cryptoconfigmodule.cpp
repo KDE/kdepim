@@ -41,8 +41,6 @@
 #include <KLocalizedString>
 #include "kleo_ui_debug.h"
 #include <kiconloader.h>
-#include <kglobal.h>
-#include <kcomponentdata.h>
 #include <qicon.h>
 #include <KDialog>
 #include <QSpinBox>

@@ -43,13 +43,13 @@
 #include <QDebug>
 #include <kconfig.h>
 #include <knuminput.h>
-#include <kdialog.h>
-#include <kcomponentdata.h>
+#include <QDialog>
 
 #include <QLabel>
 #include <qdatetimeedit.h>
 #include <QCheckBox>
 #include <QLayout>
+#include <KConfigGroup>
 
 using namespace Kleo;
 
@@ -149,18 +149,18 @@ static const char s_addnewservers_componentName[] = "dirmngr";
 static const char s_addnewservers_groupName[] = "LDAP";
 static const char s_addnewservers_entryName[] = "add-servers";
 
-DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
-    : KCModule( /*instance,*/ parent, args )
+DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget *parent, const QVariantList &args )
+    : KCModule( parent, args )
 {
   mConfig = Kleo::CryptoBackendFactory::instance()->config();
   QGridLayout * glay = new QGridLayout( this );
-  glay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   glay->setSpacing( QDialog::spacingHint() );
   glay->setMargin( 0 );
 
   int row = 0;
   mWidget = new Kleo::DirectoryServicesWidget( this );
   if ( QLayout * l = mWidget->layout() ) {
-      l->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5       l->setSpacing( QDialog::spacingHint() );
       l->setMargin( 0 );
   }
   glay->addWidget( mWidget, row, 0, 1, 3 );
@@ -364,7 +364,7 @@ extern "C"
   Q_DECL_EXPORT KCModule *create_kleopatra_config_dirserv( QWidget *parent=0, const QVariantList &args=QVariantList() )
   {
     DirectoryServicesConfigurationPage *page =
-      new DirectoryServicesConfigurationPage( KComponentData( "kleopatra" ), parent, args );
+      new DirectoryServicesConfigurationPage( parent, args );
     page->setObjectName( QLatin1String("kleopatra_config_dirserv") );
     return page;
   }

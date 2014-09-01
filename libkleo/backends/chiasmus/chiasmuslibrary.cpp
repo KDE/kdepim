@@ -38,7 +38,7 @@
 #include "kleo/cryptoconfig.h"
 
 #include <klibloader.h>
-#include <kdebug.h>
+#include <QDebug>
 #include <KLocalizedString>
 
 
@@ -73,7 +73,7 @@ Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus( QString * reas
     if ( reason )
       *reason = i18n( "Failed to load %1: %2",
                       libfile, mXiaLibrary->errorString() );
-    kDebug(5150) <<"ChiasmusLibrary: loading \"" << libfile
+    qDebug() <<"ChiasmusLibrary: loading \"" << libfile
                   << "\" failed:" << mXiaLibrary->errorString();
     delete mXiaLibrary;
     mXiaLibrary = 0;
@@ -84,7 +84,7 @@ Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus( QString * reas
     if ( reason )
       *reason = i18n( "Failed to load %1: %2",
                       libfile, i18n( "Library does not contain the symbol \"Chiasmus\"." ) );
-    kDebug(5150) <<"ChiasmusLibrary: loading \"" << libfile
+    qDebug() <<"ChiasmusLibrary: loading \"" << libfile
                   << "\" failed: " << "Library does not contain the symbol \"Chiasmus\".";
     delete mXiaLibrary;
     mXiaLibrary = 0;

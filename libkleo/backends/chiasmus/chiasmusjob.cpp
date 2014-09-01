@@ -40,7 +40,7 @@
 
 #include <kshell.h>
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <QDebug>
 #include <kmessagebox.h>
 
 #include <QTimer>
@@ -157,7 +157,7 @@ GpgME::Error Kleo::ChiasmusJob::finished() {
 }
 
 void Kleo::ChiasmusJob::showChiasmusOutput() {
-  kDebug(5150) ;
+  qDebug() ;
   if ( mStderr.isEmpty() )
     return;
   KMessageBox::information( 0 /*how to get a parent widget?*/,

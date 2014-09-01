@@ -39,7 +39,6 @@
 
 #include <KLocalizedString>
 #include <kconfig.h>
-#include <kglobal.h>
 #include <KPluralHandlingSpinBox>
 
 #include <QVBoxLayout>

@@ -17,7 +17,7 @@
 #include <QtCore/QStringList>
 #include <QPushButton>
 
-#include <kdialog.h>
+#include <QDialog>
 #include <QListWidget>
 
 class KIconLoader;
@@ -105,7 +105,7 @@ private:
  *
  * @short An icon selection dialog.
  */
-class KIconDialog: public KDialog
+class KIconDialog: public QDialog
 {
     Q_OBJECT
 

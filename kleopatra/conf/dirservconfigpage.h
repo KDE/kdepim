@@ -41,7 +41,6 @@ class QCheckBox;
 class QLabel;
 class QTimeEdit;
 class QSpinBox;
-class KComponentData;
 namespace Kleo {
   class CryptoConfig;
   class CryptoConfigEntry;
@@ -56,7 +55,7 @@ namespace Kleo {
 class DirectoryServicesConfigurationPage : public KCModule {
   Q_OBJECT
 public:
-  explicit DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
+  explicit DirectoryServicesConfigurationPage( QWidget *parent=0, const QVariantList &args=QVariantList() );
 
   /* reimp */ void load();
   /* reimp */ void save();

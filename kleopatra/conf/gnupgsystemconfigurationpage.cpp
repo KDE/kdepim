@@ -39,12 +39,11 @@
 #include <kleo/cryptobackendfactory.h>
 
 #include <QVBoxLayout>
-#include <kcomponentdata.h>
 
 using namespace Kleo::Config;
 
-GnuPGSystemConfigurationPage::GnuPGSystemConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
-    : KCModule( /*instance,*/ parent, args )
+GnuPGSystemConfigurationPage::GnuPGSystemConfigurationPage( QWidget *parent, const QVariantList &args )
+    : KCModule( parent, args )
 {
   QVBoxLayout * lay = new QVBoxLayout( this );
   lay->setMargin( 0 );
@@ -96,7 +95,7 @@ void GnuPGSystemConfigurationPage::defaults()
 
 extern "C" Q_DECL_EXPORT KCModule *create_kleopatra_config_gnupgsystem( QWidget * parent, const QVariantList & args ) {
     GnuPGSystemConfigurationPage * page =
-        new GnuPGSystemConfigurationPage( KComponentData( "kleopatra" ), parent, args );
+        new GnuPGSystemConfigurationPage( parent, args );
     page->setObjectName( QLatin1String("kleopatra_config_gnupgsystem") );
     return page;
 }

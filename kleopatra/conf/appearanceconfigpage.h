@@ -34,7 +34,6 @@
 #define KLEOPATRA_CONFIG_APPEARANCECONFIGPAGE_H
 
 #include <kcmodule.h>
-class KComponentData;
 namespace Kleo {
 namespace Config {
 
@@ -46,7 +45,7 @@ namespace Config {
     class AppearanceConfigurationPage : public KCModule {
         Q_OBJECT
     public:
-        explicit AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
+        explicit AppearanceConfigurationPage( QWidget *parent=0, const QVariantList &args=QVariantList() );
 
         /* reimp */ void load();
         /* reimp */ void save();
