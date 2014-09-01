@@ -22,6 +22,7 @@
 
 class SendLaterInfoTest : public QObject
 {
+    Q_OBJECT
 public:
     SendLaterInfoTest();
 

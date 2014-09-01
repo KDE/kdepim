@@ -16,7 +16,7 @@
 */
 
 #include "sendlaterinfotest.h"
-
+#include "../sendlaterinfo.h"
 #include <qtest_kde.h>
 
 SendLaterInfoTest::SendLaterInfoTest()
@@ -25,7 +25,16 @@ SendLaterInfoTest::SendLaterInfoTest()
 
 void SendLaterInfoTest::shouldHaveDefaultValue()
 {
-
+    SendLater::SendLaterInfo info;
+    QCOMPARE(info.itemId(), Akonadi::Item::Id(-1));
+    QCOMPARE(info.isRecurrence(), false);
+    QVERIFY(!info.dateTime().isValid());
+    QVERIFY(!info.lastDateTimeSend().isValid());
+    QCOMPARE(info.to(), QString());
+    QCOMPARE(info.subject(), QString());
+    QVERIFY(!info.isValid());
+    QCOMPARE(info.recurrenceUnit(), SendLater::SendLaterInfo::Days);
+    QCOMPARE(info.recurrenceEachValue(), 1);
 }
 
 QTEST_KDEMAIN(SendLaterInfoTest, NoGUI)
