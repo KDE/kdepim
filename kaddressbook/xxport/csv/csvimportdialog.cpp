@@ -48,6 +48,7 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 #include <QHeaderView>
+#include <QStandardPaths>
 
 enum {
   Local = 0,
@@ -769,4 +770,3 @@ void CSVImportDialog::modelFinishedLoading()
 }
 
 #include <csvimportdialog.moc>
-#include <QStandardPaths>

@@ -51,10 +51,8 @@ FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient,
 {
     setFocusPolicy( Qt::NoFocus );
 
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
-             this, SLOT(slotGeneralFontChanged()));
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-             this, SLOT(slotGeneralPaletteChanged()));
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &FavoriteCollectionWidget::slotGeneralFontChanged);
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &FavoriteCollectionWidget::slotGeneralPaletteChanged);
 
     readConfig();
 

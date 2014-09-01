@@ -28,7 +28,7 @@
 #include <KCalCore/Journal>
 #include <KCalCore/Todo>
 
-#include <KDialog>
+#include <QDialog>
 #include <KIconButton>
 #include <QLineEdit>
 #include <KLocalizedString>
@@ -37,6 +37,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <KConfigGroup>
 
 using namespace Akonadi;
 using namespace CalendarSupport;
@@ -48,12 +49,12 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   setPageTitle( i18nc( "@title:tab General settings for a folder.", "General" ) );
 
   QVBoxLayout *topLayout = new QVBoxLayout( this );
-  topLayout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   topLayout->setSpacing( QDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
   QHBoxLayout *hbox = new QHBoxLayout();
   topLayout->addItem( hbox );
-  hbox->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   hbox->setSpacing( QDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18nc( "@label:textbox Name of the folder.", "&Name:" ), this );
   hbox->addWidget( label );
@@ -70,7 +71,7 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   // should replies to mails in this folder be kept in this same folder?
   hbox = new QHBoxLayout();
   topLayout->addItem( hbox );
-  hbox->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   hbox->setSpacing( QDialog::spacingHint() );
 
   mBlockAlarmsCheckBox = new QCheckBox( i18nc( "@option:check", "Block reminders locally" ), this );
   mBlockAlarmsCheckBox->setToolTip(
@@ -85,7 +86,7 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
 #ifndef KDEPIM_MOBILE_UI
   hbox = new QHBoxLayout();
   topLayout->addItem( hbox );
-  hbox->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   hbox->setSpacing( QDialog::spacingHint() );
   mIconCheckBox = new QCheckBox( i18nc( "@option:check", "&Use custom icon:" ), this );
   mIconCheckBox->setToolTip(
     i18nc( "@info:tooltip", "Set a custom icon" ) );

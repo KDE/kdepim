@@ -45,7 +45,7 @@ void FollowUpReminderJob::start()
     job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotItemFetchJobDone(KJob*)) );
+    connect(job, &Akonadi::ItemFetchJob::result, this, &FollowUpReminderJob::slotItemFetchJobDone);
 }
 
 void FollowUpReminderJob::setItem(const Akonadi::Item &item)

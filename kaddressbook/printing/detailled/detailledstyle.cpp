@@ -38,6 +38,7 @@
 #include <QTextDocument>
 #include <KSharedConfig>
 #include <KLocale>
+#include <QLocale>
 
 using namespace KABPrinting;
 
@@ -86,8 +87,7 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
             name += QString::fromLatin1( " (%1)" ).arg( content.join( QLatin1String( ", " ) ) );
         }
 
-        const QString birthday = KLocale::global()->formatDate( contact.birthday().date(),
-                                                                KLocale::ShortDate );
+        const QString birthday = QLocale().toString( contact.birthday().date(), QLocale::ShortFormat );
 
         ContactBlock::List blocks;
 
