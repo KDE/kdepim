@@ -110,10 +110,14 @@ void FollowUpReminderManager::answerReceived(const QString &from)
 QString FollowUpReminderManager::printDebugInfo()
 {
     QString infoStr;
-    Q_FOREACH (FollowUpReminder::FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
-        if (!infoStr.isEmpty())
-            infoStr += QLatin1Char('\n');
-        infoStr += infoToStr(info);
+    if (mFollowUpReminderInfoList.isEmpty()) {
+        infoStr = QLatin1String("No mail");
+    } else {
+        Q_FOREACH (FollowUpReminder::FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
+            if (!infoStr.isEmpty())
+                infoStr += QLatin1Char('\n');
+            infoStr += infoToStr(info);
+        }
     }
     return infoStr;
 }
