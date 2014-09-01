@@ -11,3 +11,4 @@ Migrate configrc done:
 - agent/mailfilteragent (akonadi_mailfilter_agentrc)
 - agent/archivemailagent (akonadi_archivemail_agentrc, akonadi_archivemail_agent.notifyrc)
 - kalarm (kalarmrc, kalarmui.rc)
+- kmail (kmail_part.rc  kmcomposerui.rc  kmmainwin.rc  kmreadermainwin.rc, kmail2rc, kmail2.notifyrc) #TODO migrate autosave folder
