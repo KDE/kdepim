@@ -68,10 +68,11 @@ void SendLaterManager::load(bool forcereload)
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
         SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);
-        if (info->isValid())
+        if (info->isValid()) {
             mListSendLaterInfo.append(info);
-        else
+        } else {
             delete info;
+        }
     }
     createSendInfoList();
 }
@@ -222,10 +223,14 @@ void SendLaterManager::removeLaterInfo(SendLater::SendLaterInfo *info)
 QString SendLaterManager::printDebugInfo()
 {
     QString infoStr;
-    Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
-        if (!infoStr.isEmpty())
-            infoStr += QLatin1Char('\n');
-        infoStr += infoToStr(info);
+    if (mListSendLaterInfo.isEmpty()) {
+        infoStr = QLatin1String("No mail");
+    } else {
+        Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
+            if (!infoStr.isEmpty())
+                infoStr += QLatin1Char('\n');
+            infoStr += infoToStr(info);
+        }
     }
     return infoStr;
 }
