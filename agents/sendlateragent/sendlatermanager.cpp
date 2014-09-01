@@ -222,10 +222,14 @@ void SendLaterManager::removeLaterInfo(SendLater::SendLaterInfo *info)
 QString SendLaterManager::printDebugInfo()
 {
     QString infoStr;
-    Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
-        if (!infoStr.isEmpty())
-            infoStr += QLatin1Char('\n');
-        infoStr += infoToStr(info);
+    if (mListSendLaterInfo.isEmpty()) {
+        infoStr = QLatin1String("No mail");
+    } else {
+        Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
+            if (!infoStr.isEmpty())
+                infoStr += QLatin1Char('\n');
+            infoStr += infoToStr(info);
+        }
     }
     return infoStr;
 }
