@@ -160,10 +160,14 @@ void ArchiveMailManager::resume()
 QString ArchiveMailManager::printCurrentListInfo()
 {
     QString infoStr;
-    Q_FOREACH (ArchiveMailInfo *info, mListArchiveInfo) {
-        if (!infoStr.isEmpty())
-            infoStr += QLatin1Char('\n');
-        infoStr += infoToStr(info);
+    if (mListArchiveInfo.isEmpty()) {
+        infoStr = QLatin1String("No archive in queue");
+    } else {
+        Q_FOREACH (ArchiveMailInfo *info, mListArchiveInfo) {
+            if (!infoStr.isEmpty())
+                infoStr += QLatin1Char('\n');
+            infoStr += infoToStr(info);
+        }
     }
     return infoStr;
 }
