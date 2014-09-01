@@ -26,7 +26,7 @@
 #include "calendarsupport_export.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <KDialog>
+#include <QDialog>
 
 class KComboBox;
 class KDateComboBox;
@@ -35,6 +35,7 @@ class KUrlRequester;
 
 class QCheckBox;
 class QRadioButton;
+class QPushButton;
 
 namespace Akonadi {
   class IncidenceChanger;
@@ -43,7 +44,7 @@ namespace Akonadi {
 
 namespace CalendarSupport {
 
-class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
+class CALENDARSUPPORT_EXPORT ArchiveDialog : public QDialog
 {
   Q_OBJECT
   public:
@@ -78,6 +79,7 @@ class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
     QCheckBox *mTodos;
     Akonadi::IncidenceChanger *mChanger;
     Akonadi::ETMCalendar::Ptr mCalendar;
+    QPushButton *mUser1Button;
 };
 
 }

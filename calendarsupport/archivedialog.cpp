@@ -49,27 +49,37 @@
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include <QWhatsThis>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace CalendarSupport;
 
 ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
                               Akonadi::IncidenceChanger *changer,
                               QWidget *parent )
-  : KDialog (parent)
+  : QDialog (parent)
 {
-  setCaption( i18nc( "@title:window", "Archive/Delete Past Events and To-dos" ) );
-  setButtons( User1|Cancel );
-  setDefaultButton( User1 );
+  setWindowTitle( i18nc( "@title:window", "Archive/Delete Past Events and To-dos" ) );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mUser1Button = new QPushButton;
+  buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  mUser1Button->setDefault(true);
   setModal( false );
-  showButtonSeparator( true );
-  setButtonText( User1, i18nc( "@action:button", "&Archive" ) );
+  mUser1Button->setText(i18nc( "@action:button", "&Archive"));
   mCalendar = cal;
   mChanger = changer;
 
   QFrame *topFrame = new QFrame( this );
-  setMainWidget( topFrame );
+  mainLayout->addWidget(topFrame);
+  mainLayout->addWidget(buttonBox);
+
   QVBoxLayout *topLayout = new QVBoxLayout( topFrame );
-  topLayout->setSpacing( spacingHint() );
+  //QT5 topLayout->setSpacing( spacingHint() );
 #ifndef KDEPIM_MOBILE_UI
   QLabel *descLabel = new QLabel( topFrame );
   descLabel->setText(
@@ -177,7 +187,7 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
 
   QHBoxLayout *fileLayout = new QHBoxLayout();
   fileLayout->setMargin( 0 );
-  fileLayout->setSpacing( spacingHint() );
+  //QT5 fileLayout->setSpacing( spacingHint() );
   QLabel *l = new QLabel( i18nc( "@label", "Archive &file:" ), topFrame );
   fileLayout->addWidget( l );
   mArchiveFile = new KUrlRequester( KCalPrefs::instance()->mArchiveFile, topFrame );
@@ -264,7 +274,7 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
     mArchiveOnceRB->setFocus();
   }
   slotActionChanged();
-  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
+  connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotUser1()) );
 }
 
 ArchiveDialog::~ArchiveDialog()
@@ -274,7 +284,7 @@ ArchiveDialog::~ArchiveDialog()
 void ArchiveDialog::slotEnableUser1()
 {
   const bool state = ( mDeleteCb->isChecked() || !mArchiveFile->lineEdit()->text().isEmpty() );
-  enableButton( KDialog::User1, state );
+  mUser1Button->setEnabled(state);
 }
 
 void ArchiveDialog::slotActionChanged()
