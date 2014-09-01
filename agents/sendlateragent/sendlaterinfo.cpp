@@ -55,7 +55,7 @@ SendLaterInfo::~SendLaterInfo()
 
 bool SendLaterInfo::isValid() const
 {
-    return ((mId != -1) && mLastDateTimeSend.isValid());
+    return ((mId != -1) && mDateTime.isValid());
 }
 
 bool SendLaterInfo::isRecurrence() const
