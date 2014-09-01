@@ -23,36 +23,42 @@
 */
 
 #include "mainwindow.h"
-#include <kuniqueapplication.h>
 #include "global.h"
 #include "constants.h"
 
+#include <QApplication>
+#include <KLocalizedString>
+#include <kaboutdata.h>
+#include <QCommandLineParser>
+#include <kdbusservice.h>
 
-#include <k4aboutdata.h>
-#include <kcmdlineargs.h>
-
-static const char description[] =
-    I18N_NOOP( "A KDE Blogging Client" );
 
 int main( int argc, char *argv[] )
 {
     KLocalizedString::setApplicationDomain("blogilo");
-    K4AboutData about( "blogilo", 0, ki18n( APPNAME ), VERSION, ki18n( description ),
-                      K4AboutData::License_GPL_V2, ki18n( "Copyright © 2008–2014 Blogilo authors" ),
-                      KLocalizedString(), "http://blogilo.gnufolks.org" );
-    about.addAuthor( ki18n( "Mehrdad Momeny" ), ki18n( "Core Developer" ), "mehrdad.momeny@gmail.com" );
-    about.addAuthor( ki18n( "Golnaz Nilieh" ), ki18n( "Core Developer" ), "g382nilieh@gmail.com" );
-    about.addAuthor( ki18n( "Laurent Montel" ), ki18n( "Core Developer" ), "montel@kde.org" );
-    about.addCredit( ki18n( "Roozbeh Shafiee" ), ki18n( "Icon designer" ), "roozbeh@roozbehonline.com");
-    about.addCredit( ki18n( "Sajjad Baroodkoo" ), ki18n( "Icon designer" ), "sajjad@graphit.ir");
+    KAboutData about( QLatin1String("blogilo"), i18n( APPNAME ), QLatin1String(VERSION), i18n( "A KDE Blogging Client" ),
+                      KAboutLicense::GPL_V2, i18n( "Copyright © 2008–2014 Blogilo authors" ),
+                      QLatin1String("http://blogilo.gnufolks.org") );
+    about.addAuthor( i18n( "Mehrdad Momeny" ), i18n( "Core Developer" ), QLatin1String("mehrdad.momeny@gmail.com") );
+    about.addAuthor( i18n( "Golnaz Nilieh" ), i18n( "Core Developer" ), QLatin1String("g382nilieh@gmail.com") );
+    about.addAuthor( i18n( "Laurent Montel" ), i18n( "Core Developer" ), QLatin1String("montel@kde.org") );
+    about.addCredit( i18n( "Roozbeh Shafiee" ), i18n( "Icon designer" ), QLatin1String("roozbeh@roozbehonline.com"));
+    about.addCredit( i18n( "Sajjad Baroodkoo" ), i18n( "Icon designer" ), QLatin1String("sajjad@graphit.ir"));
 
-    about.setTranslator( ki18nc("NAME OF TRANSLATORS", "Your names"),
-                         ki18nc("EMAIL OF TRANSLATORS", "Your emails"));
-    KCmdLineArgs::init( argc, argv, &about );
-//     KCmdLineOptions options;
+    about.setTranslator( i18nc("NAME OF TRANSLATORS", "Your names"),
+                         i18nc("EMAIL OF TRANSLATORS", "Your emails"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(about);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    about.setupCommandLine(&parser);
+    parser.process(app);
+    about.processCommandLine(&parser);
 
-    KUniqueApplication app;
     global_init();
+
+    KDBusService service(KDBusService::Unique);
 
     MainWindow *bilbo = new MainWindow;
 
