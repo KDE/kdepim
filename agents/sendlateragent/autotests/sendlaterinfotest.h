@@ -29,6 +29,9 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldRestoreFromSettings();
+    void shouldNotValidIfIdIsNotValid();
+    void shouldNotValidIfDateIsNotValid();
+    void shouldCopyInfo();
 
 };
 

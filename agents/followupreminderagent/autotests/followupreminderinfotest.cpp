@@ -85,6 +85,21 @@ void FollowUpReminderInfoTest::shouldRestoreFromSettings()
     QCOMPARE(info, restoreInfo);
 }
 
+void FollowUpReminderInfoTest::shouldCopyReminderInfo()
+{
+    FollowUpReminder::FollowUpReminderInfo info;
+    info.setMessageId(QLatin1String("foo"));
+    const QDate date(2014,1,1);
+    info.setFollowUpReminderDate(QDateTime(date));
+    const QString to = QLatin1String("kde.org");
+    info.setTo(to);
+    info.setId(Akonadi::Item::Id(42));
+    info.setSubject(QLatin1String("Subject"));
+
+    FollowUpReminder::FollowUpReminderInfo copyInfo(info);
+    QCOMPARE(info, copyInfo);
+}
+
 
 
 QTEST_MAIN(FollowUpReminderInfoTest)

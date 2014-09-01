@@ -37,6 +37,7 @@ FollowUpReminderInfo::FollowUpReminderInfo(const FollowUpReminderInfo &info)
     mId = info.id();
     mMessageId = info.messageId();
     mTo = info.to();
+    mSubject = info.subject();
 }
 
 void FollowUpReminderInfo::readConfig(const KConfigGroup &config)

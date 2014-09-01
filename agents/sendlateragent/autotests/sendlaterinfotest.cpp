@@ -62,4 +62,52 @@ void SendLaterInfoTest::shouldRestoreFromSettings()
 
 }
 
+void SendLaterInfoTest::shouldNotValidIfIdIsNotValid()
+{
+    SendLater::SendLaterInfo info;
+    const QString to = QLatin1String("kde.org");
+    info.setTo(to);
+    info.setSubject(QLatin1String("Subject"));
+    info.setRecurrence(true);
+    info.setRecurrenceEachValue(5);
+    info.setRecurrenceUnit(SendLater::SendLaterInfo::Years);
+    const QDate date(2014,1,1);
+    info.setDateTime(QDateTime(date));
+    info.setLastDateTimeSend(QDateTime(date));
+    QVERIFY(!info.isValid());
+}
+
+void SendLaterInfoTest::shouldNotValidIfDateIsNotValid()
+{
+    SendLater::SendLaterInfo info;
+    const QString to = QLatin1String("kde.org");
+    info.setTo(to);
+    info.setItemId(Akonadi::Item::Id(42));
+    info.setSubject(QLatin1String("Subject"));
+    info.setRecurrence(true);
+    info.setRecurrenceEachValue(5);
+    info.setRecurrenceUnit(SendLater::SendLaterInfo::Years);
+    const QDate date(2014,1,1);
+    info.setLastDateTimeSend(QDateTime(date));
+    QVERIFY(!info.isValid());
+}
+
+void SendLaterInfoTest::shouldCopyInfo()
+{
+    SendLater::SendLaterInfo info;
+    const QString to = QLatin1String("kde.org");
+    info.setTo(to);
+    info.setItemId(Akonadi::Item::Id(42));
+    info.setSubject(QLatin1String("Subject"));
+    info.setRecurrence(true);
+    info.setRecurrenceEachValue(5);
+    info.setRecurrenceUnit(SendLater::SendLaterInfo::Years);
+    const QDate date(2014,1,1);
+    info.setDateTime(QDateTime(date));
+    info.setLastDateTimeSend(QDateTime(date));
+
+    SendLater::SendLaterInfo copyInfo(info);
+    QCOMPARE(info, copyInfo);
+}
+
 QTEST_MAIN(SendLaterInfoTest)
