@@ -35,6 +35,7 @@
 
 #include "aboutdata.h"
 #include "kwatchgnupgmainwin.h"
+#include <kdelibs4configmigrator.h>
 
 #include <kuniqueapplication.h>
 #include <kcmdlineargs.h>
@@ -72,6 +73,11 @@ int KWatchGnuPGApplication::newInstance()
 
 int main( int argc, char** argv )
 {
+  Kdelibs4ConfigMigrator migrate(QLatin1String("kwatchgnupg"));
+  migrate.setConfigFiles(QStringList() << QLatin1String("kwatchgnupgrc"));
+  migrate.setUiFiles(QStringList() << QLatin1String("kwatchgnupgui.rc"));
+  migrate.migrate();
+
   KLocalizedString::setApplicationDomain("kwatchgnupg");   
   AboutData aboutData;
 
