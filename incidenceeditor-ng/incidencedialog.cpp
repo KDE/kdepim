@@ -564,8 +564,8 @@ void IncidenceDialogPrivate::load( const Akonadi::Item &item )
   kDebug() << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
            << "; storage " << item.storageCollectionId();
 
-  if ( item.parentCollection().isValid() ) {
-    mCalSelector->setDefaultCollection( item.parentCollection() );
+  if ( item.storageCollectionId() > -1 ) {
+    mCalSelector->setDefaultCollection(Akonadi::Collection(item.storageCollectionId()));
   }
 
   if ( !mCalSelector->mimeTypeFilter().contains( "text/calendar" ) ||

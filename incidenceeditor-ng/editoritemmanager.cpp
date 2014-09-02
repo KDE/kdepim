@@ -333,7 +333,8 @@ void EditorItemManager::save()
     KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( d->mItem );
 
     KCalCore::Incidence::Ptr oldPayload = CalendarSupport::incidence( d->mPrevItem );
-    if ( d->mItem.parentCollection() == d->mItemUi->selectedCollection() ) {
+    if ( d->mItem.parentCollection() == d->mItemUi->selectedCollection()
+         || d->mItem.storageCollectionId() == d->mItemUi->selectedCollection().id()) {
       d->mChanger->modifyIncidence( d->mItem, oldPayload );
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
