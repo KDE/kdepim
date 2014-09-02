@@ -70,8 +70,7 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
     mTreeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mTreeWidget, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(customContextMenuRequested(QPoint)));
+    connect(mTreeWidget, &QTreeWidget::customContextMenuRequested, this, &FollowUpReminderInfoWidget::customContextMenuRequested);
 
     hbox->addWidget(mTreeWidget);
     setLayout(hbox);

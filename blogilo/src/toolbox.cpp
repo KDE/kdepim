@@ -68,18 +68,18 @@ Toolbox::Toolbox( QWidget *parent )
     optionsDate->setDate( QDateTime::currentDateTime().date() );
     optionsTime->setTime( QDateTime::currentDateTime().time() );
 
-    connect( btnCatReload, SIGNAL(clicked()), this, SLOT(slotReloadCategoryList()) );
-    connect( btnEntriesUpdate, SIGNAL(clicked()), this, SLOT(slotUpdateEntries()) );
-    connect( btnEntriesClear, SIGNAL(clicked(bool)), this, SLOT(clearEntries()) );
+    connect(btnCatReload, &QPushButton::clicked, this, &Toolbox::slotReloadCategoryList);
+    connect(btnEntriesUpdate, &QPushButton::clicked, this, &Toolbox::slotUpdateEntries);
+    connect(btnEntriesClear, &QPushButton::clicked, this, &Toolbox::clearEntries);
 
     connect( lstEntriesList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
              this, SLOT(slotEntrySelected(QListWidgetItem*)) );
-    connect( btnEntriesRemove, SIGNAL(clicked(bool)), this, SLOT(slotRemoveSelectedEntryFromServer()) );
+    connect(btnEntriesRemove, &QPushButton::clicked, this, &Toolbox::slotRemoveSelectedEntryFromServer);
 
-    connect( btnOptionsNow, SIGNAL(clicked(bool)), this, SLOT(setDateTimeNow()) );
+    connect(btnOptionsNow, &QPushButton::clicked, this, &Toolbox::setDateTimeNow);
     connect( localEntries, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
              this, SLOT(slotLocalEntrySelected(QTreeWidgetItem*,int)) );
-    connect( btnLocalRemove, SIGNAL(clicked(bool)) , this, SLOT(slotRemoveLocalEntry()) );
+    connect(btnLocalRemove, &QPushButton::clicked, this, &Toolbox::slotRemoveLocalEntry);
 
     lblOptionsTrackBack->setVisible( false );
     txtOptionsTrackback->setVisible( false );
@@ -121,7 +121,7 @@ void Toolbox::slotReloadCategoryList()
 
     Backend *b = new Backend( d->mCurrentBlogId );
     connect(b, &Backend::sigCategoryListFetched, this, &Toolbox::slotLoadCategoryListFromDB);
-    connect( b, SIGNAL(sigError(QString)), this, SIGNAL(sigError(QString)) );
+    connect(b, &Backend::sigError, this, &Toolbox::sigError);
     emit sigBusy( true );
     d->statusbar->showMessage( i18n( "Requesting list of categories..." ) );
     b->getCategoryListFromServer();
@@ -148,7 +148,7 @@ void Toolbox::slotUpdateEntries(int count)
     Backend *entryB = new Backend( d->mCurrentBlogId, this);
     entryB->getEntriesListFromServer( count );
     connect(entryB, &Backend::sigEntriesListFetched, this, &Toolbox::slotLoadEntriesFromDB);
-    connect( entryB, SIGNAL(sigError(QString)), this, SIGNAL(sigError(QString)) );
+    connect(entryB, &Backend::sigError, this, &Toolbox::sigError);
     d->statusbar->showMessage( i18n( "Requesting list of entries..." ) );
     setCursor( Qt::BusyCursor );
     emit sigBusy( true );
@@ -210,7 +210,7 @@ void Toolbox::slotRemoveSelectedEntryFromServer()
         BilboPost *post = new BilboPost( DBMan::self()->getPostInfo( lstEntriesList->currentItem()->
                                                                      data(BlogEntryID).toInt() ) );
         Backend *b = new Backend( d->mCurrentBlogId, this);
-        connect(b, SIGNAL(sigPostRemoved(int,BilboPost)), this, SLOT(slotPostRemoved(int,BilboPost)) );
+        connect(b, &Backend::sigPostRemoved, this, &Toolbox::slotPostRemoved);
         connect(b, &Backend::sigError, this, &Toolbox::slotError);
         b->removePost(post);
         d->statusbar->showMessage( i18n( "Removing post..." ) );

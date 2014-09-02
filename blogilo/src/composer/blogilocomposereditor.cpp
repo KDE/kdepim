@@ -86,12 +86,12 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
 
 
     mActSplitPost = new QAction( QIcon::fromTheme( QLatin1String("insert-more-mark") ), i18n( "Split text" ), this );
-    connect( mActSplitPost, SIGNAL(triggered(bool)), this, SLOT(slotAddPostSplitter()) );
+    connect(mActSplitPost, &QAction::triggered, this, &BlogiloComposerEditor::slotAddPostSplitter);
     addActionInToolBar(mActSplitPost, mainToolBar);
 
     mActCode = new QAction( QIcon::fromTheme( QLatin1String("format-text-code") ), i18nc( "Sets text font to code style",
                            "Code" ), this );
-    connect( mActCode, SIGNAL(triggered(bool)), this, SLOT(slotToggleCode(bool)) );
+    connect(mActCode, &QAction::triggered, this, &BlogiloComposerEditor::slotToggleCode);
     addActionInToolBar(mActCode, mainToolBar);
 
     createToolBar(lstActionsFormat);

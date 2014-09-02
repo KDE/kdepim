@@ -384,7 +384,7 @@ void MainWidget::delayedInit()
            SLOT(saveState()) );
   connect( GlobalContactModel::instance()->model(), SIGNAL(modelReset()),
            SLOT(restoreState()) );
-  connect( kapp, SIGNAL(aboutToQuit()), SLOT(saveState()) );
+  connect(kapp, &KApplication::aboutToQuit, this, &MainWidget::saveState);
 
   restoreState();
   updateQuickSearchText();
@@ -560,8 +560,8 @@ void MainWidget::setupActions( KActionCollection *collection )
 {
   mGrantleeThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Addressbook, QString::fromLatin1( "theme.desktop" ), collection, QLatin1String("kaddressbook/viewertemplates/"));
   mGrantleeThemeManager->setDownloadNewStuffConfigFile(QLatin1String("kaddressbook_themes.knsrc"));
-  connect(mGrantleeThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeThemeSelected()));
-  connect(mGrantleeThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
+  connect(mGrantleeThemeManager, &GrantleeTheme::GrantleeThemeManager::grantleeThemeSelected, this, &MainWidget::slotGrantleeThemeSelected);
+  connect(mGrantleeThemeManager, &GrantleeTheme::GrantleeThemeManager::updateThemes, this, &MainWidget::slotGrantleeThemesUpdated);
 
 
   KActionMenu *themeMenu  = new KActionMenu(i18n("&Themes"), this);
@@ -595,14 +595,14 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setText( i18n( "Select All" ) );
   collection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_A ) );
   action->setWhatsThis( i18n( "Select all contacts in the current address book view." ) );
-  connect( action, SIGNAL(triggered(bool)), mItemView, SLOT(selectAll()) );
+  connect(action, &QAction::triggered, mItemView, &Akonadi::EntityTreeView::selectAll);
 
 #if defined(HAVE_PRISON)
   KToggleAction *qrtoggleAction;
   qrtoggleAction = collection->add<KToggleAction>( QLatin1String("options_show_qrcodes") );
   qrtoggleAction->setText( i18n( "Show QR Codes" ) );
   qrtoggleAction->setWhatsThis( i18n( "Show QR Codes in the contact." ) );
-  connect( qrtoggleAction, SIGNAL(toggled(bool)), SLOT(setQRCodeShow(bool)) );
+  connect(qrtoggleAction, &KToggleAction::toggled, this, &MainWidget::setQRCodeShow);
 #endif
 
   mViewModeGroup = new QActionGroup( this );
@@ -691,22 +691,22 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   action = collection->addAction( QLatin1String("merge_contacts") );
   action->setText( i18n( "Merge Contacts..." ) );
-  connect( action, SIGNAL(triggered(bool)), this, SLOT(mergeContacts()) );
+  connect(action, &QAction::triggered, this, &MainWidget::mergeContacts);
 
   action = collection->addAction( QLatin1String("search_duplicate_contacts") );
   action->setText( i18n( "Search Duplicate Contacts..." ) );
-  connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSearchDuplicateContacts()) );
+  connect(action, &QAction::triggered, this, &MainWidget::slotSearchDuplicateContacts);
 
   mQuickSearchAction = new QAction( i18n("Set Focus to Quick Search"), this );
   //If change shortcut change in quicksearchwidget->lineedit->setPlaceholderText
   collection->addAction( QLatin1String("focus_to_quickseach"), mQuickSearchAction );
-  connect( mQuickSearchAction, SIGNAL(triggered(bool)), mQuickSearchWidget, SLOT(slotFocusQuickSearch()) );
+  connect(mQuickSearchAction, &QAction::triggered, mQuickSearchWidget, &QuickSearchWidget::slotFocusQuickSearch);
   collection->setDefaultShortcut( mQuickSearchAction, QKeySequence( Qt::ALT + Qt::Key_Q ) );
 
   action = collection->addAction( QLatin1String("send_mail") );
   action->setText( i18n( "Send an email...") );
   action->setIcon(KIconLoader::global()->loadIcon( QLatin1String( "mail-message-new"), KIconLoader::Small ));
-  connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSendMail()));
+  connect(action, &QAction::triggered, this, &MainWidget::slotSendMail);
 }
 
 void MainWidget::printPreview()
@@ -1005,7 +1005,7 @@ void MainWidget::slotSendMail()
     const Akonadi::Item::List lst = Utils::collectSelectedAllContactsItem(mItemView->selectionModel());
     if (!lst.isEmpty()) {
         KABMailSender::MailSenderJob *mailSender = new KABMailSender::MailSenderJob(lst, this);
-        connect(mailSender, SIGNAL(sendMails(QStringList)), this, SLOT(slotSendMails(QStringList)));
+        connect(mailSender, &KABMailSender::MailSenderJob::sendMails, this, &MainWidget::slotSendMails);
         mailSender->start();
     } else {
         KMessageBox::sorry( this, i18n( "You have not selected any contacts." ) );

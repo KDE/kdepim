@@ -65,8 +65,7 @@ void KAddressBookPart::initAction()
 {
   QAction *action = new QAction( QIcon::fromTheme( QLatin1String("configure") ), i18n( "&Configure KAddressBook..." ), this );
   actionCollection()->addAction( QLatin1String("kaddressbook_configure"), action );
-  connect( action, SIGNAL(triggered(bool)), mMainWidget,
-           SLOT(configure()) );
+  connect(action, &QAction::triggered, mMainWidget, &MainWidget::configure);
 }
 
 void KAddressBookPart::newContact()

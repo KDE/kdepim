@@ -34,8 +34,8 @@ BlogiloComposerWidget::BlogiloComposerWidget(BlogiloComposerView *view, QWidget 
 
     lay->addWidget(mEditor);
     mCustomToolsWidget = new PimCommon::CustomToolsWidget;
-    connect(mCustomToolsWidget, SIGNAL(toolSwitched(PimCommon::CustomToolsWidget::ToolType)), this, SLOT(slotToolSwitched(PimCommon::CustomToolsWidget::ToolType)));
-    connect(mCustomToolsWidget, SIGNAL(insertShortUrl(QString)), this, SLOT(slotInsertShortUrl(QString)));
+    connect(mCustomToolsWidget, &PimCommon::CustomToolsWidget::toolSwitched, this, &BlogiloComposerWidget::slotToolSwitched);
+    connect(mCustomToolsWidget, &PimCommon::CustomToolsWidget::insertShortUrl, this, &BlogiloComposerWidget::slotInsertShortUrl);
     lay->addWidget(mCustomToolsWidget);
     setLayout(lay);
     view->setCustomTools(mCustomToolsWidget);

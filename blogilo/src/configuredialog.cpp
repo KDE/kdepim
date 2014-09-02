@@ -46,7 +46,7 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
              this, SIGNAL(blogAdded(BilboBlog)) );
     connect( blogSettingsDlg, SIGNAL(blogEdited(BilboBlog)),
              this, SIGNAL(blogEdited(BilboBlog)) );
-    connect( blogSettingsDlg, SIGNAL(blogRemoved(int)), this, SIGNAL(blogRemoved(int)) );
+    connect(blogSettingsDlg, &BlogSettings::blogRemoved, this, &ConfigureDialog::blogRemoved);
 
     QWidget *editorSettingsDlg = new QWidget;
     editorSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
@@ -66,11 +66,11 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
     addPage( advancedSettingsDlg, i18nc( "Configure Page", "Advanced" ), QLatin1String("applications-utilities"));
     addPage( mConfigStorageService, i18nc( "Configure Page", "Storage Service" ), QLatin1String("applications-utilities"));
 
-    connect( this, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
-    connect( this, SIGNAL(destroyed(QObject*)), this, SIGNAL(dialogDestroyed(QObject*)));
-    connect( button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(slotApplySettingsClicked()));
-    connect( button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(slotDefaultClicked()));
-    connect( button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(slotApplySettingsClicked()));
+    connect(this, &ConfigureDialog::settingsChanged, this, &ConfigureDialog::settingsChanged);
+    connect(this, &ConfigureDialog::destroyed, this, &ConfigureDialog::dialogDestroyed);
+    connect(button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ConfigureDialog::slotApplySettingsClicked);
+    connect(button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &ConfigureDialog::slotDefaultClicked);
+    connect(button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &ConfigureDialog::slotApplySettingsClicked);
     setAttribute( Qt::WA_DeleteOnClose );
     resize( Settings::configWindowSize() );
     show();

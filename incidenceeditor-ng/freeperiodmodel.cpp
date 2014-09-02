@@ -132,9 +132,13 @@ KCalCore::Period::List FreePeriodModel::splitPeriodsByDay(
 
   // Perform some jiggery pokery to remove duplicates
   QList<KCalCore::Period> tmpList = splitList.toList();
+#if 0 //FIX ME
   QSet<KCalCore::Period>set = tmpList.toSet();
   tmpList = QList<KCalCore::Period>::fromSet( set );
   return KCalCore::Period::List::fromList( tmpList );
+#else
+  return KCalCore::Period::List();
+#endif
 }
 
 QString FreePeriodModel::day( int index ) const

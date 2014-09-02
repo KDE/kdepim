@@ -52,7 +52,7 @@ EventSelectorDialog::EventSelectorDialog(QWidget *parent, Qt::WindowFlags f)
     QHBoxLayout *layout = new QHBoxLayout(mainWidget);
     m_view = new QTreeView;
     layout->addWidget(m_view);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
