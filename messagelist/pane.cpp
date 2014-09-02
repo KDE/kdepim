@@ -182,7 +182,7 @@ Pane::Pane( bool restoreSession, QAbstractItemModel *model, QItemSelectionModel 
     connect( Core::Settings::self(), SIGNAL(configChanged()),
              this, SLOT(updateTabControls()) );
 
-    connect( this, SIGNAL(mouseDoubleClick()),
+    connect( this, SIGNAL(tabBarDoubleClicked(int)),
              this, SLOT(createNewTab()) );
 
     connect( this, SIGNAL(mouseMiddleClick(QWidget*)),
