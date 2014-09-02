@@ -580,15 +580,17 @@ void MainWidget::setupActions( KActionCollection *collection )
   if(KPrintPreview::isAvailable())
     KStandardAction::printPreview( this, SLOT(printPreview()), collection );
 
-  action = collection->addAction( QLatin1String("quick_search") );
-  action->setText( i18n( "Quick search" ) );
-  //QT5
-  //action->setDefaultWidget( mQuickSearchWidget );
+  QWidgetAction *quicksearch = new QWidgetAction(this);
+  quicksearch->setText( i18n( "Quick search" ) );
+  quicksearch->setDefaultWidget(mQuickSearchWidget);
+  collection->addAction( QLatin1String("quick_search"), quicksearch );
 
-  action = collection->addAction( QLatin1String("category_filter") );
-  action->setText( i18n( "Category filter" ) );
-  //QT5 action->setDefaultWidget( mCategorySelectWidget );
 
+  QWidgetAction *categoryFilter = new QWidgetAction(this);
+  categoryFilter->setText( i18n( "Category filter" ) );
+  categoryFilter->setDefaultWidget(mCategorySelectWidget);
+  collection->addAction( QLatin1String("category_filter"), categoryFilter);
+  
   action = collection->addAction( QLatin1String("select_all") );
   action->setText( i18n( "Select All" ) );
   collection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_A ) );
