@@ -142,10 +142,8 @@ void SieveConditionWidget::initWidget()
     // redirect focus to the filter action combo box
     setFocusProxy(mComboBox);
 
-    connect(mAdd, SIGNAL(clicked()),
-            this, SLOT(slotAddWidget()));
-    connect(mRemove, SIGNAL(clicked()),
-            this, SLOT(slotRemoveWidget()));
+    connect(mAdd, &QPushButton::clicked, this, &SieveConditionWidget::slotAddWidget);
+    connect(mRemove, &QPushButton::clicked, this, &SieveConditionWidget::slotRemoveWidget);
     setFilterCondition(0);
 }
 
@@ -258,12 +256,9 @@ void SieveConditionWidgetLister::updateAddRemoveButton()
 
 void SieveConditionWidgetLister::reconnectWidget(SieveConditionWidget *w)
 {
-    connect(w, SIGNAL(addWidget(QWidget*)),
-            this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection);
-    connect(w, SIGNAL(removeWidget(QWidget*)),
-            this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection);
-    connect(w, SIGNAL(valueChanged()),
-            this, SIGNAL(valueChanged()), Qt::UniqueConnection);
+    connect(w, &SieveConditionWidget::addWidget, this, &SieveConditionWidgetLister::slotAddWidget, Qt::UniqueConnection);
+    connect(w, &SieveConditionWidget::removeWidget, this, &SieveConditionWidgetLister::slotRemoveWidget, Qt::UniqueConnection);
+    connect(w, SIGNAL(valueChanged()),  this, SIGNAL(valueChanged()), Qt::UniqueConnection);
 }
 
 void SieveConditionWidgetLister::clearWidget(QWidget *aWidget)

@@ -41,7 +41,7 @@ PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
                                        MessageViewer::HeaderStrategy::create(QString()));
     lay->addWidget(mViewer);
     QPushButton *update = new QPushButton(i18n("Update view"));
-    connect(update, SIGNAL(clicked(bool)), this, SIGNAL(needUpdateViewer()));
+    connect(update, &QPushButton::clicked, this, &PreviewWidget::needUpdateViewer);
     lay->addWidget(update);
     setLayout(lay);
     loadConfig();
