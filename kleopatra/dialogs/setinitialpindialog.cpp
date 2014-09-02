@@ -38,7 +38,7 @@
 
 #include <KIconLoader>
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 
 #include <QTextDocument> // for Qt::escape
 

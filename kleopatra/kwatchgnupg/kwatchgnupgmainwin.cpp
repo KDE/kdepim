@@ -52,7 +52,6 @@
 #include <kconfig.h>
 #include <kedittoolbar.h>
 #include <kshortcutsdialog.h>
-#include <kglobal.h>
 #include <QIcon>
 #include <KConfigGroup>
 

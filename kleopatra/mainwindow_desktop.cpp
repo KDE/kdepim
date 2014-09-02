@@ -73,7 +73,6 @@
 #include <KAboutApplicationDialog>
 #include <qdebug.h>
 #include <KLineEdit>
-#include <KGlobal>
 #include <QDebug>
 #include <KActionMenu>
 #include <KConfigGroup>

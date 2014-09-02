@@ -750,7 +750,7 @@ void KIconButton::setIconType(KIconLoader::Group group, KIconLoader::Context con
 void KIconButton::setIcon(const QString& icon)
 {
     d->mIcon = icon;
-    setIcon(KIcon(d->mIcon));
+    setIcon(QIcon::fromTheme(d->mIcon));
 
     if (!d->mpDialog) {
         d->mpDialog = new KIconDialog(d->mpLoader, this);
@@ -795,7 +795,7 @@ void KIconButton::KIconButtonPrivate::_k_newIconName(const QString& name)
     if (name.isEmpty())
         return;
 
-    q->setIcon(KIcon(name));
+    q->setIcon(QIcon::fromTheme(name));
     mIcon = name;
 
     if (mbUser) {
