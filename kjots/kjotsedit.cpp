@@ -73,7 +73,7 @@ KJotsEdit::KJotsEdit ( QItemSelectionModel *selectionModel, QWidget *parent )
 
     setFocusPolicy(Qt::StrongFocus);
 
-    connect( m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
+    connect(m_selectionModel, &QItemSelectionModel::selectionChanged, this, &KJotsEdit::selectionChanged);
     connect( m_selectionModel->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(tryDisableEditing()) );
 }
 
@@ -252,7 +252,7 @@ void KJotsEdit::onAutoDecimal( void )
 {
     if (allowAutoDecimal == true ) {
         allowAutoDecimal = false;
-        disconnect(this, SIGNAL(textChanged()), this, SLOT(DecimalList()));
+        disconnect(this, &KJotsEdit::textChanged, this, &KJotsEdit::DecimalList);
         actionCollection->action(QLatin1String("auto_decimal"))->setChecked( false );
     } else {
         allowAutoDecimal = true;
