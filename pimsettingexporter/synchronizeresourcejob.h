@@ -37,7 +37,7 @@ Q_SIGNALS:
     void synchronizationInstanceFailed(const QString &);
 
 private Q_SLOTS:
-    void slotSynchronizationFinished(KJob*);
+    void slotSynchronizationFinished(KJob *);
 
 private:
     void nextSync();

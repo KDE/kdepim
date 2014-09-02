@@ -28,7 +28,7 @@ class PimSettingsBackupRestore : public QObject
 {
     Q_OBJECT
 public:
-    explicit PimSettingsBackupRestore(QWidget *parentWidget, QObject *parent=0);
+    explicit PimSettingsBackupRestore(QWidget *parentWidget, QObject *parent = 0);
     ~PimSettingsBackupRestore();
 
     void backupStart(const QString &filename);

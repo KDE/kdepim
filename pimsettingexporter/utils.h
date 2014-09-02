@@ -22,22 +22,23 @@
 #include <KSharedConfig>
 #include <QDebug>
 class KZip;
-namespace Akonadi {
+namespace Akonadi
+{
 class AgentInstance;
 }
 
-
-struct resourceFiles
-{
+struct resourceFiles {
     QString akonadiConfigFile;
     QString akonadiResources;
     QString akonadiAgentConfigFile;
-    void debug() const {
-        qDebug() <<" akonadiconfigfile :"<<akonadiConfigFile<<" akonadiResources:"<<akonadiResources<<" akonadiAgentConfigFile:"<<akonadiAgentConfigFile;
+    void debug() const
+    {
+        qDebug() << " akonadiconfigfile :" << akonadiConfigFile << " akonadiResources:" << akonadiResources << " akonadiAgentConfigFile:" << akonadiAgentConfigFile;
     }
 };
 
-namespace Utils {
+namespace Utils
+{
 enum StoredType {
     None = 0,
     Identity = 1,
@@ -47,7 +48,7 @@ enum StoredType {
     Config = 16,
     AkonadiDb = 32,
     Data = 64
-    //TODO add more type to import/export
+           //TODO add more type to import/export
 };
 Q_DECLARE_FLAGS(StoredTypes, StoredType)
 
@@ -63,21 +64,20 @@ enum AppsType {
     Blogilo
 };
 
-struct importExportParameters
-{
+struct importExportParameters {
     importExportParameters()
         : numberSteps(0),
           types(None)
     {
 
     }
-    bool isEmpty() const {
+    bool isEmpty() const
+    {
         return (types == None);
     }
     int numberSteps;
     Utils::StoredTypes types;
 };
-
 
 KUrl resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath = QString());
 QString transportsPath();

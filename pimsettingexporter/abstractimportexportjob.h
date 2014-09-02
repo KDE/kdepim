@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -31,12 +31,14 @@ class KZip;
 class KArchiveFile;
 class KArchiveEntry;
 
-namespace KIdentityManagement {
+namespace KIdentityManagement
+{
 class Identity;
 class IdentityManager;
 }
 
-namespace PimCommon {
+namespace PimCommon
+{
 class CreateResource;
 }
 
@@ -75,9 +77,9 @@ protected:
     void copyToDirectory(const KArchiveEntry *entry, const QString &dest);
     void extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination);
 
-    void convertRealPathToCollection(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix=false);
-    void convertRealPathToCollectionList(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix=true);
-    void copyToFile(const KArchiveFile * archivefile, const QString &dest, const QString &filename, const QString &prefix);
+    void convertRealPathToCollection(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix = false);
+    void convertRealPathToCollectionList(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix = true);
+    void copyToFile(const KArchiveFile *archivefile, const QString &dest, const QString &filename, const QString &prefix);
     void initializeImportJob();
     void backupFile(const QString &filename, const QString &path, const QString &storedName);
     void backupResourceDirectory(const Akonadi::AgentInstance &agent, const QString &defaultPath);
@@ -92,7 +94,6 @@ protected:
     void restoreConfigFile(const QString &configNameStr);
     bool overwriteDirectoryMessageBox(const QString &directory) const;
     void overwriteDirectory(const QString &path, const KArchiveEntry *entry);
-
 
     KZip *archive();
 
@@ -112,7 +113,7 @@ protected:
     QWidget *mParent;
     QTemporaryDir *mTempDir;
     QProgressDialog *mProgressDialog;
-    const KArchiveDirectory* mArchiveDirectory;
+    const KArchiveDirectory *mArchiveDirectory;
     int mNumberOfStep;
     PimCommon::CreateResource *mCreateResource;
     QStringList mAgentPaths;

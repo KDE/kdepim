@@ -19,14 +19,15 @@
 #define BACKUPFILESTRUCTUREINFODIALOG_H
 
 #include <QDialog>
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditorWidget;
 }
 class BackupFileStructureInfoDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit BackupFileStructureInfoDialog(QWidget *parent=0);
+    explicit BackupFileStructureInfoDialog(QWidget *parent = 0);
     ~BackupFileStructureInfoDialog();
 
 private:

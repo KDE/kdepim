@@ -28,7 +28,7 @@ class SelectionTypeTreeWidget : public QTreeWidget
 {
     Q_OBJECT
 public:
-    explicit SelectionTypeTreeWidget(QWidget *parent=0);
+    explicit SelectionTypeTreeWidget(QWidget *parent = 0);
     ~SelectionTypeTreeWidget();
 
     QHash<Utils::AppsType, Utils::importExportParameters> storedType() const;
@@ -40,7 +40,7 @@ public:
 
     void loadTemplate(const QString &fileName = QString());
 private Q_SLOTS:
-    void slotItemChanged(QTreeWidgetItem*,int);
+    void slotItemChanged(QTreeWidgetItem *, int);
 
 private:
     enum ActionType {

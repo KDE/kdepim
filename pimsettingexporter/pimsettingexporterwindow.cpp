@@ -55,7 +55,6 @@
 
 #include "pimcommon/util/pimutil.h"
 
-
 #include <AkonadiCore/Control>
 
 #include <KStandardAction>
@@ -85,9 +84,9 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
 {
     //Initialize filtermanager
     (void)MailCommon::FilterManager::instance();
-    PimSettingExporterKernel *kernel = new PimSettingExporterKernel( this );
-    CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
-    CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+    PimSettingExporterKernel *kernel = new PimSettingExporterKernel(this);
+    CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
 
     bool canZipFile = canZip();
     setupActions(canZipFile);
@@ -95,10 +94,10 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     mLogWidget = new LogWidget(this);
 
     setCentralWidget(mLogWidget);
-    resize( 800, 600 );
+    resize(800, 600);
     Akonadi::Control::widgetNeedsAkonadi(this);
     if (!canZipFile) {
-        KMessageBox::error(this,i18n("Zip program not found. Install it before to launch this application."),i18n("Zip program not found."));
+        KMessageBox::error(this, i18n("Zip program not found. Install it before to launch this application."), i18n("Zip program not found."));
     }
     statusBar()->hide();
 }
@@ -107,7 +106,7 @@ PimSettingExporterWindow::~PimSettingExporterWindow()
 {
     delete mImportExportData;
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup groupConfig = config->group( QLatin1String("Recent File") );
+    KConfigGroup groupConfig = config->group(QLatin1String("Recent File"));
     mRecentFilesAction->saveEntries(groupConfig);
 }
 
@@ -118,11 +117,11 @@ void PimSettingExporterWindow::handleCommandLine()
     if (args->isSet("template")) {
         templateFile = args->getOption("template");
     }
-    if ( args->isSet( "import" ) ) {
+    if (args->isSet("import")) {
         if (args->count() > 0) {
             loadData(args->url(0).path(), templateFile);
         }
-    } else if (args->isSet( "export" )) {
+    } else if (args->isSet("export")) {
         if (args->count() > 0) {
             backupData(args->url(0).path(), templateFile);
         }
@@ -132,7 +131,7 @@ void PimSettingExporterWindow::handleCommandLine()
 
 void PimSettingExporterWindow::setupActions(bool canZipFile)
 {
-    KActionCollection* ac=actionCollection();
+    KActionCollection *ac = actionCollection();
 
     mBackupAction = ac->addAction(QLatin1String("backup"), this, SLOT(slotBackupData()));
     mBackupAction->setText(i18n("Back Up Data..."));
@@ -151,12 +150,11 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     mShowArchiveInformationsAction = ac->addAction(QLatin1String("show_archive_info"), this, SLOT(slotShowArchiveInformations()));
     mShowArchiveInformationsAction->setText(i18n("Show Archive Information..."));
 
-
-    KStandardAction::quit( this, SLOT(close()), ac );
+    KStandardAction::quit(this, SLOT(close()), ac);
     mRecentFilesAction = KStandardAction::openRecent(this, SLOT(slotRestoreFile(QUrl)), ac);
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup groupConfig = config->group( QLatin1String("Recent File") );
+    KConfigGroup groupConfig = config->group(QLatin1String("Recent File"));
     mRecentFilesAction->loadEntries(groupConfig);
 }
 
@@ -179,8 +177,9 @@ void PimSettingExporterWindow::slotRestoreFile(const QUrl &url)
 void PimSettingExporterWindow::slotShowArchiveInformations()
 {
     const QString filename = QFileDialog::getOpenFileName(this, i18n("Select Archive"), QLatin1String("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"));
-    if (filename.isEmpty())
+    if (filename.isEmpty()) {
         return;
+    }
 
     QPointer<ShowArchiveStructureDialog> dlg = new ShowArchiveStructureDialog(filename, this);
     dlg->exec();
@@ -200,12 +199,14 @@ void PimSettingExporterWindow::slotSaveLog()
 
 void PimSettingExporterWindow::slotBackupData()
 {
-    if (KMessageBox::warningYesNo(this,i18n("Before to backup data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
+    if (KMessageBox::warningYesNo(this, i18n("Before to backup data, close all kdepim applications. Do you want to continue?"), i18n("Backup")) == KMessageBox::No) {
         return;
+    }
 
     const QString filename = QFileDialog::getSaveFileName(this, i18n("Create backup"), QLatin1String("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"));
-    if (filename.isEmpty())
+    if (filename.isEmpty()) {
         return;
+    }
     mRecentFilesAction->addUrl(QUrl(filename));
     backupData(filename);
 }
@@ -220,10 +221,11 @@ void PimSettingExporterWindow::backupData(const QString &filename, const QString
         delete dialog;
         mLogWidget->clear();
 
-        if (mStored.isEmpty())
+        if (mStored.isEmpty()) {
             return;
+        }
 
-        mArchiveStorage = new ArchiveStorage(filename,this);
+        mArchiveStorage = new ArchiveStorage(filename, this);
         if (!mArchiveStorage->openArchive(true)) {
             delete mArchiveStorage;
             mArchiveStorage = 0;
@@ -242,7 +244,7 @@ void PimSettingExporterWindow::backupStart()
     mAction = Backup;
     mStoreIterator = mStored.constBegin();
     const QDateTime now = QDateTime::currentDateTime();
-    slotAddInfo(QLatin1Char('[') + QLocale().toString(( now ), QLocale::ShortFormat) + QLatin1Char(']'));
+    slotAddInfo(QLatin1Char('[') + QLocale().toString((now), QLocale::ShortFormat) + QLatin1Char(']'));
     slotAddInfo(i18n("Start to backup data in \'%1\'", mArchiveStorage->filename()));
     slotAddEndLine();
     //Add version
@@ -253,7 +255,7 @@ void PimSettingExporterWindow::backupStart()
 void PimSettingExporterWindow::backupNextStep()
 {
     if (mStoreIterator != mStored.constEnd()) {
-        switch(mStoreIterator.key()) {
+        switch (mStoreIterator.key()) {
         case Utils::KMail:
             if (mStoreIterator.value().numberSteps != 0) {
                 mImportExportData = new ExportMailJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
@@ -323,12 +325,12 @@ void PimSettingExporterWindow::backupFinished()
     updateActions(false);
 }
 
-void PimSettingExporterWindow::slotAddInfo(const QString& info)
+void PimSettingExporterWindow::slotAddInfo(const QString &info)
 {
     mLogWidget->addInfoLogEntry(info);
 }
 
-void PimSettingExporterWindow::slotAddError(const QString& info)
+void PimSettingExporterWindow::slotAddError(const QString &info)
 {
     mLogWidget->addErrorLogEntry(info);
 }
@@ -346,15 +348,17 @@ void PimSettingExporterWindow::slotAddEndLine()
 void PimSettingExporterWindow::slotRestoreData()
 {
     const QString filename = QFileDialog::getOpenFileName(this, i18n("Restore backup"), QLatin1String("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"));
-    if (filename.isEmpty())
+    if (filename.isEmpty()) {
         return;
+    }
     loadData(filename);
 }
 
 void PimSettingExporterWindow::loadData(const QString &filename, const QString &templateFile)
 {
-    if (KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
+    if (KMessageBox::warningYesNo(this, i18n("Before to restore data, close all kdepim applications. Do you want to continue?"), i18n("Backup")) == KMessageBox::No) {
         return;
+    }
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     dialog->loadTemplate(templateFile);
     if (dialog->exec()) {
@@ -363,10 +367,11 @@ void PimSettingExporterWindow::loadData(const QString &filename, const QString &
 
         delete dialog;
 
-        if (mStored.isEmpty())
+        if (mStored.isEmpty()) {
             return;
+        }
 
-        mArchiveStorage = new ArchiveStorage(filename,this);
+        mArchiveStorage = new ArchiveStorage(filename, this);
         if (!mArchiveStorage->openArchive(false)) {
             delete mArchiveStorage;
             mArchiveStorage = 0;
@@ -382,7 +387,7 @@ void PimSettingExporterWindow::loadData(const QString &filename, const QString &
 void PimSettingExporterWindow::restoreNextStep()
 {
     if (mStoreIterator != mStored.constEnd()) {
-        switch(mStoreIterator.key()) {
+        switch (mStoreIterator.key()) {
         case Utils::KMail:
             if (mStoreIterator.value().numberSteps != 0) {
                 mImportExportData = new ImportMailJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
@@ -432,7 +437,7 @@ void PimSettingExporterWindow::restoreNextStep()
             }
             break;
         case Utils::Unknown:
-	    break;
+            break;
         }
     } else {
         restoreFinished();
@@ -446,14 +451,15 @@ void PimSettingExporterWindow::restoreStart()
     mStoreIterator = mStored.constBegin();
     const int version = Utils::archiveVersion(mArchiveStorage->archive());
     if (version > Utils::currentArchiveVersion()) {
-        if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("The archive was created by a newer version of this program. It might contain additional data which will be skipped during import. Do you want to import it?"), i18n("Not correct version")))
+        if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("The archive was created by a newer version of this program. It might contain additional data which will be skipped during import. Do you want to import it?"), i18n("Not correct version"))) {
             return;
+        }
     }
-    qDebug()<<" version "<<version;
+    qDebug() << " version " << version;
     AbstractImportExportJob::setArchiveVersion(version);
 
     const QDateTime now = QDateTime::currentDateTime();
-    slotAddInfo(QLatin1Char('[') + QLocale().toString(( now ), QLocale::ShortFormat) + QLatin1Char(']'));
+    slotAddInfo(QLatin1Char('[') + QLocale().toString((now), QLocale::ShortFormat) + QLatin1Char(']'));
 
     slotAddInfo(i18n("Start to restore data from \'%1\'", mArchiveStorage->filename()));
     slotAddEndLine();
@@ -488,7 +494,7 @@ void PimSettingExporterWindow::slotJobFinished()
     slotAddEndLine();
     delete mImportExportData;
     mImportExportData = 0;
-    switch(mAction) {
+    switch (mAction) {
     case Backup:
         backupNextStep();
         break;
@@ -500,7 +506,7 @@ void PimSettingExporterWindow::slotJobFinished()
 
 bool PimSettingExporterWindow::canZip() const
 {
-    const QString zip = QStandardPaths::findExecutable( QLatin1String("zip") );
+    const QString zip = QStandardPaths::findExecutable(QLatin1String("zip"));
     if (zip.isEmpty()) {
         return false;
     }

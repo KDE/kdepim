@@ -34,7 +34,7 @@ public:
     void start();
 
 private:
-    KUrl subdirPath(const KUrl &url ) const;
+    KUrl subdirPath(const KUrl &url) const;
 
     void backupTransports();
     void backupResources();

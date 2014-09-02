@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -28,7 +28,7 @@
 #include <QDir>
 #include <QStandardPaths>
 
-ExportAkregatorJob::ExportAkregatorJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+ExportAkregatorJob::ExportAkregatorJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }
@@ -61,11 +61,10 @@ void ExportAkregatorJob::start()
     Q_EMIT jobFinished();
 }
 
-
 void ExportAkregatorJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
     const QString akregatorStr(QLatin1String("akregatorrc"));
     const QString akregatorsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + akregatorStr;
     backupFile(akregatorsrc, Utils::configsPath(), akregatorStr);
@@ -75,11 +74,11 @@ void ExportAkregatorJob::backupConfig()
 void ExportAkregatorJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/akregator" ) ;
-    QDir akregatorDirectory( akregatorDir );
+    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/akregator") ;
+    QDir akregatorDirectory(akregatorDir);
     if (akregatorDirectory.exists()) {
-        const bool akregatorDirAdded = archive()->addLocalDirectory(akregatorDir, Utils::dataPath() +  QLatin1String( "/akregator" ));
+        const bool akregatorDirAdded = archive()->addLocalDirectory(akregatorDir, Utils::dataPath() +  QLatin1String("/akregator"));
         if (!akregatorDirAdded) {
             Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", akregatorDir));
         }

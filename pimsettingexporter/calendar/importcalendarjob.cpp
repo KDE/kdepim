@@ -49,7 +49,7 @@ void ImportCalendarJob::start()
 {
     Q_EMIT title(i18n("Start import KOrganizer settings..."));
     mArchiveDirectory = archive()->directory();
-    searchAllFiles(mArchiveDirectory ,QString());
+    searchAllFiles(mArchiveDirectory , QString());
     initializeListStep();
     nextStep();
 }
@@ -59,10 +59,12 @@ void ImportCalendarJob::nextStep()
     ++mIndex;
     if (mIndex < mListStep.count()) {
         Utils::StoredType type = mListStep.at(mIndex);
-        if (type == Utils::Resources)
+        if (type == Utils::Resources) {
             restoreResources();
-        if (type == Utils::Config)
+        }
+        if (type == Utils::Config) {
             restoreConfig();
+        }
     } else {
         Q_EMIT jobFinished();
     }
@@ -83,24 +85,24 @@ void ImportCalendarJob::restoreResources()
             resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
             if (value.akonadiConfigFile.contains(QLatin1String("akonadi_icaldir_resource_"))) {
-                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
+                const KArchiveEntry *fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
-                    const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
+                    const KArchiveFile *file = static_cast<const KArchiveFile *>(fileResouceEntry);
                     file->copyTo(copyToDirName);
                     QString resourceName(file->name());
 
                     QString filename(file->name());
                     //TODO adapt filename otherwise it will use all the time the same filename.
-                    qDebug()<<" filename :"<<filename;
+                    qDebug() << " filename :" << filename;
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
                     const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeCalendar);
 
                     const QString dataFile = value.akonadiResources;
-                    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
+                    const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
-                        const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                        const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         //TODO  adapt directory name too
                         extractZipFile(file, copyToDirName, newUrl.path());
                     }
@@ -110,7 +112,7 @@ void ImportCalendarJob::restoreResources()
                     if (!agentConfigFile.isEmpty()) {
                         const KArchiveEntry *akonadiAgentConfigEntry = mArchiveDirectory->entry(agentConfigFile);
                         if (akonadiAgentConfigEntry->isFile()) {
-                            const KArchiveFile* file = static_cast<const KArchiveFile*>(akonadiAgentConfigEntry);
+                            const KArchiveFile *file = static_cast<const KArchiveFile *>(akonadiAgentConfigEntry);
                             file->copyTo(copyToDirName);
                             resourceName = file->name();
                             KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
@@ -118,10 +120,10 @@ void ImportCalendarJob::restoreResources()
                         }
                     }
 
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_icaldir_resource"), filename, settings, true );
+                    const QString newResource = mCreateResource->createResource(QString::fromLatin1("akonadi_icaldir_resource"), filename, settings, true);
                     infoAboutNewResource(newResource);
                     listResource << newResource;
-                    qDebug()<<" newResource"<<newResource;
+                    qDebug() << " newResource" << newResource;
                 }
             }
         }
@@ -146,16 +148,16 @@ void ImportCalendarJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceC
     }
 }
 
-void ImportCalendarJob::searchAllFiles(const KArchiveDirectory *dir,const QString &prefix)
+void ImportCalendarJob::searchAllFiles(const KArchiveDirectory *dir, const QString &prefix)
 {
-    Q_FOREACH(const QString& entryName, dir->entries()) {
+    Q_FOREACH (const QString &entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
             const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
             if (entryName == QLatin1String("calendar")) {
-                storeCalendarArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
+                storeCalendarArchiveResource(static_cast<const KArchiveDirectory *>(entry), entryName);
             } else {
-                searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
+                searchAllFiles(static_cast<const KArchiveDirectory *>(entry), newPrefix);
             }
         }
     }
@@ -163,18 +165,18 @@ void ImportCalendarJob::searchAllFiles(const KArchiveDirectory *dir,const QStrin
 
 void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
 {
-    Q_FOREACH(const QString& entryName, dir->entries()) {
+    Q_FOREACH (const QString &entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
-            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory *>(entry);
             const QStringList lst = resourceDir->entries();
 
             if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 resourceFiles files;
-                Q_FOREACH(const QString &name, lst) {
+                Q_FOREACH (const QString &name, lst) {
                     if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_ical_resource_"))
-                                                               || name.contains(QLatin1String("akonadi_icaldir_resource_")))) {
+                            || name.contains(QLatin1String("akonadi_icaldir_resource_")))) {
                         files.akonadiConfigFile = archPath + name;
                     } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
                         files.akonadiAgentConfigFile = archPath + name;
@@ -185,20 +187,19 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                qDebug()<<" Problem in archive. number of file "<<lst.count();
+                qDebug() << " Problem in archive. number of file " << lst.count();
             }
         }
     }
 }
 
-
 void ImportCalendarJob::restoreConfig()
 {
     const QString korganizerPrinterrcStr(QLatin1String("calendar_printing.rc"));
     const QString oldKorganizerPrintrrcStr(QLatin1String("korganizer_printing.rc"));
-    const KArchiveEntry* oldKorganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + oldKorganizerPrintrrcStr);
+    const KArchiveEntry *oldKorganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + oldKorganizerPrintrrcStr);
     if (oldKorganizerPrinterEntry && oldKorganizerPrinterEntry->isFile()) {
-        const KArchiveFile* korganizerFile = static_cast<const KArchiveFile*>(oldKorganizerPrinterEntry);
+        const KArchiveFile *korganizerFile = static_cast<const KArchiveFile *>(oldKorganizerPrinterEntry);
         const QString oldKorganizerPrintrrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerPrinterrcStr;
         if (QFile(oldKorganizerPrintrrc).exists()) {
             if (overwriteConfigMessageBox(oldKorganizerPrintrrc)) {
@@ -208,9 +209,9 @@ void ImportCalendarJob::restoreConfig()
             copyToFile(korganizerFile, oldKorganizerPrintrrc, oldKorganizerPrintrrcStr, Utils::configsPath());
         }
     } else {
-        const KArchiveEntry* korganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerPrinterrcStr);
+        const KArchiveEntry *korganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerPrinterrcStr);
         if (korganizerPrinterEntry && korganizerPrinterEntry->isFile()) {
-            const KArchiveFile* korganizerFile = static_cast<const KArchiveFile*>(korganizerPrinterEntry);
+            const KArchiveFile *korganizerFile = static_cast<const KArchiveFile *>(korganizerPrinterEntry);
             const QString korganizerPrinterrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerPrinterrcStr;
             if (QFile(korganizerPrinterrc).exists()) {
                 if (overwriteConfigMessageBox(korganizerPrinterrcStr)) {
@@ -223,9 +224,9 @@ void ImportCalendarJob::restoreConfig()
     }
 
     const QString korganizerStr(QLatin1String("korganizerrc"));
-    const KArchiveEntry* korganizerrcentry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerStr);
+    const KArchiveEntry *korganizerrcentry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerStr);
     if (korganizerrcentry && korganizerrcentry->isFile()) {
-        const KArchiveFile* korganizerrcFile = static_cast<const KArchiveFile*>(korganizerrcentry);
+        const KArchiveFile *korganizerrcFile = static_cast<const KArchiveFile *>(korganizerrcentry);
         const QString korganizerrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerStr;
         if (QFile(korganizerrc).exists()) {
             if (overwriteConfigMessageBox(korganizerStr)) {
@@ -237,9 +238,9 @@ void ImportCalendarJob::restoreConfig()
     }
 
     const QString korgacStr(QLatin1String("korgacrc"));
-    const KArchiveEntry* korgacrcentry  = mArchiveDirectory->entry(Utils::configsPath() + korgacStr);
+    const KArchiveEntry *korgacrcentry  = mArchiveDirectory->entry(Utils::configsPath() + korgacStr);
     if (korgacrcentry && korgacrcentry->isFile()) {
-        const KArchiveFile* korgacrcFile = static_cast<const KArchiveFile*>(korgacrcentry);
+        const KArchiveFile *korgacrcFile = static_cast<const KArchiveFile *>(korgacrcentry);
         const QString korgacrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korgacStr;
         if (QFile(korgacrc).exists()) {
             if (overwriteConfigMessageBox(korgacStr)) {
@@ -251,40 +252,37 @@ void ImportCalendarJob::restoreConfig()
     }
 
     const QString freebusyStr(QLatin1String("freebusyurls"));
-    const KArchiveEntry* freebusyentry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("korganizer/") + freebusyStr);
+    const KArchiveEntry *freebusyentry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("korganizer/") + freebusyStr);
     if (freebusyentry && freebusyentry->isFile()) {
-        const KArchiveFile* freebusyrcFile = static_cast<const KArchiveFile*>(freebusyentry);
+        const KArchiveFile *freebusyrcFile = static_cast<const KArchiveFile *>(freebusyentry);
 
         const QString freebusypath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/") + freebusyStr ;
         if (QFile(freebusypath).exists()) {
             //TODO 4.12 merge it.
             if (overwriteConfigMessageBox(freebusyStr)) {
-                copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath() );
+                copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath());
             }
         } else {
             copyToFile(freebusyrcFile, freebusypath, freebusyStr, Utils::dataPath());
         }
     }
 
-
-    const KArchiveEntry *templateEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "korganizer/templates/" ) );
+    const KArchiveEntry *templateEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("korganizer/templates/"));
     if (templateEntry && templateEntry->isDirectory()) {
         //TODO 4.12 verify if template already exists.
         const QString templatePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("korganizer/templates/");
-        const KArchiveDirectory *templateDir = static_cast<const KArchiveDirectory*>(templateEntry);
+        const KArchiveDirectory *templateDir = static_cast<const KArchiveDirectory *>(templateEntry);
         templateDir->copyTo(templatePath);
     }
-
 
     Q_EMIT info(i18n("Config restored."));
     nextStep();
 }
 
-void ImportCalendarJob::importkorganizerConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix)
+void ImportCalendarJob::importkorganizerConfig(const KArchiveFile *file, const QString &config, const QString &filename, const QString &prefix)
 {
     copyToFile(file, config, filename, prefix);
     KSharedConfig::Ptr korganizerConfig = KSharedConfig::openConfig(config);
-
 
     const QString collectionsStr(QLatin1String("GlobalCollectionSelection"));
     if (korganizerConfig->hasGroup(collectionsStr)) {
@@ -294,5 +292,4 @@ void ImportCalendarJob::importkorganizerConfig(const KArchiveFile* file, const Q
     }
     korganizerConfig->sync();
 }
-
 

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "pimsettingexporterwindow.h"
 #include "pimsettingexporter_options.h"
 
@@ -29,19 +28,18 @@
 int main(int argc, char *argv[])
 {
     KLocalizedString::setApplicationDomain("pimsettingexporter");
-    K4AboutData aboutData( "pimsettingexporter", 0, ki18n("PIM Setting Exporter"),
+    K4AboutData aboutData("pimsettingexporter", 0, ki18n("PIM Setting Exporter"),
                           KDEPIM_VERSION, ki18n("PIM Setting Exporter"), K4AboutData::License_GPL_V2,
                           ki18n("Copyright © 2012-2014 pimsettingexporter authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
     aboutData.setProgramIconName(QLatin1String("kontact"));
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-    KCmdLineArgs::addCmdLineOptions( pimsettingexporter_options() ); // Add our own options.
+    KCmdLineArgs::addCmdLineOptions(pimsettingexporter_options());   // Add our own options.
 
     KUniqueApplication::addCmdLineOptions();
 
-    if (!KUniqueApplication::start())
-    {
+    if (!KUniqueApplication::start()) {
         qDebug() << "pimsettingexporter is already running!";
         return (0);
     }

@@ -19,15 +19,14 @@
 
 #include <qdebug.h>
 
-
 #include <KLocalizedString>
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("selectiontypedialog_gui"), i18n("SelectionTypeTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("selectiontypedialog_gui"), i18n("SelectionTypeTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for selectiontypedialog"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

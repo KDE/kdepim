@@ -21,7 +21,6 @@
 #include <AkonadiCore/AgentInstance>
 #include <AkonadiCore/AgentManager>
 
-
 #include <QStringList>
 #include <QDebug>
 #include <QApplication>
@@ -31,7 +30,7 @@ SynchronizeResourceJob::SynchronizeResourceJob(QObject *parent)
     : QObject(parent),
       mIndex(0)
 {
-    QApplication::setOverrideCursor( QCursor(Qt::WaitCursor) );
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 }
 
 SynchronizeResourceJob::~SynchronizeResourceJob()
@@ -51,8 +50,8 @@ void SynchronizeResourceJob::start()
 void SynchronizeResourceJob::nextSync()
 {
     if (mIndex < mListResources.count()) {
-        const Akonadi::AgentInstance resource = Akonadi::AgentManager::self()->instance( mListResources.at(mIndex) );
-        qDebug()<<" resource.name"<<resource.name();
+        const Akonadi::AgentInstance resource = Akonadi::AgentManager::self()->instance(mListResources.at(mIndex));
+        qDebug() << " resource.name" << resource.name();
         Akonadi::ResourceSynchronizationJob *job = new Akonadi::ResourceSynchronizationJob(resource);
         job->setCollectionTreeOnly(true);
         connect(job, &Akonadi::ResourceSynchronizationJob::result, this, &SynchronizeResourceJob::slotSynchronizationFinished);
@@ -64,7 +63,7 @@ void SynchronizeResourceJob::nextSync()
 
 void SynchronizeResourceJob::slotSynchronizationFinished(KJob *job)
 {
-    Akonadi::ResourceSynchronizationJob *resourceSync = qobject_cast<Akonadi::ResourceSynchronizationJob *>( job );
+    Akonadi::ResourceSynchronizationJob *resourceSync = qobject_cast<Akonadi::ResourceSynchronizationJob *>(job);
     const QString instanceName = resourceSync->resource().name();
     if (job->error()) {
         Q_EMIT synchronizationInstanceFailed(instanceName);

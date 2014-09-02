@@ -70,7 +70,7 @@ void PimSettingsBackupRestore::setStoredParameters(const QHash<Utils::AppsType, 
 
 bool PimSettingsBackupRestore::openArchive(const QString &filename, bool readWrite)
 {
-    mArchiveStorage = new ArchiveStorage(filename,this);
+    mArchiveStorage = new ArchiveStorage(filename, this);
     if (!mArchiveStorage->openArchive(readWrite)) {
         delete mArchiveStorage;
         mArchiveStorage = 0;
@@ -90,7 +90,7 @@ void PimSettingsBackupRestore::backupStart(const QString &filename)
     mAction = Backup;
     mStoreIterator = mStored.constBegin();
     const QDateTime now = QDateTime::currentDateTime();
-    Q_EMIT addInfo(QLatin1Char('[') + QLocale().toString(( now ), QLocale::ShortFormat) + QLatin1Char(']'));
+    Q_EMIT addInfo(QLatin1Char('[') + QLocale().toString((now), QLocale::ShortFormat) + QLatin1Char(']'));
     Q_EMIT addInfo(i18n("Start to backup data in \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();
     //Add version
@@ -101,7 +101,7 @@ void PimSettingsBackupRestore::backupStart(const QString &filename)
 void PimSettingsBackupRestore::backupNextStep()
 {
     if (mStoreIterator != mStored.constEnd()) {
-        switch(mStoreIterator.key()) {
+        switch (mStoreIterator.key()) {
         case Utils::KMail:
             if (mStoreIterator.value().numberSteps != 0) {
                 mImportExportData = new ExportMailJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
@@ -176,7 +176,7 @@ void PimSettingsBackupRestore::backupFinished()
 void PimSettingsBackupRestore::restoreNextStep()
 {
     if (mStoreIterator != mStored.constEnd()) {
-        switch(mStoreIterator.key()) {
+        switch (mStoreIterator.key()) {
         case Utils::KMail:
             if (mStoreIterator.value().numberSteps != 0) {
                 mImportExportData = new ImportMailJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
@@ -226,7 +226,7 @@ void PimSettingsBackupRestore::restoreNextStep()
             }
             break;
         case Utils::Unknown:
-        break;
+            break;
         }
     } else {
         restoreFinished();
@@ -245,14 +245,15 @@ void PimSettingsBackupRestore::restoreStart(const QString &filename)
     mStoreIterator = mStored.constBegin();
     const int version = Utils::archiveVersion(mArchiveStorage->archive());
     if (version > Utils::currentArchiveVersion()) {
-        if (KMessageBox::No == KMessageBox::questionYesNo(mParentWidget, i18n("The archive was created by a newer version of this program. It might contain additional data which will be skipped during import. Do you want to import it?"), i18n("Not correct version")))
+        if (KMessageBox::No == KMessageBox::questionYesNo(mParentWidget, i18n("The archive was created by a newer version of this program. It might contain additional data which will be skipped during import. Do you want to import it?"), i18n("Not correct version"))) {
             return;
+        }
     }
-    qDebug()<<" version "<<version;
+    qDebug() << " version " << version;
     AbstractImportExportJob::setArchiveVersion(version);
 
     const QDateTime now = QDateTime::currentDateTime();
-    Q_EMIT addInfo(QLatin1Char('[') + QLocale().toString(( now ), QLocale::ShortFormat) + QLatin1Char(']'));
+    Q_EMIT addInfo(QLatin1Char('[') + QLocale().toString((now), QLocale::ShortFormat) + QLatin1Char(']'));
 
     Q_EMIT addInfo(i18n("Start to restore data from \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();
@@ -288,7 +289,7 @@ void PimSettingsBackupRestore::slotJobFinished()
     Q_EMIT addEndLine();
     delete mImportExportData;
     mImportExportData = 0;
-    switch(mAction) {
+    switch (mAction) {
     case Backup:
         backupNextStep();
         break;

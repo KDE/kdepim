@@ -21,9 +21,8 @@
 
 #include <QHBoxLayout>
 
-
-LogWidget::LogWidget(QWidget * parent)
-    :QWidget(parent)
+LogWidget::LogWidget(QWidget *parent)
+    : QWidget(parent)
 {
     QHBoxLayout *layout = new QHBoxLayout;
     mCustomLogWidget = new KPIM::CustomLogWidget;
@@ -41,17 +40,17 @@ void LogWidget::clear()
     mCustomLogWidget->clear();
 }
 
-void LogWidget::addInfoLogEntry( const QString &log )
+void LogWidget::addInfoLogEntry(const QString &log)
 {
     mCustomLogWidget->addInfoLogEntry(log);
 }
 
-void LogWidget::addErrorLogEntry( const QString &log )
+void LogWidget::addErrorLogEntry(const QString &log)
 {
     mCustomLogWidget->addErrorLogEntry(log);
 }
 
-void LogWidget::addTitleLogEntry( const QString &log )
+void LogWidget::addTitleLogEntry(const QString &log)
 {
     mCustomLogWidget->addTitleLogEntry(log);
 }

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef PIMSETTINGEXPORTERWINDOW_H
 #define PIMSETTINGEXPORTERWINDOW_H
 #include <kxmlguiwindow.h>
@@ -30,7 +29,7 @@ class PimSettingExporterWindow: public KXmlGuiWindow
 {
     Q_OBJECT
 public:
-    explicit PimSettingExporterWindow(QWidget *parent=0);
+    explicit PimSettingExporterWindow(QWidget *parent = 0);
     ~PimSettingExporterWindow();
     void handleCommandLine();
 
@@ -78,7 +77,6 @@ private:
     QAction *mArchiveStructureInfo;
     QAction *mShowArchiveInformationsAction;
 };
-
 
 #endif /* PIMSETTINGEXPORTERWINDOW_H */
 

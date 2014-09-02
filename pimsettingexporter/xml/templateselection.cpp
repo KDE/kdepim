@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "templateselection.h"
 #include <QDomDocument>
 #include <QDebug>
@@ -30,7 +29,7 @@ TemplateSelection::TemplateSelection(const QString &path)
         int errorCol;
         QFile file(path);
         if (file.open(QIODevice::ReadOnly)) {
-            if ( !doc.setContent( &file, &errorMsg, &errorRow, &errorCol ) ) {
+            if (!doc.setContent(&file, &errorMsg, &errorRow, &errorCol)) {
                 qDebug() << "Unable to load document.Parse error in line " << errorRow
                          << ", col " << errorCol << ": " << errorMsg;
             } else {
@@ -49,9 +48,9 @@ Utils::StoredTypes TemplateSelection::loadStoredTypes(const QDomElement &element
 {
     Utils::StoredTypes types = Utils::None;
     QDomNode n = element.firstChild();
-    while(!n.isNull())  {
+    while (!n.isNull())  {
         QDomElement e = n.toElement();
-        if(!e.isNull())  {
+        if (!e.isNull())  {
             const QString tagName(e.tagName());
             if (tagName == QLatin1String("mailtransport")) {
                 types |= Utils::MailTransport;
@@ -80,32 +79,34 @@ QHash<Utils::AppsType, Utils::StoredTypes> TemplateSelection::loadTemplate(const
     }
     QDomElement docElem = mDocument.documentElement();
     QDomNode n = docElem.firstChild();
-    while(!n.isNull())  {
+    while (!n.isNull())  {
         QDomElement e = n.toElement();
-        if(!e.isNull())  {
+        if (!e.isNull())  {
             const QString tagName(e.tagName());
-            qDebug()<<"tag :"<< tagName;
+            qDebug() << "tag :" << tagName;
             Utils::AppsType type = Utils::Unknown;
-            if (tagName == QLatin1String("kmail"))
+            if (tagName == QLatin1String("kmail")) {
                 type = Utils::KMail;
-            else if (tagName == QLatin1String("kaddressbook"))
+            } else if (tagName == QLatin1String("kaddressbook")) {
                 type = Utils::KAddressBook;
-            else if (tagName == QLatin1String("kalarm"))
+            } else if (tagName == QLatin1String("kalarm")) {
                 type = Utils::KAlarm;
-            else if (tagName == QLatin1String("korganizer"))
+            } else if (tagName == QLatin1String("korganizer")) {
                 type = Utils::KOrganizer;
-            else if (tagName == QLatin1String("kjots"))
+            } else if (tagName == QLatin1String("kjots")) {
                 type = Utils::KJots;
-            else if (tagName == QLatin1String("knotes"))
+            } else if (tagName == QLatin1String("knotes")) {
                 type = Utils::KNotes;
-            else if (tagName == QLatin1String("akregator"))
+            } else if (tagName == QLatin1String("akregator")) {
                 type = Utils::Akregator;
-            else if (tagName == QLatin1String("blogilo"))
+            } else if (tagName == QLatin1String("blogilo")) {
                 type = Utils::Blogilo;
+            }
             if (type != Utils::Unknown) {
                 Utils::StoredTypes storedType = loadStoredTypes(e);
-                if (storedType != Utils::None)
+                if (storedType != Utils::None) {
                     value.insert(type, storedType);
+                }
             }
         }
         n = n.nextSibling();
@@ -153,7 +154,7 @@ void TemplateSelection::createTemplate(const QHash<Utils::AppsType, Utils::impor
 
     QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
     while (i != stored.constEnd())  {
-        switch(i.key()) {
+        switch (i.key()) {
         case Utils::KMail: {
             QDomElement tag = mDocument.createElement(QLatin1String("kmail"));
             root.appendChild(tag);

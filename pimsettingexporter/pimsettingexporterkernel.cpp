@@ -31,30 +31,30 @@
 #include <AkonadiCore/changerecorder.h>
 #include <KSharedConfig>
 
-PimSettingExporterKernel::PimSettingExporterKernel( QObject *parent )
-    : QObject( parent )
+PimSettingExporterKernel::PimSettingExporterKernel(QObject *parent)
+    : QObject(parent)
 {
-    mMessageSender = new MessageComposer::AkonadiSender( this );
-    mIdentityManager = new KIdentityManagement::IdentityManager( false, this );
-    Akonadi::Session *session = new Akonadi::Session( "Backup Mail Kernel ETM", this );
+    mMessageSender = new MessageComposer::AkonadiSender(this);
+    mIdentityManager = new KIdentityManagement::IdentityManager(false, this);
+    Akonadi::Session *session = new Akonadi::Session("Backup Mail Kernel ETM", this);
 
-    mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
-    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored( KABC::Addressee::mimeType(), true );
-    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored( KABC::ContactGroup::mimeType(), true );
+    mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor(session, this);
+    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KABC::Addressee::mimeType(), true);
+    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KABC::ContactGroup::mimeType(), true);
     mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_ACTIVE);
     mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_ARCHIVED);
     mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_TEMPLATE);
 
-    mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
-    mEntityTreeModel->setIncludeUnsubscribed( false );
-    mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+    mEntityTreeModel = new Akonadi::EntityTreeModel(folderCollectionMonitor(), this);
+    mEntityTreeModel->setIncludeUnsubscribed(false);
+    mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
-    mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
-    mCollectionModel->setSourceModel( mEntityTreeModel );
-    mCollectionModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-    mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-    mCollectionModel->setDynamicSortFilter( true );
-    mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+    mCollectionModel = new Akonadi::EntityMimeTypeFilterModel(this);
+    mCollectionModel->setSourceModel(mEntityTreeModel);
+    mCollectionModel->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
+    mCollectionModel->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
+    mCollectionModel->setDynamicSortFilter(true);
+    mCollectionModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 }
 
 KIdentityManagement::IdentityManager *PimSettingExporterKernel::identityManager()
@@ -79,12 +79,12 @@ KSharedConfig::Ptr PimSettingExporterKernel::config()
 
 void PimSettingExporterKernel::syncConfig()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
 }
 
-MailCommon::JobScheduler* PimSettingExporterKernel::jobScheduler() const
+MailCommon::JobScheduler *PimSettingExporterKernel::jobScheduler() const
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return 0;
 }
 
@@ -95,7 +95,7 @@ Akonadi::ChangeRecorder *PimSettingExporterKernel::folderCollectionMonitor() con
 
 void PimSettingExporterKernel::updateSystemTray()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
 }
 
 bool PimSettingExporterKernel::showPopupAfterDnD()
@@ -110,27 +110,24 @@ qreal PimSettingExporterKernel::closeToQuotaThreshold()
 
 QStringList PimSettingExporterKernel::customTemplates()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return QStringList();
 }
 
 bool PimSettingExporterKernel::excludeImportantMailFromExpiry()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return true;
 }
 
 Akonadi::Entity::Id PimSettingExporterKernel::lastSelectedFolder()
 {
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return Akonadi::Entity::Id();
 }
 
-void PimSettingExporterKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
+void PimSettingExporterKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
 {
     Q_UNUSED(col);
 }
-
-
-
 

@@ -35,7 +35,7 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     : QDialog(parent),
       mFileName(filename)
 {
-    setWindowTitle( i18n( "Show Archive Content on file \"%1\"", filename ) );
+    setWindowTitle(i18n("Show Archive Content on file \"%1\"", filename));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -45,7 +45,7 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &ShowArchiveStructureDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ShowArchiveStructureDialog::reject);
-    setModal( true );
+    setModal(true);
     mTreeWidget = new QTreeWidget;
     mTreeWidget->header()->hide();
     mTreeWidget->setAlternatingRowColors(true);
@@ -118,31 +118,31 @@ void ShowArchiveStructureDialog::addSubItems(QTreeWidgetItem *parent, const KArc
 {
     const KArchiveDirectory *dir = static_cast<const KArchiveDirectory *>(entry);
     ++indent;
-    const QString space = QString(indent*2, QLatin1Char(' '));
-    Q_FOREACH(const QString& entryName, dir->entries()) {
+    const QString space = QString(indent * 2, QLatin1Char(' '));
+    Q_FOREACH (const QString &entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry) {
             if (entry->isDirectory()) {
                 const KArchiveDirectory *dirEntry = static_cast<const KArchiveDirectory *>(entry);
                 QTreeWidgetItem *newTopItem = addItem(parent, dirEntry->name());
                 QFont font(newTopItem->font(0));
-                font.setBold(true);                
+                font.setBold(true);
                 mLogFile += space + dirEntry->name() + QLatin1Char('\n');
                 newTopItem->setFont(0, font);
                 addSubItems(newTopItem, entry, indent);
             } else if (entry->isFile()) {
                 const KArchiveFile *file = static_cast<const KArchiveFile *>(entry);
-                addItem(parent,file->name());                
+                addItem(parent, file->name());
                 mLogFile += space + file->name() + QLatin1Char('\n');
             }
         }
     }
 }
 
-QTreeWidgetItem *ShowArchiveStructureDialog::addItem(QTreeWidgetItem *parent,const QString &name)
+QTreeWidgetItem *ShowArchiveStructureDialog::addItem(QTreeWidgetItem *parent, const QString &name)
 {
     QTreeWidgetItem *item = new QTreeWidgetItem(parent);
-    item->setText(0,name);
+    item->setText(0, name);
     return item;
 }
 
@@ -151,26 +151,25 @@ QTreeWidgetItem *ShowArchiveStructureDialog::addTopItem(const QString &name)
     QTreeWidgetItem *item = new QTreeWidgetItem;
     QFont font = item->font(0);
     font.setBold(true);
-    item->setFont(0,font);
-    item->setText(0,name);
+    item->setFont(0, font);
+    item->setText(0, name);
     mTreeWidget->addTopLevelItem(item);
     return item;
 }
 
 void ShowArchiveStructureDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "ShowArchiveStructureDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "ShowArchiveStructureDialog");
+    group.writeEntry("Size", size());
 }
 
 void ShowArchiveStructureDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "ShowArchiveStructureDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "ShowArchiveStructureDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(600, 400));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
-
 
 #include "moc_showarchivestructuredialog.cpp"

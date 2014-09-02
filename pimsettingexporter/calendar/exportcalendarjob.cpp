@@ -32,9 +32,8 @@
 #include <QWidget>
 #include <QStandardPaths>
 
-
-ExportCalendarJob::ExportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
-    :AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
+ExportCalendarJob::ExportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }
 
@@ -68,15 +67,14 @@ void ExportCalendarJob::start()
     Q_EMIT jobFinished();
 }
 
-
 void ExportCalendarJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
 
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
-    foreach( const Akonadi::AgentInstance &agent, list ) {
+    foreach (const Akonadi::AgentInstance &agent, list) {
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_icaldir_resource_"))) {
             const QString archivePath = Utils::calendarPath() + identifier + QDir::separator();
@@ -88,16 +86,18 @@ void ExportCalendarJob::backupResources()
                     const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("calendar.zip"));
                     if (fileAdded) {
                         const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                        if (!errorStr.isEmpty())
+                        if (!errorStr.isEmpty()) {
                             Q_EMIT error(errorStr);
+                        }
                         url = Utils::akonadiAgentConfigPath(identifier);
                         if (!url.isEmpty()) {
                             const QString filename = url.fileName();
                             const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                            if (fileAdded)
-                                Q_EMIT info(i18n("\"%1\" was backuped.",filename));
-                            else
-                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                            if (fileAdded) {
+                                Q_EMIT info(i18n("\"%1\" was backuped.", filename));
+                            } else {
+                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
+                            }
                         }
                     }
                 }
@@ -113,7 +113,7 @@ void ExportCalendarJob::backupResources()
 void ExportCalendarJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
 
     const QString korganizerStr(QLatin1String("korganizerrc"));
     const QString korganizerrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerStr;
@@ -123,8 +123,7 @@ void ExportCalendarJob::backupConfig()
         QTemporaryFile tmp;
         tmp.open();
 
-        KConfig *korganizerConfig = korganizer->copyTo( tmp.fileName() );
-
+        KConfig *korganizerConfig = korganizer->copyTo(tmp.fileName());
 
         const QString globalCollectionsStr(QLatin1String("GlobalCollectionSelection"));
         if (korganizerConfig->hasGroup(globalCollectionsStr)) {
@@ -147,15 +146,14 @@ void ExportCalendarJob::backupConfig()
         backupFile(freebusyurls, Utils::dataPath(), freebusyurlsStr);
     }
 
-    const QString templateDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/korganizer/templates/" ) ;
-    QDir templateDirectory( templateDir );
+    const QString templateDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/templates/") ;
+    QDir templateDirectory(templateDir);
     if (templateDirectory.exists()) {
-        const bool templateDirAdded = archive()->addLocalDirectory(templateDir, Utils::dataPath() +  QLatin1String( "/korganizer/templates/" ));
+        const bool templateDirAdded = archive()->addLocalDirectory(templateDir, Utils::dataPath() +  QLatin1String("/korganizer/templates/"));
         if (!templateDirAdded) {
             Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", templateDir));
         }
     }
-
 
     Q_EMIT info(i18n("Config backup done."));
 }

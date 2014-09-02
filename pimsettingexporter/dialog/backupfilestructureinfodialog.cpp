@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "backupfilestructureinfodialog.h"
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
@@ -36,7 +35,7 @@
 BackupFileStructureInfoDialog::BackupFileStructureInfoDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Archive File Structure" ) );
+    setWindowTitle(i18n("Archive File Structure"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -45,7 +44,7 @@ BackupFileStructureInfoDialog::BackupFileStructureInfoDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::accepted, this, &BackupFileStructureInfoDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &BackupFileStructureInfoDialog::reject);
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
-    setModal( true );
+    setModal(true);
 
     QWidget *w = new QWidget;
 
@@ -71,7 +70,7 @@ BackupFileStructureInfoDialog::~BackupFileStructureInfoDialog()
 
 void BackupFileStructureInfoDialog::loadStructure()
 {
-    const QString fileName( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("pimsettingexporter/backup-structure.txt") ) );
+    const QString fileName(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("pimsettingexporter/backup-structure.txt")));
     if (!fileName.isEmpty()) {
         QFile f(fileName);
         if (!f.open(QIODevice::ReadOnly)) {
@@ -84,17 +83,16 @@ void BackupFileStructureInfoDialog::loadStructure()
 
 void BackupFileStructureInfoDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "BackupFileStructureInfoDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "BackupFileStructureInfoDialog");
+    group.writeEntry("Size", size());
 }
 
 void BackupFileStructureInfoDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "BackupFileStructureInfoDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "BackupFileStructureInfoDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(600, 400));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
-
 

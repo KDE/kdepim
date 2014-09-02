@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "selectiontypetreewidget.h"
 #include "pimsettingexporter/utils.h"
 #include "xml/templateselection.h"
@@ -102,29 +101,37 @@ QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeTreeWidget::s
 {
     QHash<Utils::AppsType, Utils::importExportParameters> stored;
     Utils::importExportParameters var = typeChecked(mKmailItem);
-    if (!var.isEmpty())
+    if (!var.isEmpty()) {
         stored.insert(Utils::KMail, var);
+    }
     var = typeChecked(mKalarmItem);
-    if (!var.isEmpty())
+    if (!var.isEmpty()) {
         stored.insert(Utils::KAlarm, var);
+    }
     var = typeChecked(mKaddressbookItem);
-    if (!var.isEmpty())
+    if (!var.isEmpty()) {
         stored.insert(Utils::KAddressBook, var);
+    }
     var = typeChecked(mKorganizerItem);
-    if (!var.isEmpty())
+    if (!var.isEmpty()) {
         stored.insert(Utils::KOrganizer, var);
+    }
     var = typeChecked(mKjotsItem);
-    if (!var.isEmpty())
+    if (!var.isEmpty()) {
         stored.insert(Utils::KJots, var);
+    }
     var = typeChecked(mKNotesItem);
-    if (!var.isEmpty())
+    if (!var.isEmpty()) {
         stored.insert(Utils::KNotes, var);
+    }
     var = typeChecked(mAkregatorItem);
-    if (!var.isEmpty())
+    if (!var.isEmpty()) {
         stored.insert(Utils::Akregator, var);
+    }
     var = typeChecked(mBlogiloItem);
-    if (!var.isEmpty())
+    if (!var.isEmpty()) {
         stored.insert(Utils::Blogilo, var);
+    }
     return stored;
 }
 
@@ -133,7 +140,7 @@ Utils::importExportParameters SelectionTypeTreeWidget::typeChecked(QTreeWidgetIt
     Utils::importExportParameters parameters;
     int numberOfStep = 0;
     Utils::StoredTypes types = Utils::None;
-    for (int i = 0; i<parent->childCount(); ++i) {
+    for (int i = 0; i < parent->childCount(); ++i) {
         QTreeWidgetItem *item = parent->child(i);
         if (item->checkState(0) == Qt::Checked) {
             types |= static_cast<Utils::StoredType>(item->data(0, action).toInt());
@@ -145,62 +152,54 @@ Utils::importExportParameters SelectionTypeTreeWidget::typeChecked(QTreeWidgetIt
     return parameters;
 }
 
-
 void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::StoredType type)
 {
     switch (type) {
     case Utils::None:
         break;
-    case Utils::Identity:
-    {
+    case Utils::Identity: {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, Utils::storedTypeToI18n(Utils::Identity));
         item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
-    case Utils::Mails:
-    {
+    case Utils::Mails: {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, Utils::storedTypeToI18n(Utils::Mails));
         item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
-    case Utils::MailTransport:
-    {
+    case Utils::MailTransport: {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, Utils::storedTypeToI18n(Utils::MailTransport));
         item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
-    case Utils::Resources:
-    {
+    case Utils::Resources: {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, Utils::storedTypeToI18n(Utils::Resources));
         item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
-    case Utils::Config:
-    {
+    case Utils::Config: {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, Utils::storedTypeToI18n(Utils::Config));
         item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
-    case Utils::AkonadiDb:
-    {
+    case Utils::AkonadiDb: {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, Utils::storedTypeToI18n(Utils::AkonadiDb));
         item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
-    case Utils::Data:
-    {
+    case Utils::Data: {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, Utils::storedTypeToI18n(Utils::Data));
         item->setCheckState(0, Qt::Checked);
@@ -208,7 +207,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
         break;
     }
     default:
-        qDebug()<<" Type not supported: "<<type;
+        qDebug() << " Type not supported: " << type;
         break;
     }
 }
@@ -239,7 +238,7 @@ void SelectionTypeTreeWidget::changeState(QTreeWidgetItem *item, bool b)
 {
     blockSignals(true);
     item->setCheckState(0, b ? Qt::Checked : Qt::Unchecked);
-    for (int i=0; i < item->childCount(); ++i) {
+    for (int i = 0; i < item->childCount(); ++i) {
         item->child(i)->setCheckState(0, b ? Qt::Checked : Qt::Unchecked);
     }
     blockSignals(false);
@@ -247,16 +246,17 @@ void SelectionTypeTreeWidget::changeState(QTreeWidgetItem *item, bool b)
 
 void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
 {
-    if (column!=0)
+    if (column != 0) {
         return;
+    }
     //Parent
-    if (item->childCount()!=0) {
+    if (item->childCount() != 0) {
         changeState(item, item->checkState(0) == Qt::Checked);
     } else { //child
         blockSignals(true);
         QTreeWidgetItem *parent = item->parent();
         Qt::CheckState state = Qt::PartiallyChecked;
-        for (int i=0; i < parent->childCount(); ++i) {
+        for (int i = 0; i < parent->childCount(); ++i) {
             if (i == 0) {
                 state = parent->child(i)->checkState(0);
             } else {
@@ -305,7 +305,7 @@ void SelectionTypeTreeWidget::saveAsTemplate()
 
 void SelectionTypeTreeWidget::initializeSubItem(QTreeWidgetItem *item, Utils::StoredTypes types)
 {
-    for (int i=0; i < item->childCount(); ++i) {
+    for (int i = 0; i < item->childCount(); ++i) {
         QTreeWidgetItem *child = item->child(i);
         if (types & static_cast<Utils::StoredType>(child->data(0, action).toInt())) {
             child->setCheckState(0, Qt::Checked);
@@ -319,7 +319,7 @@ void SelectionTypeTreeWidget::setParameters(const QHash<Utils::AppsType, Utils::
 {
     QHash<Utils::AppsType, Utils::StoredTypes>::const_iterator i = params.constBegin();
     while (i != params.constEnd())  {
-        switch(i.key()) {
+        switch (i.key()) {
         case Utils::KMail: {
             initializeSubItem(mKmailItem, i.value());
             break;

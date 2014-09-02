@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -98,7 +98,6 @@ QString Utils::notePath()
     return QLatin1String("note/");
 }
 
-
 QString Utils::prefixAkonadiConfigFile()
 {
     return QLatin1String("agent_config_");
@@ -131,7 +130,7 @@ KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
                 break;
             }
         }
-        newUrl=KUrl(newFileName);
+        newUrl = KUrl(newFileName);
     }
     return newUrl;
 }
@@ -149,19 +148,19 @@ KUrl Utils::resourcePath(KSharedConfigPtr resourceConfig, const QString &default
 void Utils::convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey)
 {
     if (group.hasKey(currentKey)) {
-        const QStringList value = group.readEntry(currentKey,QStringList());
+        const QStringList value = group.readEntry(currentKey, QStringList());
         QStringList newValue;
-        Q_FOREACH(const QString &str,value) {
+        Q_FOREACH (const QString &str, value) {
             bool found = false;
             const int collectionId = str.toInt(&found);
             if (found) {
-                const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionId ));
+                const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));
                 if (!realPath.isEmpty()) {
-                    newValue<<realPath;
+                    newValue << realPath;
                 }
             }
         }
-        group.writeEntry(currentKey,newValue);
+        group.writeEntry(currentKey, newValue);
     }
 }
 
@@ -178,9 +177,10 @@ void Utils::convertCollectionListToRealPath(KConfigGroup &group, const QString &
                 bool found = false;
                 const int collectionValue = collection.toInt(&found);
                 if (found && collectionValue != -1) {
-                    const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionValue ));
-                    if (!realPath.isEmpty())
+                    const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionValue));
+                    if (!realPath.isEmpty()) {
                         result << realPath;
+                    }
                 }
             }
             if (result.isEmpty()) {
@@ -203,8 +203,8 @@ void Utils::convertCollectionToRealPath(KConfigGroup &group, const QString &curr
             bool found = false;
             const int collectionValue = collectionId.toInt(&found);
             if (found && collectionValue != -1) {
-                const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( collectionValue ));
-                group.writeEntry(currentKey,realPath);
+                const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionValue));
+                group.writeEntry(currentKey, realPath);
             } else {
                 group.deleteEntry(currentKey);
             }
@@ -217,7 +217,7 @@ KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &def
     const QString agentFileName = agent.identifier() + QLatin1String("rc");
     const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName ;
 
-    KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+    KSharedConfigPtr resourceConfig = KSharedConfig::openConfig(configFileName);
     KUrl url = Utils::resourcePath(resourceConfig, defaultPath);
     return url;
 }
@@ -226,48 +226,50 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
 {
     const QString agentFileName = identifier + QLatin1String("rc");
     const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName ;
-    qDebug()<<"configFileName "<<configFileName<<"agentFileName "<<configFileName;
+    qDebug() << "configFileName " << configFileName << "agentFileName " << configFileName;
 
-    KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
+    KSharedConfigPtr resourceConfig = KSharedConfig::openConfig(configFileName);
     QTemporaryFile tmp;
     tmp.open();
-    KConfig * config = resourceConfig->copyTo( tmp.fileName() );
+    KConfig *config = resourceConfig->copyTo(tmp.fileName());
 
     if (identifier.contains(POP3_RESOURCE_IDENTIFIER)) {
         const QString targetCollection = QLatin1String("targetCollection");
         KConfigGroup group = config->group("General");
         if (group.hasKey(targetCollection)) {
-            group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
+            group.writeEntry(targetCollection, MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
         }
     } else if (PimCommon::Util::isImapResource(identifier)) {
         const QString trash = QLatin1String("TrashCollection");
         KConfigGroup group = config->group("cache");
         if (group.hasKey(trash)) {
-            group.writeEntry(trash,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
+            group.writeEntry(trash, MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));
         }
     }
     //Customize resource if necessary here.
     config->sync();
     const bool fileAdded  = archive->addLocalFile(tmp.fileName(), path + agentFileName);
     delete config;
-    if (!fileAdded)
+    if (!fileAdded) {
         return i18n("Resource file \"%1\" cannot be added to backup file.", agentFileName);
+    }
     return QString();
 }
 
 KUrl Utils::akonadiAgentConfigPath(const QString &identifier)
 {
     const QString relativeFileName = QString::fromLatin1("akonadi/%1%2").arg(Utils::prefixAkonadiConfigFile()).arg(identifier);
-    const QString configFile = Akonadi::XdgBaseDirs::findResourceFile( "config", relativeFileName );
-    if (!configFile.isEmpty())
+    const QString configFile = Akonadi::XdgBaseDirs::findResourceFile("config", relativeFileName);
+    if (!configFile.isEmpty()) {
         return KUrl(configFile);
+    }
     return KUrl();
 }
 
 QString Utils::akonadiAgentName(KSharedConfig::Ptr config)
 {
     KConfigGroup group = config->group(QLatin1String("Agent"));
-    const QString name = group.readEntry(QLatin1String("Name"),QString());
+    const QString name = group.readEntry(QLatin1String("Name"), QString());
     return name;
 }
 
@@ -290,17 +292,17 @@ void Utils::addVersion(KZip *archive)
     const bool fileAdded  = archive->addLocalFile(tmp.fileName(), Utils::infoPath() + QString::fromLatin1("VERSION_%1").arg(currentArchiveVersion()));
     if (!fileAdded) {
         //TODO add i18n ?
-        qDebug()<<"version file can not add to archive";
+        qDebug() << "version file can not add to archive";
     }
 }
 
 int Utils::archiveVersion(KZip *archive)
 {
-    const KArchiveEntry *informationFile = archive->directory()->entry(Utils::infoPath() + QLatin1String( "VERSION_1" ) );
+    const KArchiveEntry *informationFile = archive->directory()->entry(Utils::infoPath() + QLatin1String("VERSION_1"));
     if (informationFile && informationFile->isFile()) {
         return 1;
     }
-    informationFile = archive->directory()->entry(Utils::infoPath() + QLatin1String( "VERSION_2" ) );
+    informationFile = archive->directory()->entry(Utils::infoPath() + QLatin1String("VERSION_2"));
     if (informationFile && informationFile->isFile()) {
         return 2;
     }
@@ -310,7 +312,7 @@ int Utils::archiveVersion(KZip *archive)
 
 QString Utils::appTypeToI18n(AppsType type)
 {
-    switch(type) {
+    switch (type) {
     case KMail:
         return i18n("KMail");
     case KAddressBook:
@@ -328,13 +330,13 @@ QString Utils::appTypeToI18n(AppsType type)
     case Blogilo:
         return i18n("Blogilo");
     }
-    qDebug()<<" type unknown "<<type;
+    qDebug() << " type unknown " << type;
     return QString();
 }
 
 QString Utils::storedTypeToI18n(StoredType type)
 {
-    switch(type) {
+    switch (type) {
     case None:
         return QString();
     case Identity:
@@ -352,6 +354,6 @@ QString Utils::storedTypeToI18n(StoredType type)
     case Data:
         return i18n("Data");
     }
-    qDebug()<<" type unknown "<<type;
+    qDebug() << " type unknown " << type;
     return QString();
 }

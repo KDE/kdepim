@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -29,7 +29,6 @@
 #include <QDir>
 #include <QStandardPaths>
 
-
 static const QString storeAddressbook = QLatin1String("backupaddressbook/");
 
 ImportAddressbookJob::ImportAddressbookJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
@@ -47,7 +46,7 @@ void ImportAddressbookJob::start()
 {
     Q_EMIT title(i18n("Start import KAddressBook settings..."));
     mArchiveDirectory = archive()->directory();
-    searchAllFiles(mArchiveDirectory ,QString());
+    searchAllFiles(mArchiveDirectory , QString());
     initializeListStep();
     nextStep();
 }
@@ -57,10 +56,12 @@ void ImportAddressbookJob::nextStep()
     ++mIndex;
     if (mIndex < mListStep.count()) {
         Utils::StoredType type = mListStep.at(mIndex);
-        if (type == Utils::Resources)
+        if (type == Utils::Resources) {
             restoreResources();
-        if (type == Utils::Config)
+        }
+        if (type == Utils::Config) {
             restoreConfig();
+        }
     } else {
         Q_EMIT jobFinished();
     }
@@ -81,10 +82,10 @@ void ImportAddressbookJob::restoreResources()
             resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
             if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_")) ||
-                    value.akonadiConfigFile.contains(QLatin1String("akonadi_contacts_resource_")) ) {
-                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
+                    value.akonadiConfigFile.contains(QLatin1String("akonadi_contacts_resource_"))) {
+                const KArchiveEntry *fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
-                    const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
+                    const KArchiveFile *file = static_cast<const KArchiveFile *>(fileResouceEntry);
                     file->copyTo(copyToDirName);
                     QString resourceName(file->name());
 
@@ -95,9 +96,9 @@ void ImportAddressbookJob::restoreResources()
                     //TODO fix default path
                     const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, QDir::homePath() + QLatin1String("/.local/share/contacts/"));
                     const QString dataFile = value.akonadiResources;
-                    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
+                    const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
-                        const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                        const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         //TODO  adapt directory name too
                         extractZipFile(file, copyToDirName, newUrl.path());
                     }
@@ -107,7 +108,7 @@ void ImportAddressbookJob::restoreResources()
                     if (!agentConfigFile.isEmpty()) {
                         const KArchiveEntry *akonadiAgentConfigEntry = mArchiveDirectory->entry(agentConfigFile);
                         if (akonadiAgentConfigEntry->isFile()) {
-                            const KArchiveFile* file = static_cast<const KArchiveFile*>(akonadiAgentConfigEntry);
+                            const KArchiveFile *file = static_cast<const KArchiveFile *>(akonadiAgentConfigEntry);
                             file->copyTo(copyToDirName);
                             resourceName = file->name();
                             KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
@@ -115,17 +116,18 @@ void ImportAddressbookJob::restoreResources()
                         }
                     }
                     QString instanceType;
-                    if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_")))
+                    if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
                         instanceType = QLatin1String("akonadi_vcarddir_resource");
-                    else if (value.akonadiConfigFile.contains(QLatin1String("akonadi_contacts_resource_")))
+                    } else if (value.akonadiConfigFile.contains(QLatin1String("akonadi_contacts_resource_"))) {
                         instanceType = QLatin1String("akonadi_contacts_resource");
-                    else
-                        qDebug()<<" not supported"<<value.akonadiConfigFile;
+                    } else {
+                        qDebug() << " not supported" << value.akonadiConfigFile;
+                    }
 
-                    const QString newResource = mCreateResource->createResource( instanceType, filename, settings, true );
+                    const QString newResource = mCreateResource->createResource(instanceType, filename, settings, true);
                     infoAboutNewResource(newResource);
-                    qDebug()<<" newResource"<<newResource;
-                    listResource<<newResource;
+                    qDebug() << " newResource" << newResource;
+                    listResource << newResource;
                 }
             }
         }
@@ -154,14 +156,14 @@ void ImportAddressbookJob::addSpecificResourceSettings(KSharedConfig::Ptr resour
 
 void ImportAddressbookJob::searchAllFiles(const KArchiveDirectory *dir, const QString &prefix)
 {
-    Q_FOREACH(const QString& entryName, dir->entries()) {
+    Q_FOREACH (const QString &entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
             const QString newPrefix = (prefix.isEmpty() ? prefix : prefix + QLatin1Char('/')) + entryName;
             if (entryName == QLatin1String("addressbook")) {
-                storeAddressBookArchiveResource(static_cast<const KArchiveDirectory*>(entry),entryName);
+                storeAddressBookArchiveResource(static_cast<const KArchiveDirectory *>(entry), entryName);
             } else {
-                searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
+                searchAllFiles(static_cast<const KArchiveDirectory *>(entry), newPrefix);
             }
         }
     }
@@ -169,19 +171,19 @@ void ImportAddressbookJob::searchAllFiles(const KArchiveDirectory *dir, const QS
 
 void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirectory *dir, const QString &prefix)
 {
-    Q_FOREACH(const QString& entryName, dir->entries()) {
+    Q_FOREACH (const QString &entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry && entry->isDirectory()) {
-            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory*>(entry);
+            const KArchiveDirectory *resourceDir = static_cast<const KArchiveDirectory *>(entry);
             const QStringList lst = resourceDir->entries();
 
             if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 resourceFiles files;
-                Q_FOREACH(const QString &name, lst) {
+                Q_FOREACH (const QString &name, lst) {
                     if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_vcarddir_resource_")) ||
-                                                               name.contains(QLatin1String("akonadi_vcard_resource_")) ||
-                                                               name.contains(QLatin1String("akonadi_contacts_resource_")))) {
+                            name.contains(QLatin1String("akonadi_vcard_resource_")) ||
+                            name.contains(QLatin1String("akonadi_contacts_resource_")))) {
                         files.akonadiConfigFile = archPath + name;
                     } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
                         files.akonadiAgentConfigFile = archPath + name;
@@ -192,7 +194,7 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                qDebug()<<" Problem in archive. number of file "<<lst.count();
+                qDebug() << " Problem in archive. number of file " << lst.count();
             }
         }
     }
@@ -201,9 +203,9 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
 void ImportAddressbookJob::restoreConfig()
 {
     const QString kaddressbookStr(QLatin1String("kaddressbookrc"));
-    const KArchiveEntry* kaddressbookrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kaddressbookStr);
+    const KArchiveEntry *kaddressbookrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kaddressbookStr);
     if (kaddressbookrcentry && kaddressbookrcentry->isFile()) {
-        const KArchiveFile* kaddressbookrcFile = static_cast<const KArchiveFile*>(kaddressbookrcentry);
+        const KArchiveFile *kaddressbookrcFile = static_cast<const KArchiveFile *>(kaddressbookrcentry);
         const QString kaddressbookrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kaddressbookStr;
         if (QFile(kaddressbookrc).exists()) {
             if (overwriteConfigMessageBox(kaddressbookStr)) {
@@ -217,11 +219,10 @@ void ImportAddressbookJob::restoreConfig()
     nextStep();
 }
 
-void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix)
+void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile *file, const QString &config, const QString &filename, const QString &prefix)
 {
     copyToFile(file, config, filename, prefix);
     KSharedConfig::Ptr kaddressBookConfig = KSharedConfig::openConfig(config);
-
 
     const QString collectionViewCheckStateStr(QLatin1String("CollectionViewCheckState"));
     if (kaddressBookConfig->hasGroup(collectionViewCheckStateStr)) {
@@ -245,5 +246,4 @@ void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile* file, co
 
     kaddressBookConfig->sync();
 }
-
 

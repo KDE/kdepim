@@ -23,15 +23,15 @@
 
 static KCmdLineOptions pimsettingexporter_options()
 {
-  KCmdLineOptions options;
-  options.add("template <file>",       ki18n("Template file uses to define what data, settings to import or export"));
-  options.add("import",                ki18n("Import the given file" ));
-  options.add("export",                ki18n("Export the given file" ));
-  options.add( "+[url]",
-               ki18n( "File or url. "
-                      "The user will be asked whether to import or export." ) );
+    KCmdLineOptions options;
+    options.add("template <file>",       ki18n("Template file uses to define what data, settings to import or export"));
+    options.add("import",                ki18n("Import the given file"));
+    options.add("export",                ki18n("Export the given file"));
+    options.add("+[url]",
+                ki18n("File or url. "
+                      "The user will be asked whether to import or export."));
 
-  return options;
+    return options;
 }
 
 #endif // PIMSETTINGEXPORTER_OPTIONS_H

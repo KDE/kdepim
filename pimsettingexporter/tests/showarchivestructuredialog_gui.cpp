@@ -19,7 +19,6 @@
 
 #include <qdebug.h>
 
-
 #include <KLocalizedString>
 #include <QFileDialog>
 #include <QApplication>
@@ -27,9 +26,9 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("showarchivestructuredialog_gui"), i18n("showarchivestructuredialog_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("showarchivestructuredialog_gui"), i18n("showarchivestructuredialog_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for showarchivestructuredialog"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -41,15 +40,15 @@ int main (int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-
     QString fileName;
     if (parser.positionalArguments().count()) {
         fileName = parser.positionalArguments().at(0);
     } else {
         fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.zip"));
     }
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
         return 0;
+    }
     ShowArchiveStructureDialog *dialog = new ShowArchiveStructureDialog(fileName);
     dialog->resize(800, 600);
     dialog->show();
