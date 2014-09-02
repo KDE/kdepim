@@ -75,7 +75,7 @@ void CollectionExpiryPage::init()
     expireReadMailSB->setValue( 30 );
     expireReadMailSB->setSuffix( ki18ncp("Expire messages after %1", " day", " days" ) );
     daysBox->addWidget( expireReadMailSB, 0, 1 );
-    connect(expireReadMailSB,SIGNAL(valueChanged(int)),SLOT(slotChanged()));
+    connect(expireReadMailSB, static_cast<void (KPluralHandlingSpinBox::*)(int)>(&KPluralHandlingSpinBox::valueChanged), this, &CollectionExpiryPage::slotChanged);
 
     expireUnreadMailCB = new QCheckBox;
     expireUnreadMailCB->setText( i18n( "Expire unread messages after" ) );
@@ -88,7 +88,7 @@ void CollectionExpiryPage::init()
     expireUnreadMailSB->setValue( 30 );
     expireUnreadMailSB->setSuffix( ki18ncp("Expire messages after %1", " day", " days" ) );
     daysBox->addWidget( expireUnreadMailSB, 1, 1 );
-    connect(expireUnreadMailSB,SIGNAL(valueChanged(int)),SLOT(slotChanged()));
+    connect(expireUnreadMailSB, static_cast<void (KPluralHandlingSpinBox::*)(int)>(&KPluralHandlingSpinBox::valueChanged), this, &CollectionExpiryPage::slotChanged);
 
     daysBox->setColumnStretch( 3, 1 );
     globalVBox->addLayout( daysBox );
@@ -104,7 +104,7 @@ void CollectionExpiryPage::init()
 
     moveToRB = new QRadioButton( actionsGroup );
     moveToRB->setText( i18n( "Move expired messages to:" ) );
-    connect( moveToRB, SIGNAL(toggled(bool)), this, SLOT(slotUpdateControls()) );
+    connect(moveToRB, &QRadioButton::toggled, this, &CollectionExpiryPage::slotUpdateControls);
     moveToHBox->addWidget( moveToRB );
 
     folderSelector = new FolderRequester( this );
@@ -112,18 +112,18 @@ void CollectionExpiryPage::init()
     folderSelector->setShowOutbox( false );
     moveToHBox->addWidget( folderSelector );
     globalVBox->addLayout( moveToHBox );
-    connect(folderSelector,SIGNAL(folderChanged(Akonadi::Collection)),SLOT(slotChanged()));
+    connect(folderSelector, &FolderRequester::folderChanged, this, &CollectionExpiryPage::slotChanged);
 
     deletePermanentlyRB = new QRadioButton( actionsGroup );
     deletePermanentlyRB->setText( i18n( "Delete expired messages permanently" ) );
-    connect(deletePermanentlyRB, SIGNAL(toggled(bool)), this, SLOT(slotUpdateControls()) );
+    connect(deletePermanentlyRB, &QRadioButton::toggled, this, &CollectionExpiryPage::slotUpdateControls);
 
     globalVBox->addWidget( deletePermanentlyRB );
 
     globalVBox->addSpacing( 30 );
 
     expireNowPB = new QPushButton( i18n( "Save Settings and Expire Now" ), this );
-    connect(expireNowPB, SIGNAL(clicked()), SLOT(slotSaveAndExpire()));
+    connect(expireNowPB, &QPushButton::clicked, this, &CollectionExpiryPage::slotSaveAndExpire);
     globalVBox->addWidget( expireNowPB, 0, Qt::AlignRight );
 
     globalVBox->addStretch( 100 ); // eat all superfluous space
@@ -223,7 +223,7 @@ void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool 
     if (saveSettings) {
         Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection, this );
         job->setProperty( "expireNow", expireNow );
-        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)) );
+        connect(job, &Akonadi::CollectionModifyJob::result, this, &CollectionExpiryPage::slotCollectionModified);
     } else {
         if (expireNow) {
             MailCommon::Util::expireOldMessages( collection, true /*immediate*/);
