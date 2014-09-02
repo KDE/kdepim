@@ -51,7 +51,7 @@ QColor EventViews::resourceColor( const Akonadi::Item &item, const PrefsPtr &pre
   if ( !item.isValid() ) {
     return QColor();
   }
-  const QString id = QString::number( item.storageCollectionId() );
+  const QString id = QString::number( item.parentCollection().id() );
   return preferences->resourceColor( id );
 }
 

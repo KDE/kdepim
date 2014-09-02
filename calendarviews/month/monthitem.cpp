@@ -629,13 +629,7 @@ QColor IncidenceMonthItem::bgColor() const
     if ( prefs->monthViewColors() == PrefsBase::MonthItemResourceOnly ||
          prefs->monthViewColors() == PrefsBase::MonthItemResourceInsideCategoryOutside ) {
 
-      const QString id = QString::number( akonadiItem().storageCollectionId() );
-      if ( id.isEmpty() ) {
-        // item got removed from calendar, give up.
-        return QColor();
-      }
-
-      bgColor = monthScene()->monthView()->preferences()->resourceColor( id );
+      bgColor = EventViews::resourceColor(akonadiItem(), prefs);
     } else {
       bgColor = catColor();
     }
@@ -658,10 +652,7 @@ QColor IncidenceMonthItem::frameColor() const
        ( mIncidence->categories().isEmpty() && prefs->monthViewColors() ==
          PrefsBase::MonthItemResourceInsideCategoryOutside ) ) {
     Q_ASSERT( mIncidence );
-    const QString id = QString::number( akonadiItem().storageCollectionId() );
-    if ( !id.isEmpty() ) {
-      frameColor = prefs->resourceColor( id );
-    }
+    frameColor = EventViews::resourceColor(akonadiItem(), prefs);
   } else {
     frameColor = catColor();
   }
