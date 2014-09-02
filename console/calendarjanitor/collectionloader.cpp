@@ -42,7 +42,7 @@ void CollectionLoader::load()
                                                                        Akonadi::CollectionFetchJob::Recursive);
 
     job->fetchScope().setContentMimeTypes(KCalCore::Incidence::mimeTypes());
-    connect(job, SIGNAL(result(KJob*)), SLOT(onCollectionsLoaded(KJob*)));
+    connect(job, &Akonadi::CollectionFetchJob::result, this, &CollectionLoader::onCollectionsLoaded);
     job->start();
 }
 

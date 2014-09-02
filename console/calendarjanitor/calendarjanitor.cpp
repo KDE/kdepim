@@ -85,11 +85,9 @@ CalendarJanitor::CalendarJanitor(const Options &options, QObject *parent) : QObj
 {
     m_changer = new Akonadi::IncidenceChanger(this);
     m_changer->setShowDialogsOnError(false);
-    connect(m_changer, SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
-            SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
-    connect(m_changer, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
-            SLOT(onDeleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)));
-    connect(m_collectionLoader, SIGNAL(loaded(bool)), SLOT(onCollectionsFetched(bool)));
+    connect(m_changer, &Akonadi::IncidenceChanger::modifyFinished, this, &CalendarJanitor::onModifyFinished);
+    connect(m_changer, &Akonadi::IncidenceChanger::deleteFinished, this, &CalendarJanitor::onDeleteFinished);
+    connect(m_collectionLoader, &CollectionLoader::loaded, this, &CalendarJanitor::onCollectionsFetched);
 }
 
 void CalendarJanitor::start()

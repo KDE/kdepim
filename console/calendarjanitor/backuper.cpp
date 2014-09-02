@@ -83,7 +83,7 @@ void Backuper::backup(const QString &filename, const QList<Akonadi::Entity::Id> 
                                                                        Akonadi::CollectionFetchJob::Recursive);
 
     job->fetchScope().setContentMimeTypes(KCalCore::Incidence::mimeTypes());
-    connect(job, SIGNAL(result(KJob*)), SLOT(onCollectionsFetched(KJob*)));
+    connect(job, &Akonadi::CollectionFetchJob::result, this, &Backuper::onCollectionsFetched);
     job->start();
 }
 
@@ -117,7 +117,7 @@ void Backuper::loadCollection(const Akonadi::Collection &collection)
     Akonadi::ItemFetchJob *ifj = new Akonadi::ItemFetchJob(collection, this);
     ifj->setProperty("collectionId", collection.id());
     ifj->fetchScope().fetchFullPayload(true);
-    connect(ifj, SIGNAL(result(KJob*)), SLOT(onCollectionLoaded(KJob*)));
+    connect(ifj, &Akonadi::ItemFetchJob::result, this, &Backuper::onCollectionLoaded);
     m_pendingCollections << collection.id();
 }
 
