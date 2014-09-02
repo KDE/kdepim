@@ -13,3 +13,4 @@ Migrate configrc done:
 - kalarm (kalarmrc, kalarmui.rc)
 - kmail (kmail_part.rc  kmcomposerui.rc  kmmainwin.rc  kmreadermainwin.rc, kmail2rc, kmail2.notifyrc) #TODO migrate autosave folder
 - kwatchgnupg (kwatchgnupgrc, kwatchgnupgui.rc)
+- knotes (knotesrc) #TODO need to migrate it in plugins too
