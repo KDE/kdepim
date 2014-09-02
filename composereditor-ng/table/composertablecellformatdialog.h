@@ -36,11 +36,11 @@ public:
 
 private:
     friend class ComposerTableCellFormatDialogPrivate;
-    ComposerTableCellFormatDialogPrivate * const d;
+    ComposerTableCellFormatDialogPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotApplyClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotWebElementChanged() )
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotApplyClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged())
 };
 }
 

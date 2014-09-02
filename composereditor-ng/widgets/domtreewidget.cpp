@@ -43,7 +43,7 @@ public:
         treeWidget = new QTreeWidget;
         treeWidget->header()->hide();
         lay->addWidget(treeWidget);
-        QPushButton *button = new QPushButton( i18n("Update"));
+        QPushButton *button = new QPushButton(i18n("Update"));
         q->connect(button, SIGNAL(clicked()), q, SLOT(_k_slotUpdate()));
         lay->addWidget(button);
         q->setLayout(lay);
@@ -77,7 +77,7 @@ void DomTreeWidgetPrivate::examineChildElements(const QWebElement &parentElement
         parentItem->addChild(item);
 
         const QStringList listAttributes = element.attributeNames();
-        Q_FOREACH (const QString& str, listAttributes) {
+        Q_FOREACH (const QString &str, listAttributes) {
             QTreeWidgetItem *subItem = new QTreeWidgetItem();
             const QString value = element.attribute(str);
             subItem->setText(0, str + QString::fromLatin1(" (%1)").arg(value));
@@ -91,7 +91,7 @@ void DomTreeWidgetPrivate::examineChildElements(const QWebElement &parentElement
 }
 
 DomTreeWidget::DomTreeWidget(QWebView *view, QWidget *parent)
-    : QWidget(parent),d(new DomTreeWidgetPrivate(view,this))
+    : QWidget(parent), d(new DomTreeWidgetPrivate(view, this))
 {
 }
 

@@ -37,7 +37,7 @@ namespace ComposerEditorNG
 class ComposerListDialogPrivate
 {
 public:
-    ComposerListDialogPrivate(const QWebElement& element, ComposerListDialog *qq)
+    ComposerListDialogPrivate(const QWebElement &element, ComposerListDialog *qq)
         : webElement(element),
           listType(0),
           listStyle(0),
@@ -75,8 +75,8 @@ public:
 void ComposerListDialogPrivate::initialize()
 {
 
-    q->setButtons( KDialog::Ok | KDialog::Cancel );
-    q->setCaption( i18n( "Edit List" ) );
+    q->setButtons(KDialog::Ok | KDialog::Cancel);
+    q->setCaption(i18n("Edit List"));
 
     QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
 
@@ -104,32 +104,31 @@ void ComposerListDialogPrivate::initialize()
     start->setMaximum(9999);
     vbox->addWidget(start);
 
-
     initializeTypeList();
 
     KSeparator *sep = 0;
     if (!webElement.isNull()) {
         sep = new KSeparator;
-        vbox->addWidget( sep );
-        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,type,q);
+        vbox->addWidget(sep);
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement, type, q);
         q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
-        vbox->addWidget( button );
+        vbox->addWidget(button);
     }
 
     sep = new KSeparator;
-    vbox->addWidget( sep );
+    vbox->addWidget(sep);
 
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
-    fillStyle();    
+    fillStyle();
     updateSettings();
-    q->resize(300,200);
+    q->resize(300, 200);
 }
 
 void ComposerListDialogPrivate::initializeTypeList()
 {
     if (!webElement.isNull()) {
         type = ListHelper::listType(webElement);
-        switch(type) {
+        switch (type) {
         case ExtendAttributesDialog::ListOL: {
             listType->setCurrentIndex(2);
             styleLabel->setText(i18n("Number Style:"));
@@ -146,7 +145,7 @@ void ComposerListDialogPrivate::initializeTypeList()
             break;
         }
         default:
-           return;
+            return;
         }
     }
 }
@@ -155,19 +154,19 @@ void ComposerListDialogPrivate::fillStyle()
 {
     listStyle->clear();
     if (type == ExtendAttributesDialog::ListUL) {
-        listStyle->addItem(i18n("Automatic"),QString());
-        listStyle->addItem(i18n("Solid circle"),QLatin1String("disc"));
-        listStyle->addItem(i18n("Open circle"),QLatin1String("circle"));
-        listStyle->addItem(i18n("Solid square"),QLatin1String("square"));
+        listStyle->addItem(i18n("Automatic"), QString());
+        listStyle->addItem(i18n("Solid circle"), QLatin1String("disc"));
+        listStyle->addItem(i18n("Open circle"), QLatin1String("circle"));
+        listStyle->addItem(i18n("Solid square"), QLatin1String("square"));
         listStyle->setEnabled(true);
         start->setEnabled(false);
     } else if (type == ExtendAttributesDialog::ListOL) {
-        listStyle->addItem(i18n("Automatic"),QString());
-        listStyle->addItem(i18n("1,2,3..."),QLatin1String("1"));
-        listStyle->addItem(i18n("A,B,C..."),QLatin1String("A"));
-        listStyle->addItem(i18n("a,b,c..."),QLatin1String("a"));
-        listStyle->addItem(i18n("I,II,III..."),QLatin1String("I"));
-        listStyle->addItem(i18n("i,ii,iii..."),QLatin1String("i"));
+        listStyle->addItem(i18n("Automatic"), QString());
+        listStyle->addItem(i18n("1,2,3..."), QLatin1String("1"));
+        listStyle->addItem(i18n("A,B,C..."), QLatin1String("A"));
+        listStyle->addItem(i18n("a,b,c..."), QLatin1String("a"));
+        listStyle->addItem(i18n("I,II,III..."), QLatin1String("I"));
+        listStyle->addItem(i18n("i,ii,iii..."), QLatin1String("i"));
         listStyle->setEnabled(true);
         start->setEnabled(true);
     } else {
@@ -182,7 +181,7 @@ void ComposerListDialogPrivate::updateSettings()
         if (webElement.hasAttribute(QLatin1String("type"))) {
             const QString newType = webElement.attribute(QLatin1String("type"));
             const int itemIndex = listStyle->findData(newType);
-            if (itemIndex!=-1) {
+            if (itemIndex != -1) {
                 listStyle->setCurrentIndex(itemIndex);
             }
         }
@@ -228,7 +227,7 @@ void ComposerListDialogPrivate::_k_slotOkClicked()
     q->accept();
 }
 
-ComposerListDialog::ComposerListDialog(const QWebElement& element, QWidget *parent)
+ComposerListDialog::ComposerListDialog(const QWebElement &element, QWidget *parent)
     : KDialog(parent), d(new ComposerListDialogPrivate(element, this))
 {
 }

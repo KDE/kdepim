@@ -90,7 +90,7 @@ public:
      * @brief setHtmlContent
      * @param html set html in composerview.
      */
-    void setHtmlContent( const QString& html );
+    void setHtmlContent(const QString &html);
 
     /**
      * @brief enableRichText
@@ -109,7 +109,7 @@ public:
      * @param action is the enim from QWebPage to define specific action
      * @return a QAction from QWebPage
      */
-    QAction* action(QWebPage::WebAction action);
+    QAction *action(QWebPage::WebAction action);
 
     /**
      * @brief view
@@ -140,7 +140,7 @@ Q_SIGNALS:
 
 private:
     friend class ComposerEditorPrivate;
-    ComposerEditorPrivate * const d;
+    ComposerEditorPrivate *const d;
 };
 }
 

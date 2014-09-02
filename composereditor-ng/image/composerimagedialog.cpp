@@ -33,13 +33,14 @@
 #include <QLabel>
 #include <QWebElement>
 
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 
 class ComposerImageDialogPrivate
 {
 public:
     ComposerImageDialogPrivate(ComposerImageDialog *qq)
-        :q(qq)
+        : q(qq)
     {
     }
 
@@ -81,22 +82,21 @@ void ComposerImageDialogPrivate::_k_slotApplyClicked()
     }
 }
 
-
 void ComposerImageDialogPrivate::updateImageHtml()
 {
     int imageWidth = -1;
     int imageHeight = -1;
-    if ( !imageWidget->keepOriginalSize() ) {
+    if (!imageWidget->keepOriginalSize()) {
         imageWidth = imageWidget->imageWidth();
         imageHeight = imageWidget->imageHeight();
     }
-    if (imageWidth == -1 ) {
+    if (imageWidth == -1) {
         webElement.removeAttribute(QLatin1String("width"));
     } else {
         webElement.setAttribute(QLatin1String("width"), QString::number(imageWidth));
     }
 
-    if (imageHeight == -1 ) {
+    if (imageHeight == -1) {
         webElement.removeAttribute(QLatin1String("height"));
     } else {
         webElement.setAttribute(QLatin1String("height"), QString::number(imageHeight));
@@ -121,9 +121,9 @@ void ComposerImageDialogPrivate::updateImageHtml()
 
 void ComposerImageDialogPrivate::initialize()
 {
-    q->setCaption( webElement.isNull() ? i18n( "Insert Image" ) : i18n( "Edit Image" ));
-    q->setButtons( webElement.isNull() ? KDialog::Ok | KDialog::Cancel : KDialog::Ok | KDialog::Apply | KDialog::Cancel);
-    q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
+    q->setCaption(webElement.isNull() ? i18n("Insert Image") : i18n("Edit Image"));
+    q->setButtons(webElement.isNull() ? KDialog::Ok | KDialog::Cancel : KDialog::Ok | KDialog::Apply | KDialog::Cancel);
+    q->setButtonText(KDialog::Ok, i18n("Insert"));
 
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
@@ -136,7 +136,6 @@ void ComposerImageDialogPrivate::initialize()
 
     KSeparator *sep = new KSeparator;
     lay->addWidget(sep);
-
 
     //ToolTip
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -157,22 +156,20 @@ void ComposerImageDialogPrivate::initialize()
     lay->addLayout(hbox);
 
     if (!webElement.isNull()) {
-        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Image,q);
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement, ExtendAttributesDialog::Image, q);
         q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
-        lay->addWidget( button );
-        q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
+        lay->addWidget(button);
+        q->connect(q, SIGNAL(applyClicked()), q, SLOT(_k_slotApplyClicked()));
     }
-
 
     sep = new KSeparator;
     lay->addWidget(sep);
 
-    q->connect(imageWidget,SIGNAL(enableButtonOk(bool)),q,SLOT(enableButtonOk(bool)));
-    q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
-
+    q->connect(imageWidget, SIGNAL(enableButtonOk(bool)), q, SLOT(enableButtonOk(bool)));
+    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 
     q->setMainWidget(w);
-    q->enableButtonOk( false );
+    q->enableButtonOk(false);
 
     updateSettings();
 }
@@ -193,15 +190,15 @@ QString ComposerImageDialogPrivate::html() const
     const QUrl url = imageWidget->imageUrl();
     int imageWidth = -1;
     int imageHeight = -1;
-    if ( !imageWidget->keepOriginalSize() ) {
+    if (!imageWidget->keepOriginalSize()) {
         imageWidth = imageWidget->imageWidth();
         imageHeight = imageWidget->imageHeight();
     }
     QString imageHtml = QString::fromLatin1("<img");
-    if (imageWidth>0) {
+    if (imageWidth > 0) {
         imageHtml += QString::fromLatin1(" width=%1").arg(imageWidth);
     }
-    if (imageHeight>0) {
+    if (imageHeight > 0) {
         imageHtml += QString::fromLatin1(" height=%1").arg(imageHeight);
     }
     if (!url.isEmpty()) {
@@ -241,7 +238,6 @@ QString ComposerImageDialog::html() const
 {
     return d->html();
 }
-
 
 }
 

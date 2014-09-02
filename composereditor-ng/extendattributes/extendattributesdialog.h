@@ -49,14 +49,13 @@ public:
         JavascriptEvents
     };
 
-
-    explicit ExtendAttributesDialog(const QWebElement& element, ExtendType type,QWidget *parent);
+    explicit ExtendAttributesDialog(const QWebElement &element, ExtendType type, QWidget *parent);
     ~ExtendAttributesDialog();
 
 private:
     friend class ExtendAttributesDialogPrivate;
-    ExtendAttributesDialogPrivate * const d;
-    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
+    ExtendAttributesDialogPrivate *const d;
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked())
 };
 }
 

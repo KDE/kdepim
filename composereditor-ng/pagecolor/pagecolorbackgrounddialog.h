@@ -31,15 +31,15 @@ class PageColorBackgroundDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit PageColorBackgroundDialog(const QWebElement& element, QWidget *parent = 0);
+    explicit PageColorBackgroundDialog(const QWebElement &element, QWidget *parent = 0);
     ~PageColorBackgroundDialog();
 
 private:
     friend class PageColorBackgroundDialogPrivate;
-    PageColorBackgroundDialogPrivate * const d;
-    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotApplyClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotWebElementChanged() )
+    PageColorBackgroundDialogPrivate *const d;
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotApplyClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged())
 };
 }
 

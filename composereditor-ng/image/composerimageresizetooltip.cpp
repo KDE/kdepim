@@ -41,15 +41,15 @@ public:
         lay->addWidget(lab);
         q->setLayout(lay);
     }
-    void displaySize(const QSize& s);
+    void displaySize(const QSize &s);
 
     QLabel *lab;
     ComposerImageResizeToolTip *q;
 };
 
-void ComposerImageResizeToolTipPrivate::displaySize(const QSize& s)
+void ComposerImageResizeToolTipPrivate::displaySize(const QSize &s)
 {
-    lab->setText( i18n("%1x%2").arg(s.width()).arg(s.height()));
+    lab->setText(i18n("%1x%2").arg(s.width()).arg(s.height()));
 }
 
 ComposerImageResizeToolTip::ComposerImageResizeToolTip(QWidget *parent)

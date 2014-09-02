@@ -38,7 +38,7 @@ public:
         Fixed
     };
     ComposerCellSizeWidgetPrivate(ComposerCellSizeWidget *qq)
-        :q(qq)
+        : q(qq)
     {
         QHBoxLayout *layout = new QHBoxLayout;
         layout->setMargin(0);
@@ -47,16 +47,16 @@ public:
         layout->addWidget(check);
 
         size = new QSpinBox;
-        size->setMinimum( 1 );
-        size->setMaximum( 100 );
+        size->setMinimum(1);
+        size->setMaximum(100);
         layout->addWidget(size);
 
         typeSize = new KComboBox;
-        q->connect(typeSize, SIGNAL(activated(int)), q, SLOT(slotTypeChanged(int)) );
+        q->connect(typeSize, SIGNAL(activated(int)), q, SLOT(slotTypeChanged(int)));
 
         // xgettext: no-c-format
-        typeSize->addItem( i18nc( "@item:inlistbox size type", "% of windows" ), Percentage );
-        typeSize->addItem( i18nc( "@item:inlistbox size type", "pixels" ), Fixed );
+        typeSize->addItem(i18nc("@item:inlistbox size type", "% of windows"), Percentage);
+        typeSize->addItem(i18nc("@item:inlistbox size type", "pixels"), Fixed);
         layout->addWidget(typeSize);
 
         q->connect(check, SIGNAL(toggled(bool)), typeSize, SLOT(setEnabled(bool)));
@@ -68,10 +68,10 @@ public:
     }
 
     void slotTypeChanged(int index);
-    void setValue(const QString&);
+    void setValue(const QString &);
     void setType(TypeSize type);
     QString value() const;
-    void setLabel(const QString&);
+    void setLabel(const QString &);
 
     QSpinBox *size;
     KComboBox *typeSize;
@@ -79,12 +79,12 @@ public:
     ComposerCellSizeWidget *q;
 };
 
-void ComposerCellSizeWidgetPrivate::setLabel(const QString& str)
+void ComposerCellSizeWidgetPrivate::setLabel(const QString &str)
 {
     check->setText(str);
 }
 
-void ComposerCellSizeWidgetPrivate::setValue(const QString& val)
+void ComposerCellSizeWidgetPrivate::setValue(const QString &val)
 {
     if (val.isEmpty()) {
         check->setChecked(false);
@@ -109,16 +109,15 @@ void ComposerCellSizeWidgetPrivate::setType(TypeSize type)
     slotTypeChanged(index);
 }
 
-
 void ComposerCellSizeWidgetPrivate::slotTypeChanged(int index)
 {
-    switch ( index ) {
+    switch (index) {
     case 0:
-        size->setMaximum( 100 );
-        size->setValue( qMin( size->value(), 100 ) );
+        size->setMaximum(100);
+        size->setValue(qMin(size->value(), 100));
         break;
     case 1:
-        size->setMaximum( 9999 );
+        size->setMaximum(9999);
         break;
     default:
         qDebug() << " index not defined " << index;
@@ -129,7 +128,7 @@ void ComposerCellSizeWidgetPrivate::slotTypeChanged(int index)
 QString ComposerCellSizeWidgetPrivate::value() const
 {
     if (check->isChecked()) {
-        if ((TypeSize)typeSize->itemData( typeSize->currentIndex() ).toInt() == Percentage) {
+        if ((TypeSize)typeSize->itemData(typeSize->currentIndex()).toInt() == Percentage) {
             return QString::fromLatin1("%1%").arg(size->value());
         }
         return QString::number(size->value());
@@ -139,7 +138,7 @@ QString ComposerCellSizeWidgetPrivate::value() const
 }
 
 ComposerCellSizeWidget::ComposerCellSizeWidget(QWidget *parent)
-    :QWidget(parent), d(new ComposerCellSizeWidgetPrivate(this))
+    : QWidget(parent), d(new ComposerCellSizeWidgetPrivate(this))
 {
 }
 
@@ -148,7 +147,7 @@ ComposerCellSizeWidget::~ComposerCellSizeWidget()
     delete d;
 }
 
-void ComposerCellSizeWidget::setValue(const QString& val)
+void ComposerCellSizeWidget::setValue(const QString &val)
 {
     d->setValue(val);
 }
@@ -158,7 +157,7 @@ QString ComposerCellSizeWidget::value() const
     return d->value();
 }
 
-void ComposerCellSizeWidget::setLabel(const QString& str)
+void ComposerCellSizeWidget::setLabel(const QString &str)
 {
     d->setLabel(str);
 }

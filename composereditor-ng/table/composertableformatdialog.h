@@ -32,16 +32,16 @@ class ComposerTableFormatDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ComposerTableFormatDialog(const QWebElement& element, QWidget *parent);
+    explicit ComposerTableFormatDialog(const QWebElement &element, QWidget *parent);
     ~ComposerTableFormatDialog();
 
 private:
     friend class ComposerTableFormatDialogPrivate;
-    ComposerTableFormatDialogPrivate * const d;
+    ComposerTableFormatDialogPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotApplyClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotWebElementChanged() )
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotApplyClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged())
 };
 }
 

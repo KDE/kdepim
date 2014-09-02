@@ -44,7 +44,7 @@ public:
         BottomRight
     };
 
-    ComposerImageResizeWidgetPrivate(ComposerImageResizeWidget *qq, const QWebElement& element)
+    ComposerImageResizeWidgetPrivate(ComposerImageResizeWidget *qq, const QWebElement &element)
         : q(qq),
           imageSizetoolTip(0),
           imageElement(element),
@@ -54,10 +54,10 @@ public:
         q->resize(imageElement.geometry().size());
     }
 
-    void resizeElement(const QPoint& pos);
-    QSize resizeImage(const QPoint& pos);
-    void setResizeDirectionCursor(const QPoint& pos);
-    ResizeDirection resizeDirection(const QPoint& pos);
+    void resizeElement(const QPoint &pos);
+    QSize resizeImage(const QPoint &pos);
+    void setResizeDirectionCursor(const QPoint &pos);
+    ResizeDirection resizeDirection(const QPoint &pos);
 
     ComposerImageResizeWidget *q;
     ComposerImageResizeToolTip *imageSizetoolTip;
@@ -67,10 +67,10 @@ public:
     bool mousePressed;
 };
 
-void ComposerImageResizeWidgetPrivate::setResizeDirectionCursor(const QPoint& pos)
+void ComposerImageResizeWidgetPrivate::setResizeDirectionCursor(const QPoint &pos)
 {
     ResizeDirection dir = resizeDirection(pos);
-    switch(dir) {
+    switch (dir) {
     case None:
         q->setCursor(Qt::ArrowCursor);
         break;
@@ -93,27 +93,27 @@ void ComposerImageResizeWidgetPrivate::setResizeDirectionCursor(const QPoint& po
     }
 }
 
-ComposerImageResizeWidgetPrivate::ResizeDirection ComposerImageResizeWidgetPrivate::resizeDirection(const QPoint& pos)
+ComposerImageResizeWidgetPrivate::ResizeDirection ComposerImageResizeWidgetPrivate::resizeDirection(const QPoint &pos)
 {
     ResizeDirection dir;
     const QRect r(imageElement.geometry());
-    if (QRect(0,0,resizeSquareSize,resizeSquareSize).contains(pos)) {
+    if (QRect(0, 0, resizeSquareSize, resizeSquareSize).contains(pos)) {
         dir = TopLeft;
-    } else if (QRect(0,r.height()-resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
+    } else if (QRect(0, r.height() - resizeSquareSize, resizeSquareSize, resizeSquareSize).contains(pos)) {
         dir = BottomLeft;
-    } else if (QRect(r.width()-resizeSquareSize,r.height()-resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
+    } else if (QRect(r.width() - resizeSquareSize, r.height() - resizeSquareSize, resizeSquareSize, resizeSquareSize).contains(pos)) {
         dir = BottomRight;
-    } else if (QRect(r.width()-resizeSquareSize,0,resizeSquareSize,resizeSquareSize).contains(pos)) {
+    } else if (QRect(r.width() - resizeSquareSize, 0, resizeSquareSize, resizeSquareSize).contains(pos)) {
         dir = TopRight;
-    } else if (QRect(0,0,r.width(),resizeSquareSize).contains(pos)) {
+    } else if (QRect(0, 0, r.width(), resizeSquareSize).contains(pos)) {
         dir = Top;
-    } else if (QRect(0,r.height()-resizeSquareSize,r.width(),resizeSquareSize).contains(pos)) {
+    } else if (QRect(0, r.height() - resizeSquareSize, r.width(), resizeSquareSize).contains(pos)) {
         dir = Bottom;
-    } else if (QRect(0,0,resizeSquareSize,r.height()).contains(pos)) {
+    } else if (QRect(0, 0, resizeSquareSize, r.height()).contains(pos)) {
         dir = Left;
-    } else if (QRect(r.width()-resizeSquareSize,0,resizeSquareSize,r.height()).contains(pos)) {
+    } else if (QRect(r.width() - resizeSquareSize, 0, resizeSquareSize, r.height()).contains(pos)) {
         dir = Right;
-    } else if (QRect(r.width(),resizeSquareSize,resizeSquareSize,resizeSquareSize).contains(pos)) {
+    } else if (QRect(r.width(), resizeSquareSize, resizeSquareSize, resizeSquareSize).contains(pos)) {
         dir = TopLeft;
     } else {
         dir = None;
@@ -121,23 +121,23 @@ ComposerImageResizeWidgetPrivate::ResizeDirection ComposerImageResizeWidgetPriva
     return dir;
 }
 
-void ComposerImageResizeWidgetPrivate::resizeElement(const QPoint& pos)
+void ComposerImageResizeWidgetPrivate::resizeElement(const QPoint &pos)
 {
     const QSize size = resizeImage(pos);
     if (size.width() != -1) {
-        imageElement.setAttribute(QLatin1String("width"),QString::number(size.width()));
+        imageElement.setAttribute(QLatin1String("width"), QString::number(size.width()));
     }
     if (size.height() != -1) {
-        imageElement.setAttribute(QLatin1String("height"),QString::number(size.height()));
+        imageElement.setAttribute(QLatin1String("height"), QString::number(size.height()));
     }
     q->resize(size);
 }
 
-QSize ComposerImageResizeWidgetPrivate::resizeImage(const QPoint& pos)
+QSize ComposerImageResizeWidgetPrivate::resizeImage(const QPoint &pos)
 {
     int width = -1;
     int height = -1;
-    switch(direction) {
+    switch (direction) {
     case None:
         break;
     case Top:
@@ -173,7 +173,7 @@ QSize ComposerImageResizeWidgetPrivate::resizeImage(const QPoint& pos)
 }
 
 ComposerImageResizeWidget::ComposerImageResizeWidget(const QWebElement &element, QWidget *parent)
-    : QWidget(parent), d(new ComposerImageResizeWidgetPrivate(this,element))
+    : QWidget(parent), d(new ComposerImageResizeWidgetPrivate(this, element))
 {
     setMouseTracking(true);
 }
@@ -183,11 +183,11 @@ ComposerImageResizeWidget::~ComposerImageResizeWidget()
     delete d;
 }
 
-void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
+void ComposerImageResizeWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (!d->mousePressed) {
         d->setResizeDirectionCursor(event->pos());
-    } else if (d->direction!=ComposerImageResizeWidgetPrivate::None){
+    } else if (d->direction != ComposerImageResizeWidgetPrivate::None) {
         const QSize size = d->resizeImage(event->pos());
         if (!d->imageSizetoolTip) {
             d->imageSizetoolTip = new ComposerImageResizeToolTip(this);
@@ -200,10 +200,10 @@ void ComposerImageResizeWidget::mouseMoveEvent( QMouseEvent * event )
     }
 }
 
-void ComposerImageResizeWidget::mousePressEvent( QMouseEvent * event )
+void ComposerImageResizeWidget::mousePressEvent(QMouseEvent *event)
 {
     d->direction = d->resizeDirection(event->pos());
-    if (d->direction!=ComposerImageResizeWidgetPrivate::None) {
+    if (d->direction != ComposerImageResizeWidgetPrivate::None) {
         d->mousePressed = true;
         d->firstPosition = event->pos();
     } else {
@@ -212,7 +212,7 @@ void ComposerImageResizeWidget::mousePressEvent( QMouseEvent * event )
 
 }
 
-void ComposerImageResizeWidget::mouseReleaseEvent( QMouseEvent * event )
+void ComposerImageResizeWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     if (d->mousePressed) {
         d->resizeElement(event->pos());
@@ -224,30 +224,30 @@ void ComposerImageResizeWidget::mouseReleaseEvent( QMouseEvent * event )
     }
 }
 
-void ComposerImageResizeWidget::paintEvent( QPaintEvent * )
+void ComposerImageResizeWidget::paintEvent(QPaintEvent *)
 {
-    if (d->imageElement.isNull())
+    if (d->imageElement.isNull()) {
         return;
+    }
 
     //TODO fix when we scroll area
     const int width = d->imageElement.geometry().width();
     const int height = d->imageElement.geometry().height();
     QPainter painter(this);
 
-    painter.drawRect(QRect(0,0,width,height));
+    painter.drawRect(QRect(0, 0, width, height));
     painter.setPen(Qt::white);
-    painter.drawRect(QRect(0,0,resizeSquareSize,resizeSquareSize));
-    painter.drawRect(QRect(width-resizeSquareSize,0,resizeSquareSize,resizeSquareSize));
-    painter.drawRect(QRect(0,height-resizeSquareSize,resizeSquareSize,resizeSquareSize));
-    painter.drawRect(QRect(width-resizeSquareSize,height-resizeSquareSize,resizeSquareSize,resizeSquareSize));
+    painter.drawRect(QRect(0, 0, resizeSquareSize, resizeSquareSize));
+    painter.drawRect(QRect(width - resizeSquareSize, 0, resizeSquareSize, resizeSquareSize));
+    painter.drawRect(QRect(0, height - resizeSquareSize, resizeSquareSize, resizeSquareSize));
+    painter.drawRect(QRect(width - resizeSquareSize, height - resizeSquareSize, resizeSquareSize, resizeSquareSize));
 
-    painter.drawRect(QRect((width-resizeSquareSize)/2,0,resizeSquareSize,resizeSquareSize));
-    painter.drawRect(QRect((width-resizeSquareSize)/2,height-resizeSquareSize,resizeSquareSize,resizeSquareSize));
+    painter.drawRect(QRect((width - resizeSquareSize) / 2, 0, resizeSquareSize, resizeSquareSize));
+    painter.drawRect(QRect((width - resizeSquareSize) / 2, height - resizeSquareSize, resizeSquareSize, resizeSquareSize));
 
-    painter.drawRect(QRect(0,(height-resizeSquareSize)/2,resizeSquareSize,resizeSquareSize));
-    painter.drawRect(QRect(width-resizeSquareSize,(height-resizeSquareSize)/2,resizeSquareSize,resizeSquareSize));
+    painter.drawRect(QRect(0, (height - resizeSquareSize) / 2, resizeSquareSize, resizeSquareSize));
+    painter.drawRect(QRect(width - resizeSquareSize, (height - resizeSquareSize) / 2, resizeSquareSize, resizeSquareSize));
 }
-
 
 }
 

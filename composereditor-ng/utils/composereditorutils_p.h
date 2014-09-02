@@ -28,7 +28,8 @@
 namespace ComposerEditorNG
 {
 
-namespace Utils {
+namespace Utils
+{
 QColor convertRgbToQColor(QString rgb);
 QUrl guessUrlFromString(const QString &string);
 }

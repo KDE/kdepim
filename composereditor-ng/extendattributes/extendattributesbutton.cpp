@@ -25,7 +25,6 @@
 #include <QPointer>
 #include <QWebElement>
 
-
 namespace ComposerEditorNG
 {
 
@@ -47,7 +46,7 @@ public:
 
 void ExtendAttributesButtonPrivate::_k_slotClicked()
 {
-    QPointer<ExtendAttributesDialog> dlg = new ExtendAttributesDialog(webElement, extendType, q );
+    QPointer<ExtendAttributesDialog> dlg = new ExtendAttributesDialog(webElement, extendType, q);
     if (dlg->exec()) {
         Q_EMIT q->webElementChanged();
     }

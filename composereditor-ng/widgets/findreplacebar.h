@@ -38,18 +38,18 @@ public Q_SLOTS:
     void showAndFocus();
 
 protected:
-    bool event(QEvent* e);
+    bool event(QEvent *e);
 
 private:
     friend class FindReplaceBarPrivate;
-    FindReplaceBarPrivate * const d;
-    Q_PRIVATE_SLOT( d, void _k_closeBar() )
-    Q_PRIVATE_SLOT( d, void _k_slotHighlightAllChanged(bool) )
-    Q_PRIVATE_SLOT( d, void _k_slotCaseSensitivityChanged(bool) )
-    Q_PRIVATE_SLOT( d, void _k_slotAutoSearch(const QString&) )
-    Q_PRIVATE_SLOT( d, void _k_slotSearchText() )
-    Q_PRIVATE_SLOT( d, void _k_slotFindNext() )
-    Q_PRIVATE_SLOT( d, void _k_slotFindPrevious() )
+    FindReplaceBarPrivate *const d;
+    Q_PRIVATE_SLOT(d, void _k_closeBar())
+    Q_PRIVATE_SLOT(d, void _k_slotHighlightAllChanged(bool))
+    Q_PRIVATE_SLOT(d, void _k_slotCaseSensitivityChanged(bool))
+    Q_PRIVATE_SLOT(d, void _k_slotAutoSearch(const QString &))
+    Q_PRIVATE_SLOT(d, void _k_slotSearchText())
+    Q_PRIVATE_SLOT(d, void _k_slotFindNext())
+    Q_PRIVATE_SLOT(d, void _k_slotFindPrevious())
 };
 }
 

@@ -34,7 +34,7 @@ public:
 
 private:
     friend class ComposerTableResizeWidgetPrivate;
-    ComposerTableResizeWidgetPrivate * const d;
+    ComposerTableResizeWidgetPrivate *const d;
 };
 }
 

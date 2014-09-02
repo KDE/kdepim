@@ -31,22 +31,23 @@
 #include <QLabel>
 #include <QTabWidget>
 
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 
 class ExtendAttributesDialogPrivate
 {
 public:
-    ExtendAttributesDialogPrivate(const QWebElement& element, ExtendAttributesDialog::ExtendType extendType, ExtendAttributesDialog *qq)
+    ExtendAttributesDialogPrivate(const QWebElement &element, ExtendAttributesDialog::ExtendType extendType, ExtendAttributesDialog *qq)
         : q(qq)
     {
-        q->setCaption( i18n( "Extend Attribute" ) );
-        q->setButtons( KDialog::Ok | KDialog::Cancel );
-        QWidget *page = new QWidget( q );
-        q->setMainWidget( page );
+        q->setCaption(i18n("Extend Attribute"));
+        q->setButtons(KDialog::Ok | KDialog::Cancel);
+        QWidget *page = new QWidget(q);
+        q->setMainWidget(page);
 
-        QVBoxLayout *lay = new QVBoxLayout( page );
+        QVBoxLayout *lay = new QVBoxLayout(page);
         QString tagName;
-        switch(extendType) {
+        switch (extendType) {
         case ExtendAttributesDialog::Image:
             tagName = QLatin1String("img");
             break;
@@ -72,11 +73,11 @@ public:
             tagName = QLatin1String("dl");
             break;
         default:
-            qDebug()<<" extendattribute not implemented"<<extendType;
+            qDebug() << " extendattribute not implemented" << extendType;
             break;
         }
 
-        QLabel *lab = new QLabel( i18n("Current attributes for: \"%1\"", tagName) );
+        QLabel *lab = new QLabel(i18n("Current attributes for: \"%1\"", tagName));
         lay->addWidget(lab);
 
         QTabWidget *tab = new QTabWidget;
@@ -91,7 +92,7 @@ public:
 
         lay->addWidget(tab);
         q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
-        q->resize(400,300);
+        q->resize(400, 300);
     }
     void _k_slotOkClicked();
 
@@ -100,7 +101,6 @@ public:
     ExtendAttributesWidget *inlineStyleAttributes;
     ExtendAttributesDialog *q;
 };
-
 
 void ExtendAttributesDialogPrivate::_k_slotOkClicked()
 {

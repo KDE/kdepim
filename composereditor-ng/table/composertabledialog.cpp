@@ -34,7 +34,7 @@ class ComposerTableDialogPrivate
 {
 public:
     ComposerTableDialogPrivate(ComposerTableDialog *qq)
-        :q(qq)
+        : q(qq)
     {
         initialize();
     }
@@ -49,18 +49,17 @@ public:
     ComposerTableDialog *q;
 };
 
-
 QString ComposerTableDialogPrivate::html() const
 {
-    const int numberOfColumns( insertTableWidget->columns() );
-    const int numberRow( insertTableWidget->rows() );
+    const int numberOfColumns(insertTableWidget->columns());
+    const int numberRow(insertTableWidget->rows());
 
     QString htmlTable = QString::fromLatin1("<table border='%1'").arg(insertTableWidget->border());
     htmlTable += QString::fromLatin1(" width='%1%2'").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
     htmlTable += QString::fromLatin1(">");
-    for (int i = 0; i <numberRow; ++i) {
+    for (int i = 0; i < numberRow; ++i) {
         htmlTable += QLatin1String("<tr>");
-        for(int j = 0; j <numberOfColumns; ++j) {
+        for (int j = 0; j < numberOfColumns; ++j) {
             htmlTable += QLatin1String("<td><br></td>");
         }
         htmlTable += QLatin1String("</tr>");
@@ -71,22 +70,22 @@ QString ComposerTableDialogPrivate::html() const
 
 void ComposerTableDialogPrivate::initialize()
 {
-    q->setCaption( i18n( "Insert Table" ) );
-    q->setButtons( KDialog::Ok|KDialog::Cancel );
-    q->setButtonText( KDialog::Ok, i18n( "Insert" ) );
+    q->setCaption(i18n("Insert Table"));
+    q->setButtons(KDialog::Ok | KDialog::Cancel);
+    q->setButtonText(KDialog::Ok, i18n("Insert"));
 
     QWidget *page = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     page->setLayout(lay);
 
-    insertTableWidget = new KPIMTextEdit::InsertTableWidget( q );
-    lay->addWidget( insertTableWidget );
+    insertTableWidget = new KPIMTextEdit::InsertTableWidget(q);
+    lay->addWidget(insertTableWidget);
 
     KSeparator *sep = new KSeparator;
-    lay->addWidget( sep );
+    lay->addWidget(sep);
 
-    q->setMainWidget( page );
-    q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
+    q->setMainWidget(page);
+    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 }
 
 void ComposerTableDialogPrivate::_k_slotOkClicked()
@@ -99,7 +98,6 @@ ComposerTableDialog::ComposerTableDialog(QWidget *parent)
 {
 }
 
-
 ComposerTableDialog::~ComposerTableDialog()
 {
     delete d;
@@ -109,7 +107,6 @@ QString ComposerTableDialog::html() const
 {
     return d->html();
 }
-
 
 }
 

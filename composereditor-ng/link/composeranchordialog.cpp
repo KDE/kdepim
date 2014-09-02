@@ -29,7 +29,8 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 
 class ComposerAnchorDialogPrivate
 {
@@ -57,9 +58,9 @@ public:
 void ComposerAnchorDialogPrivate::initialize(const QWebElement &element)
 {
     webElement = element;
-    q->setButtons( KDialog::Ok | KDialog::Cancel );
+    q->setButtons(KDialog::Ok | KDialog::Cancel);
 
-    q->setCaption( webElement.isNull() ? i18n( "Create Anchor" ) : i18n( "Edit Anchor" ) );
+    q->setCaption(webElement.isNull() ? i18n("Create Anchor") : i18n("Edit Anchor"));
 
     QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
 
@@ -67,20 +68,20 @@ void ComposerAnchorDialogPrivate::initialize(const QWebElement &element)
     vbox->addLayout(layout);
 
     QLabel *label = new QLabel(i18n("Enter anchor name:"));
-    layout->addWidget( label, 0, 0 );
+    layout->addWidget(label, 0, 0);
 
     anchorName = new QLineEdit;
     anchorName->setReadOnly(!webElement.isNull());
     anchorName->setClearButtonEnabled(true);
-    layout->addWidget( anchorName, 0, 1 );
+    layout->addWidget(anchorName, 0, 1);
 
     if (!webElement.isNull()) {
-        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Link,q);
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement, ExtendAttributesDialog::Link, q);
         q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
-        layout->addWidget( button, 1, 1 );
+        layout->addWidget(button, 1, 1);
     }
 
-    vbox->addWidget( new KSeparator );
+    vbox->addWidget(new KSeparator);
 
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 
@@ -119,7 +120,6 @@ ComposerAnchorDialog::ComposerAnchorDialog(QWidget *parent)
 {
     d->initialize();
 }
-
 
 ComposerAnchorDialog::ComposerAnchorDialog(const QWebElement &element, QWidget *parent)
     : KDialog(parent), d(new ComposerAnchorDialogPrivate(this))

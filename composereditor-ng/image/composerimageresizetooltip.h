@@ -37,7 +37,7 @@ public:
 
 private:
     friend class ComposerImageResizeToolTipPrivate;
-    ComposerImageResizeToolTipPrivate * const d;
+    ComposerImageResizeToolTipPrivate *const d;
 };
 
 }

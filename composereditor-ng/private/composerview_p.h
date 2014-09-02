@@ -29,18 +29,19 @@ class KFontAction;
 class ComposerImageResizeWidget;
 class QWebHitTestResult;
 
-namespace KPIMTextEdit {
+namespace KPIMTextEdit
+{
 class EmoticonTextEditAction;
 }
 
-
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 class ComposerImageResizeWidget;
 
 class ComposerViewPrivate
 {
 public:
-    ComposerViewPrivate( ComposerView *qq)
+    ComposerViewPrivate(ComposerView *qq)
         : action_text_bold(0),
           action_text_italic(0),
           action_text_underline(0),
@@ -85,7 +86,6 @@ public:
     {
     }
 
-
     QWebHitTestResult contextMenuResult;
     enum FormatType {
         Paragraph,
@@ -100,8 +100,8 @@ public:
     };
 
     void _k_slotAdjustActions();
-    void _k_setFormatType(QAction* action);
-    void _k_slotAddEmoticon(const QString&);
+    void _k_setFormatType(QAction *action);
+    void _k_slotAddEmoticon(const QString &);
     void _k_slotInsertHtml();
     void _k_slotInsertTable();
     void _k_slotAddImage();
@@ -111,12 +111,12 @@ public:
     void _k_insertLink();
     void _k_slotEditLink();
     void _k_setFontSize(int);
-    void _k_setFontFamily(const QString&);
+    void _k_setFontFamily(const QString &);
     void _k_adjustActions();
     void _k_slotSpellCheck();
-    void _k_spellCheckerCorrected(const QString& original, int pos, const QString& replacement);
-    void _k_spellCheckerMisspelling(const QString& , int);
-    void _k_slotSpellCheckDone(const QString&);
+    void _k_spellCheckerCorrected(const QString &original, int pos, const QString &replacement);
+    void _k_spellCheckerMisspelling(const QString &, int);
+    void _k_slotSpellCheckDone(const QString &);
     void _k_slotFind();
     void _k_slotReplace();
     void _k_slotSpeakText();
@@ -134,8 +134,8 @@ public:
     void _k_slotInsertAnchor();
     void _k_slotOpenLink();
 
-    QAction* getAction ( QWebPage::WebAction action ) const;
-    QVariant evaluateJavascript(const QString& command);
+    QAction *getAction(QWebPage::WebAction action) const;
+    QVariant evaluateJavascript(const QString &command);
     void execCommand(const QString &cmd);
     void execCommand(const QString &cmd, const QString &arg);
     bool queryCommandState(const QString &cmd);

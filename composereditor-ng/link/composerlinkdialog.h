@@ -32,16 +32,16 @@ class ComposerLinkDialog : public KDialog
     Q_OBJECT
 public:
     explicit ComposerLinkDialog(const QString &selectedText, QWidget *parent);
-    explicit ComposerLinkDialog(const QWebElement& element, QWidget *parent);
+    explicit ComposerLinkDialog(const QWebElement &element, QWidget *parent);
     ~ComposerLinkDialog();
 
     QString html() const;
 
 private:
     friend class ComposerLinkDialogPrivate;
-    ComposerLinkDialogPrivate * const d;
-    Q_PRIVATE_SLOT(d, void _k_slotOkClicked() )
-    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged() )
+    ComposerLinkDialogPrivate *const d;
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged())
 };
 }
 

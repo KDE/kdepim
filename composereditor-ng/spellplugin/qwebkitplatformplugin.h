@@ -62,10 +62,10 @@ class QWebSelectMethod : public QObject
 public:
     virtual ~QWebSelectMethod() {}
 
-    virtual void show(const QWebSelectData&) = 0;
+    virtual void show(const QWebSelectData &) = 0;
     virtual void hide() = 0;
-    virtual void setGeometry(const QRect&) = 0;
-    virtual void setFont(const QFont&) = 0;
+    virtual void setGeometry(const QRect &) = 0;
+    virtual void setFont(const QFont &) = 0;
 
 Q_SIGNALS:
     void selectItem(int index, bool allowMultiplySelections, bool shift);
@@ -90,7 +90,7 @@ public:
     QWebNotificationPresenter() {}
     virtual ~QWebNotificationPresenter() {}
 
-    virtual void showNotification(const QWebNotificationData*) = 0;
+    virtual void showNotification(const QWebNotificationData *) = 0;
 
 Q_SIGNALS:
     void notificationClosed();
@@ -104,17 +104,15 @@ public:
     QWebHapticFeedbackPlayer() {}
     virtual ~QWebHapticFeedbackPlayer() {}
 
-    enum HapticStrength
-    {
+    enum HapticStrength {
         None, Weak, Medium, Strong
     };
 
-    enum HapticEvent
-    {
+    enum HapticEvent {
         Press, Release
     };
 
-    virtual void playHapticFeedback(const HapticEvent, const QString& hapticType, const HapticStrength) = 0;
+    virtual void playHapticFeedback(const HapticEvent, const QString &hapticType, const HapticStrength) = 0;
 };
 
 class QWebTouchModifier : public QObject
@@ -123,8 +121,7 @@ class QWebTouchModifier : public QObject
 public:
     virtual ~QWebTouchModifier() {}
 
-    enum PaddingDirection
-    {
+    enum PaddingDirection {
         Up, Right, Down, Left
     };
 
@@ -144,7 +141,7 @@ Q_SIGNALS:
     void fullScreenClosed();
 
 public Q_SLOTS:
-    virtual void enterFullScreen(QMediaPlayer*) = 0;
+    virtual void enterFullScreen(QMediaPlayer *) = 0;
     virtual void exitFullScreen() = 0;
 };
 #endif
@@ -153,8 +150,7 @@ class QWebSpellChecker : public QObject
 {
     Q_OBJECT
 public:
-    struct GrammarDetail
-    {
+    struct GrammarDetail {
         int location;
         int length;
         QStringList guesses;
@@ -164,15 +160,15 @@ public:
     virtual bool isContinousSpellCheckingEnabled() const = 0;
     virtual void toggleContinousSpellChecking() = 0;
 
-    virtual void learnWord(const QString& word) = 0;
-    virtual void ignoreWordInSpellDocument(const QString& word) = 0;
-    virtual void checkSpellingOfString(const QString& word, int* misspellingLocation, int* misspellingLength) = 0;
-    virtual QString autoCorrectSuggestionForMisspelledWord(const QString& word) = 0;
-    virtual void guessesForWord(const QString& word, const QString& context, QStringList& guesses) = 0;
+    virtual void learnWord(const QString &word) = 0;
+    virtual void ignoreWordInSpellDocument(const QString &word) = 0;
+    virtual void checkSpellingOfString(const QString &word, int *misspellingLocation, int *misspellingLength) = 0;
+    virtual QString autoCorrectSuggestionForMisspelledWord(const QString &word) = 0;
+    virtual void guessesForWord(const QString &word, const QString &context, QStringList &guesses) = 0;
 
     virtual bool isGrammarCheckingEnabled() = 0;
     virtual void toggleGrammarChecking() = 0;
-    virtual void checkGrammarOfString(const QString&, QList<GrammarDetail>&, int* badGrammarLocation, int* badGrammarLength) = 0;
+    virtual void checkGrammarOfString(const QString &, QList<GrammarDetail> &, int *badGrammarLocation, int *badGrammarLength) = 0;
 };
 
 class QWebKitPlatformPlugin
@@ -180,8 +176,7 @@ class QWebKitPlatformPlugin
 public:
     virtual ~QWebKitPlatformPlugin() {}
 
-    enum Extension
-    {
+    enum Extension {
         MultipleSelections,
         Notifications,
         Haptics,
@@ -191,7 +186,7 @@ public:
     };
 
     virtual bool supportsExtension(Extension) const = 0;
-    virtual QObject* createExtension(Extension) const = 0;
+    virtual QObject *createExtension(Extension) const = 0;
 };
 
 QT_BEGIN_NAMESPACE

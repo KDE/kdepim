@@ -38,12 +38,11 @@ ComposerHtmlEditor::ComposerHtmlEditor()
     ComposerEditorNG::DomTreeWidget *domWidget = new ComposerEditorNG::DomTreeWidget(editor->view(), this);
     w->addWidget(domWidget);
 
-    w->addWidget( editor );
-    setCentralWidget( w );
-
+    w->addWidget(editor);
+    setCentralWidget(w);
 
     editor->createAllActions();
-    editor->addCreatedActionsToActionCollection( actionCollection() );
+    editor->addCreatedActionsToActionCollection(actionCollection());
     QList<ComposerEditorNG::ComposerView::ComposerViewAction> lst;
     lst << ComposerEditorNG::ComposerView::Bold;
     editor->createToolBar(lst);
@@ -57,8 +56,7 @@ ComposerHtmlEditor::~ComposerHtmlEditor()
 
 void ComposerHtmlEditor::setupActions()
 {
-    KStandardAction::quit( kapp, SLOT(quit()),
-                           actionCollection() );
+    KStandardAction::quit(kapp, SLOT(quit()),
+                          actionCollection());
 }
-
 

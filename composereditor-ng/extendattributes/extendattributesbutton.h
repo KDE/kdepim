@@ -43,8 +43,8 @@ Q_SIGNALS:
 
 private:
     friend class ExtendAttributesButtonPrivate;
-    ExtendAttributesButtonPrivate * const d;
-    Q_PRIVATE_SLOT(d, void _k_slotClicked() )
+    ExtendAttributesButtonPrivate *const d;
+    Q_PRIVATE_SLOT(d, void _k_slotClicked())
 };
 }
 

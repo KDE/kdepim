@@ -31,64 +31,65 @@
 #include <QVBoxLayout>
 #include <QCheckBox>
 
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 
 class ComposerTableCellFormatDialogPrivate
 {
 public:
-    ComposerTableCellFormatDialogPrivate(const QWebElement& element, ComposerTableCellFormatDialog *qq)
-        :webElement(element)
-        ,q(qq)
+    ComposerTableCellFormatDialogPrivate(const QWebElement &element, ComposerTableCellFormatDialog *qq)
+        : webElement(element)
+        , q(qq)
     {
-        q->setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
-        q->setCaption( i18n( "Edit Cell Format" ) );
+        q->setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel);
+        q->setCaption(i18n("Edit Cell Format"));
 
-        QVBoxLayout *layout = new QVBoxLayout( q->mainWidget() );
+        QVBoxLayout *layout = new QVBoxLayout(q->mainWidget());
 
         width = new ComposerCellSizeWidget;
-        width->setLabel( i18n("Width:") );
+        width->setLabel(i18n("Width:"));
         layout->addWidget(width);
 
         height = new ComposerCellSizeWidget;
-        height->setLabel( i18n("Height:") );
+        height->setLabel(i18n("Height:"));
         layout->addWidget(height);
 
         KSeparator *sep = new KSeparator;
-        layout->addWidget( sep );
+        layout->addWidget(sep);
 
         QHBoxLayout *hbox = new QHBoxLayout;
 
-        useHorizontalAlignment = new QCheckBox( i18n("Horizontal Alignment:") );
+        useHorizontalAlignment = new QCheckBox(i18n("Horizontal Alignment:"));
         hbox->addWidget(useHorizontalAlignment);
         horizontalAlignment = new KComboBox;
-        horizontalAlignment->addItem( i18nc( "@item:inlistbox Horizontal Alignment:", "Top" ), QLatin1String("top") );
-        horizontalAlignment->addItem( i18nc( "@item:inlistbox Horizontal Alignment:", "Middle" ), QLatin1String("middle") );
-        horizontalAlignment->addItem( i18nc( "@item:inlistbox Horizontal Alignment:", "Bottom" ), QLatin1String("bottom") );
-        horizontalAlignment->addItem( i18nc( "@item:inlistbox Horizontal Alignment:", "Baseline" ), QLatin1String("baseline") );
+        horizontalAlignment->addItem(i18nc("@item:inlistbox Horizontal Alignment:", "Top"), QLatin1String("top"));
+        horizontalAlignment->addItem(i18nc("@item:inlistbox Horizontal Alignment:", "Middle"), QLatin1String("middle"));
+        horizontalAlignment->addItem(i18nc("@item:inlistbox Horizontal Alignment:", "Bottom"), QLatin1String("bottom"));
+        horizontalAlignment->addItem(i18nc("@item:inlistbox Horizontal Alignment:", "Baseline"), QLatin1String("baseline"));
         horizontalAlignment->setEnabled(false);
         hbox->addWidget(horizontalAlignment);
         layout->addLayout(hbox);
-        q->connect(useHorizontalAlignment,SIGNAL(toggled(bool)),horizontalAlignment,SLOT(setEnabled(bool)));
+        q->connect(useHorizontalAlignment, SIGNAL(toggled(bool)), horizontalAlignment, SLOT(setEnabled(bool)));
 
         hbox = new QHBoxLayout;
-        useVerticalAlignment = new QCheckBox( i18n("Vertical Alignment:") );
+        useVerticalAlignment = new QCheckBox(i18n("Vertical Alignment:"));
         hbox->addWidget(useVerticalAlignment);
         verticalAlignment = new KComboBox;
-        verticalAlignment->addItem( i18nc( "@item:inlistbox Vertical Alignment:", "Left" ), QLatin1String("left") );
-        verticalAlignment->addItem( i18nc( "@item:inlistbox Vertical Alignment:", "Center" ), QLatin1String("center") );
-        verticalAlignment->addItem( i18nc( "@item:inlistbox Vertical Alignment:", "Right" ), QLatin1String("right") );
-        verticalAlignment->addItem( i18nc( "@item:inlistbox Vertical Alignment:", "Justify" ), QLatin1String("justify") );
-        verticalAlignment->addItem( i18nc( "@item:inlistbox Vertical Alignment:", "Char" ), QLatin1String("char") );
+        verticalAlignment->addItem(i18nc("@item:inlistbox Vertical Alignment:", "Left"), QLatin1String("left"));
+        verticalAlignment->addItem(i18nc("@item:inlistbox Vertical Alignment:", "Center"), QLatin1String("center"));
+        verticalAlignment->addItem(i18nc("@item:inlistbox Vertical Alignment:", "Right"), QLatin1String("right"));
+        verticalAlignment->addItem(i18nc("@item:inlistbox Vertical Alignment:", "Justify"), QLatin1String("justify"));
+        verticalAlignment->addItem(i18nc("@item:inlistbox Vertical Alignment:", "Char"), QLatin1String("char"));
         verticalAlignment->setEnabled(false);
         hbox->addWidget(verticalAlignment);
         layout->addLayout(hbox);
-        q->connect(useVerticalAlignment,SIGNAL(toggled(bool)),verticalAlignment,SLOT(setEnabled(bool)));
+        q->connect(useVerticalAlignment, SIGNAL(toggled(bool)), verticalAlignment, SLOT(setEnabled(bool)));
 
         sep = new KSeparator;
-        layout->addWidget( sep );
+        layout->addWidget(sep);
 
         hbox = new QHBoxLayout;
-        useBackgroundColor = new QCheckBox( i18n( "Background Color:" ) );
+        useBackgroundColor = new QCheckBox(i18n("Background Color:"));
         hbox->addWidget(useBackgroundColor);
         backgroundColor = new KColorButton;
         backgroundColor->setEnabled(false);
@@ -97,20 +98,19 @@ public:
         layout->addLayout(hbox);
 
         if (!webElement.isNull()) {
-            ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Cell,q);
+            ExtendAttributesButton *button = new ExtendAttributesButton(webElement, ExtendAttributesDialog::Cell, q);
             q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
-            layout->addWidget( button );
+            layout->addWidget(button);
         }
 
         sep = new KSeparator;
-        layout->addWidget( sep );
+        layout->addWidget(sep);
 
+        q->connect(useBackgroundColor, SIGNAL(toggled(bool)), backgroundColor, SLOT(setEnabled(bool)));
 
-        q->connect(useBackgroundColor,SIGNAL(toggled(bool)),backgroundColor,SLOT(setEnabled(bool)));
+        q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 
-        q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
-
-        q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
+        q->connect(q, SIGNAL(applyClicked()), q, SLOT(_k_slotApplyClicked()));
         updateSettings();
     }
 
@@ -152,12 +152,12 @@ void ComposerTableCellFormatDialogPrivate::updateSettings()
         if (webElement.hasAttribute(QLatin1String("valign"))) {
             useVerticalAlignment->setChecked(true);
             const QString valign = webElement.attribute(QLatin1String("valign"));
-            verticalAlignment->setCurrentIndex( verticalAlignment->findData( valign ) );
+            verticalAlignment->setCurrentIndex(verticalAlignment->findData(valign));
         }
         if (webElement.hasAttribute(QLatin1String("align"))) {
             useHorizontalAlignment->setChecked(true);
             const QString align = webElement.attribute(QLatin1String("align"));
-            horizontalAlignment->setCurrentIndex( horizontalAlignment->findData( align ) );
+            horizontalAlignment->setCurrentIndex(horizontalAlignment->findData(align));
         }
         if (webElement.hasAttribute(QLatin1String("width"))) {
             const QString widthVal = webElement.attribute(QLatin1String("width"));
@@ -182,18 +182,18 @@ void ComposerTableCellFormatDialogPrivate::applyChanges()
         if (useBackgroundColor->isChecked()) {
             const QColor col = backgroundColor->color();
             if (col.isValid()) {
-                webElement.setAttribute(QLatin1String("bgcolor"),col.name());
+                webElement.setAttribute(QLatin1String("bgcolor"), col.name());
             }
         } else {
             webElement.removeAttribute(QLatin1String("bgcolor"));
         }
         if (useVerticalAlignment->isChecked()) {
-            webElement.setAttribute(QLatin1String("valign"), verticalAlignment->itemData( verticalAlignment->currentIndex () ).toString());
+            webElement.setAttribute(QLatin1String("valign"), verticalAlignment->itemData(verticalAlignment->currentIndex()).toString());
         } else {
             webElement.removeAttribute(QLatin1String("valign"));
         }
         if (useHorizontalAlignment->isChecked()) {
-            webElement.setAttribute(QLatin1String("align"), horizontalAlignment->itemData( horizontalAlignment->currentIndex () ).toString());
+            webElement.setAttribute(QLatin1String("align"), horizontalAlignment->itemData(horizontalAlignment->currentIndex()).toString());
         } else {
             webElement.removeAttribute(QLatin1String("align"));
         }
@@ -218,7 +218,7 @@ void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
     q->accept();
 }
 
-ComposerTableCellFormatDialog::ComposerTableCellFormatDialog(const QWebElement& element, QWidget *parent)
+ComposerTableCellFormatDialog::ComposerTableCellFormatDialog(const QWebElement &element, QWidget *parent)
     : KDialog(parent), d(new ComposerTableCellFormatDialogPrivate(element, this))
 {
 }

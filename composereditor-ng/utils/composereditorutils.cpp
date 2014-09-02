@@ -29,12 +29,11 @@ QColor ComposerEditorNG::Utils::convertRgbToQColor(QString rgb)
     rgb = rgb.simplified();
     const QStringList colorLst = rgb.split(QLatin1Char(','));
     if (colorLst.count() == 3) {
-        const QColor col(colorLst.at(0).toInt(),colorLst.at(1).toInt(),colorLst.at(2).toInt());
+        const QColor col(colorLst.at(0).toInt(), colorLst.at(1).toInt(), colorLst.at(2).toInt());
         return col;
     }
     return QColor();
 }
-
 
 QUrl ComposerEditorNG::Utils::guessUrlFromString(const QString &string)
 {
@@ -45,13 +44,15 @@ QUrl ComposerEditorNG::Utils::guessUrlFromString(const QString &string)
     const bool hasSchema = test.exactMatch(urlStr);
     if (hasSchema) {
         QUrl url(urlStr, QUrl::TolerantMode);
-        if (url.isValid())
+        if (url.isValid()) {
             return url;
+        }
     }
 
     // Might be a file.
-    if (QFile::exists(urlStr))
+    if (QFile::exists(urlStr)) {
         return QUrl::fromLocalFile(urlStr);
+    }
 
     // Might be a shorturl - try to detect the schema.
     if (!hasSchema) {
@@ -60,8 +61,9 @@ QUrl ComposerEditorNG::Utils::guessUrlFromString(const QString &string)
             const QString prefix = urlStr.left(dotIndex).toLower();
             const QString schema = (prefix == QLatin1String("ftp")) ? prefix : QLatin1String("http");
             QUrl url(schema + QLatin1String("://") + urlStr, QUrl::TolerantMode);
-            if (url.isValid())
+            if (url.isValid()) {
                 return url;
+            }
         }
     }
 

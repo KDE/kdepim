@@ -28,8 +28,8 @@
 #include <QVBoxLayout>
 #include <QWebFrame>
 
-namespace ComposerEditorNG {
-
+namespace ComposerEditorNG
+{
 
 class ComposerEditorPrivate
 {
@@ -57,16 +57,16 @@ public:
         findReplaceBar = new FindReplaceBar(view);
         vlay->addWidget(findReplaceBar);
         q->setLayout(vlay);
-        q->connect(view,SIGNAL(showFindBar()),findReplaceBar,SLOT(showAndFocus()));
-        q->connect(view,SIGNAL(openLink(QUrl)),SIGNAL(openLink(QUrl)));
-        q->connect(view->page(), SIGNAL(contentsChanged()), q, SIGNAL(textChanged()) );
+        q->connect(view, SIGNAL(showFindBar()), findReplaceBar, SLOT(showAndFocus()));
+        q->connect(view, SIGNAL(openLink(QUrl)), SIGNAL(openLink(QUrl)));
+        q->connect(view->page(), SIGNAL(contentsChanged()), q, SIGNAL(textChanged()));
     }
 
     KToolBar *createToolBar(const QList<ComposerView::ComposerViewAction> &lstActions)
     {
         KToolBar *toolbar = new KToolBar(q);
-        toolbar->setIconSize ( QSize ( 22, 22 ) );
-        toolbar->setToolButtonStyle ( Qt::ToolButtonIconOnly );
+        toolbar->setIconSize(QSize(22, 22));
+        toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
         toolBarLayout->addWidget(toolbar);
         view->createToolBar(lstActions, toolbar);
         listToolBar.append(toolbar);
@@ -79,7 +79,6 @@ public:
             toolBar->setVisible(visible);
         }
     }
-
 
     QList<KToolBar *> listToolBar;
     QVBoxLayout *toolBarLayout;
@@ -165,7 +164,7 @@ void ComposerEditor::redo()
     d->view->page()->triggerAction(QWebPage::Redo);
 }
 
-QAction* ComposerEditor::action(QWebPage::WebAction action)
+QAction *ComposerEditor::action(QWebPage::WebAction action)
 {
     return d->view->page()->action(action);
 }
@@ -175,7 +174,7 @@ ComposerView *ComposerEditor::view() const
     return d->view;
 }
 
-void ComposerEditor::setHtmlContent( const QString &html )
+void ComposerEditor::setHtmlContent(const QString &html)
 {
     d->view->setHtmlContent(html);
 }
@@ -216,7 +215,6 @@ QMap<QString, QString> ComposerEditor::localImages() const
 {
     return d->view->localImages();
 }
-
 
 }
 

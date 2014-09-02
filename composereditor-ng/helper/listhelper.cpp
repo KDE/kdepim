@@ -20,31 +20,34 @@
 
 #include "listhelper_p.h"
 
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 static QString OL = QLatin1String("ol");
 static QString UL = QLatin1String("ul");
 static QString DL = QLatin1String("dl");
 
-ExtendAttributesDialog::ExtendType ListHelper::listType(const QWebElement& element)
+ExtendAttributesDialog::ExtendType ListHelper::listType(const QWebElement &element)
 {
     if (element.isNull()) {
         return ExtendAttributesDialog::Unknown;
     } else {
         const QString tagName = element.tagName().toLower();
-        if (tagName == OL)
+        if (tagName == OL) {
             return ExtendAttributesDialog::ListOL;
-        else if (tagName == UL)
+        } else if (tagName == UL) {
             return ExtendAttributesDialog::ListUL;
-        else if (tagName == DL)
+        } else if (tagName == DL) {
             return ExtendAttributesDialog::ListDL;
+        }
     }
     return ExtendAttributesDialog::Unknown;
 }
 
-QWebElement ListHelper::ulElement(const QWebElement& element)
+QWebElement ListHelper::ulElement(const QWebElement &element)
 {
-    if (element.isNull())
+    if (element.isNull()) {
         return element;
+    }
     const QString tagName = element.tagName().toLower();
     if (tagName == UL) {
         return element;
@@ -52,16 +55,17 @@ QWebElement ListHelper::ulElement(const QWebElement& element)
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( (e.tagName().toLower() != UL) && !e.isNull() );
+        } while ((e.tagName().toLower() != UL) && !e.isNull());
         return e;
     }
     return element;
 }
 
-QWebElement ListHelper::olElement(const QWebElement& element)
+QWebElement ListHelper::olElement(const QWebElement &element)
 {
-    if (element.isNull())
+    if (element.isNull()) {
         return element;
+    }
     const QString tagName = element.tagName().toLower();
     if (tagName == OL) {
         return element;
@@ -69,16 +73,17 @@ QWebElement ListHelper::olElement(const QWebElement& element)
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( (e.tagName().toLower() != OL) && !e.isNull() );
+        } while ((e.tagName().toLower() != OL) && !e.isNull());
         return e;
     }
     return element;
 }
 
-QWebElement ListHelper::dlElement(const QWebElement& element)
+QWebElement ListHelper::dlElement(const QWebElement &element)
 {
-    if (element.isNull())
+    if (element.isNull()) {
         return element;
+    }
     const QString tagName = element.tagName().toLower();
     if (tagName == DL) {
         return element;
@@ -86,29 +91,30 @@ QWebElement ListHelper::dlElement(const QWebElement& element)
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( (e.tagName().toLower() != DL) && !e.isNull() );
+        } while ((e.tagName().toLower() != DL) && !e.isNull());
         return e;
     }
     return element;
 }
 
-
-QWebElement ListHelper::listElement(const QWebElement& element)
+QWebElement ListHelper::listElement(const QWebElement &element)
 {
-    if (element.isNull())
+    if (element.isNull()) {
         return element;
+    }
     const QString tagName = element.tagName().toLower();
     if ((tagName == OL) || (tagName == UL) || (tagName == DL)) {
         return element;
     } else {
         QWebElement e = element;
-        while(1) {
+        while (1) {
             e = e.parent();
             if (((e.tagName().toLower() == OL) ||
-                 (e.tagName().toLower() == UL) ||
-                 (e.tagName().toLower() == DL) ||
-                 (e.isNull()) ) )
+                    (e.tagName().toLower() == UL) ||
+                    (e.tagName().toLower() == DL) ||
+                    (e.isNull()))) {
                 return e;
+            }
         }
     }
     return element;

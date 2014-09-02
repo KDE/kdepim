@@ -44,10 +44,10 @@ public:
 
 private:
     friend class ComposerImageDialogPrivate;
-    ComposerImageDialogPrivate * const d;
-    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotApplyClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotWebElementChanged() )
+    ComposerImageDialogPrivate *const d;
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotApplyClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged())
 };
 }
 

@@ -36,7 +36,8 @@
 #include <QKeyEvent>
 #include <QTimer>
 
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 
 class FindReplaceBarPrivate
 {
@@ -56,17 +57,15 @@ public:
     void _k_closeBar();
     void _k_slotHighlightAllChanged(bool highLight);
     void _k_slotCaseSensitivityChanged(bool sensitivity);
-    void _k_slotAutoSearch(const QString&);
+    void _k_slotAutoSearch(const QString &);
     void _k_slotSearchText(bool backward = false, bool isAutoSearch = true);
     void _k_slotFindNext();
     void _k_slotFindPrevious();
 
-
     void clearSelections();
-    void setFoundMatch( bool match );
-    void searchText( bool backward, bool isAutoSearch );
-    void messageInfo( bool backward, bool isAutoSearch, bool found );
-
+    void setFoundMatch(bool match);
+    void searchText(bool backward, bool isAutoSearch);
+    void messageInfo(bool backward, bool isAutoSearch, bool found);
 
     QString positiveBackground;
     QString negativeBackground;
@@ -86,35 +85,35 @@ public:
 void FindReplaceBarPrivate::_k_slotHighlightAllChanged(bool highLight)
 {
     bool found = false;
-    if ( highLight ) {
+    if (highLight) {
         QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
-        if ( caseSensitiveAct->isChecked() )
+        if (caseSensitiveAct->isChecked()) {
             searchOptions |= QWebPage::FindCaseSensitively;
+        }
         searchOptions |= QWebPage::HighlightAllOccurrences;
         found = webView->findText(lastSearchStr, searchOptions);
     } else {
         found = webView->findText(QString(), QWebPage::HighlightAllOccurrences);
     }
-    setFoundMatch( found );
+    setFoundMatch(found);
 
 }
 
 void FindReplaceBarPrivate::_k_closeBar()
 {
     // Make sure that all old searches are cleared
-    search->setText( QString() );
+    search->setText(QString());
     clearSelections();
     q->hide();
 }
 
-
 void FindReplaceBarPrivate::clearSelections()
 {
-    setFoundMatch( false );
+    setFoundMatch(false);
     webView->findText(QString(), QWebPage::HighlightAllOccurrences);
 }
 
-void FindReplaceBarPrivate::setFoundMatch( bool match )
+void FindReplaceBarPrivate::setFoundMatch(bool match)
 {
 #ifndef QT_NO_STYLE_STYLESHEET
     QString styleSheet;
@@ -126,10 +125,11 @@ void FindReplaceBarPrivate::setFoundMatch( bool match )
             bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);
             negativeBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(search).color().name());
         }
-        if (match)
+        if (match) {
             styleSheet = positiveBackground;
-        else
+        } else {
             styleSheet = negativeBackground;
+        }
     }
     search->setStyleSheet(styleSheet);
 #endif
@@ -138,136 +138,141 @@ void FindReplaceBarPrivate::setFoundMatch( bool match )
 void FindReplaceBarPrivate::_k_slotCaseSensitivityChanged(bool sensitivity)
 {
     QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
-    if ( sensitivity ) {
+    if (sensitivity) {
         searchOptions |= QWebPage::FindCaseSensitively;
         webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highligh
     }
-    if ( highlightAll->isChecked() )
+    if (highlightAll->isChecked()) {
         searchOptions |= QWebPage::HighlightAllOccurrences;
+    }
     const bool found = webView->findText(lastSearchStr, searchOptions);
-    setFoundMatch( found );
+    setFoundMatch(found);
 }
 
-void FindReplaceBarPrivate::_k_slotAutoSearch(const QString& str)
+void FindReplaceBarPrivate::_k_slotAutoSearch(const QString &str)
 {
-    const bool isNotEmpty = ( !str.isEmpty() );
-    findPreviousButton->setEnabled( isNotEmpty );
-    findNextButton->setEnabled( isNotEmpty );
-    if ( isNotEmpty )
-        QTimer::singleShot( 0, q, SLOT(_k_slotSearchText()) );
-    else
+    const bool isNotEmpty = (!str.isEmpty());
+    findPreviousButton->setEnabled(isNotEmpty);
+    findNextButton->setEnabled(isNotEmpty);
+    if (isNotEmpty) {
+        QTimer::singleShot(0, q, SLOT(_k_slotSearchText()));
+    } else {
         clearSelections();
+    }
 }
 
 void FindReplaceBarPrivate::_k_slotSearchText(bool backward, bool isAutoSearch)
 {
-    searchText( backward, isAutoSearch );
+    searchText(backward, isAutoSearch);
 }
 
-void FindReplaceBarPrivate::searchText( bool backward, bool isAutoSearch )
+void FindReplaceBarPrivate::searchText(bool backward, bool isAutoSearch)
 {
     QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
 
-    if ( backward )
+    if (backward) {
         searchOptions |= QWebPage::FindBackward;
-    if ( caseSensitiveAct->isChecked() )
+    }
+    if (caseSensitiveAct->isChecked()) {
         searchOptions |= QWebPage::FindCaseSensitively;
-    if ( highlightAll->isChecked() )
+    }
+    if (highlightAll->isChecked()) {
         searchOptions |= QWebPage::HighlightAllOccurrences;
+    }
 
-    const QString searchWord( search->text() );
+    const QString searchWord(search->text());
 
-    if ( !isAutoSearch && !lastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
+    if (!isAutoSearch && !lastSearchStr.contains(searchWord, Qt::CaseSensitive)) {
         clearSelections();
+    }
 
     webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highlight
 
     lastSearchStr = searchWord;
-    const bool found = webView->findText( lastSearchStr, searchOptions );
+    const bool found = webView->findText(lastSearchStr, searchOptions);
 
-    setFoundMatch( found );
-    messageInfo( backward, isAutoSearch, found );
+    setFoundMatch(found);
+    messageInfo(backward, isAutoSearch, found);
 }
 
-void FindReplaceBarPrivate::messageInfo( bool backward, bool isAutoSearch, bool found )
+void FindReplaceBarPrivate::messageInfo(bool backward, bool isAutoSearch, bool found)
 {
-    if ( !found && !isAutoSearch ) {
-        if ( backward ) {
-            KMessageBox::information( q, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,lastSearchStr ) );
+    if (!found && !isAutoSearch) {
+        if (backward) {
+            KMessageBox::information(q, i18n("Beginning of message reached.\nPhrase '%1' could not be found." , lastSearchStr));
         } else {
-            KMessageBox::information( q, i18n( "End of message reached.\nPhrase '%1' could not be found.", lastSearchStr ) );
+            KMessageBox::information(q, i18n("End of message reached.\nPhrase '%1' could not be found.", lastSearchStr));
         }
     }
 }
 
 void FindReplaceBarPrivate::_k_slotFindNext()
 {
-    searchText( false, false );
+    searchText(false, false);
 }
 
 void FindReplaceBarPrivate::_k_slotFindPrevious()
 {
-    searchText( true, false );
+    searchText(true, false);
 }
-
 
 FindReplaceBar::FindReplaceBar(KWebView *parent)
     : QWidget(parent), d(new FindReplaceBarPrivate(this, parent))
 {
-    QHBoxLayout * lay = new QHBoxLayout( this );
-    lay->setMargin( 2 );
+    QHBoxLayout *lay = new QHBoxLayout(this);
+    lay->setMargin(2);
 
-    QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
-    closeBtn->setIconSize( QSize( 16, 16 ) );
-    closeBtn->setToolTip( i18n( "Close" ) );
+    QToolButton *closeBtn = new QToolButton(this);
+    closeBtn->setIcon(QIcon::fromTheme(QLatin1String("dialog-close")));
+    closeBtn->setIconSize(QSize(16, 16));
+    closeBtn->setToolTip(i18n("Close"));
 
 #ifndef QT_NO_ACCESSIBILITY
-    closeBtn->setAccessibleName( i18n( "Close" ) );
+    closeBtn->setAccessibleName(i18n("Close"));
 #endif
 
-    closeBtn->setAutoRaise( true );
-    lay->addWidget( closeBtn );
+    closeBtn->setAutoRaise(true);
+    lay->addWidget(closeBtn);
 
-    QLabel * label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
-    lay->addWidget( label );
+    QLabel *label = new QLabel(i18nc("Find text", "F&ind:"), this);
+    lay->addWidget(label);
 
-    d->search = new QLineEdit( this );
-    d->search->setToolTip( i18n( "Text to search for" ) );
-    d->search->setClearButtonEnabled( true );
-    label->setBuddy( d->search );
-    lay->addWidget( d->search );
+    d->search = new QLineEdit(this);
+    d->search->setToolTip(i18n("Text to search for"));
+    d->search->setClearButtonEnabled(true);
+    label->setBuddy(d->search);
+    lay->addWidget(d->search);
 
-    d->findNextButton = new QPushButton( QIcon::fromTheme( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
-    d->findNextButton->setToolTip( i18n( "Jump to next match" ) );
-    lay->addWidget( d->findNextButton );
-    d->findNextButton->setEnabled( false );
+    d->findNextButton = new QPushButton(QIcon::fromTheme(QLatin1String("go-down-search")), i18nc("Find and go to the next search match", "Next"), this);
+    d->findNextButton->setToolTip(i18n("Jump to next match"));
+    lay->addWidget(d->findNextButton);
+    d->findNextButton->setEnabled(false);
 
-    d->findPreviousButton = new QPushButton( QIcon::fromTheme( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
-    d->findPreviousButton->setToolTip( i18n( "Jump to previous match" ) );
-    lay->addWidget( d->findPreviousButton );
-    d->findPreviousButton->setEnabled( false );
+    d->findPreviousButton = new QPushButton(QIcon::fromTheme(QLatin1String("go-up-search")), i18nc("Find and go to the previous search match", "Previous"), this);
+    d->findPreviousButton->setToolTip(i18n("Jump to previous match"));
+    lay->addWidget(d->findPreviousButton);
+    d->findPreviousButton->setEnabled(false);
 
-    QPushButton * optionsBtn = new QPushButton( this );
-    optionsBtn->setText( i18n( "Options" ) );
-    optionsBtn->setToolTip( i18n( "Modify search behavior" ) );
-    d->optionsMenu = new QMenu( optionsBtn );
-    d->caseSensitiveAct = d->optionsMenu->addAction( i18n( "Case sensitive" ) );
-    d->caseSensitiveAct->setCheckable( true );
+    QPushButton *optionsBtn = new QPushButton(this);
+    optionsBtn->setText(i18n("Options"));
+    optionsBtn->setToolTip(i18n("Modify search behavior"));
+    d->optionsMenu = new QMenu(optionsBtn);
+    d->caseSensitiveAct = d->optionsMenu->addAction(i18n("Case sensitive"));
+    d->caseSensitiveAct->setCheckable(true);
 
-    d->highlightAll = d->optionsMenu->addAction( i18n( "Highlight all matches" ) );
-    d->highlightAll->setCheckable( true );
-    connect( d->highlightAll, SIGNAL(toggled(bool)), this, SLOT(_k_slotHighlightAllChanged(bool)) );
+    d->highlightAll = d->optionsMenu->addAction(i18n("Highlight all matches"));
+    d->highlightAll->setCheckable(true);
+    connect(d->highlightAll, SIGNAL(toggled(bool)), this, SLOT(_k_slotHighlightAllChanged(bool)));
 
-    optionsBtn->setMenu( d->optionsMenu );
-    lay->addWidget( optionsBtn );
+    optionsBtn->setMenu(d->optionsMenu);
+    lay->addWidget(optionsBtn);
 
-    connect( closeBtn, SIGNAL(clicked()), this, SLOT(_k_closeBar()) );
-    connect( d->caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(_k_slotCaseSensitivityChanged(bool)) );
-    connect( d->search, SIGNAL(textChanged(QString)), this, SLOT(_k_slotAutoSearch(QString)) );
-    connect( d->findNextButton, SIGNAL(clicked()), this, SLOT(_k_slotFindNext()) );
-    connect( d->findPreviousButton, SIGNAL(clicked()), this, SLOT(_k_slotFindPrevious()) );
-    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    connect(closeBtn, SIGNAL(clicked()), this, SLOT(_k_closeBar()));
+    connect(d->caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(_k_slotCaseSensitivityChanged(bool)));
+    connect(d->search, SIGNAL(textChanged(QString)), this, SLOT(_k_slotAutoSearch(QString)));
+    connect(d->findNextButton, SIGNAL(clicked()), this, SLOT(_k_slotFindNext()));
+    connect(d->findPreviousButton, SIGNAL(clicked()), this, SLOT(_k_slotFindPrevious()));
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
     hide();
 
 }
@@ -277,33 +282,34 @@ FindReplaceBar::~FindReplaceBar()
     delete d;
 }
 
-bool FindReplaceBar::event(QEvent* e)
+bool FindReplaceBar::event(QEvent *e)
 {
     // Close the bar when pressing Escape.
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if ( shortCutOverride || e->type() == QEvent::KeyPress ) {
-        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+    if (shortCutOverride || e->type() == QEvent::KeyPress) {
+        QKeyEvent *kev = static_cast<QKeyEvent * >(e);
         if (kev->key() == Qt::Key_Escape) {
-            if ( shortCutOverride ) {
+            if (shortCutOverride) {
                 e->accept();
                 return true;
             }
             e->accept();
             d->_k_closeBar();
             return true;
-        } else if ( kev->key() == Qt::Key_Enter ||
-                  kev->key() == Qt::Key_Return ) {
+        } else if (kev->key() == Qt::Key_Enter ||
+                   kev->key() == Qt::Key_Return) {
             e->accept();
-            if ( shortCutOverride ) {
+            if (shortCutOverride) {
                 return true;
             }
-            if ( kev->modifiers() & Qt::ShiftModifier )
+            if (kev->modifiers() & Qt::ShiftModifier) {
                 d->_k_slotFindPrevious();
-            else if ( kev->modifiers() == Qt::NoModifier )
+            } else if (kev->modifiers() == Qt::NoModifier) {
                 d->_k_slotFindNext();
+            }
             return true;
         }
     }

@@ -23,7 +23,6 @@
 *
 * ============================================================ */
 
-
 #include <stdio.h>
 #include <QDebug>
 #include "kspellplugin.h"
@@ -34,7 +33,6 @@
 
 /////////////////////////////
 // KWebSpellChecker
-
 
 KWebSpellChecker::KWebSpellChecker()
 {
@@ -56,27 +54,24 @@ void KWebSpellChecker::toggleContinousSpellChecking()
     //TODO
 }
 
-void KWebSpellChecker::learnWord(const QString& word)
+void KWebSpellChecker::learnWord(const QString &word)
 {
     Q_UNUSED(word);
 }
 
-void KWebSpellChecker::ignoreWordInSpellDocument(const QString& word)
+void KWebSpellChecker::ignoreWordInSpellDocument(const QString &word)
 {
     Q_UNUSED(word);
 }
 
 static bool isValidWord(const QString &str)
 {
-    if (str.isEmpty() || (str.length() == 1 && !str[0].isLetter()))
-    {
+    if (str.isEmpty() || (str.length() == 1 && !str[0].isLetter())) {
         return false;
     }
     const int length = str.length();
-    for (int i = 0; i < length; ++i)
-    {
-        if (!str[i].isNumber())
-        {
+    for (int i = 0; i < length; ++i) {
+        if (!str[i].isNumber()) {
             return true;
         }
     }
@@ -84,11 +79,12 @@ static bool isValidWord(const QString &str)
     return false;
 }
 
-void KWebSpellChecker::checkSpellingOfString(const QString& word, int* misspellingLocation, int* misspellingLength)
+void KWebSpellChecker::checkSpellingOfString(const QString &word, int *misspellingLocation, int *misspellingLength)
 {
     // sanity check
-    if (misspellingLocation == NULL || misspellingLength == NULL)
+    if (misspellingLocation == NULL || misspellingLength == NULL) {
         return;
+    }
 //QT5
 #if 0
     *misspellingLocation = -1;
@@ -101,21 +97,17 @@ void KWebSpellChecker::checkSpellingOfString(const QString& word, int* misspelli
     QTextBoundaryFinder::BoundaryReasons boundary = finder.boundaryReasons();
     int start = finder.position(), end = finder.position();
     bool inWord = (boundary & QTextBoundaryFinder::StartWord) != 0;
-    while (finder.toNextBoundary() > 0)
-    {
+    while (finder.toNextBoundary() > 0) {
         boundary = finder.boundaryReasons();
-        if ((boundary & QTextBoundaryFinder::EndWord) && inWord)
-        {
+        if ((boundary & QTextBoundaryFinder::EndWord) && inWord) {
             end = finder.position();
             QString str = finder.string().mid(start, end - start);
-            if (isValidWord(str))
-            {
+            if (isValidWord(str)) {
 #if 1
                 qDebug() << "Word at " << start << " word = '"
                          <<  str << "', len = " << str.length();
 #endif
-                if (m_speller->isMisspelled(str))
-                {
+                if (m_speller->isMisspelled(str)) {
                     *misspellingLocation = start;
                     *misspellingLength = end - start;
                 }
@@ -123,8 +115,7 @@ void KWebSpellChecker::checkSpellingOfString(const QString& word, int* misspelli
             }
             inWord = false;
         }
-        if ((boundary & QTextBoundaryFinder::StartWord))
-        {
+        if ((boundary & QTextBoundaryFinder::StartWord)) {
             start = finder.position();
             inWord = true;
         }
@@ -132,7 +123,7 @@ void KWebSpellChecker::checkSpellingOfString(const QString& word, int* misspelli
 #endif
 }
 
-QString KWebSpellChecker::autoCorrectSuggestionForMisspelledWord(const QString& word)
+QString KWebSpellChecker::autoCorrectSuggestionForMisspelledWord(const QString &word)
 {
     /*
     QStringList words = m_speller->suggest(word);
@@ -145,7 +136,7 @@ QString KWebSpellChecker::autoCorrectSuggestionForMisspelledWord(const QString& 
     return QString();
 }
 
-void KWebSpellChecker::guessesForWord(const QString& word, const QString& context, QStringList& guesses)
+void KWebSpellChecker::guessesForWord(const QString &word, const QString &context, QStringList &guesses)
 {
     Q_UNUSED(context);
 
@@ -162,12 +153,11 @@ void KWebSpellChecker::toggleGrammarChecking()
 {
 }
 
-void KWebSpellChecker::checkGrammarOfString(const QString&, QList<GrammarDetail>&, int* badGrammarLocation, int* badGrammarLength)
+void KWebSpellChecker::checkGrammarOfString(const QString &, QList<GrammarDetail> &, int *badGrammarLocation, int *badGrammarLength)
 {
     Q_UNUSED(badGrammarLocation);
     Q_UNUSED(badGrammarLength);
 }
-
 
 ////////////////////////////////////////////
 // KWebKitPlatformPlugin
@@ -179,16 +169,16 @@ KWebKitPlatformPlugin::~KWebKitPlatformPlugin()
 {
 }
 
-
 bool KWebKitPlatformPlugin::supportsExtension(Extension ext) const
 {
     return ext == SpellChecker;
 }
 
-QObject* KWebKitPlatformPlugin::createExtension(Extension ext) const
+QObject *KWebKitPlatformPlugin::createExtension(Extension ext) const
 {
-    if (ext == SpellChecker)
+    if (ext == SpellChecker) {
         return new KWebSpellChecker();
+    }
 
     return NULL;
 }
@@ -196,5 +186,4 @@ QObject* KWebKitPlatformPlugin::createExtension(Extension ext) const
 //Q_EXPORT_PLUGIN2(kwebspellchecker, KWebKitPlatformPlugin)
 //QT5
 //Q_IMPORT_PLUGIN(kwebspellchecker)
-
 

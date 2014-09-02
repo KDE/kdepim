@@ -23,16 +23,11 @@
 *
 * ============================================================ */
 
-
 #ifndef QWEBSPELLCHECKER_H
 #define QWEBSPELLCHECKER_H
 
-
 #include <sonnet/speller.h>
 #include "qwebkitplatformplugin.h"
-
-
-
 
 class KWebSpellChecker : public QWebSpellChecker
 {
@@ -43,19 +38,18 @@ public:
 
     bool isContinousSpellCheckingEnabled() const;
     void toggleContinousSpellChecking();
-    void learnWord(const QString& word);
-    void ignoreWordInSpellDocument(const QString& word);
-    void checkSpellingOfString(const QString& word, int* misspellingLocation, int* misspellingLength);
-    QString autoCorrectSuggestionForMisspelledWord(const QString& word);
-    void guessesForWord(const QString& word, const QString& context, QStringList& guesses);
+    void learnWord(const QString &word);
+    void ignoreWordInSpellDocument(const QString &word);
+    void checkSpellingOfString(const QString &word, int *misspellingLocation, int *misspellingLength);
+    QString autoCorrectSuggestionForMisspelledWord(const QString &word);
+    void guessesForWord(const QString &word, const QString &context, QStringList &guesses);
 
     bool isGrammarCheckingEnabled();
     void toggleGrammarChecking();
-    void checkGrammarOfString(const QString&, QList<GrammarDetail>&, int* badGrammarLocation, int* badGrammarLength);
+    void checkGrammarOfString(const QString &, QList<GrammarDetail> &, int *badGrammarLocation, int *badGrammarLength);
 private:
     Sonnet::Speller *m_speller;
 };
-
 
 class KWebKitPlatformPlugin : public QObject, public QWebKitPlatformPlugin
 {
@@ -67,7 +61,7 @@ public:
     ~KWebKitPlatformPlugin();
 
     bool supportsExtension(Extension) const;
-    QObject* createExtension(Extension) const;
+    QObject *createExtension(Extension) const;
 
 };
 

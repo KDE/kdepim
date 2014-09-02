@@ -37,9 +37,9 @@ public:
 
 private:
     friend class ComposerListDialogPrivate;
-    ComposerListDialogPrivate * const d;
-    Q_PRIVATE_SLOT( d, void _k_slotOkClicked() )
-    Q_PRIVATE_SLOT( d, void _k_slotWebElementChanged() )
+    ComposerListDialogPrivate *const d;
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged())
 };
 
 }

@@ -31,7 +31,7 @@ class ComposerAnchorDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ComposerAnchorDialog(const QWebElement &element, QWidget *parent=0);
+    explicit ComposerAnchorDialog(const QWebElement &element, QWidget *parent = 0);
     ComposerAnchorDialog(QWidget *parent);
     ~ComposerAnchorDialog();
 
@@ -39,9 +39,9 @@ public:
 
 private:
     friend class ComposerAnchorDialogPrivate;
-    ComposerAnchorDialogPrivate * const d;
-    Q_PRIVATE_SLOT(d, void _k_slotOkClicked() )
-    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged() )
+    ComposerAnchorDialogPrivate *const d;
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked())
+    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged())
 };
 }
 

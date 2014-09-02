@@ -31,7 +31,8 @@
 #include <QLabel>
 #include <QWebElement>
 
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 class ComposerLinkDialogPrivate
 {
 public:
@@ -43,7 +44,7 @@ public:
     {
     }
 
-    void initialize(const QWebElement& element = QWebElement() );
+    void initialize(const QWebElement &element = QWebElement());
 
     QString html() const;
 
@@ -63,10 +64,10 @@ public:
 
 void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 {
-    q->setButtons( KDialog::Ok | KDialog::Cancel );
+    q->setButtons(KDialog::Ok | KDialog::Cancel);
     webElement = element;
 
-    q->setCaption( webElement.isNull() ? i18n( "Create Link" ) : i18n( "Edit Link" ) );
+    q->setCaption(webElement.isNull() ? i18n("Create Link") : i18n("Edit Link"));
 
     QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
 
@@ -74,35 +75,34 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     vbox->addLayout(layout);
 
     QLabel *label = new QLabel(i18n("Enter text to display for the link:"));
-    layout->addWidget( label, 0, 0 );
+    layout->addWidget(label, 0, 0);
 
     linkText = new QLineEdit;
     linkText->setReadOnly(!webElement.isNull());
     linkText->setClearButtonEnabled(true);
-    layout->addWidget( linkText, 0, 1 );
+    layout->addWidget(linkText, 0, 1);
 
     label = new QLabel(i18n("Enter the location:"));
-    layout->addWidget( label, 1, 0 );
+    layout->addWidget(label, 1, 0);
     linkLocation = new QLineEdit;
     linkLocation->setClearButtonEnabled(true);
-    layout->addWidget( linkLocation, 1, 1 );
+    layout->addWidget(linkLocation, 1, 1);
 
     label = new QLabel(i18n("Target"));
-    layout->addWidget( label, 2, 0 );
+    layout->addWidget(label, 2, 0);
 
     target = new KComboBox;
     fillTarget();
     target->setCurrentIndex(0);
-    layout->addWidget( target, 2, 1 );
+    layout->addWidget(target, 2, 1);
 
     if (!webElement.isNull()) {
-        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Link,q);
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement, ExtendAttributesDialog::Link, q);
         q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
-        layout->addWidget( button, 3, 1 );
+        layout->addWidget(button, 3, 1);
     }
 
-    vbox->addWidget( new KSeparator );
-
+    vbox->addWidget(new KSeparator);
 
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 }
@@ -129,17 +129,16 @@ void ComposerLinkDialogPrivate::_k_slotOkClicked()
     q->accept();
 }
 
-
 QString ComposerLinkDialogPrivate::html() const
 {
     const QUrl url = ComposerEditorNG::Utils::guessUrlFromString(linkLocation->text());
     if (url.isValid()) {
         const QString targetStr = target->itemData(target->currentIndex()).toString();
-        QString html = QString::fromLatin1( "<a ");
+        QString html = QString::fromLatin1("<a ");
         if (!targetStr.isEmpty()) {
             html += QString::fromLatin1("target=\'%1\'").arg(targetStr);
         }
-        html += QString::fromLatin1( "href=\'%1\'>%2</a>" ).arg ( url.toString() ).arg ( linkText->text() );
+        html += QString::fromLatin1("href=\'%1\'>%2</a>").arg(url.toString()).arg(linkText->text());
         return html;
     }
     return QString();
@@ -175,15 +174,15 @@ void ComposerLinkDialogPrivate::updateSettings()
     }
 }
 
-ComposerLinkDialog::ComposerLinkDialog(const QString& selectedText, QWidget *parent)
+ComposerLinkDialog::ComposerLinkDialog(const QString &selectedText, QWidget *parent)
     : KDialog(parent), d(new ComposerLinkDialogPrivate(this))
 {
     d->initialize();
     d->linkText->setText(selectedText);
 }
 
-ComposerLinkDialog::ComposerLinkDialog(const QWebElement& element, QWidget *parent)
-    : KDialog(parent),d(new ComposerLinkDialogPrivate(this))
+ComposerLinkDialog::ComposerLinkDialog(const QWebElement &element, QWidget *parent)
+    : KDialog(parent), d(new ComposerLinkDialogPrivate(this))
 {
     d->initialize(element);
     d->updateSettings();

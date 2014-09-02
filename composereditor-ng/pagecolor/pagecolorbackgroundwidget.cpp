@@ -32,11 +32,11 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    const QStringList mimetypes = KImageIO::mimeTypes( KImageIO::Reading );
+    const QStringList mimetypes = KImageIO::mimeTypes(KImageIO::Reading);
 //QT5
     //ui->backgroundImage->fileDialog()->setFilter(mimetypes.join( QLatin1String( " " ) ));
     ui->groupBox->setEnabled(false);
-    connect(ui->customColors,SIGNAL(toggled(bool)),ui->groupBox,SLOT(setEnabled(bool)));
+    connect(ui->customColors, SIGNAL(toggled(bool)), ui->groupBox, SLOT(setEnabled(bool)));
 }
 
 PageColorBackgroundWidget::~PageColorBackgroundWidget()
@@ -66,10 +66,11 @@ void PageColorBackgroundWidget::setTextColor(const QColor &col)
 
 void PageColorBackgroundWidget::setUseDefaultColor(bool b)
 {
-    if (b)
+    if (b) {
         ui->defaultColor->setChecked(true);
-    else
+    } else {
         ui->customColors->setChecked(true);
+    }
 }
 
 bool PageColorBackgroundWidget::useDefaultColor() const

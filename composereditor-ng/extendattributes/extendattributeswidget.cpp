@@ -32,12 +32,13 @@
 #include <QLineEdit>
 #include <QWebElement>
 
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 
 class ExtendAttributesWidgetPrivate
 {
 public:
-    ExtendAttributesWidgetPrivate(const QWebElement& element, ExtendAttributesDialog::SettingsType settingsType, ExtendAttributesDialog::ExtendType extendType, ExtendAttributesWidget *qq)
+    ExtendAttributesWidgetPrivate(const QWebElement &element, ExtendAttributesDialog::SettingsType settingsType, ExtendAttributesDialog::ExtendType extendType, ExtendAttributesWidget *qq)
         : webElement(element),
           type(extendType),
           settings(settingsType),
@@ -52,10 +53,11 @@ public:
         treeWidget->setRootIsDecorated(false);
         QStringList headerStr;
 
-        if (settings == ExtendAttributesDialog::InlineStyle)
-            headerStr << i18n("Property")<< i18n("Value");
-        else
-            headerStr << i18n("Attribute")<< i18n("Value");
+        if (settings == ExtendAttributesDialog::InlineStyle) {
+            headerStr << i18n("Property") << i18n("Value");
+        } else {
+            headerStr << i18n("Attribute") << i18n("Value");
+        }
 
         q->connect(treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), q, SLOT(_k_slotCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
 
@@ -80,13 +82,13 @@ public:
         hbox->addWidget(attributeValue);
 
         lay->addLayout(hbox);
-        removeAttribute = new QPushButton( i18n( "Remove" ) );
+        removeAttribute = new QPushButton(i18n("Remove"));
         removeAttribute->setEnabled(false);
         q->connect(removeAttribute, SIGNAL(clicked(bool)), q, SLOT(_k_slotRemoveAttribute()));
         lay->addWidget(removeAttribute);
 
         KSeparator *sep = new KSeparator;
-        lay->addWidget( sep );
+        lay->addWidget(sep);
 
         fillCombobox();
         initialize();
@@ -94,9 +96,9 @@ public:
 
     void _k_slotRemoveAttribute();
     void _k_attributeChanged(const QString &key);
-    void _k_slotCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*);
-    void _k_attributeValueChanged(const QString&);
-    void _k_attributeLineEditChanged(const QString&);
+    void _k_slotCurrentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
+    void _k_attributeValueChanged(const QString &);
+    void _k_attributeLineEditChanged(const QString &);
 
     void initialize();
     void fillCombobox();
@@ -123,7 +125,7 @@ void ExtendAttributesWidgetPrivate::_k_attributeLineEditChanged(const QString &t
 {
     QTreeWidgetItem *item = treeWidget->currentItem();
     if (item && item->text(1).isEmpty()) {
-        item->setText(0,text);
+        item->setText(0, text);
     } else {
         QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
         item->setText(0, text);
@@ -133,8 +135,9 @@ void ExtendAttributesWidgetPrivate::_k_attributeLineEditChanged(const QString &t
 
 void ExtendAttributesWidgetPrivate::_k_attributeValueChanged(const QString &val)
 {
-    if (blockSignal)
+    if (blockSignal) {
         return;
+    }
 
     QTreeWidgetItem *item = treeWidget->currentItem();
     if (item) {
@@ -142,17 +145,18 @@ void ExtendAttributesWidgetPrivate::_k_attributeValueChanged(const QString &val)
     }
 }
 
-void ExtendAttributesWidgetPrivate::_k_slotCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)
+void ExtendAttributesWidgetPrivate::_k_slotCurrentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)
 {
     QTreeWidgetItem *item = treeWidget->currentItem();
     removeAttribute->setEnabled(item);
     if (item) {
         const QString key = item->text(0);
         _k_attributeChanged(key);
-        if (attributes)
+        if (attributes) {
             attributes->setCurrentIndex(attributes->findText(key));
-        else
+        } else {
             attributesLineEdit->setText(key);
+        }
     }
 }
 
@@ -184,7 +188,7 @@ void ExtendAttributesWidgetPrivate::_k_attributeChanged(const QString &key)
 
 void ExtendAttributesWidgetPrivate::fillCombobox()
 {
-    switch(settings) {
+    switch (settings) {
     case ExtendAttributesDialog::HtmlAttributes:
         attributesMap = ComposerEditorNG::ExtendAttributesUtils::attributesMap(type);
         break;
@@ -192,14 +196,16 @@ void ExtendAttributesWidgetPrivate::fillCombobox()
         //nothing
         break;
     case ExtendAttributesDialog::JavascriptEvents:
-        if (type == ExtendAttributesDialog::Body)
+        if (type == ExtendAttributesDialog::Body) {
             attributesMap = ComposerEditorNG::ExtendAttributesUtils::attributesJavascriptWindowAndBase();
-        else
+        } else {
             attributesMap = ComposerEditorNG::ExtendAttributesUtils::attributesJavascript();
+        }
         break;
     }
-    if (attributes)
+    if (attributes) {
         attributes->addItems(attributesMap.keys());
+    }
 }
 
 void ExtendAttributesWidgetPrivate::_k_slotRemoveAttribute()
@@ -212,7 +218,7 @@ void ExtendAttributesWidgetPrivate::initialize()
 {
     if (!webElement.isNull()) {
         const QStringList keys = attributesMap.keys();
-        Q_FOREACH (const QString& str, keys) {
+        Q_FOREACH (const QString &str, keys) {
             if (webElement.hasAttribute(str)) {
                 QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
                 item->setText(0, str);
@@ -226,7 +232,7 @@ void ExtendAttributesWidgetPrivate::changeAttributes()
 {
     if (!webElement.isNull()) {
         const QStringList keys = attributesMap.keys();
-        Q_FOREACH (const QString& str, keys) {
+        Q_FOREACH (const QString &str, keys) {
             const QList<QTreeWidgetItem *> lstItems = treeWidget->findItems(str, Qt::MatchCaseSensitive);
             if (lstItems.isEmpty()) {
                 if (webElement.hasAttribute(str)) {
@@ -258,6 +264,5 @@ void ExtendAttributesWidget::changeAttributes()
 }
 
 }
-
 
 #include "moc_extendattributeswidget.cpp"

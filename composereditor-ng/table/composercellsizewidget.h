@@ -34,15 +34,15 @@ public:
     explicit ComposerCellSizeWidget(QWidget *parent = 0);
     ~ComposerCellSizeWidget();
 
-    void setValue(const QString& val);
+    void setValue(const QString &val);
     QString value() const;
 
-    void setLabel(const QString&str);
+    void setLabel(const QString &str);
 
 private:
     friend class ComposerCellSizeWidgetPrivate;
-    ComposerCellSizeWidgetPrivate * const d;
-    Q_PRIVATE_SLOT(d, void slotTypeChanged(int) )
+    ComposerCellSizeWidgetPrivate *const d;
+    Q_PRIVATE_SLOT(d, void slotTypeChanged(int))
 };
 }
 

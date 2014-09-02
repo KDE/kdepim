@@ -20,8 +20,8 @@
 
 #include "tablehelper_p.h"
 
-
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 static QString TBODY = QLatin1String("tbody");
 static QString TABLE = QLatin1String("table");
 static QString ROW = QLatin1String("tr");
@@ -33,7 +33,7 @@ QWebElement TableHelper::tableBodyWebElement(const QWebElement &element)
     if (tagName == TABLE) {
         QWebElement tableElement = element.firstChild();
         while (!tableElement.isNull()) {
-            if ( tableElement.tagName().toLower() == TBODY ) {
+            if (tableElement.tagName().toLower() == TBODY) {
                 return tableElement;
             }
             tableElement = tableElement.nextSibling();
@@ -45,7 +45,7 @@ QWebElement TableHelper::tableBodyWebElement(const QWebElement &element)
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( (e.tagName().toLower() != TBODY) && !e.isNull() );
+        } while ((e.tagName().toLower() != TBODY) && !e.isNull());
         return e;
     }
 }
@@ -61,7 +61,7 @@ QWebElement TableHelper::rowWebElement(const QWebElement &element)
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( (e.tagName().toLower() != ROW) && !e.isNull() );
+        } while ((e.tagName().toLower() != ROW) && !e.isNull());
         return e;
     }
 }
@@ -74,7 +74,7 @@ QWebElement TableHelper::tableWebElement(const QWebElement &element)
         QWebElement e = element;
         do {
             e = e.parent();
-        } while(e.tagName().toLower() != TABLE);
+        } while (e.tagName().toLower() != TABLE);
         return e;
     }
 }
@@ -152,13 +152,12 @@ int TableHelper::tableColumnCount(const QWebElement &element)
     return numberColumn;
 }
 
-
 int TableHelper::currentColumn(const QWebElement &element)
 {
     QWebElement e = element;
     do {
         e = e.parent();
-    } while( (e.tagName().toLower() != ROW) && !e.isNull() );
+    } while ((e.tagName().toLower() != ROW) && !e.isNull());
 
     //TODO
     return 0;
@@ -169,11 +168,11 @@ void TableHelper::removeCellContentsFromCurrentRow(const QWebElement &element)
     QWebElement e = element;
     do {
         e = e.parent();
-    } while( (e.tagName().toLower() != ROW) && !e.isNull() );
+    } while ((e.tagName().toLower() != ROW) && !e.isNull());
     if (!e.isNull()) {
         QWebElement cellElement = e.firstChild();
         while (!cellElement.isNull()) {
-            if (cellElement.tagName().toLower() == CELL ) {
+            if (cellElement.tagName().toLower() == CELL) {
                 cellElement.setInnerXml(QString::fromLatin1("<BR>"));
             }
             cellElement = cellElement.nextSibling();

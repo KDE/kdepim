@@ -39,8 +39,8 @@ public:
 
 private:
     friend class DomTreeWidgetPrivate;
-    DomTreeWidgetPrivate * const d;
-    Q_PRIVATE_SLOT(d, void _k_slotUpdate() )
+    DomTreeWidgetPrivate *const d;
+    Q_PRIVATE_SLOT(d, void _k_slotUpdate())
 };
 }
 

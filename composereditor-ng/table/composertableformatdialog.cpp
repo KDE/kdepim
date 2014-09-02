@@ -39,12 +39,12 @@ class ComposerTableFormatDialogPrivate
 {
 public:
     ComposerTableFormatDialogPrivate(const QWebElement &element, ComposerTableFormatDialog *qq)
-        :q(qq)
+        : q(qq)
     {
         initialize(element);
     }
 
-    void initialize(const QWebElement& element);
+    void initialize(const QWebElement &element);
 
     void applyChanges();
     void updateSettings();
@@ -68,13 +68,13 @@ void ComposerTableFormatDialogPrivate::_k_slotWebElementChanged()
 void ComposerTableFormatDialogPrivate::applyChanges()
 {
     if (!webElement.isNull()) {
-        webElement.setAttribute(QLatin1String("border"),QString::number(insertTableWidget->border()));
+        webElement.setAttribute(QLatin1String("border"), QString::number(insertTableWidget->border()));
         const QString width = QString::fromLatin1("%1%2").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
-        webElement.setAttribute(QLatin1String("width"),width);
+        webElement.setAttribute(QLatin1String("width"), width);
         if (useBackgroundColor->isChecked()) {
             const QColor col = backgroundColor->color();
             if (col.isValid()) {
-                webElement.setAttribute(QLatin1String("bgcolor"),backgroundColor->color().name());
+                webElement.setAttribute(QLatin1String("bgcolor"), backgroundColor->color().name());
             }
         } else {
             webElement.removeAttribute(QLatin1String("bgcolor"));
@@ -86,40 +86,39 @@ void ComposerTableFormatDialogPrivate::applyChanges()
 void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
 {
     webElement = element;
-    q->setCaption( i18n( "Table Format" ) );
-    q->setButtons( KDialog::Ok | KDialog::Apply | KDialog::Cancel );
-    q->setButtonText( KDialog::Ok, i18n( "Edit" ) );
-    QWidget *page = new QWidget( q );
-    q->setMainWidget( page );
+    q->setCaption(i18n("Table Format"));
+    q->setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel);
+    q->setButtonText(KDialog::Ok, i18n("Edit"));
+    QWidget *page = new QWidget(q);
+    q->setMainWidget(page);
 
-    QVBoxLayout *lay = new QVBoxLayout( page );
-    insertTableWidget = new KPIMTextEdit::InsertTableWidget( q );
+    QVBoxLayout *lay = new QVBoxLayout(page);
+    insertTableWidget = new KPIMTextEdit::InsertTableWidget(q);
     lay->addWidget(insertTableWidget);
 
     KSeparator *sep = new KSeparator;
-    lay->addWidget( sep );
+    lay->addWidget(sep);
 
     QHBoxLayout *hbox = new QHBoxLayout;
-    useBackgroundColor = new QCheckBox( i18n( "Background Color:" ) );
+    useBackgroundColor = new QCheckBox(i18n("Background Color:"));
     hbox->addWidget(useBackgroundColor);
     backgroundColor = new KColorButton;
     backgroundColor->setEnabled(false);
     hbox->addWidget(backgroundColor);
 
-
     lay->addLayout(hbox);
 
     if (!webElement.isNull()) {
-        ExtendAttributesButton *button = new ExtendAttributesButton(webElement,ExtendAttributesDialog::Table,q);
+        ExtendAttributesButton *button = new ExtendAttributesButton(webElement, ExtendAttributesDialog::Table, q);
         q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
-        lay->addWidget( button );
+        lay->addWidget(button);
     }
 
     sep = new KSeparator;
-    lay->addWidget( sep );
+    lay->addWidget(sep);
 
-    q->connect(q,SIGNAL(okClicked()),q,SLOT(_k_slotOkClicked()));
-    q->connect(q,SIGNAL(applyClicked()),q,SLOT(_k_slotApplyClicked()));
+    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+    q->connect(q, SIGNAL(applyClicked()), q, SLOT(_k_slotApplyClicked()));
 
     q->connect(useBackgroundColor, SIGNAL(toggled(bool)), backgroundColor, SLOT(setEnabled(bool)));
     updateSettings();
@@ -152,7 +151,7 @@ void ComposerTableFormatDialogPrivate::updateSettings()
         QWebElementCollection allRows = webElement.findAll(QLatin1String("tr"));
         insertTableWidget->setRows(allRows.count());
         QWebElementCollection allCol = webElement.findAll(QLatin1String("td"));
-        insertTableWidget->setColumns(allCol.count()/allRows.count());
+        insertTableWidget->setColumns(allCol.count() / allRows.count());
     }
 }
 
@@ -167,7 +166,7 @@ void ComposerTableFormatDialogPrivate::_k_slotApplyClicked()
     applyChanges();
 }
 
-ComposerTableFormatDialog::ComposerTableFormatDialog(const QWebElement& element, QWidget *parent)
+ComposerTableFormatDialog::ComposerTableFormatDialog(const QWebElement &element, QWidget *parent)
     : KDialog(parent), d(new ComposerTableFormatDialogPrivate(element, this))
 {
 }
@@ -176,7 +175,6 @@ ComposerTableFormatDialog::~ComposerTableFormatDialog()
 {
     delete d;
 }
-
 
 }
 

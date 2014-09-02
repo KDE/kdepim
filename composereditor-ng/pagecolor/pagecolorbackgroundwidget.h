@@ -24,7 +24,8 @@
 #include <QWidget>
 class QUrl;
 
-namespace Ui {
+namespace Ui
+{
 class PageColorBackgroundWidget;
 }
 
@@ -33,11 +34,11 @@ namespace ComposerEditorNG
 class PageColorBackgroundWidget : public QWidget
 {
     Q_OBJECT
-    
+
 public:
     explicit PageColorBackgroundWidget(QWidget *parent = 0);
     ~PageColorBackgroundWidget();
-    
+
     QColor pageBackgroundColor() const;
     void setPageBackgroundColor(const QColor &);
 
@@ -52,7 +53,6 @@ public:
 
     QColor visitedLinkColor() const;
     void setVisitedLinkColor(const QColor &col);
-
 
     void setUseDefaultColor(bool b);
     bool useDefaultColor() const;

@@ -30,14 +30,12 @@
 #include "helper/listhelper_p.h"
 #include "globalsettings_base.h"
 
-
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
 #include <kpimtextedit/selectspecialchardialog.h>
 
 #include <Sonnet/Dialog>
 #include <sonnet/backgroundchecker.h>
-
 
 #include <KToolInvocation>
 #include <KLocalizedString>
@@ -67,9 +65,8 @@
 #include <QPrintDialog>
 #include <QClipboard>
 
-
-
-namespace ComposerEditorNG {
+namespace ComposerEditorNG
+{
 #define FORWARD_ACTION(action1, action2) \
     q->connect(action1, SIGNAL(triggered()), getAction(action2), SLOT(trigger()));\
     q->connect(getAction(action2), SIGNAL(changed()), SLOT(_k_slotAdjustActions()));
@@ -78,7 +75,7 @@ namespace ComposerEditorNG {
 
 void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
 {
-    switch(type) {
+    switch (type) {
     case ComposerView::Bold: {
         if (!action_text_bold) {
             action_text_bold = new KToggleAction(QIcon::fromTheme(QLatin1String("format-text-bold")), i18nc("@action boldify selected text", "&Bold"), q);
@@ -151,8 +148,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::AlignJustify:
-    {
+    case ComposerView::AlignJustify: {
         if (!action_align_justify) {
             action_align_justify = new KToggleAction(QIcon::fromTheme(QLatin1String("format-justify-fill")), i18nc("@action", "&Justify"), q);
             action_align_justify->setIconText(i18nc("@label justify fill", "Justify"));
@@ -161,8 +157,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::DirectionLtr:
-    {
+    case ComposerView::DirectionLtr: {
         if (!action_direction_ltr) {
             action_direction_ltr = new KToggleAction(QIcon::fromTheme(QLatin1String("format-text-direction-ltr")), i18nc("@action", "Left-to-Right"), q);
             action_direction_ltr->setIconText(i18nc("@label left-to-right", "Left-to-Right"));
@@ -171,8 +166,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::DirectionRtl:
-    {
+    case ComposerView::DirectionRtl: {
         if (!action_direction_rtl) {
             action_direction_rtl = new KToggleAction(QIcon::fromTheme(QLatin1String("format-text-direction-rtl")), i18nc("@action", "Right-to-Left"), q);
             action_direction_rtl->setIconText(i18nc("@label right-to-left", "Right-to-Left"));
@@ -181,8 +175,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::SubScript:
-    {
+    case ComposerView::SubScript: {
         if (!action_text_subscript) {
             action_text_subscript = new KToggleAction(QIcon::fromTheme(QLatin1String("format-text-subscript")), i18nc("@action", "Subscript"), q);
             htmlEditorActionList.append((action_text_subscript));
@@ -190,8 +183,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::SuperScript:
-    {
+    case ComposerView::SuperScript: {
         if (!action_text_superscript) {
             action_text_superscript = new KToggleAction(QIcon::fromTheme(QLatin1String("format-text-superscript")), i18nc("@action", "Superscript"), q);
             htmlEditorActionList.append((action_text_superscript));
@@ -199,17 +191,15 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::HorizontalRule:
-    {
+    case ComposerView::HorizontalRule: {
         if (!action_insert_horizontal_rule) {
             action_insert_horizontal_rule = new QAction(QIcon::fromTheme(QLatin1String("insert-horizontal-rule")), i18nc("@action", "Insert Rule Line"), q);
             htmlEditorActionList.append((action_insert_horizontal_rule));
-            q->connect( action_insert_horizontal_rule, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHorizontalRule()) );
+            q->connect(action_insert_horizontal_rule, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHorizontalRule()));
         }
         break;
     }
-    case ComposerView::ListIndent:
-    {
+    case ComposerView::ListIndent: {
         if (!action_list_indent) {
             action_list_indent = new QAction(QIcon::fromTheme(QLatin1String("format-indent-more")), i18nc("@action", "Increase Indent"), q);
             htmlEditorActionList.append((action_list_indent));
@@ -217,8 +207,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::ListDedent:
-    {
+    case ComposerView::ListDedent: {
         if (!action_list_dedent) {
             action_list_dedent = new QAction(QIcon::fromTheme(QLatin1String("format-indent-less")), i18nc("@action", "Decrease Indent"), q);
             htmlEditorActionList.append(action_list_dedent);
@@ -226,8 +215,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::OrderedList:
-    {
+    case ComposerView::OrderedList: {
         if (!action_ordered_list) {
             action_ordered_list = new KToggleAction(QIcon::fromTheme(QLatin1String("format-list-ordered")), i18n("Ordered Style"), q);
             htmlEditorActionList.append(action_ordered_list);
@@ -235,47 +223,44 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::UnorderedList:
-    {
+    case ComposerView::UnorderedList: {
         if (!action_unordered_list) {
-            action_unordered_list = new KToggleAction( QIcon::fromTheme( QLatin1String("format-list-unordered" )), i18n( "Unordered List" ), q);
+            action_unordered_list = new KToggleAction(QIcon::fromTheme(QLatin1String("format-list-unordered")), i18n("Unordered List"), q);
             htmlEditorActionList.append(action_unordered_list);
             FORWARD_ACTION(action_unordered_list, QWebPage::InsertUnorderedList);
         }
         break;
     }
-    case ComposerView::FormatType:
-    {
+    case ComposerView::FormatType: {
         if (!action_format_type) {
             action_format_type = new KSelectAction(QIcon::fromTheme(QLatin1String("format-list-unordered")), i18nc("@title:menu", "List Style"), q);
-            QAction *act = action_format_type->addAction(i18n( "Paragraph" ));
+            QAction *act = action_format_type->addAction(i18n("Paragraph"));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Paragraph));
-            act = action_format_type->addAction(i18n( "Heading 1" ));
+            act = action_format_type->addAction(i18n("Heading 1"));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Header1));
-            act = action_format_type->addAction(i18n( "Heading 2" ));
+            act = action_format_type->addAction(i18n("Heading 2"));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Header2));
-            act = action_format_type->addAction(i18n( "Heading 3" ));
+            act = action_format_type->addAction(i18n("Heading 3"));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Header3));
-            act = action_format_type->addAction(i18n( "Heading 4" ));
+            act = action_format_type->addAction(i18n("Heading 4"));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Header4));
-            act = action_format_type->addAction(i18n( "Heading 5" ));
+            act = action_format_type->addAction(i18n("Heading 5"));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Header5));
-            act = action_format_type->addAction(i18n( "Heading 6" ));
+            act = action_format_type->addAction(i18n("Heading 6"));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Header6));
-            act = action_format_type->addAction(i18n( "Pre" ));
+            act = action_format_type->addAction(i18n("Pre"));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Pre));
-            act = action_format_type->addAction(i18n( "Address" ));
+            act = action_format_type->addAction(i18n("Address"));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Address));
             action_format_type->setCurrentItem(0);
             htmlEditorActionList.append(action_format_type);
 
             q->connect(action_format_type, SIGNAL(triggered(QAction*)),
-                    q, SLOT(_k_setFormatType(QAction*)));
+                       q, SLOT(_k_setFormatType(QAction*)));
         }
         break;
     }
-    case ComposerView::FontSize:
-    {
+    case ComposerView::FontSize: {
         if (!action_font_size) {
             action_font_size = new KSelectAction(i18nc("@action", "Font &Size"), q);
             htmlEditorActionList.append(action_font_size);
@@ -293,8 +278,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::FontFamily:
-    {
+    case ComposerView::FontFamily: {
         if (!action_font_family) {
             action_font_family = new KFontAction(i18nc("@action", "&Font"), q);
             htmlEditorActionList.append((action_font_family));
@@ -302,42 +286,37 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::Emoticon:
-    {
+    case ComposerView::Emoticon: {
         if (!action_add_emoticon) {
             action_add_emoticon = new KPIMTextEdit::EmoticonTextEditAction(q);
-            q->connect( action_add_emoticon, SIGNAL(emoticonActivated(QString)),
-                     q, SLOT(_k_slotAddEmoticon(QString)) );
+            q->connect(action_add_emoticon, SIGNAL(emoticonActivated(QString)),
+                       q, SLOT(_k_slotAddEmoticon(QString)));
         }
         break;
     }
-    case ComposerView::InsertImage:
-    {
+    case ComposerView::InsertImage: {
         if (!action_insert_image) {
-            action_insert_image = new QAction( QIcon::fromTheme( QLatin1String( "insert-image" ) ), i18n( "Add Image" ), q);
-            q->connect( action_insert_image, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()) );
+            action_insert_image = new QAction(QIcon::fromTheme(QLatin1String("insert-image")), i18n("Add Image"), q);
+            q->connect(action_insert_image, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()));
         }
         break;
     }
-    case ComposerView::InsertHtml:
-    {
+    case ComposerView::InsertHtml: {
         if (!action_insert_html) {
-            action_insert_html = new QAction( i18n( "Insert HTML" ), q);
-            q->connect( action_insert_html, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()) );
+            action_insert_html = new QAction(i18n("Insert HTML"), q);
+            q->connect(action_insert_html, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()));
         }
         break;
     }
-    case ComposerView::InsertTable:
-    {
+    case ComposerView::InsertTable: {
         if (!action_insert_table) {
-            action_insert_table = new QAction( QIcon::fromTheme( QLatin1String( "insert-table" ) ), i18n( "Table..." ), q);
+            action_insert_table = new QAction(QIcon::fromTheme(QLatin1String("insert-table")), i18n("Table..."), q);
             htmlEditorActionList.append(action_insert_table);
-            q->connect( action_insert_table, SIGNAL(triggered(bool)), SLOT(_k_slotInsertTable()) );
+            q->connect(action_insert_table, SIGNAL(triggered(bool)), SLOT(_k_slotInsertTable()));
         }
         break;
     }
-    case ComposerView::InsertLink:
-    {
+    case ComposerView::InsertLink: {
         if (!action_insert_link) {
             action_insert_link = new QAction(QIcon::fromTheme(QLatin1String("insert-link")), i18nc("@action", "Link"), q);
             htmlEditorActionList.append(action_insert_link);
@@ -345,8 +324,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::TextForegroundColor:
-    {
+    case ComposerView::TextForegroundColor: {
         if (!action_text_foreground_color) {
             action_text_foreground_color = new QAction(QIcon::fromTheme(QLatin1String("format-stroke-color")), i18nc("@action", "Text &Color..."), q);
             action_text_foreground_color->setIconText(i18nc("@label stroke color", "Color"));
@@ -355,8 +333,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::TextBackgroundColor:
-    {
+    case ComposerView::TextBackgroundColor: {
         if (!action_text_background_color) {
             action_text_background_color = new QAction(QIcon::fromTheme(QLatin1String("format-fill-color")), i18nc("@action", "Text &Highlight..."), q);
             htmlEditorActionList.append((action_text_background_color));
@@ -364,16 +341,14 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::FormatReset:
-    {
+    case ComposerView::FormatReset: {
         if (!action_format_reset) {
-            action_format_reset = new QAction( QIcon::fromTheme( QLatin1String("draw-eraser") ), i18n("Reset Font Settings"), q);
+            action_format_reset = new QAction(QIcon::fromTheme(QLatin1String("draw-eraser")), i18n("Reset Font Settings"), q);
             FORWARD_ACTION(action_format_reset, QWebPage::RemoveFormat);
         }
         break;
     }
-    case ComposerView::SpellCheck:
-    {
+    case ComposerView::SpellCheck: {
         if (!action_spell_check) {
             action_spell_check = new QAction(QIcon::fromTheme(QLatin1String("tools-check-spelling")), i18n("Check Spelling..."), q);
             htmlEditorActionList.append(action_spell_check);
@@ -381,97 +356,87 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
-    case ComposerView::PageColor:
-    {
+    case ComposerView::PageColor: {
         if (!action_page_color) {
-            action_page_color = new QAction( i18n( "Page Color and Background..." ), q);
+            action_page_color = new QAction(i18n("Page Color and Background..."), q);
             htmlEditorActionList.append(action_page_color);
-            q->connect( action_page_color, SIGNAL(triggered(bool)), SLOT(_k_slotChangePageColorAndBackground()) );
+            q->connect(action_page_color, SIGNAL(triggered(bool)), SLOT(_k_slotChangePageColorAndBackground()));
         }
         break;
     }
-    case ComposerView::BlockQuote:
-    {
+    case ComposerView::BlockQuote: {
         if (!action_block_quote) {
-            action_block_quote = new QAction(QIcon::fromTheme(QLatin1String("format-text-blockquote")), i18n( "Blockquote" ), q);
+            action_block_quote = new QAction(QIcon::fromTheme(QLatin1String("format-text-blockquote")), i18n("Blockquote"), q);
             htmlEditorActionList.append(action_block_quote);
-            q->connect( action_block_quote, SIGNAL(triggered()), q, SLOT(_k_slotToggleBlockQuote()) );
+            q->connect(action_block_quote, SIGNAL(triggered()), q, SLOT(_k_slotToggleBlockQuote()));
         }
         break;
     }
-    case ComposerView::Find:
-    {
+    case ComposerView::Find: {
         if (!action_find) {
-            action_find = new QAction(QIcon::fromTheme(QLatin1String("edit-find")), i18n( "&Find..." ), q);
+            action_find = new QAction(QIcon::fromTheme(QLatin1String("edit-find")), i18n("&Find..."), q);
             action_find->setShortcut(KStandardShortcut::find().first());
             htmlEditorActionList.append(action_find);
-            q->connect( action_find, SIGNAL(triggered()), q, SLOT(_k_slotFind()) );
+            q->connect(action_find, SIGNAL(triggered()), q, SLOT(_k_slotFind()));
         }
         break;
     }
-    case ComposerView::Replace:
-    {
+    case ComposerView::Replace: {
         if (!action_replace) {
-            action_replace = new QAction(QIcon::fromTheme(QLatin1String("edit-replace")), i18n( "&Replace..." ), q);
+            action_replace = new QAction(QIcon::fromTheme(QLatin1String("edit-replace")), i18n("&Replace..."), q);
             htmlEditorActionList.append(action_replace);
             action_replace->setShortcut(KStandardShortcut::replace().first());
-            q->connect( action_replace, SIGNAL(triggered()), q, SLOT(_k_slotReplace()) );
+            q->connect(action_replace, SIGNAL(triggered()), q, SLOT(_k_slotReplace()));
         }
         break;
     }
-    case ComposerView::SaveAs:
-    {
+    case ComposerView::SaveAs: {
         if (!action_save_as) {
-            action_save_as = new QAction(QIcon::fromTheme(QLatin1String("file_save_as")), i18n( "Save &As..." ), q);
+            action_save_as = new QAction(QIcon::fromTheme(QLatin1String("file_save_as")), i18n("Save &As..."), q);
             htmlEditorActionList.append(action_save_as);
             action_replace->setShortcut(KStandardShortcut::save().first());
-            q->connect( action_save_as, SIGNAL(triggered()), q, SLOT(_k_slotSaveAs()) );
+            q->connect(action_save_as, SIGNAL(triggered()), q, SLOT(_k_slotSaveAs()));
         }
         break;
     }
-    case ComposerView::Print:
-    {
+    case ComposerView::Print: {
         if (!action_print) {
-            action_print = new QAction(QIcon::fromTheme(QLatin1String("file_print")), i18n( "&Print..." ), q);
+            action_print = new QAction(QIcon::fromTheme(QLatin1String("file_print")), i18n("&Print..."), q);
             htmlEditorActionList.append(action_print);
             action_replace->setShortcut(KStandardShortcut::print().first());
-            q->connect( action_print, SIGNAL(triggered()), q, SLOT(_k_slotPrint()) );
+            q->connect(action_print, SIGNAL(triggered()), q, SLOT(_k_slotPrint()));
         }
         break;
     }
-    case ComposerView::PrintPreview:
-    {
+    case ComposerView::PrintPreview: {
         if (!action_print_preview) {
-            action_print_preview = new QAction(QIcon::fromTheme(QLatin1String("file_print_preview")), i18n( "Print Previe&w" ), q);
+            action_print_preview = new QAction(QIcon::fromTheme(QLatin1String("file_print_preview")), i18n("Print Previe&w"), q);
             htmlEditorActionList.append(action_print_preview);
-            q->connect( action_print_preview, SIGNAL(triggered()), q, SLOT(_k_slotPrintPreview()) );
+            q->connect(action_print_preview, SIGNAL(triggered()), q, SLOT(_k_slotPrintPreview()));
         }
         break;
     }
-    case ComposerView::PasteWithoutFormatting:
-    {
+    case ComposerView::PasteWithoutFormatting: {
         if (!action_paste_withoutformatting) {
-            action_paste_withoutformatting = new QAction(i18n( "Paste Without Formatting" ), q);
+            action_paste_withoutformatting = new QAction(i18n("Paste Without Formatting"), q);
             htmlEditorActionList.append(action_paste_withoutformatting);
-            q->connect( action_paste_withoutformatting, SIGNAL(triggered()), q, SLOT(_k_slotPasteWithoutFormatting()) );
+            q->connect(action_paste_withoutformatting, SIGNAL(triggered()), q, SLOT(_k_slotPasteWithoutFormatting()));
         }
         break;
     }
-    case ComposerView::InsertSpecialChar:
-    {
+    case ComposerView::InsertSpecialChar: {
         if (!action_insert_specialchar) {
-            action_insert_specialchar = new QAction(i18n( "Insert Special Char..." ), q);
+            action_insert_specialchar = new QAction(i18n("Insert Special Char..."), q);
             htmlEditorActionList.append(action_insert_specialchar);
-            q->connect( action_insert_specialchar, SIGNAL(triggered()), q, SLOT(_k_slotInsertSpecialChar()) );
+            q->connect(action_insert_specialchar, SIGNAL(triggered()), q, SLOT(_k_slotInsertSpecialChar()));
         }
         break;
     }
-    case ComposerView::InsertAnchor:
-    {
+    case ComposerView::InsertAnchor: {
         if (!action_insert_anchor) {
-            action_insert_anchor = new QAction(i18n( "Insert Anchor..." ), q);
+            action_insert_anchor = new QAction(i18n("Insert Anchor..."), q);
             htmlEditorActionList.append(action_insert_anchor);
-            q->connect( action_insert_anchor, SIGNAL(triggered()), q, SLOT(_k_slotInsertAnchor()) );
+            q->connect(action_insert_anchor, SIGNAL(triggered()), q, SLOT(_k_slotInsertAnchor()));
         }
         break;
     }
@@ -485,19 +450,22 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
 
 }
 
-
 void ComposerViewPrivate::connectActionGroup()
 {
     if (action_align_left || action_align_center || action_align_right || action_align_justify) {
         QActionGroup *alignmentGroup = new QActionGroup(q);
-        if (action_align_left)
+        if (action_align_left) {
             alignmentGroup->addAction(action_align_left);
-        if (action_align_center)
+        }
+        if (action_align_center) {
             alignmentGroup->addAction(action_align_center);
-        if (action_align_right)
+        }
+        if (action_align_right) {
             alignmentGroup->addAction(action_align_right);
-        if (action_align_justify)
+        }
+        if (action_align_justify) {
             alignmentGroup->addAction(action_align_justify);
+        }
     }
 
     if (action_direction_ltr && action_direction_rtl) {
@@ -506,7 +474,6 @@ void ComposerViewPrivate::connectActionGroup()
         directionGroup->addAction(action_direction_rtl);
     }
 }
-
 
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
 bool ComposerViewPrivate::checkSpellingEnabled()
@@ -520,16 +487,17 @@ void ComposerViewPrivate::_k_changeAutoSpellChecking(bool checked)
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
     ComposerEditorNG::GlobalSettingsBase::setAutoSpellChecking(checked);
 #else
-    Q_UNUSED( checked );
+    Q_UNUSED(checked);
 #endif
 }
 
-QAction* ComposerViewPrivate::getAction ( QWebPage::WebAction action ) const
+QAction *ComposerViewPrivate::getAction(QWebPage::WebAction action) const
 {
-    if ( action >= 0 && action <= 66 )
-        return q->page()->action( static_cast<QWebPage::WebAction>( action ));
-    else
+    if (action >= 0 && action <= 66) {
+        return q->page()->action(static_cast<QWebPage::WebAction>(action));
+    } else {
         return 0;
+    }
 }
 
 void ComposerViewPrivate::hideImageResizeWidget()
@@ -541,17 +509,17 @@ void ComposerViewPrivate::hideImageResizeWidget()
 void ComposerViewPrivate::showImageResizeWidget()
 {
     if (!imageResizeWidget) {
-        imageResizeWidget = new ComposerImageResizeWidget(contextMenuResult.element(),q);
+        imageResizeWidget = new ComposerImageResizeWidget(contextMenuResult.element(), q);
         imageResizeWidget->move(contextMenuResult.element().geometry().topLeft());
         imageResizeWidget->show();
     }
 }
 
-
-static QVariant execJScript(QWebElement element, const QString& script)
+static QVariant execJScript(QWebElement element, const QString &script)
 {
-    if (element.isNull())
+    if (element.isNull()) {
         return QVariant();
+    }
     return element.evaluateJavaScript(script);
 }
 
@@ -561,8 +529,7 @@ void ComposerViewPrivate::_k_setFormatType(QAction *act)
         return;
     }
     QString command;
-    switch(act->data().value<ComposerEditorNG::ComposerViewPrivate::FormatType>())
-    {
+    switch (act->data().value<ComposerEditorNG::ComposerViewPrivate::FormatType>()) {
     case Paragraph:
         command = QLatin1String("p");
         break;
@@ -591,22 +558,22 @@ void ComposerViewPrivate::_k_setFormatType(QAction *act)
         command = QLatin1String("address");
         break;
     }
-    execCommand ( QLatin1String("formatBlock"), command );
+    execCommand(QLatin1String("formatBlock"), command);
 }
 
 void ComposerViewPrivate::_k_slotToggleBlockQuote()
 {
-    execCommand( QLatin1String("formatBlock"), QLatin1String("BLOCKQUOTE"));
+    execCommand(QLatin1String("formatBlock"), QLatin1String("BLOCKQUOTE"));
 }
 
-void ComposerViewPrivate::_k_slotAddEmoticon(const QString& emoticon)
+void ComposerViewPrivate::_k_slotAddEmoticon(const QString &emoticon)
 {
     execCommand(QLatin1String("insertHTML"), emoticon);
 }
 
 void ComposerViewPrivate::_k_slotInsertHtml()
 {
-    QPointer<KPIMTextEdit::InsertHtmlDialog> dialog = new KPIMTextEdit::InsertHtmlDialog( q );
+    QPointer<KPIMTextEdit::InsertHtmlDialog> dialog = new KPIMTextEdit::InsertHtmlDialog(q);
     if (dialog->exec()) {
         const QString str = dialog->html().remove(QLatin1String("\n"));
         if (!str.isEmpty()) {
@@ -620,14 +587,14 @@ void ComposerViewPrivate::_k_setTextBackgroundColor()
 {
     QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
     newColor = QColorDialog::getColor(newColor, q);
-    if ( newColor.isValid() ) {
+    if (newColor.isValid()) {
         execCommand(QLatin1String("hiliteColor"), newColor.name());
     }
 }
 
-QVariant ComposerViewPrivate::evaluateJavascript(const QString& command)
+QVariant ComposerViewPrivate::evaluateJavascript(const QString &command)
 {
-    return q->page()->mainFrame()->evaluateJavaScript( command );
+    return q->page()->mainFrame()->evaluateJavaScript(command);
 }
 
 void ComposerViewPrivate::_k_slotDeleteText()
@@ -639,14 +606,14 @@ void ComposerViewPrivate::_k_setTextForegroundColor()
 {
     QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
     newColor = QColorDialog::getColor(newColor, q);
-    if ( newColor.isValid() ) {
+    if (newColor.isValid()) {
         execCommand(QLatin1String("foreColor"), newColor.name());
     }
 }
 
 void ComposerViewPrivate::_k_slotAddImage()
 {
-    QPointer<ComposerImageDialog> dlg = new ComposerImageDialog( q );
+    QPointer<ComposerImageDialog> dlg = new ComposerImageDialog(q);
     if (dlg->exec() == KDialog::Accepted) {
         execCommand(QLatin1String("insertHTML"), dlg->html());
     }
@@ -656,13 +623,13 @@ void ComposerViewPrivate::_k_slotAddImage()
 void ComposerViewPrivate::_k_slotEditImage()
 {
     showImageResizeWidget();
-    ComposerImageDialog dlg( contextMenuResult.element(),q );
+    ComposerImageDialog dlg(contextMenuResult.element(), q);
     dlg.exec();
 }
 
 void ComposerViewPrivate::_k_slotInsertTable()
 {
-    QPointer<ComposerTableDialog> dlg = new ComposerTableDialog( q );
+    QPointer<ComposerTableDialog> dlg = new ComposerTableDialog(q);
     if (dlg->exec() == KDialog::Accepted) {
         execCommand(QLatin1String("insertHTML"), dlg->html());
     }
@@ -677,18 +644,19 @@ void ComposerViewPrivate::_k_slotInsertHorizontalRule()
 void ComposerViewPrivate::_k_insertLink()
 {
     const QString selectedText = q->selectedText();
-    QPointer<ComposerEditorNG::ComposerLinkDialog> dlg = new ComposerEditorNG::ComposerLinkDialog( selectedText, q );
+    QPointer<ComposerEditorNG::ComposerLinkDialog> dlg = new ComposerEditorNG::ComposerLinkDialog(selectedText, q);
     if (dlg->exec() == KDialog::Accepted) {
         const QString html(dlg->html());
-        if (!html.isEmpty())
-            execCommand ( QLatin1String("insertHTML"), html );
+        if (!html.isEmpty()) {
+            execCommand(QLatin1String("insertHTML"), html);
+        }
     }
     delete dlg;
 }
 
 void ComposerViewPrivate::_k_slotEditLink()
 {
-    ComposerEditorNG::ComposerLinkDialog dlg( contextMenuResult.linkElement(), q );
+    ComposerEditorNG::ComposerLinkDialog dlg(contextMenuResult.linkElement(), q);
     dlg.exec();
 }
 
@@ -696,16 +664,16 @@ void ComposerViewPrivate::_k_slotOpenLink()
 {
     const QString href = contextMenuResult.linkElement().attribute(QLatin1String("href"));
     if (!href.isEmpty()) {
-        new KRun( QUrl(href), 0 );
+        new KRun(QUrl(href), 0);
     }
 }
 
 void ComposerViewPrivate::_k_setFontSize(int fontSize)
 {
-    execCommand(QLatin1String("fontSize"), QString::number(fontSize+1)); //Verify
+    execCommand(QLatin1String("fontSize"), QString::number(fontSize + 1)); //Verify
 }
 
-void ComposerViewPrivate::_k_setFontFamily(const QString& family)
+void ComposerViewPrivate::_k_setFontFamily(const QString &family)
 {
     execCommand(QLatin1String("fontName"), family);
 }
@@ -722,27 +690,30 @@ void ComposerViewPrivate::_k_slotSpellCheck()
         spellTextSelectionEnd = 0;
     }
 
-    if (text.isEmpty())
+    if (text.isEmpty()) {
         return;
+    }
 
     Sonnet::BackgroundChecker *backgroundSpellCheck = new Sonnet::BackgroundChecker;
-    Sonnet::Dialog* spellDialog = new Sonnet::Dialog(backgroundSpellCheck, q);
+    Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, q);
     backgroundSpellCheck->setParent(spellDialog);
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
 
     q->connect(spellDialog, SIGNAL(replace(QString,int,QString)), q, SLOT(_k_spellCheckerCorrected(QString,int,QString)));
     q->connect(spellDialog, SIGNAL(misspelling(QString,int)), q, SLOT(_k_spellCheckerMisspelling(QString,int)));
-    if (contextMenuResult.isContentSelected())
+    if (contextMenuResult.isContentSelected()) {
         q->connect(spellDialog, SIGNAL(done(QString)), q, SLOT(_k_slotSpellCheckDone(QString)));
+    }
     spellDialog->setBuffer(text);
     spellDialog->show();
 }
 
-void ComposerViewPrivate::_k_spellCheckerCorrected(const QString& original, int pos, const QString& replacement)
+void ComposerViewPrivate::_k_spellCheckerCorrected(const QString &original, int pos, const QString &replacement)
 {
     // Adjust the selection end...
-    if (spellTextSelectionEnd > 0)
+    if (spellTextSelectionEnd > 0) {
         spellTextSelectionEnd += qMax(0, (replacement.length() - original.length()));
+    }
 
     const int index = pos + spellTextSelectionStart;
     QString script(QLatin1String("this.value=this.value.substring(0,"));
@@ -758,7 +729,7 @@ void ComposerViewPrivate::_k_spellCheckerCorrected(const QString& original, int 
     execJScript(contextMenuResult.element(), script);
 }
 
-void ComposerViewPrivate::_k_spellCheckerMisspelling(const QString& text, int pos)
+void ComposerViewPrivate::_k_spellCheckerMisspelling(const QString &text, int pos)
 {
     // qDebug() << text << pos;
     QString selectionScript(QLatin1String("this.setSelectionRange("));
@@ -769,7 +740,7 @@ void ComposerViewPrivate::_k_spellCheckerMisspelling(const QString& text, int po
     execJScript(contextMenuResult.element(), selectionScript);
 }
 
-void ComposerViewPrivate::_k_slotSpellCheckDone(const QString&)
+void ComposerViewPrivate::_k_slotSpellCheckDone(const QString &)
 {
     // Restore the text selection if one was present before we started the
     // spell check.
@@ -801,7 +772,7 @@ void ComposerViewPrivate::_k_slotSaveAs()
         return;
     }
     if (!(fn.endsWith(QLatin1String(".htm"), Qt::CaseInsensitive) ||
-          fn.endsWith(QLatin1String(".html"), Qt::CaseInsensitive))) {
+            fn.endsWith(QLatin1String(".html"), Qt::CaseInsensitive))) {
         fn += QLatin1String(".htm");
     }
     QFile file(fn);
@@ -820,8 +791,8 @@ void ComposerViewPrivate::_k_slotPrint()
     QPrinter printer;
     QPointer<QPrintDialog> dlg(KdePrint::createPrintDialog(&printer));
 
-    if ( dlg->exec() == QDialog::Accepted ) {
-        q->print( &printer );
+    if (dlg->exec() == QDialog::Accepted) {
+        q->print(&printer);
     }
     delete dlg;
 }
@@ -829,8 +800,8 @@ void ComposerViewPrivate::_k_slotPrint()
 void ComposerViewPrivate::_k_slotPrintPreview()
 {
     QPrinter printer;
-    KPrintPreview previewdlg( &printer, q );
-    q->print( &printer );
+    KPrintPreview previewdlg(&printer, q);
+    q->print(&printer);
     previewdlg.exec();
 }
 
@@ -848,7 +819,7 @@ void ComposerViewPrivate::_k_slotEditList()
 {
     QWebElement listElement = ListHelper::listElement(contextMenuResult.element());
     if (!listElement.isNull()) {
-        QPointer<ComposerListDialog> dlg = new ComposerListDialog(listElement,q);
+        QPointer<ComposerListDialog> dlg = new ComposerListDialog(listElement, q);
         if (dlg->exec()) {
             //TODO
         }
@@ -858,40 +829,54 @@ void ComposerViewPrivate::_k_slotEditList()
 
 void ComposerViewPrivate::_k_slotAdjustActions()
 {
-    if (action_text_bold)
+    if (action_text_bold) {
         FOLLOW_CHECK(action_text_bold, QWebPage::ToggleBold);
-    if (action_text_italic)
+    }
+    if (action_text_italic) {
         FOLLOW_CHECK(action_text_italic, QWebPage::ToggleItalic);
-    if (action_text_strikeout)
+    }
+    if (action_text_strikeout) {
         FOLLOW_CHECK(action_text_strikeout, QWebPage::ToggleStrikethrough);
-    if (action_text_underline)
+    }
+    if (action_text_underline) {
         FOLLOW_CHECK(action_text_underline, QWebPage::ToggleUnderline);
-    if (action_text_subscript)
+    }
+    if (action_text_subscript) {
         FOLLOW_CHECK(action_text_subscript, QWebPage::ToggleSubscript);
-    if (action_text_superscript)
+    }
+    if (action_text_superscript) {
         FOLLOW_CHECK(action_text_superscript, QWebPage::ToggleSuperscript);
-    if (action_ordered_list)
+    }
+    if (action_ordered_list) {
         FOLLOW_CHECK(action_ordered_list, QWebPage::InsertOrderedList);
-    if (action_unordered_list)
+    }
+    if (action_unordered_list) {
         FOLLOW_CHECK(action_unordered_list, QWebPage::InsertUnorderedList);
-    if (action_direction_ltr)
+    }
+    if (action_direction_ltr) {
         FOLLOW_CHECK(action_direction_ltr, QWebPage::SetTextDirectionLeftToRight);
-    if (action_direction_rtl)
+    }
+    if (action_direction_rtl) {
         FOLLOW_CHECK(action_direction_rtl, QWebPage::SetTextDirectionRightToLeft);
+    }
 
     const QString alignment = evaluateJavascript(QLatin1String("getAlignment()")).toString();
     if (alignment == QLatin1String("left")) {
-        if (action_align_left)
+        if (action_align_left) {
             action_align_left->setChecked(true);
+        }
     } else if (alignment == QLatin1String("right")) {
-        if (action_align_right)
+        if (action_align_right) {
             action_align_right->setChecked(true);
+        }
     } else if (alignment == QLatin1String("center")) {
-        if (action_align_center)
+        if (action_align_center) {
             action_align_center->setChecked(true);
+        }
     } else if (alignment == QLatin1String("-webkit-auto")) {
-        if (action_align_justify)
+        if (action_align_justify) {
             action_align_justify->setChecked(true);
+        }
     }
 
     if (action_font_family) {
@@ -916,7 +901,6 @@ void ComposerViewPrivate::execCommand(const QString &cmd, const QString &arg)
     frame->evaluateJavaScript(js);
 }
 
-
 bool ComposerViewPrivate::queryCommandState(const QString &cmd)
 {
     QWebFrame *frame = q->page()->mainFrame();
@@ -925,22 +909,22 @@ bool ComposerViewPrivate::queryCommandState(const QString &cmd)
     return result.toString().simplified().toLower() == QLatin1String("true");
 }
 
-
 void ComposerViewPrivate::_k_slotSpeakText()
 {
     // If KTTSD not running, start it.
     if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
         QString error;
         if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error)) {
-            KMessageBox::error(q, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
+            KMessageBox::error(q, i18n("Starting Jovie Text-to-Speech Service Failed"), error);
             return;
         }
     }
     QDBusInterface ktts(QLatin1String("org.kde.kttsd"), QLatin1String("/KSpeech"), QLatin1String("org.kde.KSpeech"));
 
     QString text = q->selectedText();
-    if (text.isEmpty())
+    if (text.isEmpty()) {
         text = q->page()->mainFrame()->toPlainText();
+    }
 
     ktts.asyncCall(QLatin1String("say"), text, 0);
 }
@@ -948,9 +932,9 @@ void ComposerViewPrivate::_k_slotSpeakText()
 void ComposerViewPrivate::_k_slotPasteWithoutFormatting()
 {
 #ifndef QT_NO_CLIPBOARD
-    if ( q->hasFocus() ) {
+    if (q->hasFocus()) {
         QString s = QApplication::clipboard()->text();
-        if ( !s.isEmpty() ) {
+        if (!s.isEmpty()) {
             s.replace(QLatin1String("\n"), QLatin1String("<BR>"));
             execCommand(QLatin1String("insertHTML"), s);
         }
@@ -970,7 +954,7 @@ void ComposerViewPrivate::_k_slotInsertSpecialChar()
 
 void ComposerViewPrivate::_k_slotInsertAnchor()
 {
-    QPointer<ComposerAnchorDialog> dlg = new ComposerAnchorDialog( q );
+    QPointer<ComposerAnchorDialog> dlg = new ComposerAnchorDialog(q);
     if (dlg->exec() == KDialog::Accepted) {
         execCommand(QLatin1String("insertHTML"), dlg->html());
     }
@@ -981,9 +965,9 @@ QMap<QString, QString> ComposerViewPrivate::localImages() const
 {
     QMap<QString, QString> lst;
     QWebElementCollection images = q->page()->mainFrame()->findAllElements(QLatin1String("img"));
-    Q_FOREACH (const QWebElement& elm, images){
+    Q_FOREACH (const QWebElement &elm, images) {
         if (elm.attribute(QLatin1String("src")).startsWith(QLatin1String("file://"))) {
-            QUrl url (elm.attribute(QLatin1String("src")));
+            QUrl url(elm.attribute(QLatin1String("src")));
             lst.insert(url.fileName(), url.path());
         }
     }

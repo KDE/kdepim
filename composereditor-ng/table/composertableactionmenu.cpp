@@ -34,25 +34,25 @@ namespace ComposerEditorNG
 class ComposerTableActionMenuPrivate
 {
 public:
-    ComposerTableActionMenuPrivate(QWidget *parent, const QWebElement& element, ComposerTableActionMenu *qq)
+    ComposerTableActionMenuPrivate(QWidget *parent, const QWebElement &element, ComposerTableActionMenu *qq)
         : webElement(element),
-          action_insert_table( 0 ),
-          action_insert_row_below( 0 ),
-          action_insert_row_above( 0 ),
-          action_table_format( 0 ),
-          action_table_cell_format( 0 ),
-          action_remove_cell_contents( 0 ),
-          action_remove_cell( 0 ),
-          action_insert_cell_before( 0 ),
-          action_insert_cell_after( 0 ),
-          action_remove_table( 0 ),
-          action_remove_row( 0 ),
-          action_remove_column( 0 ),
-          action_insert_column_before( 0 ),
-          action_insert_column_after( 0 ),
-          action_merge_cell( 0 ),
-          action_split_cell( 0 ),
-          q( qq ),
+          action_insert_table(0),
+          action_insert_row_below(0),
+          action_insert_row_above(0),
+          action_table_format(0),
+          action_table_cell_format(0),
+          action_remove_cell_contents(0),
+          action_remove_cell(0),
+          action_insert_cell_before(0),
+          action_insert_cell_after(0),
+          action_remove_table(0),
+          action_remove_row(0),
+          action_remove_column(0),
+          action_insert_column_before(0),
+          action_insert_column_after(0),
+          action_merge_cell(0),
+          action_split_cell(0),
+          q(qq),
           parentWidget(parent)
     {
     }
@@ -108,9 +108,9 @@ void ComposerTableActionMenuPrivate::_k_slotSplitCell()
 void ComposerTableActionMenuPrivate::_k_slotMergeCellToTheRight()
 {
     if (webElement.hasAttribute(QLatin1String("colspan"))) {
-        webElement.setAttribute(QLatin1String("colspan"),QString::number(webElement.attribute(QLatin1String("colspan")).toInt() + 1));
+        webElement.setAttribute(QLatin1String("colspan"), QString::number(webElement.attribute(QLatin1String("colspan")).toInt() + 1));
     } else {
-        webElement.setAttribute(QLatin1String("colspan"),QString::number(2));
+        webElement.setAttribute(QLatin1String("colspan"), QString::number(2));
     }
 }
 
@@ -138,16 +138,15 @@ void ComposerTableActionMenuPrivate::_k_slotInsertRowAbove()
     TableHelper::removeCellContentsFromCurrentRow(webElement);
 }
 
-
 void ComposerTableActionMenuPrivate::_k_slotRemoveColumn()
 {
-    qDebug()<<" tableColumn :"<<TableHelper::tableColumnCount(webElement);
+    qDebug() << " tableColumn :" << TableHelper::tableColumnCount(webElement);
     //TODO
 }
 
 void ComposerTableActionMenuPrivate::_k_slotRemoveRow()
 {
-    if (TableHelper::tableRowCount(webElement) == 1 ) {
+    if (TableHelper::tableRowCount(webElement) == 1) {
         //Remove full table
         QWebElement tableElement = TableHelper::tableWebElement(webElement);
         if (!tableElement.isNull()) {
@@ -204,104 +203,103 @@ void ComposerTableActionMenuPrivate::updateActions()
     action_insert_cell_before->setEnabled(isACell);
     action_remove_column->setEnabled(isACell);
 
-    const bool cellIsMerged = (webElement.hasAttribute(QLatin1String("colspan")) || webElement.hasAttribute(QLatin1String("rowspan")) );
+    const bool cellIsMerged = (webElement.hasAttribute(QLatin1String("colspan")) || webElement.hasAttribute(QLatin1String("rowspan")));
     action_split_cell->setEnabled(cellIsMerged);
 }
 
-
 void ComposerTableActionMenuPrivate::_k_slotTableFormat()
 {
-    ComposerTableFormatDialog dlg( TableHelper::tableWebElement(webElement),parentWidget );
+    ComposerTableFormatDialog dlg(TableHelper::tableWebElement(webElement), parentWidget);
     dlg.exec();
 }
 
 void ComposerTableActionMenuPrivate::_k_slotTableCellFormat()
 {
-    ComposerTableCellFormatDialog dlg( webElement, parentWidget );
+    ComposerTableCellFormatDialog dlg(webElement, parentWidget);
     dlg.exec();
 }
 
-ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObject *parent, QWidget *view)
+ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement &element, QObject *parent, QWidget *view)
     : KActionMenu(parent), d(new ComposerTableActionMenuPrivate(view, element, this))
 {
-    setText( i18n( "Table" ) );
+    setText(i18n("Table"));
 
-    KActionMenu *insertMenu = new KActionMenu( i18n( "Insert" ), this );
-    addAction( insertMenu );
+    KActionMenu *insertMenu = new KActionMenu(i18n("Insert"), this);
+    addAction(insertMenu);
 
-    d->action_insert_table = new QAction( QIcon::fromTheme(QLatin1String("insert-table")), i18nc( "@item:inmenu Insert", "Table..." ), this );
-    insertMenu->addAction( d->action_insert_table );
-    connect( d->action_insert_table, SIGNAL(triggered(bool)), SIGNAL(insertNewTable()) );
-
-    insertMenu->addSeparator();
-    d->action_insert_row_below = new QAction( QIcon::fromTheme(QLatin1String("edit-table-insert-row-below")), i18nc( "@item:inmenu Insert", "Row Below" ), this );
-    insertMenu->addAction( d->action_insert_row_below );
-    connect( d->action_insert_row_below, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowBelow()) );
-
-    d->action_insert_row_above = new QAction( QIcon::fromTheme(QLatin1String("edit-table-insert-row-above")), i18nc( "@item:inmenu Insert", "Row Above" ), this );
-    insertMenu->addAction( d->action_insert_row_above );
-    connect( d->action_insert_row_above, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowAbove()) );
+    d->action_insert_table = new QAction(QIcon::fromTheme(QLatin1String("insert-table")), i18nc("@item:inmenu Insert", "Table..."), this);
+    insertMenu->addAction(d->action_insert_table);
+    connect(d->action_insert_table, SIGNAL(triggered(bool)), SIGNAL(insertNewTable()));
 
     insertMenu->addSeparator();
-    d->action_insert_column_before = new QAction( QIcon::fromTheme(QLatin1String("edit-table-insert-column-left")), i18nc( "@item:inmenu Insert", "Column Before" ), this );
-    insertMenu->addAction( d->action_insert_column_before );
-    connect( d->action_insert_column_before, SIGNAL(triggered(bool)), SLOT(_k_slotInsertColumnBefore()) );
+    d->action_insert_row_below = new QAction(QIcon::fromTheme(QLatin1String("edit-table-insert-row-below")), i18nc("@item:inmenu Insert", "Row Below"), this);
+    insertMenu->addAction(d->action_insert_row_below);
+    connect(d->action_insert_row_below, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowBelow()));
 
-    d->action_insert_column_after = new QAction( QIcon::fromTheme(QLatin1String("edit-table-insert-column-right")), i18nc( "@item:inmenu Insert", "Column After" ), this );
-    insertMenu->addAction( d->action_insert_column_after );
-    connect( d->action_insert_column_after, SIGNAL(triggered(bool)), SLOT(_k_slotInsertColumnAfter()) );
+    d->action_insert_row_above = new QAction(QIcon::fromTheme(QLatin1String("edit-table-insert-row-above")), i18nc("@item:inmenu Insert", "Row Above"), this);
+    insertMenu->addAction(d->action_insert_row_above);
+    connect(d->action_insert_row_above, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowAbove()));
 
     insertMenu->addSeparator();
-    d->action_insert_cell_before = new QAction( i18nc( "@item:inmenu Insert", "Cell Before" ), this );
-    insertMenu->addAction( d->action_insert_cell_before );
-    connect( d->action_insert_cell_before, SIGNAL(triggered(bool)), SLOT(_k_slotInsertCellBefore()) );
+    d->action_insert_column_before = new QAction(QIcon::fromTheme(QLatin1String("edit-table-insert-column-left")), i18nc("@item:inmenu Insert", "Column Before"), this);
+    insertMenu->addAction(d->action_insert_column_before);
+    connect(d->action_insert_column_before, SIGNAL(triggered(bool)), SLOT(_k_slotInsertColumnBefore()));
 
-    d->action_insert_cell_after = new QAction( i18nc( "@item:inmenu Insert", "Cell After" ), this );
-    insertMenu->addAction( d->action_insert_cell_after );
-    connect( d->action_insert_cell_after, SIGNAL(triggered(bool)), SLOT(_k_slotInsertCellAfter()) );
+    d->action_insert_column_after = new QAction(QIcon::fromTheme(QLatin1String("edit-table-insert-column-right")), i18nc("@item:inmenu Insert", "Column After"), this);
+    insertMenu->addAction(d->action_insert_column_after);
+    connect(d->action_insert_column_after, SIGNAL(triggered(bool)), SLOT(_k_slotInsertColumnAfter()));
 
-    KActionMenu *removeMenu = new KActionMenu( i18n( "Delete" ), this );
-    addAction( removeMenu );
+    insertMenu->addSeparator();
+    d->action_insert_cell_before = new QAction(i18nc("@item:inmenu Insert", "Cell Before"), this);
+    insertMenu->addAction(d->action_insert_cell_before);
+    connect(d->action_insert_cell_before, SIGNAL(triggered(bool)), SLOT(_k_slotInsertCellBefore()));
 
-    d->action_remove_table = new QAction( i18nc( "@item:inmenu Delete", "Table" ), this );
-    removeMenu->addAction( d->action_remove_table );
-    connect( d->action_remove_table, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveTable()) );
+    d->action_insert_cell_after = new QAction(i18nc("@item:inmenu Insert", "Cell After"), this);
+    insertMenu->addAction(d->action_insert_cell_after);
+    connect(d->action_insert_cell_after, SIGNAL(triggered(bool)), SLOT(_k_slotInsertCellAfter()));
 
-    d->action_remove_row = new QAction( i18nc( "@item:inmenu Delete", "Row" ), this );
-    removeMenu->addAction( d->action_remove_row );
-    connect( d->action_remove_row, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveRow()) );
+    KActionMenu *removeMenu = new KActionMenu(i18n("Delete"), this);
+    addAction(removeMenu);
 
-    d->action_remove_column = new QAction( i18nc( "@item:inmenu Delete", "Column" ), this );
-    removeMenu->addAction( d->action_remove_column );
-    connect( d->action_remove_column, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveColumn()) );
+    d->action_remove_table = new QAction(i18nc("@item:inmenu Delete", "Table"), this);
+    removeMenu->addAction(d->action_remove_table);
+    connect(d->action_remove_table, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveTable()));
 
-    d->action_remove_cell = new QAction( i18nc( "@item:inmenu Delete", "Cell" ), this );
-    removeMenu->addAction( d->action_remove_cell );
-    connect( d->action_remove_cell, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCell()) );
+    d->action_remove_row = new QAction(i18nc("@item:inmenu Delete", "Row"), this);
+    removeMenu->addAction(d->action_remove_row);
+    connect(d->action_remove_row, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveRow()));
 
-    d->action_remove_cell_contents = new QAction( i18nc( "@item:inmenu Delete", "Cell Contents" ), this );
-    removeMenu->addAction( d->action_remove_cell_contents );
-    connect( d->action_remove_cell_contents, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCellContents()) );
+    d->action_remove_column = new QAction(i18nc("@item:inmenu Delete", "Column"), this);
+    removeMenu->addAction(d->action_remove_column);
+    connect(d->action_remove_column, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveColumn()));
+
+    d->action_remove_cell = new QAction(i18nc("@item:inmenu Delete", "Cell"), this);
+    removeMenu->addAction(d->action_remove_cell);
+    connect(d->action_remove_cell, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCell()));
+
+    d->action_remove_cell_contents = new QAction(i18nc("@item:inmenu Delete", "Cell Contents"), this);
+    removeMenu->addAction(d->action_remove_cell_contents);
+    connect(d->action_remove_cell_contents, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCellContents()));
 
     addSeparator();
 
-    d->action_merge_cell = new QAction( QIcon::fromTheme(QLatin1String("edit-table-cell-merge")), i18n( "Join With Cell to the Right" ), this );
-    connect( d->action_merge_cell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCellToTheRight()) );
-    addAction( d->action_merge_cell );
+    d->action_merge_cell = new QAction(QIcon::fromTheme(QLatin1String("edit-table-cell-merge")), i18n("Join With Cell to the Right"), this);
+    connect(d->action_merge_cell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCellToTheRight()));
+    addAction(d->action_merge_cell);
 
-    d->action_split_cell = new QAction( QIcon::fromTheme(QLatin1String("edit-table-cell-split")), i18n( "Split cells" ), this );
-    connect( d->action_split_cell, SIGNAL(triggered(bool)), SLOT(_k_slotSplitCell()) );
-    addAction( d->action_split_cell );
+    d->action_split_cell = new QAction(QIcon::fromTheme(QLatin1String("edit-table-cell-split")), i18n("Split cells"), this);
+    connect(d->action_split_cell, SIGNAL(triggered(bool)), SLOT(_k_slotSplitCell()));
+    addAction(d->action_split_cell);
 
     addSeparator();
 
-    d->action_table_format = new QAction( i18n( "Table Format..." ), this );
-    connect( d->action_table_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableFormat()) );
-    addAction( d->action_table_format );
+    d->action_table_format = new QAction(i18n("Table Format..."), this);
+    connect(d->action_table_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableFormat()));
+    addAction(d->action_table_format);
 
-    d->action_table_cell_format = new QAction( i18n( "Table Cell Format..." ), this );
-    connect( d->action_table_cell_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableCellFormat()) );
-    addAction( d->action_table_cell_format );
+    d->action_table_cell_format = new QAction(i18n("Table Cell Format..."), this);
+    connect(d->action_table_cell_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableCellFormat()));
+    addAction(d->action_table_cell_format);
 
     d->updateActions();
 }
