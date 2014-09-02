@@ -63,7 +63,7 @@ option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative)
 find_package(Qt5X11Extras NO_MODULE)
 #Need to use volatile_qt5_port branch from grantlee
 find_package(Grantlee "1.0" CONFIG REQUIRED)
