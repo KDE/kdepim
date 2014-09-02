@@ -81,7 +81,7 @@ SieveScriptBlockWidget *SieveScriptPage::addScriptBlock(KSieveUi::SieveWidgetPag
 SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type)
 {
     SieveScriptBlockWidget *blockWidget = new SieveScriptBlockWidget;
-    connect(blockWidget, SIGNAL(addNewBlock(QWidget*,KSieveUi::SieveWidgetPageAbstract::PageType)), SLOT(slotAddNewBlock(QWidget*,KSieveUi::SieveWidgetPageAbstract::PageType)));
+    connect(blockWidget, &SieveScriptBlockWidget::addNewBlock, this, &SieveScriptPage::slotAddNewBlock);
     connect(blockWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     blockWidget->setPageType(type);
     return blockWidget;
