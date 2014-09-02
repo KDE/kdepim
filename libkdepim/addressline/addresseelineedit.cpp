@@ -381,7 +381,8 @@ QStringList AddresseeLineEdit::Private::cleanupBalooContact(const QStringList &l
 
 void AddresseeLineEdit::Private::searchInBaloo()
 {
-    Baloo::PIM::ContactCompleter com(m_searchString.trimmed(), 20);
+    const QString trimmedString = m_searchString.trimmed();
+    Baloo::PIM::ContactCompleter com(trimmedString, 20);
     const QStringList listEmail = cleanupBalooContact(com.complete());
     Q_FOREACH (const QString& email, listEmail) {
         addCompletionItem(email, 1, s_static->balooCompletionSource);
@@ -609,8 +610,12 @@ void AddresseeLineEdit::Private::updateSearchString()
 
 void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
 {
-    if (m_searchString.isEmpty())
+    if (m_searchString.isEmpty() || m_searchString.trimmed().size() <= 2)
         return;
+
+    if (m_enableBalooSearch) {
+       searchInBaloo();
+    }
 
     // We send a contactsearch job through akonadi.
     // This not only searches baloo but also servers if remote search is enabled
@@ -619,21 +624,12 @@ void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
 
 void AddresseeLineEdit::Private::startSearches()
 {
-    if (m_enableBalooSearch) {
-       //No need to delay the baloo search
-       searchInBaloo();
-    }
-
     if (!m_delayedQueryTimer.isActive())
         m_delayedQueryTimer.start(50);
 }
 
 void AddresseeLineEdit::Private::akonadiPerformSearch()
 {
-
-    if ( m_searchString.size() < 2 ) {
-        return;
-    }
     kDebug() << "searching akonadi with:" << m_searchString;
 
     // first, kill all job still in flight, they are no longer current
