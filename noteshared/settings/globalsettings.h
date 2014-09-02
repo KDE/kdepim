@@ -15,14 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef NOTESHARED_GLOBALSETTINGS_H
 #define NOTESHARED_GLOBALSETTINGS_H
 
 #include "notesharedglobalconfig.h"
 #include "noteshared_export.h"
 class QTimer;
-namespace NoteShared {
+namespace NoteShared
+{
 class NOTESHARED_EXPORT GlobalSettings : public NoteSharedGlobalConfig
 {
     Q_OBJECT
