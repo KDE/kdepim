@@ -51,7 +51,7 @@ set(KDEPIMLIBS_LIB_VERSION "4.71.0")
 set(KDEPIM_LIB_VERSION "4.70.0")
 set(KDEPIM_LIB_SOVERSION "5")
 
-set(QT_REQUIRED_VERSION "5.2.0")
+set(QT_REQUIRED_VERSION "5.3.0")
 set(KF5_VERSION "5.1.0")
 
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
