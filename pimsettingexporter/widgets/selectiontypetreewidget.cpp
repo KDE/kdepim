@@ -22,7 +22,7 @@
 
 #include "pimcommon/util/pimutil.h"
 
-#include <KFileDialog>
+#include <QFileDialog>
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
@@ -282,11 +282,11 @@ void SelectionTypeTreeWidget::loadFileName(const QString &fileName)
 void SelectionTypeTreeWidget::loadTemplate(const QString &fileName)
 {
     if (fileName.isEmpty()) {
-        QPointer<KFileDialog> dlg = new KFileDialog(KUrl(), QLatin1String("*.xml"), this);
-        dlg->setMode(KFile::File);
+        QPointer<QFileDialog> dlg = new QFileDialog(this, QString(), QString(), QLatin1String("*.xml"));
+        dlg->setFileMode(QFileDialog::ExistingFile);
         if (dlg->exec()) {
-            const QString file = dlg->selectedFile();
-            loadFileName(file);
+            const QStringList file = dlg->selectedFiles();
+            loadFileName(file.at(0));
         }
         delete dlg;
     } else {

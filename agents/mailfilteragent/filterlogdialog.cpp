@@ -34,7 +34,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 #include <qdebug.h>
-#include <kfiledialog.h>
+#include <QFileDialog>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <QVBoxLayout>
@@ -350,22 +350,21 @@ void FilterLogDialog::slotUser1()
 void FilterLogDialog::slotUser2()
 {
     QUrl url;
-    MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
+    MessageViewer::AutoQPointer<QFileDialog> fdlg( new QFileDialog( this) );
 
-    fdlg->setMode( KFile::File );
-    fdlg->setSelection( QLatin1String("kmail-filter.html") );
-    fdlg->setOperationMode( KFileDialog::Saving );
-    fdlg->setConfirmOverwrite(true);
+    fdlg->setAcceptMode( QFileDialog::AcceptSave );
+    fdlg->setFileMode(QFileDialog::AnyFile);
+    fdlg->selectFile( QLatin1String("kmail-filter.html") );
     if ( fdlg->exec() == QDialog::Accepted && fdlg )
     {
-        const QString fileName = fdlg->selectedFile();
+        const QStringList fileName = fdlg->selectedFiles();
 
-        if ( !fileName.isEmpty() && !FilterLog::instance()->saveToFile( fileName ) )
+        if ( !fileName.isEmpty() && !FilterLog::instance()->saveToFile( fileName.at(0) ) )
         {
             KMessageBox::error( this,
                                 i18n( "Could not write the file %1:\n"
                                       "\"%2\" is the detailed error description.",
-                                      fileName,
+                                      fileName.at(0),
                                       QString::fromLocal8Bit( strerror( errno ) ) ),
                                 i18n( "KMail Error" ) );
         }
