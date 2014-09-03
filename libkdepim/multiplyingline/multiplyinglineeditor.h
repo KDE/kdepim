@@ -33,7 +33,8 @@
 #include <QWidget>
 #include <QObject>
 
-namespace KPIM {
+namespace KPIM
+{
 
 class MultiplyingLineView;
 
@@ -46,10 +47,13 @@ class KDEPIM_EXPORT MultiplyingLineFactory : public QObject
 {
     Q_OBJECT
 public:
-    explicit MultiplyingLineFactory( QObject* parent ) : QObject( parent ) {}
+    explicit MultiplyingLineFactory(QObject *parent) : QObject(parent) {}
     virtual ~MultiplyingLineFactory() {}
-    virtual MultiplyingLine* newLine(  QWidget *parent ) = 0;
-    virtual int maximumRecipients() { return -1; }
+    virtual MultiplyingLine *newLine(QWidget *parent) = 0;
+    virtual int maximumRecipients()
+    {
+        return -1;
+    }
 };
 
 /**
@@ -73,19 +77,19 @@ public:
 class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY( bool autoResizeView READ autoResizeView WRITE setAutoResizeView )
-    Q_PROPERTY( bool dynamicSizeHint READ dynamicSizeHint WRITE setDynamicSizeHint )
+    Q_PROPERTY(bool autoResizeView READ autoResizeView WRITE setAutoResizeView)
+    Q_PROPERTY(bool dynamicSizeHint READ dynamicSizeHint WRITE setDynamicSizeHint)
 
 public:
 
     // We take ownership of factory
-    explicit MultiplyingLineEditor( MultiplyingLineFactory* factory, QWidget *parent = 0 );
+    explicit MultiplyingLineEditor(MultiplyingLineFactory *factory, QWidget *parent = 0);
 
     virtual ~MultiplyingLineEditor();
 
     /** Get the current line factory for this instance of the widget.
      */
-    MultiplyingLineFactory* factory() const;
+    MultiplyingLineFactory *factory() const;
 
     /** Retrieve the data from the editor */
     QList<MultiplyingLineData::Ptr> allData() const;
@@ -110,12 +114,12 @@ public:
         @param data The data you want to add.
         Can be used to add an empty/default  line.
     */
-    bool addData( const MultiplyingLineData::Ptr &data = MultiplyingLineData::Ptr() );
+    bool addData(const MultiplyingLineData::Ptr &data = MultiplyingLineData::Ptr());
 
     /** Removes data provided it can be found. The Data class must support operator==
         @param data The data you want to add.
     */
-    void removeData( const MultiplyingLineData::Ptr &data );
+    void removeData(const MultiplyingLineData::Ptr &data);
 
     /**
       Set the width of the left most column to be the argument width.
@@ -124,41 +128,41 @@ public:
       @param w what the left most column width should be
       @return the width that is actually being used.
       */
-    int setFirstColumnWidth( int w );
+    int setFirstColumnWidth(int w);
 
     /**
       Set completion mode for all lines
       @param mode the completion mode
       */
-    void setCompletionMode( KCompletion::CompletionMode mode );
+    void setCompletionMode(KCompletion::CompletionMode mode);
 
     /**
      Set the underlying view's frame shape, default is none.
      @param shape of type QFrame::Shape
      */
-    void setFrameStyle( int shape );
+    void setFrameStyle(int shape);
 
     /**
      Make the line view follow it's children's size
      @param resize turn on or off this behavior of auto resizing
      */
-    void setAutoResizeView( bool resize );
+    void setAutoResizeView(bool resize);
     bool autoResizeView();
 
     /**
      * Sets whether the size hint of the editor shall be calculated
      * dynamically by the number of lines. Default is @c true.
      */
-    void setDynamicSizeHint( bool dynamic );
+    void setDynamicSizeHint(bool dynamic);
     bool dynamicSizeHint() const;
 
 signals:
     void focusUp();
     void focusDown();
-    void completionModeChanged( KCompletion::CompletionMode );
+    void completionModeChanged(KCompletion::CompletionMode);
     void sizeHintChanged();
-    void lineDeleted( int pos );
-    void lineAdded( KPIM::MultiplyingLine * );
+    void lineDeleted(int pos);
+    void lineAdded(KPIM::MultiplyingLine *);
 
 public slots:
     void setFocus();
@@ -166,7 +170,7 @@ public slots:
     void setFocusBottom();
 
 protected:
-    virtual QList<MultiplyingLine*> lines() const;
+    virtual QList<MultiplyingLine *> lines() const;
     virtual MultiplyingLine *activeLine() const;
     bool mModified;
 

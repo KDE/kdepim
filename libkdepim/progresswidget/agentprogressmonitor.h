@@ -24,7 +24,8 @@
 
 #include <AgentInstance>
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
  * @internal
@@ -40,20 +41,20 @@ class AgentProgressMonitor : public QObject
 
 protected:
     // used by our friend ProgressManager
-    AgentProgressMonitor( const Akonadi::AgentInstance &agent, ProgressItem *item );
+    AgentProgressMonitor(const Akonadi::AgentInstance &agent, ProgressItem *item);
     ~AgentProgressMonitor();
 
 private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void abort() )
-    Q_PRIVATE_SLOT( d, void instanceProgressChanged( const Akonadi::AgentInstance& ) )
-    Q_PRIVATE_SLOT( d, void instanceStatusChanged( const Akonadi::AgentInstance& ) )
-    Q_PRIVATE_SLOT( d, void instanceRemoved( const Akonadi::AgentInstance& ) )
-    Q_PRIVATE_SLOT( d, void instanceNameChanged( const Akonadi::AgentInstance&  ) )
+    Q_PRIVATE_SLOT(d, void abort())
+    Q_PRIVATE_SLOT(d, void instanceProgressChanged(const Akonadi::AgentInstance &))
+    Q_PRIVATE_SLOT(d, void instanceStatusChanged(const Akonadi::AgentInstance &))
+    Q_PRIVATE_SLOT(d, void instanceRemoved(const Akonadi::AgentInstance &))
+    Q_PRIVATE_SLOT(d, void instanceNameChanged(const Akonadi::AgentInstance &))
 
-};  
+};
 
 }
 

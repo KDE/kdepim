@@ -30,26 +30,26 @@
 
 #include "../widgets/kcheckcombobox.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-  KAboutData aboutData(QStringLiteral("testcheckcombo"), i18n("Test KCheckComboBox"), QStringLiteral("0.1"));
-  QApplication app(argc, argv);
-  QCommandLineParser parser;
-  KAboutData::setApplicationData(aboutData);
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    KAboutData aboutData(QStringLiteral("testcheckcombo"), i18n("Test KCheckComboBox"), QStringLiteral("0.1"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  KPIM::KCheckComboBox *combo = new KPIM::KCheckComboBox(0);
-  combo->addItems(QStringList() << QLatin1String("KDE") << QLatin1String("Mac OSX") << QLatin1String("Windows") << QLatin1String("XFCE") << QLatin1String("FVWM") << QLatin1String("TWM"));
-  combo->setCheckedItems(QStringList() << QLatin1String("KDE") << QLatin1String("Mac OSX") << QLatin1String("Windows"));
-  combo->resize( 400, 20 );
-  combo->setSqueezeText(true);
-  combo->show();
+    KPIM::KCheckComboBox *combo = new KPIM::KCheckComboBox(0);
+    combo->addItems(QStringList() << QLatin1String("KDE") << QLatin1String("Mac OSX") << QLatin1String("Windows") << QLatin1String("XFCE") << QLatin1String("FVWM") << QLatin1String("TWM"));
+    combo->setCheckedItems(QStringList() << QLatin1String("KDE") << QLatin1String("Mac OSX") << QLatin1String("Windows"));
+    combo->resize(400, 20);
+    combo->setSqueezeText(true);
+    combo->show();
 
-  return app.exec();
+    return app.exec();
 
 }
 

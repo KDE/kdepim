@@ -43,11 +43,10 @@
 
 #include <KCalCore/IncidenceBase>
 
-#include <KDialog>
-
+#include <QDialog>
 namespace IncidenceEditorNG {
 
-class INCIDENCEEDITORS_NG_EXPORT TemplateManagementDialog: public KDialog
+class INCIDENCEEDITORS_NG_EXPORT TemplateManagementDialog: public QDialog
 {
   Q_OBJECT
   public:

@@ -31,7 +31,8 @@
 
 #include <CollectionDialog>
 
-namespace KPIM {
+namespace KPIM
+{
 
 class SelectedCollectionDialog : public Akonadi::CollectionDialog
 {

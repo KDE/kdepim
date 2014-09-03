@@ -33,7 +33,8 @@
 #include <KTextEdit>
 
 class QMimeData;
-namespace KPIM {
+namespace KPIM
+{
 
 class KDEPIM_EXPORT SpellCheckLineEdit : public KTextEdit
 {
@@ -41,14 +42,14 @@ class KDEPIM_EXPORT SpellCheckLineEdit : public KTextEdit
 
 public:
     /**
-   * Constructs a SpellCheckLineEdit object.
-   * @param parent of widget
-   * @param configFile config file name for spell checking
-   */
-    explicit SpellCheckLineEdit(QWidget* parent, const QString& configFile);
+    * Constructs a SpellCheckLineEdit object.
+    * @param parent of widget
+    * @param configFile config file name for spell checking
+    */
+    explicit SpellCheckLineEdit(QWidget *parent, const QString &configFile);
     /**
-   * Destructor
-   */
+    * Destructor
+    */
     ~SpellCheckLineEdit();
 
     bool activateLanguageMenu() const;
@@ -58,18 +59,18 @@ protected:
 
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
-    void keyPressEvent(QKeyEvent*);
-    void insertFromMimeData ( const QMimeData * source );
+    void keyPressEvent(QKeyEvent *);
+    void insertFromMimeData(const QMimeData *source);
 
 protected Q_SLOTS:
-    void insertLanguageMenu(QMenu* contextMenu);
+    void insertLanguageMenu(QMenu *contextMenu);
     void languageSelected();
 
 Q_SIGNALS:
     /**
-   * Emitted when the user uses the up arrow in the first line. The application
-   * should then put the focus on the widget above the text edit.
-   */
+    * Emitted when the user uses the up arrow in the first line. The application
+    * should then put the focus on the widget above the text edit.
+    */
     void focusUp();
 
     void focusDown();

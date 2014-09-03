@@ -31,7 +31,8 @@
 
 class QCloseEvent;
 
-namespace KLDAP {
+namespace KLDAP
+{
 
 class LdapClient;
 class LdapObject;
@@ -55,7 +56,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit LdapSearchDialog( QWidget *parent = 0 );
+    explicit LdapSearchDialog(QWidget *parent = 0);
 
     /**
      * Destroys the ldap search dialog.
@@ -65,7 +66,7 @@ public:
     /**
      * Sets the @p text in the search line edit.
      */
-    void setSearchText( const QString &text );
+    void setSearchText(const QString &text);
 
     /**
      * Returns a list of contacts that have been selected
@@ -83,26 +84,26 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void slotUser1();
     void slotUser2();
-    void slotCustomContextMenuRequested(const QPoint&);
+    void slotCustomContextMenuRequested(const QPoint &);
     void slotCancelClicked();
 
 protected:
-    void closeEvent( QCloseEvent* );
+    void closeEvent(QCloseEvent *);
 
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotAddResult( const KLDAP::LdapClient&, const KLDAP::LdapObject& ) )
-    Q_PRIVATE_SLOT( d, void slotSetScope( bool ) )
-    Q_PRIVATE_SLOT( d, void slotStartSearch() )
-    Q_PRIVATE_SLOT( d, void slotStopSearch() )
-    Q_PRIVATE_SLOT( d, void slotSearchDone() )
-    Q_PRIVATE_SLOT( d, void slotError( const QString& ) )
-    Q_PRIVATE_SLOT( d, void slotSelectAll() )
-    Q_PRIVATE_SLOT( d, void slotUnselectAll() )
-    Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
+    Q_PRIVATE_SLOT(d, void slotAddResult(const KLDAP::LdapClient &, const KLDAP::LdapObject &))
+    Q_PRIVATE_SLOT(d, void slotSetScope(bool))
+    Q_PRIVATE_SLOT(d, void slotStartSearch())
+    Q_PRIVATE_SLOT(d, void slotStopSearch())
+    Q_PRIVATE_SLOT(d, void slotSearchDone())
+    Q_PRIVATE_SLOT(d, void slotError(const QString &))
+    Q_PRIVATE_SLOT(d, void slotSelectAll())
+    Q_PRIVATE_SLOT(d, void slotUnselectAll())
+    Q_PRIVATE_SLOT(d, void slotSelectionChanged())
     //@endcond
 };
 

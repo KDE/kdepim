@@ -29,29 +29,29 @@
 
 #include "../widgets/spellchecklineedit.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-  KAboutData aboutData(QStringLiteral("testspellchecklineedit"),i18n("Test SpellCheckLineEdit"),QStringLiteral("0.1"));
-  QApplication app(argc, argv);
-  QCommandLineParser parser;
-  KAboutData::setApplicationData(aboutData);
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    KAboutData aboutData(QStringLiteral("testspellchecklineedit"), i18n("Test SpellCheckLineEdit"), QStringLiteral("0.1"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  QWidget *w = new QWidget;
-  QVBoxLayout *vbox = new QVBoxLayout(w);
+    QWidget *w = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout(w);
 
-  KPIM::SpellCheckLineEdit *spellCheckLineEdit = new KPIM::SpellCheckLineEdit(w, QLatin1String("testspecklineeditrc"));
-  vbox->addWidget(spellCheckLineEdit);
-  vbox->addStretch();
+    KPIM::SpellCheckLineEdit *spellCheckLineEdit = new KPIM::SpellCheckLineEdit(w, QLatin1String("testspecklineeditrc"));
+    vbox->addWidget(spellCheckLineEdit);
+    vbox->addStretch();
 
-  w->resize( 400, 400 );
-  w->show();
+    w->resize(400, 400);
+    w->show();
 
-  return app.exec();
+    return app.exec();
 
 }
-    
+

@@ -24,18 +24,20 @@
 
 #include <kjob.h>
 
-namespace Akonadi {
-  class Item;
+namespace Akonadi
+{
+class Item;
 }
 
-namespace KPIM {
+namespace KPIM
+{
 
 class KDEPIM_EXPORT AddEmailDiplayJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit AddEmailDiplayJob( const QString &email, QWidget *parentWidget, QObject *parent = 0 );
+public:
+    explicit AddEmailDiplayJob(const QString &email, QWidget *parentWidget, QObject *parent = 0);
 
     ~AddEmailDiplayJob();
     void setShowAsHTML(bool html);
@@ -44,15 +46,15 @@ class KDEPIM_EXPORT AddEmailDiplayJob : public KJob
 
     virtual void start();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotSearchDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotAddModifyContactDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionsFetched( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotResourceCreationDone( KJob* ) )    
+    Q_PRIVATE_SLOT(d, void slotSearchDone(KJob *))
+    Q_PRIVATE_SLOT(d, void slotAddModifyContactDone(KJob *))
+    Q_PRIVATE_SLOT(d, void slotCollectionsFetched(KJob *))
+    Q_PRIVATE_SLOT(d, void slotResourceCreationDone(KJob *))
     //@endcond
 };
 

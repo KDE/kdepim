@@ -38,13 +38,13 @@
 
 using namespace KPIM;
 
-SSLLabel::SSLLabel( QWidget* parent )
-    : QLabel( parent )
+SSLLabel::SSLLabel(QWidget *parent)
+    : QLabel(parent)
 {
-    setState( Done );
+    setState(Done);
 }
 
-void SSLLabel::setEncrypted( SSLLabel::State state )
+void SSLLabel::setEncrypted(SSLLabel::State state)
 {
     m_lastEncryptionState = state;
 }
@@ -54,17 +54,17 @@ SSLLabel::State SSLLabel::lastState() const
     return m_lastEncryptionState;
 }
 
-void SSLLabel::setState( State state )
+void SSLLabel::setState(State state)
 {
-    switch( state ) {
+    switch (state) {
     case Encrypted:
-        this->setToolTip( i18n("Connection is encrypted") );
-        setPixmap( SmallIcon( QLatin1String("security-high") ) );
+        this->setToolTip(i18n("Connection is encrypted"));
+        setPixmap(SmallIcon(QLatin1String("security-high")));
         show();
         break;
     case Unencrypted:
-        this->setToolTip( i18n("Connection is unencrypted") );
-        setPixmap( SmallIcon( QLatin1String("security-low") ) );
+        this->setToolTip(i18n("Connection is unencrypted"));
+        setPixmap(SmallIcon(QLatin1String("security-low")));
         show();
         break;
     case Unknown:

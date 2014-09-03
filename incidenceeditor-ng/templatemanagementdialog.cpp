@@ -44,22 +44,34 @@
 #include <KLocalizedString>
 
 #include <QTimer>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace IncidenceEditorNG;
 
 TemplateManagementDialog::TemplateManagementDialog(
   QWidget *parent, const QStringList &templates, const QString &incidenceType )
-  : KDialog( parent ), m_templates( templates ), m_type( incidenceType ), m_changed( false )
+  : QDialog( parent ), m_templates( templates ), m_type( incidenceType ), m_changed( false )
 {
   QString m_type_translated = i18n( qPrintable( m_type ) );
-  setCaption( i18n( "Manage %1 Templates", m_type_translated ) );
-  setButtons( Ok | Cancel | Help );
+  setWindowTitle( i18n( "Manage %1 Templates", m_type_translated ) );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
   setObjectName( "template_management_dialog" );
-  setHelp( "entering-data-events-template-buttons", "korganizer" );
+  //QT5 setHelp( "entering-data-events-template-buttons", "korganizer" );
   QWidget *widget = new QWidget( this );
+  mainLayout->addWidget(widget);
+  mainLayout->addWidget(buttonBox);
+
   widget->setObjectName( "template_management_dialog_base" );
   m_base.setupUi( widget );
-  setMainWidget( widget );
 
   m_base.m_listBox->addItems( m_templates );
   m_base.m_listBox->setSelectionMode( QAbstractItemView::SingleSelection );
@@ -75,7 +87,7 @@ TemplateManagementDialog::TemplateManagementDialog(
            SLOT(slotItemSelected()) );
   connect( m_base.m_listBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
            SLOT(slotApplyTemplate()) );
-  connect(this, &TemplateManagementDialog::okClicked, this, &TemplateManagementDialog::slotOk);
+  connect(okButton, &QPushButton::clicked, this, &TemplateManagementDialog::slotOk);
 
   m_base.m_buttonRemove->setEnabled( false );
   m_base.m_buttonApply->setEnabled( false );
@@ -124,7 +136,7 @@ void TemplateManagementDialog::slotAddTemplate()
 
   // From this point on we need to keep the original event around until the
   // user has closed the dialog, applying a template would make little sense
-  enableButtonApply( false );
+  //buttonBox->button(QDialogButtonBox::Apply)->setEnabled( false );
   // neither does adding it again
   m_base.m_buttonAdd->setEnabled( false );
 }

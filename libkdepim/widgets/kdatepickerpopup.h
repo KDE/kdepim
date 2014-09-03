@@ -28,7 +28,8 @@
 
 class KDatePicker;
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
  * @short This menu helps the user to select a date quickly.
@@ -53,8 +54,7 @@ public:
     /**
      * Describes the available selection modes.
      */
-    enum Mode
-    {
+    enum Mode {
         NoDate = 1,     ///< A menu-item with "No Date". Will always return an invalid date.
         DatePicker = 2, ///< A menu-item with a KDatePicker.
         Words = 4       ///< A menu-item with list of words that describe a date.
@@ -63,7 +63,7 @@ public:
     /**
      * Describes the a set of combined modes.
      */
-    Q_DECLARE_FLAGS( Modes, Mode )
+    Q_DECLARE_FLAGS(Modes, Mode)
 
     /**
      * Creates a new date picker popup.
@@ -72,9 +72,9 @@ public:
      * @param date The initial date of date picker widget.
      * @param parent The parent object.
      */
-    explicit KDatePickerPopup( Modes modes = DatePicker,
-                               const QDate &date = QDate::currentDate(),
-                               QWidget *parent = 0 );
+    explicit KDatePickerPopup(Modes modes = DatePicker,
+                              const QDate &date = QDate::currentDate(),
+                              QWidget *parent = 0);
 
     /**
      * Destroys the date picker popup.
@@ -90,7 +90,7 @@ public Q_SLOTS:
     /**
      * Sets the current @p date.
      */
-    void setDate( const QDate &date );
+    void setDate(const QDate &date);
 
 Q_SIGNALS:
     /**
@@ -98,23 +98,23 @@ Q_SIGNALS:
      *
      * @param date The new date.
      */
-    void dateChanged( const QDate &date );
+    void dateChanged(const QDate &date);
 
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotDateChanged( const QDate& ) )
-    Q_PRIVATE_SLOT( d, void slotToday() )
-    Q_PRIVATE_SLOT( d, void slotTomorrow() )
-    Q_PRIVATE_SLOT( d, void slotNextWeek() )
-    Q_PRIVATE_SLOT( d, void slotNextMonth() )
-    Q_PRIVATE_SLOT( d, void slotNoDate() )
+    Q_PRIVATE_SLOT(d, void slotDateChanged(const QDate &))
+    Q_PRIVATE_SLOT(d, void slotToday())
+    Q_PRIVATE_SLOT(d, void slotTomorrow())
+    Q_PRIVATE_SLOT(d, void slotNextWeek())
+    Q_PRIVATE_SLOT(d, void slotNextMonth())
+    Q_PRIVATE_SLOT(d, void slotNoDate())
     //@endcond
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( KDatePickerPopup::Modes )
+Q_DECLARE_OPERATORS_FOR_FLAGS(KDatePickerPopup::Modes)
 
 }
 

@@ -24,11 +24,13 @@
 
 #include <kjob.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Item;
 }
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
  * @short A job to add a new contact with a given email address to Akonadi.
@@ -49,7 +51,7 @@ public:
      * @param parentWidget The widget that will be used as parent for dialog.
      * @param parent The parent object.
      */
-    AddEmailAddressJob( const QString &email, QWidget *parentWidget, QObject *parent = 0 );
+    AddEmailAddressJob(const QString &email, QWidget *parentWidget, QObject *parent = 0);
 
     /**
      * Destroys the add email address job.
@@ -71,12 +73,12 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotSearchDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotAddContactDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionsFetched( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotResourceCreationDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotContactEditorError(const QString &) )
-    Q_PRIVATE_SLOT( d, void contactStored( const Akonadi::Item & ) )
+    Q_PRIVATE_SLOT(d, void slotSearchDone(KJob *))
+    Q_PRIVATE_SLOT(d, void slotAddContactDone(KJob *))
+    Q_PRIVATE_SLOT(d, void slotCollectionsFetched(KJob *))
+    Q_PRIVATE_SLOT(d, void slotResourceCreationDone(KJob *))
+    Q_PRIVATE_SLOT(d, void slotContactEditorError(const QString &))
+    Q_PRIVATE_SLOT(d, void contactStored(const Akonadi::Item &))
 
     //@endcond
 };

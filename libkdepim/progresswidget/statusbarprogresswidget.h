@@ -48,30 +48,32 @@ class QStackedWidget;
 class QLabel;
 class QTimer;
 
-namespace KPIM {
+namespace KPIM
+{
 class SSLLabel;
 class ProgressItem;
 class ProgressDialog;
 
-class KDEPIM_EXPORT StatusbarProgressWidget : public QFrame {
+class KDEPIM_EXPORT StatusbarProgressWidget : public QFrame
+{
 
     Q_OBJECT
 
 public:
 
-    StatusbarProgressWidget( ProgressDialog* progressDialog, QWidget* parent, bool button = true );
+    StatusbarProgressWidget(ProgressDialog *progressDialog, QWidget *parent, bool button = true);
 
     void setShowTypeProgressItem(unsigned int type);
 public Q_SLOTS:
 
     void slotClean();
 
-    void slotProgressItemAdded( KPIM::ProgressItem *i );
-    void slotProgressItemCompleted( KPIM::ProgressItem *i );
-    void slotProgressItemProgress( KPIM::ProgressItem *i, unsigned int value );
+    void slotProgressItemAdded(KPIM::ProgressItem *i);
+    void slotProgressItemCompleted(KPIM::ProgressItem *i);
+    void slotProgressItemProgress(KPIM::ProgressItem *i, unsigned int value);
 
 protected Q_SLOTS:
-    void slotProgressDialogVisible( bool );
+    void slotProgressDialogVisible(bool);
     void slotShowItemDelayed();
     void slotBusyIndicator();
     void updateBusyMode(KPIM::ProgressItem *);
@@ -81,14 +83,14 @@ protected:
     void connectSingleItem();
     void activateSingleItemMode();
 
-    virtual bool eventFilter( QObject *, QEvent * );
+    virtual bool eventFilter(QObject *, QEvent *);
 
 private:
     unsigned int mShowTypeProgressItem;
-    QProgressBar* m_pProgressBar;
-    QLabel* m_pLabel;
-    SSLLabel* m_sslLabel;
-    QPushButton* m_pButton;
+    QProgressBar *m_pProgressBar;
+    QLabel *m_pLabel;
+    SSLLabel *m_sslLabel;
+    QPushButton *m_pButton;
 
     enum Mode { None, Progress };
 
@@ -97,7 +99,7 @@ private:
 
     QStackedWidget *stack;
     ProgressItem *mCurrentItem;
-    ProgressDialog* mProgressDialog;
+    ProgressDialog *mProgressDialog;
     QTimer *mDelayTimer;
     QTimer *mBusyTimer;
     QTimer *mCleanTimer;

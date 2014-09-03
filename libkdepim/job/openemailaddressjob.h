@@ -24,10 +24,12 @@
 
 #include <kjob.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 }
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
  * @short A job to open the contact editor for a contact with a given email address.
@@ -48,7 +50,7 @@ public:
      * @param parentWidget The widget that will be used as parent for dialog.
      * @param parent The parent object.
      */
-    OpenEmailAddressJob( const QString &email, QWidget *parentWidget, QObject *parent = 0 );
+    OpenEmailAddressJob(const QString &email, QWidget *parentWidget, QObject *parent = 0);
 
     /**
      * Destroys the open email address job.
@@ -63,10 +65,10 @@ public:
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotSearchDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotAddContactDone( KJob* ) )
+    Q_PRIVATE_SLOT(d, void slotSearchDone(KJob *))
+    Q_PRIVATE_SLOT(d, void slotAddContactDone(KJob *))
     //@endcond
 };
 

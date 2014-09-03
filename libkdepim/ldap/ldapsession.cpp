@@ -30,133 +30,136 @@
 
 using namespace KLDAP;
 
-LdapSession::LdapSession(QObject* parent) :
-  QThread(parent),
-  m_state( Disconnected ),
-  m_currentJob( 0 )
+LdapSession::LdapSession(QObject *parent) :
+    QThread(parent),
+    m_state(Disconnected),
+    m_currentJob(0)
 {
-  qDebug();
+    qDebug();
 }
 
 // runs in other thread
-void LdapSession::connectToServer(const KLDAP::LdapServer& server)
+void LdapSession::connectToServer(const KLDAP::LdapServer &server)
 {
-  qDebug();
-  if ( m_state != Disconnected )
-    return;
-  m_server = server;
-  start();
+    qDebug();
+    if (m_state != Disconnected) {
+        return;
+    }
+    m_server = server;
+    start();
 }
 
 // runs in this thread
 void LdapSession::connectToServerInternal()
 {
-  qDebug();
-  m_conn.setServer( m_server );
-  if ( m_conn.connect() != 0 ) {
-    qWarning() << "failed to connect: " << m_conn.connectionError();
-    return;
-  }
-  m_state = Connected;
-  authenticate();
+    qDebug();
+    m_conn.setServer(m_server);
+    if (m_conn.connect() != 0) {
+        qWarning() << "failed to connect: " << m_conn.connectionError();
+        return;
+    }
+    m_state = Connected;
+    authenticate();
 }
 
 // runs in other threads
 void LdapSession::disconnectAndDelete()
 {
-  qDebug();
-  QMetaObject::invokeMethod( this, "quit", Qt::QueuedConnection );
-  QMetaObject::invokeMethod( this, "deleteLater", Qt::QueuedConnection );
+    qDebug();
+    QMetaObject::invokeMethod(this, "quit", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, "deleteLater", Qt::QueuedConnection);
 }
 
 // runs in this thread
 void LdapSession::disconnectFromServerInternal()
 {
-  qDebug();
-  m_conn.close();
-  m_state = Disconnected;
+    qDebug();
+    m_conn.close();
+    m_state = Disconnected;
 }
 
 void LdapSession::authenticate()
 {
-  qDebug();
-  LdapOperation op( m_conn );
-  while ( true ) {
-    int retval = op.bind_s();
-    if ( retval == 0 ) {
-      qDebug() << "connected!";
-      m_state = Authenticated;
-      return;
-    }
-    if ( retval == KLDAP_INVALID_CREDENTIALS ||
-         retval == KLDAP_INSUFFICIENT_ACCESS ||
-         retval == KLDAP_INAPPROPRIATE_AUTH  ||
-         retval == KLDAP_UNWILLING_TO_PERFORM ) {
+    qDebug();
+    LdapOperation op(m_conn);
+    while (true) {
+        int retval = op.bind_s();
+        if (retval == 0) {
+            qDebug() << "connected!";
+            m_state = Authenticated;
+            return;
+        }
+        if (retval == KLDAP_INVALID_CREDENTIALS ||
+                retval == KLDAP_INSUFFICIENT_ACCESS ||
+                retval == KLDAP_INAPPROPRIATE_AUTH  ||
+                retval == KLDAP_UNWILLING_TO_PERFORM) {
 
-      if ( m_server.auth() != LdapServer::SASL ) {
-        m_server.setBindDn( m_server.user() );
-      }
-      m_conn.setServer( m_server );
-    } else {
+            if (m_server.auth() != LdapServer::SASL) {
+                m_server.setBindDn(m_server.user());
+            }
+            m_conn.setServer(m_server);
+        } else {
 //       LDAPErr( retval );
-      disconnectFromServerInternal();
-      qDebug() << "error" << retval;
-      return;
+            disconnectFromServerInternal();
+            qDebug() << "error" << retval;
+            return;
+        }
     }
-  }
 }
 
 // called from other thread
-LdapQueryJob* LdapSession::get(const KLDAP::LdapUrl& url)
+LdapQueryJob *LdapSession::get(const KLDAP::LdapUrl &url)
 {
-  qDebug() << url;
-  LdapQueryJob* job = new LdapQueryJob( url, this );
-  job->moveToThread( this ); // make sure the job is in the thread so that the result connections are queued
-  connect(job, &LdapQueryJob::result, this, &LdapSession::jobDone);
-  QMutexLocker locker( &m_mutex );
-  m_jobQueue.enqueue( job );
-  QMetaObject::invokeMethod( this, "executeNext", Qt::QueuedConnection );
-  return job;
+    qDebug() << url;
+    LdapQueryJob *job = new LdapQueryJob(url, this);
+    job->moveToThread(this);   // make sure the job is in the thread so that the result connections are queued
+    connect(job, &LdapQueryJob::result, this, &LdapSession::jobDone);
+    QMutexLocker locker(&m_mutex);
+    m_jobQueue.enqueue(job);
+    QMetaObject::invokeMethod(this, "executeNext", Qt::QueuedConnection);
+    return job;
 }
 
 void LdapSession::run()
 {
-  connectToServerInternal();
-  QMetaObject::invokeMethod( this, "executeNext", Qt::QueuedConnection );
-  exec();
-  disconnectFromServerInternal();
+    connectToServerInternal();
+    QMetaObject::invokeMethod(this, "executeNext", Qt::QueuedConnection);
+    exec();
+    disconnectFromServerInternal();
 }
 
 void LdapSession::executeNext()
 {
-  if ( m_state != Authenticated || m_currentJob )
-    return;
-  QMutexLocker locker( &m_mutex );
-  if ( m_jobQueue.isEmpty() )
-    return;
-  m_currentJob = m_jobQueue.dequeue();
-  locker.unlock();
-  QMetaObject::invokeMethod( m_currentJob, "triggerStart", Qt::QueuedConnection );
+    if (m_state != Authenticated || m_currentJob) {
+        return;
+    }
+    QMutexLocker locker(&m_mutex);
+    if (m_jobQueue.isEmpty()) {
+        return;
+    }
+    m_currentJob = m_jobQueue.dequeue();
+    locker.unlock();
+    QMetaObject::invokeMethod(m_currentJob, "triggerStart", Qt::QueuedConnection);
 }
 
 LdapServer LdapSession::server() const
 {
-  return m_server;
+    return m_server;
 }
 
-LdapConnection& LdapSession::connection()
+LdapConnection &LdapSession::connection()
 {
-  return m_conn;
+    return m_conn;
 }
 
-void LdapSession::jobDone(KJob* job)
+void LdapSession::jobDone(KJob *job)
 {
-  if ( m_currentJob == job )
-    m_currentJob = 0;
-  QMutexLocker locker( &m_mutex );
-  m_jobQueue.removeAll( static_cast<LdapQueryJob*>( job ) );
-  locker.unlock();
-  QMetaObject::invokeMethod( this, "executeNext", Qt::QueuedConnection );
+    if (m_currentJob == job) {
+        m_currentJob = 0;
+    }
+    QMutexLocker locker(&m_mutex);
+    m_jobQueue.removeAll(static_cast<LdapQueryJob *>(job));
+    locker.unlock();
+    QMetaObject::invokeMethod(this, "executeNext", Qt::QueuedConnection);
 }
-
 

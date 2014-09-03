@@ -47,36 +47,37 @@
 #include <QLayout>
 #include <QVBoxLayout>
 
-namespace KPIM {
+namespace KPIM
+{
 
 static const int MAX_LABEL_WIDTH = 650;
 
 class TransactionItem;
 
-TransactionItemView::TransactionItemView( QWidget *parent, const char *name )
-    : QScrollArea( parent )
+TransactionItemView::TransactionItemView(QWidget *parent, const char *name)
+    : QScrollArea(parent)
 {
-    setObjectName( QLatin1String(name) );
-    setFrameStyle( NoFrame );
-    mBigBox = new QWidget( this );
+    setObjectName(QLatin1String(name));
+    setFrameStyle(NoFrame);
+    mBigBox = new QWidget(this);
     QVBoxLayout *mBigBoxVBoxLayout = new QVBoxLayout(mBigBox);
     mBigBoxVBoxLayout->setMargin(0);
-    setWidget( mBigBox );
-    setWidgetResizable( true );
-    setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+    setWidget(mBigBox);
+    setWidgetResizable(true);
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 }
 
-TransactionItem *TransactionItemView::addTransactionItem( ProgressItem *item, bool first )
+TransactionItem *TransactionItemView::addTransactionItem(ProgressItem *item, bool first)
 {
-    TransactionItem *ti = new TransactionItem( mBigBox, item, first );
-    mBigBox->layout()->addWidget( ti );
+    TransactionItem *ti = new TransactionItem(mBigBox, item, first);
+    mBigBox->layout()->addWidget(ti);
 
-    resize( mBigBox->width(), mBigBox->height() );
+    resize(mBigBox->width(), mBigBox->height());
 
     return ti;
 }
 
-void TransactionItemView::resizeEvent ( QResizeEvent *event )
+void TransactionItemView::resizeEvent(QResizeEvent *event)
 {
     // Tell the layout in the parent (progressdialog) that our size changed
     updateGeometry();
@@ -85,12 +86,12 @@ void TransactionItemView::resizeEvent ( QResizeEvent *event )
     int currentWidth = parentWidget()->width();
 
     // Don't resize to sz.width() every time when it only reduces a little bit
-    if ( currentWidth < sz.width() || currentWidth > sz.width() + 100 ) {
+    if (currentWidth < sz.width() || currentWidth > sz.width() + 100) {
         currentWidth = sz.width();
     }
-    parentWidget()->resize( currentWidth, sz.height() );
+    parentWidget()->resize(currentWidth, sz.height());
 
-    QScrollArea::resizeEvent( event );
+    QScrollArea::resizeEvent(event);
 }
 
 QSize TransactionItemView::sizeHint() const
@@ -105,9 +106,9 @@ QSize TransactionItemView::minimumSizeHint() const
     int vsbExt = verticalScrollBar()->sizeHint().width();
     int minw = topLevelWidget()->width() / 3;
     int maxh = topLevelWidget()->height() / 2;
-    QSize sz( mBigBox->minimumSizeHint() );
-    sz.setWidth( qMax( sz.width(), minw ) + f + vsbExt );
-    sz.setHeight( qMin( sz.height(), maxh ) + f );
+    QSize sz(mBigBox->minimumSizeHint());
+    sz.setWidth(qMax(sz.width(), minw) + f + vsbExt);
+    sz.setHeight(qMin(sz.height(), maxh) + f);
     return sz;
 }
 
@@ -126,77 +127,77 @@ void TransactionItemView::slotLayoutFirstItem()
      one with both the right name and the right class therefor is what will
      be the first item very shortly. That's the one we want to remove the
      hline for.
-  */
-    TransactionItem *ti = mBigBox->findChild<KPIM::TransactionItem*>( QLatin1String("TransactionItem") );
-    if ( ti ) {
+    */
+    TransactionItem *ti = mBigBox->findChild<KPIM::TransactionItem *>(QLatin1String("TransactionItem"));
+    if (ti) {
         ti->hideHLine();
     }
 }
 
 // ----------------------------------------------------------------------------
 
-TransactionItem::TransactionItem( QWidget *parent,
-                                  ProgressItem *item, bool first )
-    : QWidget( parent ), mCancelButton( 0 ), mItem( item )
+TransactionItem::TransactionItem(QWidget *parent,
+                                 ProgressItem *item, bool first)
+    : QWidget(parent), mCancelButton(0), mItem(item)
 
 {
     QVBoxLayout *vboxLayout = new QVBoxLayout;
     vboxLayout->setSpacing(2);
     vboxLayout->setMargin(2);
     setLayout(vboxLayout);
-    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
 
-    mFrame = new QFrame( this );
-    mFrame->setFrameShape( QFrame::HLine );
-    mFrame->setFrameShadow( QFrame::Raised );
+    mFrame = new QFrame(this);
+    mFrame->setFrameShape(QFrame::HLine);
+    mFrame->setFrameShadow(QFrame::Raised);
     mFrame->show();
     //QT5 setStretchFactor( mFrame, 3 );
-    layout()->addWidget( mFrame );
+    layout()->addWidget(mFrame);
 
-    QWidget *h = new QWidget( this );
+    QWidget *h = new QWidget(this);
     QHBoxLayout *hHBoxLayout = new QHBoxLayout(h);
     hHBoxLayout->setMargin(0);
-    hHBoxLayout->setSpacing( 5 );
-    layout()->addWidget( h );
+    hHBoxLayout->setSpacing(5);
+    layout()->addWidget(h);
 
     mItemLabel =
-            new QLabel( fontMetrics().elidedText( item->label(), Qt::ElideRight, MAX_LABEL_WIDTH ), h );
-    h->layout()->addWidget( mItemLabel );
-    h->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+        new QLabel(fontMetrics().elidedText(item->label(), Qt::ElideRight, MAX_LABEL_WIDTH), h);
+    h->layout()->addWidget(mItemLabel);
+    h->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
 
-    mProgress = new QProgressBar( h );
+    mProgress = new QProgressBar(h);
     hHBoxLayout->addWidget(mProgress);
-    mProgress->setMaximum( 100 );
-    mProgress->setValue( item->progress() );
-    h->layout()->addWidget( mProgress );
+    mProgress->setMaximum(100);
+    mProgress->setValue(item->progress());
+    h->layout()->addWidget(mProgress);
 
-    if ( item->canBeCanceled() ) {
-        mCancelButton = new QPushButton( SmallIcon( QLatin1String("dialog-cancel") ), QString(), h );
+    if (item->canBeCanceled()) {
+        mCancelButton = new QPushButton(SmallIcon(QLatin1String("dialog-cancel")), QString(), h);
         hHBoxLayout->addWidget(mCancelButton);
-        mCancelButton->setToolTip( i18n( "Cancel this operation." ) );
-        connect ( mCancelButton, SIGNAL(clicked()),
-                  this, SLOT(slotItemCanceled()));
-        h->layout()->addWidget( mCancelButton );
+        mCancelButton->setToolTip(i18n("Cancel this operation."));
+        connect(mCancelButton, SIGNAL(clicked()),
+                this, SLOT(slotItemCanceled()));
+        h->layout()->addWidget(mCancelButton);
     }
 
-    h = new QWidget( this );
+    h = new QWidget(this);
     hHBoxLayout = new QHBoxLayout(h);
     hHBoxLayout->setMargin(0);
-    hHBoxLayout->setSpacing( 5 );
-    h->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
-    layout()->addWidget( h );
-    mSSLLabel = new SSLLabel( h );
+    hHBoxLayout->setSpacing(5);
+    h->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
+    layout()->addWidget(h);
+    mSSLLabel = new SSLLabel(h);
     hHBoxLayout->addWidget(mSSLLabel);
-    mSSLLabel->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    h->layout()->addWidget( mSSLLabel );
-    mItemStatus = new QLabel( h );
+    mSSLLabel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    h->layout()->addWidget(mSSLLabel);
+    mItemStatus = new QLabel(h);
     hHBoxLayout->addWidget(mItemStatus);
-    mItemStatus->setTextFormat( Qt::RichText );
+    mItemStatus->setTextFormat(Qt::RichText);
     mItemStatus->setText(
-                fontMetrics().elidedText( item->status(), Qt::ElideRight, MAX_LABEL_WIDTH ) );
-    h->layout()->addWidget( mItemStatus );
-    setCryptoStatus(item->cryptoStatus() );
-    if ( first ) {
+        fontMetrics().elidedText(item->status(), Qt::ElideRight, MAX_LABEL_WIDTH));
+    h->layout()->addWidget(mItemStatus);
+    setCryptoStatus(item->cryptoStatus());
+    if (first) {
         hideHLine();
     }
 }
@@ -210,91 +211,91 @@ void TransactionItem::hideHLine()
     mFrame->hide();
 }
 
-void TransactionItem::setProgress( int progress )
+void TransactionItem::setProgress(int progress)
 {
-    mProgress->setValue( progress );
+    mProgress->setValue(progress);
 }
 
-void TransactionItem::setLabel( const QString &label )
+void TransactionItem::setLabel(const QString &label)
 {
-    mItemLabel->setText( fontMetrics().elidedText( label, Qt::ElideRight, MAX_LABEL_WIDTH ) );
+    mItemLabel->setText(fontMetrics().elidedText(label, Qt::ElideRight, MAX_LABEL_WIDTH));
 }
 
-void TransactionItem::setStatus( const QString &status )
+void TransactionItem::setStatus(const QString &status)
 {
-    mItemStatus->setText( fontMetrics().elidedText( status, Qt::ElideRight, MAX_LABEL_WIDTH ) );
+    mItemStatus->setText(fontMetrics().elidedText(status, Qt::ElideRight, MAX_LABEL_WIDTH));
 }
 
 void TransactionItem::setCryptoStatus(KPIM::ProgressItem::CryptoStatus status)
 {
     switch (status) {
     case KPIM::ProgressItem::Encrypted:
-        mSSLLabel->setEncrypted( SSLLabel::Encrypted );
+        mSSLLabel->setEncrypted(SSLLabel::Encrypted);
         break;
     case KPIM::ProgressItem::Unencrypted:
-        mSSLLabel->setEncrypted( SSLLabel::Unencrypted );
+        mSSLLabel->setEncrypted(SSLLabel::Unencrypted);
         break;
     case KPIM::ProgressItem::Unknown:
-        mSSLLabel->setEncrypted( SSLLabel::Unknown );
+        mSSLLabel->setEncrypted(SSLLabel::Unknown);
         break;
     }
-    mSSLLabel->setState( mSSLLabel->lastState() );
+    mSSLLabel->setState(mSSLLabel->lastState());
 }
 
-void TransactionItem::setTotalSteps( int totalSteps )
+void TransactionItem::setTotalSteps(int totalSteps)
 {
-    mProgress->setMaximum( totalSteps );
+    mProgress->setMaximum(totalSteps);
 }
 
 void TransactionItem::slotItemCanceled()
 {
-    if ( mItem ) {
+    if (mItem) {
         mItem->cancel();
     }
 }
 
-void TransactionItem::addSubTransaction( ProgressItem *item )
+void TransactionItem::addSubTransaction(ProgressItem *item)
 {
-    Q_UNUSED( item );
+    Q_UNUSED(item);
 }
 
 // ---------------------------------------------------------------------------
 
-ProgressDialog::ProgressDialog( QWidget *alignWidget, QWidget *parent )
-    : OverlayWidget( alignWidget, parent),
+ProgressDialog::ProgressDialog(QWidget *alignWidget, QWidget *parent)
+    : OverlayWidget(alignWidget, parent),
       mShowTypeProgressItem(0),
-      mWasLastShown( false )
+      mWasLastShown(false)
 {
-    setFrameStyle( QFrame::Panel | QFrame::Sunken ); // QFrame
+    setFrameStyle(QFrame::Panel | QFrame::Sunken);   // QFrame
 
-    setAutoFillBackground( true );
+    setAutoFillBackground(true);
 
-    mScrollView = new TransactionItemView( this, "ProgressScrollView" );
-    layout()->addWidget( mScrollView );
+    mScrollView = new TransactionItemView(this, "ProgressScrollView");
+    layout()->addWidget(mScrollView);
     /*
-   * Get the singleton ProgressManager item which will inform us of
-   * appearing and vanishing items.
-   */
+    * Get the singleton ProgressManager item which will inform us of
+    * appearing and vanishing items.
+    */
     ProgressManager *pm = ProgressManager::instance();
-    connect ( pm, SIGNAL(progressItemAdded(KPIM::ProgressItem*)),
-              this, SLOT(slotTransactionAdded(KPIM::ProgressItem*)) );
-    connect ( pm, SIGNAL(progressItemCompleted(KPIM::ProgressItem*)),
-              this, SLOT(slotTransactionCompleted(KPIM::ProgressItem*)) );
-    connect ( pm, SIGNAL(progressItemProgress(KPIM::ProgressItem*,uint)),
-              this, SLOT(slotTransactionProgress(KPIM::ProgressItem*,uint)) );
-    connect ( pm, SIGNAL(progressItemStatus(KPIM::ProgressItem*,QString)),
-              this, SLOT(slotTransactionStatus(KPIM::ProgressItem*,QString)) );
-    connect ( pm, SIGNAL(progressItemLabel(KPIM::ProgressItem*,QString)),
-              this, SLOT(slotTransactionLabel(KPIM::ProgressItem*,QString)) );
-    connect ( pm, SIGNAL(progressItemCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)),
-              this, SLOT(slotTransactionCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)) );
-    connect ( pm, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
-              this, SLOT(slotTransactionUsesBusyIndicator(KPIM::ProgressItem*,bool)) );
-    connect ( pm, SIGNAL(showProgressDialog()),
-              this, SLOT(slotShow()) );
+    connect(pm, SIGNAL(progressItemAdded(KPIM::ProgressItem*)),
+            this, SLOT(slotTransactionAdded(KPIM::ProgressItem*)));
+    connect(pm, SIGNAL(progressItemCompleted(KPIM::ProgressItem*)),
+            this, SLOT(slotTransactionCompleted(KPIM::ProgressItem*)));
+    connect(pm, SIGNAL(progressItemProgress(KPIM::ProgressItem*,uint)),
+            this, SLOT(slotTransactionProgress(KPIM::ProgressItem*,uint)));
+    connect(pm, SIGNAL(progressItemStatus(KPIM::ProgressItem*,QString)),
+            this, SLOT(slotTransactionStatus(KPIM::ProgressItem*,QString)));
+    connect(pm, SIGNAL(progressItemLabel(KPIM::ProgressItem*,QString)),
+            this, SLOT(slotTransactionLabel(KPIM::ProgressItem*,QString)));
+    connect(pm, SIGNAL(progressItemCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)),
+            this, SLOT(slotTransactionCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)));
+    connect(pm, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
+            this, SLOT(slotTransactionUsesBusyIndicator(KPIM::ProgressItem*,bool)));
+    connect(pm, SIGNAL(showProgressDialog()),
+            this, SLOT(slotShow()));
 }
 
-void ProgressDialog::closeEvent( QCloseEvent *e )
+void ProgressDialog::closeEvent(QCloseEvent *e)
 {
     e->accept();
     hide();
@@ -313,131 +314,131 @@ void ProgressDialog::setShowTypeProgressItem(unsigned int type)
     mShowTypeProgressItem = type;
 }
 
-void ProgressDialog::slotTransactionAdded( ProgressItem *item )
+void ProgressDialog::slotTransactionAdded(ProgressItem *item)
 {
     if (item->typeProgressItem() == mShowTypeProgressItem) {
-        if ( item->parent() ) {
-            if ( mTransactionsToListviewItems.contains( item->parent() ) ) {
-                TransactionItem * parent = mTransactionsToListviewItems[ item->parent() ];
-                parent->addSubTransaction( item );
+        if (item->parent()) {
+            if (mTransactionsToListviewItems.contains(item->parent())) {
+                TransactionItem *parent = mTransactionsToListviewItems[ item->parent() ];
+                parent->addSubTransaction(item);
             }
         } else {
             const bool first = mTransactionsToListviewItems.empty();
-            TransactionItem *ti = mScrollView->addTransactionItem( item, first );
-            if ( ti ) {
-                mTransactionsToListviewItems.insert( item, ti );
+            TransactionItem *ti = mScrollView->addTransactionItem(item, first);
+            if (ti) {
+                mTransactionsToListviewItems.insert(item, ti);
             }
-            if ( first && mWasLastShown ) {
-                QTimer::singleShot( 1000, this, SLOT(slotShow()) );
+            if (first && mWasLastShown) {
+                QTimer::singleShot(1000, this, SLOT(slotShow()));
             }
         }
     }
 }
 
-void ProgressDialog::slotTransactionCompleted( ProgressItem *item )
+void ProgressDialog::slotTransactionCompleted(ProgressItem *item)
 {
-    if ( mTransactionsToListviewItems.contains( item ) ) {
+    if (mTransactionsToListviewItems.contains(item)) {
         TransactionItem *ti = mTransactionsToListviewItems[ item ];
-        mTransactionsToListviewItems.remove( item );
+        mTransactionsToListviewItems.remove(item);
         ti->setItemComplete();
-        QTimer::singleShot( 3000, ti, SLOT(deleteLater()) );
+        QTimer::singleShot(3000, ti, SLOT(deleteLater()));
         // see the slot for comments as to why that works
-        connect ( ti, SIGNAL(destroyed()),
-                  mScrollView, SLOT(slotLayoutFirstItem()) );
+        connect(ti, SIGNAL(destroyed()),
+                mScrollView, SLOT(slotLayoutFirstItem()));
     }
     // This was the last item, hide.
-    if ( mTransactionsToListviewItems.empty() ) {
-        QTimer::singleShot( 3000, this, SLOT(slotHide()) );
+    if (mTransactionsToListviewItems.empty()) {
+        QTimer::singleShot(3000, this, SLOT(slotHide()));
     }
 }
 
-void ProgressDialog::slotTransactionCanceled( ProgressItem * )
+void ProgressDialog::slotTransactionCanceled(ProgressItem *)
 {
 }
 
-void ProgressDialog::slotTransactionProgress( ProgressItem *item,
-                                              unsigned int progress )
+void ProgressDialog::slotTransactionProgress(ProgressItem *item,
+        unsigned int progress)
 {
-    if ( mTransactionsToListviewItems.contains( item ) ) {
+    if (mTransactionsToListviewItems.contains(item)) {
         TransactionItem *ti = mTransactionsToListviewItems[ item ];
-        ti->setProgress( progress );
+        ti->setProgress(progress);
     }
 }
 
-void ProgressDialog::slotTransactionStatus( ProgressItem *item,
-                                            const QString &status )
+void ProgressDialog::slotTransactionStatus(ProgressItem *item,
+        const QString &status)
 {
-    if ( mTransactionsToListviewItems.contains( item ) ) {
+    if (mTransactionsToListviewItems.contains(item)) {
         TransactionItem *ti = mTransactionsToListviewItems[ item ];
-        ti->setStatus( status );
+        ti->setStatus(status);
     }
 }
 
-void ProgressDialog::slotTransactionLabel( ProgressItem *item,
-                                           const QString &label )
+void ProgressDialog::slotTransactionLabel(ProgressItem *item,
+        const QString &label)
 {
-    if ( mTransactionsToListviewItems.contains( item ) ) {
+    if (mTransactionsToListviewItems.contains(item)) {
         TransactionItem *ti = mTransactionsToListviewItems[ item ];
-        ti->setLabel( label );
+        ti->setLabel(label);
     }
 }
 
-void ProgressDialog::slotTransactionCryptoStatus( ProgressItem *item,
-                                                KPIM::ProgressItem::CryptoStatus value )
+void ProgressDialog::slotTransactionCryptoStatus(ProgressItem *item,
+        KPIM::ProgressItem::CryptoStatus value)
 {
-    if ( mTransactionsToListviewItems.contains( item ) ) {
+    if (mTransactionsToListviewItems.contains(item)) {
         TransactionItem *ti = mTransactionsToListviewItems[ item ];
-        ti->setCryptoStatus( value );
+        ti->setCryptoStatus(value);
     }
 }
 
-void ProgressDialog::slotTransactionUsesBusyIndicator( KPIM::ProgressItem *item, bool value )
+void ProgressDialog::slotTransactionUsesBusyIndicator(KPIM::ProgressItem *item, bool value)
 {
-    if ( mTransactionsToListviewItems.contains( item ) ) {
+    if (mTransactionsToListviewItems.contains(item)) {
         TransactionItem *ti = mTransactionsToListviewItems[ item ];
-        if ( value ) {
-            ti->setTotalSteps( 0 );
+        if (value) {
+            ti->setTotalSteps(0);
         } else {
-            ti->setTotalSteps( 100 );
+            ti->setTotalSteps(100);
         }
     }
 }
 
 void ProgressDialog::slotShow()
 {
-    setVisible( true );
+    setVisible(true);
 }
 
 void ProgressDialog::slotHide()
 {
     // check if a new item showed up since we started the timer. If not, hide
-    if ( mTransactionsToListviewItems.isEmpty() ) {
-        setVisible( false );
+    if (mTransactionsToListviewItems.isEmpty()) {
+        setVisible(false);
     }
 }
 
 void ProgressDialog::slotClose()
 {
     mWasLastShown = false;
-    setVisible( false );
+    setVisible(false);
 }
 
-void ProgressDialog::setVisible( bool b )
+void ProgressDialog::setVisible(bool b)
 {
-    OverlayWidget::setVisible( b );
-    emit visibilityChanged( b );
+    OverlayWidget::setVisible(b);
+    emit visibilityChanged(b);
 }
 
 void ProgressDialog::slotToggleVisibility()
 {
     /* Since we are only hiding with a timeout, there is a short period of
-   * time where the last item is still visible, but clicking on it in
-   * the statusbarwidget should not display the dialog, because there
-   * are no items to be shown anymore. Guard against that.
-   */
+    * time where the last item is still visible, but clicking on it in
+    * the statusbarwidget should not display the dialog, because there
+    * are no items to be shown anymore. Guard against that.
+    */
     mWasLastShown = isHidden();
-    if ( !isHidden() || !mTransactionsToListviewItems.isEmpty() ) {
-        setVisible( isHidden() );
+    if (!isHidden() || !mTransactionsToListviewItems.isEmpty()) {
+        setVisible(isHidden());
     }
 }
 

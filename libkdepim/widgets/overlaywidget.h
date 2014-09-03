@@ -38,7 +38,8 @@
 class QResizeEvent;
 class QEvent;
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
  * This is a widget that can align itself with another one, without using a layout,
@@ -52,21 +53,24 @@ class KDEPIM_EXPORT OverlayWidget : public QFrame
     Q_OBJECT
 
 public:
-    OverlayWidget( QWidget* alignWidget, QWidget* parent );
+    OverlayWidget(QWidget *alignWidget, QWidget *parent);
     ~OverlayWidget();
 
-    QWidget * alignWidget() { return mAlignWidget; }
-    void setAlignWidget( QWidget * alignWidget );
+    QWidget *alignWidget()
+    {
+        return mAlignWidget;
+    }
+    void setAlignWidget(QWidget *alignWidget);
 
 protected:
-    void resizeEvent( QResizeEvent* ev );
-    bool eventFilter( QObject* o, QEvent* e);
+    void resizeEvent(QResizeEvent *ev);
+    bool eventFilter(QObject *o, QEvent *e);
 
 private:
     void reposition();
 
 private:
-    QWidget * mAlignWidget;
+    QWidget *mAlignWidget;
 };
 
 } // namespace

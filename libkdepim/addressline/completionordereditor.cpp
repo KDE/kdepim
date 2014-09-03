@@ -45,7 +45,6 @@
 #include <kabc/contactgroup.h>
 #include <kldap/ldapserver.h>
 
-
 #include <KConfigGroup>
 #include <QHBoxLayout>
 #include <QIcon>
@@ -60,29 +59,29 @@
 
 using namespace KPIM;
 
-CompletionOrderEditorAdaptor::CompletionOrderEditorAdaptor( QObject *parent )
-    : QDBusAbstractAdaptor( parent )
+CompletionOrderEditorAdaptor::CompletionOrderEditorAdaptor(QObject *parent)
+    : QDBusAbstractAdaptor(parent)
 {
-    setAutoRelaySignals( true );
+    setAutoRelaySignals(true);
 }
 
 class LDAPCompletionItem : public CompletionItem
 {
 public:
-    LDAPCompletionItem( KLDAP::LdapClient *ldapClient )
-        : mLdapClient( ldapClient )
+    LDAPCompletionItem(KLDAP::LdapClient *ldapClient)
+        : mLdapClient(ldapClient)
     {
         mWeight = mLdapClient->completionWeight();
     }
 
     virtual QString label() const
     {
-        return i18n( "LDAP server %1", mLdapClient->server().host() );
+        return i18n("LDAP server %1", mLdapClient->server().host());
     }
 
     virtual QIcon icon() const
     {
-        return QIcon::fromTheme( QLatin1String("view-ldap-resource") );
+        return QIcon::fromTheme(QLatin1String("view-ldap-resource"));
     }
 
     virtual int completionWeight() const
@@ -90,17 +89,17 @@ public:
         return mWeight;
     }
 
-    virtual void save( CompletionOrderEditor* )
+    virtual void save(CompletionOrderEditor *)
     {
         KConfig *config = KLDAP::LdapClientSearchConfig::config();
-        KConfigGroup group( config, "LDAP" );
-        group.writeEntry( QString::fromLatin1("SelectedCompletionWeight%1" ).arg( mLdapClient->clientNumber() ),
-                          mWeight );
+        KConfigGroup group(config, "LDAP");
+        group.writeEntry(QString::fromLatin1("SelectedCompletionWeight%1").arg(mLdapClient->clientNumber()),
+                         mWeight);
         group.sync();
     }
 
 protected:
-    virtual void setCompletionWeight( int weight )
+    virtual void setCompletionWeight(int weight)
     {
         mWeight = weight;
     }
@@ -113,14 +112,14 @@ private:
 class SimpleCompletionItem : public CompletionItem
 {
 public:
-    SimpleCompletionItem( CompletionOrderEditor* editor, const QString& label, const QString& identifier, int weight )
-        : mLabel( label ), mIdentifier( identifier )
+    SimpleCompletionItem(CompletionOrderEditor *editor, const QString &label, const QString &identifier, int weight)
+        : mLabel(label), mIdentifier(identifier)
     {
-        KConfigGroup group( editor->configFile(), "CompletionWeights" );
-        mWeight = group.readEntry( mIdentifier, weight );
+        KConfigGroup group(editor->configFile(), "CompletionWeights");
+        mWeight = group.readEntry(mIdentifier, weight);
     }
 
-    void setIcon( const QIcon &icon )
+    void setIcon(const QIcon &icon)
     {
         mIcon = icon;
     }
@@ -140,14 +139,14 @@ public:
         return mWeight;
     }
 
-    virtual void save( CompletionOrderEditor *editor )
+    virtual void save(CompletionOrderEditor *editor)
     {
-        KConfigGroup group( editor->configFile(), "CompletionWeights" );
-        group.writeEntry( mIdentifier, mWeight );
+        KConfigGroup group(editor->configFile(), "CompletionWeights");
+        group.writeEntry(mIdentifier, mWeight);
     }
 
 protected:
-    virtual void setCompletionWeight( int weight )
+    virtual void setCompletionWeight(int weight)
     {
         mWeight = weight;
     }
@@ -164,42 +163,42 @@ private:
 class CompletionViewItem : public QTreeWidgetItem
 {
 public:
-    CompletionViewItem( QTreeWidget *parent, CompletionItem* item, QTreeWidgetItem *preceding )
-        : QTreeWidgetItem( parent, preceding )
+    CompletionViewItem(QTreeWidget *parent, CompletionItem *item, QTreeWidgetItem *preceding)
+        : QTreeWidgetItem(parent, preceding)
     {
-        setItem( item );
+        setItem(item);
     }
 
-    void setItem( CompletionItem *item )
+    void setItem(CompletionItem *item)
     {
         mItem = item;
-        setText( 0, mItem->label() );
-        setIcon( 0, mItem->icon() );
+        setText(0, mItem->label());
+        setIcon(0, mItem->icon());
     }
 
-    CompletionItem* item() const
+    CompletionItem *item() const
     {
         return mItem;
     }
 
-    bool operator<( const QTreeWidgetItem &other ) const
+    bool operator<(const QTreeWidgetItem &other) const
     {
         const QTreeWidgetItem *otherItem = &other;
-        const CompletionViewItem *completionItem = static_cast<const CompletionViewItem*>( otherItem );
+        const CompletionViewItem *completionItem = static_cast<const CompletionViewItem *>(otherItem);
         // item with weight 100 should be on the top -> reverse sorting
         return (mItem->completionWeight() > completionItem->item()->completionWeight());
     }
 
 private:
-    CompletionItem* mItem;
+    CompletionItem *mItem;
 };
 
-CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearch,
-                                              QWidget* parent )
-    : QDialog( parent ), mConfig( QLatin1String("kpimcompletionorder") ), mLdapSearch( ldapSearch ), mDirty( false )
+CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch,
+        QWidget *parent)
+    : QDialog(parent), mConfig(QLatin1String("kpimcompletionorder")), mLdapSearch(ldapSearch), mDirty(false)
 {
-    setWindowTitle( i18n( "Edit Completion Order" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Edit Completion Order"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -208,52 +207,52 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     okButton->setDefault(true);
-    setModal( true );
-    new CompletionOrderEditorAdaptor( this );
-    QDBusConnection::sessionBus().registerObject( QLatin1String("/"), this, QDBusConnection::ExportAdaptors );
+    setModal(true);
+    new CompletionOrderEditorAdaptor(this);
+    QDBusConnection::sessionBus().registerObject(QLatin1String("/"), this, QDBusConnection::ExportAdaptors);
 
-    QWidget* page = new QWidget( this );
+    QWidget *page = new QWidget(this);
     QHBoxLayout *pageHBoxLayout = new QHBoxLayout(page);
     pageHBoxLayout->setMargin(0);
     mainLayout->addWidget(page);
     mainLayout->addWidget(buttonBox);
-    mListView = new QTreeWidget( page );
+    mListView = new QTreeWidget(page);
     pageHBoxLayout->addWidget(mListView);
-    mListView->setColumnCount( 1 );
-    mListView->setAlternatingRowColors( true );
-    mListView->setIndentation( 0 );
-    mListView->setAllColumnsShowFocus( true );
-    mListView->setHeaderHidden ( true );
-    mListView->setSortingEnabled( true );
+    mListView->setColumnCount(1);
+    mListView->setAlternatingRowColors(true);
+    mListView->setIndentation(0);
+    mListView->setAllColumnsShowFocus(true);
+    mListView->setHeaderHidden(true);
+    mListView->setSortingEnabled(true);
 
-    QWidget* upDownBox = new QWidget( page );
+    QWidget *upDownBox = new QWidget(page);
     QVBoxLayout *upDownBoxVBoxLayout = new QVBoxLayout(upDownBox);
     upDownBoxVBoxLayout->setMargin(0);
     pageHBoxLayout->addWidget(upDownBox);
-    mUpButton = new QPushButton( upDownBox );
+    mUpButton = new QPushButton(upDownBox);
     upDownBoxVBoxLayout->addWidget(mUpButton);
     mUpButton->setAutoRepeat(true);
-    mUpButton->setObjectName( QLatin1String("mUpButton") );
-    mUpButton->setIcon( QIcon::fromTheme(QLatin1String("go-up")) );
-    mUpButton->setEnabled( false ); // b/c no item is selected yet
-    mUpButton->setFocusPolicy( Qt::StrongFocus );
+    mUpButton->setObjectName(QLatin1String("mUpButton"));
+    mUpButton->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
+    mUpButton->setEnabled(false);   // b/c no item is selected yet
+    mUpButton->setFocusPolicy(Qt::StrongFocus);
 
-    mDownButton = new QPushButton( upDownBox );
+    mDownButton = new QPushButton(upDownBox);
     upDownBoxVBoxLayout->addWidget(mDownButton);
     mDownButton->setAutoRepeat(true);
-    mDownButton->setObjectName( QLatin1String("mDownButton") );
-    mDownButton->setIcon( QIcon::fromTheme(QLatin1String("go-down")) );
-    mDownButton->setEnabled( false ); // b/c no item is selected yet
-    mDownButton->setFocusPolicy( Qt::StrongFocus );
+    mDownButton->setObjectName(QLatin1String("mDownButton"));
+    mDownButton->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
+    mDownButton->setEnabled(false);   // b/c no item is selected yet
+    mDownButton->setFocusPolicy(Qt::StrongFocus);
 
-    QWidget* spacer = new QWidget( upDownBox );
+    QWidget *spacer = new QWidget(upDownBox);
     upDownBoxVBoxLayout->addWidget(spacer);
-    upDownBoxVBoxLayout->setStretchFactor( spacer, 100 );
+    upDownBoxVBoxLayout->setStretchFactor(spacer, 100);
 
-    connect( mListView, SIGNAL(itemSelectionChanged()),
-             SLOT(slotSelectionChanged()) );
-    connect( mListView, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-             SLOT(slotSelectionChanged()) );
+    connect(mListView, SIGNAL(itemSelectionChanged()),
+            SLOT(slotSelectionChanged()));
+    connect(mListView, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+            SLOT(slotSelectionChanged()));
     connect(mUpButton, &QPushButton::clicked, this, &CompletionOrderEditor::slotMoveUp);
     connect(mDownButton, &QPushButton::clicked, this, &CompletionOrderEditor::slotMoveDown);
 
@@ -268,132 +267,142 @@ CompletionOrderEditor::~CompletionOrderEditor()
 
 void CompletionOrderEditor::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "CompletionOrderEditor" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "CompletionOrderEditor");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void CompletionOrderEditor::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "CompletionOrderEditor" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "CompletionOrderEditor");
+    group.writeEntry("Size", size());
     group.sync();
 }
 
-
-void CompletionOrderEditor::addCompletionItemForIndex( const QModelIndex &index )
+void CompletionOrderEditor::addCompletionItemForIndex(const QModelIndex &index)
 {
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( !collection.isValid() )
+    const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+    if (!collection.isValid()) {
         return;
+    }
 
-    SimpleCompletionItem *item = new SimpleCompletionItem( this, index.data().toString(), QString::number( collection.id() ), 60 );
-    item->setIcon( index.data( Qt::DecorationRole ).value<QIcon>() );
+    SimpleCompletionItem *item = new SimpleCompletionItem(this, index.data().toString(), QString::number(collection.id()), 60);
+    item->setIcon(index.data(Qt::DecorationRole).value<QIcon>());
 
-    new CompletionViewItem( mListView, item, 0 );
+    new CompletionViewItem(mListView, item, 0);
 }
 
 void CompletionOrderEditor::loadCompletionItems()
 {
     // The first step is to gather all the data, creating CompletionItem objects
-    foreach ( KLDAP::LdapClient *client, mLdapSearch->clients() ) {
-        new CompletionViewItem( mListView, new LDAPCompletionItem( client ), 0 );
+    foreach (KLDAP::LdapClient *client, mLdapSearch->clients()) {
+        new CompletionViewItem(mListView, new LDAPCompletionItem(client), 0);
     }
 
-    Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
-    monitor->fetchCollection( true );
-    monitor->setCollectionMonitored( Akonadi::Collection::root() );
-    monitor->setMimeTypeMonitored( KABC::Addressee::mimeType(), true );
-    monitor->setMimeTypeMonitored( KABC::ContactGroup::mimeType(), true );
+    Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder(this);
+    monitor->fetchCollection(true);
+    monitor->setCollectionMonitored(Akonadi::Collection::root());
+    monitor->setMimeTypeMonitored(KABC::Addressee::mimeType(), true);
+    monitor->setMimeTypeMonitored(KABC::ContactGroup::mimeType(), true);
 
-    Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel( monitor, this );
-    model->setItemPopulationStrategy( Akonadi::EntityTreeModel::NoItemPopulation );
+    Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel(monitor, this);
+    model->setItemPopulationStrategy(Akonadi::EntityTreeModel::NoItemPopulation);
 
-    KDescendantsProxyModel *descendantsProxy = new KDescendantsProxyModel( this );
-    descendantsProxy->setDisplayAncestorData( true );
-    descendantsProxy->setSourceModel( model );
+    KDescendantsProxyModel *descendantsProxy = new KDescendantsProxyModel(this);
+    descendantsProxy->setDisplayAncestorData(true);
+    descendantsProxy->setSourceModel(model);
 
-    Akonadi::CollectionFilterProxyModel *mimeTypeProxy = new Akonadi::CollectionFilterProxyModel( this );
-    mimeTypeProxy->addMimeTypeFilters( QStringList() << KABC::Addressee::mimeType()
-                                       << KABC::ContactGroup::mimeType() );
-    mimeTypeProxy->setSourceModel( descendantsProxy );
-    mimeTypeProxy->setExcludeVirtualCollections( true );
+    Akonadi::CollectionFilterProxyModel *mimeTypeProxy = new Akonadi::CollectionFilterProxyModel(this);
+    mimeTypeProxy->addMimeTypeFilters(QStringList() << KABC::Addressee::mimeType()
+                                      << KABC::ContactGroup::mimeType());
+    mimeTypeProxy->setSourceModel(descendantsProxy);
+    mimeTypeProxy->setExcludeVirtualCollections(true);
 
     mCollectionModel = mimeTypeProxy;
 
-    connect( mimeTypeProxy, SIGNAL(rowsInserted(QModelIndex,int,int)),
-             this, SLOT(rowsInserted(QModelIndex,int,int)) );
+    connect(mimeTypeProxy, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SLOT(rowsInserted(QModelIndex,int,int)));
 
-    for ( int row = 0; row < mCollectionModel->rowCount(); ++row )
-        addCompletionItemForIndex( mCollectionModel->index( row, 0 ) );
+    for (int row = 0; row < mCollectionModel->rowCount(); ++row) {
+        addCompletionItemForIndex(mCollectionModel->index(row, 0));
+    }
 
-    mListView->sortItems( 0, Qt::AscendingOrder );
+    mListView->sortItems(0, Qt::AscendingOrder);
 }
 
-void CompletionOrderEditor::rowsInserted( const QModelIndex &parent, int start, int end )
+void CompletionOrderEditor::rowsInserted(const QModelIndex &parent, int start, int end)
 {
-    for ( int row = start; row <= end; ++row )
-        addCompletionItemForIndex( mCollectionModel->index( row, 0, parent ) );
+    for (int row = start; row <= end; ++row) {
+        addCompletionItemForIndex(mCollectionModel->index(row, 0, parent));
+    }
 
-    mListView->sortItems( 0, Qt::AscendingOrder );
+    mListView->sortItems(0, Qt::AscendingOrder);
 }
 
 void CompletionOrderEditor::slotSelectionChanged()
 {
     QTreeWidgetItem *item = mListView->currentItem();
-    mDownButton->setEnabled( item && mListView->itemBelow( item ) );
-    mUpButton->setEnabled( item && mListView->itemAbove( item ) );
+    mDownButton->setEnabled(item && mListView->itemBelow(item));
+    mUpButton->setEnabled(item && mListView->itemAbove(item));
 }
 
-static void swapItems( CompletionViewItem *one, CompletionViewItem *other )
+static void swapItems(CompletionViewItem *one, CompletionViewItem *other)
 {
-    CompletionItem* oneCompletion = one->item();
-    CompletionItem* otherCompletion = other->item();
+    CompletionItem *oneCompletion = one->item();
+    CompletionItem *otherCompletion = other->item();
 
     int weight = otherCompletion->completionWeight();
-    otherCompletion->setCompletionWeight( oneCompletion->completionWeight() );
-    oneCompletion->setCompletionWeight( weight );
+    otherCompletion->setCompletionWeight(oneCompletion->completionWeight());
+    oneCompletion->setCompletionWeight(weight);
 
-    one->setItem( otherCompletion );
-    other->setItem( oneCompletion );
+    one->setItem(otherCompletion);
+    other->setItem(oneCompletion);
 }
 
 void CompletionOrderEditor::slotMoveUp()
 {
-    CompletionViewItem *item = static_cast<CompletionViewItem *>( mListView->currentItem() );
-    if ( !item ) return;
-    CompletionViewItem *above = static_cast<CompletionViewItem *>( mListView->itemAbove( item ) );
-    if ( !above ) return;
-    swapItems( item, above );
-    mListView->setCurrentItem( above, 0, QItemSelectionModel::Select | QItemSelectionModel::Current );
-    mListView->sortItems( 0, Qt::AscendingOrder );
+    CompletionViewItem *item = static_cast<CompletionViewItem *>(mListView->currentItem());
+    if (!item) {
+        return;
+    }
+    CompletionViewItem *above = static_cast<CompletionViewItem *>(mListView->itemAbove(item));
+    if (!above) {
+        return;
+    }
+    swapItems(item, above);
+    mListView->setCurrentItem(above, 0, QItemSelectionModel::Select | QItemSelectionModel::Current);
+    mListView->sortItems(0, Qt::AscendingOrder);
     mDirty = true;
 }
 
 void CompletionOrderEditor::slotMoveDown()
 {
-    CompletionViewItem *item = static_cast<CompletionViewItem *>( mListView->currentItem() );
-    if ( !item ) return;
-    CompletionViewItem *below = static_cast<CompletionViewItem *>( mListView->itemBelow( item ) );
-    if ( !below ) return;
-    swapItems( item, below );
-    mListView->setCurrentItem( below );
-    mListView->setCurrentItem( below, 0, QItemSelectionModel::Select | QItemSelectionModel::Current );
-    mListView->sortItems( 0, Qt::AscendingOrder );
+    CompletionViewItem *item = static_cast<CompletionViewItem *>(mListView->currentItem());
+    if (!item) {
+        return;
+    }
+    CompletionViewItem *below = static_cast<CompletionViewItem *>(mListView->itemBelow(item));
+    if (!below) {
+        return;
+    }
+    swapItems(item, below);
+    mListView->setCurrentItem(below);
+    mListView->setCurrentItem(below, 0, QItemSelectionModel::Select | QItemSelectionModel::Current);
+    mListView->sortItems(0, Qt::AscendingOrder);
     mDirty = true;
 }
 
 void CompletionOrderEditor::slotOk()
 {
-    if ( mDirty ) {
+    if (mDirty) {
         int w = 100;
-        for ( int itemIndex = 0; itemIndex < mListView->topLevelItemCount(); ++itemIndex ) {
+        for (int itemIndex = 0; itemIndex < mListView->topLevelItemCount(); ++itemIndex) {
             CompletionViewItem *item =
-                    static_cast<CompletionViewItem *>( mListView->topLevelItem( itemIndex ) );
-            item->item()->setCompletionWeight( w );
-            item->item()->save( this );
+                static_cast<CompletionViewItem *>(mListView->topLevelItem(itemIndex));
+            item->item()->setCompletionWeight(w);
+            item->item()->save(this);
             --w;
         }
         emit completionOrderChanged();

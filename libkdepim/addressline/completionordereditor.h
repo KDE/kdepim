@@ -41,11 +41,13 @@ class QAbstractItemModel;
 class QModelIndex;
 class QTreeWidget;
 
-namespace KLDAP {
+namespace KLDAP
+{
 class LdapClientSearch;
 }
 
-namespace KPIM {
+namespace KPIM
+{
 
 class CompletionOrderEditor;
 
@@ -57,26 +59,28 @@ public:
     virtual QString label() const = 0;
     virtual QIcon icon() const = 0;
     virtual int completionWeight() const = 0;
-    virtual void setCompletionWeight( int weight ) = 0;
-    virtual void save( CompletionOrderEditor* ) = 0;
+    virtual void setCompletionWeight(int weight) = 0;
+    virtual void save(CompletionOrderEditor *) = 0;
 };
-
 
 class KDEPIM_EXPORT CompletionOrderEditor : public QDialog
 {
     Q_OBJECT
 
 public:
-    CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearch, QWidget* parent );
+    CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch, QWidget *parent);
     ~CompletionOrderEditor();
 
-    KConfig* configFile() { return &mConfig; }
+    KConfig *configFile()
+    {
+        return &mConfig;
+    }
 
 Q_SIGNALS:
     void completionOrderChanged();
 
 private Q_SLOTS:
-    void rowsInserted( const QModelIndex &parent, int start, int end );
+    void rowsInserted(const QModelIndex &parent, int start, int end);
     void slotSelectionChanged();
     void slotMoveUp();
     void slotMoveDown();
@@ -86,12 +90,12 @@ private:
     void readConfig();
     void writeConfig();
     void loadCompletionItems();
-    void addCompletionItemForIndex( const QModelIndex& );
+    void addCompletionItemForIndex(const QModelIndex &);
 
     KConfig mConfig;
-    QTreeWidget* mListView;
-    QPushButton* mUpButton;
-    QPushButton* mDownButton;
+    QTreeWidget *mListView;
+    QPushButton *mUpButton;
+    QPushButton *mDownButton;
     QAbstractItemModel *mCollectionModel;
     KLDAP::LdapClientSearch *mLdapSearch;
 

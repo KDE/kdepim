@@ -32,8 +32,8 @@
 
 using namespace KPIM;
 
-TagWidget::TagWidget(QWidget* parent)
-:   QWidget(parent)
+TagWidget::TagWidget(QWidget *parent)
+    :   QWidget(parent)
 {
     mTagWidget = new Akonadi::TagWidget(this);
     connect(mTagWidget, &Akonadi::TagWidget::selectionChanged, this, &TagWidget::onSelectionChanged);
@@ -57,10 +57,10 @@ void TagWidget::setSelection(const QStringList &tagNames)
     mTagList.clear();
     mCachedTagNames = tagNames;
     foreach (const QString &name, tagNames) {
-      //TODO fetch by GID instead, we don't really want to create tags here
-      Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(name), this);
-      tagCreateJob->setMergeIfExisting(true);
-      connect(tagCreateJob, &Akonadi::TagCreateJob::result, this, &TagWidget::onTagCreated);
+        //TODO fetch by GID instead, we don't really want to create tags here
+        Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(name), this);
+        tagCreateJob->setMergeIfExisting(true);
+        connect(tagCreateJob, &Akonadi::TagCreateJob::result, this, &TagWidget::onTagCreated);
     }
 }
 
@@ -70,7 +70,7 @@ void TagWidget::onTagCreated(KJob *job)
         qWarning() << "Failed to create tag " << job->errorString();
         return;
     }
-    Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob*>(job);
+    Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob *>(job);
     mTagList << createJob->tag();
     mTagWidget->setSelection(mTagList);
 }
@@ -80,9 +80,8 @@ QStringList TagWidget::selection() const
     return mCachedTagNames;
 }
 
-
-TagSelectionDialog::TagSelectionDialog(QWidget* parent)
-:   Akonadi::TagSelectionDialog(parent)
+TagSelectionDialog::TagSelectionDialog(QWidget *parent)
+    :   Akonadi::TagSelectionDialog(parent)
 {
 
 }
@@ -91,10 +90,10 @@ void TagSelectionDialog::setSelection(const QStringList &tagNames)
 {
     mTagList.clear();
     foreach (const QString &name, tagNames) {
-      //TODO fetch by GID instead, we don't really want to create tags here
-      Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(name), this);
-      tagCreateJob->setMergeIfExisting(true);
-      connect(tagCreateJob, &Akonadi::TagCreateJob::result, this, &TagSelectionDialog::onTagCreated);
+        //TODO fetch by GID instead, we don't really want to create tags here
+        Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(name), this);
+        tagCreateJob->setMergeIfExisting(true);
+        connect(tagCreateJob, &Akonadi::TagCreateJob::result, this, &TagSelectionDialog::onTagCreated);
     }
 }
 
@@ -104,7 +103,7 @@ void TagSelectionDialog::onTagCreated(KJob *job)
         qWarning() << "Failed to create tag " << job->errorString();
         return;
     }
-    Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob*>(job);
+    Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob *>(job);
     mTagList << createJob->tag();
     Akonadi::TagSelectionDialog::setSelection(mTagList);
 }
@@ -121,8 +120,8 @@ QStringList TagSelectionDialog::selection() const
 class MatchingCheckableProxyModel : public KCheckableProxyModel
 {
 public:
-    MatchingCheckableProxyModel(QObject* parent = 0): KCheckableProxyModel(parent) {}
-    virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchExactly) const
+    MatchingCheckableProxyModel(QObject *parent = 0): KCheckableProxyModel(parent) {}
+    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchExactly) const
     {
         if (role == Qt::CheckStateRole) {
             return selectionModel()->selectedRows();
@@ -131,8 +130,8 @@ public:
     }
 };
 
-TagSelectionCombo::TagSelectionCombo(QWidget* parent)
-:   KPIM::KCheckComboBox(parent)
+TagSelectionCombo::TagSelectionCombo(QWidget *parent)
+    :   KPIM::KCheckComboBox(parent)
 {
     Akonadi::Monitor *monitor = new Akonadi::Monitor(this);
     monitor->setTypeMonitored(Akonadi::Monitor::Tags);
@@ -140,19 +139,19 @@ TagSelectionCombo::TagSelectionCombo(QWidget* parent)
     Akonadi::TagModel *model = new Akonadi::TagModel(monitor, this);
 
     QItemSelectionModel *selectionModel = new QItemSelectionModel(model, this);
-    KCheckableProxyModel *checkableProxy = new MatchingCheckableProxyModel( this );
-    checkableProxy->setSourceModel( model );
-    checkableProxy->setSelectionModel( selectionModel );
+    KCheckableProxyModel *checkableProxy = new MatchingCheckableProxyModel(this);
+    checkableProxy->setSourceModel(model);
+    checkableProxy->setSelectionModel(selectionModel);
 
     setModel(checkableProxy);
 
     //We need to reconnect from the constructor of KCheckComboBox to the new model
     connect(checkableProxy, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(updateCheckedItems(QModelIndex,QModelIndex)) );
+            this, SLOT(updateCheckedItems(QModelIndex,QModelIndex)));
 }
 
-TagCombo::TagCombo(QWidget* parent)
-:   KComboBox(parent)
+TagCombo::TagCombo(QWidget *parent)
+    :   KComboBox(parent)
 {
     Akonadi::Monitor *monitor = new Akonadi::Monitor(this);
     monitor->setTypeMonitored(Akonadi::Monitor::Tags);

@@ -24,7 +24,8 @@
 
 #include <qdialog.h>
 
-namespace KLDAP {
+namespace KLDAP
+{
 class LdapConfigWidget;
 class LdapServer;
 }
@@ -34,18 +35,18 @@ class AddHostDialog : public QDialog
 {
     Q_OBJECT
 
-  public:
-    explicit AddHostDialog( KLDAP::LdapServer *server, QWidget *parent = 0 );
+public:
+    explicit AddHostDialog(KLDAP::LdapServer *server, QWidget *parent = 0);
     ~AddHostDialog();
 
-  Q_SIGNALS:
-    void changed( bool );
+Q_SIGNALS:
+    void changed(bool);
 
-  private Q_SLOTS:
-    void slotHostEditChanged( const QString& );
+private Q_SLOTS:
+    void slotHostEditChanged(const QString &);
     void slotOk();
 
-  private:
+private:
     KLDAP::LdapConfigWidget *mCfg;
     KLDAP::LdapServer *mServer;
     QPushButton *mOkButton;

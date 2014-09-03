@@ -40,17 +40,19 @@ class QMenu;
 class QMouseEvent;
 class QObject;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Item;
 }
 
-namespace KABC {
+namespace KABC
+{
 class Addressee;
 class ContactGroup;
 }
 
-namespace KPIM {
-
+namespace KPIM
+{
 
 class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
 {
@@ -63,7 +65,7 @@ public:
      * @param parent The parent object.
      * @param enableCompletion Whether autocompletion shall be enabled.
      */
-    explicit AddresseeLineEdit( QWidget *parent, bool enableCompletion = true );
+    explicit AddresseeLineEdit(QWidget *parent, bool enableCompletion = true);
 
     /**
      * Destroys the addressee line edit.
@@ -73,12 +75,12 @@ public:
     /**
      * Sets whether semicolons are allowed as separators.
      */
-    void allowSemicolonAsSeparator( bool allow );
+    void allowSemicolonAsSeparator(bool allow);
 
     /**
      * Reimplemented for setting the @p font for line edit and completion box.
      */
-    void setFont( const QFont &font );
+    void setFont(const QFont &font);
 Q_SIGNALS:
     void textCompleted();
 
@@ -91,13 +93,13 @@ public Q_SLOTS:
     /**
      * Sets whether autocompletion shall be enabled.
      */
-    void enableCompletion( bool enable );
+    void enableCompletion(bool enable);
 
     /**
      * Reimplemented for stripping whitespace after completion
      * Danger: This is _not_ virtual in the base class!
      */
-    virtual void setText( const QString &text );
+    virtual void setText(const QString &text);
 
 protected:
     /**
@@ -106,14 +108,14 @@ protected:
      * @p source index
      * @p append  is added to completion string, but removed, when mail is selected.
      */
-    void addContact( const KABC::Addressee &contact, int weight, int source = -1, QString append = QString() );
+    void addContact(const KABC::Addressee &contact, int weight, int source = -1, QString append = QString());
 
     /**
      * Same as the above, but this time with contact groups.
      */
-    void addContactGroup( const KABC::ContactGroup &group, int weight, int source = -1 );
+    void addContactGroup(const KABC::ContactGroup &group, int weight, int source = -1);
 
-    void addItem( const Akonadi::Item &item, int weight, int source = -1 );
+    void addItem(const Akonadi::Item &item, int weight, int source = -1);
 
     /**
      * Adds the @p name of a completion source and its @p weight
@@ -122,7 +124,7 @@ protected:
      *
      * If the source already exists, the weight will be updated.
      */
-    int addCompletionSource( const QString &name, int weight );
+    int addCompletionSource(const QString &name, int weight);
 
     void removeCompletionSource(const QString &source);
 
@@ -134,7 +136,7 @@ protected:
      * - Recognizes email addresses which are protected against address
      *   harvesters, i.e. "name at kde dot org" and "name(at)kde.org"
      */
-    virtual void insert( const QString & );
+    virtual void insert(const QString &);
 
     /**
      * Reimplemented for smart insertion of pasted email addresses.
@@ -144,19 +146,19 @@ protected:
     /**
      * Reimplemented for smart insertion with middle mouse button.
      */
-    virtual void mouseReleaseEvent( QMouseEvent * );
+    virtual void mouseReleaseEvent(QMouseEvent *);
 
 #ifndef QT_NO_DRAGANDDROP
     /**
      * Reimplemented for smart insertion of dragged email addresses.
      */
-    virtual void dropEvent( QDropEvent * );
+    virtual void dropEvent(QDropEvent *);
 #endif
 
     /**
      * Reimplemented for internal reasons.
      */
-    virtual void keyPressEvent( QKeyEvent * );
+    virtual void keyPressEvent(QKeyEvent *);
 
 #ifndef QT_NO_CONTEXTMENU
     /**
@@ -169,29 +171,29 @@ protected:
      *
      * See QLineEdit::contextMenuEvent().
      */
-    virtual void contextMenuEvent( QContextMenuEvent * );
+    virtual void contextMenuEvent(QContextMenuEvent *);
 #endif
 
 private:
-    virtual bool eventFilter( QObject *, QEvent * );
+    virtual bool eventFilter(QObject *, QEvent *);
     void emitTextCompleted();
 
     //@cond PRIVATE
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotCompletion() )
-    Q_PRIVATE_SLOT( d, void slotPopupCompletion( const QString & ) )
-    Q_PRIVATE_SLOT( d, void slotReturnPressed( const QString & ) )
-    Q_PRIVATE_SLOT( d, void slotStartLDAPLookup() )
-    Q_PRIVATE_SLOT( d, void slotLDAPSearchData( const KLDAP::LdapResult::List & ) )
-    Q_PRIVATE_SLOT( d, void slotEditCompletionOrder() )
-    Q_PRIVATE_SLOT( d, void slotShowOUChanged( bool ) )
-    Q_PRIVATE_SLOT( d, void slotUserCancelled( const QString & ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiHandleItems( const Akonadi::Item::List & ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiSearchResult( KJob * ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & ) )
-    Q_PRIVATE_SLOT( d, void slotTriggerDelayedQueries() )
+    Q_PRIVATE_SLOT(d, void slotCompletion())
+    Q_PRIVATE_SLOT(d, void slotPopupCompletion(const QString &))
+    Q_PRIVATE_SLOT(d, void slotReturnPressed(const QString &))
+    Q_PRIVATE_SLOT(d, void slotStartLDAPLookup())
+    Q_PRIVATE_SLOT(d, void slotLDAPSearchData(const KLDAP::LdapResult::List &))
+    Q_PRIVATE_SLOT(d, void slotEditCompletionOrder())
+    Q_PRIVATE_SLOT(d, void slotShowOUChanged(bool))
+    Q_PRIVATE_SLOT(d, void slotUserCancelled(const QString &))
+    Q_PRIVATE_SLOT(d, void slotAkonadiHandleItems(const Akonadi::Item::List &))
+    Q_PRIVATE_SLOT(d, void slotAkonadiSearchResult(KJob *))
+    Q_PRIVATE_SLOT(d, void slotAkonadiCollectionsReceived(const Akonadi::Collection::List &))
+    Q_PRIVATE_SLOT(d, void slotTriggerDelayedQueries())
     //@endcond
 };
 

@@ -30,83 +30,86 @@
 
 using namespace KLDAP;
 
-LdapQueryJob::LdapQueryJob( const LdapUrl& url, LdapSession* session ) :
-  KJob( 0 ), // to not break moveToThread
-  m_url( url ),
-  m_session( session )
+LdapQueryJob::LdapQueryJob(const LdapUrl &url, LdapSession *session) :
+    KJob(0),   // to not break moveToThread
+    m_url(url),
+    m_session(session)
 {
-  setAutoDelete( false ); // auto-deletion is bad in combination with cross-thread queued connections
+    setAutoDelete(false);   // auto-deletion is bad in combination with cross-thread queued connections
 }
 
 void LdapQueryJob::triggerStart()
 {
-  start();
+    start();
 }
 
 void LdapQueryJob::start()
 {
-  qDebug();
-  m_op.setConnection( m_session->connection() );
+    qDebug();
+    m_op.setConnection(m_session->connection());
 
-  LdapControls serverctrls, clientctrls;
-  if ( m_session->server().pageSize() ) {
-    LdapControls ctrls = serverctrls;
-    ctrls.append( LdapControl::createPageControl( m_session->server().pageSize() ) );
-    qDebug() << "page size: " << m_session->server().pageSize();
-    m_op.setServerControls( ctrls );
-  } else {
-    m_op.setServerControls( serverctrls );
-  }
-  m_op.setClientControls( clientctrls );
+    LdapControls serverctrls, clientctrls;
+    if (m_session->server().pageSize()) {
+        LdapControls ctrls = serverctrls;
+        ctrls.append(LdapControl::createPageControl(m_session->server().pageSize()));
+        qDebug() << "page size: " << m_session->server().pageSize();
+        m_op.setServerControls(ctrls);
+    } else {
+        m_op.setServerControls(serverctrls);
+    }
+    m_op.setClientControls(clientctrls);
 
-  int ret, id;
-  if ( (id = m_op.search( m_url.dn(), m_url.scope(), m_url.filter(), m_url.attributes() )) == -1 ) {
+    int ret, id;
+    if ((id = m_op.search(m_url.dn(), m_url.scope(), m_url.filter(), m_url.attributes())) == -1) {
 //     LDAPErr();
-    return;
-  }
+        return;
+    }
 
-  QByteArray result;
-  while( true ) {
-    ret = m_op.waitForResult( id, -1 );
-    if ( ret == -1 || m_session->connection().ldapErrorCode() != KLDAP_SUCCESS ) {
+    QByteArray result;
+    while (true) {
+        ret = m_op.waitForResult(id, -1);
+        if (ret == -1 || m_session->connection().ldapErrorCode() != KLDAP_SUCCESS) {
 //       LDAPErr();
-      return;
-    }
-    qDebug() << " ldap_result: " << ret;
-    if ( ret == LdapOperation::RES_SEARCH_RESULT ) {
-
-      if ( m_session->server().pageSize() ) {
-        QByteArray cookie;
-        int estsize = -1;
-        for ( int i = 0; i < m_op.controls().count(); ++i ) {
-          qDebug() << " control oid: " << m_op.controls()[i].oid();
-          estsize = m_op.controls()[i].parsePageControl( cookie );
-          if ( estsize != -1 ) break;
-        }
-        qDebug() << " estimated size: " << estsize;
-        if ( estsize != -1 && !cookie.isEmpty() ) {
-          LdapControls ctrls;
-          ctrls = serverctrls;
-          qDebug() << "page size: " << m_session->server().pageSize() << " estimated size: " << estsize;
-          ctrls.append( LdapControl::createPageControl( m_session->server().pageSize(), cookie ) );
-          m_op.setServerControls( ctrls );
-          if ( (id = m_op.search( m_url.dn(), m_url.scope(), m_url.filter(), m_url.attributes() )) == -1 ) {
-//             LDAPErr();
             return;
-          }
-          continue;
         }
-      }
-      break;
+        qDebug() << " ldap_result: " << ret;
+        if (ret == LdapOperation::RES_SEARCH_RESULT) {
+
+            if (m_session->server().pageSize()) {
+                QByteArray cookie;
+                int estsize = -1;
+                for (int i = 0; i < m_op.controls().count(); ++i) {
+                    qDebug() << " control oid: " << m_op.controls()[i].oid();
+                    estsize = m_op.controls()[i].parsePageControl(cookie);
+                    if (estsize != -1) {
+                        break;
+                    }
+                }
+                qDebug() << " estimated size: " << estsize;
+                if (estsize != -1 && !cookie.isEmpty()) {
+                    LdapControls ctrls;
+                    ctrls = serverctrls;
+                    qDebug() << "page size: " << m_session->server().pageSize() << " estimated size: " << estsize;
+                    ctrls.append(LdapControl::createPageControl(m_session->server().pageSize(), cookie));
+                    m_op.setServerControls(ctrls);
+                    if ((id = m_op.search(m_url.dn(), m_url.scope(), m_url.filter(), m_url.attributes())) == -1) {
+//             LDAPErr();
+                        return;
+                    }
+                    continue;
+                }
+            }
+            break;
+        }
+        if (ret != LdapOperation::RES_SEARCH_ENTRY) {
+            continue;
+        }
+
+        QByteArray entry = m_op.object().toString().toUtf8() + '\n';
+        emit data(entry);
     }
-    if ( ret != LdapOperation::RES_SEARCH_ENTRY ) continue;
 
-    QByteArray entry = m_op.object().toString().toUtf8() + '\n';
-    emit data(entry);
-  }
-
-  emit data( QByteArray() );
-  emitResult();
+    emit data(QByteArray());
+    emitResult();
 }
-
 

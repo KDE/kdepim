@@ -24,31 +24,31 @@
 
 class QTextDocument;
 
-namespace KPIM {
+namespace KPIM
+{
 class LogItemDelegate : public QStyledItemDelegate
 {
 public:
-    explicit LogItemDelegate( QObject *parent );
+    explicit LogItemDelegate(QObject *parent);
     ~LogItemDelegate();
 
-    virtual QSize sizeHint ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-    virtual void paint ( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-    virtual QWidget  *createEditor ( QWidget *, const QStyleOptionViewItem  &, const QModelIndex & ) const;
-
+    virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    virtual QWidget  *createEditor(QWidget *, const QStyleOptionViewItem &, const QModelIndex &) const;
 
 private:
-    QTextDocument* document ( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+    QTextDocument *document(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
 class KDEPIM_EXPORT CustomLogWidget : public QListWidget
 {
 public:
-    explicit CustomLogWidget( QWidget * parent = 0 );
+    explicit CustomLogWidget(QWidget *parent = 0);
     ~CustomLogWidget();
 
-    void addInfoLogEntry( const QString &log );
-    void addErrorLogEntry( const QString &log );
-    void addTitleLogEntry( const QString &log );
+    void addInfoLogEntry(const QString &log);
+    void addErrorLogEntry(const QString &log);
+    void addTitleLogEntry(const QString &log);
     void addEndLineLogEntry();
 
     QString toHtml() const;
@@ -61,7 +61,7 @@ private:
     };
 
     enum LogType {
-        Title=0,
+        Title = 0,
         Error,
         Info,
         EndLine

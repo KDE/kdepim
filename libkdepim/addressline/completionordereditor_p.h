@@ -33,16 +33,17 @@
 
 #include <QtDBus/QDBusAbstractAdaptor>
 
-namespace KPIM {
+namespace KPIM
+{
 
 class CompletionOrderEditorAdaptor : public QDBusAbstractAdaptor
 {
-   Q_OBJECT
-   Q_CLASSINFO("D-Bus Interface", "org.kde.pim.CompletionOrder" )
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.pim.CompletionOrder")
 public:
-   explicit CompletionOrderEditorAdaptor( QObject *parent );
+    explicit CompletionOrderEditorAdaptor(QObject *parent);
 Q_SIGNALS:
-   void completionOrderChanged();
+    void completionOrderChanged();
 };
 
 } // namespace

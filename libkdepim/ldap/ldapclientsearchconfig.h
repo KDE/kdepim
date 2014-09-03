@@ -27,7 +27,8 @@
 class KConfigGroup;
 class KConfig;
 
-namespace KLDAP {
+namespace KLDAP
+{
 class LdapServer;
 class LdapClient;
 class KDEPIM_EXPORT LdapClientSearchConfig : public QObject
@@ -48,8 +49,8 @@ public:
      *
      * @param active Defines whether the active settings shall be read.
      */
-    void readConfig( KLDAP::LdapServer &server, KConfigGroup &group,
-                     int clientNumber, bool active );
+    void readConfig(KLDAP::LdapServer &server, KConfigGroup &group,
+                    int clientNumber, bool active);
 
     /**
      * Writes the LDAP @p server settings to the given config @p group for the
@@ -57,15 +58,15 @@ public:
      *
      * @param active Defines whether the active settings shall be written.
      */
-    void writeConfig( const KLDAP::LdapServer &server, KConfigGroup &group,
-                      int clientNumber, bool active );
+    void writeConfig(const KLDAP::LdapServer &server, KConfigGroup &group,
+                     int clientNumber, bool active);
 private Q_SLOTS:
     void slotWalletClosed();
 
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 }

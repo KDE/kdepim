@@ -58,11 +58,11 @@ void deleteGlobalRecentAddresses()
     s_self = 0;
 }
 
-RecentAddresses *RecentAddresses::self( KConfig *config )
+RecentAddresses *RecentAddresses::self(KConfig *config)
 {
-    if ( !s_self ) {
-        s_self = new RecentAddresses( config );
-        qAddPostRoutine( deleteGlobalRecentAddresses );
+    if (!s_self) {
+        s_self = new RecentAddresses(config);
+        qAddPostRoutine(deleteGlobalRecentAddresses);
     }
     return s_self;
 }
@@ -72,12 +72,12 @@ bool RecentAddresses::exists()
     return s_self != 0;
 }
 
-RecentAddresses::RecentAddresses( KConfig *config )
+RecentAddresses::RecentAddresses(KConfig *config)
 {
-    if ( !config ) {
-        load( KSharedConfig::openConfig().data() );
+    if (!config) {
+        load(KSharedConfig::openConfig().data());
     } else {
-        load( config );
+        load(config);
     }
 }
 
@@ -87,70 +87,70 @@ RecentAddresses::~RecentAddresses()
     // on s_self
 }
 
-void RecentAddresses::load( KConfig *config )
+void RecentAddresses::load(KConfig *config)
 {
     QStringList addresses;
     QString name;
     QString email;
 
     m_addresseeList.clear();
-    KConfigGroup cg( config, "General" );
-    m_maxCount = cg.readEntry( "Maximum Recent Addresses", 40 );
-    addresses = cg.readEntry( "Recent Addresses", QStringList() );
-    QStringList::ConstIterator end( addresses.constEnd() );
-    for ( QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it ) {
-        KABC::Addressee::parseEmailAddress( *it, name, email );
-        if ( !email.isEmpty() ) {
+    KConfigGroup cg(config, "General");
+    m_maxCount = cg.readEntry("Maximum Recent Addresses", 40);
+    addresses = cg.readEntry("Recent Addresses", QStringList());
+    QStringList::ConstIterator end(addresses.constEnd());
+    for (QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it) {
+        KABC::Addressee::parseEmailAddress(*it, name, email);
+        if (!email.isEmpty()) {
             KABC::Addressee addr;
-            addr.setNameFromString( name );
-            addr.insertEmail( email, true );
-            m_addresseeList.append( addr );
+            addr.setNameFromString(name);
+            addr.insertEmail(email, true);
+            m_addresseeList.append(addr);
         }
     }
 
     adjustSize();
 }
 
-void RecentAddresses::save( KConfig *config )
+void RecentAddresses::save(KConfig *config)
 {
-    KConfigGroup cg( config, "General" );
-    cg.writeEntry( "Recent Addresses", addresses() );
+    KConfigGroup cg(config, "General");
+    cg.writeEntry("Recent Addresses", addresses());
 }
 
-void RecentAddresses::add( const QString &entry )
+void RecentAddresses::add(const QString &entry)
 {
-    if ( !entry.isEmpty() && m_maxCount > 0 ) {
-        const QStringList list = KPIMUtils::splitAddressList( entry );
-        QStringList::const_iterator e_itEnd( list.constEnd() );
-        for ( QStringList::const_iterator e_it = list.constBegin(); e_it != e_itEnd; ++e_it ) {
-            KPIMUtils::EmailParseResult errorCode = KPIMUtils::isValidAddress( *e_it );
-            if ( errorCode != KPIMUtils::AddressOk ) {
+    if (!entry.isEmpty() && m_maxCount > 0) {
+        const QStringList list = KPIMUtils::splitAddressList(entry);
+        QStringList::const_iterator e_itEnd(list.constEnd());
+        for (QStringList::const_iterator e_it = list.constBegin(); e_it != e_itEnd; ++e_it) {
+            KPIMUtils::EmailParseResult errorCode = KPIMUtils::isValidAddress(*e_it);
+            if (errorCode != KPIMUtils::AddressOk) {
                 continue;
             }
             QString email;
             QString fullName;
             KABC::Addressee addr;
 
-            KABC::Addressee::parseEmailAddress( *e_it, fullName, email );
+            KABC::Addressee::parseEmailAddress(*e_it, fullName, email);
 
-            KABC::Addressee::List::Iterator end( m_addresseeList.end() );
-            for ( KABC::Addressee::List::Iterator it = m_addresseeList.begin();
-                  it != end; ++it ) {
-                if ( email == (*it).preferredEmail() ) {
+            KABC::Addressee::List::Iterator end(m_addresseeList.end());
+            for (KABC::Addressee::List::Iterator it = m_addresseeList.begin();
+                    it != end; ++it) {
+                if (email == (*it).preferredEmail()) {
                     //already inside, remove it here and add it later at pos==1
-                    m_addresseeList.erase( it );
+                    m_addresseeList.erase(it);
                     break;
                 }
             }
-            addr.setNameFromString( fullName );
-            addr.insertEmail( email, true );
-            m_addresseeList.prepend( addr );
+            addr.setNameFromString(fullName);
+            addr.insertEmail(email, true);
+            m_addresseeList.prepend(addr);
             adjustSize();
         }
     }
 }
 
-void RecentAddresses::setMaxCount( int count )
+void RecentAddresses::setMaxCount(int count)
 {
     if (count != m_maxCount) {
         m_maxCount = count;
@@ -160,7 +160,7 @@ void RecentAddresses::setMaxCount( int count )
 
 void RecentAddresses::adjustSize()
 {
-    while ( m_addresseeList.count() > m_maxCount ) {
+    while (m_addresseeList.count() > m_maxCount) {
         m_addresseeList.takeLast();
     }
 }
@@ -175,18 +175,18 @@ QStringList RecentAddresses::addresses() const
 {
     QStringList addresses;
     KABC::Addressee::List::ConstIterator end = m_addresseeList.constEnd();
-    for ( KABC::Addressee::List::ConstIterator it = m_addresseeList.constBegin();
-          it != end; ++it ) {
-        addresses.append( (*it).fullEmail() );
+    for (KABC::Addressee::List::ConstIterator it = m_addresseeList.constBegin();
+            it != end; ++it) {
+        addresses.append((*it).fullEmail());
     }
     return addresses;
 }
 
-RecentAddressDialog::RecentAddressDialog( QWidget *parent )
-    : QDialog( parent )
+RecentAddressDialog::RecentAddressDialog(QWidget *parent)
+    : QDialog(parent)
 {
-    setWindowTitle( i18n( "Edit Recent Addresses" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Edit Recent Addresses"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -197,12 +197,12 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
     connect(buttonBox, &QDialogButtonBox::accepted, this, &RecentAddressDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &RecentAddressDialog::reject);
     okButton->setDefault(true);
-    setModal( true );
-    QWidget *page = new QWidget( this );
+    setModal(true);
+    QWidget *page = new QWidget(this);
 
-    QVBoxLayout *layout = new QVBoxLayout( page );
+    QVBoxLayout *layout = new QVBoxLayout(page);
     //PORT QT5 layout->setSpacing( spacingHint() );
-    layout->setMargin( 0 );
+    layout->setMargin(0);
 
     mLineEdit = new KLineEdit(this);
     layout->addWidget(mLineEdit);
@@ -213,20 +213,18 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
     connect(mLineEdit, &KLineEdit::textChanged, this, &RecentAddressDialog::slotTypedSomething);
     connect(mLineEdit, &KLineEdit::returnPressed, this, &RecentAddressDialog::slotAddItem);
 
+    QHBoxLayout *hboxLayout = new QHBoxLayout;
 
-    QHBoxLayout* hboxLayout = new QHBoxLayout;
-
-    QVBoxLayout* btnsLayout = new QVBoxLayout;
+    QVBoxLayout *btnsLayout = new QVBoxLayout;
     btnsLayout->addStretch();
     mNewButton = new QPushButton(QIcon::fromTheme(QLatin1String("list-add")), i18n("&Add"), this);
     connect(mNewButton, &QPushButton::clicked, this, &RecentAddressDialog::slotAddItem);
-    btnsLayout->insertWidget(0 ,mNewButton);
+    btnsLayout->insertWidget(0 , mNewButton);
 
     mRemoveButton = new QPushButton(QIcon::fromTheme(QLatin1String("list-remove")), i18n("&Remove"), this);
     mRemoveButton->setEnabled(false);
     connect(mRemoveButton, &QPushButton::clicked, this, &RecentAddressDialog::slotRemoveItem);
     btnsLayout->insertWidget(1, mRemoveButton);
-
 
     mListView = new QListWidget(this);
     mListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -237,10 +235,9 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
     connect(mListView, SIGNAL(itemSelectionChanged()),
             SLOT(slotSelectionChanged()));
     // maybe supplied lineedit has some text already
-    slotTypedSomething( mLineEdit->text() );
+    slotTypedSomething(mLineEdit->text());
     mainLayout->addWidget(page);
     mainLayout->addWidget(buttonBox);
-
 
     readConfig();
 }
@@ -250,7 +247,7 @@ RecentAddressDialog::~RecentAddressDialog()
     writeConfig();
 }
 
-void RecentAddressDialog::slotTypedSomething(const QString& text)
+void RecentAddressDialog::slotTypedSomething(const QString &text)
 {
     if (mListView->currentItem()) {
         if (mListView->currentItem()->text() != mLineEdit->text() && !mLineEdit->text().isEmpty()) {
@@ -258,12 +255,12 @@ void RecentAddressDialog::slotTypedSomething(const QString& text)
             // of currentItem() ... like changing it or emitting signals ...
             // but TT disagree with me on this one (it's been that way since ages ... grrr)
             bool block = mListView->signalsBlocked();
-            mListView->blockSignals( true );
+            mListView->blockSignals(true);
             QListWidgetItem *currentIndex = mListView->currentItem();
-            if ( currentIndex ) {
+            if (currentIndex) {
                 currentIndex->setText(text);
             }
-            mListView->blockSignals( block );
+            mListView->blockSignals(block);
         }
     }
 }
@@ -281,10 +278,11 @@ void RecentAddressDialog::slotAddItem()
 void RecentAddressDialog::slotRemoveItem()
 {
     QList<QListWidgetItem *> selectedItems = mListView->selectedItems();
-    if (selectedItems.isEmpty())
+    if (selectedItems.isEmpty()) {
         return;
+    }
     if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18np("Do you want to remove this email?", "Do you want to remove %1 emails?", selectedItems.count()), i18n("Remove"))) {
-        Q_FOREACH(QListWidgetItem *item, selectedItems) {
+        Q_FOREACH (QListWidgetItem *item, selectedItems) {
             delete mListView->takeItem(mListView->row(item));
         }
         updateButtonState();
@@ -301,8 +299,9 @@ void RecentAddressDialog::updateButtonState()
 
     if (numberOfElementSelected == 1) {
         const QString text = mListView->currentItem()->text();
-        if (text != mLineEdit->text())
+        if (text != mLineEdit->text()) {
             mLineEdit->setText(text);
+        }
     } else {
         mLineEdit->clear();
     }
@@ -313,29 +312,29 @@ void RecentAddressDialog::slotSelectionChanged()
     updateButtonState();
 }
 
-void RecentAddressDialog::setAddresses( const QStringList &addrs )
+void RecentAddressDialog::setAddresses(const QStringList &addrs)
 {
     mListView->clear();
-    mListView->addItems( addrs );
+    mListView->addItems(addrs);
 }
 
 QStringList RecentAddressDialog::addresses() const
 {
     QStringList lst;
     const int numberOfItem(mListView->count());
-    for(int i = 0; i < numberOfItem; ++i) {
-        lst<<mListView->item(i)->text();
+    for (int i = 0; i < numberOfItem; ++i) {
+        lst << mListView->item(i)->text();
     }
     return lst;
 }
 
-bool RecentAddressDialog::eventFilter( QObject* o, QEvent* e )
+bool RecentAddressDialog::eventFilter(QObject *o, QEvent *e)
 {
-    if (o == mLineEdit && e->type() == QEvent::KeyPress ) {
-        QKeyEvent* keyEvent = (QKeyEvent*)e;
+    if (o == mLineEdit && e->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = (QKeyEvent *)e;
         if (keyEvent->key() == Qt::Key_Down ||
                 keyEvent->key() == Qt::Key_Up) {
-            return ((QObject*)mListView)->event(e);
+            return ((QObject *)mListView)->event(e);
         }
     }
 
@@ -346,25 +345,23 @@ void RecentAddressDialog::addAddresses(KConfig *config)
 {
     const int numberOfItem(mListView->count());
     for (int i = 0; i < numberOfItem; ++i) {
-        KPIM::RecentAddresses::self( config )->add( mListView->item(i)->text() );
+        KPIM::RecentAddresses::self(config)->add(mListView->item(i)->text());
     }
 }
 
 void RecentAddressDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "RecentAddressDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "RecentAddressDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void RecentAddressDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "RecentAddressDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "RecentAddressDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }
-
-
 

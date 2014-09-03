@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "progressstatusbarwidget.h"
 
 #include "statusbarprogresswidget.h"
@@ -26,11 +25,11 @@ using namespace KPIM;
 ProgressStatusBarWidget::ProgressStatusBarWidget(QWidget *alignWidget, QWidget *parent, unsigned int showTypeProgressItem)
     : QObject(parent)
 {
-    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( alignWidget, parent );
+    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog(alignWidget, parent);
     progressDialog->setShowTypeProgressItem(showTypeProgressItem);
     progressDialog->hide();
 
-    mLittleProgress = new KPIM::StatusbarProgressWidget( progressDialog, alignWidget );
+    mLittleProgress = new KPIM::StatusbarProgressWidget(progressDialog, alignWidget);
     mLittleProgress->setShowTypeProgressItem(showTypeProgressItem);
     mLittleProgress->show();
 }

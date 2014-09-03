@@ -5,7 +5,7 @@
     Refactored from earlier code by:
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
-    
+
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
     the Free Software Foundation; either version 2 of the License, or (at your
@@ -28,41 +28,40 @@
 
 using namespace KPIM;
 
-MultiplyingLine::MultiplyingLine( QWidget *parent ) : QWidget( parent )
+MultiplyingLine::MultiplyingLine(QWidget *parent) : QWidget(parent)
 {
 }
 
 void MultiplyingLine::slotReturnPressed()
 {
-    emit returnPressed( this );
+    emit returnPressed(this);
 }
 
 void MultiplyingLine::slotPropagateDeletion()
 {
-    emit deleteLine( this );
+    emit deleteLine(this);
 }
 
 void MultiplyingLine::slotFocusUp()
 {
-    emit upPressed( this );
+    emit upPressed(this);
 }
 
 void MultiplyingLine::slotFocusDown()
 {
-    emit downPressed( this );
+    emit downPressed(this);
 }
 
-void MultiplyingLine::keyPressEvent( QKeyEvent* ev )
+void MultiplyingLine::keyPressEvent(QKeyEvent *ev)
 {
-    if ( ev->key() == Qt::Key_Up ) {
-        emit upPressed( this );
-    } else if ( ev->key() == Qt::Key_Down ) {
-        emit downPressed( this );
+    if (ev->key() == Qt::Key_Up) {
+        emit upPressed(this);
+    } else if (ev->key() == Qt::Key_Down) {
+        emit downPressed(this);
     }
 }
 
 void MultiplyingLine::aboutToBeDeleted()
 {
 }
-
 

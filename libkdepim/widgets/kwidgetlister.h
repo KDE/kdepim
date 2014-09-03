@@ -36,7 +36,8 @@
 #include "kdepim_export.h"
 #include <QWidget>
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
   @short Widget that manages a list of other widgets (incl. 'more', 'fewer' and 'clear' buttons).
@@ -73,7 +74,7 @@ public:
      * @param maxWidgets The maximum number of widgets to stay on the screen.
      * @param parent The parent widget.
      */
-    explicit KWidgetLister( int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0 );
+    explicit KWidgetLister(int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0);
 
     /**
      * Creates a new widget lister.
@@ -82,7 +83,7 @@ public:
      * @param maxWidgets The maximum number of widgets to stay on the screen.
      * @param parent The parent widget.
      */
-    explicit KWidgetLister( bool fewerMoreButton, int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0 );
+    explicit KWidgetLister(bool fewerMoreButton, int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0);
 
     /**
      * Destroys the widget lister.
@@ -128,7 +129,7 @@ protected:
      * from derived classes (@p mLayout is private).
      * Make sure the parent of the QWidget to add is this KWidgetLister.
      */
-    virtual void addWidgetAtEnd( QWidget *widget = 0 );
+    virtual void addWidgetAtEnd(QWidget *widget = 0);
 
     /**
      * Removes a single (always the last) widget. Doesn't care if there
@@ -145,25 +146,25 @@ protected:
      * Called to clear a given widget. The default implementation does
      * nothing.
      */
-    virtual void clearWidget( QWidget *w );
+    virtual void clearWidget(QWidget *w);
 
     /**
      * Returns a new widget that shall be added to the lister.
      *
      * @param parent The parent widget of the new widget.
      */
-    virtual QWidget *createWidget( QWidget *parent );
+    virtual QWidget *createWidget(QWidget *parent);
 
     /**
      * Sets the number of widgets on scrren to exactly @p count. Doesn't
      * check if @p count is inside the range @p [mMinWidgets,mMaxWidgets].
      */
-    virtual void setNumberOfShownWidgetsTo( int count );
+    virtual void setNumberOfShownWidgetsTo(int count);
 
     /**
      * Returns the list of widgets.
      */
-    QList<QWidget*> widgets() const;
+    QList<QWidget *> widgets() const;
 
     /**
      * The minimum number of widgets that are to stay on screen.
@@ -178,14 +179,14 @@ protected:
     /**
      * Remove specific widget
      */
-    virtual void removeWidget(QWidget*widget);
+    virtual void removeWidget(QWidget *widget);
     /**
      * Add widget after specific widget
      */
-    virtual void addWidgetAfterThisWidget(QWidget*currentWidget, QWidget* widget = 0);
+    virtual void addWidgetAfterThisWidget(QWidget *currentWidget, QWidget *widget = 0);
 
 private:
-    void init( bool fewerMoreButton = true );
+    void init(bool fewerMoreButton = true);
 
 Q_SIGNALS:
     /**
@@ -198,7 +199,7 @@ Q_SIGNALS:
      *
      * @param widget The added widget.
      */
-    void widgetAdded( QWidget *widget );
+    void widgetAdded(QWidget *widget);
 
     /**
      * This signal is emitted whenever a widget was removed.
@@ -208,7 +209,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted whenever a widget was removed.
      */
-    void widgetRemoved( QWidget *widget );
+    void widgetRemoved(QWidget *widget);
 
     /**
      * This signal is emitted whenever the clear button is clicked.
@@ -218,7 +219,7 @@ Q_SIGNALS:
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

@@ -26,7 +26,6 @@
  *  your version.
  */
 
-
 #include "selectedcollectiondialog.h"
 
 #include <KLocalizedString>
@@ -35,19 +34,20 @@
 #include <kabc/addressee.h>
 #include <KSharedConfig>
 
-namespace KPIM {
+namespace KPIM
+{
 
 SelectedCollectionDialog::SelectedCollectionDialog(QWidget *parent)
-    : Akonadi::CollectionDialog (parent)
+    : Akonadi::CollectionDialog(parent)
 {
-    const QStringList mimeTypes( KABC::Addressee::mimeType() );
-    setMimeTypeFilter( mimeTypes );
-    setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    setCaption( i18nc( "@title:window", "Select Address Book" ) );
+    const QStringList mimeTypes(KABC::Addressee::mimeType());
+    setMimeTypeFilter(mimeTypes);
+    setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+    setCaption(i18nc("@title:window", "Select Address Book"));
     setDescription(
-                i18nc( "@info",
-                       "Select the address book where the contact will be saved:" ) );
-    changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
+        i18nc("@info",
+              "Select the address book where the contact will be saved:"));
+    changeCollectionDialogOptions(Akonadi::CollectionDialog::KeepTreeExpanded);
     readConfig();
 }
 
@@ -58,17 +58,17 @@ SelectedCollectionDialog::~SelectedCollectionDialog()
 
 void SelectedCollectionDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SelectedCollectionDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectedCollectionDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void SelectedCollectionDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SelectedCollectionDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectedCollectionDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }
 }

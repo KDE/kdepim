@@ -27,18 +27,18 @@
 #include <qdialog.h>
 #include <QPushButton>
 
-QDialogButtonBox::StandardButton PIMMessageBox::fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
-                                  const QString &text,
-                                  const QString &caption,
-                                  const QString &button1Text,
-                                  const QString &button2Text,
-                                  const QString &button3Text,
-                                  KMessageBox::Options options )
+QDialogButtonBox::StandardButton PIMMessageBox::fourBtnMsgBox(QWidget *parent, QMessageBox::Icon type,
+        const QString &text,
+        const QString &caption,
+        const QString &button1Text,
+        const QString &button2Text,
+        const QString &button3Text,
+        KMessageBox::Options options)
 {
-    QDialog *dialog= new QDialog( parent );
-    dialog->setWindowTitle( caption );
-    QDialogButtonBox *box = new QDialogButtonBox( QDialogButtonBox::Yes|QDialogButtonBox::No|QDialogButtonBox::Cancel|QDialogButtonBox::Ok, parent );
-    dialog->setObjectName( QLatin1String("PIMMessageBox") );
+    QDialog *dialog = new QDialog(parent);
+    dialog->setWindowTitle(caption);
+    QDialogButtonBox *box = new QDialogButtonBox(QDialogButtonBox::Yes | QDialogButtonBox::No | QDialogButtonBox::Cancel | QDialogButtonBox::Ok, parent);
+    dialog->setObjectName(QLatin1String("PIMMessageBox"));
     box->button(QDialogButtonBox::Ok)->setText(button3Text);
     box->button(QDialogButtonBox::Yes)->setText(button1Text);
     box->button(QDialogButtonBox::No)->setText(button2Text);
@@ -46,6 +46,6 @@ QDialogButtonBox::StandardButton PIMMessageBox::fourBtnMsgBox( QWidget *parent, 
 
     bool checkboxResult = false;
     QDialogButtonBox::StandardButton result = KMessageBox::createKMessageBox(
-                dialog, box, type, text, QStringList(), QString(), &checkboxResult, options );
+                dialog, box, type, text, QStringList(), QString(), &checkboxResult, options);
     return result;
 }

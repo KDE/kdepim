@@ -28,52 +28,52 @@
 
 class KJob;
 
-namespace KLDAP {
+namespace KLDAP
+{
 
 class LdapServer;
 class LdapQueryJob;
 
-
 class LdapSession : public QThread
 {
-  Q_OBJECT
-  public:
-    explicit LdapSession( QObject * parent = 0 );
+    Q_OBJECT
+public:
+    explicit LdapSession(QObject *parent = 0);
 
     /// call this instead of start()
-    void connectToServer( const LdapServer &server );
+    void connectToServer(const LdapServer &server);
     /// call this instead of the dtor
     void disconnectAndDelete();
 
-    LdapQueryJob* get( const LdapUrl &url );
+    LdapQueryJob *get(const LdapUrl &url);
 
     LdapServer server() const;
-    LdapConnection& connection();
+    LdapConnection &connection();
 
-  protected:
+protected:
     void connectToServerInternal();
     void disconnectFromServerInternal();
     void run();
 
-  private:
+private:
     void authenticate();
 
-  private slots:
+private slots:
     void executeNext();
-    void jobDone( KJob* job );
+    void jobDone(KJob *job);
 
-  private:
+private:
     enum State {
-      Disconnected,
-      Connected,
-      Authenticated
+        Disconnected,
+        Connected,
+        Authenticated
     };
     State m_state;
     LdapConnection m_conn;
     LdapServer m_server;
     QMutex m_mutex;
-    QQueue<LdapQueryJob*> m_jobQueue;
-    LdapQueryJob* m_currentJob;
+    QQueue<LdapQueryJob *> m_jobQueue;
+    LdapQueryJob *m_currentJob;
 };
 
 }

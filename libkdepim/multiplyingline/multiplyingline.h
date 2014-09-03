@@ -31,7 +31,8 @@
 #include <QWidget>
 #include <QSharedPointer>
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
   @short ABC representing line data
@@ -41,7 +42,7 @@ class KDEPIM_EXPORT MultiplyingLineData
 {
 public:
     typedef QSharedPointer<MultiplyingLineData> Ptr;
-    virtual ~MultiplyingLineData(){}
+    virtual ~MultiplyingLineData() {}
 
     /**
       Clear data, reset to defaults
@@ -65,7 +66,7 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
 
     Q_OBJECT
 public:
-    explicit MultiplyingLine( QWidget *parent );
+    explicit MultiplyingLine(QWidget *parent);
     virtual ~MultiplyingLine() {}
 
     /**
@@ -102,7 +103,7 @@ public:
       populated accordingly.
       @param data the data to populate this line wit
     */
-    virtual void setData( const MultiplyingLineData::Ptr &data ) = 0;
+    virtual void setData(const MultiplyingLineData::Ptr &data) = 0;
 
     /**
       Whether this line is empty or not. Usually there is a primary widget
@@ -118,7 +119,7 @@ public:
       @param w the width to set the left most column to.
       @return the width that is actually being used.
     */
-    virtual int setColumnWidth( int w ) = 0;
+    virtual int setColumnWidth(int w) = 0;
 
     /**
       Used to set setup the correct chain of widgets to focus on
@@ -133,7 +134,7 @@ public:
         setTabOrder( mMiddle, mRightMost);
       }
       */
-    virtual void fixTabOrder( QWidget *previous ) = 0;
+    virtual void fixTabOrder(QWidget *previous) = 0;
 
     /**
       @return The final widget in this line on which if the user presses
@@ -152,7 +153,7 @@ public:
       Sets the type of completion to be used for KLineEdits in this line
       @param mode the completion mode
       */
-    virtual void setCompletionMode( KCompletion::CompletionMode mode ) = 0;
+    virtual void setCompletionMode(KCompletion::CompletionMode mode) = 0;
 
     /**
       If the view is resized while the completion popup is open, things might start
@@ -181,15 +182,15 @@ signals:
     /**
       Emitted when the return/enter key is pressed
     */
-    void returnPressed( KPIM::MultiplyingLine * );
+    void returnPressed(KPIM::MultiplyingLine *);
     /**
       Emitted when the down key is pressed
     */
-    void downPressed( KPIM::MultiplyingLine * );
+    void downPressed(KPIM::MultiplyingLine *);
     /**
       Emitted when the up key is pressed
     */
-    void upPressed( KPIM::MultiplyingLine * );
+    void upPressed(KPIM::MultiplyingLine *);
     /**
       Emitted when the right key is pressed
     */
@@ -197,11 +198,11 @@ signals:
     /**
       Should be emitted when the line should be deleted
       */
-    void deleteLine( KPIM::MultiplyingLine * );
+    void deleteLine(KPIM::MultiplyingLine *);
     /**
       Emitted when the completion mode changes
     */
-    void completionModeChanged( KCompletion::CompletionMode );
+    void completionModeChanged(KCompletion::CompletionMode);
 public slots:
     void slotPropagateDeletion();
 
@@ -210,13 +211,12 @@ protected slots:
     void slotFocusUp();
     void slotFocusDown();
 
-
 protected:
     /**
       Handles key press events on this line.
       Default behavior handles Up and Down presses.
     */
-    virtual void keyPressEvent( QKeyEvent * );
+    virtual void keyPressEvent(QKeyEvent *);
 };
 
 }

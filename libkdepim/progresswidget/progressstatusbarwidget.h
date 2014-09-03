@@ -15,14 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef PROGRESSSTATUSBARWIDGET_H
 #define PROGRESSSTATUSBARWIDGET_H
 
 #include <QObject>
 #include "kdepim_export.h"
 
-namespace KPIM {
+namespace KPIM
+{
 class StatusbarProgressWidget;
 class KDEPIM_EXPORT ProgressStatusBarWidget : public QObject
 {

@@ -29,7 +29,8 @@
 #include <QBitArray>
 #include <QDate>
 
-namespace KPIM {
+namespace KPIM
+{
 
 //FIXME: This class assumes all weeks have 7 days. We should use KCalenderSystem instead.
 /**
@@ -46,7 +47,7 @@ public:
     /**
     * @param first5Checked if true the first 5 weekdays will be checked by default
     */
-    explicit KWeekdayCheckCombo( QWidget *parent = 0, bool first5Checked = false );
+    explicit KWeekdayCheckCombo(QWidget *parent = 0, bool first5Checked = false);
     virtual ~KWeekdayCheckCombo();
 
     /**
@@ -61,13 +62,13 @@ public:
      * @param disableDays if not empty, the corresponding days will be disabled, all others enabled (bit 0 = Monday, value 1 = disable).
      * @see days()
      */
-    void setDays( const QBitArray &days, const QBitArray &disableDays = QBitArray() );
+    void setDays(const QBitArray &days, const QBitArray &disableDays = QBitArray());
 
     /**
      * Returns the index of the weekday represented by the
      * QDate object.
      */
-    int weekdayIndex( const QDate &date ) const;
+    int weekdayIndex(const QDate &date) const;
 };
 
 }

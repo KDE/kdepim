@@ -34,7 +34,8 @@
 
 #include <QLabel>
 
-namespace KPIM {
+namespace KPIM
+{
 
 class SSLLabel : public QLabel
 {
@@ -46,10 +47,10 @@ public:
         Done,
         Unknown
     };
-    explicit SSLLabel( QWidget* parent );
+    explicit SSLLabel(QWidget *parent);
 
-    void setEncrypted( State enc = Encrypted );
-    void setState( State state );
+    void setEncrypted(State enc = Encrypted);
+    void setState(State state);
     State lastState() const;
 
 private:

@@ -34,7 +34,8 @@
 
 class QUrl;
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
  * @defgroup maildnd Mail drag and drop
@@ -59,13 +60,13 @@ namespace KPIM {
 class KDEPIM_EXPORT MailSummary
 {
 public:
-    MailSummary( quint32 serialNumber, const QString &messageId, const QString &subject,
-                 const QString &from, const QString &to, time_t date );
+    MailSummary(quint32 serialNumber, const QString &messageId, const QString &subject,
+                const QString &from, const QString &to, time_t date);
     MailSummary() {}
     ~MailSummary() {}
 
     /** Set fields for this mail summary  */
-    void set( quint32, const QString&, const QString&, const QString&, const QString&, time_t );
+    void set(quint32, const QString &, const QString &, const QString &, const QString &, time_t);
 
     /** KMail unique identification number */
     quint32 serialNumber() const;
@@ -86,8 +87,8 @@ public:
     time_t date() const;
 
     //KDE_DUMMY_COMPARISON_OPERATOR(MailSummary)
-    private:
-        quint32 mSerialNumber;
+private:
+    quint32 mSerialNumber;
     QString mMessageId, mSubject, mFrom, mTo;
     time_t mDate;
 };
@@ -98,8 +99,9 @@ public:
 /**
   Object for the drag object to call-back for message fulltext.
 */
-class KDEPIM_EXPORT MailTextSource {
-    public:
+class KDEPIM_EXPORT MailTextSource
+{
+public:
     MailTextSource() {}
     virtual ~MailTextSource() {}
 
@@ -113,11 +115,11 @@ class KDEPIM_EXPORT MailList : public QList<MailSummary>
 {
 public:
     static QString mimeDataType();
-    static bool canDecode( const QMimeData*md );
-    static MailList fromMimeData( const QMimeData*md );
-    static QByteArray serialsFromMimeData( const QMimeData *md );
-    static MailList decode( const QByteArray& payload );
-    void populateMimeData( QMimeData*md );
+    static bool canDecode(const QMimeData *md);
+    static MailList fromMimeData(const QMimeData *md);
+    static QByteArray serialsFromMimeData(const QMimeData *md);
+    static MailList decode(const QByteArray &payload);
+    void populateMimeData(QMimeData *md);
 };
 
 /**
@@ -144,7 +146,7 @@ public:
      *            This object takes ownership of src and deletes it in the
      *            destructor.
      */
-    explicit MailListMimeData( MailTextSource *src = 0 );
+    explicit MailListMimeData(MailTextSource *src = 0);
 
     ~MailListMimeData();
 
@@ -154,12 +156,12 @@ protected:
      * Reimplemented so that the message/rfc822 mimetype data can be retrieved
      * from mMailTextSource.
      */
-    virtual QVariant retrieveData( const QString & mimeType,
-                                   QVariant::Type type ) const;
+    virtual QVariant retrieveData(const QString &mimeType,
+                                  QVariant::Type type) const;
 
-    virtual bool hasFormat ( const QString & mimeType ) const;
+    virtual bool hasFormat(const QString &mimeType) const;
 
-    virtual QStringList formats () const;
+    virtual QStringList formats() const;
 
 private:
 

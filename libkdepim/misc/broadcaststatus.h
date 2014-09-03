@@ -28,7 +28,8 @@
 
 #undef None
 
-namespace KPIM {
+namespace KPIM
+{
 
 class ProgressItem;
 
@@ -49,38 +50,41 @@ public:
     static BroadcastStatus *instance();
 
     /** Return the last status message from setStatusMsg() */
-    QString statusMsg() const { return mStatusMsg; }
+    QString statusMsg() const
+    {
+        return mStatusMsg;
+    }
 
     /** Sets a status bar message with timestamp */
-    void setStatusMsgWithTimestamp( const QString &message );
+    void setStatusMsgWithTimestamp(const QString &message);
 
     /** Sets a transmission completed status bar message */
-    void setStatusMsgTransmissionCompleted( int numMessages,
-                                            int numBytes = -1,
-                                            int numBytesRead = -1,
-                                            int numBytesToRead = -1,
-                                            bool mLeaveOnServer = false,
-                                            KPIM::ProgressItem *progressItem = 0 );
-    void setStatusMsgTransmissionCompleted( const QString &account,
-                                            int numMessages,
-                                            int numBytes = -1,
-                                            int numBytesRead = -1,
-                                            int numBytesToRead = -1,
-                                            bool mLeaveOnServer = false,
-                                            KPIM::ProgressItem *progressItem = 0 );
+    void setStatusMsgTransmissionCompleted(int numMessages,
+                                           int numBytes = -1,
+                                           int numBytesRead = -1,
+                                           int numBytesToRead = -1,
+                                           bool mLeaveOnServer = false,
+                                           KPIM::ProgressItem *progressItem = 0);
+    void setStatusMsgTransmissionCompleted(const QString &account,
+                                           int numMessages,
+                                           int numBytes = -1,
+                                           int numBytesRead = -1,
+                                           int numBytesToRead = -1,
+                                           bool mLeaveOnServer = false,
+                                           KPIM::ProgressItem *progressItem = 0);
 
 public Q_SLOTS:
     /**
       Emit an update status bar signal. It's a slot so it can be hooked up
       to other signals.
     */
-    void setStatusMsg( const QString &message );
+    void setStatusMsg(const QString &message);
 
     /**
       Set a status message that will go away again with the next call of
       reset().
     */
-    void setTransientStatusMsg( const QString &msg );
+    void setTransientStatusMsg(const QString &msg);
 
     /**
       Reset the status message to what ever non-transient message was last
@@ -90,7 +94,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     /** Emitted when setStatusMsg is called. */
-    void statusMsg( const QString & );
+    void statusMsg(const QString &);
 
 protected:
     BroadcastStatus();

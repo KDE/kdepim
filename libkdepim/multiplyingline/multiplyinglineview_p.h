@@ -28,18 +28,18 @@
 #include "multiplyingline.h"
 #include "multiplyinglineeditor.h"
 
-
 #include <QPointer>
 #include <QScrollArea>
 
-namespace KPIM {
+namespace KPIM
+{
 
 class MultiplyingLineView : public QScrollArea
 {
     Q_OBJECT
 public:
-    MultiplyingLineView( MultiplyingLineFactory* factory, MultiplyingLineEditor *parent );
-    ~MultiplyingLineView(){}
+    MultiplyingLineView(MultiplyingLineFactory *factory, MultiplyingLineEditor *parent);
+    ~MultiplyingLineView() {}
 
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
@@ -53,7 +53,7 @@ public:
     /** Removes data provided it can be found. The Data class must support operator==
         @param data The data you want to remove.
     */
-    void removeData( const MultiplyingLineData::Ptr &data );
+    void removeData(const MultiplyingLineData::Ptr &data);
 
     /** Returns true if the user has made any modifications to the list of
         recipients.
@@ -66,7 +66,7 @@ public:
     void clearModified();
 
     /** Activates the line */
-    void activateLine( MultiplyingLine *line );
+    void activateLine(MultiplyingLine *line);
 
     /**QScrollArea
       * Set the width of the left most column to be the argument width.
@@ -74,26 +74,26 @@ public:
       * by communicating how many pixels that first column is for them.
       * Returns the width that is actually being used.
       */
-    int setFirstColumnWidth( int );
+    int setFirstColumnWidth(int);
 
     /**
      Make this widget follow it's children's size
      @param resize turn on or off this behavior of auto resizing
      */
-    void setAutoResize( bool resize );
+    void setAutoResize(bool resize);
     bool autoResize();
 
     /**
      * Sets whether the size hint of the editor shall be calculated
      * dynamically by the number of lines. Default is @c true.
      */
-    void setDynamicSizeHint( bool dynamic );
+    void setDynamicSizeHint(bool dynamic);
     bool dynamicSizeHint() const;
 
-    QList<MultiplyingLine*> lines() const;
+    QList<MultiplyingLine *> lines() const;
 
 public slots:
-    void setCompletionMode( KCompletion::CompletionMode mode );
+    void setCompletionMode(KCompletion::CompletionMode mode);
     MultiplyingLine *addLine();
 
     void setFocus();
@@ -104,26 +104,26 @@ signals:
     void focusUp();
     void focusDown();
     void focusRight();
-    void completionModeChanged( KCompletion::CompletionMode );
+    void completionModeChanged(KCompletion::CompletionMode);
     void sizeHintChanged();
-    void lineDeleted( int pos );
-    void lineAdded( KPIM::MultiplyingLine * );
+    void lineDeleted(int pos);
+    void lineAdded(KPIM::MultiplyingLine *);
 
 protected:
-    void resizeEvent( QResizeEvent * );
+    void resizeEvent(QResizeEvent *);
     void resizeView();
 
 protected slots:
-    void slotReturnPressed( KPIM::MultiplyingLine * );
-    void slotDownPressed( KPIM::MultiplyingLine * );
-    void slotUpPressed( KPIM::MultiplyingLine * );
-    void slotDecideLineDeletion( KPIM::MultiplyingLine * );
+    void slotReturnPressed(KPIM::MultiplyingLine *);
+    void slotDownPressed(KPIM::MultiplyingLine *);
+    void slotUpPressed(KPIM::MultiplyingLine *);
+    void slotDecideLineDeletion(KPIM::MultiplyingLine *);
     void slotDeleteLine();
     void moveCompletionPopup();
     void moveScrollBarToEnd();
 
 private:
-    QList<MultiplyingLine*> mLines;
+    QList<MultiplyingLine *> mLines;
     QPointer<MultiplyingLine> mCurDelLine;
     int mLineHeight;
     int mFirstColumnWidth;

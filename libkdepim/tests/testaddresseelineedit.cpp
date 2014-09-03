@@ -32,31 +32,31 @@
 
 #include "../addressline/addresseelineedit.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-  KAboutData aboutData(QStringLiteral("testaddresseelineedit"),i18n("Test AddresseeLineEdit"),QStringLiteral("0.1"));
-  QApplication app(argc, argv);
-  QCommandLineParser parser;
-  KAboutData::setApplicationData(aboutData);
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    KAboutData aboutData(QStringLiteral("testaddresseelineedit"), i18n("Test AddresseeLineEdit"), QStringLiteral("0.1"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  QWidget *w = new QWidget;
-  QVBoxLayout *vbox = new QVBoxLayout(w);
+    QWidget *w = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout(w);
 
-  KPIM::AddresseeLineEdit *kale1 = new KPIM::AddresseeLineEdit(0);
-  vbox->addWidget(kale1);
-  KPIM::AddresseeLineEdit *kale2 = new KPIM::AddresseeLineEdit(0);
-  vbox->addWidget(kale2);
-  vbox->addStretch();
+    KPIM::AddresseeLineEdit *kale1 = new KPIM::AddresseeLineEdit(0);
+    vbox->addWidget(kale1);
+    KPIM::AddresseeLineEdit *kale2 = new KPIM::AddresseeLineEdit(0);
+    vbox->addWidget(kale2);
+    vbox->addStretch();
 
-  w->resize( 400, 400 );
-  w->show();
+    w->resize(400, 400);
+    w->show();
 
-  return app.exec();
+    return app.exec();
 
 }
-    
+

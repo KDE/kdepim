@@ -24,15 +24,18 @@
 
 #include <kjob.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Collection;
 }
 
-namespace KABC {
+namespace KABC
+{
 class Addressee;
 }
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
  * @short A job to add a new contact to Akonadi.
@@ -55,7 +58,7 @@ public:
      * @param parentWidget The widget that will be used as parent for dialog.
      * @param parent The parent object.
      */
-    AddContactJob( const KABC::Addressee &contact, QWidget *parentWidget, QObject *parent = 0 );
+    AddContactJob(const KABC::Addressee &contact, QWidget *parentWidget, QObject *parent = 0);
 
     /**
      * Creates a new add contact job.
@@ -64,7 +67,7 @@ public:
      * @param collection The address book collection where the contact shall be stored in.
      * @param parent The parent object.
      */
-    AddContactJob( const KABC::Addressee &contact, const Akonadi::Collection &collection, QObject *parent = 0 );
+    AddContactJob(const KABC::Addressee &contact, const Akonadi::Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the add email address job.
@@ -81,10 +84,10 @@ public:
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotSearchDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotAddContactDone( KJob* ) )
+    Q_PRIVATE_SLOT(d, void slotSearchDone(KJob *))
+    Q_PRIVATE_SLOT(d, void slotAddContactDone(KJob *))
     //@endcond
 };
 

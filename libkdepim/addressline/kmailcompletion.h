@@ -28,7 +28,8 @@
 #include <QString>
 #include <QStringList>
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
  * KMailCompletion allows lookup of email addresses by keyword.
@@ -54,7 +55,7 @@ public:
      *
      * @returns email address
      */
-    QString makeCompletion( const QString &string );
+    QString makeCompletion(const QString &string);
 
     /**
      * specify keywords for email.
@@ -65,13 +66,13 @@ public:
      * \li contains <email>
      * or if they have also been added with this function.
      */
-    void addItemWithKeys( const QString &email, int weight, const QStringList *keyWords );
+    void addItemWithKeys(const QString &email, int weight, const QStringList *keyWords);
 
     /**
      * use internal map to replace all keywords in pMatches with corresponding
      * email addresses.
      */
-    virtual void postProcessMatches( QStringList *pMatches ) const;
+    virtual void postProcessMatches(QStringList *pMatches) const;
 
     // We are not using allWeightedMatches() anywhere, therefore we don't need
     // to override the other postProcessMatches() function

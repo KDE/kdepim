@@ -26,23 +26,24 @@
 #include "ldapsession.h"
 #include <kldap/ldapoperation.h>
 
-namespace KLDAP {
+namespace KLDAP
+{
 
 class LdapQueryJob : public KJob
 {
-  Q_OBJECT
-  public:
-    LdapQueryJob( const LdapUrl &url, LdapSession * session );
+    Q_OBJECT
+public:
+    LdapQueryJob(const LdapUrl &url, LdapSession *session);
 
     void start();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void triggerStart();
 
-  signals:
-    void data( const QByteArray &data );
+signals:
+    void data(const QByteArray &data);
 
-  private:
+private:
     LdapUrl m_url;
     LdapSession *m_session;
     LdapOperation m_op;

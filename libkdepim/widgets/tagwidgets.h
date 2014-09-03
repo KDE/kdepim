@@ -26,24 +26,26 @@
 #include "kcheckcombobox.h"
 
 class KJob;
-namespace Akonadi {
-  class TagWidget;
+namespace Akonadi
+{
+class TagWidget;
 }
 
-namespace KPIM {
+namespace KPIM
+{
 
 class KDEPIM_EXPORT TagWidget: public QWidget
 {
     Q_OBJECT
 public:
-    explicit TagWidget(QWidget* parent = 0);
+    explicit TagWidget(QWidget *parent = 0);
     void setSelection(const QStringList &);
     QStringList selection() const;
 signals:
     void selectionChanged(const QStringList &);
 
 private slots:
-    void onTagCreated(KJob*);
+    void onTagCreated(KJob *);
     void onSelectionChanged(const Akonadi::Tag::List &);
 
 private:
@@ -56,12 +58,12 @@ class KDEPIM_EXPORT TagSelectionDialog : public Akonadi::TagSelectionDialog
 {
     Q_OBJECT
 public:
-    explicit TagSelectionDialog(QWidget* parent = 0);
+    explicit TagSelectionDialog(QWidget *parent = 0);
     void setSelection(const QStringList &);
     QStringList selection() const;
 
 private slots:
-    void onTagCreated(KJob*);
+    void onTagCreated(KJob *);
 
 private:
     Akonadi::Tag::List mTagList;
@@ -71,14 +73,14 @@ class KDEPIM_EXPORT TagSelectionCombo : public KPIM::KCheckComboBox
 {
     Q_OBJECT
 public:
-    explicit TagSelectionCombo(QWidget* parent = 0);
+    explicit TagSelectionCombo(QWidget *parent = 0);
 };
 
 class KDEPIM_EXPORT TagCombo : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit TagCombo(QWidget* parent = 0);
+    explicit TagCombo(QWidget *parent = 0);
 };
 
 }
