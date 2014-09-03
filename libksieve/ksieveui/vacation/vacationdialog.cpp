@@ -83,7 +83,6 @@ void VacationDialog::slotRejected()
     Q_EMIT cancelClicked();
 }
 
-
 void VacationDialog::writeConfig()
 {
     KConfigGroup group(KSharedConfig::openConfig(), "VacationDialog");

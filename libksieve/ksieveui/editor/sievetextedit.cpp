@@ -154,7 +154,7 @@ void SieveTextEdit::initCompleter()
     m_completer->setWidget(this);
     m_completer->setCompletionMode(QCompleter::PopupCompletion);
 
-    connect(m_completer, static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated), this, &SieveTextEdit::slotInsertCompletion);
+    connect(m_completer, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &SieveTextEdit::slotInsertCompletion);
 }
 
 void SieveTextEdit::slotInsertCompletion(const QString &completion)
