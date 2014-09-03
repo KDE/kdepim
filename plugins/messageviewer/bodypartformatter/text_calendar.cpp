@@ -308,6 +308,9 @@ static QString directoryForStatus( Attendee::PartStat status )
   case Attendee::Delegated:
     dir = QLatin1String( "delegated" );
     break;
+  case Attendee::NeedsAction:
+    dir = QLatin1String( "request" );
+    break;
   default:
     break;
   }
@@ -979,7 +982,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       // find our delegator, we need to inform him as well
       QString delegator;
-      if ( myself && !myself->delegator().isEmpty() ) {
+      if ( status !=  Attendee::NeedsAction && myself && !myself->delegator().isEmpty() ) {
         Attendee::List attendees = incidence->attendees();
         Attendee::List::ConstIterator end = attendees.constEnd();
         for ( Attendee::List::ConstIterator it = attendees.constBegin();
@@ -993,7 +996,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         }
       }
 
-      if ( ( myself && myself->RSVP() ) || heuristicalRSVP( incidence ) ) {
+      if ( status !=  Attendee::NeedsAction && ( ( myself && myself->RSVP() ) || heuristicalRSVP( incidence ) ) ) {
         Attendee::Ptr newMyself = setStatusOnMyself( incidence, myself, status, receiver );
         if ( newMyself && status == Attendee::Delegated ) {
           newMyself->setDelegate( delegateString );
@@ -1009,7 +1012,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
             ok = mail( viewerInstance, incidence, dir, iTIPReply, receiver, delegator );
           }
         }
-      } else if ( !myself && ( status != Attendee::Declined ) ) {
+      } else if ( !myself && ( status != Attendee::Declined && status !=  Attendee::NeedsAction ) ) {
         // forwarded invitation
         QString name;
         QString email;
@@ -1271,6 +1274,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
       else if ( path == QLatin1String( "decline" ) ) {
         result = handleInvitation( iCal, Attendee::Declined, part, viewerInstance );
       }
+      else if ( path == QLatin1String( "postpone" ) ) {
+        result = handleInvitation( iCal, Attendee::NeedsAction, part, viewerInstance );
+      }
       else if ( path == QLatin1String( "decline_counter" ) ) {
         result = handleDeclineCounter( iCal, part, viewerInstance );
       }
@@ -1422,6 +1428,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
         else if ( path == QLatin1String("decline" ) ) {
           return i18n( "Decline invitation" );
         }
+        else if ( path == QLatin1String("postpone" ) ) {
+          return i18n( "Postpone" );
+        }
         else if ( path == QLatin1String("decline_counter" ) ) {
           return i18n( "Decline counter proposal" );
         }
@@ -1457,11 +1466,11 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
     bool askForComment( Attendee::PartStat status ) const
     {
-      if ( ( status != Attendee::Accepted &&
+      if ( status !=  Attendee::NeedsAction && ( ( status != Attendee::Accepted &&
              GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
              GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance ) ||
            ( GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
-             GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk ) ) {
+             GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk ) ) ) {
         return true;
       }
       return false;
