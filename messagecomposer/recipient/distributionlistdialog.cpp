@@ -111,6 +111,7 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
     setWindowTitle( i18nc("@title:window", "Save Distribution List") );
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
     mainLayout->addWidget(topFrame);
     mUser1Button = new QPushButton;
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
