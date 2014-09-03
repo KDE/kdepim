@@ -51,7 +51,7 @@ class KDEPIM_EXPORT OverlayWidget : public KHBox
     Q_OBJECT
 
 public:
-    OverlayWidget( QWidget* alignWidget, QWidget* parent, const char* name = 0 );
+    OverlayWidget( QWidget* alignWidget, QWidget* parent );
     ~OverlayWidget();
 
     QWidget * alignWidget() { return mAlignWidget; }

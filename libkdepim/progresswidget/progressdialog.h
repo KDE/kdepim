@@ -119,7 +119,7 @@ class KDEPIM_EXPORT ProgressDialog : public OverlayWidget
 {
     Q_OBJECT
 public:
-    ProgressDialog( QWidget *alignWidget, QWidget *parent, const char *name = 0 );
+    ProgressDialog( QWidget *alignWidget, QWidget *parent );
     ~ProgressDialog();
     void setVisible( bool b );
 

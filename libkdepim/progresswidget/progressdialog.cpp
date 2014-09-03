@@ -247,8 +247,8 @@ void TransactionItem::addSubTransaction( ProgressItem *item )
 
 // ---------------------------------------------------------------------------
 
-ProgressDialog::ProgressDialog( QWidget *alignWidget, QWidget *parent, const char *name )
-    : OverlayWidget( alignWidget, parent, name ),
+ProgressDialog::ProgressDialog( QWidget *alignWidget, QWidget *parent )
+    : OverlayWidget( alignWidget, parent),
       mShowTypeProgressItem(0),
       mWasLastShown( false )
 {
