@@ -108,33 +108,33 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog(QWidget *parent)
     vlay->setMargin(0);
 
     mTreeView = new CustomManageSieveWidget(frame);
-    connect(mTreeView, SIGNAL(editScript(QUrl,QStringList)), SLOT(slotEditScript(QUrl,QStringList)));
-    connect(mTreeView, SIGNAL(newScript(QUrl,QStringList)), SLOT(slotNewScript(QUrl,QStringList)));
-    connect(mTreeView, SIGNAL(updateButtons(QTreeWidgetItem*)), SLOT(slotUpdateButtons(QTreeWidgetItem*)));
+    connect(mTreeView, &CustomManageSieveWidget::editScript, this, &ManageSieveScriptsDialog::slotEditScript);
+    connect(mTreeView, &CustomManageSieveWidget::newScript, this, &ManageSieveScriptsDialog::slotNewScript);
+    connect(mTreeView, &CustomManageSieveWidget::updateButtons, this, &ManageSieveScriptsDialog::slotUpdateButtons);
     vlay->addWidget(mTreeView);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     vlay->addLayout(buttonLayout);
 
     mNewScript = new QPushButton(i18nc("create a new sieve script", "New..."));
-    connect(mNewScript, SIGNAL(clicked()), mTreeView, SLOT(slotNewScript()));
+    connect(mNewScript, &QPushButton::clicked, mTreeView, &CustomManageSieveWidget::slotNewScript);
     buttonLayout->addWidget(mNewScript);
 
     mEditScript = new QPushButton(i18n("Edit..."));
-    connect(mEditScript, SIGNAL(clicked()), mTreeView, SLOT(slotEditScript()));
+    connect(mEditScript, &QPushButton::clicked, mTreeView, &CustomManageSieveWidget::slotEditScript);
     buttonLayout->addWidget(mEditScript);
 
     mDeleteScript = new QPushButton(i18n("Delete"));
-    connect(mDeleteScript, SIGNAL(clicked()), mTreeView, SLOT(slotDeleteScript()));
+    connect(mDeleteScript, &QPushButton::clicked, mTreeView, &CustomManageSieveWidget::slotDeleteScript);
     buttonLayout->addWidget(mDeleteScript);
 
     mDeactivateScript = new QPushButton(i18n("Deactivate"));
-    connect(mDeactivateScript, SIGNAL(clicked()), mTreeView, SLOT(slotDeactivateScript()));
+    connect(mDeactivateScript, &QPushButton::clicked, mTreeView, &CustomManageSieveWidget::slotDeactivateScript);
     buttonLayout->addWidget(mDeactivateScript);
 
     QPushButton *close = new QPushButton;
     KGuiItem::assign(close, KStandardGuiItem::close());
-    connect(close, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(close, &QPushButton::clicked, this, &ManageSieveScriptsDialog::accept);
     buttonLayout->addWidget(close);
 
     KConfigGroup group(KSharedConfig::openConfig(), "ManageSieveScriptsDialog");
@@ -201,9 +201,9 @@ void ManageSieveScriptsDialog::slotGetResult(KManageSieve::SieveJob *, bool succ
     mSieveEditor->setScriptName(mCurrentURL.fileName());
     mSieveEditor->setSieveCapabilities(mCurrentCapabilities);
     mSieveEditor->setScript(script);
-    connect(mSieveEditor, SIGNAL(okClicked()), this, SLOT(slotSieveEditorOkClicked()));
-    connect(mSieveEditor, SIGNAL(cancelClicked()), this, SLOT(slotSieveEditorCancelClicked()));
-    connect(mSieveEditor, SIGNAL(checkSyntax()), this, SLOT(slotSieveEditorCheckSyntaxClicked()));
+    connect(mSieveEditor, &SieveEditor::okClicked, this, &ManageSieveScriptsDialog::slotSieveEditorOkClicked);
+    connect(mSieveEditor, &SieveEditor::cancelClicked, this, &ManageSieveScriptsDialog::slotSieveEditorCancelClicked);
+    connect(mSieveEditor, &SieveEditor::checkSyntax, this, &ManageSieveScriptsDialog::slotSieveEditorCheckSyntaxClicked);
     mSieveEditor->show();
     mWasActive = isActive;
 }

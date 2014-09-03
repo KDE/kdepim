@@ -136,22 +136,22 @@ void SieveIncludeActionWidget::initWidget()
     QLabel *lab = new QLabel(i18n("Include:"));
     mLayout->addWidget(lab, 1, 0);
     mLocation = new SieveIncludeLocation;
-    connect(mLocation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(mLocation, &SieveIncludeLocation::valueChanged, this, &SieveIncludeActionWidget::valueChanged);
     mLayout->addWidget(mLocation, 1, 1);
 
     lab = new QLabel(i18n("Name:"));
     mLayout->addWidget(lab, 1, 2);
 
     mIncludeName = new QLineEdit;
-    connect(mIncludeName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(mIncludeName, &QLineEdit::textChanged, this, &SieveIncludeActionWidget::valueChanged);
     mLayout->addWidget(mIncludeName, 1, 3);
 
     mOptional = new QCheckBox(i18n("Optional"));
-    connect(mOptional, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
+    connect(mOptional, &QCheckBox::toggled, this, &SieveIncludeActionWidget::valueChanged);
     mLayout->addWidget(mOptional, 1, 4);
 
     mOnce = new QCheckBox(i18n("Once"));
-    connect(mOnce, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
+    connect(mOnce, &QCheckBox::toggled, this, &SieveIncludeActionWidget::valueChanged);
     mLayout->addWidget(mOnce, 1, 5);
 
     mAdd = new QPushButton(this);
@@ -164,10 +164,8 @@ void SieveIncludeActionWidget::initWidget()
     mLayout->addWidget(mAdd, 1, 6);
     mLayout->addWidget(mRemove, 1, 7);
 
-    connect(mAdd, SIGNAL(clicked()),
-            this, SLOT(slotAddWidget()));
-    connect(mRemove, SIGNAL(clicked()),
-            this, SLOT(slotRemoveWidget()));
+    connect(mAdd, &QPushButton::clicked, this, &SieveIncludeActionWidget::slotAddWidget);
+    connect(mRemove, &QPushButton::clicked, this, &SieveIncludeActionWidget::slotRemoveWidget);
 }
 
 void SieveIncludeActionWidget::slotAddWidget()
@@ -202,7 +200,7 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
     connect(mHelpButton, &SieveHelpButton::clicked, this, &SieveIncludeWidget::slotHelp);
 
     mIncludeLister = new SieveIncludeWidgetLister;
-    connect(mIncludeLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(mIncludeLister, &SieveIncludeWidgetLister::valueChanged, this, &SieveIncludeWidget::valueChanged);
     lay->addWidget(mIncludeLister, 0, Qt::AlignTop);
     setPageType(KSieveUi::SieveScriptBlockWidget::Include);
     setLayout(lay);

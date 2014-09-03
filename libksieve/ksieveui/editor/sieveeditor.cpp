@@ -41,8 +41,8 @@ SieveEditor::SieveEditor(QWidget *parent)
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveEditor::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveEditor::reject);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveEditor::slotAccepted);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveEditor::slotCanceled);
     setModal(true);
     mSieveEditorWidget = new SieveEditorWidget;
     connect(mSieveEditorWidget, SIGNAL(valueChanged(bool)), this, SIGNAL(valueChanged(bool)));
@@ -57,6 +57,19 @@ SieveEditor::~SieveEditor()
 {
     writeConfig();
 }
+
+void SieveEditor::slotAccepted()
+{
+   Q_EMIT okClicked();
+   accept();
+}
+
+void SieveEditor::slotCanceled()
+{
+   Q_EMIT cancelClicked();
+   reject();
+}
+
 
 bool SieveEditor::event(QEvent *e)
 {

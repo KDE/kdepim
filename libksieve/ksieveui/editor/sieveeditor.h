@@ -47,10 +47,14 @@ public:
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
+    void slotAccepted();
+    void slotCanceled();
 
 Q_SIGNALS:
     void checkSyntax();
     void valueChanged(bool);
+    void okClicked();
+    void cancelClicked();
 
 protected:
     bool event(QEvent *e);

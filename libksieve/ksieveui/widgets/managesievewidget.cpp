@@ -42,17 +42,14 @@ ManageSieveWidget::ManageSieveWidget(QWidget *parent)
 
     mTreeView = new ManageSieveTreeView;
 #ifndef QT_NO_CONTEXTMENU
-    connect(mTreeView, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(slotContextMenuRequested(QPoint)));
+    connect(mTreeView, &ManageSieveTreeView::customContextMenuRequested, this, &ManageSieveWidget::slotContextMenuRequested);
 #endif
-    connect(mTreeView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-            this, SLOT(slotDoubleClicked(QTreeWidgetItem*)));
-    connect(mTreeView, SIGNAL(itemSelectionChanged()),
-            this, SLOT(slotUpdateButtons()));
-    connect(mTreeView, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
-            this, SLOT(slotItemChanged(QTreeWidgetItem*,int)));
+    connect(mTreeView, &ManageSieveTreeView::itemDoubleClicked, this, &ManageSieveWidget::slotDoubleClicked);
+    connect(mTreeView, &ManageSieveTreeView::itemSelectionChanged, this, &ManageSieveWidget::slotUpdateButtons);
+    connect(mTreeView, &ManageSieveTreeView::itemChanged, this, &ManageSieveWidget::slotItemChanged);
     connect(Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
             this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)));
+
 
     lay->addWidget(mTreeView);
     setLayout(lay);
@@ -278,8 +275,7 @@ void ManageSieveWidget::changeActiveScript(QTreeWidgetItem *item, bool activate)
         job = KManageSieve::SieveJob::deactivate(u);
     }
     mBlockSignal = true;
-    connect(job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-            this, SLOT(slotRefresh()));
+    connect(job, &KManageSieve::SieveJob::result, this, &ManageSieveWidget::slotRefresh);
 }
 
 bool ManageSieveWidget::itemIsActived(QTreeWidgetItem *item) const
@@ -335,8 +331,7 @@ void ManageSieveWidget::slotDeleteScript()
         return;
     }
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::del(u);
-    connect(job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-            this, SLOT(slotRefresh()));
+    connect(job, &KManageSieve::SieveJob::result, this, &ManageSieveWidget::slotRefresh);
     Q_EMIT scriptDeleted(u);
 }
 
