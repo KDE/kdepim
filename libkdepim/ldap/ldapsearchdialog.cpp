@@ -56,6 +56,9 @@
 
 #include <KPIMUtils/ProgressIndicatorLabel>
 #include <KLocale>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <KGuiItem>
 
 using namespace KLDAP;
 
@@ -515,28 +518,41 @@ public:
     KPIMUtils::ProgressIndicatorLabel *progressIndication;
     QSortFilterProxyModel *sortproxy;
     QLineEdit *searchLine;
+    QPushButton *user1Button;
 };
 
 LdapSearchDialog::LdapSearchDialog( QWidget *parent )
-    : KDialog( parent ), d( new Private( this ) )
+    : QDialog( parent ), d( new Private( this ) )
 {
-    setCaption( i18n( "Import Contacts from LDAP" ) );
-    setButtons( /*Help |*/ User1 | User2 | Cancel );
-    setDefaultButton( User1 );
+    setWindowTitle( i18n( "Import Contacts from LDAP" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    d->user1Button = new QPushButton;
+    buttonBox->addButton(d->user1Button, QDialogButtonBox::ActionRole);
+    
+    QPushButton *user2Button = new QPushButton;
+    buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+
+    connect(d->user1Button, &QPushButton::clicked, this, &LdapSearchDialog::slotUser1);
+    connect(user2Button, &QPushButton::clicked, this, &LdapSearchDialog::slotUser2);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &LdapSearchDialog::slotCancelClicked);
+    d->user1Button->setDefault(true);
     setModal( false );
-    showButtonSeparator( true );
-    setButtonGuiItem( KDialog::Cancel, KStandardGuiItem::close() );
+    KGuiItem::assign(buttonBox->button(QDialogButtonBox::Cancel), KStandardGuiItem::close( ));
     QFrame *page = new QFrame( this );
-    setMainWidget( page );
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
+
     QVBoxLayout *topLayout = new QVBoxLayout( page );
-    topLayout->setSpacing( spacingHint() );
-    topLayout->setMargin( marginHint() );
+    //QT5 topLayout->setSpacing( spacingHint() );
+    //QT5 topLayout->setMargin( marginHint() );
 
     QGroupBox *groupBox = new QGroupBox( i18n( "Search for Addresses in Directory" ),
                                          page );
     QGridLayout *boxLayout = new QGridLayout();
     groupBox->setLayout( boxLayout );
-    boxLayout->setSpacing( spacingHint() );
+    //QT5 boxLayout->setSpacing( spacingHint() );
     boxLayout->setColumnStretch( 1, 1 );
 
     QLabel *label = new QLabel( i18n( "Search for:" ), groupBox );
@@ -637,8 +653,8 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 
 
 
-    setButtonText( User1, i18n( "Add Selected" ) );
-    setButtonText( User2, i18n( "Configure LDAP Servers..." ) );
+    d->user1Button->setText(i18n( "Add Selected"  ));
+    user2Button->setText(i18n( "Configure LDAP Servers..."  ));
 
     connect( d->mRecursiveCheckbox, SIGNAL(toggled(bool)),
              this, SLOT(slotSetScope(bool)) );
@@ -649,9 +665,6 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
     setTabOrder( d->mFilterCombo, d->mSearchButton );
     d->mSearchEdit->setFocus();
 
-    connect(this, &LdapSearchDialog::user1Clicked, this, &LdapSearchDialog::slotUser1);
-    connect(this, &LdapSearchDialog::user2Clicked, this, &LdapSearchDialog::slotUser2);
-    connect(this, &LdapSearchDialog::cancelClicked, this, &LdapSearchDialog::slotCancelClicked);
     d->slotSelectionChanged();
     d->restoreSettings();
 }
@@ -688,7 +701,7 @@ void LdapSearchDialog::slotCustomContextMenuRequested(const QPoint &pos)
 
 void LdapSearchDialog::Private::slotSelectionChanged()
 {
-    q->enableButton( KDialog::User1, mResultView->selectionModel()->hasSelection() );
+    user1Button->setEnabled(mResultView->selectionModel()->hasSelection() );
 }
 
 void LdapSearchDialog::Private::restoreSettings()

@@ -42,7 +42,7 @@
 
 #include <gpgme++/key.h>
 
-#include <kdialog.h>
+#include <QDialog>
 
 #include <QPixmap>
 
@@ -66,7 +66,7 @@ namespace GpgME {
 
 namespace Kleo {
 
-  class KLEO_EXPORT KeySelectionDialog : public KDialog {
+  class KLEO_EXPORT KeySelectionDialog : public QDialog {
     Q_OBJECT
   public:
 
@@ -184,6 +184,7 @@ namespace Kleo {
     const QString mInitialQuery;
     Kleo::KeyListViewItem * mCurrentContextMenuItem;
     int mTruncated, mListJobCount, mSavedOffsetY;
+    QPushButton *mOkButton;
   };
 
 }

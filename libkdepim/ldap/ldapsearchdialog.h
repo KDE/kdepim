@@ -27,7 +27,7 @@
 #include "libkdepim/kdepim_export.h"
 
 #include <kabc/addressee.h>
-#include <kdialog.h>
+#include <QDialog>
 
 class QCloseEvent;
 
@@ -45,7 +45,7 @@ class LdapObject;
  * @author Steffen Hansen <hansen@kde.org>
  * @since 4.5
  */
-class KDEPIM_EXPORT LdapSearchDialog : public KDialog
+class KDEPIM_EXPORT LdapSearchDialog : public QDialog
 {
     Q_OBJECT
 

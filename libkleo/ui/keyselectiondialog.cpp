@@ -85,6 +85,8 @@
 #include <assert.h>
 #include <qscrollbar.h>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
@@ -308,7 +310,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
                                               bool rememberChoice,
                                               QWidget * parent,
                                               bool modal )
-  : KDialog( parent ),
+  : QDialog( parent ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -316,9 +318,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mKeyUsage( keyUsage ),
     mCurrentContextMenuItem( 0 )
 {
-  setCaption( title );
-  setButtons( User1|User2|Ok|Cancel );
-  setDefaultButton( Ok );
+  setWindowTitle( title );
   setModal( modal );
   init( rememberChoice, extendedSelection, text, QString() );
 }
@@ -332,7 +332,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
                                               bool rememberChoice,
                                               QWidget * parent,
                                               bool modal )
-  : KDialog( parent ),
+  : QDialog( parent ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -342,9 +342,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mInitialQuery( initialQuery ),
     mCurrentContextMenuItem( 0 )
 {
-  setCaption( title );
-  setButtons( User1|User2|Ok|Cancel );
-  setDefaultButton( Ok );
+  setWindowTitle( title );
   setModal( modal );
   init( rememberChoice, extendedSelection, text, initialQuery );
 }
@@ -357,7 +355,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
                                               bool rememberChoice,
                                               QWidget * parent,
                                               bool modal )
-  : KDialog( parent ),
+  : QDialog( parent ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -366,15 +364,24 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mInitialQuery( initialQuery ),
     mCurrentContextMenuItem( 0 )
 {
-  setCaption( title );
-  setButtons( User1|User2|Ok|Cancel );
-  setDefaultButton( Ok );
+  setWindowTitle( title );
   setModal( modal );
   init( rememberChoice, extendedSelection, text, initialQuery );
 }
 
 void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection,
                                      const QString & text, const QString & initialQuery ) {
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+  mOkButton->setDefault(true);
+  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  QPushButton *user1Button = new QPushButton;
+  buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+  QPushButton *user2Button = new QPushButton;
+  buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+
   if ( mKeyUsage & OpenPGPKeys )
     mOpenPGPBackend = Kleo::CryptoBackendFactory::instance()->openpgp();
   if ( mKeyUsage & SMIMEKeys )
@@ -384,10 +391,12 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mStartSearchTimer = new QTimer( this );
 
   QFrame *page = new QFrame( this );
-  setMainWidget( page );
+  mainLayout->addWidget(page);
+  mainLayout->addWidget(buttonBox);
+
   mTopLayout = new QVBoxLayout( page );
   mTopLayout->setMargin( 0 );
-  mTopLayout->setSpacing( spacingHint() );
+  //QT5 mTopLayout->setSpacing( spacingHint() );
 
   if ( !text.isEmpty() ) {
 #ifndef KDEPIM_MOBILE_UI
@@ -464,12 +473,12 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
            SIGNAL(contextMenu(Kleo::KeyListViewItem*,QPoint)),
            SLOT(slotRMB(Kleo::KeyListViewItem*,QPoint)) );
 
-  setButtonText( KDialog::User1, i18n("&Reread Keys") );
-  setButtonText( KDialog::User2, i18n("&Start Certificate Manager") );
-  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotRereadKeys()) );
-  connect( this, SIGNAL(user2Clicked()), this, SLOT(slotStartCertificateManager()) );
-  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
-  connect( this, SIGNAL(cancelClicked()),this,SLOT(slotCancel()));
+  user1Button->setText(i18n("&Reread Keys" ));
+  user2Button->setText(i18n("&Start Certificate Manager" ));
+  connect(user1Button, SIGNAL(clicked()), this, SLOT(slotRereadKeys()) );
+  connect(user2Button, SIGNAL(clicked()), this, SLOT(slotStartCertificateManager()) );
+  connect(mOkButton, SIGNAL(clicked()), this, SLOT(slotOk()));
+  connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),this,SLOT(slotCancel()));
   slotRereadKeys();
   mTopLayout->activate();
 
@@ -729,7 +738,7 @@ void Kleo::KeySelectionDialog::slotCheckSelection( KeyListViewItem * item ) {
                        std::back_inserter( mKeysToCheck ),
                        AlreadyChecked() );
   if ( mKeysToCheck.empty() ) {
-    enableButton( Ok, !mSelectedKeys.empty() &&
+    mOkButton->setEnabled(!mSelectedKeys.empty() &&
                     checkKeyUsage( mSelectedKeys, mKeyUsage ) );
     return;
   }
