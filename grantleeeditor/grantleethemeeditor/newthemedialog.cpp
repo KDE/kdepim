@@ -81,7 +81,7 @@ NewThemeDialog::~NewThemeDialog()
 
 void NewThemeDialog::readConfig()
 {
-    mUrlRequester->setUrl(QUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
+    mUrlRequester->setUrl(QUrl::fromLocalFile(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
 }
 
 QString NewThemeDialog::themeName() const

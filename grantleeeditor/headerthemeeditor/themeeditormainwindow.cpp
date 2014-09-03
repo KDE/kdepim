@@ -183,6 +183,7 @@ void ThemeEditorMainWindow::slotInstallTheme()
     //Save before installing :)
     if (slotSaveTheme()) {
         const QString localThemePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/messageviewer/themes/");
+        QDir().mkpath(localThemePath);
         mThemeEditor->installTheme(localThemePath);
     }
 }
@@ -222,7 +223,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
     }
     closeThemeEditor();
     if (loadTheme(directory)) {
-        mRecentFileAction->addUrl(QUrl(directory));
+        mRecentFileAction->addUrl(QUrl::fromLocalFile(directory));
     }
     mSaveAction->setEnabled(false);
 }
@@ -287,7 +288,7 @@ bool ThemeEditorMainWindow::saveCurrentProject(ActionSaveTheme act)
             projectDirectory = dialog->directory();
         }
         if (!projectDirectory.isEmpty()) {
-            mRecentFileAction->addUrl(QUrl(projectDirectory));
+            mRecentFileAction->addUrl(QUrl::fromLocalFile(projectDirectory));
             mThemeEditor = new ThemeEditorPage(projectDirectory, newTheme);
             connect(mThemeEditor, &ThemeEditorPage::changed, mSaveAction, &QAction::setEnabled);
             connect(mThemeEditor, &ThemeEditorPage::canInsertFile, this, &ThemeEditorMainWindow::slotCanInsertFile);

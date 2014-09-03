@@ -209,7 +209,7 @@ void KTNEFMain::loadFile(const QString &filename)
         mView->setAttachments(QList<KTNEFAttach *>());
         enableExtractAll(false);
     } else {
-        addRecentFile(QUrl(filename));
+        addRecentFile(QUrl::fromLocalFile(filename));
         QList<KTNEFAttach *> list = mParser->message()->attachmentList();
         QString msg;
         msg = i18ncp("@info:status",
@@ -526,7 +526,7 @@ void KTNEFMain::slotShowMessageText()
         tmpFile->write(rtf.toLocal8Bit());
         tmpFile->close();
 
-        KRun::runUrl(QUrl(tmpFile->fileName()), QLatin1String("text/rtf"), this, true);
+        KRun::runUrl(QUrl::fromLocalFile(tmpFile->fileName()), QLatin1String("text/rtf"), this, true);
         delete tmpFile;
     } else {
         KMessageBox::error(

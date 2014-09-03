@@ -27,9 +27,11 @@
 #include <QTextDocument>
 #include <QDomDocument>
 #include <QFile>
+#include <QDir>
 #include <KCalendarSystem>
 #include <KLocalizedString>
 #include <QStandardPaths>
+#include <QFileInfo>
 
 using namespace PimCommon;
 
@@ -864,6 +866,8 @@ void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 void AutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
 {
     const QString fname = filename.isEmpty() ? QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml") : filename;
+    QFileInfo fileInfo(fname);
+    QDir().mkpath(fileInfo.absolutePath());
     QFile file(fname);
     if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
         qDebug()<<"We can't save in file :"<<fname;

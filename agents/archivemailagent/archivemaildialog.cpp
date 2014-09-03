@@ -55,7 +55,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
 //TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
 //TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mWidget = new ArchiveMailWidget(this);
-    connect(mWidget, SIGNAL(archiveNow(ArchiveMailInfo*)), this, SIGNAL(archiveNow(ArchiveMailInfo*)));
+    connect(mWidget, &ArchiveMailWidget::archiveNow, this, &ArchiveMailDialog::archiveNow);
     mainLayout->addWidget(mWidget);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
@@ -173,9 +173,9 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
     connect(mWidget->removeItem, &QPushButton::clicked, this, &ArchiveMailWidget::slotRemoveItem);
     connect(mWidget->modifyItem, &QPushButton::clicked, this, &ArchiveMailWidget::slotModifyItem);
     connect(mWidget->addItem, &QPushButton::clicked, this, &ArchiveMailWidget::slotAddItem);
-    connect(mWidget->treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(slotItemChanged(QTreeWidgetItem*,int)));
-    connect(mWidget->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
-    connect(mWidget->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(slotModifyItem()));
+    connect(mWidget->treeWidget, &QTreeWidget::itemChanged, this, &ArchiveMailWidget::slotItemChanged);
+    connect(mWidget->treeWidget, &QTreeWidget::itemSelectionChanged, this, &ArchiveMailWidget::updateButtons);
+    connect(mWidget->treeWidget, &QTreeWidget::itemDoubleClicked, this, &ArchiveMailWidget::slotModifyItem);
     updateButtons();
 }
 

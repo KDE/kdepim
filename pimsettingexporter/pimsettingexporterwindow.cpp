@@ -206,7 +206,7 @@ void PimSettingExporterWindow::slotBackupData()
     if (filename.isEmpty()) {
         return;
     }
-    mRecentFilesAction->addUrl(QUrl(filename));
+    mRecentFilesAction->addUrl(QUrl::fromLocalFile(filename));
     backupData(filename);
 }
 

@@ -145,7 +145,7 @@ void FilterThunderbird::importMails(const QString  &maildir)
     * If the user only select homedir no import needed because
     * there should be no files and we surely import wrong files.
     */
-    else if (mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + '/')) {
+    else if (mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + QLatin1Char('/'))) {
         filterInfo()->addErrorLogEntry(i18n("No files found for import."));
     } else {
         filterInfo()->setOverall(0);
@@ -214,7 +214,7 @@ void FilterThunderbird::importDirContents(const QString &dirName, const QString 
         QString temp_mailfile = *mailFile;
         if (!excludeFiles(temp_mailfile)) {
             filterInfo()->addInfoLogEntry(i18n("Start import file %1...", temp_mailfile));
-            importMBox((dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);
+            importMBox((dirName + QLatin1Char('/') + temp_mailfile) , KMailRootDir, KMailSubDir);
         }
     }
 
@@ -305,7 +305,7 @@ void FilterThunderbird::importMBox(const QString &mboxName, const QString &rootD
                 if (_targetDir.contains(".sbd")) {
                     _targetDir.remove(".sbd");
                 }
-                destFolder += "Thunderbird-Import/" + _targetDir + '/' + filenameInfo.completeBaseName();// mboxName;
+                destFolder += QLatin1String("Thunderbird-Import/") + _targetDir + QLatin1Char('/') + filenameInfo.completeBaseName();// mboxName;
             } else {
                 destFolder = "Thunderbird-Import/" + rootDir;
                 if (destFolder.contains(".sbd")) {

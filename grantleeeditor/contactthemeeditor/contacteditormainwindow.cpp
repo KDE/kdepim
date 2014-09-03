@@ -157,6 +157,7 @@ void ContactEditorMainWindow::slotInstallTheme()
     //Save before installing :)
     if (slotSaveTheme()) {
         const QString localThemePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kaddressbook/viewertemplates/");
+        QDir().mkpath(localThemePath);
         mContactEditor->installTheme(localThemePath);
     }
 }

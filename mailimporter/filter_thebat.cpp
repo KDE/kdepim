@@ -85,7 +85,7 @@ void FilterTheBat::importMails(const QString  &maildir)
     * If the user only select homedir no import needed because
     * there should be no files and we surely import wrong files.
     */
-    else if (mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + '/')) {
+    else if (mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + QLatin1Char('/'))) {
         filterInfo()->addErrorLogEntry(i18n("No files found for import."));
     } else {
         filterInfo()->setOverall(0);
@@ -123,13 +123,12 @@ void FilterTheBat::importDirContents(const QString &dirName)
     }
 
     /** Here Import all archives in the current dir */
-    QDir dir(dirName);
     QDir importDir(dirName);
     const QStringList files = importDir.entryList(QStringList("*.[tT][bB][bB]"), QDir::Files, QDir::Name);
     QStringList::ConstIterator end = files.constEnd();
     for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
         QString temp_mailfile = *mailFile;
-        importFiles((dirName + '/' + temp_mailfile));
+        importFiles((dirName + QLatin1Char('/') + temp_mailfile));
         if (filterInfo()->shouldTerminate()) {
             return;
         }

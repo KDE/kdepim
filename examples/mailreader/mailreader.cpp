@@ -104,8 +104,7 @@ void mailreader::setupDocks()
 
     // Now make the message list multi-tab pane
     m_messagePane = new MessageList::Pane(true, entityModel, collectionView->selectionModel(), this);
-    connect(m_messagePane, SIGNAL(messageSelected(Akonadi::Item)),
-            this, SLOT(slotMessageSelected(Akonadi::Item)));
+    connect(m_messagePane, &MessageList::Pane::messageSelected, this, &mailreader::slotMessageSelected);
 
     // Dock the message list view
     QDockWidget *messageListDock = new QDockWidget(i18n("Messages"), this);
@@ -138,8 +137,7 @@ void mailreader::setupActions()
                                      i18n("Open a new tab"),
                                      this);
     actionCollection()->addAction(QLatin1String("new_tab"), createTab);
-    connect(createTab, SIGNAL(triggered(bool)),
-            m_messagePane, SLOT(createNewTab()));
+    connect(createTab, &QAction::triggered, m_messagePane, &MessageList::Pane::createNewTab);
 
     m_previousMessage = new QAction(i18n("Previous Message"), this);
     actionCollection()->addAction(QLatin1String("previous_message"), m_previousMessage);

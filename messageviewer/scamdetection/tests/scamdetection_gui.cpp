@@ -80,7 +80,7 @@ void ScamDetectionTestWidget::slotOpenHtml()
     const QString fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.html"));
     if (!fileName.isEmpty()) {
         mScamWarningWidget->setVisible(false);
-        mWebView->load(QUrl(fileName));
+        mWebView->load(QUrl::fromLocalFile(fileName));
     }
 }
 

@@ -674,6 +674,9 @@ void CSVImportDialog::saveTemplate()
                                                  QUuid::createUuid().toString() +
                                                  QLatin1String(".desktop" );
 
+  QFileInfo fileInfo(fileName);
+  QDir().mkpath(fileInfo.absolutePath());
+
   KConfig config( fileName );
   KConfigGroup generalGroup( &config, "General" );
   generalGroup.writeEntry( "DatePattern", mDatePatternEdit->text() );

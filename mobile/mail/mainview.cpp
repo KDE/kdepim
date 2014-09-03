@@ -600,6 +600,8 @@ void MainView::recoverAutoSavedMessages()
 {
   qDebug() << "Any message to recover?";
   QDir autoSaveDir( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/" ) + QLatin1String( "autosave" ) );
+  QDir().mkpath(autoSaveDir.absolutePath());
+
   //### move directory creation to here
 
   const QFileInfoList savedMessages = autoSaveDir.entryInfoList( QDir::Files );

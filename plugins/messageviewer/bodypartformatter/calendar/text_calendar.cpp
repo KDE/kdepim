@@ -1087,7 +1087,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         file->write( QByteArray::fromBase64( attachment->data() ) );
         file->close();
 
-        bool stat = KRun::runUrl( QUrl( file->fileName() ), attachment->mimeType(), 0, true );
+        bool stat = KRun::runUrl( QUrl::fromLocalFile( file->fileName() ), attachment->mimeType(), 0, true );
         delete file;
         return stat;
       }

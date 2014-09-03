@@ -93,7 +93,7 @@ void FilterEvolution_v2::importMails(const QString &maildir)
     * If the user only select homedir no import needed because
     * there should be no files and we surely import wrong files.
     */
-    else if (mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + '/')) {
+    else if (mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + QLatin1Char('/'))) {
         filterInfo()->addErrorLogEntry(i18n("No files found for import."));
     } else {
         filterInfo()->setOverall(0);
@@ -161,7 +161,7 @@ void FilterEvolution_v2::importDirContents(const QString &dirName, const QString
         QString temp_mailfile = *mailFile;
         if (!excludeFiles(temp_mailfile)) {
             filterInfo()->addInfoLogEntry(i18n("Start import file %1...", temp_mailfile));
-            importMBox((dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);
+            importMBox((dirName + QLatin1Char('/') + temp_mailfile) , KMailRootDir, KMailSubDir);
         }
     }
 
@@ -172,7 +172,7 @@ void FilterEvolution_v2::importDirContents(const QString &dirName, const QString
     for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
         QString kSubDir;
         if (!KMailSubDir.isNull()) {
-            kSubDir = KMailSubDir + '/' + *filename;
+            kSubDir = KMailSubDir + QLatin1Char('/') + *filename;
         } else {
             kSubDir = *filename;
         }
@@ -250,7 +250,7 @@ void FilterEvolution_v2::importMBox(const QString &mboxName, const QString &root
                 if (_targetDir.contains(QLatin1String(".sbd"))) {
                     _targetDir.remove(QLatin1String(".sbd"));
                 }
-                destFolder += "Evolution-Import/" + _targetDir + '/' + filenameInfo.completeBaseName(); // mboxName;
+                destFolder += "Evolution-Import/" + _targetDir + QLatin1Char('/') + filenameInfo.completeBaseName(); // mboxName;
             } else {
                 destFolder = "Evolution-Import/" + rootDir;
                 if (destFolder.contains(QLatin1String(".sbd"))) {

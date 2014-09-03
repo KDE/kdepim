@@ -236,12 +236,12 @@ bool AttachmentHandler::saveAs( const Attachment::Ptr &attachment )
   bool stat = false;
   if ( attachment->isUri() ) {
     // save the attachment url
-    stat = KIO::NetAccess::file_copy( attachment->uri(), QUrl( saveAsFile ) );
+    stat = KIO::NetAccess::file_copy( attachment->uri(), QUrl::fromLocalFile( saveAsFile ) );
   } else {
     // put the attachment in a temporary file and save it
     QUrl tempUrl = tempFileForAttachment( attachment );
     if ( tempUrl.isValid() ) {
-      stat = KIO::NetAccess::file_copy( tempUrl, QUrl( saveAsFile ) );
+      stat = KIO::NetAccess::file_copy( tempUrl, QUrl::fromLocalFile( saveAsFile ) );
       if ( !stat && KIO::NetAccess::lastError() ) {
         KMessageBox::error( d->mParent, KIO::NetAccess::lastErrorString() );
       }

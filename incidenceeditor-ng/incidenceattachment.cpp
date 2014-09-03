@@ -271,7 +271,7 @@ void IncidenceAttachment::saveAttachment( QListWidgetItem *item )
   }
   // save the attachment url
   //QT5 verify QUrl(...)
-  if ( !KIO::NetAccess::file_copy( sourceUrl, QUrl( saveAsFile ) ) &&
+  if ( !KIO::NetAccess::file_copy( sourceUrl, QUrl::fromLocalFile( saveAsFile ) ) &&
        KIO::NetAccess::lastError() ) {
     KMessageBox::error( 0, KIO::NetAccess::lastErrorString() );
   }
