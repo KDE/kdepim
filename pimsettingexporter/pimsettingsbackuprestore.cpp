@@ -275,11 +275,11 @@ void PimSettingsBackupRestore::restoreFinished()
 
 void PimSettingsBackupRestore::executeJob()
 {
-    connect(mImportExportData, SIGNAL(info(QString)), SIGNAL(addInfo(QString)));
-    connect(mImportExportData, SIGNAL(error(QString)), SIGNAL(addError(QString)));
-    connect(mImportExportData, SIGNAL(title(QString)), SIGNAL(addTitle(QString)));
-    connect(mImportExportData, SIGNAL(endLine()), SIGNAL(addEndLine()));
-    connect(mImportExportData, SIGNAL(jobFinished()), SIGNAL(jobFinished()));
+    connect(mImportExportData, &AbstractImportExportJob::info, this, &PimSettingsBackupRestore::addInfo);
+    connect(mImportExportData, &AbstractImportExportJob::error, this, &PimSettingsBackupRestore::addError);
+    connect(mImportExportData, &AbstractImportExportJob::title, this, &PimSettingsBackupRestore::addTitle);
+    connect(mImportExportData, &AbstractImportExportJob::endLine, this, &PimSettingsBackupRestore::addEndLine);
+    connect(mImportExportData, &AbstractImportExportJob::jobFinished, this, &PimSettingsBackupRestore::jobFinished);
     mImportExportData->start();
 }
 

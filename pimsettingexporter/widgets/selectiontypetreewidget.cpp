@@ -94,7 +94,7 @@ void SelectionTypeTreeWidget::initialize()
     createSubItem(mBlogiloItem, Utils::Config);
     createSubItem(mBlogiloItem, Utils::Data);
 
-    connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(slotItemChanged(QTreeWidgetItem*,int)));
+    connect(this, &SelectionTypeTreeWidget::itemChanged, this, &SelectionTypeTreeWidget::slotItemChanged);
 }
 
 QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeTreeWidget::storedType() const

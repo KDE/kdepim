@@ -220,8 +220,8 @@ void AbstractImportExportJob::initializeImportJob()
         mTempDir = new QTemporaryDir();
         mTempDirName = mTempDir->path();
         mCreateResource = new PimCommon::CreateResource();
-        connect(mCreateResource, SIGNAL(createResourceInfo(QString)), SIGNAL(info(QString)));
-        connect(mCreateResource, SIGNAL(createResourceError(QString)), SIGNAL(error(QString)));
+        connect(mCreateResource, &PimCommon::CreateResource::createResourceInfo, this, &AbstractImportExportJob::info);
+        connect(mCreateResource, &PimCommon::CreateResource::createResourceError, this, &AbstractImportExportJob::error);
     }
 }
 

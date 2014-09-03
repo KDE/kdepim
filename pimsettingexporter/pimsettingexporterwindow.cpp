@@ -70,6 +70,7 @@
 #include <QStandardPaths>
 #include <QLocale>
 #include <QFileDialog>
+#include <QCommandLineParser>
 
 PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     : KXmlGuiWindow(parent),
@@ -110,23 +111,21 @@ PimSettingExporterWindow::~PimSettingExporterWindow()
     mRecentFilesAction->saveEntries(groupConfig);
 }
 
-void PimSettingExporterWindow::handleCommandLine()
+void PimSettingExporterWindow::handleCommandLine(const QCommandLineParser &parser)
 {
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     QString templateFile;
-    if (args->isSet("template")) {
-        templateFile = args->getOption("template");
+    if (parser.isSet(QStringLiteral("template"))) {
+        templateFile = parser.value(QStringLiteral("template"));
     }
-    if (args->isSet("import")) {
-        if (args->count() > 0) {
-            loadData(args->url(0).path(), templateFile);
+    if (parser.isSet(QStringLiteral("import"))) {
+        if (parser.positionalArguments().count() > 0) {
+            loadData(parser.positionalArguments().at(0), templateFile);
         }
-    } else if (args->isSet("export")) {
-        if (args->count() > 0) {
-            backupData(args->url(0).path(), templateFile);
+    } else if (parser.isSet(QStringLiteral("export"))) {
+        if (parser.positionalArguments().count() > 0) {
+            backupData(parser.positionalArguments().at(0), templateFile);
         }
     }
-    args->clear();
 }
 
 void PimSettingExporterWindow::setupActions(bool canZipFile)

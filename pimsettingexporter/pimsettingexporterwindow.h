@@ -24,6 +24,7 @@ class AbstractImportExportJob;
 class KRecentFilesAction;
 class ArchiveStorage;
 class QAction;
+class QCommandLineParser;
 
 class PimSettingExporterWindow: public KXmlGuiWindow
 {
@@ -31,7 +32,7 @@ class PimSettingExporterWindow: public KXmlGuiWindow
 public:
     explicit PimSettingExporterWindow(QWidget *parent = 0);
     ~PimSettingExporterWindow();
-    void handleCommandLine();
+    void handleCommandLine(const QCommandLineParser &parser);
 
 private Q_SLOTS:
     void slotJobFinished();
