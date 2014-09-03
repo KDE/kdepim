@@ -6,6 +6,7 @@
   <name xml:lang="ca">KJots</name>
   <name xml:lang="cs">KJots</name>
   <name xml:lang="en-GB">KJots</name>
+  <name xml:lang="es">KJots</name>
   <name xml:lang="fr">KJots</name>
   <name xml:lang="ko">KJots</name>
   <name xml:lang="nds">KJots</name>
@@ -25,6 +26,7 @@
     </p>
     <p xml:lang="ca">El KJots organitza totes les vostres notes en llibres separats.</p>
     <p xml:lang="en-GB">KJots organises all of your notes into separate books</p>
+    <p xml:lang="es">KJots organiza todas sus notas en libretas separadas</p>
     <p xml:lang="fr">KJots organise toutes vos notes dans des livres séparés</p>
     <p xml:lang="ko">KJots는 모든 메모를 책 단위로 관리합니다</p>
     <p xml:lang="nds">KJots organiseert all Dien Notizen in en Reeg Böker</p>
@@ -42,6 +44,7 @@
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="cs">Vlastnosti:</p>
     <p xml:lang="en-GB">Features:</p>
+    <p xml:lang="es">Características:</p>
     <p xml:lang="fr">Fonctionnalités :</p>
     <p xml:lang="ko">기능:</p>
     <p xml:lang="nds">Markmalen:</p>
@@ -59,6 +62,7 @@
       <li>Multiple books handled</li>
       <li xml:lang="ca">Maneja múltiples llibres</li>
       <li xml:lang="en-GB">Multiple books handled</li>
+      <li xml:lang="es">Manejo de libretas múltiples</li>
       <li xml:lang="fr">Gère plusieurs livres à la fois</li>
       <li xml:lang="ko">여러 책 관리</li>
       <li xml:lang="nds">Vele Böker mööglich</li>
@@ -74,6 +78,7 @@
       <li>Each book has many named pages</li>
       <li xml:lang="ca">Cada llibre conté moltes pàgines amb nom</li>
       <li xml:lang="en-GB">Each book has many named pages</li>
+      <li xml:lang="es">Cada libreta dispone de muchas páginas nombradas</li>
       <li xml:lang="fr">Chaque livre a plusieurs pages nommées</li>
       <li xml:lang="ko">책별 이름 있는 쪽 지원</li>
       <li xml:lang="nds">Elkeen Book besteiht ut benöömt Sieden</li>
@@ -89,6 +94,7 @@
       <li>Books and pages can be rearranged by drag-and-drop</li>
       <li xml:lang="ca">Els llibres i les pàgines es poden tornar a ordenar arrossegant i deixant</li>
       <li xml:lang="en-GB">Books and pages can be rearranged by drag-and-drop</li>
+      <li xml:lang="es">Libretas y páginas pueden reorganizarse mediante arrastrar y soltar</li>
       <li xml:lang="fr">Les livres et les pages peuvent être réorganisés par glisser-déposer</li>
       <li xml:lang="ko">드래그 앤 드롭으로 책과 페이지 정렬</li>
       <li xml:lang="nds">Böker un Sieden laat sik mit Trecken un Afleggen nieg anornen</li>
@@ -104,6 +110,7 @@
       <li>Keyboard shortcuts are available for many functions</li>
       <li xml:lang="ca">Les dreceres de teclat estan disponibles per a moltes funcions</li>
       <li xml:lang="en-GB">Keyboard shortcuts are available for many functions</li>
+      <li xml:lang="es">Los accesos rápidos de teclado están disponibles para muchas funciones</li>
       <li xml:lang="fr">Des raccourcis clavier sont disponibles pour de nombreuses fonctions</li>
       <li xml:lang="ko">다양한 기능을 위한 키보드 단축키</li>
       <li xml:lang="nds">För vele Funkschonen gifft dat Tastkombinatschonen</li>
@@ -119,6 +126,7 @@
       <li>Automatic saving means your notes are safe from loss</li>
       <li xml:lang="ca">El desat automàtic significa que les vostres notes estan resguardades de la pèrdua de les dades</li>
       <li xml:lang="en-GB">Automatic saving means your notes are safe from loss</li>
+      <li xml:lang="es">El guardado automáticos significa que sus notas están seguras frente a pérdidas</li>
       <li xml:lang="fr">Enregistrement automatique, ce qui signifie que vos notes sont à l'abri des pertes accidentelles</li>
       <li xml:lang="ko">자동 저장 기능 지원</li>
       <li xml:lang="nds">Automaatsch Sekern verhöödt, Di kaamt Daten weg</li>
