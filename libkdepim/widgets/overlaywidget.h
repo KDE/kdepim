@@ -32,7 +32,8 @@
 
 #include "kdepim_export.h"
 
-#include <KHBox>
+#include <QHBoxLayout>
+#include <QFrame>
 
 class QResizeEvent;
 class QEvent;
@@ -46,7 +47,7 @@ namespace KPIM {
  *
  * OverlayWidget inherits KHBox for convenience purposes (layout, and frame)
  */
-class KDEPIM_EXPORT OverlayWidget : public KHBox
+class KDEPIM_EXPORT OverlayWidget : public QFrame
 {
     Q_OBJECT
 

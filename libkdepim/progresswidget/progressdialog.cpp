@@ -32,7 +32,7 @@
 #include "progressdialog.h"
 #include "ssllabel.h"
 
-#include <KHBox>
+#include <QHBoxLayout>
 #include <KLocalizedString>
 #include <KIconLoader>
 
@@ -45,6 +45,7 @@
 #include <QScrollBar>
 #include <QTimer>
 #include <QLayout>
+#include <QVBoxLayout>
 
 namespace KPIM {
 
@@ -57,7 +58,9 @@ TransactionItemView::TransactionItemView( QWidget *parent, const char *name )
 {
     setObjectName( QLatin1String(name) );
     setFrameStyle( NoFrame );
-    mBigBox = new KVBox( this );
+    mBigBox = new QWidget( this );
+    QVBoxLayout *mBigBoxVBoxLayout = new QVBoxLayout(mBigBox);
+    mBigBoxVBoxLayout->setMargin(0);
     setWidget( mBigBox );
     setWidgetResizable( true );
     setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
@@ -134,22 +137,26 @@ void TransactionItemView::slotLayoutFirstItem()
 
 TransactionItem::TransactionItem( QWidget *parent,
                                   ProgressItem *item, bool first )
-    : KVBox( parent ), mCancelButton( 0 ), mItem( item )
+    : QWidget( parent ), mCancelButton( 0 ), mItem( item )
 
 {
-    setSpacing( 2 );
-    setMargin( 2 );
+    QVBoxLayout *vboxLayout = new QVBoxLayout;
+    vboxLayout->setSpacing(2);
+    vboxLayout->setMargin(2);
+    setLayout(vboxLayout);
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
 
     mFrame = new QFrame( this );
     mFrame->setFrameShape( QFrame::HLine );
     mFrame->setFrameShadow( QFrame::Raised );
     mFrame->show();
-    setStretchFactor( mFrame, 3 );
+    //QT5 setStretchFactor( mFrame, 3 );
     layout()->addWidget( mFrame );
 
-    KHBox *h = new KHBox( this );
-    h->setSpacing( 5 );
+    QWidget *h = new QWidget( this );
+    QHBoxLayout *hHBoxLayout = new QHBoxLayout(h);
+    hHBoxLayout->setMargin(0);
+    hHBoxLayout->setSpacing( 5 );
     layout()->addWidget( h );
 
     mItemLabel =
@@ -158,26 +165,32 @@ TransactionItem::TransactionItem( QWidget *parent,
     h->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
 
     mProgress = new QProgressBar( h );
+    hHBoxLayout->addWidget(mProgress);
     mProgress->setMaximum( 100 );
     mProgress->setValue( item->progress() );
     h->layout()->addWidget( mProgress );
 
     if ( item->canBeCanceled() ) {
         mCancelButton = new QPushButton( SmallIcon( QLatin1String("dialog-cancel") ), QString(), h );
+        hHBoxLayout->addWidget(mCancelButton);
         mCancelButton->setToolTip( i18n( "Cancel this operation." ) );
         connect ( mCancelButton, SIGNAL(clicked()),
                   this, SLOT(slotItemCanceled()));
         h->layout()->addWidget( mCancelButton );
     }
 
-    h = new KHBox( this );
-    h->setSpacing( 5 );
+    h = new QWidget( this );
+    hHBoxLayout = new QHBoxLayout(h);
+    hHBoxLayout->setMargin(0);
+    hHBoxLayout->setSpacing( 5 );
     h->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     layout()->addWidget( h );
     mSSLLabel = new SSLLabel( h );
+    hHBoxLayout->addWidget(mSSLLabel);
     mSSLLabel->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     h->layout()->addWidget( mSSLLabel );
     mItemStatus = new QLabel( h );
+    hHBoxLayout->addWidget(mItemStatus);
     mItemStatus->setTextFormat( Qt::RichText );
     mItemStatus->setText(
                 fontMetrics().elidedText( item->status(), Qt::ElideRight, MAX_LABEL_WIDTH ) );

@@ -35,9 +35,10 @@
 using namespace KPIM;
 
 OverlayWidget::OverlayWidget( QWidget* alignWidget, QWidget* parent )
-    : KHBox( parent ), mAlignWidget( 0 )
+    : QFrame( parent ), mAlignWidget( 0 )
 {
     setAlignWidget( alignWidget );
+    setLayout(new QHBoxLayout(this));
 }
 
 OverlayWidget::~OverlayWidget()
