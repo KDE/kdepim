@@ -21,33 +21,33 @@
 #include <KLocalizedString>
 using namespace MailCommon;
 
-FilterAction* FilterActionUnsetStatus::newAction()
+FilterAction *FilterActionUnsetStatus::newAction()
 {
     return new FilterActionUnsetStatus;
 }
 
-FilterActionUnsetStatus::FilterActionUnsetStatus( QObject *parent )
-    : FilterActionStatus( QLatin1String("unset status"), i18nc( "action: to unset the status", "Unset Status" ), parent )
+FilterActionUnsetStatus::FilterActionUnsetStatus(QObject *parent)
+    : FilterActionStatus(QLatin1String("unset status"), i18nc("action: to unset the status", "Unset Status"), parent)
 {
 }
 
 FilterAction::ReturnCode FilterActionUnsetStatus::process(ItemContext &context , bool) const
 {
-    const int index = mParameterList.indexOf( mParameter );
-    if ( index < 1 )
+    const int index = mParameterList.indexOf(mParameter);
+    if (index < 1) {
         return ErrorButGoOn;
+    }
 
     Akonadi::MessageStatus status;
-    status.setStatusFromFlags( context.item().flags() );
-
+    status.setStatusFromFlags(context.item().flags());
 
     Akonadi::MessageStatus newStatus = FilterActionStatus::stati[ index - 1 ];
     //Laurent unread status doesn't exist. And crash if we use "const Akonadi::Item::Flag flag = *(flags.begin());" etc. => if we unset "unread" we set read
-    if ( newStatus == Akonadi::MessageStatus::statusUnread() ) {
+    if (newStatus == Akonadi::MessageStatus::statusUnread()) {
         Akonadi::MessageStatus oldStatus = status;
-        newStatus.setRead( true );
-        if ( oldStatus != newStatus ) {
-            context.item().setFlags( newStatus.statusFlags() );
+        newStatus.setRead(true);
+        if (oldStatus != newStatus) {
+            context.item().setFlags(newStatus.statusFlags());
             context.setNeedsFlagStore();
         }
         return GoOn;
@@ -55,8 +55,8 @@ FilterAction::ReturnCode FilterActionUnsetStatus::process(ItemContext &context ,
 
     QSet<QByteArray> flags = newStatus.statusFlags();
     const Akonadi::Item::Flag flag = *(flags.begin());
-    if ( context.item().hasFlag( flag ) ) {
-        context.item().clearFlag( flag );
+    if (context.item().hasFlag(flag)) {
+        context.item().clearFlag(flag);
         context.setNeedsFlagStore();
     }
     return GoOn;
@@ -76,9 +76,9 @@ QString FilterActionUnsetStatus::sieveCode() const
     } else if (parameter == QLatin1String("D")) {
         flagCode = QLatin1String("\\\\Deleted");
     } else if (parameter == QLatin1String("A")) {
-        flagCode =QLatin1String("\\\\Answered");
+        flagCode = QLatin1String("\\\\Answered");
     } else {
-        qDebug()<<" FilterActionSetStatus::sieveCode() unknown flags"<<parameter;
+        qDebug() << " FilterActionSetStatus::sieveCode() unknown flags" << parameter;
         flagCode = parameter;
     }
 

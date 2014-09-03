@@ -47,37 +47,37 @@ FilterImporterThunderbird::~FilterImporterThunderbird()
 void FilterImporterThunderbird::readStream(QTextStream &stream)
 {
     MailFilter *filter = 0;
-    while ( !stream.atEnd() ) {
+    while (!stream.atEnd()) {
         QString line = stream.readLine();
         qDebug() << " line :" << line << " filter " << filter;
-        filter = parseLine( stream, line, filter );
+        filter = parseLine(stream, line, filter);
     }
     appendFilter(filter);
 }
 
 QString FilterImporterThunderbird::defaultFiltersSettingsPath()
 {
-    return QString::fromLatin1( "%1/.thunderbird/" ).arg( QDir::homePath() );
+    return QString::fromLatin1("%1/.thunderbird/").arg(QDir::homePath());
 }
 
-MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &stream,
-                                                              QString line,
-                                                              MailCommon::MailFilter *filter )
+MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream,
+        QString line,
+        MailCommon::MailFilter *filter)
 {
-    if ( line.startsWith( QLatin1String( "name=" ) ) ) {
+    if (line.startsWith(QLatin1String("name="))) {
         appendFilter(filter);
         filter = new MailFilter();
-        line = cleanArgument( line, QLatin1String( "name=" ) );
-        filter->pattern()->setName( line );
-        filter->setToolbarName( line );
-    } else if ( line.startsWith( QLatin1String( "action=" ) ) ) {
-        line = cleanArgument( line, QLatin1String( "action=" ) );
+        line = cleanArgument(line, QLatin1String("name="));
+        filter->pattern()->setName(line);
+        filter->setToolbarName(line);
+    } else if (line.startsWith(QLatin1String("action="))) {
+        line = cleanArgument(line, QLatin1String("action="));
         QString value;
-        QString actionName = extractActions( line, filter, value );
-        if ( !stream.atEnd() ) {
+        QString actionName = extractActions(line, filter, value);
+        if (!stream.atEnd()) {
             line = stream.readLine();
-            if ( line.startsWith( QLatin1String( "actionValue=" ) ) ) {
-                value = cleanArgument( line, QLatin1String( "actionValue=" ) );
+            if (line.startsWith(QLatin1String("actionValue="))) {
+                value = cleanArgument(line, QLatin1String("actionValue="));
                 //change priority
                 if (actionName == QLatin1String("Change priority")) {
                     QStringList lstValue;
@@ -101,40 +101,40 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
                     if (url.isValid()) {
                         QString path = url.path();
                         if (path.startsWith(QLatin1Char('/'))) {
-                            path.remove(0,1); //Remove '/'
+                            path.remove(0, 1); //Remove '/'
                         }
                         value = path;
                     }
                 }
-                createFilterAction( filter, actionName, value );
+                createFilterAction(filter, actionName, value);
             } else {
-                createFilterAction( filter, actionName, value );
-                filter = parseLine( stream, line, filter );
+                createFilterAction(filter, actionName, value);
+                filter = parseLine(stream, line, filter);
             }
         } else {
-            createFilterAction( filter, actionName, value );
+            createFilterAction(filter, actionName, value);
         }
-    } else if ( line.startsWith( QLatin1String( "enabled=" ) ) ) {
-        line = cleanArgument( line, QLatin1String( "enabled=" ) );
-        if ( line == QLatin1String( "no" ) ) {
-            filter->setEnabled( false );
+    } else if (line.startsWith(QLatin1String("enabled="))) {
+        line = cleanArgument(line, QLatin1String("enabled="));
+        if (line == QLatin1String("no")) {
+            filter->setEnabled(false);
         }
-    } else if ( line.startsWith( QLatin1String( "condition=" ) ) ) {
-        line = cleanArgument( line, QLatin1String( "condition=" ) );
-        extractConditions( line, filter );
-    } else if ( line.startsWith( QLatin1String( "type=" ) ) ) {
-        line = cleanArgument( line, QLatin1String( "type=" ) );
-        extractType( line, filter );
-    } else if ( line.startsWith( QLatin1String( "version=" ) ) ) {
-        line = cleanArgument( line, QLatin1String( "version=" ) );
-        if ( line.toInt() != 9 ) {
+    } else if (line.startsWith(QLatin1String("condition="))) {
+        line = cleanArgument(line, QLatin1String("condition="));
+        extractConditions(line, filter);
+    } else if (line.startsWith(QLatin1String("type="))) {
+        line = cleanArgument(line, QLatin1String("type="));
+        extractType(line, filter);
+    } else if (line.startsWith(QLatin1String("version="))) {
+        line = cleanArgument(line, QLatin1String("version="));
+        if (line.toInt() != 9) {
             qDebug() << " thunderbird filter version different of 9 need to look at if it changed";
         }
-    } else if ( line.startsWith( QLatin1String( "logging=" ) ) ) {
-        line = cleanArgument( line, QLatin1String( "logging=" ) );
-        if ( line == QLatin1String( "no" ) ) {
+    } else if (line.startsWith(QLatin1String("logging="))) {
+        line = cleanArgument(line, QLatin1String("logging="));
+        if (line == QLatin1String("no")) {
             //TODO
-        } else if ( line == QLatin1String( "yes" ) ) {
+        } else if (line == QLatin1String("yes")) {
             //TODO
         } else {
             qDebug() << " Logging option not implemented " << line;
@@ -145,39 +145,39 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine( QTextStream &strea
     return filter;
 }
 
-void FilterImporterThunderbird::extractConditions( const QString &line,
-                                                   MailCommon::MailFilter *filter )
+void FilterImporterThunderbird::extractConditions(const QString &line,
+        MailCommon::MailFilter *filter)
 {
-    if ( line.startsWith( QLatin1String( "AND" ) ) ) {
-        filter->pattern()->setOp( SearchPattern::OpAnd );
-        const QStringList conditionsList = line.split( QLatin1String( "AND " ) );
-        const int numberOfCond( conditionsList.count() );
-        for ( int i = 0; i < numberOfCond; ++i ) {
-            if ( !conditionsList.at( i ).trimmed().isEmpty() ) {
-                splitConditions( conditionsList.at( i ), filter );
+    if (line.startsWith(QLatin1String("AND"))) {
+        filter->pattern()->setOp(SearchPattern::OpAnd);
+        const QStringList conditionsList = line.split(QLatin1String("AND "));
+        const int numberOfCond(conditionsList.count());
+        for (int i = 0; i < numberOfCond; ++i) {
+            if (!conditionsList.at(i).trimmed().isEmpty()) {
+                splitConditions(conditionsList.at(i), filter);
             }
         }
-    } else if ( line.startsWith( QLatin1String( "OR" ) ) ) {
-        filter->pattern()->setOp( SearchPattern::OpOr );
-        const QStringList conditionsList = line.split( QLatin1String( "OR " ) );
-        const int numberOfCond( conditionsList.count() );
-        for ( int i = 0; i < numberOfCond; ++i ) {
-            if ( !conditionsList.at( i ).trimmed().isEmpty() ) {
-                splitConditions( conditionsList.at( i ), filter );
+    } else if (line.startsWith(QLatin1String("OR"))) {
+        filter->pattern()->setOp(SearchPattern::OpOr);
+        const QStringList conditionsList = line.split(QLatin1String("OR "));
+        const int numberOfCond(conditionsList.count());
+        for (int i = 0; i < numberOfCond; ++i) {
+            if (!conditionsList.at(i).trimmed().isEmpty()) {
+                splitConditions(conditionsList.at(i), filter);
             }
         }
-    } else if ( line.startsWith( QLatin1String( "ALL" ) ) ){
-        filter->pattern()->setOp( SearchPattern::OpAll );
+    } else if (line.startsWith(QLatin1String("ALL"))) {
+        filter->pattern()->setOp(SearchPattern::OpAll);
     } else {
         qDebug() << " missing extract condition" << line;
     }
 }
 
-bool FilterImporterThunderbird::splitConditions( const QString &cond,
-                                                 MailCommon::MailFilter *filter )
+bool FilterImporterThunderbird::splitConditions(const QString &cond,
+        MailCommon::MailFilter *filter)
 {
     /*
-   *    {nsMsgSearchAttrib::Subject,    "subject"},
+    *    {nsMsgSearchAttrib::Subject,    "subject"},
     {nsMsgSearchAttrib::Sender,     "from"},
     {nsMsgSearchAttrib::Body,       "body"},
     {nsMsgSearchAttrib::Date,       "date"},
@@ -201,261 +201,261 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
     {nsMsgSearchAttrib::JunkScoreOrigin, "junk score origin"},
     {nsMsgSearchAttrib::HasAttachmentStatus, "has attachment status"},
 
-  */
+    */
 
     QString str = cond.trimmed();
-    str.remove( QLatin1Char('(') );
-    str.remove( str.length() - 1, 1 ); //remove last )
+    str.remove(QLatin1Char('('));
+    str.remove(str.length() - 1, 1);   //remove last )
 
-    const QStringList listOfCond = str.split( QLatin1Char( ',' ) );
-    if ( listOfCond.count() < 3 ) {
+    const QStringList listOfCond = str.split(QLatin1Char(','));
+    if (listOfCond.count() < 3) {
         qDebug() << "We have a pb in cond:" << cond;
         return false;
     }
-    const QString field = listOfCond.at( 0 );
-    const QString function = listOfCond.at( 1 );
-    const QString contents = listOfCond.at( 2 );
+    const QString field = listOfCond.at(0);
+    const QString function = listOfCond.at(1);
+    const QString contents = listOfCond.at(2);
 
     QByteArray fieldName;
-    if ( field == QLatin1String( "subject" ) ) {
+    if (field == QLatin1String("subject")) {
         fieldName = "subject";
-    } else if ( field == QLatin1String( "from" ) ) {
+    } else if (field == QLatin1String("from")) {
         fieldName = "from";
-    } else if ( field == QLatin1String( "body" ) ) {
+    } else if (field == QLatin1String("body")) {
         fieldName = "<body>";
-    } else if ( field == QLatin1String( "date" ) ) {
+    } else if (field == QLatin1String("date")) {
         fieldName = "<date>";
-    } else if ( field == QLatin1String( "priority" ) ) {
+    } else if (field == QLatin1String("priority")) {
         //TODO
-    } else if ( field == QLatin1String( "status" ) ) {
+    } else if (field == QLatin1String("status")) {
         fieldName = "<status>";
-    } else if ( field == QLatin1String( "to" ) ) {
+    } else if (field == QLatin1String("to")) {
         fieldName = "to";
-    } else if ( field == QLatin1String( "cc" ) ) {
+    } else if (field == QLatin1String("cc")) {
         fieldName = "cc";
-    } else if ( field == QLatin1String( "to or cc" ) ) {
+    } else if (field == QLatin1String("to or cc")) {
         fieldName = "<recipients>";
-    } else if ( field == QLatin1String( "all addresses" ) ) {
+    } else if (field == QLatin1String("all addresses")) {
         fieldName = "<recipients>";
-    } else if ( field == QLatin1String( "age in days" ) ) {
+    } else if (field == QLatin1String("age in days")) {
         fieldName = "<age in days>";
-    } else if ( field == QLatin1String( "label" ) ) {
+    } else if (field == QLatin1String("label")) {
         //TODO
-    } else if ( field == QLatin1String( "tag" ) ) {
+    } else if (field == QLatin1String("tag")) {
         fieldName = "<tag>";
-    } else if ( field == QLatin1String( "size" ) ) {
+    } else if (field == QLatin1String("size")) {
         fieldName = "<size>";
-    } else if ( field == QLatin1String( "from in ab" ) ) {
+    } else if (field == QLatin1String("from in ab")) {
         //TODO
-    } else if ( field == QLatin1String( "junk status" ) ) {
+    } else if (field == QLatin1String("junk status")) {
         //TODO
-    } else if ( field == QLatin1String( "junk percent" ) ) {
+    } else if (field == QLatin1String("junk percent")) {
         //TODO
-    } else if ( field == QLatin1String( "junk score origin" ) ) {
+    } else if (field == QLatin1String("junk score origin")) {
         //TODO
-    } else if ( field == QLatin1String( "has attachment status" ) ) {
+    } else if (field == QLatin1String("has attachment status")) {
         //TODO
     }
 
-    if ( fieldName.isEmpty() ) {
+    if (fieldName.isEmpty()) {
         qDebug() << " Field not implemented: " << field;
     }
     /*
-  {nsMsgSearchOp::Contains, "contains"},
-  {nsMsgSearchOp::DoesntContain,"doesn't contain"},
-  {nsMsgSearchOp::Is,"is"},
-  {nsMsgSearchOp::Isnt,  "isn't"},
-  {nsMsgSearchOp::IsEmpty, "is empty"},
-  {nsMsgSearchOp::IsntEmpty, "isn't empty"},
-  {nsMsgSearchOp::IsBefore, "is before"},
-  {nsMsgSearchOp::IsAfter, "is after"},
-  {nsMsgSearchOp::IsHigherThan, "is higher than"},
-  {nsMsgSearchOp::IsLowerThan, "is lower than"},
-  {nsMsgSearchOp::BeginsWith, "begins with"},
-  {nsMsgSearchOp::EndsWith, "ends with"},
-  {nsMsgSearchOp::IsInAB, "is in ab"},
-  {nsMsgSearchOp::IsntInAB, "isn't in ab"},
-  {nsMsgSearchOp::IsGreaterThan, "is greater than"},
-  {nsMsgSearchOp::IsLessThan, "is less than"},
-  {nsMsgSearchOp::Matches, "matches"},
-  {nsMsgSearchOp::DoesntMatch, "doesn't match"}
-*/
+    {nsMsgSearchOp::Contains, "contains"},
+    {nsMsgSearchOp::DoesntContain,"doesn't contain"},
+    {nsMsgSearchOp::Is,"is"},
+    {nsMsgSearchOp::Isnt,  "isn't"},
+    {nsMsgSearchOp::IsEmpty, "is empty"},
+    {nsMsgSearchOp::IsntEmpty, "isn't empty"},
+    {nsMsgSearchOp::IsBefore, "is before"},
+    {nsMsgSearchOp::IsAfter, "is after"},
+    {nsMsgSearchOp::IsHigherThan, "is higher than"},
+    {nsMsgSearchOp::IsLowerThan, "is lower than"},
+    {nsMsgSearchOp::BeginsWith, "begins with"},
+    {nsMsgSearchOp::EndsWith, "ends with"},
+    {nsMsgSearchOp::IsInAB, "is in ab"},
+    {nsMsgSearchOp::IsntInAB, "isn't in ab"},
+    {nsMsgSearchOp::IsGreaterThan, "is greater than"},
+    {nsMsgSearchOp::IsLessThan, "is less than"},
+    {nsMsgSearchOp::Matches, "matches"},
+    {nsMsgSearchOp::DoesntMatch, "doesn't match"}
+    */
     SearchRule::Function functionName = SearchRule::FuncNone;
 
-    if ( function == QLatin1String( "contains" ) ) {
+    if (function == QLatin1String("contains")) {
         functionName = SearchRule::FuncContains;
-    } else if ( function == QLatin1String( "doesn't contain" ) ) {
+    } else if (function == QLatin1String("doesn't contain")) {
         functionName = SearchRule::FuncContainsNot;
-    } else if ( function == QLatin1String( "is" ) ) {
+    } else if (function == QLatin1String("is")) {
         functionName = SearchRule::FuncEquals;
-    } else if ( function == QLatin1String( "isn't" ) ) {
+    } else if (function == QLatin1String("isn't")) {
         functionName = SearchRule::FuncNotEqual;
-    } else if ( function == QLatin1String( "is empty" ) ) {
+    } else if (function == QLatin1String("is empty")) {
         //TODO
-    } else if ( function == QLatin1String( "isn't empty" ) ) {
+    } else if (function == QLatin1String("isn't empty")) {
         //TODO
-    } else if ( function == QLatin1String( "is before" ) ) {
+    } else if (function == QLatin1String("is before")) {
         functionName = SearchRule::FuncIsLess;
-    } else if ( function == QLatin1String( "is after" ) ) {
+    } else if (function == QLatin1String("is after")) {
         functionName = SearchRule::FuncIsGreater;
-    } else if ( function == QLatin1String( "is higher than" ) ) {
+    } else if (function == QLatin1String("is higher than")) {
         functionName = SearchRule::FuncIsGreater;
-    } else if ( function == QLatin1String( "is lower than" ) ) {
+    } else if (function == QLatin1String("is lower than")) {
         functionName = SearchRule::FuncIsLess;
-    } else if ( function == QLatin1String( "begins with" ) ) {
+    } else if (function == QLatin1String("begins with")) {
         functionName = SearchRule::FuncStartWith;
-    } else if ( function == QLatin1String( "ends with" ) ) {
+    } else if (function == QLatin1String("ends with")) {
         functionName = SearchRule::FuncEndWith;
-    } else if ( function == QLatin1String( "is in ab" ) ) {
+    } else if (function == QLatin1String("is in ab")) {
         functionName = SearchRule::FuncIsInAddressbook;
-    } else if ( function == QLatin1String( "isn't in ab" ) ) {
+    } else if (function == QLatin1String("isn't in ab")) {
         functionName = SearchRule::FuncIsNotInAddressbook;
-    } else if ( function == QLatin1String( "is greater than" ) ) {
+    } else if (function == QLatin1String("is greater than")) {
         functionName = SearchRule::FuncIsGreater;
-    } else if ( function == QLatin1String( "is less than" ) ) {
+    } else if (function == QLatin1String("is less than")) {
         functionName = SearchRule::FuncIsLess;
-    } else if ( function == QLatin1String( "matches" ) ) {
+    } else if (function == QLatin1String("matches")) {
         functionName = SearchRule::FuncEquals;
-    } else if ( function == QLatin1String( "doesn't match" ) ) {
+    } else if (function == QLatin1String("doesn't match")) {
         functionName = SearchRule::FuncNotEqual;
     }
 
-    if ( functionName == SearchRule::FuncNone ) {
+    if (functionName == SearchRule::FuncNone) {
         qDebug() << " functionName not implemented: " << function;
     }
     QString contentsName;
-    if ( fieldName == "<status>" ) {
-        if ( contents == QLatin1String( "read" ) ) {
-            contentsName = QLatin1String( "Read" );
-        } else if ( contents == QLatin1String( "unread" ) ) {
-            contentsName = QLatin1String( "Unread" );
-        } else if ( contents == QLatin1String( "new" ) ) {
-            contentsName = QLatin1String( "New" );
-        } else if ( contents == QLatin1String( "forwarded" ) ) {
-            contentsName = QLatin1String( "Forwarded" );
+    if (fieldName == "<status>") {
+        if (contents == QLatin1String("read")) {
+            contentsName = QLatin1String("Read");
+        } else if (contents == QLatin1String("unread")) {
+            contentsName = QLatin1String("Unread");
+        } else if (contents == QLatin1String("new")) {
+            contentsName = QLatin1String("New");
+        } else if (contents == QLatin1String("forwarded")) {
+            contentsName = QLatin1String("Forwarded");
         } else {
             qDebug() << " contents for status not implemented " << contents;
         }
-    } else if ( fieldName == "<size>" ) {
+    } else if (fieldName == "<size>") {
         int value = contents.toInt();
         value = value * 1024; //Ko
-        contentsName = QString::number( value );
-    } else if ( fieldName == "<date>" ) {
+        contentsName = QString::number(value);
+    } else if (fieldName == "<date>") {
         QLocale locale(QLocale::C);
-        const QDate date = locale.toDate(contents,QString::fromLatin1("dd-MMM-yyyy"));
+        const QDate date = locale.toDate(contents, QString::fromLatin1("dd-MMM-yyyy"));
         contentsName = date.toString(Qt::ISODate);
     } else {
         contentsName = contents;
     }
 
-    SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, contentsName );
-    filter->pattern()->append( rule );
+    SearchRule::Ptr rule = SearchRule::createInstance(fieldName, functionName, contentsName);
+    filter->pattern()->append(rule);
     //qDebug() << " field :" << field << " function :" << function
     //         << " contents :" << contents << " cond :" << cond;
     return true;
 }
 
-QString FilterImporterThunderbird::extractActions( const QString &line,
-                                                   MailCommon::MailFilter *filter,
-                                                   QString &value )
+QString FilterImporterThunderbird::extractActions(const QString &line,
+        MailCommon::MailFilter *filter,
+        QString &value)
 {
     /*
-  { nsMsgFilterAction::MoveToFolder,            "Move to folder"},
-  { nsMsgFilterAction::CopyToFolder,            "Copy to folder"},
-  { nsMsgFilterAction::ChangePriority,          "Change priority"},
-  { nsMsgFilterAction::Delete,                  "Delete"},
-  { nsMsgFilterAction::MarkRead,                "Mark read"},
-  { nsMsgFilterAction::KillThread,              "Ignore thread"},
-  { nsMsgFilterAction::KillSubthread,           "Ignore subthread"},
-  { nsMsgFilterAction::WatchThread,             "Watch thread"},
-  { nsMsgFilterAction::MarkFlagged,             "Mark flagged"},
-  { nsMsgFilterAction::Label,                   "Label"},
-  { nsMsgFilterAction::Reply,                   "Reply"},
-  { nsMsgFilterAction::Forward,                 "Forward"},
-  { nsMsgFilterAction::StopExecution,           "Stop execution"},
-  { nsMsgFilterAction::DeleteFromPop3Server,    "Delete from Pop3 server"},
-  { nsMsgFilterAction::LeaveOnPop3Server,       "Leave on Pop3 server"},
-  { nsMsgFilterAction::JunkScore,               "JunkScore"},
-  { nsMsgFilterAction::FetchBodyFromPop3Server, "Fetch body from Pop3Server"},
-  { nsMsgFilterAction::AddTag,                  "AddTag"},
-  { nsMsgFilterAction::Custom,                  "Custom"},
+    { nsMsgFilterAction::MoveToFolder,            "Move to folder"},
+    { nsMsgFilterAction::CopyToFolder,            "Copy to folder"},
+    { nsMsgFilterAction::ChangePriority,          "Change priority"},
+    { nsMsgFilterAction::Delete,                  "Delete"},
+    { nsMsgFilterAction::MarkRead,                "Mark read"},
+    { nsMsgFilterAction::KillThread,              "Ignore thread"},
+    { nsMsgFilterAction::KillSubthread,           "Ignore subthread"},
+    { nsMsgFilterAction::WatchThread,             "Watch thread"},
+    { nsMsgFilterAction::MarkFlagged,             "Mark flagged"},
+    { nsMsgFilterAction::Label,                   "Label"},
+    { nsMsgFilterAction::Reply,                   "Reply"},
+    { nsMsgFilterAction::Forward,                 "Forward"},
+    { nsMsgFilterAction::StopExecution,           "Stop execution"},
+    { nsMsgFilterAction::DeleteFromPop3Server,    "Delete from Pop3 server"},
+    { nsMsgFilterAction::LeaveOnPop3Server,       "Leave on Pop3 server"},
+    { nsMsgFilterAction::JunkScore,               "JunkScore"},
+    { nsMsgFilterAction::FetchBodyFromPop3Server, "Fetch body from Pop3Server"},
+    { nsMsgFilterAction::AddTag,                  "AddTag"},
+    { nsMsgFilterAction::Custom,                  "Custom"},
      */
 
     QString actionName;
-    if ( line == QLatin1String( "Move to folder" ) ) {
-        actionName = QLatin1String( "transfer" );
-    } else if ( line == QLatin1String( "Forward" ) ) {
-        actionName = QLatin1String( "forward" );
-    } else if ( line == QLatin1String( "Mark read" ) ) {
-        actionName = QLatin1String( "set status" );
-        value = QLatin1String( "R" );
-    } else if ( line == QLatin1String( "Mark unread" ) ) {
-        actionName = QLatin1String( "set status" );
-        value = QLatin1String( "U" ); //TODO verify
-    } else if ( line == QLatin1String( "Copy to folder" ) ) {
-        actionName = QLatin1String( "copy" );
-    } else if ( line == QLatin1String( "AddTag" ) ) {
-        actionName = QLatin1String( "add tag" );
-    } else if ( line == QLatin1String( "Delete" ) ) {
-        actionName = QLatin1String( "delete" );
-    } else if ( line == QLatin1String( "Change priority" ) ) {
+    if (line == QLatin1String("Move to folder")) {
+        actionName = QLatin1String("transfer");
+    } else if (line == QLatin1String("Forward")) {
+        actionName = QLatin1String("forward");
+    } else if (line == QLatin1String("Mark read")) {
+        actionName = QLatin1String("set status");
+        value = QLatin1String("R");
+    } else if (line == QLatin1String("Mark unread")) {
+        actionName = QLatin1String("set status");
+        value = QLatin1String("U");   //TODO verify
+    } else if (line == QLatin1String("Copy to folder")) {
+        actionName = QLatin1String("copy");
+    } else if (line == QLatin1String("AddTag")) {
+        actionName = QLatin1String("add tag");
+    } else if (line == QLatin1String("Delete")) {
+        actionName = QLatin1String("delete");
+    } else if (line == QLatin1String("Change priority")) {
         actionName = QLatin1String("Change priority"); //Doesn't exist in kmail but we help us to importing
-    } else if ( line == QLatin1String( "Ignore thread" ) ) {
-    } else if ( line == QLatin1String( "Ignore subthread" ) ) {
-    } else if ( line == QLatin1String( "Watch thread" ) ) {
-    } else if ( line == QLatin1String( "Mark flagged" ) ) {
-    } else if ( line == QLatin1String( "Label" ) ) {
-    } else if ( line == QLatin1String( "Reply" ) ) {
-        actionName = QLatin1String( "set Reply-To" );
-    } else if ( line == QLatin1String( "Stop execution" ) ) {
-        filter->setStopProcessingHere( true );
+    } else if (line == QLatin1String("Ignore thread")) {
+    } else if (line == QLatin1String("Ignore subthread")) {
+    } else if (line == QLatin1String("Watch thread")) {
+    } else if (line == QLatin1String("Mark flagged")) {
+    } else if (line == QLatin1String("Label")) {
+    } else if (line == QLatin1String("Reply")) {
+        actionName = QLatin1String("set Reply-To");
+    } else if (line == QLatin1String("Stop execution")) {
+        filter->setStopProcessingHere(true);
         return QString();
-    } else if ( line == QLatin1String( "Delete from Pop3 server" ) ) {
-    } else if ( line == QLatin1String( "JunkScore" ) ) {
-    } else if ( line == QLatin1String( "Fetch body from Pop3Server" ) ) {
-    } else if ( line == QLatin1String( "Custom" ) ) {
+    } else if (line == QLatin1String("Delete from Pop3 server")) {
+    } else if (line == QLatin1String("JunkScore")) {
+    } else if (line == QLatin1String("Fetch body from Pop3Server")) {
+    } else if (line == QLatin1String("Custom")) {
     }
-    if ( actionName.isEmpty() ) {
-        qDebug() << QString::fromLatin1( " missing convert method: %1" ).arg( line );
+    if (actionName.isEmpty()) {
+        qDebug() << QString::fromLatin1(" missing convert method: %1").arg(line);
     }
     return actionName;
 }
 
-void FilterImporterThunderbird::extractType( const QString &line, MailCommon::MailFilter *filter )
+void FilterImporterThunderbird::extractType(const QString &line, MailCommon::MailFilter *filter)
 {
     const int value = line.toInt();
-    if ( value == 1 ) {
-        filter->setApplyOnInbound( true );
-        filter->setApplyOnExplicit( false );
+    if (value == 1) {
+        filter->setApplyOnInbound(true);
+        filter->setApplyOnExplicit(false);
         //Checking mail
-    } else if ( value == 16 ) {
-        filter->setApplyOnInbound( false );
-        filter->setApplyOnExplicit( true );
+    } else if (value == 16) {
+        filter->setApplyOnInbound(false);
+        filter->setApplyOnExplicit(true);
         //Manual mail
-    } else if ( value == 17 ) {
-        filter->setApplyOnInbound( true );
-        filter->setApplyOnExplicit( true );
+    } else if (value == 17) {
+        filter->setApplyOnInbound(true);
+        filter->setApplyOnExplicit(true);
         //Checking mail or manual
-    } else if ( value == 32 ) {
-        filter->setApplyOnExplicit( false );
-        filter->setApplyOnOutbound( true );
-        filter->setApplyOnInbound( false );
+    } else if (value == 32) {
+        filter->setApplyOnExplicit(false);
+        filter->setApplyOnOutbound(true);
+        filter->setApplyOnInbound(false);
         //checking mail after classification
-    } else if ( value == 48 ) {
-        filter->setApplyOnExplicit( true );
-        filter->setApplyOnOutbound( true );
-        filter->setApplyOnInbound( false );
+    } else if (value == 48) {
+        filter->setApplyOnExplicit(true);
+        filter->setApplyOnOutbound(true);
+        filter->setApplyOnInbound(false);
         //checking mail after classification or manual check
     } else {
         qDebug() << " type value is not valid :" << value;
     }
 }
 
-QString FilterImporterThunderbird::cleanArgument( const QString &line, const QString &removeStr )
+QString FilterImporterThunderbird::cleanArgument(const QString &line, const QString &removeStr)
 {
     QString str = line;
-    str.remove( removeStr );
-    str.remove( QLatin1String( "\"" ) );
-    str.remove( str.length(), 1 ); //remove last "
+    str.remove(removeStr);
+    str.remove(QLatin1String("\""));
+    str.remove(str.length(), 1);   //remove last "
     return str;
 }

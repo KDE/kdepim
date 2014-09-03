@@ -41,32 +41,33 @@ class QLineEdit;
 class QPushButton;
 class QString;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT RegExpLineEdit : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit RegExpLineEdit( const QString &str, QWidget *parent = 0 );
-    explicit RegExpLineEdit( QWidget *parent = 0 );
+    explicit RegExpLineEdit(const QString &str, QWidget *parent = 0);
+    explicit RegExpLineEdit(QWidget *parent = 0);
 
     QString text() const;
 
 public slots:
     void clear();
-    void setText( const QString & );
-    void showEditButton( bool );
+    void setText(const QString &);
+    void showEditButton(bool);
 
 signals:
-    void textChanged( const QString & );
+    void textChanged(const QString &);
     void returnPressed();
 
 protected slots:
     void slotEditRegExp();
 
 private:
-    void initWidget( const QString & = QString() );
+    void initWidget(const QString & = QString());
 
     QLineEdit *mLineEdit;
     QPushButton *mRegExpEditButton;

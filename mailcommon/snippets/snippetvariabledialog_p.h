@@ -26,16 +26,17 @@
 class KTextEdit;
 class QCheckBox;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class SnippetVariableDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    SnippetVariableDialog( const QString &variableName,
-                           QMap<QString, QString> *variables,
-                           QWidget *parent = 0 );
+    SnippetVariableDialog(const QString &variableName,
+                          QMap<QString, QString> *variables,
+                          QWidget *parent = 0);
 
     QString variableValue() const;
     bool saveVariableIsChecked() const;

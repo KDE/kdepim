@@ -32,13 +32,13 @@
 
 using namespace MailCommon;
 
-SnippetVariableDialog::SnippetVariableDialog( const QString &variableName,
-                                              QMap<QString, QString> *variables,
-                                              QWidget *parent )
-    : QDialog( parent ), mVariableName( variableName ), mVariables( variables )
+SnippetVariableDialog::SnippetVariableDialog(const QString &variableName,
+        QMap<QString, QString> *variables,
+        QWidget *parent)
+    : QDialog(parent), mVariableName(variableName), mVariables(variables)
 {
-    setWindowTitle( i18n( "Enter Values for Variables" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Enter Values for Variables"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -53,30 +53,30 @@ SnippetVariableDialog::SnippetVariableDialog( const QString &variableName,
     QVBoxLayout *layout = new QVBoxLayout(mainWidget);
 
     QLabel *label = new QLabel;
-    label->setText( i18n( "Enter the replacement values for '%1':", variableName ) );
-    layout->addWidget( label );
+    label->setText(i18n("Enter the replacement values for '%1':", variableName));
+    layout->addWidget(label);
 
     mVariableValueText = new KTextEdit;
     mVariableValueText->setAcceptRichText(false);
-    layout->addWidget( mVariableValueText );
+    layout->addWidget(mVariableValueText);
 
     mSaveVariable = new QCheckBox;
-    mSaveVariable->setChecked( false );
-    mSaveVariable->setText( i18n( "Make value &default" ) );
+    mSaveVariable->setChecked(false);
+    mSaveVariable->setText(i18n("Make value &default"));
     mSaveVariable->setToolTip(
-                i18nc( "@info:tooltip",
-                       "Enable this to save the value entered to the right "
-                       "as the default value for this variable" ) );
+        i18nc("@info:tooltip",
+              "Enable this to save the value entered to the right "
+              "as the default value for this variable"));
     mSaveVariable->setWhatsThis(
-                i18nc( "@info:whatsthis",
-                       "If you enable this option, the value entered to the right will be saved. "
-                       "If you use the same variable later, even in another snippet, the value entered "
-                       "to the right will be the default value for that variable." ) );
-    layout->addWidget( mSaveVariable );
+        i18nc("@info:whatsthis",
+              "If you enable this option, the value entered to the right will be saved. "
+              "If you use the same variable later, even in another snippet, the value entered "
+              "to the right will be the default value for that variable."));
+    layout->addWidget(mSaveVariable);
 
-    if ( mVariables->contains( variableName ) ) {
-        mSaveVariable->setChecked( true );
-        mVariableValueText->setText( mVariables->value( variableName ) );
+    if (mVariables->contains(variableName)) {
+        mSaveVariable->setChecked(true);
+        mVariableValueText->setText(mVariables->value(variableName));
     }
 
     mVariableValueText->setFocus();
@@ -94,13 +94,13 @@ bool SnippetVariableDialog::saveVariableIsChecked() const
 
 void SnippetVariableDialog::slotAccepted()
 {
-    if ( mSaveVariable->isChecked() ) {
-        mVariables->insert( mVariableName, mVariableValueText->toPlainText() );
+    if (mSaveVariable->isChecked()) {
+        mVariables->insert(mVariableName, mVariableValueText->toPlainText());
     } else {
-        mVariables->remove( mVariableName );
+        mVariables->remove(mVariableName);
     }
 
-   accept();
+    accept();
 }
 
 #include "moc_snippetvariabledialog_p.cpp"

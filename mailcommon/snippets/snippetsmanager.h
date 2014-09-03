@@ -31,24 +31,25 @@ class QAbstractItemModel;
 class QAction;
 class QItemSelectionModel;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT SnippetsManager : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY( QAbstractItemModel *model READ model )
-    Q_PROPERTY( QItemSelectionModel *selectionModel READ selectionModel )
-    Q_PROPERTY( QAction *addSnippetAction READ addSnippetAction )
-    Q_PROPERTY( QAction *editSnippetAction READ editSnippetAction )
-    Q_PROPERTY( QAction *deleteSnippetAction READ deleteSnippetAction )
-    Q_PROPERTY( QAction *addSnippetGroupAction READ addSnippetGroupAction )
-    Q_PROPERTY( QAction *editSnippetGroupAction READ editSnippetGroupAction )
-    Q_PROPERTY( QAction *deleteSnippetGroupAction READ deleteSnippetGroupAction )
-    Q_PROPERTY( QAction *insertSnippetAction READ insertSnippetAction )
+    Q_PROPERTY(QAbstractItemModel *model READ model)
+    Q_PROPERTY(QItemSelectionModel *selectionModel READ selectionModel)
+    Q_PROPERTY(QAction *addSnippetAction READ addSnippetAction)
+    Q_PROPERTY(QAction *editSnippetAction READ editSnippetAction)
+    Q_PROPERTY(QAction *deleteSnippetAction READ deleteSnippetAction)
+    Q_PROPERTY(QAction *addSnippetGroupAction READ addSnippetGroupAction)
+    Q_PROPERTY(QAction *editSnippetGroupAction READ editSnippetGroupAction)
+    Q_PROPERTY(QAction *deleteSnippetGroupAction READ deleteSnippetGroupAction)
+    Q_PROPERTY(QAction *insertSnippetAction READ insertSnippetAction)
 
-    Q_PROPERTY( bool snippetGroupSelected READ snippetGroupSelected )
-    Q_PROPERTY( QString selectedName READ selectedName )
+    Q_PROPERTY(bool snippetGroupSelected READ snippetGroupSelected)
+    Q_PROPERTY(QString selectedName READ selectedName)
 
 public:
     /**
@@ -58,8 +59,8 @@ public:
      *                         register the snippet shortcuts at.
      * @param parent The parent object.
      */
-    explicit SnippetsManager( KActionCollection *actionCollection,
-                              QObject *parent = 0, QWidget *widget = 0 );
+    explicit SnippetsManager(KActionCollection *actionCollection,
+                             QObject *parent = 0, QWidget *widget = 0);
 
     /**
      * Destroys the snippets manager.
@@ -86,7 +87,7 @@ public:
      *
      * @endcode
      */
-    void setEditor( QObject *editor, const char *insertSnippetMethod, const char *dropSignal );
+    void setEditor(QObject *editor, const char *insertSnippetMethod, const char *dropSignal);
 
     /**
      * Returns the model that represents the snippets.
@@ -149,16 +150,16 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void selectionChanged() )
-    Q_PRIVATE_SLOT( d, void addSnippet() )
-    Q_PRIVATE_SLOT( d, void editSnippet() )
-    Q_PRIVATE_SLOT( d, void deleteSnippet() )
-    Q_PRIVATE_SLOT( d, void addSnippetGroup() )
-    Q_PRIVATE_SLOT( d, void editSnippetGroup() )
-    Q_PRIVATE_SLOT( d, void deleteSnippetGroup() )
-    Q_PRIVATE_SLOT( d, void insertSelectedSnippet() )
-    Q_PRIVATE_SLOT( d, void insertActionSnippet() )
-    Q_PRIVATE_SLOT( d, void dndDone() )
+    Q_PRIVATE_SLOT(d, void selectionChanged())
+    Q_PRIVATE_SLOT(d, void addSnippet())
+    Q_PRIVATE_SLOT(d, void editSnippet())
+    Q_PRIVATE_SLOT(d, void deleteSnippet())
+    Q_PRIVATE_SLOT(d, void addSnippetGroup())
+    Q_PRIVATE_SLOT(d, void editSnippetGroup())
+    Q_PRIVATE_SLOT(d, void deleteSnippetGroup())
+    Q_PRIVATE_SLOT(d, void insertSelectedSnippet())
+    Q_PRIVATE_SLOT(d, void insertActionSnippet())
+    Q_PRIVATE_SLOT(d, void dndDone())
     //@endcond
 };
 

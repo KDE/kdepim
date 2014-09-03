@@ -31,34 +31,36 @@
 
 using namespace MailCommon;
 
-FilterAction* FilterActionRedirect::newAction()
+FilterAction *FilterActionRedirect::newAction()
 {
     return new FilterActionRedirect;
 }
 
-FilterActionRedirect::FilterActionRedirect( QObject *parent )
-    : FilterActionWithAddress( QLatin1String("redirect"), i18n( "Redirect To" ), parent )
+FilterActionRedirect::FilterActionRedirect(QObject *parent)
+    : FilterActionWithAddress(QLatin1String("redirect"), i18n("Redirect To"), parent)
 {
 }
 
 FilterAction::ReturnCode FilterActionRedirect::process(ItemContext &context , bool) const
 {
-    if ( mParameter.isEmpty() )
+    if (mParameter.isEmpty()) {
         return ErrorButGoOn;
+    }
 
-    KMime::Message::Ptr msg = MessageCore::Util::message( context.item() );
+    KMime::Message::Ptr msg = MessageCore::Util::message(context.item());
 
-    MessageComposer::MessageFactory factory( msg, context.item().id() );
-    factory.setFolderIdentity( Util::folderIdentity( context.item() ) );
-    factory.setIdentityManager( KernelIf->identityManager() );
+    MessageComposer::MessageFactory factory(msg, context.item().id());
+    factory.setFolderIdentity(Util::folderIdentity(context.item()));
+    factory.setIdentityManager(KernelIf->identityManager());
 
-    KMime::Message::Ptr rmsg = factory.createRedirect( mParameter );
-    if ( !rmsg )
+    KMime::Message::Ptr rmsg = factory.createRedirect(mParameter);
+    if (!rmsg) {
         return ErrorButGoOn;
+    }
 
-    sendMDN( context.item(), KMime::MDN::Dispatched );
+    sendMDN(context.item(), KMime::MDN::Dispatched);
 
-    if ( !KernelIf->msgSender()->send( rmsg, MessageComposer::MessageSender::SendLater ) ) {
+    if (!KernelIf->msgSender()->send(rmsg, MessageComposer::MessageSender::SendLater)) {
         qDebug() << "FilterAction: could not redirect message (sending failed)";
         return ErrorButGoOn; // error: couldn't send
     }
@@ -76,5 +78,4 @@ QString FilterActionRedirect::sieveCode() const
     const QString result = QString::fromLatin1("redirect \"%1\";").arg(mParameter);
     return result;
 }
-
 

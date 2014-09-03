@@ -24,26 +24,26 @@
 
 class QFile;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MailFilter;
 
 class FilterImporterProcmail : public FilterImporterAbstract
 {
 public:
-    explicit FilterImporterProcmail( QFile *file );
+    explicit FilterImporterProcmail(QFile *file);
     ~FilterImporterProcmail();
     static QString defaultFiltersSettingsPath();
 
 private:
-    MailCommon::MailFilter *parseLine( QTextStream &stream, QString line, MailCommon::MailFilter *filter );
+    MailCommon::MailFilter *parseLine(QTextStream &stream, QString line, MailCommon::MailFilter *filter);
     QString createUniqFilterName();
     int mFilterCount;
 
 };
 
 }
-
 
 #endif /*MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERPROCMAIL_P_H*/
 

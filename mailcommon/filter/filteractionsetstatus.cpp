@@ -23,36 +23,35 @@
 #include <KLocalizedString>
 using namespace MailCommon;
 
-FilterAction* FilterActionSetStatus::newAction()
+FilterAction *FilterActionSetStatus::newAction()
 {
     return new FilterActionSetStatus;
 }
 
-FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
-    : FilterActionStatus( QLatin1String("set status"), i18n( "Mark As" ), parent )
+FilterActionSetStatus::FilterActionSetStatus(QObject *parent)
+    : FilterActionStatus(QLatin1String("set status"), i18n("Mark As"), parent)
 {
 }
 
-
-
 FilterAction::ReturnCode FilterActionSetStatus::process(ItemContext &context , bool) const
 {
-    const int index = mParameterList.indexOf( mParameter );
-    if ( index < 1 )
+    const int index = mParameterList.indexOf(mParameter);
+    if (index < 1) {
         return ErrorButGoOn;
+    }
 
     Akonadi::MessageStatus status;
-    status.setStatusFromFlags( context.item().flags() );
+    status.setStatusFromFlags(context.item().flags());
 
     Akonadi::MessageStatus oldStatus = status;
     const Akonadi::MessageStatus newStatus = FilterActionStatus::stati[ index - 1 ];
-    if ( newStatus == Akonadi::MessageStatus::statusUnread() ) {
-        status.setRead( false );
+    if (newStatus == Akonadi::MessageStatus::statusUnread()) {
+        status.setRead(false);
+    } else {
+        status.set(newStatus);
     }
-    else
-        status.set( newStatus );
-    if ( oldStatus != status ) {
-        context.item().setFlags( status.statusFlags() );
+    if (oldStatus != status) {
+        context.item().setFlags(status.statusFlags());
         context.setNeedsFlagStore();
     }
 
@@ -75,7 +74,7 @@ QString FilterActionSetStatus::sieveCode() const
     } else if (parameter == QLatin1String("A")) {
         flagCode = QLatin1String("\\\\Answered");
     } else {
-        qDebug()<<" FilterActionSetStatus::sieveCode() unknown flags"<<parameter;
+        qDebug() << " FilterActionSetStatus::sieveCode() unknown flags" << parameter;
         flagCode = parameter;
     }
 
@@ -87,5 +86,4 @@ QStringList FilterActionSetStatus::sieveRequires() const
 {
     return QStringList() << QLatin1String("imap4flags");
 }
-
 

@@ -22,7 +22,8 @@
 
 #include "filteractionwithstringlist.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionAddToAddressBook
@@ -32,25 +33,24 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
 {
     Q_OBJECT
 public:
-    explicit FilterActionAddToAddressBook( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
-    static FilterAction* newAction();
+    explicit FilterActionAddToAddressBook(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
+    static FilterAction *newAction();
 
     SearchRule::RequiredPart requiredPart() const;
 
     bool isEmpty() const;
 
-    QWidget* createParamWidget( QWidget *parent ) const;
-    void setParamWidgetValue( QWidget *paramWidget ) const;
-    void applyParamWidgetValue( QWidget *paramWidget );
-    void clearParamWidget( QWidget *paramWidget ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
+    void setParamWidgetValue(QWidget *paramWidget) const;
+    void applyParamWidgetValue(QWidget *paramWidget);
+    void clearParamWidget(QWidget *paramWidget) const;
 
     QString argsAsString() const;
-    void argsFromString( const QString &argsStr );
+    void argsFromString(const QString &argsStr);
 
 private:
-    enum HeaderType
-    {
+    enum HeaderType {
         FromHeader,
         ToHeader,
         CcHeader,

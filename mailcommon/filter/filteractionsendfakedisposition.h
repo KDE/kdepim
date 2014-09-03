@@ -22,7 +22,8 @@
 
 #include "filteractionwithstringlist.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionSendFakeDisposition - send fake MDN
@@ -32,15 +33,15 @@ class FilterActionSendFakeDisposition: public FilterActionWithStringList
 {
     Q_OBJECT
 public:
-    explicit FilterActionSendFakeDisposition( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionSendFakeDisposition(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
 
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 
     bool isEmpty() const;
 
-    void argsFromString( const QString &argsStr );
+    void argsFromString(const QString &argsStr);
     QString argsAsString() const;
     QString displayString() const;
 };

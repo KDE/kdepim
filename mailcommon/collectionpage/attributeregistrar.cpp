@@ -23,17 +23,17 @@
 
 #include <AkonadiCore/attributefactory.h>
 
-
 #ifndef KDELIBS_STATIC_LIBS
-namespace {
+namespace
+{
 
 // Anonymous namespace; function is invisible outside this file.
 bool dummy()
 {
-  Akonadi::AttributeFactory::registerAttribute<MailCommon::CollectionAnnotationsAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<MailCommon::ExpireCollectionAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<MailCommon::NewMailNotifierAttribute>();
-  return true;
+    Akonadi::AttributeFactory::registerAttribute<MailCommon::CollectionAnnotationsAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<MailCommon::ExpireCollectionAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<MailCommon::NewMailNotifierAttribute>();
+    return true;
 }
 
 // Called when this library is loaded.
@@ -45,11 +45,11 @@ const bool registered = dummy();
 
 extern bool ___MailCommon____INIT()
 {
-  Akonadi::AttributeFactory::registerAttribute<MailCommon::CollectionAnnotationsAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<MailCommon::ExpirationCollectionAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<MailCommon::NewMailNotifierAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<MailCommon::CollectionAnnotationsAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<MailCommon::ExpirationCollectionAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<MailCommon::NewMailNotifierAttribute>();
 
-  return true;
+    return true;
 }
 
 #endif

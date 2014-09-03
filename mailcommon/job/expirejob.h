@@ -37,14 +37,14 @@
 
 class KJob;
 
-namespace MailCommon {
-
+namespace MailCommon
+{
 
 class ExpireJob : public ScheduledJob
 {
     Q_OBJECT
 public:
-    explicit ExpireJob( const Akonadi::Collection &folder, bool immediate );
+    explicit ExpireJob(const Akonadi::Collection &folder, bool immediate);
     virtual ~ExpireJob();
 
     virtual void execute();
@@ -52,9 +52,9 @@ public:
 
 private slots:
     void slotDoWork();
-    void slotExpireDone( KJob *job );
-    void slotMoveDone( KJob *job );
-    void itemFetchResult( KJob *job );
+    void slotExpireDone(KJob *job);
+    void slotMoveDone(KJob *job);
+    void itemFetchResult(KJob *job);
 
 private:
     void done();
@@ -72,8 +72,8 @@ class ScheduledExpireTask : public ScheduledTask
 public:
     /// If immediate is set, the job will execute synchronously. This is used when
     /// the user requests explicitly that the operation should happen immediately.
-    ScheduledExpireTask( const Akonadi::Collection &folder, bool immediate )
-        : ScheduledTask( folder, immediate )
+    ScheduledExpireTask(const Akonadi::Collection &folder, bool immediate)
+        : ScheduledTask(folder, immediate)
     {
     }
 
@@ -83,7 +83,7 @@ public:
 
     virtual ScheduledJob *run()
     {
-        return folder().isValid() ? new ExpireJob( folder(), isImmediate() ) : 0;
+        return folder().isValid() ? new ExpireJob(folder(), isImmediate()) : 0;
     }
 
     virtual int taskTypeId() const

@@ -34,29 +34,30 @@
 #include <QDebug>
 #include <KMime/KMimeMessage>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
-FolderCollectionMonitor::FolderCollectionMonitor( Akonadi::Session *session, QObject *parent )
-    : QObject( parent )
+FolderCollectionMonitor::FolderCollectionMonitor(Akonadi::Session *session, QObject *parent)
+    : QObject(parent)
 {
     // monitor collection changes
-    mMonitor = new Akonadi::ChangeRecorder( this );
+    mMonitor = new Akonadi::ChangeRecorder(this);
     mMonitor->setSession(session);
-    mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
-    mMonitor->fetchCollectionStatistics( true );
-    mMonitor->collectionFetchScope().setIncludeStatistics( true );
-    mMonitor->fetchCollection( true );
-    mMonitor->setAllMonitored( true );
-    mMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
+    mMonitor->setCollectionMonitored(Akonadi::Collection::root());
+    mMonitor->fetchCollectionStatistics(true);
+    mMonitor->collectionFetchScope().setIncludeStatistics(true);
+    mMonitor->fetchCollection(true);
+    mMonitor->setAllMonitored(true);
+    mMonitor->setMimeTypeMonitored(KMime::Message::mimeType());
 #ifdef MERGE_KNODE_IN_KMAIL
-    mMonitor->setMimeTypeMonitored( QString::fromLatin1("message/news") );
+    mMonitor->setMimeTypeMonitored(QString::fromLatin1("message/news"));
 #endif
-    mMonitor->setResourceMonitored( "akonadi_search_resource", true );
-    mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
-    mMonitor->itemFetchScope().setFetchModificationTime( false );
-    mMonitor->itemFetchScope().setFetchRemoteIdentification( false );
-    mMonitor->itemFetchScope().setFetchTags( true );
-    mMonitor->itemFetchScope().fetchAttribute<Akonadi::EntityAnnotationsAttribute>( true );
+    mMonitor->setResourceMonitored("akonadi_search_resource", true);
+    mMonitor->itemFetchScope().fetchPayloadPart(Akonadi::MessagePart::Envelope);
+    mMonitor->itemFetchScope().setFetchModificationTime(false);
+    mMonitor->itemFetchScope().setFetchRemoteIdentification(false);
+    mMonitor->itemFetchScope().setFetchTags(true);
+    mMonitor->itemFetchScope().fetchAttribute<Akonadi::EntityAnnotationsAttribute>(true);
 }
 
 FolderCollectionMonitor::~FolderCollectionMonitor()
@@ -68,54 +69,54 @@ Akonadi::ChangeRecorder *FolderCollectionMonitor::monitor() const
     return mMonitor;
 }
 
-void FolderCollectionMonitor::expireAllFolders( bool immediate,
-                                                QAbstractItemModel *collectionModel )
+void FolderCollectionMonitor::expireAllFolders(bool immediate,
+        QAbstractItemModel *collectionModel)
 {
-    if ( collectionModel ) {
-        expireAllCollection( collectionModel, immediate );
+    if (collectionModel) {
+        expireAllCollection(collectionModel, immediate);
     }
 }
 
-void FolderCollectionMonitor::expireAllCollection( const QAbstractItemModel *model,
-                                                   bool immediate,
-                                                   const QModelIndex &parentIndex )
+void FolderCollectionMonitor::expireAllCollection(const QAbstractItemModel *model,
+        bool immediate,
+        const QModelIndex &parentIndex)
 {
-    const int rowCount = model->rowCount( parentIndex );
-    for ( int row = 0; row < rowCount; ++row ) {
-        const QModelIndex index = model->index( row, 0, parentIndex );
+    const int rowCount = model->rowCount(parentIndex);
+    for (int row = 0; row < rowCount; ++row) {
+        const QModelIndex index = model->index(row, 0, parentIndex);
         const Akonadi::Collection collection =
-                model->data(
-                    index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+            model->data(
+                index, Akonadi::CollectionModel::CollectionRole).value<Akonadi::Collection>();
 
-        if ( !collection.isValid() || Util::isVirtualCollection( collection ) ) {
+        if (!collection.isValid() || Util::isVirtualCollection(collection)) {
             continue;
         }
 
         bool mustDeleteExpirationAttribute = false;
         MailCommon::ExpireCollectionAttribute *attr =
-                MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
-                    collection, mustDeleteExpirationAttribute );
+            MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
+                collection, mustDeleteExpirationAttribute);
 
-        if ( attr->isAutoExpire() ) {
-            MailCommon::Util::expireOldMessages( collection, immediate );
+        if (attr->isAutoExpire()) {
+            MailCommon::Util::expireOldMessages(collection, immediate);
         }
 
-        if ( model->rowCount( index ) > 0 ) {
-            expireAllCollection( model, immediate, index );
+        if (model->rowCount(index) > 0) {
+            expireAllCollection(model, immediate, index);
         }
 
-        if ( mustDeleteExpirationAttribute ) {
+        if (mustDeleteExpirationAttribute) {
             delete attr;
         }
     }
 }
 
-void FolderCollectionMonitor::expunge( const Akonadi::Collection & col, bool sync )
+void FolderCollectionMonitor::expunge(const Akonadi::Collection &col, bool sync)
 {
-    if ( col.isValid() ) {
-        Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( col, this );
+    if (col.isValid()) {
+        Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(col, this);
         connect(job, &Akonadi::ItemDeleteJob::result, this, &FolderCollectionMonitor::slotDeleteJob);
-        if ( sync ) {
+        if (sync) {
             job->exec();
         }
     } else {
@@ -123,9 +124,9 @@ void FolderCollectionMonitor::expunge( const Akonadi::Collection & col, bool syn
     }
 }
 
-void FolderCollectionMonitor::slotDeleteJob( KJob *job )
+void FolderCollectionMonitor::slotDeleteJob(KJob *job)
 {
-    Util::showJobErrorMessage( job );
+    Util::showJobErrorMessage(job);
 }
 
 }

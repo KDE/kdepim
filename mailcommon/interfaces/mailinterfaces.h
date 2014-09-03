@@ -23,20 +23,24 @@
 
 #include <KSharedConfig>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class MessageSender;
 }
 
-namespace Akonadi {
-  class ChangeRecorder;
-  class EntityMimeTypeFilterModel;
+namespace Akonadi
+{
+class ChangeRecorder;
+class EntityMimeTypeFilterModel;
 }
 
-namespace KIdentityManagement {
-  class IdentityManager;
+namespace KIdentityManagement
+{
+class IdentityManager;
 }
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FilterDialog;
 class JobScheduler;
@@ -44,7 +48,7 @@ class JobScheduler;
 /** Generic interface for mail kernels.*/
 class IKernel
 {
-  public:
+public:
     /**
      * Returns a model of all folders in KMail.
      * This is basically the same as entityTreeModel(), but with items
@@ -72,9 +76,9 @@ class IKernel
 /** Filter related interface */
 class IFilter
 {
-  public:
-    virtual void openFilterDialog( bool createDummyFilter = true ) = 0;
-    virtual void createFilter( const QByteArray & field, const QString &value ) = 0;
+public:
+    virtual void openFilterDialog(bool createDummyFilter = true) = 0;
+    virtual void createFilter(const QByteArray &field, const QString &value) = 0;
     virtual ~IFilter()
     {
     };
@@ -83,7 +87,7 @@ class IFilter
 /** Interface to access some settings. */
 class ISettings
 {
-  public:
+public:
     virtual bool showPopupAfterDnD() = 0;
 
     virtual bool excludeImportantMailFromExpiry() = 0;
@@ -91,7 +95,7 @@ class ISettings
     virtual qreal closeToQuotaThreshold() = 0;
 
     virtual Akonadi::Collection::Id lastSelectedFolder() = 0;
-    virtual void setLastSelectedFolder( const Akonadi::Collection::Id &col ) = 0;
+    virtual void setLastSelectedFolder(const Akonadi::Collection::Id &col) = 0;
 
     virtual QStringList customTemplates() = 0;
 

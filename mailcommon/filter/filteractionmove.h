@@ -22,7 +22,8 @@
 
 #include "filteractionwithfolder.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionMove - move into folder
@@ -32,11 +33,11 @@ class FilterActionMove: public FilterActionWithFolder
 {
     Q_OBJECT
 public:
-    explicit FilterActionMove( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionMove(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     bool requiresBody() const;
     SearchRule::RequiredPart requiredPart() const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
     QString sieveCode() const;
     QStringList sieveRequires() const;
 

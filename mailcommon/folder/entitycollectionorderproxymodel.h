@@ -21,23 +21,24 @@
 
 #include <EntityOrderProxyModel>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class EntityCollectionOrderProxyModel : public Akonadi::EntityOrderProxyModel
 {
     Q_OBJECT
 public:
-    explicit EntityCollectionOrderProxyModel( QObject *parent = 0 );
+    explicit EntityCollectionOrderProxyModel(QObject *parent = 0);
 
     virtual ~EntityCollectionOrderProxyModel();
 
-    virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
+    virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 
-    void setManualSortingActive( bool active );
+    void setManualSortingActive(bool active);
     bool isManualSortingActive() const;
 
     void clearRanks();
-    void setTopLevelOrder(const QStringList& list);
+    void setTopLevelOrder(const QStringList &list);
 
 public slots:
     void slotSpecialCollectionsChanged();

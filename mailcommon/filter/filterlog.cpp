@@ -43,20 +43,20 @@ using namespace MailCommon;
 class FilterLog::Private
 {
 public:
-    Private( FilterLog *qq )
-        : q( qq ),
-          mLogging( false ),
-          mMaxLogSize( 512 * 1024 ),
-          mCurrentLogSize( 0 ),
-          mAllowedTypes( FilterLog::Meta |
-                         FilterLog::PatternDescription |
-                         FilterLog::RuleResult |
-                         FilterLog::PatternResult |
-                         FilterLog::AppliedAction )
+    Private(FilterLog *qq)
+        : q(qq),
+          mLogging(false),
+          mMaxLogSize(512 * 1024),
+          mCurrentLogSize(0),
+          mAllowedTypes(FilterLog::Meta |
+                        FilterLog::PatternDescription |
+                        FilterLog::RuleResult |
+                        FilterLog::PatternResult |
+                        FilterLog::AppliedAction)
     {
     }
 
-    static FilterLog * mSelf;
+    static FilterLog *mSelf;
 
     FilterLog *q;
     QStringList mLogEntries;
@@ -70,17 +70,17 @@ public:
 
 void FilterLog::Private::checkLogSize()
 {
-    if ( mCurrentLogSize > mMaxLogSize && mMaxLogSize > -1 ) {
+    if (mCurrentLogSize > mMaxLogSize && mMaxLogSize > -1) {
         qDebug() << "Filter log: memory limit reached, starting to discard old items, size ="
-                 << QString::number( mCurrentLogSize );
+                 << QString::number(mCurrentLogSize);
 
         // avoid some kind of hysteresis, shrink the log to 90% of its maximum
-        while ( mCurrentLogSize > ( mMaxLogSize * 0.9 ) ) {
+        while (mCurrentLogSize > (mMaxLogSize * 0.9)) {
             QStringList::Iterator it = mLogEntries.begin();
-            if ( it != mLogEntries.end() ) {
+            if (it != mLogEntries.end()) {
                 mCurrentLogSize -= (*it).length();
-                mLogEntries.erase( it );
-                qDebug() << "Filter log: new size =" << QString::number( mCurrentLogSize );
+                mLogEntries.erase(it);
+                qDebug() << "Filter log: new size =" << QString::number(mCurrentLogSize);
             } else {
                 qDebug() << "Filter log: size reduction disaster!";
                 q->clear();
@@ -91,10 +91,10 @@ void FilterLog::Private::checkLogSize()
     }
 }
 
-FilterLog * FilterLog::Private::mSelf = 0;
+FilterLog *FilterLog::Private::mSelf = 0;
 
 FilterLog::FilterLog()
-    : d( new Private( this ) )
+    : d(new Private(this))
 {
 }
 
@@ -105,7 +105,7 @@ FilterLog::~FilterLog()
 
 FilterLog *FilterLog::instance()
 {
-    if ( !FilterLog::Private::mSelf ) {
+    if (!FilterLog::Private::mSelf) {
         FilterLog::Private::mSelf = new FilterLog();
     }
 
@@ -117,20 +117,20 @@ bool FilterLog::isLogging() const
     return d->mLogging;
 }
 
-void FilterLog::setLogging( bool active )
+void FilterLog::setLogging(bool active)
 {
     d->mLogging = active;
     emit logStateChanged();
 }
 
-void FilterLog::setMaxLogSize( long size )
+void FilterLog::setMaxLogSize(long size)
 {
-    if ( size < -1 ) {
+    if (size < -1) {
         size = -1;
     }
 
     // do not allow less than 1 KByte except unlimited (-1)
-    if ( size >= 0 && size < 1024 ) {
+    if (size >= 0 && size < 1024) {
         size = 1024;
     }
 
@@ -144,9 +144,9 @@ long FilterLog::maxLogSize() const
     return d->mMaxLogSize;
 }
 
-void FilterLog::setContentTypeEnabled( ContentType contentType, bool enable )
+void FilterLog::setContentTypeEnabled(ContentType contentType, bool enable)
 {
-    if ( enable ) {
+    if (enable) {
         d->mAllowedTypes |= contentType;
     } else {
         d->mAllowedTypes &= ~contentType;
@@ -155,23 +155,23 @@ void FilterLog::setContentTypeEnabled( ContentType contentType, bool enable )
     emit logStateChanged();
 }
 
-bool FilterLog::isContentTypeEnabled( ContentType contentType ) const
+bool FilterLog::isContentTypeEnabled(ContentType contentType) const
 {
-    return ( d->mAllowedTypes & contentType );
+    return (d->mAllowedTypes & contentType);
 }
 
-void FilterLog::add( const QString &logEntry, ContentType contentType )
+void FilterLog::add(const QString &logEntry, ContentType contentType)
 {
-    if ( isLogging() && ( d->mAllowedTypes & contentType ) ) {
-        QString timedLog = QLatin1Char( '[' ) + QTime::currentTime().toString() + QLatin1String( "] " );
-        if ( contentType & ~Meta ) {
+    if (isLogging() && (d->mAllowedTypes & contentType)) {
+        QString timedLog = QLatin1Char('[') + QTime::currentTime().toString() + QLatin1String("] ");
+        if (contentType & ~Meta) {
             timedLog += logEntry;
         } else {
             timedLog = logEntry;
         }
 
-        d->mLogEntries.append( timedLog );
-        emit logEntryAdded( timedLog );
+        d->mLogEntries.append(timedLog);
+        emit logEntryAdded(timedLog);
         d->mCurrentLogSize += timedLog.length();
         d->checkLogSize();
     }
@@ -179,7 +179,7 @@ void FilterLog::add( const QString &logEntry, ContentType contentType )
 
 void FilterLog::addSeparator()
 {
-    add( QLatin1String("------------------------------"), Meta );
+    add(QLatin1String("------------------------------"), Meta);
 }
 
 void FilterLog::clear()
@@ -197,34 +197,34 @@ void FilterLog::dump()
 {
 #ifndef NDEBUG
     qDebug() << "----- starting filter log -----";
-    foreach ( const QString &entry, d->mLogEntries ) {
+    foreach (const QString &entry, d->mLogEntries) {
         qDebug() << entry;
     }
     qDebug() << "------ end of filter log ------";
 #endif
 }
 
-bool FilterLog::saveToFile( const QString &fileName ) const
+bool FilterLog::saveToFile(const QString &fileName) const
 {
-    QFile file( fileName );
-    if ( !file.open( QIODevice::WriteOnly ) ) {
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly)) {
         return false;
     }
 
-    fchmod( file.handle(), MessageViewer::Util::getWritePermissions() );
+    fchmod(file.handle(), MessageViewer::Util::getWritePermissions());
 
-    file.write( "<html>\n<body>\n" );
-    file.write( "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n");
-    foreach ( const QString &entry, d->mLogEntries ) {
-        const QString line = QLatin1String( "<p>" ) + entry + QLatin1String( "</p>" ) + QLatin1Char( '\n' );
-        file.write( line.toLocal8Bit() );
+    file.write("<html>\n<body>\n");
+    file.write("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n");
+    foreach (const QString &entry, d->mLogEntries) {
+        const QString line = QLatin1String("<p>") + entry + QLatin1String("</p>") + QLatin1Char('\n');
+        file.write(line.toLocal8Bit());
     }
-    file.write( "</body>\n</html>\n" );
+    file.write("</body>\n</html>\n");
     file.close();
     return true;
 }
 
-QString FilterLog::recode( const QString &plain )
+QString FilterLog::recode(const QString &plain)
 {
     return plain.toHtmlEscaped();
 }

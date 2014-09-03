@@ -20,7 +20,8 @@
 
 #include <QList>
 
-namespace MailCommon {
+namespace MailCommon
+{
 class MailFilter;
 class FilterConvertToSieve
 {

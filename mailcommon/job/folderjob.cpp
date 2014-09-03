@@ -31,26 +31,26 @@
 
 #include <kio/global.h> //krazy:exclude=camelcase as there is no such
 
-
-namespace MailCommon {
+namespace MailCommon
+{
 
 //----------------------------------------------------------------------------
 FolderJob::FolderJob() :
-    mErrorCode( 0 ), mStarted( false ), mCancellable( false )
+    mErrorCode(0), mStarted(false), mCancellable(false)
 {
 }
 
 //----------------------------------------------------------------------------
 FolderJob::~FolderJob()
 {
-    emit result( this );
+    emit result(this);
     emit finished();
 }
 
 //----------------------------------------------------------------------------
 void FolderJob::start()
 {
-    if ( !mStarted ) {
+    if (!mStarted) {
         mStarted = true;
         execute();
     }

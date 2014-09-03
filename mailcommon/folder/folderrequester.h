@@ -41,7 +41,8 @@ class QKeyEvent;
 
 class KJob;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * A widget that contains a QLineEdit which shows the current folder
@@ -65,7 +66,7 @@ public:
      * Constructor
      * @param parent the parent widget
      */
-    explicit FolderRequester( QWidget *parent = 0 );
+    explicit FolderRequester(QWidget *parent = 0);
     virtual ~FolderRequester();
 
     /**
@@ -77,7 +78,7 @@ public:
      * Presets the folder to the collection @p collection.
      * Disable fetchcollection when not necessary @p fetchCollection
      */
-    void setCollection(const Akonadi::Collection &collection , bool fetchCollection = true );
+    void setCollection(const Akonadi::Collection &collection , bool fetchCollection = true);
 
     /**
      * Returns @c true if there's a valid collection set on this widget.
@@ -89,11 +90,11 @@ public:
      * Be aware that if you disable this the user can also select the
      * 'Local Folders' folder which has no valid folder associated
      */
-    void setMustBeReadWrite( bool readwrite );
+    void setMustBeReadWrite(bool readwrite);
 
-    void setShowOutbox( bool show );
+    void setShowOutbox(bool show);
 
-    void setNotAllowToCreateNewFolder( bool notCreateNewFolder );
+    void setNotAllowToCreateNewFolder(bool notCreateNewFolder);
 
 protected slots:
     /**
@@ -104,18 +105,18 @@ protected slots:
     /**
      * Updates the information we have about the current folder.
      */
-    void slotCollectionsReceived( KJob * );
+    void slotCollectionsReceived(KJob *);
 
 signals:
     /**
      * Emitted when the folder changed.
      */
-    void folderChanged( const Akonadi::Collection & );
+    void folderChanged(const Akonadi::Collection &);
 
 protected:
     /** Capture space key to open the dialog */
-    void keyPressEvent( QKeyEvent *e );
-    void setCollectionFullPath( const Akonadi::Collection &col );
+    void keyPressEvent(QKeyEvent *e);
+    void setCollectionFullPath(const Akonadi::Collection &col);
 
 protected:
     Akonadi::Collection mCollection;

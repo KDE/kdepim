@@ -23,24 +23,23 @@
 
 using namespace MailCommon;
 
-FilterAction* FilterActionPipeThrough::newAction()
+FilterAction *FilterActionPipeThrough::newAction()
 {
     return new FilterActionPipeThrough;
 }
 
-FilterActionPipeThrough::FilterActionPipeThrough( QObject *parent )
-    : FilterActionWithCommand( QLatin1String("filter app"), i18nc("pipe through with command", "Pipe Through" ), parent )
+FilterActionPipeThrough::FilterActionPipeThrough(QObject *parent)
+    : FilterActionWithCommand(QLatin1String("filter app"), i18nc("pipe through with command", "Pipe Through"), parent)
 {
 }
 
 FilterAction::ReturnCode FilterActionPipeThrough::process(ItemContext &context , bool) const
 {
-    return FilterActionWithCommand::genericProcess( context, true ); // use output
+    return FilterActionWithCommand::genericProcess(context, true);   // use output
 }
 
 SearchRule::RequiredPart FilterActionPipeThrough::requiredPart() const
 {
     return SearchRule::CompleteMessage;
 }
-
 

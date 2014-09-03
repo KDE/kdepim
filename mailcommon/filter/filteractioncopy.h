@@ -24,7 +24,8 @@
 
 class KJob;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionCopy - copy into folder
@@ -34,15 +35,15 @@ class FilterActionCopy: public FilterActionWithFolder
 {
     Q_OBJECT
 public:
-    explicit FilterActionCopy( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionCopy(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
     QString sieveCode() const;
     QStringList sieveRequires() const;
 
 protected Q_SLOTS:
-    void jobFinished(KJob* job);
+    void jobFinished(KJob *job);
 };
 
 }

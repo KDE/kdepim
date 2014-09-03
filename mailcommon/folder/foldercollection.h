@@ -30,7 +30,8 @@ using MessageCore::MailingList;
 #include <QKeySequence>
 #include <KIO/Job>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT FolderCollection : public QObject
 {
@@ -38,18 +39,18 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
 
 public:
     static QSharedPointer<FolderCollection> forCollection(
-            const Akonadi::Collection &coll, bool writeConfig = true );
+        const Akonadi::Collection &coll, bool writeConfig = true);
 
     ~FolderCollection();
 
     Akonadi::Collection collection() const;
-    void setCollection( const Akonadi::Collection &collection );
+    void setCollection(const Akonadi::Collection &collection);
 
-    static QString configGroupName( const Akonadi::Collection &col );
+    static QString configGroupName(const Akonadi::Collection &col);
     static void clearCache();
 
     bool isWriteConfig() const;
-    void setWriteConfig( bool writeConfig );
+    void setWriteConfig(bool writeConfig);
 
     void writeConfig() const;
     void readConfig();
@@ -74,7 +75,7 @@ public:
 
     Akonadi::CollectionStatistics statistics() const;
 
-    void setShortcut( const QKeySequence & );
+    void setShortcut(const QKeySequence &);
     const QKeySequence &shortcut() const
     {
         return mShortcut;
@@ -84,25 +85,25 @@ public:
      *  Get / set whether the default identity should be used instead of the
      *  identity specified by setIdentity().
      */
-    void setUseDefaultIdentity( bool useDefaultIdentity );
+    void setUseDefaultIdentity(bool useDefaultIdentity);
     bool useDefaultIdentity() const
     {
         return mUseDefaultIdentity;
     }
 
-    void setIdentity( uint identity );
+    void setIdentity(uint identity);
     uint identity() const;
 
     /**
      * Returns true if this folder is associated with a mailing-list.
      */
-    void setMailingListEnabled( bool enabled );
+    void setMailingListEnabled(bool enabled);
     bool isMailingListEnabled() const
     {
         return mMailingListEnabled;
     }
 
-    void setMailingList( const MailingList &mlist );
+    void setMailingList(const MailingList &mlist);
 
     MailingList mailingList() const
     {
@@ -117,7 +118,7 @@ public:
     {
         return mPutRepliesInSameFolder;
     }
-    void setPutRepliesInSameFolder( bool b )
+    void setPutRepliesInSameFolder(bool b)
     {
         mPutRepliesInSameFolder = b;
     }
@@ -129,7 +130,7 @@ public:
     {
         return mHideInSelectionDialog;
     }
-    void setHideInSelectionDialog( bool hide )
+    void setHideInSelectionDialog(bool hide)
     {
         mHideInSelectionDialog = hide;
     }
@@ -140,7 +141,7 @@ protected slots:
     void slotIdentitiesChanged();
 
 private:
-    explicit FolderCollection( const Akonadi::Collection &col, bool writeconfig );
+    explicit FolderCollection(const Akonadi::Collection &col, bool writeconfig);
 
     Akonadi::Collection mCollection;
 

@@ -36,7 +36,7 @@ FilterImporterAbstract::~FilterImporterAbstract()
 {
 }
 
-QList<MailFilter*> FilterImporterAbstract::importFilter() const
+QList<MailFilter *> FilterImporterAbstract::importFilter() const
 {
     return mListMailFilter;
 }
@@ -46,41 +46,43 @@ QStringList FilterImporterAbstract::emptyFilter() const
     return mEmptyFilter;
 }
 
-void FilterImporterAbstract::appendFilter( MailCommon::MailFilter *filter )
+void FilterImporterAbstract::appendFilter(MailCommon::MailFilter *filter)
 {
-    if ( !filter )
+    if (!filter) {
         return;
+    }
 
     filter->purify();
-    if ( !filter->isEmpty() ) {
+    if (!filter->isEmpty()) {
         // the filter is valid:
         mListMailFilter << filter;
     } else {
         mEmptyFilter << filter->name();
         // the filter is invalid:
-        qDebug()<<" Empty filter";
+        qDebug() << " Empty filter";
         delete filter;
     }
 }
 
-void FilterImporterAbstract::createFilterAction( MailCommon::MailFilter *filter,
-                                                 const QString &actionName,
-                                                 const QString &value )
+void FilterImporterAbstract::createFilterAction(MailCommon::MailFilter *filter,
+        const QString &actionName,
+        const QString &value)
 {
-    if ( !actionName.isEmpty() ) {
-        FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( actionName );
-        if ( desc ) {
+    if (!actionName.isEmpty()) {
+        FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value(actionName);
+        if (desc) {
             FilterAction *fa = desc->create();
             //...create an instance...
-            if (mInteractive)
-                fa->argsFromStringInteractive( value, filter->name() );
-            else
-                fa->argsFromString( value );
+            if (mInteractive) {
+                fa->argsFromStringInteractive(value, filter->name());
+            } else {
+                fa->argsFromString(value);
+            }
 
             //...check if it's empty and...
-            if ( !fa->isEmpty() ) {
+            if (!fa->isEmpty()) {
                 //...append it if it's not and...
-                filter->actions()->append( fa );
+                filter->actions()->append(fa);
             } else {
                 //...delete is else.
                 delete fa;
@@ -89,12 +91,12 @@ void FilterImporterAbstract::createFilterAction( MailCommon::MailFilter *filter,
     }
 }
 
-bool FilterImporterAbstract::loadDomElement( QDomDocument &doc, QFile *file )
+bool FilterImporterAbstract::loadDomElement(QDomDocument &doc, QFile *file)
 {
     QString errorMsg;
     int errorRow;
     int errorCol;
-    if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+    if (!doc.setContent(file, &errorMsg, &errorRow, &errorCol)) {
         qDebug() << "Unable to load document.Parse error in line " << errorRow
                  << ", col " << errorCol << ": " << errorMsg;
         return false;

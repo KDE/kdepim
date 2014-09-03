@@ -34,18 +34,20 @@
 
 using Akonadi::MessageStatus;
 
-
-namespace Akonadi {
+namespace Akonadi
+{
 class Item;
 }
 
-namespace KMime {
+namespace KMime
+{
 class Message;
 }
 
 class KConfigGroup;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 // maximum number of filter rules per filter
 const int FILTER_MAX_RULES = 8;
@@ -111,18 +113,18 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    explicit SearchRule ( const QByteArray &field = 0, Function function = FuncContains,
-                          const QString &contents = QString() );
+    explicit SearchRule(const QByteArray &field = 0, Function function = FuncContains,
+                        const QString &contents = QString());
 
     /**
      * Creates a new search rule from an @p other rule.
      */
-    SearchRule( const SearchRule &other );
+    SearchRule(const SearchRule &other);
 
     /**
      * Initializes this rule with an @p other rule.
      */
-    const SearchRule &operator=( const SearchRule &other );
+    const SearchRule &operator=(const SearchRule &other);
 
     /**
      * Creates a new search rule of a certain type by instantiating the
@@ -132,9 +134,9 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    static SearchRule::Ptr createInstance( const QByteArray &field = 0,
-                                           Function function = FuncContains,
-                                           const QString &contents = QString() );
+    static SearchRule::Ptr createInstance(const QByteArray &field = 0,
+                                          Function function = FuncContains,
+                                          const QString &contents = QString());
 
     /**
      * Creates a new search rule of a certain type by instantiating the
@@ -144,19 +146,19 @@ public:
      * @param function The name of the function to use for searching.
      * @param contents The contents to search for.
      */
-    static SearchRule::Ptr createInstance( const QByteArray &field,
-                                           const char *function,
-                                           const QString &contents );
+    static SearchRule::Ptr createInstance(const QByteArray &field,
+                                          const char *function,
+                                          const QString &contents);
 
     /**
      * Creates a new search rule by cloning an @p other rule.
      */
-    static SearchRule::Ptr createInstance( const SearchRule &other );
+    static SearchRule::Ptr createInstance(const SearchRule &other);
 
     /**
      * Creates a new search rule by deseralizing its structure from a data @p stream.
      */
-    static SearchRule::Ptr createInstance( QDataStream &stream );
+    static SearchRule::Ptr createInstance(QDataStream &stream);
 
     /**
      * Creates a new search rule from a given config @p group.
@@ -169,7 +171,7 @@ public:
      *       from the config file. You should call isEmpty yourself
      *       if you need valid rules.
      */
-    static SearchRule::Ptr createInstanceFromConfig( const KConfigGroup &group, int index );
+    static SearchRule::Ptr createInstanceFromConfig(const KConfigGroup &group, int index);
 
     /**
      * Destroys the search rule.
@@ -184,7 +186,7 @@ public:
      *
      * @note Must be implemented by subclasses.
      */
-    virtual bool matches( const Akonadi::Item &item ) const = 0;
+    virtual bool matches(const Akonadi::Item &item) const = 0;
 
     /**
      * Determines whether the rule is worth considering.
@@ -208,14 +210,14 @@ public:
      * @note This function will happily write itself even when it's
      *       not valid, assuming higher layers to Do The Right Thing(TM).
      */
-    void writeConfig( KConfigGroup &group, int index ) const;
+    void writeConfig(KConfigGroup &group, int index) const;
 
     void generateSieveScript(QStringList &requires, QString &code);
 
     /**
      * Sets the filter @p function of the rule.
      */
-    void setFunction( Function function );
+    void setFunction(Function function);
 
     /**
      * Returns the filter function of the rule.
@@ -227,7 +229,7 @@ public:
      *
      * @note Make sure the name contains no trailing ':'.
      */
-    void setField( const QByteArray &name );
+    void setField(const QByteArray &name);
 
     /**
      * Returns the message header field name (without the trailing ':').
@@ -250,7 +252,7 @@ public:
      * This can be either a substring to search for in
      * or a regexp pattern to match against the header.
      */
-    void setContents( const QString &contents );
+    void setContents(const QString &contents);
 
     /**
      * Returns the contents of the rule.
@@ -265,10 +267,9 @@ public:
     /**
      * Adds query terms to the given term group.
      */
-    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const {  }
+    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const {  }
 
-
-    QDataStream &operator>>( QDataStream & ) const;
+    QDataStream &operator>>(QDataStream &) const;
 
 protected:
     /**
@@ -282,10 +283,10 @@ protected:
     Akonadi::SearchTerm::Condition akonadiComparator() const;
 
 protected:
-    QString quote( const QString &content ) const;
+    QString quote(const QString &content) const;
 private:
-    static Function configValueToFunc( const char * );
-    static QString functionToString( Function );
+    static Function configValueToFunc(const char *);
+    static QString functionToString(Function);
     QString conditionToString(Function function);
 
     QByteArray mField;
@@ -295,7 +296,7 @@ private:
 
 // Needed for MSVC 2010, as it seems to not implicit cast for a pointer anymore
 #ifdef _MSC_VER
-uint qHash( SearchRule::Ptr sr );
+uint qHash(SearchRule::Ptr sr);
 #endif
 
 /**
@@ -315,19 +316,19 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    explicit SearchRuleString( const QByteArray &field = 0,
-                               Function function = FuncContains,
-                               const QString &contents = QString() );
+    explicit SearchRuleString(const QByteArray &field = 0,
+                              Function function = FuncContains,
+                              const QString &contents = QString());
 
     /**
      * Creates a new string search rule from an @p other rule.
      */
-    SearchRuleString( const SearchRuleString &other );
+    SearchRuleString(const SearchRuleString &other);
 
     /**
      * Initializes this rule with an @p other rule.
      */
-    const SearchRuleString &operator=( const SearchRuleString &other );
+    const SearchRuleString &operator=(const SearchRuleString &other);
 
     /**
      * Destroys the string search rule.
@@ -347,18 +348,18 @@ public:
     /**
      * @copydoc SearchRule::matches()
      */
-    virtual bool matches( const Akonadi::Item &item ) const;
+    virtual bool matches(const Akonadi::Item &item) const;
 
     /**
      * A helper method for the main matches() method.
      * Does the actual comparing.
      */
-    bool matchesInternal( const QString &contents ) const;
+    bool matchesInternal(const QString &contents) const;
 
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
+    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const;
 };
 
 /**
@@ -377,9 +378,9 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    explicit SearchRuleNumerical( const QByteArray &field = 0,
-                                  Function function = FuncContains,
-                                  const QString &contents = QString() );
+    explicit SearchRuleNumerical(const QByteArray &field = 0,
+                                 Function function = FuncContains,
+                                 const QString &contents = QString());
 
     /**
      * @copydoc SearchRule::isEmpty()
@@ -389,7 +390,7 @@ public:
     /**
      * @copydoc SearchRule::matches()
      */
-    virtual bool matches( const Akonadi::Item &item ) const;
+    virtual bool matches(const Akonadi::Item &item) const;
 
     /**
      * @copydoc SearchRule::requiredPart()
@@ -404,16 +405,15 @@ public:
      * A helper method for the main matches() method.
      * Does the actual comparing.
      */
-    bool matchesInternal( long numericalValue, long numericalContents,
-                          const QString &contents ) const;
+    bool matchesInternal(long numericalValue, long numericalContents,
+                         const QString &contents) const;
 
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
+    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const;
 
 };
-
 
 class SearchRuleDate : public SearchRule
 {
@@ -425,9 +425,9 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    explicit SearchRuleDate( const QByteArray &field = 0,
-                             Function function = FuncContains,
-                             const QString &contents = QString() );
+    explicit SearchRuleDate(const QByteArray &field = 0,
+                            Function function = FuncContains,
+                            const QString &contents = QString());
 
     /**
      * @copydoc SearchRule::isEmpty()
@@ -437,7 +437,7 @@ public:
     /**
      * @copydoc SearchRule::matches()
      */
-    virtual bool matches( const Akonadi::Item &item ) const;
+    virtual bool matches(const Akonadi::Item &item) const;
 
     /**
      * @copydoc SearchRule::requiredPart()
@@ -452,18 +452,14 @@ public:
      * A helper method for the main matches() method.
      * Does the actual comparing.
      */
-    bool matchesInternal( const QDate& dateValue, const QDate& msgDate ) const;
+    bool matchesInternal(const QDate &dateValue, const QDate &msgDate) const;
 
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
+    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const;
 
 };
-
-
-
-
 
 //TODO: Check if the below one is needed or not!
 // The below are used in several places and here so they are accessible.
@@ -473,22 +469,21 @@ struct MessageStatusInfo {
 };
 
 // If you change the ordering here; also do it in the enum below
-static const MessageStatusInfo StatusValues[] =
-{
-    { I18N_NOOP2( "message status", "Important" ),     "emblem-important"    },
-    { I18N_NOOP2( "message status", "Action Item" ),   "mail-task"           },
-    { I18N_NOOP2( "message status", "Unread" ),        "mail-unread"         },
-    { I18N_NOOP2( "message status", "Read" ),          "mail-read"           },
-    { I18N_NOOP2( "message status", "Deleted" ),       "mail-deleted"        },
-    { I18N_NOOP2( "message status", "Replied" ),       "mail-replied"        },
-    { I18N_NOOP2( "message status", "Forwarded" ),     "mail-forwarded"      },
-    { I18N_NOOP2( "message status", "Queued" ),        "mail-queued"         },
-    { I18N_NOOP2( "message status", "Sent" ),          "mail-sent"           },
-    { I18N_NOOP2( "message status", "Watched" ),       "mail-thread-watch"   },
-    { I18N_NOOP2( "message status", "Ignored" ),       "mail-thread-ignored" },
-    { I18N_NOOP2( "message status", "Spam" ),          "mail-mark-junk"      },
-    { I18N_NOOP2( "message status", "Ham" ),           "mail-mark-notjunk"   },
-    { I18N_NOOP2( "message status", "Has Attachment"), "mail-attachment"     } //must be last
+static const MessageStatusInfo StatusValues[] = {
+    { I18N_NOOP2("message status", "Important"),     "emblem-important"    },
+    { I18N_NOOP2("message status", "Action Item"),   "mail-task"           },
+    { I18N_NOOP2("message status", "Unread"),        "mail-unread"         },
+    { I18N_NOOP2("message status", "Read"),          "mail-read"           },
+    { I18N_NOOP2("message status", "Deleted"),       "mail-deleted"        },
+    { I18N_NOOP2("message status", "Replied"),       "mail-replied"        },
+    { I18N_NOOP2("message status", "Forwarded"),     "mail-forwarded"      },
+    { I18N_NOOP2("message status", "Queued"),        "mail-queued"         },
+    { I18N_NOOP2("message status", "Sent"),          "mail-sent"           },
+    { I18N_NOOP2("message status", "Watched"),       "mail-thread-watch"   },
+    { I18N_NOOP2("message status", "Ignored"),       "mail-thread-ignored" },
+    { I18N_NOOP2("message status", "Spam"),          "mail-mark-junk"      },
+    { I18N_NOOP2("message status", "Ham"),           "mail-mark-notjunk"   },
+    { I18N_NOOP2("message status", "Has Attachment"), "mail-attachment"     }  //must be last
 };
 
 // If you change the ordering here; also do it in the array above
@@ -510,7 +505,7 @@ enum StatusValueTypes {
 };
 
 static const int StatusValueCount =
-        sizeof( StatusValues ) / sizeof( MessageStatusInfo );
+    sizeof(StatusValues) / sizeof(MessageStatusInfo);
 // we want to show all status entries in the quick search bar, but only the
 // ones up to attachment in the search/filter dialog, because there the
 // attachment case is handled separately.
@@ -526,27 +521,27 @@ static const int StatusValueCountWithoutHidden = StatusValueCount - 1;
 class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
 {
 public:
-    explicit SearchRuleStatus( const QByteArray &field = 0,
-                               Function function = FuncContains,
-                               const QString &contents = QString() );
+    explicit SearchRuleStatus(const QByteArray &field = 0,
+                              Function function = FuncContains,
+                              const QString &contents = QString());
 
-    explicit SearchRuleStatus( Akonadi::MessageStatus status,
-                               Function function = FuncContains );
+    explicit SearchRuleStatus(Akonadi::MessageStatus status,
+                              Function function = FuncContains);
 
     virtual bool isEmpty() const ;
-    virtual bool matches( const Akonadi::Item &item ) const;
+    virtual bool matches(const Akonadi::Item &item) const;
 
     /**
      * @copydoc SearchRule::requiredPart()
      */
     virtual RequiredPart requiredPart() const;
 
-    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
+    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const;
 
     //Not possible to implement optimized form for status searching
     using SearchRule::matches;
 
-    static Akonadi::MessageStatus statusFromEnglishName( const QString & );
+    static Akonadi::MessageStatus statusFromEnglishName(const QString &);
 
 private:
     Akonadi::MessageStatus mStatus;
@@ -588,7 +583,6 @@ public:
         OpAll
     };
 
-
     enum SparqlQueryError {
         NoError = 0,
         MissingCheck,
@@ -610,7 +604,7 @@ public:
      * given. This feature is mainly (solely?) used in KMFilter,
      * as we don't allow to store search patterns in the config (yet).
      */
-    explicit SearchPattern( const KConfigGroup &config );
+    explicit SearchPattern(const KConfigGroup &config);
 
     /** Destructor. Deletes all stored rules! */
     ~SearchPattern();
@@ -625,7 +619,7 @@ public:
      *
      * @return true if the match was successful, false otherwise.
      */
-    bool matches( const Akonadi::Item &item, bool ignoreBody = false ) const;
+    bool matches(const Akonadi::Item &item, bool ignoreBody = false) const;
 
     /**
      * Returns the required part from the item that is needed for the search to
@@ -651,7 +645,7 @@ public:
      * Derived classes reimplementing readConfig() should also call this
      * method, or else the rules will not be loaded.
      */
-    void readConfig( const KConfigGroup &config );
+    void readConfig(const KConfigGroup &config);
 
     /**
      * Writes itself into @p config. Tries to delete old-style keys by
@@ -660,7 +654,7 @@ public:
      * Derived classes reimplementing writeConfig() should also call this
      * method, or else the rules will not be stored.
      */
-    void writeConfig( KConfigGroup &config ) const;
+    void writeConfig(KConfigGroup &config) const;
 
     /**
      * Returns the name of the search pattern.
@@ -674,7 +668,7 @@ public:
      * Sets the name of the search pattern. KMFilter uses this to
      * store it's own name, too.
      */
-    void setName( const QString &newName )
+    void setName(const QString &newName)
     {
         mName = newName;
     }
@@ -690,7 +684,7 @@ public:
     /**
      * Sets the filter operator.
      */
-    void setOp( SearchPattern::Operator aOp )
+    void setOp(SearchPattern::Operator aOp)
     {
         mOperator = aOp;
     }
@@ -708,7 +702,7 @@ public:
     /**
      * Overloaded assignment operator. Makes a deep copy.
      */
-    const SearchPattern &operator=( const SearchPattern &aPattern );
+    const SearchPattern &operator=(const SearchPattern &aPattern);
 
     /**
      * Writes the pattern into a byte array for persistance purposes.
@@ -718,11 +712,10 @@ public:
     /**
      * Constructs the pattern from a byte array serialization.
      */
-    void deserialize( const QByteArray & );
+    void deserialize(const QByteArray &);
 
-    QDataStream &operator>>( QDataStream &s ) const;
-    QDataStream &operator<<( QDataStream &s );
-
+    QDataStream &operator>>(QDataStream &s) const;
+    QDataStream &operator<<(QDataStream &s);
 
     void generateSieveScript(QStringList &requires, QString &code);
 
@@ -734,7 +727,7 @@ private:
      * readConfig, which detects legacy configurations and also makes sure
      * that this method is called from an initialized object.
      */
-    void importLegacyConfig( const KConfigGroup &config );
+    void importLegacyConfig(const KConfigGroup &config);
 
     /**
      * Initializes the object. Clears the list of rules, sets the name

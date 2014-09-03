@@ -22,7 +22,8 @@
 
 #include "filteraction.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * @short Abstract base class for filter actions with a free-form string as parameter.
@@ -46,7 +47,7 @@ public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithUOID(const QString &name, const QString &label, QObject *parent = 0 );
+    FilterActionWithUOID(const QString &name, const QString &label, QObject *parent = 0);
 
     /**
      * @copydoc FilterAction::isEmpty
@@ -56,7 +57,7 @@ public:
     /**
      * @copydoc FilterAction::argsFromString
      */
-    virtual void argsFromString( const QString &argsStr );
+    virtual void argsFromString(const QString &argsStr);
 
     /**
      * @copydoc FilterAction::argsAsString

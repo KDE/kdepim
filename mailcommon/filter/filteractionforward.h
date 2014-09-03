@@ -22,7 +22,8 @@
 
 #include "filteractionwithaddress.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionForward - forward to
@@ -32,18 +33,18 @@ class FilterActionForward: public FilterActionWithAddress
 {
     Q_OBJECT
 public:
-    explicit FilterActionForward( QObject *parent = 0 );
-    static FilterAction* newAction();
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionForward(QObject *parent = 0);
+    static FilterAction *newAction();
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    QWidget* createParamWidget( QWidget *parent ) const;
-    void applyParamWidgetValue( QWidget *paramWidget );
-    void setParamWidgetValue( QWidget *paramWidget ) const;
-    void clearParamWidget( QWidget *paramWidget ) const;
-    void argsFromString( const QString &argsStr );
+    QWidget *createParamWidget(QWidget *parent) const;
+    void applyParamWidgetValue(QWidget *paramWidget);
+    void setParamWidgetValue(QWidget *paramWidget) const;
+    void clearParamWidget(QWidget *paramWidget) const;
+    void argsFromString(const QString &argsStr);
     QString argsAsString() const;
     QString displayString() const;
-    bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
+    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
 
 private:
     mutable QString mTemplate;

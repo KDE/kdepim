@@ -21,7 +21,8 @@
 #include "filteractionwithstringlist.h"
 #include <Akonadi/KMime/MessageStatus>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FilterActionStatus : public FilterActionWithStringList
 {
@@ -30,11 +31,11 @@ public:
     FilterActionStatus(const QString &name, const QString &label, QObject *parent = 0);
     SearchRule::RequiredPart requiredPart() const;
     bool isEmpty() const;
-    void argsFromString( const QString &argsStr );
+    void argsFromString(const QString &argsStr);
     QString argsAsString() const;
     QString displayString() const;
 
-    static QString realStatusString( const QString &statusStr );
+    static QString realStatusString(const QString &statusStr);
 
     static Akonadi::MessageStatus stati[];
     static int StatiCount;

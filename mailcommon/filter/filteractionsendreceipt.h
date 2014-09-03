@@ -22,7 +22,8 @@
 
 #include "filteractionwithnone.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionSendReceipt - send receipt
@@ -32,10 +33,10 @@ class FilterActionSendReceipt : public FilterActionWithNone
 {
     Q_OBJECT
 public:
-    explicit FilterActionSendReceipt( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionSendReceipt(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
 }

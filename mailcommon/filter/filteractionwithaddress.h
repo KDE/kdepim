@@ -22,7 +22,8 @@
 
 #include "filteractionwithstring.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * @short Abstract base class for filter actions with a mail address as parameter.
@@ -47,27 +48,27 @@ public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithAddress(const QString &name, const QString &label, QObject *parent = 0 );
+    FilterActionWithAddress(const QString &name, const QString &label, QObject *parent = 0);
 
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget *createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget(QWidget *parent) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
+    virtual void applyParamWidgetValue(QWidget *paramWidget);
 
     /**
      * @copydoc FilterAction::setParamWidgetValue
      */
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
+    virtual void setParamWidgetValue(QWidget *paramWidget) const;
 
     /**
      * @copydoc FilterAction::clearParamWidget
      */
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
+    virtual void clearParamWidget(QWidget *paramWidget) const;
 };
 
 }

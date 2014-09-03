@@ -24,7 +24,8 @@
 
 class QTemporaryFile;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FilterActionWithCommand : public FilterActionWithUrl
 {
@@ -34,27 +35,27 @@ public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithCommand(const QString &name, const QString &label, QObject *parent = 0 );
+    FilterActionWithCommand(const QString &name, const QString &label, QObject *parent = 0);
 
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget *createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget(QWidget *parent) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
+    virtual void applyParamWidgetValue(QWidget *paramWidget);
 
     /**
      * @copydoc FilterAction::setParamWidgetValue
      */
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
+    virtual void setParamWidgetValue(QWidget *paramWidget) const;
 
     /**
      * @copydoc FilterAction::clearParamWidget
      */
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
+    virtual void clearParamWidget(QWidget *paramWidget) const;
 
     /**
      * Substitutes various placeholders for data from the message
@@ -63,10 +64,10 @@ public:
      * the name of a tempfile holding the n'th message part, with n=0
      * meaning the body of the message.
      */
-    virtual QString substituteCommandLineArgsFor( const KMime::Message::Ptr &aMsg,
-                                                  QList<QTemporaryFile*> &aTempFileList ) const;
+    virtual QString substituteCommandLineArgsFor(const KMime::Message::Ptr &aMsg,
+            QList<QTemporaryFile *> &aTempFileList) const;
 
-    virtual ReturnCode genericProcess( ItemContext &context, bool filtering ) const;
+    virtual ReturnCode genericProcess(ItemContext &context, bool filtering) const;
 };
 
 }

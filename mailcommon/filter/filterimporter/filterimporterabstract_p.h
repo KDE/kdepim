@@ -25,7 +25,8 @@
 
 class QFile;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MailFilter;
 
@@ -34,16 +35,16 @@ class MAILCOMMON_EXPORT FilterImporterAbstract
 public:
     explicit FilterImporterAbstract(bool interactive = true);
     ~FilterImporterAbstract();
-    QList<MailFilter*> importFilter() const;
+    QList<MailFilter *> importFilter() const;
     QStringList emptyFilter() const;
 
 protected:
-    void appendFilter( MailCommon::MailFilter *filter );
+    void appendFilter(MailCommon::MailFilter *filter);
     void createFilterAction(MailCommon::MailFilter *filter,
-                             const QString &actionName, const QString &value );
-    bool loadDomElement( QDomDocument &doc, QFile *file );
+                            const QString &actionName, const QString &value);
+    bool loadDomElement(QDomDocument &doc, QFile *file);
 
-    QList<MailFilter*> mListMailFilter;
+    QList<MailFilter *> mListMailFilter;
     QStringList mEmptyFilter;
 private:
     bool mInteractive;

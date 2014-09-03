@@ -24,7 +24,8 @@
 
 #include <QtCore/QRegExp>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionRewriteHeader - rewrite header
@@ -34,20 +35,20 @@ class FilterActionRewriteHeader: public FilterActionWithStringList
 {
     Q_OBJECT
 public:
-    explicit FilterActionRewriteHeader( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionRewriteHeader(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    QWidget* createParamWidget( QWidget *parent ) const;
-    void setParamWidgetValue( QWidget *paramWidget ) const;
-    void applyParamWidgetValue( QWidget *paramWidget );
-    void clearParamWidget( QWidget *paramWidget ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
+    void setParamWidgetValue(QWidget *paramWidget) const;
+    void applyParamWidgetValue(QWidget *paramWidget);
+    void clearParamWidget(QWidget *paramWidget) const;
 
     QString argsAsString() const;
-    void argsFromString( const QString &argsStr );
+    void argsFromString(const QString &argsStr);
 
     QString displayString() const;
 
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 
 private:
     QRegExp mRegExp;

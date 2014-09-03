@@ -22,7 +22,8 @@
 
 #include "filteraction.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * @short Abstract base class for filter actions with a free-form string as parameter.
@@ -45,7 +46,7 @@ public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithString(const QString &name, const QString &label, QObject *parent = 0 );
+    FilterActionWithString(const QString &name, const QString &label, QObject *parent = 0);
 
     /**
      * @copydoc FilterAction::isEmpty
@@ -55,27 +56,27 @@ public:
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget *createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget(QWidget *parent) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
+    virtual void applyParamWidgetValue(QWidget *paramWidget);
 
     /**
      * @copydoc FilterAction::setParamWidgetValue
      */
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
+    virtual void setParamWidgetValue(QWidget *paramWidget) const;
 
     /**
      * @copydoc FilterAction::clearParamWidget
      */
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
+    virtual void clearParamWidget(QWidget *paramWidget) const;
 
     /**
      * @copydoc FilterAction::argsFromString
      */
-    virtual void argsFromString( const QString &argsStr );
+    virtual void argsFromString(const QString &argsStr);
 
     /**
      * @copydoc FilterAction::argsAsString

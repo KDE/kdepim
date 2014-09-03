@@ -23,14 +23,14 @@
 
 using namespace MailCommon;
 
-FilterActionExec::FilterActionExec( QObject *parent )
-    : FilterActionWithCommand( QLatin1String("execute"), i18n( "Execute Command" ), parent )
+FilterActionExec::FilterActionExec(QObject *parent)
+    : FilterActionWithCommand(QLatin1String("execute"), i18n("Execute Command"), parent)
 {
 }
 
 FilterAction::ReturnCode FilterActionExec::process(ItemContext &context , bool) const
 {
-    return FilterActionWithCommand::genericProcess( context, false ); // ignore output
+    return FilterActionWithCommand::genericProcess(context, false);   // ignore output
 }
 
 SearchRule::RequiredPart FilterActionExec::requiredPart() const
@@ -38,7 +38,7 @@ SearchRule::RequiredPart FilterActionExec::requiredPart() const
     return SearchRule::CompleteMessage;
 }
 
-FilterAction* FilterActionExec::newAction()
+FilterAction *FilterActionExec::newAction()
 {
     return new FilterActionExec();
 }

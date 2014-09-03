@@ -41,7 +41,8 @@
 // This is for debugging purposes only, don't commit with it.
 //#define DEBUG_SCHEDULER
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FolderJob;
 class ScheduledJob;
@@ -51,12 +52,13 @@ class ScheduledJob;
  * As long as it's not running, it's called a "task", i.e. something that needs to be done.
  * Tasks are held in the JobScheduler.
  */
-class MAILCOMMON_EXPORT ScheduledTask {
+class MAILCOMMON_EXPORT ScheduledTask
+{
 public:
     /// Create a scheduled task for a given folder
     /// If @p immediate is true, the scheduler will run this task as soon
     /// as possible (but won't interrupt a currently running job for it)
-    ScheduledTask( const Akonadi::Collection & folder, bool immediate );
+    ScheduledTask(const Akonadi::Collection &folder, bool immediate);
     virtual ~ScheduledTask();
 
     /// Run this task, i.e. create a job for it.
@@ -66,7 +68,7 @@ public:
     /// Otherwise (if the open() is delayed) an unrelated open() could happen first
     /// and mess things up.
     /// If for some reason (e.g. folder deleted) nothing should be done, return 0.
-    virtual ScheduledJob* run() = 0;
+    virtual ScheduledJob *run() = 0;
 
     /// An identifier for the type of task (a bit like QListViewItem::rtti)
     /// This allows to automatically prevent two identical tasks from being scheduled
@@ -75,9 +77,15 @@ public:
     virtual int taskTypeId() const = 0;
 
     /// The folder which this task is about, 0 if it was deleted meanwhile.
-    Akonadi::Collection folder() const { return mCurrentFolder; }
+    Akonadi::Collection folder() const
+    {
+        return mCurrentFolder;
+    }
 
-    bool isImmediate() const { return mImmediate; }
+    bool isImmediate() const
+    {
+        return mImmediate;
+    }
 
 private:
     Akonadi::Collection mCurrentFolder;
@@ -96,12 +104,12 @@ class MAILCOMMON_EXPORT JobScheduler : public QObject
 {
     Q_OBJECT
 public:
-    explicit JobScheduler( QObject* parent );
+    explicit JobScheduler(QObject *parent);
     ~JobScheduler();
 
     /// Register a task to be done for a given folder
     /// The ownership of the task is transferred to the JobScheduler
-    void registerTask( ScheduledTask* task );
+    void registerTask(ScheduledTask *task);
 
     // D-Bus calls, called from KMKernel
     void pause();
@@ -117,9 +125,9 @@ private slots:
 private:
     void restartTimer();
     void interruptCurrentTask();
-    void runTaskNow( ScheduledTask* task );
+    void runTaskNow(ScheduledTask *task);
     typedef QList<ScheduledTask *> TaskList;
-    void removeTask( TaskList::Iterator& it );
+    void removeTask(TaskList::Iterator &it);
 private:
     TaskList mTaskList; // FIFO of tasks to be run
 
@@ -127,8 +135,8 @@ private:
     int mPendingImmediateTasks;
 
     /// Information about the currently running job, if any
-    ScheduledTask* mCurrentTask;
-    ScheduledJob* mCurrentJob;
+    ScheduledTask *mCurrentTask;
+    ScheduledJob *mCurrentJob;
 };
 
 /**
@@ -137,7 +145,7 @@ private:
 class MAILCOMMON_EXPORT ScheduledJob : public FolderJob
 {
 public:
-    ScheduledJob( const Akonadi::Collection & folder, bool immediate );
+    ScheduledJob(const Akonadi::Collection &folder, bool immediate);
     ~ScheduledJob();
 
 protected:

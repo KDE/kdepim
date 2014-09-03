@@ -23,13 +23,13 @@
 
 using namespace MailCommon;
 
-FilterAction* FilterActionReplyTo::newAction()
+FilterAction *FilterActionReplyTo::newAction()
 {
     return new FilterActionReplyTo;
 }
 
-FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
-    : FilterActionWithAddress( QLatin1String("set Reply-To"), i18n( "Set Reply-To To" ), parent )
+FilterActionReplyTo::FilterActionReplyTo(QObject *parent)
+    : FilterActionWithAddress(QLatin1String("set Reply-To"), i18n("Set Reply-To To"), parent)
 {
     mParameter.clear();
 }
@@ -38,13 +38,13 @@ FilterAction::ReturnCode FilterActionReplyTo::process(ItemContext &context , boo
 {
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
     const QByteArray replyTo("Reply-To");
-    KMime::Headers::Base *header = KMime::Headers::createHeader( replyTo );
-    if ( !header ) {
-        header = new KMime::Headers::Generic( replyTo, msg.get(), mParameter, "utf-8" );
+    KMime::Headers::Base *header = KMime::Headers::createHeader(replyTo);
+    if (!header) {
+        header = new KMime::Headers::Generic(replyTo, msg.get(), mParameter, "utf-8");
     } else {
-        header->fromUnicodeString( mParameter, "utf-8" );
+        header->fromUnicodeString(mParameter, "utf-8");
     }
-    msg->setHeader( header );
+    msg->setHeader(header);
     msg->assemble();
 
     context.setNeedsPayloadStore();
@@ -56,5 +56,4 @@ SearchRule::RequiredPart FilterActionReplyTo::requiredPart() const
 {
     return SearchRule::CompleteMessage;
 }
-
 

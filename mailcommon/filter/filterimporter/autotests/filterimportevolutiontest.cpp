@@ -20,20 +20,18 @@
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
 
-
-QTEST_AKONADIMAIN( FilterImportEvolutiontest )
+QTEST_AKONADIMAIN(FilterImportEvolutiontest)
 
 void FilterImportEvolutiontest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
 
-    FilterTestKernel *kernel = new FilterTestKernel( this );
-    CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
-    CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+    FilterTestKernel *kernel = new FilterTestKernel(this);
+    CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
 }
 
 void FilterImportEvolutiontest::testImportFilters()
 {
 }
-
 

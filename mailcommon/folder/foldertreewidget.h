@@ -27,7 +27,8 @@
 #include <QAbstractItemView>
 #include <QWidget>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class StatisticsProxyModel;
 }
 
@@ -36,7 +37,8 @@ class KXMLGUIClient;
 
 class QItemSelectionModel;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class EntityCollectionOrderProxyModel;
 class FolderTreeView;
@@ -60,14 +62,14 @@ public:
         ShowCollectionStatisticAnimation = 8,
         DontKeyFilter = 16
     };
-    Q_DECLARE_FLAGS( TreeViewOptions, TreeViewOption )
+    Q_DECLARE_FLAGS(TreeViewOptions, TreeViewOption)
 
     explicit FolderTreeWidget(
-            QWidget *parent = 0,
-            KXMLGUIClient *xmlGuiClient = 0,
-            TreeViewOptions options = (TreeViewOptions)( ShowUnreadCount |
-                                                         ShowCollectionStatisticAnimation ),
-            FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy = FolderTreeWidgetProxyModel::None );
+        QWidget *parent = 0,
+        KXMLGUIClient *xmlGuiClient = 0,
+        TreeViewOptions options = (TreeViewOptions)(ShowUnreadCount |
+                                  ShowCollectionStatisticAnimation),
+        FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy = FolderTreeWidgetProxyModel::None);
     ~FolderTreeWidget();
 
     /**
@@ -87,13 +89,13 @@ public:
         SortByDragAndDropKey      ///< Columns are NOT clickable, sorting is done by drag and drop
     };
 
-    void selectCollectionFolder( const Akonadi::Collection & col );
+    void selectCollectionFolder(const Akonadi::Collection &col);
 
-    void setSelectionMode( QAbstractItemView::SelectionMode mode );
+    void setSelectionMode(QAbstractItemView::SelectionMode mode);
 
     QAbstractItemView::SelectionMode selectionMode() const;
 
-    QItemSelectionModel * selectionModel () const;
+    QItemSelectionModel *selectionModel() const;
 
     QModelIndex currentIndex() const;
 
@@ -103,37 +105,37 @@ public:
 
     FolderTreeView *folderTreeView() const;
 
-    Akonadi::StatisticsProxyModel * statisticsProxyModel() const;
+    Akonadi::StatisticsProxyModel *statisticsProxyModel() const;
 
     FolderTreeWidgetProxyModel *folderTreeWidgetProxyModel() const;
 
     EntityCollectionOrderProxyModel *entityOrderProxy() const;
 
-    void quotaWarningParameters( const QColor &color, qreal threshold );
+    void quotaWarningParameters(const QColor &color, qreal threshold);
     void readQuotaConfig();
 
     QLineEdit *filterFolderLineEdit() const;
-    void applyFilter( const QString & );
+    void applyFilter(const QString &);
     void clearFilter();
 
     void disableContextMenuAndExtraColumn();
 
     void readConfig();
 
-    void restoreHeaderState( const QByteArray &data );
+    void restoreHeaderState(const QByteArray &data);
 
 protected:
-    void changeToolTipsPolicyConfig( ToolTipDisplayPolicy );
+    void changeToolTipsPolicyConfig(ToolTipDisplayPolicy);
 
 protected slots:
-    void slotChangeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy );
-    void slotManualSortingChanged( bool );
-    void slotFilterFixedString( const QString & );
+    void slotChangeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy);
+    void slotManualSortingChanged(bool);
+    void slotFilterFixedString(const QString &);
     void slotGeneralFontChanged();
     void slotGeneralPaletteChanged();
 
 private:
-    virtual bool eventFilter( QObject *o, QEvent *e );
+    virtual bool eventFilter(QObject *o, QEvent *e);
     class FolderTreeWidgetPrivate;
     FolderTreeWidgetPrivate *const d;
 

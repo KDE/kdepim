@@ -29,17 +29,18 @@ class QAbstractItemModel;
 class QAction;
 class QItemSelectionModel;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT FilterController : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY( QAction *addAction READ addAction )
-    Q_PROPERTY( QAction *editAction READ editAction )
-    Q_PROPERTY( QAction *removeAction READ removeAction )
-    Q_PROPERTY( QAction *moveUpAction READ moveUpAction )
-    Q_PROPERTY( QAction *moveDownAction READ moveDownAction )
+    Q_PROPERTY(QAction *addAction READ addAction)
+    Q_PROPERTY(QAction *editAction READ editAction)
+    Q_PROPERTY(QAction *removeAction READ removeAction)
+    Q_PROPERTY(QAction *moveUpAction READ moveUpAction)
+    Q_PROPERTY(QAction *moveDownAction READ moveDownAction)
 
 public:
     /**
@@ -47,7 +48,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit FilterController( QObject *parent = 0 );
+    explicit FilterController(QObject *parent = 0);
 
     /**
      * Destroys the filter controller.
@@ -95,12 +96,12 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void selectionChanged() )
-    Q_PRIVATE_SLOT( d, void addFilter() )
-    Q_PRIVATE_SLOT( d, void editFilter() )
-    Q_PRIVATE_SLOT( d, void removeFilter() )
-    Q_PRIVATE_SLOT( d, void moveUpFilter() )
-    Q_PRIVATE_SLOT( d, void moveDownFilter() )
+    Q_PRIVATE_SLOT(d, void selectionChanged())
+    Q_PRIVATE_SLOT(d, void addFilter())
+    Q_PRIVATE_SLOT(d, void editFilter())
+    Q_PRIVATE_SLOT(d, void removeFilter())
+    Q_PRIVATE_SLOT(d, void moveUpFilter())
+    Q_PRIVATE_SLOT(d, void moveDownFilter())
     //@endcond
 };
 

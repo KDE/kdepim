@@ -34,8 +34,8 @@
 
 using namespace MailCommon;
 
-FilterAction::FilterAction( const QString &name, const QString &label, QObject *parent )
-    : QObject( parent ), mName( name ), mLabel( label )
+FilterAction::FilterAction(const QString &name, const QString &label, QObject *parent)
+    : QObject(parent), mName(name), mLabel(label)
 {
 }
 
@@ -58,31 +58,31 @@ bool FilterAction::isEmpty() const
     return false;
 }
 
-FilterAction* FilterAction::newAction()
+FilterAction *FilterAction::newAction()
 {
     return 0;
 }
 
-QWidget* FilterAction::createParamWidget( QWidget *parent ) const
+QWidget *FilterAction::createParamWidget(QWidget *parent) const
 {
-    return new QWidget( parent );
+    return new QWidget(parent);
 }
 
-void FilterAction::applyParamWidgetValue( QWidget * )
-{
-}
-
-void FilterAction::setParamWidgetValue( QWidget * ) const
+void FilterAction::applyParamWidgetValue(QWidget *)
 {
 }
 
-void FilterAction::clearParamWidget( QWidget * ) const
+void FilterAction::setParamWidgetValue(QWidget *) const
 {
 }
 
-bool FilterAction::argsFromStringInteractive( const QString &argsStr, const QString & filterName )
+void FilterAction::clearParamWidget(QWidget *) const
 {
-    Q_UNUSED( filterName );
+}
+
+bool FilterAction::argsFromStringInteractive(const QString &argsStr, const QString &filterName)
+{
+    Q_UNUSED(filterName);
     argsFromString(argsStr);
     return false;
 }
@@ -92,33 +92,33 @@ QString FilterAction::argsAsStringReal() const
     return argsAsString();
 }
 
-bool FilterAction::folderRemoved( const Akonadi::Collection&, const Akonadi::Collection& )
+bool FilterAction::folderRemoved(const Akonadi::Collection &, const Akonadi::Collection &)
 {
     return false;
 }
 
-void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionType type,
-                            const QList<KMime::MDN::DispositionModifier> &modifiers )
+void FilterAction::sendMDN(const Akonadi::Item &item, KMime::MDN::DispositionType type,
+                           const QList<KMime::MDN::DispositionModifier> &modifiers)
 {
-    const KMime::Message::Ptr msg = MessageCore::Util::message( item );
-    if ( !msg )
+    const KMime::Message::Ptr msg = MessageCore::Util::message(item);
+    if (!msg) {
         return;
+    }
 
-
-
-    const QPair<bool, KMime::MDN::SendingMode> mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, type, true );
-    if ( mdnSend.first ) {
+    const QPair<bool, KMime::MDN::SendingMode> mdnSend = MDNAdviceHelper::instance()->checkAndSetMDNInfo(item, type, true);
+    if (mdnSend.first) {
         const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
         QString receiptTo =  msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString();
-        if ( receiptTo.isEmpty() )
+        if (receiptTo.isEmpty()) {
             return;
-        MessageComposer::MessageFactory factory( msg, Akonadi::Item().id() );
-        factory.setIdentityManager( KernelIf->identityManager() );
-        factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
+        }
+        MessageComposer::MessageFactory factory(msg, Akonadi::Item().id());
+        factory.setIdentityManager(KernelIf->identityManager());
+        factory.setFolderIdentity(MailCommon::Util::folderIdentity(item));
 
-        const KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::AutomaticAction, type, mdnSend.second, quote, modifiers );
-        if ( mdn ) {
-            if ( !KernelIf->msgSender()->send( mdn, MessageComposer::MessageSender::SendLater ) ) {
+        const KMime::Message::Ptr mdn = factory.createMDN(KMime::MDN::AutomaticAction, type, mdnSend.second, quote, modifiers);
+        if (mdn) {
+            if (!KernelIf->msgSender()->send(mdn, MessageComposer::MessageSender::SendLater)) {
                 qDebug() << "Sending failed.";
             }
         }

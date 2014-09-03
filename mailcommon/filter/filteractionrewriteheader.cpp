@@ -31,13 +31,13 @@
 
 using namespace MailCommon;
 
-FilterAction* FilterActionRewriteHeader::newAction()
+FilterAction *FilterActionRewriteHeader::newAction()
 {
     return new FilterActionRewriteHeader;
 }
 
-FilterActionRewriteHeader::FilterActionRewriteHeader( QObject *parent )
-    : FilterActionWithStringList( QLatin1String("rewrite header"), i18n( "Rewrite Header" ), parent )
+FilterActionRewriteHeader::FilterActionRewriteHeader(QObject *parent)
+    : FilterActionWithStringList(QLatin1String("rewrite header"), i18n("Rewrite Header"), parent)
 {
     mParameterList << QLatin1String("")
                    << QLatin1String("Subject")
@@ -47,35 +47,36 @@ FilterActionRewriteHeader::FilterActionRewriteHeader( QObject *parent )
                    << QLatin1String("X-KDE-PR-Package")
                    << QLatin1String("X-KDE-PR-Keywords");
 
-    mParameter = mParameterList.at( 0 );
+    mParameter = mParameterList.at(0);
 }
 
 FilterAction::ReturnCode FilterActionRewriteHeader::process(ItemContext &context , bool) const
 {
-    if ( mParameter.isEmpty() || !mRegExp.isValid() )
+    if (mParameter.isEmpty() || !mRegExp.isValid()) {
         return ErrorButGoOn;
+    }
 
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
     const QByteArray param(mParameter.toLatin1());
     KMime::Headers::Base *header = msg->headerByType(param);
-    if ( !header ) {
+    if (!header) {
         return GoOn; //TODO: Maybe create a new header by type?
     }
 
     QString value = header->asUnicodeString();
 
-    const QString newValue = value.replace( mRegExp, mReplacementString );
+    const QString newValue = value.replace(mRegExp, mReplacementString);
 
-    msg->removeHeader( param );
+    msg->removeHeader(param);
 
     KMime::Headers::Base *newheader = KMime::Headers::createHeader(param);
-    if ( !newheader ) {
-        newheader = new KMime::Headers::Generic(param, msg.get(), newValue, "utf-8" );
+    if (!newheader) {
+        newheader = new KMime::Headers::Generic(param, msg.get(), newValue, "utf-8");
     } else {
-        newheader->fromUnicodeString( newValue, "utf-8" );
+        newheader->fromUnicodeString(newValue, "utf-8");
     }
-    msg->setHeader( newheader );
+    msg->setHeader(newheader);
     msg->assemble();
 
     context.setNeedsPayloadStore();
@@ -88,117 +89,116 @@ SearchRule::RequiredPart FilterActionRewriteHeader::requiredPart() const
     return SearchRule::CompleteMessage;
 }
 
-
-QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionRewriteHeader::createParamWidget(QWidget *parent) const
 {
-    QWidget *widget = new QWidget( parent );
-    QHBoxLayout *layout = new QHBoxLayout( widget );
-    layout->setSpacing( 4 );
-    layout->setMargin( 0 );
+    QWidget *widget = new QWidget(parent);
+    QHBoxLayout *layout = new QHBoxLayout(widget);
+    layout->setSpacing(4);
+    layout->setMargin(0);
 
-    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( widget );
-    comboBox->setEditable( true );
-    comboBox->setObjectName( QLatin1String("combo") );
-    comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
-    layout->addWidget( comboBox, 0 /* stretch */ );
+    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox(widget);
+    comboBox->setEditable(true);
+    comboBox->setObjectName(QLatin1String("combo"));
+    comboBox->setInsertPolicy(QComboBox::InsertAtBottom);
+    layout->addWidget(comboBox, 0 /* stretch */);
 
     KCompletion *comp = comboBox->completionObject();
     comp->setIgnoreCase(true);
     comp->insertItems(mParameterList);
     comp->setCompletionMode(KCompletion::CompletionPopupAuto);
 
-    QLabel *label = new QLabel( i18n( "Replace:" ), widget );
-    label->setFixedWidth( label->sizeHint().width() );
-    layout->addWidget( label, 0 );
+    QLabel *label = new QLabel(i18n("Replace:"), widget);
+    label->setFixedWidth(label->sizeHint().width());
+    layout->addWidget(label, 0);
 
-    RegExpLineEdit *regExpLineEdit = new RegExpLineEdit( widget );
-    regExpLineEdit->setObjectName( QLatin1String("search") );
-    layout->addWidget( regExpLineEdit, 1 );
+    RegExpLineEdit *regExpLineEdit = new RegExpLineEdit(widget);
+    regExpLineEdit->setObjectName(QLatin1String("search"));
+    layout->addWidget(regExpLineEdit, 1);
 
-    label = new QLabel( i18n( "With:" ), widget );
-    label->setFixedWidth( label->sizeHint().width() );
-    layout->addWidget( label, 0 );
+    label = new QLabel(i18n("With:"), widget);
+    label->setFixedWidth(label->sizeHint().width());
+    layout->addWidget(label, 0);
 
-    QLineEdit *lineEdit = new QLineEdit( widget );
-    lineEdit->setObjectName( QLatin1String("replace") );
-    lineEdit->setClearButtonEnabled( true );
+    QLineEdit *lineEdit = new QLineEdit(widget);
+    lineEdit->setObjectName(QLatin1String("replace"));
+    lineEdit->setClearButtonEnabled(true);
     //QT5 lineEdit->setTrapReturnKey(true);
-    layout->addWidget( lineEdit, 1 );
+    layout->addWidget(lineEdit, 1);
 
-    setParamWidgetValue( widget );
+    setParamWidgetValue(widget);
 
-    connect( comboBox, SIGNAL(currentIndexChanged(int)),
-             this, SIGNAL(filterActionModified()) );
-    connect( comboBox->lineEdit(), SIGNAL(textChanged(QString)),
-             this, SIGNAL(filterActionModified()) );
-    connect( regExpLineEdit, SIGNAL(textChanged(QString)),
-             this, SIGNAL(filterActionModified()) );
-    connect( lineEdit, SIGNAL(textChanged(QString)),
-             this, SIGNAL(filterActionModified()) );
+    connect(comboBox, SIGNAL(currentIndexChanged(int)),
+            this, SIGNAL(filterActionModified()));
+    connect(comboBox->lineEdit(), SIGNAL(textChanged(QString)),
+            this, SIGNAL(filterActionModified()));
+    connect(regExpLineEdit, SIGNAL(textChanged(QString)),
+            this, SIGNAL(filterActionModified()));
+    connect(lineEdit, SIGNAL(textChanged(QString)),
+            this, SIGNAL(filterActionModified()));
 
     return widget;
 }
 
-void FilterActionRewriteHeader::setParamWidgetValue( QWidget *paramWidget ) const
+void FilterActionRewriteHeader::setParamWidgetValue(QWidget *paramWidget) const
 {
-    const int index = mParameterList.indexOf( mParameter );
-    PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("combo") );
-    Q_ASSERT( comboBox );
+    const int index = mParameterList.indexOf(mParameter);
+    PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    Q_ASSERT(comboBox);
 
     comboBox->clear();
-    comboBox->addItems( mParameterList );
-    if ( index < 0 ) {
-        comboBox->addItem( mParameter );
-        comboBox->setCurrentIndex( comboBox->count() - 1 );
+    comboBox->addItems(mParameterList);
+    if (index < 0) {
+        comboBox->addItem(mParameter);
+        comboBox->setCurrentIndex(comboBox->count() - 1);
     } else {
-        comboBox->setCurrentIndex( index );
+        comboBox->setCurrentIndex(index);
     }
 
-    RegExpLineEdit *regExpLineEdit = paramWidget->findChild<RegExpLineEdit*>( QLatin1String("search") );
-    Q_ASSERT( regExpLineEdit );
-    regExpLineEdit->setText( mRegExp.pattern() );
+    RegExpLineEdit *regExpLineEdit = paramWidget->findChild<RegExpLineEdit *>(QLatin1String("search"));
+    Q_ASSERT(regExpLineEdit);
+    regExpLineEdit->setText(mRegExp.pattern());
 
-    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("replace") );
-    Q_ASSERT( lineEdit );
-    lineEdit->setText( mReplacementString );
+    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit *>(QLatin1String("replace"));
+    Q_ASSERT(lineEdit);
+    lineEdit->setText(mReplacementString);
 }
 
-void FilterActionRewriteHeader::applyParamWidgetValue( QWidget *paramWidget )
+void FilterActionRewriteHeader::applyParamWidgetValue(QWidget *paramWidget)
 {
-    const PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("combo") );
-    Q_ASSERT( comboBox );
+    const PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    Q_ASSERT(comboBox);
     mParameter = comboBox->currentText();
 
-    const RegExpLineEdit *regExpLineEdit = paramWidget->findChild<RegExpLineEdit*>( QLatin1String("search") );
-    Q_ASSERT( regExpLineEdit );
-    mRegExp.setPattern( regExpLineEdit->text() );
+    const RegExpLineEdit *regExpLineEdit = paramWidget->findChild<RegExpLineEdit *>(QLatin1String("search"));
+    Q_ASSERT(regExpLineEdit);
+    mRegExp.setPattern(regExpLineEdit->text());
 
-    const QLineEdit *lineEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("replace") );
-    Q_ASSERT( lineEdit );
+    const QLineEdit *lineEdit = paramWidget->findChild<QLineEdit *>(QLatin1String("replace"));
+    Q_ASSERT(lineEdit);
     mReplacementString = lineEdit->text();
 }
 
-void FilterActionRewriteHeader::clearParamWidget( QWidget *paramWidget ) const
+void FilterActionRewriteHeader::clearParamWidget(QWidget *paramWidget) const
 {
-    PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("combo") );
-    Q_ASSERT( comboBox );
-    comboBox->setCurrentIndex( 0 );
+    PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    Q_ASSERT(comboBox);
+    comboBox->setCurrentIndex(0);
 
-    RegExpLineEdit *regExpLineEdit = paramWidget->findChild<RegExpLineEdit*>( QLatin1String("search") );
-    Q_ASSERT( regExpLineEdit );
+    RegExpLineEdit *regExpLineEdit = paramWidget->findChild<RegExpLineEdit *>(QLatin1String("search"));
+    Q_ASSERT(regExpLineEdit);
     regExpLineEdit->clear();
 
-    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("replace") );
-    Q_ASSERT( lineEdit );
+    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit *>(QLatin1String("replace"));
+    Q_ASSERT(lineEdit);
     lineEdit->clear();
 }
 
 QString FilterActionRewriteHeader::argsAsString() const
 {
     QString result = mParameter;
-    result += QLatin1Char( '\t' );
+    result += QLatin1Char('\t');
     result += mRegExp.pattern();
-    result += QLatin1Char( '\t' );
+    result += QLatin1Char('\t');
     result += mReplacementString;
 
     return result;
@@ -206,26 +206,24 @@ QString FilterActionRewriteHeader::argsAsString() const
 
 QString FilterActionRewriteHeader::displayString() const
 {
-    return label() + QLatin1String( " \"" ) + argsAsString().toHtmlEscaped() + QLatin1String( "\"" );
+    return label() + QLatin1String(" \"") + argsAsString().toHtmlEscaped() + QLatin1String("\"");
 }
 
-void FilterActionRewriteHeader::argsFromString( const QString &argsStr )
+void FilterActionRewriteHeader::argsFromString(const QString &argsStr)
 {
-    const QStringList list = argsStr.split( QLatin1Char( '\t' ) );
+    const QStringList list = argsStr.split(QLatin1Char('\t'));
     QString result;
 
     result = list[ 0 ];
-    mRegExp.setPattern( list[ 1 ] );
+    mRegExp.setPattern(list[ 1 ]);
     mReplacementString = list[ 2 ];
 
-    int index = mParameterList.indexOf( result );
-    if ( index < 0 ) {
-        mParameterList.append( result );
+    int index = mParameterList.indexOf(result);
+    if (index < 0) {
+        mParameterList.append(result);
         index = mParameterList.count() - 1;
     }
 
-    mParameter = mParameterList.at( index );
+    mParameter = mParameterList.at(index);
 }
-
-
 

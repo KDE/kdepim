@@ -22,7 +22,8 @@
 
 #include "filteraction.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionSetTransport - set transport to...
@@ -32,32 +33,32 @@ class FilterActionSetTransport: public FilterAction
 {
     Q_OBJECT
 public:
-    explicit FilterActionSetTransport( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionSetTransport(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
     static FilterAction *newAction();
-    QWidget *createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
-    void applyParamWidgetValue( QWidget *paramWidget );
+    void applyParamWidgetValue(QWidget *paramWidget);
 
     /**
      * @copydoc FilterAction::setParamWidgetValue
      */
-    void setParamWidgetValue( QWidget *paramWidget ) const;
+    void setParamWidgetValue(QWidget *paramWidget) const;
 
     /**
      * @copydoc FilterAction::clearParamWidget
      */
-    void clearParamWidget( QWidget *paramWidget ) const;
+    void clearParamWidget(QWidget *paramWidget) const;
 
-    bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
 
     /**
      * @copydoc FilterAction::argsFromString
      */
-    void argsFromString( const QString &argsStr );
+    void argsFromString(const QString &argsStr);
     /**
      * @copydoc FilterAction::isEmpty
      */

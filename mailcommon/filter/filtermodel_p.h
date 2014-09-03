@@ -22,24 +22,25 @@
 
 #include <QModelIndex>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FilterModel : public QAbstractListModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit FilterModel( QObject *parent = 0 );
-    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+public:
+    explicit FilterModel(QObject *parent = 0);
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    void moveRow( int sourceRow, int destinationRow );
+    void moveRow(int sourceRow, int destinationRow);
 
-  protected:
-    virtual bool insertRows( int row, int count, const QModelIndex &parent = QModelIndex() );
-    virtual bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() );
+protected:
+    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void filterListUpdated();
 };
 

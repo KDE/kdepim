@@ -78,78 +78,75 @@
 #include <KJob>
 #include <KIO/JobUiDelegate>
 
-
 OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface(
-        const QString &ident )
+    const QString &ident)
 {
     return
-            new OrgKdeAkonadiPOP3SettingsInterface(
-                QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QLatin1String("/Settings"), QDBusConnection::sessionBus() );
+        new OrgKdeAkonadiPOP3SettingsInterface(
+            QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QLatin1String("/Settings"), QDBusConnection::sessionBus());
 }
 
-bool MailCommon::Util::isVirtualCollection( const Akonadi::Collection &collection )
+bool MailCommon::Util::isVirtualCollection(const Akonadi::Collection &collection)
 {
-    return MailCommon::Util::isVirtualCollection( collection.resource() );
+    return MailCommon::Util::isVirtualCollection(collection.resource());
 }
 
-bool MailCommon::Util::isVirtualCollection( const QString &resource )
+bool MailCommon::Util::isVirtualCollection(const QString &resource)
 {
-    return resource == QLatin1String( "akonadi_search_resource" );
+    return resource == QLatin1String("akonadi_search_resource");
 }
 
-bool MailCommon::Util::isLocalCollection( const QString &resource )
+bool MailCommon::Util::isLocalCollection(const QString &resource)
 {
     return resource.contains(QLatin1String("akonadi_mbox_resource")) ||
-            resource.contains(QLatin1String("akonadi_maildir_resource")) ||
-            resource.contains(QLatin1String("akonadi_mixedmaildir_resource"));
+           resource.contains(QLatin1String("akonadi_maildir_resource")) ||
+           resource.contains(QLatin1String("akonadi_mixedmaildir_resource"));
 }
 
-
-QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection &collection )
+QString MailCommon::Util::fullCollectionPath(const Akonadi::Collection &collection)
 {
     QString fullPath;
 
     QModelIndex idx =
-            Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), collection );
-    if ( !idx.isValid() ) {
+        Akonadi::EntityTreeModel::modelIndexForCollection(KernelIf->collectionModel(), collection);
+    if (!idx.isValid()) {
         return fullPath;
     }
 
     fullPath = idx.data().toString();
     idx = idx.parent();
-    while ( idx != QModelIndex() ) {
+    while (idx != QModelIndex()) {
         fullPath = idx.data().toString() + QLatin1Char('/') + fullPath;
         idx = idx.parent();
     }
     return fullPath;
 }
 
-bool MailCommon::Util::showJobErrorMessage( KJob *job )
+bool MailCommon::Util::showJobErrorMessage(KJob *job)
 {
-    if ( job->error() ) {
-        if ( static_cast<KIO::Job*>( job )->ui() ) {
-            static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+    if (job->error()) {
+        if (static_cast<KIO::Job *>(job)->ui()) {
+            static_cast<KIO::Job *>(job)->ui()->showErrorMessage();
         } else {
-            qDebug() << " job->errorString() :"<<job->errorString();
+            qDebug() << " job->errorString() :" << job->errorString();
         }
         return true;
     }
     return false;
 }
 
-Akonadi::AgentInstance::List MailCommon::Util::agentInstances( bool excludeMailDispacher )
+Akonadi::AgentInstance::List MailCommon::Util::agentInstances(bool excludeMailDispacher)
 {
     Akonadi::AgentInstance::List relevantInstances;
-    foreach ( const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances() ) {
-        const QStringList capabilities( instance.type().capabilities() );
-        if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) ) {
-            if ( capabilities.contains( QLatin1String("Resource") ) &&
-                 !capabilities.contains( QLatin1String("Virtual") ) &&
-                 !capabilities.contains( QLatin1String("MailTransport") ) )
-            {
+    foreach (const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances()) {
+        const QStringList capabilities(instance.type().capabilities());
+        if (instance.type().mimeTypes().contains(KMime::Message::mimeType())) {
+            if (capabilities.contains(QLatin1String("Resource")) &&
+                    !capabilities.contains(QLatin1String("Virtual")) &&
+                    !capabilities.contains(QLatin1String("MailTransport"))) {
                 relevantInstances << instance;
-            } else if ( !excludeMailDispacher &&
-                        instance.identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) ) {
+            } else if (!excludeMailDispacher &&
+                       instance.identifier() == QLatin1String("akonadi_maildispatcher_agent")) {
                 relevantInstances << instance;
             }
         }
@@ -158,7 +155,7 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances( bool excludeMailD
 }
 
 /* static */
-bool MailCommon::Util::ensureKorganizerRunning( bool switchTo )
+bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
 {
     // FIXME: this function should be inside a QObject, and async,
     //         and emit a signal when korg registered itself successfuly
@@ -169,17 +166,17 @@ bool MailCommon::Util::ensureKorganizerRunning( bool switchTo )
 
 #if defined(Q_OS_WIN32)
     //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
-    QDBusInterface *interface = new QDBusInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication") );
-    if ( !interface->isValid() ) {
+    QDBusInterface *interface = new QDBusInterface(QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication"));
+    if (!interface->isValid()) {
         qDebug() << "Starting korganizer...";
 
         QDBusServiceWatcher *watcher =
-                new QDBusServiceWatcher( QLatin1String("org.kde.korganizer"), QDBusConnection::sessionBus(),
-                                         QDBusServiceWatcher::WatchForRegistration );
+            new QDBusServiceWatcher(QLatin1String("org.kde.korganizer"), QDBusConnection::sessionBus(),
+                                    QDBusServiceWatcher::WatchForRegistration);
         QEventLoop loop;
-        watcher->connect( watcher, SIGNAL(serviceRegistered(QString)), &loop, SLOT(quit()) );
-        result = QProcess::startDetached( QLatin1String("korganizer-mobile") );
-        if ( result ) {
+        watcher->connect(watcher, SIGNAL(serviceRegistered(QString)), &loop, SLOT(quit()));
+        result = QProcess::startDetached(QLatin1String("korganizer-mobile"));
+        if (result) {
             qDebug() << "Starting loop";
             loop.exec();
             qDebug() << "Korganizer finished starting";
@@ -198,23 +195,23 @@ bool MailCommon::Util::ensureKorganizerRunning( bool switchTo )
     constraint = QLatin1String("'mobile' in Keywords");
 #endif
 
-    result = KDBusServiceStarter::self()->findServiceFor( QLatin1String("DBUS/Organizer"),
-                                                          constraint,
-                                                          &error, &dbusService ) == 0;
+    result = KDBusServiceStarter::self()->findServiceFor(QLatin1String("DBUS/Organizer"),
+             constraint,
+             &error, &dbusService) == 0;
 #endif
-    if ( result ) {
+    if (result) {
         // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
-        QDBusInterface iface( QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication"),
-                              QLatin1String("org.kde.KUniqueApplication") );
-        if ( iface.isValid() ) {
-            if ( switchTo ) {
-                iface.call( QLatin1String("newInstance") ); // activate korganizer window
+        QDBusInterface iface(QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication"),
+                             QLatin1String("org.kde.KUniqueApplication"));
+        if (iface.isValid()) {
+            if (switchTo) {
+                iface.call(QLatin1String("newInstance"));   // activate korganizer window
             }
 #if 0 //Not exist
-            QDBusInterface pimIface( "org.kde.korganizer", "/korganizer_PimApplication",
-                                     "org.kde.KUniqueApplication" );
-            QDBusReply<bool> r = pimIface.call( "load" );
-            if ( !r.isValid() || !r.value() ) {
+            QDBusInterface pimIface("org.kde.korganizer", "/korganizer_PimApplication",
+                                    "org.kde.KUniqueApplication");
+            QDBusReply<bool> r = pimIface.call("load");
+            if (!r.isValid() || !r.value()) {
                 qWarning() << "Loading korganizer failed: " << pimIface.lastError().message();
             }
 #endif
@@ -230,122 +227,122 @@ bool MailCommon::Util::ensureKorganizerRunning( bool switchTo )
     return result;
 }
 
-uint MailCommon::Util::folderIdentity( const Akonadi::Item &item )
+uint MailCommon::Util::folderIdentity(const Akonadi::Item &item)
 {
     uint id = 0;
-    if ( item.isValid() && item.parentCollection().isValid() ) {
+    if (item.isValid() && item.parentCollection().isValid()) {
         Akonadi::Collection col = item.parentCollection();
-        if ( col.resource().isEmpty()) {
+        if (col.resource().isEmpty()) {
             col = parentCollectionFromItem(item);
         }
         const QSharedPointer<FolderCollection> fd =
-                FolderCollection::forCollection( col, false );
+            FolderCollection::forCollection(col, false);
 
         id = fd->identity();
     }
     return id;
 }
 
-static QModelIndex indexBelow( QAbstractItemModel *model, const QModelIndex &current )
+static QModelIndex indexBelow(QAbstractItemModel *model, const QModelIndex &current)
 {
     // if we have children, return first child
-    if ( model->rowCount( current ) > 0 ) {
-        return model->index( 0, 0, current );
+    if (model->rowCount(current) > 0) {
+        return model->index(0, 0, current);
     }
 
     // if we have siblings, return next sibling
-    const QModelIndex parent = model->parent( current );
-    const QModelIndex sibling = model->index( current.row() + 1, 0, parent );
+    const QModelIndex parent = model->parent(current);
+    const QModelIndex sibling = model->index(current.row() + 1, 0, parent);
 
-    if ( sibling.isValid() ) { // found valid sibling
+    if (sibling.isValid()) {   // found valid sibling
         return sibling;
     }
 
-    if ( !parent.isValid() ) { // our parent is the tree root and we have no siblings
+    if (!parent.isValid()) {   // our parent is the tree root and we have no siblings
         return QModelIndex(); // we reached the bottom of the tree
     }
 
     // We are the last child, the next index to check is our uncle, parent's first sibling
-    const QModelIndex parentsSibling = parent.sibling( parent.row() + 1, 0 );
-    if ( parentsSibling.isValid() ) {
+    const QModelIndex parentsSibling = parent.sibling(parent.row() + 1, 0);
+    if (parentsSibling.isValid()) {
         return parentsSibling;
     }
 
     // iterate over our parents back to root until we find a parent with a valid sibling
     QModelIndex currentParent = parent;
-    QModelIndex grandParent = model->parent( currentParent );
-    while ( currentParent.isValid() ) {
+    QModelIndex grandParent = model->parent(currentParent);
+    while (currentParent.isValid()) {
         // check if the parent has children except from us
-        if ( model->rowCount( grandParent ) > currentParent.row() + 1 ) {
+        if (model->rowCount(grandParent) > currentParent.row() + 1) {
             const QModelIndex index =
-                    indexBelow( model, model->index( currentParent.row() + 1, 0, grandParent ) );
-            if ( index.isValid() ) {
+                indexBelow(model, model->index(currentParent.row() + 1, 0, grandParent));
+            if (index.isValid()) {
                 return index;
             }
         }
 
         currentParent = grandParent;
-        grandParent = model->parent( currentParent );
+        grandParent = model->parent(currentParent);
     }
 
     return QModelIndex(); // nothing found -> end of tree
 }
 
-static QModelIndex lastChildOfModel( QAbstractItemModel *model, const QModelIndex &current )
+static QModelIndex lastChildOfModel(QAbstractItemModel *model, const QModelIndex &current)
 {
-    if ( model->rowCount( current ) == 0 ) {
+    if (model->rowCount(current) == 0) {
         return current;
     }
 
-    return lastChildOfModel( model, model->index( model->rowCount( current ) - 1, 0, current ) );
+    return lastChildOfModel(model, model->index(model->rowCount(current) - 1, 0, current));
 }
 
-static QModelIndex indexAbove( QAbstractItemModel *model, const QModelIndex &current )
+static QModelIndex indexAbove(QAbstractItemModel *model, const QModelIndex &current)
 {
-    const QModelIndex parent = model->parent( current );
+    const QModelIndex parent = model->parent(current);
 
-    if ( current.row() == 0 ) {
+    if (current.row() == 0) {
         // we have no previous siblings -> our parent is the next item above us
         return parent;
     }
 
     // find previous sibling
-    const QModelIndex previousSibling = model->index( current.row() - 1, 0, parent );
+    const QModelIndex previousSibling = model->index(current.row() - 1, 0, parent);
 
     // the item above us is the last child (or grandchild, or grandgrandchild... etc)
     // of our previous sibling
-    return lastChildOfModel( model, previousSibling );
+    return lastChildOfModel(model, previousSibling);
 }
 
-QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model,
-                                                    const QModelIndex &current,
-                                                    SearchDirection direction,
-                                                    bool (*ignoreCollectionCallback)( const Akonadi::Collection &collection ) )
+QModelIndex MailCommon::Util::nextUnreadCollection(QAbstractItemModel *model,
+        const QModelIndex &current,
+        SearchDirection direction,
+        bool (*ignoreCollectionCallback)(const Akonadi::Collection &collection))
 {
     QModelIndex index = current;
-    while ( true ) {
-        if ( direction == MailCommon::Util::ForwardSearch ) {
-            index = indexBelow( model, index );
-        } else if ( direction == MailCommon::Util::BackwardSearch ) {
-            index = indexAbove( model, index );
+    while (true) {
+        if (direction == MailCommon::Util::ForwardSearch) {
+            index = indexBelow(model, index);
+        } else if (direction == MailCommon::Util::BackwardSearch) {
+            index = indexAbove(model, index);
         }
 
-        if ( !index.isValid() ) { // reach end or top of the model
+        if (!index.isValid()) {   // reach end or top of the model
             return QModelIndex();
         }
 
         // check if the index is a collection
         const Akonadi::Collection collection =
-                index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+            index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 
-        if ( collection.isValid() ) {
+        if (collection.isValid()) {
 
             // check if it is unread
-            if ( collection.statistics().unreadCount() > 0 ) {
-                if ( ignoreCollectionCallback && ignoreCollectionCallback( collection ) ) {
+            if (collection.statistics().unreadCount() > 0) {
+                if (ignoreCollectionCallback && ignoreCollectionCallback(collection)) {
                     continue;
                 }
-                if ( !ignoreNewMailInFolder(collection) ) {
+                if (!ignoreNewMailInFolder(collection)) {
                     return index; // we found the next unread collection
                 }
             }
@@ -357,7 +354,7 @@ QModelIndex MailCommon::Util::nextUnreadCollection( QAbstractItemModel *model,
 
 bool MailCommon::Util::ignoreNewMailInFolder(const Akonadi::Collection &collection)
 {
-    if ( collection.hasAttribute<NewMailNotifierAttribute>() ) {
+    if (collection.hasAttribute<NewMailNotifierAttribute>()) {
         if (collection.attribute<NewMailNotifierAttribute>()->ignoreNewMail()) {
             return true;
         }
@@ -365,51 +362,51 @@ bool MailCommon::Util::ignoreNewMailInFolder(const Akonadi::Collection &collecti
     return false;
 }
 
-Akonadi::Collection MailCommon::Util::parentCollectionFromItem( const Akonadi::Item &item )
+Akonadi::Collection MailCommon::Util::parentCollectionFromItem(const Akonadi::Item &item)
 {
     return updatedCollection(item.parentCollection());
 }
 
-QString MailCommon::Util::realFolderPath( const QString &path )
+QString MailCommon::Util::realFolderPath(const QString &path)
 {
-    QString realPath( path );
-    realPath.remove( QLatin1String(".directory") );
-    realPath.replace( QLatin1String("/."), QLatin1String("/") );
-    if ( !realPath.isEmpty() && ( realPath.at( 0 ) == QLatin1Char('.') ) ) {
-        realPath.remove( 0, 1 ); //remove first "."
+    QString realPath(path);
+    realPath.remove(QLatin1String(".directory"));
+    realPath.replace(QLatin1String("/."), QLatin1String("/"));
+    if (!realPath.isEmpty() && (realPath.at(0) == QLatin1Char('.'))) {
+        realPath.remove(0, 1);   //remove first "."
     }
     return realPath;
 }
 
 QColor MailCommon::Util::defaultQuotaColor()
 {
-    KColorScheme scheme( QPalette::Active, KColorScheme::View );
-    return scheme.foreground( KColorScheme::NegativeText ).color();
+    KColorScheme scheme(QPalette::Active, KColorScheme::View);
+    return scheme.foreground(KColorScheme::NegativeText).color();
 }
 
-void MailCommon::Util::expireOldMessages( const Akonadi::Collection &collection, bool immediate )
+void MailCommon::Util::expireOldMessages(const Akonadi::Collection &collection, bool immediate)
 {
-    ScheduledExpireTask *task = new ScheduledExpireTask( collection, immediate );
-    KernelIf->jobScheduler()->registerTask( task );
+    ScheduledExpireTask *task = new ScheduledExpireTask(collection, immediate);
+    KernelIf->jobScheduler()->registerTask(task);
 }
 
-Akonadi::Collection MailCommon::Util::updatedCollection( const Akonadi::Collection& col )
+Akonadi::Collection MailCommon::Util::updatedCollection(const Akonadi::Collection &col)
 {
-    const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KernelIf->collectionModel(), col );
-    const Akonadi::Collection collection = idx.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    const QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection(KernelIf->collectionModel(), col);
+    const Akonadi::Collection collection = idx.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
     return collection;
 }
 
-Akonadi::Collection::Id MailCommon::Util::convertFolderPathToCollectionId( const QString& folder)
+Akonadi::Collection::Id MailCommon::Util::convertFolderPathToCollectionId(const QString &folder)
 {
-    Akonadi::Collection::Id newFolderId=-1;
+    Akonadi::Collection::Id newFolderId = -1;
     bool exactPath = false;
-    Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders( folder, exactPath );
-    if ( lst.count() == 1 && exactPath )
-        newFolderId = lst.at( 0 ).id();
-    else {
-        QPointer<FilterActionMissingCollectionDialog> dlg = new FilterActionMissingCollectionDialog( lst, QString(), folder );
-        if ( dlg->exec() ) {
+    Akonadi::Collection::List lst = FilterActionMissingCollectionDialog::potentialCorrectFolders(folder, exactPath);
+    if (lst.count() == 1 && exactPath) {
+        newFolderId = lst.at(0).id();
+    } else {
+        QPointer<FilterActionMissingCollectionDialog> dlg = new FilterActionMissingCollectionDialog(lst, QString(), folder);
+        if (dlg->exec()) {
             newFolderId = dlg->selectedCollection().id();
         }
         delete dlg;
@@ -417,11 +414,12 @@ Akonadi::Collection::Id MailCommon::Util::convertFolderPathToCollectionId( const
     return newFolderId;
 }
 
-QString MailCommon::Util::convertFolderPathToCollectionStr( const QString& folder)
+QString MailCommon::Util::convertFolderPathToCollectionStr(const QString &folder)
 {
-    Akonadi::Collection::Id newFolderId= MailCommon::Util::convertFolderPathToCollectionId(folder);
-    if (newFolderId == -1 )
+    Akonadi::Collection::Id newFolderId = MailCommon::Util::convertFolderPathToCollectionId(folder);
+    if (newFolderId == -1) {
         return QString();
+    }
     return QString::number(newFolderId);
 }
 
@@ -438,9 +436,9 @@ bool MailCommon::Util::foundMailer()
     lst << MailImporter::FilterThunderbird::defaultSettingsPath();
     lst << MailImporter::OtherMailerUtil::trojitaDefaultPath();
 
-    Q_FOREACH(const QString& path, lst) {
-        QDir directory( path );
-        if ( directory.exists() ) {
+    Q_FOREACH (const QString &path, lst) {
+        QDir directory(path);
+        if (directory.exists()) {
             return true;
         }
     }

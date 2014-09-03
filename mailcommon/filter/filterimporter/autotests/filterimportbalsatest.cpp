@@ -20,20 +20,18 @@
 #include <mailcommon/kernel/mailkernel.h>
 #include <AkonadiCore/qtest_akonadi.h>
 
-
-QTEST_AKONADIMAIN( FilterImportBalsatest )
+QTEST_AKONADIMAIN(FilterImportBalsatest)
 
 void FilterImportBalsatest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
 
-    FilterTestKernel *kernel = new FilterTestKernel( this );
-    CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
-    CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+    FilterTestKernel *kernel = new FilterTestKernel(this);
+    CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
 }
 
 void FilterImportBalsatest::testImportFilters()
 {
 }
-
 

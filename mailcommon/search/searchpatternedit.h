@@ -35,12 +35,10 @@ class QAbstractButton;
 class QRadioButton;
 class QStackedWidget;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class SearchPatternEdit;
-
-
-
 
 /**
  * This widget is intended to be used in the filter configuration as
@@ -88,7 +86,7 @@ public:
         NotShowDate = 16,
         NotShowTags = 32
     };
-    Q_DECLARE_FLAGS( SearchPatternEditOptions, SearchPatternEditOption )
+    Q_DECLARE_FLAGS(SearchPatternEditOptions, SearchPatternEditOption)
 
     enum SearchModeType {
         StandardMode = 0,
@@ -100,13 +98,13 @@ public:
      * QGroupBox, as usual.
      */
     explicit SearchPatternEdit(
-            QWidget *parent = 0,
-            SearchPatternEditOptions options = (SearchPatternEditOptions) (None),
-            SearchModeType modeType = StandardMode);
+        QWidget *parent = 0,
+        SearchPatternEditOptions options = (SearchPatternEditOptions)(None),
+        SearchModeType modeType = StandardMode);
 
     ~SearchPatternEdit();
 
-    void setPatternEditOptions( SearchPatternEdit::SearchPatternEditOptions options );
+    void setPatternEditOptions(SearchPatternEdit::SearchPatternEditOptions options);
 
     /**
      * Sets the search pattern. Rules are inserted regardless of the
@@ -114,8 +112,7 @@ public:
      * This widget makes a shallow copy of @p aPattern and operates
      * directly on it.
      */
-    void setSearchPattern( MailCommon::SearchPattern *aPattern );
-
+    void setSearchPattern(MailCommon::SearchPattern *aPattern);
 
     /**
      * Updates the search pattern according to the current widget values.
@@ -144,12 +141,12 @@ signals:
     void returnPressed();
 
 private slots:
-    void slotRadioClicked( QAbstractButton *aRBtn );
+    void slotRadioClicked(QAbstractButton *aRBtn);
     void slotAutoNameHack();
-    void slotRuleAdded( QWidget *widget );
+    void slotRuleAdded(QWidget *widget);
 
 private:
-    void initLayout( SearchPatternEditOptions options, SearchModeType modeType );
+    void initLayout(SearchPatternEditOptions options, SearchModeType modeType);
     MailCommon::SearchPattern *mPattern;
     QRadioButton *mAllRBtn;
     QRadioButton *mAnyRBtn;
@@ -177,12 +174,12 @@ class SearchRuleWidget : public QWidget
 
 public:
     /**
-   * Constructor. You can give a MailCommon::SearchRule as parameter,
-   * which will be used to initialize the widget.
-   */
+    * Constructor. You can give a MailCommon::SearchRule as parameter,
+    * which will be used to initialize the widget.
+    */
     explicit SearchRuleWidget(QWidget *parent = 0,
                               MailCommon::SearchRule::Ptr aRule = MailCommon::SearchRule::Ptr(),
-                              SearchPatternEdit::SearchPatternEditOptions options = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None),
+                              SearchPatternEdit::SearchPatternEditOptions options = (SearchPatternEdit::SearchPatternEditOptions)(SearchPatternEdit::None),
                               SearchPatternEdit::SearchModeType modeType = SearchPatternEdit::StandardMode);
 
     enum {
@@ -204,27 +201,27 @@ public:
     };
 
     /**
-   * Sets the rule. The rule is accepted regardless of the return
-   * value of MailCommon::SearchRule::isEmpty. This widget makes a shallow
-   * copy of @p aRule and operates directly on it. If @p aRule is 0,
-   * resets itself, taks user input, but does essentially nothing.
-   * If you pass 0, you should probably disable it.
-   */
-    void setRule( MailCommon::SearchRule::Ptr aRule );
+    * Sets the rule. The rule is accepted regardless of the return
+    * value of MailCommon::SearchRule::isEmpty. This widget makes a shallow
+    * copy of @p aRule and operates directly on it. If @p aRule is 0,
+    * resets itself, taks user input, but does essentially nothing.
+    * If you pass 0, you should probably disable it.
+    */
+    void setRule(MailCommon::SearchRule::Ptr aRule);
 
     /**
-   * Returns a reference to the currently-worked-on MailCommon::SearchRule.
-   */
+    * Returns a reference to the currently-worked-on MailCommon::SearchRule.
+    */
     MailCommon::SearchRule::Ptr rule() const;
 
     /**
-   * Resets the rule currently worked on and updates the widget accordingly.
-   */
+    * Resets the rule currently worked on and updates the widget accordingly.
+    */
     void reset();
 
-    static int ruleFieldToId( const QString &i18nVal );
+    static int ruleFieldToId(const QString &i18nVal);
 
-    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled);
 
     void setPatternEditOptions(MailCommon::SearchPatternEdit::SearchPatternEditOptions options);
 
@@ -235,37 +232,37 @@ public slots:
 
 signals:
     /**
-   * This signal is emitted whenever the user alters the field.
-   * The pseudo-headers <...> are returned in their i18n form, but
-   * stored in their English form in the rule.
-   */
-    void fieldChanged( const QString & );
+    * This signal is emitted whenever the user alters the field.
+    * The pseudo-headers <...> are returned in their i18n form, but
+    * stored in their English form in the rule.
+    */
+    void fieldChanged(const QString &);
 
     /**
-   * This signal is emitted whenever the user alters the contents/value
-   * of the rule.
-   */
-    void contentsChanged( const QString & );
+    * This signal is emitted whenever the user alters the contents/value
+    * of the rule.
+    */
+    void contentsChanged(const QString &);
 
     void returnPressed();
 
-    void addWidget( QWidget * );
-    void removeWidget( QWidget * );
+    void addWidget(QWidget *);
+    void removeWidget(QWidget *);
 
 protected:
     /**
-   * Used internally to translate i18n-ized pseudo-headers back to English.
-   */
-    static QByteArray ruleFieldToEnglish( const QString &i18nVal );
+    * Used internally to translate i18n-ized pseudo-headers back to English.
+    */
+    static QByteArray ruleFieldToEnglish(const QString &i18nVal);
 
     /**
-   * Used internally to find the corresponding index into the field
-   * ComboBox. Returns the index if found or -1 if the search failed,
-   */
-    int indexOfRuleField( const QByteArray & aName ) const;
+    * Used internally to find the corresponding index into the field
+    * ComboBox. Returns the index if found or -1 if the search failed,
+    */
+    int indexOfRuleField(const QByteArray &aName) const;
 
 protected slots:
-    void slotRuleFieldChanged( const QString & );
+    void slotRuleFieldChanged(const QString &);
     void slotAddWidget();
     void slotRemoveWidget();
 
@@ -281,7 +278,6 @@ private:
     QPushButton *mRemove;
 };
 
-
 class SearchRuleWidgetLister : public KPIM::KWidgetLister
 {
     Q_OBJECT
@@ -290,33 +286,32 @@ class SearchRuleWidgetLister : public KPIM::KWidgetLister
 
 public:
     explicit SearchRuleWidgetLister(QWidget *parent = 0,
-                                    SearchPatternEdit::SearchPatternEditOptions opt = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None),
+                                    SearchPatternEdit::SearchPatternEditOptions opt = (SearchPatternEdit::SearchPatternEditOptions)(SearchPatternEdit::None),
                                     SearchPatternEdit::SearchModeType modeType = SearchPatternEdit::StandardMode);
 
     virtual ~SearchRuleWidgetLister();
 
-    void setRuleList( QList<MailCommon::SearchRule::Ptr> *aList );
+    void setRuleList(QList<MailCommon::SearchRule::Ptr> *aList);
 
-    void setPatternEditOptions( SearchPatternEdit::SearchPatternEditOptions options );
+    void setPatternEditOptions(SearchPatternEdit::SearchPatternEditOptions options);
 
 public slots:
     void reset();
-    void slotAddWidget( QWidget * );
-    void slotRemoveWidget( QWidget * );
+    void slotAddWidget(QWidget *);
+    void slotRemoveWidget(QWidget *);
 
 protected:
-    virtual void clearWidget( QWidget *aWidget );
-    virtual QWidget *createWidget( QWidget *parent );
+    virtual void clearWidget(QWidget *aWidget);
+    virtual QWidget *createWidget(QWidget *parent);
 
 private:
-    void reconnectWidget( SearchRuleWidget *w );
+    void reconnectWidget(SearchRuleWidget *w);
     void updateAddRemoveButton();
     void regenerateRuleListFromWidgets();
     QList<MailCommon::SearchRule::Ptr> *mRuleList;
     SearchPatternEdit::SearchPatternEditOptions mOptions;
     SearchPatternEdit::SearchModeType mTypeMode;
 };
-
 
 }
 

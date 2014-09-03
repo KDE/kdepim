@@ -23,7 +23,8 @@
 #include <Collection>
 #include <EntityRightsFilterModel>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FolderTreeWidgetProxyModel : public Akonadi::EntityRightsFilterModel
 {
@@ -36,38 +37,38 @@ public:
         HideSpecificFolder = 2,
         HideOutboxFolder = 4
     };
-    Q_DECLARE_FLAGS( FolderTreeWidgetProxyModelOptions, FolderTreeWidgetProxyModelOption )
+    Q_DECLARE_FLAGS(FolderTreeWidgetProxyModelOptions, FolderTreeWidgetProxyModelOption)
 
     explicit FolderTreeWidgetProxyModel(
-            QObject *parent = 0,
-            FolderTreeWidgetProxyModelOptions = FolderTreeWidgetProxyModel::None );
+        QObject *parent = 0,
+        FolderTreeWidgetProxyModelOptions = FolderTreeWidgetProxyModel::None);
 
     virtual ~FolderTreeWidgetProxyModel();
 
-    virtual Qt::ItemFlags flags ( const QModelIndex &index ) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
-    virtual QVariant data ( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    void setEnabledCheck( bool enable );
+    void setEnabledCheck(bool enable);
     bool enabledCheck() const;
 
-    void setHideVirtualFolder( bool exclude );
+    void setHideVirtualFolder(bool exclude);
     bool hideVirtualFolder() const;
 
-    void setHideSpecificFolder( bool hide );
+    void setHideSpecificFolder(bool hide);
     bool hideSpecificFolder() const;
 
-    void setHideOutboxFolder( bool hide );
+    void setHideOutboxFolder(bool hide);
     bool hideOutboxFolder() const;
-    void setFilterFolder( const QString &filter );
+    void setFilterFolder(const QString &filter);
 
-    void addContentMimeTypeInclusionFilter( const QString &mimeTypes );
+    void addContentMimeTypeInclusionFilter(const QString &mimeTypes);
 
     void updatePalette();
     void readConfig();
 
 protected:
-    virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
+    virtual bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 private:
     class Private;

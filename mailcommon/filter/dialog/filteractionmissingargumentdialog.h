@@ -33,16 +33,19 @@ class QListWidget;
 class QListWidgetItem;
 class QModelIndex;
 
-namespace MailCommon {
+namespace MailCommon
+{
 class FolderRequester;
 class AccountList;
 }
 
-namespace KIdentityManagement {
+namespace KIdentityManagement
+{
 class IdentityCombo;
 }
 
-namespace MailTransport {
+namespace MailTransport
+{
 class TransportComboBox;
 }
 
@@ -50,26 +53,26 @@ class MAILCOMMON_EXPORT FilterActionMissingCollectionDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit FilterActionMissingCollectionDialog( const Akonadi::Collection::List &list,
-                                                  const QString &filtername = QString(),
-                                                  const QString &argStr = QString(),
-                                                  QWidget *parent = 0 );
+    explicit FilterActionMissingCollectionDialog(const Akonadi::Collection::List &list,
+            const QString &filtername = QString(),
+            const QString &argStr = QString(),
+            QWidget *parent = 0);
     ~FilterActionMissingCollectionDialog();
 
     Akonadi::Collection selectedCollection() const;
-    static Akonadi::Collection::List potentialCorrectFolders( const QString &path,
-                                                              bool &exactPath );
+    static Akonadi::Collection::List potentialCorrectFolders(const QString &path,
+            bool &exactPath);
 
 private Q_SLOTS:
     void slotCurrentItemChanged();
-    void slotFolderChanged( const Akonadi::Collection &col );
-    void slotDoubleItemClicked( QListWidgetItem *item );
+    void slotFolderChanged(const Akonadi::Collection &col);
+    void slotDoubleItemClicked(QListWidgetItem *item);
 
 private:
-    static void getPotentialFolders( const QAbstractItemModel *model,
-                                     const QModelIndex &parentIndex,
-                                     const QString &realPath,
-                                     Akonadi::Collection::List &list );
+    static void getPotentialFolders(const QAbstractItemModel *model,
+                                    const QModelIndex &parentIndex,
+                                    const QString &realPath,
+                                    Akonadi::Collection::List &list);
     enum collectionEnum {
         IdentifyCollection = Qt::UserRole + 1
     };
@@ -85,8 +88,8 @@ class FilterActionMissingIdentityDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit FilterActionMissingIdentityDialog( const QString &filtername,
-                                                QWidget *parent = 0 );
+    explicit FilterActionMissingIdentityDialog(const QString &filtername,
+            QWidget *parent = 0);
     ~FilterActionMissingIdentityDialog();
     int selectedIdentity() const;
 
@@ -100,8 +103,8 @@ class FilterActionMissingTransportDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit FilterActionMissingTransportDialog( const QString &filtername,
-                                                 QWidget *parent = 0 );
+    explicit FilterActionMissingTransportDialog(const QString &filtername,
+            QWidget *parent = 0);
     ~FilterActionMissingTransportDialog();
     int selectedTransport() const;
 
@@ -115,9 +118,9 @@ class FilterActionMissingTemplateDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit FilterActionMissingTemplateDialog( const QStringList &templateList,
-                                                const QString &filtername,
-                                                QWidget *parent = 0 );
+    explicit FilterActionMissingTemplateDialog(const QStringList &templateList,
+            const QString &filtername,
+            QWidget *parent = 0);
     ~FilterActionMissingTemplateDialog();
     QString selectedTemplate() const;
 
@@ -131,12 +134,12 @@ class FilterActionMissingAccountDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit FilterActionMissingAccountDialog( const QStringList &lstAccount,
-                                               const QString &filtername,
-                                               QWidget *parent = 0 );
+    explicit FilterActionMissingAccountDialog(const QStringList &lstAccount,
+            const QString &filtername,
+            QWidget *parent = 0);
     ~FilterActionMissingAccountDialog();
     QStringList selectedAccount() const;
-    static bool allAccountExist( const QStringList & lst );
+    static bool allAccountExist(const QStringList &lst);
 
 private:
     void readConfig();
@@ -151,7 +154,7 @@ public:
     explicit FilterActionMissingTagDialog(const QMap<QUrl, QString> &templateList,
                                           const QString &filtername,
                                           const QString &argsStr,
-                                          QWidget *parent = 0 );
+                                          QWidget *parent = 0);
     ~FilterActionMissingTagDialog();
     QString selectedTag() const;
 
@@ -172,9 +175,9 @@ class FilterActionMissingSoundUrlDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit FilterActionMissingSoundUrlDialog( const QString &filtername,
-                                                const QString &argStr,
-                                                QWidget *parent = 0 );
+    explicit FilterActionMissingSoundUrlDialog(const QString &filtername,
+            const QString &argStr,
+            QWidget *parent = 0);
     ~FilterActionMissingSoundUrlDialog();
     QString soundUrl() const;
 

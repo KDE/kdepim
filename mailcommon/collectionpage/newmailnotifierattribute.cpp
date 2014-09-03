@@ -15,14 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "newmailnotifierattribute.h"
 
 #include <QByteArray>
 #include <QIODevice>
 #include <QDataStream>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class NewMailNotifierAttributePrivate
 {
@@ -53,21 +53,21 @@ NewMailNotifierAttribute *NewMailNotifierAttribute::clone() const
 
 QByteArray NewMailNotifierAttribute::type() const
 {
-    static const QByteArray sType( "newmailnotifierattribute" );
+    static const QByteArray sType("newmailnotifierattribute");
     return sType;
 }
 
 QByteArray NewMailNotifierAttribute::serialized() const
 {
     QByteArray result;
-    QDataStream s( &result, QIODevice::WriteOnly );
+    QDataStream s(&result, QIODevice::WriteOnly);
     s << ignoreNewMail();
     return result;
 }
 
-void NewMailNotifierAttribute::deserialize( const QByteArray &data )
+void NewMailNotifierAttribute::deserialize(const QByteArray &data)
 {
-    QDataStream s( data );
+    QDataStream s(data);
     s >> d->ignoreNewMail;
 }
 

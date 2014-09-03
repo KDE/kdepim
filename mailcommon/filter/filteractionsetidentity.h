@@ -22,7 +22,8 @@
 
 #include "filteractionwithuoid.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionSetIdentity - set identity to
@@ -32,16 +33,16 @@ class FilterActionSetIdentity: public FilterActionWithUOID
 {
     Q_OBJECT
 public:
-    explicit FilterActionSetIdentity( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionSetIdentity(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
-    static FilterAction* newAction();
+    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
+    static FilterAction *newAction();
 
-    QWidget * createParamWidget( QWidget *parent ) const;
-    void applyParamWidgetValue( QWidget *parent );
-    void setParamWidgetValue( QWidget *parent ) const;
-    void clearParamWidget( QWidget *param ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
+    void applyParamWidgetValue(QWidget *parent);
+    void setParamWidgetValue(QWidget *parent) const;
+    void clearParamWidget(QWidget *param) const;
 };
 
 }

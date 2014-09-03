@@ -25,17 +25,17 @@
 #include <QtCore/QMultiHash>
 #include <QString>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FilterAction;
 
-typedef FilterAction * (*FilterActionNewFunc)(void);
+typedef FilterAction *(*FilterActionNewFunc)(void);
 
 /**
  * @short Auxiliary struct for FilterActionDict.
  */
-struct FilterActionDesc
-{
+struct FilterActionDesc {
     QString label, name;
     FilterActionNewFunc create;
 };
@@ -63,7 +63,7 @@ struct FilterActionDesc
  * @author Marc Mutz <mutz@kde.org>, based on work by Stefan Taferner <taferner@kde.org>
  * @see FilterAction FilterActionDesc Filter
  */
-class FilterActionDict : public QMultiHash<QString, FilterActionDesc*>
+class FilterActionDict : public QMultiHash<QString, FilterActionDesc *>
 {
 public:
     /**
@@ -85,13 +85,13 @@ public:
      * instance of the action internally and deletes it again after
      * querying it for name and label.
      */
-    MAILCOMMON_EXPORT void insert( FilterActionNewFunc aNewFunc );
+    MAILCOMMON_EXPORT void insert(FilterActionNewFunc aNewFunc);
 
     /**
      * Provides read-only access to a list of all known filter
      * actions.
      */
-    MAILCOMMON_EXPORT const QList<FilterActionDesc*>& list() const;
+    MAILCOMMON_EXPORT const QList<FilterActionDesc *> &list() const;
 
 protected:
     /**
@@ -101,7 +101,7 @@ protected:
     virtual void init();
 
 private:
-    QList<FilterActionDesc*> mList;
+    QList<FilterActionDesc *> mList;
 };
 
 }

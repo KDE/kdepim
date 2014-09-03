@@ -40,7 +40,8 @@ class QObject;
 class QString;
 class QStackedWidget;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class RuleWidgetHandler;
 
@@ -49,7 +50,7 @@ class RuleWidgetHandler;
  */
 class RuleWidgetHandlerManager
 {
-    static RuleWidgetHandlerManager * self;
+    static RuleWidgetHandlerManager *self;
 
     RuleWidgetHandlerManager();
 
@@ -58,7 +59,7 @@ public:
 
     static RuleWidgetHandlerManager *instance()
     {
-        if ( !self ) {
+        if (!self) {
             self = new RuleWidgetHandlerManager();
         }
         return self;
@@ -66,44 +67,44 @@ public:
 
     void setIsBalooSearch(bool isBalooSearch);
 
-    void registerHandler( const RuleWidgetHandler *handler );
-    void unregisterHandler( const RuleWidgetHandler *handler );
+    void registerHandler(const RuleWidgetHandler *handler);
+    void unregisterHandler(const RuleWidgetHandler *handler);
 
     void createWidgets(QStackedWidget *functionStack,
-                        QStackedWidget *valueStack,
-                        const QObject *receiver) const;
+                       QStackedWidget *valueStack,
+                       const QObject *receiver) const;
 
-    MailCommon::SearchRule::Function function( const QByteArray & field,
-                                               const QStackedWidget *functionStack ) const;
+    MailCommon::SearchRule::Function function(const QByteArray &field,
+            const QStackedWidget *functionStack) const;
 
-    QString value( const QByteArray &field,
-                   const QStackedWidget *functionStack,
-                   const QStackedWidget *valueStack ) const;
+    QString value(const QByteArray &field,
+                  const QStackedWidget *functionStack,
+                  const QStackedWidget *valueStack) const;
 
-    QString prettyValue( const QByteArray & field,
-                         const QStackedWidget *functionStack,
-                         const QStackedWidget *valueStack ) const;
+    QString prettyValue(const QByteArray &field,
+                        const QStackedWidget *functionStack,
+                        const QStackedWidget *valueStack) const;
 
-    bool handlesField( const QByteArray & field,
-                       const QStackedWidget *functionStack,
-                       const QStackedWidget *valueStack ) const;
+    bool handlesField(const QByteArray &field,
+                      const QStackedWidget *functionStack,
+                      const QStackedWidget *valueStack) const;
 
-    void reset( QStackedWidget *functionStack,
-                QStackedWidget *valueStack ) const;
+    void reset(QStackedWidget *functionStack,
+               QStackedWidget *valueStack) const;
 
     void setRule(QStackedWidget *functionStack,
-                  QStackedWidget *valueStack,
-                  const MailCommon::SearchRule::Ptr rule ) const;
+                 QStackedWidget *valueStack,
+                 const MailCommon::SearchRule::Ptr rule) const;
 
-    void update( const QByteArray & field,
-                 QStackedWidget *functionStack,
-                 QStackedWidget *valueStack ) const;
+    void update(const QByteArray &field,
+                QStackedWidget *functionStack,
+                QStackedWidget *valueStack) const;
 
 private:
-    typedef QVector<const RuleWidgetHandler*>::const_iterator const_iterator;
-    typedef QVector<const RuleWidgetHandler*>::iterator iterator;
+    typedef QVector<const RuleWidgetHandler *>::const_iterator const_iterator;
+    typedef QVector<const RuleWidgetHandler *>::iterator iterator;
 
-    QVector<const RuleWidgetHandler*> mHandlers;
+    QVector<const RuleWidgetHandler *> mHandlers;
     bool mIsBalooSearch;
 };
 

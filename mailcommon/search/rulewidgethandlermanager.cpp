@@ -46,8 +46,6 @@
 
 #include "search/searchpattern.h"
 
-
-
 #include <algorithm>
 using std::for_each;
 using std::remove;
@@ -59,22 +57,22 @@ MailCommon::RuleWidgetHandlerManager *MailCommon::RuleWidgetHandlerManager::self
 MailCommon::RuleWidgetHandlerManager::RuleWidgetHandlerManager()
     : mIsBalooSearch(false)
 {
-    registerHandler( new MailCommon::TagRuleWidgetHandler() );
-    registerHandler( new MailCommon::DateRuleWidgetHandler() );
-    registerHandler( new MailCommon::NumericRuleWidgetHandler() );
-    registerHandler( new MailCommon::StatusRuleWidgetHandler() );
-    registerHandler( new MailCommon::MessageRuleWidgetHandler() );
-    registerHandler( new MailCommon::NumericDoubleRuleWidgetHandler() );
-    registerHandler( new MailCommon::HeadersRuleWidgetHandler() );
+    registerHandler(new MailCommon::TagRuleWidgetHandler());
+    registerHandler(new MailCommon::DateRuleWidgetHandler());
+    registerHandler(new MailCommon::NumericRuleWidgetHandler());
+    registerHandler(new MailCommon::StatusRuleWidgetHandler());
+    registerHandler(new MailCommon::MessageRuleWidgetHandler());
+    registerHandler(new MailCommon::NumericDoubleRuleWidgetHandler());
+    registerHandler(new MailCommon::HeadersRuleWidgetHandler());
     // the TextRuleWidgetHandler is the fallback handler, so it has to be added
     // as last handler
-    registerHandler( new MailCommon::TextRuleWidgetHandler() );
+    registerHandler(new MailCommon::TextRuleWidgetHandler());
 }
 
 MailCommon::RuleWidgetHandlerManager::~RuleWidgetHandlerManager()
 {
-    for_each( mHandlers.begin(), mHandlers.end(),
-              MessageViewer::DeleteAndSetToZero<RuleWidgetHandler>() );
+    for_each(mHandlers.begin(), mHandlers.end(),
+             MessageViewer::DeleteAndSetToZero<RuleWidgetHandler>());
 }
 
 void MailCommon::RuleWidgetHandlerManager::setIsBalooSearch(bool isBalooSearch)
@@ -82,34 +80,35 @@ void MailCommon::RuleWidgetHandlerManager::setIsBalooSearch(bool isBalooSearch)
     mIsBalooSearch = isBalooSearch;
 }
 
-void MailCommon::RuleWidgetHandlerManager::registerHandler( const RuleWidgetHandler *handler )
+void MailCommon::RuleWidgetHandlerManager::registerHandler(const RuleWidgetHandler *handler)
 {
-    if ( !handler ) {
+    if (!handler) {
         return;
     }
-    unregisterHandler( handler ); // don't produce duplicates
-    mHandlers.push_back( handler );
+    unregisterHandler(handler);   // don't produce duplicates
+    mHandlers.push_back(handler);
 }
 
-void MailCommon::RuleWidgetHandlerManager::unregisterHandler( const RuleWidgetHandler *handler )
+void MailCommon::RuleWidgetHandlerManager::unregisterHandler(const RuleWidgetHandler *handler)
 {
     // don't delete them, only remove them from the list!
-    mHandlers.erase( remove( mHandlers.begin(), mHandlers.end(), handler ), mHandlers.end() );
+    mHandlers.erase(remove(mHandlers.begin(), mHandlers.end(), handler), mHandlers.end());
 }
 
-namespace {
+namespace
+{
 
 /**
  * Returns the number of immediate children of parent with the given object name.
  * Used by RuleWidgetHandlerManager::createWidgets().
  */
-int childCount( const QObject *parent, const QString &objName )
+int childCount(const QObject *parent, const QString &objName)
 {
     QObjectList list = parent->children();
     QObject *item;
     int count = 0;
-    foreach ( item, list ) {
-        if ( item->objectName() == objName ) {
+    foreach (item, list) {
+        if (item->objectName() == objName) {
             count++;
         }
     }
@@ -119,30 +118,30 @@ int childCount( const QObject *parent, const QString &objName )
 }
 
 void MailCommon::RuleWidgetHandlerManager::createWidgets(QStackedWidget *functionStack,
-                                                          QStackedWidget *valueStack,
-                                                          const QObject *receiver) const
+        QStackedWidget *valueStack,
+        const QObject *receiver) const
 {
-    const_iterator end( mHandlers.constEnd() );
-    for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
+    const_iterator end(mHandlers.constEnd());
+    for (const_iterator it = mHandlers.constBegin(); it != end; ++it) {
         QWidget *w = 0;
-        for ( int i = 0;
-              ( w = (*it)->createFunctionWidget( i, functionStack, receiver, mIsBalooSearch ) );
-              ++i ) {
-            if ( childCount( functionStack, w->objectName() ) < 2 ) {
+        for (int i = 0;
+                (w = (*it)->createFunctionWidget(i, functionStack, receiver, mIsBalooSearch));
+                ++i) {
+            if (childCount(functionStack, w->objectName()) < 2) {
                 // there wasn't already a widget with this name, so add this widget
-                functionStack->addWidget( w );
+                functionStack->addWidget(w);
             } else {
                 // there was already a widget with this name, so discard this widget
                 delete w;
                 w = 0;
             }
         }
-        for ( int i = 0;
-              ( w = (*it)->createValueWidget( i, valueStack, receiver ) );
-              ++i ) {
-            if ( childCount( valueStack, w->objectName() ) < 2 ) {
+        for (int i = 0;
+                (w = (*it)->createValueWidget(i, valueStack, receiver));
+                ++i) {
+            if (childCount(valueStack, w->objectName()) < 2) {
                 // there wasn't already a widget with this name, so add this widget
-                valueStack->addWidget( w );
+                valueStack->addWidget(w);
             } else {
                 // there was already a widget with this name, so discard this widget
                 delete w;
@@ -153,77 +152,77 @@ void MailCommon::RuleWidgetHandlerManager::createWidgets(QStackedWidget *functio
 }
 
 SearchRule::Function MailCommon::RuleWidgetHandlerManager::function(
-        const QByteArray &field, const QStackedWidget *functionStack ) const
+    const QByteArray &field, const QStackedWidget *functionStack) const
 {
-    const_iterator end( mHandlers.constEnd() );
-    for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
-        const SearchRule::Function func = (*it)->function( field, functionStack );
-        if ( func != SearchRule::FuncNone ) {
+    const_iterator end(mHandlers.constEnd());
+    for (const_iterator it = mHandlers.constBegin(); it != end; ++it) {
+        const SearchRule::Function func = (*it)->function(field, functionStack);
+        if (func != SearchRule::FuncNone) {
             return func;
         }
     }
     return SearchRule::FuncNone;
 }
 
-QString MailCommon::RuleWidgetHandlerManager::value( const QByteArray &field,
-                                                     const QStackedWidget *functionStack,
-                                                     const QStackedWidget *valueStack ) const
+QString MailCommon::RuleWidgetHandlerManager::value(const QByteArray &field,
+        const QStackedWidget *functionStack,
+        const QStackedWidget *valueStack) const
 {
-    const_iterator end( mHandlers.constEnd() );
-    for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
-        const QString val = (*it)->value( field, functionStack, valueStack );
-        if ( !val.isEmpty() ) {
+    const_iterator end(mHandlers.constEnd());
+    for (const_iterator it = mHandlers.constBegin(); it != end; ++it) {
+        const QString val = (*it)->value(field, functionStack, valueStack);
+        if (!val.isEmpty()) {
             return val;
         }
     }
     return QString();
 }
 
-QString MailCommon::RuleWidgetHandlerManager::prettyValue( const QByteArray &field,
-                                                           const QStackedWidget *functionStack,
-                                                           const QStackedWidget *valueStack ) const
+QString MailCommon::RuleWidgetHandlerManager::prettyValue(const QByteArray &field,
+        const QStackedWidget *functionStack,
+        const QStackedWidget *valueStack) const
 {
-    const_iterator end( mHandlers.constEnd() );
-    for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
-        const QString val = (*it)->prettyValue( field, functionStack, valueStack );
-        if ( !val.isEmpty() ) {
+    const_iterator end(mHandlers.constEnd());
+    for (const_iterator it = mHandlers.constBegin(); it != end; ++it) {
+        const QString val = (*it)->prettyValue(field, functionStack, valueStack);
+        if (!val.isEmpty()) {
             return val;
         }
     }
     return QString();
 }
 
-void MailCommon::RuleWidgetHandlerManager::reset( QStackedWidget *functionStack,
-                                                  QStackedWidget *valueStack ) const
+void MailCommon::RuleWidgetHandlerManager::reset(QStackedWidget *functionStack,
+        QStackedWidget *valueStack) const
 {
-    const_iterator end( mHandlers.constEnd() );
-    for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
-        (*it)->reset( functionStack, valueStack );
+    const_iterator end(mHandlers.constEnd());
+    for (const_iterator it = mHandlers.constBegin(); it != end; ++it) {
+        (*it)->reset(functionStack, valueStack);
     }
-    update( "", functionStack, valueStack );
+    update("", functionStack, valueStack);
 }
 
-void MailCommon::RuleWidgetHandlerManager::setRule( QStackedWidget *functionStack,
-                                                    QStackedWidget *valueStack,
-                                                    const SearchRule::Ptr rule ) const
+void MailCommon::RuleWidgetHandlerManager::setRule(QStackedWidget *functionStack,
+        QStackedWidget *valueStack,
+        const SearchRule::Ptr rule) const
 {
-    Q_ASSERT( rule );
-    reset( functionStack, valueStack );
-    const_iterator end( mHandlers.constEnd() );
-    for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
-        if ( (*it)->setRule( functionStack, valueStack, rule, mIsBalooSearch ) ) {
+    Q_ASSERT(rule);
+    reset(functionStack, valueStack);
+    const_iterator end(mHandlers.constEnd());
+    for (const_iterator it = mHandlers.constBegin(); it != end; ++it) {
+        if ((*it)->setRule(functionStack, valueStack, rule, mIsBalooSearch)) {
             return;
         }
     }
 }
 
-void MailCommon::RuleWidgetHandlerManager::update( const QByteArray &field,
-                                                   QStackedWidget *functionStack,
-                                                   QStackedWidget *valueStack ) const
+void MailCommon::RuleWidgetHandlerManager::update(const QByteArray &field,
+        QStackedWidget *functionStack,
+        QStackedWidget *valueStack) const
 {
-    const_iterator end( mHandlers.constEnd() );
-    for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
-        if ( (*it)->update( field, functionStack, valueStack ) ) {
+    const_iterator end(mHandlers.constEnd());
+    for (const_iterator it = mHandlers.constBegin(); it != end; ++it) {
+        if ((*it)->update(field, functionStack, valueStack)) {
             return;
         }
     }

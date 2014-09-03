@@ -21,8 +21,7 @@
 #include <KLocalizedString>
 using namespace MailCommon;
 
-Akonadi::MessageStatus MailCommon::FilterActionStatus::stati[] =
-{
+Akonadi::MessageStatus MailCommon::FilterActionStatus::stati[] = {
     Akonadi::MessageStatus::statusImportant(),
     Akonadi::MessageStatus::statusRead(),
     Akonadi::MessageStatus::statusUnread(),
@@ -35,26 +34,26 @@ Akonadi::MessageStatus MailCommon::FilterActionStatus::stati[] =
     Akonadi::MessageStatus::statusToAct()
 };
 
-int MailCommon::FilterActionStatus::StatiCount = sizeof( MailCommon::FilterActionStatus::stati ) / sizeof( Akonadi::MessageStatus );
+int MailCommon::FilterActionStatus::StatiCount = sizeof(MailCommon::FilterActionStatus::stati) / sizeof(Akonadi::MessageStatus);
 
-FilterActionStatus::FilterActionStatus(const QString &name, const QString &label, QObject *parent )
-    : FilterActionWithStringList( name, label, parent )
+FilterActionStatus::FilterActionStatus(const QString &name, const QString &label, QObject *parent)
+    : FilterActionWithStringList(name, label, parent)
 {
     // if you change this list, also update
     // FilterActionSetStatus::stati above
-    mParameterList.append(QString() );
-    mParameterList.append( i18nc( "msg status", "Important" ) );
-    mParameterList.append( i18nc( "msg status", "Read" ) );
-    mParameterList.append( i18nc( "msg status", "Unread" ) );
-    mParameterList.append( i18nc( "msg status", "Replied" ) );
-    mParameterList.append( i18nc( "msg status", "Forwarded" ) );
-    mParameterList.append( i18nc( "msg status", "Watched" ) );
-    mParameterList.append( i18nc( "msg status", "Ignored" ) );
-    mParameterList.append( i18nc( "msg status", "Spam" ) );
-    mParameterList.append( i18nc( "msg status", "Ham" ) );
-    mParameterList.append( i18nc( "msg status", "Action Item" ) );
+    mParameterList.append(QString());
+    mParameterList.append(i18nc("msg status", "Important"));
+    mParameterList.append(i18nc("msg status", "Read"));
+    mParameterList.append(i18nc("msg status", "Unread"));
+    mParameterList.append(i18nc("msg status", "Replied"));
+    mParameterList.append(i18nc("msg status", "Forwarded"));
+    mParameterList.append(i18nc("msg status", "Watched"));
+    mParameterList.append(i18nc("msg status", "Ignored"));
+    mParameterList.append(i18nc("msg status", "Spam"));
+    mParameterList.append(i18nc("msg status", "Ham"));
+    mParameterList.append(i18nc("msg status", "Action Item"));
 
-    mParameter = mParameterList.at( 0 );
+    mParameter = mParameterList.at(0);
 }
 
 SearchRule::RequiredPart FilterActionStatus::requiredPart() const
@@ -67,45 +66,46 @@ bool FilterActionStatus::isEmpty() const
     return false;
 }
 
-QString FilterActionStatus::realStatusString( const QString &statusStr )
+QString FilterActionStatus::realStatusString(const QString &statusStr)
 {
-    QString result( statusStr );
+    QString result(statusStr);
 
-    if ( result.size() == 2 )
-        result.remove( QLatin1Char( 'U' ) );
+    if (result.size() == 2) {
+        result.remove(QLatin1Char('U'));
+    }
 
     return result;
 }
 
-
-void FilterActionStatus::argsFromString( const QString &argsStr )
+void FilterActionStatus::argsFromString(const QString &argsStr)
 {
-    if ( argsStr.length() == 1 ) {
+    if (argsStr.length() == 1) {
         Akonadi::MessageStatus status;
 
-        for ( int i = 0 ; i < FilterActionStatus::StatiCount; ++i ) {
+        for (int i = 0 ; i < FilterActionStatus::StatiCount; ++i) {
             status = stati[i];
-            if ( realStatusString( status.statusStr() ) == QLatin1String(argsStr.toLatin1()) ) {
-                mParameter = mParameterList.at( i + 1 );
+            if (realStatusString(status.statusStr()) == QLatin1String(argsStr.toLatin1())) {
+                mParameter = mParameterList.at(i + 1);
                 return;
             }
         }
     }
 
-    mParameter = mParameterList.at( 0 );
+    mParameter = mParameterList.at(0);
 }
 
 QString FilterActionStatus::argsAsString() const
 {
-    const int index = mParameterList.indexOf( mParameter );
-    if ( index < 1 )
+    const int index = mParameterList.indexOf(mParameter);
+    if (index < 1) {
         return QString();
+    }
 
-    return realStatusString( FilterActionStatus::stati[index - 1].statusStr() );
+    return realStatusString(FilterActionStatus::stati[index - 1].statusStr());
 }
 
 QString FilterActionStatus::displayString() const
 {
-    return label() + QLatin1String( " \"" ) + mParameter + QLatin1String( "\"" );
+    return label() + QLatin1String(" \"") + mParameter + QLatin1String("\"");
 }
 

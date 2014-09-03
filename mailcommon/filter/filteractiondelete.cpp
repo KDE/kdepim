@@ -26,8 +26,8 @@
 
 using namespace MailCommon;
 
-FilterActionDelete::FilterActionDelete( QObject *parent )
-    : FilterActionWithNone( QLatin1String("delete"), i18n( "Delete Message" ), parent )
+FilterActionDelete::FilterActionDelete(QObject *parent)
+    : FilterActionWithNone(QLatin1String("delete"), i18n("Delete Message"), parent)
 {
 }
 
@@ -42,8 +42,7 @@ SearchRule::RequiredPart FilterActionDelete::requiredPart() const
     return SearchRule::Envelope;
 }
 
-
-QWidget* FilterActionDelete::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionDelete::createParamWidget(QWidget *parent) const
 {
     QLabel *lab = new QLabel(parent);
     QPalette pal = lab->palette();
@@ -54,7 +53,7 @@ QWidget* FilterActionDelete::createParamWidget( QWidget *parent ) const
     return lab;
 }
 
-FilterAction* FilterActionDelete::newAction()
+FilterAction *FilterActionDelete::newAction()
 {
     return new FilterActionDelete;
 }
@@ -63,5 +62,4 @@ QString FilterActionDelete::sieveCode() const
 {
     return QLatin1String("discard;");
 }
-
 

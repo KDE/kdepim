@@ -24,7 +24,8 @@
 
 #include <QtCore/QStringList>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * @short Abstract base class for filter actions with a fixed set of string parameters.
@@ -54,32 +55,32 @@ public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithStringList(const QString &name, const QString &label, QObject *parent = 0 );
+    FilterActionWithStringList(const QString &name, const QString &label, QObject *parent = 0);
 
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget *createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget(QWidget *parent) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
+    virtual void applyParamWidgetValue(QWidget *paramWidget);
 
     /**
      * @copydoc FilterAction::setParamWidgetValue
      */
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
+    virtual void setParamWidgetValue(QWidget *paramWidget) const;
 
     /**
      * @copydoc FilterAction::clearParamWidget
      */
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
+    virtual void clearParamWidget(QWidget *paramWidget) const;
 
     /**
      * @copydoc FilterAction::argsFromString
      */
-    virtual void argsFromString( const QString &argsStr );
+    virtual void argsFromString(const QString &argsStr);
 
 protected:
     QStringList mParameterList;

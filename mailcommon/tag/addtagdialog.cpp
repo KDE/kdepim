@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -33,12 +33,12 @@
 
 using namespace MailCommon;
 
-AddTagDialog::AddTagDialog(const QList<KActionCollection *>& actions, QWidget *parent)
+AddTagDialog::AddTagDialog(const QList<KActionCollection *> &actions, QWidget *parent)
     : QDialog(parent)
 {
-    setModal( true );
-    setWindowTitle( i18n( "Add Tag" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setModal(true);
+    setWindowTitle(i18n("Add Tag"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -48,7 +48,7 @@ AddTagDialog::AddTagDialog(const QList<KActionCollection *>& actions, QWidget *p
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AddTagDialog::reject);
     mOkButton->setDefault(true);
 
-    mTagWidget = new MailCommon::TagWidget(actions,this);
+    mTagWidget = new MailCommon::TagWidget(actions, this);
 
     connect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)), SLOT(slotTagNameChanged(QString)));
     mOkButton->setEnabled(false);
@@ -74,19 +74,19 @@ void AddTagDialog::slotSave()
 {
     const QString name(mTagWidget->tagNameLineEdit()->text());
 
-    Q_FOREACH ( const MailCommon::Tag::Ptr &tag, mTags ) {
-        if ( tag->name() == name ) {
-            KMessageBox::error( this, i18n( "Tag %1 already exists", name ) );
+    Q_FOREACH (const MailCommon::Tag::Ptr &tag, mTags) {
+        if (tag->name() == name) {
+            KMessageBox::error(this, i18n("Tag %1 already exists", name));
             mTagWidget->tagNameLineEdit()->setFocus();
             mTagWidget->tagNameLineEdit()->selectAll();
             return;
         }
     }
 
-    MailCommon::Tag::Ptr tag( Tag::createDefaultTag( name ) );
+    MailCommon::Tag::Ptr tag(Tag::createDefaultTag(name));
     mTagWidget->recordTagSettings(tag);
     MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
-    const Akonadi::Tag akonadiTag = tag->saveToAkonadi( saveFlags );
+    const Akonadi::Tag akonadiTag = tag->saveToAkonadi(saveFlags);
     Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(akonadiTag, this);
     connect(createJob, &Akonadi::TagCreateJob::result, this, &AddTagDialog::onTagCreated);
 
@@ -100,7 +100,7 @@ void AddTagDialog::onTagCreated(KJob *job)
         reject();
         return;
     }
-    Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob*>(job);
+    Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob *>(job);
     mTag = createJob->tag();
     accept();
 }
@@ -114,6 +114,4 @@ Akonadi::Tag AddTagDialog::tag() const
 {
     return mTag;
 }
-
-
 

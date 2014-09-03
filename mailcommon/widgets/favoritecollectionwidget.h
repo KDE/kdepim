@@ -26,13 +26,14 @@
 class KXMLGUIClient;
 class KActionCollection;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT FavoriteCollectionWidget : public Akonadi::EntityListView
 {
     Q_OBJECT
 public:
-    explicit FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
+    explicit FavoriteCollectionWidget(KXMLGUIClient *xmlGuiClient, QWidget *parent = 0);
     ~FavoriteCollectionWidget();
 
     void readConfig();
@@ -47,7 +48,7 @@ protected slots:
     void slotChangeMode(bool);
 
 protected:
-    void paintEvent(QPaintEvent*);
+    void paintEvent(QPaintEvent *);
 
 private:
     void createMenu(KActionCollection *ac);

@@ -22,41 +22,39 @@
 #include "kernel/mailkernel.h"
 #include "mailcommon/util/mailutil.h"
 
-
 #include <ItemCopyJob>
 #include <KLocalizedString>
 #include <QDebug>
 
 using namespace MailCommon;
 
-FilterActionCopy::FilterActionCopy( QObject *parent )
-    : FilterActionWithFolder( QLatin1String("copy"), i18n( "Copy Into Folder" ), parent )
+FilterActionCopy::FilterActionCopy(QObject *parent)
+    : FilterActionWithFolder(QLatin1String("copy"), i18n("Copy Into Folder"), parent)
 {
 }
 
 FilterAction::ReturnCode FilterActionCopy::process(ItemContext &context , bool) const
 {
     // copy the message 1:1
-    Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob( context.item(), mFolder, 0 );
+    Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob(context.item(), mFolder, 0);
     connect(job, SIGNAL(result(KJob*)), this, SLOT(jobFinished(KJob*)));
 
     return GoOn;
 }
 
-void FilterActionCopy::jobFinished(KJob* job)
+void FilterActionCopy::jobFinished(KJob *job)
 {
     if (job->error()) {
         qCritical() << "Error while moving mail: " << job->errorString();
     }
 }
 
-
 SearchRule::RequiredPart FilterActionCopy::requiredPart() const
 {
     return SearchRule::Envelope;
 }
 
-FilterAction* FilterActionCopy::newAction()
+FilterAction *FilterActionCopy::newAction()
 {
     return new FilterActionCopy;
 }
@@ -64,10 +62,11 @@ FilterAction* FilterActionCopy::newAction()
 QString FilterActionCopy::sieveCode() const
 {
     QString path;
-    if ( KernelIf->collectionModel() )
-        path = MailCommon::Util::fullCollectionPath( mFolder );
-    else
+    if (KernelIf->collectionModel()) {
+        path = MailCommon::Util::fullCollectionPath(mFolder);
+    } else {
         path = QString::number(mFolder.id());
+    }
     const QString result = QString::fromLatin1("fileinto :copy \"%1\";").arg(path);
     return result;
 }
@@ -76,5 +75,4 @@ QStringList FilterActionCopy::sieveRequires() const
 {
     return QStringList() << QLatin1String("fileinto") << QLatin1String("copy");
 }
-
 

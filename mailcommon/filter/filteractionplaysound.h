@@ -22,11 +22,13 @@
 
 #include "filteractionwithtest.h"
 
-namespace Phonon {
+namespace Phonon
+{
 class MediaObject;
 }
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionPlaySound - execute command
@@ -36,18 +38,17 @@ class FilterActionPlaySound : public FilterActionWithTest
 {
     Q_OBJECT
 public:
-    FilterActionPlaySound(  );
+    FilterActionPlaySound();
     ~FilterActionPlaySound();
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    static FilterAction* newAction();
-    bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+    static FilterAction *newAction();
+    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
 
 private:
-    mutable Phonon::MediaObject* mPlayer;
+    mutable Phonon::MediaObject *mPlayer;
 };
 
 }
-
 
 #endif

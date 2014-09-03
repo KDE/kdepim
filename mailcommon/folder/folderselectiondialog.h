@@ -29,7 +29,8 @@
 
 class KJob;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * A dialog that lets the user select a folder.
@@ -49,38 +50,38 @@ public:
         HideOutboxFolder = 16,
         NotUseGlobalSettings = 64
     };
-    Q_DECLARE_FLAGS( SelectionFolderOptions, SelectionFolderOption )
+    Q_DECLARE_FLAGS(SelectionFolderOptions, SelectionFolderOption)
 
-    FolderSelectionDialog( QWidget *parent, FolderSelectionDialog::SelectionFolderOptions options );
+    FolderSelectionDialog(QWidget *parent, FolderSelectionDialog::SelectionFolderOptions options);
     ~FolderSelectionDialog();
 
-    void setSelectionMode( QAbstractItemView::SelectionMode mode );
+    void setSelectionMode(QAbstractItemView::SelectionMode mode);
     QAbstractItemView::SelectionMode selectionMode() const;
 
     Akonadi::Collection selectedCollection() const;
-    void setSelectedCollection( const Akonadi::Collection &collection );
+    void setSelectedCollection(const Akonadi::Collection &collection);
 
     Akonadi::Collection::List selectedCollections() const;
 
 private slots:
     void slotSelectionChanged();
     void slotAddChildFolder();
-    void collectionCreationResult( KJob * );
-    void rowsInserted( const QModelIndex &col, int, int );
-    void slotDoubleClick(const QModelIndex&);
-    void slotFolderTreeWidgetContextMenuRequested(const QPoint&);
+    void collectionCreationResult(KJob *);
+    void rowsInserted(const QModelIndex &col, int, int);
+    void slotDoubleClick(const QModelIndex &);
+    void slotFolderTreeWidgetContextMenuRequested(const QPoint &);
 
 protected:
     void focusTreeView();
     void readConfig();
     void writeConfig();
-    bool canCreateCollection( Akonadi::Collection &parentCol );
+    bool canCreateCollection(Akonadi::Collection &parentCol);
 
     /*reimp*/
-    void hideEvent( QHideEvent * );
+    void hideEvent(QHideEvent *);
 
     /*reimp*/
-    void showEvent( QShowEvent * );
+    void showEvent(QShowEvent *);
 
 private:
     class FolderSelectionDialogPrivate;

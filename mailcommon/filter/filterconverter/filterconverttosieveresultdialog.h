@@ -21,16 +21,18 @@
 #include <QDialog>
 #include <KConfigGroup>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditorWidget;
 }
 
-namespace MailCommon {
+namespace MailCommon
+{
 class FilterConvertToSieveResultDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit FilterConvertToSieveResultDialog(QWidget *parent=0);
+    explicit FilterConvertToSieveResultDialog(QWidget *parent = 0);
     ~FilterConvertToSieveResultDialog();
 
     void setCode(const QString &code);

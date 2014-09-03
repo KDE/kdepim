@@ -34,7 +34,8 @@
 #include <QObject>
 #include <QStringList>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * @short KMail Filter Log Collector.
@@ -81,7 +82,7 @@ public:
     /**
      * Sets whether the filter log is currently @p active.
      */
-    void setLogging( bool active );
+    void setLogging(bool active);
 
     /**
      * Returns whether the filter log is currently active.
@@ -91,7 +92,7 @@ public:
     /**
      * Sets the maximum @p size of the log in bytes.
      */
-    void setMaxLogSize( long size = -1 );
+    void setMaxLogSize(long size = -1);
 
     /**
      * Returns the maximum size of the log in bytes.
@@ -101,17 +102,17 @@ public:
     /**
      * Sets whether a given content @p type will be @p enabled for logging.
      */
-    void setContentTypeEnabled( ContentType type, bool enabled );
+    void setContentTypeEnabled(ContentType type, bool enabled);
 
     /**
      * Returns whether the given content @p type is enabled for logging.
      */
-    bool isContentTypeEnabled( ContentType type ) const;
+    bool isContentTypeEnabled(ContentType type) const;
 
     /**
      * Adds the given log @p entry under the given content @p type to the log.
      */
-    void add( const QString &entry, ContentType type );
+    void add(const QString &entry, ContentType type);
 
     /**
      * Adds a separator line to the log.
@@ -133,13 +134,13 @@ public:
      *
      * @return @c true on success or @c false on failure.
      */
-    bool saveToFile( const QString &fileName ) const;
+    bool saveToFile(const QString &fileName) const;
 
     /**
      * Returns an escaped version of the log which can be used
      * in a HTML document.
      */
-    static QString recode( const QString &plain );
+    static QString recode(const QString &plain);
 
     /**
      * Dumps the log to console. Used for debugging.
@@ -150,7 +151,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted whenever a new @p entry has been added to the log.
      */
-    void logEntryAdded( const QString &entry );
+    void logEntryAdded(const QString &entry);
 
     /**
      * This signal is emitted whenever the log has shrinked.

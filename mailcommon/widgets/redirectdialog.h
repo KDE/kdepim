@@ -36,17 +36,19 @@
 #include <KConfigGroup>
 class QFormLayout;
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class ComposerLineEdit;
 }
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class RedirectWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit RedirectWidget(QWidget *parent=0);
+    explicit RedirectWidget(QWidget *parent = 0);
     ~RedirectWidget();
 
     void setFocus();
@@ -91,7 +93,7 @@ public:
      * @param mode The preferred send mode.
      * @param parent The parent widget.
      */
-    explicit RedirectDialog( SendMode mode = SendNow, QWidget *parent = 0 );
+    explicit RedirectDialog(SendMode mode = SendNow, QWidget *parent = 0);
 
     /**
      * Destroys the redirect dialog.
@@ -122,9 +124,9 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotUser1() )
-    Q_PRIVATE_SLOT( d, void slotUser2() )
-    Q_PRIVATE_SLOT( d, void slotAddressChanged( const QString & ) )
+    Q_PRIVATE_SLOT(d, void slotUser1())
+    Q_PRIVATE_SLOT(d, void slotUser2())
+    Q_PRIVATE_SLOT(d, void slotAddressChanged(const QString &))
     //@endcond
 };
 

@@ -24,21 +24,22 @@
 
 #include <QMap>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class CollectionAnnotationsAttribute : public Akonadi::Attribute
 {
 public:
     CollectionAnnotationsAttribute();
-    CollectionAnnotationsAttribute( const QMap<QByteArray, QByteArray> &annotations );
+    CollectionAnnotationsAttribute(const QMap<QByteArray, QByteArray> &annotations);
 
-    void setAnnotations( const QMap<QByteArray, QByteArray> &annotations );
+    void setAnnotations(const QMap<QByteArray, QByteArray> &annotations);
     QMap<QByteArray, QByteArray> annotations() const;
 
     QByteArray type() const;
     Attribute *clone() const;
     QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
 private:
     QMap<QByteArray, QByteArray> mAnnotations;

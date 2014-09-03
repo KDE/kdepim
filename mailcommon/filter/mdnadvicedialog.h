@@ -27,7 +27,8 @@
 
 #include <KDialog>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT MDNAdviceHelper : public QObject
 {
@@ -35,7 +36,7 @@ class MAILCOMMON_EXPORT MDNAdviceHelper : public QObject
 public:
     static MDNAdviceHelper *instance()
     {
-        if ( !s_instance ) {
+        if (!s_instance) {
             s_instance = new MDNAdviceHelper;
         }
 
@@ -53,23 +54,23 @@ public:
      * to what the user has selected.
      */
     QPair<bool, KMime::MDN::SendingMode>checkAndSetMDNInfo(
-            const Akonadi::Item &item, KMime::MDN::DispositionType d, bool forceSend=false );
+        const Akonadi::Item &item, KMime::MDN::DispositionType d, bool forceSend = false);
 
     MessageCore::MDNStateAttribute::MDNSentState dispositionToSentState(
-            KMime::MDN::DispositionType d );
+        KMime::MDN::DispositionType d);
 
 private:
-    explicit MDNAdviceHelper( QObject *parent = 0 )
+    explicit MDNAdviceHelper(QObject *parent = 0)
     {
-        Q_UNUSED( parent );
+        Q_UNUSED(parent);
     }
 
     virtual ~MDNAdviceHelper()
     {
     }
 
-    int requestAdviceOnMDN( const char *what );
-    MessageComposer::MDNAdvice questionIgnoreSend( const QString &text, bool canDeny );
+    int requestAdviceOnMDN(const char *what);
+    MessageComposer::MDNAdvice questionIgnoreSend(const QString &text, bool canDeny);
 
     static MDNAdviceHelper *s_instance;
 };
@@ -79,7 +80,7 @@ class MDNAdviceDialog : public KDialog
     Q_OBJECT
 
 public:
-    MDNAdviceDialog( const QString &text, bool canDeny, QWidget *parent = 0 );
+    MDNAdviceDialog(const QString &text, bool canDeny, QWidget *parent = 0);
     ~MDNAdviceDialog();
 
     MessageComposer::MDNAdvice result() const;
@@ -90,7 +91,7 @@ private:
 protected:
 
     // Reimplemented
-    void slotButtonClicked( int button );
+    void slotButtonClicked(int button);
 };
 
 }

@@ -25,8 +25,8 @@
 
 using namespace MailCommon;
 
-FilterActionWithUrl::FilterActionWithUrl( const QString &name, const QString &label, QObject *parent )
-    : FilterAction( name, label, parent )
+FilterActionWithUrl::FilterActionWithUrl(const QString &name, const QString &label, QObject *parent)
+    : FilterAction(name, label, parent)
 {
 }
 
@@ -39,35 +39,34 @@ bool FilterActionWithUrl::isEmpty() const
     return mParameter.trimmed().isEmpty();
 }
 
-QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionWithUrl::createParamWidget(QWidget *parent) const
 {
-    KUrlRequester *requester = new KUrlRequester( parent );
-    requester->setUrl( QUrl::fromLocalFile( mParameter ) );
+    KUrlRequester *requester = new KUrlRequester(parent);
+    requester->setUrl(QUrl::fromLocalFile(mParameter));
 
-    connect( requester, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
+    connect(requester, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()));
 
     return requester;
 }
 
-
-void FilterActionWithUrl::applyParamWidgetValue( QWidget *paramWidget )
+void FilterActionWithUrl::applyParamWidgetValue(QWidget *paramWidget)
 {
-    const QUrl url = static_cast<KUrlRequester*>( paramWidget )->url();
+    const QUrl url = static_cast<KUrlRequester *>(paramWidget)->url();
 
     mParameter = (url.isLocalFile() ? url.toLocalFile() : url.path());
 }
 
-void FilterActionWithUrl::setParamWidgetValue( QWidget *paramWidget ) const
+void FilterActionWithUrl::setParamWidgetValue(QWidget *paramWidget) const
 {
-    static_cast<KUrlRequester*>( paramWidget )->setUrl( QUrl::fromLocalFile( mParameter ) );
+    static_cast<KUrlRequester *>(paramWidget)->setUrl(QUrl::fromLocalFile(mParameter));
 }
 
-void FilterActionWithUrl::clearParamWidget( QWidget *paramWidget ) const
+void FilterActionWithUrl::clearParamWidget(QWidget *paramWidget) const
 {
-    static_cast<KUrlRequester*>( paramWidget )->clear();
+    static_cast<KUrlRequester *>(paramWidget)->clear();
 }
 
-void FilterActionWithUrl::argsFromString( const QString &argsStr )
+void FilterActionWithUrl::argsFromString(const QString &argsStr)
 {
     mParameter = argsStr;
 }
@@ -79,7 +78,6 @@ QString FilterActionWithUrl::argsAsString() const
 
 QString FilterActionWithUrl::displayString() const
 {
-    return label() + QLatin1String( " \"" ) + argsAsString().toHtmlEscaped() + QLatin1String( "\"" );
+    return label() + QLatin1String(" \"") + argsAsString().toHtmlEscaped() + QLatin1String("\"");
 }
-
 

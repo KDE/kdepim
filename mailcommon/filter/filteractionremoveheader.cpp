@@ -26,13 +26,13 @@
 
 using namespace MailCommon;
 
-FilterAction* FilterActionRemoveHeader::newAction()
+FilterAction *FilterActionRemoveHeader::newAction()
 {
     return new FilterActionRemoveHeader;
 }
 
-FilterActionRemoveHeader::FilterActionRemoveHeader( QObject *parent )
-    : FilterActionWithStringList( QLatin1String("remove header"), i18n( "Remove Header" ), parent )
+FilterActionRemoveHeader::FilterActionRemoveHeader(QObject *parent)
+    : FilterActionWithStringList(QLatin1String("remove header"), i18n("Remove Header"), parent)
 {
     mParameterList << QLatin1String("")
                    << QLatin1String("Reply-To")
@@ -41,33 +41,35 @@ FilterActionRemoveHeader::FilterActionRemoveHeader( QObject *parent )
                    << QLatin1String("X-KDE-PR-Package")
                    << QLatin1String("X-KDE-PR-Keywords");
 
-    mParameter = mParameterList.at( 0 );
+    mParameter = mParameterList.at(0);
 }
 
-QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionRemoveHeader::createParamWidget(QWidget *parent) const
 {
-    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
-    comboBox->setEditable( true );
-    comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
-    setParamWidgetValue( comboBox );
+    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox(parent);
+    comboBox->setEditable(true);
+    comboBox->setInsertPolicy(QComboBox::InsertAtBottom);
+    setParamWidgetValue(comboBox);
 
-    connect( comboBox, SIGNAL(currentIndexChanged(int)),
-             this, SIGNAL(filterActionModified()) );
-    connect( comboBox->lineEdit(), SIGNAL(textChanged(QString)),
-             this, SIGNAL(filterActionModified()) );
+    connect(comboBox, SIGNAL(currentIndexChanged(int)),
+            this, SIGNAL(filterActionModified()));
+    connect(comboBox->lineEdit(), SIGNAL(textChanged(QString)),
+            this, SIGNAL(filterActionModified()));
 
     return comboBox;
 }
 
 FilterAction::ReturnCode FilterActionRemoveHeader::process(ItemContext &context , bool) const
 {
-    if ( mParameter.isEmpty() )
+    if (mParameter.isEmpty()) {
         return ErrorButGoOn;
+    }
 
     KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
     const QByteArray param(mParameter.toLatin1());
-    while ( msg->headerByType( param ) )
-        msg->removeHeader( param );
+    while (msg->headerByType(param)) {
+        msg->removeHeader(param);
+    }
 
     msg->assemble();
 
@@ -81,19 +83,19 @@ SearchRule::RequiredPart FilterActionRemoveHeader::requiredPart() const
     return SearchRule::CompleteMessage;
 }
 
-void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
+void FilterActionRemoveHeader::setParamWidgetValue(QWidget *paramWidget) const
 {
-    PimCommon::MinimumComboBox *comboBox = dynamic_cast<PimCommon::MinimumComboBox*>(paramWidget );
-    Q_ASSERT( comboBox );
+    PimCommon::MinimumComboBox *comboBox = dynamic_cast<PimCommon::MinimumComboBox *>(paramWidget);
+    Q_ASSERT(comboBox);
 
-    const int index = mParameterList.indexOf( mParameter );
+    const int index = mParameterList.indexOf(mParameter);
     comboBox->clear();
-    comboBox->addItems( mParameterList );
-    if ( index < 0 ) {
-        comboBox->addItem( mParameter );
-        comboBox->setCurrentIndex( comboBox->count() - 1 );
+    comboBox->addItems(mParameterList);
+    if (index < 0) {
+        comboBox->addItem(mParameter);
+        comboBox->setCurrentIndex(comboBox->count() - 1);
     } else {
-        comboBox->setCurrentIndex( index );
+        comboBox->setCurrentIndex(index);
     }
 }
 

@@ -30,9 +30,9 @@
 
 using namespace MailCommon;
 
-FilterActionPlaySound::FilterActionPlaySound( )
-    : FilterActionWithTest( QLatin1String("play sound"), i18n( "Play Sound" ) )
-    , mPlayer( 0 )
+FilterActionPlaySound::FilterActionPlaySound()
+    : FilterActionWithTest(QLatin1String("play sound"), i18n("Play Sound"))
+    , mPlayer(0)
 {
 }
 
@@ -41,19 +41,21 @@ FilterActionPlaySound::~FilterActionPlaySound()
     delete mPlayer;
 }
 
-FilterAction* FilterActionPlaySound::newAction()
+FilterAction *FilterActionPlaySound::newAction()
 {
     return new FilterActionPlaySound();
 }
 
-FilterAction::ReturnCode FilterActionPlaySound::process(ItemContext& , bool) const
+FilterAction::ReturnCode FilterActionPlaySound::process(ItemContext &, bool) const
 {
-    if ( mParameter.isEmpty() )
+    if (mParameter.isEmpty()) {
         return ErrorButGoOn;
-    if ( !mPlayer )
-        mPlayer = Phonon::createPlayer( Phonon::NotificationCategory );
+    }
+    if (!mPlayer) {
+        mPlayer = Phonon::createPlayer(Phonon::NotificationCategory);
+    }
 
-    mPlayer->setCurrentSource( mParameter );
+    mPlayer->setCurrentSource(mParameter);
     mPlayer->play();
     return GoOn;
 }
@@ -63,14 +65,13 @@ SearchRule::RequiredPart FilterActionPlaySound::requiredPart() const
     return SearchRule::Envelope;
 }
 
-
-bool FilterActionPlaySound::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
+bool FilterActionPlaySound::argsFromStringInteractive(const QString &argsStr, const QString &filterName)
 {
     bool needUpdate = false;
-    argsFromString( argsStr );
-    if (!QFile(mParameter).exists()){
-        QPointer<FilterActionMissingSoundUrlDialog> dlg = new FilterActionMissingSoundUrlDialog( filterName, argsStr );
-        if ( dlg->exec() ) {
+    argsFromString(argsStr);
+    if (!QFile(mParameter).exists()) {
+        QPointer<FilterActionMissingSoundUrlDialog> dlg = new FilterActionMissingSoundUrlDialog(filterName, argsStr);
+        if (dlg->exec()) {
             mParameter = dlg->soundUrl();
             needUpdate = true;
         }

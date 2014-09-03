@@ -22,7 +22,8 @@
 
 #include "filteractionwithaddress.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionReplyTo - set Reply-To to
@@ -32,10 +33,10 @@ class FilterActionReplyTo: public FilterActionWithAddress
 {
     Q_OBJECT
 public:
-    explicit FilterActionReplyTo( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionReplyTo(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
 }

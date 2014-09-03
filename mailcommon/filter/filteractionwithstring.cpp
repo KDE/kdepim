@@ -25,8 +25,8 @@
 
 using namespace MailCommon;
 
-FilterActionWithString::FilterActionWithString( const QString &name, const QString &label, QObject *parent )
-    : FilterAction( name, label, parent )
+FilterActionWithString::FilterActionWithString(const QString &name, const QString &label, QObject *parent)
+    : FilterAction(name, label, parent)
 {
 }
 
@@ -35,34 +35,34 @@ bool FilterActionWithString::isEmpty() const
     return mParameter.trimmed().isEmpty();
 }
 
-QWidget* FilterActionWithString::createParamWidget( QWidget *parent ) const
+QWidget *FilterActionWithString::createParamWidget(QWidget *parent) const
 {
-    QLineEdit *lineEdit = new QLineEdit( parent );
-    lineEdit->setClearButtonEnabled( true );
+    QLineEdit *lineEdit = new QLineEdit(parent);
+    lineEdit->setClearButtonEnabled(true);
     //QT5 lineEdit->setTrapReturnKey(true);
-    lineEdit->setText( mParameter );
+    lineEdit->setText(mParameter);
 
-    connect( lineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
+    connect(lineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()));
 
     return lineEdit;
 }
 
-void FilterActionWithString::applyParamWidgetValue( QWidget *paramWidget )
+void FilterActionWithString::applyParamWidgetValue(QWidget *paramWidget)
 {
-    mParameter = static_cast<QLineEdit*>( paramWidget )->text();
+    mParameter = static_cast<QLineEdit *>(paramWidget)->text();
 }
 
-void FilterActionWithString::setParamWidgetValue( QWidget *paramWidget ) const
+void FilterActionWithString::setParamWidgetValue(QWidget *paramWidget) const
 {
-    static_cast<QLineEdit*>( paramWidget )->setText( mParameter );
+    static_cast<QLineEdit *>(paramWidget)->setText(mParameter);
 }
 
-void FilterActionWithString::clearParamWidget( QWidget *paramWidget ) const
+void FilterActionWithString::clearParamWidget(QWidget *paramWidget) const
 {
-    static_cast<QLineEdit*>( paramWidget )->clear();
+    static_cast<QLineEdit *>(paramWidget)->clear();
 }
 
-void FilterActionWithString::argsFromString( const QString &argsStr )
+void FilterActionWithString::argsFromString(const QString &argsStr)
 {
     mParameter = argsStr;
 }
@@ -74,7 +74,6 @@ QString FilterActionWithString::argsAsString() const
 
 QString FilterActionWithString::displayString() const
 {
-    return label() + QLatin1String( " \"" ) + argsAsString().toHtmlEscaped() + QLatin1String( "\"" );
+    return label() + QLatin1String(" \"") + argsAsString().toHtmlEscaped() + QLatin1String("\"");
 }
-
 

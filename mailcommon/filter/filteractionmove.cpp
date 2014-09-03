@@ -26,27 +26,28 @@
 
 using namespace MailCommon;
 
-FilterAction* FilterActionMove::newAction()
+FilterAction *FilterActionMove::newAction()
 {
     return new FilterActionMove;
 }
 
-FilterActionMove::FilterActionMove( QObject *parent )
-    : FilterActionWithFolder( QLatin1String("transfer"), i18n( "Move Into Folder" ), parent )
+FilterActionMove::FilterActionMove(QObject *parent)
+    : FilterActionWithFolder(QLatin1String("transfer"), i18n("Move Into Folder"), parent)
 {
 }
 
 FilterAction::ReturnCode FilterActionMove::process(ItemContext &context , bool) const
 {
-    if ( !mFolder.isValid() ) {
-        const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolder.id() );
-        if ( !targetFolder.isValid() )
+    if (!mFolder.isValid()) {
+        const Akonadi::Collection targetFolder = CommonKernel->collectionFromId(mFolder.id());
+        if (!targetFolder.isValid()) {
             return ErrorButGoOn;
+        }
 
-        context.setMoveTargetCollection( targetFolder );
+        context.setMoveTargetCollection(targetFolder);
         return GoOn;
     }
-    context.setMoveTargetCollection( mFolder );
+    context.setMoveTargetCollection(mFolder);
     return GoOn;
 }
 
@@ -63,10 +64,11 @@ SearchRule::RequiredPart FilterActionMove::requiredPart() const
 QString FilterActionMove::sieveCode() const
 {
     QString path;
-    if ( KernelIf->collectionModel() )
-        path = MailCommon::Util::fullCollectionPath( mFolder );
-    else
+    if (KernelIf->collectionModel()) {
+        path = MailCommon::Util::fullCollectionPath(mFolder);
+    } else {
         path = QString::number(mFolder.id());
+    }
     const QString result = QString::fromLatin1("fileinto \"%1\";").arg(path);
     return result;
 }

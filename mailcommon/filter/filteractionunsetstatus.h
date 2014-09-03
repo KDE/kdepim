@@ -20,17 +20,18 @@
 #define FILTERACTIONUNSETSTATUS_H
 
 #include "filteractionstatus.h"
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FilterActionUnsetStatus: public FilterActionStatus
 {
     Q_OBJECT
 public:
-    explicit FilterActionUnsetStatus( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionUnsetStatus(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    
-    static FilterAction* newAction();
+
+    static FilterAction *newAction();
     QString sieveCode() const;
     QStringList sieveRequires() const;
 };

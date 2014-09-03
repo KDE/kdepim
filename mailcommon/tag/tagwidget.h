@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2012 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -32,7 +32,8 @@ class KKeySequenceWidget;
 class QCheckBox;
 class KActionCollection;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT TagWidget : public QWidget
 {
@@ -42,42 +43,69 @@ public:
     ~TagWidget();
 
     MailCommon::Tag::SaveFlags saveFlags() const;
-    void recordTagSettings( MailCommon::Tag::Ptr tag);
+    void recordTagSettings(MailCommon::Tag::Ptr tag);
 
+    QLineEdit *tagNameLineEdit()
+    {
+        return mTagNameLineEdit;
+    }
+    QCheckBox *textColorCheck()
+    {
+        return mTextColorCheck;
+    }
+    QCheckBox *textFontCheck()
+    {
+        return mTextFontCheck;
+    }
+    QCheckBox *backgroundColorCheck()
+    {
+        return mBackgroundColorCheck;
+    }
+    QCheckBox *inToolBarCheck()
+    {
+        return mInToolbarCheck;
+    }
 
-    QLineEdit *tagNameLineEdit() { return mTagNameLineEdit; }
-    QCheckBox *textColorCheck() { return mTextColorCheck; }
-    QCheckBox *textFontCheck() { return mTextFontCheck; }
-    QCheckBox *backgroundColorCheck() { return mBackgroundColorCheck; }
-    QCheckBox *inToolBarCheck() { return mInToolbarCheck; }
+    KColorCombo *textColorCombo()
+    {
+        return mTextColorCombo;
+    }
+    KColorCombo *backgroundColorCombo()
+    {
+        return mBackgroundColorCombo;
+    }
 
-    KColorCombo *textColorCombo() { return mTextColorCombo; }
-    KColorCombo *backgroundColorCombo() { return mBackgroundColorCombo; }
+    KFontRequester *fontRequester()
+    {
+        return mFontRequester;
+    }
 
-    KFontRequester *fontRequester() { return mFontRequester; }
+    KIconButton *iconButton()
+    {
+        return mIconButton;
+    }
 
-    KIconButton *iconButton() { return mIconButton; }
+    KKeySequenceWidget *keySequenceWidget()
+    {
+        return mKeySequenceWidget;
+    }
 
-    KKeySequenceWidget *keySequenceWidget() { return mKeySequenceWidget; }
-
-    void setTagTextColor(const QColor& color);
-    void setTagBackgroundColor(const QColor& color);
-    void setTagTextFont(const QFont& font);
+    void setTagTextColor(const QColor &color);
+    void setTagBackgroundColor(const QColor &color);
+    void setTagTextFont(const QFont &font);
 
 Q_SIGNALS:
     void changed();
-    void iconNameChanged(const QString&);
+    void iconNameChanged(const QString &);
 
 private Q_SLOTS:
     void slotEmitChangeCheck();
-
-
 
 private:
     QLineEdit *mTagNameLineEdit;
 
     QCheckBox *mTextColorCheck, *mBackgroundColorCheck,
-    *mTextFontCheck, *mInToolbarCheck;
+              *mTextFontCheck, *mInToolbarCheck;
 
     KColorCombo *mTextColorCombo, *mBackgroundColorCombo;
 

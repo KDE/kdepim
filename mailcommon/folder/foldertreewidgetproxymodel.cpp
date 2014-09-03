@@ -35,16 +35,17 @@
 
 #include <QPalette>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FolderTreeWidgetProxyModel::Private
 {
 public:
     Private()
-        : enableCheck( false ),
-          hideVirtualFolder( false ),
-          hideSpecificFolder( false ),
-          hideOutboxFolder( false )
+        : enableCheck(false),
+          hideVirtualFolder(false),
+          hideSpecificFolder(false),
+          hideOutboxFolder(false)
     {
     }
 
@@ -59,21 +60,21 @@ public:
     bool hideOutboxFolder;
 };
 
-FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModel( QObject *parent,
-                                                        FolderTreeWidgetProxyModelOptions option )
-    : Akonadi::EntityRightsFilterModel( parent ),
-      d( new Private )
+FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModel(QObject *parent,
+        FolderTreeWidgetProxyModelOptions option)
+    : Akonadi::EntityRightsFilterModel(parent),
+      d(new Private)
 {
-    setDynamicSortFilter( true );
-    setFilterCaseSensitivity( Qt::CaseInsensitive );
+    setDynamicSortFilter(true);
+    setFilterCaseSensitivity(Qt::CaseInsensitive);
 
-    if ( option & HideVirtualFolder ) {
+    if (option & HideVirtualFolder) {
         d->hideVirtualFolder = true;
     }
-    if ( option & HideSpecificFolder ) {
+    if (option & HideSpecificFolder) {
         d->hideSpecificFolder = true;
     }
-    if ( option & HideOutboxFolder ) {
+    if (option & HideOutboxFolder) {
         d->hideOutboxFolder = true;
     }
     readConfig();
@@ -86,44 +87,44 @@ FolderTreeWidgetProxyModel::~FolderTreeWidgetProxyModel()
 
 void FolderTreeWidgetProxyModel::readConfig()
 {
-    KConfigGroup collectionFolderView( KernelIf->config(), "CollectionFolderView" );
-    KColorScheme scheme( QPalette::Active, KColorScheme::View );
-    if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-        d->brokenAccountColor = scheme.foreground( KColorScheme::NegativeText ).color();
+    KConfigGroup collectionFolderView(KernelIf->config(), "CollectionFolderView");
+    KColorScheme scheme(QPalette::Active, KColorScheme::View);
+    if (MessageCore::GlobalSettings::self()->useDefaultColors()) {
+        d->brokenAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
     } else {
         d->brokenAccountColor =
-                collectionFolderView.readEntry( "BrokenAccountColor",
-                                                scheme.foreground( KColorScheme::NegativeText ).color() );
+            collectionFolderView.readEntry("BrokenAccountColor",
+                                           scheme.foreground(KColorScheme::NegativeText).color());
     }
     invalidate();
 }
 
-Qt::ItemFlags FolderTreeWidgetProxyModel::flags( const QModelIndex &index ) const
+Qt::ItemFlags FolderTreeWidgetProxyModel::flags(const QModelIndex &index) const
 {
-    if ( d->enableCheck ) {
-        const QModelIndex sourceIndex = mapToSource( index );
-        const QModelIndex rowIndex = sourceIndex.sibling( sourceIndex.row(), 0 );
-        const Akonadi::Collection collection = sourceModel()->data( rowIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-        if ( !MailCommon::Util::isVirtualCollection( collection ) ) {
-            const Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
-            if ( instance.status() == Akonadi::AgentInstance::Broken ) {
-                return KRecursiveFilterProxyModel::flags( sourceIndex ) & ~( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+    if (d->enableCheck) {
+        const QModelIndex sourceIndex = mapToSource(index);
+        const QModelIndex rowIndex = sourceIndex.sibling(sourceIndex.row(), 0);
+        const Akonadi::Collection collection = sourceModel()->data(rowIndex, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+        if (!MailCommon::Util::isVirtualCollection(collection)) {
+            const Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance(collection.resource());
+            if (instance.status() == Akonadi::AgentInstance::Broken) {
+                return KRecursiveFilterProxyModel::flags(sourceIndex) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
             }
         }
-        return Akonadi::EntityRightsFilterModel::flags( index );
+        return Akonadi::EntityRightsFilterModel::flags(index);
     }
-    return QSortFilterProxyModel::flags( index );
+    return QSortFilterProxyModel::flags(index);
 }
 
-void FolderTreeWidgetProxyModel::setEnabledCheck( bool enable )
+void FolderTreeWidgetProxyModel::setEnabledCheck(bool enable)
 {
-    if ( d->enableCheck == enable ) {
+    if (d->enableCheck == enable) {
         return;
     }
 
     d->enableCheck = enable;
-    if ( enable ) {
-        setAccessRights( Akonadi::Collection::CanCreateItem | Akonadi::Collection::CanCreateCollection );
+    if (enable) {
+        setAccessRights(Akonadi::Collection::CanCreateItem | Akonadi::Collection::CanCreateCollection);
     }
 }
 
@@ -132,7 +133,7 @@ bool FolderTreeWidgetProxyModel::enabledCheck() const
     return d->enableCheck;
 }
 
-void FolderTreeWidgetProxyModel::setHideVirtualFolder( bool exclude )
+void FolderTreeWidgetProxyModel::setHideVirtualFolder(bool exclude)
 {
     d->hideVirtualFolder = exclude;
     invalidate();
@@ -143,7 +144,7 @@ bool FolderTreeWidgetProxyModel::hideVirtualFolder() const
     return d->hideVirtualFolder;
 }
 
-void FolderTreeWidgetProxyModel::setHideSpecificFolder( bool hide )
+void FolderTreeWidgetProxyModel::setHideSpecificFolder(bool hide)
 {
     d->hideSpecificFolder = hide;
     invalidate();
@@ -154,7 +155,7 @@ bool FolderTreeWidgetProxyModel::hideSpecificFolder() const
     return d->hideSpecificFolder;
 }
 
-void FolderTreeWidgetProxyModel::setHideOutboxFolder( bool hide )
+void FolderTreeWidgetProxyModel::setHideOutboxFolder(bool hide)
 {
     d->hideOutboxFolder = hide;
     invalidate();
@@ -165,101 +166,101 @@ bool FolderTreeWidgetProxyModel::hideOutboxFolder() const
     return d->hideOutboxFolder;
 }
 
-bool FolderTreeWidgetProxyModel::acceptRow( int sourceRow, const QModelIndex &sourceParent ) const
+bool FolderTreeWidgetProxyModel::acceptRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    const QModelIndex modelIndex = sourceModel()->index( sourceRow, 0, sourceParent );
+    const QModelIndex modelIndex = sourceModel()->index(sourceRow, 0, sourceParent);
 
     const Akonadi::Collection collection =
-            sourceModel()->data(
-                modelIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( !d->checker.isWantedCollection( collection ) ) {
+        sourceModel()->data(
+            modelIndex, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+    if (!d->checker.isWantedCollection(collection)) {
         return false;
     }
 
-    if ( d->hideVirtualFolder ) {
-        if ( Util::isVirtualCollection( collection ) ) {
+    if (d->hideVirtualFolder) {
+        if (Util::isVirtualCollection(collection)) {
             return false;
         }
     }
 
-    if ( d->hideSpecificFolder ) {
+    if (d->hideSpecificFolder) {
         const QSharedPointer<FolderCollection> col =
-                FolderCollection::forCollection( collection, false );
-        if ( col && col->hideInSelectionDialog() ) {
+            FolderCollection::forCollection(collection, false);
+        if (col && col->hideInSelectionDialog()) {
             return false;
         }
     }
 
-    if ( d->hideOutboxFolder ) {
-        if ( collection == Kernel::self()->outboxCollectionFolder() ) {
+    if (d->hideOutboxFolder) {
+        if (collection == Kernel::self()->outboxCollectionFolder()) {
             return false;
         }
     }
 
-    if ( d->filterStr.isEmpty() ) {
-        return Akonadi::EntityRightsFilterModel::acceptRow( sourceRow, sourceParent );
+    if (d->filterStr.isEmpty()) {
+        return Akonadi::EntityRightsFilterModel::acceptRow(sourceRow, sourceParent);
     }
 
-    return KRecursiveFilterProxyModel::acceptRow( sourceRow, sourceParent );
+    return KRecursiveFilterProxyModel::acceptRow(sourceRow, sourceParent);
 }
 
-void FolderTreeWidgetProxyModel::setFilterFolder( const QString &filter )
+void FolderTreeWidgetProxyModel::setFilterFolder(const QString &filter)
 {
     d->filterStr = filter;
-    setFilterWildcard( filter );
+    setFilterWildcard(filter);
 }
 
-QVariant FolderTreeWidgetProxyModel::data( const QModelIndex &index, int role ) const
+QVariant FolderTreeWidgetProxyModel::data(const QModelIndex &index, int role) const
 {
-    if ( role == Qt::TextColorRole ) {
-        const QModelIndex sourceIndex = mapToSource( index );
-        const QModelIndex rowIndex = sourceIndex.sibling( sourceIndex.row(), 0 );
+    if (role == Qt::TextColorRole) {
+        const QModelIndex sourceIndex = mapToSource(index);
+        const QModelIndex rowIndex = sourceIndex.sibling(sourceIndex.row(), 0);
         const Akonadi::Collection collection =
-                sourceModel()->data(
-                    rowIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+            sourceModel()->data(
+                rowIndex, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 
-        if ( !MailCommon::Util::isVirtualCollection( collection ) ) {
+        if (!MailCommon::Util::isVirtualCollection(collection)) {
 
             const Akonadi::AgentInstance instance =
-                    Akonadi::AgentManager::self()->instance( collection.resource() );
+                Akonadi::AgentManager::self()->instance(collection.resource());
 
-            if ( instance.status() == Akonadi::AgentInstance::Broken ) {
+            if (instance.status() == Akonadi::AgentInstance::Broken) {
                 return d->brokenAccountColor;
             }
         }
-    } else if ( role == Qt::DisplayRole) {
-        const QModelIndex sourceIndex = mapToSource( index );
-        const QModelIndex rowIndex = sourceIndex.sibling( sourceIndex.row(), 0 );
+    } else if (role == Qt::DisplayRole) {
+        const QModelIndex sourceIndex = mapToSource(index);
+        const QModelIndex rowIndex = sourceIndex.sibling(sourceIndex.row(), 0);
         const Akonadi::Collection collection =
-                sourceModel()->data(
-                    rowIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-        if ( !MailCommon::Util::isVirtualCollection( collection ) ) {
+            sourceModel()->data(
+                rowIndex, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+        if (!MailCommon::Util::isVirtualCollection(collection)) {
 
             const Akonadi::AgentInstance instance =
-                    Akonadi::AgentManager::self()->instance( collection.resource() );
+                Akonadi::AgentManager::self()->instance(collection.resource());
             if (collection.parentCollection() == Akonadi::Collection::root()) {
                 if (!instance.isOnline()) {
-                    return i18n("%1 (Offline)",Akonadi::EntityRightsFilterModel::data(index,role).toString());
+                    return i18n("%1 (Offline)", Akonadi::EntityRightsFilterModel::data(index, role).toString());
                 }
             }
         }
     }
-    return  Akonadi::EntityRightsFilterModel::data( index, role );
+    return  Akonadi::EntityRightsFilterModel::data(index, role);
 }
 
 void FolderTreeWidgetProxyModel::updatePalette()
 {
-    if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-        KColorScheme scheme( QPalette::Active, KColorScheme::View );
-        d->brokenAccountColor = scheme.foreground( KColorScheme::NegativeText ).color();
+    if (MessageCore::GlobalSettings::self()->useDefaultColors()) {
+        KColorScheme scheme(QPalette::Active, KColorScheme::View);
+        d->brokenAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
         invalidate();
     }
 }
 
-void FolderTreeWidgetProxyModel::addContentMimeTypeInclusionFilter( const QString &mimeType )
+void FolderTreeWidgetProxyModel::addContentMimeTypeInclusionFilter(const QString &mimeType)
 {
     d->includedMimeTypes << mimeType;
-    d->checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
+    d->checker.setWantedMimeTypes(d->includedMimeTypes.toList());
     invalidateFilter();
 }
 

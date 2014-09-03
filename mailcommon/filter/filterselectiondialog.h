@@ -18,7 +18,6 @@
 #ifndef MAILCOMMON_FILTERSELECTIONDIALOG_H
 #define MAILCOMMON_FILTERSELECTIONDIALOG_H
 
-
 #include <QDialog>
 
 #include <QList>
@@ -29,7 +28,8 @@ class QPushButton;
 class QListWidget;
 class QWidget;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MailFilter;
 
@@ -38,10 +38,10 @@ class FilterSelectionDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FilterSelectionDialog( QWidget * parent = 0 );
+    explicit FilterSelectionDialog(QWidget *parent = 0);
     virtual ~FilterSelectionDialog();
-    void setFilters( const QList<MailFilter*> &filters );
-    QList<MailFilter*> selectedFilters() const;
+    void setFilters(const QList<MailFilter *> &filters);
+    QList<MailFilter *> selectedFilters() const;
 
 public Q_SLOTS:
     void slotUnselectAllButton();
@@ -52,7 +52,7 @@ private:
     void writeConfig();
     void readConfig();
     QListWidget *filtersListWidget;
-    QList<MailFilter*> originalFilters;
+    QList<MailFilter *> originalFilters;
     QPushButton *selectAllButton;
     QPushButton *unselectAllButton;
     QPushButton *mOkButton;

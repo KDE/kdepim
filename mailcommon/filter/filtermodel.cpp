@@ -23,73 +23,73 @@
 
 using namespace MailCommon;
 
-FilterModel::FilterModel( QObject *parent )
-    : QAbstractListModel( parent )
+FilterModel::FilterModel(QObject *parent)
+    : QAbstractListModel(parent)
 {
-    connect( FilterManager::instance(), SIGNAL(filtersChanged()),
-             this, SLOT(filterListUpdated()) );
+    connect(FilterManager::instance(), SIGNAL(filtersChanged()),
+            this, SLOT(filterListUpdated()));
 }
 
-QVariant FilterModel::data( const QModelIndex &index, int role ) const
+QVariant FilterModel::data(const QModelIndex &index, int role) const
 {
-    if ( role == Qt::DisplayRole ) {
-        return FilterManager::instance()->filters().at( index.row() )->name();
+    if (role == Qt::DisplayRole) {
+        return FilterManager::instance()->filters().at(index.row())->name();
     }
 
     return QVariant();
 }
 
-int FilterModel::rowCount( const QModelIndex & ) const
+int FilterModel::rowCount(const QModelIndex &) const
 {
     return FilterManager::instance()->filters().size();
 }
 
-void FilterModel::moveRow( int sourceRow, int destinationRow )
+void FilterModel::moveRow(int sourceRow, int destinationRow)
 {
-    if ( sourceRow == destinationRow ) {
+    if (sourceRow == destinationRow) {
         return;
     }
 
-    if ( sourceRow < 0 || sourceRow >= rowCount() ) {
+    if (sourceRow < 0 || sourceRow >= rowCount()) {
         return;
     }
 
-    if ( destinationRow < 0 || destinationRow >= rowCount() ) {
+    if (destinationRow < 0 || destinationRow >= rowCount()) {
         return;
     }
 
-    QList<MailFilter*> filters;
+    QList<MailFilter *> filters;
 
-    foreach ( MailFilter *filter, FilterManager::instance()->filters() ) {
-        filters.append( new MailFilter( *filter ) ); // deep copy
+    foreach (MailFilter *filter, FilterManager::instance()->filters()) {
+        filters.append(new MailFilter(*filter));     // deep copy
     }
 
-    filters.move( sourceRow, destinationRow );
-    FilterManager::instance()->setFilters( filters );
+    filters.move(sourceRow, destinationRow);
+    FilterManager::instance()->setFilters(filters);
 
     reset();
 }
 
-bool FilterModel::insertRows( int row, int count, const QModelIndex &parent )
+bool FilterModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    beginInsertRows( parent, row, row + count - 1 );
-    for ( int i = 0; i < count; ++i ) {
+    beginInsertRows(parent, row, row + count - 1);
+    for (int i = 0; i < count; ++i) {
         MailFilter *filter = new MailFilter();
-        FilterManager::instance()->appendFilters( QList<MailFilter*> () << filter );
+        FilterManager::instance()->appendFilters(QList<MailFilter *> () << filter);
     }
     endInsertRows();
 
     return true;
 }
 
-bool FilterModel::removeRows( int row, int count, const QModelIndex &parent )
+bool FilterModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    const QList<MailFilter*> filters = FilterManager::instance()->filters();
+    const QList<MailFilter *> filters = FilterManager::instance()->filters();
 
-    beginRemoveRows( parent, row, row + count - 1 );
-    for ( int i = 0; i < count; ++i ) {
-        MailFilter *filter = filters.at( row );
-        FilterManager::instance()->removeFilter( filter );
+    beginRemoveRows(parent, row, row + count - 1);
+    for (int i = 0; i < count; ++i) {
+        MailFilter *filter = filters.at(row);
+        FilterManager::instance()->removeFilter(filter);
         delete filter;
     }
     endRemoveRows();
@@ -101,7 +101,7 @@ void FilterModel::filterListUpdated()
 {
     // Since the FilterManager doesn't tell use which filter has been
     // updated, we emit dataChanged() for all of them
-    emit dataChanged( index( 0, 0 ), index( rowCount() - 1, 0 ) );
+    emit dataChanged(index(0, 0), index(rowCount() - 1, 0));
 }
 
 #include "moc_filtermodel_p.cpp"

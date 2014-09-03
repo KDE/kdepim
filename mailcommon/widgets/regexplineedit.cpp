@@ -40,52 +40,53 @@
 #include <QString>
 #include <QPushButton>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
-RegExpLineEdit::RegExpLineEdit( QWidget *parent )
-    : QWidget( parent ),
-      mLineEdit( 0 ),
-      mRegExpEditButton( 0 ),
-      mRegExpEditDialog( 0 )
+RegExpLineEdit::RegExpLineEdit(QWidget *parent)
+    : QWidget(parent),
+      mLineEdit(0),
+      mRegExpEditButton(0),
+      mRegExpEditDialog(0)
 {
     initWidget();
 }
 
-RegExpLineEdit::RegExpLineEdit( const QString &str, QWidget *parent )
-    : QWidget( parent ),
-      mLineEdit( 0 ),
-      mRegExpEditButton( 0 ),
-      mRegExpEditDialog( 0 )
+RegExpLineEdit::RegExpLineEdit(const QString &str, QWidget *parent)
+    : QWidget(parent),
+      mLineEdit(0),
+      mRegExpEditButton(0),
+      mRegExpEditDialog(0)
 {
-    initWidget( str );
+    initWidget(str);
 }
 
-void RegExpLineEdit::initWidget( const QString &str )
+void RegExpLineEdit::initWidget(const QString &str)
 {
-    QHBoxLayout * hlay = new QHBoxLayout( this );
-    hlay->setSpacing( KDialog::spacingHint() );
-    hlay->setMargin( 0 );
+    QHBoxLayout *hlay = new QHBoxLayout(this);
+    hlay->setSpacing(KDialog::spacingHint());
+    hlay->setMargin(0);
 
-    mLineEdit = new QLineEdit( str, this );
-    mLineEdit->setClearButtonEnabled( true );
+    mLineEdit = new QLineEdit(str, this);
+    mLineEdit->setClearButtonEnabled(true);
     //QT5 mLineEdit->setTrapReturnKey(true);
-    setFocusProxy( mLineEdit );
-    hlay->addWidget( mLineEdit );
+    setFocusProxy(mLineEdit);
+    hlay->addWidget(mLineEdit);
 
-    connect( mLineEdit, SIGNAL(textChanged(QString)),
-             this, SIGNAL(textChanged(QString)) );
-    connect( mLineEdit, SIGNAL(returnPressed()),
-             this, SIGNAL(returnPressed()) );
+    connect(mLineEdit, SIGNAL(textChanged(QString)),
+            this, SIGNAL(textChanged(QString)));
+    connect(mLineEdit, SIGNAL(returnPressed()),
+            this, SIGNAL(returnPressed()));
 
-    if ( !KServiceTypeTrader::self()->query( QLatin1String("KRegExpEditor/KRegExpEditor") ).isEmpty() ) {
-        mRegExpEditButton = new QPushButton( i18n( "Edit..." ), this );
-        mRegExpEditButton->setObjectName( QLatin1String("mRegExpEditButton") );
-        mRegExpEditButton->setSizePolicy( QSizePolicy::Minimum,
-                                          QSizePolicy::Fixed );
-        hlay->addWidget( mRegExpEditButton );
+    if (!KServiceTypeTrader::self()->query(QLatin1String("KRegExpEditor/KRegExpEditor")).isEmpty()) {
+        mRegExpEditButton = new QPushButton(i18n("Edit..."), this);
+        mRegExpEditButton->setObjectName(QLatin1String("mRegExpEditButton"));
+        mRegExpEditButton->setSizePolicy(QSizePolicy::Minimum,
+                                         QSizePolicy::Fixed);
+        hlay->addWidget(mRegExpEditButton);
 
-        connect( mRegExpEditButton, SIGNAL(clicked()),
-                 this, SLOT(slotEditRegExp()) );
+        connect(mRegExpEditButton, SIGNAL(clicked()),
+                this, SLOT(slotEditRegExp()));
     }
 }
 
@@ -99,18 +100,18 @@ QString RegExpLineEdit::text() const
     return mLineEdit->text();
 }
 
-void RegExpLineEdit::setText( const QString & str )
+void RegExpLineEdit::setText(const QString &str)
 {
-    mLineEdit->setText( str );
+    mLineEdit->setText(str);
 }
 
-void RegExpLineEdit::showEditButton( bool show )
+void RegExpLineEdit::showEditButton(bool show)
 {
-    if ( !mRegExpEditButton ) {
+    if (!mRegExpEditButton) {
         return;
     }
 
-    if ( show ) {
+    if (show) {
         mRegExpEditButton->show();
     } else {
         mRegExpEditButton->hide();
@@ -119,18 +120,18 @@ void RegExpLineEdit::showEditButton( bool show )
 
 void RegExpLineEdit::slotEditRegExp()
 {
-    if ( !mRegExpEditDialog ) {
+    if (!mRegExpEditDialog) {
         mRegExpEditDialog =
-                KServiceTypeTrader::createInstanceFromQuery<KDialog>(
-                    QLatin1String("KRegExpEditor/KRegExpEditor"), QString(), this );
+            KServiceTypeTrader::createInstanceFromQuery<KDialog>(
+                QLatin1String("KRegExpEditor/KRegExpEditor"), QString(), this);
     }
 
-    KRegExpEditorInterface *iface = qobject_cast<KRegExpEditorInterface *>( mRegExpEditDialog );
+    KRegExpEditorInterface *iface = qobject_cast<KRegExpEditorInterface *>(mRegExpEditDialog);
 
-    if ( iface ) {
-        iface->setRegExp( mLineEdit->text() );
-        if ( mRegExpEditDialog->exec() == KDialog::Accepted ) {
-            mLineEdit->setText( iface->regExp() );
+    if (iface) {
+        iface->setRegExp(mLineEdit->text());
+        if (mRegExpEditDialog->exec() == KDialog::Accepted) {
+            mLineEdit->setText(iface->regExp());
         }
     }
 }

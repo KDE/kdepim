@@ -19,7 +19,6 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 
-
 #include <QDebug>
 
 #include <QFile>
@@ -27,12 +26,12 @@
 
 using namespace MailCommon;
 
-FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
-    :FilterImporterAbstract()
+FilterImporterClawsMails::FilterImporterClawsMails(QFile *file)
+    : FilterImporterAbstract()
 {
     QTextStream stream(file);
     MailFilter *filter = 0;
-    while ( !stream.atEnd() ) {
+    while (!stream.atEnd()) {
         QString line = stream.readLine();
         qDebug() << " line :" << line << " filter " << filter;
 
@@ -42,14 +41,14 @@ FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
             //TODO
         } else {
             appendFilter(filter);
-            filter = parseLine( line );
+            filter = parseLine(line);
         }
     }
     appendFilter(filter);
 }
 
 FilterImporterClawsMails::FilterImporterClawsMails(bool interactive)
-    :FilterImporterAbstract(interactive)
+    : FilterImporterAbstract(interactive)
 {
 }
 
@@ -59,10 +58,10 @@ FilterImporterClawsMails::~FilterImporterClawsMails()
 
 QString FilterImporterClawsMails::defaultFiltersSettingsPath()
 {
-    return QString::fromLatin1( "%1/.claws-mail/matcherrc" ).arg( QDir::homePath() );
+    return QString::fromLatin1("%1/.claws-mail/matcherrc").arg(QDir::homePath());
 }
 
-MailFilter * FilterImporterClawsMails::parseLine(const QString &line)
+MailFilter *FilterImporterClawsMails::parseLine(const QString &line)
 {
     MailFilter *filter = new MailFilter();
     QString tmp = line;
@@ -73,30 +72,30 @@ MailFilter * FilterImporterClawsMails::parseLine(const QString &line)
     }
 
     //Filter name
-    if (tmp.startsWith(QLatin1String("rulename")) ) {
+    if (tmp.startsWith(QLatin1String("rulename"))) {
         tmp.remove(QLatin1String("rulename "));
         int pos;
         const QString name = extractString(tmp, pos);
-        filter->pattern()->setName( name );
-        filter->setToolbarName( name );
+        filter->pattern()->setName(name);
+        filter->setToolbarName(name);
 
-        tmp = tmp.mid(pos+2); //remove "\" "
-        qDebug()<<" new tmp"<<tmp;
+        tmp = tmp.mid(pos + 2); //remove "\" "
+        qDebug() << " new tmp" << tmp;
     }
 
-    tmp = extractConditions( tmp, filter);
+    tmp = extractConditions(tmp, filter);
 
     tmp = extractActions(tmp, filter);
     //TODO
     return filter;
 }
 
-QString FilterImporterClawsMails::extractActions( const QString &line,MailFilter *filter)
+QString FilterImporterClawsMails::extractActions(const QString &line, MailFilter *filter)
 {
     return line;
 }
 
-QString FilterImporterClawsMails::extractConditions( const QString &line,MailFilter *filter)
+QString FilterImporterClawsMails::extractConditions(const QString &line, MailFilter *filter)
 {
     QByteArray fieldName;
     //Action
@@ -105,17 +104,17 @@ QString FilterImporterClawsMails::extractConditions( const QString &line,MailFil
     } else if (line.startsWith(QLatin1String("age_lower"))) {
 
     }
-    filter->pattern()->setOp( SearchPattern::OpAnd );
+    filter->pattern()->setOp(SearchPattern::OpAnd);
     //TODO
     return QString();
 }
 
-QString FilterImporterClawsMails::extractString( const QString & tmp, int & pos)
+QString FilterImporterClawsMails::extractString(const QString &tmp, int &pos)
 {
     QString name;
     QChar previousChar;
     int i = 0;
-    for (; i <tmp.length(); ++i) {
+    for (; i < tmp.length(); ++i) {
         const QChar currentChar = tmp.at(i);
         if (i == 0 && (currentChar.isSpace() || currentChar == QLatin1Char('"'))) {
 
@@ -135,7 +134,7 @@ QString FilterImporterClawsMails::extractString( const QString & tmp, int & pos)
         }
     }
     pos = i;
-    qDebug()<<" name "<<name;
+    qDebug() << " name " << name;
     return name;
 }
 

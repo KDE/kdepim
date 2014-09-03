@@ -22,7 +22,8 @@
 
 #include "filteractionwithcommand.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionPipeThrough - use external filter app
@@ -33,10 +34,10 @@ class FilterActionPipeThrough: public FilterActionWithCommand
 {
     Q_OBJECT
 public:
-    explicit FilterActionPipeThrough( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionPipeThrough(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
 }

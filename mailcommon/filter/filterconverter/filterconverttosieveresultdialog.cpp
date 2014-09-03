@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "filterconverttosieveresultdialog.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighter.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
@@ -39,7 +38,7 @@ using namespace MailCommon;
 FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Convert to sieve script" ) );
+    setWindowTitle(i18n("Convert to sieve script"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *topLayout = new QVBoxLayout;
     setLayout(topLayout);
@@ -49,16 +48,16 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     user1Button->setText(i18n("Save..."));
     user1Button->setDefault(true);
-    setModal( true );
+    setModal(true);
     connect(user1Button, SIGNAL(clicked()), SLOT(slotSave()));
 
-    QWidget *mainWidget = new QWidget( this );
-    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
+    QWidget *mainWidget = new QWidget(this);
+    QHBoxLayout *mainLayout = new QHBoxLayout(mainWidget);
 
 //TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
 //TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mEditor = new PimCommon::PlainTextEditorWidget;
-    PimCommon::SieveSyntaxHighlighter *syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter( mEditor->editor()->document() );
+    PimCommon::SieveSyntaxHighlighter *syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter(mEditor->editor()->document());
     syntaxHighlighter->addCapabilities(PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities());
     mainLayout->addWidget(mEditor);
     topLayout->addWidget(mainWidget);
@@ -74,7 +73,7 @@ FilterConvertToSieveResultDialog::~FilterConvertToSieveResultDialog()
 
 void FilterConvertToSieveResultDialog::slotSave()
 {
-    const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
+    const QString filter = i18n("*.siv|sieve files (*.siv)\n*|all files (*)");
     PimCommon::Util::saveTextAs(mEditor->editor()->toPlainText(), filter, this, KUrl(), i18n("Convert to Script Sieve"));
 }
 
@@ -87,19 +86,18 @@ static const char *myConfigGroupName = "FilterConvertToSieveResultDialog";
 
 void FilterConvertToSieveResultDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
+    KConfigGroup group(KSharedConfig::openConfig(), myConfigGroupName);
 
-    const QSize size = group.readEntry( "Size", QSize(500, 300) );
-    if ( size.isValid() ) {
-        resize( size );
+    const QSize size = group.readEntry("Size", QSize(500, 300));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void FilterConvertToSieveResultDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), myConfigGroupName);
+    group.writeEntry("Size", size());
     group.sync();
 }
-
 

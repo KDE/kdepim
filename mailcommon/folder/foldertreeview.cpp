@@ -32,22 +32,23 @@
 #include <QHeaderView>
 #include <QMouseEvent>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
-FolderTreeView::FolderTreeView( QWidget *parent, bool showUnreadCount )
-    : Akonadi::EntityTreeView( parent ),
-      mbDisableContextMenuAndExtraColumn( false ),
-      mbDisableSaveConfig( false )
+FolderTreeView::FolderTreeView(QWidget *parent, bool showUnreadCount)
+    : Akonadi::EntityTreeView(parent),
+      mbDisableContextMenuAndExtraColumn(false),
+      mbDisableSaveConfig(false)
 {
     init(showUnreadCount);
 }
 
-FolderTreeView::FolderTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent, bool showUnreadCount )
-    : Akonadi::EntityTreeView( xmlGuiClient, parent ),
-      mbDisableContextMenuAndExtraColumn( false ),
-      mbDisableSaveConfig( false )
+FolderTreeView::FolderTreeView(KXMLGUIClient *xmlGuiClient, QWidget *parent, bool showUnreadCount)
+    : Akonadi::EntityTreeView(xmlGuiClient, parent),
+      mbDisableContextMenuAndExtraColumn(false),
+      mbDisableSaveConfig(false)
 {
-    init( showUnreadCount );
+    init(showUnreadCount);
 }
 
 FolderTreeView::~FolderTreeView()
@@ -59,14 +60,14 @@ void FolderTreeView::disableSaveConfig()
     mbDisableSaveConfig = true;
 }
 
-void FolderTreeView::setTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy policy )
+void FolderTreeView::setTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy policy)
 {
-    if ( mToolTipDisplayPolicy == policy ) {
+    if (mToolTipDisplayPolicy == policy) {
         return;
     }
 
     mToolTipDisplayPolicy = policy;
-    emit changeTooltipsPolicy( mToolTipDisplayPolicy );
+    emit changeTooltipsPolicy(mToolTipDisplayPolicy);
     writeConfig();
 }
 
@@ -74,69 +75,69 @@ void FolderTreeView::disableContextMenuAndExtraColumn()
 {
     mbDisableContextMenuAndExtraColumn = true;
     const int nbColumn = header()->count();
-    for ( int i = 1; i <nbColumn; ++i ) {
-        setColumnHidden( i, true );
+    for (int i = 1; i < nbColumn; ++i) {
+        setColumnHidden(i, true);
     }
 }
 
-void FolderTreeView::init( bool showUnreadCount )
+void FolderTreeView::init(bool showUnreadCount)
 {
-    setIconSize( QSize( 22, 22 ) );
-    setUniformRowHeights( true );
+    setIconSize(QSize(22, 22));
+    setUniformRowHeights(true);
     mSortingPolicy = FolderTreeWidget::SortByCurrentColumn;
     mToolTipDisplayPolicy = FolderTreeWidget::DisplayAlways;
 
-    header()->setContextMenuPolicy( Qt::CustomContextMenu );
-    connect( header(), SIGNAL(customContextMenuRequested(QPoint)),
-             SLOT(slotHeaderContextMenuRequested(QPoint)) );
+    header()->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(header(), SIGNAL(customContextMenuRequested(QPoint)),
+            SLOT(slotHeaderContextMenuRequested(QPoint)));
 
-    mCollectionStatisticsDelegate = new Akonadi::CollectionStatisticsDelegate( this );
-    mCollectionStatisticsDelegate->setProgressAnimationEnabled( true );
+    mCollectionStatisticsDelegate = new Akonadi::CollectionStatisticsDelegate(this);
+    mCollectionStatisticsDelegate->setProgressAnimationEnabled(true);
     setItemDelegate(mCollectionStatisticsDelegate);
     mCollectionStatisticsDelegate->setUnreadCountShown(
-                showUnreadCount && !header()->isSectionHidden( 1 ) );
+        showUnreadCount && !header()->isSectionHidden(1));
 }
 
-void FolderTreeView::showStatisticAnimation( bool anim )
+void FolderTreeView::showStatisticAnimation(bool anim)
 {
-    mCollectionStatisticsDelegate->setProgressAnimationEnabled( anim );
+    mCollectionStatisticsDelegate->setProgressAnimationEnabled(anim);
 }
 
 void FolderTreeView::writeConfig()
 {
-    if ( mbDisableSaveConfig ) {
+    if (mbDisableSaveConfig) {
         return;
     }
 
-    KConfigGroup myGroup( KernelIf->config(), "MainFolderView" );
-    myGroup.writeEntry( "IconSize", iconSize().width() );
-    myGroup.writeEntry( "ToolTipDisplayPolicy", (int)mToolTipDisplayPolicy );
-    myGroup.writeEntry( "SortingPolicy", (int)mSortingPolicy );
+    KConfigGroup myGroup(KernelIf->config(), "MainFolderView");
+    myGroup.writeEntry("IconSize", iconSize().width());
+    myGroup.writeEntry("ToolTipDisplayPolicy", (int)mToolTipDisplayPolicy);
+    myGroup.writeEntry("SortingPolicy", (int)mSortingPolicy);
 }
 
 void FolderTreeView::readConfig()
 {
-    KConfigGroup myGroup( KernelIf->config(), "MainFolderView" );
-    int iIconSize = myGroup.readEntry( "IconSize", iconSize().width() );
-    if ( iIconSize < 16 || iIconSize > 32 ) {
+    KConfigGroup myGroup(KernelIf->config(), "MainFolderView");
+    int iIconSize = myGroup.readEntry("IconSize", iconSize().width());
+    if (iIconSize < 16 || iIconSize > 32) {
         iIconSize = 22;
     }
-    setIconSize( QSize( iIconSize, iIconSize ) );
+    setIconSize(QSize(iIconSize, iIconSize));
     mToolTipDisplayPolicy =
-            static_cast<FolderTreeWidget::ToolTipDisplayPolicy>(
-                myGroup.readEntry( "ToolTipDisplayPolicy",
-                                   static_cast<int>( FolderTreeWidget::DisplayAlways ) ) );
+        static_cast<FolderTreeWidget::ToolTipDisplayPolicy>(
+            myGroup.readEntry("ToolTipDisplayPolicy",
+                              static_cast<int>(FolderTreeWidget::DisplayAlways)));
 
-    emit changeTooltipsPolicy( mToolTipDisplayPolicy );
+    emit changeTooltipsPolicy(mToolTipDisplayPolicy);
 
     setSortingPolicy(
-                ( FolderTreeWidget::SortingPolicy )myGroup.readEntry(
-                    "SortingPolicy", (int)FolderTreeWidget::SortByCurrentColumn ), false );
+        (FolderTreeWidget::SortingPolicy)myGroup.readEntry(
+            "SortingPolicy", (int)FolderTreeWidget::SortByCurrentColumn), false);
 }
 
-void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
+void FolderTreeView::slotHeaderContextMenuRequested(const QPoint &pnt)
 {
-    if ( mbDisableContextMenuAndExtraColumn ) {
+    if (mbDisableContextMenuAndExtraColumn) {
         readConfig();
         return;
     }
@@ -144,114 +145,114 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
     // the menu for the columns
     QMenu menu;
     QAction *act;
-    menu.addSection( i18n( "View Columns" ) );
+    menu.addSection(i18n("View Columns"));
     const int nbColumn = header()->count();
-    for ( int i = 1; i <nbColumn; ++i ) {
-        act = menu.addAction( model()->headerData( i, Qt::Horizontal ).toString() );
-        act->setCheckable( true );
-        act->setChecked( !header()->isSectionHidden( i ) );
-        act->setData( QVariant( i ) );
-        connect( act,  SIGNAL(triggered(bool)),
-                 SLOT(slotHeaderContextMenuChangeHeader(bool)) );
+    for (int i = 1; i < nbColumn; ++i) {
+        act = menu.addAction(model()->headerData(i, Qt::Horizontal).toString());
+        act->setCheckable(true);
+        act->setChecked(!header()->isSectionHidden(i));
+        act->setData(QVariant(i));
+        connect(act,  SIGNAL(triggered(bool)),
+                SLOT(slotHeaderContextMenuChangeHeader(bool)));
     }
 
-    menu.addSection( i18n( "Icon Size" ) );
+    menu.addSection(i18n("Icon Size"));
 
     static int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
 
-    QActionGroup *grp = new QActionGroup( &menu );
-    const int nbElement( (int)( sizeof( icon_sizes ) / sizeof( int ) ) );
-    for ( int i = 0; i < nbElement; ++i ) {
-        act = menu.addAction( QString::fromLatin1( "%1x%2" ).arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ) );
-        act->setCheckable( true );
-        grp->addAction( act );
-        if ( iconSize().width() == icon_sizes[ i ] ) {
-            act->setChecked( true );
+    QActionGroup *grp = new QActionGroup(&menu);
+    const int nbElement((int)(sizeof(icon_sizes) / sizeof(int)));
+    for (int i = 0; i < nbElement; ++i) {
+        act = menu.addAction(QString::fromLatin1("%1x%2").arg(icon_sizes[ i ]).arg(icon_sizes[ i ]));
+        act->setCheckable(true);
+        grp->addAction(act);
+        if (iconSize().width() == icon_sizes[ i ]) {
+            act->setChecked(true);
         }
-        act->setData( QVariant( icon_sizes[ i ] ) );
+        act->setData(QVariant(icon_sizes[ i ]));
 
-        connect( act, SIGNAL(triggered(bool)),
-                 SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
+        connect(act, SIGNAL(triggered(bool)),
+                SLOT(slotHeaderContextMenuChangeIconSize(bool)));
     }
-    menu.addSection( i18n( "Display Tooltips" ) );
+    menu.addSection(i18n("Display Tooltips"));
 
-    grp = new QActionGroup( &menu );
+    grp = new QActionGroup(&menu);
 
-    act = menu.addAction( i18nc( "@action:inmenu Always display tooltips", "Always" ) );
-    act->setCheckable( true );
-    grp->addAction( act );
-    act->setChecked( mToolTipDisplayPolicy == FolderTreeWidget::DisplayAlways );
-    act->setData( QVariant( (int)FolderTreeWidget::DisplayAlways ) );
-    connect( act, SIGNAL(triggered(bool)),
-             SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)) );
+    act = menu.addAction(i18nc("@action:inmenu Always display tooltips", "Always"));
+    act->setCheckable(true);
+    grp->addAction(act);
+    act->setChecked(mToolTipDisplayPolicy == FolderTreeWidget::DisplayAlways);
+    act->setData(QVariant((int)FolderTreeWidget::DisplayAlways));
+    connect(act, SIGNAL(triggered(bool)),
+            SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)));
 
-    act = menu.addAction( i18nc( "@action:inmenu Never display tooltips.", "Never" ) );
-    act->setCheckable( true );
-    grp->addAction( act );
-    act->setChecked( mToolTipDisplayPolicy == FolderTreeWidget::DisplayNever );
-    act->setData( QVariant( (int)FolderTreeWidget::DisplayNever ) );
-    connect( act, SIGNAL(triggered(bool)),
-             SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)) );
+    act = menu.addAction(i18nc("@action:inmenu Never display tooltips.", "Never"));
+    act->setCheckable(true);
+    grp->addAction(act);
+    act->setChecked(mToolTipDisplayPolicy == FolderTreeWidget::DisplayNever);
+    act->setData(QVariant((int)FolderTreeWidget::DisplayNever));
+    connect(act, SIGNAL(triggered(bool)),
+            SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)));
 
-    menu.addSection( i18nc( "@action:inmenu", "Sort Items" ) );
+    menu.addSection(i18nc("@action:inmenu", "Sort Items"));
 
-    grp = new QActionGroup( &menu );
+    grp = new QActionGroup(&menu);
 
-    act = menu.addAction( i18nc( "@action:inmenu", "Automatically, by Current Column" ) );
-    act->setCheckable( true );
-    grp->addAction( act );
-    act->setChecked( mSortingPolicy == FolderTreeWidget::SortByCurrentColumn );
-    act->setData( QVariant( (int)FolderTreeWidget::SortByCurrentColumn ) );
-    connect( act, SIGNAL(triggered(bool)),
-             SLOT(slotHeaderContextMenuChangeSortingPolicy(bool)) );
+    act = menu.addAction(i18nc("@action:inmenu", "Automatically, by Current Column"));
+    act->setCheckable(true);
+    grp->addAction(act);
+    act->setChecked(mSortingPolicy == FolderTreeWidget::SortByCurrentColumn);
+    act->setData(QVariant((int)FolderTreeWidget::SortByCurrentColumn));
+    connect(act, SIGNAL(triggered(bool)),
+            SLOT(slotHeaderContextMenuChangeSortingPolicy(bool)));
 
-    act = menu.addAction( i18nc( "@action:inmenu", "Manually, by Drag And Drop" ) );
-    act->setCheckable( true );
-    grp->addAction( act );
-    act->setChecked( mSortingPolicy == FolderTreeWidget::SortByDragAndDropKey );
-    act->setData( QVariant( (int)FolderTreeWidget::SortByDragAndDropKey ) );
-    connect( act, SIGNAL(triggered(bool)),
-             SLOT(slotHeaderContextMenuChangeSortingPolicy(bool)) );
+    act = menu.addAction(i18nc("@action:inmenu", "Manually, by Drag And Drop"));
+    act->setCheckable(true);
+    grp->addAction(act);
+    act->setChecked(mSortingPolicy == FolderTreeWidget::SortByDragAndDropKey);
+    act->setData(QVariant((int)FolderTreeWidget::SortByDragAndDropKey));
+    connect(act, SIGNAL(triggered(bool)),
+            SLOT(slotHeaderContextMenuChangeSortingPolicy(bool)));
 
-    menu.exec( header()->mapToGlobal( pnt ) );
+    menu.exec(header()->mapToGlobal(pnt));
 }
 
-void FolderTreeView::slotHeaderContextMenuChangeSortingPolicy( bool )
+void FolderTreeView::slotHeaderContextMenuChangeSortingPolicy(bool)
 {
-    QAction *act = dynamic_cast< QAction * >( sender() );
-    if ( !act ) {
+    QAction *act = dynamic_cast< QAction * >(sender());
+    if (!act) {
         return;
     }
 
     QVariant data = act->data();
 
     bool ok;
-    int policy = data.toInt( &ok );
-    if ( !ok ) {
+    int policy = data.toInt(&ok);
+    if (!ok) {
         return;
     }
 
-    setSortingPolicy( ( FolderTreeWidget::SortingPolicy )policy, true );
+    setSortingPolicy((FolderTreeWidget::SortingPolicy)policy, true);
 }
 
-void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy, bool writeInConfig )
+void FolderTreeView::setSortingPolicy(FolderTreeWidget::SortingPolicy policy, bool writeInConfig)
 {
-    if ( mSortingPolicy == policy ) {
+    if (mSortingPolicy == policy) {
         return;
     }
 
     mSortingPolicy = policy;
-    switch ( mSortingPolicy ) {
+    switch (mSortingPolicy) {
     case FolderTreeWidget::SortByCurrentColumn:
-        header()->setClickable( true );
-        header()->setSortIndicatorShown( true );
-        setSortingEnabled( true );
-        emit manualSortingChanged( false );
+        header()->setClickable(true);
+        header()->setSortIndicatorShown(true);
+        setSortingEnabled(true);
+        emit manualSortingChanged(false);
         break;
 
     case FolderTreeWidget::SortByDragAndDropKey:
-        header()->setClickable( false );
-        header()->setSortIndicatorShown( false );
+        header()->setClickable(false);
+        header()->setSortIndicatorShown(false);
 
 #if 0
         //
@@ -262,139 +263,139 @@ void FolderTreeView::setSortingPolicy( FolderTreeWidget::SortingPolicy policy, b
         // This is a bug as we actually DON'T want automatic sorting to be
         // performed by the view whenever it wants. We want to control sorting.
         //
-        setSortingEnabled( true ); // hack for qutie bug: the param here should be false
-        header()->setSortIndicator( 0, Qt::AscendingOrder );
+        setSortingEnabled(true);   // hack for qutie bug: the param here should be false
+        header()->setSortIndicator(0, Qt::AscendingOrder);
 #endif
-        setSortingEnabled( false ); // hack for qutie bug: this call shouldn't be here at all
-        emit manualSortingChanged( true );
+        setSortingEnabled(false);   // hack for qutie bug: this call shouldn't be here at all
+        emit manualSortingChanged(true);
 
         break;
     default:
         // should never happen
         break;
     }
-    if ( writeInConfig ) {
+    if (writeInConfig) {
         writeConfig();
     }
 }
 
-void FolderTreeView::slotHeaderContextMenuChangeToolTipDisplayPolicy( bool )
+void FolderTreeView::slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)
 {
-    QAction *act = dynamic_cast< QAction * >( sender() );
-    if ( !act ) {
+    QAction *act = dynamic_cast< QAction * >(sender());
+    if (!act) {
         return;
     }
 
     QVariant data = act->data();
 
     bool ok;
-    const int id = data.toInt( &ok );
-    if ( !ok ) {
+    const int id = data.toInt(&ok);
+    if (!ok) {
         return;
     }
-    emit changeTooltipsPolicy( ( FolderTreeWidget::ToolTipDisplayPolicy )id );
+    emit changeTooltipsPolicy((FolderTreeWidget::ToolTipDisplayPolicy)id);
 }
 
-void FolderTreeView::slotHeaderContextMenuChangeHeader( bool )
+void FolderTreeView::slotHeaderContextMenuChangeHeader(bool)
 {
-    QAction *act = dynamic_cast< QAction * >( sender() );
-    if ( !act ) {
+    QAction *act = dynamic_cast< QAction * >(sender());
+    if (!act) {
         return;
     }
 
     QVariant data = act->data();
 
     bool ok;
-    const int id = data.toInt( &ok );
-    if ( !ok ) {
+    const int id = data.toInt(&ok);
+    if (!ok) {
         return;
     }
 
-    if ( id > header()->count() ) {
+    if (id > header()->count()) {
         return;
     }
 
-    if ( id == 1 ) {
-        mCollectionStatisticsDelegate->setUnreadCountShown( !act->isChecked() );
+    if (id == 1) {
+        mCollectionStatisticsDelegate->setUnreadCountShown(!act->isChecked());
     }
 
-    setColumnHidden( id, !act->isChecked() );
+    setColumnHidden(id, !act->isChecked());
 }
 
-void FolderTreeView::slotHeaderContextMenuChangeIconSize( bool )
+void FolderTreeView::slotHeaderContextMenuChangeIconSize(bool)
 {
-    QAction *act = dynamic_cast< QAction * >( sender() );
-    if ( !act ) {
+    QAction *act = dynamic_cast< QAction * >(sender());
+    if (!act) {
         return;
     }
 
     QVariant data = act->data();
 
     bool ok;
-    const int size = data.toInt( &ok );
-    if ( !ok ) {
+    const int size = data.toInt(&ok);
+    if (!ok) {
         return;
     }
 
-    const QSize newIconSize( QSize( size, size ) );
-    if ( newIconSize == iconSize() ) {
+    const QSize newIconSize(QSize(size, size));
+    if (newIconSize == iconSize()) {
         return;
     }
-    setIconSize( newIconSize );
+    setIconSize(newIconSize);
 
     writeConfig();
 }
 
-void FolderTreeView::setCurrentModelIndex( const QModelIndex & index )
+void FolderTreeView::setCurrentModelIndex(const QModelIndex &index)
 {
-    if ( index.isValid() ) {
+    if (index.isValid()) {
         clearSelection();
-        scrollTo( index );
-        selectionModel()->setCurrentIndex( index, QItemSelectionModel::Rows );
+        scrollTo(index);
+        selectionModel()->setCurrentIndex(index, QItemSelectionModel::Rows);
     }
 }
 
-void FolderTreeView::selectModelIndex( const QModelIndex & index )
+void FolderTreeView::selectModelIndex(const QModelIndex &index)
 {
-    if ( index.isValid() ) {
-        scrollTo( index );
+    if (index.isValid()) {
+        scrollTo(index);
         selectionModel()->select(
-                    index,
-                    QItemSelectionModel::Rows | QItemSelectionModel::Select |
-                    QItemSelectionModel::Current | QItemSelectionModel::Clear );
+            index,
+            QItemSelectionModel::Rows | QItemSelectionModel::Select |
+            QItemSelectionModel::Current | QItemSelectionModel::Clear);
     }
 }
 
 void FolderTreeView::slotSelectFocusFolder()
 {
     const QModelIndex index = currentIndex();
-    if ( index.isValid() ) {
-        setCurrentIndex( index );
+    if (index.isValid()) {
+        setCurrentIndex(index);
     }
 }
 
 void FolderTreeView::slotFocusNextFolder()
 {
-    const QModelIndex nextFolder = selectNextFolder( currentIndex() );
+    const QModelIndex nextFolder = selectNextFolder(currentIndex());
 
-    if ( nextFolder.isValid() ) {
-        expand( nextFolder );
-        setCurrentModelIndex( nextFolder );
+    if (nextFolder.isValid()) {
+        expand(nextFolder);
+        setCurrentModelIndex(nextFolder);
     }
 }
 
-QModelIndex FolderTreeView::selectNextFolder( const QModelIndex & current )
+QModelIndex FolderTreeView::selectNextFolder(const QModelIndex &current)
 {
     QModelIndex below;
-    if ( current.isValid() ) {
-        model()->fetchMore( current );
-        if ( model()->hasChildren( current ) ) {
-            expand( current );
-            below = indexBelow( current );
-        } else if ( current.row() < model()->rowCount( model()->parent( current ) ) -1 ) {
-            below = model()->index( current.row()+1, current.column(), model()->parent( current ) );
+    if (current.isValid()) {
+        model()->fetchMore(current);
+        if (model()->hasChildren(current)) {
+            expand(current);
+            below = indexBelow(current);
+        } else if (current.row() < model()->rowCount(model()->parent(current)) - 1) {
+            below = model()->index(current.row() + 1, current.column(), model()->parent(current));
         } else {
-            below = indexBelow( current );
+            below = indexBelow(current);
         }
     }
     return below;
@@ -403,84 +404,84 @@ QModelIndex FolderTreeView::selectNextFolder( const QModelIndex & current )
 void FolderTreeView::slotFocusPrevFolder()
 {
     const QModelIndex current = currentIndex();
-    if ( current.isValid() ) {
-        QModelIndex above = indexAbove( current );
-        setCurrentModelIndex( above );
+    if (current.isValid()) {
+        QModelIndex above = indexAbove(current);
+        setCurrentModelIndex(above);
     }
 }
 
 void FolderTreeView::slotFocusFirstFolder()
 {
-    const QModelIndex first = moveCursor( QAbstractItemView::MoveHome, 0 );
-    if ( first.isValid() ) {
-        setCurrentModelIndex( first );
+    const QModelIndex first = moveCursor(QAbstractItemView::MoveHome, 0);
+    if (first.isValid()) {
+        setCurrentModelIndex(first);
     }
 }
 
 void FolderTreeView::slotFocusLastFolder()
 {
-    const QModelIndex last = moveCursor( QAbstractItemView::MoveEnd, 0 );
-    if ( last.isValid() ) {
-        setCurrentModelIndex( last );
+    const QModelIndex last = moveCursor(QAbstractItemView::MoveEnd, 0);
+    if (last.isValid()) {
+        setCurrentModelIndex(last);
     }
 }
 
-
-void FolderTreeView::selectNextUnreadFolder( bool confirm )
+void FolderTreeView::selectNextUnreadFolder(bool confirm)
 {
     // find next unread collection starting from current position
-    if ( !trySelectNextUnreadFolder( currentIndex(), MailCommon::Util::ForwardSearch, confirm ) ) {
+    if (!trySelectNextUnreadFolder(currentIndex(), MailCommon::Util::ForwardSearch, confirm)) {
         // if there is none, jump to the last collection and try again
-        trySelectNextUnreadFolder( model()->index( 0, 0 ), MailCommon::Util::ForwardSearch, confirm );
+        trySelectNextUnreadFolder(model()->index(0, 0), MailCommon::Util::ForwardSearch, confirm);
     }
 }
 
 // helper method to find last item in the model tree
-static QModelIndex lastChildOf( QAbstractItemModel *model, const QModelIndex &current )
+static QModelIndex lastChildOf(QAbstractItemModel *model, const QModelIndex &current)
 {
-    if ( model->rowCount( current ) == 0 ) {
+    if (model->rowCount(current) == 0) {
         return current;
     }
 
-    return lastChildOf( model, model->index( model->rowCount( current ) - 1, 0, current ) );
+    return lastChildOf(model, model->index(model->rowCount(current) - 1, 0, current));
 }
 
-void FolderTreeView::selectPrevUnreadFolder( bool confirm )
+void FolderTreeView::selectPrevUnreadFolder(bool confirm)
 {
     // find next unread collection starting from current position
-    if ( !trySelectNextUnreadFolder( currentIndex(), MailCommon::Util::BackwardSearch, confirm ) ) {
+    if (!trySelectNextUnreadFolder(currentIndex(), MailCommon::Util::BackwardSearch, confirm)) {
         // if there is none, jump to top and try again
-        const QModelIndex index = lastChildOf( model(), QModelIndex() );
-        trySelectNextUnreadFolder( index, MailCommon::Util::BackwardSearch, confirm );
+        const QModelIndex index = lastChildOf(model(), QModelIndex());
+        trySelectNextUnreadFolder(index, MailCommon::Util::BackwardSearch, confirm);
     }
 }
 
-bool FolderTreeView::trySelectNextUnreadFolder( const QModelIndex &current,
-                                                MailCommon::Util::SearchDirection direction,
-                                                bool confirm )
+bool FolderTreeView::trySelectNextUnreadFolder(const QModelIndex &current,
+        MailCommon::Util::SearchDirection direction,
+        bool confirm)
 {
     QModelIndex index = current;
-    while ( true ) {
-        index = MailCommon::Util::nextUnreadCollection( model(), index, direction );
+    while (true) {
+        index = MailCommon::Util::nextUnreadCollection(model(), index, direction);
 
-        if ( !index.isValid() ) {
+        if (!index.isValid()) {
             return false;
         }
 
         const Akonadi::Collection collection =
-                index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-        if ( collection == Kernel::self()->trashCollectionFolder() ||
-             collection == Kernel::self()->outboxCollectionFolder() )
-            continue;
-
-        if ( ignoreUnreadFolder( collection, confirm ) ) {
+            index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+        if (collection == Kernel::self()->trashCollectionFolder() ||
+                collection == Kernel::self()->outboxCollectionFolder()) {
             continue;
         }
 
-        if ( allowedToEnterFolder( collection, confirm ) ) {
-            expand( index );
-            setCurrentIndex( index );
-            selectModelIndex( index );
+        if (ignoreUnreadFolder(collection, confirm)) {
+            continue;
+        }
+
+        if (allowedToEnterFolder(collection, confirm)) {
+            expand(index);
+            setCurrentIndex(index);
+            selectModelIndex(index);
             return true;
         } else {
             return false;
@@ -490,9 +491,9 @@ bool FolderTreeView::trySelectNextUnreadFolder( const QModelIndex &current,
     return false;
 }
 
-bool FolderTreeView::ignoreUnreadFolder( const Akonadi::Collection &collection, bool confirm ) const
+bool FolderTreeView::ignoreUnreadFolder(const Akonadi::Collection &collection, bool confirm) const
 {
-    if ( !confirm ) {
+    if (!confirm) {
         return false;
     }
 
@@ -501,15 +502,15 @@ bool FolderTreeView::ignoreUnreadFolder( const Akonadi::Collection &collection, 
     // via ctrl+ or ctrl- so we do this only if (confirm == true), which means
     // we are doing readOn.
 
-    return ( collection == Kernel::self()->draftsCollectionFolder() ||
-             collection == Kernel::self()->templatesCollectionFolder() ||
-             collection == Kernel::self()->sentCollectionFolder() );
+    return (collection == Kernel::self()->draftsCollectionFolder() ||
+            collection == Kernel::self()->templatesCollectionFolder() ||
+            collection == Kernel::self()->sentCollectionFolder());
 }
 
-bool FolderTreeView::allowedToEnterFolder( const Akonadi::Collection &collection,
-                                           bool confirm ) const
+bool FolderTreeView::allowedToEnterFolder(const Akonadi::Collection &collection,
+        bool confirm) const
 {
-    if ( !confirm ) {
+    if (!confirm) {
         return true;
     }
 
@@ -517,38 +518,38 @@ bool FolderTreeView::allowedToEnterFolder( const Akonadi::Collection &collection
     // whether he wishes to be notified again in "AskNextFolder"
     // parameter (kept in the config file for kmail)
     const int result =
-            KMessageBox::questionYesNo(
-                const_cast<FolderTreeView*>( this ),
-                i18n( "<qt>Go to the next unread message in folder <b>%1</b>?</qt>", collection.name() ),
-                i18n( "Go to Next Unread Message" ),
-                KGuiItem( i18n( "Go To" ) ),
-                KGuiItem( i18n( "Do Not Go To" ) ), // defaults
-                QLatin1String(":kmail_AskNextFolder"), 0 );
+        KMessageBox::questionYesNo(
+            const_cast<FolderTreeView *>(this),
+            i18n("<qt>Go to the next unread message in folder <b>%1</b>?</qt>", collection.name()),
+            i18n("Go to Next Unread Message"),
+            KGuiItem(i18n("Go To")),
+            KGuiItem(i18n("Do Not Go To")),     // defaults
+            QLatin1String(":kmail_AskNextFolder"), 0);
 
-    return ( result == KMessageBox::Yes );
+    return (result == KMessageBox::Yes);
 }
 
-bool FolderTreeView::isUnreadFolder( const QModelIndex &current,
-                                     QModelIndex &index, FolderTreeView::Move move,
-                                     bool confirm )
+bool FolderTreeView::isUnreadFolder(const QModelIndex &current,
+                                    QModelIndex &index, FolderTreeView::Move move,
+                                    bool confirm)
 {
-    if ( current.isValid() ) {
+    if (current.isValid()) {
 
-        if ( move == FolderTreeView::Next ) {
-            index = selectNextFolder( current );
-        } else if ( move == FolderTreeView::Previous ) {
-            index = indexAbove( current );
+        if (move == FolderTreeView::Next) {
+            index = selectNextFolder(current);
+        } else if (move == FolderTreeView::Previous) {
+            index = indexAbove(current);
         }
 
-        if ( index.isValid() ) {
+        if (index.isValid()) {
             const Akonadi::Collection collection =
-                    index.model()->data(
-                        current, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+                index.model()->data(
+                    current, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 
-            if ( collection.isValid() ) {
-                if ( collection.statistics().unreadCount() > 0 ) {
-                    if ( !confirm ) {
-                        selectModelIndex( current );
+            if (collection.isValid()) {
+                if (collection.statistics().unreadCount() > 0) {
+                    if (!confirm) {
+                        selectModelIndex(current);
                         return true;
                     } else {
                         // Skip drafts, sent mail and templates as well, when reading mail with the
@@ -556,28 +557,28 @@ bool FolderTreeView::isUnreadFolder( const QModelIndex &current,
                         // via ctrl+ or ctrl- so we do this only if (confirm == true), which means
                         // we are doing readOn.
 
-                        if ( collection == Kernel::self()->draftsCollectionFolder() ||
-                             collection == Kernel::self()->templatesCollectionFolder() ||
-                             collection == Kernel::self()->sentCollectionFolder() ) {
+                        if (collection == Kernel::self()->draftsCollectionFolder() ||
+                                collection == Kernel::self()->templatesCollectionFolder() ||
+                                collection == Kernel::self()->sentCollectionFolder()) {
                             return false;
                         }
 
                         // warn user that going to next folder - but keep track of
                         // whether he wishes to be notified again in "AskNextFolder"
                         // parameter (kept in the config file for kmail)
-                        if ( KMessageBox::questionYesNo(
-                                 this,
-                                 i18n( "<qt>Go to the next unread message in folder <b>%1</b>?</qt>",
-                                       collection.name() ),
-                                 i18n( "Go to Next Unread Message" ),
-                                 KGuiItem( i18n( "Go To" ) ),
-                                 KGuiItem( i18n( "Do Not Go To" ) ), // defaults
-                                 QLatin1String(":kmail_AskNextFolder"),
-                                 0 ) == KMessageBox::No ) {
+                        if (KMessageBox::questionYesNo(
+                                    this,
+                                    i18n("<qt>Go to the next unread message in folder <b>%1</b>?</qt>",
+                                         collection.name()),
+                                    i18n("Go to Next Unread Message"),
+                                    KGuiItem(i18n("Go To")),
+                                    KGuiItem(i18n("Do Not Go To")),     // defaults
+                                    QLatin1String(":kmail_AskNextFolder"),
+                                    0) == KMessageBox::No) {
                             return true; // assume selected (do not continue looping)
                         }
 
-                        selectModelIndex( current );
+                        selectModelIndex(current);
                         return true;
                     }
                 }
@@ -590,34 +591,34 @@ bool FolderTreeView::isUnreadFolder( const QModelIndex &current,
 Akonadi::Collection FolderTreeView::currentFolder() const
 {
     const QModelIndex current = currentIndex();
-    if ( current.isValid() ) {
+    if (current.isValid()) {
         const Akonadi::Collection collection =
-                current.model()->data(
-                    current,
-                    Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+            current.model()->data(
+                current,
+                Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
         return collection;
     }
     return Akonadi::Collection();
 }
 
-void FolderTreeView::mousePressEvent( QMouseEvent *e )
+void FolderTreeView::mousePressEvent(QMouseEvent *e)
 {
-    const bool buttonPressedIsMiddle = ( e->button() == Qt::MidButton );
-    emit prefereCreateNewTab( buttonPressedIsMiddle );
-    EntityTreeView::mousePressEvent( e );
+    const bool buttonPressedIsMiddle = (e->button() == Qt::MidButton);
+    emit prefereCreateNewTab(buttonPressedIsMiddle);
+    EntityTreeView::mousePressEvent(e);
 }
 
-void FolderTreeView::restoreHeaderState( const QByteArray &data )
+void FolderTreeView::restoreHeaderState(const QByteArray &data)
 {
     if (data.isEmpty()) {
         const int nbColumn = header()->count();
-        for ( int i = 1; i <nbColumn; ++i ) {
-            setColumnHidden( i, true );
+        for (int i = 1; i < nbColumn; ++i) {
+            setColumnHidden(i, true);
         }
+    } else {
+        header()->restoreState(data);
     }
-    else
-        header()->restoreState( data );
-    mCollectionStatisticsDelegate->setUnreadCountShown( header()->isSectionHidden( 1 ) );
+    mCollectionStatisticsDelegate->setUnreadCountShown(header()->isSectionHidden(1));
 }
 
 void FolderTreeView::updatePalette()
@@ -625,7 +626,7 @@ void FolderTreeView::updatePalette()
     mCollectionStatisticsDelegate->updatePalette();
 }
 
-void FolderTreeView::keyboardSearch( const QString & )
+void FolderTreeView::keyboardSearch(const QString &)
 {
     // Disable keyboardSearch: it interfers with filtering in the
     // FolderSelectionDialog. We don't want it in KMail main window

@@ -46,12 +46,11 @@ using MailCommon::FilterLog;
 #include <algorithm>
 #include <boost/bind.hpp>
 
-
 using namespace MailCommon;
 
 MailFilter::MailFilter()
 {
-    mIdentifier = KRandom::randomString( 16 );
+    mIdentifier = KRandom::randomString(16);
     bApplyOnInbound = true;
     bApplyBeforeOutbound = false;
     bApplyOnOutbound = false;
@@ -64,14 +63,12 @@ MailFilter::MailFilter()
     bEnabled = true;
 }
 
-
-MailFilter::MailFilter( const KConfigGroup & aConfig, bool interactive, bool & needUpdate )
+MailFilter::MailFilter(const KConfigGroup &aConfig, bool interactive, bool &needUpdate)
 {
-    needUpdate =  readConfig( aConfig, interactive );
+    needUpdate =  readConfig(aConfig, interactive);
 }
 
-
-MailFilter::MailFilter( const MailFilter & aFilter )
+MailFilter::MailFilter(const MailFilter &aFilter)
 {
     mIdentifier = aFilter.mIdentifier;
     mPattern = aFilter.mPattern;
@@ -90,15 +87,15 @@ MailFilter::MailFilter( const MailFilter & aFilter )
     mIcon = aFilter.icon();
     mShortcut = aFilter.shortcut();
 
-    QListIterator<FilterAction*> it( aFilter.mActions );
-    while ( it.hasNext() ) {
+    QListIterator<FilterAction *> it(aFilter.mActions);
+    while (it.hasNext()) {
         FilterAction *action = it.next();
-        FilterActionDesc *desc = FilterManager::filterActionDict()->value( action->name() );
-        if ( desc ) {
+        FilterActionDesc *desc = FilterManager::filterActionDict()->value(action->name());
+        if (desc) {
             FilterAction *f = desc->create();
-            if ( f ) {
-                f->argsFromString( action->argsAsString() );
-                mActions.append( f );
+            if (f) {
+                f->argsFromString(action->argsAsString());
+                mActions.append(f);
             }
         }
     }
@@ -106,13 +103,14 @@ MailFilter::MailFilter( const MailFilter & aFilter )
     mAccounts.clear();
     QStringList::ConstIterator it2;
     QStringList::ConstIterator end2 = aFilter.mAccounts.constEnd();
-    for ( it2 = aFilter.mAccounts.constBegin() ; it2 != end2 ; ++it2 )
-        mAccounts.append( *it2 );
+    for (it2 = aFilter.mAccounts.constBegin() ; it2 != end2 ; ++it2) {
+        mAccounts.append(*it2);
+    }
 }
 
 MailFilter::~MailFilter()
 {
-    qDeleteAll( mActions );
+    qDeleteAll(mActions);
 }
 
 QString MailFilter::identifier() const
@@ -125,76 +123,77 @@ QString MailFilter::name() const
     return mPattern.name();
 }
 
-MailFilter::ReturnCode MailFilter::execActions( ItemContext &context, bool& stopIt, bool applyOnOutbound ) const
+MailFilter::ReturnCode MailFilter::execActions(ItemContext &context, bool &stopIt, bool applyOnOutbound) const
 {
     ReturnCode status = NoResult;
 
-    QList<FilterAction*>::const_iterator it( mActions.constBegin() );
-    QList<FilterAction*>::const_iterator end( mActions.constEnd() );
-    for ( ; it != end ; ++it ) {
+    QList<FilterAction *>::const_iterator it(mActions.constBegin());
+    QList<FilterAction *>::const_iterator end(mActions.constEnd());
+    for (; it != end ; ++it) {
 
-        if ( FilterLog::instance()->isLogging() ) {
-            const QString logText( i18n( "<b>Applying filter action:</b> %1",
-                                         (*it)->displayString() ) );
-            FilterLog::instance()->add( logText, FilterLog::AppliedAction );
+        if (FilterLog::instance()->isLogging()) {
+            const QString logText(i18n("<b>Applying filter action:</b> %1",
+                                       (*it)->displayString()));
+            FilterLog::instance()->add(logText, FilterLog::AppliedAction);
         }
 
-        FilterAction::ReturnCode result = (*it)->process( context, applyOnOutbound );
+        FilterAction::ReturnCode result = (*it)->process(context, applyOnOutbound);
 
-        switch ( result ) {
+        switch (result) {
         case FilterAction::CriticalError:
-            if ( FilterLog::instance()->isLogging() ) {
-                const QString logText = QString::fromLatin1( "<font color=#FF0000>%1</font>" )
-                        .arg( i18n( "A critical error occurred. Processing stops here." ) );
-                FilterLog::instance()->add( logText, FilterLog::AppliedAction );
+            if (FilterLog::instance()->isLogging()) {
+                const QString logText = QString::fromLatin1("<font color=#FF0000>%1</font>")
+                                        .arg(i18n("A critical error occurred. Processing stops here."));
+                FilterLog::instance()->add(logText, FilterLog::AppliedAction);
             }
             // in case it's a critical error: return immediately!
             return CriticalError;
         case FilterAction::ErrorButGoOn:
-            if ( FilterLog::instance()->isLogging() ) {
-                const QString logText = QString::fromLatin1( "<font color=#FF0000>%1</font>" )
-                        .arg( i18n( "A problem was found while applying this action." ) );
-                FilterLog::instance()->add( logText, FilterLog::AppliedAction );
+            if (FilterLog::instance()->isLogging()) {
+                const QString logText = QString::fromLatin1("<font color=#FF0000>%1</font>")
+                                        .arg(i18n("A problem was found while applying this action."));
+                FilterLog::instance()->add(logText, FilterLog::AppliedAction);
             }
         default:
             break;
         }
     }
 
-    if ( status == NoResult ) // No filters matched, keep copy of message
+    if (status == NoResult) { // No filters matched, keep copy of message
         status = GoOn;
+    }
 
     stopIt = stopProcessingHere();
 
     return status;
 }
 
-QList<FilterAction*>* MailFilter::actions()
+QList<FilterAction *> *MailFilter::actions()
 {
     return &mActions;
 }
 
-const QList<FilterAction*>* MailFilter::actions() const
+const QList<FilterAction *> *MailFilter::actions() const
 {
     return &mActions;
 }
 
-SearchPattern* MailFilter::pattern()
+SearchPattern *MailFilter::pattern()
 {
     return &mPattern;
 }
 
-const SearchPattern* MailFilter::pattern() const
+const SearchPattern *MailFilter::pattern() const
 {
     return &mPattern;
 }
 
-void MailFilter::setApplyOnOutbound( bool aApply )
+void MailFilter::setApplyOnOutbound(bool aApply)
 {
     bApplyOnOutbound = aApply;
 }
 
-void MailFilter::setApplyBeforeOutbound( bool aApply )
+void MailFilter::setApplyBeforeOutbound(bool aApply)
 {
     bApplyBeforeOutbound = aApply;
 }
@@ -209,7 +208,7 @@ bool MailFilter::applyBeforeOutbound() const
     return bApplyBeforeOutbound;
 }
 
-void MailFilter::setApplyOnInbound( bool aApply )
+void MailFilter::setApplyOnInbound(bool aApply)
 {
     bApplyOnInbound = aApply;
 }
@@ -219,7 +218,7 @@ bool MailFilter::applyOnInbound() const
     return bApplyOnInbound;
 }
 
-void MailFilter::setApplyOnExplicit( bool aApply )
+void MailFilter::setApplyOnExplicit(bool aApply)
 {
     bApplyOnExplicit = aApply;
 }
@@ -229,7 +228,7 @@ bool MailFilter::applyOnExplicit() const
     return bApplyOnExplicit;
 }
 
-void MailFilter::setApplicability( AccountType aApply )
+void MailFilter::setApplicability(AccountType aApply)
 {
     mApplicability = aApply;
 }
@@ -239,72 +238,77 @@ MailFilter::AccountType MailFilter::applicability() const
     return mApplicability;
 }
 
-SearchRule::RequiredPart MailFilter::requiredPart(const QString& id) const
+SearchRule::RequiredPart MailFilter::requiredPart(const QString &id) const
 {
     //find the required message part needed for the filter
     //this can be either only the Envelope, all Header or the CompleteMessage
     //Makes the assumption that  Envelope < Header < CompleteMessage
     int requiredPart = SearchRule::Envelope;
 
-    if (!bEnabled || !applyOnAccount(id))
+    if (!bEnabled || !applyOnAccount(id)) {
         return SearchRule::Envelope;
+    }
 
-    if (pattern())
-        requiredPart = qMax( requiredPart, (int)pattern()->requiredPart() ) ; // no pattern means always matches?
+    if (pattern()) {
+        requiredPart = qMax(requiredPart, (int)pattern()->requiredPart()) ;    // no pattern means always matches?
+    }
 
     int requiredPartByActions = SearchRule::Envelope;
 
-    QList<FilterAction*> actionList = *actions();
+    QList<FilterAction *> actionList = *actions();
     if (!actionList.isEmpty()) {
         requiredPartByActions = (*std::max_element(actionList.constBegin(), actionList.constEnd(),
-                                                   boost::bind(&MailCommon::FilterAction::requiredPart, _1) <
-                                                   boost::bind(&MailCommon::FilterAction::requiredPart, _2) ))->requiredPart();
+                                 boost::bind(&MailCommon::FilterAction::requiredPart, _1) <
+                                 boost::bind(&MailCommon::FilterAction::requiredPart, _2)))->requiredPart();
     }
-    requiredPart = qMax( requiredPart, requiredPartByActions);
+    requiredPart = qMax(requiredPart, requiredPartByActions);
 
     return static_cast<SearchRule::RequiredPart>(requiredPart);
 }
 
-bool MailFilter::folderRemoved( const Akonadi::Collection & aFolder, const Akonadi::Collection& aNewFolder )
+bool MailFilter::folderRemoved(const Akonadi::Collection &aFolder, const Akonadi::Collection &aNewFolder)
 {
     bool rem = false;
 
-    QListIterator<FilterAction*> it( mActions );
-    while ( it.hasNext() )
-        if ( it.next()->folderRemoved( aFolder, aNewFolder ) )
+    QListIterator<FilterAction *> it(mActions);
+    while (it.hasNext())
+        if (it.next()->folderRemoved(aFolder, aNewFolder)) {
             rem = true;
+        }
 
     return rem;
 }
 
-void MailFilter::setApplyOnAccount( const QString& id, bool aApply )
+void MailFilter::setApplyOnAccount(const QString &id, bool aApply)
 {
-    if (aApply && !mAccounts.contains( id )) {
-        mAccounts.append( id );
-    } else if (!aApply && mAccounts.contains( id )) {
-        mAccounts.removeAll( id );
+    if (aApply && !mAccounts.contains(id)) {
+        mAccounts.append(id);
+    } else if (!aApply && mAccounts.contains(id)) {
+        mAccounts.removeAll(id);
     }
 }
 
-bool MailFilter::applyOnAccount( const QString& id ) const
+bool MailFilter::applyOnAccount(const QString &id) const
 {
-    if ( applicability() == All )
+    if (applicability() == All) {
         return true;
-    if ( applicability() == ButImap ) {
-        Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( id );
-        if ( instance.isValid() ) {
-            return !PimCommon::Util::isImapResource( instance.type().identifier());
+    }
+    if (applicability() == ButImap) {
+        Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance(id);
+        if (instance.isValid()) {
+            return !PimCommon::Util::isImapResource(instance.type().identifier());
         } else {
             return false;
         }
     }
-    if ( applicability() == Checked )
-        return mAccounts.contains( id );
+    if (applicability() == Checked) {
+        return mAccounts.contains(id);
+    }
 
     return false;
 }
 
-void MailFilter::setStopProcessingHere( bool aStop )
+void MailFilter::setStopProcessingHere(bool aStop)
 {
     bStopProcessingHere = aStop;
 }
@@ -314,7 +318,7 @@ bool MailFilter::stopProcessingHere() const
     return bStopProcessingHere;
 }
 
-void MailFilter::setConfigureShortcut( bool aShort )
+void MailFilter::setConfigureShortcut(bool aShort)
 {
     bConfigureShortcut = aShort;
     bConfigureToolbar = (bConfigureToolbar && bConfigureShortcut);
@@ -325,7 +329,7 @@ bool MailFilter::configureShortcut() const
     return bConfigureShortcut;
 }
 
-void MailFilter::setConfigureToolbar( bool aTool )
+void MailFilter::setConfigureToolbar(bool aTool)
 {
     bConfigureToolbar = (aTool && bConfigureShortcut);
 }
@@ -335,22 +339,22 @@ bool MailFilter::configureToolbar() const
     return bConfigureToolbar;
 }
 
-void MailFilter::setToolbarName( const QString &toolbarName )
+void MailFilter::setToolbarName(const QString &toolbarName)
 {
     mToolbarName = toolbarName;
 }
 
-void MailFilter::setShortcut( const QKeySequence &shortcut )
+void MailFilter::setShortcut(const QKeySequence &shortcut)
 {
     mShortcut = shortcut;
 }
 
-const QKeySequence& MailFilter::shortcut() const
+const QKeySequence &MailFilter::shortcut() const
 {
     return mShortcut;
 }
 
-void MailFilter::setIcon( const QString &icon )
+void MailFilter::setIcon(const QString &icon)
 {
     mIcon = icon;
 }
@@ -360,7 +364,7 @@ QString MailFilter::icon() const
     return mIcon;
 }
 
-void MailFilter::setAutoNaming( bool useAutomaticNames )
+void MailFilter::setAutoNaming(bool useAutomaticNames)
 {
     bAutoNaming = useAutomaticNames;
 }
@@ -371,16 +375,16 @@ bool MailFilter::isAutoNaming() const
 }
 
 //-----------------------------------------------------------------------------
-bool MailFilter::readConfig(const KConfigGroup & config, bool interactive)
+bool MailFilter::readConfig(const KConfigGroup &config, bool interactive)
 {
     bool needUpdate = false;
     // MKSearchPattern::readConfig ensures
     // that the pattern is purified.
     mPattern.readConfig(config);
-    mIdentifier = config.readEntry( "identifier", KRandom::randomString( 16 ) );
+    mIdentifier = config.readEntry("identifier", KRandom::randomString(16));
 
-    const QStringList sets = config.readEntry("apply-on", QStringList() );
-    if ( sets.isEmpty() && !config.hasKey("apply-on") ) {
+    const QStringList sets = config.readEntry("apply-on", QStringList());
+    if (sets.isEmpty() && !config.hasKey("apply-on")) {
         bApplyBeforeOutbound = false;
         bApplyOnOutbound = false;
         bApplyOnInbound = true;
@@ -392,70 +396,74 @@ bool MailFilter::readConfig(const KConfigGroup & config, bool interactive)
         bApplyOnOutbound = bool(sets.contains(QLatin1String("send-mail")));
         bApplyOnExplicit = bool(sets.contains(QLatin1String("manual-filtering")));
         mApplicability = (AccountType) config.readEntry(
-                    "Applicability", (int)ButImap );
+                             "Applicability", (int)ButImap);
     }
 
-    bStopProcessingHere = config.readEntry( "StopProcessingHere", true );
-    bConfigureShortcut = config.readEntry( "ConfigureShortcut", false );
-    QString shortcut( config.readEntry( "Shortcut", QString() ) );
-    if ( !shortcut.isEmpty() ) {
-        QKeySequence sc( shortcut );
-        setShortcut( sc );
+    bStopProcessingHere = config.readEntry("StopProcessingHere", true);
+    bConfigureShortcut = config.readEntry("ConfigureShortcut", false);
+    QString shortcut(config.readEntry("Shortcut", QString()));
+    if (!shortcut.isEmpty()) {
+        QKeySequence sc(shortcut);
+        setShortcut(sc);
     }
-    bConfigureToolbar = config.readEntry( "ConfigureToolbar", false );
+    bConfigureToolbar = config.readEntry("ConfigureToolbar", false);
     bConfigureToolbar = bConfigureToolbar && bConfigureShortcut;
-    mToolbarName = config.readEntry( "ToolbarName", name() );
-    mIcon = config.readEntry( "Icon", "system-run" );
-    bAutoNaming = config.readEntry( "AutomaticName", false );
-    bEnabled = config.readEntry( "Enabled", true );
+    mToolbarName = config.readEntry("ToolbarName", name());
+    mIcon = config.readEntry("Icon", "system-run");
+    bAutoNaming = config.readEntry("AutomaticName", false);
+    bEnabled = config.readEntry("Enabled", true);
     QString actName, argsName;
 
     mActions.clear();
 
-    int numActions = config.readEntry( "actions", 0 );
+    int numActions = config.readEntry("actions", 0);
     if (numActions > FILTER_MAX_ACTIONS) {
         numActions = FILTER_MAX_ACTIONS ;
-        KMessageBox::information( 0, i18n("<qt>Too many filter actions in filter rule <b>%1</b>.</qt>", mPattern.name() ) );
+        KMessageBox::information(0, i18n("<qt>Too many filter actions in filter rule <b>%1</b>.</qt>", mPattern.name()));
     }
 
-    for ( int i=0 ; i < numActions ; ++i ) {
+    for (int i = 0 ; i < numActions ; ++i) {
         actName.sprintf("action-name-%d", i);
         argsName.sprintf("action-args-%d", i);
         // get the action description...
         FilterActionDesc *desc = FilterManager::filterActionDict()->value(
-                    config.readEntry( actName, QString() ) );
-        if ( desc ) {
+                                     config.readEntry(actName, QString()));
+        if (desc) {
             //...create an instance...
             FilterAction *fa = desc->create();
-            if ( fa ) {
+            if (fa) {
                 //...load it with it's parameter...
-                if ( interactive ) {
-                    const bool ret = fa->argsFromStringInteractive( config.readEntry( argsName, QString() ), name() );
-                    if ( ret )
+                if (interactive) {
+                    const bool ret = fa->argsFromStringInteractive(config.readEntry(argsName, QString()), name());
+                    if (ret) {
                         needUpdate = true;
+                    }
+                } else {
+                    fa->argsFromString(config.readEntry(argsName, QString()));
                 }
-                else
-                    fa->argsFromString( config.readEntry( argsName, QString() ) );
                 //...check if it's empty and...
-                if ( !fa->isEmpty() )
+                if (!fa->isEmpty())
                     //...append it if it's not and...
-                    mActions.append( fa );
-                else
+                {
+                    mActions.append(fa);
+                } else
                     //...delete is else.
+                {
                     delete fa;
+                }
             }
         } else
-            KMessageBox::information( 0 /* app-global modal dialog box */,
-                                      i18n("<qt>Unknown filter action <b>%1</b><br />in filter rule <b>%2</b>.<br />Ignoring it.</qt>",
-                                           config.readEntry( actName, QString() ),
-                                           mPattern.name() ) );
+            KMessageBox::information(0 /* app-global modal dialog box */,
+                                     i18n("<qt>Unknown filter action <b>%1</b><br />in filter rule <b>%2</b>.<br />Ignoring it.</qt>",
+                                          config.readEntry(actName, QString()),
+                                          mPattern.name()));
     }
 
-    mAccounts = config.readEntry( "accounts-set",QStringList() );
-    if ( !mAccounts.isEmpty() && interactive ) {
-        if ( !FilterActionMissingAccountDialog::allAccountExist( mAccounts ) ) {
+    mAccounts = config.readEntry("accounts-set", QStringList());
+    if (!mAccounts.isEmpty() && interactive) {
+        if (!FilterActionMissingAccountDialog::allAccountExist(mAccounts)) {
             FilterActionMissingAccountDialog *dlg = new FilterActionMissingAccountDialog(mAccounts, name());
-            if ( dlg->exec() ) {
+            if (dlg->exec()) {
                 mAccounts = dlg->selectedAccount();
                 needUpdate = true;
             }
@@ -469,12 +477,12 @@ void MailFilter::generateSieveScript(QStringList &requires, QString &code)
 {
     mPattern.generateSieveScript(requires, code);
 
-    QList<FilterAction*>::const_iterator it;
-    QList<FilterAction*>::const_iterator end( mActions.constEnd() );
+    QList<FilterAction *>::const_iterator it;
+    QList<FilterAction *>::const_iterator end(mActions.constEnd());
 
     code += QLatin1String(")\n{\n");
     bool firstAction = true;
-    for ( it = mActions.constBegin() ; it != end ; ++it) {
+    for (it = mActions.constBegin() ; it != end ; ++it) {
         //Add endline here.
         if (firstAction) {
             firstAction = false;
@@ -482,7 +490,7 @@ void MailFilter::generateSieveScript(QStringList &requires, QString &code)
             code += QLatin1Char('\n');
         }
         code += QLatin1String("    ") + (*it)->sieveCode();
-        Q_FOREACH(const QString &str, (*it)->sieveRequires()) {
+        Q_FOREACH (const QString &str, (*it)->sieveRequires()) {
             if (!requires.contains(str)) {
                 requires.append(str);
             }
@@ -491,87 +499,97 @@ void MailFilter::generateSieveScript(QStringList &requires, QString &code)
     code += QLatin1String("\n}\n");
 }
 
-void MailFilter::writeConfig(KConfigGroup & config, bool exportFilter) const
+void MailFilter::writeConfig(KConfigGroup &config, bool exportFilter) const
 {
     mPattern.writeConfig(config);
-    config.writeEntry( "identifier", mIdentifier );
+    config.writeEntry("identifier", mIdentifier);
 
     QStringList sets;
-    if ( bApplyOnInbound )
-        sets.append( QLatin1String("check-mail") );
-    if ( bApplyBeforeOutbound )
-        sets.append( QLatin1String("before-send-mail") );
-    if ( bApplyOnOutbound )
-        sets.append( QLatin1String("send-mail") );
-    if ( bApplyOnExplicit )
-        sets.append( QLatin1String("manual-filtering") );
-    config.writeEntry( "apply-on", sets );
+    if (bApplyOnInbound) {
+        sets.append(QLatin1String("check-mail"));
+    }
+    if (bApplyBeforeOutbound) {
+        sets.append(QLatin1String("before-send-mail"));
+    }
+    if (bApplyOnOutbound) {
+        sets.append(QLatin1String("send-mail"));
+    }
+    if (bApplyOnExplicit) {
+        sets.append(QLatin1String("manual-filtering"));
+    }
+    config.writeEntry("apply-on", sets);
 
-    config.writeEntry( "StopProcessingHere", bStopProcessingHere );
-    config.writeEntry( "ConfigureShortcut", bConfigureShortcut );
-    if ( !mShortcut.isEmpty() )
-        config.writeEntry( "Shortcut", mShortcut.toString() );
-    config.writeEntry( "ConfigureToolbar", bConfigureToolbar );
-    config.writeEntry( "ToolbarName", mToolbarName );
-    if ( !mIcon.isEmpty() )
-        config.writeEntry( "Icon", mIcon );
-    config.writeEntry( "AutomaticName", bAutoNaming );
-    config.writeEntry( "Applicability", (int)mApplicability );
-    config.writeEntry( "Enabled", bEnabled );
+    config.writeEntry("StopProcessingHere", bStopProcessingHere);
+    config.writeEntry("ConfigureShortcut", bConfigureShortcut);
+    if (!mShortcut.isEmpty()) {
+        config.writeEntry("Shortcut", mShortcut.toString());
+    }
+    config.writeEntry("ConfigureToolbar", bConfigureToolbar);
+    config.writeEntry("ToolbarName", mToolbarName);
+    if (!mIcon.isEmpty()) {
+        config.writeEntry("Icon", mIcon);
+    }
+    config.writeEntry("AutomaticName", bAutoNaming);
+    config.writeEntry("Applicability", (int)mApplicability);
+    config.writeEntry("Enabled", bEnabled);
     QString key;
     int i;
 
-    QList<FilterAction*>::const_iterator it;
-    QList<FilterAction*>::const_iterator end( mActions.constEnd() );
+    QList<FilterAction *>::const_iterator it;
+    QList<FilterAction *>::const_iterator end(mActions.constEnd());
 
-    for ( i=0, it = mActions.constBegin() ; it != end ; ++it, ++i ) {
-        config.writeEntry( key.sprintf("action-name-%d", i),
-                           (*it)->name() );
-        config.writeEntry( key.sprintf("action-args-%d", i),
-                           exportFilter ? ( *it )->argsAsStringReal() :  (*it)->argsAsString() );
+    for (i = 0, it = mActions.constBegin() ; it != end ; ++it, ++i) {
+        config.writeEntry(key.sprintf("action-name-%d", i),
+                          (*it)->name());
+        config.writeEntry(key.sprintf("action-args-%d", i),
+                          exportFilter ? (*it)->argsAsStringReal() : (*it)->argsAsString());
     }
-    config.writeEntry( "actions", i );
-    if ( !mAccounts.isEmpty() )
-        config.writeEntry( "accounts-set", mAccounts );
+    config.writeEntry("actions", i);
+    if (!mAccounts.isEmpty()) {
+        config.writeEntry("accounts-set", mAccounts);
+    }
 }
 
 void MailFilter::purify()
 {
     mPattern.purify();
 
-    QListIterator<FilterAction*> it( mActions );
+    QListIterator<FilterAction *> it(mActions);
     it.toBack();
-    while ( it.hasPrevious() ) {
+    while (it.hasPrevious()) {
         FilterAction *action = it.previous();
-        if ( action->isEmpty() )
-            mActions.removeAll ( action );
+        if (action->isEmpty()) {
+            mActions.removeAll(action);
+        }
     }
 
-    if ( !Akonadi::AgentManager::self()->instances().isEmpty() ) { // safety test to ensure that Akonadi system is ready
+    if (!Akonadi::AgentManager::self()->instances().isEmpty()) {   // safety test to ensure that Akonadi system is ready
 
         // Remove invalid accounts from mAccounts - just to be tidy
         QStringList::Iterator it2 = mAccounts.begin();
-        while ( it2 != mAccounts.end() ) {
-            if ( !Akonadi::AgentManager::self()->instance( *it2 ).isValid() )
-                it2 = mAccounts.erase( it2 );
-            else
+        while (it2 != mAccounts.end()) {
+            if (!Akonadi::AgentManager::self()->instance(*it2).isValid()) {
+                it2 = mAccounts.erase(it2);
+            } else {
                 ++it2;
+            }
         }
     }
 }
 
 bool MailFilter::isEmpty() const
 {
-    return ( mPattern.isEmpty() && mActions.isEmpty() ) ||
-            ( ( applicability() == Checked ) && mAccounts.isEmpty() );
+    return (mPattern.isEmpty() && mActions.isEmpty()) ||
+           ((applicability() == Checked) && mAccounts.isEmpty());
 }
 
 QString MailFilter::toolbarName() const
 {
-    if ( mToolbarName.isEmpty() )
+    if (mToolbarName.isEmpty()) {
         return name();
-    else
+    } else {
         return mToolbarName;
+    }
 }
 
 #ifndef NDEBUG
@@ -584,9 +602,9 @@ const QString MailFilter::asString() const
 
     result += QString("Filter is %1\n").arg(bEnabled ? QLatin1String("enabled") : QLatin1String("disabled"));
 
-    QList<FilterAction*>::const_iterator it( mActions.constBegin() );
-    QList<FilterAction*>::const_iterator end( mActions.constEnd() );
-    for ( ; it != end ; ++it ) {
+    QList<FilterAction *>::const_iterator it(mActions.constBegin());
+    QList<FilterAction *>::const_iterator end(mActions.constEnd());
+    for (; it != end ; ++it) {
         result += "    action: ";
         result += (*it)->label();
         result += ' ';
@@ -594,48 +612,53 @@ const QString MailFilter::asString() const
         result += '\n';
     }
     result += "This filter belongs to the following sets:";
-    if ( bApplyOnInbound )
+    if (bApplyOnInbound) {
         result += " Inbound";
-    if ( bApplyBeforeOutbound )
+    }
+    if (bApplyBeforeOutbound) {
         result += " before-Outbound";
-    if ( bApplyOnOutbound )
+    }
+    if (bApplyOnOutbound) {
         result += " Outbound";
-    if ( bApplyOnExplicit )
+    }
+    if (bApplyOnExplicit) {
         result += " Explicit";
+    }
     result += '\n';
-    if ( bApplyOnInbound && mApplicability == All ) {
+    if (bApplyOnInbound && mApplicability == All) {
         result += "This filter applies to all accounts.\n";
-    } else if ( bApplyOnInbound && mApplicability == ButImap ) {
+    } else if (bApplyOnInbound && mApplicability == ButImap) {
         result += "This filter applies to all but IMAP accounts.\n";
-    } else if ( bApplyOnInbound ) {
+    } else if (bApplyOnInbound) {
         QStringList::ConstIterator it2;
         result += "This filter applies to the following accounts:";
-        if ( mAccounts.isEmpty() )
+        if (mAccounts.isEmpty()) {
             result += " None";
-        else {
-            for ( it2 = mAccounts.begin() ; it2 != mAccounts.end() ; ++it2 ) {
-                if ( Akonadi::AgentManager::self()->instance( *it2 ).isValid() ) {
-                    result += ' ' + Akonadi::AgentManager::self()->instance( *it2 ).name();
+        } else {
+            for (it2 = mAccounts.begin() ; it2 != mAccounts.end() ; ++it2) {
+                if (Akonadi::AgentManager::self()->instance(*it2).isValid()) {
+                    result += ' ' + Akonadi::AgentManager::self()->instance(*it2).name();
                 }
             }
         }
         result += '\n';
     }
-    if ( bStopProcessingHere )
+    if (bStopProcessingHere) {
         result += "If it matches, processing stops at this filter.\n";
+    }
 
     return result;
 }
 #endif
 
-QDataStream& MailCommon::operator<<( QDataStream &stream, const MailCommon::MailFilter &filter )
+QDataStream &MailCommon::operator<<(QDataStream &stream, const MailCommon::MailFilter &filter)
 {
     stream << filter.mIdentifier;
     stream << filter.mPattern.serialize();
 
     stream << filter.mActions.count();
-    QListIterator<FilterAction*> it( filter.mActions );
-    while ( it.hasNext() ) {
+    QListIterator<FilterAction *> it(filter.mActions);
+    while (it.hasNext()) {
         const FilterAction *action = it.next();
         stream << action->name();
         stream << action->argsAsString();
@@ -659,7 +682,7 @@ QDataStream& MailCommon::operator<<( QDataStream &stream, const MailCommon::Mail
     return stream;
 }
 
-QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter &filter )
+QDataStream &MailCommon::operator>>(QDataStream &stream, MailCommon::MailFilter &filter)
 {
     QByteArray pattern;
     int numberOfActions;
@@ -689,12 +712,12 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
         stream >> actionName;
         stream >> actionArguments;
 
-        FilterActionDesc *description = FilterManager::filterActionDict()->value( actionName );
-        if ( description ) {
+        FilterActionDesc *description = FilterManager::filterActionDict()->value(actionName);
+        if (description) {
             FilterAction *filterAction = description->create();
-            if ( filterAction ) {
-                filterAction->argsFromString( actionArguments );
-                filter.mActions.append( filterAction );
+            if (filterAction) {
+                filterAction->argsFromString(actionArguments);
+                filter.mActions.append(filterAction);
             }
         }
     }
@@ -725,18 +748,17 @@ QDataStream& MailCommon::operator>>( QDataStream &stream, MailCommon::MailFilter
     filter.bConfigureToolbar = bConfigureToolbar;
     filter.bAutoNaming = bAutoNaming;
     filter.bEnabled = bEnabled;
-    filter.mApplicability = static_cast<MailCommon::MailFilter::AccountType>( applicability );
+    filter.mApplicability = static_cast<MailCommon::MailFilter::AccountType>(applicability);
 
     return stream;
 }
-
 
 bool MailFilter::isEnabled() const
 {
     return bEnabled;
 }
 
-void MailFilter::setEnabled( bool enabled )
+void MailFilter::setEnabled(bool enabled)
 {
     bEnabled = enabled;
 }

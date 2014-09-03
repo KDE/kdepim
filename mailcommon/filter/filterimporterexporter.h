@@ -68,7 +68,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit FilterImporterExporter( QWidget *parent = 0 );
+    explicit FilterImporterExporter(QWidget *parent = 0);
 
     /**
      * Destroys the filter importer/exporter.
@@ -80,35 +80,35 @@ public:
      * is asked from the user. The list to export is also
      * presented for confirmation/selection.
      */
-    void exportFilters(const QList<MailFilter*> &filters , const KUrl &fileName = KUrl(), bool saveAll = false);
+    void exportFilters(const QList<MailFilter *> &filters , const KUrl &fileName = KUrl(), bool saveAll = false);
 
     /**
      * Imports filters. Ask the user where to import them from
      * and which filters to import.
      */
-    QList<MailFilter*> importFilters(
-            bool &canceled,
-            FilterImporterExporter::FilterType type =  FilterImporterExporter::KMailFilter, const QString& filename = QString() );
+    QList<MailFilter *> importFilters(
+        bool &canceled,
+        FilterImporterExporter::FilterType type =  FilterImporterExporter::KMailFilter, const QString &filename = QString());
 
     /**
      * Writes the given list of @p filters to the given @p config file.
      */
     static void writeFiltersToConfig(
-            const QList<MailFilter*> &filters,
-            KSharedConfig::Ptr config,
-            bool exportFilter = false );
+        const QList<MailFilter *> &filters,
+        KSharedConfig::Ptr config,
+        bool exportFilter = false);
 
     /**
      * Reads a list of filters from the given @p config file.
      * Return list of empty filter
      */
-    static QList<MailFilter*> readFiltersFromConfig(
-            const KSharedConfig::Ptr config,
-            QStringList &emptyFilter );
+    static QList<MailFilter *> readFiltersFromConfig(
+        const KSharedConfig::Ptr config,
+        QStringList &emptyFilter);
 
 private:
     //@cond PRIVATE
-    Q_DISABLE_COPY( FilterImporterExporter )
+    Q_DISABLE_COPY(FilterImporterExporter)
 
     class Private;
     Private *const d;

@@ -46,10 +46,10 @@ public:
     QAction *iconMode;
 };
 
-FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent )
-    : Akonadi::EntityListView( xmlGuiClient, parent ), d( new Private )
+FavoriteCollectionWidget::FavoriteCollectionWidget(KXMLGUIClient *xmlGuiClient, QWidget *parent)
+    : Akonadi::EntityListView(xmlGuiClient, parent), d(new Private)
 {
-    setFocusPolicy( Qt::NoFocus );
+    setFocusPolicy(Qt::NoFocus);
 
     connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &FavoriteCollectionWidget::slotGeneralFontChanged);
     connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &FavoriteCollectionWidget::slotGeneralPaletteChanged);
@@ -66,14 +66,14 @@ FavoriteCollectionWidget::~FavoriteCollectionWidget()
 
 void FavoriteCollectionWidget::updateMode()
 {
-    switch(viewMode()) {
+    switch (viewMode()) {
     case ListMode:
-        d->listMode->setChecked( true );
-        d->iconMode->setChecked( false );
+        d->listMode->setChecked(true);
+        d->iconMode->setChecked(false);
         break;
     case IconMode:
-        d->listMode->setChecked( false );
-        d->iconMode->setChecked( true );
+        d->listMode->setChecked(false);
+        d->iconMode->setChecked(true);
         break;
     }
 }
@@ -85,65 +85,65 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
 
     static int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
 
-    QActionGroup *grp = new QActionGroup( iconSizeMenu );
-    const int nbElement( (int)( sizeof( icon_sizes ) / sizeof( int ) ) );
+    QActionGroup *grp = new QActionGroup(iconSizeMenu);
+    const int nbElement((int)(sizeof(icon_sizes) / sizeof(int)));
     QAction *act = 0;
-    for ( int i = 0; i < nbElement; ++i ) {
-        act = new QAction(QString::fromLatin1( "%1x%2" ).arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ), iconSizeMenu);
-        iconSizeMenu->addAction( act );
-        act->setCheckable( true );
-        grp->addAction( act );
-        if ( iconSize().width() == icon_sizes[ i ] ) {
-            act->setChecked( true );
+    for (int i = 0; i < nbElement; ++i) {
+        act = new QAction(QString::fromLatin1("%1x%2").arg(icon_sizes[ i ]).arg(icon_sizes[ i ]), iconSizeMenu);
+        iconSizeMenu->addAction(act);
+        act->setCheckable(true);
+        grp->addAction(act);
+        if (iconSize().width() == icon_sizes[ i ]) {
+            act->setChecked(true);
         }
-        act->setData( QVariant( icon_sizes[ i ] ) );
-        connect( act, SIGNAL(triggered(bool)),
-                 SLOT(slotChangeIconSize(bool)) );
+        act->setData(QVariant(icon_sizes[ i ]));
+        connect(act, SIGNAL(triggered(bool)),
+                SLOT(slotChangeIconSize(bool)));
     }
 
     KActionMenu *modeFavoriteMenu = new KActionMenu(i18n("Mode"), this);
     ac->addAction(QLatin1String("favorite_mode"), modeFavoriteMenu);
 
-    grp = new QActionGroup( modeFavoriteMenu );
+    grp = new QActionGroup(modeFavoriteMenu);
     d->listMode = new QAction(i18n("List Mode"), modeFavoriteMenu);
-    modeFavoriteMenu->addAction( d->listMode );
-    d->listMode->setCheckable( true );
-    grp->addAction( d->listMode );
-    if ( viewMode() ==  ListMode) {
-        d->listMode->setChecked( true );
+    modeFavoriteMenu->addAction(d->listMode);
+    d->listMode->setCheckable(true);
+    grp->addAction(d->listMode);
+    if (viewMode() ==  ListMode) {
+        d->listMode->setChecked(true);
     }
-    d->listMode->setData( QVariant( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::ListMode ) );
-    connect( d->listMode, SIGNAL(triggered(bool)),
-             SLOT(slotChangeMode(bool)) );
+    d->listMode->setData(QVariant(MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::ListMode));
+    connect(d->listMode, SIGNAL(triggered(bool)),
+            SLOT(slotChangeMode(bool)));
 
     d->iconMode = new QAction(i18n("Icon Mode"), modeFavoriteMenu);
-    modeFavoriteMenu->addAction( d->iconMode );
-    grp->addAction( d->iconMode );
-    d->iconMode->setCheckable( true );
-    if ( viewMode() == IconMode ) {
-        d->iconMode->setChecked( true );
+    modeFavoriteMenu->addAction(d->iconMode);
+    grp->addAction(d->iconMode);
+    d->iconMode->setCheckable(true);
+    if (viewMode() == IconMode) {
+        d->iconMode->setChecked(true);
     }
-    d->iconMode->setData( QVariant( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode ) );
-    connect( d->iconMode, SIGNAL(triggered(bool)),
-             SLOT(slotChangeMode(bool)) );
+    d->iconMode->setData(QVariant(MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode));
+    connect(d->iconMode, SIGNAL(triggered(bool)),
+            SLOT(slotChangeMode(bool)));
 }
 
 void FavoriteCollectionWidget::slotChangeMode(bool)
 {
-    QAction *act = dynamic_cast< QAction * >( sender() );
-    if ( !act ) {
+    QAction *act = dynamic_cast< QAction * >(sender());
+    if (!act) {
         return;
     }
 
     QVariant data = act->data();
 
     bool ok;
-    const int mode = data.toInt( &ok );
-    if ( !ok ) {
+    const int mode = data.toInt(&ok);
+    if (!ok) {
         return;
     }
 
-    switch(mode) {
+    switch (mode) {
     case MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode:
         changeViewMode(IconMode);
         break;
@@ -163,26 +163,26 @@ void FavoriteCollectionWidget::changeViewMode(QListView::ViewMode mode)
     setAcceptDrops(true);
 }
 
-void FavoriteCollectionWidget::slotChangeIconSize(bool )
+void FavoriteCollectionWidget::slotChangeIconSize(bool)
 {
-    QAction *act = dynamic_cast< QAction * >( sender() );
-    if ( !act ) {
+    QAction *act = dynamic_cast< QAction * >(sender());
+    if (!act) {
         return;
     }
 
     QVariant data = act->data();
 
     bool ok;
-    const int size = data.toInt( &ok );
-    if ( !ok ) {
+    const int size = data.toInt(&ok);
+    if (!ok) {
         return;
     }
 
-    const QSize newIconSize( QSize( size, size ) );
-    if ( newIconSize == iconSize() ) {
+    const QSize newIconSize(QSize(size, size));
+    if (newIconSize == iconSize()) {
         return;
     }
-    setIconSize( newIconSize );
+    setIconSize(newIconSize);
     MailCommon::MailCommonSettings::self()->setIconSize(iconSize().width());
     MailCommon::MailCommonSettings::self()->save();
 }
@@ -191,52 +191,52 @@ void FavoriteCollectionWidget::slotGeneralPaletteChanged()
 {
     const QPalette palette = viewport()->palette();
     QColor color = palette.text().color();
-    color.setAlpha( 128 );
+    color.setAlpha(128);
     d->textColor = color;
 }
 
 void FavoriteCollectionWidget::slotGeneralFontChanged()
 {
     // Custom/System font support
-    if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-        setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
+    if (MessageCore::GlobalSettings::self()->useDefaultFonts()) {
+        setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
     }
 }
 
 void FavoriteCollectionWidget::readConfig()
 {
     // Custom/System font support
-    if (!MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-        KConfigGroup fontConfig( KernelIf->config(), "Fonts" );
-        setFont( fontConfig.readEntry( "folder-font", QFontDatabase::systemFont(QFontDatabase::GeneralFont) ) );
+    if (!MessageCore::GlobalSettings::self()->useDefaultFonts()) {
+        KConfigGroup fontConfig(KernelIf->config(), "Fonts");
+        setFont(fontConfig.readEntry("folder-font", QFontDatabase::systemFont(QFontDatabase::GeneralFont)));
     } else {
-        setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
+        setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
     }
 
     int iIconSize = MailCommon::MailCommonSettings::self()->iconSize();
-    if ( iIconSize < 16 || iIconSize > 32 ) {
+    if (iIconSize < 16 || iIconSize > 32) {
         iIconSize = 22;
     }
-    setIconSize( QSize( iIconSize, iIconSize ) );
+    setIconSize(QSize(iIconSize, iIconSize));
 }
 
-void FavoriteCollectionWidget::paintEvent( QPaintEvent *event )
+void FavoriteCollectionWidget::paintEvent(QPaintEvent *event)
 {
-    if ( !model() || model()->rowCount() == 0 ) {
-        QPainter p( viewport() );
+    if (!model() || model()->rowCount() == 0) {
+        QPainter p(viewport());
 
         QFont font = p.font();
-        font.setItalic( true );
-        p.setFont( font );
+        font.setItalic(true);
+        p.setFont(font);
 
         if (!d->textColor.isValid()) {
             slotGeneralPaletteChanged();
         }
-        p.setPen( d->textColor );
+        p.setPen(d->textColor);
 
-        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n( "Drop your favorite folders here..." ) );
+        p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, i18n("Drop your favorite folders here..."));
     } else {
-        Akonadi::EntityListView::paintEvent( event );
+        Akonadi::EntityListView::paintEvent(event);
     }
 }
 

@@ -29,11 +29,13 @@ class QCheckBox;
 
 template <typename T> class QSharedPointer;
 
-namespace KIdentityManagement {
+namespace KIdentityManagement
+{
 class IdentityCombo;
 }
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FolderCollection;
 
@@ -42,11 +44,11 @@ class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionProper
     Q_OBJECT
 
 public:
-    explicit CollectionGeneralPage( QWidget *parent = 0 );
+    explicit CollectionGeneralPage(QWidget *parent = 0);
     ~CollectionGeneralPage();
 
-    void load( const Akonadi::Collection &collection );
-    void save( Akonadi::Collection &collection );
+    void load(const Akonadi::Collection &collection);
+    void save(Akonadi::Collection &collection);
 
     enum FolderContentsType {
         ContentsTypeMail = 0,
@@ -68,12 +70,12 @@ public:
     };
 
 protected:
-    void init( const Akonadi::Collection & );
+    void init(const Akonadi::Collection &);
 
 private Q_SLOTS:
     void slotIdentityCheckboxChanged();
-    void slotFolderContentsSelectionChanged( int );
-    void slotNameChanged( const QString &name );
+    void slotFolderContentsSelectionChanged(int);
+    void slotNameChanged(const QString &name);
 
 private:
     QString mColorName;
@@ -91,7 +93,7 @@ private:
     bool mIsResourceFolder;
 };
 
-AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CollectionGeneralPageFactory, CollectionGeneralPage )
+AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPageFactory, CollectionGeneralPage)
 
 }
 

@@ -28,7 +28,8 @@
 #include <QSharedPointer>
 #include <AkonadiCore/tag.h>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 // Our own copy of the tag data.
 // Useful in the config dialog, because the user might cancel his changes,
@@ -48,20 +49,20 @@ public:
     typedef QFlags<SaveFlag> SaveFlags;
 
     // Returns true if two tags are equal
-    bool operator==( const Tag &other ) const;
+    bool operator==(const Tag &other) const;
 
-    bool operator!=( const Tag &other ) const;
+    bool operator!=(const Tag &other) const;
 
-    static Ptr createDefaultTag( const QString &name );
+    static Ptr createDefaultTag(const QString &name);
     // expects a tag with all attributes fetched
-    static Ptr fromAkonadi( const Akonadi::Tag &tag );
+    static Ptr fromAkonadi(const Akonadi::Tag &tag);
 
-    Akonadi::Tag saveToAkonadi( SaveFlags saveFlags ) const;
+    Akonadi::Tag saveToAkonadi(SaveFlags saveFlags) const;
 
     // Compare, based on priority
-    static bool compare( Ptr &tag1, Ptr &tag2 );
+    static bool compare(Ptr &tag1, Ptr &tag2);
     // Compare, based on name
-    static bool compareName( Ptr &tag1, Ptr &tag2 );
+    static bool compareName(Ptr &tag1, Ptr &tag2);
 
     qint64 id() const;
     QString name() const;
@@ -80,10 +81,10 @@ public:
     int priority;
 
 private:
-    Tag() 
-       : inToolbar(false),
-         isImmutable(false),
-         priority(0)
+    Tag()
+        : inToolbar(false),
+          isImmutable(false),
+          priority(0)
     {
     }
     Akonadi::Tag mTag;

@@ -22,7 +22,8 @@
 
 #include "filteractionwithstringlist.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionAddTag - append tag to message
@@ -32,24 +33,23 @@ class FilterActionAddTag: public FilterAction
 {
     Q_OBJECT
 public:
-    explicit FilterActionAddTag( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionAddTag(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
 
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 
     bool isEmpty() const;
 
-    void argsFromString( const QString &argsStr );
+    void argsFromString(const QString &argsStr);
     QString argsAsString() const;
     QString displayString() const;
-    bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
+    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
 
-    QWidget *createParamWidget( QWidget *parent ) const;
-    void applyParamWidgetValue( QWidget *paramWidget );
-    void setParamWidgetValue( QWidget *paramWidget ) const;
-    void clearParamWidget( QWidget *paramWidget ) const;
-
+    QWidget *createParamWidget(QWidget *parent) const;
+    void applyParamWidgetValue(QWidget *paramWidget);
+    void setParamWidgetValue(QWidget *paramWidget) const;
+    void clearParamWidget(QWidget *paramWidget) const;
 
 private Q_SLOTS:
     void slotTagListingFinished();

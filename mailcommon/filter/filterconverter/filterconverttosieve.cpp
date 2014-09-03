@@ -23,7 +23,7 @@
 
 using namespace MailCommon;
 
-FilterConvertToSieve::FilterConvertToSieve(const QList<MailFilter*> &filters)
+FilterConvertToSieve::FilterConvertToSieve(const QList<MailFilter *> &filters)
     : mListFilters(filters)
 {
 }
@@ -36,7 +36,7 @@ void FilterConvertToSieve::convert()
 {
     QStringList requires;
     QString code;
-    Q_FOREACH(MailFilter *filter, mListFilters) {
+    Q_FOREACH (MailFilter *filter, mListFilters) {
         filter->generateSieveScript(requires, code);
         code += QLatin1Char('\n');
     }

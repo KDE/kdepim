@@ -28,7 +28,8 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class AttachmentSelectionDialog : public KDialog
 {
@@ -41,26 +42,26 @@ public:
         AttachWithoutAttachments
     };
 
-    explicit AttachmentSelectionDialog( QWidget *parent = 0 )
-        : KDialog( parent ),
-          mButtonCode( KDialog::Cancel )
+    explicit AttachmentSelectionDialog(QWidget *parent = 0)
+        : KDialog(parent),
+          mButtonCode(KDialog::Cancel)
     {
-        setButtons( User1 | User2 | User3 | Cancel );
-        setWindowTitle( i18n( "Create Todo/Reminder" ) );
-        setButtonText( User1, i18n( "Attach inline without attachments" ) );
-        setButtonText( User2, i18n( "Attach &inline" ) );
-        setButtonText( User3, i18n( "Attach as &link" ) );
+        setButtons(User1 | User2 | User3 | Cancel);
+        setWindowTitle(i18n("Create Todo/Reminder"));
+        setButtonText(User1, i18n("Attach inline without attachments"));
+        setButtonText(User2, i18n("Attach &inline"));
+        setButtonText(User3, i18n("Attach as &link"));
         QVBoxLayout *lay = new QVBoxLayout;
         QWidget *w = new QWidget;
         w->setLayout(lay);
-        lay->addWidget(new QLabel( i18n( "How should the email be attached?" ) ));
+        lay->addWidget(new QLabel(i18n("How should the email be attached?")));
         lay->addWidget(new KSeparator);
-        setMainWidget( w );
+        setMainWidget(w);
     }
 
     Type attachmentType() const
     {
-        switch ( mButtonCode ) {
+        switch (mButtonCode) {
         case User1:
             return AttachWithoutAttachments;
         case User2:
@@ -72,15 +73,15 @@ public:
     }
 
 protected Q_SLOTS:
-    void slotButtonClicked( int button )
+    void slotButtonClicked(int button)
     {
-        mButtonCode = static_cast<KDialog::ButtonCode>( button );
+        mButtonCode = static_cast<KDialog::ButtonCode>(button);
 
-        if ( mButtonCode == User1 || mButtonCode == User2 || mButtonCode == User3 ) {
+        if (mButtonCode == User1 || mButtonCode == User2 || mButtonCode == User3) {
             accept();
         }
 
-        KDialog::slotButtonClicked( button );
+        KDialog::slotButtonClicked(button);
     }
 
 private:

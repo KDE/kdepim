@@ -40,193 +40,198 @@
 using namespace Akonadi;
 using namespace MailCommon;
 
-CollectionExpiryPage::CollectionExpiryPage( QWidget *parent )
-    : CollectionPropertiesPage( parent )
+CollectionExpiryPage::CollectionExpiryPage(QWidget *parent)
+    : CollectionPropertiesPage(parent)
 {
-    setObjectName( QLatin1String( "MailCommon::CollectionExpiryPage" ) );
-    setPageTitle( i18nc( "@title:tab Expiry settings for a folder.", "Expiry" ) );
+    setObjectName(QLatin1String("MailCommon::CollectionExpiryPage"));
+    setPageTitle(i18nc("@title:tab Expiry settings for a folder.", "Expiry"));
 }
 
 CollectionExpiryPage::~CollectionExpiryPage()
 {
 }
 
-bool CollectionExpiryPage::canHandle( const Akonadi::Collection &col ) const
+bool CollectionExpiryPage::canHandle(const Akonadi::Collection &col) const
 {
-    QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( col, false );
-    return ( fd->canDeleteMessages() && !fd->isStructural() );
+    QSharedPointer<FolderCollection> fd = FolderCollection::forCollection(col, false);
+    return (fd->canDeleteMessages() && !fd->isStructural());
 }
 
 void CollectionExpiryPage::init()
 {
-    QVBoxLayout *globalVBox = new QVBoxLayout( this );
+    QVBoxLayout *globalVBox = new QVBoxLayout(this);
     //PORT QT5 globalVBox->setSpacing( KDialog::spacingHint() );
 
     QGridLayout *daysBox = new QGridLayout;
 
     expireReadMailCB = new QCheckBox;
-    expireReadMailCB->setText( i18n( "Expire read messages after" ) );
-    connect( expireReadMailCB, SIGNAL(toggled(bool)),
-             this, SLOT(slotUpdateControls()) );
-    daysBox->addWidget( expireReadMailCB, 0, 0, Qt::AlignLeft );
+    expireReadMailCB->setText(i18n("Expire read messages after"));
+    connect(expireReadMailCB, SIGNAL(toggled(bool)),
+            this, SLOT(slotUpdateControls()));
+    daysBox->addWidget(expireReadMailCB, 0, 0, Qt::AlignLeft);
 
     expireReadMailSB = new KPluralHandlingSpinBox;
-    expireReadMailSB->setMaximum( 999999 );
-    expireReadMailSB->setValue( 30 );
-    expireReadMailSB->setSuffix( ki18ncp("Expire messages after %1", " day", " days" ) );
-    daysBox->addWidget( expireReadMailSB, 0, 1 );
+    expireReadMailSB->setMaximum(999999);
+    expireReadMailSB->setValue(30);
+    expireReadMailSB->setSuffix(ki18ncp("Expire messages after %1", " day", " days"));
+    daysBox->addWidget(expireReadMailSB, 0, 1);
     connect(expireReadMailSB, static_cast<void (KPluralHandlingSpinBox::*)(int)>(&KPluralHandlingSpinBox::valueChanged), this, &CollectionExpiryPage::slotChanged);
 
     expireUnreadMailCB = new QCheckBox;
-    expireUnreadMailCB->setText( i18n( "Expire unread messages after" ) );
-    connect( expireUnreadMailCB, SIGNAL(toggled(bool)),
-             this, SLOT(slotUpdateControls()) );
-    daysBox->addWidget( expireUnreadMailCB, 1, 0, Qt::AlignLeft );
+    expireUnreadMailCB->setText(i18n("Expire unread messages after"));
+    connect(expireUnreadMailCB, SIGNAL(toggled(bool)),
+            this, SLOT(slotUpdateControls()));
+    daysBox->addWidget(expireUnreadMailCB, 1, 0, Qt::AlignLeft);
 
     expireUnreadMailSB = new KPluralHandlingSpinBox;
-    expireUnreadMailSB->setMaximum( 99999 );
-    expireUnreadMailSB->setValue( 30 );
-    expireUnreadMailSB->setSuffix( ki18ncp("Expire messages after %1", " day", " days" ) );
-    daysBox->addWidget( expireUnreadMailSB, 1, 1 );
+    expireUnreadMailSB->setMaximum(99999);
+    expireUnreadMailSB->setValue(30);
+    expireUnreadMailSB->setSuffix(ki18ncp("Expire messages after %1", " day", " days"));
+    daysBox->addWidget(expireUnreadMailSB, 1, 1);
     connect(expireUnreadMailSB, static_cast<void (KPluralHandlingSpinBox::*)(int)>(&KPluralHandlingSpinBox::valueChanged), this, &CollectionExpiryPage::slotChanged);
 
-    daysBox->setColumnStretch( 3, 1 );
-    globalVBox->addLayout( daysBox );
+    daysBox->setColumnStretch(3, 1);
+    globalVBox->addLayout(daysBox);
 
-    globalVBox->addSpacing( 30 );
+    globalVBox->addSpacing(30);
 
     QGroupBox *actionsGroup = new QGroupBox;
     actionsGroup->hide(); // for mutual exclusion of the radio buttons
 
     QHBoxLayout *moveToHBox = new QHBoxLayout();
-    moveToHBox->setMargin( 0 );
-    moveToHBox->setSpacing( 6 );
+    moveToHBox->setMargin(0);
+    moveToHBox->setSpacing(6);
 
-    moveToRB = new QRadioButton( actionsGroup );
-    moveToRB->setText( i18n( "Move expired messages to:" ) );
+    moveToRB = new QRadioButton(actionsGroup);
+    moveToRB->setText(i18n("Move expired messages to:"));
     connect(moveToRB, &QRadioButton::toggled, this, &CollectionExpiryPage::slotUpdateControls);
-    moveToHBox->addWidget( moveToRB );
+    moveToHBox->addWidget(moveToRB);
 
-    folderSelector = new FolderRequester( this );
-    folderSelector->setMustBeReadWrite( true );
-    folderSelector->setShowOutbox( false );
-    moveToHBox->addWidget( folderSelector );
-    globalVBox->addLayout( moveToHBox );
+    folderSelector = new FolderRequester(this);
+    folderSelector->setMustBeReadWrite(true);
+    folderSelector->setShowOutbox(false);
+    moveToHBox->addWidget(folderSelector);
+    globalVBox->addLayout(moveToHBox);
     connect(folderSelector, &FolderRequester::folderChanged, this, &CollectionExpiryPage::slotChanged);
 
-    deletePermanentlyRB = new QRadioButton( actionsGroup );
-    deletePermanentlyRB->setText( i18n( "Delete expired messages permanently" ) );
+    deletePermanentlyRB = new QRadioButton(actionsGroup);
+    deletePermanentlyRB->setText(i18n("Delete expired messages permanently"));
     connect(deletePermanentlyRB, &QRadioButton::toggled, this, &CollectionExpiryPage::slotUpdateControls);
 
-    globalVBox->addWidget( deletePermanentlyRB );
+    globalVBox->addWidget(deletePermanentlyRB);
 
-    globalVBox->addSpacing( 30 );
+    globalVBox->addSpacing(30);
 
-    expireNowPB = new QPushButton( i18n( "Save Settings and Expire Now" ), this );
+    expireNowPB = new QPushButton(i18n("Save Settings and Expire Now"), this);
     connect(expireNowPB, &QPushButton::clicked, this, &CollectionExpiryPage::slotSaveAndExpire);
-    globalVBox->addWidget( expireNowPB, 0, Qt::AlignRight );
+    globalVBox->addWidget(expireNowPB, 0, Qt::AlignRight);
 
-    globalVBox->addStretch( 100 ); // eat all superfluous space
+    globalVBox->addStretch(100);   // eat all superfluous space
 }
 
-void CollectionExpiryPage::load( const Akonadi::Collection &collection )
+void CollectionExpiryPage::load(const Akonadi::Collection &collection)
 {
     mCollection = collection;
     init();
 
     bool mustDeleteExpirationAttribute = false;
-    MailCommon::ExpireCollectionAttribute *attr = MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute( mCollection, mustDeleteExpirationAttribute );
+    MailCommon::ExpireCollectionAttribute *attr = MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(mCollection, mustDeleteExpirationAttribute);
 
     // Load the values from the folder
     bool expiryGloballyOn = attr->isAutoExpire();
     int daysToExpireRead, daysToExpireUnread;
-    attr->daysToExpire( daysToExpireUnread, daysToExpireRead);
+    attr->daysToExpire(daysToExpireUnread, daysToExpireRead);
 
-    if ( expiryGloballyOn
-         && attr->readExpireUnits() != ExpireCollectionAttribute::ExpireNever
-         && daysToExpireRead >= 0 ) {
-        expireReadMailCB->setChecked( true );
-        expireReadMailSB->setValue( daysToExpireRead );
+    if (expiryGloballyOn
+            && attr->readExpireUnits() != ExpireCollectionAttribute::ExpireNever
+            && daysToExpireRead >= 0) {
+        expireReadMailCB->setChecked(true);
+        expireReadMailSB->setValue(daysToExpireRead);
     }
-    if ( expiryGloballyOn
-         && attr->unreadExpireUnits() != ExpireCollectionAttribute::ExpireNever
-         && daysToExpireUnread >= 0 ) {
-        expireUnreadMailCB->setChecked( true );
-        expireUnreadMailSB->setValue( daysToExpireUnread );
+    if (expiryGloballyOn
+            && attr->unreadExpireUnits() != ExpireCollectionAttribute::ExpireNever
+            && daysToExpireUnread >= 0) {
+        expireUnreadMailCB->setChecked(true);
+        expireUnreadMailSB->setValue(daysToExpireUnread);
     }
 
-    if ( attr->expireAction() == ExpireCollectionAttribute::ExpireDelete )
-        deletePermanentlyRB->setChecked( true );
-    else
-        moveToRB->setChecked( true );
+    if (attr->expireAction() == ExpireCollectionAttribute::ExpireDelete) {
+        deletePermanentlyRB->setChecked(true);
+    } else {
+        moveToRB->setChecked(true);
+    }
 
     Akonadi::Collection::Id destFolderID = attr->expireToFolderId();
-    if ( destFolderID > 0 ) {
-        Akonadi::Collection destFolder = Kernel::self()->collectionFromId( destFolderID );
-        if ( destFolder.isValid() )
-            folderSelector->setCollection( destFolder );
+    if (destFolderID > 0) {
+        Akonadi::Collection destFolder = Kernel::self()->collectionFromId(destFolderID);
+        if (destFolder.isValid()) {
+            folderSelector->setCollection(destFolder);
+        }
     }
 
-    if ( mustDeleteExpirationAttribute )
+    if (mustDeleteExpirationAttribute) {
         delete attr;
+    }
     slotUpdateControls();
     mChanged = false;
 }
 
-void CollectionExpiryPage::save( Akonadi::Collection &collection )
+void CollectionExpiryPage::save(Akonadi::Collection &collection)
 {
-    if ( mChanged)
-        saveAndExpire( collection, false, true );
+    if (mChanged) {
+        saveAndExpire(collection, false, true);
+    }
 }
 
-void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool saveSettings, bool _expireNow )
+void CollectionExpiryPage::saveAndExpire(Akonadi::Collection &collection, bool saveSettings, bool _expireNow)
 {
     bool expireNow = _expireNow;
     bool enableGlobally = expireReadMailCB->isChecked() || expireUnreadMailCB->isChecked();
     const Akonadi::Collection expireToFolder = folderSelector->collection();
-    if ( enableGlobally && moveToRB->isChecked() && !expireToFolder.isValid() ) {
-        KMessageBox::error( this, i18n("Please select a folder to expire messages into.\nIf this is not done, expired messages will be permanently deleted."),
-                            i18n( "No Folder Selected" ) );
-        deletePermanentlyRB->setChecked( true );
+    if (enableGlobally && moveToRB->isChecked() && !expireToFolder.isValid()) {
+        KMessageBox::error(this, i18n("Please select a folder to expire messages into.\nIf this is not done, expired messages will be permanently deleted."),
+                           i18n("No Folder Selected"));
+        deletePermanentlyRB->setChecked(true);
         expireNow = false;                                // settings are not valid
     }
 
     MailCommon::ExpireCollectionAttribute *attribute = 0;
-    if ( expireToFolder.isValid() && moveToRB->isChecked() ) {
-        if ( expireToFolder.id() == collection.id() ) {
-            KMessageBox::error( this, i18n( "Please select a different folder than the current folder to expire messages into.\nIf this is not done, expired messages will be permanently deleted."),
-                                i18n( "Wrong Folder Selected" ) );
-            deletePermanentlyRB->setChecked( true );
+    if (expireToFolder.isValid() && moveToRB->isChecked()) {
+        if (expireToFolder.id() == collection.id()) {
+            KMessageBox::error(this, i18n("Please select a different folder than the current folder to expire messages into.\nIf this is not done, expired messages will be permanently deleted."),
+                               i18n("Wrong Folder Selected"));
+            deletePermanentlyRB->setChecked(true);
             expireNow = false;                                // settings are not valid
-        }
-        else {
-            attribute = collection.attribute<MailCommon::ExpireCollectionAttribute>( Akonadi::Entity::AddIfMissing );
-            attribute->setExpireToFolderId( expireToFolder.id() );
+        } else {
+            attribute = collection.attribute<MailCommon::ExpireCollectionAttribute>(Akonadi::Entity::AddIfMissing);
+            attribute->setExpireToFolderId(expireToFolder.id());
         }
     }
-    if ( !attribute )
-        attribute =  collection.attribute<MailCommon::ExpireCollectionAttribute>( Akonadi::Entity::AddIfMissing );
+    if (!attribute) {
+        attribute =  collection.attribute<MailCommon::ExpireCollectionAttribute>(Akonadi::Entity::AddIfMissing);
+    }
 
-    attribute->setAutoExpire( enableGlobally );
+    attribute->setAutoExpire(enableGlobally);
     // we always write out days now
-    attribute->setReadExpireAge( expireReadMailSB->value() );
-    attribute->setUnreadExpireAge( expireUnreadMailSB->value() );
-    attribute->setReadExpireUnits( expireReadMailCB->isChecked() ? MailCommon::ExpireCollectionAttribute::ExpireDays :
-                                                                   MailCommon::ExpireCollectionAttribute::ExpireNever );
-    attribute->setUnreadExpireUnits( expireUnreadMailCB->isChecked() ? MailCommon::ExpireCollectionAttribute::ExpireDays :
-                                                                       MailCommon::ExpireCollectionAttribute::ExpireNever );
+    attribute->setReadExpireAge(expireReadMailSB->value());
+    attribute->setUnreadExpireAge(expireUnreadMailSB->value());
+    attribute->setReadExpireUnits(expireReadMailCB->isChecked() ? MailCommon::ExpireCollectionAttribute::ExpireDays :
+                                  MailCommon::ExpireCollectionAttribute::ExpireNever);
+    attribute->setUnreadExpireUnits(expireUnreadMailCB->isChecked() ? MailCommon::ExpireCollectionAttribute::ExpireDays :
+                                    MailCommon::ExpireCollectionAttribute::ExpireNever);
 
-    if ( deletePermanentlyRB->isChecked() )
-        attribute->setExpireAction( ExpireCollectionAttribute::ExpireDelete );
-    else
-        attribute->setExpireAction( ExpireCollectionAttribute::ExpireMove );
+    if (deletePermanentlyRB->isChecked()) {
+        attribute->setExpireAction(ExpireCollectionAttribute::ExpireDelete);
+    } else {
+        attribute->setExpireAction(ExpireCollectionAttribute::ExpireMove);
+    }
     if (saveSettings) {
-        Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection, this );
-        job->setProperty( "expireNow", expireNow );
+        Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob(collection, this);
+        job->setProperty("expireNow", expireNow);
         connect(job, &Akonadi::CollectionModifyJob::result, this, &CollectionExpiryPage::slotCollectionModified);
     } else {
         if (expireNow) {
-            MailCommon::Util::expireOldMessages( collection, true /*immediate*/);
+            MailCommon::Util::expireOldMessages(collection, true /*immediate*/);
         }
     }
     mChanged = false;
@@ -234,32 +239,33 @@ void CollectionExpiryPage::saveAndExpire( Akonadi::Collection &collection, bool 
 
 void CollectionExpiryPage::slotSaveAndExpire()
 {
-    saveAndExpire( mCollection, true, true );                        // save and start expire job
+    saveAndExpire(mCollection, true, true);                          // save and start expire job
 }
 
-void CollectionExpiryPage::slotCollectionModified(KJob* job)
+void CollectionExpiryPage::slotCollectionModified(KJob *job)
 {
-    if ( job->error() ) {
-        qDebug()<<" Error when we modified collection";
+    if (job->error()) {
+        qDebug() << " Error when we modified collection";
         return;
     }
 
     // trigger immediate expiry if there is something to do
-    if ( job->property( "expireNow" ).toBool() )
-        MailCommon::Util::expireOldMessages( mCollection, true /*immediate*/);
+    if (job->property("expireNow").toBool()) {
+        MailCommon::Util::expireOldMessages(mCollection, true /*immediate*/);
+    }
 }
 
 void CollectionExpiryPage::slotUpdateControls()
 {
     const bool showExpiryActions = expireReadMailCB->isChecked() || expireUnreadMailCB->isChecked();
-    moveToRB->setEnabled( showExpiryActions );
-    folderSelector->setEnabled( showExpiryActions && moveToRB->isChecked() );
-    deletePermanentlyRB->setEnabled( showExpiryActions );
+    moveToRB->setEnabled(showExpiryActions);
+    folderSelector->setEnabled(showExpiryActions && moveToRB->isChecked());
+    deletePermanentlyRB->setEnabled(showExpiryActions);
 
-    expireReadMailSB->setEnabled( expireReadMailCB->isChecked() );
-    expireUnreadMailSB->setEnabled( expireUnreadMailCB->isChecked() );
+    expireReadMailSB->setEnabled(expireReadMailCB->isChecked());
+    expireUnreadMailSB->setEnabled(expireUnreadMailCB->isChecked());
 
-    expireNowPB->setEnabled( showExpiryActions );
+    expireNowPB->setEnabled(showExpiryActions);
 
     mChanged = true;
 }

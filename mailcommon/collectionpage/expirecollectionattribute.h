@@ -24,7 +24,8 @@
 #include <Attribute>
 #include <Collection>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT ExpireCollectionAttribute : public Akonadi::Attribute
 {
@@ -52,21 +53,21 @@ public:
     QByteArray type() const;
     Attribute *clone() const;
     QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
-    static int daysToExpire( int number, ExpireCollectionAttribute::ExpireUnits units );
+    static int daysToExpire(int number, ExpireCollectionAttribute::ExpireUnits units);
 
     static ExpireCollectionAttribute *expirationCollectionAttribute(
-            const Akonadi::Collection &collection, bool &mustDeleteExpirationAttribute );
+        const Akonadi::Collection &collection, bool &mustDeleteExpirationAttribute);
 
-    void loadFromConfig( const Akonadi::Collection &collection );
+    void loadFromConfig(const Akonadi::Collection &collection);
 
-    void daysToExpire( int &unreadDays, int &readDays );
+    void daysToExpire(int &unreadDays, int &readDays);
 
     /**
      * Sets whether this folder automatically expires messages.
      */
-    void setAutoExpire( bool enabled );
+    void setAutoExpire(bool enabled);
 
     /**
      * Returns true if this folder automatically expires old messages.
@@ -78,26 +79,26 @@ public:
      * Age should not be negative. Units are set using
      * setUnreadExpireUnits().
      */
-    void setUnreadExpireAge( int age );
+    void setUnreadExpireAge(int age);
 
     /**
      * Sets the units to use for expiry of unread messages.
      * Values are 1 = days, 2 = weeks, 3 = months.
      */
-    void setUnreadExpireUnits( ExpireUnits units );
+    void setUnreadExpireUnits(ExpireUnits units);
 
     /**
      * Sets the maximum age for read messages in this folder.
      * Age should not be negative. Units are set using
      * setReadExpireUnits().
      */
-    void setReadExpireAge( int age );
+    void setReadExpireAge(int age);
 
     /**
      * Sets the units to use for expiry of read messages.
      * Values are 1 = days, 2 = weeks, 3 = months.
      */
-    void setReadExpireUnits( ExpireUnits units );
+    void setReadExpireUnits(ExpireUnits units);
 
     /**
      * Returns the age at which unread messages are expired.
@@ -115,13 +116,13 @@ public:
      * What should expiry do? Delete or move to another folder?
      */
     ExpireAction expireAction() const;
-    void setExpireAction( ExpireAction a );
+    void setExpireAction(ExpireAction a);
 
     /**
      * If expiry should move to folder, return the ID of that folder
      */
     Akonadi::Collection::Id expireToFolderId() const;
-    void setExpireToFolderId( Akonadi::Collection::Id id );
+    void setExpireToFolderId(Akonadi::Collection::Id id);
 
     /**
      * Units getUnreadExpireAge() is returned in.

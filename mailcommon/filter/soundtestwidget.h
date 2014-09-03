@@ -20,13 +20,13 @@
 #ifndef MAILCOMMON_SOUNDTESTWIDGET_H
 #define MAILCOMMON_SOUNDTESTWIDGET_H
 
-
 #include <QWidget>
 
 class QPushButton;
 class KUrlRequester;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * @short A widget to play a sound from a given URL.
@@ -41,7 +41,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit SoundTestWidget( QWidget *parent = 0 );
+    explicit SoundTestWidget(QWidget *parent = 0);
 
     /**
      * Destroys the sound test widget.
@@ -51,7 +51,7 @@ public:
     /**
      * Sets the @p url of the sound file to play.
      */
-    void setUrl( const QString &url );
+    void setUrl(const QString &url);
 
     /**
      * Returns the url of the sound file to play.
@@ -69,17 +69,17 @@ Q_SIGNALS:
      * the Play button.
      */
     void testPressed();
-    
+
     /**
      * This signal is emitted when the user
      * enters a new URL.
      */
-    void textChanged( const QString& );
+    void textChanged(const QString &);
 
 private Q_SLOTS:
     void playSound();
-    void openSoundDialog( KUrlRequester* );
-    void slotUrlChanged( const QString& );
+    void openSoundDialog(KUrlRequester *);
+    void slotUrlChanged(const QString &);
 
 private:
     KUrlRequester *m_urlRequester;

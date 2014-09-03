@@ -22,7 +22,8 @@
 
 #include "filteractionwithnone.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionDelete - Delete action
@@ -31,11 +32,11 @@ class FilterActionDelete : public FilterActionWithNone
 {
     Q_OBJECT
 public:
-    explicit FilterActionDelete( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionDelete(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    static FilterAction* newAction();
-    QWidget* createParamWidget( QWidget *parent ) const;
+    static FilterAction *newAction();
+    QWidget *createParamWidget(QWidget *parent) const;
     QString sieveCode() const;
 };
 

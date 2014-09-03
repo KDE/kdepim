@@ -22,7 +22,8 @@
 
 #include "filteraction.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  *  @short Abstract base class for filter actions with no parameter.
@@ -46,12 +47,12 @@ public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithNone(const QString &name, const QString &label, QObject *parent = 0 );
+    FilterActionWithNone(const QString &name, const QString &label, QObject *parent = 0);
 
     /**
      * @copydoc FilterAction::argsFromString
      */
-    virtual void argsFromString( const QString & );
+    virtual void argsFromString(const QString &);
 
     /**
      * @copydoc FilterAction::argsAsString

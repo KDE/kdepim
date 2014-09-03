@@ -28,7 +28,8 @@
 
 #include <QObject>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FilterActionDict;
 
@@ -51,7 +52,7 @@ public:
         Outbound = 0x2,
         Explicit = 0x4,
         BeforeOutbound = 0x8,
-        All = Inbound|BeforeOutbound|Outbound|Explicit
+        All = Inbound | BeforeOutbound | Outbound | Explicit
     };
 
     /**
@@ -68,7 +69,7 @@ public:
      * Checks for existing filters with the @p name and extend the
      * "name" to "name (i)" until no match is found for i=1..n
      */
-    QString createUniqueFilterName( const QString &name ) const;
+    QString createUniqueFilterName(const QString &name) const;
 
     /**
      * Returns the global filter action dictionary.
@@ -88,7 +89,7 @@ public:
      * Applies filter with the given @p identifier on the message @p item.
      * @return @c true on success, @c false otherwise.
      */
-    void filter( const Akonadi::Item &item, const QString &identifier, const QString &resourceId ) const;
+    void filter(const Akonadi::Item &item, const QString &identifier, const QString &resourceId) const;
 
     /**
      * Process given message item by applying the filter rules one by
@@ -100,8 +101,8 @@ public:
      * @param account @c true if an account id is specified else @c false
      * @param accountId The id of the resource that the message was retrieved from
      */
-    void filter( const Akonadi::Item &item, FilterSet set = Inbound,
-                 bool account = false, const QString &resourceId = QString() ) const;
+    void filter(const Akonadi::Item &item, FilterSet set = Inbound,
+                bool account = false, const QString &resourceId = QString()) const;
 
     /**
      * Process given @p messages by applying the filter rules one by
@@ -111,10 +112,10 @@ public:
      * @param item The message item to process.
      * @param set Select the filter set to use.
      */
-    void filter( const Akonadi::Item::List &messages, FilterSet set = Explicit ) const;
+    void filter(const Akonadi::Item::List &messages, FilterSet set = Explicit) const;
 
-    void filter( const Akonadi::Item::List &messages, SearchRule::RequiredPart requiredPart,
-                 const QStringList &listFilters ) const;
+    void filter(const Akonadi::Item::List &messages, SearchRule::RequiredPart requiredPart,
+                const QStringList &listFilters) const;
 
     /// Manage filters interface
 
@@ -123,25 +124,25 @@ public:
      * write everything back into the configuration. The filter manager
      * takes ownership of the filters in the list.
      */
-    void appendFilters( const QList<MailCommon::MailFilter*> &filters,
-                        bool replaceIfNameExists = false );
+    void appendFilters(const QList<MailCommon::MailFilter *> &filters,
+                       bool replaceIfNameExists = false);
 
     /**
      * Removes the given @p filter from the list.
      * The filter object is not deleted.
      */
-    void removeFilter( MailCommon::MailFilter *filter );
+    void removeFilter(MailCommon::MailFilter *filter);
 
     /**
      * Replace the list of filters of the filter manager with the given list of @p filters.
      * The manager takes ownership of the filters.
      */
-    void setFilters( const QList<MailCommon::MailFilter*> &filters );
+    void setFilters(const QList<MailCommon::MailFilter *> &filters);
 
     /**
      * Returns the filter list of the manager.
      */
-    QList<MailCommon::MailFilter*> filters() const;
+    QList<MailCommon::MailFilter *> filters() const;
 
     /**
      * Should be called at the beginning of an filter list update.

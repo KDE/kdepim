@@ -29,12 +29,12 @@
 
 using namespace MailCommon;
 
-FilterImporterBalsa::FilterImporterBalsa( QFile *file )
-    :FilterImporterAbstract()
+FilterImporterBalsa::FilterImporterBalsa(QFile *file)
+    : FilterImporterAbstract()
 {
-    KConfig config( file->fileName() );
-    const QStringList filterList = config.groupList().filter( QRegExp( QLatin1String("filter-\\d+") ) );
-    Q_FOREACH(const QString &filter, filterList) {
+    KConfig config(file->fileName());
+    const QStringList filterList = config.groupList().filter(QRegExp(QLatin1String("filter-\\d+")));
+    Q_FOREACH (const QString &filter, filterList) {
         KConfigGroup grp = config.group(filter);
         addFilter(grp);
     }
@@ -46,72 +46,70 @@ FilterImporterBalsa::~FilterImporterBalsa()
 
 QString FilterImporterBalsa::defaultFiltersSettingsPath()
 {
-    return QString::fromLatin1( "%1/.balsa/config" ).arg( QDir::homePath() );
+    return QString::fromLatin1("%1/.balsa/config").arg(QDir::homePath());
 }
-
 
 void FilterImporterBalsa::addFilter(const KConfigGroup &grp)
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
     const QString name = grp.readEntry(QLatin1String("Name"));
-    filter->pattern()->setName( name );
-    filter->setToolbarName( name );
+    filter->pattern()->setName(name);
+    filter->setToolbarName(name);
 
     //TODO not implemented in kmail.
     const QString popupText = grp.readEntry(QLatin1String("Popup-text"));
 
-
     const QString sound = grp.readEntry(QLatin1String("Sound"));
     if (!sound.isEmpty()) {
-        const QString actionName = QLatin1String( "play sound" );
-        createFilterAction( filter, actionName, sound );
+        const QString actionName = QLatin1String("play sound");
+        createFilterAction(filter, actionName, sound);
     }
 
-    const int actionType = grp.readEntry(QLatin1String("Action-type"),-1);
+    const int actionType = grp.readEntry(QLatin1String("Action-type"), -1);
     const QString actionStr = grp.readEntry(QLatin1String("Action-string"));
-    parseAction(actionType,actionStr,filter);
+    parseAction(actionType, actionStr, filter);
 
     const QString condition = grp.readEntry(QLatin1String("Condition"));
-    parseCondition(condition,filter);
+    parseCondition(condition, filter);
 
     appendFilter(filter);
 }
 
-void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::MailFilter *filter )
+void FilterImporterBalsa::parseCondition(const QString &condition, MailCommon::MailFilter *filter)
 {
     QStringList conditionList;
     if (condition.startsWith(QLatin1String("OR "))) {
         conditionList = condition.split(QLatin1String("OR"));
-        filter->pattern()->setOp( SearchPattern::OpOr );
+        filter->pattern()->setOp(SearchPattern::OpOr);
     } else if (condition.startsWith(QLatin1String("AND "))) {
         conditionList = condition.split(QLatin1String("AND"));
-        filter->pattern()->setOp( SearchPattern::OpAnd );
+        filter->pattern()->setOp(SearchPattern::OpAnd);
     } else {
         //no multi condition
-        conditionList<< condition;
+        conditionList << condition;
     }
-    Q_FOREACH(QString cond, conditionList) {
+    Q_FOREACH (QString cond, conditionList) {
         cond = cond.trimmed();
         if (cond.startsWith(QLatin1String("NOT"))) {
-            cond = cond.right(cond.length()-3);
+            cond = cond.right(cond.length() - 3);
             cond = cond.trimmed();
         }
-        qDebug()<<" cond"<<cond;
+        qDebug() << " cond" << cond;
 
         //Date between
         QByteArray fieldName;
         if (cond.startsWith(QLatin1String("DATE"))) {
             fieldName = "<date>";
-            cond = cond.right(cond.length()-4);
+            cond = cond.right(cond.length() - 4);
             cond = cond.trimmed();
             QStringList splitDate = cond.split(QLatin1Char(' '));
-            qDebug()<<" splitDate "<<splitDate;
+            qDebug() << " splitDate " << splitDate;
         } else if (cond.startsWith(QLatin1String("FLAG"))) {
-            qDebug()<<" FLAG :";
+            qDebug() << " FLAG :";
         } else if (cond.startsWith(QLatin1String("STRING"))) {
-            qDebug()<<" STRING";
+            qDebug() << " STRING";
         } else {
-            qDebug()<<" condition not implemented :"<<cond;
+            qDebug() << " condition not implemented :" << cond;
         }
 
         //SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, line );
@@ -119,20 +117,20 @@ void FilterImporterBalsa::parseCondition(const QString& condition,MailCommon::Ma
     }
 }
 
-void FilterImporterBalsa::parseAction(int actionType, const QString& action,MailCommon::MailFilter *filter)
+void FilterImporterBalsa::parseAction(int actionType, const QString &action, MailCommon::MailFilter *filter)
 {
     QString actionName;
     QString actionStr(action);
-    switch(actionType) {
+    switch (actionType) {
     case 0:
         break;
     case 1:
         //Copy
-        actionName = QLatin1String( "copy" );
+        actionName = QLatin1String("copy");
         break;
     case 2:
         //Move
-        actionName = QLatin1String( "transfer" );
+        actionName = QLatin1String("transfer");
         break;
     case 3:
         //Print
@@ -140,22 +138,22 @@ void FilterImporterBalsa::parseAction(int actionType, const QString& action,Mail
         break;
     case 4:
         //Execute
-        actionName = QLatin1String( "execute" );
+        actionName = QLatin1String("execute");
         break;
     case 5:
         //Move to trash
-        actionName = QLatin1String( "transfer" );
+        actionName = QLatin1String("transfer");
         //Special !
         break;
     case 6:
         //Put color
         break;
     default:
-        qDebug()<<" unknown parse action type "<<actionType;
+        qDebug() << " unknown parse action type " << actionType;
         break;
     }
     if (!actionName.isEmpty()) {
         //TODO adapt actionStr
-        createFilterAction( filter, actionName, actionStr );
+        createFilterAction(filter, actionName, actionStr);
     }
 }

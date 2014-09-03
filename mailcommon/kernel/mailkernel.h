@@ -29,7 +29,8 @@
 
 #include <QObject>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * Deals with common mail application related operations. The required interfaces
@@ -53,7 +54,7 @@ public:
      * MUST be called with a valid interface pointer, before any Kernel::self()
      * method is used. The pointer ownership will not be transferred to Kernel.
      */
-    void registerKernelIf( IKernel *kernelIf )
+    void registerKernelIf(IKernel *kernelIf)
     {
         mKernelIf = kernelIf;
     }
@@ -65,7 +66,7 @@ public:
 
     IKernel *kernelIf() const
     {
-        Q_ASSERT( mKernelIf );
+        Q_ASSERT(mKernelIf);
         return mKernelIf;
     }
 
@@ -74,14 +75,14 @@ public:
      * MUST be called with a valid interface pointer, before any Kernel::self()
      * method is used. The pointer ownership will not be transferred to Kernel.
      */
-    void registerSettingsIf( ISettings *settingsIf )
+    void registerSettingsIf(ISettings *settingsIf)
     {
         mSettingsIf = settingsIf;
     }
 
     ISettings *settingsIf() const
     {
-        Q_ASSERT( mSettingsIf );
+        Q_ASSERT(mSettingsIf);
         return mSettingsIf;
     }
 
@@ -90,14 +91,14 @@ public:
      * MUST be called with a valid interface pointer, before any Kernel::self()
      * method is used. The pointer ownership will not be transferred to Kernel.
      */
-    void registerFilterIf( IFilter *filterIf )
+    void registerFilterIf(IFilter *filterIf)
     {
         mFilterIf = filterIf;
     }
 
     IFilter *filterIf() const
     {
-        Q_ASSERT( mFilterIf );
+        Q_ASSERT(mFilterIf);
         return mFilterIf;
     }
 
@@ -107,7 +108,7 @@ public:
      * the collection. Since the ETM is loaded async, this method will not find
      * the collection right after startup, when the ETM is not yet fully loaded.
      */
-    Akonadi::Collection collectionFromId( const Akonadi::Collection::Id &id ) const;
+    Akonadi::Collection collectionFromId(const Akonadi::Collection::Id &id) const;
 
     Akonadi::Collection inboxCollectionFolder();
     Akonadi::Collection outboxCollectionFolder();
@@ -116,21 +117,21 @@ public:
     Akonadi::Collection draftsCollectionFolder();
     Akonadi::Collection templatesCollectionFolder();
 
-    bool isSystemFolderCollection( const Akonadi::Collection &col );
+    bool isSystemFolderCollection(const Akonadi::Collection &col);
 
     /**
      * Returns true if this folder is the inbox on the local disk
      */
-    bool isMainFolderCollection( const Akonadi::Collection &col );
+    bool isMainFolderCollection(const Akonadi::Collection &col);
 
     /**
      * Returns true if the folder is either the outbox or one of the drafts-folders.
      */
-    bool folderIsDraftOrOutbox( const Akonadi::Collection &collection );
+    bool folderIsDraftOrOutbox(const Akonadi::Collection &collection);
 
-    bool folderIsDrafts( const Akonadi::Collection & );
+    bool folderIsDrafts(const Akonadi::Collection &);
 
-    bool folderIsTemplates( const Akonadi::Collection &collection );
+    bool folderIsTemplates(const Akonadi::Collection &collection);
 
     /**
      * Returns true if the folder is a trash folder.
@@ -139,7 +140,7 @@ public:
      * it will say false erroneously. However you can connect to SpecialMailCollections::collectionsChanged
      * to react on dynamic changes and call this again.
      */
-    bool folderIsTrash( const Akonadi::Collection &collection );
+    bool folderIsTrash(const Akonadi::Collection &collection);
 
     /**
      * Returns the trash folder for the resource which @p col belongs to.
@@ -148,24 +149,24 @@ public:
      * it will return an invalid collection erroneously. However you can connect to SpecialMailCollections::collectionsChanged
      * to react on dynamic changes and call this again.
      */
-    Akonadi::Collection trashCollectionFromResource( const Akonadi::Collection & col );
+    Akonadi::Collection trashCollectionFromResource(const Akonadi::Collection &col);
 
     /**
      * Returns true if the folder is one of the sent-mail folders.
      */
-    bool folderIsSentMailFolder( const Akonadi::Collection & );
+    bool folderIsSentMailFolder(const Akonadi::Collection &);
 
-    static bool folderIsInbox( const Akonadi::Collection &, bool withoutPop3InboxSetting = false );
+    static bool folderIsInbox(const Akonadi::Collection &, bool withoutPop3InboxSetting = false);
 
     void initFolders();
 
-    void emergencyExit( const QString &reason );
+    void emergencyExit(const QString &reason);
 
 private:
-    void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type );
+    void findCreateDefaultCollection(Akonadi::SpecialMailCollections::Type);
 
 private Q_SLOTS:
-    void createDefaultCollectionDone( KJob *job );
+    void createDefaultCollectionDone(KJob *job);
     void slotDefaultCollectionsChanged();
 
 Q_SIGNALS:
@@ -173,7 +174,7 @@ Q_SIGNALS:
     void requestSystemTrayUpdate();
 
 private:
-    Kernel( QObject *parent = 0 );
+    Kernel(QObject *parent = 0);
     friend class KernelPrivate;
 
     IKernel *mKernelIf;

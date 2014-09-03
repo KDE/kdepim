@@ -22,7 +22,8 @@
 
 #include "filteractionwithstringlist.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionRemoveHeader - remove header
@@ -32,15 +33,15 @@ class FilterActionRemoveHeader: public FilterActionWithStringList
 {
     Q_OBJECT
 public:
-    explicit FilterActionRemoveHeader( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionRemoveHeader(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    QWidget* createParamWidget( QWidget *parent ) const;
-    void setParamWidgetValue( QWidget *paramWidget ) const;
+    QWidget *createParamWidget(QWidget *parent) const;
+    void setParamWidgetValue(QWidget *paramWidget) const;
     QStringList sieveRequires() const;
     QString sieveCode() const;
 
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
 }

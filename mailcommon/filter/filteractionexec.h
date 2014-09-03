@@ -22,7 +22,8 @@
 
 #include "filteractionwithcommand.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionExec - execute command
@@ -32,10 +33,10 @@ class FilterActionExec : public FilterActionWithCommand
 {
     Q_OBJECT
 public:
-    explicit FilterActionExec( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionExec(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
-    static FilterAction* newAction();
+    static FilterAction *newAction();
 };
 
 }

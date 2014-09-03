@@ -58,10 +58,11 @@ using KPIM::BroadcastStatus;
   - Expire All Folders                              [KMMainWidget::slotExpireAll()]
 */
 
-namespace MailCommon {
+namespace MailCommon
+{
 
-ExpireJob::ExpireJob( const Akonadi::Collection &folder, bool immediate )
-    : ScheduledJob( folder, immediate ), mMaxUnreadTime( 0 ), mMaxReadTime( 0 ), mMoveToFolder( 0 )
+ExpireJob::ExpireJob(const Akonadi::Collection &folder, bool immediate)
+    : ScheduledJob(folder, immediate), mMaxUnreadTime(0), mMaxReadTime(0), mMoveToFolder(0)
 {
 }
 
@@ -83,24 +84,24 @@ void ExpireJob::execute()
     bool mustDeleteExpirationAttribute = false;
 
     MailCommon::ExpireCollectionAttribute *expirationAttribute =
-            MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
-                mSrcFolder, mustDeleteExpirationAttribute );
+        MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
+            mSrcFolder, mustDeleteExpirationAttribute);
 
-    expirationAttribute->daysToExpire( unreadDays, readDays );
-    if ( mustDeleteExpirationAttribute ) {
+    expirationAttribute->daysToExpire(unreadDays, readDays);
+    if (mustDeleteExpirationAttribute) {
         delete expirationAttribute;
     }
 
-    if ( unreadDays > 0 ) {
-        qDebug() << "ExpireJob: deleting unread older than"<< unreadDays << "days";
+    if (unreadDays > 0) {
+        qDebug() << "ExpireJob: deleting unread older than" << unreadDays << "days";
         mMaxUnreadTime = time(0) - unreadDays * 3600 * 24;
     }
-    if ( readDays > 0 ) {
-        qDebug() << "ExpireJob: deleting read older than"<< readDays << "days";
+    if (readDays > 0) {
+        qDebug() << "ExpireJob: deleting read older than" << readDays << "days";
         mMaxReadTime = time(0) - readDays * 3600 * 24;
     }
 
-    if ( ( mMaxUnreadTime == 0 ) && ( mMaxReadTime == 0 ) ) {
+    if ((mMaxUnreadTime == 0) && (mMaxReadTime == 0)) {
         qDebug() << "ExpireJob: nothing to do";
         deleteLater();
         return;
@@ -112,40 +113,40 @@ void ExpireJob::execute()
 
 void ExpireJob::slotDoWork()
 {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mSrcFolder, this );
-    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
-    connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(mSrcFolder, this);
+    job->fetchScope().fetchPayloadPart(Akonadi::MessagePart::Envelope);
+    connect(job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)));
 }
 
-void ExpireJob::itemFetchResult( KJob *job )
+void ExpireJob::itemFetchResult(KJob *job)
 {
-    if ( job->error() ) {
+    if (job->error()) {
         qWarning() << job->errorString();
         deleteLater();
         return;
     }
 
-    foreach ( const Akonadi::Item &item, qobject_cast<Akonadi::ItemFetchJob*>( job )->items() ) {
-        if ( !item.hasPayload<KMime::Message::Ptr>() ) {
+    foreach (const Akonadi::Item &item, qobject_cast<Akonadi::ItemFetchJob *>(job)->items()) {
+        if (!item.hasPayload<KMime::Message::Ptr>()) {
             continue;
         }
 
         const KMime::Message::Ptr mb = item.payload<KMime::Message::Ptr>();
         Akonadi::MessageStatus status;
-        status.setStatusFromFlags( item.flags() );
-        if ( ( status.isImportant() || status.isToAct() || status.isWatched() ) &&
-             SettingsIf->excludeImportantMailFromExpiry() ) {
+        status.setStatusFromFlags(item.flags());
+        if ((status.isImportant() || status.isToAct() || status.isWatched()) &&
+                SettingsIf->excludeImportantMailFromExpiry()) {
             continue;
         }
 
         time_t maxTime = status.isRead() ? mMaxReadTime : mMaxUnreadTime;
 
-        if ( !mb->date( false ) ) {
+        if (!mb->date(false)) {
             continue;
         }
 
-        if ( mb->date()->dateTime().toTime_t() < maxTime ) {
-            mRemovedMsgs.append( item );
+        if (mb->date()->dateTime().toTime_t() < maxTime) {
+            mRemovedMsgs.append(item);
         }
     }
 
@@ -157,7 +158,7 @@ void ExpireJob::done()
     QString str;
     bool moving = false;
 
-    if ( !mRemovedMsgs.isEmpty() ) {
+    if (!mRemovedMsgs.isEmpty()) {
         int count = mRemovedMsgs.count();
 
         // The command shouldn't kill us because it opens the folder
@@ -165,86 +166,86 @@ void ExpireJob::done()
         bool mustDeleteExpirationAttribute = false;
 
         MailCommon::ExpireCollectionAttribute *expirationAttribute =
-                MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
-                    mSrcFolder, mustDeleteExpirationAttribute );
+            MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
+                mSrcFolder, mustDeleteExpirationAttribute);
 
-        if ( expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete ) {
+        if (expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete) {
             // Expire by deletion, i.e. move to null target folder
             qDebug() << "ExpireJob: finished expiring in folder"
                      << mSrcFolder.name()
                      << count << "messages to remove.";
-            Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( mRemovedMsgs, this );
-            connect( job, SIGNAL(result(KJob*)), this, SLOT(slotExpireDone(KJob*)) );
+            Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(mRemovedMsgs, this);
+            connect(job, SIGNAL(result(KJob*)), this, SLOT(slotExpireDone(KJob*)));
             moving = true;
-            str = i18np( "Removing 1 old message from folder %2...",
-                         "Removing %1 old messages from folder %2...",
-                         count, mSrcFolder.name() );
+            str = i18np("Removing 1 old message from folder %2...",
+                        "Removing %1 old messages from folder %2...",
+                        count, mSrcFolder.name());
         } else {
             // Expire by moving
-            mMoveToFolder = Kernel::self()->collectionFromId( expirationAttribute->expireToFolderId() );
-            if ( !mMoveToFolder.isValid() ) {
-                str = i18n( "Cannot expire messages from folder %1: destination "
-                            "folder %2 not found",
-                            mSrcFolder.name(), expirationAttribute->expireToFolderId() );
+            mMoveToFolder = Kernel::self()->collectionFromId(expirationAttribute->expireToFolderId());
+            if (!mMoveToFolder.isValid()) {
+                str = i18n("Cannot expire messages from folder %1: destination "
+                           "folder %2 not found",
+                           mSrcFolder.name(), expirationAttribute->expireToFolderId());
                 qWarning() << str;
             } else {
                 qDebug() << "ExpireJob: finished expiring in folder"
                          << mSrcFolder.name()
                          << mRemovedMsgs.count() << "messages to move to"
                          << mMoveToFolder.name();
-                Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( mRemovedMsgs, mMoveToFolder, this );
-                connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMoveDone(KJob*)) );
+                Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob(mRemovedMsgs, mMoveToFolder, this);
+                connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMoveDone(KJob*)));
                 moving = true;
-                str = i18np( "Moving 1 old message from folder %2 to folder %3...",
-                             "Moving %1 old messages from folder %2 to folder %3...",
-                             count, mSrcFolder.name(), mMoveToFolder.name() );
+                str = i18np("Moving 1 old message from folder %2 to folder %3...",
+                            "Moving %1 old messages from folder %2 to folder %3...",
+                            count, mSrcFolder.name(), mMoveToFolder.name());
             }
         }
-        if ( mustDeleteExpirationAttribute ) {
+        if (mustDeleteExpirationAttribute) {
             delete expirationAttribute;
         }
     }
-    if ( !str.isEmpty() ) {
-        BroadcastStatus::instance()->setStatusMsg( str );
+    if (!str.isEmpty()) {
+        BroadcastStatus::instance()->setStatusMsg(str);
     }
 
-    if ( !moving ) {
+    if (!moving) {
         deleteLater();
     }
 }
 
-void ExpireJob::slotMoveDone( KJob *job )
+void ExpireJob::slotMoveDone(KJob *job)
 {
-    if ( job->error() ) {
+    if (job->error()) {
         qCritical() << job->error() << job->errorString();
     }
-    Akonadi::ItemMoveJob *itemjob = dynamic_cast<Akonadi::ItemMoveJob *>( job );
-    if ( itemjob ) {
+    Akonadi::ItemMoveJob *itemjob = dynamic_cast<Akonadi::ItemMoveJob *>(job);
+    if (itemjob) {
         QList<Akonadi::Item> lst = itemjob->items();
-        if ( !lst.isEmpty() ) {
+        if (!lst.isEmpty()) {
             QList<Akonadi::Item> newLst;
-            Q_FOREACH( Akonadi::Item item, lst ) {
-                if (!item.hasFlag(Akonadi::MessageFlags::Seen) ) {
-                    item.setFlag( Akonadi::MessageFlags::Seen );
-                    newLst<<item;
+            Q_FOREACH (Akonadi::Item item, lst) {
+                if (!item.hasFlag(Akonadi::MessageFlags::Seen)) {
+                    item.setFlag(Akonadi::MessageFlags::Seen);
+                    newLst << item;
                 }
             }
-            if ( !newLst.isEmpty() ) {
-                Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( newLst, this );
+            if (!newLst.isEmpty()) {
+                Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(newLst, this);
                 modifyJob->disableRevisionCheck();
-                connect( modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotExpireDone(KJob*)) );
+                connect(modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotExpireDone(KJob*)));
             } else {
-                slotExpireDone( job );
+                slotExpireDone(job);
             }
         }
     } else {
-        slotExpireDone( job );
+        slotExpireDone(job);
     }
 }
 
-void ExpireJob::slotExpireDone( KJob *job )
+void ExpireJob::slotExpireDone(KJob *job)
 {
-    if ( job->error() ) {
+    if (job->error()) {
         qCritical() << job->error() << job->errorString();
     }
 
@@ -253,47 +254,47 @@ void ExpireJob::slotExpireDone( KJob *job )
     bool mustDeleteExpirationAttribute = false;
 
     MailCommon::ExpireCollectionAttribute *expirationAttribute =
-            MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
-                mSrcFolder, mustDeleteExpirationAttribute );
+        MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
+            mSrcFolder, mustDeleteExpirationAttribute);
 
-    switch ( error ) {
+    switch (error) {
     case KJob::NoError:
-        if ( expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete ) {
-            msg = i18np( "Removed 1 old message from folder %2.",
-                         "Removed %1 old messages from folder %2.",
-                         mRemovedMsgs.count(),
-                         mSrcFolder.name() );
+        if (expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete) {
+            msg = i18np("Removed 1 old message from folder %2.",
+                        "Removed %1 old messages from folder %2.",
+                        mRemovedMsgs.count(),
+                        mSrcFolder.name());
         } else {
-            msg = i18np( "Moved 1 old message from folder %2 to folder %3.",
-                         "Moved %1 old messages from folder %2 to folder %3.",
-                         mRemovedMsgs.count(), mSrcFolder.name(), mMoveToFolder.name() );
+            msg = i18np("Moved 1 old message from folder %2 to folder %3.",
+                        "Moved %1 old messages from folder %2 to folder %3.",
+                        mRemovedMsgs.count(), mSrcFolder.name(), mMoveToFolder.name());
         }
         break;
 
     case Akonadi::Job::UserCanceled:
-        if ( expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete ) {
-            msg = i18n( "Removing old messages from folder %1 was canceled.",
-                        mSrcFolder.name() );
+        if (expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete) {
+            msg = i18n("Removing old messages from folder %1 was canceled.",
+                       mSrcFolder.name());
         } else {
-            msg = i18n( "Moving old messages from folder %1 to folder %2 was "
-                        "canceled.",
-                        mSrcFolder.name(), mMoveToFolder.name() );
+            msg = i18n("Moving old messages from folder %1 to folder %2 was "
+                       "canceled.",
+                       mSrcFolder.name(), mMoveToFolder.name());
         }
         break;
 
     default: //any other error
-        if ( expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete ) {
-            msg = i18n( "Removing old messages from folder %1 failed.",
-                        mSrcFolder.name() );
+        if (expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete) {
+            msg = i18n("Removing old messages from folder %1 failed.",
+                       mSrcFolder.name());
         } else {
-            msg = i18n( "Moving old messages from folder %1 to folder %2 failed.",
-                        mSrcFolder.name(), mMoveToFolder.name() );
+            msg = i18n("Moving old messages from folder %1 to folder %2 failed.",
+                       mSrcFolder.name(), mMoveToFolder.name());
         }
         break;
     }
 
-    BroadcastStatus::instance()->setStatusMsg( msg );
-    if ( mustDeleteExpirationAttribute ) {
+    BroadcastStatus::instance()->setStatusMsg(msg);
+    if (mustDeleteExpirationAttribute) {
         delete expirationAttribute;
     }
     deleteLater();

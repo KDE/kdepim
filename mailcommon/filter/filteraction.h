@@ -36,7 +36,8 @@
 
 class QWidget;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * @short Abstract base class for mail filter actions.
@@ -64,9 +65,8 @@ public:
         ///  (e.g. an invalid address in the 'forward' action),
         ///   but processing should continue.
         CriticalError = 0x8      ///< A critical error occurred during processing
-        ///  (e.g. "disk full").
+                        ///  (e.g. "disk full").
     };
-
 
     /**
      * Creates a new filter action.
@@ -74,7 +74,7 @@ public:
      * The action is initialized with an identifier @p name and
      * an i18n'd @p label.
      */
-    FilterAction( const QString &name, const QString &label, QObject *parent = 0 );
+    FilterAction(const QString &name, const QString &label, QObject *parent = 0);
 
     /**
      * Destroys the filter action.
@@ -106,7 +106,7 @@ public:
      * is required, @p GoOn if the message shall be processed by
      * further filters and @p Ok otherwise.
      */
-    virtual ReturnCode process( ItemContext &context, bool applyOnOutbound ) const = 0;
+    virtual ReturnCode process(ItemContext &context, bool applyOnOutbound) const = 0;
 
     /**
      * Returns the required part from the item that is needed for the action to
@@ -124,37 +124,37 @@ public:
      * Creates a widget for setting the filter action parameter. Also
      * sets the value of the widget.
      */
-    virtual QWidget *createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget(QWidget *parent) const;
 
     /**
      * The filter action shall set it's parameter from the widget's
      * contents. It is allowed that the value is read by the action
      * before this function is called.
      */
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
+    virtual void applyParamWidgetValue(QWidget *paramWidget);
 
     /**
      * The filter action shall set it's widget's contents from it's
      * parameter.
      */
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
+    virtual void setParamWidgetValue(QWidget *paramWidget) const;
 
     /**
      * The filter action shall clear it's parameter widget's
      * contents.
      */
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
+    virtual void clearParamWidget(QWidget *paramWidget) const;
 
     /**
      * Read extra arguments from given string.
      */
-    virtual void argsFromString( const QString &argsStr ) = 0;
+    virtual void argsFromString(const QString &argsStr) = 0;
 
     /**
      * Read extra arguments from given string.
      * Return true if we need to update config file
      */
-    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+    virtual bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
 
     virtual QString argsAsStringReal() const;
 
@@ -174,8 +174,8 @@ public:
      * folder @p aFolder is used and changes to @p aNewFolder in this
      * case. Returns true if a change was made.
      */
-    virtual bool folderRemoved( const Akonadi::Collection &aFolder,
-                                const Akonadi::Collection &aNewFolder );
+    virtual bool folderRemoved(const Akonadi::Collection &aFolder,
+                               const Akonadi::Collection &aNewFolder);
 
     /**
      * Static function that creates a filter action of this type.
@@ -185,10 +185,10 @@ public:
     /**
      * Automates the sending of MDNs from filter actions.
      */
-    static void sendMDN( const Akonadi::Item &item,
-                         KMime::MDN::DispositionType d,
-                         const QList<KMime::MDN::DispositionModifier> &m =
-            QList<KMime::MDN::DispositionModifier>() );
+    static void sendMDN(const Akonadi::Item &item,
+                        KMime::MDN::DispositionType d,
+                        const QList<KMime::MDN::DispositionModifier> &m =
+                            QList<KMime::MDN::DispositionModifier>());
 
 signals:
     /**

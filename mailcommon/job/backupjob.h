@@ -38,11 +38,13 @@ class KJob;
 
 class QWidget;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class ItemFetchJob;
 }
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * Writes an entire folder structure to an archive file. The archive is
@@ -64,45 +66,44 @@ public:
         TarGz = 3
     };
 
-    explicit BackupJob( QWidget *parent = 0 );
+    explicit BackupJob(QWidget *parent = 0);
     ~BackupJob();
 
-    void setRootFolder( const Akonadi::Collection &rootFolder );
-    void setSaveLocation( const KUrl &savePath );
-    void setArchiveType( ArchiveType type );
-    void setDeleteFoldersAfterCompletion( bool deleteThem );
-    void setRecursive( bool recursive );
+    void setRootFolder(const Akonadi::Collection &rootFolder);
+    void setSaveLocation(const KUrl &savePath);
+    void setArchiveType(ArchiveType type);
+    void setDeleteFoldersAfterCompletion(bool deleteThem);
+    void setRecursive(bool recursive);
     void setDisplayMessageBox(bool display);
     void setRealPath(const QString &path);
 
-
     void start();
 signals:
-    void backupDone(const QString&);
-    void error(const QString&);
+    void backupDone(const QString &);
+    void error(const QString &);
 
 private slots:
-    void itemFetchJobResult( KJob *job );
+    void itemFetchJobResult(KJob *job);
     void cancelJob();
     void archiveNextFolder();
-    void onArchiveNextFolderDone( KJob *job );
+    void onArchiveNextFolderDone(KJob *job);
     void archiveNextMessage();
 
 private:
-    bool queueFolders( const Akonadi::Collection &root );
-    void processMessage( const Akonadi::Item &item );
-    QString pathForCollection( const Akonadi::Collection &collection ) const;
-    QString subdirPathForCollection( const Akonadi::Collection &collection ) const;
-    bool hasChildren( const Akonadi::Collection &collection ) const;
+    bool queueFolders(const Akonadi::Collection &root);
+    void processMessage(const Akonadi::Item &item);
+    QString pathForCollection(const Akonadi::Collection &collection) const;
+    QString subdirPathForCollection(const Akonadi::Collection &collection) const;
+    bool hasChildren(const Akonadi::Collection &collection) const;
     void finish();
-    void abort( const QString &errorMessage );
-    bool writeDirHelper( const QString &directoryPath );
+    void abort(const QString &errorMessage);
+    bool writeDirHelper(const QString &directoryPath);
 
     // Helper function to return the name of the given collection.
     // Some Collection's don't have the name fetched. However, in mAllFolders,
     // we have a list of Collection's that have that information in them, so
     // we can just look it up there.
-    QString collectionName( const Akonadi::Collection &collection ) const;
+    QString collectionName(const Akonadi::Collection &collection) const;
 
     QString mRealPath;
     KUrl mMailArchivePath;

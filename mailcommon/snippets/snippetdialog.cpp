@@ -25,11 +25,11 @@
 
 using namespace MailCommon;
 
-SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupMode, QWidget *parent )
-    : QDialog( parent ), mActionCollection( actionCollection )
+SnippetDialog::SnippetDialog(KActionCollection *actionCollection, bool inGroupMode, QWidget *parent)
+    : QDialog(parent), mActionCollection(actionCollection)
 {
     mUi = new Ui::SnippetDialog;
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -43,17 +43,17 @@ SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupM
     mainLayout->addWidget(buttonBox);
     mUi->setupUi(mainWidget);
 
-    mUi->keyWidget->setCheckActionCollections( QList<KActionCollection*>() << actionCollection );
+    mUi->keyWidget->setCheckActionCollections(QList<KActionCollection *>() << actionCollection);
     mOkButton->setEnabled(false);
 
-    connect( mUi->nameEdit, SIGNAL(textChanged(QString)),
-             this, SLOT(slotTextChanged()) );
-    connect( mUi->groupBox, SIGNAL(currentIndexChanged(QString)),
-             this, SLOT(slotGroupChanged()));
+    connect(mUi->nameEdit, SIGNAL(textChanged(QString)),
+            this, SLOT(slotTextChanged()));
+    connect(mUi->groupBox, SIGNAL(currentIndexChanged(QString)),
+            this, SLOT(slotGroupChanged()));
 
-    mUi->snippetText->setMinimumSize( 500, 300 );
+    mUi->snippetText->setMinimumSize(500, 300);
 
-    mUi->groupWidget->setVisible( !inGroupMode );
+    mUi->groupWidget->setVisible(!inGroupMode);
     mUi->nameEdit->setFocus();
 }
 
@@ -67,9 +67,9 @@ void SnippetDialog::slotGroupChanged()
     mOkButton->setEnabled(snippetIsValid());
 }
 
-void SnippetDialog::setName( const QString &name )
+void SnippetDialog::setName(const QString &name)
 {
-    mUi->nameEdit->setText( name );
+    mUi->nameEdit->setText(name);
 }
 
 QString SnippetDialog::name() const
@@ -77,9 +77,9 @@ QString SnippetDialog::name() const
     return mUi->nameEdit->text();
 }
 
-void SnippetDialog::setText( const QString &text )
+void SnippetDialog::setText(const QString &text)
 {
-    mUi->snippetText->setText( text );
+    mUi->snippetText->setText(text);
 }
 
 QString SnippetDialog::text() const
@@ -87,9 +87,9 @@ QString SnippetDialog::text() const
     return mUi->snippetText->toPlainText();
 }
 
-void SnippetDialog::setKeySequence( const QKeySequence &sequence )
+void SnippetDialog::setKeySequence(const QKeySequence &sequence)
 {
-    mUi->keyWidget->setKeySequence( sequence );
+    mUi->keyWidget->setKeySequence(sequence);
 }
 
 QKeySequence SnippetDialog::keySequence() const
@@ -97,19 +97,19 @@ QKeySequence SnippetDialog::keySequence() const
     return mUi->keyWidget->keySequence();
 }
 
-void SnippetDialog::setGroupModel( QAbstractItemModel *model )
+void SnippetDialog::setGroupModel(QAbstractItemModel *model)
 {
-    mUi->groupBox->setModel( model );
+    mUi->groupBox->setModel(model);
 }
 
-void SnippetDialog::setGroupIndex( const QModelIndex &index )
+void SnippetDialog::setGroupIndex(const QModelIndex &index)
 {
-    mUi->groupBox->setCurrentIndex( index.row() );
+    mUi->groupBox->setCurrentIndex(index.row());
 }
 
 QModelIndex SnippetDialog::groupIndex() const
 {
-    return mUi->groupBox->model()->index( mUi->groupBox->currentIndex(), 0 );
+    return mUi->groupBox->model()->index(mUi->groupBox->currentIndex(), 0);
 }
 
 void SnippetDialog::slotTextChanged()
@@ -119,11 +119,12 @@ void SnippetDialog::slotTextChanged()
 
 bool SnippetDialog::snippetIsValid() const
 {
-    if ( mUi->groupWidget->isVisible() )
-        return ( !mUi->nameEdit->text().trimmed().isEmpty() &&
-                 !mUi->groupBox->currentText().trimmed().isEmpty() );
-    else
-        return ( !mUi->nameEdit->text().trimmed().isEmpty() );
+    if (mUi->groupWidget->isVisible())
+        return (!mUi->nameEdit->text().trimmed().isEmpty() &&
+                !mUi->groupBox->currentText().trimmed().isEmpty());
+    else {
+        return (!mUi->nameEdit->text().trimmed().isEmpty());
+    }
 }
 
 #include "moc_snippetdialog_p.cpp"

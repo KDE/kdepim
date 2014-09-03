@@ -26,7 +26,8 @@
 #include <Collection>
 #include <Item>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * @short A helper class for the filtering process
@@ -43,7 +44,7 @@ public:
      * Creates an item context for the given @p item.
      * @p requestedPart the part requested for the item (Envelope, Header or CompleteMessage)
      */
-    ItemContext( const Akonadi::Item &item, bool needsFullPayload );
+    ItemContext(const Akonadi::Item &item, bool needsFullPayload);
 
     /**
      * Returns the item of the context.
@@ -53,7 +54,7 @@ public:
     /**
      * Sets the target collection the item should be moved to.
      */
-    void setMoveTargetCollection( const Akonadi::Collection &collection );
+    void setMoveTargetCollection(const Akonadi::Collection &collection);
 
     /**
      * Returns the target collection the item should be moved to, or an invalid

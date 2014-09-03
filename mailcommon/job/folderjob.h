@@ -33,7 +33,8 @@
 #include <Collection>
 #include "mailcommon_export.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT FolderJob : public QObject
 {
@@ -79,7 +80,7 @@ public:
      * are cancellable, the others are not. But when copying, a non-cancellable
      * tGetMessage is needed.
      */
-    void setCancellable( bool b )
+    void setCancellable(bool b)
     {
         mCancellable = b;
     }
@@ -96,7 +97,7 @@ signals:
      * This signal is emitted by the FolderJob destructor => do NOT downcast
      * the job to a subclass!
      */
-    void result( FolderJob *job );
+    void result(FolderJob *job);
 
 protected:
     /**

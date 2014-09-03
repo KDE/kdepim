@@ -34,21 +34,22 @@
 
 #include <QTimer>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FilterManager::Private
 {
 public:
-    Private( FilterManager *qq )
-        : q( qq ), mMailFilterAgentInterface(0), mMonitor(new Akonadi::Monitor), mInitialized(false)
+    Private(FilterManager *qq)
+        : q(qq), mMailFilterAgentInterface(0), mMonitor(new Akonadi::Monitor), mInitialized(false)
     {
-        mMailFilterAgentInterface = new org::freedesktop::Akonadi::MailFilterAgent( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ),
-                                                                                    QLatin1String( "/MailFilterAgent" ),
-                                                                                    QDBusConnection::sessionBus(), q );
+        mMailFilterAgentInterface = new org::freedesktop::Akonadi::MailFilterAgent(QLatin1String("org.freedesktop.Akonadi.MailFilterAgent"),
+                QLatin1String("/MailFilterAgent"),
+                QDBusConnection::sessionBus(), q);
     }
 
     void readConfig();
-    void writeConfig( bool withSync = true ) const;
+    void writeConfig(bool withSync = true) const;
     void clear();
 
     QMap<QUrl, QString> mTagList;
@@ -64,29 +65,29 @@ public:
 
 void FilterManager::Private::readConfig()
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("akonadi_mailfilter_agentrc") );
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("akonadi_mailfilter_agentrc"));
     clear();
     QStringList emptyFilters;
-    mFilters = FilterImporterExporter::readFiltersFromConfig( config, emptyFilters );
+    mFilters = FilterImporterExporter::readFiltersFromConfig(config, emptyFilters);
     emit q->filtersChanged();
 }
 
-void FilterManager::Private::writeConfig( bool withSync ) const
+void FilterManager::Private::writeConfig(bool withSync) const
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("akonadi_mailfilter_agentrc") );
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("akonadi_mailfilter_agentrc"));
 
     // Now, write out the new stuff:
-    FilterImporterExporter::writeFiltersToConfig( mFilters, config );
-    KConfigGroup group = config->group( "General" );
+    FilterImporterExporter::writeFiltersToConfig(mFilters, config);
+    KConfigGroup group = config->group("General");
 
-    if ( withSync ) {
+    if (withSync) {
         group.sync();
     }
 }
 
 void FilterManager::Private::clear()
 {
-    qDeleteAll( mFilters );
+    qDeleteAll(mFilters);
     mFilters.clear();
 }
 
@@ -94,28 +95,29 @@ void FilterManager::Private::clear()
 
 using namespace MailCommon;
 
-FilterManager* FilterManager::Private::mInstance = 0;
-FilterActionDict* FilterManager::Private::mFilterActionDict = 0;
+FilterManager *FilterManager::Private::mInstance = 0;
+FilterActionDict *FilterManager::Private::mFilterActionDict = 0;
 
-FilterManager* FilterManager::instance()
+FilterManager *FilterManager::instance()
 {
-    if ( !FilterManager::Private::mInstance )
+    if (!FilterManager::Private::mInstance) {
         FilterManager::Private::mInstance = new FilterManager;
+    }
 
     return FilterManager::Private::mInstance;
 }
 
-FilterActionDict* FilterManager::filterActionDict()
+FilterActionDict *FilterManager::filterActionDict()
 {
-    if ( !FilterManager::Private::mFilterActionDict )
+    if (!FilterManager::Private::mFilterActionDict) {
         FilterManager::Private::mFilterActionDict = new FilterActionDict;
+    }
 
     return FilterManager::Private::mFilterActionDict;
 }
 
-
 FilterManager::FilterManager()
-    : d( new Private( this ) )
+    : d(new Private(this))
 {
     updateTagList();
 
@@ -128,10 +130,10 @@ FilterManager::FilterManager()
     qDBusRegisterMetaType<QList<qint64> >();
     Akonadi::ServerManager::State state = Akonadi::ServerManager::self()->state();
     if (state == Akonadi::ServerManager::Running) {
-        QTimer::singleShot(0,this,SLOT(slotReadConfig()));
+        QTimer::singleShot(0, this, SLOT(slotReadConfig()));
     } else {
-        connect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-                 SLOT(slotServerStateChanged(Akonadi::ServerManager::State)) );
+        connect(Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+                SLOT(slotServerStateChanged(Akonadi::ServerManager::State)));
     }
 }
 
@@ -139,15 +141,15 @@ void FilterManager::slotServerStateChanged(Akonadi::ServerManager::State state)
 {
     if (state == Akonadi::ServerManager::Running) {
         d->readConfig();
-        disconnect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)));
+        disconnect(Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)));
     }
 }
 
 void FilterManager::updateTagList()
 {
-  Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
-  fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
-  connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotFinishedTagListing(KJob*)));
+    Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
+    fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotFinishedTagListing(KJob*)));
 }
 
 bool FilterManager::initialized() const
@@ -167,8 +169,8 @@ void FilterManager::slotFinishedTagListing(KJob *job)
     if (job->error()) {
         qWarning() << "failed to retrieve tags " << job->errorString();
     }
-    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
-    Q_FOREACH(const Akonadi::Tag &tag, fetchJob->tags() ) {
+    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob *>(job);
+    Q_FOREACH (const Akonadi::Tag &tag, fetchJob->tags()) {
         d->mTagList.insert(tag.url(), tag.name());
     }
 
@@ -207,9 +209,9 @@ bool FilterManager::isValid() const
     return d->mMailFilterAgentInterface->isValid();
 }
 
-QString FilterManager::createUniqueFilterName( const QString &name ) const
+QString FilterManager::createUniqueFilterName(const QString &name) const
 {
-    return d->mMailFilterAgentInterface->createUniqueName( name );
+    return d->mMailFilterAgentInterface->createUniqueName(name);
 }
 
 void FilterManager::showFilterLogDialog(qlonglong windowId)
@@ -217,37 +219,38 @@ void FilterManager::showFilterLogDialog(qlonglong windowId)
     d->mMailFilterAgentInterface->showFilterLogDialog(windowId);
 }
 
-void FilterManager::filter( const Akonadi::Item &item, const QString &identifier, const QString &resourceId ) const
+void FilterManager::filter(const Akonadi::Item &item, const QString &identifier, const QString &resourceId) const
 {
-    d->mMailFilterAgentInterface->filter( item.id(), identifier, resourceId );
+    d->mMailFilterAgentInterface->filter(item.id(), identifier, resourceId);
 }
 
-void FilterManager::filter( const Akonadi::Item &item, FilterSet set, bool account, const QString &resourceId ) const
+void FilterManager::filter(const Akonadi::Item &item, FilterSet set, bool account, const QString &resourceId) const
 {
-    d->mMailFilterAgentInterface->filterItem( item.id(), static_cast<int>(set), account ? resourceId : QString() );
+    d->mMailFilterAgentInterface->filterItem(item.id(), static_cast<int>(set), account ? resourceId : QString());
 }
 
-void FilterManager::filter( const Akonadi::Item::List& messages, FilterManager::FilterSet set ) const
-{
-    QList<qint64> itemIds;
-
-    foreach ( const Akonadi::Item &item, messages )
-        itemIds << item.id();
-
-    d->mMailFilterAgentInterface->filterItems( itemIds, static_cast<int>(set) );
-}
-
-
-void FilterManager::filter(const Akonadi::Item::List& messages, SearchRule::RequiredPart requiredPart, const QStringList& listFilters) const
+void FilterManager::filter(const Akonadi::Item::List &messages, FilterManager::FilterSet set) const
 {
     QList<qint64> itemIds;
 
-    foreach ( const Akonadi::Item &item, messages )
+    foreach (const Akonadi::Item &item, messages) {
         itemIds << item.id();
-    d->mMailFilterAgentInterface->applySpecificFilters( itemIds, static_cast<int>(requiredPart), listFilters);
+    }
+
+    d->mMailFilterAgentInterface->filterItems(itemIds, static_cast<int>(set));
 }
 
-void FilterManager::setFilters( const QList<MailCommon::MailFilter*> &filters )
+void FilterManager::filter(const Akonadi::Item::List &messages, SearchRule::RequiredPart requiredPart, const QStringList &listFilters) const
+{
+    QList<qint64> itemIds;
+
+    foreach (const Akonadi::Item &item, messages) {
+        itemIds << item.id();
+    }
+    d->mMailFilterAgentInterface->applySpecificFilters(itemIds, static_cast<int>(requiredPart), listFilters);
+}
+
+void FilterManager::setFilters(const QList<MailCommon::MailFilter *> &filters)
 {
     beginUpdate();
     d->clear();
@@ -255,21 +258,21 @@ void FilterManager::setFilters( const QList<MailCommon::MailFilter*> &filters )
     endUpdate();
 }
 
-QList<MailCommon::MailFilter*> FilterManager::filters() const
+QList<MailCommon::MailFilter *> FilterManager::filters() const
 {
     return d->mFilters;
 }
 
-void FilterManager::appendFilters( const QList<MailCommon::MailFilter*> &filters, bool replaceIfNameExists )
+void FilterManager::appendFilters(const QList<MailCommon::MailFilter *> &filters, bool replaceIfNameExists)
 {
     beginUpdate();
-    if ( replaceIfNameExists ) {
-        foreach ( const MailCommon::MailFilter *newFilter, filters ) {
+    if (replaceIfNameExists) {
+        foreach (const MailCommon::MailFilter *newFilter, filters) {
             int numberOfFilters = d->mFilters.count();
-            for ( int i = 0; i < numberOfFilters; ++i ) {
-                MailCommon::MailFilter *filter = d->mFilters.at( i );
-                if ( newFilter->name() == filter->name() ) {
-                    d->mFilters.removeAll( filter );
+            for (int i = 0; i < numberOfFilters; ++i) {
+                MailCommon::MailFilter *filter = d->mFilters.at(i);
+                if (newFilter->name() == filter->name()) {
+                    d->mFilters.removeAll(filter);
                     i = 0;
                     numberOfFilters = d->mFilters.count();
                 }
@@ -281,10 +284,10 @@ void FilterManager::appendFilters( const QList<MailCommon::MailFilter*> &filters
     endUpdate();
 }
 
-void FilterManager::removeFilter( MailCommon::MailFilter *filter )
+void FilterManager::removeFilter(MailCommon::MailFilter *filter)
 {
     beginUpdate();
-    d->mFilters.removeAll( filter );
+    d->mFilters.removeAll(filter);
     endUpdate();
 }
 
@@ -294,7 +297,7 @@ void FilterManager::beginUpdate()
 
 void FilterManager::endUpdate()
 {
-    d->writeConfig( true );
+    d->writeConfig(true);
     d->mMailFilterAgentInterface->reload();
     emit filtersChanged();
 }

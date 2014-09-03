@@ -16,7 +16,8 @@
 
 #include <QDialog>
 
-namespace Ui {
+namespace Ui
+{
 class SnippetDialog;
 }
 
@@ -26,28 +27,29 @@ class QAbstractItemModel;
 class QModelIndex;
 class QPushButton;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class SnippetDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit SnippetDialog( KActionCollection *actionCollection, bool inGroupMode, QWidget *parent = 0 );
+    explicit SnippetDialog(KActionCollection *actionCollection, bool inGroupMode, QWidget *parent = 0);
     ~SnippetDialog();
 
-    void setName( const QString &name );
+    void setName(const QString &name);
     QString name() const;
 
-    void setText( const QString &text );
+    void setText(const QString &text);
     QString text() const;
 
-    void setKeySequence( const QKeySequence &sequence );
+    void setKeySequence(const QKeySequence &sequence);
     QKeySequence keySequence() const;
 
-    void setGroupModel( QAbstractItemModel *model );
+    void setGroupModel(QAbstractItemModel *model);
 
-    void setGroupIndex( const QModelIndex &index );
+    void setGroupIndex(const QModelIndex &index);
     QModelIndex groupIndex() const;
 
 private Q_SLOTS:

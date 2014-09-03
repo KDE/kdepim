@@ -24,8 +24,8 @@
 
 using namespace MailCommon;
 
-FilterActionBeep::FilterActionBeep( QObject *parent )
-    : FilterActionWithNone( QLatin1String("beep"), i18n( "Beep" ), parent )
+FilterActionBeep::FilterActionBeep(QObject *parent)
+    : FilterActionWithNone(QLatin1String("beep"), i18n("Beep"), parent)
 {
 }
 
@@ -35,14 +35,12 @@ FilterAction::ReturnCode FilterActionBeep::process(ItemContext &/*context*/ , bo
     return GoOn;
 }
 
-
 SearchRule::RequiredPart FilterActionBeep::requiredPart() const
 {
     return SearchRule::Envelope;
 }
 
-
-FilterAction* FilterActionBeep::newAction()
+FilterAction *FilterActionBeep::newAction()
 {
     return new FilterActionBeep;
 }

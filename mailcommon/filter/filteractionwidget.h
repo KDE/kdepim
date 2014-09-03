@@ -28,7 +28,8 @@
 
 #include <KHBox>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FilterAction;
 class FilterActionWidget;
@@ -61,7 +62,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit FilterActionWidget( QWidget *parent = 0 );
+    explicit FilterActionWidget(QWidget *parent = 0);
 
     /**
      * Destroys the filter action widget.
@@ -77,7 +78,7 @@ public:
      * If @p action is @c 0, the widget is cleared.
      * @note The widget takes ownership of the passed action.
      */
-    void setAction( const MailCommon::FilterAction *action );
+    void setAction(const MailCommon::FilterAction *action);
 
     /**
      * Returns the filter action.
@@ -88,21 +89,21 @@ public:
      */
     MailCommon::FilterAction *action() const;
 
-    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled);
 
 signals:
     void filterModified();
-    void addWidget( QWidget * );
-    void removeWidget( QWidget * );
+    void addWidget(QWidget *);
+    void removeWidget(QWidget *);
 
 private:
     //@cond PRIVATE
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotFilterTypeChanged( int ) )
-    Q_PRIVATE_SLOT( d, void slotAddWidget() )
-    Q_PRIVATE_SLOT( d, void slotRemoveWidget() )
+    Q_PRIVATE_SLOT(d, void slotFilterTypeChanged(int))
+    Q_PRIVATE_SLOT(d, void slotAddWidget())
+    Q_PRIVATE_SLOT(d, void slotRemoveWidget())
     //@endcond
 };
 
@@ -122,7 +123,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit FilterActionWidgetLister( QWidget *parent = 0 );
+    explicit FilterActionWidgetLister(QWidget *parent = 0);
 
     /**
      * Destroys the filter action widget lister.
@@ -132,22 +133,22 @@ public:
     /**
      * Sets the @p list of filter actions, the lister will create FilterActionWidgets for.
      */
-    void setActionList( QList<MailCommon::FilterAction*> *list );
+    void setActionList(QList<MailCommon::FilterAction *> *list);
 
     /**
      * Updates the action list according to the current action widget values.
      */
     void updateActionList();
 
-    void reconnectWidget( FilterActionWidget *w );
+    void reconnectWidget(FilterActionWidget *w);
 
 public Q_SLOTS:
     /**
      * Resets the action widgets.
      */
     void reset();
-    void slotAddWidget( QWidget * );
-    void slotRemoveWidget( QWidget * );
+    void slotAddWidget(QWidget *);
+    void slotRemoveWidget(QWidget *);
 
 signals:
     void filterModified();
@@ -156,12 +157,12 @@ protected:
     /**
      * @copydoc KPIM::KWidgetLister::clearWidget
      */
-    virtual void clearWidget( QWidget * );
+    virtual void clearWidget(QWidget *);
 
     /**
      * @copydoc KPIM::KWidgetLister::createWidget
      */
-    virtual QWidget *createWidget( QWidget * );
+    virtual QWidget *createWidget(QWidget *);
 
     void updateAddRemoveButton();
 

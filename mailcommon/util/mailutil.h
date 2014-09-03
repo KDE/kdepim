@@ -45,7 +45,8 @@
 
 class OrgKdeAkonadiPOP3SettingsInterface;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Item;
 }
 
@@ -55,33 +56,35 @@ class QAbstractItemModel;
 class QModelIndex;
 class QString;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * The Util namespace contains a collection of helper functions use in
  * various places.
  */
-namespace Util {
+namespace Util
+{
 
 MAILCOMMON_EXPORT OrgKdeAkonadiPOP3SettingsInterface *createPop3SettingsInterface(
-        const QString &ident );
+    const QString &ident);
 
-MAILCOMMON_EXPORT bool isVirtualCollection( const Akonadi::Collection &col );
+MAILCOMMON_EXPORT bool isVirtualCollection(const Akonadi::Collection &col);
 
-MAILCOMMON_EXPORT bool isVirtualCollection( const QString &resource );
+MAILCOMMON_EXPORT bool isVirtualCollection(const QString &resource);
 
-MAILCOMMON_EXPORT QString fullCollectionPath( const Akonadi::Collection &collection );
+MAILCOMMON_EXPORT QString fullCollectionPath(const Akonadi::Collection &collection);
 
-MAILCOMMON_EXPORT bool showJobErrorMessage( KJob *job );
+MAILCOMMON_EXPORT bool showJobErrorMessage(KJob *job);
 
-MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances( bool excludeMailTransport = true );
+MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances(bool excludeMailTransport = true);
 
-MAILCOMMON_EXPORT bool ensureKorganizerRunning( bool switchTo );
+MAILCOMMON_EXPORT bool ensureKorganizerRunning(bool switchTo);
 
 /**
    * Returns the identity of the folder that contains the given Akonadi::Item.
    */
-MAILCOMMON_EXPORT uint folderIdentity( const Akonadi::Item &item );
+MAILCOMMON_EXPORT uint folderIdentity(const Akonadi::Item &item);
 
 /**
    * Describes the direction for searching next unread collection.
@@ -100,27 +103,27 @@ enum SearchDirection {
    * @param ignoreCollectionCallback A callback method to ignore certain
    *        collections by returning @c true.
    */
-MAILCOMMON_EXPORT QModelIndex nextUnreadCollection( QAbstractItemModel *model,
-                                                    const QModelIndex &current,
-                                                    SearchDirection direction,
-                                                    bool (*ignoreCollectionCallback)( const Akonadi::Collection &collection ) = 0 );
+MAILCOMMON_EXPORT QModelIndex nextUnreadCollection(QAbstractItemModel *model,
+        const QModelIndex &current,
+        SearchDirection direction,
+        bool (*ignoreCollectionCallback)(const Akonadi::Collection &collection) = 0);
 
-MAILCOMMON_EXPORT Akonadi::Collection parentCollectionFromItem( const Akonadi::Item &item );
+MAILCOMMON_EXPORT Akonadi::Collection parentCollectionFromItem(const Akonadi::Item &item);
 
-MAILCOMMON_EXPORT QString realFolderPath( const QString &path );
+MAILCOMMON_EXPORT QString realFolderPath(const QString &path);
 
 MAILCOMMON_EXPORT QColor defaultQuotaColor();
 
-MAILCOMMON_EXPORT void expireOldMessages( const Akonadi::Collection &collection,
-                                          bool immediate );
+MAILCOMMON_EXPORT void expireOldMessages(const Akonadi::Collection &collection,
+        bool immediate);
 
-MAILCOMMON_EXPORT Akonadi::Collection updatedCollection( const Akonadi::Collection& col );
+MAILCOMMON_EXPORT Akonadi::Collection updatedCollection(const Akonadi::Collection &col);
 
-MAILCOMMON_EXPORT Akonadi::Collection::Id convertFolderPathToCollectionId( const QString& folder);
-MAILCOMMON_EXPORT QString convertFolderPathToCollectionStr( const QString& folder);
+MAILCOMMON_EXPORT Akonadi::Collection::Id convertFolderPathToCollectionId(const QString &folder);
+MAILCOMMON_EXPORT QString convertFolderPathToCollectionStr(const QString &folder);
 
 MAILCOMMON_EXPORT bool foundMailer();
-MAILCOMMON_EXPORT bool isLocalCollection( const QString &resource );
+MAILCOMMON_EXPORT bool isLocalCollection(const QString &resource);
 
 MAILCOMMON_EXPORT bool ignoreNewMailInFolder(const Akonadi::Collection &collection);
 }

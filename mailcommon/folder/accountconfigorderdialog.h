@@ -25,7 +25,8 @@
 class QListWidget;
 class QPushButton;
 class QCheckBox;
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT AccountConfigOrderDialog : public QDialog
 {
@@ -38,11 +39,11 @@ private Q_SLOTS:
     void slotOk();
     void slotMoveUp();
     void slotMoveDown();
-    void slotEnableControls();    
+    void slotEnableControls();
     void slotEnableAccountOrder(bool state);
 private:
     enum Type {
-        IdentifierAccount = Qt::UserRole+1
+        IdentifierAccount = Qt::UserRole + 1
     };
 
     void writeConfig();

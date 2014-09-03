@@ -21,7 +21,8 @@
 #define MAILCOMMON_FILTERACTIONSETSTATUS_H
 
 #include "filteractionstatus.h"
-namespace MailCommon {
+namespace MailCommon
+{
 
 //=============================================================================
 // FilterActionSetStatus - set status to
@@ -31,11 +32,11 @@ class FilterActionSetStatus: public FilterActionStatus
 {
     Q_OBJECT
 public:
-    explicit FilterActionSetStatus( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    explicit FilterActionSetStatus(QObject *parent = 0);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
 
-    static FilterAction* newAction();
+    static FilterAction *newAction();
     QString sieveCode() const;
     QStringList sieveRequires() const;
 };

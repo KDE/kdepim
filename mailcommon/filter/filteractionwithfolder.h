@@ -22,7 +22,8 @@
 
 #include "filteraction.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 /**
  * @short Abstract base class for filter actions with a mail folder as parameter.
@@ -46,7 +47,7 @@ public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithFolder(const QString &name, const QString &label, QObject *parent = 0 );
+    FilterActionWithFolder(const QString &name, const QString &label, QObject *parent = 0);
 
     /**
      * @copydoc FilterAction::isEmpty
@@ -56,34 +57,34 @@ public:
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget *createParamWidget( QWidget *parent ) const;
+    virtual QWidget *createParamWidget(QWidget *parent) const;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
+    virtual void applyParamWidgetValue(QWidget *paramWidget);
 
     /**
      * @copydoc FilterAction::setParamWidgetValue
      */
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
+    virtual void setParamWidgetValue(QWidget *paramWidget) const;
 
     /**
      * @copydoc FilterAction::clearParamWidget
      */
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
+    virtual void clearParamWidget(QWidget *paramWidget) const;
 
     /**
      * @copydoc FilterAction::argsFromString
      */
-    virtual void argsFromString( const QString &argsStr );
+    virtual void argsFromString(const QString &argsStr);
 
     /**
      * @copydoc FilterAction::argsAsString
      */
     virtual QString argsAsString() const;
 
-    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+    virtual bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
 
     virtual QString argsAsStringReal() const;
 
@@ -95,8 +96,8 @@ public:
     /**
      * @copydoc FilterAction::folderRemoved
      */
-    virtual bool folderRemoved( const Akonadi::Collection &aFolder,
-                                const Akonadi::Collection &aNewFolder );
+    virtual bool folderRemoved(const Akonadi::Collection &aFolder,
+                               const Akonadi::Collection &aNewFolder);
 
 protected:
     Akonadi::Collection mFolder;

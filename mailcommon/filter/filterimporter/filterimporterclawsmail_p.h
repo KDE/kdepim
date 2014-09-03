@@ -23,26 +23,27 @@
 
 class QFile;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MailFilter;
 
 class MAILCOMMON_EXPORT FilterImporterClawsMails : public FilterImporterAbstract
 {
 public:
-    explicit FilterImporterClawsMails( QFile *file );
+    explicit FilterImporterClawsMails(QFile *file);
     //Use for unittests
     FilterImporterClawsMails(bool interactive = false);
     ~FilterImporterClawsMails();
     static QString defaultFiltersSettingsPath();
 
     // the returned mail filter instance will be owned by the caller, who must ensure to delete it at some point
-    MailFilter * parseLine(const QString& line);
+    MailFilter *parseLine(const QString &line);
 
 private:
-    QString extractString( const QString & tmp, int & pos);
-    QString extractConditions( const QString &line,MailFilter *filter);
-    QString extractActions( const QString &line,MailFilter *filter);
+    QString extractString(const QString &tmp, int &pos);
+    QString extractConditions(const QString &line, MailFilter *filter);
+    QString extractActions(const QString &line, MailFilter *filter);
 };
 
 }

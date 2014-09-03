@@ -31,7 +31,8 @@ class QCheckBox;
 class QPushButton;
 class QRadioButton;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FolderRequester;
 
@@ -40,24 +41,24 @@ class MAILCOMMON_EXPORT CollectionExpiryPage : public Akonadi::CollectionPropert
     Q_OBJECT
 
 public:
-    explicit CollectionExpiryPage( QWidget *parent = 0 );
+    explicit CollectionExpiryPage(QWidget *parent = 0);
     ~CollectionExpiryPage();
 
-    bool canHandle( const Akonadi::Collection &col ) const;
-    void load( const Akonadi::Collection &collection );
-    void save( Akonadi::Collection &collection );
+    bool canHandle(const Akonadi::Collection &col) const;
+    void load(const Akonadi::Collection &collection);
+    void save(Akonadi::Collection &collection);
 
 protected:
     void init();
 
 protected slots:
     void slotUpdateControls();
-    void slotCollectionModified(KJob* job);
+    void slotCollectionModified(KJob *job);
     void slotChanged();
     void slotSaveAndExpire();
 
 private:
-    void saveAndExpire( Akonadi::Collection &collection, bool saveSettings, bool _expirenow );
+    void saveAndExpire(Akonadi::Collection &collection, bool saveSettings, bool _expirenow);
 
 private:
     QCheckBox *expireReadMailCB;
@@ -73,7 +74,7 @@ private:
     bool mChanged;
 };
 
-AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CollectionExpiryPageFactory, CollectionExpiryPage )
+AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionExpiryPageFactory, CollectionExpiryPage)
 
 }
 

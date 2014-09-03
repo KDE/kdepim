@@ -17,7 +17,6 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-
 #ifndef MAILCOMMON_FILTEREDITDIALOG_P_H
 #define MAILCOMMON_FILTEREDITDIALOG_P_H
 
@@ -25,7 +24,8 @@
 
 class Ui_FilterConfigWidget;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MailFilter;
 class SearchPatternEdit;
@@ -33,16 +33,16 @@ class FilterActionWidgetLister;
 
 class FilterEditDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit FilterEditDialog( QWidget *parent = 0 );
+public:
+    explicit FilterEditDialog(QWidget *parent = 0);
     virtual ~FilterEditDialog();
 
-    void load( int index );
+    void load(int index);
     void save();
 
-  private:
+private:
     Ui_FilterConfigWidget *mUi;
     MailFilter *mFilter;
     SearchPatternEdit *mPatternEdit;

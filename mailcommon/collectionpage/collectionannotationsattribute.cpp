@@ -28,13 +28,13 @@ CollectionAnnotationsAttribute::CollectionAnnotationsAttribute()
 }
 
 CollectionAnnotationsAttribute::CollectionAnnotationsAttribute(
-        const QMap<QByteArray, QByteArray> &annotations )
-    : mAnnotations( annotations )
+    const QMap<QByteArray, QByteArray> &annotations)
+    : mAnnotations(annotations)
 {
 }
 
 void CollectionAnnotationsAttribute::setAnnotations(
-        const QMap<QByteArray, QByteArray> &annotations )
+    const QMap<QByteArray, QByteArray> &annotations)
 {
     mAnnotations = annotations;
 }
@@ -51,47 +51,47 @@ QByteArray CollectionAnnotationsAttribute::type() const
 
 Akonadi::Attribute *CollectionAnnotationsAttribute::clone() const
 {
-    return new CollectionAnnotationsAttribute( mAnnotations );
+    return new CollectionAnnotationsAttribute(mAnnotations);
 }
 
 QByteArray CollectionAnnotationsAttribute::serialized() const
 {
     QByteArray result = "";
 
-    foreach ( const QByteArray &key, mAnnotations.keys() ) {
+    foreach (const QByteArray &key, mAnnotations.keys()) {
         result += key;
         result += ' ';
         result += mAnnotations[key];
         result += " % "; // We use this separator as '%' is not allowed in keys or values
     }
-    result.chop( 3 );
+    result.chop(3);
 
     return result;
 }
 
-void CollectionAnnotationsAttribute::deserialize( const QByteArray &data )
+void CollectionAnnotationsAttribute::deserialize(const QByteArray &data)
 {
     mAnnotations.clear();
-    const QList<QByteArray> lines = data.split( '%' );
+    const QList<QByteArray> lines = data.split('%');
 
-    for ( int i = 0; i < lines.size(); ++i ) {
+    for (int i = 0; i < lines.size(); ++i) {
         QByteArray line = lines[i];
-        if ( i != 0 && line.startsWith( ' ' ) ) {
-            line = line.mid( 1 );
+        if (i != 0 && line.startsWith(' ')) {
+            line = line.mid(1);
         }
-        if ( i != lines.size() - 1 && line.endsWith( ' ' ) ) {
-            line.chop( 1 );
+        if (i != lines.size() - 1 && line.endsWith(' ')) {
+            line.chop(1);
         }
-        if ( line.trimmed().isEmpty() ) {
+        if (line.trimmed().isEmpty()) {
             continue;
         }
-        int wsIndex = line.indexOf( ' ' );
-        if ( wsIndex > 0 ) {
-            const QByteArray key = line.mid( 0, wsIndex );
-            const QByteArray value = line.mid( wsIndex+1 );
+        int wsIndex = line.indexOf(' ');
+        if (wsIndex > 0) {
+            const QByteArray key = line.mid(0, wsIndex);
+            const QByteArray value = line.mid(wsIndex + 1);
             mAnnotations[key] = value;
         } else {
-            mAnnotations.insert( line, QByteArray() );
+            mAnnotations.insert(line, QByteArray());
         }
     }
 }

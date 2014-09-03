@@ -21,16 +21,15 @@
 #include <AkonadiCore/qtest_akonadi.h>
 #include <mailcommon/kernel/mailkernel.h>
 
-
-QTEST_AKONADIMAIN( FilterImportThunderbirdtest )
+QTEST_AKONADIMAIN(FilterImportThunderbirdtest)
 
 void FilterImportThunderbirdtest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
 
-    FilterTestKernel *kernel = new FilterTestKernel( this );
-    CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
-    CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+    FilterTestKernel *kernel = new FilterTestKernel(this);
+    CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
 }
 
 void FilterImportThunderbirdtest::testImportFiltersAllCondition()
@@ -43,7 +42,7 @@ void FilterImportThunderbirdtest::testImportFiltersAllCondition()
                                          "action=\"Mark read\"\n"
                                          "condition=\"ALL\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
-    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QList<MailCommon::MailFilter *> lst = importer.importFilter();
     QCOMPARE(lst.count(), 1);
     MailCommon::MailFilter *f = lst.at(0);
     QVERIFY(f->isEnabled());
@@ -57,7 +56,7 @@ void FilterImportThunderbirdtest::testImportFiltersEmpty()
 {
     QString filter;
     MailCommon::FilterImporterThunderbird importer(filter, false);
-    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QList<MailCommon::MailFilter *> lst = importer.importFilter();
     QCOMPARE(lst.count(), 0);
 }
 
@@ -72,7 +71,7 @@ void FilterImportThunderbirdtest::testImportFiltersStopExecution()
                                          "action=\"Mark read\"\n"
                                          "condition=\"ALL\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
-    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QList<MailCommon::MailFilter *> lst = importer.importFilter();
     MailCommon::MailFilter *f = lst.at(0);
     QVERIFY(f->isEnabled());
     QCOMPARE(f->stopProcessingHere(), true);
@@ -90,7 +89,7 @@ void FilterImportThunderbirdtest::testImportFiltersDisabled()
                                          "action=\"Mark read\"\n"
                                          "condition=\"ALL\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
-    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QList<MailCommon::MailFilter *> lst = importer.importFilter();
     MailCommon::MailFilter *f = lst.at(0);
     QCOMPARE(f->isEnabled(), false);
     QCOMPARE(f->stopProcessingHere(), true);
@@ -115,7 +114,7 @@ void FilterImportThunderbirdtest::testImportTwoFilters()
                                          "action=\"Mark read\"\n"
                                          "condition=\"AND (subject,contains,kmail) AND (subject,contains,konqueror) AND (subject,contains,kf5) AND (subject,contains,qtcreator)\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
-    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QList<MailCommon::MailFilter *> lst = importer.importFilter();
     QCOMPARE(lst.count(), 2);
     MailCommon::MailFilter *f = lst.at(0);
     QCOMPARE(f->pattern()->op(), MailCommon::SearchPattern::OpAnd);
@@ -138,7 +137,7 @@ void FilterImportThunderbirdtest::testImportAndFilters()
                                          "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
                                          "condition=\"AND (subject,contains,konqi)\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
-    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QList<MailCommon::MailFilter *> lst = importer.importFilter();
     MailCommon::MailFilter *f = lst.at(0);
     QCOMPARE(f->pattern()->op(), MailCommon::SearchPattern::OpAnd);
     qDeleteAll(lst);
@@ -155,7 +154,7 @@ void FilterImportThunderbirdtest::testImportOrFilters()
                                          "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
                                          "condition=\"OR (subject,contains,konqi)\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
-    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QList<MailCommon::MailFilter *> lst = importer.importFilter();
     MailCommon::MailFilter *f = lst.at(0);
     QCOMPARE(f->pattern()->op(), MailCommon::SearchPattern::OpOr);
     qDeleteAll(lst);
@@ -186,7 +185,7 @@ void FilterImportThunderbirdtest::testImportTypeFilters()
                                          "action=\"Mark read\"\n"
                                          "condition=\"AND (subject,contains,kmail) AND (subject,contains,konqueror) AND (subject,contains,kf5) AND (subject,contains,qtcreator)\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
-    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QList<MailCommon::MailFilter *> lst = importer.importFilter();
 
     MailCommon::MailFilter *f = lst.at(0);
     //17
@@ -205,5 +204,4 @@ void FilterImportThunderbirdtest::testImportTypeFilters()
 
     qDeleteAll(lst);
 }
-
 

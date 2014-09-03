@@ -20,24 +20,24 @@
 
 #include "filter/filterimporter/filterimporterabstract_p.h"
 
-
 class QFile;
 class KConfigGroup;
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MailFilter;
 
 class FilterImporterBalsa : public FilterImporterAbstract
 {
 public:
-    explicit FilterImporterBalsa( QFile *file );
+    explicit FilterImporterBalsa(QFile *file);
     ~FilterImporterBalsa();
     static QString defaultFiltersSettingsPath();
 private:
     void addFilter(const KConfigGroup &grp);
-    void parseCondition(const QString& condition,MailCommon::MailFilter *filter );
-    void parseAction(int actionType, const QString& action,MailCommon::MailFilter *filter);
+    void parseCondition(const QString &condition, MailCommon::MailFilter *filter);
+    void parseAction(int actionType, const QString &action, MailCommon::MailFilter *filter);
 };
 
 }

@@ -26,14 +26,14 @@
  *  your version.
  */
 
-
 #include "jobscheduler.h"
 #include <qdebug.h>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
-ScheduledTask::ScheduledTask( const Akonadi::Collection& folder, bool immediate )
-    : mCurrentFolder( folder ), mImmediate( immediate )
+ScheduledTask::ScheduledTask(const Akonadi::Collection &folder, bool immediate)
+    : mCurrentFolder(folder), mImmediate(immediate)
 {
 }
 
@@ -41,140 +41,143 @@ ScheduledTask::~ScheduledTask()
 {
 }
 
-JobScheduler::JobScheduler( QObject* parent )
-    : QObject( parent ), mTimer( this ),
-      mPendingImmediateTasks( 0 ),
-      mCurrentTask( 0 ), mCurrentJob( 0 )
+JobScheduler::JobScheduler(QObject *parent)
+    : QObject(parent), mTimer(this),
+      mPendingImmediateTasks(0),
+      mCurrentTask(0), mCurrentJob(0)
 {
-    connect( &mTimer, SIGNAL(timeout()), SLOT(slotRunNextJob()) );
+    connect(&mTimer, SIGNAL(timeout()), SLOT(slotRunNextJob()));
     // No need to start the internal timer yet, we wait for a task to be scheduled
 }
 
-
 JobScheduler::~JobScheduler()
 {
-    qDeleteAll( mTaskList );
+    qDeleteAll(mTaskList);
     mTaskList.clear();
     delete mCurrentTask;
     mCurrentTask = 0;
     delete mCurrentJob;
 }
 
-void JobScheduler::registerTask( ScheduledTask* task )
+void JobScheduler::registerTask(ScheduledTask *task)
 {
     bool immediate = task->isImmediate();
     int typeId = task->taskTypeId();
-    if ( typeId ) {
+    if (typeId) {
         const Akonadi::Collection folder = task->folder();
         // Search for an identical task already scheduled
-        TaskList::Iterator end( mTaskList.end() );
-        for ( TaskList::Iterator it = mTaskList.begin(); it != end; ++it ) {
-            if ( (*it)->taskTypeId() == typeId && (*it)->folder() == folder ) {
+        TaskList::Iterator end(mTaskList.end());
+        for (TaskList::Iterator it = mTaskList.begin(); it != end; ++it) {
+            if ((*it)->taskTypeId() == typeId && (*it)->folder() == folder) {
 #ifdef DEBUG_SCHEDULER
                 qDebug() << "JobScheduler: already having task type" << typeId << "for folder" << folder->label();
 #endif
                 delete task;
-                if ( !mCurrentTask && immediate ) {
-                    ScheduledTask* task = *it;
-                    removeTask( it );
-                    runTaskNow( task );
+                if (!mCurrentTask && immediate) {
+                    ScheduledTask *task = *it;
+                    removeTask(it);
+                    runTaskNow(task);
                 }
                 return;
             }
         }
         // Note that scheduling an identical task as the one currently running is allowed.
     }
-    if ( !mCurrentTask && immediate )
-        runTaskNow( task );
-    else {
+    if (!mCurrentTask && immediate) {
+        runTaskNow(task);
+    } else {
 #ifdef DEBUG_SCHEDULER
         qDebug() << "JobScheduler: adding task" << task << "(type" << task->taskTypeId()
                  << ") for folder" << task->folder() << task->folder().name();
 #endif
-        mTaskList.append( task );
-        if ( immediate )
+        mTaskList.append(task);
+        if (immediate) {
             ++mPendingImmediateTasks;
-        if ( !mCurrentTask && !mTimer.isActive() )
+        }
+        if (!mCurrentTask && !mTimer.isActive()) {
             restartTimer();
+        }
     }
 }
 
-void JobScheduler::removeTask( TaskList::Iterator& it )
+void JobScheduler::removeTask(TaskList::Iterator &it)
 {
-    if ( (*it)->isImmediate() )
+    if ((*it)->isImmediate()) {
         --mPendingImmediateTasks;
-    mTaskList.erase( it );
+    }
+    mTaskList.erase(it);
 }
 
 void JobScheduler::interruptCurrentTask()
 {
-    Q_ASSERT( mCurrentTask );
+    Q_ASSERT(mCurrentTask);
 #ifdef DEBUG_SCHEDULER
     qDebug() << "JobScheduler: interrupting job" << mCurrentJob << "for folder" << mCurrentTask->folder()->label();
 #endif
     // File it again. This will either delete it or put it in mTaskList.
-    registerTask( mCurrentTask );
+    registerTask(mCurrentTask);
     mCurrentTask = 0;
     mCurrentJob->kill(); // This deletes the job and calls slotJobFinished!
 }
 
 void JobScheduler::slotRunNextJob()
 {
-    while ( !mCurrentJob ) {
+    while (!mCurrentJob) {
 #ifdef DEBUG_SCHEDULER
         qDebug() << "JobScheduler: slotRunNextJob";
 #endif
-        Q_ASSERT( mCurrentTask == 0 );
-        ScheduledTask* task = 0;
+        Q_ASSERT(mCurrentTask == 0);
+        ScheduledTask *task = 0;
         // Find a task suitable for being run
-        TaskList::Iterator end( mTaskList.end() );
-        for ( TaskList::Iterator it = mTaskList.begin(); it != end; ++it ) {
+        TaskList::Iterator end(mTaskList.end());
+        for (TaskList::Iterator it = mTaskList.begin(); it != end; ++it) {
             // Remove if folder died
             const Akonadi::Collection folder = (*it)->folder();
-            if ( !folder.isValid() ) {
+            if (!folder.isValid()) {
 #ifdef DEBUG_SCHEDULER
                 qDebug() << "  folder for task" << (*it) << "was deleted";
 #endif
-                removeTask( it );
-                if ( !mTaskList.isEmpty() )
-                    slotRunNextJob(); // to avoid the mess with invalid iterators :)
-                else
+                removeTask(it);
+                if (!mTaskList.isEmpty()) {
+                    slotRunNextJob();    // to avoid the mess with invalid iterators :)
+                } else {
                     mTimer.stop();
+                }
                 return;
             }
 #ifdef DEBUG_SCHEDULER
             qDebug() << "  looking at folder" << folder.name();
 #endif
             task = *it;
-            removeTask( it );
+            removeTask(it);
             break;
         }
 
-        if ( !task ) // found nothing to run, i.e. folder was opened
-            return; // Timer keeps running, i.e. try again in 1 minute
+        if (!task) { // found nothing to run, i.e. folder was opened
+            return;    // Timer keeps running, i.e. try again in 1 minute
+        }
 
-        runTaskNow( task );
+        runTaskNow(task);
     } // If nothing to do for that task, loop and find another one to run
 }
 
 void JobScheduler::restartTimer()
 {
-    if ( mPendingImmediateTasks > 0 )
+    if (mPendingImmediateTasks > 0) {
         slotRunNextJob();
-    else
-    {
+    } else {
 #ifdef DEBUG_SCHEDULER
-        mTimer.start( 10000 ); // 10 seconds
+        mTimer.start(10000);   // 10 seconds
 #else
-        mTimer.start( 1 * 60000 ); // 1 minute
+        mTimer.start(1 * 60000);   // 1 minute
 #endif
     }
 }
 
-void JobScheduler::runTaskNow( ScheduledTask* task )
+void JobScheduler::runTaskNow(ScheduledTask *task)
 {
-    Q_ASSERT( mCurrentTask == 0 );
-    if ( mCurrentTask ) {
+    Q_ASSERT(mCurrentTask == 0);
+    if (mCurrentTask) {
         interruptCurrentTask();
     }
     mCurrentTask = task;
@@ -185,20 +188,21 @@ void JobScheduler::runTaskNow( ScheduledTask* task )
              << "(type" << mCurrentTask->taskTypeId() << ")"
              << "for folder" << mCurrentTask->folder()->label()
              << "returned job" << mCurrentJob
-             << ( mCurrentJob?mCurrentJob->className():0 );
+             << (mCurrentJob ? mCurrentJob->className() : 0);
 #endif
-    if ( !mCurrentJob ) { // nothing to do, e.g. folder deleted
+    if (!mCurrentJob) {   // nothing to do, e.g. folder deleted
         delete mCurrentTask;
         mCurrentTask = 0;
-        if ( !mTaskList.isEmpty() )
+        if (!mTaskList.isEmpty()) {
             restartTimer();
+        }
         return;
     }
     // Register the job in the folder. This makes it autodeleted if the folder is deleted.
 #if 0
-    mCurrentTask->folder()->storage()->addJob( mCurrentJob );
+    mCurrentTask->folder()->storage()->addJob(mCurrentJob);
 #endif
-    connect( mCurrentJob, SIGNAL(finished()), this, SLOT(slotJobFinished()) );
+    connect(mCurrentJob, SIGNAL(finished()), this, SLOT(slotJobFinished()));
     mCurrentJob->start();
 }
 
@@ -211,16 +215,18 @@ void JobScheduler::slotJobFinished()
     delete mCurrentTask;
     mCurrentTask = 0;
     mCurrentJob = 0;
-    if ( !mTaskList.isEmpty() )
+    if (!mTaskList.isEmpty()) {
         restartTimer();
+    }
 }
 
 // D-Bus call to pause any background jobs
 void JobScheduler::pause()
 {
     mPendingImmediateTasks = 0;
-    if ( mCurrentJob && mCurrentJob->isCancellable() )
+    if (mCurrentJob && mCurrentJob->isCancellable()) {
         interruptCurrentTask();
+    }
     mTimer.stop();
 }
 
@@ -231,8 +237,8 @@ void JobScheduler::resume()
 
 ////
 
-ScheduledJob::ScheduledJob( const Akonadi::Collection& folder, bool immediate )
-    : mImmediate( immediate )
+ScheduledJob::ScheduledJob(const Akonadi::Collection &folder, bool immediate)
+    : mImmediate(immediate)
 {
     mCancellable = true;
     mSrcFolder = folder;

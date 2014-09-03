@@ -27,7 +27,8 @@
 
 #include <QObject>
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class IKernel;
 
@@ -35,18 +36,18 @@ class IKernel;
  * @short A viewer handler to send MDN for viewed messages.
  */
 class MAILCOMMON_EXPORT SendMdnHandler : public QObject,
-                                         public MessageViewer::AbstractMessageLoadedHandler
+    public MessageViewer::AbstractMessageLoadedHandler
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new send mnd handler.
      *
      * @param kernel The mail kernel object that will be used.
      * @param parent The parent object.
      */
-    explicit SendMdnHandler( IKernel *kernel, QObject *parent = 0 );
+    explicit SendMdnHandler(IKernel *kernel, QObject *parent = 0);
 
     /**
      * Destroys the send mdn handler.
@@ -56,14 +57,14 @@ class MAILCOMMON_EXPORT SendMdnHandler : public QObject,
     /**
      * @copydoc AbstractMessageLoadedHandler::setItem()
      */
-    virtual void setItem( const Akonadi::Item &item );
+    virtual void setItem(const Akonadi::Item &item);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void handleMessages() )
+    Q_PRIVATE_SLOT(d, void handleMessages())
     //@endcond
 };
 
