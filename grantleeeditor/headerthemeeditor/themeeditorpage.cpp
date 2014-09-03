@@ -210,7 +210,7 @@ void ThemeEditorPage::uploadTheme()
         //qDebug()<< "zipFilename"<<zipFileName;
 
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
-        dialog->setUploadFile(zipFileName);
+        dialog->setUploadFile(QUrl::fromLocalFile(zipFileName));
         dialog->setUploadName(themename);
         dialog->setPreviewImageFile(0, QUrl::fromLocalFile(previewFileName));
         const QString description = mDesktopPage->description();

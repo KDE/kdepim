@@ -163,7 +163,7 @@ void SieveEditorWidget::slotUploadScripts()
             if (zip->addLocalFile(tmpFile.fileName(), sourceName + QLatin1String(".siv"))) {
                 zip->close();
                 QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("ksieve_script.knsrc"), this);
-                dialog->setUploadFile(zipFileName);
+                dialog->setUploadFile(QUrl::fromLocalFile(zipFileName));
                 dialog->setUploadName(sourceName);
                 dialog->setDescription(i18nc("Default description for the source", "My Sieve Script"));
                 dialog->exec();
