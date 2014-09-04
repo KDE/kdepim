@@ -44,7 +44,7 @@ CustomToolWidgetTest::CustomToolWidgetTest(QWidget *parent)
     QComboBox *style = new QComboBox;
     hbox->addWidget(style);
     style->addItems(QStringList()<< i18n("Translate") << i18n("Short url"));
-    connect(style, SIGNAL(activated(int)), this, SLOT(slotSwitchComponent(int)));
+    connect(style, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &CustomToolWidgetTest::slotSwitchComponent);
 
     mCustomTools = new PimCommon::CustomToolsWidget;
     lay->addWidget(mCustomTools);

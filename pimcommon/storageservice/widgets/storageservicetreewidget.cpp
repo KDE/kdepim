@@ -43,7 +43,7 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(StorageServiceAbstract *stora
       mStorageService(storageService)
 {
     setContextMenuPolicy( Qt::CustomContextMenu );
-    connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
+    connect(this, &StorageServiceTreeWidget::customContextMenuRequested, this, &StorageServiceTreeWidget::slotContextMenu);
     setSortingEnabled(true);
     setAlternatingRowColors(true);
     setRootIsDecorated(false);
@@ -51,7 +51,7 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(StorageServiceAbstract *stora
     lst << i18n("Name") << i18n("Size") << i18n("Created") << i18n("Last Modified");
     setHeaderLabels(lst);
     header()->setMovable(false);
-    connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
+    connect(this, &StorageServiceTreeWidget::itemDoubleClicked, this, &StorageServiceTreeWidget::slotItemDoubleClicked);
 }
 
 StorageServiceTreeWidget::~StorageServiceTreeWidget()

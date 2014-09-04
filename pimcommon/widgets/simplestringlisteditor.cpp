@@ -70,8 +70,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
     mListBox = new QListWidget( this );
 
     mListBox->setContextMenuPolicy( Qt::CustomContextMenu );
-    connect( mListBox, SIGNAL(customContextMenuRequested(QPoint)),
-             SLOT(slotContextMenu(QPoint)) );
+    connect(mListBox, &QListWidget::customContextMenuRequested, this, &SimpleStringListEditor::slotContextMenu);
 
     mListBox->setSelectionMode(QAbstractItemView::ExtendedSelection);
     hlay->addWidget( mListBox, 1 );
@@ -91,8 +90,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
             mAddButton = new QPushButton( addLabel, this );
         mAddButton->setAutoDefault( false );
         mButtonLayout->addWidget( mAddButton );
-        connect( mAddButton, SIGNAL(clicked()),
-                 this, SLOT(slotAdd()) );
+        connect(mAddButton, &QPushButton::clicked, this, &SimpleStringListEditor::slotAdd);
     }
 
 
@@ -104,10 +102,8 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
         mModifyButton->setAutoDefault( false );
         mModifyButton->setEnabled( false ); // no selection yet
         mButtonLayout->addWidget( mModifyButton );
-        connect( mModifyButton, SIGNAL(clicked()),
-                 this, SLOT(slotModify()) );
-        connect( mListBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-                 this, SLOT(slotModify()) );
+        connect(mModifyButton, &QPushButton::clicked, this, &SimpleStringListEditor::slotModify);
+        connect(mListBox, &QListWidget::itemDoubleClicked, this, &SimpleStringListEditor::slotModify);
     }
 
     if ( buttons & Remove ) {
@@ -133,8 +129,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
         mUpButton->setAutoDefault( false );
         mUpButton->setEnabled( false ); // no selection yet
         mButtonLayout->addWidget( mUpButton );
-        connect( mUpButton, SIGNAL(clicked()),
-                 this, SLOT(slotUp()) );
+        connect(mUpButton, &QPushButton::clicked, this, &SimpleStringListEditor::slotUp);
     }
 
     if ( buttons & Down ) {
@@ -148,16 +143,13 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
         mDownButton->setAutoDefault( false );
         mDownButton->setEnabled( false ); // no selection yet
         mButtonLayout->addWidget( mDownButton );
-        connect( mDownButton, SIGNAL(clicked()),
-                 this, SLOT(slotDown()) );
+        connect(mDownButton, &QPushButton::clicked, this, &SimpleStringListEditor::slotDown);
     }
 
     mButtonLayout->addStretch( 1 ); // spacer
 
-    connect( mListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-             this, SLOT(slotSelectionChanged()) );
-    connect( mListBox, SIGNAL(itemSelectionChanged()),
-             this, SLOT(slotSelectionChanged()) );
+    connect(mListBox, &QListWidget::currentItemChanged, this, &SimpleStringListEditor::slotSelectionChanged);
+    connect(mListBox, &QListWidget::itemSelectionChanged, this, &SimpleStringListEditor::slotSelectionChanged);
 }
 
 void SimpleStringListEditor::setUpDownAutoRepeat(bool b)

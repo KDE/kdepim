@@ -28,10 +28,8 @@ CustomTreeView::CustomTreeView(QWidget *parent)
     : QTreeWidget(parent),
       mShowDefaultText(true)
 {
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
-             this, SLOT(slotGeneralFontChanged()));
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-             this, SLOT(slotGeneralPaletteChanged()));
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &CustomTreeView::slotGeneralFontChanged);
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &CustomTreeView::slotGeneralPaletteChanged);
 }
 
 CustomTreeView::~CustomTreeView()
