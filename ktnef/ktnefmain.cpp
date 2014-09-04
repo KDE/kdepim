@@ -28,7 +28,6 @@
 #include <KActionCollection>
 #include <QDebug>
 #include <KEditToolBar>
-#include <KFileDialog>
 #include <KLocalizedString>
 #include <QMenu>
 #include <KMessageBox>
@@ -223,12 +222,7 @@ void KTNEFMain::loadFile(const QString &filename)
 
 void KTNEFMain::openFile()
 {
-    QString filename =
-        KFileDialog::getOpenFileName(
-            QUrl(),
-            QString(),
-            this,
-            i18nc("@title:window", "Open TNEF File"));
+    QString filename = QFileDialog::getOpenFileName(this, i18nc("@title:window", "Open TNEF File"),  QString(), QString());
     if (!filename.isEmpty()) {
         loadFile(filename);
     }
