@@ -18,6 +18,7 @@
 #include "autocorrectiontest.h"
 #include "../autocorrection.h"
 #include "pimcommon/settings/pimcommonsettings.h"
+#include <QDebug>
 #include <qtest_kde.h>
 
 AutoCorrectionTest::AutoCorrectionTest()
@@ -33,6 +34,26 @@ AutoCorrectionTest::~AutoCorrectionTest()
 
 void AutoCorrectionTest::shouldHaveDefaultValue()
 {
+    PimCommon::AutoCorrection autocorrection;
+    QVERIFY(!autocorrection.isEnabledAutoCorrection());
+    QVERIFY(!autocorrection.isUppercaseFirstCharOfSentence());
+    QVERIFY(!autocorrection.isFixTwoUppercaseChars());
+    QVERIFY(!autocorrection.isSingleSpaces());
+    QVERIFY(!autocorrection.isAutoFractions());
+    QVERIFY(!autocorrection.isCapitalizeWeekDays());
+    QVERIFY(!autocorrection.isReplaceDoubleQuotes());
+    QVERIFY(!autocorrection.isReplaceSingleQuotes());
+    QVERIFY(!autocorrection.isAdvancedAutocorrect());
+    QVERIFY(!autocorrection.isAutoFormatUrl());
+    QVERIFY(!autocorrection.isAutoBoldUnderline());
+    QVERIFY(!autocorrection.isSuperScript());
+    QVERIFY(!autocorrection.isAddNonBreakingSpace());
+}
+
+void AutoCorrectionTest::shouldRestoreValue()
+{
+    PimCommon::AutoCorrection autocorrection;
+    //TODO
 }
 
 
