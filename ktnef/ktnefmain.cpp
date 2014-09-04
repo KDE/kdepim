@@ -29,15 +29,14 @@
 #include <QDebug>
 #include <KEditToolBar>
 #include <KFileDialog>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <QMenu>
 #include <KMessageBox>
 #include <KRun>
 #include <KShortcutsDialog>
 #include <KStandardAction>
-#include <KStandardDirs>
 #include <QTemporaryFile>
+#include <QStandardPaths>
 #include <QUrl>
 #include <QIcon>
 
@@ -70,7 +69,7 @@ KTNEFMain::KTNEFMain(QWidget *parent)
     mLastDir = mDefaultDir;
 
     // create personal temp extract dir
-    QDir().mkpath(KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp"));
+    QDir().mkpath(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QLatin1String("/ktnef/"));
 
     resize(430, 350);
 
@@ -276,7 +275,7 @@ void KTNEFMain::viewFile()
 
 QString KTNEFMain::extractTemp(KTNEFAttach *att)
 {
-    QString dir = KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp/");
+    QString dir = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QLatin1String("/ktnef/");
     mParser->extractFileTo(att->name(), dir);
     dir.append(att->name());
     return dir;
@@ -387,7 +386,7 @@ void KTNEFMain::enableSingleAction(bool on)
 
 void KTNEFMain::cleanup()
 {
-    QDir d(KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp/"));
+    QDir d(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QLatin1String("/ktnef/"));
     d.removeRecursively();
 }
 
@@ -515,7 +514,7 @@ void KTNEFMain::slotShowMessageText()
 
     QString rtf = mParser->message()->rtfString();
     if (!rtf.isEmpty()) {
-        QTemporaryFile *tmpFile = new QTemporaryFile(KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp/") + QLatin1String("ktnef_XXXXXX.rtf"));
+        QTemporaryFile *tmpFile = new QTemporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QLatin1String("/ktnef/") + QLatin1String("ktnef_XXXXXX.rtf"));
         tmpFile->open();
         tmpFile->setPermissions(QFile::ReadUser);
         tmpFile->write(rtf.toLocal8Bit());
