@@ -29,6 +29,8 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldRestoreValue();
+
 private:
     KSharedConfig::Ptr mConfig;
 };
