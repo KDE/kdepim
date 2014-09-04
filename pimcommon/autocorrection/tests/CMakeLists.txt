@@ -23,12 +23,6 @@ target_link_libraries(richtexteditwithautocorrection_gui
 )
 
 
-set( autocorrectiontest_SRCS autocorrectiontest.cpp )
-add_executable( autocorrectiontest ${autocorrectiontest_SRCS})
-add_test(autocorrectiontest autocorrectiontest)
-ecm_mark_as_test(autocorrectiontest)
-target_link_libraries( autocorrectiontest Qt5::Test  pimcommon)
-
 set( lineeditwithautocorrectiontest_SRCS lineeditwithautocorrectiontest.cpp )
 add_executable( lineeditwithautocorrectiontest ${lineeditwithautocorrectiontest_SRCS})
 add_test(lineeditwithautocorrectiontest lineeditwithautocorrectiontest)
