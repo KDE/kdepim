@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013-2014 Montel Laurent <montel@kde.org>
   code based on calligra autocorrection.
   
   This program is free software; you can redistribute it and/or modify it
@@ -194,6 +194,91 @@ void AutoCorrection::setTwoUpperLetterExceptions(const QSet<QString> &exceptions
 void AutoCorrection::setAutocorrectEntries(const QHash<QString, QString> &entries)
 {
     mAutocorrectEntries = entries;
+}
+
+void AutoCorrection::setAutoFormatUrl(bool b)
+{
+    mAutoFormatUrl = b;
+}
+
+void AutoCorrection::setAutoBoldUnderline(bool b)
+{
+    mAutoBoldUnderline = b;
+}
+
+void AutoCorrection::setSuperScript(bool b)
+{
+    mSuperScriptAppendix = b;
+}
+
+void AutoCorrection::setAddNonBreakingSpace(bool b)
+{
+    mAddNonBreakingSpace = b;
+}
+
+bool AutoCorrection::isEnabledAutoCorrection() const
+{
+    return mEnabled;
+}
+
+bool AutoCorrection::isUppercaseFirstCharOfSentence() const
+{
+    return mUppercaseFirstCharOfSentence;
+}
+
+bool AutoCorrection::isFixTwoUppercaseChars() const
+{
+    return mFixTwoUppercaseChars;
+}
+
+bool AutoCorrection::isSingleSpaces() const
+{
+    return mSingleSpaces;
+}
+
+bool AutoCorrection::isAutoFractions() const
+{
+    return mAutoFractions;
+}
+
+bool AutoCorrection::isCapitalizeWeekDays() const
+{
+    return mCapitalizeWeekDays;
+}
+
+bool AutoCorrection::isReplaceDoubleQuotes() const
+{
+    return mReplaceDoubleQuotes;
+}
+
+bool AutoCorrection::isReplaceSingleQuotes() const
+{
+    return mReplaceSingleQuotes;
+}
+
+bool AutoCorrection::isAdvancedAutocorrect() const
+{
+    return mAdvancedAutocorrect;
+}
+
+bool AutoCorrection::isAutoFormatUrl() const
+{
+    return mAutoFormatUrl;
+}
+
+bool AutoCorrection::isAutoBoldUnderline() const
+{
+    return mAutoBoldUnderline;
+}
+
+bool AutoCorrection::isSuperScript() const
+{
+    return mSuperScriptAppendix;
+}
+
+bool AutoCorrection::isAddNonBreakingSpace() const
+{
+    return mAddNonBreakingSpace;
 }
 
 AutoCorrection::TypographicQuotes AutoCorrection::typographicDefaultSingleQuotes() const
@@ -952,6 +1037,16 @@ QString AutoCorrection::language() const
     return mAutoCorrectLang;
 }
 
+AutoCorrection::TypographicQuotes AutoCorrection::typographicSingleQuotes() const
+{
+    return mTypographicSingleQuotes;
+}
+
+AutoCorrection::TypographicQuotes AutoCorrection::typographicDoubleQuotes() const
+{
+    return mTypographicDoubleQuotes;
+}
+
 void AutoCorrection::setLanguage(const QString &lang, bool forceGlobal)
 {
     if (mAutoCorrectLang != lang || forceGlobal) {
@@ -959,6 +1054,61 @@ void AutoCorrection::setLanguage(const QString &lang, bool forceGlobal)
         //Re-read xml file
         readAutoCorrectionXmlFile(forceGlobal);
     }
+}
+
+void AutoCorrection::setEnabledAutoCorrection(bool b)
+{
+    mEnabled = b;
+}
+
+void AutoCorrection::setUppercaseFirstCharOfSentence(bool b)
+{
+    mUppercaseFirstCharOfSentence = b;
+}
+
+void AutoCorrection::setFixTwoUppercaseChars(bool b)
+{
+    mFixTwoUppercaseChars = b;
+}
+
+void AutoCorrection::setSingleSpaces(bool b)
+{
+    mSingleSpaces = b;
+}
+
+void AutoCorrection::setAutoFractions(bool b)
+{
+    mAutoFractions = b;
+}
+
+void AutoCorrection::setCapitalizeWeekDays(bool b)
+{
+    mCapitalizeWeekDays = b;
+}
+
+void AutoCorrection::setReplaceDoubleQuotes(bool b)
+{
+    mReplaceDoubleQuotes = b;
+}
+
+void AutoCorrection::setReplaceSingleQuotes(bool b)
+{
+    mReplaceSingleQuotes = b;
+}
+
+void AutoCorrection::setAdvancedAutocorrect(bool b)
+{
+    mAdvancedAutocorrect = b;
+}
+
+void AutoCorrection::setTypographicSingleQuotes(AutoCorrection::TypographicQuotes singleQuote)
+{
+    mTypographicSingleQuotes = singleQuote;
+}
+
+void AutoCorrection::setTypographicDoubleQuotes(AutoCorrection::TypographicQuotes doubleQuote)
+{
+    mTypographicDoubleQuotes = doubleQuote;
 }
 
 bool AutoCorrection::isFrenchLanguage() const
