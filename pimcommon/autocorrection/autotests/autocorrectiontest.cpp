@@ -18,13 +18,13 @@
 #include "autocorrectiontest.h"
 #include "../autocorrection.h"
 #include "pimcommon/settings/pimcommonsettings.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 AutoCorrectionTest::AutoCorrectionTest()
 {
     mConfig = KSharedConfig::openConfig( QLatin1String("autocorrectiontestrc") );
     PimCommon::PimCommonSettings::self()->setSharedConfig( mConfig );
-    PimCommon::PimCommonSettings::self()->readConfig();
+    PimCommon::PimCommonSettings::self()->load();
 }
 
 AutoCorrectionTest::~AutoCorrectionTest()
@@ -36,4 +36,4 @@ void AutoCorrectionTest::shouldHaveDefaultValue()
 }
 
 
-QTEST_KDEMAIN(AutoCorrectionTest, NoGUI)
+QTEST_MAIN(AutoCorrectionTest)
