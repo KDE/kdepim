@@ -37,43 +37,43 @@ public:
     ~AutoCorrection();
 
     void setLanguage(const QString& lang, bool forceGlobal = false);
-    void setEnabledAutoCorrection(bool b) { mEnabled = b; }
-    void setUppercaseFirstCharOfSentence(bool b) { mUppercaseFirstCharOfSentence = b; }
-    void setFixTwoUppercaseChars(bool b) { mFixTwoUppercaseChars = b; }
-    void setSingleSpaces(bool b) { mSingleSpaces = b; }
-    void setAutoFractions(bool b) { mAutoFractions = b; }
-    void setCapitalizeWeekDays(bool b) { mCapitalizeWeekDays = b; }
-    void setReplaceDoubleQuotes(bool b) { mReplaceDoubleQuotes = b; }
-    void setReplaceSingleQuotes(bool b) { mReplaceSingleQuotes = b; }
-    void setAdvancedAutocorrect(bool b) { mAdvancedAutocorrect = b; }
-    void setTypographicSingleQuotes(TypographicQuotes singleQuote) { mTypographicSingleQuotes = singleQuote; }
-    void setTypographicDoubleQuotes(TypographicQuotes doubleQuote) { mTypographicDoubleQuotes = doubleQuote; }
+    void setEnabledAutoCorrection(bool b);
+    void setUppercaseFirstCharOfSentence(bool b);
+    void setFixTwoUppercaseChars(bool b);
+    void setSingleSpaces(bool b);
+    void setAutoFractions(bool b);
+    void setCapitalizeWeekDays(bool b);
+    void setReplaceDoubleQuotes(bool b);
+    void setReplaceSingleQuotes(bool b);
+    void setAdvancedAutocorrect(bool b);
+    void setTypographicSingleQuotes(TypographicQuotes singleQuote);
+    void setTypographicDoubleQuotes(TypographicQuotes doubleQuote);
     void setUpperCaseExceptions(const QSet<QString>& exceptions);
     void setTwoUpperLetterExceptions(const QSet<QString>& exceptions);
     void setAutocorrectEntries(const QHash<QString, QString>& entries);
-    void setAutoFormatUrl(bool b) { mAutoFormatUrl = b; }
-    void setAutoBoldUnderline(bool b) { mAutoBoldUnderline = b; }
-    void setSuperScript(bool b) { mSuperScriptAppendix = b; }
-    void setAddNonBreakingSpace(bool b) { mAddNonBreakingSpace = b; }
+    void setAutoFormatUrl(bool b);
+    void setAutoBoldUnderline(bool b);
+    void setSuperScript(bool b);
+    void setAddNonBreakingSpace(bool b);
 
-    bool isEnabledAutoCorrection() const { return mEnabled; }
-    bool isUppercaseFirstCharOfSentence() const { return mUppercaseFirstCharOfSentence; }
-    bool isFixTwoUppercaseChars() const { return mFixTwoUppercaseChars; }
-    bool isSingleSpaces() const { return mSingleSpaces; }
-    bool isAutoFractions() const { return mAutoFractions; }
-    bool isCapitalizeWeekDays() const { return mCapitalizeWeekDays; }
-    bool isReplaceDoubleQuotes() const { return mReplaceDoubleQuotes; }
-    bool isReplaceSingleQuotes() const { return mReplaceSingleQuotes; }
-    bool isAdvancedAutocorrect() const { return mAdvancedAutocorrect; }
-    bool isAutoFormatUrl() const { return mAutoFormatUrl; }
-    bool isAutoBoldUnderline() const { return mAutoBoldUnderline; }
-    bool isSuperScript() const { return mSuperScriptAppendix; }
+    bool isEnabledAutoCorrection() const;
+    bool isUppercaseFirstCharOfSentence() const;
+    bool isFixTwoUppercaseChars() const;
+    bool isSingleSpaces() const;
+    bool isAutoFractions() const;
+    bool isCapitalizeWeekDays() const;
+    bool isReplaceDoubleQuotes() const;
+    bool isReplaceSingleQuotes() const;
+    bool isAdvancedAutocorrect() const;
+    bool isAutoFormatUrl() const;
+    bool isAutoBoldUnderline() const;
+    bool isSuperScript() const;
 
-    bool isAddNonBreakingSpace() const { return mAddNonBreakingSpace; }
+    bool isAddNonBreakingSpace() const;
 
     QString language() const;
-    TypographicQuotes typographicSingleQuotes() const { return mTypographicSingleQuotes; }
-    TypographicQuotes typographicDoubleQuotes() const { return mTypographicDoubleQuotes; }
+    TypographicQuotes typographicSingleQuotes() const;
+    TypographicQuotes typographicDoubleQuotes() const;
     TypographicQuotes typographicDefaultSingleQuotes() const;
     TypographicQuotes typographicDefaultDoubleQuotes() const;
     QSet<QString> upperCaseExceptions() const;
