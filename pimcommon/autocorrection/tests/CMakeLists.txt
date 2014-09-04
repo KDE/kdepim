@@ -21,3 +21,18 @@ target_link_libraries(richtexteditwithautocorrection_gui
   KF5::KIOCore
   pimcommon
 )
+
+
+set( autocorrectiontest_SRCS autocorrectiontest.cpp )
+kde4_add_unit_test( autocorrectiontest ${autocorrectiontest_SRCS})
+target_link_libraries( autocorrectiontest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} pimcommon)
+
+set( lineeditwithautocorrectiontest_SRCS lineeditwithautocorrectiontest.cpp )
+kde4_add_unit_test( lineeditwithautocorrectiontest ${lineeditwithautocorrectiontest_SRCS})
+target_link_libraries( lineeditwithautocorrectiontest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} pimcommon)
+
+set( richtexteditwithautocorrectiontest_SRCS richtexteditwithautocorrectiontest.cpp )
+kde4_add_unit_test( richtexteditwithautocorrectiontest ${richtexteditwithautocorrectiontest_SRCS})
+target_link_libraries( richtexteditwithautocorrectiontest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} pimcommon)
+
+
