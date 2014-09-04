@@ -53,7 +53,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SendLaterConfigureDialog::reject);
 
     mWidget = new SendLaterWidget(this);
-    connect(mWidget, SIGNAL(sendNow(Akonadi::Item::Id)), SIGNAL(sendNow(Akonadi::Item::Id)));
+    connect(mWidget, &SendLaterWidget::sendNow, this, &SendLaterConfigureDialog::sendNow);
     mainLayout->addWidget(mWidget);
     mainLayout->addWidget(buttonBox);
     connect(okButton, &QPushButton::clicked, this, &SendLaterConfigureDialog::slotSave);
@@ -160,8 +160,7 @@ SendLaterWidget::SendLaterWidget(QWidget *parent)
     mWidget->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     mWidget->treeWidget->setDefaultText(i18n("No messages waiting..."));
 
-    connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(customContextMenuRequested(QPoint)));
+    connect(mWidget->treeWidget, &QTreeWidget::customContextMenuRequested, this, &SendLaterWidget::customContextMenuRequested);
 
     connect(mWidget->removeItem, &QPushButton::clicked, this, &SendLaterWidget::slotRemoveItem);
     connect(mWidget->modifyItem, &QPushButton::clicked, this, &SendLaterWidget::slotModifyItem);

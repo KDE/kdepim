@@ -170,7 +170,7 @@ void FilterKMail_maildir::importFiles(const QString &dirName)
                         } else if (_cat.startsWith('.')) {
                             _cat = _cat.remove(0 , 1);
                         }
-                        _path += '/' + _cat;
+                        _path += QLatin1Char('/') + _cat;
                     }
                 }
                 if (_path.endsWith("cur")) {

@@ -46,8 +46,8 @@ SnippetVariableDialog::SnippetVariableDialog(const QString &variableName,
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotAccepted()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SnippetVariableDialog::slotAccepted);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SnippetVariableDialog::reject);
     mainLayout->addWidget(buttonBox);
 
     QVBoxLayout *layout = new QVBoxLayout(mainWidget);

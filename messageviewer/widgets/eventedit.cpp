@@ -66,8 +66,8 @@ EventEdit::EventEdit(QWidget *parent)
     mEventEdit->setClearButtonEnabled(true);
     mEventEdit->setObjectName(QLatin1String("noteedit"));
     mEventEdit->setFocus();
-    connect(mEventEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
-    connect(mEventEdit, SIGNAL(textChanged(QString)), SLOT(slotUpdateButtons(QString)));
+    connect(mEventEdit, &QLineEdit::returnPressed, this, &EventEdit::slotReturnPressed);
+    connect(mEventEdit, &QLineEdit::textChanged, this, &EventEdit::slotUpdateButtons);
     hbox->addWidget(mEventEdit);
 
     hbox->addSpacing(5);
@@ -82,8 +82,8 @@ EventEdit::EventEdit(QWidget *parent)
 #endif
     mCollectionCombobox->setToolTip( i18n("Calendar where the new event will be stored.") );
 
-    connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionChanged(int)));
-    connect(mCollectionCombobox, SIGNAL(activated(int)), SLOT(slotCollectionChanged(int)));
+    connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::currentIndexChanged), this, &EventEdit::slotCollectionChanged);
+    connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::activated), this, &EventEdit::slotCollectionChanged);
     hbox->addWidget(mCollectionCombobox);
 
     hbox = new QHBoxLayout;
@@ -131,7 +131,7 @@ EventEdit::EventEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     mSaveButton->setAccessibleDescription(i18n("Create new event and close this widget."));
 #endif
-    connect(mSaveButton, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
+    connect(mSaveButton, &QPushButton::clicked, this, &EventEdit::slotReturnPressed);
     hbox->addWidget(mSaveButton);
 
     mOpenEditorButton = new QPushButton(i18n("Open &editor..."));
@@ -140,7 +140,7 @@ EventEdit::EventEdit(QWidget *parent)
 #endif
     mOpenEditorButton->setObjectName(QLatin1String("open-editor-button"));
     mOpenEditorButton->setEnabled(false);
-    connect(mOpenEditorButton, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
+    connect(mOpenEditorButton, &QPushButton::clicked, this, &EventEdit::slotOpenEditor);
     hbox->addWidget(mOpenEditorButton);
 
     QPushButton *btn = new QPushButton;
@@ -149,7 +149,7 @@ EventEdit::EventEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new events."));
 #endif
-    connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotCloseWidget()));
+    connect(btn, &QPushButton::clicked, this, &EventEdit::slotCloseWidget);
     hbox->addWidget(btn);
 
     readConfig();
@@ -333,7 +333,7 @@ void EventEdit::slotOpenEditor()
     item.setMimeType(KCalCore::Event::eventMimeType());
 
     IncidenceEditorNG::IncidenceDialog *dlg = IncidenceEditorNG::IncidenceDialogFactory::create(true, KCalCore::IncidenceBase::TypeEvent, 0, this);
-    connect(dlg, SIGNAL(finished()), this, SLOT(slotCloseWidget()));
+    connect(dlg, &IncidenceEditorNG::IncidenceDialog::finished, this, &EventEdit::slotCloseWidget);
     dlg->load(item);
     dlg->open();
 }

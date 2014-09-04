@@ -33,8 +33,8 @@ SnippetDialog::SnippetDialog(KActionCollection *actionCollection, bool inGroupMo
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SnippetDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SnippetDialog::reject);
 
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -46,10 +46,8 @@ SnippetDialog::SnippetDialog(KActionCollection *actionCollection, bool inGroupMo
     mUi->keyWidget->setCheckActionCollections(QList<KActionCollection *>() << actionCollection);
     mOkButton->setEnabled(false);
 
-    connect(mUi->nameEdit, SIGNAL(textChanged(QString)),
-            this, SLOT(slotTextChanged()));
-    connect(mUi->groupBox, SIGNAL(currentIndexChanged(QString)),
-            this, SLOT(slotGroupChanged()));
+    connect(mUi->nameEdit, &KLineEdit::textChanged, this, &SnippetDialog::slotTextChanged);
+    connect(mUi->groupBox, static_cast<void (KComboBox::*)(const QString &)>(&KComboBox::currentIndexChanged), this, &SnippetDialog::slotGroupChanged);
 
     mUi->snippetText->setMinimumSize(500, 300);
 

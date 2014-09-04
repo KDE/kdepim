@@ -23,7 +23,7 @@ ImportSettingPage::ImportSettingPage(QWidget *parent) :
     ui(new Ui::ImportSettingPage)
 {
     ui->setupUi(this);
-    connect(ui->importSettings, SIGNAL(clicked()), SIGNAL(importSettingsClicked()));
+    connect(ui->importSettings, &QPushButton::clicked, this, &ImportSettingPage::importSettingsClicked);
 }
 
 ImportSettingPage::~ImportSettingPage()

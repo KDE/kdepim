@@ -72,8 +72,7 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     mListWidget = new NoteShared::NoteListWidget;
     mListWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(mListWidget, &NoteShared::NoteListWidget::itemDoubleClicked, this, &NotesAgentAlarmDialog::slotItemDoubleClicked);
-    connect(mListWidget, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(slotCustomContextMenuRequested(QPoint)));
+    connect(mListWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotCustomContextMenuRequested(QPoint)));
 
     vbox->addWidget(mListWidget);
     mainLayout->addWidget(w);

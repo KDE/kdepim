@@ -35,22 +35,22 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
     setWordWrap(true);
     setText(i18n("This message may be a scam. <a href=\"scamdetails\">(Details...)</a>"));
 
-    connect(this, SIGNAL(linkActivated(QString)), SLOT(slotShowDetails(QString)));
+    connect(this, &ScamDetectionWarningWidget::linkActivated, this, &ScamDetectionWarningWidget::slotShowDetails);
 
     QAction *action = new QAction( i18n( "Move to Trash" ), this );
-    connect( action, SIGNAL(triggered(bool)), SIGNAL(moveMessageToTrash()) );
+    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::moveMessageToTrash);
     addAction( action );
 
     action = new QAction( i18n( "I confirm it's not a scam" ), this );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotMessageIsNotAScam()) );
+    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotMessageIsNotAScam);
     addAction( action );
 
     action = new QAction( i18n( "Add email to whitelist" ), this );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotAddToWhiteList()) );
+    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotAddToWhiteList);
     addAction( action );
 
     action = new QAction( i18n( "Disable scam detection for all messages" ), this );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotDisableScamDetection()) );
+    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotDisableScamDetection);
     addAction( action );
 }
 

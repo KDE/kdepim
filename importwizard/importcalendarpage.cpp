@@ -23,7 +23,7 @@ ImportCalendarPage::ImportCalendarPage(QWidget *parent) :
     ui(new Ui::ImportCalendarPage)
 {
     ui->setupUi(this);
-    connect(ui->importCalendar, SIGNAL(clicked()), SIGNAL(importCalendarClicked()));
+    connect(ui->importCalendar, &QPushButton::clicked, this, &ImportCalendarPage::importCalendarClicked);
 }
 
 ImportCalendarPage::~ImportCalendarPage()

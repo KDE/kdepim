@@ -71,8 +71,8 @@ TodoEdit::TodoEdit(QWidget *parent)
     mNoteEdit->setClearButtonEnabled(true);
     mNoteEdit->setObjectName(QLatin1String("noteedit"));
     mNoteEdit->setFocus();
-    connect(mNoteEdit, SIGNAL(textChanged(QString)), SLOT(slotTextEdited(QString)));
-    connect(mNoteEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
+    connect(mNoteEdit, &QLineEdit::textChanged, this, &TodoEdit::slotTextEdited);
+    connect(mNoteEdit, &QLineEdit::returnPressed, this, &TodoEdit::slotReturnPressed);
     hbox->addWidget(mNoteEdit, 1);
 
     hbox->addSpacing(5);
@@ -86,8 +86,8 @@ TodoEdit::TodoEdit(QWidget *parent)
     mCollectionCombobox->setAccessibleDescription( i18n("Todo list where the new task will be stored.") );
 #endif
     mCollectionCombobox->setToolTip( i18n("Todo list where the new task will be stored.") );
-    connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionChanged(int)));
-    connect(mCollectionCombobox, SIGNAL(activated(int)), SLOT(slotCollectionChanged(int)));
+    connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::currentIndexChanged), this, &TodoEdit::slotCollectionChanged);
+    connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::activated), this, &TodoEdit::slotCollectionChanged);
     hbox->addWidget(mCollectionCombobox);
 
     hbox = new QHBoxLayout;
@@ -102,7 +102,7 @@ TodoEdit::TodoEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     mSaveButton->setAccessibleDescription(i18n("Create new todo and close this widget."));
 #endif
-    connect(mSaveButton, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
+    connect(mSaveButton, &QPushButton::clicked, this, &TodoEdit::slotReturnPressed);
     hbox->addWidget(mSaveButton);
 
     mOpenEditorButton = new QPushButton(i18n("Open &editor..."));
@@ -111,7 +111,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     mOpenEditorButton->setAccessibleDescription(i18n("Open todo editor, where more details can be changed."));
 #endif
     mOpenEditorButton->setEnabled(false);
-    connect(mOpenEditorButton, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
+    connect(mOpenEditorButton, &QPushButton::clicked, this, &TodoEdit::slotOpenEditor);
     hbox->addWidget(mOpenEditorButton);
 
     QPushButton *btn = new QPushButton;
@@ -120,7 +120,7 @@ TodoEdit::TodoEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new todos."));
 #endif
-    connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotCloseWidget()));
+    connect(btn, &QPushButton::clicked, this, &TodoEdit::slotCloseWidget);
     hbox->addWidget(btn);
 
 
@@ -277,7 +277,7 @@ void TodoEdit::slotOpenEditor()
         QStringList() << KMime::Message::mimeType(),
         QStringList() << (subject ? subject->asUnicodeString() : QString()),
         false, mCollection, false, this);
-    connect(dlg, SIGNAL(finished()), this, SLOT(slotCloseWidget()));
+    connect(dlg, &IncidenceEditorNG::IncidenceDialog::finished, this, &TodoEdit::slotCloseWidget);
     dlg->open();
 }
 

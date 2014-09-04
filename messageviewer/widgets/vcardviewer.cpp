@@ -58,8 +58,8 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
     mUser3Button = new QPushButton;
     buttonBox->addButton(mUser3Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &VCardViewer::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &VCardViewer::reject);
     setModal( false );
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
     
@@ -83,9 +83,9 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
         }
         else
             mUser3Button->setEnabled(false);
-        connect(user1Button, SIGNAL(clicked()), SLOT(slotUser1()) );
-        connect(mUser2Button, SIGNAL(clicked()), SLOT(slotUser2()) );
-        connect(mUser3Button, SIGNAL(clicked()), SLOT(slotUser3()) );
+        connect(user1Button, &QPushButton::clicked, this, &VCardViewer::slotUser1);
+        connect(mUser2Button, &QPushButton::clicked, this, &VCardViewer::slotUser2);
+        connect(mUser3Button, &QPushButton::clicked, this, &VCardViewer::slotUser3);
     } else {
         mContactViewer->setRawContact(KABC::Addressee());
         user1Button->setEnabled(false);

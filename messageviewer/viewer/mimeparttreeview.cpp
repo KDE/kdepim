@@ -35,10 +35,10 @@ MimePartTreeView::MimePartTreeView(QWidget *parent)
     setModel( mMimePartModel );
     setSelectionMode( QAbstractItemView::ExtendedSelection );
     setSelectionBehavior( QAbstractItemView::SelectRows );
-    connect(this, SIGNAL(destroyed(QObject*)), this, SLOT(slotMimePartDestroyed()) );
+    connect(this, &MimePartTreeView::destroyed, this, &MimePartTreeView::slotMimePartDestroyed);
     setContextMenuPolicy(Qt::CustomContextMenu);
     header()->setResizeMode( QHeaderView::ResizeToContents );
-    connect(mMimePartModel,SIGNAL(modelReset()),this,SLOT(expandAll()));
+    connect(mMimePartModel, &MimeTreeModel::modelReset, this, &MimePartTreeView::expandAll);
     restoreMimePartTreeConfig();
 }
 

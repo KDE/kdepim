@@ -23,7 +23,7 @@ ImportAddressbookPage::ImportAddressbookPage(QWidget *parent) :
     ui(new Ui::ImportAddressbookPage)
 {
     ui->setupUi(this);
-    connect(ui->importAddressBook, SIGNAL(clicked()), SIGNAL(importAddressbookClicked()));
+    connect(ui->importAddressBook, &QPushButton::clicked, this, &ImportAddressbookPage::importAddressbookClicked);
 }
 
 ImportAddressbookPage::~ImportAddressbookPage()

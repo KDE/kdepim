@@ -27,8 +27,8 @@ ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& captio
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ChiasmusKeySelector::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ChiasmusKeySelector::reject);
     QWidget *page = new QWidget( this );
     mainLayout->addWidget(page);
     mainLayout->addWidget(buttonBox);
@@ -60,8 +60,8 @@ ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& captio
 
     layout->addStretch();
 
-    connect( mListBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(accept()) );
-    connect( mListBox, SIGNAL(itemSelectionChanged()), this, SLOT(slotItemSelectionChanged()) );
+    connect(mListBox, &QListWidget::itemDoubleClicked, this, &ChiasmusKeySelector::accept);
+    connect(mListBox, &QListWidget::itemSelectionChanged, this, &ChiasmusKeySelector::slotItemSelectionChanged);
 
     slotItemSelectionChanged();
     mListBox->setFocus();

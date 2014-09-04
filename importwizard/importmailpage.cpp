@@ -23,7 +23,7 @@ ImportMailPage::ImportMailPage(QWidget *parent) :
     ui(new Ui::ImportMailPage)
 {
     ui->setupUi(this);
-    connect(ui->importMails, SIGNAL(clicked()), SIGNAL(importMailsClicked()));
+    connect(ui->importMails, &QPushButton::clicked, this, &ImportMailPage::importMailsClicked);
     connect(ui->mCollectionRequestor, &MailCommon::FolderRequester::folderChanged, this, &ImportMailPage::collectionChanged);
 }
 

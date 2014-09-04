@@ -57,8 +57,7 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     namelabel->setBuddy(mTagNameLineEdit);
     settings->addWidget(namelabel, 1, 0);
 
-    connect(mTagNameLineEdit, SIGNAL(textChanged(QString)),
-            this, SLOT(slotEmitChangeCheck()));
+    connect(mTagNameLineEdit, &QLineEdit::textChanged, this, &TagWidget::slotEmitChangeCheck);
 
     //Second row for text color
     mTextColorCheck = new QCheckBox(i18n("Change te&xt color:"),
@@ -69,8 +68,7 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     settings->addWidget(mTextColorCombo, 2, 1);
     mTextColorCombo->setEnabled(false);
 
-    connect(mTextColorCheck, SIGNAL(toggled(bool)),
-            mTextColorCombo, SLOT(setEnabled(bool)));
+    connect(mTextColorCheck, &QCheckBox::toggled, mTextColorCombo, &KColorCombo::setEnabled);
     connect(mTextColorCheck, SIGNAL(stateChanged(int)),
             this, SLOT(slotEmitChangeCheck()));
     connect(mTextColorCombo, SIGNAL(activated(int)),

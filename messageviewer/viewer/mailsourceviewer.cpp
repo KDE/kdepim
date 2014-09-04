@@ -72,13 +72,13 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget( QWidget *paren
     mTextBrowser = new MailSourceViewTextBrowser();
     mTextBrowser->setLineWrapMode( QPlainTextEdit::NoWrap );
     mTextBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
-    connect( mTextBrowser, SIGNAL(findText()), SLOT(slotFind()) );
+    connect(mTextBrowser, &MailSourceViewTextBrowser::findText, this, &MailSourceViewTextBrowserWidget::slotFind);
     lay->addWidget( mTextBrowser );
     mFindBar = new FindBarSourceView( mTextBrowser, this );
     lay->addWidget( mFindBar );
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
+    connect(shortcut, &QShortcut::activated, this, &MailSourceViewTextBrowserWidget::slotFind);
 }
 
 void MailSourceViewTextBrowserWidget::slotFind()
@@ -248,12 +248,12 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mainLayout->addWidget(mainWidget);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &MailSourceViewer::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &MailSourceViewer::reject);
 
     QVBoxLayout *layout = new QVBoxLayout(mainWidget);
     layout->setMargin( 0 );
-    connect( this, SIGNAL(closeClicked()), SLOT(close()) );
+    connect(buttonBox->button(QDialogButtonBox::Close), &QPushButton::clicked, this, &MailSourceViewer::close);
 
     mRawBrowser = new MailSourceViewTextBrowserWidget();
 
@@ -277,10 +277,10 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
     // combining the shortcuts in one qkeysequence() did not work...
     QShortcut* shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_Escape );
-    connect( shortcut, SIGNAL(activated()), SLOT(close()) );
+    connect(shortcut, &QShortcut::activated, this, &MailSourceViewer::close);
     shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_W+Qt::CTRL );
-    connect( shortcut, SIGNAL(activated()), SLOT(close()) );
+    connect(shortcut, &QShortcut::activated, this, &MailSourceViewer::close);
 
     KWindowSystem::setIcons( winId(),
                              qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
