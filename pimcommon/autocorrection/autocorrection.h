@@ -83,7 +83,7 @@ public:
     void autocorrect(bool htmlMode, QTextDocument &document, int &position);
     void writeConfig();
 
-    void addAutoCorrect(const QString& currentWord, const QString& replaceWord);
+    bool addAutoCorrect(const QString& currentWord, const QString& replaceWord);
 
     void writeAutoCorrectionXmlFile(const QString &filename = QString());
 

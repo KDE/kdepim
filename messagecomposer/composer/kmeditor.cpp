@@ -124,7 +124,9 @@ using namespace MessageComposer;
 void KMeditorPrivate::slotAddAutoCorrect(const QString&currentWord, const QString&replaceWord)
 {
     if(mAutoCorrection) {
-        mAutoCorrection->addAutoCorrect(currentWord,replaceWord);
+        if (!mAutoCorrection->addAutoCorrect(currentWord,replaceWord)) {
+            KMessageBox::error(q, i18n("Current word has already a replacement."), i18n("Add New Autocorrect"));
+        }
     }
 }
 

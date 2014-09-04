@@ -174,10 +174,15 @@ void AutoCorrection::writeConfig()
     writeAutoCorrectionXmlFile();
 }
 
-void AutoCorrection::addAutoCorrect(const QString &currentWord, const QString &replaceWord)
+bool AutoCorrection::addAutoCorrect(const QString &currentWord, const QString &replaceWord)
 {
-    mAutocorrectEntries.insert(currentWord, replaceWord);
-    writeAutoCorrectionXmlFile();
+    if (!mAutocorrectEntries.contains(currentWord)) {
+        mAutocorrectEntries.insert(currentWord, replaceWord);
+        writeAutoCorrectionXmlFile();
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
