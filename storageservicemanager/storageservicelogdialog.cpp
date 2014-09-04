@@ -26,21 +26,35 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption(i18n("Log"));
+    setWindowTitle(i18n("Log"));
 
-    setButtons(User2 | User1 | Close);
-    setButtonText(User1, i18n("Clear Log"));
-    setButtonText(User2, i18n("Save As..."));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    mUser1Button = new QPushButton;
+    buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+    mUser2Button = new QPushButton;
+    buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mUser1Button->setText(i18n("Clear Log"));
+    mUser2Button->setText(i18n("Save As..."));
     mLog = new PimCommon::RichTextEditorWidget;
     mLog->setReadOnly(true);
     readConfig();
-    setMainWidget(mLog);
-    connect(this, &StorageServiceLogDialog::user1Clicked, this, &StorageServiceLogDialog::slotClearLog);
-    connect(this, &StorageServiceLogDialog::user2Clicked, this, &StorageServiceLogDialog::slotSaveAs);
+    mainLayout->addWidget(mLog);
+    mainLayout->addWidget(buttonBox);
+    connect(mUser1Button, &QPushButton::clicked, this, &StorageServiceLogDialog::slotClearLog);
+    connect(mUser2Button, &QPushButton::clicked, this, &StorageServiceLogDialog::slotSaveAs);
     connect(mLog->editor(), SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
 }
 
@@ -52,8 +66,8 @@ StorageServiceLogDialog::~StorageServiceLogDialog()
 void StorageServiceLogDialog::slotTextChanged()
 {
     const bool status = !mLog->toPlainText().isEmpty();
-    enableButton(User2, status);
-    enableButton(User1, status);
+    mUser2Button->setEnabled(status);
+    mUser1Button->setEnabled(status);
 }
 
 void StorageServiceLogDialog::slotClearLog()

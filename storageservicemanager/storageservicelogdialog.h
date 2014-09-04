@@ -21,12 +21,13 @@
 #ifndef STORAGESERVICELOGDIALOG_H
 #define STORAGESERVICELOGDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
+class QPushButton;
 namespace PimCommon
 {
 class RichTextEditorWidget;
 }
-class StorageServiceLogDialog : public KDialog
+class StorageServiceLogDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -46,6 +47,8 @@ private:
     void readConfig();
     void writeConfig();
     PimCommon::RichTextEditorWidget *mLog;
+    QPushButton *mUser1Button;
+    QPushButton *mUser2Button;
 };
 
 #endif // STORAGESERVICELOGDIALOG_H
