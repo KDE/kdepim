@@ -74,9 +74,9 @@ void StorageServiceTabWidget::createPage(const QString &name, PimCommon::Storage
 {
     StorageServicePage *page = new StorageServicePage(name, service);
     connect(page, &StorageServicePage::updateIcon, this, &StorageServiceTabWidget::slotUpdateIcon);
-    connect(page, SIGNAL(updateStatusBarMessage(QString)), this, SIGNAL(updateStatusBarMessage(QString)));
-    connect(page, SIGNAL(listFileWasInitialized()), this, SIGNAL(listFileWasInitialized()));
-    connect(page, SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
+    connect(page, &StorageServicePage::updateStatusBarMessage, this, &StorageServiceTabWidget::updateStatusBarMessage);
+    connect(page, &StorageServicePage::listFileWasInitialized, this, &StorageServiceTabWidget::listFileWasInitialized);
+    connect(page, &StorageServicePage::selectionChanged, this, &StorageServiceTabWidget::selectionChanged);
     addTab(page, name);
 }
 

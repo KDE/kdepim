@@ -44,8 +44,8 @@ StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
     mUser2Button = new QPushButton;
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &StorageServiceLogDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageServiceLogDialog::reject);
     mUser1Button->setText(i18n("Clear Log"));
     mUser2Button->setText(i18n("Save As..."));
     mLog = new PimCommon::RichTextEditorWidget;

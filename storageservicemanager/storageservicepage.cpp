@@ -58,7 +58,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     connect(mTreeWidget, &StorageServiceTreeWidget::uploadFile, this, &StorageServicePage::slotUploadFile);
     connect(mTreeWidget, &StorageServiceTreeWidget::downloadFile, this, &StorageServicePage::slotDownloadFile);
     connect(mTreeWidget, &StorageServiceTreeWidget::changeFolder, this, &StorageServicePage::slotChangeFolder);
-    connect(mTreeWidget, SIGNAL(itemSelectionChanged()), this, SIGNAL(selectionChanged()));
+    connect(mTreeWidget, &StorageServiceTreeWidget::itemSelectionChanged, this, &StorageServicePage::selectionChanged);
     vbox->addWidget(mTreeWidget);
     mProgressWidget = new PimCommon::StorageServiceProgressWidget(storageService);
     vbox->addWidget(mProgressWidget);
@@ -94,7 +94,7 @@ void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
 
 void StorageServicePage::connectStorageService()
 {
-    connect(mTreeWidget, SIGNAL(listFileWasInitialized()), this, SIGNAL(listFileWasInitialized()));
+    connect(mTreeWidget, &StorageServiceTreeWidget::listFileWasInitialized, this, &StorageServicePage::listFileWasInitialized);
     connect(mStorageService, &PimCommon::StorageServiceAbstract::shareLinkDone, this, &StorageServicePage::slotShareLinkDone);
 
     connect(mStorageService, &PimCommon::StorageServiceAbstract::authenticationDone, this, &StorageServicePage::slotAuthenticationDone);

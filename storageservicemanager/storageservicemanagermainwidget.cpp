@@ -23,7 +23,7 @@ StorageServiceManagerMainWidget::StorageServiceManagerMainWidget(QWidget *parent
     : QStackedWidget(parent)
 {
     mConfigureWidget = new StorageServiceConfigureStorageWidget;
-    connect(mConfigureWidget, SIGNAL(configureClicked()), SIGNAL(configureClicked()));
+    connect(mConfigureWidget, &StorageServiceConfigureStorageWidget::configureClicked, this, &StorageServiceManagerMainWidget::configureClicked);
     addWidget(mConfigureWidget);
     mStorageServiceTabWidget = new StorageServiceTabWidget;
     connect(mStorageServiceTabWidget, &StorageServiceTabWidget::tabCountChanged, this, &StorageServiceManagerMainWidget::slotTabCountchanged);

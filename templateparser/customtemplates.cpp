@@ -54,35 +54,23 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
     mUi->mName->setTrapReturnKey( true );
     connect( mUi->mEdit->editor(), SIGNAL(textChanged()),
              this, SLOT(slotTextChanged()) );
-    connect( mUi->mToEdit, SIGNAL(textChanged()),
-             this, SLOT(slotTextChanged()) );
-    connect( mUi->mCCEdit, SIGNAL(textChanged()),
-             this, SLOT(slotTextChanged()) );
+    connect(mUi->mToEdit, &MessageCore::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
+    connect(mUi->mCCEdit, &MessageCore::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
 
-    connect( mUi->mName, SIGNAL(textChanged(QString)),
-             this, SLOT(slotNameChanged(QString)) );
+    connect(mUi->mName, &KLineEdit::textChanged, this, &CustomTemplates::slotNameChanged);
 
-    connect( mUi->mName, SIGNAL(returnPressed()),
-             this, SLOT(slotAddClicked()) );
+    connect(mUi->mName, &KLineEdit::returnPressed, this, &CustomTemplates::slotAddClicked);
 
-    connect( mUi->mInsertCommand, SIGNAL(insertCommand(QString,int)),
-             this, SLOT(slotInsertCommand(QString,int)) );
+    connect( mUi->mInsertCommand, SIGNAL(insertCommand(QString,int)), this, SLOT(slotInsertCommand(QString,int)) );
 
-    connect( mUi->mAdd, SIGNAL(clicked()),
-             this, SLOT(slotAddClicked()) );
-    connect( mUi->mRemove, SIGNAL(clicked()),
-             this, SLOT(slotRemoveClicked()) );
-    connect( mUi->mDuplicate, SIGNAL(clicked()),
-             this, SLOT(slotDuplicateClicked()) );
-    connect( mUi->mList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-             this, SLOT(slotListSelectionChanged()) );
-    connect( mUi->mList, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
-             this, SLOT(slotItemChanged(QTreeWidgetItem*,int)) );
-    connect( mUi->mType, SIGNAL(activated(int)),
-             this, SLOT(slotTypeActivated(int)) );
+    connect(mUi->mAdd, &QPushButton::clicked, this, &CustomTemplates::slotAddClicked);
+    connect(mUi->mRemove, &QPushButton::clicked, this, &CustomTemplates::slotRemoveClicked);
+    connect(mUi->mDuplicate, &QPushButton::clicked, this, &CustomTemplates::slotDuplicateClicked);
+    connect(mUi->mList, &QTreeWidget::currentItemChanged, this, &CustomTemplates::slotListSelectionChanged);
+    connect(mUi->mList, &QTreeWidget::itemChanged, this, &CustomTemplates::slotItemChanged);
+    connect( mUi->mType, SIGNAL(activated(int)), this, SLOT(slotTypeActivated(int)) );
 
-    connect( mUi->mKeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)),
-             this, SLOT(slotShortcutChanged(QKeySequence)) );
+    connect(mUi->mKeySequenceWidget, &KKeySequenceWidget::keySequenceChanged, this, &CustomTemplates::slotShortcutChanged);
 
     mUi->mKeySequenceWidget->setCheckActionCollections( actionCollection );
 
