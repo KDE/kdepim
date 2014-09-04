@@ -116,8 +116,12 @@ void AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int &po
         done = singleSpaces();
     if (!done)
         done = autoFractions();
-    if (!done)
-        advancedAutocorrect();
+    if (!done) {
+        const int newPos = advancedAutocorrect();
+        if (newPos != -1) {
+            oldPosition = newPos;
+        }
+    }
     if (!done)
         uppercaseFirstCharOfSentence();
     if (!done)
@@ -691,10 +695,10 @@ bool AutoCorrection::autoFractions()
     return true;
 }
 
-void AutoCorrection::advancedAutocorrect()
+int AutoCorrection::advancedAutocorrect()
 {
     if (!mAdvancedAutocorrect)
-        return;
+        return -1;
 
     const int startPos = mCursor.selectionStart();
     const int length = mWord.length();
@@ -703,7 +707,7 @@ void AutoCorrection::advancedAutocorrect()
     QString actualWord = trimmedWord;
 
     if (actualWord.isEmpty())
-        return;
+        return -1;
 
     // If the last char is punctuation, drop it for now
     bool hasPunctuation = false;
@@ -754,8 +758,11 @@ void AutoCorrection::advancedAutocorrect()
         mCursor.setPosition(startPos + length, QTextCursor::KeepAnchor);
         mCursor.insertText(mWord);
         mCursor.setPosition(startPos); // also restore the selection
-        mCursor.setPosition(startPos + mWord.length(), QTextCursor::KeepAnchor);
+        const int newPosition = startPos + mWord.length();
+        mCursor.setPosition(newPosition, QTextCursor::KeepAnchor);
+        return newPosition;
     }
+    return -1;
 }
 
 void AutoCorrection::replaceTypographicQuotes()

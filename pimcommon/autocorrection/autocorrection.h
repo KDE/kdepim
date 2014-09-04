@@ -96,7 +96,7 @@ private:
     void capitalizeWeekDays();
     bool autoFractions();
     void uppercaseFirstCharOfSentence();
-    void advancedAutocorrect();
+    int advancedAutocorrect();
     void replaceTypographicQuotes();
     void superscriptAppendix();
 
