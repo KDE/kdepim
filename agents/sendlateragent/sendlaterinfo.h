@@ -24,7 +24,8 @@
 
 class KConfigGroup;
 
-namespace SendLater {
+namespace SendLater
+{
 
 class SENDLATER_EXPORT SendLaterInfo
 {
@@ -59,15 +60,15 @@ public:
     QDateTime dateTime() const;
 
     void readConfig(const KConfigGroup &config);
-    void writeConfig(KConfigGroup &config );
+    void writeConfig(KConfigGroup &config);
 
-    void setLastDateTimeSend( const QDateTime &date );
+    void setLastDateTimeSend(const QDateTime &date);
     QDateTime lastDateTimeSend() const;
 
-    void setSubject( const QString &subject );
+    void setSubject(const QString &subject);
     QString subject() const;
 
-    void setTo( const QString &to );
+    void setTo(const QString &to);
     QString to() const;
 
     bool operator ==(const SendLaterInfo &other) const;

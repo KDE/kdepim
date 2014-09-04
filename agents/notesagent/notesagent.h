@@ -49,10 +49,10 @@ Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
-    void configure( WId windowId );
+    void configure(WId windowId);
 
 protected:
-    void doSetOnline( bool online );
+    void doSetOnline(bool online);
 
 private:
     NotesManager *mNotesManager;

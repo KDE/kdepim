@@ -18,8 +18,10 @@
 #ifndef FOLLOWUPREMINDERUTIL_H
 #define FOLLOWUPREMINDERUTIL_H
 #include "followupreminder_export.h"
-namespace FollowUpReminder {
-namespace FollowUpReminderUtil {
+namespace FollowUpReminder
+{
+namespace FollowUpReminderUtil
+{
 FOLLOWUPREMINDER_EXPORT bool sentLaterAgentWasRegistered();
 
 FOLLOWUPREMINDER_EXPORT bool sentLaterAgentEnabled();

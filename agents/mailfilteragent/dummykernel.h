@@ -3,19 +3,21 @@
 
 #include <mailcommon/interfaces/mailinterfaces.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class EntityTreeModel;
 class EntityMimeTypeFilterModel;
 }
 
-namespace MailCommon {
+namespace MailCommon
+{
 class FolderCollectionMonitor;
 }
 
 class DummyKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
 public:
-    explicit DummyKernel( QObject *parent = 0 );
+    explicit DummyKernel(QObject *parent = 0);
 
     virtual KIdentityManagement::IdentityManager *identityManager();
     virtual MessageComposer::MessageSender *msgSender();
@@ -23,7 +25,7 @@ public:
     virtual Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
     virtual KSharedConfig::Ptr config();
     virtual void syncConfig();
-    virtual MailCommon::JobScheduler* jobScheduler() const;
+    virtual MailCommon::JobScheduler *jobScheduler() const;
     virtual Akonadi::ChangeRecorder *folderCollectionMonitor() const;
     virtual void updateSystemTray();
 
@@ -31,9 +33,8 @@ public:
     virtual bool excludeImportantMailFromExpiry();
     virtual QStringList customTemplates();
     virtual Akonadi::Entity::Id lastSelectedFolder();
-    virtual void setLastSelectedFolder(const Akonadi::Entity::Id& col);
+    virtual void setLastSelectedFolder(const Akonadi::Entity::Id &col);
     virtual bool showPopupAfterDnD();
-    
 
 private:
     KIdentityManagement::IdentityManager *mIdentityManager;

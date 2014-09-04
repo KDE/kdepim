@@ -23,7 +23,6 @@
 #include <AkonadiCore/Collection>
 class QTimer;
 
-
 class ArchiveMailManager;
 class ArchiveMailInfo;
 
@@ -32,7 +31,7 @@ class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::O
     Q_OBJECT
 
 public:
-    explicit ArchiveMailAgent( const QString &id );
+    explicit ArchiveMailAgent(const QString &id);
     ~ArchiveMailAgent();
 
     void showConfigureDialog(qlonglong windowId = 0);
@@ -48,13 +47,13 @@ Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
-    void configure( WId windowId );
+    void configure(WId windowId);
     void reload();
     void pause();
     void resume();
 
 private Q_SLOTS:
-    void mailCollectionRemoved( const Akonadi::Collection &collection );
+    void mailCollectionRemoved(const Akonadi::Collection &collection);
 
 protected:
     void doSetOnline(bool online);
@@ -63,7 +62,6 @@ private:
     QTimer *mTimer;
     ArchiveMailManager *mArchiveManager;
 };
-
 
 #endif /* ARCHIVEMAILAGENT_H */
 

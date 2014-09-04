@@ -28,13 +28,12 @@
 #include <QIcon>
 #include <KIconLoader>
 
-
-ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
-    : MailCommon::ScheduledJob( folder, immediate )
-    ,mInfo(info)
-    ,mManager(manager)
+ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate)
+    : MailCommon::ScheduledJob(folder, immediate)
+    , mInfo(info)
+    , mManager(manager)
 {
-    mPixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    mPixmap = QIcon::fromTheme(QLatin1String("kmail")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
 }
 
 ArchiveJob::~ArchiveJob()
@@ -49,13 +48,13 @@ void ArchiveJob::execute()
         Akonadi::Collection collection(mInfo->saveCollectionId());
         const QString realPath = MailCommon::Util::fullCollectionPath(collection);
         if (realPath.isEmpty()) {
-            qDebug()<<" We cannot find real path, collection doesn't exist";
+            qDebug() << " We cannot find real path, collection doesn't exist";
             mManager->collectionDoesntExist(mInfo);
             deleteLater();
             return;
         }
         if (mInfo->url().isEmpty()) {
-            qDebug()<<" Path is empty";
+            qDebug() << " Path is empty";
             mManager->collectionDoesntExist(mInfo);
             deleteLater();
             return;
@@ -65,32 +64,32 @@ void ArchiveJob::execute()
         const KUrl archivePath = mInfo->realUrl(realPath, dirExit);
         if (!dirExit) {
             mManager->backupDone(mInfo);
-            KNotification::event( QLatin1String("archivemailfolderdoesntexist"),
-                                  i18n("Directory does not exist. Please verify settings. Archive postponed."),
-                                  mPixmap,
-                                  0,
-                                  KNotification::CloseOnTimeout,
-                                  QLatin1String("akonadi_archivemail_agent"));
+            KNotification::event(QLatin1String("archivemailfolderdoesntexist"),
+                                 i18n("Directory does not exist. Please verify settings. Archive postponed."),
+                                 mPixmap,
+                                 0,
+                                 KNotification::CloseOnTimeout,
+                                 QLatin1String("akonadi_archivemail_agent"));
             deleteLater();
             return;
         }
 
         MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
-        backupJob->setRootFolder( MailCommon::Util::updatedCollection(collection) );
+        backupJob->setRootFolder(MailCommon::Util::updatedCollection(collection));
 
-        backupJob->setSaveLocation( archivePath );
-        backupJob->setArchiveType( mInfo->archiveType() );
-        backupJob->setDeleteFoldersAfterCompletion( false );
-        backupJob->setRecursive( mInfo->saveSubCollection() );
+        backupJob->setSaveLocation(archivePath);
+        backupJob->setArchiveType(mInfo->archiveType());
+        backupJob->setDeleteFoldersAfterCompletion(false);
+        backupJob->setRecursive(mInfo->saveSubCollection());
         backupJob->setDisplayMessageBox(false);
         backupJob->setRealPath(realPath);
-        const QString summary = i18n("Start to archive %1",realPath );
-        KNotification::event( QLatin1String("archivemailstarted"),
-                              summary,
-                              mPixmap,
-                              0,
-                              KNotification::CloseOnTimeout,
-                              QLatin1String("akonadi_archivemail_agent"));
+        const QString summary = i18n("Start to archive %1", realPath);
+        KNotification::event(QLatin1String("archivemailstarted"),
+                             summary,
+                             mPixmap,
+                             0,
+                             KNotification::CloseOnTimeout,
+                             QLatin1String("akonadi_archivemail_agent"));
         connect(backupJob, &MailCommon::BackupJob::backupDone, this, &ArchiveJob::slotBackupDone);
         connect(backupJob, &MailCommon::BackupJob::error, this, &ArchiveJob::slotError);
         backupJob->start();
@@ -99,24 +98,24 @@ void ArchiveJob::execute()
 
 void ArchiveJob::slotError(const QString &error)
 {
-    KNotification::event( QLatin1String("archivemailerror"),
-                          error,
-                          mPixmap,
-                          0,
-                          KNotification::CloseOnTimeout,
-                          QLatin1String("akonadi_archivemail_agent"));
+    KNotification::event(QLatin1String("archivemailerror"),
+                         error,
+                         mPixmap,
+                         0,
+                         KNotification::CloseOnTimeout,
+                         QLatin1String("akonadi_archivemail_agent"));
     mManager->backupDone(mInfo);
     deleteLater();
 }
 
 void ArchiveJob::slotBackupDone(const QString &info)
 {
-    KNotification::event( QLatin1String("archivemailfinished"),
-                          info,
-                          mPixmap,
-                          0,
-                          KNotification::CloseOnTimeout,
-                          QLatin1String("akonadi_archivemail_agent"));
+    KNotification::event(QLatin1String("archivemailfinished"),
+                         info,
+                         mPixmap,
+                         0,
+                         KNotification::CloseOnTimeout,
+                         QLatin1String("akonadi_archivemail_agent"));
     mManager->backupDone(mInfo);
     deleteLater();
 }
@@ -128,7 +127,6 @@ void ArchiveJob::kill()
 
 MailCommon::ScheduledJob *ScheduledArchiveTask::run()
 {
-    return folder().isValid() ? new ArchiveJob( mManager, mInfo, folder(), isImmediate() ) : 0;
+    return folder().isValid() ? new ArchiveJob(mManager, mInfo, folder(), isImmediate()) : 0;
 }
-
 

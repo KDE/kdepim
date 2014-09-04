@@ -29,10 +29,10 @@ class KUrlRequester;
 class QSpinBox;
 class QPushButton;
 
-namespace MailCommon {
+namespace MailCommon
+{
 class FolderRequester;
 }
-
 
 class AddArchiveMailDialog : public QDialog
 {
@@ -41,11 +41,10 @@ public:
     explicit AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *parent = 0);
     ~AddArchiveMailDialog();
 
-
     void setArchiveType(MailCommon::BackupJob::ArchiveType type);
     MailCommon::BackupJob::ArchiveType archiveType() const;
 
-    void setRecursive( bool b );
+    void setRecursive(bool b);
     bool recursive() const;
 
     void setSelectedFolder(const Akonadi::Collection &collection);
@@ -61,7 +60,7 @@ public:
     int maximumArchiveCount() const;
 
 private Q_SLOTS:
-    void slotFolderChanged(const Akonadi::Collection&);
+    void slotFolderChanged(const Akonadi::Collection &);
     void slotUpdateOkButton();
 
 private:

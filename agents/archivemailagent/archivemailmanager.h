@@ -59,6 +59,5 @@ private:
     ArchiveMailKernel *mArchiveMailKernel;
 };
 
-
 #endif /* ARCHIVEMAILMANAGER_H */
 

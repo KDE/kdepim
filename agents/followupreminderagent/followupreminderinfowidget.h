@@ -22,7 +22,8 @@
 #include <KConfigGroup>
 #include <QTreeWidgetItem>
 class QTreeWidget;
-namespace FollowUpReminder {
+namespace FollowUpReminder
+{
 class FollowUpReminderInfo;
 }
 
@@ -39,12 +40,11 @@ private:
     FollowUpReminder::FollowUpReminderInfo *mInfo;
 };
 
-
 class FollowUpReminderInfoWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderInfoWidget(QWidget *parent=0);
+    explicit FollowUpReminderInfoWidget(QWidget *parent = 0);
     ~FollowUpReminderInfoWidget();
 
     void restoreTreeWidgetHeader(const QByteArray &data);

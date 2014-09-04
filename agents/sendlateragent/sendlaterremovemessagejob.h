@@ -31,7 +31,7 @@ public:
     ~SendLaterRemoveMessageJob();
 
 private Q_SLOTS:
-    void slotItemDeleteDone(KJob* job);
+    void slotItemDeleteDone(KJob *job);
 
 private:
     void deleteItem();

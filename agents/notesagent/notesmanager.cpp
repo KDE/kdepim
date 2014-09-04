@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "notesmanager.h"
 #include "notesharedglobalconfig.h"
 #include "noteshared/network/notesnetworkreceiver.h"
@@ -46,16 +45,16 @@ NotesManager::NotesManager(QObject *parent)
       mListener(0),
       mCheckAlarm(0)
 {
-    Akonadi::Session *session = new Akonadi::Session( "KNotes Session", this );
+    Akonadi::Session *session = new Akonadi::Session("KNotes Session", this);
     mNoteRecorder = new NoteShared::NotesChangeRecorder(this);
     mNoteRecorder->changeRecorder()->setSession(session);
     mNoteTreeModel = new NoteShared::NotesAkonadiTreeModel(mNoteRecorder->changeRecorder(), this);
 
-    connect( mNoteTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-             SLOT(slotRowInserted(QModelIndex,int,int)));
+    connect(mNoteTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            SLOT(slotRowInserted(QModelIndex,int,int)));
 
-    connect( mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
-    connect( mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)) );
+    connect(mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
+    connect(mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)));
 }
 
 NotesManager::~NotesManager()
@@ -66,9 +65,10 @@ NotesManager::~NotesManager()
 void NotesManager::clear()
 {
     delete mListener;
-    mListener=0;
-    if (mCheckAlarm && mCheckAlarm->isActive())
+    mListener = 0;
+    if (mCheckAlarm && mCheckAlarm->isActive()) {
         mCheckAlarm->stop();
+    }
 }
 
 void NotesManager::slotItemRemoved(const Akonadi::Item &item)
@@ -94,14 +94,15 @@ void NotesManager::slotItemChanged(const Akonadi::Item &item, const QSet<QByteAr
 
 void NotesManager::slotRowInserted(const QModelIndex &parent, int start, int end)
 {
-    for ( int i = start; i <= end; ++i) {
-        if ( mNoteTreeModel->hasIndex( i, 0, parent ) ) {
-            const QModelIndex child = mNoteTreeModel->index( i, 0, parent );
+    for (int i = start; i <= end; ++i) {
+        if (mNoteTreeModel->hasIndex(i, 0, parent)) {
+            const QModelIndex child = mNoteTreeModel->index(i, 0, parent);
             Akonadi::Item item =
-                    mNoteTreeModel->data( child, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-            if ( !item.hasPayload<KMime::Message::Ptr>() )
+                mNoteTreeModel->data(child, Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+            if (!item.hasPayload<KMime::Message::Ptr>()) {
                 continue;
-            if ( item.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
+            }
+            if (item.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
                 mListItem.append(item);
             }
         }
@@ -110,20 +111,19 @@ void NotesManager::slotRowInserted(const QModelIndex &parent, int start, int end
 
 void NotesManager::slotCheckAlarm()
 {
-    QDateTime from = NoteShared::NoteSharedGlobalConfig::self()->alarmsLastChecked().addSecs( 1 );
-    if ( !from.isValid() ) {
-        from.setTime_t( 0 );
+    QDateTime from = NoteShared::NoteSharedGlobalConfig::self()->alarmsLastChecked().addSecs(1);
+    if (!from.isValid()) {
+        from.setTime_t(0);
     }
 
     const QDateTime now = QDateTime::currentDateTime();
-    NoteShared::NoteSharedGlobalConfig::self()->setAlarmsLastChecked( now );
-
+    NoteShared::NoteSharedGlobalConfig::self()->setAlarmsLastChecked(now);
 
     Akonadi::Item::List lst;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         NoteShared::NoteAlarmAttribute *attrAlarm = item.attribute<NoteShared::NoteAlarmAttribute>();
         if (attrAlarm) {
-            if (attrAlarm->dateTime()< KDateTime::currentDateTime(KDateTime::LocalZone)) {
+            if (attrAlarm->dateTime() < KDateTime::currentDateTime(KDateTime::LocalZone)) {
                 lst.append(item);
             }
         }
@@ -141,12 +141,14 @@ void NotesManager::slotCheckAlarm()
 void NotesManager::load()
 {
     updateNetworkListener();
-    if (!mCheckAlarm)
+    if (!mCheckAlarm) {
         mCheckAlarm = new QTimer(this);
-    if (mCheckAlarm->isActive())
+    }
+    if (mCheckAlarm->isActive()) {
         mCheckAlarm->stop();
+    }
 
-    mCheckAlarm->setInterval(1000*60*NoteShared::NoteSharedGlobalConfig::checkInterval());
+    mCheckAlarm->setInterval(1000 * 60 * NoteShared::NoteSharedGlobalConfig::checkInterval());
     connect(mCheckAlarm, SIGNAL(timeout()), this, SLOT(slotCheckAlarm()));
     slotCheckAlarm();
 }
@@ -161,21 +163,21 @@ void NotesManager::slotAcceptConnection()
     // Accept the connection and make KNotesNetworkReceiver do the job
     QTcpSocket *s = mListener->nextPendingConnection();
 
-    if ( s ) {
-        NoteShared::NotesNetworkReceiver *recv = new NoteShared::NotesNetworkReceiver( s );
-        connect( recv, SIGNAL(noteReceived(QString,QString)), SLOT(slotNewNote(QString,QString)) );
+    if (s) {
+        NoteShared::NotesNetworkReceiver *recv = new NoteShared::NotesNetworkReceiver(s);
+        connect(recv, SIGNAL(noteReceived(QString,QString)), SLOT(slotNewNote(QString,QString)));
     }
 }
 
 void NotesManager::slotNewNote(const QString &name, const QString &text)
 {
-    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("knotes") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-    KNotification::event( QLatin1String("receivednotes"),
-                          i18n("Note Received"),
-                          pixmap,
-                          0,
-                          KNotification::CloseOnTimeout,
-                          QLatin1String("akonadi_notes_agent"));
+    const QPixmap pixmap = QIcon::fromTheme(QLatin1String("knotes")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
+    KNotification::event(QLatin1String("receivednotes"),
+                         i18n("Note Received"),
+                         pixmap,
+                         0,
+                         KNotification::CloseOnTimeout,
+                         QLatin1String("akonadi_notes_agent"));
     NoteShared::CreateNewNoteJob *job = new NoteShared::CreateNewNoteJob(this, 0);
     //For the moment it doesn't support richtext.
     job->setRichText(false);
@@ -186,13 +188,13 @@ void NotesManager::slotNewNote(const QString &name, const QString &text)
 void NotesManager::updateNetworkListener()
 {
     delete mListener;
-    mListener=0;
+    mListener = 0;
 
-    if ( NoteShared::NoteSharedGlobalConfig::receiveNotes() ) {
+    if (NoteShared::NoteSharedGlobalConfig::receiveNotes()) {
         // create the socket and start listening for connections
-        mListener= KSocketFactory::listen( QLatin1String("knotes") , QHostAddress::Any,
-                                           NoteShared::NoteSharedGlobalConfig::port() );
-        connect( mListener, SIGNAL(newConnection()),
-                 SLOT(slotAcceptConnection()) );
+        mListener = KSocketFactory::listen(QLatin1String("knotes") , QHostAddress::Any,
+                                           NoteShared::NoteSharedGlobalConfig::port());
+        connect(mListener, SIGNAL(newConnection()),
+                SLOT(slotAcceptConnection()));
     }
 }

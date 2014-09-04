@@ -25,7 +25,7 @@ class FollowUpReminderInfoDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderInfoDialog(QWidget *parent=0);
+    explicit FollowUpReminderInfoDialog(QWidget *parent = 0);
     ~FollowUpReminderInfoDialog();
 
 private slots:

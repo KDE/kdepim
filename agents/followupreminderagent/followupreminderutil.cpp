@@ -22,7 +22,7 @@
 
 bool FollowUpReminder::FollowUpReminderUtil::sentLaterAgentWasRegistered()
 {
-    QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_followupreminder_agent"), QLatin1String("/FollowUpReminder") );
+    QDBusInterface interface(QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_followupreminder_agent"), QLatin1String("/FollowUpReminder"));
     return interface.isValid();
 }
 
@@ -33,7 +33,7 @@ bool FollowUpReminder::FollowUpReminderUtil::sentLaterAgentEnabled()
 
 void FollowUpReminder::FollowUpReminderUtil::reload()
 {
-    QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_followupreminder_agent"), QLatin1String("/FollowUpReminder") );
+    QDBusInterface interface(QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_followupreminder_agent"), QLatin1String("/FollowUpReminder"));
     if (interface.isValid()) {
         interface.call(QLatin1String("reload"));
     }

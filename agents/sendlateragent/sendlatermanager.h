@@ -25,11 +25,13 @@
 
 #include <KSharedConfig>
 
-namespace SendLater {
+namespace SendLater
+{
 class SendLaterInfo;
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class AkonadiSender;
 }
 

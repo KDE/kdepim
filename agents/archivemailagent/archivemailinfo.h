@@ -23,7 +23,6 @@
 #include <KUrl>
 #include <QDate>
 
-
 class ArchiveMailInfo
 {
 public:
@@ -32,7 +31,7 @@ public:
     ArchiveMailInfo(const ArchiveMailInfo &info);
     ~ArchiveMailInfo();
 
-    ArchiveMailInfo& operator=( const ArchiveMailInfo &old );
+    ArchiveMailInfo &operator=(const ArchiveMailInfo &old);
 
     enum ArchiveUnit {
         ArchiveDays = 0,
@@ -51,26 +50,26 @@ public:
     void setSaveSubCollection(bool b);
     bool saveSubCollection() const;
 
-    void setUrl(const KUrl& url);
+    void setUrl(const KUrl &url);
     KUrl url() const;
 
     void readConfig(const KConfigGroup &config);
-    void writeConfig(KConfigGroup &config );
+    void writeConfig(KConfigGroup &config);
 
-    void setArchiveType( MailCommon::BackupJob::ArchiveType type );
+    void setArchiveType(MailCommon::BackupJob::ArchiveType type);
     MailCommon::BackupJob::ArchiveType archiveType() const;
 
-    void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
+    void setArchiveUnit(ArchiveMailInfo::ArchiveUnit unit);
     ArchiveMailInfo::ArchiveUnit archiveUnit() const;
 
-    void setArchiveAge( int age );
+    void setArchiveAge(int age);
     int archiveAge() const;
 
-    void setLastDateSaved( const QDate &date );
+    void setLastDateSaved(const QDate &date);
     QDate lastDateSaved() const;
 
     int maximumArchiveCount() const;
-    void setMaximumArchiveCount( int max );
+    void setMaximumArchiveCount(int max);
 
     QStringList listOfArchive(const QString &foldername, bool &dirExist) const;
 

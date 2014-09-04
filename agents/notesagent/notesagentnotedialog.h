@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef NOTESAGENTNOTEDIALOG_H
 #define NOTESAGENTNOTEDIALOG_H
 
@@ -24,7 +23,8 @@
 class QTextEdit;
 class QLineEdit;
 class KJob;
-namespace PimCommon {
+namespace PimCommon
+{
 class RichTextEditorWidget;
 }
 class NotesAgentNoteDialog : public QDialog

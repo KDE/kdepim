@@ -26,7 +26,8 @@
 #include <ItemFetchScope>
 #include <Item>
 
-namespace SendLater {
+namespace SendLater
+{
 class SendLaterInfo;
 }
 class KJob;
@@ -41,9 +42,9 @@ public:
 private Q_SLOTS:
     void sendDone();
     void sendError(const QString &error, SendLaterManager::ErrorType type);
-    void slotMessageTransfered(const Akonadi::Item::List& );
-    void slotJobFinished(KJob*);
-    void slotDeleteItem(KJob*);
+    void slotMessageTransfered(const Akonadi::Item::List &);
+    void slotJobFinished(KJob *);
+    void slotDeleteItem(KJob *);
 
 private:
     void updateAndCleanMessageBeforeSending(const KMime::Message::Ptr &msg);

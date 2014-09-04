@@ -15,14 +15,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "followupreminderfinishtaskjob.h"
 
 FollowUpReminderFinishTaskJob::FollowUpReminderFinishTaskJob(QObject *parent)
     : QObject(parent)
 {
 }
-
 
 FollowUpReminderFinishTaskJob::~FollowUpReminderFinishTaskJob()
 {

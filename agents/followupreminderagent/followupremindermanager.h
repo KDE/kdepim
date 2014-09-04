@@ -22,7 +22,8 @@
 #include <KSharedConfig>
 #include <AkonadiCore/Item>
 #include <QPointer>
-namespace FollowUpReminder {
+namespace FollowUpReminder
+{
 class FollowUpReminderInfo;
 }
 class FollowUpReminderNoAnswerDialog;
@@ -45,7 +46,7 @@ private:
     QString infoToStr(FollowUpReminder::FollowUpReminderInfo *info);
 
     KSharedConfig::Ptr mConfig;
-    QList<FollowUpReminder::FollowUpReminderInfo*> mFollowUpReminderInfoList;
+    QList<FollowUpReminder::FollowUpReminderInfo *> mFollowUpReminderInfoList;
     QPointer<FollowUpReminderNoAnswerDialog> mNoAnswerDialog;
 };
 

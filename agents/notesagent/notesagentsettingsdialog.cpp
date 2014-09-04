@@ -38,9 +38,9 @@
 NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Configure Notes Agent" ) );
-    setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
+    setWindowTitle(i18n("Configure Notes Agent"));
+    setWindowIcon(QIcon::fromTheme(QLatin1String("knotes")));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -51,9 +51,9 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     okButton->setDefault(true);
     connect(okButton, &QPushButton::clicked, this, &NotesAgentSettingsDialog::slotOkClicked);
 
-    setModal( true );
-    QWidget *mainWidget = new QWidget( this );
-    QHBoxLayout *lay = new QHBoxLayout( mainWidget );
+    setModal(true);
+    QWidget *mainWidget = new QWidget(this);
+    QHBoxLayout *lay = new QHBoxLayout(mainWidget);
 //TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
 //TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
 
@@ -68,25 +68,24 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     tab->addTab(mNetworkConfig, i18n("Network"));
     mNetworkConfig->load();
 
-
     mainLayout->addWidget(mainWidget);
     mainLayout->addWidget(buttonBox);
     readConfig();
 
     KAboutData aboutData = KAboutData(
-                QLatin1String( "notesagent" ),
-                i18n( "Notes Agent" ),
-                QLatin1String( KDEPIM_VERSION ),
-                i18n( "Notes Agent." ),
-                KAboutLicense::GPL_V2,
-                i18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
+                               QLatin1String("notesagent"),
+                               i18n("Notes Agent"),
+                               QLatin1String(KDEPIM_VERSION),
+                               i18n("Notes Agent."),
+                               KAboutLicense::GPL_V2,
+                               i18n("Copyright (C) 2013, 2014 Laurent Montel"));
 
-    aboutData.addAuthor( i18n( "Laurent Montel" ),
-                         i18n( "Maintainer" ), QLatin1String("montel@kde.org") );
+    aboutData.addAuthor(i18n("Laurent Montel"),
+                        i18n("Maintainer"), QLatin1String("montel@kde.org"));
 
-    aboutData.setProgramIconName( QLatin1String("knotes") );
-    aboutData.setTranslator( i18nc( "NAME OF TRANSLATORS", "Your names" ),
-                             i18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+    aboutData.setProgramIconName(QLatin1String("knotes"));
+    aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
+                            i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 
     KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
@@ -103,18 +102,18 @@ NotesAgentSettingsDialog::~NotesAgentSettingsDialog()
 static const char *myConfigGroupName = "NotesAgentSettingsDialog";
 void NotesAgentSettingsDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
+    KConfigGroup group(KSharedConfig::openConfig(), myConfigGroupName);
 
-    const QSize size = group.readEntry( "Size", QSize(500, 300) );
-    if ( size.isValid() ) {
-        resize( size );
+    const QSize size = group.readEntry("Size", QSize(500, 300));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void NotesAgentSettingsDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), myConfigGroupName);
+    group.writeEntry("Size", size());
     group.sync();
 }
 

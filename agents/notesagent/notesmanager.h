@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef NOTESMANAGER_H
 #define NOTESMANAGER_H
 
@@ -27,7 +26,8 @@
 #include <QPointer>
 class QTcpServer;
 class QTimer;
-namespace NoteShared {
+namespace NoteShared
+{
 class NotesChangeRecorder;
 class NotesAkonadiTreeModel;
 }
@@ -36,7 +36,7 @@ class NotesManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit NotesManager(QObject *parent=0);
+    explicit NotesManager(QObject *parent = 0);
     ~NotesManager();
 
     void stopAll();

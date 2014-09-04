@@ -21,14 +21,15 @@
 #include <QDialog>
 
 class KNotifyConfigWidget;
-namespace NoteShared {
+namespace NoteShared
+{
 class NoteNetworkConfigWidget;
 }
 class NotesAgentSettingsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit NotesAgentSettingsDialog(QWidget *parent=0);
+    explicit NotesAgentSettingsDialog(QWidget *parent = 0);
     ~NotesAgentSettingsDialog();
 
 private slots:

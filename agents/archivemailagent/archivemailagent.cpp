@@ -36,8 +36,8 @@
 
 //#define DEBUG_ARCHIVEMAILAGENT 1
 
-ArchiveMailAgent::ArchiveMailAgent( const QString &id )
-    : Akonadi::AgentBase( id )
+ArchiveMailAgent::ArchiveMailAgent(const QString &id)
+    : Akonadi::AgentBase(id)
 {
     Kdelibs4ConfigMigrator migrate(QLatin1String("archivemailagent"));
     migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_archivemail_agentrc") << QLatin1String("akonadi_archivemail_agent.notifyrc"));
@@ -46,30 +46,29 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
     mArchiveManager = new ArchiveMailManager(this);
     connect(mArchiveManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
 
-    Akonadi::Monitor *collectionMonitor = new Akonadi::Monitor( this );
-    collectionMonitor->fetchCollection( true );
-    collectionMonitor->ignoreSession( Akonadi::Session::defaultSession() );
-    collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
-    collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
+    Akonadi::Monitor *collectionMonitor = new Akonadi::Monitor(this);
+    collectionMonitor->fetchCollection(true);
+    collectionMonitor->ignoreSession(Akonadi::Session::defaultSession());
+    collectionMonitor->collectionFetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
+    collectionMonitor->setMimeTypeMonitored(KMime::Message::mimeType());
 
-
-    new ArchiveMailAgentAdaptor( this );
-    Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/ArchiveMailAgent" ), this, QDBusConnection::ExportAdaptors );
-    Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.ArchiveMailAgent" ) );
-    connect( collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
-             this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
+    new ArchiveMailAgentAdaptor(this);
+    Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/ArchiveMailAgent"), this, QDBusConnection::ExportAdaptors);
+    Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.ArchiveMailAgent"));
+    connect(collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+            this, SLOT(mailCollectionRemoved(Akonadi::Collection)));
 
     if (enabledAgent()) {
 #ifdef DEBUG_ARCHIVEMAILAGENT
         QTimer::singleShot(1000, mArchiveManager, SLOT(load()));
 #else
-        QTimer::singleShot(1000*60*5, mArchiveManager, SLOT(load()));
+        QTimer::singleShot(1000 * 60 * 5, mArchiveManager, SLOT(load()));
 #endif
     }
 
     mTimer = new QTimer(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
-    mTimer->start(24*60*60*1000);
+    mTimer->start(24 * 60 * 60 * 1000);
 }
 
 ArchiveMailAgent::~ArchiveMailAgent()
@@ -105,12 +104,12 @@ void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
     QPointer<ArchiveMailDialog> dialog = new ArchiveMailDialog();
     if (windowId) {
 #ifndef Q_OS_WIN
-        KWindowSystem::setMainWindow( dialog, windowId );
+        KWindowSystem::setMainWindow(dialog, windowId);
 #else
-        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+        KWindowSystem::setMainWindow(dialog, (HWND)windowId);
 #endif
     }
-    connect(dialog, SIGNAL(archiveNow(ArchiveMailInfo*)),mArchiveManager, SLOT(slotArchiveNow(ArchiveMailInfo*)));
+    connect(dialog, SIGNAL(archiveNow(ArchiveMailInfo*)), mArchiveManager, SLOT(slotArchiveNow(ArchiveMailInfo*)));
     connect(this, SIGNAL(needUpdateConfigDialogBox()), dialog, SLOT(slotNeedReloadConfig()));
     if (dialog->exec()) {
         mArchiveManager->load();
@@ -135,7 +134,7 @@ void ArchiveMailAgent::reload()
     }
 }
 
-void ArchiveMailAgent::configure( WId windowId )
+void ArchiveMailAgent::configure(WId windowId)
 {
     showConfigureDialog((qulonglong)windowId);
 }
@@ -169,5 +168,5 @@ void ArchiveMailAgent::archiveFolder(const QString &path, Akonadi::Collection::I
     mArchiveManager->archiveFolder(path, collectionId);
 }
 
-AKONADI_AGENT_MAIN( ArchiveMailAgent )
+AKONADI_AGENT_MAIN(ArchiveMailAgent)
 

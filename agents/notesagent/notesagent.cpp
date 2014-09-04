@@ -37,18 +37,17 @@
 
 #include <QPointer>
 
-
 NotesAgent::NotesAgent(const QString &id)
-    : Akonadi::AgentBase( id )
+    : Akonadi::AgentBase(id)
 {
     Kdelibs4ConfigMigrator migrate(QLatin1String("notesagent"));
     migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_notes_agentrc") << QLatin1String("akonadi_notes_agent.notifyrc"));
     migrate.migrate();
 
     mNotesManager = new NotesManager(this);
-    new NotesAgentAdaptor( this );
-    Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/NotesAgent" ), this, QDBusConnection::ExportAdaptors );
-    Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.NotesAgent" ) );
+    new NotesAgentAdaptor(this);
+    Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/NotesAgent"), this, QDBusConnection::ExportAdaptors);
+    Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.NotesAgent"));
 
     setNeedsNetwork(true);
 
@@ -61,7 +60,7 @@ NotesAgent::~NotesAgent()
 {
 }
 
-void NotesAgent::doSetOnline( bool online )
+void NotesAgent::doSetOnline(bool online)
 {
     if (online) {
         reload();
@@ -72,14 +71,16 @@ void NotesAgent::doSetOnline( bool online )
 
 void NotesAgent::reload()
 {
-    if (NotesAgentSettings::enabled())
+    if (NotesAgentSettings::enabled()) {
         mNotesManager->load();
+    }
 }
 
 void NotesAgent::setEnableAgent(bool enabled)
 {
-    if (NotesAgentSettings::enabled() == enabled)
+    if (NotesAgentSettings::enabled() == enabled) {
         return;
+    }
 
     NotesAgentSettings::setEnabled(enabled);
     NotesAgentSettings::self()->save();
@@ -95,7 +96,7 @@ bool NotesAgent::enabledAgent() const
     return NotesAgentSettings::enabled();
 }
 
-void NotesAgent::configure( WId windowId )
+void NotesAgent::configure(WId windowId)
 {
     showConfigureDialog(windowId);
 }
@@ -105,9 +106,9 @@ void NotesAgent::showConfigureDialog(qlonglong windowId)
     QPointer<NotesAgentSettingsDialog> dialog = new NotesAgentSettingsDialog;
     if (windowId) {
 #ifndef Q_OS_WIN
-        KWindowSystem::setMainWindow( dialog, windowId );
+        KWindowSystem::setMainWindow(dialog, windowId);
 #else
-        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+        KWindowSystem::setMainWindow(dialog, (HWND)windowId);
 #endif
     }
     if (dialog->exec()) {
@@ -123,7 +124,7 @@ bool NotesAgent::receiveNotes() const
 
 void NotesAgent::setReceiveNotes(bool b)
 {
-    if (NoteShared::NoteSharedGlobalConfig::receiveNotes() != b ) {
+    if (NoteShared::NoteSharedGlobalConfig::receiveNotes() != b) {
         NoteShared::NoteSharedGlobalConfig::setReceiveNotes(b);
         NoteShared::GlobalSettings::self()->requestSync();
         mNotesManager->updateNetworkListener();
@@ -137,23 +138,26 @@ int NotesAgent::port() const
 
 void NotesAgent::setPort(int value)
 {
-    if (value < 0)
+    if (value < 0) {
         return;
+    }
 
-    if (NoteShared::NoteSharedGlobalConfig::port() != static_cast<uint>(value) ) {
+    if (NoteShared::NoteSharedGlobalConfig::port() != static_cast<uint>(value)) {
         NoteShared::NoteSharedGlobalConfig::setPort(value);
         NoteShared::GlobalSettings::self()->requestSync();
-        if (NotesAgentSettings::enabled())
+        if (NotesAgentSettings::enabled()) {
             mNotesManager->updateNetworkListener();
+        }
     }
 }
 
 void NotesAgent::setAlarmCheckInterval(int value)
 {
-    if (value < 0)
+    if (value < 0) {
         return;
+    }
 
-    if (NoteShared::NoteSharedGlobalConfig::checkInterval() != static_cast<uint>(value) ) {
+    if (NoteShared::NoteSharedGlobalConfig::checkInterval() != static_cast<uint>(value)) {
         NoteShared::NoteSharedGlobalConfig::setCheckInterval(value);
         NoteShared::GlobalSettings::self()->requestSync();
         reload();
@@ -171,5 +175,5 @@ int NotesAgent::alarmCheckInterval() const
     return NoteShared::NoteSharedGlobalConfig::checkInterval();
 }
 
-AKONADI_AGENT_MAIN( NotesAgent )
+AKONADI_AGENT_MAIN(NotesAgent)
 

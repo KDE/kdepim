@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "followupreminderagent.h"
 #include "followupremindermanager.h"
 #include "followupreminderadaptor.h"
@@ -33,22 +32,22 @@
 #include <QTimer>
 
 FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
-    : Akonadi::AgentBase( id )
+    : Akonadi::AgentBase(id)
 {
     new FollowUpReminderAgentAdaptor(this);
-    Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FollowUpReminder" ), this, QDBusConnection::ExportAdaptors );
-    Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FollowUpReminder" ) );
+    Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/FollowUpReminder"), this, QDBusConnection::ExportAdaptors);
+    Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.FollowUpReminder"));
     mManager = new FollowUpReminderManager(this);
-    changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    changeRecorder()->itemFetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
     changeRecorder()->itemFetchScope().setCacheOnly(true);
-    changeRecorder()->fetchCollection( true );
+    changeRecorder()->fetchCollection(true);
     if (FollowUpReminderAgentSettings::enabled()) {
         mManager->load();
     }
     mTimer = new QTimer(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
     //Reload all each 24hours
-    mTimer->start(24*60*60*1000);
+    mTimer->start(24 * 60 * 60 * 1000);
 }
 
 FollowUpReminderAgent::~FollowUpReminderAgent()
@@ -57,8 +56,9 @@ FollowUpReminderAgent::~FollowUpReminderAgent()
 
 void FollowUpReminderAgent::setEnableAgent(bool enabled)
 {
-    if (FollowUpReminderAgentSettings::self()->enabled() == enabled)
+    if (FollowUpReminderAgentSettings::self()->enabled() == enabled) {
         return;
+    }
 
     FollowUpReminderAgentSettings::self()->setEnabled(enabled);
     FollowUpReminderAgentSettings::self()->save();
@@ -80,9 +80,9 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
     QPointer<FollowUpReminderInfoDialog> dialog = new FollowUpReminderInfoDialog();
     if (windowId) {
 #ifndef Q_OS_WIN
-        KWindowSystem::setMainWindow( dialog, windowId );
+        KWindowSystem::setMainWindow(dialog, windowId);
 #else
-        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+        KWindowSystem::setMainWindow(dialog, (HWND)windowId);
 #endif
     }
     if (dialog->exec()) {
@@ -91,17 +91,18 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
     delete dialog;
 }
 
-void FollowUpReminderAgent::configure( WId windowId )
+void FollowUpReminderAgent::configure(WId windowId)
 {
     showConfigureDialog((qulonglong)windowId);
 }
 
-void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
+void FollowUpReminderAgent::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    if (!enabledAgent())
+    if (!enabledAgent()) {
         return;
+    }
 
-    if ( item.mimeType() != KMime::Message::mimeType() ) {
+    if (item.mimeType() != KMime::Message::mimeType()) {
         qDebug() << "FollowUpReminderAgent::itemAdded called for a non-message item!";
         return;
     }
@@ -121,5 +122,5 @@ QString FollowUpReminderAgent::printDebugInfo()
     return mManager->printDebugInfo();
 }
 
-AKONADI_AGENT_MAIN( FollowUpReminderAgent )
+AKONADI_AGENT_MAIN(FollowUpReminderAgent)
 

@@ -41,7 +41,7 @@ class ArchiveMailWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ArchiveMailWidget( QWidget *parent = 0 );
+    explicit ArchiveMailWidget(QWidget *parent = 0);
     ~ArchiveMailWidget();
 
     enum ArchiveMailColumn {
@@ -93,7 +93,6 @@ Q_SIGNALS:
 public Q_SLOTS:
     void slotNeedReloadConfig();
 
-
 protected Q_SLOTS:
     void slotSave();
 
@@ -102,7 +101,6 @@ private:
     void readConfig();
     ArchiveMailWidget *mWidget;
 };
-
 
 #endif /* ARCHIVEMAILWIDGET_H */
 

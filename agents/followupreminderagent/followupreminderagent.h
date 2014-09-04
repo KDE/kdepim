@@ -37,7 +37,7 @@ public:
     QString printDebugInfo();
 
 public Q_SLOTS:
-    void configure( WId windowId );
+    void configure(WId windowId);
     void reload();
 
 private:

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sendlaterinfo.h"
 
 #include <KConfigGroup>
@@ -110,7 +109,7 @@ QDateTime SendLaterInfo::dateTime() const
     return mDateTime;
 }
 
-void SendLaterInfo::setLastDateTimeSend( const QDateTime &dateTime )
+void SendLaterInfo::setLastDateTimeSend(const QDateTime &dateTime)
 {
     mLastDateTimeSend = dateTime;
 }
@@ -120,7 +119,7 @@ QDateTime SendLaterInfo::lastDateTimeSend() const
     return mLastDateTimeSend;
 }
 
-void SendLaterInfo::setSubject( const QString &subject )
+void SendLaterInfo::setSubject(const QString &subject)
 {
     mSubject = subject;
 }
@@ -130,7 +129,7 @@ QString SendLaterInfo::subject() const
     return mSubject;
 }
 
-void SendLaterInfo::setTo( const QString &to )
+void SendLaterInfo::setTo(const QString &to)
 {
     mTo = to;
 }
@@ -143,13 +142,13 @@ QString SendLaterInfo::to() const
 bool SendLaterInfo::operator ==(const SendLaterInfo &other) const
 {
     return (itemId() == other.itemId()) &&
-            (recurrenceUnit() == other.recurrenceUnit()) &&
-            (recurrenceEachValue() == other.recurrenceEachValue()) &&
-            (isRecurrence() == other.isRecurrence()) &&
-            (dateTime() == other.dateTime()) &&
-            (lastDateTimeSend() == other.lastDateTimeSend()) &&
-            (subject() == other.subject()) &&
-            (to() == other.to());
+           (recurrenceUnit() == other.recurrenceUnit()) &&
+           (recurrenceEachValue() == other.recurrenceEachValue()) &&
+           (isRecurrence() == other.isRecurrence()) &&
+           (dateTime() == other.dateTime()) &&
+           (lastDateTimeSend() == other.lastDateTimeSend()) &&
+           (subject() == other.subject()) &&
+           (to() == other.to());
 }
 
 void SendLaterInfo::readConfig(const KConfigGroup &config)
@@ -159,21 +158,21 @@ void SendLaterInfo::readConfig(const KConfigGroup &config)
     }
     mDateTime = config.readEntry("date", QDateTime::currentDateTime());
     mRecurrence = config.readEntry("recurrence", false);
-    mRecurrenceEachValue = config.readEntry("recurrenceValue",1);
+    mRecurrenceEachValue = config.readEntry("recurrenceValue", 1);
     mRecurrenceUnit = static_cast<RecurrenceUnit>(config.readEntry("recurrenceUnit", (int)Days));
     mId = config.readEntry("itemId", -1);
     mSubject = config.readEntry("subject");
     mTo = config.readEntry("to");
 }
 
-void SendLaterInfo::writeConfig(KConfigGroup &config )
+void SendLaterInfo::writeConfig(KConfigGroup &config)
 {
     if (mLastDateTimeSend.isValid()) {
-        config.writeEntry("lastDateTimeSend", mLastDateTimeSend.toString(Qt::ISODate) );
+        config.writeEntry("lastDateTimeSend", mLastDateTimeSend.toString(Qt::ISODate));
     }
     config.writeEntry("date", mDateTime);
     config.writeEntry("recurrence", mRecurrence);
-    config.writeEntry("recurrenceValue", mRecurrenceEachValue );
+    config.writeEntry("recurrenceValue", mRecurrenceEachValue);
     config.writeEntry("recurrenceUnit", (int)mRecurrenceUnit);
     config.writeEntry("itemId", mId);
     config.writeEntry("subject", mSubject);

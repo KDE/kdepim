@@ -60,10 +60,11 @@ void SendLaterManager::stopAll()
 void SendLaterManager::load(bool forcereload)
 {
     stopAll();
-    if (forcereload)
+    if (forcereload) {
         mConfig->reparseConfiguration();
+    }
 
-    const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("SendLaterItem \\d+") ) );
+    const QStringList itemList = mConfig->groupList().filter(QRegExp(QLatin1String("SendLaterItem \\d+")));
     const int numberOfItems = itemList.count();
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
@@ -90,13 +91,13 @@ void SendLaterManager::createSendInfoList()
             const int seconds = now.secsTo(mCurrentInfo->dateTime());
             if (seconds > 0) {
                 //qDebug()<<" seconds"<<seconds;
-                mTimer->start(seconds*1000);
+                mTimer->start(seconds * 1000);
             } else {
                 //Create job when seconds <0
                 slotCreateJob();
             }
         } else {
-            qDebug()<<" list is empty";
+            qDebug() << " list is empty";
         }
     } else {
         SendLater::SendLaterInfo *info = searchInfo(mSendLaterQueue.dequeue());
@@ -111,13 +112,14 @@ void SendLaterManager::createSendInfoList()
 
 void SendLaterManager::stopTimer()
 {
-    if (mTimer->isActive())
+    if (mTimer->isActive()) {
         mTimer->stop();
+    }
 }
 
 SendLater::SendLaterInfo *SendLaterManager::searchInfo(Akonadi::Item::Id id)
 {
-    Q_FOREACH(SendLater::SendLaterInfo *info, mListSendLaterInfo) {
+    Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
         if (info->itemId() == id) {
             return info;
         }
@@ -133,7 +135,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
             mCurrentInfo = info;
             slotCreateJob();
         } else {
-            qDebug()<<" can't find info about current id: "<<id;
+            qDebug() << " can't find info about current id: " << id;
             itemRemoved(id);
         }
     } else {
@@ -145,7 +147,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
 void SendLaterManager::slotCreateJob()
 {
     if (mCurrentJob) {
-        qDebug()<<" Problem we have already a job"<<mCurrentJob;
+        qDebug() << " Problem we have already a job" << mCurrentJob;
         return;
     }
     mCurrentJob = new SendLaterJob(this, mCurrentInfo);
@@ -171,7 +173,7 @@ void SendLaterManager::removeInfo(Akonadi::Item::Id id)
 void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
 {
     if (info) {
-        switch(type) {
+        switch (type) {
         case ItemNotFound:
             //Don't try to resend it. Remove it.
             removeLaterInfo(info);
@@ -179,7 +181,7 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
         case MailDispatchDoesntWork:
             //Force to make online maildispatcher
             //Don't remove it.
-            MessageComposer::Util::sendMailDispatcherIsOnline( 0 );
+            MessageComposer::Util::sendMailDispatcherIsOnline(0);
             //Remove item which create error ?
             if (!info->isRecurrence()) {
                 removeLaterInfo(info);
@@ -199,7 +201,7 @@ void SendLaterManager::recreateSendList()
 {
     mCurrentJob = 0;
     Q_EMIT needUpdateConfigDialogBox();
-    QTimer::singleShot(1000*60, this, SLOT(createSendInfoList()));
+    QTimer::singleShot(1000 * 60, this, SLOT(createSendInfoList()));
 }
 
 void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
@@ -227,8 +229,9 @@ QString SendLaterManager::printDebugInfo()
         infoStr = QLatin1String("No mail");
     } else {
         Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
-            if (!infoStr.isEmpty())
+            if (!infoStr.isEmpty()) {
                 infoStr += QLatin1Char('\n');
+            }
             infoStr += infoToStr(info);
         }
     }

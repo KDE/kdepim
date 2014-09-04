@@ -45,17 +45,17 @@ FollowUpReminderManager::~FollowUpReminderManager()
 
 void FollowUpReminderManager::load()
 {
-    const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("FollowupReminderItem \\d+") ) );
+    const QStringList itemList = mConfig->groupList().filter(QRegExp(QLatin1String("FollowupReminderItem \\d+")));
     const int numberOfItems = itemList.count();
     const QDate currentDate = QDate::currentDate();
-    QList<FollowUpReminder::FollowUpReminderInfo*> noAnswerList;
+    QList<FollowUpReminder::FollowUpReminderInfo *> noAnswerList;
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
 
         FollowUpReminderInfo *info = new FollowUpReminderInfo(group);
         if (info->isValid()) {
             mFollowUpReminderInfoList.append(info);
-            if( info->followUpReminderDate().date() > currentDate) {
+            if (info->followUpReminderDate().date() > currentDate) {
                 FollowUpReminderInfo *noAnswerInfo = new FollowUpReminderInfo(*info);
                 noAnswerList.append(noAnswerInfo);
             }
@@ -82,7 +82,7 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
 
 void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId)
 {
-    Q_FOREACH(FollowUpReminderInfo* info, mFollowUpReminderInfoList) {
+    Q_FOREACH (FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
         if (info->messageId() == messageId) {
             answerReceived(info->to());
             //Remove info in list and settings
@@ -97,13 +97,13 @@ void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId
 
 void FollowUpReminderManager::answerReceived(const QString &from)
 {
-    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-    KNotification::event( QLatin1String("mailreceived"),
-                          i18n("Answer from %1 received", from),
-                          pixmap,
-                          0,
-                          KNotification::CloseOnTimeout,
-                          QLatin1String("akonadi_followupreminder_agent"));
+    const QPixmap pixmap = QIcon::fromTheme(QLatin1String("kmail")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
+    KNotification::event(QLatin1String("mailreceived"),
+                         i18n("Answer from %1 received", from),
+                         pixmap,
+                         0,
+                         KNotification::CloseOnTimeout,
+                         QLatin1String("akonadi_followupreminder_agent"));
 
 }
 
@@ -114,8 +114,9 @@ QString FollowUpReminderManager::printDebugInfo()
         infoStr = QLatin1String("No mail");
     } else {
         Q_FOREACH (FollowUpReminder::FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
-            if (!infoStr.isEmpty())
+            if (!infoStr.isEmpty()) {
                 infoStr += QLatin1Char('\n');
+            }
             infoStr += infoToStr(info);
         }
     }

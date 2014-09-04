@@ -35,9 +35,9 @@
 FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n("Configure") );
-    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
+    setWindowTitle(i18n("Configure"));
+    setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -54,19 +54,19 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
 
     readConfig();
     KAboutData aboutData = KAboutData(
-                QLatin1String( "followupreminderagent" ),
-                i18n( "Follow Up Reminder Agent" ),
-                QLatin1String( KDEPIM_VERSION ),
-                i18n( "Follow Up Mail." ),
-                KAboutLicense::GPL_V2,
-                i18n( "Copyright (C) 2014 Laurent Montel" ) );
+                               QLatin1String("followupreminderagent"),
+                               i18n("Follow Up Reminder Agent"),
+                               QLatin1String(KDEPIM_VERSION),
+                               i18n("Follow Up Mail."),
+                               KAboutLicense::GPL_V2,
+                               i18n("Copyright (C) 2014 Laurent Montel"));
 
-    aboutData.addAuthor( i18n( "Laurent Montel" ),
-                         i18n( "Maintainer" ), QLatin1String("montel@kde.org") );
+    aboutData.addAuthor(i18n("Laurent Montel"),
+                        i18n("Maintainer"), QLatin1String("montel@kde.org"));
 
-    aboutData.setProgramIconName( QLatin1String("kmail") );
-    aboutData.setTranslator( i18nc( "NAME OF TRANSLATORS", "Your names" ),
-                             i18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+    aboutData.setProgramIconName(QLatin1String("kmail"));
+    aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
+                            i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 
     KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
@@ -82,18 +82,18 @@ FollowUpReminderInfoDialog::~FollowUpReminderInfoDialog()
 
 void FollowUpReminderInfoDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "FollowUpReminderInfoDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "FollowUpReminderInfoDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
-    mWidget->restoreTreeWidgetHeader(group.readEntry("HeaderState",QByteArray()));
+    mWidget->restoreTreeWidgetHeader(group.readEntry("HeaderState", QByteArray()));
 }
 
 void FollowUpReminderInfoDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SendLaterConfigureDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SendLaterConfigureDialog");
+    group.writeEntry("Size", size());
     mWidget->saveTreeWidgetHeader(group);
 }
 

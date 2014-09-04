@@ -60,10 +60,10 @@ void FollowUpReminderInfo::setSubject(const QString &subject)
     mSubject = subject;
 }
 
-void FollowUpReminderInfo::writeConfig(KConfigGroup &config )
+void FollowUpReminderInfo::writeConfig(KConfigGroup &config)
 {
     if (mFollowUpReminderDate.isValid()) {
-        config.writeEntry("followUpReminderDate", mFollowUpReminderDate.toString(Qt::ISODate) );
+        config.writeEntry("followUpReminderDate", mFollowUpReminderDate.toString(Qt::ISODate));
     }
     config.writeEntry("messageId", mMessageId);
     config.writeEntry("itemId", mId);
@@ -120,12 +120,12 @@ void FollowUpReminderInfo::setFollowUpReminderDate(const QDateTime &followUpRemi
     mFollowUpReminderDate = followUpReminderDate;
 }
 
-bool FollowUpReminderInfo::operator==( const FollowUpReminderInfo& other ) const
+bool FollowUpReminderInfo::operator==(const FollowUpReminderInfo &other) const
 {
     return mId == other.id()
-            && mMessageId == other.messageId()
-            && mTo == other.to()
-            && mFollowUpReminderDate == other.followUpReminderDate()
-            && mSubject == other.subject();
+           && mMessageId == other.messageId()
+           && mTo == other.to()
+           && mFollowUpReminderDate == other.followUpReminderDate()
+           && mSubject == other.subject();
 }
 

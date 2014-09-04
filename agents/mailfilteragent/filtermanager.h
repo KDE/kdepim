@@ -25,7 +25,8 @@
 
 #include "mailcommon/search/searchpattern.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 class MailFilter;
 class ItemContext;
 }
@@ -38,18 +39,16 @@ public:
     /**
      * Describes the list of filters.
      */
-    enum FilterSet
-    {
+    enum FilterSet {
         NoSet = 0x0,
         Inbound = 0x1,
         Outbound = 0x2,
         Explicit = 0x4,
         BeforeOutbound = 0x8,
-        All = Inbound|BeforeOutbound|Outbound|Explicit
+        All = Inbound | BeforeOutbound | Outbound | Explicit
     };
 
-    enum FilterRequires
-    {
+    enum FilterRequires {
         Unknown = 0,
         HeaderMessage = 1,
         FullMessage = 2
@@ -60,7 +59,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit FilterManager( QObject *parent = 0 );
+    explicit FilterManager(QObject *parent = 0);
 
     /**
      * Destroys the filter manager.
@@ -81,7 +80,7 @@ public:
      * Checks for existing filters with the @p name and extend the
      * "name" to "name (i)" until no match is found for i=1..n
      */
-    QString createUniqueName( const QString &name ) const;
+    QString createUniqueName(const QString &name) const;
 
     /**
      * Process given message item by applying the filter rules one by
@@ -95,13 +94,13 @@ public:
      *
      *  @return true if the filtering was successful, false in case of any error
      */
-    bool process( const Akonadi::Item &item, bool needsFullPayload,
-                  FilterSet set = Inbound,
-                  bool account = false, const QString &accountId = QString() );
+    bool process(const Akonadi::Item &item, bool needsFullPayload,
+                 FilterSet set = Inbound,
+                 bool account = false, const QString &accountId = QString());
 
-    bool process( const QList<MailCommon::MailFilter*>& mailFilters, const Akonadi::Item &item,
-                  bool needsFullPayload, FilterSet set = Inbound,
-                  bool account = false, const QString &accountId = QString() );
+    bool process(const QList<MailCommon::MailFilter *> &mailFilters, const Akonadi::Item &item,
+                 bool needsFullPayload, FilterSet set = Inbound,
+                 bool account = false, const QString &accountId = QString());
 
     /**
      * For ad-hoc filters.
@@ -109,24 +108,24 @@ public:
      * Applies @p filter to message @p item.
      * Return codes are as with the above method.
      */
-    bool process( const Akonadi::Item &item, bool needsFullPayload, const MailCommon::MailFilter *filter );
+    bool process(const Akonadi::Item &item, bool needsFullPayload, const MailCommon::MailFilter *filter);
 
-    void filter( const Akonadi::Item& item, FilterManager::FilterSet set, const QString& resourceId );
-    void filter( const Akonadi::Item &item, const QString& filterId, const QString& resourceId );
+    void filter(const Akonadi::Item &item, FilterManager::FilterSet set, const QString &resourceId);
+    void filter(const Akonadi::Item &item, const QString &filterId, const QString &resourceId);
 
-    void applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, MailCommon::SearchRule::RequiredPart requiredPart, const QStringList& listFilters );
+    void applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, MailCommon::SearchRule::RequiredPart requiredPart, const QStringList &listFilters);
 
     /**
      * Applies the filters on the given @p messages.
      */
-    void applyFilters( const QList<Akonadi::Item> &messages, FilterSet set = Explicit );
+    void applyFilters(const QList<Akonadi::Item> &messages, FilterSet set = Explicit);
 
     /**
      * Returns whether the configured filters need the full mail content.
      */
-    MailCommon::SearchRule::RequiredPart requiredPart(const QString& id) const;
+    MailCommon::SearchRule::RequiredPart requiredPart(const QString &id) const;
 
-    void mailCollectionRemoved( const Akonadi::Collection& collection );
+    void mailCollectionRemoved(const Akonadi::Collection &collection);
 
 #ifndef NDEBUG
     /**
@@ -136,7 +135,7 @@ public:
 #endif
 
 protected:
-    bool processContextItem(MailCommon::ItemContext context );
+    bool processContextItem(MailCommon::ItemContext context);
 
 Q_SIGNALS:
     /**
@@ -147,22 +146,22 @@ Q_SIGNALS:
     /**
      * This signal is emitted to notify that @p item has not been moved.
      */
-    void filteringFailed( const Akonadi::Item &item );
+    void filteringFailed(const Akonadi::Item &item);
 
     void percent(int progress);
-    void progressMessage(const QString& message);
+    void progressMessage(const QString &message);
 
 private:
     //@cond PRIVATE
     class Private;
-    Private* d;
+    Private *d;
 
-    Q_PRIVATE_SLOT( d, void itemsFetchJobForFilterDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void itemFetchJobForFilterDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void moveJobResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void modifyJobResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void deleteJobResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotItemsFetchedForFilter( const Akonadi::Item::List& ) )
+    Q_PRIVATE_SLOT(d, void itemsFetchJobForFilterDone(KJob *))
+    Q_PRIVATE_SLOT(d, void itemFetchJobForFilterDone(KJob *))
+    Q_PRIVATE_SLOT(d, void moveJobResult(KJob *))
+    Q_PRIVATE_SLOT(d, void modifyJobResult(KJob *))
+    Q_PRIVATE_SLOT(d, void deleteJobResult(KJob *))
+    Q_PRIVATE_SLOT(d, void slotItemsFetchedForFilter(const Akonadi::Item::List &))
     //@endcond
 };
 

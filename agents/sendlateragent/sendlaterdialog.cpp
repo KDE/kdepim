@@ -37,18 +37,18 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
       mDelay(0),
       mInfo(info)
 {
-    setWindowTitle( i18nc("@title:window", "Send Later") );
-    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
+    setWindowTitle(i18nc("@title:window", "Send Later"));
+    setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
 
     QWidget *sendLaterWidget = new QWidget;
     mSendLaterWidget = new Ui::SendLaterWidget;
-    mSendLaterWidget->setupUi( sendLaterWidget );
+    mSendLaterWidget->setupUi(sendLaterWidget);
 
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -73,15 +73,15 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     lay->addWidget(sendLaterWidget);
 
     QDateTime t = QDateTime::currentDateTime();
-    t = t.addSecs(60*60);
+    t = t.addSecs(60 * 60);
 
     mSendLaterWidget->mDateTime->setDateTime(t);
     connect(mSendLaterWidget->mRecurrence, &QCheckBox::clicked, this, &SendLaterDialog::slotRecurrenceClicked);
     QStringList unitsList;
-    unitsList<<i18n("Days");
-    unitsList<<i18n("Weeks");
-    unitsList<<i18n("Months");
-    unitsList<<i18n("Years");
+    unitsList << i18n("Days");
+    unitsList << i18n("Weeks");
+    unitsList << i18n("Months");
+    unitsList << i18n("Years");
     mSendLaterWidget->mRecurrenceComboBox->addItems(unitsList);
 
     lay->addWidget(new KSeparator);
@@ -89,9 +89,10 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     mainLayout->addWidget(w);
     mainLayout->addWidget(buttonBox);
     slotRecurrenceClicked(false);
-    if (info)
+    if (info) {
         load(info);
-    resize(180,120);
+    }
+    resize(180, 120);
 }
 
 SendLaterDialog::~SendLaterDialog()
@@ -115,7 +116,7 @@ void SendLaterDialog::load(SendLater::SendLaterInfo *info)
     mSendLaterWidget->mRecurrenceComboBox->setCurrentIndex((int)info->recurrenceUnit());
 }
 
-SendLater::SendLaterInfo* SendLaterDialog::info()
+SendLater::SendLaterInfo *SendLaterDialog::info()
 {
     if (!mInfo) {
         mInfo = new SendLater::SendLaterInfo();
@@ -123,10 +124,11 @@ SendLater::SendLaterInfo* SendLaterDialog::info()
     mInfo->setRecurrence(mSendLaterWidget->mRecurrence->isChecked());
     mInfo->setRecurrenceEachValue(mSendLaterWidget->mRecurrenceValue->value());
     mInfo->setRecurrenceUnit((SendLater::SendLaterInfo::RecurrenceUnit)mSendLaterWidget->mRecurrenceComboBox->currentIndex());
-    if (mSendDateTime.isValid())
+    if (mSendDateTime.isValid()) {
         mInfo->setDateTime(mSendDateTime);
-    else
+    } else {
         mInfo->setDateTime(mSendLaterWidget->mDateTime->dateTime());
+    }
     return mInfo;
 }
 

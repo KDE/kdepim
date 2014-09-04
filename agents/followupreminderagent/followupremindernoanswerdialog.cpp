@@ -28,13 +28,12 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-
 FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n("Follow Up Mail") );
-    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Follow Up Mail"));
+    setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -71,18 +70,18 @@ void FollowUpReminderNoAnswerDialog::setInfo(const QList<FollowUpReminder::Follo
 
 void FollowUpReminderNoAnswerDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "FollowUpReminderNoAnswerDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "FollowUpReminderNoAnswerDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
-    mWidget->restoreTreeWidgetHeader(group.readEntry("HeaderState",QByteArray()));
+    mWidget->restoreTreeWidgetHeader(group.readEntry("HeaderState", QByteArray()));
 }
 
 void FollowUpReminderNoAnswerDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "FollowUpReminderNoAnswerDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "FollowUpReminderNoAnswerDialog");
+    group.writeEntry("Size", size());
     mWidget->saveTreeWidgetHeader(group);
 }
 

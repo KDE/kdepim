@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "notesagentnotedialog.h"
 
 #include <ItemFetchJob>
@@ -36,7 +35,6 @@
 #include <KConfigGroup>
 #include <QPushButton>
 
-
 NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
     : QDialog(parent)
 {
@@ -46,7 +44,7 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::accepted, this, &NotesAgentNoteDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &NotesAgentNoteDialog::reject);
     setAttribute(Qt::WA_DeleteOnClose);
-    setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
+    setWindowIcon(QIcon::fromTheme(QLatin1String("knotes")));
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
@@ -71,16 +69,16 @@ NotesAgentNoteDialog::~NotesAgentNoteDialog()
 void NotesAgentNoteDialog::setNoteId(Akonadi::Item::Id id)
 {
     Akonadi::Item item(id);
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
-    job->fetchScope().fetchFullPayload( true );
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item, this);
+    job->fetchScope().fetchFullPayload(true);
     job->fetchScope().fetchAttribute< NoteShared::NoteDisplayAttribute >();
     connect(job, &Akonadi::ItemFetchJob::result, this, &NotesAgentNoteDialog::slotFetchItem);
 }
 
-void NotesAgentNoteDialog::slotFetchItem(KJob* job)
+void NotesAgentNoteDialog::slotFetchItem(KJob *job)
 {
-    if ( job->error() ) {
-        qDebug()<<"fetch item failed "<<job->errorString();
+    if (job->error()) {
+        qDebug() << "fetch item failed " << job->errorString();
         return;
     }
     Akonadi::ItemFetchJob *itemFetchJob = static_cast<Akonadi::ItemFetchJob *>(job);
@@ -89,10 +87,11 @@ void NotesAgentNoteDialog::slotFetchItem(KJob* job)
         const Akonadi::Item item = lstItem.first();
         KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
         if (noteMessage) {
-            const KMime::Headers::Subject * const subject = noteMessage->subject(false);
-            if (subject)
+            const KMime::Headers::Subject *const subject = noteMessage->subject(false);
+            if (subject) {
                 mSubject->setText(subject->asUnicodeString());
-            if ( noteMessage->contentType()->isHTMLText() ) {
+            }
+            if (noteMessage->contentType()->isHTMLText()) {
                 mNote->setAcceptRichText(true);
                 mNote->setHtml(noteMessage->mainBodyPart()->decodedText());
             } else {
@@ -103,7 +102,7 @@ void NotesAgentNoteDialog::slotFetchItem(KJob* job)
         if (item.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
             NoteShared::NoteDisplayAttribute *attr = item.attribute<NoteShared::NoteDisplayAttribute>();
             if (attr) {
-                mNote->editor()->setTextColor( attr->backgroundColor() );
+                mNote->editor()->setTextColor(attr->backgroundColor());
                 //TODO add background color.
             }
         }
@@ -112,16 +111,16 @@ void NotesAgentNoteDialog::slotFetchItem(KJob* job)
 
 void NotesAgentNoteDialog::readConfig()
 {
-    KConfigGroup grp( KSharedConfig::openConfig(), "NotesAgentNoteDialog" );
-    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup grp(KSharedConfig::openConfig(), "NotesAgentNoteDialog");
+    const QSize size = grp.readEntry("Size", QSize(300, 200));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void NotesAgentNoteDialog::writeConfig()
 {
-    KConfigGroup grp( KSharedConfig::openConfig(), "NotesAgentNoteDialog" );
-    grp.writeEntry( "Size", size() );
+    KConfigGroup grp(KSharedConfig::openConfig(), "NotesAgentNoteDialog");
+    grp.writeEntry("Size", size());
     grp.sync();
 }

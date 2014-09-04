@@ -42,7 +42,8 @@ class QPushButton;
   The filter log dialog allows a continued observation of the
   filter log of MailFilterAgent.
 */
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditorWidget;
 }
 class FilterLogDialog : public QDialog
@@ -51,15 +52,15 @@ class FilterLogDialog : public QDialog
 
 public:
     /** constructor */
-    explicit FilterLogDialog( QWidget * parent );
+    explicit FilterLogDialog(QWidget *parent);
     ~FilterLogDialog();
 protected slots:
-    void slotLogEntryAdded( const QString& logEntry );
+    void slotLogEntryAdded(const QString &logEntry);
     void slotLogShrinked();
     void slotLogStateChanged();
     void slotChangeLogDetail();
     void slotSwitchLogState();
-    void slotChangeLogMemLimit( int value );
+    void slotChangeLogMemLimit(int value);
 
     void slotUser1();
     void slotUser2();
@@ -67,14 +68,14 @@ private:
     void readConfig();
     void writeConfig();
 protected:
-    PimCommon::PlainTextEditorWidget * mTextEdit;
-    QCheckBox * mLogActiveBox;
-    QGroupBox * mLogDetailsBox;
-    QCheckBox * mLogPatternDescBox;
-    QCheckBox * mLogRuleEvaluationBox;
-    QCheckBox * mLogPatternResultBox;
-    QCheckBox * mLogFilterActionBox;
-    QSpinBox  * mLogMemLimitSpin;
+    PimCommon::PlainTextEditorWidget *mTextEdit;
+    QCheckBox *mLogActiveBox;
+    QGroupBox *mLogDetailsBox;
+    QCheckBox *mLogPatternDescBox;
+    QCheckBox *mLogRuleEvaluationBox;
+    QCheckBox *mLogPatternResultBox;
+    QCheckBox *mLogFilterActionBox;
+    QSpinBox   *mLogMemLimitSpin;
     bool mIsInitialized;
 private slots:
     void slotTextChanged();

@@ -41,10 +41,10 @@ void SendLaterRemoveMessageJob::deleteItem()
     }
 }
 
-void SendLaterRemoveMessageJob::slotItemDeleteDone(KJob* job)
+void SendLaterRemoveMessageJob::slotItemDeleteDone(KJob *job)
 {
-    if ( job->error() ) {
-        qDebug()<<" Error during delete item :"<<job->errorString();
+    if (job->error()) {
+        qDebug() << " Error during delete item :" << job->errorString();
     }
     ++mIndex;
     deleteItem();

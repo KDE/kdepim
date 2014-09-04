@@ -43,15 +43,15 @@ Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
-    void configure( WId windowId );
+    void configure(WId windowId);
 
 private Q_SLOTS:
     void slotSendNow(Akonadi::Item::Id id);
 
 protected:
-    void itemsRemoved( const Akonadi::Item::List &item );
+    void itemsRemoved(const Akonadi::Item::List &item);
     void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection, const Akonadi::Collection &destinationCollection);
-    void doSetOnline( bool online );
+    void doSetOnline(bool online);
 
 private:
     SendLaterManager *mManager;

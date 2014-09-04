@@ -20,12 +20,14 @@
 
 #include <mailcommon/interfaces/mailinterfaces.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class EntityTreeModel;
 class EntityMimeTypeFilterModel;
 }
 
-namespace MailCommon {
+namespace MailCommon
+{
 class FolderCollectionMonitor;
 class JobScheduler;
 }
@@ -33,7 +35,7 @@ class JobScheduler;
 class ArchiveMailKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
 public:
-    explicit  ArchiveMailKernel( QObject *parent = 0 );
+    explicit  ArchiveMailKernel(QObject *parent = 0);
 
     KIdentityManagement::IdentityManager *identityManager();
     MessageComposer::MessageSender *msgSender();
@@ -41,7 +43,7 @@ public:
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
     KSharedConfig::Ptr config();
     void syncConfig();
-    MailCommon::JobScheduler* jobScheduler() const;
+    MailCommon::JobScheduler *jobScheduler() const;
     Akonadi::ChangeRecorder *folderCollectionMonitor() const;
     void updateSystemTray();
 
@@ -49,16 +51,15 @@ public:
     bool excludeImportantMailFromExpiry();
     QStringList customTemplates();
     Akonadi::Entity::Id lastSelectedFolder();
-    void setLastSelectedFolder(const Akonadi::Entity::Id& col);
+    void setLastSelectedFolder(const Akonadi::Entity::Id &col);
     bool showPopupAfterDnD();
-    
 
 private:
     KIdentityManagement::IdentityManager *mIdentityManager;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
-    MailCommon::JobScheduler* mJobScheduler;
+    MailCommon::JobScheduler *mJobScheduler;
 };
 
 #endif

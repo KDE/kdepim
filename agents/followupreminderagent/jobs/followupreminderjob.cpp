@@ -42,8 +42,8 @@ void FollowUpReminderJob::start()
         return;
     }
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(mItem);
-    job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
-    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    job->fetchScope().fetchPayloadPart(Akonadi::MessagePart::Envelope, true);
+    job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
 
     connect(job, &Akonadi::ItemFetchJob::result, this, &FollowUpReminderJob::slotItemFetchJobDone);
 }
@@ -53,23 +53,23 @@ void FollowUpReminderJob::setItem(const Akonadi::Item &item)
     mItem = item;
 }
 
-void FollowUpReminderJob::slotItemFetchJobDone(KJob* job)
+void FollowUpReminderJob::slotItemFetchJobDone(KJob *job)
 {
-    if ( job->error() ) {
+    if (job->error()) {
         qCritical() << "Error while fetching item. " << job->error() << job->errorString();
         deleteLater();
         return;
     }
 
-    const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+    const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob *>(job);
 
     const Akonadi::Item::List items = fetchJob->items();
-    if ( items.isEmpty() ) {
+    if (items.isEmpty()) {
         qCritical() << "Error while fetching item: item not found";
         deleteLater();
         return;
     }
-    if ( !items.at(0).hasPayload<KMime::Message::Ptr>() ) {
+    if (!items.at(0).hasPayload<KMime::Message::Ptr>()) {
         qCritical() << "Item has not payload";
         deleteLater();
         return;
@@ -80,7 +80,7 @@ void FollowUpReminderJob::slotItemFetchJobDone(KJob* job)
         if (msgID) {
             //FIXME It's not the messageID to look at!
             const QString messageIdStr = msgID->asUnicodeString();
-            qDebug()<<" messageIdStr"<<messageIdStr;
+            qDebug() << " messageIdStr" << messageIdStr;
             Q_EMIT finished(messageIdStr);
         }
     }

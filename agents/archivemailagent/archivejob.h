@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -17,7 +17,6 @@
 
 #ifndef ARCHIVEJOB_H
 #define ARCHIVEJOB_H
-
 
 #include <mailcommon/job/jobscheduler.h>
 #include <Collection>
@@ -50,8 +49,8 @@ class ScheduledArchiveTask : public MailCommon::ScheduledTask
 public:
     /// If immediate is set, the job will execute synchronously. This is used when
     /// the user requests explicitly that the operation should happen immediately.
-    ScheduledArchiveTask( ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
-        : MailCommon::ScheduledTask( folder, immediate )
+    ScheduledArchiveTask(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate)
+        : MailCommon::ScheduledTask(folder, immediate)
         , mInfo(info)
         , mManager(manager)
     {
@@ -71,6 +70,5 @@ private:
     ArchiveMailInfo *mInfo;
     ArchiveMailManager *mManager;
 };
-
 
 #endif // ARCHIVEJOB_H

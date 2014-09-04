@@ -43,7 +43,7 @@
 //#define DEBUG_SENDLATERAGENT 1
 
 SendLaterAgent::SendLaterAgent(const QString &id)
-    : Akonadi::AgentBase( id )
+    : Akonadi::AgentBase(id)
 {
     Kdelibs4ConfigMigrator migrate(QLatin1String("sendlateragent"));
     migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_sendlater_agentrc") << QLatin1String("akonadi_sendlater_agent.notifyrc"));
@@ -51,22 +51,22 @@ SendLaterAgent::SendLaterAgent(const QString &id)
 
     mManager = new SendLaterManager(this);
     connect(mManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
-    new SendLaterAgentAdaptor( this );
-    Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/SendLaterAgent" ), this, QDBusConnection::ExportAdaptors );
-    Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.SendLaterAgent" ) );
+    new SendLaterAgentAdaptor(this);
+    Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/SendLaterAgent"), this, QDBusConnection::ExportAdaptors);
+    Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.SendLaterAgent"));
 
-    changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
-    changeRecorder()->itemFetchScope().setCacheOnly( true );
-    changeRecorder()->itemFetchScope().setFetchModificationTime( false );
-    changeRecorder()->setChangeRecordingEnabled( false );
-    changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
+    changeRecorder()->setMimeTypeMonitored(KMime::Message::mimeType());
+    changeRecorder()->itemFetchScope().setCacheOnly(true);
+    changeRecorder()->itemFetchScope().setFetchModificationTime(false);
+    changeRecorder()->setChangeRecordingEnabled(false);
+    changeRecorder()->ignoreSession(Akonadi::Session::defaultSession());
     setNeedsNetwork(true);
 
     if (SendLaterAgentSettings::enabled()) {
 #ifdef DEBUG_SENDLATERAGENT
         QTimer::singleShot(1000, mManager, SLOT(load()));
 #else
-        QTimer::singleShot(1000*60*4, mManager, SLOT(load()));
+        QTimer::singleShot(1000 * 60 * 4, mManager, SLOT(load()));
 #endif
     }
 }
@@ -75,7 +75,7 @@ SendLaterAgent::~SendLaterAgent()
 {
 }
 
-void SendLaterAgent::doSetOnline( bool online )
+void SendLaterAgent::doSetOnline(bool online)
 {
     if (online) {
         reload();
@@ -86,14 +86,16 @@ void SendLaterAgent::doSetOnline( bool online )
 
 void SendLaterAgent::reload()
 {
-    if (SendLaterAgentSettings::enabled())
+    if (SendLaterAgentSettings::enabled()) {
         mManager->load(true);
+    }
 }
 
 void SendLaterAgent::setEnableAgent(bool enabled)
 {
-    if (SendLaterAgentSettings::enabled() == enabled)
+    if (SendLaterAgentSettings::enabled() == enabled) {
         return;
+    }
 
     SendLaterAgentSettings::setEnabled(enabled);
     SendLaterAgentSettings::self()->save();
@@ -109,7 +111,7 @@ bool SendLaterAgent::enabledAgent() const
     return SendLaterAgentSettings::enabled();
 }
 
-void SendLaterAgent::configure( WId windowId )
+void SendLaterAgent::configure(WId windowId)
 {
     showConfigureDialog((qlonglong)windowId);
 }
@@ -124,9 +126,9 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
     QPointer<SendLaterConfigureDialog> dialog = new SendLaterConfigureDialog();
     if (windowId) {
 #ifndef Q_OS_WIN
-        KWindowSystem::setMainWindow( dialog, windowId );
+        KWindowSystem::setMainWindow(dialog, windowId);
 #else
-        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+        KWindowSystem::setMainWindow(dialog, (HWND)windowId);
 #endif
     }
     connect(this, &SendLaterAgent::needUpdateConfigDialogBox, dialog.data(), &SendLaterConfigureDialog::slotNeedToReloadConfig);
@@ -142,10 +144,10 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
     delete dialog;
 }
 
-void SendLaterAgent::itemsRemoved( const Akonadi::Item::List &items )
+void SendLaterAgent::itemsRemoved(const Akonadi::Item::List &items)
 {
-    Q_FOREACH(const Akonadi::Item &item, items) {
-       mManager->itemRemoved(item.id());
+    Q_FOREACH (const Akonadi::Item &item, items) {
+        mManager->itemRemoved(item.id());
     }
 }
 
@@ -154,7 +156,7 @@ void SendLaterAgent::itemsMoved(const Akonadi::Item::List &items, const Akonadi:
     if (Akonadi::SpecialMailCollections::self()->specialCollectionType(destinationCollection) != Akonadi::SpecialMailCollections::Trash) {
         return;
     }
-    Q_FOREACH(const Akonadi::Item &item, items) {
+    Q_FOREACH (const Akonadi::Item &item, items) {
         mManager->itemRemoved(item.id());
     }
 }
@@ -164,5 +166,5 @@ QString SendLaterAgent::printDebugInfo()
     return mManager->printDebugInfo();
 }
 
-AKONADI_AGENT_MAIN( SendLaterAgent )
+AKONADI_AGENT_MAIN(SendLaterAgent)
 

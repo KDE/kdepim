@@ -22,7 +22,8 @@
 class QListWidget;
 class QLabel;
 class QListWidgetItem;
-namespace NoteShared {
+namespace NoteShared
+{
 class NoteListWidget;
 }
 class KJob;
@@ -30,7 +31,7 @@ class NotesAgentAlarmDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit NotesAgentAlarmDialog(QWidget *parent=0);
+    explicit NotesAgentAlarmDialog(QWidget *parent = 0);
     ~NotesAgentAlarmDialog();
 
     void addListAlarm(const Akonadi::Item::List &lstAlarm);
