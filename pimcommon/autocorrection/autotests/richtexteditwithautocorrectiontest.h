@@ -29,6 +29,7 @@ private slots:
     void shouldReplaceWordWhenExactText();
     void shouldNotReplaceWordWhenInexactText();
     void shouldReplaceWhenPressEnter();
+    void shouldReplaceWhenPressReturn();
 };
 
 #endif // RICHTEXTEDITWITHAUTOCORRECTIONTEST_H
