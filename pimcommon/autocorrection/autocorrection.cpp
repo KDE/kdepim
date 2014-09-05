@@ -646,15 +646,15 @@ void AutoCorrection::uppercaseFirstCharOfSentence()
 
         while (constIter != text.constBegin()) {
             while (constIter != text.begin() && constIter->isSpace()) {
-                constIter--;
-                position--;
+                --constIter;
+                --position;
             }
 
             if (constIter != text.constBegin() && (*constIter == QLatin1Char('.') || *constIter == QLatin1Char('!') || *constIter == QLatin1Char('?'))) {
                 constIter--;
                 while (constIter != text.constBegin() && !(constIter->isLetter())) {
-                    position--;
-                    constIter--;
+                    --position;
+                    --constIter;
                 }
                 selectWord(mCursor, --position);
                 const QString prevWord = mCursor.selectedText();

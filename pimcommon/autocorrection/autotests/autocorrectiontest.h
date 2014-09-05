@@ -33,6 +33,7 @@ private Q_SLOTS:
     void shouldUpperCaseFirstCharOfSentence();
     void shouldFixTwoUpperCaseChars();
     void shouldRemoveDoubleSpace();
+    void shouldReplaceSingleQuote();
 
 private:
     KSharedConfig::Ptr mConfig;
