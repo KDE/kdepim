@@ -163,8 +163,7 @@ ArchiveMailWidget::ArchiveMailWidget(QWidget *parent)
     mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mWidget->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(customContextMenuRequested(QPoint)));
+    connect(mWidget->treeWidget, &QTreeWidget::customContextMenuRequested, this, &ArchiveMailWidget::customContextMenuRequested);
 
     load();
     connect(mWidget->removeItem, &QPushButton::clicked, this, &ArchiveMailWidget::slotRemoveItem);

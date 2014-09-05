@@ -78,8 +78,7 @@ NoteHostDialog::NoteHostDialog(const QString &caption, QWidget *parent)
     m_servicesView->setModel(mdl);
     m_servicesView->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_servicesView->hideColumn(KDNSSD::ServiceModel::Port);
-    connect(m_servicesView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-            SLOT(serviceSelected(QModelIndex)));
+    connect(m_servicesView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(serviceSelected(QModelIndex)));
 
     connect(m_servicesView, &QTreeView::activated, this, &NoteHostDialog::serviceSelected);
     connect(m_servicesView, &QTreeView::clicked, this, &NoteHostDialog::serviceSelected);
@@ -95,8 +94,7 @@ NoteHostDialog::NoteHostDialog(const QString &caption, QWidget *parent)
     // Read known hosts from configfile
     m_hostCombo->setHistoryItems(NoteShared::NoteSharedGlobalConfig::knownHosts(), true);
     m_hostCombo->setFocus();
-    connect(m_hostCombo->lineEdit(), SIGNAL(textChanged(QString)),
-            this, SLOT(slotTextChanged(QString)));
+    connect(m_hostCombo->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(slotTextChanged(QString)));
     slotTextChanged(m_hostCombo->lineEdit()->text());
     readConfig();
 }
