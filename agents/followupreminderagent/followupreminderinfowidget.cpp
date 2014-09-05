@@ -27,6 +27,7 @@
 #include <kmenu.h>
 #include <KLocalizedString>
 
+//#define DEBUG_MESSAGE_ID
 static QString followUpItemPattern = QLatin1String("FollowupReminderItem \\d+");
 
 
@@ -60,8 +61,12 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
     QStringList headers;
     headers << i18n("To")
             << i18n("Subject")
-            << i18n("Message Id")
-            << i18n("Dead Line");
+            << i18n("Dead Line")
+#ifdef DEBUG_MESSAGE_ID
+            << i18n("Message Id");
+#else
+               ;
+#endif
 
     mTreeWidget->setHeaderLabels(headers);
     mTreeWidget->setSortingEnabled(true);
@@ -86,7 +91,9 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
     Q_FOREACH(FollowUpReminder::FollowUpReminderInfo *info, infoList) {
         FollowUpReminderInfoItem *item = new FollowUpReminderInfoItem(mTreeWidget);
         item->setText(To, info->to());
+#ifdef DEBUG_MESSAGE_ID
         item->setText(MessageId, info->messageId());
+#endif
         item->setText(Subject, info->subject());
         const QString date = KGlobal::locale()->formatDateTime( info->followUpReminderDate(), KLocale::LongDate );
         item->setText(DeadLine, date);
