@@ -167,5 +167,37 @@ void AutoCorrectionTest::shouldRemoveDoubleSpace()
     QCOMPARE(doc.toPlainText(), QLatin1String(" "));
 }
 
+void AutoCorrectionTest::shouldReplaceSingleQuote()
+{
+    PimCommon::AutoCorrection autocorrection;
+    autocorrection.setEnabledAutoCorrection(true);
+    autocorrection.setReplaceSingleQuotes(true);
+    PimCommon::AutoCorrection::TypographicQuotes simpleQuote;
+    simpleQuote.begin = QLatin1Char('A');
+    simpleQuote.end = QLatin1Char('B');
+
+    autocorrection.setTypographicSingleQuotes(simpleQuote);
+
+    QTextDocument doc;
+    QString text = QLatin1String("sss");
+    doc.setPlainText(QLatin1String("'") + text);
+    int position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), QString(simpleQuote.begin + text));
+
+    text = QLatin1String("sss");
+    doc.setPlainText(text + QLatin1String("'"));
+    position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), QString(text + simpleQuote.end ));
+
+    text = QLatin1String("sss");
+    doc.setPlainText(QLatin1String("'") + text + QLatin1String("'"));
+    position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), QString(simpleQuote.begin + text + simpleQuote.end ));
+
+}
+
 
 QTEST_KDEMAIN(AutoCorrectionTest, NoGUI)
