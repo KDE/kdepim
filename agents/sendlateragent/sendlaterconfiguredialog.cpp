@@ -38,6 +38,8 @@
 
 static QString sendLaterItemPattern = QLatin1String("SendLaterItem \\d+");
 
+//#define DEBUG_MESSAGE_ID
+
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
@@ -151,7 +153,11 @@ SendLaterWidget::SendLaterWidget(QWidget *parent)
             << i18n("Subject")
             << i18n("Send around")
             << i18n("Recurrent")
+#ifdef DEBUG_MESSAGE_ID
             << i18n("Message Id");
+#else
+               ;
+#endif
 
     mWidget->treeWidget->setHeaderLabels(headers);
     mWidget->treeWidget->setSortingEnabled(true);
@@ -242,7 +248,9 @@ void SendLaterWidget::createOrUpdateItem(SendLater::SendLaterInfo *info, SendLat
         item = new SendLaterItem(mWidget->treeWidget);
     }
     item->setText(Recursive, info->isRecurrence() ? i18n("Yes") : i18n("No"));
+#ifdef DEBUG_MESSAGE_ID
     item->setText(MessageId, QString::number(info->itemId()));
+#endif
     item->setText(SendAround, info->dateTime().toString());
     item->setText(Subject, info->subject());
     item->setText(To, info->to());

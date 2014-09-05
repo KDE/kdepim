@@ -62,8 +62,8 @@ private:
     enum FollowUpReminderColumn {
         To = 0,
         Subject,
-        MessageId,
-        DeadLine
+        DeadLine,
+        MessageId
     };
     QTreeWidget *mTreeWidget;
     bool mChanged;
