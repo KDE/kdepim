@@ -122,6 +122,14 @@ void AutoCorrectionTest::shouldFixTwoUpperCaseChars()
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), text);
 
+    //There is a uppercase word
+    text = QLatin1String("FOO");
+    doc.setPlainText(text);
+    position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), text);
+
+
 
     //Exclude 2 upper letter
     text = QLatin1String("ABc");
@@ -139,8 +147,24 @@ void AutoCorrectionTest::shouldFixTwoUpperCaseChars()
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), text);
+}
 
+void AutoCorrectionTest::shouldRemoveDoubleSpace()
+{
+    PimCommon::AutoCorrection autocorrection;
+    autocorrection.setEnabledAutoCorrection(true);
+    autocorrection.setSingleSpaces(true);
 
+    //Remove double space here.
+    QTextDocument doc;
+    QString text = QLatin1String("  ");
+    doc.setPlainText(text);
+    int position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    //TODO FIXME
+    QEXPECT_FAIL( "", "Double space support is broken", Continue );
+
+    QCOMPARE(doc.toPlainText(), QLatin1String(" "));
 }
 
 

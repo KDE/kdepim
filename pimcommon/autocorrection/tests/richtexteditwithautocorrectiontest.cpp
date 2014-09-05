@@ -93,5 +93,22 @@ void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressEnter()
     QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char('\n')) );
 }
 
+void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressReturn()
+{
+    PimCommon::RichTextEditWithAutoCorrection richtext(0);
+    const QString originalWord = QLatin1String("FOOFOO");
+    const QString replaceWord = QLatin1String("BLABLA");
+    QHash<QString, QString> entries;
+    entries.insert(originalWord, replaceWord);
+    richtext.autocorrection()->setAutocorrectEntries(entries);
+    richtext.autocorrection()->setEnabledAutoCorrection(true);
+    richtext.autocorrection()->setAdvancedAutocorrect(true);
+    richtext.show();
+    QTest::qWaitForWindowShown(&richtext);
+    QTest::keyClicks(&richtext, originalWord);
+    QTest::keyPress(&richtext, Qt::Key_Return);
+    QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char('\n')) );
+}
+
 
 QTEST_KDEMAIN(RichTextEditWithAutoCorrectionTest, GUI)

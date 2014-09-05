@@ -32,6 +32,7 @@ private Q_SLOTS:
     void shouldRestoreValue();
     void shouldUpperCaseFirstCharOfSentence();
     void shouldFixTwoUpperCaseChars();
+    void shouldRemoveDoubleSpace();
 
 private:
     KSharedConfig::Ptr mConfig;
