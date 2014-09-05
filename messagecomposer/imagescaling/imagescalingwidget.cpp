@@ -40,43 +40,43 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
     initComboBox(ui->CBMinimumHeight);
 
     initWriteImageFormat();
-    connect(ui->enabledAutoResize,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->KeepImageRatio,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->AskBeforeResizing,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->EnlargeImageToMinimum,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->ReduceImageToMaximum,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->customMaximumWidth,SIGNAL(valueChanged(int)),SIGNAL(changed()));
-    connect(ui->customMaximumHeight,SIGNAL(valueChanged(int)),SIGNAL(changed()));
-    connect(ui->customMinimumWidth,SIGNAL(valueChanged(int)),SIGNAL(changed()));
-    connect(ui->customMinimumHeight,SIGNAL(valueChanged(int)),SIGNAL(changed()));
-    connect(ui->skipImageSizeLower,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->imageSize,SIGNAL(valueChanged(int)),SIGNAL(changed()));
-    connect(ui->pattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
-    connect(ui->CBMaximumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
-    connect(ui->CBMaximumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
-    connect(ui->CBMinimumWidth,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
-    connect(ui->CBMinimumHeight,SIGNAL(currentIndexChanged(int)),SLOT(slotComboboxChanged(int)));
-    connect(ui->WriteToImageFormat,SIGNAL(activated(int)),SIGNAL(changed()));
-    connect(ui->renameResizedImage,SIGNAL(clicked()),SIGNAL(changed()));
-    connect(ui->renameResizedImage,SIGNAL(clicked(bool)),ui->renameResizedImagePattern,SLOT(setEnabled(bool)));
-    connect(ui->renameResizedImagePattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
+    connect(ui->enabledAutoResize, &QCheckBox::clicked, this, &ImageScalingWidget::changed);
+    connect(ui->KeepImageRatio, &QCheckBox::clicked, this, &ImageScalingWidget::changed);
+    connect(ui->AskBeforeResizing, &QCheckBox::clicked, this, &ImageScalingWidget::changed);
+    connect(ui->EnlargeImageToMinimum, &QCheckBox::clicked, this, &ImageScalingWidget::changed);
+    connect(ui->ReduceImageToMaximum, &QCheckBox::clicked, this, &ImageScalingWidget::changed);
+    connect(ui->customMaximumWidth, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &ImageScalingWidget::changed);
+    connect(ui->customMaximumHeight, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &ImageScalingWidget::changed);
+    connect(ui->customMinimumWidth, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &ImageScalingWidget::changed);
+    connect(ui->customMinimumHeight, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &ImageScalingWidget::changed);
+    connect(ui->skipImageSizeLower, &QCheckBox::clicked, this, &ImageScalingWidget::changed);
+    connect(ui->imageSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &ImageScalingWidget::changed);
+    connect(ui->pattern, &KLineEdit::textChanged, this, &ImageScalingWidget::changed);
+    connect(ui->CBMaximumWidth, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ImageScalingWidget::slotComboboxChanged);
+    connect(ui->CBMaximumHeight, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ImageScalingWidget::slotComboboxChanged);
+    connect(ui->CBMinimumWidth, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ImageScalingWidget::slotComboboxChanged);
+    connect(ui->CBMinimumHeight, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ImageScalingWidget::slotComboboxChanged);
+    connect(ui->WriteToImageFormat, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &ImageScalingWidget::changed);
+    connect(ui->renameResizedImage, &QCheckBox::clicked, this, &ImageScalingWidget::changed);
+    connect(ui->renameResizedImage, &QCheckBox::clicked, ui->renameResizedImagePattern, &KLineEdit::setEnabled);
+    connect(ui->renameResizedImagePattern, &KLineEdit::textChanged, this, &ImageScalingWidget::changed);
 
-    connect(ui->resizeEmailsPattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
-    connect(ui->doNotResizePattern,SIGNAL(textChanged(QString)),SIGNAL(changed()));
-    connect(ui->resizeImageWithFormatsType,SIGNAL(textChanged(QString)),SIGNAL(changed()));
-    connect(ui->resizeImageWithFormats,SIGNAL(clicked(bool)),SIGNAL(changed()));
-    connect(ui->resizeImageWithFormats,SIGNAL(clicked(bool)),ui->resizeImageWithFormatsType,SLOT(setEnabled(bool)));
+    connect(ui->resizeEmailsPattern, &KLineEdit::textChanged, this, &ImageScalingWidget::changed);
+    connect(ui->doNotResizePattern, &KLineEdit::textChanged, this, &ImageScalingWidget::changed);
+    connect(ui->resizeImageWithFormatsType, &MessageComposer::ImageScalingSelectFormat::textChanged, this, &ImageScalingWidget::changed);
+    connect(ui->resizeImageWithFormats, &QCheckBox::clicked, this, &ImageScalingWidget::changed);
+    connect(ui->resizeImageWithFormats, &QCheckBox::clicked, ui->resizeImageWithFormatsType, &MessageComposer::ImageScalingSelectFormat::setEnabled);
     ui->resizeImageWithFormatsType->setEnabled(false);
 
     ui->pattern->setEnabled(false);
     mSourceFilenameFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
-    connect( mSourceFilenameFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSourceFilterClicked(int)) );
+    connect(mSourceFilenameFilterGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &ImageScalingWidget::slotSourceFilterClicked);
     mSourceFilenameFilterGroup->addButton( ui->notFilterFilename, MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter );
     mSourceFilenameFilterGroup->addButton( ui->includeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern );
     mSourceFilenameFilterGroup->addButton( ui->excludeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern );
 
     mRecipientFilterGroup = new QButtonGroup(ui->tab_4);
-    connect( mRecipientFilterGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotRecipientFilterClicked(int)) );
+    connect(mRecipientFilterGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &ImageScalingWidget::slotRecipientFilterClicked);
     ui->doNotResizePattern->setEnabled(false);
     ui->resizeEmailsPattern->setEnabled(false);
     mRecipientFilterGroup->addButton(ui->doNotFilterRecipients,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter );
@@ -86,7 +86,7 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
     mRecipientFilterGroup->addButton(ui->doNotResizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern );
 
     ui->help->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
-    connect( ui->help, SIGNAL(linkActivated(QString)),SLOT(slotHelpLinkClicked(QString)) );
+    connect(ui->help, &QLabel::linkActivated, this, &ImageScalingWidget::slotHelpLinkClicked);
 }
 
 ImageScalingWidget::~ImageScalingWidget()

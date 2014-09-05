@@ -231,7 +231,7 @@ void StorageServiceManagerMainWindow::closeEvent(QCloseEvent *e)
 void StorageServiceManagerMainWindow::slotConfigure()
 {
     QPointer<StorageServiceConfigureDialog> dlg = new StorageServiceConfigureDialog(this);
-    connect(dlg, SIGNAL(serviceRemoved(QString)), this, SLOT(slotServiceRemoved(QString)));
+    connect(dlg.data(), &StorageServiceConfigureDialog::serviceRemoved, this, &StorageServiceManagerMainWindow::slotServiceRemoved);
     dlg->setListService(mStorageManager->listService());
     if (dlg->exec()) {
         mStorageManager->setListService(dlg->listService());

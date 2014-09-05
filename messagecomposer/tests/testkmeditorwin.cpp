@@ -38,15 +38,15 @@ testKMeditorWindow::testKMeditorWindow()
   QMenu *editMenu = menuBar()->addMenu(tr("Edit"));
 
   QAction *act = new QAction(tr("Paste as quote"), this);
-  connect(act, SIGNAL(triggered()), editor, SLOT(slotPasteAsQuotation()));
+  connect(act, &QAction::triggered, editor, &KMeditor::slotPasteAsQuotation);
   editMenu->addAction(act);
 
   act = new QAction(tr("Remove  quote"), this);
-  connect(act, SIGNAL(triggered()), editor, SLOT(slotRemoveQuotes()));
+  connect(act, &QAction::triggered, editor, &KMeditor::slotRemoveQuotes);
   editMenu->addAction(act);
 
   act = new QAction(tr("Add quote"), this);
-  connect(act, SIGNAL(triggered()), editor, SLOT(slotAddQuotes()));
+  connect(act, &QAction::triggered, editor, &KMeditor::slotAddQuotes);
   editMenu->addAction(act);
 
 }

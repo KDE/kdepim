@@ -206,7 +206,7 @@ CSVImportDialog::CSVImportDialog( QWidget *parent )
   connect( mSkipFirstRow, SIGNAL(toggled(bool)),
            this, SLOT(skipFirstRowChanged(bool)) );
 
-  connect( mModel, SIGNAL(finishedLoading()), this, SLOT(modelFinishedLoading()) );
+  connect(mModel, &QCsvModel::finishedLoading, this, &CSVImportDialog::modelFinishedLoading);
 
   delimiterClicked( 0 );
   textQuoteChanged( QLatin1String("\"") );
@@ -638,7 +638,7 @@ void CSVImportDialog::applyTemplate()
   }
 
   setProperty( "TemplateFileName", templateFileName );
-  connect( mModel, SIGNAL(finishedLoading()), this, SLOT(finalizeApplyTemplate()) );
+  connect(mModel, &QCsvModel::finishedLoading, this, &CSVImportDialog::finalizeApplyTemplate);
 }
 
 void CSVImportDialog::finalizeApplyTemplate()
@@ -772,4 +772,3 @@ void CSVImportDialog::modelFinishedLoading()
   mFieldSelection.clear();
 }
 
-#include <csvimportdialog.moc>

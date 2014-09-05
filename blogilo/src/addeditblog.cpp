@@ -79,17 +79,17 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
     d->isNewBlog = true;
     d->mFetchAPITimer = d->mFetchBlogIdTimer = d->mFetchProfileIdTimer = 0;
 
-    connect( d->ui.txtId, SIGNAL(textChanged(QString)), this, SLOT(enableOkButton(QString)) );
-    connect( d->ui.txtUrl, SIGNAL(textChanged(QString)), this, SLOT(enableAutoConfBtn()) );
-    connect( d->ui.txtUser, SIGNAL(textChanged(QString)), this, SLOT(enableAutoConfBtn()) );
-    connect( d->ui.txtPass, SIGNAL(textChanged(QString)), this, SLOT(enableAutoConfBtn()) );
-    connect( d->ui.btnAutoConf, SIGNAL(clicked()), this, SLOT(autoConfigure()) );
-    connect( d->ui.btnFetch, SIGNAL(clicked()), this, SLOT(fetchBlogId()) );
-    connect( d->ui.comboApi, SIGNAL(currentIndexChanged(int)), this, SLOT(slotComboApiChanged(int)) );
-    connect( d->ui.txtUrl, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()) );
-    connect( d->ui.txtUser, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()) );
-    connect( d->ui.txtPass, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()) );
-    connect( d->ui.txtId, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()) );
+    connect(d->ui.txtId, &KLineEdit::textChanged, this, &AddEditBlog::enableOkButton);
+    connect(d->ui.txtUrl, &KLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
+    connect(d->ui.txtUser, &QLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
+    connect(d->ui.txtPass, &KLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
+    connect(d->ui.btnAutoConf, &QPushButton::clicked, this, &AddEditBlog::autoConfigure);
+    connect(d->ui.btnFetch, &QPushButton::clicked, this, &AddEditBlog::fetchBlogId);
+    connect(d->ui.comboApi, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &AddEditBlog::slotComboApiChanged);
+    connect(d->ui.txtUrl, &KLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
+    connect(d->ui.txtUser, &QLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
+    connect(d->ui.txtPass, &KLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
+    connect(d->ui.txtId, &KLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
 
     if ( blog_id > -1 ) {
         setWindowTitle( i18n( "Edit blog settings" ) );
@@ -178,7 +178,7 @@ void AddEditBlog::autoConfigure()
     connect( httpGetJob, SIGNAL(result(KJob*)), this, SLOT(gotHtml(KJob*)) );
     d->mFetchAPITimer = new QTimer( this );
     d->mFetchAPITimer->setSingleShot( true );
-    connect( d->mFetchAPITimer, SIGNAL(timeout()), this, SLOT(handleFetchAPITimeout()) );
+    connect(d->mFetchAPITimer, &QTimer::timeout, this, &AddEditBlog::handleFetchAPITimeout);
     d->mFetchAPITimer->start( TIMEOUT );
 }
 
@@ -284,7 +284,7 @@ void AddEditBlog::fetchBlogId()
                  this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
         d->mFetchBlogIdTimer = new QTimer( this );
         d->mFetchBlogIdTimer->setSingleShot( true );
-        connect( d->mFetchBlogIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
+        connect(d->mFetchBlogIdTimer, &QTimer::timeout, this, &AddEditBlog::handleFetchIDTimeout);
         d->mFetchBlogIdTimer->start( TIMEOUT );
         blog->listBlogs();
         break;
@@ -623,7 +623,7 @@ void AddEditBlog::bloggerAuthenticated(const QMap< QString, QString > &authData)
              this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
     d->mFetchBlogIdTimer = new QTimer( this );
     d->mFetchBlogIdTimer->setSingleShot( true );
-    connect( d->mFetchBlogIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
+    connect(d->mFetchBlogIdTimer, &QTimer::timeout, this, &AddEditBlog::handleFetchIDTimeout);
     d->mFetchBlogIdTimer->start( TIMEOUT );
     blogger->listBlogs();
 }

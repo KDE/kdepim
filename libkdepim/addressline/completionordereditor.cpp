@@ -204,8 +204,8 @@ CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &CompletionOrderEditor::slotOk);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &CompletionOrderEditor::reject);
     okButton->setDefault(true);
     setModal(true);
     new CompletionOrderEditorAdaptor(this);

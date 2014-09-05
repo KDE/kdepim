@@ -55,9 +55,9 @@ UploadMediaDialog::UploadMediaDialog( QWidget *parent )
     ui.kcfg_httpUrl->setText(Settings::httpUrl());
     setWindowModality(Qt::ApplicationModal);
     ui.kcfg_urlBrowser->setIcon(QIcon::fromTheme(QLatin1String("document-open")));
-    connect( ui.kcfg_urlBrowser, SIGNAL(clicked(bool)), this, SLOT(selectNewFile()) );
-    connect(ui.kcfg_uploadType, SIGNAL(currentIndexChanged(int)), this, SLOT(slotUploadTypeChanged(int)));
-    connect( ui.kcfg_urlLineEdit, SIGNAL(textChanged(QString)), this, SLOT(currentMediaChanged(QString)) );
+    connect(ui.kcfg_urlBrowser, &QPushButton::clicked, this, &UploadMediaDialog::selectNewFile);
+    connect(ui.kcfg_uploadType, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &UploadMediaDialog::slotUploadTypeChanged);
+    connect(ui.kcfg_urlLineEdit, &QLineEdit::textChanged, this, &UploadMediaDialog::currentMediaChanged);
 }
 
 UploadMediaDialog::~UploadMediaDialog()
@@ -129,7 +129,7 @@ void UploadMediaDialog::slotButtonClicked(int button)
             connect( b, SIGNAL(sigMediaUploaded(BilboMedia*)),
                      this, SLOT(slotMediaObjectUploaded(BilboMedia*)) );
             connect(b, &Backend::sigError, this, &UploadMediaDialog::slotError);
-            connect( b, SIGNAL(sigMediaError(QString,BilboMedia*)), this, SLOT(slotError(QString)) );
+            connect(b, &Backend::sigMediaError, this, &UploadMediaDialog::slotError);
             b->uploadMedia( media );
             this->hide();
             emit sigBusy(true);

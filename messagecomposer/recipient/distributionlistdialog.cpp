@@ -149,10 +149,8 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
     mRecipientsList->setRootIsDecorated( false );
     mRecipientsList->header()->setMovable(false);
     topLayout->addWidget( mRecipientsList );
-    connect(mUser1Button, SIGNAL(clicked()),
-             this, SLOT(slotUser1()) );
-    connect( mTitleEdit, SIGNAL(textChanged(QString)),
-             this, SLOT(slotTitleChanged(QString)) );
+    connect(mUser1Button, &QPushButton::clicked, this, &DistributionListDialog::slotUser1);
+    connect(mTitleEdit, &QLineEdit::textChanged, this, &DistributionListDialog::slotTitleChanged);
     readConfig();
 }
 

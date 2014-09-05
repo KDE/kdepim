@@ -85,17 +85,17 @@ RecipientLineNG::RecipientLineNG( QWidget* parent )
     mEdit->setClearButtonEnabled( true );
     topLayout->addWidget( mEdit );
 
-    connect( mEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()) );
-    connect( mEdit, SIGNAL(deleteMe()), SLOT(slotPropagateDeletion()) );
+    connect(mEdit, &RecipientLineEdit::returnPressed, this, &RecipientLineNG::slotReturnPressed);
+    connect(mEdit, &RecipientLineEdit::deleteMe, this, &RecipientLineNG::slotPropagateDeletion);
     connect( mEdit, SIGNAL(textChanged(QString)),
              SLOT(analyzeLine(QString)) );
-    connect( mEdit, SIGNAL(focusUp()), SLOT(slotFocusUp()) );
-    connect( mEdit, SIGNAL(focusDown()), SLOT(slotFocusDown()) );
-    connect( mEdit, SIGNAL(rightPressed()), SIGNAL(rightPressed()) );
+    connect(mEdit, &RecipientLineEdit::focusUp, this, &RecipientLineNG::slotFocusUp);
+    connect(mEdit, &RecipientLineEdit::focusDown, this, &RecipientLineNG::slotFocusDown);
+    connect(mEdit, &RecipientLineEdit::rightPressed, this, &RecipientLineNG::rightPressed);
 
     connect( mEdit, SIGNAL(leftPressed()), mCombo, SLOT(setFocus()) );
-    connect( mEdit, SIGNAL(editingFinished()), SLOT(slotEditingFinished()) );
-    connect( mEdit, SIGNAL(clearButtonClicked()), SLOT(slotPropagateDeletion()) );
+    connect(mEdit, &RecipientLineEdit::editingFinished, this, &RecipientLineNG::slotEditingFinished);
+    connect(mEdit, &RecipientLineEdit::clearButtonClicked, this, &RecipientLineNG::slotPropagateDeletion);
     connect( mCombo, SIGNAL(rightPressed()), mEdit, SLOT(setFocus()) );
 
     connect( mCombo, SIGNAL(activated(int)),

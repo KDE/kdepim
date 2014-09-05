@@ -102,7 +102,7 @@ ImageScalingSelectFormat::ImageScalingSelectFormat(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout(this);
     mFormat = new QLineEdit;
-    connect(mFormat, SIGNAL(textChanged(QString)),SIGNAL(textChanged(QString)));
+    connect(mFormat, &QLineEdit::textChanged, this, &ImageScalingSelectFormat::textChanged);
     mFormat->setReadOnly(true);
     lay->addWidget(mFormat);
     mSelectFormat = new QPushButton(i18n("Select Format..."));
