@@ -33,7 +33,7 @@
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_headers.h>
-#include <kmimetype.h>
+
 #include <qdebug.h>
 #include <kascii.h>
 #include <QTemporaryFile>
@@ -52,6 +52,8 @@
 #include <algorithm>
 #include <KCharsets>
 #include <KLocalizedString>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 
 namespace MessageViewer {
@@ -487,9 +489,10 @@ QString NodeHelper::iconName( KMime::Content *node, int size )
 void NodeHelper::magicSetType( KMime::Content* node, bool aAutoDecode )
 {
   const QByteArray body = ( aAutoDecode ) ? node->decodedContent() : node->body() ;
-  KMimeType::Ptr mime = KMimeType::findByContent( body );
+  QMimeDatabase db;
+  QMimeType mime = db.mimeTypeForData( body );
 
-  QString mimetype = mime->name();
+  QString mimetype = mime.name();
   node->contentType()->setMimeType( mimetype.toLatin1() );
 }
 
