@@ -49,15 +49,15 @@ ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
     mainLayout->addWidget(mainWidget);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ScamDetectionDetailsDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ScamDetectionDetailsDialog::reject);
     KGuiItem::assign(user1Button, KStandardGuiItem::saveAs());
     setModal( false );
     mDetails = new PimCommon::RichTextEditorWidget;
     mainLayout->addWidget(mDetails);
     mainLayout->addWidget(buttonBox);
     mDetails->setReadOnly(true);
-    connect(user1Button, SIGNAL(clicked()), SLOT(slotSaveAs()));
+    connect(user1Button, &QPushButton::clicked, this, &ScamDetectionDetailsDialog::slotSaveAs);
     readConfig();
 }
 

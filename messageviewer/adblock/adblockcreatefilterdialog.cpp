@@ -36,8 +36,8 @@ AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
    okButton->setDefault(true);
    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-   connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-   connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+   connect(buttonBox, &QDialogButtonBox::accepted, this, &AdBlockCreateFilterDialog::accept);
+   connect(buttonBox, &QDialogButtonBox::rejected, this, &AdBlockCreateFilterDialog::reject);
 
     QWidget *w = new QWidget;
     mUi = new Ui::AdBlockCreateFilterWidget;
@@ -46,20 +46,20 @@ AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
     setLayout(mainLayout);
     mainLayout->addWidget(w);
     mainLayout->addWidget(buttonBox);
-    connect(mUi->filtercustom,SIGNAL(textChanged(QString)), SLOT(slotUpdateFilter()));
-    connect(mUi->blockingFilter, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
-    connect(mUi->exceptionFilter, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
-    connect(mUi->atTheBeginning, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
-    connect(mUi->atTheEnd, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
-    connect(mUi->restrictToDomain, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
-    connect(mUi->restrictToDomainStr, SIGNAL(textChanged(QString)), SLOT(slotUpdateFilter()));
-    connect(mUi->firstPartOnly, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
-    connect(mUi->matchCase, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
-    connect(mUi->applyListElement, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(slotUpdateFilter()));
+    connect(mUi->filtercustom, &QLineEdit::textChanged, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
+    connect(mUi->blockingFilter, &QRadioButton::toggled, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
+    connect(mUi->exceptionFilter, &QRadioButton::toggled, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
+    connect(mUi->atTheBeginning, &QCheckBox::toggled, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
+    connect(mUi->atTheEnd, &QCheckBox::toggled, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
+    connect(mUi->restrictToDomain, &QCheckBox::toggled, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
+    connect(mUi->restrictToDomainStr, &QLineEdit::textChanged, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
+    connect(mUi->firstPartOnly, &QCheckBox::toggled, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
+    connect(mUi->matchCase, &QCheckBox::toggled, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
+    connect(mUi->applyListElement, &QListWidget::itemChanged, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
     mUi->collapseBlocked->addItem(i18n("Use default"), QString());
     mUi->collapseBlocked->addItem(i18n("Yes"), QLatin1String("collapse"));
     mUi->collapseBlocked->addItem(i18n("Not"), QLatin1String("~collapse"));
-    connect(mUi->collapseBlocked, SIGNAL(activated(int)), SLOT(slotUpdateFilter()));
+    connect(mUi->collapseBlocked, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &AdBlockCreateFilterDialog::slotUpdateFilter);
     readConfig();
 }
 

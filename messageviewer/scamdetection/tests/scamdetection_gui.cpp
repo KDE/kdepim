@@ -46,18 +46,18 @@ ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidge
     lay->addWidget(mScamWarningWidget);
 
     mWebView = new QWebView;
-    connect(mWebView, SIGNAL(loadFinished(bool)), SLOT(slotLoadFinished()));
+    connect(mWebView, &QWebView::loadFinished, this, &ScamDetectionTestWidget::slotLoadFinished);
     lay->addWidget(mWebView);
 
-    connect(mScamDetection, SIGNAL(messageMayBeAScam()), mScamWarningWidget, SLOT(slotShowWarning()));
-    connect(mScamWarningWidget, SIGNAL(showDetails()), mScamDetection, SLOT(showDetails()));
+    connect(mScamDetection, &MessageViewer::ScamDetection::messageMayBeAScam, mScamWarningWidget, &MessageViewer::ScamDetectionWarningWidget::slotShowWarning);
+    connect(mScamWarningWidget, &MessageViewer::ScamDetectionWarningWidget::showDetails, mScamDetection, &MessageViewer::ScamDetection::showDetails);
 
 
     mWebView->load(QUrl::fromLocalFile(filename));
 
     QHBoxLayout *hbox = new QHBoxLayout;
     QPushButton *openFile = new QPushButton(i18n("Open html..."));
-    connect(openFile, SIGNAL(clicked()), SLOT(slotOpenHtml()));
+    connect(openFile, &QPushButton::clicked, this, &ScamDetectionTestWidget::slotOpenHtml);
     hbox->addWidget(openFile);
     lay->addLayout(hbox);
 

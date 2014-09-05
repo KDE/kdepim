@@ -62,39 +62,39 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     setupUi(this);
 
     hintLabel->setText(i18n("<qt>Filter expression (e.g. <tt>http://www.example.com/ad/*</tt>, <a href=\"filterhelp\">more information</a>):"));
-    connect(hintLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotInfoLinkActivated(QString)));
+    connect(hintLabel, &QLabel::linkActivated, this, &AdBlockSettingWidget::slotInfoLinkActivated);
 
     manualFiltersListWidget->setSelectionMode(QAbstractItemView::MultiSelection);
 
     searchLine->setListWidget(manualFiltersListWidget);
 
     insertButton->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
-    connect(insertButton, SIGNAL(clicked()), this, SLOT(insertRule()));
+    connect(insertButton, &QToolButton::clicked, this, &AdBlockSettingWidget::insertRule);
 
     removeButton->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
-    connect(removeButton, SIGNAL(clicked()), this, SLOT(removeRule()));
-    connect(removeSubscription, SIGNAL(clicked()), SLOT(slotRemoveSubscription()));
-    connect(manualFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateManualButtons()));
+    connect(removeButton, &QPushButton::clicked, this, &AdBlockSettingWidget::removeRule);
+    connect(removeSubscription, &QPushButton::clicked, this, &AdBlockSettingWidget::slotRemoveSubscription);
+    connect(manualFiltersListWidget, &QListWidget::currentItemChanged, this, &AdBlockSettingWidget::slotUpdateManualButtons);
 
     spinBox->setSuffix(ki18np(" day", " days"));
 
     removeSubscription->setEnabled(false);
     showList->setEnabled(false);
     // emit changed signal
-    connect(checkEnableAdblock, SIGNAL(stateChanged(int)),   this, SLOT(hasChanged()));
-    connect(checkHideAds,       SIGNAL(stateChanged(int)),   this, SLOT(hasChanged()));
-    connect(spinBox,            SIGNAL(valueChanged(int)),   this, SLOT(hasChanged()));
-    connect(addFilters, SIGNAL(clicked()), this, SLOT(slotAddFilter()));
-    connect(showList, SIGNAL(clicked()), this, SLOT(slotShowList()));
-    connect(editFilter, SIGNAL(clicked()), this, SLOT(slotEditFilter()));
+    connect(checkEnableAdblock, &QCheckBox::stateChanged, this, &AdBlockSettingWidget::hasChanged);
+    connect(checkHideAds, &QCheckBox::stateChanged, this, &AdBlockSettingWidget::hasChanged);
+    connect(spinBox, static_cast<void (KPluralHandlingSpinBox::*)(int)>(&KPluralHandlingSpinBox::valueChanged), this, &AdBlockSettingWidget::hasChanged);
+    connect(addFilters, &QPushButton::clicked, this, &AdBlockSettingWidget::slotAddFilter);
+    connect(showList, &QPushButton::clicked, this, &AdBlockSettingWidget::slotShowList);
+    connect(editFilter, &QPushButton::clicked, this, &AdBlockSettingWidget::slotEditFilter);
 
-    connect(automaticFiltersListWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(hasChanged()));
-    connect(automaticFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateButtons()));
-    connect(automaticFiltersListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotAutomaticFilterDouble(QListWidgetItem*)));
+    connect(automaticFiltersListWidget, &MessageViewer::AdBlockListWidget::itemChanged, this, &AdBlockSettingWidget::hasChanged);
+    connect(automaticFiltersListWidget, &MessageViewer::AdBlockListWidget::currentItemChanged, this, &AdBlockSettingWidget::slotUpdateButtons);
+    connect(automaticFiltersListWidget, &MessageViewer::AdBlockListWidget::itemDoubleClicked, this, &AdBlockSettingWidget::slotAutomaticFilterDouble);
 
-    connect(importFilters, SIGNAL(clicked()), SLOT(slotImportFilters()));
-    connect(exportFilters, SIGNAL(clicked()), SLOT(slotExportFilters()));
-    connect(addFilterLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotManualFilterLineEditTextChanged(QString)));
+    connect(importFilters, &QPushButton::clicked, this, &AdBlockSettingWidget::slotImportFilters);
+    connect(exportFilters, &QPushButton::clicked, this, &AdBlockSettingWidget::slotExportFilters);
+    connect(addFilterLineEdit, &QLineEdit::textChanged, this, &AdBlockSettingWidget::slotManualFilterLineEditTextChanged);
     slotUpdateManualButtons();
     insertButton->setEnabled(false);
 }
@@ -369,7 +369,7 @@ void AdBlockSettingWidget::showAutomaticFilterList(QListWidgetItem *item)
         QPointer<AdBlockShowListDialog> dlg = new AdBlockShowListDialog(this);
         dlg->setListName(item->text());
         dlg->setAdBlockListPath(item->data(PathList).toString(), item->data(UrlList).toString());
-        connect(dlg, SIGNAL(deleteList(QString)), SLOT(slotDeleteList(QString)));
+        connect(dlg.data(), &AdBlockShowListDialog::deleteList, this, &AdBlockSettingWidget::slotDeleteList);
         dlg->exec();
         delete dlg;
     }

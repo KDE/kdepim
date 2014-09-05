@@ -50,12 +50,12 @@ AdBlockBlockableItemTestDialog::AdBlockBlockableItemTestDialog(const QString &fi
 
     QHBoxLayout *hbox = new QHBoxLayout;
     QPushButton *openFile = new QPushButton(i18n("Open html..."));
-    connect(openFile, SIGNAL(clicked()), SLOT(slotOpenHtml()));
+    connect(openFile, &QPushButton::clicked, this, &AdBlockBlockableItemTestDialog::slotOpenHtml);
     hbox->addWidget(openFile);
     lay->addLayout(hbox);
 
     setLayout(lay);
-    connect(&page, SIGNAL(loadFinished(bool)), this, SLOT(slotLoadFinished()));
+    connect(&page, &QWebPage::loadFinished, this, &AdBlockBlockableItemTestDialog::slotLoadFinished);
     mProgress->start();
     page.mainFrame()->load(QUrl::fromLocalFile(filename));
 }

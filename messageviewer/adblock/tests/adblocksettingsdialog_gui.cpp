@@ -49,8 +49,8 @@ int main (int argc, char **argv)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    QObject::connect(buttonBox, SIGNAL(accepted()), &dlg, SLOT(accept()));
-    QObject::connect(buttonBox, SIGNAL(rejected()), &dlg, SLOT(reject()));
+    QObject::connect(buttonBox, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
+    QObject::connect(buttonBox, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
     layout->addWidget(buttonBox);
  
     w->doLoadFromGlobalSettings();

@@ -48,11 +48,11 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     mainLayout->addWidget(mainWidget);
     mUser1Button = new QPushButton;
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AdBlockShowListDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AdBlockShowListDialog::reject);
     mUser1Button->setText(i18n("Delete List"));
     mUser1Button->setEnabled(false);
-    connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotDeleteBrokenList()));
+    connect(mUser1Button, &QPushButton::clicked, this, &AdBlockShowListDialog::slotDeleteBrokenList);
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     mTextEdit = new PimCommon::PlainTextEditorWidget;
@@ -125,7 +125,7 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
     job->metaData().insert(QLatin1String("cookies"), QLatin1String("none"));
     job->metaData().insert(QLatin1String("no-auth"), QLatin1String("true"));
 
-    connect(job, SIGNAL(finished(KJob*)), this, SLOT(slotFinished(KJob*)));
+    connect(job, &KIO::FileCopyJob::finished, this, &AdBlockShowListDialog::slotFinished);
 }
 
 void AdBlockShowListDialog::slotFinished(KJob *job)
