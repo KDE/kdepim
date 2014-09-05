@@ -31,6 +31,8 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldRestoreValue();
     void shouldUpperCaseFirstCharOfSentence();
+    void shouldFixTwoUpperCaseChars();
+
 private:
     KSharedConfig::Ptr mConfig;
 };
