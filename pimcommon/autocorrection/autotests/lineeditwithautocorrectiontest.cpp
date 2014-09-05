@@ -18,7 +18,7 @@
 #include "lineeditwithautocorrectiontest.h"
 #include "../widgets/lineeditwithautocorrection.h"
 #include "../autocorrection.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qtestkeyboard.h>
 
 LineEditWithAutocorrectionTest::LineEditWithAutocorrectionTest()
@@ -76,4 +76,4 @@ void LineEditWithAutocorrectionTest::shouldNotReplaceWordWhenInexactText()
     QCOMPARE(lineedit.toPlainText(), QString(nonExactText + QLatin1Char(' ')) );
 }
 
-QTEST_KDEMAIN(LineEditWithAutocorrectionTest, GUI)
+QTEST_MAIN(LineEditWithAutocorrectionTest)

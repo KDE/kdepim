@@ -16,7 +16,7 @@
 */
 
 #include "richtexteditwithautocorrectiontest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include "../widgets/richtexteditwithautocorrection.h"
 #include "../autocorrection.h"
 #include <qtestkeyboard.h>
@@ -94,4 +94,4 @@ void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressEnter()
 }
 
 
-QTEST_KDEMAIN(RichTextEditWithAutoCorrectionTest, GUI)
+QTEST_MAIN(RichTextEditWithAutoCorrectionTest)
