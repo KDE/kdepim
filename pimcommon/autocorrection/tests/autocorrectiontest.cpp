@@ -19,6 +19,7 @@
 #include "../autocorrection.h"
 #include "pimcommon/settings/pimcommonsettings.h"
 #include <QDebug>
+#include <QTextDocument>
 #include <qtest_kde.h>
 
 AutoCorrectionTest::AutoCorrectionTest()
@@ -54,6 +55,44 @@ void AutoCorrectionTest::shouldRestoreValue()
 {
     PimCommon::AutoCorrection autocorrection;
     //TODO
+}
+
+void AutoCorrectionTest::shouldUpperCaseFirstCharOfSentence()
+{
+    PimCommon::AutoCorrection autocorrection;
+    autocorrection.setEnabledAutoCorrection(true);
+    autocorrection.setUppercaseFirstCharOfSentence(true);
+
+    //Uppercase here.
+    QTextDocument doc;
+    QString text = QLatin1String("foo");
+    doc.setPlainText(text);
+    int position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), QLatin1String("Foo"));
+
+    //IT's not first char -> not uppercase
+    text = QLatin1String(" foo");
+    doc.setPlainText(text);
+    position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), text);
+
+    //It's already uppercase
+    text = QLatin1String("Foo");
+    doc.setPlainText(text);
+    position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), text);
+
+    //Word is after a ". "
+    text = QLatin1String("Foo. foo");
+    doc.setPlainText(text);
+    position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), QLatin1String("Foo. Foo"));
+
+
 }
 
 

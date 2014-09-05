@@ -30,7 +30,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldRestoreValue();
-
+    void shouldUpperCaseFirstCharOfSentence();
 private:
     KSharedConfig::Ptr mConfig;
 };
