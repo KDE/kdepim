@@ -399,7 +399,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
         isNew = true;
     QPointer<SendToBlogDialog> dia = new SendToBlogDialog( isNew, d->mCurrentPost.isPrivate(), this);
     dia->setAttribute(Qt::WA_DeleteOnClose, false);
-    if ( dia->exec() == KDialog::Accepted ) {
+    if ( dia->exec() == QDialog::Accepted ) {
         this->setCursor( Qt::BusyCursor );
         d->mCurrentPost.setProperties( postData );
         d->mCurrentPostBlogId = blogId;

@@ -25,9 +25,9 @@
 #ifndef SENDTOBLOGDIALOG_H
 #define SENDTOBLOGDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
 
-class SendToBlogDialog : public KDialog
+class SendToBlogDialog : public QDialog
 {
     Q_OBJECT
 public:

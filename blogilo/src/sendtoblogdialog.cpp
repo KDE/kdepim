@@ -26,6 +26,9 @@
 #include "ui_sendtoblogbase.h"
 #include <qdebug.h>
 #include <KLocalizedString>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 class SendToBlogDialog::Private
 {
@@ -41,12 +44,21 @@ public:
     bool mIsNew;
 };
 SendToBlogDialog::SendToBlogDialog( bool isNew, bool isPrivate, QWidget *parent )
-    : KDialog(parent), d(new Private)
+    : QDialog(parent), d(new Private)
 {
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
     QWidget *dialog = new QWidget( this );
     d->ui.setupUi( dialog );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
-    this->setMainWidget( dialog );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(dialog);
+    mainLayout->addWidget(buttonBox);
     setWindowTitle( i18n( "Submitting as..." ) );
     if ( isNew ) {
         d->ui.pubAsModify->setEnabled( false );
@@ -79,6 +91,6 @@ void SendToBlogDialog::accept()
 {
     d->mIsPrivate = d->ui.saveDraft->isChecked();
     d->mIsNew = !d->ui.pubAsModify->isChecked();
-    KDialog::accept();
+    QDialog::accept();
 }
 
