@@ -89,10 +89,10 @@ MainWindow::MainWindow()
 
     tabPosts = new PostsTabWidget(this);
     setCentralWidget( tabPosts );
-    connect(tabPosts,SIGNAL(createNewPost()),SLOT(slotCreateNewPost()));
-    connect(tabPosts,SIGNAL(closeTabClicked()),SLOT(slotCloseTabClicked()));
-    connect(tabPosts,SIGNAL(tabCloseRequested(int)), this, SLOT(slotRemovePostEntry(int)));
-    connect(tabPosts,SIGNAL(tabRemoveAllExclude(int)), this, SLOT(slotRemoveAllExclude(int)));
+    connect(tabPosts, &PostsTabWidget::createNewPost, this, &MainWindow::slotCreateNewPost);
+    connect(tabPosts, &PostsTabWidget::closeTabClicked, this, &MainWindow::slotCloseTabClicked);
+    connect(tabPosts, &PostsTabWidget::tabCloseRequested, this, &MainWindow::slotRemovePostEntry);
+    connect(tabPosts, &PostsTabWidget::tabRemoveAllExclude, this, &MainWindow::slotRemoveAllExclude);
 
     toolbox = new Toolbox( this );
     toolboxDock = new QDockWidget( i18n( "Toolbox" ), this );
@@ -122,9 +122,9 @@ MainWindow::MainWindow()
     setupSystemTray();
 
     connect( tabPosts, SIGNAL(currentChanged(int)), this, SLOT(slotActivePostChanged(int)) );
-    connect( toolbox, SIGNAL(sigEntrySelected(BilboPost&,int)), this, SLOT(slotNewPostOpened(BilboPost&,int)) );
-    connect( toolbox, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)) );
-    connect( toolbox, SIGNAL(sigBusy(bool)), this, SLOT(slotBusy(bool)));
+    connect(toolbox, &Toolbox::sigEntrySelected, this, &MainWindow::slotNewPostOpened);
+    connect(toolbox, &Toolbox::sigError, this, &MainWindow::slotError);
+    connect(toolbox, &Toolbox::sigBusy, this, &MainWindow::slotBusy);
 
     QList<BilboBlog*> blogList = DBMan::self()->blogList().values();
     const int count = blogList.count();
@@ -134,7 +134,7 @@ MainWindow::MainWindow()
         act->setData( blogList.at(i)->id() );
         blogs->addAction( act );
     }
-    connect( blogs, SIGNAL(triggered(QAction*)), this, SLOT(currentBlogChanged(QAction*)) );
+    connect(blogs, static_cast<void (KSelectAction::*)(QAction*)>(&KSelectAction::triggered), this, &MainWindow::currentBlogChanged);
     QTimer::singleShot( 0, this, SLOT(loadTempPosts()) );
 }
 
@@ -156,10 +156,10 @@ void MainWindow::initStorageService()
     configJob->registerConfigIf(settingsJob);
 
     mStorageManager = new PimCommon::StorageServiceManager(this);
-    connect(mStorageManager, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
-    connect(mStorageManager, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
-    connect(mStorageManager, SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
-    connect(mStorageManager, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
+    connect(mStorageManager, &PimCommon::StorageServiceManager::uploadFileDone, this, &MainWindow::slotUploadFileDone);
+    connect(mStorageManager, &PimCommon::StorageServiceManager::shareLinkDone, this, &MainWindow::slotUploadFileDone);
+    connect(mStorageManager, &PimCommon::StorageServiceManager::uploadFileFailed, this, &MainWindow::slotUploadFileFailed);
+    connect(mStorageManager, &PimCommon::StorageServiceManager::actionFailed, this, &MainWindow::slotActionFailed);
 }
 
 void MainWindow::slotUploadFileDone(const QString &serviceName, const QString &link)
@@ -214,24 +214,24 @@ void MainWindow::setupActions()
     QAction *actNewPost = new QAction( QIcon::fromTheme( QLatin1String("document-new") ), i18n( "New Post" ), this );
     actionCollection()->addAction( QLatin1String( "new_post" ), actNewPost );
     actionCollection()->setDefaultShortcut(actNewPost, QKeySequence( Qt::CTRL + Qt::Key_N ));
-    connect( actNewPost, SIGNAL(triggered(bool)), this, SLOT(slotCreateNewPost()) );
+    connect(actNewPost, &QAction::triggered, this, &MainWindow::slotCreateNewPost);
 
     QAction *actAddBlog = new QAction( QIcon::fromTheme( QLatin1String("list-add") ), i18n( "Add Blog..." ), this );
     actionCollection()->addAction( QLatin1String( "add_blog" ), actAddBlog );
-    connect( actAddBlog, SIGNAL(triggered(bool)), this, SLOT(addBlog()) );
+    connect(actAddBlog, &QAction::triggered, this, &MainWindow::addBlog);
 
     QAction *actPublish = new QAction( QIcon::fromTheme( QLatin1String("arrow-up") ), i18n( "Submit..." ), this );
     actionCollection()->addAction( QLatin1String( "publish_post" ), actPublish );
-    connect( actPublish, SIGNAL(triggered(bool)), this, SLOT(slotPublishPost()) );
+    connect(actPublish, &QAction::triggered, this, &MainWindow::slotPublishPost);
 
     QAction *actUpload = new QAction( QIcon::fromTheme( QLatin1String("upload-media") ), i18n( "Upload Media..." ), this );
     actionCollection()->addAction( QLatin1String( "upload_media" ), actUpload );
-    connect( actUpload, SIGNAL(triggered(bool)), this, SLOT(uploadMediaObject()) );
+    connect(actUpload, &QAction::triggered, this, &MainWindow::uploadMediaObject);
 
     QAction *actSaveLocally = new QAction( QIcon::fromTheme( QLatin1String("document-save") ), i18n( "Save Locally" ), this );
     actionCollection()->addAction( QLatin1String( "save_locally" ), actSaveLocally );
     actionCollection()->setDefaultShortcut(actSaveLocally, QKeySequence( Qt::CTRL + Qt::Key_S ));
-    connect( actSaveLocally, SIGNAL(triggered(bool)), this, SLOT(slotSavePostLocally()) );
+    connect(actSaveLocally, &QAction::triggered, this, &MainWindow::slotSavePostLocally);
 
     KToggleAction *actToggleToolboxVisible = new KToggleAction( i18n( "Show Toolbox" ), this );
     actionCollection()->addAction( QLatin1String( "toggle_toolbox" ), actToggleToolboxVisible );
@@ -247,7 +247,7 @@ void MainWindow::setupActions()
     QAction *actOpenBlog = new QAction(QIcon::fromTheme(QLatin1String("applications-internet")), i18n("Open in browser"), this);
     actionCollection()->addAction( QLatin1String("open_blog_in_browser"), actOpenBlog);
     actOpenBlog->setToolTip(i18n("Open current blog in browser"));
-    connect( actOpenBlog, SIGNAL(triggered(bool)), this, SLOT(slotOpenCurrentBlogInBrowser()) );
+    connect(actOpenBlog, &QAction::triggered, this, &MainWindow::slotOpenCurrentBlogInBrowser);
 
     actionCollection()->addAction( QLatin1String("upload_file"), mStorageManager->menuUploadServices(this) );
     actionCollection()->addAction( QLatin1String("download_file"), mStorageManager->menuDownloadServices(this) );
@@ -346,11 +346,11 @@ void MainWindow::optionsPreferences()
              this, SLOT(slotBlogAdded(BilboBlog)) );
     connect( dialog, SIGNAL(blogEdited(BilboBlog)),
              this, SLOT(slotBlogEdited(BilboBlog)) );
-    connect( dialog, SIGNAL(blogRemoved(int)), this, SLOT(slotBlogRemoved(int)) );
-    connect( dialog, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
-    connect( dialog, SIGNAL(settingsChanged(QString)), this, SLOT(slotSettingsChanged()) );
-    connect( dialog, SIGNAL(dialogDestroyed(QObject*)), this, SLOT(slotDialogDestroyed(QObject*)));
-    connect( dialog, SIGNAL(settingsChanged()), this, SLOT(slotSettingsChanged()));
+    connect(dialog, &ConfigureDialog::blogRemoved, this, &MainWindow::slotBlogRemoved);
+    connect(dialog, &ConfigureDialog::settingsChanged, this, &MainWindow::settingsChanged);
+    connect(dialog, &ConfigureDialog::settingsChanged, this, &MainWindow::slotSettingsChanged);
+    connect(dialog, &ConfigureDialog::dialogDestroyed, this, &MainWindow::slotDialogDestroyed);
+    connect(dialog, &ConfigureDialog::settingsChanged, this, &MainWindow::slotSettingsChanged);
     dialog->show();
 }
 
@@ -666,11 +666,11 @@ QWidget* MainWindow::createPostEntry(int blog_id, const BilboPost& post)
              this, SLOT(slotPostTitleChanged(QString)) );
     connect( temp, SIGNAL(postPublishingDone(bool,QString)),
             this, SLOT(postManipulationDone(bool,QString)) );
-    connect( this, SIGNAL(settingsChanged()), temp, SLOT(settingsChanged()));
+    connect(this, &MainWindow::settingsChanged, temp, &PostEntry::settingsChanged);
     connect( temp, SIGNAL(showStatusMessage(QString,bool)),
              this, SLOT(slotShowStatusMessage(QString,bool)));
 
-    connect( temp, SIGNAL(sigBusy(bool)), this, SLOT(slotBusy(bool)) );
+    connect(temp, &PostEntry::sigBusy, this, &MainWindow::slotBusy);
 
     tabPosts->addTab( temp, post.title() );
     return temp;
@@ -684,7 +684,7 @@ void MainWindow::slotShowStatusMessage(const QString &message, bool isPermanent)
 void MainWindow::uploadMediaObject()
 {
     UploadMediaDialog *uploadDlg = new UploadMediaDialog(this);
-    connect(uploadDlg, SIGNAL(sigBusy(bool)), SLOT(slotBusy(bool)));
+    connect(uploadDlg, &UploadMediaDialog::sigBusy, this, &MainWindow::slotBusy);
     if (mCurrentBlogId == -1)
         uploadDlg->init( 0 );
     else

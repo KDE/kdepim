@@ -60,7 +60,7 @@ ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageS
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mStorageServiceConfigureWidget = new StorageServiceConfigureWidget;
-    connect(mStorageServiceConfigureWidget, SIGNAL(changed()), this, SIGNAL(changed()));
+    connect(mStorageServiceConfigureWidget, &StorageServiceConfigureWidget::changed, this, &ConfigureStorageServiceWidget::changed);
     lay->addWidget(mStorageServiceConfigureWidget);
 
     QHBoxLayout *hbox = new QHBoxLayout;

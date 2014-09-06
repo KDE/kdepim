@@ -83,7 +83,7 @@ StyleGetter::StyleGetter( const int blogid, QObject *parent )
     b = new Backend( blogid );
     connect( b, SIGNAL(sigPostPublished(int,BilboPost*)), this,
              SLOT(slotTempPostPublished(int,BilboPost*)) );
-    connect( b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)) );
+    connect(b, &Backend::sigError, this, &StyleGetter::slotError);
 
     Q_EMIT sigGetStyleProgress( 10 );
 
