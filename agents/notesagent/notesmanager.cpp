@@ -163,9 +163,9 @@ void NotesManager::slotAcceptConnection()
     // Accept the connection and make KNotesNetworkReceiver do the job
     QTcpSocket *s = mListener->nextPendingConnection();
 
-    if (s) {
-        NoteShared::NotesNetworkReceiver *recv = new NoteShared::NotesNetworkReceiver(s);
-        connect(recv, SIGNAL(noteReceived(QString,QString)), SLOT(slotNewNote(QString,QString)));
+    if ( s ) {
+        NoteShared::NotesNetworkReceiver *recv = new NoteShared::NotesNetworkReceiver( s );
+        connect( recv, SIGNAL(sigNoteReceived(QString,QString)), SLOT(slotNewNote(QString,QString)) );
     }
 }
 
