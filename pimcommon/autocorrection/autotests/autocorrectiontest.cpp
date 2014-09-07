@@ -199,5 +199,54 @@ void AutoCorrectionTest::shouldReplaceSingleQuote()
 
 }
 
+void AutoCorrectionTest::shouldReplaceDoubleQuote()
+{
+    PimCommon::AutoCorrection autocorrection;
+    autocorrection.setEnabledAutoCorrection(true);
+    autocorrection.setReplaceDoubleQuotes(true);
+    PimCommon::AutoCorrection::TypographicQuotes doubleQuote;
+    doubleQuote.begin = QLatin1Char('A');
+    doubleQuote.end = QLatin1Char('B');
+
+    autocorrection.setTypographicDoubleQuotes(doubleQuote);
+
+    QTextDocument doc;
+    QString text = QLatin1String("sss");
+
+    doc.setPlainText(QLatin1Char('"') + text);
+    int position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), QString(doubleQuote.begin + text));
+
+    text = QLatin1String("sss");
+    doc.setPlainText(text + QLatin1String("\""));
+    position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), QString(text + doubleQuote.end ));
+
+    text = QLatin1String("sss");
+    doc.setPlainText(QLatin1String("\"") + text + QLatin1String("\""));
+    position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), QString(doubleQuote.begin + text + doubleQuote.end ));
+}
+
+void AutoCorrectionTest::shouldNotReplaceUppercaseLetter()
+{
+    PimCommon::AutoCorrection autocorrection;
+    autocorrection.setEnabledAutoCorrection(true);
+    autocorrection.setFixTwoUppercaseChars(true);
+    QSet<QString> exceptions;
+    exceptions.insert(QLatin1String("ABc"));
+    autocorrection.setTwoUpperLetterExceptions(exceptions);
+
+    QTextDocument doc;
+    QString text = QLatin1String("foo ABc");
+    doc.setPlainText(text);
+    int position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), text);
+}
+
 
 QTEST_MAIN(AutoCorrectionTest)
