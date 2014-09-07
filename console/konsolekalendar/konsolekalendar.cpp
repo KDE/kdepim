@@ -88,7 +88,7 @@ bool KonsoleKalendar::printCalendarList()
                                           << KCalCore::Journal::journalMimeType();
     job->fetchScope().setContentMimeTypes( mimeTypes );
     QEventLoop loop;
-    QObject::connect(job, SIGNAL(result(KJob*)), &loop, SLOT(quit()));
+    QObject::connect(job, &Akonadi::CollectionFetchJob::result, &loop, &QEventLoop::quit);
     job->start();
     loop.exec();
 
@@ -127,7 +127,7 @@ bool KonsoleKalendar::createAkonadiResource(const QString &icalFileName)
     Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(type);
     job->setProperty("path", icalFileName);
     QEventLoop loop;
-    QObject::connect(job, SIGNAL(result(KJob*)), &loop, SLOT(quit()));
+    QObject::connect(job, &Akonadi::CollectionFetchJob::result, &loop, &QEventLoop::quit);
     job->start();
     loop.exec();
     return job->error() == 0;

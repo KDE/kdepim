@@ -46,8 +46,8 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SelectHeadersDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectHeadersDialog::reject);
     okButton->setFocus();
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
@@ -63,15 +63,15 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     mNewHeader = new QLineEdit;
     mNewHeader->setClearButtonEnabled(true);
     //QT5 mNewHeader->setTrapReturnKey(true);
-    connect(mNewHeader, SIGNAL(returnPressed()), SLOT(slotAddNewHeader()));
+    connect(mNewHeader, &QLineEdit::returnPressed, this, &SelectHeadersDialog::slotAddNewHeader);
     mNewHeader->setClearButtonEnabled(true);
 
     mAddNewHeader = new QPushButton;
     mAddNewHeader->setEnabled(false);
     mAddNewHeader->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
     mAddNewHeader->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
-    connect(mAddNewHeader, SIGNAL(clicked(bool)), SLOT(slotAddNewHeader()));
-    connect(mNewHeader, SIGNAL(textChanged(QString)), this, SLOT(slotNewHeaderTextChanged(QString)));
+    connect(mAddNewHeader, &QPushButton::clicked, this, &SelectHeadersDialog::slotAddNewHeader);
+    connect(mNewHeader, &QLineEdit::textChanged, this, &SelectHeadersDialog::slotNewHeaderTextChanged);
     hbox->addWidget(mAddNewHeader);
 
     lay->addLayout(hbox);
@@ -201,9 +201,9 @@ SelectHeaderTypeComboBox::SelectHeaderTypeComboBox(bool onlyEnvelopType, QWidget
     setEditable(true);
     //TODO add completion
     initialize(onlyEnvelopType);
-    connect(this, SIGNAL(activated(QString)), SLOT(slotSelectItem(QString)));
-    connect(this, SIGNAL(editTextChanged(QString)), SIGNAL(valueChanged()));
-    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
+    connect(this, static_cast<void (SelectHeaderTypeComboBox::*)(const QString &)>(&SelectHeaderTypeComboBox::activated), this, &SelectHeaderTypeComboBox::slotSelectItem);
+    connect(this, &SelectHeaderTypeComboBox::editTextChanged, this, &SelectHeaderTypeComboBox::valueChanged);
+    connect(this, static_cast<void (SelectHeaderTypeComboBox::*)(int)>(&SelectHeaderTypeComboBox::activated), this, &SelectHeaderTypeComboBox::valueChanged);
 }
 
 SelectHeaderTypeComboBox::~SelectHeaderTypeComboBox()
