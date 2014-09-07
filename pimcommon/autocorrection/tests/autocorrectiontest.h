@@ -34,6 +34,8 @@ private Q_SLOTS:
     void shouldFixTwoUpperCaseChars();
     void shouldRemoveDoubleSpace();
     void shouldReplaceSingleQuote();
+    void shouldReplaceDoubleQuote();
+    void shouldNotReplaceUppercaseLetter();
 
 private:
     KSharedConfig::Ptr mConfig;
