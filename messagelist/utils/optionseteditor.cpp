@@ -47,8 +47,7 @@ OptionSetEditor::OptionSetEditor( QWidget *parent )
 
     tabg->addWidget( mNameEdit, 0, 1 );
 
-    connect( mNameEdit, SIGNAL(textEdited(QString)),
-             SLOT(slotNameEditTextEdited(QString)) );
+    connect(mNameEdit, &KLineEdit::textEdited, this, &OptionSetEditor::slotNameEditTextEdited);
 
     l = new QLabel( i18nc( "@label:textbox Description of the option", "Description:" ), tab );
     tabg->addWidget( l, 1, 0 );

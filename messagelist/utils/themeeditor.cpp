@@ -117,8 +117,7 @@ ThemeColumnPropertiesDialog::ThemeColumnPropertiesDialog( QWidget * parent, Them
     g->setColumnStretch( 1, 1 );
     g->setRowStretch( 10, 1 );
 
-    connect(okButton, SIGNAL(clicked()),
-             SLOT(slotOkButtonClicked()) );
+    connect(okButton, &QPushButton::clicked, this, &ThemeColumnPropertiesDialog::slotOkButtonClicked);
 
     // Display the current settings
     mNameEdit->setText( mColumn->label() );
@@ -896,8 +895,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
                 act = menu.addAction( i18nc( "@action:inmenu soften the text color", "Soften" ) );
                 act->setCheckable( true );
                 act->setChecked( mSelectedThemeContentItem->softenByBlending() );
-                connect( act, SIGNAL(triggered(bool)),
-                         SLOT(slotSoftenActionTriggered(bool)) );
+                connect(act, &QAction::triggered, this, &ThemePreviewWidget::slotSoftenActionTriggered);
 
                 QMenu * childmenu = new QMenu( &menu );
 
@@ -915,8 +913,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
                 grp->addAction( act );
 
 
-                connect( childmenu, SIGNAL(triggered(QAction*)),
-                         SLOT(slotFontMenuTriggered(QAction*)) );
+                connect(childmenu, &QMenu::triggered, this, &ThemePreviewWidget::slotFontMenuTriggered);
 
                 menu.addMenu( childmenu )->setText( i18n( "Font" ) );
             }
@@ -939,8 +936,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
                 act->setChecked( mSelectedThemeContentItem->useCustomColor() );
                 grp->addAction( act );
 
-                connect( childmenu, SIGNAL(triggered(QAction*)),
-                         SLOT(slotForegroundColorMenuTriggered(QAction*)) );
+                connect(childmenu, &QMenu::triggered, this, &ThemePreviewWidget::slotForegroundColorMenuTriggered);
 
                 menu.addMenu( childmenu )->setText( i18n( "Foreground Color" ) );
             }
@@ -969,8 +965,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
                 act->setChecked( mSelectedThemeContentItem->softenByBlendingWhenDisabled() );
                 grp->addAction( act );
 
-                connect( childmenu, SIGNAL(triggered(QAction*)),
-                         SLOT(slotDisabledFlagsMenuTriggered(QAction*)) );
+                connect(childmenu, &QMenu::triggered, this, &ThemePreviewWidget::slotDisabledFlagsMenuTriggered);
 
                 menu.addMenu( childmenu )->setText( i18n( "When Disabled" ) );
             }
@@ -1006,8 +1001,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
                 grp->addAction( act );
 
 
-                connect( childmenu, SIGNAL(triggered(QAction*)),
-                         SLOT(slotGroupHeaderBackgroundModeMenuTriggered(QAction*)) );
+                connect(childmenu, &QMenu::triggered, this, &ThemePreviewWidget::slotGroupHeaderBackgroundModeMenuTriggered);
 
                 menu.addMenu( childmenu )->setText( i18n( "Background Color" ) );
 
@@ -1027,8 +1021,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
                     grp->addAction( act );
                 }
 
-                connect( childmenu, SIGNAL(triggered(QAction*)),
-                         SLOT(slotGroupHeaderBackgroundStyleMenuTriggered(QAction*)) );
+                connect(childmenu, &QMenu::triggered, this, &ThemePreviewWidget::slotGroupHeaderBackgroundStyleMenuTriggered);
 
                 act = menu.addMenu( childmenu );
                 act->setText( i18n( "Background Style" ) );
@@ -1225,29 +1218,24 @@ void ThemePreviewWidget::slotHeaderContextMenuRequested( const QPoint &pos )
     QAction * act;
 
     act = menu.addAction( i18n( "Column Properties..." ) );
-    connect( act, SIGNAL(triggered(bool)),
-             SLOT(slotColumnProperties()) );
+    connect(act, &QAction::triggered, this, &ThemePreviewWidget::slotColumnProperties);
 
     act = menu.addAction( i18n( "Add Column..." ) );
-    connect( act, SIGNAL(triggered(bool)),
-             SLOT(slotAddColumn()) );
+    connect(act, &QAction::triggered, this, &ThemePreviewWidget::slotAddColumn);
 
     act = menu.addAction( i18n( "Delete Column" ) );
-    connect( act, SIGNAL(triggered(bool)),
-             SLOT(slotDeleteColumn()) );
+    connect(act, &QAction::triggered, this, &ThemePreviewWidget::slotDeleteColumn);
     act->setEnabled( col > 0 );
 
     menu.addSeparator();
 
     act = menu.addAction( i18n( "Move Column to Left"));
-    connect( act, SIGNAL(triggered(bool)),
-             SLOT(slotMoveColumnToLeft()) );
+    connect(act, &QAction::triggered, this, &ThemePreviewWidget::slotMoveColumnToLeft);
     act->setEnabled( col > 0 );
 
 
     act = menu.addAction( i18n( "Move Column to Right"));
-    connect( act, SIGNAL(triggered(bool)),
-             SLOT(slotMoveColumnToRight()) );
+    connect(act, &QAction::triggered, this, &ThemePreviewWidget::slotMoveColumnToRight);
     act->setEnabled( col < mTheme->columns().count()-1 );
 
 
@@ -1540,10 +1528,7 @@ ThemeEditor::ThemeEditor( QWidget *parent )
     mIconSizeSpinBox->setMaximum( 64 );
     mIconSizeSpinBox->setSuffix( ki18ncp( "suffix in a spinbox", " pixel", " pixels" ) );
 
-    QObject::connect(
-                mIconSizeSpinBox, SIGNAL(valueChanged(int)),
-                this, SLOT(slotIconSizeSpinBoxValueChanged(int))
-                );
+    QObject::connect(mIconSizeSpinBox, static_cast<void (KPluralHandlingSpinBox::*)(int)>(&KPluralHandlingSpinBox::valueChanged), this, &ThemeEditor::slotIconSizeSpinBoxValueChanged);
 
     tabg->addWidget( mIconSizeSpinBox, 1, 1 );
 

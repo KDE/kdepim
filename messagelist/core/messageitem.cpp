@@ -739,7 +739,7 @@ void TagCache::retrieveTags(const Akonadi::Tag::List &tags, MessageItemPrivate *
     if (!toFetch.isEmpty()) {
         Akonadi::TagFetchJob *tagFetchJob = new Akonadi::TagFetchJob(tags, this);
         tagFetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
-        connect(tagFetchJob, SIGNAL(result(KJob*)), this, SLOT(onTagsFetched(KJob*)));
+        connect(tagFetchJob, &Akonadi::TagFetchJob::result, this, &TagCache::onTagsFetched);
         mRequests.insert(tagFetchJob, m);
     } else {
         m->fillTagList(available);

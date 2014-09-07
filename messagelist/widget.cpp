@@ -87,9 +87,9 @@ Widget::Widget( QWidget *parent )
 
     d->mMonitor = new Akonadi::Monitor( this );
     d->mMonitor->setTypeMonitored( Akonadi::Monitor::Tags );
-    connect(d->mMonitor, SIGNAL(tagAdded(Akonadi::Tag)), this, SLOT(populateStatusFilterCombo()));
-    connect(d->mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)), this, SLOT(populateStatusFilterCombo()));
-    connect(d->mMonitor, SIGNAL(tagChanged(Akonadi::Tag)), this, SLOT(populateStatusFilterCombo()));
+    connect(d->mMonitor, &Akonadi::Monitor::tagAdded, this, &Widget::populateStatusFilterCombo);
+    connect(d->mMonitor, &Akonadi::Monitor::tagRemoved, this, &Widget::populateStatusFilterCombo);
+    connect(d->mMonitor, &Akonadi::Monitor::tagChanged, this, &Widget::populateStatusFilterCombo);
 }
 
 Widget::~Widget()

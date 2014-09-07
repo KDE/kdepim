@@ -96,10 +96,8 @@ void SieveGlobalVariableActionWidget::initWidget()
     mLayout->addWidget(mAdd, 1, 4);
     mLayout->addWidget(mRemove, 1, 5);
 
-    connect(mAdd, SIGNAL(clicked()),
-            this, SLOT(slotAddWidget()));
-    connect(mRemove, SIGNAL(clicked()),
-            this, SLOT(slotRemoveWidget()));
+    connect(mAdd, &QPushButton::clicked, this, &SieveGlobalVariableActionWidget::slotAddWidget);
+    connect(mRemove, &QPushButton::clicked, this, &SieveGlobalVariableActionWidget::slotRemoveWidget);
 }
 
 bool SieveGlobalVariableActionWidget::isInitialized() const

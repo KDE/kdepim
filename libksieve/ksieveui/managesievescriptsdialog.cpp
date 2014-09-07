@@ -77,8 +77,7 @@ bool CustomManageSieveWidget::refreshList()
         } else {
             serverName += QString::fromLatin1(" (%1)").arg(u.userName());
             KManageSieve::SieveJob *job = KManageSieve::SieveJob::list(u);
-            connect(job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
-                    this, SLOT(slotGotList(KManageSieve::SieveJob*,bool,QStringList,QString)));
+            connect(job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),  this, SLOT(slotGotList(KManageSieve::SieveJob*,bool,QStringList,QString)));
             mJobs.insert(job, last);
             mUrls.insert(last, u);
             last->startAnimation();
@@ -174,8 +173,7 @@ void ManageSieveScriptsDialog::slotEditScript(const QUrl &url, const QStringList
     mCurrentCapabilities = capabilities;
     mIsNewScript = false;
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::get(url);
-    connect(job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-            this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)));
+    connect(job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)), this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)));
 }
 
 void ManageSieveScriptsDialog::slotNewScript(const QUrl &url, const QStringList &capabilities)
@@ -215,8 +213,7 @@ void ManageSieveScriptsDialog::slotSieveEditorCheckSyntaxClicked()
     }
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditor->script(), mWasActive, mWasActive);
     job->setInteractive(false);
-    connect(job, SIGNAL(errorMessage(KManageSieve::SieveJob*,bool,QString)),
-            this, SLOT(slotPutResultDebug(KManageSieve::SieveJob*,bool,QString)));
+    connect(job, SIGNAL(errorMessage(KManageSieve::SieveJob*,bool,QString)), this, SLOT(slotPutResultDebug(KManageSieve::SieveJob*,bool,QString)));
 }
 
 void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
