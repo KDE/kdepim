@@ -163,7 +163,7 @@ void NotesManager::slotAcceptConnection()
 
     if ( s ) {
         NoteShared::NotesNetworkReceiver *recv = new NoteShared::NotesNetworkReceiver( s );
-        connect( recv, SIGNAL(noteReceived(QString,QString)), SLOT(slotNewNote(QString,QString)) );
+        connect( recv, SIGNAL(sigNoteReceived(QString,QString)), SLOT(slotNewNote(QString,QString)) );
     }
 }
 
