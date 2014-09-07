@@ -50,7 +50,7 @@ void SelectDateWidget::initialize()
     lay->setMargin(0);
 
     mDateType = new KComboBox;
-    connect(mDateType, SIGNAL(activated(int)), SLOT(slotDateTypeActivated(int)));
+    connect(mDateType, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &SelectDateWidget::slotDateTypeActivated);
     mDateType->addItem(i18n("Year"), QVariant::fromValue(KSieveUi::SelectDateWidget::Year));
     mDateType->addItem(i18n("Month"), QVariant::fromValue(KSieveUi::SelectDateWidget::Month));
     mDateType->addItem(i18n("Day"), QVariant::fromValue(KSieveUi::SelectDateWidget::Day));
@@ -74,19 +74,19 @@ void SelectDateWidget::initialize()
 
     mDateLineEdit = new QLineEdit;
     mStackWidget->addWidget(mDateLineEdit);
-    connect(mDateLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(mDateLineEdit, &QLineEdit::textChanged, this, &SelectDateWidget::valueChanged);
 
     mDateValue = new QSpinBox;
     mStackWidget->addWidget(mDateValue);
-    connect(mDateValue, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
+    connect(mDateValue, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SelectDateWidget::valueChanged);
 
     mDateEdit = new KDateComboBox;
     mStackWidget->addWidget(mDateEdit);
-    connect(mDateEdit, SIGNAL(dateChanged(QDate)), this, SIGNAL(valueChanged()));
+    connect(mDateEdit, &KDateComboBox::dateChanged, this, &SelectDateWidget::valueChanged);
 
     mTimeEdit = new KTimeComboBox;
     mStackWidget->addWidget(mTimeEdit);
-    connect(mTimeEdit, SIGNAL(timeChanged(QTime)), this, SIGNAL(valueChanged()));
+    connect(mTimeEdit, &KTimeComboBox::timeChanged, this, &SelectDateWidget::valueChanged);
 
     mStackWidget->setCurrentWidget(mDateValue);
 

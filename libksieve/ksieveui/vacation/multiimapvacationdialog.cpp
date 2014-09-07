@@ -110,15 +110,15 @@ void MultiImapVacationDialog::init()
         QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
         okButton->setDefault(true);
         okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-        connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOkClicked()));
-        connect(buttonBox, SIGNAL(rejected()), this, SLOT(slotCanceled()));
-        connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(slotDefaultClicked));
+        connect(buttonBox, &QDialogButtonBox::accepted, this, &MultiImapVacationDialog::slotOkClicked);
+        connect(buttonBox, &QDialogButtonBox::rejected, this, &MultiImapVacationDialog::slotCanceled);
+        connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &MultiImapVacationDialog::slotDefaultClicked);
         okButton->setDefault(true);
     } else {
         mStackedWidget->setCurrentIndex(1);
         QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-        connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOkClicked()));
-        connect(buttonBox, SIGNAL(rejected()), this, SLOT(slotCanceled()));
+        connect(buttonBox, &QDialogButtonBox::accepted, this, &MultiImapVacationDialog::slotOkClicked);
+        connect(buttonBox, &QDialogButtonBox::rejected, this, &MultiImapVacationDialog::slotCanceled);
     }
     mainLayout->addWidget(buttonBox);
     if (mTabWidget->count() <= 1) {

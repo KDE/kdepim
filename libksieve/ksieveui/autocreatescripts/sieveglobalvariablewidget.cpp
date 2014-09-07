@@ -71,20 +71,20 @@ void SieveGlobalVariableActionWidget::initWidget()
     mLayout->addWidget(lab, 1, 0);
 
     mVariableName = new QLineEdit;
-    connect(mVariableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(mVariableName, &QLineEdit::textChanged, this, &SieveGlobalVariableActionWidget::valueChanged);
     mLayout->addWidget(mVariableName, 1, 1);
 
     mSetValueTo = new QCheckBox(i18n("Set value to:"));
-    connect(mSetValueTo, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
+    connect(mSetValueTo, &QCheckBox::toggled, this, &SieveGlobalVariableActionWidget::valueChanged);
     mLayout->addWidget(mSetValueTo, 1, 2);
     mSetValueTo->setChecked(false);
 
     mVariableValue = new QLineEdit;
-    connect(mVariableValue, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(mVariableValue, &QLineEdit::textChanged, this, &SieveGlobalVariableActionWidget::valueChanged);
     mVariableValue->setEnabled(false);
     mLayout->addWidget(mVariableValue, 1, 3);
 
-    connect(mSetValueTo, SIGNAL(clicked(bool)), mVariableValue, SLOT(setEnabled(bool)));
+    connect(mSetValueTo, &QCheckBox::clicked, mVariableValue, &QLineEdit::setEnabled);
 
     mAdd = new QPushButton(this);
     mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
@@ -161,10 +161,10 @@ SieveGlobalVariableWidget::SieveGlobalVariableWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     mHelpButton = new SieveHelpButton;
     lay->addWidget(mHelpButton);
-    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    connect(mHelpButton, &SieveHelpButton::clicked, this, &SieveGlobalVariableWidget::slotHelp);
 
     mIncludeLister = new SieveGlobalVariableLister;
-    connect(mIncludeLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(mIncludeLister, &SieveGlobalVariableLister::valueChanged, this, &SieveGlobalVariableWidget::valueChanged);
     lay->addWidget(mIncludeLister, 0, Qt::AlignTop);
     setPageType(KSieveUi::SieveScriptBlockWidget::GlobalVariable);
     setLayout(lay);
