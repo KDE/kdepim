@@ -803,7 +803,7 @@ public:
     void save();
     void defaults();
 
-protected Q_SLOTS:
+public Q_SLOTS:
     void slotWidChanged();
 
 protected:
