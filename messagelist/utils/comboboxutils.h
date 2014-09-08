@@ -42,19 +42,19 @@ namespace ComboBoxUtils
    * Each option descriptor contains a description string and a distinct integer (possibly enum)
    * identifier value.
    */
-void fillIntegerOptionCombo( KComboBox *combo, const QList< QPair< QString, int > > &optionDescriptors );
+void fillIntegerOptionCombo(KComboBox *combo, const QList< QPair< QString, int > > &optionDescriptors);
 
 /**
    * Returns the identifier of the currently selected option in the specified combo.
    * If the combo has no current selection or something goes wrong then the defaultValue
    * is returned instead.
    */
-int getIntegerOptionComboValue( KComboBox *combo, int defaultValue );
+int getIntegerOptionComboValue(KComboBox *combo, int defaultValue);
 
 /**
    * Sets the currently selected option in the specified combo.
    */
-void setIntegerOptionComboValue( KComboBox *combo, int value );
+void setIntegerOptionComboValue(KComboBox *combo, int value);
 
 } // namespace ComboBoxUtils
 

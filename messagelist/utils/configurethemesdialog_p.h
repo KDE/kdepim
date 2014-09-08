@@ -43,35 +43,34 @@ class ThemeListWidgetItem;
 class ConfigureThemesDialog::Private
 {
 public:
-  Private( ConfigureThemesDialog *owner )
-    : q( owner ) { }
+    Private(ConfigureThemesDialog *owner)
+        : q(owner) { }
 
-  void fillThemeList();
-  QString uniqueNameForTheme( const QString& baseName, Core::Theme * skipTheme = 0 );
-  ThemeListWidgetItem * findThemeItemByName( const QString &name, Core::Theme * skipTheme = 0 );
-  ThemeListWidgetItem * findThemeItemByTheme( Core::Theme * set );
-  ThemeListWidgetItem * findThemeItemById( const QString &themeId );
-  void commitEditor();
+    void fillThemeList();
+    QString uniqueNameForTheme(const QString &baseName, Core::Theme *skipTheme = 0);
+    ThemeListWidgetItem *findThemeItemByName(const QString &name, Core::Theme *skipTheme = 0);
+    ThemeListWidgetItem *findThemeItemByTheme(Core::Theme *set);
+    ThemeListWidgetItem *findThemeItemById(const QString &themeId);
+    void commitEditor();
 
-  void themeListItemClicked(QListWidgetItem*);
-  void newThemeButtonClicked();
-  void cloneThemeButtonClicked();
-  void deleteThemeButtonClicked();
-  void editedThemeNameChanged();
-  void okButtonClicked();
-  void exportThemeButtonClicked();
-  void importThemeButtonClicked();
+    void themeListItemClicked(QListWidgetItem *);
+    void newThemeButtonClicked();
+    void cloneThemeButtonClicked();
+    void deleteThemeButtonClicked();
+    void editedThemeNameChanged();
+    void okButtonClicked();
+    void exportThemeButtonClicked();
+    void importThemeButtonClicked();
 
+    ConfigureThemesDialog *const q;
 
-  ConfigureThemesDialog * const q;
-
-  ThemeListWidget *mThemeList;
-  ThemeEditor *mEditor;
-  QPushButton *mNewThemeButton;
-  QPushButton *mCloneThemeButton;
-  QPushButton *mDeleteThemeButton;
-  QPushButton *mExportThemeButton;
-  QPushButton *mImportThemeButton;
+    ThemeListWidget *mThemeList;
+    ThemeEditor *mEditor;
+    QPushButton *mNewThemeButton;
+    QPushButton *mCloneThemeButton;
+    QPushButton *mDeleteThemeButton;
+    QPushButton *mExportThemeButton;
+    QPushButton *mImportThemeButton;
 
 };
 

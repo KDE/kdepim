@@ -26,15 +26,16 @@
 using namespace MessageList::Core;
 
 ModelInvariantIndex::ModelInvariantIndex()
-    : d( new Private )
+    : d(new Private)
 {
     d->mRowMapper = 0;
 }
 
 ModelInvariantIndex::~ModelInvariantIndex()
 {
-    if ( d->mRowMapper )
-        d->mRowMapper->d->indexDead( this );
+    if (d->mRowMapper) {
+        d->mRowMapper->d->indexDead(this);
+    }
 
     delete d;
 }
@@ -46,7 +47,8 @@ bool ModelInvariantIndex::isValid() const
 
 int ModelInvariantIndex::currentModelIndexRow()
 {
-    if ( d->mRowMapper )
-        return d->mRowMapper->modelInvariantIndexToModelIndexRow( this );
+    if (d->mRowMapper) {
+        return d->mRowMapper->modelInvariantIndexToModelIndexRow(this);
+    }
     return -1;
 }

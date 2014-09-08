@@ -33,22 +33,20 @@ namespace Utils
 {
 class ThemeComboBox;
 
-
-
 class ThemeComboBoxPrivate
 {
 public:
-  explicit ThemeComboBoxPrivate( ThemeComboBox *owner )
-    : q( owner ) { }
+    explicit ThemeComboBoxPrivate(ThemeComboBox *owner)
+        : q(owner) { }
 
-  ThemeComboBox * const q;
+    ThemeComboBox *const q;
 
-  /**
-   * Refresh list of themes in the combobox.
-   */
-  void slotLoadThemes();
+    /**
+     * Refresh list of themes in the combobox.
+     */
+    void slotLoadThemes();
 
-  void setCurrentTheme( const Core::Theme *theme );
+    void setCurrentTheme(const Core::Theme *theme);
 };
 
 } // namespace Utils

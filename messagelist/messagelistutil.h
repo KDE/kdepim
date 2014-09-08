@@ -23,14 +23,16 @@
 #include <QString>
 #include <QColor>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Item;
 }
 class QMenu;
 
 namespace MessageList
 {
-namespace Util {
+namespace Util
+{
 MESSAGELIST_EXPORT QString messageSortingConfigName();
 MESSAGELIST_EXPORT QString messageSortDirectionConfigName();
 MESSAGELIST_EXPORT QString groupSortingConfigName();
@@ -41,14 +43,14 @@ MESSAGELIST_EXPORT QString storageModelThemesGroup();
 MESSAGELIST_EXPORT QString storageModelAggregationsGroup();
 MESSAGELIST_EXPORT QString setForStorageModelConfigName();
 MESSAGELIST_EXPORT QString storageModelSelectedMessageGroup();
-MESSAGELIST_EXPORT void deleteConfig( const QString& collectionId );
+MESSAGELIST_EXPORT void deleteConfig(const QString &collectionId);
 MESSAGELIST_EXPORT QColor unreadDefaultMessageColor();
 MESSAGELIST_EXPORT QColor importantDefaultMessageColor();
 MESSAGELIST_EXPORT QColor todoDefaultMessageColor();
-MESSAGELIST_EXPORT void fillViewMenu( QMenu * menu, QObject *receiver );
+MESSAGELIST_EXPORT void fillViewMenu(QMenu *menu, QObject *receiver);
 
 /// Returns the first few lines of the actual email text if available.
-MESSAGELIST_EXPORT QString contentSummary( const Akonadi::Item &item );
+MESSAGELIST_EXPORT QString contentSummary(const Akonadi::Item &item);
 }
 }
 

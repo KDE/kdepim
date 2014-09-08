@@ -46,27 +46,26 @@ class MESSAGELIST_EXPORT ThemeComboBox : public KComboBox
     Q_OBJECT
 
 public:
-    explicit ThemeComboBox( QWidget * parent);
+    explicit ThemeComboBox(QWidget *parent);
     ~ThemeComboBox();
 
     QString currentTheme() const;
 
     void writeDefaultConfig() const;
 
-    void writeStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool isPrivateSetting ) const;
-    void writeStorageModelConfig( const Akonadi::Collection &col, bool isPrivateSetting ) const;
-    void writeStorageModelConfig( const QString &id, bool isPrivateSetting )const;
+    void writeStorageModelConfig(MessageList::Core::StorageModel *storageModel, bool isPrivateSetting) const;
+    void writeStorageModelConfig(const Akonadi::Collection &col, bool isPrivateSetting) const;
+    void writeStorageModelConfig(const QString &id, bool isPrivateSetting)const;
 
-
-    void readStorageModelConfig( const Akonadi::Collection& col, bool &isPrivateSetting );
-    void readStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting );
+    void readStorageModelConfig(const Akonadi::Collection &col, bool &isPrivateSetting);
+    void readStorageModelConfig(MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting);
 
 public Q_SLOTS:
     void selectDefault();
 
 private:
     Q_PRIVATE_SLOT(d, void slotLoadThemes())
-    ThemeComboBoxPrivate * const d;
+    ThemeComboBoxPrivate *const d;
 };
 
 } // namespace Utils

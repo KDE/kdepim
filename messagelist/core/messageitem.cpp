@@ -36,13 +36,13 @@
 #include <QDebug>
 using namespace MessageList::Core;
 
-Q_GLOBAL_STATIC( TagCache, s_tagCache )
+Q_GLOBAL_STATIC(TagCache, s_tagCache)
 
 class MessageItem::Tag::Private
 {
-    public:
+public:
     Private()
-        :mPriority( 0 ) //Initialize it
+        : mPriority(0)  //Initialize it
     {
 
     }
@@ -55,8 +55,8 @@ class MessageItem::Tag::Private
     int mPriority;
 };
 
-MessageItem::Tag::Tag( const QPixmap &pix, const QString &tagName, const QString &tagId )
-    : d( new Private )
+MessageItem::Tag::Tag(const QPixmap &pix, const QString &tagName, const QString &tagId)
+    : d(new Private)
 {
     d->mPixmap = pix;
     d->mName = tagName;
@@ -103,26 +103,25 @@ int MessageItem::Tag::priority() const
     return d->mPriority;
 }
 
-void MessageItem::Tag::setTextColor( const QColor &textColor )
+void MessageItem::Tag::setTextColor(const QColor &textColor)
 {
     d->mTextColor = textColor;
 }
 
-void MessageItem::Tag::setBackgroundColor( const QColor &backgroundColor )
+void MessageItem::Tag::setBackgroundColor(const QColor &backgroundColor)
 {
     d->mBackgroundColor = backgroundColor;
 }
 
-void MessageItem::Tag::setFont( const QFont &font )
+void MessageItem::Tag::setFont(const QFont &font)
 {
     d->mFont = font;
 }
 
-void MessageItem::Tag::setPriority( int priority )
+void MessageItem::Tag::setPriority(int priority)
 {
     d->mPriority = priority;
 }
-
 
 class MessageItemPrivateSettings
 {
@@ -142,14 +141,14 @@ public:
 
 Q_GLOBAL_STATIC(MessageItemPrivateSettings, s_settings)
 
-MessageItemPrivate::MessageItemPrivate( MessageItem* qq )
-    : ItemPrivate( qq ),
-      mThreadingStatus( MessageItem::ParentMissing ),
-      mEncryptionState( MessageItem::NotEncrypted ),
-      mSignatureState( MessageItem::NotSigned ),
-      mAboutToBeRemoved( false ),
-      mSubjectIsPrefixed( false ),
-      mTagList( 0 )
+MessageItemPrivate::MessageItemPrivate(MessageItem *qq)
+    : ItemPrivate(qq),
+      mThreadingStatus(MessageItem::ParentMissing),
+      mEncryptionState(MessageItem::NotEncrypted),
+      mSignatureState(MessageItem::NotSigned),
+      mAboutToBeRemoved(false),
+      mSubjectIsPrefixed(false),
+      mTagList(0)
 {
 }
 
@@ -161,8 +160,8 @@ MessageItemPrivate::~MessageItemPrivate()
 
 void MessageItemPrivate::invalidateTagCache()
 {
-    if ( mTagList ) {
-        qDeleteAll( *mTagList );
+    if (mTagList) {
+        qDeleteAll(*mTagList);
         delete mTagList;
         mTagList = 0;
     }
@@ -172,28 +171,29 @@ void MessageItemPrivate::invalidateAnnotationCache()
 {
 }
 
-const MessageItem::Tag* MessageItemPrivate::bestTag() const
+const MessageItem::Tag *MessageItemPrivate::bestTag() const
 {
     const MessageItem::Tag *best = 0;
-    foreach( const MessageItem::Tag* tag, getTagList() ) {
-        if ( !best || tag->priority() < best->priority() )
+    foreach (const MessageItem::Tag *tag, getTagList()) {
+        if (!best || tag->priority() < best->priority()) {
             best = tag;
+        }
     }
     return best;
 }
 
 void MessageItemPrivate::fillTagList(const Akonadi::Tag::List &taglist)
 {
-    Q_ASSERT( !mTagList );
-    mTagList = new QList<MessageItem::Tag*>;
+    Q_ASSERT(!mTagList);
+    mTagList = new QList<MessageItem::Tag *>;
 
     // TODO: The tag pointers here could be shared between all items, there really is no point in
     //       creating them for each item that has tags
 
     //Priority sort this and make bestTag more efficient
 
-    foreach( const Akonadi::Tag &tag, taglist ) {
-        QString symbol = QLatin1String( "mail-tagged" );
+    foreach (const Akonadi::Tag &tag, taglist) {
+        QString symbol = QLatin1String("mail-tagged");
         Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>();
         if (attr) {
             if (!attr->iconName().isEmpty()) {
@@ -201,33 +201,33 @@ void MessageItemPrivate::fillTagList(const Akonadi::Tag::List &taglist)
             }
         }
         MessageItem::Tag *messageListTag =
-                new MessageItem::Tag( SmallIcon( symbol ), tag.name(), tag.url().url() );
+            new MessageItem::Tag(SmallIcon(symbol), tag.name(), tag.url().url());
 
         if (attr) {
-            messageListTag->setTextColor( attr->textColor() );
-            messageListTag->setBackgroundColor( attr->backgroundColor() );
+            messageListTag->setTextColor(attr->textColor());
+            messageListTag->setBackgroundColor(attr->backgroundColor());
             if (!attr->font().isEmpty()) {
                 QFont font;
-                if (font.fromString( attr->font() )) {
-                    messageListTag->setFont( font );
+                if (font.fromString(attr->font())) {
+                    messageListTag->setFont(font);
                 }
             }
             if (attr->priority() != -1) {
-                messageListTag->setPriority( attr->priority() );
+                messageListTag->setPriority(attr->priority());
             } else {
-                messageListTag->setPriority( 0xFFFF );
+                messageListTag->setPriority(0xFFFF);
             }
         }
 
-        mTagList->append( messageListTag );
+        mTagList->append(messageListTag);
     }
 }
 
-QList<MessageItem::Tag*> MessageItemPrivate::getTagList() const
+QList<MessageItem::Tag *> MessageItemPrivate::getTagList() const
 {
-    if ( !mTagList ) {
-        s_tagCache->retrieveTags(mAkonadiItem.tags(), const_cast<MessageItemPrivate*>(this));
-        return QList<MessageItem::Tag*>();
+    if (!mTagList) {
+        s_tagCache->retrieveTags(mAkonadiItem.tags(), const_cast<MessageItemPrivate *>(this));
+        return QList<MessageItem::Tag *>();
     }
 
     return *mTagList;
@@ -239,12 +239,12 @@ bool MessageItemPrivate::tagListInitialized() const
 }
 
 MessageItem::MessageItem()
-    : Item( Message, new MessageItemPrivate( this ) ), ModelInvariantIndex()
+    : Item(Message, new MessageItemPrivate(this)), ModelInvariantIndex()
 {
 }
 
-MessageItem::MessageItem ( MessageItemPrivate* dd )
-    : Item ( Message, dd ), ModelInvariantIndex()
+MessageItem::MessageItem(MessageItemPrivate *dd)
+    : Item(Message, dd), ModelInvariantIndex()
 {
 }
 
@@ -254,21 +254,21 @@ MessageItem::~MessageItem()
 
 QList< MessageItem::Tag * > MessageItem::tagList() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->getTagList();
 }
 
 bool MessageItem::hasAnnotation() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     //TODO check for note entry?
     return d->mAkonadiItem.hasAttribute<Akonadi::EntityAnnotationsAttribute>();
 }
 
 QString MessageItem::annotation() const
 {
-    Q_D( const MessageItem );
-    if ( d->mAkonadiItem.hasAttribute<Akonadi::EntityAnnotationsAttribute>() ) {
+    Q_D(const MessageItem);
+    if (d->mAkonadiItem.hasAttribute<Akonadi::EntityAnnotationsAttribute>()) {
         Akonadi::EntityAnnotationsAttribute *attr = d->mAkonadiItem.attribute<Akonadi::EntityAnnotationsAttribute>();
         const QMap<QByteArray, QByteArray> annotations = attr->annotations();
         if (annotations.contains("/private/comment")) {
@@ -283,39 +283,42 @@ QString MessageItem::annotation() const
 
 void MessageItem::editAnnotation()
 {
-    Q_D( MessageItem );
-    if ( d->mAnnotationDialog.data() )
+    Q_D(MessageItem);
+    if (d->mAnnotationDialog.data()) {
         return;
-    d->mAnnotationDialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem );
-    d->mAnnotationDialog.data()->setAttribute( Qt::WA_DeleteOnClose );
+    }
+    d->mAnnotationDialog = new MessageCore::AnnotationEditDialog(d->mAkonadiItem);
+    d->mAnnotationDialog.data()->setAttribute(Qt::WA_DeleteOnClose);
     //FIXME make async
-    if ( d->mAnnotationDialog.data()->exec() ) {
+    if (d->mAnnotationDialog.data()->exec()) {
         // invalidate the cached mHasAnnotation value
     }
 }
 
-const MessageItem::Tag * MessageItemPrivate::findTagInternal( const QString &szTagId ) const
+const MessageItem::Tag *MessageItemPrivate::findTagInternal(const QString &szTagId) const
 {
-    foreach( const MessageItem::Tag *tag, getTagList() ) {
-        if ( tag->id() == szTagId )
+    foreach (const MessageItem::Tag *tag, getTagList()) {
+        if (tag->id() == szTagId) {
             return tag;
+        }
     }
     return 0;
 }
 
-const MessageItem::Tag *MessageItem::findTag( const QString &szTagId ) const
+const MessageItem::Tag *MessageItem::findTag(const QString &szTagId) const
 {
-    Q_D( const MessageItem );
-    return d->findTagInternal( szTagId );
+    Q_D(const MessageItem);
+    return d->findTagInternal(szTagId);
 }
 
 QString MessageItem::tagListDescription() const
 {
     QString ret;
 
-    foreach( const Tag *tag, tagList() ) {
-        if ( !ret.isEmpty() )
-            ret += QLatin1String( ", " );
+    foreach (const Tag *tag, tagList()) {
+        if (!ret.isEmpty()) {
+            ret += QLatin1String(", ");
+        }
         ret += tag->name();
     }
 
@@ -324,30 +327,30 @@ QString MessageItem::tagListDescription() const
 
 void MessageItem::invalidateTagCache()
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->invalidateTagCache();
 }
 
 void MessageItem::invalidateAnnotationCache()
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->invalidateAnnotationCache();
 }
 
 QColor MessageItem::textColor() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     const Tag *bestTag = d->bestTag();
-    if ( bestTag != 0 && bestTag->textColor().isValid() ) {
+    if (bestTag != 0 && bestTag->textColor().isValid()) {
         return bestTag->textColor();
     }
     QColor clr;
     Akonadi::MessageStatus messageStatus = status();
-    if ( !messageStatus.isRead() ) {
+    if (!messageStatus.isRead()) {
         clr = s_settings->mColorUnreadMessage;
-    } else if ( messageStatus.isImportant() ) {
+    } else if (messageStatus.isImportant()) {
         clr = s_settings->mColorImportantMessage;
-    } else if ( messageStatus.isToAct() ) {
+    } else if (messageStatus.isToAct()) {
         clr = s_settings->mColorToDoMessage;
     }
 
@@ -356,9 +359,9 @@ QColor MessageItem::textColor() const
 
 QColor MessageItem::backgroundColor() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     const Tag *bestTag = d->bestTag();
-    if ( bestTag ) {
+    if (bestTag) {
         return bestTag->backgroundColor();
     } else {
         return QColor();
@@ -367,13 +370,13 @@ QColor MessageItem::backgroundColor() const
 
 QFont MessageItem::font() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     // for performance reasons we don't want font retrieval to trigger
     // full tags loading, as the font is used for geometry calculation
     // and thus this method called for each item
-    if ( d->tagListInitialized() ) {
+    if (d->tagListInitialized()) {
         const Tag *bestTag = d->bestTag();
-        if ( bestTag && bestTag->font() != QFont() ) {
+        if (bestTag && bestTag->font() != QFont()) {
             return bestTag->font();
         }
     }
@@ -382,11 +385,11 @@ QFont MessageItem::font() const
 
     // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
     Akonadi::MessageStatus messageStatus = status();
-    if ( messageStatus.isImportant() ) {
+    if (messageStatus.isImportant()) {
         font = s_settings->mFontImportantMessage;
-    } else if ( !messageStatus.isRead() ) {
+    } else if (!messageStatus.isRead()) {
         font = s_settings->mFontUnreadMessage;
-    } else if ( messageStatus.isToAct() ) {
+    } else if (messageStatus.isToAct()) {
         font = s_settings->mFontToDoMessage;
     } else {
         font = s_settings->mFont;
@@ -397,25 +400,25 @@ QFont MessageItem::font() const
 
 QString MessageItem::fontKey() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
 
     // for performance reasons we don't want font retrieval to trigger
     // full tags loading, as the font is used for geometry calculation
     // and thus this method called for each item
-    if ( d->tagListInitialized() ) {
+    if (d->tagListInitialized()) {
         const Tag *bestTag = d->bestTag();
-        if ( bestTag  && bestTag->font() != QFont() ) {
+        if (bestTag  && bestTag->font() != QFont()) {
             return bestTag->font().key();
         }
     }
 
     // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
     Akonadi::MessageStatus messageStatus = status();
-    if ( messageStatus.isImportant() ) {
+    if (messageStatus.isImportant()) {
         return s_settings->mFontImportantMessageKey;
-    } else if ( !messageStatus.isRead() ) {
+    } else if (!messageStatus.isRead()) {
         return s_settings->mFontUnreadMessageKey;
-    } else if ( messageStatus.isToAct() ) {
+    } else if (messageStatus.isToAct()) {
         return s_settings->mFontToDoMessageKey;
     } else {
         return s_settings->mFontKey;
@@ -423,139 +426,140 @@ QString MessageItem::fontKey() const
 
 }
 
-
 MessageItem::SignatureState MessageItem::signatureState() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mSignatureState;
 }
 
-void MessageItem::setSignatureState( SignatureState state )
+void MessageItem::setSignatureState(SignatureState state)
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->mSignatureState = state;
 }
 
 MessageItem::EncryptionState MessageItem::encryptionState() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mEncryptionState;
 }
 
-void MessageItem::setEncryptionState( EncryptionState state )
+void MessageItem::setEncryptionState(EncryptionState state)
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->mEncryptionState = state;
 }
 
 QByteArray MessageItem::messageIdMD5() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mMessageIdMD5;
 }
 
-void MessageItem::setMessageIdMD5( const QByteArray &md5 )
+void MessageItem::setMessageIdMD5(const QByteArray &md5)
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->mMessageIdMD5 = md5;
 }
 
 QByteArray MessageItem::inReplyToIdMD5() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mInReplyToIdMD5;
 }
 
-void MessageItem::setInReplyToIdMD5( const QByteArray& md5 )
+void MessageItem::setInReplyToIdMD5(const QByteArray &md5)
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->mInReplyToIdMD5 = md5;
 }
 
 QByteArray MessageItem::referencesIdMD5() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mReferencesIdMD5;
 }
 
-void MessageItem::setReferencesIdMD5( const QByteArray& md5 )
+void MessageItem::setReferencesIdMD5(const QByteArray &md5)
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->mReferencesIdMD5 = md5;
 }
 
-void MessageItem::setSubjectIsPrefixed( bool subjectIsPrefixed )
+void MessageItem::setSubjectIsPrefixed(bool subjectIsPrefixed)
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->mSubjectIsPrefixed = subjectIsPrefixed;
 }
 
 bool MessageItem::subjectIsPrefixed() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mSubjectIsPrefixed;
 }
 
 QByteArray MessageItem::strippedSubjectMD5() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mStrippedSubjectMD5;
 }
 
-void MessageItem::setStrippedSubjectMD5( const QByteArray& md5 )
+void MessageItem::setStrippedSubjectMD5(const QByteArray &md5)
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->mStrippedSubjectMD5 = md5;
 }
 
 bool MessageItem::aboutToBeRemoved() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mAboutToBeRemoved;
 }
 
-void MessageItem::setAboutToBeRemoved( bool aboutToBeRemoved )
+void MessageItem::setAboutToBeRemoved(bool aboutToBeRemoved)
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->mAboutToBeRemoved = aboutToBeRemoved;
 }
 
 MessageItem::ThreadingStatus MessageItem::threadingStatus() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mThreadingStatus;
 }
 
-void MessageItem::setThreadingStatus( ThreadingStatus threadingStatus )
+void MessageItem::setThreadingStatus(ThreadingStatus threadingStatus)
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->mThreadingStatus = threadingStatus;
 }
 
 unsigned long MessageItem::uniqueId() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mAkonadiItem.id();
 }
 
 Akonadi::Item MessageList::Core::MessageItem::akonadiItem() const
 {
-    Q_D( const MessageItem );
+    Q_D(const MessageItem);
     return d->mAkonadiItem;
 }
 
-void MessageList::Core::MessageItem::setAkonadiItem(const Akonadi::Item& item)
+void MessageList::Core::MessageItem::setAkonadiItem(const Akonadi::Item &item)
 {
-    Q_D( MessageItem );
+    Q_D(MessageItem);
     d->mAkonadiItem = item;
 }
 
-MessageItem * MessageItem::topmostMessage()
+MessageItem *MessageItem::topmostMessage()
 {
-    if ( !parent() )
+    if (!parent()) {
         return this;
-    if ( parent()->type() == Item::Message )
-        return static_cast< MessageItem * >( parent() )->topmostMessage();
+    }
+    if (parent()->type() == Item::Message) {
+        return static_cast< MessageItem * >(parent())->topmostMessage();
+    }
     return this;
 }
 
@@ -575,100 +579,96 @@ QString MessageItem::accessibleTextForField(Theme::ContentItem::Type field)
     case Theme::ContentItem::Size:
         return formattedSize();
     case Theme::ContentItem::RepliedStateIcon:
-        return status().isReplied() ? i18nc( "Status of an item", "Replied" ) : QString();
+        return status().isReplied() ? i18nc("Status of an item", "Replied") : QString();
     case Theme::ContentItem::ReadStateIcon:
-        return status().isRead() ? i18nc( "Status of an item", "Read" ) : i18nc( "Status of an item", "Unread" );
+        return status().isRead() ? i18nc("Status of an item", "Read") : i18nc("Status of an item", "Unread");
     case Theme::ContentItem::CombinedReadRepliedStateIcon:
-        return accessibleTextForField( Theme::ContentItem::ReadStateIcon ) + accessibleTextForField( Theme::ContentItem::RepliedStateIcon );
+        return accessibleTextForField(Theme::ContentItem::ReadStateIcon) + accessibleTextForField(Theme::ContentItem::RepliedStateIcon);
     default:
         return QString();
     }
 }
 
-
-QString MessageItem::accessibleText( const Theme* theme, int columnIndex )
+QString MessageItem::accessibleText(const Theme *theme, int columnIndex)
 {
     QStringList rowsTexts;
 
-    Q_FOREACH( Theme::Row *row, theme->column(columnIndex)->messageRows() ) {
+    Q_FOREACH (Theme::Row *row, theme->column(columnIndex)->messageRows()) {
         QStringList leftStrings;
         QStringList rightStrings;
-        Q_FOREACH( Theme::ContentItem *contentItem, row->leftItems() ) {
-            leftStrings.append( accessibleTextForField( contentItem->type() ) );
+        Q_FOREACH (Theme::ContentItem *contentItem, row->leftItems()) {
+            leftStrings.append(accessibleTextForField(contentItem->type()));
         }
 
-        Q_FOREACH( Theme::ContentItem *contentItem, row->rightItems() ) {
-            rightStrings.insert( rightStrings.begin(), accessibleTextForField( contentItem->type() ) );
+        Q_FOREACH (Theme::ContentItem *contentItem, row->rightItems()) {
+            rightStrings.insert(rightStrings.begin(), accessibleTextForField(contentItem->type()));
         }
 
-        rowsTexts.append( ( leftStrings + rightStrings ).join( QLatin1String( " " ) ) );
+        rowsTexts.append((leftStrings + rightStrings).join(QLatin1String(" ")));
     }
 
-    return rowsTexts.join( QLatin1String(" ") );
+    return rowsTexts.join(QLatin1String(" "));
 }
 
-void MessageItem::subTreeToList( QList< MessageItem * > &list )
+void MessageItem::subTreeToList(QList< MessageItem * > &list)
 {
-    list.append( this );
-    QList< Item * > * childList = childItems();
-    if ( !childList )
+    list.append(this);
+    QList< Item * > *childList = childItems();
+    if (!childList) {
         return;
-    QList< Item * >::ConstIterator end( childList->constEnd() );
-    for ( QList< Item * >::ConstIterator it = childList->constBegin(); it != end; ++it )
-    {
-        Q_ASSERT( ( *it )->type() == Item::Message );
-        static_cast< MessageItem * >( *it )->subTreeToList( list );
+    }
+    QList< Item * >::ConstIterator end(childList->constEnd());
+    for (QList< Item * >::ConstIterator it = childList->constBegin(); it != end; ++it) {
+        Q_ASSERT((*it)->type() == Item::Message);
+        static_cast< MessageItem * >(*it)->subTreeToList(list);
     }
 }
 
-void MessageItem::setUnreadMessageColor( const QColor &color )
+void MessageItem::setUnreadMessageColor(const QColor &color)
 {
     s_settings->mColorUnreadMessage = color;
 }
 
-
-void MessageItem::setImportantMessageColor( const QColor &color )
+void MessageItem::setImportantMessageColor(const QColor &color)
 {
     s_settings->mColorImportantMessage = color;
 }
 
-
-void MessageItem::setToDoMessageColor( const QColor &color )
+void MessageItem::setToDoMessageColor(const QColor &color)
 {
     s_settings->mColorToDoMessage = color;
 }
 
-
-void MessageItem::setGeneralFont( const QFont &font )
+void MessageItem::setGeneralFont(const QFont &font)
 {
     s_settings->mFont = font;
     s_settings->mFontKey = font.key();
 }
 
-void MessageItem::setUnreadMessageFont( const QFont &font )
+void MessageItem::setUnreadMessageFont(const QFont &font)
 {
     s_settings->mFontUnreadMessage = font;
     s_settings->mFontUnreadMessageKey = font.key();
 }
 
-void MessageItem::setImportantMessageFont( const QFont &font )
+void MessageItem::setImportantMessageFont(const QFont &font)
 {
     s_settings->mFontImportantMessage = font;
     s_settings->mFontImportantMessageKey = font.key();
 }
 
-void MessageItem::setToDoMessageFont( const QFont &font )
+void MessageItem::setToDoMessageFont(const QFont &font)
 {
     s_settings->mFontToDoMessage = font;
     s_settings->mFontToDoMessageKey = font.key();
 }
 
-FakeItemPrivate::FakeItemPrivate( FakeItem *qq ) : MessageItemPrivate( qq )
+FakeItemPrivate::FakeItemPrivate(FakeItem *qq) : MessageItemPrivate(qq)
 {
 }
 
 FakeItem::FakeItem()
-    : MessageItem( new FakeItemPrivate( this ) )
+    : MessageItem(new FakeItemPrivate(this))
 {
 }
 
@@ -678,13 +678,13 @@ FakeItem::~FakeItem()
 
 QList< MessageItem::Tag * > FakeItem::tagList() const
 {
-    Q_D( const FakeItem );
+    Q_D(const FakeItem);
     return d->mFakeTags;
 }
 
-void FakeItem::setFakeTags( const QList< MessageItem::Tag* > &tagList )
+void FakeItem::setFakeTags(const QList< MessageItem::Tag * > &tagList)
 {
-    Q_D( FakeItem );
+    Q_D(FakeItem);
     d->mFakeTags = tagList;
 }
 
@@ -694,7 +694,7 @@ bool FakeItem::hasAnnotation() const
 }
 
 TagCache::TagCache()
-    :QObject(),
+    : QObject(),
       mMonitor(new Akonadi::Monitor(this))
 {
     mCache.setMaxCost(100);
@@ -728,7 +728,7 @@ void TagCache::retrieveTags(const Akonadi::Tag::List &tags, MessageItemPrivate *
     }
     Akonadi::Tag::List toFetch;
     Akonadi::Tag::List available;
-    Q_FOREACH( const Akonadi::Tag &tag, tags ) {
+    Q_FOREACH (const Akonadi::Tag &tag, tags) {
         if (mCache.contains(tag.id())) {
             available << *mCache.object(tag.id());
         } else {
@@ -748,8 +748,8 @@ void TagCache::retrieveTags(const Akonadi::Tag::List &tags, MessageItemPrivate *
 
 void TagCache::cancelRequest(MessageItemPrivate *m)
 {
-    const QList<KJob*> keys = mRequests.keys(m);
-    Q_FOREACH( KJob *job, keys ) {
+    const QList<KJob *> keys = mRequests.keys(m);
+    Q_FOREACH (KJob *job, keys) {
         mRequests.remove(job);
     }
 }
@@ -760,8 +760,8 @@ void TagCache::onTagsFetched(KJob *job)
         qWarning() << "Failed to fetch tags: " << job->errorString();
         return;
     }
-    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
-    Q_FOREACH( const Akonadi::Tag &tag, fetchJob->tags() ) {
+    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob *>(job);
+    Q_FOREACH (const Akonadi::Tag &tag, fetchJob->tags()) {
         mCache.insert(tag.id(), new Akonadi::Tag(tag));
     }
     MessageItemPrivate *m = mRequests.take(fetchJob);

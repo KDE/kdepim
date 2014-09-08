@@ -37,9 +37,9 @@ namespace Core
 class SortOrder
 {
     Q_GADGET
-    Q_ENUMS( GroupSorting )
-    Q_ENUMS( SortDirection )
-    Q_ENUMS( MessageSorting )
+    Q_ENUMS(GroupSorting)
+    Q_ENUMS(SortDirection)
+    Q_ENUMS(MessageSorting)
 
 public:
 
@@ -48,8 +48,7 @@ public:
     * If you add values here please look at the implementations of the enumerate* functions
     * and add appropriate descriptors.
     */
-    enum GroupSorting
-    {
+    enum GroupSorting {
         NoGroupSorting,                      ///< Don't sort the groups at all, add them as they come in
         SortGroupsByDateTime,                ///< Sort groups by date/time of the group
         SortGroupsByDateTimeOfMostRecent,    ///< Sort groups by date/time of the most recent message
@@ -64,8 +63,7 @@ public:
     * If you add values here please look at the implementations of the enumerate* functions
     * and add appropriate descriptors.
     */
-    enum SortDirection
-    {
+    enum SortDirection {
         Ascending,
         Descending
     };
@@ -75,8 +73,7 @@ public:
     * If you add values here please look at the implementations of the enumerate* functions
     * and add appropriate descriptors.
     */
-    enum MessageSorting
-    {
+    enum MessageSorting {
         NoMessageSorting,                    ///< Don't sort the messages at all
         SortMessagesByDateTime,              ///< Sort the messages by date and time
         SortMessagesByDateTimeOfMostRecent,  ///< Sort the messages by date and time of the most recent message in subtree
@@ -98,60 +95,76 @@ public:
     * Returns the GroupSorting
     */
     GroupSorting groupSorting() const
-    { return mGroupSorting; }
+    {
+        return mGroupSorting;
+    }
 
     /**
     * Sets the GroupSorting option.
     * This may not have any effect, depending on the Aggregation this sort order
     * is used in.
     */
-    void setGroupSorting( GroupSorting gs )
-    { mGroupSorting = gs; }
+    void setGroupSorting(GroupSorting gs)
+    {
+        mGroupSorting = gs;
+    }
 
     /**
     * Returns the current group SortDirection.
     */
     SortDirection groupSortDirection() const
-    { return mGroupSortDirection; }
+    {
+        return mGroupSortDirection;
+    }
 
     /**
     * Sets the SortDirection for the groups.
     * Note that this option has no meaning if group sorting is set to NoGroupSorting.
     */
-    void setGroupSortDirection( SortDirection groupSortDirection )
-    { mGroupSortDirection = groupSortDirection; }
+    void setGroupSortDirection(SortDirection groupSortDirection)
+    {
+        mGroupSortDirection = groupSortDirection;
+    }
 
     /**
     * Returns the current message sorting option
     */
     MessageSorting messageSorting() const
-    { return mMessageSorting; }
+    {
+        return mMessageSorting;
+    }
 
     /**
     * Sets the current message sorting option
     */
-    void setMessageSorting( MessageSorting ms )
-    { mMessageSorting = ms; }
+    void setMessageSorting(MessageSorting ms)
+    {
+        mMessageSorting = ms;
+    }
 
     /**
     * Returns the current message SortDirection.
     */
     SortDirection messageSortDirection() const
-    { return mMessageSortDirection; }
+    {
+        return mMessageSortDirection;
+    }
 
     /**
     * Sets the SortDirection for the message.
     * Note that this option has no meaning if message sorting is set to NoMessageSorting.
     */
-    void setMessageSortDirection( SortDirection messageSortDirection )
-    { mMessageSortDirection = messageSortDirection; }
+    void setMessageSortDirection(SortDirection messageSortDirection)
+    {
+        mMessageSortDirection = messageSortDirection;
+    }
 
     /**
     * Enumerates the message sorting options compatible with the specified Threading setting.
     * The returned descriptors are pairs in that the first item is the localized description
     * of the option value and the second item is the integer option value itself.
     */
-    static QList< QPair< QString, int > > enumerateMessageSortingOptions( Aggregation::Threading t );
+    static QList< QPair< QString, int > > enumerateMessageSortingOptions(Aggregation::Threading t);
 
     /**
     * Enumerates the available message sorting directions for the specified MessageSorting option.
@@ -159,7 +172,7 @@ public:
     * of the option value and the second item is the integer option value itself.
     * If the returned list is empty then the value of the option is meaningless in the current context.
     */
-    static QList< QPair< QString, int > > enumerateMessageSortDirectionOptions( MessageSorting ms );
+    static QList< QPair< QString, int > > enumerateMessageSortDirectionOptions(MessageSorting ms);
 
     /**
     * Enumerates the group sorting options compatible with the specified Grouping.
@@ -167,7 +180,7 @@ public:
     * of the option value and the second item is the integer option value itself.
     * If the returned list is empty then the value of the option is meaningless in the current context.
     */
-    static QList< QPair< QString, int > > enumerateGroupSortingOptions( Aggregation::Grouping g );
+    static QList< QPair< QString, int > > enumerateGroupSortingOptions(Aggregation::Grouping g);
 
     /**
     * Enumerates the group sort direction options compatible with the specified Grouping and GroupSorting.
@@ -175,15 +188,15 @@ public:
     * of the option value and the second item is the integer option value itself.
     * If the returned list is empty then the value of the option is meaningless in the current context.
     */
-    static QList< QPair< QString, int > > enumerateGroupSortDirectionOptions( Aggregation::Grouping g,
-                                                                              GroupSorting groupSorting );
+    static QList< QPair< QString, int > > enumerateGroupSortDirectionOptions(Aggregation::Grouping g,
+            GroupSorting groupSorting);
 
     /**
      * Checks if this sort order can be used in combination with the given aggregation.
      * Some combinations are not valid, for example the message sorting
      * "most recent in subtree" with a non-threaded aggregation.
      */
-    bool validForAggregation( const Aggregation *aggregation ) const;
+    bool validForAggregation(const Aggregation *aggregation) const;
 
     /**
      * Returns the default sort order for the given aggregation.
@@ -191,13 +204,13 @@ public:
      *                     will be based on that old sort order, i.e. the message sorting and
      *                     message sort direction is adopted.
      */
-    static SortOrder defaultForAggregation( const Aggregation *aggregation,
-                                            const SortOrder &oldSortOrder );
+    static SortOrder defaultForAggregation(const Aggregation *aggregation,
+                                           const SortOrder &oldSortOrder);
 
     /**
     * Returns true if the ms parameter specifies a valid MessageSorting option.
     */
-    static bool isValidMessageSorting( SortOrder::MessageSorting ms );
+    static bool isValidMessageSorting(SortOrder::MessageSorting ms);
 
     /**
      * Reads the sort order from a config group.
@@ -207,8 +220,8 @@ public:
      *                                    is private for that folder, and false if the
      *                                    sort order is the global sort order.
      */
-    void readConfig( KConfigGroup &conf, const QString &storageId,
-                     bool *storageUsesPrivateSortOrder );
+    void readConfig(KConfigGroup &conf, const QString &storageId,
+                    bool *storageUsesPrivateSortOrder);
 
     /**
      * Writes the sort order to a config group.
@@ -216,20 +229,20 @@ public:
      *                                    global sort order.
      * @sa readConfig
      */
-    void writeConfig( KConfigGroup &conf, const QString &storageId,
-                      bool storageUsesPrivateSortOrder ) const;
+    void writeConfig(KConfigGroup &conf, const QString &storageId,
+                     bool storageUsesPrivateSortOrder) const;
 
 private:
 
     // Helper function to convert an enum value to a string and back
-    static const QString nameForSortDirection( SortDirection sortDirection );
-    static const QString nameForMessageSorting( MessageSorting messageSorting );
-    static const QString nameForGroupSorting( GroupSorting groupSorting );
-    static SortDirection sortDirectionForName( const QString& name );
-    static MessageSorting messageSortingForName( const QString& name );
-    static GroupSorting groupSortingForName( const QString& name );
+    static const QString nameForSortDirection(SortDirection sortDirection);
+    static const QString nameForMessageSorting(MessageSorting messageSorting);
+    static const QString nameForGroupSorting(GroupSorting groupSorting);
+    static SortDirection sortDirectionForName(const QString &name);
+    static MessageSorting messageSortingForName(const QString &name);
+    static GroupSorting groupSortingForName(const QString &name);
 
-    bool readConfigHelper( KConfigGroup &conf, const QString &id );
+    bool readConfigHelper(KConfigGroup &conf, const QString &id);
 
     MessageSorting mMessageSorting;
     SortDirection mMessageSortDirection;

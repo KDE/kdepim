@@ -31,13 +31,15 @@ class QToolButton;
 class QPushButton;
 class QSignalMapper;
 class QPushButton;
-namespace MessageList {
-namespace Core {
+namespace MessageList
+{
+namespace Core
+{
 class MESSAGELIST_EXPORT QuickSearchLine : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QuickSearchLine(QWidget *parent=0);
+    explicit QuickSearchLine(QWidget *parent = 0);
     ~QuickSearchLine();
 
     enum SearchOption {
@@ -83,7 +85,7 @@ private slots:
     void slotSearchOptionChanged();
     void slotSearchEditTextEdited(const QString &text);
     void slotClearButtonClicked();
-    void slotMoreOptionClicked(bool b);    
+    void slotMoreOptionClicked(bool b);
     void slotSearchBy();
 
 private:

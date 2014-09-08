@@ -34,14 +34,14 @@ class View;
 class Delegate : public ThemeDelegate
 {
 public:
-    explicit Delegate( View *pParent );
+    explicit Delegate(View *pParent);
     ~Delegate();
 
 protected:
     /**
-   * Returns the Item for the specified model index. Reimplemented from ThemeDelegate.
-   */
-    virtual Item * itemFromIndex( const QModelIndex &index ) const;
+    * Returns the Item for the specified model index. Reimplemented from ThemeDelegate.
+    */
+    virtual Item *itemFromIndex(const QModelIndex &index) const;
 };
 
 } // namespace Core

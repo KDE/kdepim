@@ -26,59 +26,64 @@
 
 using namespace MessageList::Utils;
 
-void ComboBoxUtils::fillIntegerOptionCombo( KComboBox *combo, const QList< QPair< QString, int > > &optionDescriptors )
+void ComboBoxUtils::fillIntegerOptionCombo(KComboBox *combo, const QList< QPair< QString, int > > &optionDescriptors)
 {
-    int val = getIntegerOptionComboValue( combo, -1 );
+    int val = getIntegerOptionComboValue(combo, -1);
     combo->clear();
     int valIdx = -1;
     int idx = 0;
 
-    QList< QPair< QString, int > >::ConstIterator end( optionDescriptors.end() );
+    QList< QPair< QString, int > >::ConstIterator end(optionDescriptors.end());
 
-    for( QList< QPair< QString, int > >::ConstIterator it = optionDescriptors.constBegin(); it != end; ++it )
-    {
-        if ( val == (*it).second )
+    for (QList< QPair< QString, int > >::ConstIterator it = optionDescriptors.constBegin(); it != end; ++it) {
+        if (val == (*it).second) {
             valIdx = idx;
-        combo->addItem( (*it).first, QVariant( (*it).second ) );
+        }
+        combo->addItem((*it).first, QVariant((*it).second));
         ++idx;
     }
-    if ( idx == 0)
-    {
-        combo->addItem( QLatin1String("-"), QVariant( (int)0 ) ); // always default to 0
-        combo->setEnabled( false );
+    if (idx == 0) {
+        combo->addItem(QLatin1String("-"), QVariant((int)0));     // always default to 0
+        combo->setEnabled(false);
     } else {
-        if ( !combo->isEnabled() )
-            combo->setEnabled( true );
-        if ( valIdx >= 0 )
-            combo->setCurrentIndex( valIdx );
-        if ( combo->count() == 1 )
-            combo->setEnabled( false ); // disable when there is no choice
+        if (!combo->isEnabled()) {
+            combo->setEnabled(true);
+        }
+        if (valIdx >= 0) {
+            combo->setCurrentIndex(valIdx);
+        }
+        if (combo->count() == 1) {
+            combo->setEnabled(false);    // disable when there is no choice
+        }
     }
 }
 
-void ComboBoxUtils::setIntegerOptionComboValue( KComboBox *combo, int value )
+void ComboBoxUtils::setIntegerOptionComboValue(KComboBox *combo, int value)
 {
-    if(combo->itemData(combo->currentIndex()).toInt() == value) {
+    if (combo->itemData(combo->currentIndex()).toInt() == value) {
         return;
     }
     int index = combo->findData(value);
-    if(index!=-1)
-        combo->setCurrentIndex( index );
-    else
-        combo->setCurrentIndex( 0 ); // default
+    if (index != -1) {
+        combo->setCurrentIndex(index);
+    } else {
+        combo->setCurrentIndex(0);    // default
+    }
 }
 
-int ComboBoxUtils::getIntegerOptionComboValue( KComboBox *combo, int defaultValue )
+int ComboBoxUtils::getIntegerOptionComboValue(KComboBox *combo, int defaultValue)
 {
     const int idx = combo->currentIndex();
-    if ( idx < 0 )
+    if (idx < 0) {
         return defaultValue;
+    }
 
-    QVariant data = combo->itemData( idx );
+    QVariant data = combo->itemData(idx);
     bool ok;
-    const int val = data.toInt( &ok );
-    if ( !ok )
+    const int val = data.toInt(&ok);
+    if (!ok) {
         return defaultValue;
+    }
     return val;
 }
 

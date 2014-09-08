@@ -18,7 +18,6 @@
 
 */
 
-
 #ifndef QUICKSEARCHLINETEST_H
 #define QUICKSEARCHLINETEST_H
 

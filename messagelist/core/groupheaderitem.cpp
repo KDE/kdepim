@@ -22,8 +22,8 @@
 
 using namespace MessageList::Core;
 
-GroupHeaderItem::GroupHeaderItem( const QString &label )
-    : Item( GroupHeader ), mLabel( label )
+GroupHeaderItem::GroupHeaderItem(const QString &label)
+    : Item(GroupHeader), mLabel(label)
 {
 }
 
@@ -31,13 +31,12 @@ GroupHeaderItem::~GroupHeaderItem()
 {
 }
 
-
-const QString & GroupHeaderItem::label() const
+const QString &GroupHeaderItem::label() const
 {
     return mLabel;
 }
 
-void GroupHeaderItem::setLabel( const QString &label )
+void GroupHeaderItem::setLabel(const QString &label)
 {
     mLabel = label;
 }

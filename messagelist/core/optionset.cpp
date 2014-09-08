@@ -34,18 +34,18 @@ static const int gOptionSetWithReadOnLyModeVersion = 0x1002;
 using namespace MessageList::Core;
 
 OptionSet::OptionSet()
-    : mReadOnly( false )
+    : mReadOnly(false)
 {
     generateUniqueId();
 }
 
-OptionSet::OptionSet( const OptionSet &set )
-    : mId( set.mId ), mName( set.mName ), mDescription( set.mDescription ), mReadOnly( set.mReadOnly )
+OptionSet::OptionSet(const OptionSet &set)
+    : mId(set.mId), mName(set.mName), mDescription(set.mDescription), mReadOnly(set.mReadOnly)
 {
 }
 
-OptionSet::OptionSet( const QString &name, const QString &description, bool readOnly )
-    : mName( name ), mDescription( description ), mReadOnly( readOnly )
+OptionSet::OptionSet(const QString &name, const QString &description, bool readOnly)
+    : mName(name), mDescription(description), mReadOnly(readOnly)
 {
     generateUniqueId();
 }
@@ -58,7 +58,7 @@ void OptionSet::generateUniqueId()
 {
     static int nextUniqueId = 0;
     nextUniqueId++;
-    mId = QString::fromLatin1( "%1-%2" ).arg( (unsigned int)::time(0) ).arg( nextUniqueId );
+    mId = QString::fromLatin1("%1-%2").arg((unsigned int)::time(0)).arg(nextUniqueId);
 }
 
 QString OptionSet::saveToString() const
@@ -66,7 +66,7 @@ QString OptionSet::saveToString() const
     QByteArray raw;
 
     {
-        QDataStream s( &raw, QIODevice::WriteOnly );
+        QDataStream s(&raw, QIODevice::WriteOnly);
 
         s << gOptionSetInitialMarker;
         s << gOptionSetWithReadOnLyModeVersion;
@@ -75,58 +75,65 @@ QString OptionSet::saveToString() const
         s << mDescription;
         s << mReadOnly;
 
-        save( s );
+        save(s);
 
         s << gOptionSetFinalMarker;
     }
 
-    return QString::fromLatin1( raw.toHex() );
+    return QString::fromLatin1(raw.toHex());
 }
 
-bool OptionSet::loadFromString(const QString &data )
+bool OptionSet::loadFromString(const QString &data)
 {
-    QByteArray raw = QByteArray::fromHex( data.toLatin1() );
+    QByteArray raw = QByteArray::fromHex(data.toLatin1());
 
-    QDataStream s( &raw, QIODevice::ReadOnly );
+    QDataStream s(&raw, QIODevice::ReadOnly);
 
     int marker;
 
     s >> marker;
 
-    if ( marker != gOptionSetInitialMarker )
-        return false; // invalid configuration
+    if (marker != gOptionSetInitialMarker) {
+        return false;    // invalid configuration
+    }
 
     int currentVersion;
 
     s >> currentVersion;
 
-    if ( currentVersion > gOptionSetWithReadOnLyModeVersion)
-        return false; // invalid configuration
+    if (currentVersion > gOptionSetWithReadOnLyModeVersion) {
+        return false;    // invalid configuration
+    }
 
     s >> mId;
 
-    if ( mId.isEmpty() )
-        return false; // invalid configuration
+    if (mId.isEmpty()) {
+        return false;    // invalid configuration
+    }
 
     s >> mName;
 
-    if ( mName.isEmpty() )
-        return false; // invalid configuration
+    if (mName.isEmpty()) {
+        return false;    // invalid configuration
+    }
 
     s >> mDescription;
 
     bool readOnly = false;
-    if ( currentVersion == gOptionSetWithReadOnLyModeVersion )
+    if (currentVersion == gOptionSetWithReadOnLyModeVersion) {
         s >> readOnly;
+    }
     mReadOnly = readOnly;
 
-    if ( !load( s ) )
-        return false; // invalid configuration
+    if (!load(s)) {
+        return false;    // invalid configuration
+    }
 
     s >> marker;
 
-    if ( marker != gOptionSetFinalMarker )
-        return false; // invalid configuration
+    if (marker != gOptionSetFinalMarker) {
+        return false;    // invalid configuration
+    }
 
     return true;
 }

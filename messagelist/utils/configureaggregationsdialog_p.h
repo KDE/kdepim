@@ -49,39 +49,39 @@ class AggregationListWidgetItem;
 class ConfigureAggregationsDialog::Private
 {
 public:
-  Private( ConfigureAggregationsDialog *owner )
-    : q( owner ) { }
+    Private(ConfigureAggregationsDialog *owner)
+        : q(owner) { }
 
-  // Private implementation
+    // Private implementation
 
-  void fillAggregationList();
-  QString uniqueNameForAggregation( const QString& baseName, Core::Aggregation * skipAggregation = 0 );
-  AggregationListWidgetItem * findAggregationItemByName( const QString &name, Core::Aggregation * skipAggregation = 0 );
-  AggregationListWidgetItem * findAggregationItemByAggregation( Core::Aggregation * set );
-  AggregationListWidgetItem * findAggregationItemById( const QString &aggregationId );
-  void commitEditor();
+    void fillAggregationList();
+    QString uniqueNameForAggregation(const QString &baseName, Core::Aggregation *skipAggregation = 0);
+    AggregationListWidgetItem *findAggregationItemByName(const QString &name, Core::Aggregation *skipAggregation = 0);
+    AggregationListWidgetItem *findAggregationItemByAggregation(Core::Aggregation *set);
+    AggregationListWidgetItem *findAggregationItemById(const QString &aggregationId);
+    void commitEditor();
 
-  // Private slots
+    // Private slots
 
-  void aggregationListItemClicked(QListWidgetItem* cur);
-  void newAggregationButtonClicked();
-  void cloneAggregationButtonClicked();
-  void deleteAggregationButtonClicked();
-  void editedAggregationNameChanged();
-  void okButtonClicked();
-  void exportAggregationButtonClicked();
-  void importAggregationButtonClicked();
-  void updateButton(QListWidgetItem* cur);
+    void aggregationListItemClicked(QListWidgetItem *cur);
+    void newAggregationButtonClicked();
+    void cloneAggregationButtonClicked();
+    void deleteAggregationButtonClicked();
+    void editedAggregationNameChanged();
+    void okButtonClicked();
+    void exportAggregationButtonClicked();
+    void importAggregationButtonClicked();
+    void updateButton(QListWidgetItem *cur);
 
-  ConfigureAggregationsDialog * const q;
+    ConfigureAggregationsDialog *const q;
 
-  AggregationListWidget *mAggregationList;
-  AggregationEditor *mEditor;
-  QPushButton *mNewAggregationButton;
-  QPushButton *mCloneAggregationButton;
-  QPushButton *mDeleteAggregationButton;
-  QPushButton *mExportAggregationButton;
-  QPushButton *mImportAggregationButton;
+    AggregationListWidget *mAggregationList;
+    AggregationEditor *mEditor;
+    QPushButton *mNewAggregationButton;
+    QPushButton *mCloneAggregationButton;
+    QPushButton *mDeleteAggregationButton;
+    QPushButton *mExportAggregationButton;
+    QPushButton *mImportAggregationButton;
 };
 
 } // namespace Utils

@@ -47,47 +47,49 @@ class AggregationEditor : public OptionSetEditor
 {
     Q_OBJECT
 public:
-    explicit AggregationEditor( QWidget *parent );
+    explicit AggregationEditor(QWidget *parent);
     ~AggregationEditor();
 
 private:
-    Core::Aggregation * mCurrentAggregation; // shallow, may be null!
+    Core::Aggregation *mCurrentAggregation;  // shallow, may be null!
 
     // Grouping, Threading and Sorting tab
-    KComboBox * mGroupingCombo;
-    KComboBox * mGroupExpandPolicyCombo;
-    KComboBox * mThreadingCombo;
-    KComboBox * mThreadLeaderCombo;
-    KComboBox * mThreadExpandPolicyCombo;
+    KComboBox *mGroupingCombo;
+    KComboBox *mGroupExpandPolicyCombo;
+    KComboBox *mThreadingCombo;
+    KComboBox *mThreadLeaderCombo;
+    KComboBox *mThreadExpandPolicyCombo;
     // Advanced tab
-    KComboBox * mFillViewStrategyCombo;
+    KComboBox *mFillViewStrategyCombo;
 
 public:
     /**
-   * Sets the Aggregation to be edited.
-   * Saves and forgets any previously Aggregation that was being edited.
-   * The set parameter may be 0: in this case the editor is simply disabled.
-   */
-    void editAggregation( Core::Aggregation *set );
+    * Sets the Aggregation to be edited.
+    * Saves and forgets any previously Aggregation that was being edited.
+    * The set parameter may be 0: in this case the editor is simply disabled.
+    */
+    void editAggregation(Core::Aggregation *set);
 
     /**
-   * Returns the Aggregation currently edited by this AggregationEditor.
-   * May be 0.
-   */
-    Core::Aggregation * editedAggregation() const
-    { return mCurrentAggregation; }
+    * Returns the Aggregation currently edited by this AggregationEditor.
+    * May be 0.
+    */
+    Core::Aggregation *editedAggregation() const
+    {
+        return mCurrentAggregation;
+    }
 
     /**
-   * Explicitly commits the changes in the editor to the edited Aggregation, if any.
-   */
+    * Explicitly commits the changes in the editor to the edited Aggregation, if any.
+    */
     void commit();
 
 signals:
     /**
-   * This is triggered when the aggregation name changes in the editor text field.
-   * It's connected to the Aggregation configuration dialog which updates
-   * the list of aggregations with the new name.
-   */
+    * This is triggered when the aggregation name changes in the editor text field.
+    * It's connected to the Aggregation configuration dialog which updates
+    * the list of aggregations with the new name.
+    */
     void aggregationNameChanged();
 
 private:
@@ -106,9 +108,9 @@ private slots:
 
     // Internal handlers for editing element interaction
 
-    void groupingComboActivated( int idx );
-    void threadingComboActivated( int idx );
-    virtual void slotNameEditTextEdited( const QString &newName );
+    void groupingComboActivated(int idx);
+    void threadingComboActivated(int idx);
+    virtual void slotNameEditTextEdited(const QString &newName);
 
 };
 

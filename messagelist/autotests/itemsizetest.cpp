@@ -26,22 +26,22 @@ using namespace MessageList::Core;
 
 class ItemSizeTest : public QObject
 {
-  Q_OBJECT
-  private slots:
+    Q_OBJECT
+private slots:
 
     void testItemSize()
     {
-      qDebug() << sizeof(Item);
-      QVERIFY( sizeof(Item) <= 16 );
-      qDebug() << sizeof(ItemPrivate);
-      QVERIFY( sizeof(ItemPrivate) <= 120 );
-      qDebug() << sizeof(MessageItem);
-      QVERIFY( sizeof(MessageItem) <= 32 );
-      qDebug() << sizeof(MessageItemPrivate);
-      QVERIFY( sizeof(MessageItemPrivate) <= 192 );
+        qDebug() << sizeof(Item);
+        QVERIFY(sizeof(Item) <= 16);
+        qDebug() << sizeof(ItemPrivate);
+        QVERIFY(sizeof(ItemPrivate) <= 120);
+        qDebug() << sizeof(MessageItem);
+        QVERIFY(sizeof(MessageItem) <= 32);
+        qDebug() << sizeof(MessageItemPrivate);
+        QVERIFY(sizeof(MessageItemPrivate) <= 192);
     }
 };
 
-QTEST_MAIN( ItemSizeTest )
+QTEST_MAIN(ItemSizeTest)
 
 #include "itemsizetest.moc"

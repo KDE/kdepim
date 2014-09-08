@@ -52,16 +52,16 @@ public:
     ~MessageItemSetManager();
 
 private:
-    QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * > * mSets;
+    QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * > *mSets;
 
 public:
     void clearAllSets();
     int setCount() const;
-    void removeSet( MessageItemSetReference ref );
-    void removeMessageItemFromAllSets( MessageItem * mi );
-    QList< MessageItem * > messageItems( MessageItemSetReference ref );
+    void removeSet(MessageItemSetReference ref);
+    void removeMessageItemFromAllSets(MessageItem *mi);
+    QList< MessageItem * > messageItems(MessageItemSetReference ref);
     MessageItemSetReference createSet();
-    bool addMessageItem( MessageItemSetReference ref, MessageItem * mi );
+    bool addMessageItem(MessageItemSetReference ref, MessageItem *mi);
 };
 
 } // namespace Core

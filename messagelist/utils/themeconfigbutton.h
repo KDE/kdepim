@@ -41,23 +41,23 @@ class MESSAGELIST_EXPORT ThemeConfigButton : public QPushButton
 
 public:
     /** Constructor.
-   * @param parent The parent widget for the button.
-   * @param themeComboBox Optional ThemeComboBox to be kept in sync
-   * with changes made by the configure dialog.
-   */
-    explicit ThemeConfigButton( QWidget * parent, const ThemeComboBox * themeComboBox = 0 );
+    * @param parent The parent widget for the button.
+    * @param themeComboBox Optional ThemeComboBox to be kept in sync
+    * with changes made by the configure dialog.
+    */
+    explicit ThemeConfigButton(QWidget *parent, const ThemeComboBox *themeComboBox = 0);
     ~ThemeConfigButton();
 
 signals:
     /**
-   * A signal emitted when configure dialog has been successfully completed.
-   */
+    * A signal emitted when configure dialog has been successfully completed.
+    */
     void configureDialogCompleted();
 
 private:
     Q_PRIVATE_SLOT(d, void slotConfigureThemes())
 
-    ThemeConfigButtonPrivate * const d;
+    ThemeConfigButtonPrivate *const d;
 };
 
 } // namespace Utils

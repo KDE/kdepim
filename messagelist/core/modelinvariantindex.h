@@ -53,31 +53,30 @@ public:
 
 public:
     /**
-   * Returns true if this ModelInvariantIndex is valid, that is, it has been attacched
-   * to a ModelInvariantRowMapper. Returns false otherwise.
-   * An invalid index will always map to the current row -1 (which is invalid as QModelIndex row).
-   */
+    * Returns true if this ModelInvariantIndex is valid, that is, it has been attacched
+    * to a ModelInvariantRowMapper. Returns false otherwise.
+    * An invalid index will always map to the current row -1 (which is invalid as QModelIndex row).
+    */
     bool isValid() const;
 
     /**
-   * Returns the current model index row for this invariant index. This function
-   * calls the mapper and asks it to perform the persistent mapping.
-   * If this index isn't valid then the returned value is -1.
-   *
-   * If you actually own the row mapper then you may save some clock cycles
-   * by calling the modelInvariantIndexToModelIndexRow() by your own. If you don't
-   * own the mapper then this function is the only way to go.
-   */
+    * Returns the current model index row for this invariant index. This function
+    * calls the mapper and asks it to perform the persistent mapping.
+    * If this index isn't valid then the returned value is -1.
+    *
+    * If you actually own the row mapper then you may save some clock cycles
+    * by calling the modelInvariantIndexToModelIndexRow() by your own. If you don't
+    * own the mapper then this function is the only way to go.
+    */
     int currentModelIndexRow();
 
 private:
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 } // namespace Core
 
 } // namespace MessageList
-
 
 #endif //!__MESSAGELIST_CORE_MODELINVARIANTINDEX_H__

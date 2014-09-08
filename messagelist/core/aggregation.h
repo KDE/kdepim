@@ -45,12 +45,11 @@ class Aggregation : public OptionSet
 public:
 
     /**
-   * Message grouping.
-   * If you add values here please look at the implementations of the enumerate* functions
-   * and add appropriate descriptors.
-   */
-    enum Grouping
-    {
+    * Message grouping.
+    * If you add values here please look at the implementations of the enumerate* functions
+    * and add appropriate descriptors.
+    */
+    enum Grouping {
         NoGrouping,                          ///< Don't group messages at all
         GroupByDate,                         ///< Group the messages by the date of the thread leader
         GroupByDateRange,                    ///< Use smart (thread leader) date ranges ("Today","Yesterday","Last Week"...)
@@ -63,12 +62,11 @@ public:
     };
 
     /**
-   * The available group expand policies.
-   * If you add values here please look at the implementations of the enumerate* functions
-   * and add appropriate descriptors.
-   */
-    enum GroupExpandPolicy
-    {
+    * The available group expand policies.
+    * If you add values here please look at the implementations of the enumerate* functions
+    * and add appropriate descriptors.
+    */
+    enum GroupExpandPolicy {
         NeverExpandGroups,                   ///< Never expand groups during a view fill algorithm
         ExpandRecentGroups,                  ///< Makes sense only with GroupByDate or GroupByDateRange
         AlwaysExpandGroups                   ///< All groups are expanded as they are inserted
@@ -76,12 +74,11 @@ public:
     };
 
     /**
-   * The available threading methods.
-   * If you add values here please look at the implementations of the enumerate* functions
-   * and add appropriate descriptors.
-   */
-    enum Threading
-    {
+    * The available threading methods.
+    * If you add values here please look at the implementations of the enumerate* functions
+    * and add appropriate descriptors.
+    */
+    enum Threading {
         NoThreading,                         ///< Perform no threading at all
         PerfectOnly,                         ///< Thread by "In-Reply-To" field only
         PerfectAndReferences,                ///< Thread by "In-Reply-To" and "References" fields
@@ -90,24 +87,22 @@ public:
     };
 
     /**
-   * The available thread leading options. Meaningless when threading is set to NoThreading.
-   * If you add values here please look at the implementations of the enumerate* functions
-   * and add appropriate descriptors.
-   */
-    enum ThreadLeader
-    {
+    * The available thread leading options. Meaningless when threading is set to NoThreading.
+    * If you add values here please look at the implementations of the enumerate* functions
+    * and add appropriate descriptors.
+    */
+    enum ThreadLeader {
         TopmostMessage,                      ///< The thread grouping is computed from the topmost message (very similar to least recent, but might be different if timezones or machine clocks are screwed)
         MostRecentMessage                    ///< The thread grouping is computed from the most recent message
         // Never add enum entries in the middle: always add them at the end (numeric values are stored in configuration)
     };
 
     /**
-   * The available thread expand policies. Meaningless when threading is set to NoThreading.
-   * If you add values here please look at the implementations of the enumerate* functions
-   * and add appropriate descriptors.
-   */
-    enum ThreadExpandPolicy
-    {
+    * The available thread expand policies. Meaningless when threading is set to NoThreading.
+    * If you add values here please look at the implementations of the enumerate* functions
+    * and add appropriate descriptors.
+    */
+    enum ThreadExpandPolicy {
         NeverExpandThreads,                                ///< Never expand any thread, this is fast
         ExpandThreadsWithNewMessages,                      ///< DEPRECATED. New message status no longer exists.
         ExpandThreadsWithUnreadMessages,                   ///< Expand threads with unread messages (this includes new)
@@ -117,12 +112,11 @@ public:
     };
 
     /**
-   * The available fill view strategies.
-   * If you add values here please look at the implementations of the enumerate* functions
-   * and add appropriate descriptors.
-   */
-    enum FillViewStrategy
-    {
+    * The available fill view strategies.
+    * If you add values here please look at the implementations of the enumerate* functions
+    * and add appropriate descriptors.
+    */
+    enum FillViewStrategy {
         FavorInteractivity,                  ///< Do small chunks of work, small intervals between chunks to allow for UI event processing
         FavorSpeed,                          ///< Do larger chunks of work, zero intervals between chunks
         BatchNoInteractivity                 ///< Do one large chunk, no interactivity at all
@@ -139,155 +133,179 @@ private:
 
 public:
     explicit Aggregation();
-    explicit Aggregation( const Aggregation &opt );
+    explicit Aggregation(const Aggregation &opt);
     explicit Aggregation(
-            const QString &name,
-            const QString &description,
-            Grouping grouping,
-            GroupExpandPolicy groupExpandPolicy,
-            Threading threading,
-            ThreadLeader threadLeader,
-            ThreadExpandPolicy threadExpandPolicy,
-            FillViewStrategy fillViewStrategy,
-            bool readOnly );
-    static bool compareName( Aggregation *agg1, Aggregation *agg2 )
+        const QString &name,
+        const QString &description,
+        Grouping grouping,
+        GroupExpandPolicy groupExpandPolicy,
+        Threading threading,
+        ThreadLeader threadLeader,
+        ThreadExpandPolicy threadExpandPolicy,
+        FillViewStrategy fillViewStrategy,
+        bool readOnly);
+    static bool compareName(Aggregation *agg1, Aggregation *agg2)
     {
-        return ( agg1->name() < agg2->name() );
+        return (agg1->name() < agg2->name());
     }
 
 public:
     /**
-   * Returns the currently set Grouping option.
-   */
+    * Returns the currently set Grouping option.
+    */
     Grouping grouping() const
-    { return mGrouping; }
+    {
+        return mGrouping;
+    }
 
     /**
-   * Sets the Grouping option.
-   */
-    void setGrouping( Grouping g )
-    { mGrouping = g; }
+    * Sets the Grouping option.
+    */
+    void setGrouping(Grouping g)
+    {
+        mGrouping = g;
+    }
 
     /**
-   * Enumerates the available grouping options as a QList of
-   * pairs in that the first item is the localized description of the
-   * option value and the second item is the integer option value itself.
-   */
+    * Enumerates the available grouping options as a QList of
+    * pairs in that the first item is the localized description of the
+    * option value and the second item is the integer option value itself.
+    */
     static QList< QPair< QString, int > > enumerateGroupingOptions();
 
     /**
-   * Returns the current GroupExpandPolicy.
-   */
+    * Returns the current GroupExpandPolicy.
+    */
     GroupExpandPolicy groupExpandPolicy() const
-    { return mGroupExpandPolicy; }
+    {
+        return mGroupExpandPolicy;
+    }
 
     /**
-   * Sets the GroupExpandPolicy for the groups.
-   * Note that this option has no meaning if grouping is set to NoGrouping.
-   */
-    void setGroupExpandPolicy( GroupExpandPolicy groupExpandPolicy )
-    { mGroupExpandPolicy = groupExpandPolicy; }
+    * Sets the GroupExpandPolicy for the groups.
+    * Note that this option has no meaning if grouping is set to NoGrouping.
+    */
+    void setGroupExpandPolicy(GroupExpandPolicy groupExpandPolicy)
+    {
+        mGroupExpandPolicy = groupExpandPolicy;
+    }
 
     /**
-   * Enumerates the group sort direction options compatible with the specified Grouping.
-   * The returned descriptors are pairs in that the first item is the localized description
-   * of the option value and the second item is the integer option value itself.
-   * If the returned list is empty then the value of the option is meaningless in the current context.
-   */
-    static QList< QPair< QString, int > > enumerateGroupExpandPolicyOptions( Grouping g );
+    * Enumerates the group sort direction options compatible with the specified Grouping.
+    * The returned descriptors are pairs in that the first item is the localized description
+    * of the option value and the second item is the integer option value itself.
+    * If the returned list is empty then the value of the option is meaningless in the current context.
+    */
+    static QList< QPair< QString, int > > enumerateGroupExpandPolicyOptions(Grouping g);
 
     /**
-   * Returns the current threading method.
-   */
+    * Returns the current threading method.
+    */
     Threading threading() const
-    { return mThreading; }
+    {
+        return mThreading;
+    }
 
     /**
-   * Sets the threading method option.
-   */
-    void setThreading( Threading t )
-    { mThreading = t; }
+    * Sets the threading method option.
+    */
+    void setThreading(Threading t)
+    {
+        mThreading = t;
+    }
 
     /**
-   * Enumerates the available threading method options.
-   * The returned descriptors are pairs in that the first item is the localized description
-   * of the option value and the second item is the integer option value itself.
-   */
+    * Enumerates the available threading method options.
+    * The returned descriptors are pairs in that the first item is the localized description
+    * of the option value and the second item is the integer option value itself.
+    */
     static QList< QPair< QString, int > > enumerateThreadingOptions();
 
     /**
-   * Returns the current thread leader determination method.
-   */
+    * Returns the current thread leader determination method.
+    */
     ThreadLeader threadLeader() const
-    { return mThreadLeader; }
+    {
+        return mThreadLeader;
+    }
 
     /**
-   * Sets the current thread leader determination method.
-   * Please note that when Threading is set to NoThreading this value is meaningless
-   * and by policy should be set to TopmostMessage.
-   */
-    void setThreadLeader( ThreadLeader tl )
-    { mThreadLeader = tl; }
+    * Sets the current thread leader determination method.
+    * Please note that when Threading is set to NoThreading this value is meaningless
+    * and by policy should be set to TopmostMessage.
+    */
+    void setThreadLeader(ThreadLeader tl)
+    {
+        mThreadLeader = tl;
+    }
 
     /**
-   * Enumerates the thread leader determination methods compatible with the specified Threading
-   * and the specified Gouping options.
-   * The returned descriptors are pairs in that the first item is the localized description
-   * of the option value and the second item is the integer option value itself.
-   * If the returned list is empty then the value of the option is meaningless in the current context.
-   */
-    static QList< QPair< QString, int > > enumerateThreadLeaderOptions( Grouping g, Threading t );
+    * Enumerates the thread leader determination methods compatible with the specified Threading
+    * and the specified Gouping options.
+    * The returned descriptors are pairs in that the first item is the localized description
+    * of the option value and the second item is the integer option value itself.
+    * If the returned list is empty then the value of the option is meaningless in the current context.
+    */
+    static QList< QPair< QString, int > > enumerateThreadLeaderOptions(Grouping g, Threading t);
 
     /**
-   * Returns the current thread expand policy.
-   */
+    * Returns the current thread expand policy.
+    */
     ThreadExpandPolicy threadExpandPolicy() const
-    { return mThreadExpandPolicy; }
+    {
+        return mThreadExpandPolicy;
+    }
 
     /**
-   * Sets the current thread expand policy.
-   * Please note that when Threading is set to NoThreading this value is meaningless
-   * and by policy should be set to NeverExpandThreads.
-   */
-    void setThreadExpandPolicy( ThreadExpandPolicy threadExpandPolicy )
-    { mThreadExpandPolicy = threadExpandPolicy; }
+    * Sets the current thread expand policy.
+    * Please note that when Threading is set to NoThreading this value is meaningless
+    * and by policy should be set to NeverExpandThreads.
+    */
+    void setThreadExpandPolicy(ThreadExpandPolicy threadExpandPolicy)
+    {
+        mThreadExpandPolicy = threadExpandPolicy;
+    }
 
     /**
-   * Enumerates the thread expand policies compatible with the specified Threading option.
-   * The returned descriptors are pairs in that the first item is the localized description
-   * of the option value and the second item is the integer option value itself.
-   * If the returned list is empty then the value of the option is meaningless in the current context.
-   */
-    static QList< QPair< QString, int > > enumerateThreadExpandPolicyOptions( Threading t );
+    * Enumerates the thread expand policies compatible with the specified Threading option.
+    * The returned descriptors are pairs in that the first item is the localized description
+    * of the option value and the second item is the integer option value itself.
+    * If the returned list is empty then the value of the option is meaningless in the current context.
+    */
+    static QList< QPair< QString, int > > enumerateThreadExpandPolicyOptions(Threading t);
 
     /**
-   * Returns the current fill view strategy.
-   */
+    * Returns the current fill view strategy.
+    */
     FillViewStrategy fillViewStrategy() const
-    { return mFillViewStrategy; }
+    {
+        return mFillViewStrategy;
+    }
 
     /**
-   * Sets the current fill view strategy.
-   */
-    void setFillViewStrategy( FillViewStrategy fillViewStrategy )
-    { mFillViewStrategy = fillViewStrategy; }
+    * Sets the current fill view strategy.
+    */
+    void setFillViewStrategy(FillViewStrategy fillViewStrategy)
+    {
+        mFillViewStrategy = fillViewStrategy;
+    }
 
     /**
-   * Enumerates the fill view strategies.
-   * The returned descriptors are pairs in that the first item is the localized description
-   * of the option value and the second item is the integer option value itself.
-   */
+    * Enumerates the fill view strategies.
+    * The returned descriptors are pairs in that the first item is the localized description
+    * of the option value and the second item is the integer option value itself.
+    */
     static QList< QPair< QString, int > > enumerateFillViewStrategyOptions();
 
     /**
-   * Pure virtual reimplemented from OptionSet.
-   */
-    virtual void save( QDataStream &stream ) const;
+    * Pure virtual reimplemented from OptionSet.
+    */
+    virtual void save(QDataStream &stream) const;
 
     /**
-   * Pure virtual reimplemented from OptionSet.
-   */
-    virtual bool load( QDataStream &stream );
+    * Pure virtual reimplemented from OptionSet.
+    */
+    virtual bool load(QDataStream &stream);
 };
 
 } // namespace Core

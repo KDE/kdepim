@@ -53,16 +53,16 @@ class MESSAGELIST_EXPORT ConfigureAggregationsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ConfigureAggregationsDialog( QWidget *parent = 0 );
+    explicit ConfigureAggregationsDialog(QWidget *parent = 0);
     ~ConfigureAggregationsDialog();
 
-    void selectAggregation( const QString &aggregationId );
+    void selectAggregation(const QString &aggregationId);
 
 Q_SIGNALS:
     void okClicked();
 
 private:
-    Q_PRIVATE_SLOT(d, void aggregationListItemClicked(QListWidgetItem* cur))
+    Q_PRIVATE_SLOT(d, void aggregationListItemClicked(QListWidgetItem *cur))
     Q_PRIVATE_SLOT(d, void newAggregationButtonClicked())
     Q_PRIVATE_SLOT(d, void cloneAggregationButtonClicked())
     Q_PRIVATE_SLOT(d, void deleteAggregationButtonClicked())
@@ -72,7 +72,7 @@ private:
     Q_PRIVATE_SLOT(d, void exportAggregationButtonClicked())
 
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 } // namespace Utils

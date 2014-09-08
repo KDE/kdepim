@@ -19,7 +19,6 @@
 #ifndef __MESSAGELIST_UTILS_AGGREGATIONCOMBOBOX_P_H__
 #define __MESSAGELIST_UTILS_AGGREGATIONCOMBOBOX_P_H__
 
-
 namespace MessageList
 {
 
@@ -37,17 +36,17 @@ class AggregationComboBox;
 class AggregationComboBoxPrivate
 {
 public:
-  explicit AggregationComboBoxPrivate( AggregationComboBox *owner )
-    : q( owner ) { }
+    explicit AggregationComboBoxPrivate(AggregationComboBox *owner)
+        : q(owner) { }
 
-  AggregationComboBox * const q;
+    AggregationComboBox *const q;
 
-  /**
-   * Refresh list of aggregations in the combobox.
-   */
-  void slotLoadAggregations();
+    /**
+     * Refresh list of aggregations in the combobox.
+     */
+    void slotLoadAggregations();
 
-  void setCurrentAggregation( const Core::Aggregation *aggregation );
+    void setCurrentAggregation(const Core::Aggregation *aggregation);
 };
 
 } // namespace Utils

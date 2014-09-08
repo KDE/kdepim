@@ -47,34 +47,34 @@ class OptionSetEditor : public QTabWidget
     Q_OBJECT
 
 public:
-    explicit OptionSetEditor( QWidget *parent );
+    explicit OptionSetEditor(QWidget *parent);
     ~OptionSetEditor();
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
 protected:
 
     /**
-   * Returns the editor for the name of the OptionSet.
-   * Derived classes are responsable of filling this UI element and reading back data from it.
-   */
-    KLineEdit * nameEdit() const;
+    * Returns the editor for the name of the OptionSet.
+    * Derived classes are responsable of filling this UI element and reading back data from it.
+    */
+    KLineEdit *nameEdit() const;
 
     /**
-   * Returns the editor for the description of the OptionSet.
-   * Derived classes are responsable of filling this UI element and reading back data from it.
-   */
-    KTextEdit * descriptionEdit() const;
+    * Returns the editor for the description of the OptionSet.
+    * Derived classes are responsable of filling this UI element and reading back data from it.
+    */
+    KTextEdit *descriptionEdit() const;
 
 protected slots:
     /**
-   * Handles editing of the name field.
-   * Pure virtual slot. Derived classes must provide an implementation.
-   */
-    virtual void slotNameEditTextEdited( const QString &newName ) = 0;
+    * Handles editing of the name field.
+    * Pure virtual slot. Derived classes must provide an implementation.
+    */
+    virtual void slotNameEditTextEdited(const QString &newName) = 0;
 
 private:
-    KLineEdit * mNameEdit;                       ///< The editor for the OptionSet name
-    KTextEdit * mDescriptionEdit;                ///< The editor for the OptionSet description
+    KLineEdit *mNameEdit;                        ///< The editor for the OptionSet name
+    KTextEdit *mDescriptionEdit;                 ///< The editor for the OptionSet description
 
 };
 

@@ -36,9 +36,10 @@ MessageItemSetManager::~MessageItemSetManager()
 
 void MessageItemSetManager::clearAllSets()
 {
-    QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator end( mSets->constEnd() );
-    for ( QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator it = mSets->constBegin(); it != end; ++it )
-        delete ( *it );
+    QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator end(mSets->constEnd());
+    for (QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator it = mSets->constBegin(); it != end; ++it) {
+        delete(*it);
+    }
 
     mSets->clear();
 }
@@ -48,45 +49,48 @@ int MessageItemSetManager::setCount() const
     return mSets->count();
 }
 
-
-void MessageItemSetManager::removeSet( MessageItemSetReference ref )
+void MessageItemSetManager::removeSet(MessageItemSetReference ref)
 {
-    QHash< MessageItem *, MessageItem * > * set = mSets->value( static_cast< unsigned long int >( ref ), 0 );
-    if ( !set )
+    QHash< MessageItem *, MessageItem * > *set = mSets->value(static_cast< unsigned long int >(ref), 0);
+    if (!set) {
         return;
-    mSets->remove( static_cast< unsigned long int >( ref ) );
+    }
+    mSets->remove(static_cast< unsigned long int >(ref));
     delete set;
 }
 
-QList< MessageItem * > MessageItemSetManager::messageItems( MessageItemSetReference ref )
+QList< MessageItem * > MessageItemSetManager::messageItems(MessageItemSetReference ref)
 {
     QList< MessageItem * > ret;
-    QHash< MessageItem *, MessageItem * > * set = mSets->value( static_cast< unsigned long int >( ref ), 0 );
-    if ( !set )
+    QHash< MessageItem *, MessageItem * > *set = mSets->value(static_cast< unsigned long int >(ref), 0);
+    if (!set) {
         return ret;
+    }
 
-    QHash< MessageItem *, MessageItem * >::ConstIterator end( set->constEnd() );
-    for ( QHash< MessageItem *, MessageItem * >::ConstIterator it = set->constBegin(); it != end; ++it )
-        ret.append( *it );
+    QHash< MessageItem *, MessageItem * >::ConstIterator end(set->constEnd());
+    for (QHash< MessageItem *, MessageItem * >::ConstIterator it = set->constBegin(); it != end; ++it) {
+        ret.append(*it);
+    }
 
     return ret;
 }
 
-void MessageItemSetManager::removeMessageItemFromAllSets( MessageItem * mi )
+void MessageItemSetManager::removeMessageItemFromAllSets(MessageItem *mi)
 {
     QList< MessageItemSetReference > setsToBeKilled;
-    QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator end( mSets->end());
+    QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator end(mSets->end());
 
-    for ( QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator it = mSets->constBegin(); it != end; ++it )
-    {
-        ( *it )->remove( mi );
-        if ( ( *it )->isEmpty() )
-            setsToBeKilled.append( it.key() );
+    for (QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * >::ConstIterator it = mSets->constBegin(); it != end; ++it) {
+        (*it)->remove(mi);
+        if ((*it)->isEmpty()) {
+            setsToBeKilled.append(it.key());
+        }
     }
 
-    QList< MessageItemSetReference >::ConstIterator endit2( setsToBeKilled.constEnd() );
-    for ( QList< MessageItemSetReference >::ConstIterator it2 = setsToBeKilled.constBegin(); it2 != endit2; ++it2 )
-        removeSet( *it2 );
+    QList< MessageItemSetReference >::ConstIterator endit2(setsToBeKilled.constEnd());
+    for (QList< MessageItemSetReference >::ConstIterator it2 = setsToBeKilled.constBegin(); it2 != endit2; ++it2) {
+        removeSet(*it2);
+    }
 }
 
 MessageItemSetReference MessageItemSetManager::createSet()
@@ -94,31 +98,31 @@ MessageItemSetReference MessageItemSetManager::createSet()
     static unsigned long int uNextId = 0;
     uNextId++;
 
-    QHash< MessageItem *, MessageItem * > * set = mSets->value( uNextId, 0 );
+    QHash< MessageItem *, MessageItem * > *set = mSets->value(uNextId, 0);
 
     // Here we assume that having 2^32 sets is impossible
     // (that would be _at_least_ 2^32 * 8 bytes of allocated memory which is
     // quite a lot...)
 
-    while( set )
-    {
+    while (set) {
         uNextId++;
-        set = mSets->value( uNextId, 0 );
+        set = mSets->value(uNextId, 0);
     }
 
     set = new QHash< MessageItem *, MessageItem * >();
-    mSets->insert( uNextId, set );
+    mSets->insert(uNextId, set);
 
-    return static_cast< MessageItemSetReference >( uNextId );
+    return static_cast< MessageItemSetReference >(uNextId);
 }
 
-bool MessageItemSetManager::addMessageItem( MessageItemSetReference ref, MessageItem * mi )
+bool MessageItemSetManager::addMessageItem(MessageItemSetReference ref, MessageItem *mi)
 {
-    QHash< MessageItem *, MessageItem * > * set = mSets->value( static_cast< unsigned long int >( ref ), 0 );
-    if ( !set )
+    QHash< MessageItem *, MessageItem * > *set = mSets->value(static_cast< unsigned long int >(ref), 0);
+    if (!set) {
         return false;
+    }
 
-    set->insert( mi, mi );
+    set->insert(mi, mi);
 
     return true;
 }

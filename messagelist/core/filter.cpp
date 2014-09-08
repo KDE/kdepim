@@ -33,8 +33,8 @@ Filter::Filter()
 bool Filter::containString(const QString &searchInString) const
 {
     bool found = false;
-    Q_FOREACH(const QString &str, mSearchList) {
-        if(searchInString.contains(str,Qt::CaseInsensitive)) {
+    Q_FOREACH (const QString &str, mSearchList) {
+        if (searchInString.contains(str, Qt::CaseInsensitive)) {
             found = true;
         } else {
             found = false;
@@ -44,36 +44,39 @@ bool Filter::containString(const QString &searchInString) const
     return found;
 }
 
-bool Filter::match( const MessageItem * item ) const
+bool Filter::match(const MessageItem *item) const
 {
-    if ( !mStatus.isEmpty() ) {
-        Q_FOREACH(Akonadi::MessageStatus status, mStatus) {
+    if (!mStatus.isEmpty()) {
+        Q_FOREACH (Akonadi::MessageStatus status, mStatus) {
             if (!(status & item->status())) {
                 return false;
             }
         }
     }
 
-    if ( !mSearchString.isEmpty() ) {
-        if ( mMatchingItemIds.contains( item->itemId() ) )
+    if (!mSearchString.isEmpty()) {
+        if (mMatchingItemIds.contains(item->itemId())) {
             return true;
+        }
         bool searchMatches = false;
-        if ( containString(item->subject()) ) {
+        if (containString(item->subject())) {
             searchMatches = true;
-        } else if ( containString(item->sender()) ) {
+        } else if (containString(item->sender())) {
             searchMatches = true;
-        } else if ( containString(item->receiver()) ) {
+        } else if (containString(item->receiver())) {
             searchMatches = true;
         }
-        if ( !searchMatches )
+        if (!searchMatches) {
             return false;
+        }
     }
 
-    if ( !mTagId.isEmpty() ) {
+    if (!mTagId.isEmpty()) {
         //mTagId is a Akonadi::Tag::url
-        const bool tagMatches = item->findTag( mTagId ) != 0;
-        if ( !tagMatches )
+        const bool tagMatches = item->findTag(mTagId) != 0;
+        if (!tagMatches) {
             return false;
+        }
     }
 
     return true;
@@ -81,14 +84,17 @@ bool Filter::match( const MessageItem * item ) const
 
 bool Filter::isEmpty() const
 {
-    if ( !mStatus.isEmpty() )
+    if (!mStatus.isEmpty()) {
         return false;
+    }
 
-    if ( !mSearchString.isEmpty() )
+    if (!mSearchString.isEmpty()) {
         return false;
+    }
 
-    if ( !mTagId.isEmpty() )
+    if (!mTagId.isEmpty()) {
         return false;
+    }
 
     return true;
 }
@@ -102,12 +108,12 @@ void Filter::clear()
     mSearchList.clear();
 }
 
-void Filter::setCurrentFolder( const Akonadi::Collection &folder )
+void Filter::setCurrentFolder(const Akonadi::Collection &folder)
 {
     mCurrentFolder = folder;
 }
 
-void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOptions options )
+void Filter::setSearchString(const QString &search, QuickSearchLine::SearchOptions options)
 {
     const QString trimStr = search.trimmed();
     if ((mSearchString == trimStr) && (mOptions == options)) {
@@ -122,9 +128,9 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
     bool needToSplitString = false;
     QString newStr = mSearchString;
     if (mSearchString.startsWith(QLatin1Char('"')) && mSearchString.startsWith(QLatin1Char('"'))) {
-        newStr = newStr.remove(0,1);
-        newStr = newStr.remove(newStr.length()-1,1);
-        mSearchList = QStringList()<<newStr;
+        newStr = newStr.remove(0, 1);
+        newStr = newStr.remove(newStr.length() - 1, 1);
+        mSearchList = QStringList() << newStr;
     } else {
         mSearchList = mSearchString.split(QLatin1Char(' '), QString::SkipEmptyParts);
         needToSplitString = true;
@@ -145,7 +151,6 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
     } else if (options & QuickSearchLine::SearchAgainstTo) {
         query.setTo(QStringList() << newStr);
     }
-
 
     //If the collection is virtual we're probably trying to filter the search collection, so we just search globally
     if (mCurrentFolder.isValid() && !mCurrentFolder.isVirtual()) {

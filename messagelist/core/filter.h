@@ -50,60 +50,70 @@ public:
 
 public:
     /**
-   * Returns true if the specified parameters match this filter and false otherwise.
-   * The msg pointer must not be null.
-   */
-    bool match( const MessageItem * item ) const;
+    * Returns true if the specified parameters match this filter and false otherwise.
+    * The msg pointer must not be null.
+    */
+    bool match(const MessageItem *item) const;
 
     /**
-   * Returns the currently set status mask
-   */
+    * Returns the currently set status mask
+    */
     QList<Akonadi::MessageStatus>  status() const
-    { return mStatus; }
+    {
+        return mStatus;
+    }
 
     /**
-   * Sets the status mask for this filter.
-   */
-    void setStatus( const QList<Akonadi::MessageStatus> &lstStatus )
-    { mStatus = lstStatus; }
+    * Sets the status mask for this filter.
+    */
+    void setStatus(const QList<Akonadi::MessageStatus> &lstStatus)
+    {
+        mStatus = lstStatus;
+    }
 
     /**
-   * Sets the current folder of this filter.
-   */
-    void setCurrentFolder( const Akonadi::Collection &collection );
+    * Sets the current folder of this filter.
+    */
+    void setCurrentFolder(const Akonadi::Collection &collection);
 
     /**
-   * Returns the currently set search string.
-   */
-    const QString & searchString() const
-    { return mSearchString; }
+    * Returns the currently set search string.
+    */
+    const QString &searchString() const
+    {
+        return mSearchString;
+    }
 
     /**
-   * Sets the search string for this filter.
-   */
+    * Sets the search string for this filter.
+    */
     void setSearchString(const QString &search, QuickSearchLine::SearchOptions options);
 
     /**
-   * Returns the currently set MessageItem::Tag id
-   */
-    const QString & tagId() const
-    { return mTagId; }
+    * Returns the currently set MessageItem::Tag id
+    */
+    const QString &tagId() const
+    {
+        return mTagId;
+    }
 
     /**
-   * Sets the id of a MessageItem::Tag that the matching messages must contain.
-   */
-    void setTagId( const QString &tagId )
-    { mTagId = tagId; }
+    * Sets the id of a MessageItem::Tag that the matching messages must contain.
+    */
+    void setTagId(const QString &tagId)
+    {
+        mTagId = tagId;
+    }
 
     /**
-   * Clears this filter (sets status to 0, search string and tag id to empty strings)
-   */
+    * Clears this filter (sets status to 0, search string and tag id to empty strings)
+    */
     void clear();
 
     /**
-   * Returns true if this filter is empty (0 status mask, empty search string and empty tag)
-   * and it's useless to call match() that will always return true.
-   */
+    * Returns true if this filter is empty (0 status mask, empty search string and empty tag)
+    * and it's useless to call match() that will always return true.
+    */
     bool isEmpty() const;
 
 Q_SIGNALS:

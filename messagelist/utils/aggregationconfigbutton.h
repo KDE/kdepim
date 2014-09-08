@@ -41,23 +41,23 @@ class MESSAGELIST_EXPORT AggregationConfigButton : public QPushButton
 
 public:
     /** Constructor.
-   * @param parent The parent widget for the button.
-   * @param aggregationComboBox Optional AggregationComboBox to be kept in sync
-   * with changes made by the configure dialog.
-   */
-    explicit AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox = 0 );
+    * @param parent The parent widget for the button.
+    * @param aggregationComboBox Optional AggregationComboBox to be kept in sync
+    * with changes made by the configure dialog.
+    */
+    explicit AggregationConfigButton(QWidget *parent, const AggregationComboBox *aggregationComboBox = 0);
     ~AggregationConfigButton();
 
 signals:
     /**
-   * A signal emitted when configure dialog has been successfully completed.
-   */
+    * A signal emitted when configure dialog has been successfully completed.
+    */
     void configureDialogCompleted();
 
 private:
     Q_PRIVATE_SLOT(d, void slotConfigureAggregations())
 
-    AggregationConfigButtonPrivate * const d;
+    AggregationConfigButtonPrivate *const d;
 };
 
 } // namespace Utils
