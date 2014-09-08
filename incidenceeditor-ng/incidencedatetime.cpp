@@ -117,18 +117,18 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
     }
   }
 
-  connect( mUi->mFreeBusyCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
-  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(enableTimeEdits()) );
-  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
+  connect(mUi->mFreeBusyCheck, &QCheckBox::toggled, this, &IncidenceDateTime::checkDirtyStatus);
+  connect(mUi->mWholeDayCheck, &QCheckBox::toggled, this, &IncidenceDateTime::enableTimeEdits);
+  connect(mUi->mWholeDayCheck, &QCheckBox::toggled, this, &IncidenceDateTime::checkDirtyStatus);
 
-  connect( this, SIGNAL(startDateChanged(QDate)), SLOT(updateStartToolTips()) );
-  connect( this, SIGNAL(startTimeChanged(QTime)), SLOT(updateStartToolTips()) );
-  connect( this, SIGNAL(endDateChanged(QDate)), SLOT(updateEndToolTips()) );
-  connect( this, SIGNAL(endTimeChanged(QTime)), SLOT(updateEndToolTips()) );
-  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(updateStartToolTips()) );
-  connect( mUi->mWholeDayCheck, SIGNAL(toggled(bool)), SLOT(updateEndToolTips()) );
-  connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(updateStartToolTips()) );
-  connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(updateEndToolTips()) );
+  connect(this, &IncidenceDateTime::startDateChanged, this, &IncidenceDateTime::updateStartToolTips);
+  connect(this, &IncidenceDateTime::startTimeChanged, this, &IncidenceDateTime::updateStartToolTips);
+  connect(this, &IncidenceDateTime::endDateChanged, this, &IncidenceDateTime::updateEndToolTips);
+  connect(this, &IncidenceDateTime::endTimeChanged, this, &IncidenceDateTime::updateEndToolTips);
+  connect(mUi->mWholeDayCheck, &QCheckBox::toggled, this, &IncidenceDateTime::updateStartToolTips);
+  connect(mUi->mWholeDayCheck, &QCheckBox::toggled, this, &IncidenceDateTime::updateEndToolTips);
+  connect(mUi->mStartCheck, &QCheckBox::toggled, this, &IncidenceDateTime::updateStartToolTips);
+  connect(mUi->mEndCheck, &QCheckBox::toggled, this, &IncidenceDateTime::updateEndToolTips);
 }
 
 IncidenceDateTime::~IncidenceDateTime()
@@ -689,19 +689,19 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo, bool isTemplate, 
   mUi->mWholeDayCheck->setEnabled( hasDateTimes );
 
   // Connect to the right logic
-  connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(enableStartEdit(bool)) );
-  connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SIGNAL(startDateTimeToggled(bool)) );
-  connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
-  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(updateStartTime(QTime)) );
-  connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
+  connect(mUi->mStartCheck, &QCheckBox::toggled, this, &IncidenceDateTime::enableStartEdit);
+  connect(mUi->mStartCheck, &QCheckBox::toggled, this, &IncidenceDateTime::startDateTimeToggled);
+  connect(mUi->mStartDateEdit, &KDateComboBox::dateChanged, this, &IncidenceDateTime::checkDirtyStatus);
+  connect(mUi->mStartTimeEdit, &KTimeComboBox::timeChanged, this, &IncidenceDateTime::updateStartTime);
+  connect(mUi->mTimeZoneComboStart, static_cast<void (IncidenceEditorNG::KTimeZoneComboBox::*)(int)>(&IncidenceEditorNG::KTimeZoneComboBox::currentIndexChanged), this, &IncidenceDateTime::checkDirtyStatus);
 
-  connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SLOT(enableEndEdit(bool)) );
-  connect( mUi->mEndCheck, SIGNAL(toggled(bool)), SIGNAL(endDateTimeToggled(bool)) );
-  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SLOT(checkDirtyStatus()) );
-  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)), SLOT(checkDirtyStatus()) );
-  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)), SIGNAL(endDateChanged(QDate)) );
-  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)), SIGNAL(endTimeChanged(QTime)) );
-  connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
+  connect(mUi->mEndCheck, &QCheckBox::toggled, this, &IncidenceDateTime::enableEndEdit);
+  connect(mUi->mEndCheck, &QCheckBox::toggled, this, &IncidenceDateTime::endDateTimeToggled);
+  connect(mUi->mEndDateEdit, &KDateComboBox::dateChanged, this, &IncidenceDateTime::checkDirtyStatus);
+  connect(mUi->mEndTimeEdit, &KTimeComboBox::timeChanged, this, &IncidenceDateTime::checkDirtyStatus);
+  connect(mUi->mEndDateEdit, &KDateComboBox::dateChanged, this, &IncidenceDateTime::endDateChanged);
+  connect(mUi->mEndTimeEdit, &KTimeComboBox::timeChanged, this, &IncidenceDateTime::endTimeChanged);
+  connect(mUi->mTimeZoneComboEnd, static_cast<void (IncidenceEditorNG::KTimeZoneComboBox::*)(int)>(&IncidenceEditorNG::KTimeZoneComboBox::currentIndexChanged), this, &IncidenceDateTime::checkDirtyStatus);
 
   const KDateTime rightNow = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
 
