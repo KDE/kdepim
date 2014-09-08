@@ -16,7 +16,7 @@ ecm_mark_as_test(bnf_selection)
 
 target_link_libraries(bnf_selection
   kdepimmobileui
-  ${QT_QTGUI_LIBRARIES}
-  ${QT_QTCORE_LIBRARIES}
+  Qt5::Gui
+  Qt5::Core
 )
 

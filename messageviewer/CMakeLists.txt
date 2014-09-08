@@ -61,7 +61,7 @@ else()
                        adblock/adblockcreatefilterdialog.cpp
                        adblock/adblockblockableitemswidget.cpp
                        )
-  set(_mailwebview_lib KF5::WebKit ${QT_QTWEBKIT_LIBRARY})
+  set(_mailwebview_lib KF5::WebKit Qt5::WebKitWidgets)
   #reactivate
   #add_subdirectory(a11y)
 endif()

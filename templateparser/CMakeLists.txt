@@ -54,7 +54,7 @@ target_link_libraries(templateparser
   kpgp
   pimcommon
   ${QGPGME_LIBRARIES}
-  ${QT_QTWEBKIT_LIBRARY}
+  Qt5::WebKitWidgets
 )
 set_target_properties(templateparser PROPERTIES
   VERSION ${KDEPIM_LIB_VERSION}

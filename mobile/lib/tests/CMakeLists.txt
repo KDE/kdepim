@@ -9,7 +9,7 @@ macro( add_mobileui_test _source )
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(mobileui-${_name})
-  target_link_libraries( ${_name} ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} )
+  target_link_libraries( ${_name} Qt5::Core Qt5::Test )
 endmacro()
 
 add_mobileui_test( rangemanagertest.cpp )

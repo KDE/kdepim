@@ -40,13 +40,8 @@ target_link_libraries(akonadi_mailfilter_agent
   messagecore
   messagecomposer
   pimcommon
-  
-  
   KF5::AkonadiCore
   KF5::AkonadiMime
-  ${QT_QTSCRIPT_LIBRARY}
-  
-  
   KF5::Mime
   KF5::IdentityManagement
 )

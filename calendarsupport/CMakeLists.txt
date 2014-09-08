@@ -3,7 +3,6 @@
 # add_subdirectory(next/tests)
 
 include_directories(
-  ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
    ${CMAKE_BINARY_DIR}/calendarviews
 )

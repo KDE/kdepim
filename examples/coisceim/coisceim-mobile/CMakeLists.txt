@@ -14,7 +14,7 @@ set(coisceim_mobile_srcs
 add_executable(coisceim-mobile ${coisceim_mobile_srcs})
 
 target_link_libraries(coisceim-mobile
-  ${QT_QTDECLARATIVE_LIBRARIES}
+  Qt5::Declarative
   KF5::CalendarCore
   ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   calendarsupport
