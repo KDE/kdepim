@@ -262,7 +262,7 @@ void AbstractImportExportJob::backupResourceDirectory(const Akonadi::AgentInstan
     const QString identifier = agent.identifier();
     const QString archivePath = defaultPath + identifier + QDir::separator();
 
-    KUrl url = Utils::resourcePath(agent);
+    QUrl url = Utils::resourcePath(agent);
     if (!url.isEmpty()) {
         QString filename = url.fileName();
         if (QDir(url.path()).exists()) {
@@ -302,7 +302,7 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
     const QString identifier = agent.identifier();
     const QString archivePath = defaultPath + identifier + QDir::separator();
 
-    KUrl url = Utils::resourcePath(agent);
+    QUrl url = Utils::resourcePath(agent);
     if (!url.isEmpty()) {
         QString filename = url.fileName();
         const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
@@ -355,7 +355,7 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    KUrl newUrl;
+                    QUrl newUrl;
                     if (overwriteResources) {
                         newUrl = Utils::resourcePath(resourceConfig);
                     } else {
@@ -365,7 +365,7 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
-                        file->copyTo(newUrl.directory());
+                        file->copyTo(newUrl.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path());
                     }
                     settings.insert(QLatin1String("Path"), newUrl.path());
 
@@ -431,7 +431,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     }
 }
 
-bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename)
+bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString &archivePath, const QString &archivename)
 {
     QTemporaryFile tmp;
     tmp.open();

@@ -21,7 +21,7 @@
 #include "utils.h"
 #include <AkonadiCore/Collection>
 #include <QStringList>
-
+#include <QUrl>
 class QWidget;
 class QProgressDialog;
 class ArchiveStorage;
@@ -89,7 +89,7 @@ protected:
     Akonadi::Collection::Id convertPathToId(const QString &path);
     void backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath);
     QStringList restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath, bool overwriteResources = false);
-    bool backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename);
+    bool backupFullDirectory(const QUrl &url, const QString &archivePath, const QString &archivename);
     virtual void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
     void restoreConfigFile(const QString &configNameStr);
     bool overwriteDirectoryMessageBox(const QString &directory) const;

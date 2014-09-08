@@ -187,7 +187,7 @@ void ExportMailJob::backupConfig()
     if (!lstFilter.isEmpty()) {
         QTemporaryFile tmp;
         tmp.open();
-        KUrl url(tmp.fileName());
+        QUrl url(tmp.fileName());
         MailCommon::FilterImporterExporter exportFilters;
         exportFilters.exportFilters(lstFilter, url, true);
         const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::configsPath() + QLatin1String("filters"));
@@ -474,7 +474,7 @@ void ExportMailJob::backupMails()
                 } else if (identifier.contains(QLatin1String("akonadi_maildir_resource_")) ||
                            identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
                     //Store akonadi agent config
-                    KUrl url = Utils::resourcePath(agent);
+                    QUrl url = Utils::resourcePath(agent);
 
                     const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("mail.zip"));
                     if (fileAdded) {
@@ -573,12 +573,12 @@ void ExportMailJob::backupAkonadiDb()
     }
 }
 
-KUrl ExportMailJob::subdirPath(const KUrl &url) const
+QUrl ExportMailJob::subdirPath(const QUrl &url) const
 {
     const QString filename(url.fileName());
     QString path = url.path();
     const int parentDirEndIndex = path.lastIndexOf(filename);
     path = path.left(parentDirEndIndex);
     path.append(QLatin1Char('.') + filename + QLatin1String(".directory"));
-    return KUrl(path);
+    return QUrl(path);
 }

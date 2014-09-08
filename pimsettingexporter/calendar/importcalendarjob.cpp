@@ -97,7 +97,7 @@ void ImportCalendarJob::restoreResources()
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeCalendar);
+                    const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeCalendar);
 
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);

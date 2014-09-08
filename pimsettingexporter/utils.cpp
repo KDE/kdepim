@@ -108,10 +108,10 @@ QString Utils::infoPath()
     return QLatin1String("information/");
 }
 
-KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
+QUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
 {
-    const KUrl url = Utils::resourcePath(resourceConfig);
-    KUrl newUrl = url;
+    const QUrl url = Utils::resourcePath(resourceConfig);
+    QUrl newUrl = url;
     if (!url.path().contains(QDir::homePath())) {
         //qDebug()<<" url "<<url.path();
         newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storedData + url.fileName());
@@ -123,26 +123,26 @@ KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
     if (QFile(newUrl.path()).exists()) {
         QString newFileName = newUrl.path();
         for (int i = 0;; ++i) {
-            newFileName = newUrl.directory() + QLatin1Char('/') + QString::number(i) + QLatin1Char('/') + newUrl.fileName();
+            newFileName = newUrl.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path() + QLatin1Char('/') + QString::number(i) + QLatin1Char('/') + newUrl.fileName();
             if (!QFile(newFileName).exists()) {
-                QDir dir(newUrl.directory());
+                QDir dir(newUrl.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path());
                 dir.mkdir(QString::number(i));
                 break;
             }
         }
-        newUrl = KUrl(newFileName);
+        newUrl = QUrl(newFileName);
     }
     return newUrl;
 }
 
-KUrl Utils::resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath)
+QUrl Utils::resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath)
 {
     KConfigGroup group = resourceConfig->group(QLatin1String("General"));
     QString url = group.readEntry(QLatin1String("Path"), defaultPath);
     if (!url.isEmpty()) {
         url.replace(QLatin1String("$HOME"), QDir::homePath());
     }
-    return KUrl(url);
+    return QUrl::fromLocalFile(url);
 }
 
 void Utils::convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey)
@@ -212,13 +212,13 @@ void Utils::convertCollectionToRealPath(KConfigGroup &group, const QString &curr
     }
 }
 
-KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath)
+QUrl Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath)
 {
     const QString agentFileName = agent.identifier() + QLatin1String("rc");
     const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName ;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig(configFileName);
-    KUrl url = Utils::resourcePath(resourceConfig, defaultPath);
+    QUrl url = Utils::resourcePath(resourceConfig, defaultPath);
     return url;
 }
 
@@ -256,14 +256,14 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     return QString();
 }
 
-KUrl Utils::akonadiAgentConfigPath(const QString &identifier)
+QUrl Utils::akonadiAgentConfigPath(const QString &identifier)
 {
     const QString relativeFileName = QString::fromLatin1("akonadi/%1%2").arg(Utils::prefixAkonadiConfigFile()).arg(identifier);
     const QString configFile = Akonadi::XdgBaseDirs::findResourceFile("config", relativeFileName);
     if (!configFile.isEmpty()) {
-        return KUrl(configFile);
+        return QUrl::fromLocalFile(configFile);
     }
-    return KUrl();
+    return QUrl();
 }
 
 QString Utils::akonadiAgentName(KSharedConfig::Ptr config)

@@ -22,7 +22,7 @@
 #include <KSharedConfig>
 #include <QDateTime>
 #include <time.h>
-class KUrl;
+class QUrl;
 class ArchiveStorage;
 
 class ExportMailJob : public AbstractImportExportJob
@@ -34,7 +34,7 @@ public:
     void start();
 
 private:
-    KUrl subdirPath(const KUrl &url) const;
+    QUrl subdirPath(const QUrl &url) const;
 
     void backupTransports();
     void backupResources();

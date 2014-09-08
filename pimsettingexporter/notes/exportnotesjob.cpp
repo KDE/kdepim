@@ -123,7 +123,7 @@ void ExportNotesJob::backupData()
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_akonotes_resource_"))) {
             const QString archivePath = Utils::notePath() + identifier + QDir::separator();
-            KUrl url = Utils::resourcePath(agent);
+            QUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
                 const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("notes.zip"));
                 if (fileAdded) {

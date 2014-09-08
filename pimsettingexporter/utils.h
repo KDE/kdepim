@@ -18,7 +18,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 #include <QString>
-#include <KUrl>
+#include <QUrl>
 #include <KSharedConfig>
 #include <QDebug>
 class KZip;
@@ -79,7 +79,7 @@ struct importExportParameters {
     Utils::StoredTypes types;
 };
 
-KUrl resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath = QString());
+QUrl resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath = QString());
 QString transportsPath();
 QString resourcesPath();
 QString identitiesPath();
@@ -101,10 +101,10 @@ void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey)
 
 void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey);
 
-KUrl resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath = QString());
-KUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
+QUrl resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath = QString());
+QUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
-KUrl akonadiAgentConfigPath(const QString &identifier);
+QUrl akonadiAgentConfigPath(const QString &identifier);
 KZip *openZip(const QString &filename, QString &errorMsg);
 
 void addVersion(KZip *archive);

@@ -469,7 +469,7 @@ void ImportMailJob::restoreMails()
             //qDebug()<<" filename "<<filename<<" resourceName"<<resourceName;
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-            const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
+            const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
 
             const QString agentConfigFile = value.akonadiAgentConfigFile;
             if (!agentConfigFile.isEmpty()) {

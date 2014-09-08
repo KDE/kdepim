@@ -79,7 +79,7 @@ void ExportCalendarJob::backupResources()
         if (identifier.contains(QLatin1String("akonadi_icaldir_resource_"))) {
             const QString archivePath = Utils::calendarPath() + identifier + QDir::separator();
 
-            KUrl url = Utils::resourcePath(agent);
+            QUrl url = Utils::resourcePath(agent);
             if (!mAgentPaths.contains(url.path())) {
                 if (!url.isEmpty()) {
                     mAgentPaths << url.path();

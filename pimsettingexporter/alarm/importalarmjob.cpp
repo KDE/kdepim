@@ -94,7 +94,7 @@ void ImportAlarmJob::restoreResources()
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAlarm);
+                    const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAlarm);
 
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
