@@ -26,10 +26,17 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include "kdepim-version.h"
+#include <kdelibs4configmigrator.h>
 
 int main(int argc, char *argv[])
 {
     KLocalizedString::setApplicationDomain("pimsettingexporter");
+
+    Kdelibs4ConfigMigrator migrate(QLatin1String("pimsettingexporter"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("pimsettingexporterrc"));
+    migrate.setUiFiles(QStringList() << QLatin1String("pimsettingexporter.rc"));
+    migrate.migrate();
+
     KAboutData aboutData(QLatin1String("pimsettingexporter"), i18n("PIM Setting Exporter"),
                           QLatin1String(KDEPIM_VERSION), i18n("PIM Setting Exporter"), KAboutLicense::GPL_V2,
                           i18n("Copyright © 2012-2014 pimsettingexporter authors"));
