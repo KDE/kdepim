@@ -57,13 +57,10 @@ ConfigureWidget::ConfigureWidget( QWidget *parent )
     mSettingsUi->kcfg_ShowExpandQuotesMark->setWhatsThis(
                 GlobalSettings::self()->showExpandQuotesMarkItem()->whatsThis() );
 
-    connect( mSettingsUi->fallbackCharacterEncoding, SIGNAL(currentIndexChanged(int)),
-             this, SIGNAL(settingsChanged()) );
-    connect( mSettingsUi->overrideCharacterEncoding, SIGNAL(currentIndexChanged(int)),
-             this, SIGNAL(settingsChanged()) );
+    connect(mSettingsUi->fallbackCharacterEncoding, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ConfigureWidget::settingsChanged);
+    connect(mSettingsUi->overrideCharacterEncoding, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ConfigureWidget::settingsChanged);
 
-    connect( mSettingsUi->configureCustomHeadersButton, SIGNAL(clicked()),
-             this, SLOT(showCustomHeadersDialog()) );
+    connect(mSettingsUi->configureCustomHeadersButton, &QPushButton::clicked, this, &ConfigureWidget::showCustomHeadersDialog);
 }
 
 ConfigureWidget::~ConfigureWidget()

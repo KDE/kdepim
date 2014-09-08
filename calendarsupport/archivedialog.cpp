@@ -66,8 +66,8 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
   setLayout(mainLayout);
   mUser1Button = new QPushButton;
   buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &ArchiveDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &ArchiveDialog::reject);
   mUser1Button->setDefault(true);
   setModal( false );
   mUser1Button->setText(i18nc( "@action:button", "&Archive"));
@@ -99,11 +99,11 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
     Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard );
   descLabel->setWordWrap( true );
   topLayout->addWidget( descLabel );
-  connect( descLabel, SIGNAL(linkActivated(QString)), SLOT(showWhatsThis()) );
+  connect(descLabel, &QLabel::linkActivated, this, &ArchiveDialog::showWhatsThis);
 #endif
 
   QButtonGroup *radioBG = new QButtonGroup( this );
-  connect( radioBG, SIGNAL(buttonClicked(int)), SLOT(slotActionChanged()) );
+  connect(radioBG, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &ArchiveDialog::slotActionChanged);
 
   QHBoxLayout *dateLayout = new QHBoxLayout();
   dateLayout->setMargin( 0 );
@@ -251,10 +251,9 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
            "Select this option to delete old events and to-dos without saving "
            "them. It is not possible to recover the events later." ) );
   topLayout->addWidget( mDeleteCb );
-  connect( mDeleteCb, SIGNAL(toggled(bool)), mArchiveFile, SLOT(setDisabled(bool)) );
-  connect( mDeleteCb, SIGNAL(toggled(bool)), this, SLOT(slotEnableUser1()) );
-  connect( mArchiveFile->lineEdit(), SIGNAL(textChanged(QString)),
-           this, SLOT(slotEnableUser1()) );
+  connect(mDeleteCb, &QCheckBox::toggled, mArchiveFile, &KUrlRequester::setDisabled);
+  connect(mDeleteCb, &QCheckBox::toggled, this, &ArchiveDialog::slotEnableUser1);
+  connect( mArchiveFile->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(slotEnableUser1()) );
 
   // Load settings from KCalPrefs
   mExpiryTimeNumInput->setValue( KCalPrefs::instance()->mExpiryTime );
@@ -274,7 +273,7 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
     mArchiveOnceRB->setFocus();
   }
   slotActionChanged();
-  connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotUser1()) );
+  connect(mUser1Button, &QPushButton::clicked, this, &ArchiveDialog::slotUser1);
 }
 
 ArchiveDialog::~ArchiveDialog()
@@ -298,7 +297,7 @@ void ArchiveDialog::slotActionChanged()
 void ArchiveDialog::slotUser1()
 {
   EventArchiver archiver;
-  connect( &archiver, SIGNAL(eventsDeleted()), this, SLOT(slotEventsDeleted()) );
+  connect(&archiver, &EventArchiver::eventsDeleted, this, &ArchiveDialog::slotEventsDeleted);
 
   KCalPrefs::instance()->mAutoArchive = mAutoArchiveRB->isChecked();
   KCalPrefs::instance()->mExpiryTime = mExpiryTimeNumInput->value();

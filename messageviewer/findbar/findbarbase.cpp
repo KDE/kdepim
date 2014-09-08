@@ -83,12 +83,12 @@ FindBarBase::FindBarBase( QWidget * parent )
     optionsBtn->setMenu( mOptionsMenu );
     lay->addWidget( optionsBtn );
 
-    connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
-    connect( mFindNextBtn, SIGNAL(clicked()), this, SLOT(findNext()) );
-    connect( mFindPrevBtn, SIGNAL(clicked()), this, SLOT(findPrev()) );
-    connect( mCaseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged(bool)) );
-    connect( mSearch, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
-    connect( mSearch, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
+    connect(closeBtn, &QToolButton::clicked, this, &FindBarBase::closeBar);
+    connect(mFindNextBtn, &QPushButton::clicked, this, &FindBarBase::findNext);
+    connect(mFindPrevBtn, &QPushButton::clicked, this, &FindBarBase::findPrev);
+    connect(mCaseSensitiveAct, &QAction::toggled, this, &FindBarBase::caseSensitivityChanged);
+    connect(mSearch, &KLineEdit::textChanged, this, &FindBarBase::autoSearch);
+    connect(mSearch, &KLineEdit::clearButtonClicked, this, &FindBarBase::slotClearSearch);
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     hide();
 }

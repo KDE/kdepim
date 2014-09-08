@@ -220,7 +220,7 @@ CalPrintDialog::CalPrintDialog( int initialPrintType, PrintPlugin::List plugins,
   splitterRightLayout->addWidget( mOrientationSelection, 1, 1 );
 
   // signals and slots connections
-  connect( mTypeGroup, SIGNAL(buttonClicked(int)), SLOT(setPrintType(int)) );
+  connect(mTypeGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &CalPrintDialog::setPrintType);
   orientationLabel->setBuddy( mOrientationSelection );
 
   // First insert the config widgets into the widget stack. This possibly assigns
@@ -262,7 +262,7 @@ CalPrintDialog::CalPrintDialog( int initialPrintType, PrintPlugin::List plugins,
     typeBox->hide();
   }
   typeLayout->insertStretch( -1, 100 );
-  connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+  connect(this, &CalPrintDialog::okClicked, this, &CalPrintDialog::slotOk);
   setMinimumSize( minimumSizeHint() );
   resize( minimumSizeHint() );
 }

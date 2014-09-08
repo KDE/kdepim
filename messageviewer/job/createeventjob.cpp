@@ -46,7 +46,7 @@ void CreateEventJob::start()
     if ( !mItem.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
         job->fetchScope().fetchFullPayload();
-        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
+        connect(job, &Akonadi::ItemFetchJob::result, this, &CreateEventJob::slotFetchDone);
 
         if ( job->exec() ) {
             if ( job->items().count() == 1 ) {
@@ -93,7 +93,7 @@ void CreateEventJob::createEvent()
     newEventItem.setPayload<KCalCore::Event::Ptr>( mEventPtr );
 
     Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob(newEventItem, mCollection);
-    connect(createJob, SIGNAL(result(KJob*)), this, SLOT(slotCreateNewEvent(KJob*)));
+    connect(createJob, &Akonadi::ItemCreateJob::result, this, &CreateEventJob::slotCreateNewEvent);
 }
 
 void CreateEventJob::slotCreateNewEvent(KJob *job)

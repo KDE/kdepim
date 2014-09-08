@@ -89,8 +89,8 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &TimeScaleConfigDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &TimeScaleConfigDialog::reject);
   okButton->setDefault(true);
   setModal( true );
 
@@ -126,13 +126,13 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   upButton->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
   downButton->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
 
-  connect( addButton, SIGNAL(clicked()), SLOT(add()) );
-  connect( removeButton, SIGNAL(clicked()), SLOT(remove()) );
-  connect( upButton, SIGNAL(clicked()), SLOT(up()) );
-  connect( downButton, SIGNAL(clicked()), SLOT(down()) );
+  connect(addButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::add);
+  connect(removeButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::remove);
+  connect(upButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::up);
+  connect(downButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::down);
 
-  connect(okButton, SIGNAL(clicked()), SLOT(okClicked()) );
-  connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(reject()) );
+  connect(okButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::okClicked);
+  connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &TimeScaleConfigDialog::reject);
 
   Q_FOREACH(const TimeZoneNamePair& item, selList) {
     QListWidgetItem* widgetItem = new QListWidgetItem(item.first);

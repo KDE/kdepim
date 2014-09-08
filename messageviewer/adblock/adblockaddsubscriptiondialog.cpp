@@ -39,8 +39,8 @@ AdBlockAddSubscriptionDialog::AdBlockAddSubscriptionDialog(const QStringList &ex
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AdBlockAddSubscriptionDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AdBlockAddSubscriptionDialog::reject);
     QWidget *w = new QWidget;
     QHBoxLayout *lay = new QHBoxLayout;
     QLabel *lab = new QLabel(i18n("Select List:"));

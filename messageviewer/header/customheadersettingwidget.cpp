@@ -46,13 +46,13 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
                                                            i18n("&Modify..."), i18n("Header:") );
     mHeaders->setUpDownAutoRepeat(true);
 
-    connect(mHeaders, SIGNAL(changed()), this, SIGNAL(changed()));
+    connect(mHeaders, &PimCommon::SimpleStringListEditor::changed, this, &CustomHeaderSettingWidget::changed);
     topLayout->addWidget(mHeaders);
 
     mHeaderGroup = new QButtonGroup(this);
     mHeaderGroup->addButton(mCbHeaderToHide, MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Hide);
     mHeaderGroup->addButton(mCbHeaderToShow, MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display);
-    connect( mHeaderGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotHeaderClicked(int)) );
+    connect(mHeaderGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &CustomHeaderSettingWidget::slotHeaderClicked);
 
     setLayout(topLayout);
 }

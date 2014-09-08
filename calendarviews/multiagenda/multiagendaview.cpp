@@ -216,8 +216,8 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   topSideBoxVBoxLayout->addWidget(d->mRightSplitter);
   d->mRightSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
-  connect( d->mLeftSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
-  connect( d->mRightSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
+  connect(d->mLeftSplitter, &QSplitter::splitterMoved, this, &MultiAgendaView::resizeSplitters);
+  connect(d->mRightSplitter, &QSplitter::splitterMoved, this, &MultiAgendaView::resizeSplitters);
 
   d->mRightDummyWidget = new QWidget( d->mRightSplitter );
 
