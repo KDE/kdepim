@@ -135,8 +135,7 @@ CompactStyle::CompactStyle( PrintingWizard *parent )
 
     addPage( mPageSettings, i18n( "Compact Style" ) );
 
-    connect( mPageSettings->cbAlternating, SIGNAL(clicked()),
-             this, SLOT(setAlternatingColors()) );
+    connect(mPageSettings->cbAlternating, &QCheckBox::clicked, this, &CompactStyle::setAlternatingColors);
 
     // set the controls, with the values in config
     KConfigGroup config( KSharedConfig::openConfig(), CompactStyleConfigSectionName );

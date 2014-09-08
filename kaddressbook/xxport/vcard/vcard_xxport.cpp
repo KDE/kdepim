@@ -33,7 +33,7 @@
 #include <KABC/VCardConverter>
 
 #include <QDebug>
-#include <KDialog>
+#include <QDialog>
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -51,8 +51,12 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <KGuiItem>
 
-class VCardViewerDialog : public KDialog
+class VCardViewerDialog : public QDialog
 {
     Q_OBJECT
   public:
@@ -77,9 +81,10 @@ class VCardViewerDialog : public KDialog
 
     KABC::Addressee::List mContacts;
     KABC::Addressee::List::Iterator mIt;
+    QPushButton *mApplyButton;
 };
 
-class VCardExportSelectionDialog : public KDialog
+class VCardExportSelectionDialog : public QDialog
 {
   public:
     VCardExportSelectionDialog( QWidget *parent );
@@ -494,23 +499,33 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Type type ) const
 // ---------- VCardViewer Dialog ---------------- //
 
 VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget *parent )
-  : KDialog( parent ),
+  : QDialog( parent ),
     mContacts( list )
 {
-  setCaption( i18nc( "@title:window", "Import vCard" ) );
-  setButtons( User1 | User2 | Apply | Cancel );
-  setButtonGuiItem(User1, KStandardGuiItem::no());
-  setButtonGuiItem(User2, KStandardGuiItem::yes());
-  setDefaultButton( User1 );
+  setWindowTitle( i18nc( "@title:window", "Import vCard" ) );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel|QDialogButtonBox::Apply);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QPushButton *user1Button = new QPushButton;
+  buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+  QPushButton *user2Button = new QPushButton;
+  buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  KGuiItem::assign(user1Button, KStandardGuiItem::no());
+  KGuiItem::assign(user2Button, KStandardGuiItem::yes());
+  mApplyButton = buttonBox->button(QDialogButtonBox::Apply);
+  user1Button->setDefault(true);
   setModal( true );
-  showButtonSeparator( true );
 
   QFrame *page = new QFrame( this );
-  setMainWidget( page );
+  mainLayout->addWidget(page);
+  mainLayout->addWidget(buttonBox);
+
 
   QVBoxLayout *layout = new QVBoxLayout( page );
-  layout->setSpacing( spacingHint() );
-  layout->setMargin( marginHint() );
+  //QT5 layout->setSpacing( spacingHint() );
+  //QT5 layout->setMargin( marginHint() );
 
   QLabel *label =
     new QLabel(
@@ -524,14 +539,14 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
 
   layout->addWidget( mView );
 
-  setButtonText( Apply, i18nc( "@action:button", "Import All..." ) );
+  buttonBox->button(QDialogButtonBox::Apply)->setText(i18nc( "@action:button", "Import All..." ));
 
   mIt = mContacts.begin();
 
-  connect( this, SIGNAL(user2Clicked()), this, SLOT(slotYes()) );
-  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotNo()) );
-  connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
-  connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()) );
+  connect(user2Button, SIGNAL(clicked()), this, SLOT(slotYes()) );
+  connect(user1Button, SIGNAL(clicked()), this, SLOT(slotNo()) );
+  connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(slotApply()) );
+  connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(slotCancel()) );
 
   updateView();
   readConfig();
@@ -569,7 +584,7 @@ void VCardViewerDialog::updateView()
   mView->setRawContact( *mIt );
 
   KABC::Addressee::List::Iterator it = mIt;
-  enableButton( Apply, ( ++it ) != mContacts.end() );
+  mApplyButton->setEnabled(++it!=mContacts.end());
 }
 
 void VCardViewerDialog::slotYes()
@@ -601,7 +616,7 @@ void VCardViewerDialog::slotNo()
 
 void VCardViewerDialog::slotApply()
 {
-  KDialog::accept();
+  QDialog::accept();
 }
 
 void VCardViewerDialog::slotCancel()
@@ -613,20 +628,33 @@ void VCardViewerDialog::slotCancel()
 // ---------- VCardExportSelection Dialog ---------------- //
 
 VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setCaption( i18nc( "@title:window", "Select vCard Fields" ) );
-  setButtons( Ok | Cancel );
-  setDefaultButton( Ok );
+  setWindowTitle( i18nc( "@title:window", "Select vCard Fields" ) );
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  QPushButton *user1Button = new QPushButton;
+  buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+  QPushButton *user2Button = new QPushButton;
+  buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  okButton->setDefault(true);
   setModal( true );
-  showButtonSeparator( true );
 
   QFrame *page = new QFrame( this );
-  setMainWidget( page );
+  mainLayout->addWidget(page);
+  mainLayout->addWidget(buttonBox);
+ 
 
   QGridLayout *layout = new QGridLayout( page );
-  layout->setSpacing( spacingHint() );
-  layout->setMargin( marginHint() );
+  //QT5 layout->setSpacing( spacingHint() );
+  //QT5 layout->setMargin( marginHint() );
 
   QGroupBox *gbox = new QGroupBox(
     i18nc( "@title:group", "Fields to be exported" ), page );
