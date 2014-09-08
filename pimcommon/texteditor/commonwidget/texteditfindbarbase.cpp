@@ -63,16 +63,16 @@ TextEditFindBarBase::TextEditFindBarBase(QWidget * parent )
     mReplaceWidget->hide();
 
 
-    connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
-    connect( mFindWidget, SIGNAL(findNext()), this, SLOT(findNext()) );
-    connect( mFindWidget, SIGNAL(findPrev()), this, SLOT(findPrev()) );
-    connect( mFindWidget, SIGNAL(updateSearchOptions()), this, SLOT(slotUpdateSearchOptions()) );
-    connect( mFindWidget, SIGNAL(updateSearchOptions()), this, SLOT(slotUpdateSearchOptions()) );
-    connect( mFindWidget, SIGNAL(autoSearch(QString)), this, SLOT(autoSearch(QString)) );
-    connect( mFindWidget, SIGNAL(clearSearch()), this, SLOT(slotClearSearch()) );
-    connect( mFindWidget, SIGNAL(searchStringEmpty(bool)), mReplaceWidget, SLOT(slotSearchStringEmpty(bool)));
-    connect( mReplaceWidget, SIGNAL(replaceText()), this, SLOT(slotReplaceText()));
-    connect( mReplaceWidget, SIGNAL(replaceAllText()), this, SLOT(slotReplaceAllText()));
+    connect(closeBtn, &QToolButton::clicked, this, &TextEditFindBarBase::closeBar);
+    connect(mFindWidget, &TextFindWidget::findNext, this, &TextEditFindBarBase::findNext);
+    connect(mFindWidget, &TextFindWidget::findPrev, this, &TextEditFindBarBase::findPrev);
+    connect(mFindWidget, &TextFindWidget::updateSearchOptions, this, &TextEditFindBarBase::slotUpdateSearchOptions);
+    connect(mFindWidget, &TextFindWidget::updateSearchOptions, this, &TextEditFindBarBase::slotUpdateSearchOptions);
+    connect(mFindWidget, &TextFindWidget::autoSearch, this, &TextEditFindBarBase::autoSearch);
+    connect(mFindWidget, &TextFindWidget::clearSearch, this, &TextEditFindBarBase::slotClearSearch);
+    connect(mFindWidget, &TextFindWidget::searchStringEmpty, mReplaceWidget, &TextReplaceWidget::slotSearchStringEmpty);
+    connect(mReplaceWidget, &TextReplaceWidget::replaceText, this, &TextEditFindBarBase::slotReplaceText);
+    connect(mReplaceWidget, &TextReplaceWidget::replaceAllText, this, &TextEditFindBarBase::slotReplaceAllText);
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     hide();
     setLayout(topLayout);

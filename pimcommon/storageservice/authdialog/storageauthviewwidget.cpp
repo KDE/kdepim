@@ -32,10 +32,10 @@ StorageAuthViewWidget::StorageAuthViewWidget(QWidget *parent)
     mWebView = new StorageAuthWebView;
     mProgressBar = new QProgressBar;
     mProgressBar->hide();
-    connect(mWebView, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged(QUrl)));
-    connect(mWebView, SIGNAL(loadStarted()), this, SLOT(slotLoadStarted()));
-    connect(mWebView, SIGNAL(loadProgress(int)), mProgressBar, SLOT(setValue(int)));
-    connect(mWebView, SIGNAL(loadFinished(bool)), this, SLOT(slotLoadFinished(bool)));
+    connect(mWebView, &StorageAuthWebView::urlChanged, this, &StorageAuthViewWidget::urlChanged);
+    connect(mWebView, &StorageAuthWebView::loadStarted, this, &StorageAuthViewWidget::slotLoadStarted);
+    connect(mWebView, &StorageAuthWebView::loadProgress, mProgressBar, &QProgressBar::setValue);
+    connect(mWebView, &StorageAuthWebView::loadFinished, this, &StorageAuthViewWidget::slotLoadFinished);
     lay->addWidget(mWebView);
     lay->addWidget(mProgressBar);
     setLayout(lay);

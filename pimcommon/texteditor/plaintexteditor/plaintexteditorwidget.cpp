@@ -68,13 +68,13 @@ void PlainTextEditorWidget::init(PlainTextEditor *customEditor)
 
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
-    connect( mEditor, SIGNAL(findText()), SLOT(slotFind()) );
+    connect(shortcut, &QShortcut::activated, this, &PlainTextEditorWidget::slotFind);
+    connect(mEditor, &PlainTextEditor::findText, this, &PlainTextEditorWidget::slotFind);
 
     shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_R+Qt::CTRL );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
-    connect( mEditor, SIGNAL(replaceText()), SLOT(slotReplace()) );
+    connect(shortcut, &QShortcut::activated, this, &PlainTextEditorWidget::slotReplace);
+    connect(mEditor, &PlainTextEditor::replaceText, this, &PlainTextEditorWidget::slotReplace);
 
     setLayout(lay);
 }

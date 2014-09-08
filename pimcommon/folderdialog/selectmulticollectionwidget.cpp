@@ -56,8 +56,8 @@ void SelectMultiCollectionWidget::initialize(const QString &mimetype)
 
     mCheckedCollectionWidget = new PimCommon::CheckedCollectionWidget(mimetype);
 
-    connect(mCheckedCollectionWidget, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), SLOT(slotCollectionsTreeFetched()));
-    connect(mCheckedCollectionWidget, SIGNAL(collectionRemoved(Akonadi::Collection)), SLOT(slotCollectionsTreeFetched()));
+    connect(mCheckedCollectionWidget, &PimCommon::CheckedCollectionWidget::collectionAdded, this, &SelectMultiCollectionWidget::slotCollectionsTreeFetched);
+    connect(mCheckedCollectionWidget, &PimCommon::CheckedCollectionWidget::collectionRemoved, this, &SelectMultiCollectionWidget::slotCollectionsTreeFetched);
 
     connect(mCheckedCollectionWidget->entityTreeModel(), SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
             this, SLOT(slotCollectionsTreeFetched()));

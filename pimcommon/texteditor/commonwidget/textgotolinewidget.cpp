@@ -46,7 +46,7 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
 #endif
 
     closeBtn->setAutoRaise( true );
-    connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseBar()) );
+    connect(closeBtn, &QToolButton::clicked, this, &TextGoToLineWidget::slotCloseBar);
     hbox->addWidget( closeBtn );
 
     QLabel *lab = new QLabel(i18n("Go to Line:"));
@@ -54,11 +54,11 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
     mSpinbox = new QSpinBox;
     mSpinbox->setMinimum(1);
     mSpinbox->setObjectName(QLatin1String("line"));
-    connect(mSpinbox, SIGNAL(editingFinished()), this, SLOT(slotGoToLine()));
+    connect(mSpinbox, &QSpinBox::editingFinished, this, &TextGoToLineWidget::slotGoToLine);
     hbox->addWidget(mSpinbox);
     mGoToLine = new QPushButton(QIcon::fromTheme(QLatin1String("go-jump")), i18n("Go"));
     mGoToLine->setFlat(true);
-    connect(mGoToLine, SIGNAL(clicked(bool)), this, SLOT(slotGoToLine()));
+    connect(mGoToLine, &QPushButton::clicked, this, &TextGoToLineWidget::slotGoToLine);
     mGoToLine->setObjectName(QLatin1String("gotoline"));
     hbox->addWidget(mGoToLine);
     hbox->addStretch();

@@ -93,13 +93,13 @@ void RichTextEditorWidget::init(RichTextEditor *customEditor)
 
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
-    connect( mEditor, SIGNAL(findText()), SLOT(slotFind()) );
+    connect(shortcut, &QShortcut::activated, this, &RichTextEditorWidget::slotFind);
+    connect(mEditor, &RichTextEditor::findText, this, &RichTextEditorWidget::slotFind);
 
     shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_R+Qt::CTRL );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
-    connect( mEditor, SIGNAL(replaceText()), SLOT(slotReplace()) );
+    connect(shortcut, &QShortcut::activated, this, &RichTextEditorWidget::slotReplace);
+    connect(mEditor, &RichTextEditor::replaceText, this, &RichTextEditorWidget::slotReplace);
 
     setLayout(lay);
 }

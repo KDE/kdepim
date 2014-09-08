@@ -214,8 +214,8 @@ void TranslatorWidget::readConfig()
 void TranslatorWidget::init()
 {
     d->abstractTranslator = new GoogleTranslator();
-    connect(d->abstractTranslator, SIGNAL(translateDone()), SLOT(slotTranslateDone()));
-    connect(d->abstractTranslator, SIGNAL(translateFailed(bool,QString)), SLOT(slotTranslateFailed(bool,QString)));
+    connect(d->abstractTranslator, &PimCommon::AbstractTranslator::translateDone, this, &TranslatorWidget::slotTranslateDone);
+    connect(d->abstractTranslator, &PimCommon::AbstractTranslator::translateFailed, this, &TranslatorWidget::slotTranslateFailed);
 
     QVBoxLayout *layout = new QVBoxLayout( this );
     layout->setMargin( 2 );
@@ -231,7 +231,7 @@ void TranslatorWidget::init()
 #endif
     closeBtn->setAutoRaise( true );
     hboxLayout->addWidget( closeBtn );
-    connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
+    connect(closeBtn, &QToolButton::clicked, this, &TranslatorWidget::slotCloseWidget);
 
     QLabel *label = new QLabel( i18nc( "Translate from language", "From:" ) );
     hboxLayout->addWidget( label );
@@ -243,8 +243,8 @@ void TranslatorWidget::init()
     hboxLayout->addWidget( label );
     d->to = new MinimumComboBox;
     d->to->setObjectName(QLatin1String("to"));
-    connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotTranslate()) );
-    connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotConfigChanged()));
+    connect(d->to, static_cast<void (MinimumComboBox::*)(int)>(&MinimumComboBox::currentIndexChanged), this, &TranslatorWidget::slotTranslate);
+    connect(d->to, static_cast<void (MinimumComboBox::*)(int)>(&MinimumComboBox::currentIndexChanged), this, &TranslatorWidget::slotConfigChanged);
     hboxLayout->addWidget( d->to );
 
     KSeparator *separator = new KSeparator;
@@ -254,7 +254,7 @@ void TranslatorWidget::init()
     d->invert = new QPushButton(
                 i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"),this);
     d->invert->setObjectName(QLatin1String("invert-button"));
-    connect(d->invert, SIGNAL(clicked()), this, SLOT(slotInvertLanguage()));
+    connect(d->invert, &QPushButton::clicked, this, &TranslatorWidget::slotInvertLanguage);
     hboxLayout->addWidget(d->invert);
 
     QPushButton *clear = new QPushButton(i18n("Clear"),this);
@@ -262,7 +262,7 @@ void TranslatorWidget::init()
 #ifndef QT_NO_ACCESSIBILITY
     clear->setAccessibleName( i18n("Clear") );
 #endif
-    connect(clear, SIGNAL(clicked()), this, SLOT(slotClear()));
+    connect(clear, &QPushButton::clicked, this, &TranslatorWidget::slotClear);
     hboxLayout->addWidget(clear);
 
     d->translate = new QPushButton( i18n( "Translate" ) );
@@ -273,12 +273,12 @@ void TranslatorWidget::init()
 
 
     hboxLayout->addWidget( d->translate );
-    connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
+    connect(d->translate, &QPushButton::clicked, this, &TranslatorWidget::slotTranslate);
 
 #if !defined(NDEBUG)
     QPushButton *debugButton = new QPushButton( i18n("Debug") );
     hboxLayout->addWidget( debugButton );
-    connect( debugButton, SIGNAL(clicked()), SLOT(slotDebug()));
+    connect(debugButton, &QPushButton::clicked, this, &TranslatorWidget::slotDebug);
 #endif
 
     d->progressIndictor = new KPIMUtils::ProgressIndicatorWidget(this);
@@ -295,8 +295,8 @@ void TranslatorWidget::init()
     d->inputText->enableFindReplace(false);
     d->inputText->setAcceptRichText(false);
     d->inputText->setPlaceholderText(i18n("Drag text that you want to translate."));
-    connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
-    connect( d->inputText, SIGNAL(translateText()), SLOT(slotTranslate()));
+    connect(d->inputText, &TranslatorTextEdit::textChanged, this, &TranslatorWidget::slotTextChanged);
+    connect(d->inputText, &TranslatorTextEdit::translateText, this, &TranslatorWidget::slotTranslate);
 
     d->splitter->addWidget( d->inputText );
     d->translatorResultTextEdit = new TranslatorResultTextEdit;
@@ -309,7 +309,7 @@ void TranslatorWidget::init()
 
     d->initLanguage();
     connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotFromLanguageChanged(int)) );
-    connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotConfigChanged()));
+    connect(d->from, static_cast<void (MinimumComboBox::*)(int)>(&MinimumComboBox::currentIndexChanged), this, &TranslatorWidget::slotConfigChanged);
 
     d->from->setCurrentIndex( 0 ); //Fill "to" combobox
     slotFromLanguageChanged( 0, true );

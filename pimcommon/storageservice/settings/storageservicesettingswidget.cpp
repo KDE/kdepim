@@ -62,15 +62,15 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     QHBoxLayout *hlay = new QHBoxLayout;
 
     mAddService = new QPushButton(i18n("Add..."));
-    connect(mAddService, SIGNAL(clicked()), this, SLOT(slotAddService()));
+    connect(mAddService, &QPushButton::clicked, this, &StorageServiceSettingsWidget::slotAddService);
     hlay->addWidget(mAddService);
 
     mRemoveService = new QPushButton(i18n("Remove"));
-    connect(mRemoveService, SIGNAL(clicked()), this, SLOT(slotRemoveService()));
+    connect(mRemoveService, &QPushButton::clicked, this, &StorageServiceSettingsWidget::slotRemoveService);
     hlay->addWidget(mRemoveService);
 
     mModifyService = new QPushButton(i18n("Modify..."));
-    connect(mModifyService, SIGNAL(clicked()), this, SLOT(slotModifyService()));
+    connect(mModifyService, &QPushButton::clicked, this, &StorageServiceSettingsWidget::slotModifyService);
     hlay->addWidget(mModifyService);
 
 
@@ -108,7 +108,7 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     errorLayout->addWidget(mErrorInfo);
     mAuthenticate = new QPushButton(i18n("Authenticate"));
     errorLayout->addWidget(mAuthenticate);
-    connect(mAuthenticate, SIGNAL(clicked()), this, SLOT(slotAuthenticate()));
+    connect(mAuthenticate, &QPushButton::clicked, this, &StorageServiceSettingsWidget::slotAuthenticate);
 
 
     mCanNotGetInfo = new QLabel(i18n("Unable to get account information."));
@@ -117,7 +117,7 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     vbox->addWidget(mStackWidget);
     mainLayout->addLayout(vbox);
     setLayout(mainLayout);
-    connect(mListService, SIGNAL(itemSelectionChanged()), this, SLOT(slotServiceSelected()));
+    connect(mListService, &QListWidget::itemSelectionChanged, this, &StorageServiceSettingsWidget::slotServiceSelected);
     updateButtons();
 }
 
@@ -295,10 +295,10 @@ void StorageServiceSettingsWidget::slotAddService()
 
 void StorageServiceSettingsWidget::defaultConnection(StorageServiceAbstract *storage)
 {
-    connect(storage, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
-    connect(storage, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
-    connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString,PimCommon::AccountInfo)));
-    connect(storage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotUpdateAccountInfoFailed(QString,QString)));
+    connect(storage, &PimCommon::DropBoxStorageService::authenticationFailed, this, &StorageServiceSettingsWidget::slotAuthenticationFailed);
+    connect(storage, &PimCommon::DropBoxStorageService::authenticationDone, this, &StorageServiceSettingsWidget::slotAuthenticationDone);
+    connect(storage, &PimCommon::DropBoxStorageService::accountInfoDone, this, &StorageServiceSettingsWidget::slotUpdateAccountInfo);
+    connect(storage, &PimCommon::DropBoxStorageService::actionFailed, this, &StorageServiceSettingsWidget::slotUpdateAccountInfoFailed);
 }
 
 void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)
