@@ -36,6 +36,9 @@
 
 #include <QVBoxLayout>
 #include <QShowEvent>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace MailCommon
 {
@@ -45,35 +48,43 @@ class FolderSelectionDialog::FolderSelectionDialogPrivate
 public:
     FolderSelectionDialogPrivate()
         : folderTreeWidget(0),
+          mUser1Button(0),
+          mOkButton(0),
           mNotAllowToCreateNewFolder(false),
           mUseGlobalSettings(true)
     {
     }
     FolderTreeWidget *folderTreeWidget;
+    QPushButton *mUser1Button;
+    QPushButton *mOkButton;
     bool mNotAllowToCreateNewFolder;
     bool mUseGlobalSettings;
 };
 
 FolderSelectionDialog::FolderSelectionDialog(QWidget *parent, SelectionFolderOptions options)
-    : KDialog(parent), d(new FolderSelectionDialogPrivate())
+    : QDialog(parent), d(new FolderSelectionDialogPrivate())
 {
     setObjectName(QLatin1String("folder dialog"));
 
     d->mNotAllowToCreateNewFolder = (options & FolderSelectionDialog::NotAllowToCreateNewFolder);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->mOkButton->setDefault(true);
+    d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-    if (d->mNotAllowToCreateNewFolder) {
-        setButtons(Ok | Cancel);
-    } else {
-        setButtons(Ok | Cancel | User1);
-        setButtonGuiItem(
-            User1,
-            KGuiItem(i18n("&New Subfolder..."), QLatin1String("folder-new"),
+
+    if (!d->mNotAllowToCreateNewFolder) {
+        d->mUser1Button = new QPushButton;
+        buttonBox->addButton(d->mUser1Button, QDialogButtonBox::ActionRole);
+        KGuiItem::assign(d->mUser1Button, KGuiItem(i18n("&New Subfolder..."), QLatin1String("folder-new"),
                      i18n("Create a new subfolder under the currently selected folder")));
     }
-
-    QWidget *widget = mainWidget();
-    QVBoxLayout *layout = new QVBoxLayout(widget);
-    layout->setMargin(0);
 
     FolderTreeWidget::TreeViewOptions opt = FolderTreeWidget::None;
     if (options & FolderSelectionDialog::ShowUnreadCount) {
@@ -104,12 +115,15 @@ FolderSelectionDialog::FolderSelectionDialog(QWidget *parent, SelectionFolderOpt
 #ifndef QT_NO_DRAGANDDROP
     d->folderTreeWidget->folderTreeView()->setDragDropMode(QAbstractItemView::NoDragDrop);
 #endif
-    layout->addWidget(d->folderTreeWidget);
+    mainLayout->addWidget(d->folderTreeWidget);
+    mainLayout->addWidget(buttonBox);
 
-    enableButton(KDialog::Ok, false);
+
+
+    d->mOkButton->setEnabled(false);
     if (!d->mNotAllowToCreateNewFolder) {
-        enableButton(KDialog::User1, false);
-        connect(this, &FolderSelectionDialog::user1Clicked, this, &FolderSelectionDialog::slotAddChildFolder);
+        d->mUser1Button->setEnabled(false);
+        connect(d->mUser1Button, &QPushButton::clicked, this, &FolderSelectionDialog::slotAddChildFolder);
         d->folderTreeWidget->folderTreeView()->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(d->folderTreeWidget->folderTreeView(), SIGNAL(customContextMenuRequested(QPoint)),
                 SLOT(slotFolderTreeWidgetContextMenuRequested(QPoint)));
@@ -140,7 +154,7 @@ FolderSelectionDialog::~FolderSelectionDialog()
 
 void FolderSelectionDialog::slotFolderTreeWidgetContextMenuRequested(const QPoint &pos)
 {
-    if (isButtonEnabled(KDialog::User1) && d->folderTreeWidget->folderTreeView()->indexAt(pos).isValid()) {
+    if (d->mUser1Button && d->mUser1Button->isEnabled() && d->folderTreeWidget->folderTreeView()->indexAt(pos).isValid()) {
         QMenu menu;
         menu.addAction(i18n("&New Subfolder..."), this, SLOT(slotAddChildFolder()));
         menu.exec(QCursor::pos());
@@ -170,7 +184,7 @@ void FolderSelectionDialog::showEvent(QShowEvent *event)
         FolderTreeView *view = d->folderTreeWidget->folderTreeView();
         view->scrollTo(view->currentIndex());
     }
-    KDialog::showEvent(event);
+    QDialog::showEvent(event);
 }
 
 void FolderSelectionDialog::rowsInserted(const QModelIndex &, int, int)
@@ -226,14 +240,14 @@ void FolderSelectionDialog::slotSelectionChanged()
 {
     const bool enablebuttons =
         (d->folderTreeWidget->selectionModel()->selectedIndexes().count() > 0);
-    enableButton(KDialog::Ok, enablebuttons);
+    d->mOkButton->setEnabled(enablebuttons);
 
     if (!d->mNotAllowToCreateNewFolder) {
         Akonadi::Collection parent;
-        enableButton(KDialog::User1, canCreateCollection(parent));
+        d->mUser1Button->setEnabled(canCreateCollection(parent));
         if (parent.isValid()) {
             const QSharedPointer<FolderCollection> fd(FolderCollection::forCollection(parent, false));
-            enableButton(KDialog::Ok, fd->canCreateMessages());
+            d->mOkButton->setEnabled(fd->canCreateMessages());
         }
     }
 }

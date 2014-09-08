@@ -23,7 +23,7 @@
 
 #include <Collection>
 
-#include <KDialog>
+#include <QDialog>
 
 #include <QAbstractItemView>
 
@@ -36,7 +36,7 @@ namespace MailCommon
  * A dialog that lets the user select a folder.
  * TODO: Move most of this to Akonadi::CollectionDialog
  */
-class MAILCOMMON_EXPORT FolderSelectionDialog : public KDialog
+class MAILCOMMON_EXPORT FolderSelectionDialog : public QDialog
 {
     Q_OBJECT
 
