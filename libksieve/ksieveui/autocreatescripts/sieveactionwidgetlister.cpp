@@ -151,8 +151,7 @@ void SieveActionWidget::initWidget()
 
     updateGeometry();
 
-    connect(mComboBox, SIGNAL(activated(int)),
-            this, SLOT(slotActionChanged(int)));
+    connect(mComboBox, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::activated), this, &SieveActionWidget::slotActionChanged);
 
     mAdd = new QPushButton(this);
     mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
@@ -167,10 +166,8 @@ void SieveActionWidget::initWidget()
     // redirect focus to the filter action combo box
     setFocusProxy(mComboBox);
 
-    connect(mAdd, SIGNAL(clicked()),
-            this, SLOT(slotAddWidget()));
-    connect(mRemove, SIGNAL(clicked()),
-            this, SLOT(slotRemoveWidget()));
+    connect(mAdd, &QPushButton::clicked, this, &SieveActionWidget::slotAddWidget);
+    connect(mRemove, &QPushButton::clicked, this, &SieveActionWidget::slotRemoveWidget);
     setFilterAction(0);
 }
 
@@ -314,10 +311,8 @@ void SieveActionWidgetLister::generatedScript(QString &script, QStringList &requ
 
 void SieveActionWidgetLister::reconnectWidget(SieveActionWidget *w)
 {
-    connect(w, SIGNAL(addWidget(QWidget*)),
-            this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection);
-    connect(w, SIGNAL(removeWidget(QWidget*)),
-            this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection);
+    connect(w, SIGNAL(addWidget(QWidget*)), this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection);
+    connect(w, SIGNAL(removeWidget(QWidget*)), this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection);
     connect(w, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()), Qt::UniqueConnection);
 }
 
