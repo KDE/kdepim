@@ -38,7 +38,7 @@
 #include <KLocalizedString>
 #include <KActionCollection>
 #include <KConfigGroup>
-#include <KStatusBar>
+#include <QStatusBar>
 #include <KMessageBox>
 #include <knotifyconfigwidget.h>
 

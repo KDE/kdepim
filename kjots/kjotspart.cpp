@@ -35,7 +35,7 @@
 
 #include <kpluginfactory.h>
 #include <KLocalizedString>
-#include <kstatusbar.h>
+#include <qstatusbar.h>
 #include <QIcon>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>

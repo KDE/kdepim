@@ -29,7 +29,7 @@
 #include <kactioncollection.h>
 #include <qdebug.h>
 #include <kstandardaction.h>
-#include <kstatusbar.h>
+#include <qstatusbar.h>
 
 #include "KJotsSettings.h"
 #include "kjotsbookmarks.h"
