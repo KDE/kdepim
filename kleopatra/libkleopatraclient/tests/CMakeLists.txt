@@ -14,7 +14,7 @@ foreach(_kleoclient_test ${kleoclient_TESTS})
 
   target_link_libraries("${_kleoclient_test}"
     kleopatraclientcore
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTCORE_LIBRARY}
+    Qt5::Gui
+    Qt5::Core
 )
 endforeach()

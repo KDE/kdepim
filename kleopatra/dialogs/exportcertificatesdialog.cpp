@@ -42,6 +42,9 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
@@ -57,15 +60,27 @@ public:
 private:
     FileNameRequester* pgpRequester;
     FileNameRequester* cmsRequester;
+    QPushButton *mOkButton;
 };
 
 
 ExportCertificatesDialog::Private::Private( ExportCertificatesDialog * qq )
   : q( qq )
 {
-    q->setButtons( KDialog::Ok | KDialog::Cancel );
-    q->setButtonGuiItem( KDialog::Ok, KGuiItem( i18n( "Export" ) ) );
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    q->setLayout(mainLayout);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+
+    KGuiItem::assign(mOkButton, KGuiItem( i18n( "Export" ) ) );
     QWidget* const main = new QWidget;
+    mainLayout->addWidget(main);
+    mainLayout->addWidget(buttonBox);
+
     QFormLayout *layout = new QFormLayout;
     main->setLayout(layout);
 
@@ -81,7 +96,6 @@ ExportCertificatesDialog::Private::Private( ExportCertificatesDialog * qq )
     layout->addRow(cmsLabel, cmsRequester);
 
     connect( cmsRequester, SIGNAL(fileNameChanged(QString)), q, SLOT(fileNamesChanged()) );
-    q->setMainWidget( main );
     fileNamesChanged();
 }
 
@@ -90,14 +104,14 @@ ExportCertificatesDialog::Private::~Private() {}
 
 
 ExportCertificatesDialog::ExportCertificatesDialog( QWidget * parent, Qt::WindowFlags f )
-  : KDialog( parent, f ), d( new Private( this ) )
+  : QDialog( parent, f ), d( new Private( this ) )
 {
     
 }
 
 void ExportCertificatesDialog::Private::fileNamesChanged()
 {
-    q->button( KDialog::Ok )->setEnabled( !pgpRequester->fileName().isEmpty() && !cmsRequester->fileName().isEmpty() );
+    mOkButton->setEnabled( !pgpRequester->fileName().isEmpty() && !cmsRequester->fileName().isEmpty() );
 }
 
 ExportCertificatesDialog::~ExportCertificatesDialog() {}

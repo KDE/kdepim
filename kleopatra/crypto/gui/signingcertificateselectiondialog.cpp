@@ -38,16 +38,30 @@
 #include <KLocalizedString>
 
 #include <cassert>
+#include <KConfigGroup>
+
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace Kleo;
 using namespace Kleo::Crypto::Gui;
 
 SigningCertificateSelectionDialog::SigningCertificateSelectionDialog( QWidget * parent, Qt::WindowFlags f )
-    : KDialog( parent, f ),
+    : QDialog( parent, f ),
       widget( new SigningCertificateSelectionWidget( this ) )
 {
     setWindowTitle( i18n( "Select Signing Certificates" ) );
-    setMainWidget( widget );
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(widget);
+    mainLayout->addWidget(buttonBox);
 }
 
 SigningCertificateSelectionDialog::~SigningCertificateSelectionDialog() {}

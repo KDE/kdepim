@@ -32,7 +32,7 @@
 #ifndef __KLEOPATRA_CRYPTO_GUI_SIGNINGCERTIFICATESELECTIONDIALOG_H__
 #define __KLEOPATRA_CRYPTO_GUI_SIGNINGCERTIFICATESELECTIONDIALOG_H__
 
-#include <KDialog>
+#include <QDialog>
 
 #include <gpgme++/key.h>
 
@@ -46,7 +46,7 @@ namespace Gui {
 
     class SigningCertificateSelectionWidget;
 
-    class SigningCertificateSelectionDialog : public KDialog {
+    class SigningCertificateSelectionDialog : public QDialog {
         Q_OBJECT
     public:
         explicit SigningCertificateSelectionDialog( QWidget * parent=0, Qt::WindowFlags f=0 );

@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_DIALOGS_EXPORTCERTIFICATESDIALOG_H__
 #define __KLEOPATRA_DIALOGS_EXPORTCERTIFICATESDIALOG_H__
 
-#include <KDialog>
+#include <QDialog>
 
 #include <utils/pimpl_ptr.h>
 
@@ -42,7 +42,7 @@ class QString;
 namespace Kleo {
 namespace Dialogs {
 
-    class ExportCertificatesDialog : public KDialog {
+    class ExportCertificatesDialog : public QDialog {
         Q_OBJECT
     public:
         explicit ExportCertificatesDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
