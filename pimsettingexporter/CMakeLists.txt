@@ -121,7 +121,7 @@ install(FILES
 
 install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter)
 
-install(PROGRAMS pimsettingexporter.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.pimsettingexporter.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
 
 ########### install files ###############

@@ -88,3 +88,5 @@ Comment[zh_TW]=PIM 設定匯出器可以將 PIM 應用程式裡的資料儲存�
 Terminal=false
 Categories=Qt;KDE;Office;Network;Email;
 X-DocPath=pimsettingexporter/index.html
+X-DBUS-StartupType=Unique
+X-DBUS-ServiceName=org.kde.pimsettingexporter

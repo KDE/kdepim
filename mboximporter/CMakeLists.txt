@@ -29,4 +29,4 @@ target_link_libraries(mboximporter
 
 install(TARGETS mboximporter  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(PROGRAMS mboximporter.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.mboximporter.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
