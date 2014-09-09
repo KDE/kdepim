@@ -314,8 +314,8 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   mOkButton = buttonBox->button(QDialogButtonBox::Ok);
   mOkButton->setDefault(true);
   mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &KeySelectionDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &KeySelectionDialog::reject);
   if ( qApp ) {
     KWindowSystem::setIcons( winId(),
                              qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
@@ -363,9 +363,8 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   hlay->addWidget( le, 1 );
   le->setFocus();
 
-  connect( le, SIGNAL(textChanged(QString)),
-           this, SLOT(slotSearch(QString)) );
-  connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
+  connect( le, SIGNAL(textChanged(QString)), this, SLOT(slotSearch(QString)) );
+  connect(mStartSearchTimer, &QTimer::timeout, this, &KeySelectionDialog::slotFilter);
 
   mListView = new QTreeWidget( page );
   mListView->setHeaderLabels( QStringList()
@@ -418,7 +417,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
     connect( mListView, SIGNAL(itemSelectionChanged()),
              this,      SLOT(slotSelectionChanged()) );
   }
-  connect( mListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(accept()) );
+  connect(mListView, &QTreeWidget::itemDoubleClicked, this, &KeySelectionDialog::accept);
 
   mListView->setContextMenuPolicy( Qt::CustomContextMenu );
   connect( mListView, SIGNAL(customContextMenuRequested(QPoint)),
@@ -427,8 +426,8 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   KGuiItem::assign(buttonBox->button(QDialogButtonBox::RestoreDefaults), KGuiItem(i18n("&Reread Keys")));
   connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()),
            this, SLOT(slotRereadKeys()) );
-  connect(mOkButton, SIGNAL(clicked()),SLOT(slotOk()));
-  connect(buttonBox->button(QDialogButtonBox::Cancel),SIGNAL(clicked()),SLOT(slotCancel()));
+  connect(mOkButton, &QPushButton::clicked, this, &KeySelectionDialog::slotOk);
+  connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &KeySelectionDialog::slotCancel);
   mainLayout->addWidget(buttonBox);
 }
 
@@ -1229,8 +1228,8 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
   hlay->addWidget( mEraseButton );
   hlay->addWidget( mDialogButton );
 
-  connect( mEraseButton, SIGNAL(clicked()), SLOT(slotEraseButtonClicked()) );
-  connect( mDialogButton, SIGNAL(clicked()), SLOT(slotDialogButtonClicked()) );
+  connect(mEraseButton, &QPushButton::clicked, this, &KeyRequester::slotEraseButtonClicked);
+  connect(mDialogButton, &QPushButton::clicked, this, &KeyRequester::slotDialogButtonClicked);
 
   setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
                               QSizePolicy::Fixed ) );
@@ -1363,8 +1362,8 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &KeyApprovalDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &KeyApprovalDialog::reject);
 
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
 
@@ -1564,8 +1563,8 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   int screenHeight = desk.height();
   if( size.height() > 7*screenHeight/8 )
     size.setHeight( 7*screenHeight/8 );
-  connect(okButton,SIGNAL(clicked()),SLOT(slotOk()));
-  connect(buttonBox->button(QDialogButtonBox::Cancel),SIGNAL(clicked()),SLOT(slotCancel()));
+  connect(okButton, &QPushButton::clicked, this, &KeyApprovalDialog::slotOk);
+  connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &KeyApprovalDialog::slotCancel);
   resize( size );
 }
 
@@ -1682,8 +1681,8 @@ CipherTextDialog::CipherTextDialog( const QByteArray & text,
   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &CipherTextDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &CipherTextDialog::reject);
 
   QWidget *mainWidget = new QWidget(this);
   QVBoxLayout *mainLayout = new QVBoxLayout;

@@ -35,14 +35,14 @@ StorageAuthViewDialog::StorageAuthViewDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &StorageAuthViewDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageAuthViewDialog::reject);
 
     mView = new StorageAuthViewWidget;
     mainLayout->addWidget(mView);
     mainLayout->addWidget(buttonBox);
 
-    connect(mView, SIGNAL(urlChanged(QUrl)), SIGNAL(urlChanged(QUrl)));
+    connect(mView, &StorageAuthViewWidget::urlChanged, this, &StorageAuthViewDialog::urlChanged);
     mainLayout->addWidget(mView);
     readConfig();
 }

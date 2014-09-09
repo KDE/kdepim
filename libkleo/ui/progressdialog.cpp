@@ -61,11 +61,9 @@ Kleo::ProgressDialog::ProgressDialog( Job * job, const QString & baseText,
   setModal(false);
   setRange( 0, 0 ); // activate busy indicator
 
-  connect( job, SIGNAL(progress(QString,int,int)),
-           SLOT(slotProgress(QString,int,int)) );
+  connect( job, SIGNAL(progress(QString,int,int)), SLOT(slotProgress(QString,int,int)) );
   connect( job, SIGNAL(done()), SLOT(slotDone()) );
-  connect( this, SIGNAL(canceled()),
-           job, SLOT(slotCancel()) );
+  connect( this, SIGNAL(canceled()), job, SLOT(slotCancel()) );
 
   QTimer::singleShot( minimumDuration(), this, SLOT(forceShow()) );
 }

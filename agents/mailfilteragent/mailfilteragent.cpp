@@ -84,13 +84,11 @@ MailFilterAgent::MailFilterAgent(const QString &id)
     collectionMonitor->collectionFetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
     collectionMonitor->setMimeTypeMonitored(KMime::Message::mimeType());
 
-    connect(collectionMonitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
-            this, SLOT(mailCollectionAdded(Akonadi::Collection,Akonadi::Collection)));
+    connect(collectionMonitor, &Akonadi::Monitor::collectionAdded, this, &MailFilterAgent::mailCollectionAdded);
     connect(collectionMonitor, SIGNAL(collectionChanged(Akonadi::Collection)),
             this, SLOT(mailCollectionChanged(Akonadi::Collection)));
 
-    connect(collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
-            this, SLOT(mailCollectionRemoved(Akonadi::Collection)));
+    connect(collectionMonitor, &Akonadi::Monitor::collectionRemoved, this, &MailFilterAgent::mailCollectionRemoved);
 
     QTimer::singleShot(0, this, SLOT(initializeCollections()));
 

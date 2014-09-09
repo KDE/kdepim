@@ -97,7 +97,7 @@ void GDriveJob::listFolder(const QString &folder)
     mError = false;
     const QString folderId = folder.isEmpty() ? QLatin1String("root") : folder;
     KGAPI2::Drive::ChildReferenceFetchJob *fetchJob = new KGAPI2::Drive::ChildReferenceFetchJob( folderId, mAccount );
-    connect(fetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotChildReferenceFetchJobFinished(KGAPI2::Job*)));
+    connect(fetchJob, &KGAPI2::Drive::ChildReferenceFetchJob::finished, this, &GDriveJob::slotChildReferenceFetchJobFinished);
 }
 
 void GDriveJob::slotChildReferenceFetchJobFinished(KGAPI2::Job *job)
@@ -111,7 +111,7 @@ void GDriveJob::slotChildReferenceFetchJobFinished(KGAPI2::Job *job)
             filesIds << ref->id();
         }
         KGAPI2::Drive::FileFetchJob *fileFetchJob = new KGAPI2::Drive::FileFetchJob( filesIds, mAccount );
-        connect(fileFetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotFileFetchFinished(KGAPI2::Job*)));
+        connect(fileFetchJob, &KGAPI2::Drive::FileFetchJob::finished, this, &GDriveJob::slotFileFetchFinished);
         childRef->deleteLater();
     } else {
         //TODO emit error
@@ -183,7 +183,7 @@ void GDriveJob::accountInfo()
     mActionType = PimCommon::StorageServiceAbstract::AccountInfoAction;
     mError = false;
     KGAPI2::Drive::AboutFetchJob *aboutFetchJob = new KGAPI2::Drive::AboutFetchJob(mAccount, this);
-    connect(aboutFetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotAboutFetchJobFinished(KGAPI2::Job*)));
+    connect(aboutFetchJob, &KGAPI2::Drive::AboutFetchJob::finished, this, &GDriveJob::slotAboutFetchJobFinished);
 }
 
 void GDriveJob::slotAboutFetchJobFinished(KGAPI2::Job *job)
@@ -216,8 +216,8 @@ QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &upl
 
     //TODO destination
     KGAPI2::Drive::FileCreateJob *createJob = new KGAPI2::Drive::FileCreateJob( filename/*, file*/, mAccount);
-    connect(createJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotUploadJobFinished(KGAPI2::Job*)));
-    connect(createJob, SIGNAL(progress(KGAPI2::Job*,int,int)), this, SLOT(slotUploadDownLoadProgress(KGAPI2::Job*,int,int)));
+    connect(createJob, &KGAPI2::Drive::FileCreateJob::finished, this, &GDriveJob::slotUploadJobFinished);
+    connect(createJob, &KGAPI2::Drive::FileCreateJob::progress, this, &GDriveJob::slotUploadDownLoadProgress);
     return 0;
 }
 
@@ -245,7 +245,7 @@ void GDriveJob::deleteFile(const QString &filename)
     mError = false;
     const QString folderId = filename;
     KGAPI2::Drive::FileDeleteJob *fileDeleteJob = new KGAPI2::Drive::FileDeleteJob(folderId, mAccount, this);
-    connect(fileDeleteJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotDeleteFileFinished(KGAPI2::Job*)));
+    connect(fileDeleteJob, &KGAPI2::Drive::FileDeleteJob::finished, this, &GDriveJob::slotDeleteFileFinished);
 }
 
 void GDriveJob::deleteFolder(const QString &foldername)
@@ -254,7 +254,7 @@ void GDriveJob::deleteFolder(const QString &foldername)
     mError = false;
     const QString folderId = foldername;
     KGAPI2::Drive::FileDeleteJob *fileDeleteJob = new KGAPI2::Drive::FileDeleteJob(folderId, mAccount, this);
-    connect(fileDeleteJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotDeleteFolderFinished(KGAPI2::Job*)));
+    connect(fileDeleteJob, &KGAPI2::Drive::FileDeleteJob::finished, this, &GDriveJob::slotDeleteFolderFinished);
 }
 
 void GDriveJob::slotDeleteFolderFinished(KGAPI2::Job*job)
@@ -306,7 +306,7 @@ void GDriveJob::refreshToken()
                 mAccount,
                 mClientId,
                 mClientSecret);
-    connect(authJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotAuthJobFinished(KGAPI2::Job*)));
+    connect(authJob, &KGAPI2::AuthJob::finished, this, &GDriveJob::slotAuthJobFinished);
 }
 
 void GDriveJob::createFolder(const QString &foldername, const QString &destination)
@@ -322,7 +322,7 @@ void GDriveJob::createFolder(const QString &foldername, const QString &destinati
     file->setParents( KGAPI2::Drive::ParentReferencesList() << parent );
 
     KGAPI2::Drive::FileCreateJob *createJob = new KGAPI2::Drive::FileCreateJob( file, mAccount);
-    connect(createJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotCreateJobFinished(KGAPI2::Job*)));
+    connect(createJob, &KGAPI2::Drive::FileCreateJob::finished, this, &GDriveJob::slotCreateJobFinished);
 }
 
 void GDriveJob::slotCreateJobFinished(KGAPI2::Job *job)
@@ -350,7 +350,7 @@ void GDriveJob::createServiceFolder()
     file->setParents( KGAPI2::Drive::ParentReferencesList() << parent );
 
     KGAPI2::Drive::FileCreateJob *createJob = new KGAPI2::Drive::FileCreateJob( file, mAccount);
-    connect(createJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotCreateJobFinished(KGAPI2::Job*)));
+    connect(createJob, &KGAPI2::Drive::FileCreateJob::finished, this, &GDriveJob::slotCreateJobFinished);
 }
 
 void GDriveJob::copyFile(const QString &source, const QString &destination)
@@ -367,7 +367,7 @@ void GDriveJob::copyFile(const QString &source, const QString &destination)
     file->setParents( KGAPI2::Drive::ParentReferencesList() << parent );
 
     KGAPI2::Drive::FileCopyJob *copyJob = new KGAPI2::Drive::FileCopyJob( source, file, mAccount);
-    connect(copyJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotCopyJobFinished(KGAPI2::Job*)));
+    connect(copyJob, &KGAPI2::Drive::FileCopyJob::finished, this, &GDriveJob::slotCopyJobFinished);
 }
 
 void GDriveJob::slotCopyJobFinished(KGAPI2::Job *job)
@@ -393,7 +393,7 @@ void GDriveJob::copyFolder(const QString &source, const QString &destination)
     file->setParents( KGAPI2::Drive::ParentReferencesList() << parent );
 
     KGAPI2::Drive::FileCopyJob *copyJob = new KGAPI2::Drive::FileCopyJob( source, file, mAccount);
-    connect(copyJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotCopyFolderJobFinished(KGAPI2::Job*)));
+    connect(copyJob, &KGAPI2::Drive::FileCopyJob::finished, this, &GDriveJob::slotCopyFolderJobFinished);
 }
 
 void GDriveJob::slotCopyFolderJobFinished(KGAPI2::Job *job)
