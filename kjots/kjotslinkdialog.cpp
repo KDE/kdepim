@@ -92,10 +92,8 @@ KJotsLinkDialog::KJotsLinkDialog(QAbstractItemModel *kjotsModel, QWidget *parent
     linkUrlLineEditRadioButton = new QRadioButton(entries);
     hrefComboRadioButton = new QRadioButton(entries);
 
-    connect(linkUrlLineEditRadioButton, SIGNAL(toggled(bool)),
-            linkUrlLineEdit, SLOT(setEnabled(bool)));
-    connect(hrefComboRadioButton, SIGNAL(toggled(bool)),
-            hrefCombo, SLOT(setEnabled(bool)));
+    connect(linkUrlLineEditRadioButton, &QRadioButton::toggled, linkUrlLineEdit, &QLineEdit::setEnabled);
+    connect(hrefComboRadioButton, &QRadioButton::toggled, hrefCombo, &KComboBox::setEnabled);
     hrefCombo->setEnabled(false);
     linkUrlLineEditRadioButton->setChecked(true);
 

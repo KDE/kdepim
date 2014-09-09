@@ -181,9 +181,9 @@ KJotsWidget::KJotsWidget(QWidget *parent, KXMLGUIClient *xmlGuiClient, Qt::Windo
     selProxy->setSourceModel(treeview->model());
 
     // TODO: Write a QAbstractItemView subclass to render kjots selection.
-    connect(selProxy, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(renderSelection()));
-    connect(selProxy, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(renderSelection()));
-    connect(selProxy, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(renderSelection()));
+    connect(selProxy, &KSelectionProxyModel::dataChanged, this, &KJotsWidget::renderSelection);
+    connect(selProxy, &KSelectionProxyModel::rowsInserted, this, &KJotsWidget::renderSelection);
+    connect(selProxy, &KSelectionProxyModel::rowsRemoved, this, &KJotsWidget::renderSelection);
 
     stackedWidget = new QStackedWidget(m_splitter);
 
@@ -205,58 +205,58 @@ KJotsWidget::KJotsWidget(QWidget *parent, KXMLGUIClient *xmlGuiClient, Qt::Windo
     action->setText(i18n("Next Book"));
     action->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
     actionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_D));
-    connect(action, SIGNAL(triggered()), SLOT(nextBook()));
-    connect(this, SIGNAL(canGoNextBookChanged(bool)), action, SLOT(setEnabled(bool)));
+    connect(action, &QAction::triggered, this, &KJotsWidget::nextBook);
+    connect(this, &KJotsWidget::canGoNextBookChanged, action, &QAction::setEnabled);
 
     action = actionCollection->addAction(QLatin1String("go_prev_book"));
     action->setText(i18n("Previous Book"));
     action->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
     actionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_D));
-    connect(action, SIGNAL(triggered()), SLOT(prevBook()));
-    connect(this, SIGNAL(canGoPreviousBookChanged(bool)), action, SLOT(setEnabled(bool)));
+    connect(action, &QAction::triggered, this, &KJotsWidget::prevBook);
+    connect(this, &KJotsWidget::canGoPreviousBookChanged, action, &QAction::setEnabled);
 
     action = actionCollection->addAction(QLatin1String("go_next_page"));
     action->setText(i18n("Next Page"));
     action->setIcon(QIcon::fromTheme(QLatin1String("go-next")));
     actionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_PageDown));
-    connect(action, SIGNAL(triggered()), SLOT(nextPage()));
-    connect(this, SIGNAL(canGoNextPageChanged(bool)), action, SLOT(setEnabled(bool)));
+    connect(action, &QAction::triggered, this, &KJotsWidget::nextPage);
+    connect(this, &KJotsWidget::canGoNextPageChanged, action, &QAction::setEnabled);
 
     action = actionCollection->addAction(QLatin1String("go_prev_page"));
     action->setText(i18n("Previous Page"));
     action->setIcon(QIcon::fromTheme(QLatin1String("go-previous")));
     actionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_PageUp));
-    connect(action, SIGNAL(triggered()), SLOT(prevPage()));
-    connect(this, SIGNAL(canGoPreviousPageChanged(bool)), action, SLOT(setEnabled(bool)));
+    connect(action, &QAction::triggered, this, &KJotsWidget::prevPage);
+    connect(this, &KJotsWidget::canGoPreviousPageChanged, action, &QAction::setEnabled);
 
     action = actionCollection->addAction(QLatin1String("new_page"));
     action->setText(i18n("&New Page"));
     actionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_N));
     action->setIcon(QIcon::fromTheme(QLatin1String("document-new")));
-    connect(action, SIGNAL(triggered()), SLOT(newPage()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::newPage);
 
     action = actionCollection->addAction(QLatin1String("new_book"));
     action->setText(i18n("New &Book..."));
     actionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_N));
     action->setIcon(QIcon::fromTheme(QLatin1String("address-book-new")));
-    connect(action, SIGNAL(triggered()), SLOT(newBook()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::newBook);
 
     action = actionCollection->addAction(QLatin1String("del_page"));
     action->setText(i18n("&Delete Page"));
     actionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_Delete));
     action->setIcon(QIcon::fromTheme(QLatin1String("edit-delete-page")));
-    connect(action, SIGNAL(triggered()), SLOT(deletePage()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::deletePage);
 
     action = actionCollection->addAction(QLatin1String("del_folder"));
     action->setText(i18n("Delete Boo&k"));
     actionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Delete));
     action->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
-    connect(action, SIGNAL(triggered()), SLOT(deleteBook()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::deleteBook);
 
     action = actionCollection->addAction(QLatin1String("del_mult"));
     action->setText(i18n("Delete Selected"));
     action->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
-    connect(action, SIGNAL(triggered()), SLOT(deleteMultiple()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::deleteMultiple);
 
     action = actionCollection->addAction(QLatin1String("manual_save"));
     action->setText(i18n("Manual Save"));
@@ -302,28 +302,28 @@ KJotsWidget::KJotsWidget(QWidget *parent, KXMLGUIClient *xmlGuiClient, Qt::Windo
     action = actionCollection->addAction(QLatin1String("lock"));
     action->setText(i18n("Lock Selected"));
     action->setIcon(QIcon::fromTheme(QLatin1String("emblem-locked")));
-    connect(action, SIGNAL(triggered()), SLOT(actionLock()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::actionLock);
 
     action = actionCollection->addAction(QLatin1String("unlock"));
     action->setText(i18n("Unlock Selected"));
     action->setIcon(QIcon::fromTheme(QLatin1String("emblem-unlocked")));
-    connect(action, SIGNAL(triggered()), SLOT(actionUnlock()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::actionUnlock);
 
     action = actionCollection->addAction(QLatin1String("sort_children_alpha"));
     action->setText(i18n("Sort children alphabetically"));
-    connect(action, SIGNAL(triggered()), SLOT(actionSortChildrenAlpha()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::actionSortChildrenAlpha);
 
     action = actionCollection->addAction(QLatin1String("sort_children_by_date"));
     action->setText(i18n("Sort children by creation date"));
-    connect(action, SIGNAL(triggered()), SLOT(actionSortChildrenByDate()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::actionSortChildrenByDate);
 
     action = KStandardAction::cut(editor, SLOT(cut()), actionCollection);
-    connect(editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)));
+    connect(editor, &KJotsEdit::copyAvailable, action, &QAction::setEnabled);
     action->setEnabled(false);
 
     action = KStandardAction::copy(this, SLOT(copy()), actionCollection);
-    connect(editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)));
-    connect(browser, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)));
+    connect(editor, &KJotsEdit::copyAvailable, action, &QAction::setEnabled);
+    connect(browser, &KJotsBrowser::copyAvailable, action, &QAction::setEnabled);
     action->setEnabled(false);
 
     KStandardAction::pasteText(editor, SLOT(paste()), actionCollection);
@@ -336,13 +336,13 @@ KJotsWidget::KJotsWidget(QWidget *parent, KXMLGUIClient *xmlGuiClient, Qt::Windo
     action->setText(i18n("Copy &into Page Title"));
     actionCollection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_T));
     action->setIcon(QIcon::fromTheme(QLatin1String("edit-copy")));
-    connect(action, SIGNAL(triggered()), SLOT(copySelectionToTitle()));
-    connect(editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)));
+    connect(action, &QAction::triggered, this, &KJotsWidget::copySelectionToTitle);
+    connect(editor, &KJotsEdit::copyAvailable, action, &QAction::setEnabled);
     action->setEnabled(false);
 
     action = actionCollection->addAction(QLatin1String("paste_plain_text"));
     action->setText(i18nc("@action Paste the text in the clipboard without rich text formatting.", "Paste Plain Text"));
-    connect(action, SIGNAL(triggered()), editor, SLOT(pastePlainText()));
+    connect(action, &QAction::triggered, editor, &KJotsEdit::pastePlainText);
 
     KStandardAction::preferences(this, SLOT(configure()), actionCollection);
 
@@ -376,19 +376,19 @@ KJotsWidget::KJotsWidget(QWidget *parent, KXMLGUIClient *xmlGuiClient, Qt::Windo
     action = actionCollection->addAction(QLatin1String("save_to_ascii"));
     action->setText(i18n("To Text File..."));
     action->setIcon(QIcon::fromTheme(QLatin1String("text-plain")));
-    connect(action, SIGNAL(triggered()), SLOT(exportSelectionToPlainText()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::exportSelectionToPlainText);
     exportMenu->menu()->addAction(action);
 
     action = actionCollection->addAction(QLatin1String("save_to_html"));
     action->setText(i18n("To HTML File..."));
     action->setIcon(QIcon::fromTheme(QLatin1String("text-html")));
-    connect(action, SIGNAL(triggered()), SLOT(exportSelectionToHtml()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::exportSelectionToHtml);
     exportMenu->menu()->addAction(action);
 
     action = actionCollection->addAction(QLatin1String("save_to_book"));
     action->setText(i18n("To Book File..."));
     action->setIcon(QIcon::fromTheme(QLatin1String("x-office-address-book")));
-    connect(action, SIGNAL(triggered()), SLOT(exportSelectionToXml()));
+    connect(action, &QAction::triggered, this, &KJotsWidget::exportSelectionToXml);
     exportMenu->menu()->addAction(action);
 
     KStandardAction::print(this, SLOT(printSelection()), actionCollection);
@@ -403,8 +403,8 @@ KJotsWidget::KJotsWidget(QWidget *parent, KXMLGUIClient *xmlGuiClient, Qt::Windo
     connect(treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateMenu()));
     connect(treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateCaption()));
 
-    connect(m_kjotsModel, SIGNAL(modelAboutToBeReset()), SLOT(saveState()));
-    connect(m_kjotsModel, SIGNAL(modelReset()), SLOT(restoreState()));
+    connect(m_kjotsModel, &Akonadi::EntityTreeModel::modelAboutToBeReset, this, &KJotsWidget::saveState);
+    connect(m_kjotsModel, &Akonadi::EntityTreeModel::modelReset, this, &KJotsWidget::restoreState);
 
     restoreState();
 
@@ -446,11 +446,11 @@ void KJotsWidget::delayedInitialization()
     searchAllPages = new QCheckBox(i18n("Search all pages"), searchDialog->findExtension());
     layout->addWidget(searchAllPages, 0, 0);
 
-    connect(searchDialog, SIGNAL(okClicked()), this, SLOT(onStartSearch()));
-    connect(searchDialog, SIGNAL(cancelClicked()), this, SLOT(onEndSearch()));
+    connect(searchDialog, &KFindDialog::okClicked, this, &KJotsWidget::onStartSearch);
+    connect(searchDialog, &KFindDialog::cancelClicked, this, &KJotsWidget::onEndSearch);
     connect(treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(onUpdateSearch()));
-    connect(searchDialog, SIGNAL(optionsChanged()), SLOT(onUpdateSearch()));
-    connect(searchAllPages, SIGNAL(stateChanged(int)), SLOT(onUpdateSearch()));
+    connect(searchDialog, &KFindDialog::optionsChanged, this, &KJotsWidget::onUpdateSearch);
+    connect(searchAllPages, &QCheckBox::stateChanged, this, &KJotsWidget::onUpdateSearch);
 
     replaceDialog = new KReplaceDialog(this, 0, searchHistory, replaceHistory, false);
     QGridLayout *layout2 = new QGridLayout(replaceDialog->findExtension());
@@ -458,10 +458,10 @@ void KJotsWidget::delayedInitialization()
     replaceAllPages = new QCheckBox(i18n("Search all pages"), replaceDialog->findExtension());
     layout2->addWidget(replaceAllPages, 0, 0);
 
-    connect(replaceDialog, SIGNAL(okClicked()), this, SLOT(onStartReplace()));
-    connect(replaceDialog, SIGNAL(cancelClicked()), this, SLOT(onEndReplace()));
-    connect(replaceDialog, SIGNAL(optionsChanged()), SLOT(onUpdateReplace()));
-    connect(replaceAllPages, SIGNAL(stateChanged(int)), SLOT(onUpdateReplace()));
+    connect(replaceDialog, &KReplaceDialog::okClicked, this, &KJotsWidget::onStartReplace);
+    connect(replaceDialog, &KReplaceDialog::cancelClicked, this, &KJotsWidget::onEndReplace);
+    connect(replaceDialog, &KReplaceDialog::optionsChanged, this, &KJotsWidget::onUpdateReplace);
+    connect(replaceAllPages, &QCheckBox::stateChanged, this, &KJotsWidget::onUpdateReplace);
 
     // Actions are enabled or disabled based on whether the selection is a single page, a single book
     // multiple selections, or no selection.
@@ -511,7 +511,7 @@ void KJotsWidget::delayedInitialization()
     m_autosaveTimer = new QTimer(this);
     updateConfiguration();
 
-    connect(m_autosaveTimer, SIGNAL(timeout()), editor, SLOT(savePage()));
+    connect(m_autosaveTimer, &QTimer::timeout, editor, &KJotsEdit::savePage);
     connect(treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), m_autosaveTimer, SLOT(start()));
 
     treeview->delayedInitialization();
@@ -839,7 +839,7 @@ void KJotsWidget::newBook()
     newCollection.addAttribute(eda);
 
     Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob(newCollection);
-    connect(job, SIGNAL(result(KJob*)), this, SLOT(newBookResult(KJob*)));
+    connect(job, &Akonadi::CollectionCreateJob::result, this, &KJotsWidget::newBookResult);
 }
 
 void KJotsWidget::newPage()

@@ -32,8 +32,7 @@ ThemeEditorTabWidget::ThemeEditorTabWidget(QWidget *parent)
     tabBar()->setSelectionBehaviorOnRemove(QTabBar::SelectPreviousTab);
     setDocumentMode(true);
     setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(slotTabContextMenuRequest(QPoint)));
+    connect(this, &ThemeEditorTabWidget::customContextMenuRequested, this, &ThemeEditorTabWidget::slotTabContextMenuRequest);
 }
 
 ThemeEditorTabWidget::~ThemeEditorTabWidget()

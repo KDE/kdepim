@@ -72,22 +72,15 @@ DebugWidget::DebugWidget( QWidget *parent )
 
   org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification( QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this );
 
-  connect( iface, SIGNAL(connectionStarted(QString,QString)),
-           this, SLOT(connectionStarted(QString,QString)) );
-  connect( iface, SIGNAL(connectionEnded(QString,QString)),
-           this, SLOT(connectionEnded(QString,QString)) );
-  connect( iface, SIGNAL(signalEmitted(QString,QString)),
-           this, SLOT(signalEmitted(QString,QString)) );
-  connect( iface, SIGNAL(warningEmitted(QString,QString)),
-           this, SLOT(warningEmitted(QString,QString)) );
-  connect( iface, SIGNAL(errorEmitted(QString,QString)),
-           this, SLOT(errorEmitted(QString,QString)) );
+  connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionStarted, this, &DebugWidget::connectionStarted);
+  connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionEnded, this, &DebugWidget::connectionEnded);
+  connect(iface, &org::freedesktop::Akonadi::TracerNotification::signalEmitted, this, &DebugWidget::signalEmitted);
+  connect(iface, &org::freedesktop::Akonadi::TracerNotification::warningEmitted, this, &DebugWidget::warningEmitted);
+  connect(iface, &org::freedesktop::Akonadi::TracerNotification::errorEmitted, this, &DebugWidget::errorEmitted);
 
   // in case we started listening when the connection is already ongoing
-  connect( iface, SIGNAL(connectionDataInput(QString,QString)),
-           this, SLOT(connectionStarted(QString,QString)) );
-  connect( iface, SIGNAL(connectionDataOutput(QString,QString)),
-           this, SLOT(connectionStarted(QString,QString)) );
+  connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionDataInput, this, &DebugWidget::connectionStarted);
+  connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionDataOutput, this, &DebugWidget::connectionStarted);
 
   QHBoxLayout *buttonLayout = new QHBoxLayout;
   layout->addLayout( buttonLayout );

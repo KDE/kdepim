@@ -73,27 +73,21 @@ void TagPropertiesDialog::setupUi()
     mainLayout->addWidget(widget);
     mainLayout->addWidget(buttonBox);
 
-    connect(ui.addAttrButton, SIGNAL(clicked(bool)),
-            this, SLOT(addAttributeClicked()));
-    connect(ui.deleteAttrButton, SIGNAL(clicked(bool)),
-            this, SLOT(deleteAttributeClicked()));
+    connect(ui.addAttrButton, &QPushButton::clicked, this, &TagPropertiesDialog::addAttributeClicked);
+    connect(ui.deleteAttrButton, &QPushButton::clicked, this, &TagPropertiesDialog::deleteAttributeClicked);
 
-    connect(ui.addRIDButton, SIGNAL(clicked(bool)),
-            this, SLOT(addRIDClicked()));
-    connect(ui.deleteRIDButton, SIGNAL(clicked(bool)),
-            this, SLOT(deleteRIDClicked()));
+    connect(ui.addRIDButton, &QPushButton::clicked, this, &TagPropertiesDialog::addRIDClicked);
+    connect(ui.deleteRIDButton, &QPushButton::clicked, this, &TagPropertiesDialog::deleteRIDClicked);
 
     Attribute::List attributes = mTag.attributes();
     mAttributesModel = new QStandardItemModel(attributes.size(), 2, this);
-    connect(mAttributesModel, SIGNAL(itemChanged(QStandardItem*)),
-            this, SLOT(attributeChanged(QStandardItem*)));
+    connect(mAttributesModel, &QStandardItemModel::itemChanged, this, &TagPropertiesDialog::attributeChanged);
     QStringList labels;
     labels << i18n("Attribute") << i18n("Value");
     mAttributesModel->setHorizontalHeaderLabels(labels);
 
     mRemoteIdsModel = new QStandardItemModel(this);
-    connect(mRemoteIdsModel, SIGNAL(itemChanged(QStandardItem*)),
-            this, SLOT(remoteIdChanged(QStandardItem*)));
+    connect(mRemoteIdsModel, &QStandardItemModel::itemChanged, this, &TagPropertiesDialog::remoteIdChanged);
     mRemoteIdsModel->setColumnCount(2);
     labels.clear();
     labels << i18n("Resource") << i18n("Remote ID");

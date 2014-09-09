@@ -53,18 +53,12 @@ MonitorItem::MonitorItem( const QString &identifier_, MonitorsModel* model):
     return;
   }
 
-  connect( mInterface, SIGNAL(monitoredCollectionsChanged()),
-           this, SLOT(monitoredCollectionsChanged()) );
-  connect( mInterface, SIGNAL(monitoredItemsChanged()),
-           this, SLOT(monitoredItemsChanged()) );
-  connect( mInterface, SIGNAL(monitoredResourcesChanged()),
-           this, SLOT(monitoredResourcesChanged()) );
-  connect( mInterface, SIGNAL(monitoredMimeTypesChanged()),
-           this, SLOT(monitoredMimeTypesChanged()) );
-  connect( mInterface, SIGNAL(isAllMonitoredChanged()),
-           this, SLOT(isAllMonitoredChanged()) );
-  connect( mInterface, SIGNAL(ignoredSessionsChanged()),
-           this, SLOT(ignoredSessionsChanged()) );
+  connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::monitoredCollectionsChanged, this, &MonitorItem::monitoredCollectionsChanged);
+  connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::monitoredItemsChanged, this, &MonitorItem::monitoredItemsChanged);
+  connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::monitoredResourcesChanged, this, &MonitorItem::monitoredResourcesChanged);
+  connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::monitoredMimeTypesChanged, this, &MonitorItem::monitoredMimeTypesChanged);
+  connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::isAllMonitoredChanged, this, &MonitorItem::isAllMonitoredChanged);
+  connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::ignoredSessionsChanged, this, &MonitorItem::ignoredSessionsChanged);
 
   QTimer::singleShot( 0, this, SLOT(init()));
 }

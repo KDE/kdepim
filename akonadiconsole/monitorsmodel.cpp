@@ -61,10 +61,8 @@ void MonitorsModel::init()
     slotSubscriberSubscribed( subscriber );
   }
 
-  connect( mManager, SIGNAL(subscribed(QString)),
-           this, SLOT(slotSubscriberSubscribed(QString)) );
-  connect( mManager, SIGNAL(unsubscribed(QString)),
-           this, SLOT(slotSubscriberUnsubscribed(QString)) );
+  connect(mManager, &org::freedesktop::Akonadi::NotificationManager::subscribed, this, &MonitorsModel::slotSubscriberSubscribed);
+  connect(mManager, &org::freedesktop::Akonadi::NotificationManager::unsubscribed, this, &MonitorsModel::slotSubscriberUnsubscribed);
 }
 
 void MonitorsModel::slotSubscriberSubscribed( const QString &identifier )
@@ -75,8 +73,7 @@ void MonitorsModel::slotSubscriberSubscribed( const QString &identifier )
   }
 
   MonitorItem *item = new MonitorItem( identifier, this );
-  connect( item, SIGNAL(changed(MonitorsModel::Column)),
-           this, SLOT(slotItemChanged(MonitorsModel::Column)) );
+  connect(item, &MonitorItem::changed, this, &MonitorsModel::slotItemChanged);
   beginInsertRows( QModelIndex(), mData.count(), mData.count() );
   mData.insert( identifier, item );
   endInsertRows();

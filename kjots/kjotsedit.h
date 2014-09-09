@@ -51,7 +51,7 @@ protected:
 
     virtual bool event(QEvent *event);
 
-protected slots:
+public slots:
     void mousePopupMenuImplementation(const QPoint &pos);
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void tryDisableEditing();

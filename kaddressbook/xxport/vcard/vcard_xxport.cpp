@@ -510,8 +510,8 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
   buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
   QPushButton *user2Button = new QPushButton;
   buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &VCardViewerDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &VCardViewerDialog::reject);
   KGuiItem::assign(user1Button, KStandardGuiItem::no());
   KGuiItem::assign(user2Button, KStandardGuiItem::yes());
   mApplyButton = buttonBox->button(QDialogButtonBox::Apply);
@@ -543,10 +543,10 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
 
   mIt = mContacts.begin();
 
-  connect(user2Button, SIGNAL(clicked()), this, SLOT(slotYes()) );
-  connect(user1Button, SIGNAL(clicked()), this, SLOT(slotNo()) );
-  connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(slotApply()) );
-  connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(slotCancel()) );
+  connect(user2Button, &QPushButton::clicked, this, &VCardViewerDialog::slotYes);
+  connect(user1Button, &QPushButton::clicked, this, &VCardViewerDialog::slotNo);
+  connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &VCardViewerDialog::slotApply);
+  connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &VCardViewerDialog::slotCancel);
 
   updateView();
   readConfig();
@@ -642,8 +642,8 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
   QPushButton *user2Button = new QPushButton;
   buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &VCardExportSelectionDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &VCardExportSelectionDialog::reject);
   okButton->setDefault(true);
   setModal( true );
 
