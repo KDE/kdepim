@@ -130,7 +130,7 @@ add_subdirectory(merge/autotests)
 add_subdirectory(sendmail/autotests)
 
 if(QGPGME_FOUND)
-  target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
+  target_link_libraries(kaddressbookprivate KF5::QGpgme)
 endif()
 
 if(PRISON_FOUND)
@@ -162,7 +162,7 @@ target_link_libraries(kaddressbook
 )
 
 if(QGPGME_FOUND)
-  target_link_libraries(kaddressbook ${QGPGME_LIBRARIES})
+  target_link_libraries(kaddressbook KF5::QGpgme)
 endif()
 
 install(TARGETS kaddressbook ${INSTALL_TARGETS_DEFAULT_ARGS})

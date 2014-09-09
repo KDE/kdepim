@@ -53,7 +53,7 @@ target_link_libraries(templateparser
   kleo
   kpgp
   pimcommon
-  ${QGPGME_LIBRARIES}
+  KF5::QGpgme
   Qt5::WebKitWidgets
 )
 set_target_properties(templateparser PROPERTIES

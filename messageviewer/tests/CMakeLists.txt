@@ -22,7 +22,7 @@ macro(add_messageviewer_unittest _source)
   target_link_libraries( ${_name}
     messageviewer
     kleo
-    ${QGPGME_LIBRARIES}
+    KF5::QGpgme
     Qt5::Test
     Qt5::WebKitWidgets
     KF5::KIOCore

@@ -42,7 +42,7 @@ macro( add_messagecomposer_cryptotest _source )
       KF5::PimTextEdit
       KF5::AkonadiCore
       Qt5::Test
-      ${QGPGME_LIBRARIES}
+      KF5::QGpgme
       )
 endmacro()
 

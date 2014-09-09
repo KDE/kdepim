@@ -22,7 +22,7 @@ macro(add_templateparser_unittest _source)
     kleo
     templateparser
     messageviewer
-    ${QGPGME_LIBRARIES}
+    KF5::QGpgme
     Qt5::Test
     Qt5::WebKitWidgets
     KF5::KIOCore

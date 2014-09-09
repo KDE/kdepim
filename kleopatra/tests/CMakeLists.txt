@@ -62,7 +62,7 @@ target_link_libraries(test_verify
   
   
   
-  ${QGPGME_LIBRARIES}
+  KF5::QGpgme
 )
 
 ########### next target ###############
@@ -100,13 +100,13 @@ if(USABLE_ASSUAN_FOUND)
   if(WIN32)
     target_link_libraries(test_uiserver
       ${ASSUAN_VANILLA_LIBRARIES}
-      ${QGPGME_LIBRARIES}
+      KF5::QGpgme
       ws2_32
     )
   else()
     target_link_libraries(test_uiserver
       ${ASSUAN_PTHREAD_LIBRARIES}
-      ${QGPGME_LIBRARIES}
+      KF5::QGpgme
   )
   endif()
 
