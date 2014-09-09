@@ -123,3 +123,4 @@ GenericName[zh_TW]=憑證管理與統一加密介面
 Terminal=false
 X-KDE-StartupNotify=true
 X-DocPath=kleopatra/index.html
+X-DBUS-ServiceName=org.kde.kleopatra

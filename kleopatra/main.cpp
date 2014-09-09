@@ -151,7 +151,7 @@ static bool selfCheck( SplashScreen & splash ) {
     cmd.setSplashScreen( &splash );
 #endif
     QEventLoop loop;
-    QObject::connect( &cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
+    QObject::connect(&cmd, &Kleo::Commands::SelfTestCommand::finished, &loop, &QEventLoop::quit);
 #ifndef QT_NO_SPLASHSCREEN
     QObject::connect( &cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)) );
 #endif
@@ -174,7 +174,7 @@ static void fillKeyCache( SplashScreen * splash, Kleo::UiServer * server ) {
 
   QEventLoop loop;
   Kleo::ReloadKeysCommand * cmd = new Kleo::ReloadKeysCommand( 0 );
-  QObject::connect( cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
+  QObject::connect(cmd, &Kleo::Commands::SelfTestCommand::finished, &loop, &QEventLoop::quit);
 #ifdef HAVE_USABLE_ASSUAN
   QObject::connect( cmd, SIGNAL(finished()), server, SLOT(enableCryptoCommands()) );
 #else

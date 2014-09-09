@@ -351,7 +351,7 @@ set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
 target_link_libraries(kleopatra_bin
   ${_kleopatra_extra_libs}
   kleo
-  ${QGPGME_LIBRARIES}
+  KF5::QGpgme
   KF5::Mime
   KF5::KCMUtils
   ${_kleopatra_uiserver_extra_libs}
@@ -369,7 +369,7 @@ endif()
 install(TARGETS kleopatra_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(
-  PROGRAMS data/kleopatra.desktop data/kleopatra_import.desktop
+  PROGRAMS data/org.kde.kleopatra.desktop data/kleopatra_import.desktop
   DESTINATION ${XDG_APPS_INSTALL_DIR}
 )
 install(FILES data/kleopatra.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
