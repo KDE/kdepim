@@ -174,7 +174,7 @@ JournalFrame::JournalFrame( const Akonadi::Item &j,
   mEditButton->setToolTip( i18n( "Edit this journal entry" ) );
   mEditButton->setWhatsThis( i18n( "Opens an editor dialog for this journal entry" ) );
   buttonsLayout->addWidget( mEditButton );
-  connect( mEditButton, SIGNAL(clicked()), this, SLOT(editItem()) );
+  connect(mEditButton, &QPushButton::clicked, this, &JournalFrame::editItem);
 
   mDeleteButton = new QPushButton( this );
   mDeleteButton->setObjectName( QLatin1String("deleteButton") );
@@ -185,7 +185,7 @@ JournalFrame::JournalFrame( const Akonadi::Item &j,
   mDeleteButton->setToolTip( i18n( "Delete this journal entry" ) );
   mDeleteButton->setWhatsThis( i18n( "Delete this journal entry" ) );
   buttonsLayout->addWidget( mDeleteButton );
-  connect( mDeleteButton, SIGNAL(pressed()), this, SLOT(deleteItem()) );
+  connect(mDeleteButton, &QPushButton::pressed, this, &JournalFrame::deleteItem);
 
   mPrintButton = new QPushButton( this );
   mPrintButton->setText( i18n( "&Print" ) );

@@ -192,7 +192,7 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
   , mResizeColumnsScheduled( false )
 {
   mResizeColumnsTimer = new QTimer( this );
-  connect( mResizeColumnsTimer, SIGNAL(timeout()), SLOT(resizeColumns()) );
+  connect(mResizeColumnsTimer, &QTimer::timeout, this, &TodoView::resizeColumns);
   mResizeColumnsTimer->setInterval( 100 ); // so we don't overdue it when user resizes window manually
   mResizeColumnsTimer->setSingleShot( true );
 
@@ -208,7 +208,7 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
   mProxyModel->setFilterKeyColumn( TodoModel::SummaryColumn );
   mProxyModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
   mProxyModel->setSortRole( Qt::EditRole );
-  connect( mProxyModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex,int,int)) );
+  connect(mProxyModel, &TodoViewSortFilterProxyModel::rowsInserted, this, &TodoView::onRowsInserted);
 
   if ( !mSidebarView ) {
     mQuickSearch = new TodoViewQuickSearch( calendar(), this );
@@ -242,7 +242,7 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
                           QAbstractItemView::EditKeyPressed );
 
   connect( mView->header(), SIGNAL(geometriesChanged()), SLOT(scheduleResizeColumns()) );
-  connect( mView, SIGNAL(visibleColumnCountChanged()), SLOT(resizeColumns()) );
+  connect(mView, &TodoViewView::visibleColumnCountChanged, this, &TodoView::resizeColumns);
 
   TodoRichTextDelegate *richTextDelegate = new TodoRichTextDelegate( mView );
   mView->setItemDelegateForColumn( TodoModel::SummaryColumn, richTextDelegate );
@@ -306,7 +306,7 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
 
   connect( mFlatViewButton, SIGNAL(toggled(bool)), SLOT(setFlatView(bool)) );
   if ( mFullViewButton ) {
-    connect( mFullViewButton, SIGNAL(toggled(bool)), SLOT(setFullView(bool)) );
+    connect(mFullViewButton, &QToolButton::toggled, this, &TodoView::setFullView);
   }
 
   QGridLayout *layout = new QGridLayout( this );
@@ -922,7 +922,7 @@ QMenu *TodoView::createCategoryPopupMenu()
 
 
   Akonadi::TagFetchJob *tagFetchJob = new Akonadi::TagFetchJob(this);
-  connect(tagFetchJob, SIGNAL(result(KJob*)), this, SLOT(onTagsFetched(KJob*)));
+  connect(tagFetchJob, &Akonadi::TagFetchJob::result, this, &TodoView::onTagsFetched);
   tagFetchJob->setProperty("menu", QVariant::fromValue(QPointer<QMenu>(tempMenu)));
   tagFetchJob->setProperty("checkedCategories", checkedCategories);
 
