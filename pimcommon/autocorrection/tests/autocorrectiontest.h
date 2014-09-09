@@ -36,6 +36,7 @@ private Q_SLOTS:
     void shouldReplaceSingleQuote();
     void shouldReplaceDoubleQuote();
     void shouldNotReplaceUppercaseLetter();
+    void shouldReplaceToBold();
 
 private:
     KSharedConfig::Ptr mConfig;
