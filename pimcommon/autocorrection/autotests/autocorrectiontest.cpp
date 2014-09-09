@@ -248,5 +248,24 @@ void AutoCorrectionTest::shouldNotReplaceUppercaseLetter()
     QCOMPARE(doc.toPlainText(), text);
 }
 
+void AutoCorrectionTest::shouldReplaceToBold()
+{
+    PimCommon::AutoCorrection autocorrection;
+    autocorrection.setEnabledAutoCorrection(true);
+    autocorrection.setAutoBoldUnderline(true);
+
+    QTextDocument doc;
+    //We don't use html => don't change it.
+    QString text = QLatin1String("*foo*");
+    doc.setHtml(text);
+    int position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), text);
+
+    autocorrection.autocorrect(true, doc, position);
+    //TODO QCOMPARE(doc.toHtml(), text);
+
+}
+
 
 QTEST_MAIN(AutoCorrectionTest)
