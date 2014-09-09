@@ -176,27 +176,27 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
                     menuService->setText(i18n("Delete Folder..."));
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFolder()));
+                    connect(act, &QAction::triggered, this, &StorageServiceManager::slotDeleteFolder);
                     break;
                 case PimCommon::StorageServiceAbstract::DownloadFileCapability:
                     menuService->setText(i18n("Download File..."));
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotDownloadFile()));
+                    connect(act, &QAction::triggered, this, &StorageServiceManager::slotDownloadFile);
                     break;
                 case PimCommon::StorageServiceAbstract::UploadFileCapability:
                     menuService->setText(i18n("Upload File..."));
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
+                    connect(act, &QAction::triggered, this, &StorageServiceManager::slotShareFile);
                     break;
                 case PimCommon::StorageServiceAbstract::ShareLinkCapability:
                     menuService->setText(i18n("Share File..."));
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
+                    connect(act, &QAction::triggered, this, &StorageServiceManager::slotShareFile);
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFileCapability:
                     menuService->setText(i18n("Delete File..."));
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFile()));
+                    connect(act, &QAction::triggered, this, &StorageServiceManager::slotDeleteFile);
                     break;
                 case PimCommon::StorageServiceAbstract::AccountInfoCapability:
                     menuService->setText(i18n("Account Info..."));
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotAccountInfo()));
+                    connect(act, &QAction::triggered, this, &StorageServiceManager::slotAccountInfo);
                     break;
                 }
                 menuService->addAction(act);
@@ -283,7 +283,7 @@ void StorageServiceManager::slotDeleteFile()
             StorageServiceAbstract *service = mListService.value(type);
             QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(StorageServiceDeleteDialog::DeleteFiles,service);
             defaultConnect(service);
-            connect(dlg,SIGNAL(deleteFileDone(QString,QString)), this, SIGNAL(deleteFileDone(QString,QString)));
+            connect(dlg.data(), &StorageServiceDeleteDialog::deleteFileDone, this, &StorageServiceManager::deleteFileDone);
             dlg->exec();
             delete dlg;
         }
@@ -299,7 +299,7 @@ void StorageServiceManager::slotDeleteFolder()
             StorageServiceAbstract *service = mListService.value(type);
             QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(StorageServiceDeleteDialog::DeleteFolders, service);
             defaultConnect(service);
-            connect(dlg,SIGNAL(deleteFolderDone(QString,QString)), this, SIGNAL(deleteFolderDone(QString,QString)));
+            connect(dlg.data(), &StorageServiceDeleteDialog::deleteFolderDone, this, &StorageServiceManager::deleteFolderDone);
             dlg->exec();
             delete dlg;
         }

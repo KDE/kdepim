@@ -50,8 +50,8 @@ StorageServiceSettingsDialog::StorageServiceSettingsDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &StorageServiceSettingsDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageServiceSettingsDialog::reject);
     mSettings = new PimCommon::StorageServiceSettingsWidget;
     mainLayout->addWidget(mSettings);
     mainLayout->addWidget(buttonBox);
@@ -77,18 +77,18 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
 
     QVBoxLayout *lay = new QVBoxLayout;
     mStorageManager = new PimCommon::StorageServiceManager(this);
-    connect(mStorageManager, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
-    connect(mStorageManager, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), this, SLOT(slotuploadDownloadFileProgress(QString,qint64,qint64)));
-    connect(mStorageManager, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
-    connect(mStorageManager, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
-    connect(mStorageManager, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
-    connect(mStorageManager, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
+    connect(mStorageManager, &PimCommon::StorageServiceManager::uploadFileDone, this, &StorageServiceTestWidget::slotUploadFileDone);
+    connect(mStorageManager, &PimCommon::StorageServiceManager::uploadDownloadFileProgress, this, &StorageServiceTestWidget::slotuploadDownloadFileProgress);
+    connect(mStorageManager, &PimCommon::StorageServiceManager::shareLinkDone, this, &StorageServiceTestWidget::slotShareLinkDone);
+    connect(mStorageManager, &PimCommon::StorageServiceManager::authenticationDone, this, &StorageServiceTestWidget::slotAuthenticationDone);
+    connect(mStorageManager, &PimCommon::StorageServiceManager::authenticationFailed, this, &StorageServiceTestWidget::slotAuthenticationFailed);
+    connect(mStorageManager, &PimCommon::StorageServiceManager::actionFailed, this, &StorageServiceTestWidget::slotActionFailed);
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
     bar->addAction(QLatin1String("Settings..."), this, SLOT(slotSettings()));
     QAction *act = bar->addAction(QLatin1String("service menu"));
     QMenu *menu = new QMenu(QLatin1String("Service"));
-    connect(menu, SIGNAL(aboutToShow()), this, SLOT(slotServiceMenu()));
+    connect(menu, &QMenu::aboutToShow, this, &StorageServiceTestWidget::slotServiceMenu);
     act->setMenu(menu);
 
     mEdit = new QTextEdit;

@@ -39,8 +39,8 @@ LoginDialog::LoginDialog(QWidget *parent)
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &LoginDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &LoginDialog::reject);
     mOkButton->setDefault(true);
 
     QWidget *w = new QWidget;
@@ -64,7 +64,7 @@ LoginDialog::LoginDialog(QWidget *parent)
     mPassword->setEchoMode(QLineEdit::Password);
 
     mainLayout->addWidget(w);
-    connect(mUsername, SIGNAL(textChanged(QString)), this, SLOT(slotUserNameChanged(QString)));
+    connect(mUsername, &QLineEdit::textChanged, this, &LoginDialog::slotUserNameChanged);
     mOkButton->setEnabled(false);
     resize(300,100);
     mLabUsername->setFocus();

@@ -82,7 +82,7 @@ void BoxJob::requestTokenAccess()
     //qDebug()<<" url"<<url;
     delete mAuthDialog;
     mAuthDialog = new PimCommon::StorageAuthViewDialog;
-    connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
+    connect(mAuthDialog.data(), &PimCommon::StorageAuthViewDialog::urlChanged, this, &BoxJob::slotRedirect);
     mAuthDialog->setUrl(url);
     if (mAuthDialog->exec()) {
         delete mAuthDialog;

@@ -98,9 +98,9 @@ void DropBoxStorageService::readConfig()
 void DropBoxStorageService::storageServiceauthentication()
 {
     DropBoxJob *job = new DropBoxJob(this);
-    connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
-    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
-    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
+    connect(job, &DropBoxJob::authorizationDone, this, &DropBoxStorageService::slotAuthorizationDone);
+    connect(job, &DropBoxJob::authorizationFailed, this, &DropBoxStorageService::slotAuthorizationFailed);
+    connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
     job->requestTokenAccess();
 }
 
@@ -121,8 +121,8 @@ void DropBoxStorageService::storageServiceShareLink(const QString &root, const Q
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::shareLinkDone, this, &DropBoxStorageService::slotShareLinkDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->shareLink(root, path);
     }
 }
@@ -135,8 +135,8 @@ void DropBoxStorageService::storageServicecreateServiceFolder()
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::createFolderDone, this, &DropBoxStorageService::slotCreateFolderDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->createServiceFolder();
     }
 }
@@ -171,8 +171,8 @@ void DropBoxStorageService::storageServicelistFolder(const QString &folder)
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(listFolderDone(QVariant)), this, SLOT(slotListFolderDone(QVariant)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::listFolderDone, this, &DropBoxStorageService::slotListFolderDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->listFolder(folder);
     }
 }
@@ -185,8 +185,8 @@ void DropBoxStorageService::storageServiceaccountInfo()
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::accountInfoDone, this, &DropBoxStorageService::slotAccountInfoDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->accountInfo();
     }
 }
@@ -201,8 +201,8 @@ void DropBoxStorageService::storageServicecreateFolder(const QString &name, cons
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::createFolderDone, this, &DropBoxStorageService::slotCreateFolderDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->createFolder(name, destination);
     }
 }
@@ -218,11 +218,11 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename, co
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
-        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
-        connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
+        connect(job, &DropBoxJob::uploadFileDone, this, &DropBoxStorageService::slotUploadFileDone);
+        connect(job, &DropBoxJob::shareLinkDone, this, &DropBoxStorageService::slotShareLinkDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
+        connect(job, &DropBoxJob::uploadDownloadFileProgress, this, &DropBoxStorageService::slotuploadDownloadFileProgress);
+        connect(job, &DropBoxJob::uploadFileFailed, this, &DropBoxStorageService::slotUploadFileFailed);
         mUploadReply = job->uploadFile(filename, uploadAsName, destination);
     }
 }
@@ -298,10 +298,10 @@ void DropBoxStorageService::storageServicedownloadFile(const QString &name, cons
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
+        connect(job, &DropBoxJob::downLoadFileDone, this, &DropBoxStorageService::slotDownLoadFileDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
+        connect(job, &DropBoxJob::downLoadFileFailed, this, &DropBoxStorageService::slotDownLoadFileFailed);
+        connect(job, &DropBoxJob::uploadDownloadFileProgress, this, &DropBoxStorageService::slotuploadDownloadFileProgress);
         mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
@@ -315,8 +315,8 @@ void DropBoxStorageService::storageServicedeleteFile(const QString &filename)
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::deleteFileDone, this, &DropBoxStorageService::slotDeleteFileDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->deleteFile(filename);
     }
 }
@@ -330,8 +330,8 @@ void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::deleteFolderDone, this, &DropBoxStorageService::slotDeleteFolderDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->deleteFolder(foldername);
     }
 }
@@ -345,8 +345,8 @@ void DropBoxStorageService::storageServiceRenameFolder(const QString &source, co
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::renameFolderDone, this, &DropBoxStorageService::slotRenameFolderDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->renameFolder(source, destination);
     }
 }
@@ -360,8 +360,8 @@ void DropBoxStorageService::storageServiceRenameFile(const QString &source, cons
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::renameFileDone, this, &DropBoxStorageService::slotRenameFileDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->renameFile(source, destination);
     }
 }
@@ -375,8 +375,8 @@ void DropBoxStorageService::storageServiceMoveFolder(const QString &source, cons
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::moveFolderDone, this, &DropBoxStorageService::slotMoveFileDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->moveFolder(source, destination);
     }
 }
@@ -390,8 +390,8 @@ void DropBoxStorageService::storageServiceMoveFile(const QString &source, const 
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::moveFileDone, this, &DropBoxStorageService::slotMoveFileDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->moveFile(source, destination);
     }
 }
@@ -405,8 +405,8 @@ void DropBoxStorageService::storageServiceCopyFile(const QString &source, const 
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::copyFileDone, this, &DropBoxStorageService::slotCopyFileDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->copyFile(source, destination);
     }
 }
@@ -420,8 +420,8 @@ void DropBoxStorageService::storageServiceCopyFolder(const QString &source, cons
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &DropBoxJob::copyFolderDone, this, &DropBoxStorageService::slotCopyFolderDone);
+        connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->copyFolder(source, destination);
     }
 }

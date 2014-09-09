@@ -68,7 +68,7 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     setWindowTitle( i18n( "Download File" ) );
 
     mStorageServiceProgressIndicator = new PimCommon::StorageServiceProgressIndicator(this);
-    connect(mStorageServiceProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
+    connect(mStorageServiceProgressIndicator, &PimCommon::StorageServiceProgressIndicator::updatePixmap, this, &StorageServiceDownloadDialog::slotUpdatePixmap);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -76,8 +76,8 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     mUser1Button = new QPushButton;
     mCloseButton = buttonBox->button(QDialogButtonBox::Close);
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &StorageServiceDownloadDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageServiceDownloadDialog::reject);
     mUser1Button->setText(i18n("Download"));
 
     QWidget *w = new QWidget;
@@ -94,11 +94,11 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     hbox->addWidget(mLabelProgressIncator);
     hbox->setAlignment(mLabelProgressIncator, Qt::AlignLeft);
     mTreeWidget = new StorageServiceDownloadTreeWidget(storage);
-    connect(mTreeWidget, SIGNAL(downloadFile()), this, SLOT(slotDownloadFile()));
+    connect(mTreeWidget, &StorageServiceDownloadTreeWidget::downloadFile, this, &StorageServiceDownloadDialog::slotDownloadFile);
 
 
     vbox->addWidget(mTreeWidget);
-    connect(mTreeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
+    connect(mTreeWidget, &StorageServiceDownloadTreeWidget::itemDoubleClicked, this, &StorageServiceDownloadDialog::slotItemDoubleClicked);
     mProgressWidget = new StorageServiceProgressWidget(storage);
     mProgressWidget->setProgressBarType(StorageServiceProgressWidget::DownloadBar);
     vbox->addWidget(mProgressWidget);
@@ -106,13 +106,13 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     w->setLayout(vbox);
     mainLayout->addWidget(w);
     mUser1Button->setEnabled(false);
-    connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotDownloadFile()));
-    connect(mStorage, SIGNAL(listFolderDone(QString,QVariant)), this, SLOT(slotListFolderDone(QString,QVariant)));
-    connect(mStorage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
-    connect(mStorage, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownfileDone(QString,QString)));
-    connect(mStorage, SIGNAL(downLoadFileFailed(QString,QString)), this, SLOT(slotDownfileFailed(QString,QString)));
-    connect(mStorage, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadDownloadFileProgress(QString,qint64,qint64)));
-    connect(mTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
+    connect(mUser1Button, &QPushButton::clicked, this, &StorageServiceDownloadDialog::slotDownloadFile);
+    connect(mStorage, &PimCommon::StorageServiceAbstract::listFolderDone, this, &StorageServiceDownloadDialog::slotListFolderDone);
+    connect(mStorage, &PimCommon::StorageServiceAbstract::actionFailed, this, &StorageServiceDownloadDialog::slotActionFailed);
+    connect(mStorage, &PimCommon::StorageServiceAbstract::downLoadFileDone, this, &StorageServiceDownloadDialog::slotDownfileDone);
+    connect(mStorage, &PimCommon::StorageServiceAbstract::downLoadFileFailed, this, &StorageServiceDownloadDialog::slotDownfileFailed);
+    connect(mStorage, &PimCommon::StorageServiceAbstract::uploadDownloadFileProgress, this, &StorageServiceDownloadDialog::slotUploadDownloadFileProgress);
+    connect(mTreeWidget, &StorageServiceDownloadTreeWidget::itemClicked, this, &StorageServiceDownloadDialog::slotItemActivated);
     mStorageServiceProgressIndicator->startAnimation();
     mTreeWidget->setEnabled(false);
     mTreeWidget->refreshList();

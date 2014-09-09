@@ -96,18 +96,18 @@ void ServiceTestWidget::slotAuthentication()
 
 void ServiceTestWidget::connectStorageService()
 {
-    connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
-    connect(mStorageService, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), this, SLOT(slotuploadDownloadFileProgress(QString,qint64,qint64)));
-    connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
-    connect(mStorageService, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
-    connect(mStorageService, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
-    connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString,QString)));
-    connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
-    connect(mStorageService, SIGNAL(listFolderDone(QString,QVariant)), this, SLOT(slotListFolderDone(QString,QVariant)));
-    connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
-    connect(mStorageService, SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)));
-    connect(mStorageService, SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)));
-    connect(mStorageService, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownloadFileDone(QString,QString)));
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::actionFailed, this, &ServiceTestWidget::slotActionFailed);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::uploadDownloadFileProgress, this, &ServiceTestWidget::slotuploadDownloadFileProgress);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::shareLinkDone, this, &ServiceTestWidget::slotShareLinkDone);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::authenticationDone, this, &ServiceTestWidget::slotAuthenticationDone);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::authenticationFailed, this, &ServiceTestWidget::slotAuthenticationFailed);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::createFolderDone, this, &ServiceTestWidget::slotCreateFolderDone);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::uploadFileDone, this, &ServiceTestWidget::slotUploadFileDone);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::listFolderDone, this, &ServiceTestWidget::slotListFolderDone);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::accountInfoDone, this, &ServiceTestWidget::slotAccountInfoDone);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::deleteFileDone, this, &ServiceTestWidget::slotDeleteFileDone);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::deleteFolderDone, this, &ServiceTestWidget::slotDeleteFolderDone);
+    connect(mStorageService, &PimCommon::StorageServiceAbstract::downLoadFileDone, this, &ServiceTestWidget::slotDownloadFileDone);
 }
 
 void ServiceTestWidget::slotDeleteFolderDone(const QString &serviceName, const QString &foldername)

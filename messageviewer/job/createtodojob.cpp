@@ -46,7 +46,7 @@ void CreateTodoJob::start()
     if ( !mItem.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
         job->fetchScope().fetchFullPayload();
-        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
+        connect(job, &Akonadi::ItemFetchJob::result, this, &CreateTodoJob::slotFetchDone);
 
         if ( job->exec() ) {
             if ( job->items().count() == 1 ) {
@@ -93,7 +93,7 @@ void CreateTodoJob::createTodo()
     newTodoItem.setPayload<KCalCore::Todo::Ptr>( mTodoPtr );
 
     Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob(newTodoItem, mCollection);
-    connect(createJob, SIGNAL(result(KJob*)), this, SLOT(slotCreateNewTodo(KJob*)));
+    connect(createJob, &Akonadi::ItemCreateJob::result, this, &CreateTodoJob::slotCreateNewTodo);
 }
 
 void CreateTodoJob::slotCreateNewTodo(KJob *job)

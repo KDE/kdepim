@@ -72,19 +72,19 @@ void Viewer::initialize()
              SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)) );
     connect( d_ptr, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
              SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
-    connect( d_ptr, SIGNAL(requestConfigSync()), SIGNAL(requestConfigSync()) );
-    connect( d_ptr, SIGNAL(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)), SIGNAL(makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode)) );
+    connect(d_ptr, &ViewerPrivate::requestConfigSync, this, &Viewer::requestConfigSync);
+    connect(d_ptr, &ViewerPrivate::makeResourceOnline, this, &Viewer::makeResourceOnline);
     connect( d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
              SIGNAL(showReader(KMime::Content*,bool,QString)) );
-    connect( d_ptr, SIGNAL(showMessage(KMime::Message::Ptr,QString)), this, SIGNAL(showMessage(KMime::Message::Ptr,QString)) );
+    connect(d_ptr, &ViewerPrivate::showMessage, this, &Viewer::showMessage);
     connect( d_ptr, SIGNAL(showStatusBarMessage(QString)),
              this, SIGNAL(showStatusBarMessage(QString)) );
     connect( d_ptr, SIGNAL(itemRemoved()),
              this, SIGNAL(itemRemoved()) );
-    connect( d_ptr, SIGNAL(changeDisplayMail(Viewer::DisplayFormatMessage,bool)), SLOT(slotChangeDisplayMail(Viewer::DisplayFormatMessage,bool)) );
-    connect( d_ptr, SIGNAL(moveMessageToTrash()), SIGNAL(moveMessageToTrash()));
+    connect(d_ptr, &ViewerPrivate::changeDisplayMail, this, &Viewer::slotChangeDisplayMail);
+    connect(d_ptr, &ViewerPrivate::moveMessageToTrash, this, &Viewer::moveMessageToTrash);
 
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), d_ptr,  SLOT(slotGeneralFontChanged()) );
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, d_ptr, &ViewerPrivate::slotGeneralFontChanged);
 
     setMessage( KMime::Message::Ptr(), Delayed );
 }

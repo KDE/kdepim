@@ -41,8 +41,8 @@ StorageServiceCheckNameDialog::StorageServiceCheckNameDialog(QWidget *parent)
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &StorageServiceCheckNameDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageServiceCheckNameDialog::reject);
 
     QWidget *w = new QWidget;
     mainLayout->addWidget(w);
@@ -59,7 +59,7 @@ StorageServiceCheckNameDialog::StorageServiceCheckNameDialog(QWidget *parent)
     mName = new QLineEdit;
     hbox->addWidget(mName);
     lay->addLayout(hbox);
-    connect(mName, SIGNAL(textChanged(QString)), this, SLOT(slotNameChanged(QString)));
+    connect(mName, &QLineEdit::textChanged, this, &StorageServiceCheckNameDialog::slotNameChanged);
 }
 
 StorageServiceCheckNameDialog::~StorageServiceCheckNameDialog()
