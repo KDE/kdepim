@@ -125,3 +125,6 @@ X-DocPath=http://userbase.kde.org/KAddressBook
 Terminal=false
 X-KDE-StartupNotify=true
 Categories=Qt;KDE;Office;ContactManagement;
+X-DBUS-StartupType=Unique
+X-DBUS-ServiceName=org.kde.kaddressbook
+

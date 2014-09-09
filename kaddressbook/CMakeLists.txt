@@ -166,7 +166,7 @@ if(QGPGME_FOUND)
 endif()
 
 install(TARGETS kaddressbook ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS data/kaddressbook.desktop data/kaddressbook-importer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS data/org.kde.kaddressbook.desktop data/kaddressbook-importer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES data/kaddressbook.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
 install(FILES kaddressbookui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kaddressbook)
 

@@ -107,4 +107,5 @@ Type=Application
 Terminal=false
 X-KDE-StartupNotify=true
 X-DBUS-StartupType=Multi
+X-DBUS-ServiceName=org.kde.kjots
 Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;

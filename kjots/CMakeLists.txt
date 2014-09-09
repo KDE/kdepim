@@ -88,7 +88,7 @@ install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 
-install( PROGRAMS Kjots.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install( PROGRAMS org.kde.kjots.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES Kjots.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
 install( FILES kjots.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 install( FILES kjotsui.rc  DESTINATION ${KXMLGUI_INSTALL_DIR}/kjots)
