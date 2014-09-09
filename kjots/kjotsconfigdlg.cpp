@@ -21,15 +21,15 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
-  : KCMultiDialog( parent )
+KJotsConfigDlg::KJotsConfigDlg(const QString &title, QWidget *parent)
+    : KCMultiDialog(parent)
 {
-    setWindowTitle( title );
-    setFaceType( KPageDialog::List );
-    setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    setWindowTitle(title);
+    setFaceType(KPageDialog::List);
+    setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
     button(QDialogButtonBox::Ok)->setDefault(true);
 
-    addModule( QLatin1String("kjots_config_misc") );
+    addModule(QLatin1String("kjots_config_misc"));
     connect(button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &KJotsConfigDlg::slotOk);
 }
 
@@ -41,12 +41,12 @@ void KJotsConfigDlg::slotOk()
 {
 }
 
-KJotsConfigMisc::KJotsConfigMisc( QWidget *parent )
-    :KCModule( parent )
+KJotsConfigMisc::KJotsConfigMisc(QWidget *parent)
+    : KCModule(parent)
 {
-    QHBoxLayout *lay = new QHBoxLayout( this );
-    miscPage = new confPageMisc( 0 );
-    lay->addWidget( miscPage );
+    QHBoxLayout *lay = new QHBoxLayout(this);
+    miscPage = new confPageMisc(0);
+    lay->addWidget(miscPage);
     connect(miscPage->autoSaveInterval, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &KJotsConfigMisc::modified);
     connect(miscPage->autoSave, &QCheckBox::stateChanged, this, &KJotsConfigMisc::modified);
     load();
@@ -54,26 +54,26 @@ KJotsConfigMisc::KJotsConfigMisc( QWidget *parent )
 
 void KJotsConfigMisc::modified()
 {
-  emit changed( true );
+    emit changed(true);
 }
 
 void KJotsConfigMisc::load()
 {
-    KConfig config( QLatin1String("kjotsrc") );
-    KConfigGroup group = config.group( "kjots" );
-    miscPage->autoSaveInterval->setValue( group.readEntry( "AutoSaveInterval", 5 ) );
-    miscPage->autoSave->setChecked( group.readEntry( "AutoSave", true ) );
-    emit changed( false );
+    KConfig config(QLatin1String("kjotsrc"));
+    KConfigGroup group = config.group("kjots");
+    miscPage->autoSaveInterval->setValue(group.readEntry("AutoSaveInterval", 5));
+    miscPage->autoSave->setChecked(group.readEntry("AutoSave", true));
+    emit changed(false);
 }
 
 void KJotsConfigMisc::save()
 {
-    KConfig config( QLatin1String("kjotsrc") );
-    KConfigGroup group = config.group( "kjots" );
-    group.writeEntry( "AutoSaveInterval", miscPage->autoSaveInterval->value() );
-    group.writeEntry( "AutoSave", miscPage->autoSave->isChecked() );
+    KConfig config(QLatin1String("kjotsrc"));
+    KConfigGroup group = config.group("kjots");
+    group.writeEntry("AutoSaveInterval", miscPage->autoSaveInterval->value());
+    group.writeEntry("AutoSave", miscPage->autoSave->isChecked());
     group.sync();
-    emit changed( false );
+    emit changed(false);
 }
 
 #include "moc_kjotsconfigdlg.cpp"

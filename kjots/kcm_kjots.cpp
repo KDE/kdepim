@@ -16,13 +16,12 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
 #include "kjotsconfigdlg.h"
 
 extern "C"
 {
-  Q_DECL_EXPORT KCModule *create_kjots_config_misc( QWidget *parent )
-  {
-      return new KJotsConfigMisc(parent );
-  }
+    Q_DECL_EXPORT KCModule *create_kjots_config_misc(QWidget *parent)
+    {
+        return new KJotsConfigMisc(parent);
+    }
 }

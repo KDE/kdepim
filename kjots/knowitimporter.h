@@ -29,16 +29,14 @@ class QDomElement;
 
 class KUrl;
 
-struct KnowItNote
-{
-  QString title;
-  int depth;
-  QString content;
-  int id; // Only used to determine parent /child relationships. This is not the KJots Page or Book id.
-  int parent;
+struct KnowItNote {
+    QString title;
+    int depth;
+    QString content;
+    int id; // Only used to determine parent /child relationships. This is not the KJots Page or Book id.
+    int parent;
 
-  QList< QPair< QString, QString > > links;
-
+    QList< QPair< QString, QString > > links;
 
 };
 
@@ -49,30 +47,29 @@ Class for importing KNowIt notes. KNowIt is not longer maintained.
 class KnowItImporter
 {
 public:
-  KnowItImporter();
+    KnowItImporter();
 
-  /**
-  Create a KJotsBook from the knowit file at @p url.
-  */
-  void importFromUrl( const KUrl& url );
+    /**
+    Create a KJotsBook from the knowit file at @p url.
+    */
+    void importFromUrl(const KUrl &url);
 
-  private:
+private:
     /**
     Builds several trees with roots at m_notes.
     @param url The url of the knowit file.
     */
-    void buildNoteTree( const KUrl& url );
+    void buildNoteTree(const KUrl &url);
 
     /**
     Add a representation of note @p n to m_domDoc. If @p n has child notes, it will create a book, otherwise a page.
     */
-    QDomElement addNote( const KnowItNote& n );
+    QDomElement addNote(const KnowItNote &n);
 
     /**
     Build a domDocument from the notes rooted at m_notes.
     */
     void buildDomDocument();
-
 
     QList<KnowItNote> m_notes; // Top level notes.
     QList<KnowItNote> m_lastNoteAtLevel;

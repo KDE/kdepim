@@ -60,16 +60,15 @@ SieveEditor::~SieveEditor()
 
 void SieveEditor::slotAccepted()
 {
-   Q_EMIT okClicked();
-   accept();
+    Q_EMIT okClicked();
+    accept();
 }
 
 void SieveEditor::slotCanceled()
 {
-   Q_EMIT cancelClicked();
-   reject();
+    Q_EMIT cancelClicked();
+    reject();
 }
-
 
 bool SieveEditor::event(QEvent *e)
 {

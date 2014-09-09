@@ -36,7 +36,7 @@
 #include <kconfiggroup.h>
 #include <KSharedConfig>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
     KLocalizedString::setApplicationDomain("kjots");
     AboutData aboutData;
@@ -53,24 +53,24 @@ int main( int argc, char **argv )
     // to the new config settings
     KConfigGroup config(KSharedConfig::openConfig(), "kjots");
     if (config.hasKey("EFontFamily")) {
-      // read old font and create it
-      QFont font( config.readEntry("EFontFamily"),
-                  config.readEntry("EFontSize", 12),
-                  config.readEntry("EFontWeight", 0),
-                  config.readEntry("EFontItalic", 0));
-      // delete old entries
-      config.deleteEntry("EFontFamily");
-      config.deleteEntry("EFontSize");
-      config.deleteEntry("EFontWeight");
-      config.deleteEntry("EFontItalic");
-      config.deleteEntry("EFontCharset");
-      // write new "converted" entry
-      config.writeEntry("Font", font);
+        // read old font and create it
+        QFont font(config.readEntry("EFontFamily"),
+                   config.readEntry("EFontSize", 12),
+                   config.readEntry("EFontWeight", 0),
+                   config.readEntry("EFontItalic", 0));
+        // delete old entries
+        config.deleteEntry("EFontFamily");
+        config.deleteEntry("EFontSize");
+        config.deleteEntry("EFontWeight");
+        config.deleteEntry("EFontItalic");
+        config.deleteEntry("EFontCharset");
+        // write new "converted" entry
+        config.writeEntry("Font", font);
     }
 
     KJotsMain *jots = new KJotsMain;
-    if( a.isSessionRestored() ) {
-        if( KJotsMain::canBeRestored(1) ) {
+    if (a.isSessionRestored()) {
+        if (KJotsMain::canBeRestored(1)) {
             jots->restore(1);
         }
     }
@@ -81,4 +81,3 @@ int main( int argc, char **argv )
 }
 
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
-/* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

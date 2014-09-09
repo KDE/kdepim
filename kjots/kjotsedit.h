@@ -34,34 +34,34 @@ class KActionCollection;
 
 class KJotsEdit : public KRichTextWidget
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit KJotsEdit ( QItemSelectionModel *selectionModel, QWidget* );
-    virtual ~KJotsEdit ();
+    explicit KJotsEdit(QItemSelectionModel *selectionModel, QWidget *);
+    virtual ~KJotsEdit();
 
-    void delayedInitialization ( KActionCollection* );
-    virtual bool canInsertFromMimeData ( const QMimeData *) const;
-    virtual void insertFromMimeData ( const QMimeData *);
+    void delayedInitialization(KActionCollection *);
+    virtual bool canInsertFromMimeData(const QMimeData *) const;
+    virtual void insertFromMimeData(const QMimeData *);
 
 protected:
     /** Override to make ctrl+click follow links */
     virtual void mouseReleaseEvent(QMouseEvent *);
 
-    virtual void focusOutEvent( QFocusEvent* );
+    virtual void focusOutEvent(QFocusEvent *);
 
-    virtual bool event( QEvent *event );
+    virtual bool event(QEvent *event);
 
 protected slots:
-    void mousePopupMenuImplementation(const QPoint& pos);
+    void mousePopupMenuImplementation(const QPoint &pos);
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void tryDisableEditing();
-    void onBookshelfSelection ( void );
-    void onAutoBullet ( void );
-    void onLinkify ( void );
-    void addCheckmark( void );
-    void onAutoDecimal( void );
-    void DecimalList( void );
-    void pastePlainText( void );
+    void onBookshelfSelection(void);
+    void onAutoBullet(void);
+    void onLinkify(void);
+    void addCheckmark(void);
+    void onAutoDecimal(void);
+    void DecimalList(void);
+    void pastePlainText(void);
 
     void savePage();
     void insertDate();
@@ -76,4 +76,3 @@ private:
 
 #endif // __KJOTSEDIT_H
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
-/* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

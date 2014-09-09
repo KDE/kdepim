@@ -27,12 +27,12 @@
 #include <KLocalizedString>
 
 AboutData::AboutData()
-    : K4AboutData( "kjots", 0, ki18n( "KJots" ),
+    : K4AboutData("kjots", 0, ki18n("KJots"),
                   KDEPIM_VERSION,
-                  ki18n( "KDE note taking utility" ),
+                  ki18n("KDE note taking utility"),
                   K4AboutData::License_GPL,
-                  ki18n("Copyright © 1997–2010 KJots authors" ),
-                  KLocalizedString() )
+                  ki18n("Copyright © 1997–2010 KJots authors"),
+                  KLocalizedString())
 {
 
     addAuthor(ki18n("Stephen Kelly"), ki18n("Current maintainer"), "steveire@gmail.com");

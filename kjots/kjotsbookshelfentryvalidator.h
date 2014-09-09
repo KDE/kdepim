@@ -19,7 +19,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef KJOTSBOOKSHELFENTRYVALIDATOR
 #define KJOTSBOOKSHELFENTRYVALIDATOR
 
@@ -35,14 +34,14 @@
 */
 class KJotsBookshelfEntryValidator : public QValidator
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Create a new Validator for Entries in the KJots bookshelf.
       @param parent The parent object.
       @param model The model to use to validate the input.
     */
-    explicit KJotsBookshelfEntryValidator( QAbstractItemModel* model, QObject *parent = 0 );
+    explicit KJotsBookshelfEntryValidator(QAbstractItemModel *model, QObject *parent = 0);
 
     /**
       Destructor.
@@ -59,10 +58,10 @@ class KJotsBookshelfEntryValidator : public QValidator
 
       \return The validation state.
     */
-    virtual QValidator::State validate ( QString& input, int& pos ) const;
+    virtual QValidator::State validate(QString &input, int &pos) const;
 
-  private:
-    QAbstractItemModel* m_model;
+private:
+    QAbstractItemModel *m_model;
 
 };
 

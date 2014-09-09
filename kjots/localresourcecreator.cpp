@@ -35,148 +35,138 @@
 #include <KMime/KMimeMessage>
 #include <AkonadiCore/EntityDisplayAttribute>
 
-LocalResourceCreator::LocalResourceCreator(QObject* parent)
-  : NoteShared::LocalResourceCreator(parent)
+LocalResourceCreator::LocalResourceCreator(QObject *parent)
+    : NoteShared::LocalResourceCreator(parent)
 {
 
 }
 
 void LocalResourceCreator::finishCreateResource()
 {
-    Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::FirstLevel, this );
+    Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob(Akonadi::Collection::root(), Akonadi::CollectionFetchJob::FirstLevel, this);
     connect(collectionFetchJob, &Akonadi::CollectionFetchJob::result, this, &LocalResourceCreator::rootFetchFinished);
 }
 
-void LocalResourceCreator::rootFetchFinished(KJob* job)
+void LocalResourceCreator::rootFetchFinished(KJob *job)
 {
-  if (job->error()) {
-    qWarning() << job->errorString();
-    deleteLater();
-    return;
-  }
-
-  Akonadi::CollectionFetchJob *lastCollectionFetchJob = qobject_cast<Akonadi::CollectionFetchJob*>(job);
-  if (!lastCollectionFetchJob) {
-    deleteLater();
-    return;
-  }
-
-  Akonadi::Collection::List list = lastCollectionFetchJob->collections();
-
-  if (list.isEmpty())
-  {
-    qWarning() << "Couldn't find new collection in resource";
-    deleteLater();
-    return;
-  }
-
-  foreach (const Akonadi::Collection &col, list)
-  {
-    Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance(col.resource());
-    if (instance.type().identifier() == akonadiNotesInstanceName())
-    {
-      Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( col, Akonadi::CollectionFetchJob::FirstLevel, this );
-      collectionFetchJob->setProperty("FetchedCollection", col.id());
-      connect(collectionFetchJob, &Akonadi::CollectionFetchJob::result, this, &LocalResourceCreator::topLevelFetchFinished);
-      return;
+    if (job->error()) {
+        qWarning() << job->errorString();
+        deleteLater();
+        return;
     }
-  }
-  Q_ASSERT(!"Couldn't find new collection");
-  deleteLater();
+
+    Akonadi::CollectionFetchJob *lastCollectionFetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
+    if (!lastCollectionFetchJob) {
+        deleteLater();
+        return;
+    }
+
+    Akonadi::Collection::List list = lastCollectionFetchJob->collections();
+
+    if (list.isEmpty()) {
+        qWarning() << "Couldn't find new collection in resource";
+        deleteLater();
+        return;
+    }
+
+    foreach (const Akonadi::Collection &col, list) {
+        Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance(col.resource());
+        if (instance.type().identifier() == akonadiNotesInstanceName()) {
+            Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob(col, Akonadi::CollectionFetchJob::FirstLevel, this);
+            collectionFetchJob->setProperty("FetchedCollection", col.id());
+            connect(collectionFetchJob, &Akonadi::CollectionFetchJob::result, this, &LocalResourceCreator::topLevelFetchFinished);
+            return;
+        }
+    }
+    Q_ASSERT(!"Couldn't find new collection");
+    deleteLater();
 }
 
-void LocalResourceCreator::topLevelFetchFinished(KJob* job)
+void LocalResourceCreator::topLevelFetchFinished(KJob *job)
 {
-  if (job->error()) {
-    qWarning() << job->errorString();
-    deleteLater();
-    return;
-  }
+    if (job->error()) {
+        qWarning() << job->errorString();
+        deleteLater();
+        return;
+    }
 
-  Akonadi::CollectionFetchJob *lastCollectionFetchJob = qobject_cast<Akonadi::CollectionFetchJob*>(job);
-  if (!lastCollectionFetchJob) {
-    deleteLater();
-    return;
-  }
+    Akonadi::CollectionFetchJob *lastCollectionFetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
+    if (!lastCollectionFetchJob) {
+        deleteLater();
+        return;
+    }
 
-  Akonadi::Collection::List list = lastCollectionFetchJob->collections();
+    Akonadi::Collection::List list = lastCollectionFetchJob->collections();
 
-  if (!list.isEmpty())
-  {
-    deleteLater();
-    return;
-  }
+    if (!list.isEmpty()) {
+        deleteLater();
+        return;
+    }
 
-  Akonadi::Collection::Id id = lastCollectionFetchJob->property("FetchedCollection").toLongLong();
+    Akonadi::Collection::Id id = lastCollectionFetchJob->property("FetchedCollection").toLongLong();
 
-  Akonadi::Collection collection;
-  collection.setParentCollection( Akonadi::Collection(id) );
-  QString title = i18nc( "The default name for new books.", "New Book" );
-  collection.setName( KRandom::randomString( 10 ) );
-  collection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Akonotes::Note::mimeType() );
+    Akonadi::Collection collection;
+    collection.setParentCollection(Akonadi::Collection(id));
+    QString title = i18nc("The default name for new books.", "New Book");
+    collection.setName(KRandom::randomString(10));
+    collection.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << Akonotes::Note::mimeType());
 
-  Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
-  eda->setIconName( QLatin1String("x-office-address-book") );
-  eda->setDisplayName( title );
-  collection.addAttribute(eda);
+    Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
+    eda->setIconName(QLatin1String("x-office-address-book"));
+    eda->setDisplayName(title);
+    collection.addAttribute(eda);
 
-  Akonadi::CollectionCreateJob *createJob = new Akonadi::CollectionCreateJob( collection, this );
-  connect(createJob, &Akonadi::CollectionCreateJob::result, this, &LocalResourceCreator::createFinished);
+    Akonadi::CollectionCreateJob *createJob = new Akonadi::CollectionCreateJob(collection, this);
+    connect(createJob, &Akonadi::CollectionCreateJob::result, this, &LocalResourceCreator::createFinished);
 
 }
 
-void LocalResourceCreator::createFinished(KJob* job)
+void LocalResourceCreator::createFinished(KJob *job)
 {
-  if (job->error()) {
-    qWarning() << job->errorString();
-    deleteLater();
-    return;
-  }
+    if (job->error()) {
+        qWarning() << job->errorString();
+        deleteLater();
+        return;
+    }
 
-  Akonadi::CollectionCreateJob* collectionCreateJob = qobject_cast<Akonadi::CollectionCreateJob*>(job);
-  if (!collectionCreateJob)
-  {
-    deleteLater();
-    return;
-  }
+    Akonadi::CollectionCreateJob *collectionCreateJob = qobject_cast<Akonadi::CollectionCreateJob *>(job);
+    if (!collectionCreateJob) {
+        deleteLater();
+        return;
+    }
 
-  Akonadi::Item item;
-  item.setParentCollection(collectionCreateJob->collection());
-  item.setMimeType( Akonotes::Note::mimeType() );
+    Akonadi::Item item;
+    item.setParentCollection(collectionCreateJob->collection());
+    item.setMimeType(Akonotes::Note::mimeType());
 
-  KMime::Message::Ptr note( new KMime::Message() );
+    KMime::Message::Ptr note(new KMime::Message());
 
-  QString title = i18nc( "The default name for new pages.", "New Page" );
-  QByteArray encoding( "utf-8" );
+    QString title = i18nc("The default name for new pages.", "New Page");
+    QByteArray encoding("utf-8");
 
-  note->subject( true )->fromUnicodeString( title, encoding );
-  note->contentType( true )->setMimeType( "text/plain" );
-  note->date( true )->setDateTime( QDateTime::currentDateTime() );
-  note->from( true )->fromUnicodeString( QLatin1String("Kjots@kde4"), encoding );
-  // Need a non-empty body part so that the serializer regards this as a valid message.
-  note->mainBodyPart()->fromUnicodeString( QLatin1String(" ") );
+    note->subject(true)->fromUnicodeString(title, encoding);
+    note->contentType(true)->setMimeType("text/plain");
+    note->date(true)->setDateTime(QDateTime::currentDateTime());
+    note->from(true)->fromUnicodeString(QLatin1String("Kjots@kde4"), encoding);
+    // Need a non-empty body part so that the serializer regards this as a valid message.
+    note->mainBodyPart()->fromUnicodeString(QLatin1String(" "));
 
-  note->assemble();
+    note->assemble();
 
-  item.setPayload(note);
-  Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
-  eda->setIconName( QLatin1String("text-plain") );
-  item.addAttribute(eda);
+    item.setPayload(note);
+    Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
+    eda->setIconName(QLatin1String("text-plain"));
+    item.addAttribute(eda);
 
-  Akonadi::ItemCreateJob *itemCreateJob = new Akonadi::ItemCreateJob( item,  collectionCreateJob->collection(), this);
-  connect(itemCreateJob, &Akonadi::ItemCreateJob::result, this, &LocalResourceCreator::itemCreateFinished);
+    Akonadi::ItemCreateJob *itemCreateJob = new Akonadi::ItemCreateJob(item,  collectionCreateJob->collection(), this);
+    connect(itemCreateJob, &Akonadi::ItemCreateJob::result, this, &LocalResourceCreator::itemCreateFinished);
 }
 
-void LocalResourceCreator::itemCreateFinished(KJob* job)
+void LocalResourceCreator::itemCreateFinished(KJob *job)
 {
-  if (job->error()) {
-    qWarning() << job->errorString();
-  }
-  deleteLater();
+    if (job->error()) {
+        qWarning() << job->errorString();
+    }
+    deleteLater();
 }
-
-
-
-
-
 

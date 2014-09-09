@@ -38,14 +38,13 @@
 
 using namespace Akonadi;
 
-
-KJotsTreeView::KJotsTreeView( KXMLGUIClient* xmlGuiClient, QWidget* parent )
-    : EntityTreeView( xmlGuiClient, parent ), m_xmlGuiClient( xmlGuiClient )
+KJotsTreeView::KJotsTreeView(KXMLGUIClient *xmlGuiClient, QWidget *parent)
+    : EntityTreeView(xmlGuiClient, parent), m_xmlGuiClient(xmlGuiClient)
 {
 
 }
 
-void KJotsTreeView::contextMenuEvent(QContextMenuEvent* event)
+void KJotsTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu *popup = new QMenu(this);
 
@@ -56,166 +55,171 @@ void KJotsTreeView::contextMenuEvent(QContextMenuEvent* event)
     const bool multiselection = rows.size() > 1;
 
     popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("new_book")));
-    if ( singleselection )
-    {
-      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("new_page")));
-      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("rename_entry")));
+    if (singleselection) {
+        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("new_page")));
+        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("rename_entry")));
 
-      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("copy_link_address")));
-      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("change_color")));
+        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("copy_link_address")));
+        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("change_color")));
 
-      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("sort_children_alpha")));
-      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("sort_children_by_date")));
+        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("sort_children_alpha")));
+        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("sort_children_by_date")));
     }
-    if ( !noselection )
-      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("save_to")));
+    if (!noselection) {
+        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("save_to")));
+    }
     popup->addSeparator();
 
     popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("lock")));
     popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("unlock")));
 
-    if ( singleselection )
-    {
-      Item item = rows.at( 0 ).data( KJotsModel::ItemRole ).value<Item>();
-      if ( item.isValid() ) {
-        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("del_page")));
-      } else {
-        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("del_folder")));
-      }
+    if (singleselection) {
+        Item item = rows.at(0).data(KJotsModel::ItemRole).value<Item>();
+        if (item.isValid()) {
+            popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("del_page")));
+        } else {
+            popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("del_folder")));
+        }
     }
 
-    if ( multiselection )
-      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("del_mult")));
+    if (multiselection) {
+        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("del_mult")));
+    }
 
-    popup->exec( event->globalPos() );
+    popup->exec(event->globalPos());
 
     delete popup;
 }
 
 void KJotsTreeView::delayedInitialization()
 {
-  connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("rename_entry")), SIGNAL(triggered()),
-      this, SLOT(renameEntry()));
-  connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("copy_link_address")), SIGNAL(triggered()),
-      this, SLOT(copyLinkAddress()));
-  connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("change_color")), SIGNAL(triggered()),
-      this, SLOT(changeColor()));
+    connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("rename_entry")), SIGNAL(triggered()),
+            this, SLOT(renameEntry()));
+    connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("copy_link_address")), SIGNAL(triggered()),
+            this, SLOT(copyLinkAddress()));
+    connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("change_color")), SIGNAL(triggered()),
+            this, SLOT(changeColor()));
 }
 
-QString KJotsTreeView::captionForSelection( const QString &sep ) const
+QString KJotsTreeView::captionForSelection(const QString &sep) const
 {
-  QString caption;
+    QString caption;
 
-  QModelIndexList selection = selectionModel()->selectedRows();
+    QModelIndexList selection = selectionModel()->selectedRows();
 
-  int selectionSize = selection.size();
-  if ( selectionSize > 1 ) {
-    caption = i18n("Multiple selections");
-  } else if ( selectionSize == 1 ) {
-    QModelIndex index = selection.at( 0 );
-    while ( index.isValid() ) {
-      QModelIndex parentBook = index.parent();
+    int selectionSize = selection.size();
+    if (selectionSize > 1) {
+        caption = i18n("Multiple selections");
+    } else if (selectionSize == 1) {
+        QModelIndex index = selection.at(0);
+        while (index.isValid()) {
+            QModelIndex parentBook = index.parent();
 
-      if ( parentBook.isValid() ) {
-        caption = sep + index.data().toString() + caption;
-      } else {
-        caption = index.data().toString() + caption;
-      }
-      index = parentBook;
+            if (parentBook.isValid()) {
+                caption = sep + index.data().toString() + caption;
+            } else {
+                caption = index.data().toString() + caption;
+            }
+            index = parentBook;
+        }
     }
-  }
-  return caption;
+    return caption;
 }
 
 void KJotsTreeView::renameEntry()
 {
-  QModelIndexList rows = selectionModel()->selectedRows();
+    QModelIndexList rows = selectionModel()->selectedRows();
 
-  if ( rows.size() != 1 )
-    return;
+    if (rows.size() != 1) {
+        return;
+    }
 
-  QModelIndex idx = rows.at( 0 );
+    QModelIndex idx = rows.at(0);
 
-  QString title = idx.data().toString();
+    QString title = idx.data().toString();
 
-  Item item = idx.data( KJotsModel::ItemRole ).value<Item>();
-  if ( item.isValid() )
-  {
-      Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
-      if ( !item.hasPayload<KMime::Message::Ptr>() )
-          return;
+    Item item = idx.data(KJotsModel::ItemRole).value<Item>();
+    if (item.isValid()) {
+        Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
+        if (!item.hasPayload<KMime::Message::Ptr>()) {
+            return;
+        }
 
-      bool ok;
-      const QString name = QInputDialog::getText( this, i18n( "Rename Page" ),
-          i18n( "Page title:" ), QLineEdit::Normal, title, &ok );
+        bool ok;
+        const QString name = QInputDialog::getText(this, i18n("Rename Page"),
+                             i18n("Page title:"), QLineEdit::Normal, title, &ok);
 
-      if ( ok )
-        model()->setData( idx, name, Qt::EditRole );
-      return;
-  }
+        if (ok) {
+            model()->setData(idx, name, Qt::EditRole);
+        }
+        return;
+    }
 
-  Collection col = idx.data( KJotsModel::CollectionRole ).value<Collection>();
-  Q_ASSERT( col.isValid() );
-  if (!col.isValid())
-    return;
+    Collection col = idx.data(KJotsModel::CollectionRole).value<Collection>();
+    Q_ASSERT(col.isValid());
+    if (!col.isValid()) {
+        return;
+    }
 
-  bool ok;
-  const QString name = QInputDialog::getText( this, i18n( "Rename Book" ),
-      i18n( "Book name:" ), QLineEdit::Normal, title, &ok );
+    bool ok;
+    const QString name = QInputDialog::getText(this, i18n("Rename Book"),
+                         i18n("Book name:"), QLineEdit::Normal, title, &ok);
 
-  if ( ok )
-    model()->setData( idx, name, Qt::EditRole );
+    if (ok) {
+        model()->setData(idx, name, Qt::EditRole);
+    }
 }
 
 void KJotsTreeView::copyLinkAddress()
 {
-  QModelIndexList rows = selectionModel()->selectedRows();
+    QModelIndexList rows = selectionModel()->selectedRows();
 
-  if ( rows.size() != 1 )
-    return;
+    if (rows.size() != 1) {
+        return;
+    }
 
-  QModelIndex idx = rows.at( 0 );
+    QModelIndex idx = rows.at(0);
 
-  QString title = idx.data().toString();
+    QString title = idx.data().toString();
 
-  Item item = idx.data( KJotsModel::ItemRole ).value<Item>();
+    Item item = idx.data(KJotsModel::ItemRole).value<Item>();
 
-  QMimeData *mimeData = new QMimeData();
+    QMimeData *mimeData = new QMimeData();
 
-  QString link;
-  if ( item.isValid() )
-  {
-    Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
-    if ( !item.hasPayload<KMime::Message::Ptr>() )
-      return;
+    QString link;
+    if (item.isValid()) {
+        Q_ASSERT(item.hasPayload<KMime::Message::Ptr>());
+        if (!item.hasPayload<KMime::Message::Ptr>()) {
+            return;
+        }
 
-    link = QString::fromLatin1( "<a href=\"%1\">%2</a>" ).arg( item.url().url() ).arg( title );
-  } else {
-    Collection col = idx.data( KJotsModel::CollectionRole ).value<Collection>();
+        link = QString::fromLatin1("<a href=\"%1\">%2</a>").arg(item.url().url()).arg(title);
+    } else {
+        Collection col = idx.data(KJotsModel::CollectionRole).value<Collection>();
 
-    Q_ASSERT(col.isValid());
-    if (!col.isValid())
-      return;
+        Q_ASSERT(col.isValid());
+        if (!col.isValid()) {
+            return;
+        }
 
-    link = QString::fromLatin1( "<a href=\"%1\">%2</a>" ).arg( col.url().url() ).arg( title );
-  }
+        link = QString::fromLatin1("<a href=\"%1\">%2</a>").arg(col.url().url()).arg(title);
+    }
 
-  mimeData->setData( QLatin1String("kjots/internal_link"), link.toUtf8() );
-  mimeData->setText( title );
-  QApplication::clipboard()->setMimeData( mimeData );
+    mimeData->setData(QLatin1String("kjots/internal_link"), link.toUtf8());
+    mimeData->setText(title);
+    QApplication::clipboard()->setMimeData(mimeData);
 }
 
 void KJotsTreeView::changeColor()
 {
-  QColor myColor;
-  myColor = QColorDialog::getColor();
-  if ( myColor.isValid() ) {
-    QModelIndexList rows = selectionModel()->selectedRows();
+    QColor myColor;
+    myColor = QColorDialog::getColor();
+    if (myColor.isValid()) {
+        QModelIndexList rows = selectionModel()->selectedRows();
 
-    foreach ( const QModelIndex &idx, rows )
-    {
-      model()->setData(idx, myColor, Qt::BackgroundRole );
+        foreach (const QModelIndex &idx, rows) {
+            model()->setData(idx, myColor, Qt::BackgroundRole);
+        }
     }
-  }
 }
 

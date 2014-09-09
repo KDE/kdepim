@@ -36,8 +36,7 @@ class KJotsLinkDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit KJotsLinkDialog (QAbstractItemModel *kjotsModel, QWidget *parent = 0 );
-
+    explicit KJotsLinkDialog(QAbstractItemModel *kjotsModel, QWidget *parent = 0);
 
     /**
      * Returns the link text shown in the dialog
@@ -63,20 +62,20 @@ public:
      */
     QString linkUrl() const;
 
-    public slots:
-    void trySetEntry(const QString & text);
+public slots:
+    void trySetEntry(const QString &text);
 
-    private:
-        QLabel *textLabel;
-        QLineEdit *textLineEdit;
-        QLabel *linkUrlLabel;
-        QLineEdit *linkUrlLineEdit;
-        KComboBox *hrefCombo;
-        QRadioButton* linkUrlLineEditRadioButton;
-        QRadioButton* hrefComboRadioButton;
-        QTreeView* tree;
-        QAbstractItemModel *m_kjotsModel;
-        QAbstractItemModel *m_descendantsProxyModel;
+private:
+    QLabel *textLabel;
+    QLineEdit *textLineEdit;
+    QLabel *linkUrlLabel;
+    QLineEdit *linkUrlLineEdit;
+    KComboBox *hrefCombo;
+    QRadioButton *linkUrlLineEditRadioButton;
+    QRadioButton *hrefComboRadioButton;
+    QTreeView *tree;
+    QAbstractItemModel *m_kjotsModel;
+    QAbstractItemModel *m_descendantsProxyModel;
 };
 
 #endif

@@ -24,13 +24,13 @@
 #include <AkonadiCore/ItemModifyJob>
 #include "noteshared/attributes/notelockattribute.h"
 
-KJotsLockJob::KJotsLockJob( const Akonadi::Collection::List& collections, const Akonadi::Item::List& items, KJotsLockJob::Type type, QObject* parent )
-  : Job( parent ), m_collections( collections ), m_items( items ), m_type( type )
+KJotsLockJob::KJotsLockJob(const Akonadi::Collection::List &collections, const Akonadi::Item::List &items, KJotsLockJob::Type type, QObject *parent)
+    : Job(parent), m_collections(collections), m_items(items), m_type(type)
 {
 }
 
-KJotsLockJob::KJotsLockJob( const Akonadi::Collection::List& collections, const Akonadi::Item::List& items, QObject* parent )
-  : Job( parent ), m_collections( collections ), m_items( items ), m_type( LockJob )
+KJotsLockJob::KJotsLockJob(const Akonadi::Collection::List &collections, const Akonadi::Item::List &items, QObject *parent)
+    : Job(parent), m_collections(collections), m_items(items), m_type(LockJob)
 {
 }
 
@@ -41,31 +41,32 @@ KJotsLockJob::~KJotsLockJob()
 
 void KJotsLockJob::doStart()
 {
-  foreach ( const Akonadi::Collection &_col, m_collections )
-  {
-    Akonadi::Collection col = _col;
-    if ( m_type == LockJob )
-      col.addAttribute( new NoteShared::NoteLockAttribute() );
-    else
-      col.removeAttribute<NoteShared::NoteLockAttribute>();
-    new Akonadi::CollectionModifyJob( col, this );
-  }
-  foreach ( const Akonadi::Item &_item, m_items )
-  {
-    Akonadi::Item item = _item;
-    if ( m_type == LockJob )
-      item.addAttribute( new NoteShared::NoteLockAttribute() );
-    else
-      item.removeAttribute<NoteShared::NoteLockAttribute>();
+    foreach (const Akonadi::Collection &_col, m_collections) {
+        Akonadi::Collection col = _col;
+        if (m_type == LockJob) {
+            col.addAttribute(new NoteShared::NoteLockAttribute());
+        } else {
+            col.removeAttribute<NoteShared::NoteLockAttribute>();
+        }
+        new Akonadi::CollectionModifyJob(col, this);
+    }
+    foreach (const Akonadi::Item &_item, m_items) {
+        Akonadi::Item item = _item;
+        if (m_type == LockJob) {
+            item.addAttribute(new NoteShared::NoteLockAttribute());
+        } else {
+            item.removeAttribute<NoteShared::NoteLockAttribute>();
+        }
 
-    new Akonadi::ItemModifyJob( item, this );
-  }
+        new Akonadi::ItemModifyJob(item, this);
+    }
 }
 
-void KJotsLockJob::slotResult(KJob* job)
+void KJotsLockJob::slotResult(KJob *job)
 {
-  Akonadi::Job::slotResult( job );
-  if ( !hasSubjobs() )
-    emitResult();
+    Akonadi::Job::slotResult(job);
+    if (!hasSubjobs()) {
+        emitResult();
+    }
 }
 

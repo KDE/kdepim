@@ -22,9 +22,7 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
-
 #include "KJotsMain.h"
-
 
 #include <kactioncollection.h>
 #include <qdebug.h>
@@ -50,7 +48,7 @@ KJotsMain::KJotsMain()
 
     KStandardAction::quit(this, SLOT(onQuit()), actionCollection());
 
-    component = new KJotsWidget(this, this );
+    component = new KJotsWidget(this, this);
 
     setCentralWidget(component);
     //QT5 statusBar()->insertItem(QString(), 0, 1);
@@ -74,8 +72,7 @@ void KJotsMain::updateCaption(QString caption)
 
 void KJotsMain::activeAnchorChanged(const QString &anchorTarget, const QString &anchorText)
 {
-    if (!anchorTarget.isEmpty())
-    {
+    if (!anchorTarget.isEmpty()) {
         //QT5 statusBar()->changeItem(anchorText + QLatin1String(" -> ") + anchorTarget, 0);
     } else {
         //QT5 statusBar()->changeItem(QString(), 0);
@@ -84,7 +81,7 @@ void KJotsMain::activeAnchorChanged(const QString &anchorTarget, const QString &
 
 bool KJotsMain::queryClose()
 {
-  return component->queryClose();
+    return component->queryClose();
 }
 
 void KJotsMain::onQuit()
@@ -93,5 +90,4 @@ void KJotsMain::onQuit()
     deleteLater();
     qApp->quit();
 }
-
 

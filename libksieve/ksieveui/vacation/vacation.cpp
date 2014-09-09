@@ -166,10 +166,11 @@ void Vacation::slotDialogOk()
 
     // and commit the dialog's settings to the server:
     mSieveJob = KManageSieve::SieveJob::put(mUrl, script, active, mWasActive);
-    if (active)
+    if (active) {
         connect(mSieveJob, &KManageSieve::SieveJob::gotScript, this, &Vacation::slotPutActiveResult);
-    else
+    } else {
         connect(mSieveJob, &KManageSieve::SieveJob::gotScript, this, &Vacation::slotPutInactiveResult);
+    }
 
     // destroy the dialog:
     //mDialog->delayedDestruct();

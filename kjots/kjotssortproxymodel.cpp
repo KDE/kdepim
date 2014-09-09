@@ -23,11 +23,10 @@
 #include <AkonadiCore/EntityTreeModel>
 #include <KMime/KMimeMessage>
 
-
-KJotsSortProxyModel::KJotsSortProxyModel( QObject* parent )
-  : QSortFilterProxyModel( parent )
+KJotsSortProxyModel::KJotsSortProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
-  setDynamicSortFilter(true);
+    setDynamicSortFilter(true);
 }
 
 KJotsSortProxyModel::~KJotsSortProxyModel()
@@ -35,58 +34,64 @@ KJotsSortProxyModel::~KJotsSortProxyModel()
 
 }
 
-bool KJotsSortProxyModel::lessThan( const QModelIndex& left, const QModelIndex& right ) const
+bool KJotsSortProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
-  const Akonadi::Collection::Id colId = left.data( Akonadi::EntityTreeModel::ParentCollectionRole ).value<Akonadi::Collection>().id();
+    const Akonadi::Collection::Id colId = left.data(Akonadi::EntityTreeModel::ParentCollectionRole).value<Akonadi::Collection>().id();
 
-  if ( colId < 0 || m_alphaSorted.contains( colId ) || !m_dateTimeSorted.contains( colId ) )
-    return QSortFilterProxyModel::lessThan( left, right );
+    if (colId < 0 || m_alphaSorted.contains(colId) || !m_dateTimeSorted.contains(colId)) {
+        return QSortFilterProxyModel::lessThan(left, right);
+    }
 
-  const Akonadi::Item leftItem = left.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  const Akonadi::Item rightItem = right.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    const Akonadi::Item leftItem = left.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+    const Akonadi::Item rightItem = right.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
-  if ( !leftItem.isValid() || !rightItem.isValid() )
-    return true;
+    if (!leftItem.isValid() || !rightItem.isValid()) {
+        return true;
+    }
 
-  const KMime::Message::Ptr leftNote = leftItem.payload<KMime::Message::Ptr>();
-  const KMime::Message::Ptr rightNote = rightItem.payload<KMime::Message::Ptr>();
+    const KMime::Message::Ptr leftNote = leftItem.payload<KMime::Message::Ptr>();
+    const KMime::Message::Ptr rightNote = rightItem.payload<KMime::Message::Ptr>();
 
-  return leftNote->date()->dateTime() < rightNote->date()->dateTime();
+    return leftNote->date()->dateTime() < rightNote->date()->dateTime();
 }
 
-Akonadi::Collection::Id KJotsSortProxyModel::collectionId( const QModelIndex& parent ) const
+Akonadi::Collection::Id KJotsSortProxyModel::collectionId(const QModelIndex &parent) const
 {
-  const QModelIndex childIndex = index( 0, 0, parent );
-  if ( !childIndex.isValid() )
-    return -1;
+    const QModelIndex childIndex = index(0, 0, parent);
+    if (!childIndex.isValid()) {
+        return -1;
+    }
 
-  const Akonadi::Collection collection = childIndex.data( Akonadi::EntityTreeModel::ParentCollectionRole ).value<Akonadi::Collection>();
+    const Akonadi::Collection collection = childIndex.data(Akonadi::EntityTreeModel::ParentCollectionRole).value<Akonadi::Collection>();
 
-  if ( !collection.isValid() )
-    return -1;
+    if (!collection.isValid()) {
+        return -1;
+    }
 
-  return collection.id();
+    return collection.id();
 }
 
-void KJotsSortProxyModel::sortChildrenAlphabetically( const QModelIndex& parent )
+void KJotsSortProxyModel::sortChildrenAlphabetically(const QModelIndex &parent)
 {
-  const Akonadi::Collection::Id id = collectionId( parent );
-  if ( id < 0 )
-    return;
+    const Akonadi::Collection::Id id = collectionId(parent);
+    if (id < 0) {
+        return;
+    }
 
-  m_dateTimeSorted.remove( id );
-  m_alphaSorted.insert( id );
-  invalidate();
+    m_dateTimeSorted.remove(id);
+    m_alphaSorted.insert(id);
+    invalidate();
 }
 
-void KJotsSortProxyModel::sortChildrenByCreationTime( const QModelIndex& parent )
+void KJotsSortProxyModel::sortChildrenByCreationTime(const QModelIndex &parent)
 {
-  const Akonadi::Collection::Id id = collectionId( parent );
-  if ( id < 0 )
-    return;
+    const Akonadi::Collection::Id id = collectionId(parent);
+    if (id < 0) {
+        return;
+    }
 
-  m_alphaSorted.remove( id );
-  m_dateTimeSorted.insert( id );
-  invalidate();
+    m_alphaSorted.remove(id);
+    m_dateTimeSorted.insert(id);
+    invalidate();
 }
 

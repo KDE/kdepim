@@ -27,26 +27,26 @@
 KJotsReplaceNextDialog::KJotsReplaceNextDialog(QWidget *parent) :
     KDialog(parent), m_answer(Close)
 {
-    setModal( true );
-    setCaption( i18n("Replace") );
-    setButtons( User3 | User2 | User1 | Close );
-    setButtonGuiItem( User1, KGuiItem(i18n("&All")) );
-    setButtonGuiItem( User2, KGuiItem(i18n("&Skip")) );
-    setButtonGuiItem( User3, KGuiItem(i18n("Replace")) );
-    setDefaultButton( User3 );
-    showButtonSeparator( false );
+    setModal(true);
+    setCaption(i18n("Replace"));
+    setButtons(User3 | User2 | User1 | Close);
+    setButtonGuiItem(User1, KGuiItem(i18n("&All")));
+    setButtonGuiItem(User2, KGuiItem(i18n("&Skip")));
+    setButtonGuiItem(User3, KGuiItem(i18n("Replace")));
+    setDefaultButton(User3);
+    showButtonSeparator(false);
 
-    m_mainLabel = new QLabel( this );
-    setMainWidget( m_mainLabel );
+    m_mainLabel = new QLabel(this);
+    setMainWidget(m_mainLabel);
 
-    connect( this, SIGNAL(user1Clicked()), SLOT(onHandleAll()) );
-    connect( this, SIGNAL(user2Clicked()), SLOT(onHandleSkip()) );
-    connect( this, SIGNAL(user3Clicked()), SLOT(onHandleReplace()) );
+    connect(this, SIGNAL(user1Clicked()), SLOT(onHandleAll()));
+    connect(this, SIGNAL(user2Clicked()), SLOT(onHandleSkip()));
+    connect(this, SIGNAL(user3Clicked()), SLOT(onHandleReplace()));
 }
 
-void KJotsReplaceNextDialog::setLabel( const QString& pattern, const QString& replacement )
+void KJotsReplaceNextDialog::setLabel(const QString &pattern, const QString &replacement)
 {
-    m_mainLabel->setText( i18n("Replace '%1' with '%2'?", pattern, replacement) );
+    m_mainLabel->setText(i18n("Replace '%1' with '%2'?", pattern, replacement));
 }
 
 void KJotsReplaceNextDialog::onHandleAll()

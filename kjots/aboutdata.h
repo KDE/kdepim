@@ -28,7 +28,7 @@
 
 class AboutData : public K4AboutData
 {
-  public:
+public:
     AboutData();
 };
 

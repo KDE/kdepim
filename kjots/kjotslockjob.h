@@ -28,29 +28,28 @@
 
 class KJotsLockJob : Akonadi::Job
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum Type
-  {
-    LockJob,
-    UnlockJob
-  };
+    enum Type {
+        LockJob,
+        UnlockJob
+    };
 
-  KJotsLockJob( const Akonadi::Collection::List &collections, const Akonadi::Item::List &items, Type type = LockJob, QObject* parent = 0 );
-  KJotsLockJob( const Akonadi::Collection::List &collections, const Akonadi::Item::List &items, QObject* parent = 0 );
+    KJotsLockJob(const Akonadi::Collection::List &collections, const Akonadi::Item::List &items, Type type = LockJob, QObject *parent = 0);
+    KJotsLockJob(const Akonadi::Collection::List &collections, const Akonadi::Item::List &items, QObject *parent = 0);
 
-  ~KJotsLockJob();
+    ~KJotsLockJob();
 
 protected:
-  virtual void doStart();
+    virtual void doStart();
 
 protected Q_SLOTS:
-  virtual void slotResult( KJob *job );
+    virtual void slotResult(KJob *job);
 
 private:
-  Akonadi::Collection::List m_collections;
-  Akonadi::Item::List m_items;
-  Type m_type;
+    Akonadi::Collection::List m_collections;
+    Akonadi::Item::List m_items;
+    Type m_type;
 };
 
 #endif

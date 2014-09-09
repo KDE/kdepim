@@ -33,12 +33,12 @@ class KJotsBookmarks : public QObject, public KBookmarkOwner
     Q_OBJECT
 
 public:
-    explicit KJotsBookmarks( KJotsTreeView *treeView );
+    explicit KJotsBookmarks(KJotsTreeView *treeView);
     ~KJotsBookmarks();
 
     virtual QUrl currentUrl() const;
     virtual QString currentTitle() const;
-    virtual void openBookmark( const KBookmark & bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km );
+    virtual void openBookmark(const KBookmark &bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km);
 
 private:
     KJotsTreeView *m_treeView;
@@ -46,4 +46,3 @@ private:
 
 #endif
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
-/* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

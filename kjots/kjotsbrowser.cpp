@@ -30,8 +30,8 @@
 #include <qdebug.h>
 #include <AkonadiCore/EntityTreeModel>
 
-KJotsBrowser::KJotsBrowser ( QItemSelectionModel *selectionModel, QWidget *parent )
-  : QTextBrowser(parent), m_itemSelectionModel( selectionModel )
+KJotsBrowser::KJotsBrowser(QItemSelectionModel *selectionModel, QWidget *parent)
+    : QTextBrowser(parent), m_itemSelectionModel(selectionModel)
 {
     setWordWrapMode(QTextOption::WordWrap);
 }
@@ -40,7 +40,7 @@ KJotsBrowser::~KJotsBrowser()
 {
 }
 
-void KJotsBrowser::delayedInitialization ()
+void KJotsBrowser::delayedInitialization()
 {
     connect(this, &KJotsBrowser::anchorClicked, this, &KJotsBrowser::linkClicked);
 }
@@ -48,7 +48,7 @@ void KJotsBrowser::delayedInitialization ()
 /*!
     \brief Handle link clicks.
 */
-void KJotsBrowser::linkClicked(const QUrl& link)
+void KJotsBrowser::linkClicked(const QUrl &link)
 {
     //Stop QTextBrowser from being stupid by giving it an invalid url.
     QUrl url;
@@ -56,30 +56,31 @@ void KJotsBrowser::linkClicked(const QUrl& link)
 
     QString anchor = link.fragment();
 
-    if ( link.toString().startsWith(QLatin1String("#")) && (anchor.startsWith( QLatin1String( "book_" ) )
-            || anchor.startsWith( QLatin1String( "page_" ) ) ) ) {
+    if (link.toString().startsWith(QLatin1String("#")) && (anchor.startsWith(QLatin1String("book_"))
+            || anchor.startsWith(QLatin1String("page_")))) {
         scrollToAnchor(anchor);
         return;
     }
 
-    if ( link.scheme() == QLatin1String("kjots") ) {
+    if (link.scheme() == QLatin1String("kjots")) {
         const quint64 targetId = link.path().mid(1).toULongLong();
         if (link.host().endsWith(QLatin1String("book"))) {
-          const QModelIndex colIndex = Akonadi::EntityTreeModel::modelIndexForCollection(m_itemSelectionModel->model(), Akonadi::Collection(targetId));
-          if (!colIndex.isValid())
-            return;
-          m_itemSelectionModel->select(colIndex, QItemSelectionModel::ClearAndSelect);
+            const QModelIndex colIndex = Akonadi::EntityTreeModel::modelIndexForCollection(m_itemSelectionModel->model(), Akonadi::Collection(targetId));
+            if (!colIndex.isValid()) {
+                return;
+            }
+            m_itemSelectionModel->select(colIndex, QItemSelectionModel::ClearAndSelect);
         } else {
-          Q_ASSERT(link.host().endsWith(QLatin1String("page")));
-          const QModelIndexList itemIndexes = Akonadi::EntityTreeModel::modelIndexesForItem(m_itemSelectionModel->model(), Akonadi::Item(targetId));
-          if (itemIndexes.size() != 1)
-            return;
-          m_itemSelectionModel->select(itemIndexes.first(), QItemSelectionModel::ClearAndSelect);
+            Q_ASSERT(link.host().endsWith(QLatin1String("page")));
+            const QModelIndexList itemIndexes = Akonadi::EntityTreeModel::modelIndexesForItem(m_itemSelectionModel->model(), Akonadi::Item(targetId));
+            if (itemIndexes.size() != 1) {
+                return;
+            }
+            m_itemSelectionModel->select(itemIndexes.first(), QItemSelectionModel::ClearAndSelect);
         }
     } else {
-        new KRun ( link, this );
+        new KRun(link, this);
     }
 }
 
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
-/* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

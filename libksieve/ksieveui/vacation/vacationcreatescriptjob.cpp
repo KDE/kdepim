@@ -57,10 +57,11 @@ void VacationCreateScriptJob::start()
         return;
     }
     mSieveJob = KManageSieve::SieveJob::put(mUrl, mScript, mActivate, mWasActive);
-    if (mActivate)
+    if (mActivate) {
         connect(mSieveJob, &KManageSieve::SieveJob::gotScript, this, &VacationCreateScriptJob::slotPutActiveResult);
-    else
+    } else {
         connect(mSieveJob, &KManageSieve::SieveJob::gotScript, this, &VacationCreateScriptJob::slotPutInactiveResult);
+    }
 }
 
 void VacationCreateScriptJob::setServerUrl(const QUrl &url)

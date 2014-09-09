@@ -38,66 +38,64 @@ using namespace Akonadi;
  */
 class KJotsEntity : public QObject
 {
-  Q_OBJECT
-  Q_PROPERTY(QString title READ title)
-  Q_PROPERTY(QString content READ content)
-  Q_PROPERTY(QString plainContent READ plainContent)
-  Q_PROPERTY(qint64 entityId READ entityId)
-  Q_PROPERTY(bool isBook READ isBook)
-  Q_PROPERTY(bool isPage READ isPage)
-  Q_PROPERTY(QVariantList entities READ entities)
-  Q_PROPERTY(QVariantList breadcrumbs READ breadcrumbs)
+    Q_OBJECT
+    Q_PROPERTY(QString title READ title)
+    Q_PROPERTY(QString content READ content)
+    Q_PROPERTY(QString plainContent READ plainContent)
+    Q_PROPERTY(qint64 entityId READ entityId)
+    Q_PROPERTY(bool isBook READ isBook)
+    Q_PROPERTY(bool isPage READ isPage)
+    Q_PROPERTY(QVariantList entities READ entities)
+    Q_PROPERTY(QVariantList breadcrumbs READ breadcrumbs)
 
 public:
-  explicit KJotsEntity( const QModelIndex &index, QObject *parent = 0 );
-  void setIndex( const QModelIndex &index );
+    explicit KJotsEntity(const QModelIndex &index, QObject *parent = 0);
+    void setIndex(const QModelIndex &index);
 
-  bool isBook() const;
-  bool isPage() const;
+    bool isBook() const;
+    bool isPage() const;
 
-  QString title() const;
+    QString title() const;
 
-  QString content() const;
+    QString content() const;
 
-  QString plainContent() const;
+    QString plainContent() const;
 
-  qint64 entityId() const;
+    qint64 entityId() const;
 
-  QVariantList entities() const;
+    QVariantList entities() const;
 
-  QVariantList breadcrumbs() const;
+    QVariantList breadcrumbs() const;
 
 private:
-  QPersistentModelIndex m_index;
+    QPersistentModelIndex m_index;
 };
 
 class KJotsModel : public EntityTreeModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit KJotsModel( ChangeRecorder *monitor, QObject *parent = 0 );
-  virtual ~KJotsModel();
+    explicit KJotsModel(ChangeRecorder *monitor, QObject *parent = 0);
+    virtual ~KJotsModel();
 
-  enum KJotsRoles
-  {
-    GrantleeObjectRole = EntityTreeModel::UserRole,
-    DocumentRole,
-    DocumentCursorPositionRole
-  };
+    enum KJotsRoles {
+        GrantleeObjectRole = EntityTreeModel::UserRole,
+        DocumentRole,
+        DocumentCursorPositionRole
+    };
 
-  // We don't reimplement the Collection overload.
-  using EntityTreeModel::entityData;
-  virtual QVariant entityData( const Akonadi::Item& item, int column, int role = Qt::DisplayRole ) const;
+    // We don't reimplement the Collection overload.
+    using EntityTreeModel::entityData;
+    virtual QVariant entityData(const Akonadi::Item &item, int column, int role = Qt::DisplayRole) const;
 
-  QVariant data( const QModelIndex &index, int role ) const;
+    QVariant data(const QModelIndex &index, int role) const;
 
-  virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
-
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
 private:
-  QHash<Entity::Id, QColor> m_colors;
-  mutable QHash<Item::Id, QTextDocument *> m_documents;
-  QHash<Item::Id, int> m_cursorPositions;
+    QHash<Entity::Id, QColor> m_colors;
+    mutable QHash<Item::Id, QTextDocument *> m_documents;
+    QHash<Item::Id, int> m_cursorPositions;
 
 };
 

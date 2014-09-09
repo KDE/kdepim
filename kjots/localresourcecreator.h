@@ -33,19 +33,18 @@ class KJob;
  */
 class LocalResourceCreator : public NoteShared::LocalResourceCreator
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit LocalResourceCreator(QObject* parent = 0);
-
+    explicit LocalResourceCreator(QObject *parent = 0);
 
 protected:
     virtual void finishCreateResource();
 
 private slots:
-  void rootFetchFinished( KJob *job );
-  void topLevelFetchFinished( KJob *job );
-  void createFinished( KJob *job );
-  void itemCreateFinished( KJob *job );
+    void rootFetchFinished(KJob *job);
+    void topLevelFetchFinished(KJob *job);
+    void createFinished(KJob *job);
+    void itemCreateFinished(KJob *job);
 
 };
 

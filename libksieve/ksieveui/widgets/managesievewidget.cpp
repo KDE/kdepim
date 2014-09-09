@@ -50,7 +50,6 @@ ManageSieveWidget::ManageSieveWidget(QWidget *parent)
     connect(Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
             this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)));
 
-
     lay->addWidget(mTreeView);
     setLayout(lay);
     QTimer::singleShot(0, this, SLOT(slotCheckNetworkStatus()));

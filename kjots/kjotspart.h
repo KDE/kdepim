@@ -48,7 +48,7 @@ public:
     /**
      * Default constructor
      */
-    KJotsPart(QWidget *parentWidget,QObject *parent, const QVariantList &);
+    KJotsPart(QWidget *parentWidget, QObject *parent, const QVariantList &);
 
     /**
      * Destructor

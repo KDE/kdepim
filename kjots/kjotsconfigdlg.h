@@ -24,30 +24,30 @@
 #include "ui_confpagemisc.h"
 class confPageMisc : public QWidget, public Ui::confPageMisc
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit confPageMisc( QWidget *parent ) : QWidget( parent ) {
-        setupUi( this );
+public:
+    explicit confPageMisc(QWidget *parent) : QWidget(parent)
+    {
+        setupUi(this);
     }
 };
-
 
 class KJotsConfigMisc : public KCModule
 {
     Q_OBJECT
 
-  public:
-    explicit KJotsConfigMisc( QWidget *parent );
+public:
+    explicit KJotsConfigMisc(QWidget *parent);
 
     /** Reimplemented from KCModule. */
     virtual void load();
 
     /** Reimplemented form KCModule. */
     virtual void save();
-  private slots:
+private slots:
     void modified();
-  private:
+private:
     confPageMisc *miscPage;
 };
 
@@ -56,7 +56,7 @@ class KJotsConfigDlg : public KCMultiDialog
     Q_OBJECT
 
 public:
-    KJotsConfigDlg( const QString & title, QWidget *parent );
+    KJotsConfigDlg(const QString &title, QWidget *parent);
     ~KJotsConfigDlg();
 
 public slots:

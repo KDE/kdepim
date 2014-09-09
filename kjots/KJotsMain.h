@@ -33,26 +33,24 @@ class KJotsMain : public KXmlGuiWindow
 {
     Q_OBJECT
 
-    public:
-        KJotsMain();
+public:
+    KJotsMain();
 
+public slots:
+    void updateCaption(QString);
+    void onQuit();
+    void activeAnchorChanged(const QString &, const QString &);
 
-    public slots:
-        void updateCaption(QString);
-        void onQuit();
-        void activeAnchorChanged(const QString &, const QString &);
-
-    protected:
-        /**
-          Reimplemented from KMainWindow
-        */
-        /* reimp */ bool queryClose();
+protected:
+    /**
+      Reimplemented from KMainWindow
+    */
+    /* reimp */ bool queryClose();
 
 private:
-    KJotsWidget* component;
+    KJotsWidget *component;
 
 };
 
 #endif // KJotsMainNew_included
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
-/* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

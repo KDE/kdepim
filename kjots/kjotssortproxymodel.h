@@ -28,23 +28,23 @@
 
 class KJotsSortProxyModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit KJotsSortProxyModel(QObject* parent = 0);
-  ~KJotsSortProxyModel();
+    explicit KJotsSortProxyModel(QObject *parent = 0);
+    ~KJotsSortProxyModel();
 
-  void sortChildrenAlphabetically( const QModelIndex &parent );
-  void sortChildrenByCreationTime( const QModelIndex &parent );
+    void sortChildrenAlphabetically(const QModelIndex &parent);
+    void sortChildrenByCreationTime(const QModelIndex &parent);
 
 protected:
-  virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
+    virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 
 private:
-  Akonadi::Collection::Id collectionId( const QModelIndex &parent ) const;
+    Akonadi::Collection::Id collectionId(const QModelIndex &parent) const;
 
 private:
-  QSet<Akonadi::Collection::Id> m_alphaSorted;
-  QSet<Akonadi::Collection::Id> m_dateTimeSorted;
+    QSet<Akonadi::Collection::Id> m_alphaSorted;
+    QSet<Akonadi::Collection::Id> m_dateTimeSorted;
 };
 
 #endif

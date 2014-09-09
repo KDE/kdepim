@@ -28,8 +28,8 @@
 #include "kjotsmodel.h"
 #include "kjotstreeview.h"
 
-KJotsBookmarks::KJotsBookmarks( KJotsTreeView *treeView ) :
-    m_treeView( treeView )
+KJotsBookmarks::KJotsBookmarks(KJotsTreeView *treeView) :
+    m_treeView(treeView)
 {
 }
 
@@ -37,39 +37,40 @@ KJotsBookmarks::~KJotsBookmarks()
 {
 }
 
-void KJotsBookmarks::openBookmark(const KBookmark & bookmark, Qt::MouseButtons, Qt::KeyboardModifiers)
+void KJotsBookmarks::openBookmark(const KBookmark &bookmark, Qt::MouseButtons, Qt::KeyboardModifiers)
 {
 #if 0
-  QModelIndexList rows = m_treeView->model()->match( QModelIndex(), KJotsModel::EntityUrlRole, bookmark.url().url() );
+    QModelIndexList rows = m_treeView->model()->match(QModelIndex(), KJotsModel::EntityUrlRole, bookmark.url().url());
 
-  if ( rows.isEmpty() )
-    return;
+    if (rows.isEmpty()) {
+        return;
+    }
 
-  // Arbitrarily chooses the first one if multiple are returned.
-  return m_treeView->selectionModel()->select( rows.at( 0 ), QItemSelectionModel::ClearAndSelect );
+    // Arbitrarily chooses the first one if multiple are returned.
+    return m_treeView->selectionModel()->select(rows.at(0), QItemSelectionModel::ClearAndSelect);
 #endif
 }
 
 QUrl KJotsBookmarks::currentUrl() const
 {
 #if 0 //QT5
-  QModelIndexList rows = m_treeView->selectionModel()->selectedRows();
+    QModelIndexList rows = m_treeView->selectionModel()->selectedRows();
 
-  if ( rows.size() != 1 )
-    return QString();
+    if (rows.size() != 1) {
+        return QString();
+    }
 #if 0
-  return rows.at( 0 ).data( EntityTreeModel::EntityUrlRole ).toString();
+    return rows.at(0).data(EntityTreeModel::EntityUrlRole).toString();
 #else
-  return QString();
+    return QString();
 #endif
 #else
-  return QUrl();
+    return QUrl();
 #endif
 }
 
 QString KJotsBookmarks::currentTitle() const
 {
-  return m_treeView->captionForSelection( QLatin1String(": ") );
+    return m_treeView->captionForSelection(QLatin1String(": "));
 }
 
-/* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

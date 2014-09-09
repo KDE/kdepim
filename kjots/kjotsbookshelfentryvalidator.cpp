@@ -19,11 +19,10 @@
     02110-1301, USA.
 */
 
-
 #include "kjotsbookshelfentryvalidator.h"
 
-KJotsBookshelfEntryValidator::KJotsBookshelfEntryValidator( QAbstractItemModel* model, QObject* parent )
-        : QValidator( parent )
+KJotsBookshelfEntryValidator::KJotsBookshelfEntryValidator(QAbstractItemModel *model, QObject *parent)
+    : QValidator(parent)
 {
     m_model = model;
 }
@@ -33,30 +32,27 @@ KJotsBookshelfEntryValidator::~KJotsBookshelfEntryValidator()
 
 }
 
-QValidator::State KJotsBookshelfEntryValidator::validate( QString& input, int& pos ) const
+QValidator::State KJotsBookshelfEntryValidator::validate(QString &input, int &pos) const
 {
     Q_UNUSED(pos);
-    if (!m_model)
-        return Invalid;
-    if (input.isEmpty())
-        return Intermediate;
-
-    QModelIndexList list = m_model->match(
-        m_model->index(0,0),
-        Qt::DisplayRole,
-        input,
-        Qt::MatchStartsWith | Qt::MatchFixedString | Qt::MatchWrap );
-
-    if (list.empty())
-    {
+    if (!m_model) {
         return Invalid;
     }
-    else
-    {
-        foreach (const QModelIndex& index, list)
-        {
-            if ( 0 == QString::compare(m_model->data(index).toString(), input, Qt::CaseInsensitive ) )
-            {
+    if (input.isEmpty()) {
+        return Intermediate;
+    }
+
+    QModelIndexList list = m_model->match(
+                               m_model->index(0, 0),
+                               Qt::DisplayRole,
+                               input,
+                               Qt::MatchStartsWith | Qt::MatchFixedString | Qt::MatchWrap);
+
+    if (list.empty()) {
+        return Invalid;
+    } else {
+        foreach (const QModelIndex &index, list) {
+            if (0 == QString::compare(m_model->data(index).toString(), input, Qt::CaseInsensitive)) {
                 return Acceptable;
             }
             return Intermediate;
@@ -64,5 +60,4 @@ QValidator::State KJotsBookshelfEntryValidator::validate( QString& input, int& p
     }
     return Invalid;
 }
-
 

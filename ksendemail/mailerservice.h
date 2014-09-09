@@ -30,19 +30,19 @@ class QEventLoop;
 
 class MailerService : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     MailerService();
     virtual ~MailerService();
 
     bool start();
-    void processArgs( const QCommandLineParser &args );
+    void processArgs(const QCommandLineParser &args);
 
-  private slots :
-    void serviceOwnerChanged( const QString&, const QString&, const QString& );
+private slots :
+    void serviceOwnerChanged(const QString &, const QString &, const QString &);
 
-  private :
+private :
     bool mSuccess;
     QString mDBusService;
     QString mError;

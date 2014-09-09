@@ -52,7 +52,7 @@ const K4AboutData &createAboutData()
 
 K_PLUGIN_FACTORY(KJotsPartFactory, registerPlugin<KJotsPart>();)
 
-KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/ )
+KJotsPart::KJotsPart(QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/)
     : KParts::ReadOnlyPart(parent)
 {
     // we need an instance
@@ -79,10 +79,10 @@ KJotsPart::~KJotsPart()
 
 void KJotsPart::initAction()
 {
-  QAction *action = new QAction( QIcon::fromTheme( QLatin1String("configure") ), i18n( "&Configure KJots..." ), this );
-  actionCollection()->addAction( QLatin1String("kjots_configure"), action );
-  connect( action, SIGNAL(triggered(bool)), mComponent,
-           SLOT(configure()) );
+    QAction *action = new QAction(QIcon::fromTheme(QLatin1String("configure")), i18n("&Configure KJots..."), this);
+    actionCollection()->addAction(QLatin1String("kjots_configure"), action);
+    connect(action, SIGNAL(triggered(bool)), mComponent,
+            SLOT(configure()));
 }
 
 bool KJotsPart::openFile()
@@ -98,8 +98,7 @@ void KJotsPart::delayedInitialization()
 
 void KJotsPart::activeAnchorChanged(const QString &anchorTarget, const QString &anchorText)
 {
-    if (!anchorTarget.isEmpty())
-    {
+    if (!anchorTarget.isEmpty()) {
         mStatusBar->statusBar()->showMessage(anchorText + QLatin1String(" -> ") + anchorTarget);
     } else {
         mStatusBar->statusBar()->showMessage(QString());

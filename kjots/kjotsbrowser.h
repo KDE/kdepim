@@ -29,15 +29,15 @@ class QItemSelectionModel;
 
 class KJotsBrowser : public QTextBrowser
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit KJotsBrowser ( QItemSelectionModel *selectionModel, QWidget* );
-    virtual ~KJotsBrowser ();
+    explicit KJotsBrowser(QItemSelectionModel *selectionModel, QWidget *);
+    virtual ~KJotsBrowser();
 
-    void delayedInitialization ();
+    void delayedInitialization();
 
 protected slots:
-    void linkClicked(const QUrl&);
+    void linkClicked(const QUrl &);
 
 private:
     QItemSelectionModel *m_itemSelectionModel;
@@ -45,4 +45,3 @@ private:
 
 #endif
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
-/* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

@@ -28,23 +28,23 @@ class KXMLGUIClient;
 
 class KJotsTreeView : public Akonadi::EntityTreeView
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit KJotsTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
+    explicit KJotsTreeView(KXMLGUIClient *xmlGuiClient, QWidget *parent = 0);
 
-  void delayedInitialization();
-  QString captionForSelection( const QString &sep ) const;
+    void delayedInitialization();
+    QString captionForSelection(const QString &sep) const;
 
 protected:
-  virtual void contextMenuEvent( QContextMenuEvent *event );
+    virtual void contextMenuEvent(QContextMenuEvent *event);
 
 protected slots:
-  void renameEntry();
-  void copyLinkAddress();
-  void changeColor();
+    void renameEntry();
+    void copyLinkAddress();
+    void changeColor();
 
 private:
-  KXMLGUIClient *m_xmlGuiClient;
+    KXMLGUIClient *m_xmlGuiClient;
 
 };
 
