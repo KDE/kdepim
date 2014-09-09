@@ -10,6 +10,7 @@
   <name xml:lang="en-GB">KAddressBook</name>
   <name xml:lang="es">KAddressBook</name>
   <name xml:lang="fr">KAddressBook</name>
+  <name xml:lang="hu">KAddressBook</name>
   <name xml:lang="nds">KAdressbook</name>
   <name xml:lang="nl">KAddressBook</name>
   <name xml:lang="pl">Książka adresowa</name>
@@ -31,6 +32,7 @@
     <p xml:lang="en-GB">KAddressBook stores all the personal details of your family, friends and other contacts.</p>
     <p xml:lang="es">KAddressBook almacena todos los detalles personales de su familia, amigos y otros contactos.</p>
     <p xml:lang="fr">KAddressBook mémorise toutes les coordonnées de votre famille, vos amis et autres contacts.</p>
+    <p xml:lang="hu">A KAddressBook tárolja a családja, barátai és más partnereinek minden személyes adatát.</p>
     <p xml:lang="nds">KAdressbook wohrt all de persöönlichen Enkelheiten över Dien Familie, Dien Frünnen un anner Kontakten.</p>
     <p xml:lang="nl">KAddressBook slaat alle persoonlijke details op van uw familie, vrienden en andere contactpersonen.</p>
     <p xml:lang="pl">Książka adresowa przechowuje wszystkie dane osobiste o twojej rodzinie, przyjaciołach i innych znajomych.</p>
@@ -52,6 +54,7 @@
     <p xml:lang="en-GB">Features:</p>
     <p xml:lang="es">Características:</p>
     <p xml:lang="fr">Fonctionnalités :</p>
+    <p xml:lang="hu">Szolgáltatások:</p>
     <p xml:lang="nds">Markmalen:</p>
     <p xml:lang="nl">Mogelijkheden:</p>
     <p xml:lang="pl">Możliwości:</p>
@@ -73,6 +76,7 @@
       <li xml:lang="en-GB">Imports and exports to nearly every address book standard</li>
       <li xml:lang="es">Importa y exporta a casi todas las libretas de direcciones estándar</li>
       <li xml:lang="fr">Import et export vers presque tous les formats standards de carnet d'adresse</li>
+      <li xml:lang="hu">Importálás és exportálás közel minden címjegyzékformátumba</li>
       <li xml:lang="nds">Importeren ut un Exporteren na meist all Adressbook-Standards.</li>
       <li xml:lang="nl">Importeert en exporteert naar bijna elke adresboekstandaard</li>
       <li xml:lang="pl">Importowanie i eksportowane do niemalże każdego standardu książki adresowej</li>
@@ -93,6 +97,7 @@
       <li xml:lang="en-GB">Reads .vcf format files, and can import and export vCards and csv format files</li>
       <li xml:lang="es">Lee archivos de formato .vcf, y puede importar y exportar formatos de archivo vCard y csv</li>
       <li xml:lang="fr">Lit les fichiers au format VCF, et importe et exporte les fichiers aux formats vCard et CSV</li>
+      <li xml:lang="hu">A .vcf fájlformátum olvasása, vCard és CSV fájlok importálása és exportálása</li>
       <li xml:lang="nds">Leest Dateien in't VCF-Formaat un kann Daten ut vCard- un CSV-Dateien importeren un dor ok hen exporteren.</li>
       <li xml:lang="nl">Leest .vcf-formaat bestanden en kan vCards importeren en exporteren en csv-formaat bestanden</li>
       <li xml:lang="pl">Czytanie plików w postaci .vcf oraz importowanie i eksportowanie wizytówek w postaci vCard i csv</li>
@@ -112,6 +117,7 @@
       <li xml:lang="en-GB">Can use multiple LDAPservers</li>
       <li xml:lang="es">Puede usar varios servidores LDAP</li>
       <li xml:lang="fr">Peut utiliser plusieurs serveurs LDAP</li>
+      <li xml:lang="hu">Több LDAP kiszolgáló használata</li>
       <li xml:lang="nds">Kann en Reeg LDAP-Servers tosamen bruken</li>
       <li xml:lang="nl">Kan meerdere LDAP-servers gebruiken</li>
       <li xml:lang="pl">Możliwość używania wielu serwerów LDAP</li>
@@ -131,6 +137,7 @@
       <li xml:lang="en-GB">Configurable filters and powerful search capabilities</li>
       <li xml:lang="es">Filtros configurables y poderosas capacidades de búsqueda</li>
       <li xml:lang="fr">Filtres personnalisables et fonctions de recherche poussées</li>
+      <li xml:lang="hu">Konfigurálható szűrők és hatékony keresési képességek</li>
       <li xml:lang="nds">Instellbor Filtern un en deegt Söök</li>
       <li xml:lang="nl">In te stellen filters en krachtige zoekfuncties</li>
       <li xml:lang="pl">Ustawialne filtry i zaawansowane możliwości wyszukiwania</li>
@@ -150,6 +157,7 @@
       <li xml:lang="en-GB">Integrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizer</li>
       <li xml:lang="es">Se integra con otros componentes de Kontact, p. ej., exportación de recordatorios de cumpleaños a KOrganizer</li>
       <li xml:lang="fr">Intégré avec les autres composants de la suite Kontact, par exemple pour exporter un rappel d'anniversaire vers KOrganizer</li>
+      <li xml:lang="hu">Integráció más Kontact komponensekkel, például születésnapi emlékeztetők exportálása a KOrganizerbe</li>
       <li xml:lang="nds">Arbeit mit anner Kontact-Komponenten tosamen, exporteert a.B. Geboortsdag-Vöranstööt na KOrganizer.</li>
       <li xml:lang="nl">Integreert met andere componenten van Kontact, bijv. exporteren van herinneringen van verjaardagen aan KOrganizer</li>
       <li xml:lang="pl">Integracja z innymi składnikami Kontact, np. eksportowanie przypomnień o urodzinach do KOrgranizera</li>
@@ -169,6 +177,7 @@
       <li xml:lang="en-GB">Capable of groupware integration</li>
       <li xml:lang="es">Capaz de integración con herramientas de colaboración</li>
       <li xml:lang="fr">Possibilités d'intégration en logiciel de groupe de travail</li>
+      <li xml:lang="hu">Csoportmunka-integráció</li>
       <li xml:lang="nds">Arbeit mit Arbeitkoppelprogrammen tosamen</li>
       <li xml:lang="nl">Kan met groupware integreren</li>
       <li xml:lang="pl">Możliwość integracji z oprogramowaniem groupware</li>
@@ -187,7 +196,9 @@
       <li xml:lang="ca">Desenvolupat per a l'Akonadi</li>
       <li xml:lang="de">Unterstützt durch Akonadi</li>
       <li xml:lang="en-GB">Powered by Akonadi</li>
+      <li xml:lang="es">Potenciado por Akonadi</li>
       <li xml:lang="fr">Fonctionne avec Akonadi</li>
+      <li xml:lang="hu">Akonadi támogatás</li>
       <li xml:lang="nds">Akonadi arbeidt in'n Achtergrund</li>
       <li xml:lang="nl">Powered door Akonadi</li>
       <li xml:lang="pl">Napędzane przez Akonadi</li>
