@@ -20,9 +20,9 @@ add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5153)
 
 target_link_libraries(kwatchgnupg
-  
+  KF5::DBusAddons  
   kleo
-  ${QGPGME_LIBRARIES}
+  KF5::QGpgme
 )
 
 install(TARGETS kwatchgnupg ${INSTALL_TARGETS_DEFAULT_ARGS})

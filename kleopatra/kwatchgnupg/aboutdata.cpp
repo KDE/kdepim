@@ -37,7 +37,6 @@
 #include <KLocalizedString>
 
 static const char kwatchgnupg_version[] = "1.0";
-static const char description[] = I18N_NOOP("GnuPG log viewer");
 
 struct about_data {
   const char * name;
@@ -50,26 +49,14 @@ static const about_data authors[] = {
   { I18N_NOOP("Steffen Hansen"), I18N_NOOP("Original Author"), "hansen@kde.org", 0 },
 };
 
-#if 0
-// can't create zero size array - doesn't compile
-static const about_data credits[] = {
-  // PENDING(steffen) add stuff
-};
-#endif
-
 AboutData::AboutData()
-  : K4AboutData( "kwatchgnupg", 0, ki18n("KWatchGnuPG"),
-                kwatchgnupg_version, ki18n(description), License_GPL,
-                ki18n("(c) 2004 Klar\xC3\xA4lvdalens Datakonsult AB\n") )
+  : KAboutData( QLatin1String("kwatchgnupg"), i18n("KWatchGnuPG"),
+                QLatin1String(kwatchgnupg_version), i18n("GnuPG log viewer"), KAboutLicense::GPL,
+                i18n("(c) 2004 Klar\xC3\xA4lvdalens Datakonsult AB\n") )
 {
   using ::authors;
   //using ::credits;
   for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
-    addAuthor( ki18n(authors[i].name), ki18n(authors[i].desc),
-               authors[i].email, authors[i].web );
-#if 0
-  for ( unsigned int i = 0 ; i < sizeof credits / sizeof *credits ; ++i )
-    addCredit( ki18n(credits[i].name), ki18n(credits[i].desc),
-               credits[i].email, credits[i].web );
-#endif
+    addAuthor( i18n(authors[i].name), i18n(authors[i].desc),
+               QLatin1String(authors[i].email), QLatin1String(authors[i].web) );
 }

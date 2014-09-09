@@ -36,40 +36,14 @@
 #include "aboutdata.h"
 #include "kwatchgnupgmainwin.h"
 #include <kdelibs4configmigrator.h>
+#include <KDBusService>
 
-#include <kuniqueapplication.h>
-#include <kcmdlineargs.h>
 #include <kmessagebox.h>
 #include <KLocalizedString>
 #include <kiconloader.h>
 #include <QDebug>
-
-class KWatchGnuPGApplication : public KUniqueApplication {
-public:
-  KWatchGnuPGApplication();
-  ~KWatchGnuPGApplication();
-  virtual int newInstance();
-private:
-  KWatchGnuPGMainWindow* mMainWin;
-};
-
-KWatchGnuPGApplication::KWatchGnuPGApplication()
-  : KUniqueApplication(), mMainWin(0)
-{
-}
-
-KWatchGnuPGApplication::~KWatchGnuPGApplication()
-{
-  delete mMainWin;
-}
-
-int KWatchGnuPGApplication::newInstance()
-{
-  if( !mMainWin )
-      mMainWin = new KWatchGnuPGMainWindow;
-  mMainWin->show();
-  return KUniqueApplication::newInstance();
-}
+#include <QCommandLineParser>
+#include <QApplication>
 
 int main( int argc, char** argv )
 {
@@ -81,19 +55,20 @@ int main( int argc, char** argv )
   KLocalizedString::setApplicationDomain("kwatchgnupg");   
   AboutData aboutData;
 
-  KCmdLineArgs::init(argc, argv, &aboutData);
+  QApplication app(argc, argv);
 
-  KCmdLineOptions options;
-  KCmdLineArgs::addCmdLineOptions( options );
-  KWatchGnuPGApplication::addCmdLineOptions();
+  KAboutData::setApplicationData(aboutData);
+  QCommandLineParser parser;
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
-#if 0
-  if (!KWatchGnuPGApplication::start()) {
-        qCritical() <<"KWatchGnuPG is already running!";
-        return 0;
-  }
-#endif
 
-  KWatchGnuPGApplication app;
+  KDBusService service(KDBusService::Unique);
+
+  KWatchGnuPGMainWindow* mMainWin = new KWatchGnuPGMainWindow();
+  mMainWin->show();
   return app.exec();
 }
