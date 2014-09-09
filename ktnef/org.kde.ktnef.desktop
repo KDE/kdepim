@@ -149,3 +149,5 @@ Comment[zh_TW]=TNEF 檔案檢視器
 Terminal=false
 MimeType=application/ms-tnef;
 Categories=Qt;KDE;X-KDE-Utilities-PIM;Office;Network;Email;
+X-DBUS-ServiceName=org.kde.ktnef
+

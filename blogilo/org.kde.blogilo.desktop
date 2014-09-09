@@ -101,4 +101,4 @@ GenericName[x-test]=xxA KDE Blogging Clientxx
 GenericName[zh_CN]=KDE 的博客客户端
 GenericName[zh_TW]=KDE 部落格客戶端程式
 Terminal=false
-
+X-DBUS-ServiceName=org.kde.blogilo

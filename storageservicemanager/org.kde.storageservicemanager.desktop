@@ -61,3 +61,4 @@ Terminal=false
 Categories=Qt;KDE;Office;Network;
 InitialPreference=10
 X-DBUS-StartupType=Unique
+X-DBUS-ServiceName=org.kde.storageservicemanager

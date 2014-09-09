@@ -36,4 +36,4 @@ install(FILES
   headerthemeeditorui.rc
   DESTINATION  ${KXMLGUI_INSTALL_DIR}/headerthemeeditor)
 
-install(PROGRAMS headerthemeeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.headerthemeeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

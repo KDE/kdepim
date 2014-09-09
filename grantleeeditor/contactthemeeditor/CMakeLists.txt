@@ -48,4 +48,4 @@ install(FILES
   contactthemeeditorui.rc
   DESTINATION  ${KXMLGUI_INSTALL_DIR}/contactthemeeditor)
 
-install(PROGRAMS contactthemeeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.contactthemeeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

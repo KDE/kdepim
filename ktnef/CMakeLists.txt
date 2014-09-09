@@ -28,7 +28,7 @@ target_link_libraries(ktnef KF5::Tnef KF5::KIOCore )
 
 install(TARGETS ktnef ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-install(PROGRAMS ktnef.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.ktnef.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
 install(FILES ktnefui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/ktnef)
 

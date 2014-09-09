@@ -76,3 +76,4 @@ GenericName[zh_TW]=聯絡人主題編輯器
 Terminal=false
 Categories=Qt;KDE;Office;Network;ContactManagement;
 InitialPreference=10
+X-DBUS-ServiceName=org.kde.contactthemeeditor

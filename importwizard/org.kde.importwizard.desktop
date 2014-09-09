@@ -85,3 +85,4 @@ Comment[zh_TW]=啟動匯入精靈，將其他程式如 thunderbird 或 evolution
 Terminal=false
 Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;
 X-DBUS-StartupType=Unique
+X-DBUS-ServiceName=org.kde.importwizard

@@ -80,3 +80,4 @@ GenericName[zh_TW]=郵件標頭主題編輯器
 Terminal=false
 Categories=Qt;KDE;Office;Network;Email;
 InitialPreference=10
+X-DBUS-ServiceName=org.kde.headerthemeeditor
