@@ -149,7 +149,7 @@ find_package(ZLIB)
 set_package_properties(ZLIB PROPERTIES DESCRIPTION "The Zlib compression library" URL "http://www.zlib.net" TYPE REQUIRED)
 
 set(Prison_MIN_VERSION "1.2.0")
-find_package(Prison ${Prison_MIN_VERSION})
+find_package(KF5Prison ${Prison_MIN_VERSION})
 set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
 
 if( KF5GAPI_FOUND )

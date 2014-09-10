@@ -18,7 +18,7 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
-if(Prison_FOUND)
+if(KF5Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
 endif()
 
@@ -133,8 +133,8 @@ if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate KF5::QGpgme)
 endif()
 
-if(PRISON_FOUND)
-  target_link_libraries(kaddressbookprivate ${PRISON_LIBRARIES})
+if(KF5Prison_FOUND)
+  target_link_libraries(kaddressbookprivate KF5::Prison)
 endif()
 
 set_target_properties(kaddressbookprivate PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})

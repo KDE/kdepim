@@ -10,7 +10,7 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_definitions(-DTRANSLATION_DOMAIN=\"libkaddressbookgrantlee\")
 
-if(Prison_FOUND)
+if(KF5Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
 endif()
 
