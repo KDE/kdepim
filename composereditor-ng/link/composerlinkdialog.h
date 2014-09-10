@@ -20,14 +20,14 @@
 
 #ifndef ComposerLinkDialog_H
 #define ComposerLinkDialog_H
-#include <KDialog>
+#include <QDialog>
 
 class QWebElement;
 
 namespace ComposerEditorNG
 {
 class ComposerLinkDialogPrivate;
-class ComposerLinkDialog : public KDialog
+class ComposerLinkDialog : public QDialog
 {
     Q_OBJECT
 public:

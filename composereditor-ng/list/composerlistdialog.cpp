@@ -30,6 +30,9 @@
 #include <QWebElement>
 #include <QLabel>
 #include <QSpinBox>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace ComposerEditorNG
 {
@@ -75,10 +78,20 @@ public:
 void ComposerListDialogPrivate::initialize()
 {
 
-    q->setButtons(KDialog::Ok | KDialog::Cancel);
-    q->setCaption(i18n("Edit List"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(q);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    q->setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    q->setWindowTitle(i18n("Edit List"));
 
-    QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
+    QVBoxLayout *vbox = new QVBoxLayout(mainWidget);
 
     QLabel *lab = new QLabel(i18n("List Type:"));
     vbox->addWidget(lab);
@@ -118,7 +131,7 @@ void ComposerListDialogPrivate::initialize()
     sep = new KSeparator;
     vbox->addWidget(sep);
 
-    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+    q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
     fillStyle();
     updateSettings();
     q->resize(300, 200);
@@ -228,7 +241,7 @@ void ComposerListDialogPrivate::_k_slotOkClicked()
 }
 
 ComposerListDialog::ComposerListDialog(const QWebElement &element, QWidget *parent)
-    : KDialog(parent), d(new ComposerListDialogPrivate(element, this))
+    : QDialog(parent), d(new ComposerListDialogPrivate(element, this))
 {
 }
 

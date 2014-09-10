@@ -21,14 +21,14 @@
 #ifndef COMPOSERTABLEFORMATDIALOG_H
 #define COMPOSERTABLEFORMATDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class QWebElement;
 namespace ComposerEditorNG
 {
 class ComposerTableFormatDialogPrivate;
 
-class ComposerTableFormatDialog : public KDialog
+class ComposerTableFormatDialog : public QDialog
 {
     Q_OBJECT
 public:

@@ -21,13 +21,13 @@
 #ifndef PAGECOLORBACKGROUNDDIALOG_H
 #define PAGECOLORBACKGROUNDDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 class QWebElement;
 
 namespace ComposerEditorNG
 {
 class PageColorBackgroundDialogPrivate;
-class PageColorBackgroundDialog : public KDialog
+class PageColorBackgroundDialog : public QDialog
 {
     Q_OBJECT
 public:

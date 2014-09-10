@@ -30,6 +30,8 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QTabWidget>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 namespace ComposerEditorNG
 {
@@ -40,10 +42,19 @@ public:
     ExtendAttributesDialogPrivate(const QWebElement &element, ExtendAttributesDialog::ExtendType extendType, ExtendAttributesDialog *qq)
         : q(qq)
     {
-        q->setCaption(i18n("Extend Attribute"));
-        q->setButtons(KDialog::Ok | KDialog::Cancel);
+        q->setWindowTitle(i18n("Extend Attribute"));
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+        QVBoxLayout *mainLayout = new QVBoxLayout;
+        q->setLayout(mainLayout);
+        QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+        okButton->setDefault(true);
+        okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+        q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+        q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
         QWidget *page = new QWidget(q);
-        q->setMainWidget(page);
+        mainLayout->addWidget(page);
+        mainLayout->addWidget(buttonBox);
+
 
         QVBoxLayout *lay = new QVBoxLayout(page);
         QString tagName;
@@ -91,7 +102,7 @@ public:
         tab->addTab(inlineStyleAttributes, i18n("Inline Style"));
 
         lay->addWidget(tab);
-        q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+        q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
         q->resize(400, 300);
     }
     void _k_slotOkClicked();
@@ -111,7 +122,7 @@ void ExtendAttributesDialogPrivate::_k_slotOkClicked()
 }
 
 ExtendAttributesDialog::ExtendAttributesDialog(const QWebElement &element, ExtendType type, QWidget *parent)
-    : KDialog(parent), d(new ExtendAttributesDialogPrivate(element, type, this))
+    : QDialog(parent), d(new ExtendAttributesDialogPrivate(element, type, this))
 {
 }
 

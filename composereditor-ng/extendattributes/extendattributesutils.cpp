@@ -18,7 +18,6 @@
 
 */
 #include "extendattributesutils_p.h"
-
 namespace ComposerEditorNG
 {
 

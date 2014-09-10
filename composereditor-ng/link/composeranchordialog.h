@@ -21,13 +21,13 @@
 #ifndef COMPOSERANCHORDIALOG_H
 #define COMPOSERANCHORDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include <QWebElement>
 
 namespace ComposerEditorNG
 {
 class ComposerAnchorDialogPrivate;
-class ComposerAnchorDialog : public KDialog
+class ComposerAnchorDialog : public QDialog
 {
     Q_OBJECT
 public:

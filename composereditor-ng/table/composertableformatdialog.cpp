@@ -32,6 +32,9 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QDebug>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace ComposerEditorNG
 {
@@ -86,11 +89,21 @@ void ComposerTableFormatDialogPrivate::applyChanges()
 void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
 {
     webElement = element;
-    q->setCaption(i18n("Table Format"));
-    q->setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel);
-    q->setButtonText(KDialog::Ok, i18n("Edit"));
+    q->setWindowTitle(i18n("Table Format"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Apply);
+    QWidget *mainWidget = new QWidget(q);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    q->setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    okButton->setText(i18n("Edit"));
     QWidget *page = new QWidget(q);
-    q->setMainWidget(page);
+    mainLayout->addWidget(page);
 
     QVBoxLayout *lay = new QVBoxLayout(page);
     insertTableWidget = new KPIMTextEdit::InsertTableWidget(q);
@@ -117,8 +130,8 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     sep = new KSeparator;
     lay->addWidget(sep);
 
-    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
-    q->connect(q, SIGNAL(applyClicked()), q, SLOT(_k_slotApplyClicked()));
+    q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
+    q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotApplyClicked()));
 
     q->connect(useBackgroundColor, SIGNAL(toggled(bool)), backgroundColor, SLOT(setEnabled(bool)));
     updateSettings();
@@ -167,7 +180,7 @@ void ComposerTableFormatDialogPrivate::_k_slotApplyClicked()
 }
 
 ComposerTableFormatDialog::ComposerTableFormatDialog(const QWebElement &element, QWidget *parent)
-    : KDialog(parent), d(new ComposerTableFormatDialogPrivate(element, this))
+    : QDialog(parent), d(new ComposerTableFormatDialogPrivate(element, this))
 {
 }
 

@@ -30,6 +30,9 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QWebElement>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace ComposerEditorNG
 {
@@ -64,12 +67,23 @@ public:
 
 void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 {
-    q->setButtons(KDialog::Ok | KDialog::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(q);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    q->setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
+    mainLayout->addWidget(buttonBox);
     webElement = element;
 
-    q->setCaption(webElement.isNull() ? i18n("Create Link") : i18n("Edit Link"));
+    q->setWindowTitle(webElement.isNull() ? i18n("Create Link") : i18n("Edit Link"));
 
-    QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
+    QVBoxLayout *vbox = new QVBoxLayout(mainWidget);
 
     QGridLayout *layout = new QGridLayout;
     vbox->addLayout(layout);
@@ -104,7 +118,7 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 
     vbox->addWidget(new KSeparator);
 
-    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+    q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
 }
 
 void ComposerLinkDialogPrivate::fillTarget()
@@ -175,14 +189,14 @@ void ComposerLinkDialogPrivate::updateSettings()
 }
 
 ComposerLinkDialog::ComposerLinkDialog(const QString &selectedText, QWidget *parent)
-    : KDialog(parent), d(new ComposerLinkDialogPrivate(this))
+    : QDialog(parent), d(new ComposerLinkDialogPrivate(this))
 {
     d->initialize();
     d->linkText->setText(selectedText);
 }
 
 ComposerLinkDialog::ComposerLinkDialog(const QWebElement &element, QWidget *parent)
-    : KDialog(parent), d(new ComposerLinkDialogPrivate(this))
+    : QDialog(parent), d(new ComposerLinkDialogPrivate(this))
 {
     d->initialize(element);
     d->updateSettings();

@@ -21,13 +21,13 @@
 #ifndef EXTENDATTRIBUTESDIALOG_H
 #define EXTENDATTRIBUTESDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 class QWebElement;
 
 namespace ComposerEditorNG
 {
 class ExtendAttributesDialogPrivate;
-class ExtendAttributesDialog : public KDialog
+class ExtendAttributesDialog : public QDialog
 {
     Q_OBJECT
 public:

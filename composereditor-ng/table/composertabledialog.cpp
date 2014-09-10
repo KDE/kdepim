@@ -27,6 +27,9 @@
 
 #include <QWebElement>
 #include <QVBoxLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace ComposerEditorNG
 {
@@ -70,9 +73,19 @@ QString ComposerTableDialogPrivate::html() const
 
 void ComposerTableDialogPrivate::initialize()
 {
-    q->setCaption(i18n("Insert Table"));
-    q->setButtons(KDialog::Ok | KDialog::Cancel);
-    q->setButtonText(KDialog::Ok, i18n("Insert"));
+    q->setWindowTitle(i18n("Insert Table"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(q);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    q->setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    okButton->setText(i18n("Insert"));
 
     QWidget *page = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
@@ -84,8 +97,8 @@ void ComposerTableDialogPrivate::initialize()
     KSeparator *sep = new KSeparator;
     lay->addWidget(sep);
 
-    q->setMainWidget(page);
-    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+    mainLayout->addWidget(page);
+    q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
 }
 
 void ComposerTableDialogPrivate::_k_slotOkClicked()
@@ -94,7 +107,7 @@ void ComposerTableDialogPrivate::_k_slotOkClicked()
 }
 
 ComposerTableDialog::ComposerTableDialog(QWidget *parent)
-    : KDialog(parent), d(new ComposerTableDialogPrivate(this))
+    : QDialog(parent), d(new ComposerTableDialogPrivate(this))
 {
 }
 

@@ -614,7 +614,7 @@ void ComposerViewPrivate::_k_setTextForegroundColor()
 void ComposerViewPrivate::_k_slotAddImage()
 {
     QPointer<ComposerImageDialog> dlg = new ComposerImageDialog(q);
-    if (dlg->exec() == KDialog::Accepted) {
+    if (dlg->exec() == QDialog::Accepted) {
         execCommand(QLatin1String("insertHTML"), dlg->html());
     }
     delete dlg;
@@ -630,7 +630,7 @@ void ComposerViewPrivate::_k_slotEditImage()
 void ComposerViewPrivate::_k_slotInsertTable()
 {
     QPointer<ComposerTableDialog> dlg = new ComposerTableDialog(q);
-    if (dlg->exec() == KDialog::Accepted) {
+    if (dlg->exec() == QDialog::Accepted) {
         execCommand(QLatin1String("insertHTML"), dlg->html());
     }
     delete dlg;
@@ -645,7 +645,7 @@ void ComposerViewPrivate::_k_insertLink()
 {
     const QString selectedText = q->selectedText();
     QPointer<ComposerEditorNG::ComposerLinkDialog> dlg = new ComposerEditorNG::ComposerLinkDialog(selectedText, q);
-    if (dlg->exec() == KDialog::Accepted) {
+    if (dlg->exec() == QDialog::Accepted) {
         const QString html(dlg->html());
         if (!html.isEmpty()) {
             execCommand(QLatin1String("insertHTML"), html);
@@ -956,7 +956,7 @@ void ComposerViewPrivate::_k_slotInsertSpecialChar()
 void ComposerViewPrivate::_k_slotInsertAnchor()
 {
     QPointer<ComposerAnchorDialog> dlg = new ComposerAnchorDialog(q);
-    if (dlg->exec() == KDialog::Accepted) {
+    if (dlg->exec() == QDialog::Accepted) {
         execCommand(QLatin1String("insertHTML"), dlg->html());
     }
     delete dlg;

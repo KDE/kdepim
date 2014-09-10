@@ -28,6 +28,9 @@
 
 #include <QVBoxLayout>
 #include <QLabel>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace ComposerEditorNG
 {
@@ -58,11 +61,22 @@ public:
 void ComposerAnchorDialogPrivate::initialize(const QWebElement &element)
 {
     webElement = element;
-    q->setButtons(KDialog::Ok | KDialog::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(q);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    q->setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
+    mainLayout->addWidget(buttonBox);
 
-    q->setCaption(webElement.isNull() ? i18n("Create Anchor") : i18n("Edit Anchor"));
+    q->setWindowTitle(webElement.isNull() ? i18n("Create Anchor") : i18n("Edit Anchor"));
 
-    QVBoxLayout *vbox = new QVBoxLayout(q->mainWidget());
+    QVBoxLayout *vbox = new QVBoxLayout(mainWidget);
 
     QGridLayout *layout = new QGridLayout;
     vbox->addLayout(layout);
@@ -83,7 +97,7 @@ void ComposerAnchorDialogPrivate::initialize(const QWebElement &element)
 
     vbox->addWidget(new KSeparator);
 
-    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+    q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
 
 }
 
@@ -116,13 +130,13 @@ void ComposerAnchorDialogPrivate::updateLinkHtml()
 }
 
 ComposerAnchorDialog::ComposerAnchorDialog(QWidget *parent)
-    : KDialog(parent), d(new ComposerAnchorDialogPrivate(this))
+    : QDialog(parent), d(new ComposerAnchorDialogPrivate(this))
 {
     d->initialize();
 }
 
 ComposerAnchorDialog::ComposerAnchorDialog(const QWebElement &element, QWidget *parent)
-    : KDialog(parent), d(new ComposerAnchorDialogPrivate(this))
+    : QDialog(parent), d(new ComposerAnchorDialogPrivate(this))
 {
     d->initialize(element);
     d->updateSettings();

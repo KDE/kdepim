@@ -21,7 +21,7 @@
 #ifndef EXTENDATTRIBUTESUTIL_P_H
 #define EXTENDATTRIBUTESUTIL_P_H
 #include "extendattributesdialog.h"
-
+#include <QMap>
 namespace ComposerEditorNG
 {
 namespace ExtendAttributesUtils

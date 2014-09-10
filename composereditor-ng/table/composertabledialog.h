@@ -20,13 +20,13 @@
 #ifndef COMPOSERTABLEDIALOG_H
 #define COMPOSERTABLEDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 namespace ComposerEditorNG
 {
 class ComposerTableDialogPrivate;
 
-class ComposerTableDialog : public KDialog
+class ComposerTableDialog : public QDialog
 {
     Q_OBJECT
 public:

@@ -30,6 +30,9 @@
 #include <QWebElement>
 #include <QVBoxLayout>
 #include <QCheckBox>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace ComposerEditorNG
 {
@@ -41,10 +44,20 @@ public:
         : webElement(element)
         , q(qq)
     {
-        q->setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel);
-        q->setCaption(i18n("Edit Cell Format"));
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Apply);
+        QWidget *mainWidget = new QWidget(q);
+        QVBoxLayout *mainLayout = new QVBoxLayout;
+        q->setLayout(mainLayout);
+        mainLayout->addWidget(mainWidget);
+        QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+        okButton->setDefault(true);
+        okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+        q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+        q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+        mainLayout->addWidget(buttonBox);
+        q->setWindowTitle(i18n("Edit Cell Format"));
 
-        QVBoxLayout *layout = new QVBoxLayout(q->mainWidget());
+        QVBoxLayout *layout = new QVBoxLayout(mainWidget);
 
         width = new ComposerCellSizeWidget;
         width->setLabel(i18n("Width:"));
@@ -108,9 +121,9 @@ public:
 
         q->connect(useBackgroundColor, SIGNAL(toggled(bool)), backgroundColor, SLOT(setEnabled(bool)));
 
-        q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
+        q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
 
-        q->connect(q, SIGNAL(applyClicked()), q, SLOT(_k_slotApplyClicked()));
+        q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotApplyClicked()));
         updateSettings();
     }
 
@@ -219,7 +232,7 @@ void ComposerTableCellFormatDialogPrivate::_k_slotOkClicked()
 }
 
 ComposerTableCellFormatDialog::ComposerTableCellFormatDialog(const QWebElement &element, QWidget *parent)
-    : KDialog(parent), d(new ComposerTableCellFormatDialogPrivate(element, this))
+    : QDialog(parent), d(new ComposerTableCellFormatDialogPrivate(element, this))
 {
 }
 
