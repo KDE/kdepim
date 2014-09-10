@@ -88,7 +88,7 @@ install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 
-install( PROGRAMS org.kde.kjots.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install( PROGRAMS data/org.kde.kjots.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES Kjots.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
 install( FILES kjots.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 install( FILES kjotsui.rc  DESTINATION ${KXMLGUI_INSTALL_DIR}/kjots)
@@ -118,7 +118,7 @@ target_link_libraries(kjotspart
   noteshared
 )
 
-install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
+install( FILES data/kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES kjotspartui.rc  DESTINATION ${KXMLGUI_INSTALL_DIR}/kjots)
 
 install(TARGETS kjotspart  DESTINATION ${PLUGIN_INSTALL_DIR} )
@@ -134,6 +134,6 @@ install(TARGETS kcm_kjots DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 install(FILES
-      kjots_config_misc.desktop
+      data/kjots_config_misc.desktop
       DESTINATION ${SERVICES_INSTALL_DIR})
 
