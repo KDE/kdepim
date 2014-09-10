@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_DIALOGS_EXPIRYDIALOG_H__
 #define __KLEOPATRA_DIALOGS_EXPIRYDIALOG_H__
 
-#include <kdialog.h>
+#include <QDialog>
 
 #include <utils/pimpl_ptr.h>
 
@@ -42,7 +42,7 @@ class QDate;
 namespace Kleo {
 namespace Dialogs {
 
-    class ExpiryDialog : public KDialog {
+    class ExpiryDialog : public QDialog {
         Q_OBJECT
         Q_PROPERTY( QDate dateOfExpiry READ dateOfExpiry WRITE setDateOfExpiry )
     public:

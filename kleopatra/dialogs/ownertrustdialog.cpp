@@ -42,6 +42,9 @@
 #include <QPushButton>
 
 #include <cassert>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
@@ -80,20 +83,31 @@ private:
         explicit UI( Dialogs::OwnerTrustDialog * qq )
             : Ui::OwnerTrustDialog(), q( qq )
         {
-            setupUi( qq->mainWidget() );
-            qq->setButtons( KDialog::Ok | KDialog::Cancel );
+            QWidget *mainWidget = new QWidget(q);
+
+            setupUi( mainWidget );
+            QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+            QVBoxLayout *mainLayout = new QVBoxLayout;
+            q->setLayout(mainLayout);
+            mainLayout->addWidget(mainWidget);
+            okButton = buttonBox->button(QDialogButtonBox::Ok);
+            okButton->setDefault(true);
+            okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+            q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+            q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+            mainLayout->addWidget(buttonBox);
         }
 
         QPushButton * okPB() const {
-            return q->button( KDialog::Ok );
+            return okButton;
         }
-
+        QPushButton *okButton;
         Dialogs::OwnerTrustDialog *q;
     } ui;
 };
 
 OwnerTrustDialog::OwnerTrustDialog( QWidget * p, Qt::WindowFlags f )
-    : KDialog( p, f ), d( new Private( this ) )
+    : QDialog( p, f ), d( new Private( this ) )
 {
     connect( d->ui.unknownRB, SIGNAL(toggled(bool)), this, SLOT(slotTrustLevelChanged()) );
     connect( d->ui.neverRB, SIGNAL(toggled(bool)), this, SLOT(slotTrustLevelChanged()) );

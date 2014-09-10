@@ -41,6 +41,10 @@
 
 
 #include <cassert>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
@@ -120,8 +124,19 @@ private:
         explicit UI( Dialogs::ExpiryDialog * qq )
             : Ui::ExpiryDialog()
         {
-            setupUi( qq->mainWidget() );
-            qq->setButtons( KDialog::Ok | KDialog::Cancel );
+            QWidget *mainWidget = new QWidget(qq);
+
+            setupUi( mainWidget );
+            QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+            QVBoxLayout *mainLayout = new QVBoxLayout;
+            qq->setLayout(mainLayout);
+            mainLayout->addWidget(mainWidget);
+            QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+            okButton->setDefault(true);
+            okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+            qq->connect(buttonBox, SIGNAL(accepted()), qq, SLOT(accept()));
+            qq->connect(buttonBox, SIGNAL(rejected()), qq, SLOT(reject()));
+            mainLayout->addWidget(buttonBox);
 
             assert( inCB->count() == NumPeriods );
 
@@ -131,7 +146,7 @@ private:
 };
 
 ExpiryDialog::ExpiryDialog( QWidget * p, Qt::WindowFlags f )
-    : KDialog( p, f ), d( new Private( this ) )
+    : QDialog( p, f ), d( new Private( this ) )
 {
 
 }
