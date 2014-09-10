@@ -24,6 +24,7 @@
 #include "incidenceeditor-ng.h"
 #include "attendeetablemodel.h"
 
+#include <KCalCore/FreeBusy>
 
 namespace Ui {
   class EventOrTodoDesktop;
@@ -105,6 +106,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     void slotConflictResolverAttendeeRemoved(const QModelIndex &index, int first, int last);
     void slotConflictResolverAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void slotConflictResolverLayoutChanged();
+    void slotFreeBusyAdded(const QModelIndex &index, int first, int last);
+    void slotFreeBusyChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void updateFBStatus();
+    void updateFBStatus(const KCalCore::Attendee::Ptr &attendee, const KCalCore::FreeBusy::Ptr &fb);
 
     void slotGroupSubstitutionAttendeeAdded(const QModelIndex &index, int first, int last);
     void slotGroupSubstitutionAttendeeRemoved(const QModelIndex &index, int first, int last);

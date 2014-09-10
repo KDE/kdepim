@@ -51,6 +51,14 @@ public:
       Response
     };
 
+    enum AvailableStatus {
+      Unkown,
+      Free,
+      Accepted,
+      Busy,
+      Tentative
+    };
+
     AttendeeTableModel(const KCalCore::Attendee::List &resources, QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -80,6 +88,7 @@ private:
     void addEmptyAttendee();
 
     KCalCore::Attendee::List attendeeList;
+    QMap<KCalCore::Attendee::Ptr, AvailableStatus> attendeeAvailable;
     bool mKeepEmpty;
     bool mRemoveEmptyLines;
 };

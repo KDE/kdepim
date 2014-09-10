@@ -258,31 +258,42 @@ void FreeBusyItemModel::setFreeBusyPeriods( const QModelIndex &parent,
   ItemPrivateData *parentData = static_cast<ItemPrivateData*>( parent.internalPointer() );
   QModelIndex first = index( 0, 0, parent );
   QModelIndex last = index( parentData->childCount() - 1, 0, parent );
+  int fb_count = list.size();
+  int childCount = parentData->childCount();
 
-  if ( parentData->childCount() > 0 ) {
-    beginRemoveRows( parent, 0, parentData->childCount() - 1 );
-    for ( int i = parentData->childCount() - 1; i >= 0; --i ) {
+  if ( childCount > 0 && fb_count < childCount ) {
+      beginRemoveRows( parent, fb_count-1<0 ? 0 : fb_count-1 , childCount - 1 );
+    for ( int i = childCount - 1; i > fb_count; --i ) {
       delete parentData->removeChild( i );
     }
     endRemoveRows();
+    if (fb_count > 0) {
+        last = index(fb_count-1, 0, parent);
+        emit dataChanged(first, last);
+    }
+  } else if (fb_count > childCount) {
+      beginInsertRows( parent, childCount-1 < 0 ? 0 : childCount-1, fb_count - 1 );
+      for ( int i=childCount-1; i < fb_count; ++i ) {
+        ItemPrivateData *childData= new ItemPrivateData( parentData );
+        parentData->appendChild( childData );
+      }
+      endInsertRows();
+      if (childCount > 0) {
+          last = index(childCount-1, 0, parent);
+          emit dataChanged(first, last);
+      }
+  } else if (fb_count == childCount && fb_count > 0) {
+      emit dataChanged( first, last );
   }
-
-  int fb_count = list.size();
-  beginInsertRows( parent, 0, fb_count - 1 );
-  for ( int i=0; i < fb_count; ++i ) {
-    ItemPrivateData *childData= new ItemPrivateData( parentData );
-    parentData->appendChild( childData );
-  }
-  endInsertRows();
-  emit dataChanged( first, last );
 }
 
 void FreeBusyItemModel::clear()
 {
+  beginResetModel();
   mFreeBusyItems.clear();
   delete mRootData;
   mRootData = new ItemPrivateData( 0 );
-  reset();
+  endResetModel();
 }
 
 void IncidenceEditorNG::FreeBusyItemModel::removeRow( int row )
@@ -376,6 +387,7 @@ void FreeBusyItemModel::slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb,
       item->setFreeBusy( fb );
       const int row = mFreeBusyItems.indexOf( item );
       const QModelIndex parent = index( row, 0 );
+      emit dataChanged(parent, parent);
       setFreeBusyPeriods( parent, fb->fullBusyPeriods() );
     }
   }

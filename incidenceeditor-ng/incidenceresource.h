@@ -35,15 +35,16 @@ class EventOrTodoMore;
 
 namespace IncidenceEditorNG
 {
+class ResourceManagement;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceResource : public IncidenceEditor
 {
     Q_OBJECT
 public:
 #ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceResource(IncidenceAttendee* mIeAttendee, Ui::EventOrTodoMore *ui);
+    explicit IncidenceResource(IncidenceAttendee* mIeAttendee, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui);
 #else
-    explicit IncidenceResource(IncidenceAttendee* mIeAttendee,  Ui::EventOrTodoDesktop *ui);
+    explicit IncidenceResource(IncidenceAttendee* mIeAttendee, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui);
 #endif
 
     void load(const KCalCore::Incidence::Ptr &incidence);
@@ -65,6 +66,9 @@ private slots:
     void layoutChanged();
     void updateCount();
 
+    void slotDateChanged();
+
+    void dialogOkPressed();
 private:
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;
@@ -77,6 +81,9 @@ private:
 
     /** used dataModel to rely on*/
     AttendeeTableModel *dataModel;
+    IncidenceDateTime *mDateTime;
+
+    ResourceManagement* resourceDialog;
 };
 
 }

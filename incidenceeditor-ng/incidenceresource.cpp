@@ -21,6 +21,7 @@
 #include "resourcemanagement.h"
 #include "resourcemodel.h"
 #include "attendeecomboboxdelegate.h"
+#include "incidencedatetime.h"
 
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_dialogmoremobile.h"
@@ -57,15 +58,24 @@ public:
 };
 
 #ifdef KDEPIM_MOBILE_UI
-IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, Ui::EventOrTodoMore *ui)
+IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui)
 #else
-IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, Ui::EventOrTodoDesktop *ui)
+IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui)
 #endif
     : IncidenceEditor(0)
     , mUi(ui)
     , dataModel(ieAttendee->dataModel())
+    , mDateTime(dateTime)
+    , resourceDialog(new ResourceManagement())
 {
     setObjectName("IncidenceResource");
+    connect(resourceDialog, SIGNAL(okClicked()),
+            SLOT(dialogOkPressed()));
+
+    connect( mDateTime, SIGNAL(startDateChanged(QDate)),
+             SLOT(slotDateChanged()) );
+    connect( mDateTime, SIGNAL(endDateChanged(QDate)),
+             SLOT(slotDateChanged()) );
 
 
 #ifndef KDEPIM_MOBILE_UI
@@ -112,8 +122,14 @@ IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, Ui::EventOrT
 
 void IncidenceResource::load(const KCalCore::Incidence::Ptr &incidence)
 {
-  //all logic inside IncidenceAtendee (using same model)
+    slotDateChanged();
 }
+
+void IncidenceResource::slotDateChanged()
+{
+    resourceDialog->slotDateChanged(mDateTime->startDate(), mDateTime->endDate());
+}
+
 
 void IncidenceResource::save(const KCalCore::Incidence::Ptr &incidence)
 {
@@ -140,9 +156,21 @@ void IncidenceResource::bookResource()
 
 void IncidenceResource::findResources()
 {
-    ResourceManagement* dialog = new ResourceManagement();
-    dialog->show();
+    resourceDialog->show();
 }
+
+void IncidenceResource::dialogOkPressed()
+{
+    ResourceItem::Ptr item = resourceDialog->selectedItem();
+    QString name = item->ldapObject().value(QLatin1String("cn"));
+    QString email = item->ldapObject().value(QLatin1String("mail"));
+#ifndef KDEPIM_MOBILE_UI
+    KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(name, email));
+    attendee->setCuType(KCalCore::Attendee::Resource);
+    dataModel->insertAttendee(dataModel->rowCount(), attendee);
+#endif
+}
+
 
 void IncidenceResource::layoutChanged()
 {
