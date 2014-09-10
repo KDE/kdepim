@@ -65,7 +65,11 @@ void SendLaterJob::start()
             connect( fetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(slotMessageTransfered(Akonadi::Item::List)) );
             connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished(KJob*)) );
             fetch->start();
+        } else {
+            sendError(i18n("Not message found."), SendLaterManager::ItemNotFound);
         }
+    } else {
+      sendError(i18n("Not message found."), SendLaterManager::UnknownError);
     }
 }
 

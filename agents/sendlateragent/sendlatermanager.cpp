@@ -172,6 +172,7 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
 {
     if (info) {
         switch(type) {
+        case UnknownError:
         case ItemNotFound:
             //Don't try to resend it. Remove it.
             removeLaterInfo(info);

@@ -151,9 +151,7 @@ void SendLaterAgent::itemsMoved(const Akonadi::Item::List &items, const Akonadi:
     if (Akonadi::SpecialMailCollections::self()->specialCollectionType(destinationCollection) != Akonadi::SpecialMailCollections::Trash) {
         return;
     }
-    Q_FOREACH(const Akonadi::Item &item, items) {
-        mManager->itemRemoved(item.id());
-    }
+    itemsRemoved(items);
 }
 
 QString SendLaterAgent::printDebugInfo()
