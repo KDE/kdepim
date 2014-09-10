@@ -173,7 +173,7 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   mIeAttendee->setParent(qq);
   mEditor->combine( mIeAttendee );
 
-  mIeResource = new IncidenceResource( mIeAttendee, mUi );
+  mIeResource = new IncidenceResource( mIeAttendee, mIeDateTime, mUi );
   mEditor->combine( mIeResource );
 
   q->connect( mEditor, SIGNAL(showMessage(QString,KMessageWidget::MessageType)),

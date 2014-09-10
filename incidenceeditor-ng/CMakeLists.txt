@@ -7,6 +7,7 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/calendarsupport
   ${CMAKE_BINARY_DIR}/calendarsupport
+  ${CMAKE_SOURCE_DIR}/calendarviews
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_BINARY_DIR}/incidenceeditor-ng
   ${Boost_INCLUDE_DIR}
@@ -114,6 +115,7 @@ target_link_libraries(incidenceeditorsng
   kdepim
   kdepimdbusinterfaces # For UriHandler
   calendarsupport      # For KCalPrefs
+  eventviews
   kdgantt2             # For FreeBusy Editor
 )
 
@@ -156,6 +158,7 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
     kdepim               # For KPIM::K{Date|Time}Edit
     calendarsupport      # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
+    eventviews
     kdgantt2
     ${KDEPIMLIBS_KCALUTILS_LIBS}
     ${KDEPIMLIBS_KCALCORE_LIBS}
@@ -186,6 +189,7 @@ target_link_libraries(kincidenceeditor
   ${KDEPIMLIBS_KCALUTILS_LIBS}
   incidenceeditorsng
   calendarsupport
+  eventviews
   kdepimdbusinterfaces
 )
 

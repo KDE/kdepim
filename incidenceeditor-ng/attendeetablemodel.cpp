@@ -47,33 +47,47 @@ QVariant AttendeeTableModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
+    KCalCore::Attendee::Ptr attendee = attendeeList[index.row()];
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         switch (index.column()) {
         case Role:
-            return attendeeList[index.row()]->role();
+            return attendee->role();
         case FullName:
-            return attendeeList[index.row()]->fullName();
-        case Available:
+            return attendee->fullName();
+        case Available: {
+            AvailableStatus available = attendeeAvailable[attendee];
             if (role == Qt::DisplayRole) {
-                return i18n("Unknown");
+                switch (available) {
+                case Free:
+                    return i18n("Free");
+                case Busy:
+                    return i18n("Busy");
+                case Accepted:
+                    return i18n("Accepted");
+                case Unkown:
+                    return i18n("Unknown");
+                default:
+                    return i18n("Unknown");
+                }
             } else {
-                return 0;  //attendeeList.at(index.row()).available;
+                return available;
             }
+        }
         case Status:
-            return attendeeList[index.row()]->status();
+            return attendee->status();
         case CuType:
-            return attendeeList[index.row()]->cuType();
+            return attendee->cuType();
         case Response:
-            return attendeeList[index.row()]->RSVP();
+            return attendee->RSVP();
         case Name:
-            return attendeeList[index.row()]->name();
+            return attendee->name();
         case Email:
-            return attendeeList[index.row()]->email();
+            return attendee->email();
         }
 
     }
     if (role ==  AttendeeRole) {
-        return QVariant::fromValue(attendeeList[index.row()]);
+        return QVariant::fromValue(attendee);
     }
     return QVariant();
 }
@@ -82,35 +96,36 @@ bool AttendeeTableModel::setData(const QModelIndex& index, const QVariant& value
 {
     QString email, name;
     if (index.isValid() && role == Qt::EditRole) {
+        KCalCore::Attendee::Ptr attendee = attendeeList[index.row()];
         switch (index.column()) {
         case Role:
-            attendeeList[index.row()]->setRole(static_cast<KCalCore::Attendee::Role>(value.toInt()));
+            attendee->setRole(static_cast<KCalCore::Attendee::Role>(value.toInt()));
             break;
         case FullName:
             if (mRemoveEmptyLines && value.toString().trimmed().isEmpty()) {
                 // Do not remove last empty line if mKeepEmpty==true (only works if initaly there is only one empty line)
-                if (!mKeepEmpty || !(attendeeList[index.row()]->name().isEmpty() && attendeeList[index.row()]->email().isEmpty())) {
+                if (!mKeepEmpty || !(attendee->name().isEmpty() && attendee->email().isEmpty())) {
                     removeRows(index.row(), 1);
                     return true;
                 }
             }
             KPIMUtils::extractEmailAddressAndName(value.toString(), email, name);
-            attendeeList[index.row()]->setName(name);
-            attendeeList[index.row()]->setEmail(email);
+            attendee->setName(name);
+            attendee->setEmail(email);
 
             addEmptyAttendee();
             break;
         case Available:
-            //attendeeList[index.row()].available = value.toBool();
+            attendeeAvailable[attendee] = static_cast<AvailableStatus>(value.toInt());
             break;
         case Status:
-            attendeeList[index.row()]->setStatus(static_cast<KCalCore::Attendee::PartStat>(value.toInt()));
+            attendee->setStatus(static_cast<KCalCore::Attendee::PartStat>(value.toInt()));
             break;
         case CuType:
-            attendeeList[index.row()]->setCuType(static_cast<KCalCore::Attendee::CuType>(value.toInt()));
+            attendee->setCuType(static_cast<KCalCore::Attendee::CuType>(value.toInt()));
             break;
         case Response:
-            attendeeList[index.row()]->setRSVP(value.toBool());
+            attendee->setRSVP(value.toBool());
             break;
         default:
             return false;
@@ -170,6 +185,7 @@ bool AttendeeTableModel::removeRows(int position, int rows, const QModelIndex &p
     beginRemoveRows(parent, position, position + rows-1);
 
     for (int row = 0; row < rows; ++row) {
+        attendeeAvailable.remove(attendeeList.at(position));
         attendeeList.remove(position);
     }
 
@@ -195,6 +211,7 @@ void AttendeeTableModel::setAttendees(const KCalCore::Attendee::List attendees)
     emit layoutAboutToBeChanged();
 
     attendeeList = attendees;
+    attendeeAvailable = QMap<KCalCore::Attendee::Ptr, AvailableStatus>();
 
     addEmptyAttendee();
 

@@ -29,6 +29,12 @@
 
 #include "freebusyganttproxymodel.h"
 
+#include <calendarviews/agenda/agendaview.h>
+#include <calendarviews/agenda/viewcalendar.h>
+
+#include <KCalCore/Event>
+#include <KCalCore/MemoryCalendar>
+
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttview.h>
 #include <kdgantt2/kdganttdatetimegrid.h>
@@ -43,118 +49,72 @@
 #include <QSplitter>
 #include <QStringList>
 #include <QLabel>
-
+#include <QColor>
 
 #include <KDebug>
-
+#include <KSystemTimeZones>
 
 using namespace IncidenceEditorNG;
 
-class RowController : public KDGantt::AbstractRowController
-{
-  private:
-    static const int ROW_HEIGHT ;
-    QPointer<QAbstractItemModel> m_model;
-
-  public:
-    RowController()
-    {
-      mRowHeight = 20;
-    }
-
-    void setModel( QAbstractItemModel *model )
-    {
-      m_model = model;
-    }
-
-    /*reimp*/
-    int headerHeight() const
-    {
-      return mRowHeight + 10;
-    }
-
-    /*reimp*/
-    bool isRowVisible( const QModelIndex & ) const
-    {
-      return true;
-    }
-
-    /*reimp*/
-    bool isRowExpanded( const QModelIndex & ) const
-    {
-      return false;
-    }
-
-    /*reimp*/
-    KDGantt::Span rowGeometry( const QModelIndex &idx ) const
-    {
-      return KDGantt::Span( idx.row() * mRowHeight, mRowHeight );
-    }
-
-    /*reimp*/
-    int maximumItemHeight() const
-    {
-      return mRowHeight*6/8;
-    }
-
-    /*reimp*/
-    int totalHeight() const
-    {
-      return m_model->rowCount() * mRowHeight;
-    }
-
-    /*reimp*/
-    QModelIndex indexAt( int height ) const
-    {
-      return m_model->index( height / mRowHeight, 0 );
-    }
-
-    /*reimp*/
-    QModelIndex indexBelow( const QModelIndex &idx ) const
-    {
-      if ( !idx.isValid() ) {
-        return QModelIndex();
-      }
-      return idx.model()->index( idx.row() + 1, idx.column(), idx.parent() );
-    }
-
-    /*reimp*/
-    QModelIndex indexAbove( const QModelIndex &idx ) const
-    {
-      if ( !idx.isValid() ) {
-        return QModelIndex();
-      }
-      return idx.model()->index( idx.row() - 1, idx.column(), idx.parent() );
-    }
-
-    void setRowHeight( int height )
-    {
-      mRowHeight = height;
-    }
-
-  private:
-    int mRowHeight;
-
+enum FbStatus {
+    Unkown,
+    Free,
+    Busy,
+    Tentative
 };
 
-class GanttHeaderView : public QHeaderView
+class FreebusyViewCalendar : public EventViews::ViewCalendar
 {
 public:
-    explicit GanttHeaderView( QWidget *parent = 0 ) : QHeaderView( Qt::Horizontal, parent )
+    virtual ~FreebusyViewCalendar() {};
+    virtual bool isValid(const KCalCore::Incidence::Ptr &incidence) const
     {
+        return incidence->uid().startsWith("fb-");
     }
 
-    QSize sizeHint() const
+    virtual QString displayName(const KCalCore::Incidence::Ptr &incidence) const
     {
-        QSize s = QHeaderView::sizeHint();
-        s.rheight() *= 2;
-        return s;
+        Q_UNUSED(incidence);
+        return QLatin1String("Freebusy");
     }
+
+    virtual QColor resourceColor(const KCalCore::Incidence::Ptr &incidence) const
+    {
+        bool ok = false;
+        int status = incidence->customProperty("FREEBUSY", "STATUS").toInt(&ok);
+
+        if (!ok) {
+            return QColor("#555");
+        }
+
+        switch (status) {
+        case Busy:
+            return QColor("#f00");
+        case Tentative:
+            return QColor("#f70");
+        case Free:
+            return QColor("#0f0");
+        default:
+            return QColor("#555");
+        }
+    }
+
+    virtual QString iconForIncidence(const KCalCore::Incidence::Ptr &incidence) const
+    {
+        return QString();
+    }
+
+    virtual KCalCore::Calendar::Ptr getCalendar() const
+    {
+        return mCalendar;
+    }
+
+    KCalCore::Calendar::Ptr mCalendar;
 };
-
 
 ResourceManagement::ResourceManagement()
 {
+    setButtonText(KDialog::Ok, i18nc("@action:button add resource to attendeelist", "Book resource"));
 
     mUi = new Ui_resourceManagement;
 
@@ -163,36 +123,26 @@ ResourceManagement::ResourceManagement()
     setMainWidget( w );
 
     QVariantList list;
-    mModel = new FreeBusyItemModel;
-#ifndef KDEPIM_MOBILE_UI
+    mModel = new FreeBusyItemModel(this);
 
-    KDGantt::GraphicsView *mGanttGraphicsView = new KDGantt::GraphicsView( this );
-    mGanttGraphicsView->setObjectName( "mGanttGraphicsView" );
-    mGanttGraphicsView->setToolTip(
-        i18nc( "@info:tooltip",
-            "Shows the Free/Busy status of a resource.") );
-    mGanttGraphicsView->setWhatsThis(
-        i18nc( "@info:whatsthis",
-            "Shows the Free/Busy status of a resource.") );
-    FreeBusyGanttProxyModel *model = new FreeBusyGanttProxyModel( this );
-    model->setSourceModel( mModel );
+    connect(mModel, SIGNAL(layoutChanged()), SLOT(slotFbModelLayoutChanged()));
+    connect(mModel, SIGNAL(modelReset()), SLOT(slotFbModelLayoutChanged()));
+    connect(mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+                    SLOT(slotFbModelRowsRemoved(QModelIndex,int,int)));
+    connect(mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+                    SLOT(slotFbModelRowsAdded(QModelIndex,int,int)));
+    connect(mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                    SLOT(slotFbModelRowsChanged(QModelIndex,QModelIndex)));
 
-    RowController *mRowController = new RowController;
-    mRowController->setRowHeight( fontMetrics().height()*4 );   //TODO: detect
+    mAgendaView = new EventViews::AgendaView(QDate(), QDate(), false,  false);
 
-    mRowController->setModel( model );
-    mGanttGraphicsView->setRowController( mRowController );
+    KCalCore::Calendar::Ptr cal = KCalCore::Calendar::Ptr(new KCalCore::MemoryCalendar(KSystemTimeZones::local()));
+    FreebusyViewCalendar *fbCalendar = new FreebusyViewCalendar();
+    fbCalendar->mCalendar = cal;
+    mFbCalendar = EventViews::ViewCalendar::Ptr(fbCalendar);
+    mAgendaView->addCalendar(mFbCalendar);
 
-    KDGantt::DateTimeGrid *mGanttGrid = new KDGantt::DateTimeGrid;
-    mGanttGrid->setScale( KDGantt::DateTimeGrid::ScaleDay );
-    mGanttGrid->setDayWidth( 300 );
-    mGanttGrid->setRowSeparators( true );
-    mGanttGraphicsView->setGrid( mGanttGrid );
-    mGanttGraphicsView->setModel( model );
-    mGanttGraphicsView->viewport()->setFixedWidth( 300 * 30 );
-
-    mUi->resourceCalender->addWidget( mGanttGraphicsView );
-#endif
+    mUi->resourceCalender->addWidget( mAgendaView );
 
     QStringList attrs;
     attrs << QLatin1String("cn") << QLatin1String("mail")
@@ -201,7 +151,7 @@ ResourceManagement::ResourceManagement()
     ResourceModel *resourcemodel = new ResourceModel(attrs);
     mUi->treeResults->setModel(resourcemodel);
 
-    // This doesn't work till now :( -> that's why i use the clieck signal
+    // This doesn't work till now :( -> that's why i use the click signal
     mUi->treeResults->setSelectionMode(QAbstractItemView::SingleSelection);
     selectionModel = mUi->treeResults->selectionModel();
 
@@ -211,11 +161,18 @@ ResourceManagement::ResourceManagement()
     connect(mUi->treeResults, SIGNAL(clicked(const QModelIndex &)),
             SLOT(slotShowDetails(const QModelIndex &)));
 
-    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
-    connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy::Ptr,QString)),
-        SLOT(slotInsertFreeBusy(KCalCore::FreeBusy::Ptr,QString)) );
-
     connect(resourcemodel,SIGNAL(layoutChanged()),SLOT(slotLayoutChanged()));
+}
+
+ResourceManagement::~ResourceManagement()
+{
+    delete mModel;
+}
+
+
+ResourceItem::Ptr ResourceManagement::selectedItem() const
+{
+    return mSelectedItem;
 }
 
 void ResourceManagement::slotStartSearch(const QString &text)
@@ -226,9 +183,9 @@ void ResourceManagement::slotStartSearch(const QString &text)
 void ResourceManagement::slotShowDetails(const QModelIndex & current)
 {
     ResourceItem::Ptr item = current.model()->data(current, ResourceModel::Resource).value<ResourceItem::Ptr>();
+    mSelectedItem = item;
     showDetails(item->ldapObject(), item->ldapClient());
 }
-
 
 void ResourceManagement::showDetails(const KLDAP::LdapObject &obj, const KLDAP::LdapClient &client)
 {
@@ -286,11 +243,7 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj, const KLDAP::
     FreeBusyItem::Ptr freebusy( new FreeBusyItem( attendee, this ));
     mModel->clear();
     mModel->addItem(freebusy);
-}
 
-void ResourceManagement::slotInsertFreeBusy(const KCalCore::FreeBusy::Ptr &fb, const QString &email)
-{
-    kDebug() <<  fb <<  email;
 
 }
 
@@ -340,10 +293,88 @@ void ResourceManagement::slotOwnerSearchFinished()
               }
           } else {
               mUi->formOwner->addRow(translateLDAPAttributeForDisplay(key), new QLabel(list.join("\n")));
-            }
+          }
       }
 
 }
+
+void ResourceManagement::slotDateChanged(QDate start, QDate end)
+{
+    int days = start.daysTo(end);
+    if (days < 7) {
+        end = start.addDays(7);
+    }
+    mAgendaView->showDates(start, end);
+}
+
+void ResourceManagement::slotFbModelLayoutChanged()
+{
+    if (mFbEvent.count() > 0) {
+        mFbCalendar->getCalendar()->deleteAllEvents();
+        mFbEvent.clear();
+        for (int i = mModel->rowCount()-1; i>=0; i--) {
+            QModelIndex parent = mModel->index(i, 0);
+            slotFbModelRowsAdded(parent, 0, mModel->rowCount(parent)-1);
+        }
+    }
+}
+
+void ResourceManagement::slotFbModelRowsAdded(const QModelIndex &parent, int first, int last)
+{
+    if (!parent.isValid()) {
+        return;
+    }
+    for(int i=first; i<=last; i++) {
+        QModelIndex index = mModel->index(i, 0, parent);
+
+        const KCalCore::FreeBusyPeriod &period = mModel->data(index, FreeBusyItemModel::FreeBusyPeriodRole).value<KCalCore::FreeBusyPeriod>();
+        const KCalCore::Attendee::Ptr &attendee = mModel->data(parent, FreeBusyItemModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
+        const KCalCore::FreeBusy::Ptr &fb = mModel->data(parent, FreeBusyItemModel::FreeBusyRole).value<KCalCore::FreeBusy::Ptr>();
+
+        KCalCore::Event::Ptr inc = KCalCore::Event::Ptr(new KCalCore::Event());
+        inc->setDtStart(period.start());
+        inc->setDtEnd(period.end());
+        inc->setUid(QLatin1String("fb-") + fb->uid());
+        //TODO: set to correct status if it is added to KCalCore
+        inc->setCustomProperty("FREEBUSY", "STATUS", QString::number(Busy));
+        inc->setSummary(period.summary().isEmpty()? i18n("Busy") : period.summary());
+
+        mFbEvent.insert(index, inc);
+        mFbCalendar->getCalendar()->addEvent(inc);
+
+    }
+}
+
+void ResourceManagement::slotFbModelRowsRemoved(const QModelIndex &parent, int first, int last)
+{
+    if (!parent.isValid()) {
+        for (int i = first; i<=last; i--) {
+            QModelIndex index = mModel->index(i, 0);
+            slotFbModelRowsRemoved(index, 0, mModel->rowCount(index)-1);
+        }
+    } else {
+        for(int i=first; i<=last; i++) {
+            QModelIndex index = mModel->index(i, 0, parent);
+            KCalCore::Event::Ptr inc = mFbEvent.take(index);
+            mFbCalendar->getCalendar()->deleteEvent(inc);
+        }
+    }
+}
+
+void ResourceManagement::slotFbModelRowsChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+    if (!topLeft.parent().isValid()) {
+        return;
+    }
+    for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
+        QModelIndex index = mModel->index(i, 0, topLeft.parent());
+        KCalCore::Event::Ptr inc = mFbEvent.value(index);
+        mFbCalendar->getCalendar()->beginChange(inc);
+        mFbCalendar->getCalendar()->endChange(inc);
+    }
+}
+
+
 
 
 #include "resourcemanagement.moc"

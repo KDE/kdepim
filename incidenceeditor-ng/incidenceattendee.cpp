@@ -30,6 +30,7 @@
 #include "incidencedatetime.h"
 #include "schedulingdialog.h"
 #include "attendeecomboboxdelegate.h"
+#include "freebusyitemmodel.h"
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_dialogmoremobile.h"
 #else
@@ -173,6 +174,12 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
   connect( mConflictResolver, SIGNAL(conflictsDetected(int)),
            this, SLOT(slotUpdateConflictLabel(int)) );
 
+  connect( mConflictResolver->model(),  SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+    SLOT(slotFreeBusyAdded(const QModelIndex&, int, int)) );
+  connect(mConflictResolver->model(), SIGNAL(layoutChanged()), SLOT(updateFBStatus()));
+  connect(mConflictResolver->model(), SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+      SLOT(slotFreeBusyChanged(const QModelIndex&, const QModelIndex&)));
+
   slotUpdateConflictLabel( 0 ); //initialize label
 
   // confict resolver (should show also resources)
@@ -230,7 +237,12 @@ void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
     mUi->mOrganizerLabel->setVisible( true );
   }
 
-  mDataModel->setAttendees(incidence->attendees());
+  KCalCore::Attendee::List attendees;
+  foreach(const KCalCore::Attendee::Ptr &a, incidence->attendees()) {
+      attendees << KCalCore::Attendee::Ptr(new KCalCore::Attendee(*a));
+  }
+
+  mDataModel->setAttendees(attendees);
   slotUpdateConflictLabel(0);
 
   setActions( incidence->type() );
@@ -309,10 +321,10 @@ bool IncidenceAttendee::isDirty() const
 
   // Okay, again not the most efficient algorithm, but I'm assuming that in the
   // bulk of the use cases, the number of attendees is not much higher than 10 or so.
-  foreach(const KCalCore::Attendee::Ptr & attendee, originalList) {
+  foreach(const KCalCore::Attendee::Ptr &attendee, originalList) {
     bool found = false;
     for (int i = 0; i < newList.count(); ++i) {
-      if (newList[i] == attendee) {
+      if (*(newList[i]) == *attendee) {
         newList.remove(i);
         found = true;
         break;
@@ -566,6 +578,86 @@ void IncidenceAttendee::slotConflictResolverLayoutChanged()
     checkDirtyStatus();
 }
 
+void IncidenceAttendee::slotFreeBusyAdded(const QModelIndex &parent, int first, int last)
+{
+    // We are only interested in toplevel changes
+    if (parent.isValid()) {
+        return;
+    }
+    QAbstractItemModel *model = mConflictResolver->model();
+    for (int i = first; i <= last; i++) {
+        QModelIndex index = model->index(i, 0, parent);
+        const KCalCore::Attendee::Ptr &attendee = model->data(index, FreeBusyItemModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
+        const KCalCore::FreeBusy::Ptr &fb = model->data(index, FreeBusyItemModel::FreeBusyRole).value<KCalCore::FreeBusy::Ptr>();
+        if (attendee) {
+            updateFBStatus(attendee, fb);
+        }
+    }
+}
+
+void IncidenceAttendee::slotFreeBusyChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+    // We are only interested in toplevel changes
+    if (topLeft.parent().isValid()) {
+        return;
+    }
+    QAbstractItemModel *model = mConflictResolver->model();
+    for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
+        QModelIndex index = model->index(i, 0);
+        const KCalCore::Attendee::Ptr &attendee = model->data(index, FreeBusyItemModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
+        const KCalCore::FreeBusy::Ptr &fb = model->data(index, FreeBusyItemModel::FreeBusyRole).value<KCalCore::FreeBusy::Ptr>();
+        if (attendee) {
+            updateFBStatus(attendee, fb);
+        }
+    }
+}
+
+void IncidenceAttendee::updateFBStatus()
+{
+    QAbstractItemModel *model = mConflictResolver->model();
+    for (int i = 0; i < model->rowCount(); i++) {
+        QModelIndex index = model->index(i, 0);
+        const KCalCore::Attendee::Ptr &attendee = model->data(index, FreeBusyItemModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
+        const KCalCore::FreeBusy::Ptr &fb = model->data(index, FreeBusyItemModel::FreeBusyRole).value<KCalCore::FreeBusy::Ptr>();
+        if (attendee) {
+            updateFBStatus(attendee, fb);
+        }
+    }
+}
+
+void IncidenceAttendee::updateFBStatus(const KCalCore::Attendee::Ptr &attendee, const KCalCore::FreeBusy::Ptr &fb)
+{
+    KCalCore::Attendee::List attendees = mDataModel->attendees();
+    KDateTime startTime = mDateTime->currentStartDateTime();
+    KDateTime endTime = mDateTime->currentEndDateTime();
+    QAbstractItemModel *model = mConflictResolver->model();
+    if (attendees.contains(attendee)) {
+        int row = dataModel()->attendees().indexOf(attendee);
+        QModelIndex attendeeIndex = dataModel()->index(row, AttendeeTableModel::Available);
+        if (fb) {
+            KCalCore::Period::List busyPeriods = fb->busyPeriods();
+            for ( KCalCore::Period::List::Iterator it = busyPeriods.begin(); it != busyPeriods.end(); ++it ) {
+                // periods started before and laping into the incidence (s < startTime && e >= startTime)
+                // periods starting in the time of incidende (s >= startTime && s <= endTime)
+                if ( ((*it).start() < startTime && (*it).end() > startTime) ||
+                    ((*it).start() >= startTime && (*it).start() <= endTime) ) {
+                    switch (attendee->status()) {
+                    case KCalCore::Attendee::Accepted:
+                        dataModel()->setData(attendeeIndex, AttendeeTableModel::Accepted);
+                        return;
+                    default:
+                        dataModel()->setData(attendeeIndex, AttendeeTableModel::Busy);
+                        return;
+                    }
+                }
+            }
+            dataModel()->setData(attendeeIndex, AttendeeTableModel::Free);
+        } else {
+            dataModel()->setData(attendeeIndex, AttendeeTableModel::Unkown);
+        }
+    }
+}
+
 void IncidenceAttendee::slotUpdateConflictLabel( int count )
 {
   kDebug() <<  "slotUpdateConflictLabel";
@@ -710,6 +802,7 @@ void IncidenceAttendee::slotEventDurationChanged()
 
   mConflictResolver->setEarliestDateTime( start );
   mConflictResolver->setLatestDateTime( end );
+  updateFBStatus();
 }
 
 void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )

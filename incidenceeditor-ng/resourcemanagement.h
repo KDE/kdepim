@@ -30,13 +30,20 @@
 #include "freebusyitemmodel.h"
 #include "resourceitem.h"
 
-# include <KCalCore/FreeBusy>
+#include <calendarviews/agenda/viewcalendar.h>
+
+#include <KCalCore/FreeBusy>
 #include <KDialog>
 
 #include <QStringList>
 #include <QStringListModel>
 
 class  Ui_resourceManagement;
+
+namespace EventViews
+{
+    class AgendaView;
+}
 
 namespace IncidenceEditorNG
 {
@@ -48,6 +55,12 @@ class INCIDENCEEDITORS_NG_EXPORT ResourceManagement : public KDialog
     Q_OBJECT
 public:
     ResourceManagement();
+    ~ResourceManagement();
+
+    ResourceItem::Ptr selectedItem() const;
+
+public slots:
+    void slotDateChanged(QDate start, QDate end);
 
 private:
     /* Shows the details of a resource
@@ -67,20 +80,27 @@ private slots:
      *
      */
     void slotShowDetails(const QModelIndex & current);
-    
+
     /**
      * The Owner search is done
      */
     void slotOwnerSearchFinished();
 
-    void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
-
     void slotLayoutChanged();
+
+    void slotFbModelLayoutChanged();
+    void slotFbModelRowsRemoved(const QModelIndex &parent, int first, int last);
+    void slotFbModelRowsAdded(const QModelIndex &parent, int first, int last);
+    void slotFbModelRowsChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
     FreeBusyItemModel *mModel;
     ResourceItem::Ptr mOwnerItem;
+    ResourceItem::Ptr mSelectedItem;
+    EventViews::ViewCalendar::Ptr mFbCalendar;
     Ui_resourceManagement *mUi;
+    QMap<QModelIndex,KCalCore::Event::Ptr> mFbEvent;
+    EventViews::AgendaView *mAgendaView;
 };
 
 }
