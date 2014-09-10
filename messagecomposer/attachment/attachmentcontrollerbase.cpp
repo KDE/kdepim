@@ -309,7 +309,7 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
     if (!offers.isEmpty()) {
         QMenu* menu = topMenu;
         QActionGroup *actionGroup = new QActionGroup( menu );
-        connect( actionGroup, SIGNAL(triggered(QAction*)), q, SLOT(slotOpenWithAction(QAction*)) );
+        connect(actionGroup, &QActionGroup::triggered, q, &AttachmentControllerBase::slotOpenWithAction);
 
         if (offers.count() > 1) { // submenu 'open with'
             menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
@@ -336,13 +336,13 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
         }
         QAction *openWithAct = new QAction(menu);
         openWithAct->setText(openWithActionName);
-        QObject::connect(openWithAct, SIGNAL(triggered()), q, SLOT(slotOpenWithDialog()));
+        QObject::connect(openWithAct, &QAction::triggered, q, &AttachmentControllerBase::slotOpenWithDialog);
         menu->addAction(openWithAct);
     }
     else { // no app offers -> Open With...
         QAction *act = new QAction(topMenu);
         act->setText(i18nc("@title:menu", "&Open With..."));
-        QObject::connect(act, SIGNAL(triggered()), q, SLOT(slotOpenWithDialog()));
+        QObject::connect(act, &QAction::triggered, q, &AttachmentControllerBase::slotOpenWithDialog);
         topMenu->addAction(act);
     }
 }
@@ -403,13 +403,13 @@ AttachmentControllerBase::AttachmentControllerBase( MessageComposer::AttachmentM
     , d( new Private( this ) )
 {
     d->model = model;
-    connect( model, SIGNAL(attachUrlsRequested(KUrl::List)), this, SLOT(addAttachments(KUrl::List)) );
+    connect(model, &MessageComposer::AttachmentModel::attachUrlsRequested, this, &AttachmentControllerBase::addAttachments);
     connect( model, SIGNAL(attachmentRemoved(MessageCore::AttachmentPart::Ptr)),
              this, SLOT(attachmentRemoved(MessageCore::AttachmentPart::Ptr)) );
     connect( model, SIGNAL(attachmentCompressRequested(MessageCore::AttachmentPart::Ptr,bool)),
              this, SLOT(compressAttachment(MessageCore::AttachmentPart::Ptr,bool)) );
-    connect( model, SIGNAL(encryptEnabled(bool)), this, SLOT(setEncryptEnabled(bool)) );
-    connect( model, SIGNAL(signEnabled(bool)), this, SLOT(setSignEnabled(bool)) );
+    connect(model, &MessageComposer::AttachmentModel::encryptEnabled, this, &AttachmentControllerBase::setEncryptEnabled);
+    connect(model, &MessageComposer::AttachmentModel::signEnabled, this, &AttachmentControllerBase::setSignEnabled);
 
     d->wParent = wParent;
     d->mActionCollection = actionCollection;
@@ -428,10 +428,10 @@ void AttachmentControllerBase::createActions()
              this, SLOT(showAttachPublicKeyDialog()) );
 
     d->attachMyPublicKeyAction = new QAction( i18n( "Attach &My Public Key" ), this );
-    connect( d->attachMyPublicKeyAction, SIGNAL(triggered(bool)), this, SLOT(attachMyPublicKey()) );
+    connect(d->attachMyPublicKeyAction, &QAction::triggered, this, &AttachmentControllerBase::attachMyPublicKey);
 
     d->attachmentMenu = new KActionMenu( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
-    connect( d->attachmentMenu, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
+    connect(d->attachmentMenu, &KActionMenu::triggered, this, &AttachmentControllerBase::showAddAttachmentDialog);
 
     d->attachmentMenu->setDelayed(true);
 
@@ -439,13 +439,13 @@ void AttachmentControllerBase::createActions()
     d->addAction->setIconText( i18n( "Attach" ) );
     d->addContextAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ),
                                        i18n( "Add Attachment..." ), this );
-    connect( d->addAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
-    connect( d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
+    connect(d->addAction, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentDialog);
+    connect(d->addContextAction, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentDialog);
 
     d->addOwnVcardAction = new QAction( i18n("Attach Own vCard"),this );
     d->addOwnVcardAction->setIconText( i18n( "Own vCard" ) );
     d->addOwnVcardAction->setCheckable(true);
-    connect(d->addOwnVcardAction, SIGNAL(triggered(bool)), this, SIGNAL(addOwnVcard(bool)));
+    connect(d->addOwnVcardAction, &QAction::triggered, this, &AttachmentControllerBase::addOwnVcard);
 
     d->attachmentMenu->addAction(d->addAction);
     d->attachmentMenu->addSeparator();

@@ -46,7 +46,7 @@ void DistributionListExpandJob::start()
 {
     Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob( this );
     job->setQuery( Akonadi::ContactGroupSearchJob::Name, mListName );
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
+    connect(job, &Akonadi::ContactGroupSearchJob::result, this, &DistributionListExpandJob::slotSearchDone);
 }
 
 QString DistributionListExpandJob::addresses() const
@@ -77,7 +77,7 @@ void DistributionListExpandJob::slotSearchDone( KJob *job )
     }
 
     Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( groups.first() );
-    connect( expandJob, SIGNAL(result(KJob*)), SLOT(slotExpansionDone(KJob*)) );
+    connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &DistributionListExpandJob::slotExpansionDone);
     expandJob->start();
 }
 
@@ -129,7 +129,7 @@ void AliasesExpandJob::start()
         // check for distribution list
         DistributionListExpandJob *expandJob = new DistributionListExpandJob( recipient, this );
         expandJob->setProperty( "recipient", recipient );
-        connect( expandJob, SIGNAL(result(KJob*)), SLOT(slotDistributionListExpansionDone(KJob*)) );
+        connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &AliasesExpandJob::slotDistributionListExpansionDone);
         mDistributionListExpansionJobs++;
         expandJob->start();
 
@@ -137,7 +137,7 @@ void AliasesExpandJob::start()
         Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( this );
         searchJob->setProperty( "recipient", recipient );
         searchJob->setQuery( Akonadi::ContactSearchJob::NickName, recipient.toLower() );
-        connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotNicknameExpansionDone(KJob*)) );
+        connect(searchJob, &Akonadi::ContactSearchJob::result, this, &AliasesExpandJob::slotNicknameExpansionDone);
         mNicknameExpansionJobs++;
         searchJob->start();
     }

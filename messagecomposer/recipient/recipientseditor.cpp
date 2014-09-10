@@ -70,10 +70,8 @@ RecipientsEditor::RecipientsEditor( QWidget* parent )
 
     layout()->addWidget( mSideWidget );
 
-    connect( mSideWidget, SIGNAL(pickedRecipient(Recipient,bool&)),
-             SLOT(slotPickedRecipient(Recipient,bool&)) );
-    connect( mSideWidget, SIGNAL(saveDistributionList()),
-             SLOT(saveDistributionList()) );
+    connect(mSideWidget, &RecipientsEditorSideWidget::pickedRecipient, this, &RecipientsEditor::slotPickedRecipient);
+    connect(mSideWidget, &RecipientsEditorSideWidget::saveDistributionList, this, &RecipientsEditor::saveDistributionList);
 
     //   connect( mView, SIGNAL(focusRight()),
     //     mSideWidget, SLOT(setFocus()) );

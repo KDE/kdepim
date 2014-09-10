@@ -1429,8 +1429,7 @@ void MessageComposer::ComposerViewBase::setFcc ( const Akonadi::Collection& fccC
     }
     Akonadi::CollectionFetchJob * const checkFccCollectionJob =
             new Akonadi::CollectionFetchJob( fccCollection, Akonadi::CollectionFetchJob::Base );
-    connect( checkFccCollectionJob, SIGNAL(result(KJob*)),
-             SLOT(slotFccCollectionCheckResult(KJob*)) );
+    connect( checkFccCollectionJob, SIGNAL(result(KJob*)), SLOT(slotFccCollectionCheckResult(KJob*)) );
 }
 
 void MessageComposer::ComposerViewBase::slotFccCollectionCheckResult( KJob* job )
