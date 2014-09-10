@@ -40,8 +40,7 @@ SyncItipHandler::SyncItipHandler(const QString &receiver, const QString &iCal,
                                                                        , m_result(Akonadi::ITIPHandler::ResultSuccess)
 {
     Akonadi::ITIPHandler *handler = new Akonadi::ITIPHandler(this);
-    QObject::connect(handler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
-                     SLOT(onITipMessageProcessed(Akonadi::ITIPHandler::Result,QString)));
+    QObject::connect(handler, &Akonadi::ITIPHandler::iTipMessageProcessed, this, &SyncItipHandler::onITipMessageProcessed);
 
     m_counterProposalEditorDelegate = new IncidenceEditorNG::GroupwareUiDelegate();
     handler->setGroupwareUiDelegate(m_counterProposalEditorDelegate);

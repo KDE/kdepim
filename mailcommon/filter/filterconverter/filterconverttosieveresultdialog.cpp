@@ -44,12 +44,12 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     setLayout(topLayout);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterConvertToSieveResultDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterConvertToSieveResultDialog::reject);
     user1Button->setText(i18n("Save..."));
     user1Button->setDefault(true);
     setModal(true);
-    connect(user1Button, SIGNAL(clicked()), SLOT(slotSave()));
+    connect(user1Button, &QPushButton::clicked, this, &FilterConvertToSieveResultDialog::slotSave);
 
     QWidget *mainWidget = new QWidget(this);
     QHBoxLayout *mainLayout = new QHBoxLayout(mainWidget);

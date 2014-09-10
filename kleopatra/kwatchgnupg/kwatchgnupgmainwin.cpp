@@ -251,7 +251,7 @@ void KWatchGnuPGMainWindow::slotQuit()
   disconnect( mWatcher, SIGNAL(finished(int,QProcess::ExitStatus)),
               this, SLOT(slotWatcherExited(int,QProcess::ExitStatus)) );
   mWatcher->kill();
-  kapp->quit();
+  qApp->quit();
 }
 
 void KWatchGnuPGMainWindow::slotConfigure()
@@ -277,10 +277,12 @@ void KWatchGnuPGMainWindow::slotReadConfig()
 
 bool KWatchGnuPGMainWindow::queryClose()
 {
-  if ( !kapp->sessionSaving() ) {
+#if 0 //QT5
+  if ( !qApp->sessionSaving() ) {
     hide();
     return false;
   }
+#endif
   return KMainWindow::queryClose();
 }
 

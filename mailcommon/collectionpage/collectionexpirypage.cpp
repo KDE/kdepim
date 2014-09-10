@@ -66,8 +66,7 @@ void CollectionExpiryPage::init()
 
     expireReadMailCB = new QCheckBox;
     expireReadMailCB->setText(i18n("Expire read messages after"));
-    connect(expireReadMailCB, SIGNAL(toggled(bool)),
-            this, SLOT(slotUpdateControls()));
+    connect(expireReadMailCB, &QCheckBox::toggled, this, &CollectionExpiryPage::slotUpdateControls);
     daysBox->addWidget(expireReadMailCB, 0, 0, Qt::AlignLeft);
 
     expireReadMailSB = new KPluralHandlingSpinBox;
@@ -79,8 +78,7 @@ void CollectionExpiryPage::init()
 
     expireUnreadMailCB = new QCheckBox;
     expireUnreadMailCB->setText(i18n("Expire unread messages after"));
-    connect(expireUnreadMailCB, SIGNAL(toggled(bool)),
-            this, SLOT(slotUpdateControls()));
+    connect(expireUnreadMailCB, &QCheckBox::toggled, this, &CollectionExpiryPage::slotUpdateControls);
     daysBox->addWidget(expireUnreadMailCB, 1, 0, Qt::AlignLeft);
 
     expireUnreadMailSB = new KPluralHandlingSpinBox;

@@ -97,8 +97,7 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
             act->setChecked(true);
         }
         act->setData(QVariant(icon_sizes[ i ]));
-        connect(act, SIGNAL(triggered(bool)),
-                SLOT(slotChangeIconSize(bool)));
+        connect(act, &QAction::triggered, this, &FavoriteCollectionWidget::slotChangeIconSize);
     }
 
     KActionMenu *modeFavoriteMenu = new KActionMenu(i18n("Mode"), this);
@@ -113,8 +112,7 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
         d->listMode->setChecked(true);
     }
     d->listMode->setData(QVariant(MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::ListMode));
-    connect(d->listMode, SIGNAL(triggered(bool)),
-            SLOT(slotChangeMode(bool)));
+    connect(d->listMode, &QAction::triggered, this, &FavoriteCollectionWidget::slotChangeMode);
 
     d->iconMode = new QAction(i18n("Icon Mode"), modeFavoriteMenu);
     modeFavoriteMenu->addAction(d->iconMode);
@@ -124,8 +122,7 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
         d->iconMode->setChecked(true);
     }
     d->iconMode->setData(QVariant(MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode));
-    connect(d->iconMode, SIGNAL(triggered(bool)),
-            SLOT(slotChangeMode(bool)));
+    connect(d->iconMode, &QAction::triggered, this, &FavoriteCollectionWidget::slotChangeMode);
 }
 
 void FavoriteCollectionWidget::slotChangeMode(bool)

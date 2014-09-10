@@ -62,8 +62,7 @@ QWidget *MessageRuleWidgetHandler::createFunctionWidget(
         }
     }
     funcCombo->adjustSize();
-    QObject::connect(funcCombo, SIGNAL(activated(int)),
-                     receiver, SLOT(slotFunctionChanged()));
+    QObject::connect(funcCombo, SIGNAL(activated(int)), receiver, SLOT(slotFunctionChanged()));
     return funcCombo;
 }
 
@@ -77,10 +76,8 @@ QWidget *MessageRuleWidgetHandler::createValueWidget(int number,
         RegExpLineEdit *lineEdit =
             new RegExpLineEdit(valueStack);
         lineEdit->setObjectName(QLatin1String("regExpLineEdit"));
-        QObject::connect(lineEdit, SIGNAL(textChanged(QString)),
-                         receiver, SLOT(slotValueChanged()));
-        QObject::connect(lineEdit, SIGNAL(returnPressed()),
-                         receiver, SLOT(slotReturnPressed()));
+        QObject::connect(lineEdit, SIGNAL(textChanged(QString)), receiver, SLOT(slotValueChanged()));
+        QObject::connect(lineEdit, SIGNAL(returnPressed()),  receiver, SLOT(slotReturnPressed()));
         return lineEdit;
     }
 

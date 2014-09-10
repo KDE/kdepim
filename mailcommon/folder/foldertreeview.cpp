@@ -152,8 +152,7 @@ void FolderTreeView::slotHeaderContextMenuRequested(const QPoint &pnt)
         act->setCheckable(true);
         act->setChecked(!header()->isSectionHidden(i));
         act->setData(QVariant(i));
-        connect(act,  SIGNAL(triggered(bool)),
-                SLOT(slotHeaderContextMenuChangeHeader(bool)));
+        connect(act, &QAction::triggered, this, &FolderTreeView::slotHeaderContextMenuChangeHeader);
     }
 
     menu.addSection(i18n("Icon Size"));
@@ -171,8 +170,7 @@ void FolderTreeView::slotHeaderContextMenuRequested(const QPoint &pnt)
         }
         act->setData(QVariant(icon_sizes[ i ]));
 
-        connect(act, SIGNAL(triggered(bool)),
-                SLOT(slotHeaderContextMenuChangeIconSize(bool)));
+        connect(act, &QAction::triggered, this, &FolderTreeView::slotHeaderContextMenuChangeIconSize);
     }
     menu.addSection(i18n("Display Tooltips"));
 
@@ -183,16 +181,14 @@ void FolderTreeView::slotHeaderContextMenuRequested(const QPoint &pnt)
     grp->addAction(act);
     act->setChecked(mToolTipDisplayPolicy == FolderTreeWidget::DisplayAlways);
     act->setData(QVariant((int)FolderTreeWidget::DisplayAlways));
-    connect(act, SIGNAL(triggered(bool)),
-            SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)));
+    connect(act, &QAction::triggered, this, &FolderTreeView::slotHeaderContextMenuChangeToolTipDisplayPolicy);
 
     act = menu.addAction(i18nc("@action:inmenu Never display tooltips.", "Never"));
     act->setCheckable(true);
     grp->addAction(act);
     act->setChecked(mToolTipDisplayPolicy == FolderTreeWidget::DisplayNever);
     act->setData(QVariant((int)FolderTreeWidget::DisplayNever));
-    connect(act, SIGNAL(triggered(bool)),
-            SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)));
+    connect(act, &QAction::triggered, this, &FolderTreeView::slotHeaderContextMenuChangeToolTipDisplayPolicy);
 
     menu.addSection(i18nc("@action:inmenu", "Sort Items"));
 
@@ -203,16 +199,14 @@ void FolderTreeView::slotHeaderContextMenuRequested(const QPoint &pnt)
     grp->addAction(act);
     act->setChecked(mSortingPolicy == FolderTreeWidget::SortByCurrentColumn);
     act->setData(QVariant((int)FolderTreeWidget::SortByCurrentColumn));
-    connect(act, SIGNAL(triggered(bool)),
-            SLOT(slotHeaderContextMenuChangeSortingPolicy(bool)));
+    connect(act, &QAction::triggered, this, &FolderTreeView::slotHeaderContextMenuChangeSortingPolicy);
 
     act = menu.addAction(i18nc("@action:inmenu", "Manually, by Drag And Drop"));
     act->setCheckable(true);
     grp->addAction(act);
     act->setChecked(mSortingPolicy == FolderTreeWidget::SortByDragAndDropKey);
     act->setData(QVariant((int)FolderTreeWidget::SortByDragAndDropKey));
-    connect(act, SIGNAL(triggered(bool)),
-            SLOT(slotHeaderContextMenuChangeSortingPolicy(bool)));
+    connect(act, &QAction::triggered, this, &FolderTreeView::slotHeaderContextMenuChangeSortingPolicy);
 
     menu.exec(header()->mapToGlobal(pnt));
 }
