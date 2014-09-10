@@ -174,6 +174,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
 
 void RichTextEditor::slotSpeakText()
 {
+    //Port to QtSpeech
     // If KTTSD not running, start it.
     QDBusConnectionInterface *bus = QDBusConnection::sessionBus().interface();
     if (!bus->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {

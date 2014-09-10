@@ -533,6 +533,7 @@ bool Util::speakSelectedText( const QString& text, QWidget *parent)
     if(text.isEmpty())
         return false;
 
+    //QT5 : Port to QtSpeech
     // If KTTSD not running, start it.
     if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd")))
     {

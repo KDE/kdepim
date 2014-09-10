@@ -912,6 +912,7 @@ bool ComposerViewPrivate::queryCommandState(const QString &cmd)
 void ComposerViewPrivate::_k_slotSpeakText()
 {
     // If KTTSD not running, start it.
+    //QT5 : Port to QtSpeech
     if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
         QString error;
         if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error)) {
