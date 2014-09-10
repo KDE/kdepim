@@ -135,8 +135,8 @@ configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version
 
 include_directories(${kdepim_SOURCE_DIR} ${kdepim_BINARY_DIR})
 
-set(AkonadiServer_MIN_VERSION "1.70.41")
-find_package(Akonadi ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
+set(AkonadiServer_MIN_VERSION "5.0.40")
+find_package(AkonadiServer ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 
 find_package(Xsltproc)
 set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces for all Akonadi resources.")
