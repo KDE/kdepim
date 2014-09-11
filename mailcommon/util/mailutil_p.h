@@ -21,17 +21,19 @@
 #ifndef MAILCOMMON_MAILUTIL_P_H
 #define MAILCOMMON_MAILUTIL_P_H
 
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
 #include <KSeparator>
 
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace MailCommon
 {
 
-class AttachmentSelectionDialog : public KDialog
+class AttachmentSelectionDialog : public QDialog
 {
     Q_OBJECT
 
@@ -43,49 +45,64 @@ public:
     };
 
     explicit AttachmentSelectionDialog(QWidget *parent = 0)
-        : KDialog(parent),
-          mButtonCode(KDialog::Cancel)
+        : QDialog(parent),
+          mType(AttachAsLink)
     {
-        setButtons(User1 | User2 | User3 | Cancel);
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
+        QWidget *mainWidget = new QWidget(this);
+        QVBoxLayout *mainLayout = new QVBoxLayout;
+        setLayout(mainLayout);
+        mainLayout->addWidget(mainWidget);
+        QPushButton *user1Button = new QPushButton;
+        buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+        QPushButton *user2Button = new QPushButton;
+        buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+        QPushButton *user3Button = new QPushButton;
+        buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+        connect(user1Button, SIGNAL(clicked()), this, SLOT(slotUser1Clicked()));
+        connect(user2Button, SIGNAL(clicked()), this, SLOT(slotUser2Clicked()));
+        connect(user3Button, SIGNAL(clicked()), this, SLOT(slotUser3Clicked()));
+
+
         setWindowTitle(i18n("Create Todo/Reminder"));
-        setButtonText(User1, i18n("Attach inline without attachments"));
-        setButtonText(User2, i18n("Attach &inline"));
-        setButtonText(User3, i18n("Attach as &link"));
+        user1Button->setText(i18n("Attach inline without attachments"));
+        user2Button->setText(i18n("Attach &inline"));
+        user3Button->setText(i18n("Attach as &link"));
         QVBoxLayout *lay = new QVBoxLayout;
         QWidget *w = new QWidget;
         w->setLayout(lay);
         lay->addWidget(new QLabel(i18n("How should the email be attached?")));
         lay->addWidget(new KSeparator);
-        setMainWidget(w);
+        mainLayout->addWidget(w);
+        mainLayout->addWidget(buttonBox);
     }
 
     Type attachmentType() const
     {
-        switch (mButtonCode) {
-        case User1:
-            return AttachWithoutAttachments;
-        case User2:
-            return AttachInline;
-        case User3:
-        default:
-            return AttachAsLink;
-        }
+        return mType;
     }
 
 protected Q_SLOTS:
-    void slotButtonClicked(int button)
+    void slotUser1Clicked()
     {
-        mButtonCode = static_cast<KDialog::ButtonCode>(button);
-
-        if (mButtonCode == User1 || mButtonCode == User2 || mButtonCode == User3) {
-            accept();
-        }
-
-        KDialog::slotButtonClicked(button);
+         mType = AttachWithoutAttachments; 
+         accept();
+    }
+    void slotUser2Clicked()
+    {
+         mType = AttachInline;
+         accept();
+    }
+    void slotUser3Clicked()
+    {
+         mType = AttachAsLink;
+         accept();
     }
 
 private:
-    KDialog::ButtonCode mButtonCode;
+    Type mType;
 };
 
 }
