@@ -32,7 +32,7 @@ GoogleTranslator::GoogleTranslator()
     : AbstractTranslator(),
       mNetworkAccessManager(new QNetworkAccessManager(this))
 {
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotTranslateFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &GoogleTranslator::slotTranslateFinished);
 }
 
 GoogleTranslator::~GoogleTranslator()
@@ -140,7 +140,7 @@ void GoogleTranslator::translate()
     postData.addQueryItem(QLatin1String("text"), mInputText);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &GoogleTranslator::slotError);
 }
 
 void GoogleTranslator::slotError(QNetworkReply::NetworkError /*error*/)

@@ -154,7 +154,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
                                                                                         && d->speller->defaultLanguage() == i.value()));
                     languageAction->setData(i.value());
                     languageAction->setActionGroup(languagesGroup);
-                    connect(languageAction, SIGNAL(triggered(bool)), this, SLOT(slotLanguageSelected()));
+                    connect(languageAction, &QAction::triggered, this, &RichTextEditor::slotLanguageSelected);
                 }
                 popup->addMenu(languagesMenu);
             }
@@ -164,7 +164,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
-        connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
+        connect(speakAction, &QAction::triggered, this, &RichTextEditor::slotSpeakText);
         addExtraMenuEntry(popup, pos);
         popup->exec( pos );
 
@@ -273,20 +273,13 @@ void RichTextEditor::slotCheckSpelling()
     Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, 0);
     backgroundSpellCheck->setParent(spellDialog);
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
-    connect(spellDialog, SIGNAL(replace(QString,int,QString)),
-            this, SLOT(slotSpellCheckerCorrected(QString,int,QString)));
-    connect(spellDialog, SIGNAL(misspelling(QString,int)),
-            this, SLOT(slotSpellCheckerMisspelling(QString,int)));
-    connect(spellDialog, SIGNAL(autoCorrect(QString,QString)),
-            this, SLOT(slotSpellCheckerAutoCorrect(QString,QString)));
-    connect(spellDialog, SIGNAL(done(QString)),
-            this, SLOT(slotSpellCheckerFinished()));
-    connect(spellDialog, SIGNAL(cancel()),
-            this, SLOT(slotSpellCheckerCanceled()));
-    connect(spellDialog, SIGNAL(spellCheckStatus(QString)),
-            this, SIGNAL(spellCheckStatus(QString)));
-    connect(spellDialog, SIGNAL(languageChanged(QString)),
-            this, SIGNAL(languageChanged(QString)));
+    connect(spellDialog, &Sonnet::Dialog::replace, this, &RichTextEditor::slotSpellCheckerCorrected);
+    connect(spellDialog, &Sonnet::Dialog::misspelling, this, &RichTextEditor::slotSpellCheckerMisspelling);
+    connect(spellDialog, &Sonnet::Dialog::autoCorrect, this, &RichTextEditor::slotSpellCheckerAutoCorrect);
+    connect(spellDialog, SIGNAL(done(QString)), this, SLOT(slotSpellCheckerFinished()));
+    connect(spellDialog, &Sonnet::Dialog::cancel, this, &RichTextEditor::slotSpellCheckerCanceled);
+    connect(spellDialog, &Sonnet::Dialog::spellCheckStatus, this, &RichTextEditor::spellCheckStatus);
+    connect(spellDialog, &Sonnet::Dialog::languageChanged, this, &RichTextEditor::languageChanged);
     d->originalDoc = QTextDocumentFragment(document());
     spellDialog->setBuffer(toPlainText());
     spellDialog->show();

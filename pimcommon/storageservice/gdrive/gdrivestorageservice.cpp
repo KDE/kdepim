@@ -25,7 +25,6 @@
 #include "pimcommon/storageservice/utils/storageserviceutils.h"
 
 #include <kwallet.h>
-#include <KLocale>
 
 #include <kgapi/drive/file.h>
 

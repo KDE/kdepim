@@ -23,7 +23,6 @@
 #include "pimcommon/storageservice/dialog/storageservicedownloaddialog.h"
 
 #include <KLocalizedString>
-#include <KFileDialog>
 
 #include <QVBoxLayout>
 #include <QToolBar>
