@@ -35,7 +35,6 @@ using MailCommon::FilterLog;
 #include <QDebug>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KGlobal>
 
 #include <QDataStream>
 #include <QRegExp>
@@ -153,9 +152,9 @@ SearchRule::Ptr SearchRule::createInstanceFromConfig(const KConfigGroup &config,
 {
     const char cIdx = char(int('A') + aIdx);
 
-    static const QString &field = KGlobal::staticQString("field");
-    static const QString &func = KGlobal::staticQString("func");
-    static const QString &contents = KGlobal::staticQString("contents");
+    static const QString &field = QStringLiteral("field");
+    static const QString &func = QStringLiteral("func");
+    static const QString &contents = QStringLiteral("contents");
 
     const QByteArray &field2 = config.readEntry(field + cIdx, QString()).toLatin1();
     Function func2 = configValueToFunc(config.readEntry(func + cIdx, QString()).toLatin1());
@@ -211,9 +210,9 @@ QString SearchRule::functionToString(Function function)
 void SearchRule::writeConfig(KConfigGroup &config, int aIdx) const
 {
     const char cIdx = char('A' + aIdx);
-    static const QString &field = KGlobal::staticQString("field");
-    static const QString &func = KGlobal::staticQString("func");
-    static const QString &contents = KGlobal::staticQString("contents");
+    static const QString &field = QStringLiteral("field");
+    static const QString &func = QStringLiteral("func");
+    static const QString &contents = QStringLiteral("contents");
 
     config.writeEntry(field + cIdx, QString(mField));
     config.writeEntry(func + cIdx, functionToString(mFunction));
