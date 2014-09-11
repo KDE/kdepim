@@ -28,7 +28,7 @@
 #include "ui_schedulingdialog.h"
 #endif
 
-#include <KDialog>
+#include <QDialog>
 #include <KDateTime>
 namespace IncidenceEditorNG {
 
@@ -36,7 +36,7 @@ class FreePeriodModel;
 class ConflictResolver;
 class VisualFreeBusyWidget;
 
-class INCIDENCEEDITORS_NG_EXPORT SchedulingDialog : public KDialog, private Ui_Dialog
+class INCIDENCEEDITORS_NG_EXPORT SchedulingDialog : public QDialog, private Ui_Dialog
 {
   Q_OBJECT
   public:

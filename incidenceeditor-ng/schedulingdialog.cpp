@@ -30,15 +30,30 @@
 
 #include <KIconLoader>
 #include <KLocalizedString>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
+
 using namespace IncidenceEditorNG;
 
 SchedulingDialog::SchedulingDialog( const QDate &startDate, const QTime &startTime, int duration,
                                     ConflictResolver *resolver, QWidget *parent )
-  : KDialog( parent ), mResolver( resolver ), mPeriodModel( new FreePeriodModel( this ) )
+  : QDialog( parent ), mResolver( resolver ), mPeriodModel( new FreePeriodModel( this ) )
 {
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
   QWidget *w = new QWidget( this );
   setupUi( w );
-  setMainWidget( w );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+  mainLayout->addWidget(buttonBox);
+  mainLayout->addWidget(w);
   fillCombos();
 
   Q_ASSERT( duration > 0 );

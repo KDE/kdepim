@@ -425,7 +425,7 @@ void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
                                                                  mParentWidget ) );
   dialog->slotUpdateIncidenceStartEnd( mDateTime->currentStartDateTime(),
                                        mDateTime->currentEndDateTime() );
-  if ( dialog->exec() == KDialog::Accepted ) {
+  if ( dialog->exec() == QDialog::Accepted ) {
     qDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
     mDateTime->setStartDate( dialog->selectedStartDate() );
     mDateTime->setStartTime( dialog->selectedStartTime() );
