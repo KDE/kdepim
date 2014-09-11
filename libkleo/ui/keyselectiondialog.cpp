@@ -437,7 +437,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   connect( le, SIGNAL(textChanged(QString)),
            this, SLOT(slotSearch(QString)) );
-  connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
+  connect(mStartSearchTimer, &QTimer::timeout, this, &KeySelectionDialog::slotFilter);
 
   mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), 0, page );
   mKeyListView->setObjectName( QLatin1String("mKeyListView") );
@@ -474,10 +474,10 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   user1Button->setText(i18n("&Reread Keys" ));
   user2Button->setText(i18n("&Start Certificate Manager" ));
-  connect(user1Button, SIGNAL(clicked()), this, SLOT(slotRereadKeys()) );
+  connect(user1Button, &QPushButton::clicked, this, &KeySelectionDialog::slotRereadKeys);
   connect(user2Button, SIGNAL(clicked()), this, SLOT(slotStartCertificateManager()) );
-  connect(mOkButton, SIGNAL(clicked()), this, SLOT(slotOk()));
-  connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),this,SLOT(slotCancel()));
+  connect(mOkButton, &QPushButton::clicked, this, &KeySelectionDialog::slotOk);
+  connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &KeySelectionDialog::slotCancel);
   slotRereadKeys();
   mTopLayout->activate();
 

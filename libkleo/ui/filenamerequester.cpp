@@ -100,10 +100,8 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
     hlay.addWidget( &lineedit );
     hlay.addWidget( &button );
 
-    connect( &button, SIGNAL(clicked()),
-             q, SLOT(slotButtonClicked()) );
-    connect( &lineedit, SIGNAL(textChanged(QString)),
-             q, SIGNAL(fileNameChanged(QString)) );
+    connect( &button, SIGNAL(clicked()), q, SLOT(slotButtonClicked()) );
+    connect(&lineedit, &KLineEdit::textChanged, q, &FileNameRequester::fileNameChanged);
 }
 
 FileNameRequester::Private::~Private() {}
