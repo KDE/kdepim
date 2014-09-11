@@ -46,7 +46,6 @@ namespace KPIM
  * so that it can actually be on top of other widgets.
  * Currently the only supported type of alignment is "right aligned, on top of the other widget".
  *
- * OverlayWidget inherits KHBox for convenience purposes (layout, and frame)
  */
 class KDEPIM_EXPORT OverlayWidget : public QFrame
 {
