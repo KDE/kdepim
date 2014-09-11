@@ -22,9 +22,7 @@
 #include <KLocalizedString>
 #include <KUrlRequester>
 #include <KLineEdit>
-#include <KStandardDirs>
 #include <QIcon>
-#include <KGlobal>
 #include <KUrl>
 
 #include <QHBoxLayout>
