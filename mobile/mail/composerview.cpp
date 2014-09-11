@@ -52,6 +52,7 @@
 #include <messagecomposer/utils/util.h>
 #include <AkonadiWidgets/collectioncombobox.h>
 
+#include <KActionCollection>
 #include <klocalizedstring.h>
 #include <QDebug>
 #include <QIcon>
