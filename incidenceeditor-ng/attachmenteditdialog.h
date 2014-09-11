@@ -31,8 +31,9 @@
 
 #include <KCalCore/Attachment>
 #include <QUrl>
-#include <KDialog>
+#include <QDialog>
 #include <KMimeType>
+class QPushButton;
 
 namespace Ui {
   class AttachmentEditDialog;
@@ -42,7 +43,7 @@ namespace IncidenceEditorNG {
 
 class AttachmentIconItem;
 
-class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public QDialog
 {
   Q_OBJECT
   public:
@@ -61,6 +62,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public KDialog
     AttachmentIconItem *mItem;
     KMimeType::Ptr mMimeType;
     Ui::AttachmentEditDialog *mUi;
+    QPushButton *mOkButton;
 };
 
 }

@@ -25,7 +25,7 @@
 #include "incidenceeditors_ng_export.h"
 #include "attendeedata.h"
 
-#include <KDialog>
+#include <QDialog>
 
 class KLineEdit;
 
@@ -33,7 +33,7 @@ namespace IncidenceEditorNG {
 
 class FreeBusyUrlWidget;
 
-class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlDialog : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlDialog : public QDialog
 {
   Q_OBJECT
   public:

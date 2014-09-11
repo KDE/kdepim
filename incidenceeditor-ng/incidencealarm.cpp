@@ -162,7 +162,7 @@ void IncidenceAlarm::editCurrentAlarm()
   dialog->setAllowBeginReminders( mDateTime->startDateTimeEnabled() );
   dialog->setAllowEndReminders( mDateTime->endDateTimeEnabled() );
 
-  if ( dialog->exec() == KDialog::Accepted ) {
+  if ( dialog->exec() == QDialog::Accepted ) {
     dialog->save( currentAlarm );
     updateAlarmList();
     checkDirtyStatus();
@@ -209,7 +209,7 @@ void IncidenceAlarm::newAlarm()
   dialog->setAllowBeginReminders( mDateTime->startDateTimeEnabled() );
   dialog->setAllowEndReminders( mDateTime->endDateTimeEnabled() );
 
-  if ( dialog->exec() == KDialog::Accepted ) {
+  if ( dialog->exec() == QDialog::Accepted ) {
     KCalCore::Alarm::Ptr newAlarm( new KCalCore::Alarm( 0 ) );
     dialog->save( newAlarm );
     newAlarm->setEnabled( true );

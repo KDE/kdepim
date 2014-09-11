@@ -24,15 +24,33 @@
 
 #include <KPIMUtils/Email>
 #include <KLocalizedString>
+#include <KConfigGroup>
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QPushButton>
+
 
 using namespace IncidenceEditorNG;
 
 AlarmDialog::AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWidget *parent )
-  : KDialog( parent ),  mUi( new Ui::AlarmDialog ), mIncidenceType( incidenceType ),
+  : QDialog( parent ),  mUi( new Ui::AlarmDialog ), mIncidenceType( incidenceType ),
     mAllowBeginReminders( true ), mAllowEndReminders( true )
 {
   setWindowTitle( i18n( "Create a new reminder" ) );
-  mUi->setupUi( mainWidget() );
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+  QWidget *mainWidget = new QWidget(this);
+  mUi->setupUi( mainWidget );
+  mainLayout->addWidget(mainWidget);
+  mainLayout->addWidget(buttonBox);
+  
 
   const int defaultReminderTime = IncidenceEditorNG::EditorConfig::instance()->reminderTime();
   mUi->mAlarmOffset->setValue( defaultReminderTime );

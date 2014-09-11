@@ -31,28 +31,40 @@
 #include <QDebug>
 #include <QFrame>
 #include <QLabel>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace IncidenceEditorNG;
 
 FreeBusyUrlDialog::FreeBusyUrlDialog( AttendeeData::Ptr attendee, QWidget *parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
   QFrame *topFrame = new QFrame( this );
-  setMainWidget( topFrame );
   setModal( true );
-  setCaption( i18n( "Edit Free/Busy Location" ) );
-  setButtons( Ok|Cancel );
-  setDefaultButton( Ok );
+  setWindowTitle( i18n( "Edit Free/Busy Location" ) );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(topFrame);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  mainLayout->addWidget(buttonBox);
+  okButton->setDefault(true);
 
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
-  topLayout->setSpacing( spacingHint() );
+  //QT5 topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
   mWidget = new FreeBusyUrlWidget( attendee, topFrame );
   topLayout->addWidget( mWidget );
 
   mWidget->loadConfig();
-  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()) );
+  connect(okButton, SIGNAL(clicked()), this, SLOT(slotOk()) );
 }
 
 void FreeBusyUrlDialog::slotOk()
@@ -65,7 +77,7 @@ FreeBusyUrlWidget::FreeBusyUrlWidget( AttendeeData::Ptr attendee, QWidget *paren
   : QWidget( parent ), mAttendee( attendee )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
-  topLayout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   topLayout->setSpacing( QDialog::spacingHint() );
 
   QLabel *label =
     new QLabel( xi18n( "Location of Free/Busy information for %1 <placeholder>%2</placeholder>:",

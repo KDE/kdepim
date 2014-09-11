@@ -29,6 +29,10 @@
 #include <calendarsupport/categoryconfig.h>
 
 #include <QIcon>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
@@ -47,7 +51,7 @@ CategoryWidget::CategoryWidget( CategoryConfig *cc, QWidget *parent )
 {
   QHBoxLayout *topL = new QHBoxLayout( this );
   topL->setMargin( 0 );
-  topL->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   topL->setSpacing( QDialog::spacingHint() );
   mWidgets = new CategoryWidgetBase( this );
   topL->addWidget( mWidgets );
 
@@ -229,26 +233,36 @@ void CategoryWidget::handleColorChanged( const QColor &newColor )
 }
 
 CategoryDialog::CategoryDialog( CategoryConfig *cc, QWidget *parent )
-  : KDialog( parent ), d( 0 )
+  : QDialog( parent ), d( 0 )
 {
-  setCaption( i18n( "Select Categories" ) );
+  setWindowTitle( i18n( "Select Categories" ) );
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QDialogButtonBox *buttonBox = 0;
+
 #ifdef KDEPIM_MOBILE_UI
   // HACK: This is for maemo, which hides the button if there is only a cancel
   //       button.
-  setButtons( KDialog::Ok );
-  showButtonSeparator( false );
-
-  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()) );
+  buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
 #else
-  setButtons( Ok | Apply | Cancel | Help );
-  showButtonSeparator( true );
+  buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Apply);
 #endif
 
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+
   QWidget *page = new QWidget;
-  setMainWidget( page );
+  mainLayout->addWidget(page);
+  mainLayout->addWidget(buttonBox);
+//PORTING: Verify that widget was added to mainLayout:   setMainWidget( page );
+// Add mainLayout->addWidget(page); if necessary
   QVBoxLayout *lay = new QVBoxLayout( page );
   lay->setMargin( 0 );
-  lay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   lay->setSpacing( QDialog::spacingHint() );
 
   mWidgets = new CategoryWidget( cc, this );
   mCategoryConfig = cc;
@@ -259,8 +273,8 @@ CategoryDialog::CategoryDialog( CategoryConfig *cc, QWidget *parent )
   mWidgets->setCategories();
   mWidgets->listView()->setFocus();
 
-  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()) );
-  connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
+  connect(okButton, SIGNAL(clicked()), this, SLOT(slotOk()) );
+  connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(slotApply()) );
 }
 
 CategoryDialog::~CategoryDialog()

@@ -25,7 +25,7 @@
 
 #include <KCalCore/Incidence>
 
-#include <KDialog>
+#include <QDialog>
 
 namespace Ui {
   class AlarmDialog;
@@ -33,7 +33,7 @@ namespace Ui {
 
 namespace IncidenceEditorNG {
 
-class  INCIDENCEEDITORS_NG_EXPORT AlarmDialog : public KDialog
+class  INCIDENCEEDITORS_NG_EXPORT AlarmDialog : public QDialog
 {
   public:
     enum Unit {

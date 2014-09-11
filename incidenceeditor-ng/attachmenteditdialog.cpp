@@ -33,13 +33,17 @@
 #include <KMimeType>
 #include <KIO/NetAccess>
 #include <KLocale>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+
 
 using namespace IncidenceEditorNG;
 
 AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
                                             QWidget *parent,
                                             bool modal )
-  : KDialog( parent ),
+  : QDialog( parent ),
 #ifdef KDEPIM_ENTERPRISE_BUILD
   mAttachment( new KCalCore::Attachment( '\0' ) ), //use the non-uri constructor
                                                    // as we want inline by default
@@ -51,6 +55,17 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
   mUi( new Ui::AttachmentEditDialog )
 {
   QWidget *page = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+  mOkButton->setDefault(true);
+  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  mainLayout->addWidget(page);
+  mainLayout->addWidget(buttonBox);
+
   mUi->setupUi( page );
   mUi->mLabelEdit->setText( item->label().isEmpty() ? item->uri() : item->label() );
   mUi->mIcon->setPixmap( item->icon() );
@@ -61,9 +76,8 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
                         mMimeType->comment();
   mUi->mTypeLabel->setText( typecomment );
 
-  setMainWidget( page );
   setModal( modal );
-  enableButtonOk( false );
+  mOkButton->setEnabled( false );
 
   mUi->mInlineCheck->setEnabled( false );
   if ( item->attachment()->isUri() || item->attachment()->data().isEmpty() ) {
@@ -95,7 +109,7 @@ AttachmentEditDialog::~AttachmentEditDialog()
 void AttachmentEditDialog::accept()
 {
   slotApply();
-  KDialog::accept();
+  QDialog::accept();
 }
 
 void AttachmentEditDialog::slotApply()
@@ -154,7 +168,7 @@ void AttachmentEditDialog::slotApply()
 
 void AttachmentEditDialog::inlineChanged( int state )
 {
-  enableButtonOk( !mUi->mURLRequester->url().isEmpty() ||
+  mOkButton->setEnabled( !mUi->mURLRequester->url().isEmpty() ||
                   mUi->mStackedWidget->currentIndex() == 1 );
   if ( state == Qt::Unchecked && mUi->mStackedWidget->currentIndex() == 1 ) {
     mUi->mStackedWidget->setCurrentIndex( 0 );
@@ -168,7 +182,7 @@ void AttachmentEditDialog::inlineChanged( int state )
 
 void AttachmentEditDialog::urlChanged( const QString &url )
 {
-  enableButtonOk( !url.isEmpty() );
+  mOkButton->setEnabled( !url.isEmpty() );
   mUi->mInlineCheck->setEnabled( !url.isEmpty() ||
                                  mUi->mStackedWidget->currentIndex() == 1 );
 }

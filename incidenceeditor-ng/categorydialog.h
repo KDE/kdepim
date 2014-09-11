@@ -26,7 +26,7 @@
 
 #include "incidenceeditors_ng_export.h"
 
-#include <KDialog>
+#include <QDialog>
 
 class CategoryWidgetBase;
 
@@ -75,7 +75,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryWidget : public QWidget
     CalendarSupport::CategoryConfig *mCategoryConfig;
 };
 
-class INCIDENCEEDITORS_NG_EXPORT CategoryDialog : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT CategoryDialog : public QDialog
 {
   Q_OBJECT
   public:
