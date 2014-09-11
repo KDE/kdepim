@@ -41,8 +41,8 @@ FilterSelectionDialog::FilterSelectionDialog(QWidget *parent)
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterSelectionDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterSelectionDialog::reject);
     mOkButton->setDefault(true);
 
     filtersListWidget = new QListWidget();
@@ -65,8 +65,8 @@ FilterSelectionDialog::FilterSelectionDialog(QWidget *parent)
     buttonLayout->addWidget(unselectAllButton);
     top->addWidget(buttonBox);
 
-    connect(selectAllButton, SIGNAL(clicked()), this, SLOT(slotSelectAllButton()));
-    connect(unselectAllButton, SIGNAL(clicked()), this, SLOT(slotUnselectAllButton()));
+    connect(selectAllButton, &QPushButton::clicked, this, &FilterSelectionDialog::slotSelectAllButton);
+    connect(unselectAllButton, &QPushButton::clicked, this, &FilterSelectionDialog::slotUnselectAllButton);
 
     readConfig();
 }

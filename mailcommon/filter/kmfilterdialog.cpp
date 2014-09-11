@@ -347,14 +347,14 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::ClawsMailFilter));
     menu->addAction(act);
 
-    connect(menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)));
+    connect(menu, &QMenu::triggered, this, &KMFilterDialog::slotImportFilter);
 
     button(KDialog::User1)->setMenu(menu);
 
     menu = new QMenu();
 
     act = new QAction(i18n("Sieve script"), this);
-    connect(act, SIGNAL(triggered(bool)), SLOT(slotExportAsSieveScript()));
+    connect(act, &QAction::triggered, this, &KMFilterDialog::slotExportAsSieveScript);
     menu->addAction(act);
     button(KDialog::User3)->setMenu(menu);
 
@@ -521,7 +521,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     mRunNow = new QPushButton(i18n("Run Now"));
     mRunNow->setEnabled(false);
     applySpecificFiltersLayout->addWidget(mRunNow);
-    connect(mRunNow, SIGNAL(clicked()), this, SLOT(slotRunFilters()));
+    connect(mRunNow, &QPushButton::clicked, this, &KMFilterDialog::slotRunFilters);
     topVLayout->addLayout(applySpecificFiltersLayout);
     // spacer:
     vbl->addStretch(1);
@@ -596,17 +596,17 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     connect(mFilterList, SIGNAL(abortClosing()),
             this, SLOT(slotDisableAccept()));
 
-    connect(mFilterList, SIGNAL(filterCreated()), this, SLOT(slotDialogUpdated()));
+    connect(mFilterList, &KMFilterListBox::filterCreated, this, &KMFilterDialog::slotDialogUpdated);
     connect(mFilterList, SIGNAL(filterRemoved(QList<MailCommon::MailFilter*>)),
             this, SLOT(slotDialogUpdated()));
     connect(mFilterList, SIGNAL(filterUpdated(MailCommon::MailFilter*)),
             this, SLOT(slotDialogUpdated()));
-    connect(mFilterList, SIGNAL(filterOrderAltered()), this, SLOT(slotDialogUpdated()));
-    connect(mPatternEdit, SIGNAL(patternChanged()), this, SLOT(slotDialogUpdated()));
+    connect(mFilterList, &KMFilterListBox::filterOrderAltered, this, &KMFilterDialog::slotDialogUpdated);
+    connect(mPatternEdit, &MailCommon::SearchPatternEdit::patternChanged, this, &KMFilterDialog::slotDialogUpdated);
     connect(mActionLister, SIGNAL(widgetAdded(QWidget*)), this, SLOT(slotDialogUpdated()));
     connect(mActionLister, SIGNAL(widgetRemoved()), this, SLOT(slotDialogUpdated()));
-    connect(mActionLister, SIGNAL(filterModified()), this, SLOT(slotDialogUpdated()));
-    connect(mActionLister, SIGNAL(clearWidgets()), this, SLOT(slotDialogUpdated()));
+    connect(mActionLister, &MailCommon::FilterActionWidgetLister::filterModified, this, &KMFilterDialog::slotDialogUpdated);
+    connect(mActionLister, &MailCommon::FilterActionWidgetLister::clearWidgets, this, &KMFilterDialog::slotDialogUpdated);
     KConfigGroup myGroup(KernelIf->config(), "Geometry");
     const QSize size = myGroup.readEntry("filterDialogSize", QSize());
     if (size != QSize()) {
@@ -1013,7 +1013,7 @@ KMFilterListBox::KMFilterListBox(const QString &title, QWidget *parent)
 
     QShortcut *shortcut = new QShortcut(this);
     shortcut->setKey(Qt::Key_Delete);
-    connect(shortcut, SIGNAL(activated()), SLOT(slotDelete()));
+    connect(shortcut, &QShortcut::activated, this, &KMFilterListBox::slotDelete);
 
     //----------- now connect everything
     connect(mListWidget, SIGNAL(currentRowChanged(int)),
