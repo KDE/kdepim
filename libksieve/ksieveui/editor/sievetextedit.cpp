@@ -174,6 +174,43 @@ QString SieveTextEdit::selectedWord(const QPoint &pos) const
     return word;
 }
 
+bool SieveTextEdit::event(QEvent* ev)
+{
+    if (ev->type() == QEvent::ShortcutOverride) {
+        QKeyEvent *e = static_cast<QKeyEvent *>( ev );
+        if (overrideShortcut(e)) {
+            e->accept();
+            return true;
+        }
+    }
+    return PimCommon::PlainTextEditor::event(ev);
+}
+
+bool SieveTextEdit::overrideShortcut(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_F1) {
+        if (openVariableHelp()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool SieveTextEdit::openVariableHelp()
+{
+    if (!textCursor().hasSelection()) {
+        const QString word = selectedWord();
+        const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(word);
+        if (type != KSieveUi::SieveEditorUtil::UnknownHelp) {
+            const QString url = KSieveUi::SieveEditorUtil::helpUrl(type);
+            if (!url.isEmpty()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void SieveTextEdit::keyPressEvent(QKeyEvent* e)
 {
     if ( m_completer->popup()->isVisible() ) {
@@ -188,7 +225,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
         default:
             break;
         }
-    }
+    }    
     QPlainTextEdit::keyPressEvent(e);
     if (e->key() == Qt::Key_F1 && !textCursor().hasSelection()) {
         const QString word = selectedWord();
