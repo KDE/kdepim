@@ -35,6 +35,7 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/verifydetachedjob.h>
 #include <kleo/keylistjob.h>
+#include <KAboutData>
 
 #include <gpgme++/error.h>
 #include <gpgme++/verificationresult.h>

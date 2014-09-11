@@ -527,64 +527,48 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     vbl->addStretch(1);
 
     // load the filter parts into the edit widgets
-    connect(mFilterList, SIGNAL(filterSelected(MailCommon::MailFilter*)),
-            this, SLOT(slotFilterSelected(MailCommon::MailFilter*)));
+    connect(mFilterList, &KMFilterListBox::filterSelected, this, &KMFilterDialog::slotFilterSelected);
 
     // transfer changes from the 'Apply this filter on...'
     // combo box to the filter
-    connect(mApplyOnIn, SIGNAL(clicked()),
-            this, SLOT(slotApplicabilityChanged()));
-    connect(mApplyOnForAll, SIGNAL(clicked()),
-            this, SLOT(slotApplicabilityChanged()));
-    connect(mApplyOnForTraditional, SIGNAL(clicked()),
-            this, SLOT(slotApplicabilityChanged()));
-    connect(mApplyOnForChecked, SIGNAL(clicked()),
-            this, SLOT(slotApplicabilityChanged()));
-    connect(mApplyBeforeOut, SIGNAL(clicked()),
-            this, SLOT(slotApplicabilityChanged()));
-    connect(mApplyOnOut, SIGNAL(clicked()),
-            this, SLOT(slotApplicabilityChanged()));
-    connect(mApplyOnCtrlJ, SIGNAL(clicked()),
-            this, SLOT(slotApplicabilityChanged()));
-    connect(mAccountList, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
-            this, SLOT(slotApplicableAccountsChanged()));
+    connect(mApplyOnIn, &QCheckBox::clicked, this, &KMFilterDialog::slotApplicabilityChanged);
+    connect(mApplyOnForAll, &QRadioButton::clicked, this, &KMFilterDialog::slotApplicabilityChanged);
+    connect(mApplyOnForTraditional, SIGNAL(clicked()), this, SLOT(slotApplicabilityChanged()));
+    connect(mApplyOnForChecked, SIGNAL(clicked()), this, SLOT(slotApplicabilityChanged()));
+    connect(mApplyBeforeOut, SIGNAL(clicked()), this, SLOT(slotApplicabilityChanged()));
+    connect(mApplyOnOut, SIGNAL(clicked()), this, SLOT(slotApplicabilityChanged()));
+    connect(mApplyOnCtrlJ, SIGNAL(clicked()), this, SLOT(slotApplicabilityChanged()));
+    connect(mAccountList, &AccountList::itemChanged, this, &KMFilterDialog::slotApplicableAccountsChanged);
 
     // transfer changes from the 'stop processing here'
     // check box to the filter
-    connect(mStopProcessingHere, SIGNAL(toggled(bool)),
-            this, SLOT(slotStopProcessingButtonToggled(bool)));
+    connect(mStopProcessingHere, &QCheckBox::toggled, this, &KMFilterDialog::slotStopProcessingButtonToggled);
 
-    connect(mConfigureShortcut, SIGNAL(toggled(bool)),
-            this, SLOT(slotConfigureShortcutButtonToggled(bool)));
+    connect(mConfigureShortcut, &QCheckBox::toggled, this, &KMFilterDialog::slotConfigureShortcutButtonToggled);
 
-    connect(mKeySeqWidget, SIGNAL(keySequenceChanged(QKeySequence)),
-            this, SLOT(slotShortcutChanged(QKeySequence)));
+    connect(mKeySeqWidget, &KKeySequenceWidget::keySequenceChanged, this, &KMFilterDialog::slotShortcutChanged);
 
-    connect(mConfigureToolbar, SIGNAL(toggled(bool)),
-            this, SLOT(slotConfigureToolbarButtonToggled(bool)));
+    connect(mConfigureToolbar, &QCheckBox::toggled, this, &KMFilterDialog::slotConfigureToolbarButtonToggled);
 
-    connect(mFilterActionIconButton, SIGNAL(iconChanged(QString)),
-            this, SLOT(slotFilterActionIconChanged(QString)));
+    connect(mFilterActionIconButton, &KIconButton::iconChanged, this, &KMFilterDialog::slotFilterActionIconChanged);
 
     // reset all widgets here
-    connect(mFilterList, SIGNAL(resetWidgets()),
-            this, SLOT(slotReset()));
+    connect(mFilterList, &KMFilterListBox::resetWidgets, this, &KMFilterDialog::slotReset);
 
-    connect(mFilterList, SIGNAL(applyWidgets()),
-            this, SLOT(slotUpdateFilter()));
+    connect(mFilterList, &KMFilterListBox::applyWidgets, this, &KMFilterDialog::slotUpdateFilter);
 
     // support auto-naming the filter
-    connect(mPatternEdit, SIGNAL(maybeNameChanged()),
-            mFilterList, SLOT(slotUpdateFilterName()));
+    connect(mPatternEdit, &MailCommon::SearchPatternEdit::maybeNameChanged, mFilterList, &KMFilterListBox::slotUpdateFilterName);
 
     // save filters on 'Apply' or 'OK'
-    connect(this, SIGNAL(buttonClicked(KDialog::ButtonCode)),
-            mFilterList, SLOT(slotApplyFilterChanges(KDialog::ButtonCode)));
-    connect(button(KDialog::Apply), SIGNAL(clicked(bool)), this, SLOT(slotApply()));
+    connect(this, SIGNAL(buttonClicked(KDialog::ButtonCode)), 
+           mFilterList, SLOT(slotApplyFilterChanges(KDialog::ButtonCode)));
+    connect(button(KDialog::Apply), SIGNAL(clicked(bool)), 
+           this, SLOT(slotApply()));
 
     // save dialog size on 'OK'
     connect(this, SIGNAL(okClicked()),
-            this, SLOT(slotSaveSize()));
+             this, SLOT(slotSaveSize()));
 
     // destruct the dialog on close and Cancel
     connect(this, SIGNAL(closeClicked()),

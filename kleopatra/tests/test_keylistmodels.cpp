@@ -37,9 +37,9 @@
 
 #include <utils/formatting.h>
 
-#include <kapplication.h>
-#include <K4AboutData>
-#include <kcmdlineargs.h>
+
+#include <KAboutData>
+
 
 #include <QTreeView>
 #include <QLineEdit>
@@ -58,6 +58,10 @@
 #include <vector>
 #include <string>
 #include <cassert>
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 class Relay : public QObject {
     Q_OBJECT
@@ -93,25 +97,27 @@ int main( int argc, char * argv[] ) {
         return 1;
     }
 
-    K4AboutData aboutData( "test_flatkeylistmodel", 0, ki18n("FlatKeyListModel Test"), "0.2" );
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    KAboutData aboutData( "test_flatkeylistmodel", 0, i18n("FlatKeyListModel Test"), "0.2" );
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("flat"), i18n("Perform flat certificate listing")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("hierarchical"), i18n("Perform hierarchical certificate listing")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("disable-smime"), i18n("Do not list SMIME certificates")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("secret"), i18n("List secret keys only")));
 
-    KCmdLineOptions options;
-    options.add( "flat",         ki18n("Perform flat certificate listing") );
-    options.add( "hierarchical", ki18n("Perform hierarchical certificate listing") );
-    options.add( "disable-smime", ki18n("Do not list SMIME certificates") );
-    options.add( "secret", ki18n("List secret keys only") );
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KCmdLineArgs::addCmdLineOptions( options );
 
-    KApplication app;
 
-    KCmdLineArgs * args = KCmdLineArgs::parsedArgs();
-
-    const bool showFlat = args->isSet( "flat" ) || !args->isSet( "hierarchical" );
-    const bool showHier = args->isSet( "hierarchical" ) || !args->isSet( "flat" );
-    const bool disablesmime = args->isSet( "disable-smime" );
-    const bool secretOnly = args->isSet( "secret" );
+    const bool showFlat = parser.isSet( QLatin1String("flat") ) || !parser.isSet( QLatin1String("hierarchical") );
+    const bool showHier = parser.isSet( QLatin1String("hierarchical") ) || !parser.isSet( QLatin1String("flat") );
+    const bool disablesmime = parser.isSet( QLatin1String("disable-smime") );
+    const bool secretOnly = parser.isSet( QLatin1String("secret") );
 
     qsrand( QDateTime::currentDateTime().toTime_t() );
 

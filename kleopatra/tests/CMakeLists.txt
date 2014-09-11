@@ -51,17 +51,17 @@ endif()
 
 set(test_verify_SRCS test_verify.cpp)
 
-add_definitions(-DKLEO_TEST_GNUPGHOME=\\"${CMAKE_CURRENT_SOURCE_DIR}/gnupg_home\\")
-add_definitions(-DKLEO_TEST_DATADIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\")
+add_definitions(-DKLEO_TEST_GNUPGHOME="${CMAKE_CURRENT_SOURCE_DIR}/gnupg_home")
+add_definitions(-DKLEO_TEST_DATADIR="${CMAKE_CURRENT_SOURCE_DIR}")
 
-kde4_add_unit_test(test_verify TESTNAME kleo-verifytest ${test_verify_SRCS})
+
+add_executable(test_verify  ${test_verify_SRCS})
+add_test(test_verify test_verify)
+ecm_mark_as_test(test_verify)
 
 target_link_libraries(test_verify
   kleo
   Qt5::Test
-  
-  
-  
   KF5::QGpgme
 )
 
@@ -80,19 +80,17 @@ if(USABLE_ASSUAN_FOUND)
   if(WIN32)
     add_executable(test_uiserver ${test_uiserver_SRCS})
   else()
-    add_executable(test_uiserver TEST ${test_uiserver_SRCS})
+    add_executable(test_uiserver ${test_uiserver_SRCS})
   endif()
 
   if(ASSUAN2_FOUND)
     target_link_libraries(test_uiserver
       kleo
-      
       ${ASSUAN2_LIBRARIES}
     )
   else()
     target_link_libraries(test_uiserver
       kleo
-      
       ${ASSUAN_LIBRARIES}
     )
   endif()

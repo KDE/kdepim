@@ -123,9 +123,9 @@ FilterManager::FilterManager()
 
     d->mMonitor->setTypeMonitored(Akonadi::Monitor::Tags);
     d->mMonitor->tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
-    connect(d->mMonitor, SIGNAL(tagAdded(Akonadi::Tag)), this, SLOT(slotTagAdded(Akonadi::Tag)));
-    connect(d->mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)), this, SLOT(slotTagRemoved(Akonadi::Tag)));
-    connect(d->mMonitor, SIGNAL(tagChanged(Akonadi::Tag)), this, SLOT(slotTagChanged(Akonadi::Tag)));
+    connect(d->mMonitor, &Akonadi::Monitor::tagAdded, this, &FilterManager::slotTagAdded);
+    connect(d->mMonitor, &Akonadi::Monitor::tagRemoved, this, &FilterManager::slotTagRemoved);
+    connect(d->mMonitor, &Akonadi::Monitor::tagChanged, this, &FilterManager::slotTagChanged);
 
     qDBusRegisterMetaType<QList<qint64> >();
     Akonadi::ServerManager::State state = Akonadi::ServerManager::self()->state();
@@ -149,7 +149,7 @@ void FilterManager::updateTagList()
 {
     Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
     fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
-    connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotFinishedTagListing(KJob*)));
+    connect(fetchJob, &Akonadi::TagFetchJob::result, this, &FilterManager::slotFinishedTagListing);
 }
 
 bool FilterManager::initialized() const

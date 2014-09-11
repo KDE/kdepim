@@ -42,8 +42,8 @@
 #include <KLocalizedString>
 #include <QDebug>
 #include <kconfig.h>
-#include <knuminput.h>
 #include <QDialog>
+#include <QSpinBox>
 
 #include <QLabel>
 #include <qdatetimeedit.h>

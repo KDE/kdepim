@@ -34,9 +34,9 @@
 
 #include <models/useridlistmodel.h>
 
-#include <KApplication>
-#include <KCmdLineArgs>
-#include <K4AboutData>
+
+
+#include <KAboutData>
 
 #include <QTreeView>
 
@@ -59,6 +59,10 @@
 #include <string>
 #include <iostream>
 #include <cassert>
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 class KeyResolveJob : QObject {
     Q_OBJECT
@@ -155,28 +159,29 @@ static void start( const QString & str, Protocol proto ) {
 
 int main( int argc, char * argv[] ) {
 
-    K4AboutData aboutData( "test_useridlistmodels", 0, ki18n("UserIDListModel Test"), "0.1" );
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    KAboutData aboutData( QLatin1String("test_useridlistmodels"), i18n("UserIDListModel Test"), QLatin1String("0.1") );
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("p"), i18n("OpenPGP certificate to look up"), QLatin1String("pattern")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("x"), i18n("X.509 certificate to look up"), QLatin1String("pattern")));
 
-    KCmdLineOptions options;
-    options.add( "p <pattern>", ki18n("OpenPGP certificate to look up") );
-    options.add( "x <pattern>", ki18n("X.509 certificate to look up") );
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KCmdLineArgs::addCmdLineOptions( options );
 
-    KApplication app;
-
-    KCmdLineArgs * args = KCmdLineArgs::parsedArgs();
-
-    if ( args->getOptionList( "p" ).empty() && args->getOptionList( "x" ).empty() )
+    if ( parser.values( QLatin1String("p") ).empty() && parser.values( QLatin1String("x") ).empty() )
         return 1;
 
     try {
 
-        Q_FOREACH( const QString & arg, args->getOptionList( "p" ) )
+        Q_FOREACH( const QString & arg, parser.values( QLatin1String("p") ) )
             start( arg, OpenPGP );
 
-        Q_FOREACH( const QString & arg, args->getOptionList( "x" ) )
+        Q_FOREACH( const QString & arg, parser.values( QLatin1String("x") ) )
             start( arg, CMS );
 
         return app.exec();
