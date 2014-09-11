@@ -64,7 +64,7 @@ InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, 
     m_instance = QString::fromUtf8( qgetenv("AKONADI_INSTANCE") );
     if ( insts.size() == 1 && m_instance.isEmpty() )
       m_instance = insts.first();
-    accept();
+    slotAccept();
   } else {
     QStandardItemModel *model = new QStandardItemModel( this );
     foreach ( const QString &inst, insts ) {
