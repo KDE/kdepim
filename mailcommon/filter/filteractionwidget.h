@@ -26,7 +26,6 @@
 
 #include <libkdepim/widgets/kwidgetlister.h>
 
-#include <KHBox>
 
 namespace MailCommon
 {
@@ -52,7 +51,7 @@ class FilterActionWidget;
  * @author Marc Mutz <mutz@kde.org>
  * @see MailCommon::FilterAction MailCommon::MailFilter FilterActionWidgetLister
  */
-class FilterActionWidget : public KHBox
+class FilterActionWidget : public QWidget
 {
     Q_OBJECT
 

@@ -103,9 +103,12 @@ void FilterActionWidget::Private::slotFilterTypeChanged(int index)
 }
 
 FilterActionWidget::FilterActionWidget(QWidget *parent)
-    : KHBox(parent), d(new Private(this))
+    : QWidget(parent), d(new Private(this))
 {
+    QHBoxLayout *mainLayout = new QHBoxLayout;
+    setLayout(mainLayout);
     QWidget *widget = new QWidget(this);
+    mainLayout->addWidget(widget);
 
     d->mLayout = new QGridLayout(widget);
     d->mLayout->setContentsMargins(0, 0, 0, 0);
@@ -122,7 +125,7 @@ FilterActionWidget::FilterActionWidget(QWidget *parent)
     d->mRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
     d->mRemove->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
-    setSpacing(4);
+    mainLayout->setSpacing(4);
 
     int index;
     QList<FilterActionDesc *> list = MailCommon::FilterManager::filterActionDict()->list();
