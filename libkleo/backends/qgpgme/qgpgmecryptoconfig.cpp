@@ -90,8 +90,7 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
   process << QLatin1String("--list-components");
 
 
-  connect( &process, SIGNAL(readyReadStandardOutput()),
-           this, SLOT(slotCollectStdOut()) );
+  connect(&process, &KProcess::readyReadStandardOutput, this, &QGpgMECryptoConfig::slotCollectStdOut);
 
   // run the process:
   int rc = 0;
@@ -216,8 +215,7 @@ void QGpgMECryptoConfigComponent::runGpgConf()
 
   //qCDebug(GPGPME_BACKEND_LOG) <<"Running gpgconf --list-options" << mName;
 
-  connect( &proc, SIGNAL(readyReadStandardOutput()),
-           this, SLOT(slotCollectStdOut()) );
+  connect(&proc, &KProcess::readyReadStandardOutput, this, &QGpgMECryptoConfigComponent::slotCollectStdOut);
   mCurrentGroup = 0;
 
   // run the process:

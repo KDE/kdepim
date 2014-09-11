@@ -34,7 +34,6 @@
 
 
 #include <KAboutData>
-#include <kglobal.h>
 #include <kiconloader.h>
 #include <QDebug>
 

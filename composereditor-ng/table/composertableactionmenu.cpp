@@ -229,7 +229,7 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement &element, QOb
 
     d->action_insert_table = new QAction(QIcon::fromTheme(QLatin1String("insert-table")), i18nc("@item:inmenu Insert", "Table..."), this);
     insertMenu->addAction(d->action_insert_table);
-    connect(d->action_insert_table, SIGNAL(triggered(bool)), SIGNAL(insertNewTable()));
+    connect(d->action_insert_table, &QAction::triggered, this, &ComposerTableActionMenu::insertNewTable);
 
     insertMenu->addSeparator();
     d->action_insert_row_below = new QAction(QIcon::fromTheme(QLatin1String("edit-table-insert-row-below")), i18nc("@item:inmenu Insert", "Row Below"), this);

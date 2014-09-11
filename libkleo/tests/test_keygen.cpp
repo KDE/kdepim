@@ -80,8 +80,8 @@ KeyGenerator::KeyGenerator( QWidget * parent )
   mainLayout->addWidget(mainWidget);
   QPushButton *user1Button = new QPushButton;
   buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &KeyGenerator::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &KeyGenerator::reject);
   user1Button->setDefault(true);
   KGuiItem::assign(user1Button, KGuiItem("Create"));
 
@@ -110,7 +110,7 @@ KeyGenerator::KeyGenerator( QWidget * parent )
   glay->setRowStretch( row, 1 );
   glay->setColumnStretch( 1, 1 );
 
-  connect(user1Button, SIGNAL(clicked()), SLOT(slotStartKeyGeneration()) );
+  connect(user1Button, &QPushButton::clicked, this, &KeyGenerator::slotStartKeyGeneration);
 }
 
 KeyGenerator::~KeyGenerator() {}

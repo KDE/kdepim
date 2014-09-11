@@ -47,10 +47,8 @@ ContactSelectionWidget::ContactSelectionWidget( QItemSelectionModel *selectionMo
     mAddressBookSelection->setEnabled( false );
     mAddressBookSelectionRecursive->setEnabled( false );
 
-    connect( mAddressBookContactsButton, SIGNAL(toggled(bool)),
-             mAddressBookSelection, SLOT(setEnabled(bool)) );
-    connect( mAddressBookContactsButton, SIGNAL(toggled(bool)),
-             mAddressBookSelectionRecursive, SLOT(setEnabled(bool)) );
+    connect(mAddressBookContactsButton, &QRadioButton::toggled, mAddressBookSelection, &Akonadi::CollectionComboBox::setEnabled);
+    connect(mAddressBookContactsButton, &QRadioButton::toggled, mAddressBookSelectionRecursive, &QCheckBox::setEnabled);
 
     // apply default configuration
     if ( mSelectionModel->hasSelection() ) {

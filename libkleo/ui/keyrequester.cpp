@@ -127,8 +127,8 @@ void Kleo::KeyRequester::init()
   hlay->addWidget( mEraseButton );
   hlay->addWidget( mDialogButton );
 
-  connect( mEraseButton,  SIGNAL(clicked()), SLOT(slotEraseButtonClicked()) );
-  connect( mDialogButton, SIGNAL(clicked()), SLOT(slotDialogButtonClicked()) );
+  connect(mEraseButton, &QPushButton::clicked, this, &SigningKeyRequester::slotEraseButtonClicked);
+  connect(mDialogButton, &QPushButton::clicked, this, &SigningKeyRequester::slotDialogButtonClicked);
 
   setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
                               QSizePolicy::Fixed ) );

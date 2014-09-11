@@ -56,10 +56,8 @@ Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase( const QString & class_, co
 Kleo::SymCryptRunProcessBase::~SymCryptRunProcessBase() {}
 
 bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, bool block ) {
-  connect( this, SIGNAL(readyReadStandardOutput()),
-           this, SLOT(slotReadyReadStandardOutput()) );
-  connect( this, SIGNAL(readyReadStandardError()),
-           this, SLOT(slotReadyReadStandardError()) );
+  connect(this, &SymCryptRunProcessBase::readyReadStandardOutput, this, &SymCryptRunProcessBase::slotReadyReadStandardOutput);
+  connect(this, &SymCryptRunProcessBase::readyReadStandardError, this, &SymCryptRunProcessBase::slotReadyReadStandardError);
   if ( block ) {
     QTemporaryFile tempfile;
     if ( tempfile.open() )

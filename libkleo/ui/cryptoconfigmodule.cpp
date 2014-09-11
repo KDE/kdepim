@@ -494,7 +494,7 @@ Kleo::CryptoConfigEntryLineEdit::CryptoConfigEntryLineEdit(
     label->setEnabled( false );
     mLineEdit->setEnabled( false );
   } else {
-    connect( mLineEdit, SIGNAL(textChanged(QString)), SLOT(slotChanged()) );
+    connect(mLineEdit, &KLineEdit::textChanged, this, &CryptoConfigEntryLineEdit::slotChanged);
   }
 }
 
@@ -776,7 +776,7 @@ Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
   } else {
     if ( mKind == UInt || mKind == ListOfNone )
       mNumInput->setMinimum( 0 );
-    connect( mNumInput, SIGNAL(valueChanged(int)), SLOT(slotChanged()) );
+    connect(mNumInput, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &CryptoConfigEntrySpinBox::slotChanged);
   }
 }
 
@@ -828,7 +828,7 @@ Kleo::CryptoConfigEntryCheckBox::CryptoConfigEntryCheckBox(
   if ( entry->isReadOnly() ) {
     mCheckBox->setEnabled( false );
   } else {
-    connect( mCheckBox, SIGNAL(toggled(bool)), SLOT(slotChanged()) );
+    connect(mCheckBox, &QCheckBox::toggled, this, &CryptoConfigEntryCheckBox::slotChanged);
   }
 }
 
@@ -866,7 +866,7 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
 
   if ( entry->isReadOnly() )
     mLabel->setEnabled( false );
-  connect( mPushButton, SIGNAL(clicked()), SLOT(slotOpenDialog()) );
+  connect(mPushButton, &QPushButton::clicked, this, &CryptoConfigEntryLDAPURL::slotOpenDialog);
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::doLoad()
@@ -895,7 +895,7 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
   dirserv->setAllowedProtocols( DirectoryServicesWidget::X509Protocol );
   dirserv->addX509Services( mURLList );
   dialog.setMainWidget( dirserv );
-  connect( &dialog, SIGNAL(defaultClicked()), dirserv, SLOT(clear()) );
+  connect(&dialog, &KDialog::defaultClicked, dirserv, &DirectoryServicesWidget::clear);
   if ( dialog.exec() ) {
     setURLList( dirserv->x509Services() );
     slotChanged();
@@ -937,7 +937,7 @@ Kleo::CryptoConfigEntryKeyserver::CryptoConfigEntryKeyserver(
     mLabel->setEnabled( false );
     mPushButton->hide();
   } else {
-    connect( mPushButton, SIGNAL(clicked()), SLOT(slotOpenDialog()) );
+    connect(mPushButton, &QPushButton::clicked, this, &CryptoConfigEntryKeyserver::slotOpenDialog);
   }
 }
 
@@ -1009,7 +1009,7 @@ void Kleo::CryptoConfigEntryKeyserver::slotOpenDialog()
   dirserv.setAllowedProtocols( DirectoryServicesWidget::OpenPGPProtocol );
   dirserv.addOpenPGPServices( string2urls( mLabel->text() ) );
   dialog.setMainWidget( &dirserv );
-  connect( &dialog, SIGNAL(defaultClicked()), &dirserv, SLOT(clear()) );
+  connect(&dialog, &KDialog::defaultClicked, &dirserv, &DirectoryServicesWidget::clear);
   if ( dialog.exec() ) {
     mLabel->setText( urls2string( dirserv.openPGPServices() ) );
     slotChanged();
