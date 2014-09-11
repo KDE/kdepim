@@ -57,7 +57,7 @@ OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface
                 QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QLatin1String("/Settings"), QDBusConnection::sessionBus() );
 }
 
-void PimCommon::Util::saveTextAs( const QString &text, const QString &filter, QWidget *parent, const KUrl &url, const QString &caption )
+void PimCommon::Util::saveTextAs( const QString &text, const QString &filter, QWidget *parent, const QUrl &url, const QString &caption )
 {
     QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
     if (!caption.isEmpty())
@@ -91,7 +91,7 @@ bool PimCommon::Util::saveToFile( const QString &filename, const QString &text)
     return true;
 }
 
-QString PimCommon::Util::loadToFile(const QString &filter, QWidget *parent, const KUrl &url, const QString &caption)
+QString PimCommon::Util::loadToFile(const QString &filter, QWidget *parent, const QUrl &url, const QString &caption)
 {
     QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
     if (!caption.isEmpty())

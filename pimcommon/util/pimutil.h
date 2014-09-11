@@ -40,7 +40,7 @@
 
 #include "pimcommon_export.h"
 
-#include <KUrl>
+#include <QUrl>
 class OrgKdeAkonadiImapSettingsInterface;
 class QWidget;
 
@@ -58,9 +58,9 @@ namespace PimCommon {
 namespace Util {
 
 PIMCOMMON_EXPORT OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
-PIMCOMMON_EXPORT void saveTextAs( const QString &text, const QString &filter, QWidget *parent, const KUrl &url = KUrl(), const QString &caption = QString());
+PIMCOMMON_EXPORT void saveTextAs( const QString &text, const QString &filter, QWidget *parent, const QUrl &url = QUrl(), const QString &caption = QString());
 PIMCOMMON_EXPORT bool saveToFile( const QString &filename, const QString &text );
-PIMCOMMON_EXPORT QString loadToFile(const QString &filter, QWidget *parent, const KUrl &url = KUrl(), const QString &caption = QString());
+PIMCOMMON_EXPORT QString loadToFile(const QString &filter, QWidget *parent, const QUrl &url = QUrl(), const QString &caption = QString());
 PIMCOMMON_EXPORT bool isImapResource(const QString &identifier);
 }
 

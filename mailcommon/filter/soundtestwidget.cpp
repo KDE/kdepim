@@ -31,6 +31,7 @@
 #include <QPushButton>
 
 #include <phonon/mediaobject.h>
+#include <QStandardPaths>
 
 using namespace MailCommon;
 
@@ -88,7 +89,7 @@ void SoundTestWidget::openSoundDialog(KUrlRequester *)
 
     fileDialog->setMimeTypeFilters(filters);
 
-    const QStringList soundDirs = KGlobal::dirs()->resourceDirs("sound");
+    const QStringList soundDirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QLatin1String("sound/"), QStandardPaths::LocateDirectory);
 
     if (!soundDirs.isEmpty()) {
         KUrl soundURL;
