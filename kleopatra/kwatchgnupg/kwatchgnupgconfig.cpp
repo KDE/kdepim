@@ -81,7 +81,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
   QPushButton *okButton = mButtonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(mButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(mButtonBox, &QDialogButtonBox::rejected, this, &KWatchGnuPGConfig::reject);
   okButton->setDefault(true);
 
   // tmp vars:
@@ -112,7 +112,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
   glay->addWidget( label, row, 0 );
   glay->addWidget( mExeED, row, 1 );
 
-  connect( mExeED, SIGNAL(fileNameChanged(QString)), SLOT(slotChanged()) );
+  connect(mExeED, &Kleo::FileNameRequester::fileNameChanged, this, &KWatchGnuPGConfig::slotChanged);
 
   ++row;
   mSocketED = new Kleo::FileNameRequester( group );
@@ -121,7 +121,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
   glay->addWidget( label, row, 0 );
   glay->addWidget( mSocketED, row, 1 );
 
-  connect( mSocketED, SIGNAL(fileNameChanged(QString)), SLOT(slotChanged()) );
+  connect(mSocketED, &Kleo::FileNameRequester::fileNameChanged, this, &KWatchGnuPGConfig::slotChanged);
 
   ++row;
   mLogLevelCB = new QComboBox( group );
@@ -135,7 +135,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
   glay->addWidget( label, row, 0 );
   glay->addWidget( mLogLevelCB, row, 1 );
 
-  connect( mLogLevelCB, SIGNAL(activated(int)), SLOT(slotChanged()) );
+  connect(mLogLevelCB, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &KWatchGnuPGConfig::slotChanged);
 
   /******************* Log Window group *******************/
   group = new QGroupBox( i18n("Log Window"), top );
@@ -160,19 +160,19 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
   QPushButton * button = new QPushButton( i18n("Set &Unlimited"), group );
   glay->addWidget( button, row, 2 );
 
-  connect( mLoglenSB, SIGNAL(valueChanged(int)), SLOT(slotChanged()) );
-  connect( button, SIGNAL(clicked()), SLOT(slotSetHistorySizeUnlimited()) );
+  connect(mLoglenSB, static_cast<void (KPluralHandlingSpinBox::*)(int)>(&KPluralHandlingSpinBox::valueChanged), this, &KWatchGnuPGConfig::slotChanged);
+  connect(button, &QPushButton::clicked, this, &KWatchGnuPGConfig::slotSetHistorySizeUnlimited);
 
   ++row;
   mWordWrapCB = new QCheckBox( i18n("Enable &word wrapping"), group );
   mWordWrapCB->hide(); // QTextEdit doesn't support word wrapping in LogText mode
   glay->addWidget( mWordWrapCB, row, 0, 1, 3 );
 
-  connect( mWordWrapCB, SIGNAL(clicked()), SLOT(slotChanged()) );
+  connect(mWordWrapCB, &QCheckBox::clicked, this, &KWatchGnuPGConfig::slotChanged);
 
   vlay->addStretch( 1 );
 
-  connect(okButton, SIGNAL(clicked()), SLOT(slotSave()) );
+  connect(okButton, &QPushButton::clicked, this, &KWatchGnuPGConfig::slotSave);
 }
 
 KWatchGnuPGConfig::~KWatchGnuPGConfig() {}
