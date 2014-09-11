@@ -143,7 +143,7 @@ void BoxJob::getTokenAccess(const QString &authorizeCode)
     postData.addQueryItem(QLatin1String("client_id"), mClientId);
     postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 
@@ -308,7 +308,7 @@ void BoxJob::refreshToken()
     //qDebug()<<"refreshToken postData: "<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 
@@ -322,7 +322,7 @@ void BoxJob::deleteFile(const QString &filename)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::deleteFolder(const QString &foldername)
@@ -336,7 +336,7 @@ void BoxJob::deleteFolder(const QString &foldername)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::renameFolder(const QString &source, const QString &destination)
@@ -351,7 +351,7 @@ void BoxJob::renameFolder(const QString &source, const QString &destination)
     const QString data = QString::fromLatin1("{\"name\":\"%1\"}").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::renameFile(const QString &oldName, const QString &newName)
@@ -367,7 +367,7 @@ void BoxJob::renameFile(const QString &oldName, const QString &newName)
     const QString data = QString::fromLatin1("{\"name\":\"%1\"}").arg(newName);
 
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::moveFolder(const QString &source, const QString &destination)
@@ -382,7 +382,7 @@ void BoxJob::moveFolder(const QString &source, const QString &destination)
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     const QString data = QString::fromLatin1("{\"parent\": {\"id\" : \"%1\"} }").arg(destination);
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::moveFile(const QString &source, const QString &destination)
@@ -398,7 +398,7 @@ void BoxJob::moveFile(const QString &source, const QString &destination)
     const QString data = QString::fromLatin1("{\"parent\": {\"id\" : \"%1\"} }").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::copyFile(const QString &source, const QString &destination)
@@ -413,7 +413,7 @@ void BoxJob::copyFile(const QString &source, const QString &destination)
     const QString data = QString::fromLatin1("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::copyFolder(const QString &source, const QString &destination)
@@ -428,7 +428,7 @@ void BoxJob::copyFolder(const QString &source, const QString &destination)
     const QString data = QString::fromLatin1("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
@@ -449,7 +449,7 @@ QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &upload
             postData.addQueryItem(QLatin1String("filename"), uploadAsName);
             QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
             file->setParent(reply);
-            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+            connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
             return reply;
         }
     }
@@ -467,7 +467,7 @@ void BoxJob::listFolder(const QString &folder)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::accountInfo()
@@ -480,7 +480,7 @@ void BoxJob::accountInfo()
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::createFolderJob(const QString &foldername, const QString &destination)
@@ -492,7 +492,7 @@ void BoxJob::createFolderJob(const QString &foldername, const QString &destinati
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     const QString data = QString::fromLatin1("{\"name\":\"%1\", \"parent\": {\"id\": \"%2\"}}").arg(foldername).arg((destination.isEmpty() ? QLatin1String("0") : destination));
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::createFolder(const QString &foldername, const QString &destination)
@@ -517,7 +517,7 @@ void BoxJob::shareLink(const QString &root, const QString &fileId)
     const QByteArray data("{\"shared_link\": {\"access\": \"open\"}}");
 
     QNetworkReply *reply = mNetworkAccessManager->put(request,data);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
 
 void BoxJob::parseDeleteFolder(const QString &data)
@@ -681,9 +681,9 @@ QNetworkReply * BoxJob::downloadFile(const QString &name, const QString &fileId,
         request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
         QNetworkReply *reply = mNetworkAccessManager->get(request);
         mDownloadFile->setParent(reply);
-        connect(reply, SIGNAL(readyRead()), this, SLOT(slotDownloadReadyRead()));
-        connect(reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
-        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        connect(reply, &QNetworkReply::readyRead, this, &BoxJob::slotDownloadReadyRead);
+        connect(reply, &QNetworkReply::downloadProgress, this, &BoxJob::slotuploadDownloadFileProgress);
+        connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
         return reply;
     } else {
         delete mDownloadFile;

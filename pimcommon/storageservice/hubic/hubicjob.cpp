@@ -80,7 +80,7 @@ void HubicJob::requestTokenAccess()
     //qDebug()<<" url"<<url;
     delete mAuthDialog;
     mAuthDialog = new PimCommon::StorageAuthViewDialog;
-    connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
+    connect(mAuthDialog.data(), &PimCommon::StorageAuthViewDialog::urlChanged, this, &HubicJob::slotRedirect);
     mAuthDialog->setUrl(url);
     if (mAuthDialog->exec()) {
         delete mAuthDialog;
@@ -140,7 +140,7 @@ void HubicJob::getTokenAccess(const QString &authorizeCode)
     postData.addQueryItem(QLatin1String("client_id"), mClientId);
     postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
 }
 
 
@@ -301,7 +301,7 @@ void HubicJob::refreshToken()
     qDebug()<<"refreshToken postData: "<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
 }
 
 
@@ -371,7 +371,7 @@ QNetworkReply *HubicJob::uploadFile(const QString &filename, const QString &uplo
             postData.addQueryItem(QLatin1String("filename"), uploadAsName);
             QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
             file->setParent(reply);
-            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+            connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
             return reply;
 #else
             return 0;
@@ -393,7 +393,7 @@ void HubicJob::listFolder(const QString &folder)
     qDebug()<<" mToken"<<mToken;
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
 
 #if 0
     QUrl url;
@@ -402,7 +402,7 @@ void HubicJob::listFolder(const QString &folder)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
 #endif
 }
 
@@ -416,7 +416,7 @@ void HubicJob::accountInfo()
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
 }
 
 void HubicJob::createFolder(const QString &foldername, const QString &destination)
@@ -595,9 +595,9 @@ QNetworkReply * HubicJob::downloadFile(const QString &name, const QString &fileI
         request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
         QNetworkReply *reply = mNetworkAccessManager->get(request);
         mDownloadFile->setParent(reply);
-        connect(reply, SIGNAL(readyRead()), this, SLOT(slotDownloadReadyRead()));
-        connect(reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
-        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        connect(reply, &QNetworkReply::readyRead, this, &HubicJob::slotDownloadReadyRead);
+        connect(reply, &QNetworkReply::downloadProgress, this, &HubicJob::slotuploadDownloadFileProgress);
+        connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
         return reply;
     } else {
         delete mDownloadFile;

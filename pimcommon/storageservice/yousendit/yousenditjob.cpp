@@ -100,7 +100,7 @@ void YouSendItJob::deleteFile(const QString &filename)
     qDebug()<<" url"<<url;
     QNetworkRequest request = setDefaultHeader(url);
     QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
 void YouSendItJob::deleteFolder(const QString &foldername)
@@ -110,7 +110,7 @@ void YouSendItJob::deleteFolder(const QString &foldername)
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1").arg(foldername));
     QNetworkRequest request = setDefaultHeader(url);
     QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
 void YouSendItJob::renameFolder(const QString &source, const QString &destination)
@@ -124,7 +124,7 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
     postData.addQueryItem(QLatin1String("name"), destination);
 
     QNetworkReply *reply = mNetworkAccessManager->put(request,postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
 void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
@@ -139,7 +139,7 @@ void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
     QUrl postData;
     postData.addQueryItem(QLatin1String("name"), newName);
     QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
 void YouSendItJob::moveFolder(const QString &source, const QString &destination)
@@ -153,7 +153,7 @@ void YouSendItJob::moveFolder(const QString &source, const QString &destination)
     QUrl postData;
     postData.addQueryItem(QLatin1String("parentId"), destination);
     QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
 void YouSendItJob::moveFile(const QString &source, const QString &destination)
@@ -167,7 +167,7 @@ void YouSendItJob::moveFile(const QString &source, const QString &destination)
     QUrl postData;
     postData.addQueryItem(QLatin1String("parentId"), destination);
     QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
 void YouSendItJob::requestTokenAccess()
@@ -200,7 +200,7 @@ void YouSendItJob::requestTokenAccess()
     postData.addQueryItem(QLatin1String("password"), mPassword);
     //qDebug()<<" postData"<<postData;
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
 QNetworkReply *YouSendItJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
@@ -214,7 +214,7 @@ QNetworkReply *YouSendItJob::uploadFile(const QString &filename, const QString &
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
     return reply;
 }
 
@@ -234,7 +234,7 @@ void YouSendItJob::listFolder(const QString &folder)
     QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
 void YouSendItJob::accountInfo()
@@ -247,7 +247,7 @@ void YouSendItJob::accountInfo()
     QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
 void YouSendItJob::createFolder(const QString &foldername, const QString &destination)
@@ -267,7 +267,7 @@ void YouSendItJob::createFolderJob(const QString &foldername, const QString &des
         postData.addQueryItem(QLatin1String("parentId"), destination);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
 void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
@@ -627,7 +627,7 @@ void YouSendItJob::startUploadFile(const QString &fileId)
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
     //Multipart
     //TODO
     //deleteLater();

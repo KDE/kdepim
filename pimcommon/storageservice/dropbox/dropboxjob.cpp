@@ -79,7 +79,7 @@ void DropBoxJob::requestTokenAccess()
     postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::getTokenAccess()
@@ -99,7 +99,7 @@ void DropBoxJob::getTokenAccess()
     postData.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
@@ -386,7 +386,7 @@ void DropBoxJob::createFolderJob(const QString &foldername, const QString &desti
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::createFolder(const QString &foldername, const QString &destination)
@@ -411,8 +411,8 @@ QNetworkReply *DropBoxJob::uploadFile(const QString &filename, const QString &up
             QNetworkRequest request(url);
             QNetworkReply *reply = mNetworkAccessManager->put(request, file);
             file->setParent(reply);
-            connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
-            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+            connect(reply, &QNetworkReply::uploadProgress, this, &DropBoxJob::slotuploadDownloadFileProgress);
+            connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
             return reply;
         }
     }
@@ -430,7 +430,7 @@ void DropBoxJob::accountInfo()
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
 
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::listFolder(const QString &folder)
@@ -443,7 +443,7 @@ void DropBoxJob::listFolder(const QString &folder)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
 
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::parseUploadFile(const QString &data)
@@ -481,7 +481,7 @@ void DropBoxJob::shareLink(const QString &root, const QString &path)
     QNetworkRequest request(url);
 
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::createServiceFolder()
@@ -507,9 +507,9 @@ QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &file
         QNetworkRequest request(url);
         QNetworkReply *reply = mNetworkAccessManager->get(request);
         mDownloadFile->setParent(reply);
-        connect(reply, SIGNAL(readyRead()), this, SLOT(slotDownloadReadyRead()));
-        connect(reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
-        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        connect(reply, &QNetworkReply::readyRead, this, &DropBoxJob::slotDownloadReadyRead);
+        connect(reply, &QNetworkReply::downloadProgress, this, &DropBoxJob::slotuploadDownloadFileProgress);
+        connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
         return reply;
     } else {
         delete mDownloadFile;
@@ -527,7 +527,7 @@ void DropBoxJob::deleteFile(const QString &filename)
     addDefaultUrlItem(url);
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::deleteFolder(const QString &foldername)
@@ -540,7 +540,7 @@ void DropBoxJob::deleteFolder(const QString &foldername)
     addDefaultUrlItem(url);
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::renameFolder(const QString &source, const QString &destination)
@@ -570,7 +570,7 @@ void DropBoxJob::renameFolder(const QString &source, const QString &destination)
 
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::renameFile(const QString &oldName, const QString &newName)
@@ -602,7 +602,7 @@ void DropBoxJob::renameFile(const QString &oldName, const QString &newName)
 
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::moveFolder(const QString &source, const QString &destination)
@@ -617,7 +617,7 @@ void DropBoxJob::moveFolder(const QString &source, const QString &destination)
 
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::moveFile(const QString &source, const QString &destination)
@@ -632,7 +632,7 @@ void DropBoxJob::moveFile(const QString &source, const QString &destination)
 
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::copyFile(const QString &source, const QString &destination)
@@ -647,7 +647,7 @@ void DropBoxJob::copyFile(const QString &source, const QString &destination)
 
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::copyFolder(const QString &source, const QString &destination)
@@ -662,7 +662,7 @@ void DropBoxJob::copyFolder(const QString &source, const QString &destination)
 
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);
 }
 
 void DropBoxJob::addDefaultUrlItem(QUrl &url)

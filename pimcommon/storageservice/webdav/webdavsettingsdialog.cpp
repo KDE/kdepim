@@ -39,8 +39,8 @@ WebDavSettingsDialog::WebDavSettingsDialog(QWidget *parent)
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &WebDavSettingsDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &WebDavSettingsDialog::reject);
     QWidget *w = new QWidget;
    
     QVBoxLayout *lay = new QVBoxLayout;
@@ -64,7 +64,7 @@ WebDavSettingsDialog::WebDavSettingsDialog(QWidget *parent)
     w->setLayout(lay);
     mainLayout->addWidget(w);
     mainLayout->addWidget(buttonBox);
-    connect(mServiceLocation, SIGNAL(textChanged(QString)), this, SLOT(slotServiceLocationChanged(QString)));
+    connect(mServiceLocation, &QLineEdit::textChanged, this, &WebDavSettingsDialog::slotServiceLocationChanged);
     mOkButton->setEnabled(false);
 }
 

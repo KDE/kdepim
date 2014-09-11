@@ -70,7 +70,7 @@ void StorageServiceProgressManager::addProgress(PimCommon::StorageServiceAbstrac
         job->setStorageService(storageService);
 
         mHashList.insert(storageService->storageServiceName(), job);
-        connect(progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotProgressItemCanceled(KPIM::ProgressItem*)));
+        connect(progressItem, &KPIM::ProgressItem::progressItemCanceled, this, &StorageServiceProgressManager::slotProgressItemCanceled);
         connect(storageService, SIGNAL(uploadFileDone(QString,QString)), SLOT(slotUploadFileDone(QString,QString)), Qt::UniqueConnection);
         connect(storageService, SIGNAL(uploadFileFailed(QString,QString)), SLOT(slotUploadFileFailed(QString,QString)), Qt::UniqueConnection);
         connect(storageService, SIGNAL(downLoadFileDone(QString,QString)), SLOT(slotDownloadFileDone(QString,QString)), Qt::UniqueConnection);
