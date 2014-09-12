@@ -35,7 +35,7 @@
 #include <KLocalizedString>
 #include <KTimeComboBox>
 #include <QVBoxLayout>
-#include <KDateTime>
+#include <QDateTime>
 
 #include <QDateTime>
 #include <QButtonGroup>
@@ -98,7 +98,7 @@ NoteAlarmDialog::NoteAlarmDialog(const QString &caption, QWidget *parent)
     mainLayout->addWidget(buttonBox);
 }
 
-void NoteAlarmDialog::setAlarm(const KDateTime &dateTime)
+void NoteAlarmDialog::setAlarm(const QDateTime &dateTime)
 {
     if (dateTime.isValid()) {
         m_buttons->button(1)->setChecked(true);
@@ -124,11 +124,11 @@ void NoteAlarmDialog::slotButtonChanged(int id)
     }
 }
 
-KDateTime NoteAlarmDialog::alarm() const
+QDateTime NoteAlarmDialog::alarm() const
 {
     if (m_buttons->checkedId() == 1) {
-        return KDateTime(m_atDate->date(), m_atTime->time(), KDateTime::LocalZone);
+        return QDateTime(m_atDate->date(), m_atTime->time());
     } else {
-        return KDateTime();
+        return QDateTime();
     }
 }

@@ -21,7 +21,7 @@
 #include "noteshared_export.h"
 #include <AkonadiCore/Attribute>
 
-#include <KDateTime>
+#include <QDateTime>
 namespace NoteShared
 {
 class NOTESHARED_EXPORT NoteAlarmAttribute : public Akonadi::Attribute
@@ -38,11 +38,11 @@ public:
 
     void deserialize(const QByteArray &data);
 
-    void setDateTime(const KDateTime &dateTime);
-    KDateTime dateTime() const;
+    void setDateTime(const QDateTime &dateTime);
+    QDateTime dateTime() const;
 
 private:
-    KDateTime mDateTime;
+    QDateTime mDateTime;
 };
 }
 
