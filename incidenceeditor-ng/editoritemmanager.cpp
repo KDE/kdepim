@@ -167,7 +167,8 @@ void ItemEditorPrivate::onModifyFinished( int, const Akonadi::Item &item,
 {
   Q_Q( EditorItemManager );
   if ( resultCode == Akonadi::IncidenceChanger::ResultCodeSuccess ) {
-    if ( mItem.parentCollection() == mItemUi->selectedCollection() ) {
+    if ( mItem.parentCollection() == mItemUi->selectedCollection() ||
+         mItem.storageCollectionId() == mItemUi->selectedCollection().id()) {
       mItem = item;
       emit q->itemSaveFinished( EditorItemManager::Modify );
       setupMonitor();
