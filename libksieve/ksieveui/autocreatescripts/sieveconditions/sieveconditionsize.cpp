@@ -50,10 +50,10 @@ QWidget *SieveConditionSize::createParamWidget(QWidget *parent) const
     combo->addItem(i18n("under"), QLatin1String(":under"));
     combo->addItem(i18n("over"), QLatin1String(":over"));
     lay->addWidget(combo);
-    connect(combo, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
+    connect(combo, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &SieveConditionSize::valueChanged);
 
     SelectSizeWidget *sizeWidget = new SelectSizeWidget;
-    connect(sizeWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(sizeWidget, &SelectSizeWidget::valueChanged, this, &SieveConditionSize::valueChanged);
     sizeWidget->setObjectName(QLatin1String("sizewidget"));
     lay->addWidget(sizeWidget);
 

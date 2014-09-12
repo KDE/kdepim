@@ -47,11 +47,11 @@ SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
     mSplitter = new QSplitter;
     mSplitter->setChildrenCollapsible(false);
     mSieveScript = new SieveScriptListBox(i18n("Sieve Script"));
-    connect(mSieveScript, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(mSieveScript, &SieveScriptListBox::valueChanged, this, &SieveEditorGraphicalModeWidget::valueChanged);
     connect(mSieveScript, &SieveScriptListBox::addNewPage, this, &SieveEditorGraphicalModeWidget::slotAddScriptPage);
     connect(mSieveScript, &SieveScriptListBox::removePage, this, &SieveEditorGraphicalModeWidget::slotRemoveScriptPage);
     connect(mSieveScript, &SieveScriptListBox::activatePage, this, &SieveEditorGraphicalModeWidget::slotActivateScriptPage);
-    connect(mSieveScript, SIGNAL(enableButtonOk(bool)), SIGNAL(enableButtonOk(bool)));
+    connect(mSieveScript, &SieveScriptListBox::enableButtonOk, this, &SieveEditorGraphicalModeWidget::enableButtonOk);
     mSplitter->addWidget(mSieveScript);
     vlay->addWidget(mSplitter);
 

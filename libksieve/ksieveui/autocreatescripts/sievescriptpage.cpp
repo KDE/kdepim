@@ -45,17 +45,17 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
 
     if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("include"))) {
         mIncludeWidget = new SieveIncludeWidget;
-        connect(mIncludeWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+        connect(mIncludeWidget, &SieveIncludeWidget::valueChanged, this, &SieveScriptPage::valueChanged);
         mTabWidget->addTab(mIncludeWidget, i18n("Includes"));
 
         mGlobalVariableWidget = new SieveGlobalVariableWidget;
-        connect(mGlobalVariableWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+        connect(mGlobalVariableWidget, &SieveGlobalVariableWidget::valueChanged, this, &SieveScriptPage::valueChanged);
         mTabWidget->addTab(mGlobalVariableWidget, i18n("Global Variable"));
     }
 
     if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("foreverypart"))) {
         mForEveryPartWidget = new SieveForEveryPartWidget;
-        connect(mForEveryPartWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+        connect(mForEveryPartWidget, &SieveForEveryPartWidget::valueChanged, this, &SieveScriptPage::valueChanged);
         mTabWidget->addTab(mForEveryPartWidget, i18n("ForEveryPart"));
     }
 
@@ -82,7 +82,7 @@ SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveWidget
 {
     SieveScriptBlockWidget *blockWidget = new SieveScriptBlockWidget;
     connect(blockWidget, &SieveScriptBlockWidget::addNewBlock, this, &SieveScriptPage::slotAddNewBlock);
-    connect(blockWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(blockWidget, &SieveScriptBlockWidget::valueChanged, this, &SieveScriptPage::valueChanged);
     blockWidget->setPageType(type);
     return blockWidget;
 }

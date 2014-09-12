@@ -48,16 +48,16 @@ QWidget *SieveConditionBody::createParamWidget(QWidget *parent) const
 
     SelectBodyTypeWidget *bodyType = new SelectBodyTypeWidget;
     bodyType->setObjectName(QLatin1String("bodytype"));
-    connect(bodyType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(bodyType, &SelectBodyTypeWidget::valueChanged, this, &SieveConditionBody::valueChanged);
     lay->addWidget(bodyType);
 
     SelectMatchTypeComboBox *matchType = new SelectMatchTypeComboBox;
     lay->addWidget(matchType);
     matchType->setObjectName(QLatin1String("matchtype"));
-    connect(matchType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(matchType, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionBody::valueChanged);
 
     QLineEdit *edit = new QLineEdit;
-    connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(edit, &QLineEdit::textChanged, this, &SieveConditionBody::valueChanged);
     edit->setClearButtonEnabled(true);
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("edit"));

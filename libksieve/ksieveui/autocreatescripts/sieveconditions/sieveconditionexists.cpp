@@ -52,13 +52,13 @@ QWidget *SieveConditionExists::createParamWidget(QWidget *parent) const
     combo->addItem(i18n("exists"), QLatin1String("exists"));
     combo->addItem(i18n("not exists"), QLatin1String("not exists"));
     lay->addWidget(combo);
-    connect(combo, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
+    connect(combo, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &SieveConditionExists::valueChanged);
 
     QLabel *lab = new QLabel(i18n("headers:"));
     lay->addWidget(lab);
 
     SelectHeaderTypeComboBox *value = new SelectHeaderTypeComboBox;
-    connect(value, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(value, &SelectHeaderTypeComboBox::valueChanged, this, &SieveConditionExists::valueChanged);
     value->setObjectName(QLatin1String("headervalue"));
 
     lay->addWidget(value);

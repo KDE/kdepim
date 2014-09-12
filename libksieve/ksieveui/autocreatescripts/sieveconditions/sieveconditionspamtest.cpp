@@ -53,17 +53,17 @@ QWidget *SieveConditionSpamTest::createParamWidget(QWidget *parent) const
     if (mHasSpamTestPlusSupport) {
         QCheckBox *percent = new QCheckBox(i18n("Percent"));
         percent->setObjectName(QLatin1String("percent"));
-        connect(percent, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
+        connect(percent, &QCheckBox::toggled, this, &SieveConditionSpamTest::valueChanged);
         lay->addWidget(percent);
     }
 
     SelectRelationalMatchType *relation = new SelectRelationalMatchType;
-    connect(relation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(relation, &SelectRelationalMatchType::valueChanged, this, &SieveConditionSpamTest::valueChanged);
     relation->setObjectName(QLatin1String("relation"));
     lay->addWidget(relation);
 
     SelectComparatorComboBox *comparator = new SelectComparatorComboBox;
-    connect(comparator, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(comparator, &SelectComparatorComboBox::valueChanged, this, &SieveConditionSpamTest::valueChanged);
     comparator->setObjectName(QLatin1String("comparator"));
     lay->addWidget(comparator);
 
@@ -71,7 +71,7 @@ QWidget *SieveConditionSpamTest::createParamWidget(QWidget *parent) const
     spinbox->setMaximum(10);
     spinbox->setMinimum(0);
     spinbox->setObjectName(QLatin1String("value"));
-    connect(spinbox, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
+    connect(spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SieveConditionSpamTest::valueChanged);
     lay->addWidget(spinbox);
     return w;
 }

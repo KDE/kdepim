@@ -45,7 +45,7 @@ QWidget *SieveConditionMailboxExists::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     QLineEdit *edit = new QLineEdit;
-    connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(edit, &QLineEdit::textChanged, this, &SieveConditionMailboxExists::valueChanged);
     edit->setClearButtonEnabled(true);
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("edit"));

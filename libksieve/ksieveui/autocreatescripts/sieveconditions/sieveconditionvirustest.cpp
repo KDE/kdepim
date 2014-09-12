@@ -48,12 +48,12 @@ QWidget *SieveConditionVirusTest::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     SelectRelationalMatchType *relation = new SelectRelationalMatchType;
-    connect(relation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(relation, &SelectRelationalMatchType::valueChanged, this, &SieveConditionVirusTest::valueChanged);
     relation->setObjectName(QLatin1String("relation"));
     lay->addWidget(relation);
 
     SelectComparatorComboBox *comparator = new SelectComparatorComboBox;
-    connect(comparator, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(comparator, &SelectComparatorComboBox::valueChanged, this, &SieveConditionVirusTest::valueChanged);
     comparator->setObjectName(QLatin1String("comparator"));
     lay->addWidget(comparator);
 
@@ -61,7 +61,7 @@ QWidget *SieveConditionVirusTest::createParamWidget(QWidget *parent) const
     spinbox->setMaximum(5);
     spinbox->setMinimum(0);
     spinbox->setObjectName(QLatin1String("value"));
-    connect(spinbox, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
+    connect(spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SieveConditionVirusTest::valueChanged);
     lay->addWidget(spinbox);
     return w;
 }

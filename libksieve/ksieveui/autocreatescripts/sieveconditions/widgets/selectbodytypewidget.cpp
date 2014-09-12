@@ -50,7 +50,7 @@ void SelectBodyTypeWidget::initialize()
     connect(mBodyCombobox, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &SelectBodyTypeWidget::slotBodyTypeChanged);
 
     mBodyLineEdit = new QLineEdit;
-    connect(mBodyLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(mBodyLineEdit, &QLineEdit::textChanged, this, &SelectBodyTypeWidget::valueChanged);
     lay->addWidget(mBodyLineEdit);
     mBodyLineEdit->hide();
 }

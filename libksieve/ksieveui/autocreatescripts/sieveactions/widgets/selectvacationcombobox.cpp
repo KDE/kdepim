@@ -25,7 +25,7 @@ SelectVacationComboBox::SelectVacationComboBox(QWidget *parent)
     : KComboBox(parent)
 {
     initialize();
-    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
+    connect(this, static_cast<void (SelectVacationComboBox::*)(int)>(&SelectVacationComboBox::activated), this, &SelectVacationComboBox::valueChanged);
 }
 
 SelectVacationComboBox::~SelectVacationComboBox()

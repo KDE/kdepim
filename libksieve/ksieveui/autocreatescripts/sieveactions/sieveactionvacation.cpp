@@ -55,7 +55,7 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
     if (mHasVacationSecondsSupport) {
         SelectVacationComboBox *vacation = new SelectVacationComboBox;
         vacation->setObjectName(QLatin1String("vacationcombobox"));
-        connect(vacation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+        connect(vacation, &SelectVacationComboBox::valueChanged, this, &SieveActionVacation::valueChanged);
         grid->addWidget(vacation, 0 , 0);
     } else {
         lab = new QLabel(i18n("day:"));
@@ -66,7 +66,7 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
     day->setMinimum(1);
     day->setMaximum(999);
     day->setObjectName(QLatin1String("day"));
-    connect(day, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
+    connect(day, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SieveActionVacation::valueChanged);
     grid->addWidget(day, 0 , 1);
 
     lab = new QLabel(i18n("Message subject:"));
@@ -74,7 +74,7 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
 
     QLineEdit *subject = new QLineEdit;
     subject->setObjectName(QLatin1String("subject"));
-    connect(subject, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(subject, &QLineEdit::textChanged, this, &SieveActionVacation::valueChanged);
     grid->addWidget(subject, 1 , 1);
 
     lab = new QLabel(i18n("Additional email:"));
@@ -82,14 +82,14 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
 
     QLineEdit *addresses = new QLineEdit;
     addresses->setObjectName(QLatin1String("addresses"));
-    connect(addresses, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(addresses, &QLineEdit::textChanged, this, &SieveActionVacation::valueChanged);
     grid->addWidget(addresses, 2 , 1);
 
     lab = new QLabel(i18n("Vacation reason:"));
     grid->addWidget(lab, 3 , 0);
 
     MultiLineEdit *text = new MultiLineEdit;
-    connect(text, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(text, &MultiLineEdit::valueChanged, this, &SieveActionVacation::valueChanged);
     text->setObjectName(QLatin1String("text"));
     grid->addWidget(text, 3 , 1);
 

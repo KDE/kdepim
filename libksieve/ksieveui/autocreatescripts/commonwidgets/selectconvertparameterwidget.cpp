@@ -76,7 +76,7 @@ void SelectConvertParameterWidget::initialize()
     mWidth->setMaximum(9999);
     mWidth->setValue(300);
     hbox->addWidget(mWidth);
-    connect(mWidth, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
+    connect(mWidth, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SelectConvertParameterWidget::valueChanged);
 
     QLabel *lab = new QLabel(QLatin1String("x"));
     hbox->addWidget(lab);
@@ -88,7 +88,7 @@ void SelectConvertParameterWidget::initialize()
     mHeight->setValue(200);
     hbox->addWidget(mHeight);
 
-    connect(mHeight, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
+    connect(mHeight, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SelectConvertParameterWidget::valueChanged);
     setLayout(hbox);
 }
 

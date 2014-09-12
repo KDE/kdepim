@@ -50,7 +50,7 @@ QWidget *SieveActionDeleteHeader::createParamWidget(QWidget *parent) const
 
     SelectMatchTypeComboBox *matchType = new SelectMatchTypeComboBox;
     matchType->setObjectName(QLatin1String("matchtype"));
-    connect(matchType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(matchType, &SelectMatchTypeComboBox::valueChanged, this, &SieveActionDeleteHeader::valueChanged);
     grid->addWidget(matchType, 0, 0);
 
     QLabel *lab = new QLabel(i18n("header:"));
@@ -58,7 +58,7 @@ QWidget *SieveActionDeleteHeader::createParamWidget(QWidget *parent) const
 
     QLineEdit *headerEdit = new QLineEdit;
     headerEdit->setObjectName(QLatin1String("headeredit"));
-    connect(headerEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(headerEdit, &QLineEdit::textChanged, this, &SieveActionDeleteHeader::valueChanged);
     grid->addWidget(headerEdit, 0, 2);
 
     lab = new QLabel(i18n("value:"));
@@ -66,7 +66,7 @@ QWidget *SieveActionDeleteHeader::createParamWidget(QWidget *parent) const
 
     QLineEdit *valueEdit = new QLineEdit;
     valueEdit->setObjectName(QLatin1String("valueedit"));
-    connect(valueEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(valueEdit, &QLineEdit::textChanged, this, &SieveActionDeleteHeader::valueChanged);
     grid->addWidget(valueEdit, 1, 2);
     return w;
 }

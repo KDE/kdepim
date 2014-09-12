@@ -46,7 +46,7 @@ QWidget *SieveConditionIhave::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     QLineEdit *edit = new QLineEdit;
-    connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(edit, &QLineEdit::textChanged, this, &SieveConditionIhave::valueChanged);
     edit->setPlaceholderText(i18n("Use \",\" to separate capabilities"));
     edit->setClearButtonEnabled(true);
     lay->addWidget(edit);

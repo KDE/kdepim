@@ -49,10 +49,10 @@ QWidget *SieveConditionCurrentDate::createParamWidget(QWidget *parent) const
     SelectMatchTypeComboBox *matchTypeCombo = new SelectMatchTypeComboBox;
     matchTypeCombo->setObjectName(QLatin1String("matchtype"));
     lay->addWidget(matchTypeCombo);
-    connect(matchTypeCombo, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(matchTypeCombo, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionCurrentDate::valueChanged);
 
     SelectDateWidget *dateWidget = new SelectDateWidget;
-    connect(dateWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(dateWidget, &SelectDateWidget::valueChanged, this, &SieveConditionCurrentDate::valueChanged);
     dateWidget->setObjectName(QLatin1String("datewidget"));
     lay->addWidget(dateWidget);
 

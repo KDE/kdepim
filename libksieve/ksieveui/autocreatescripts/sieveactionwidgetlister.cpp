@@ -311,9 +311,9 @@ void SieveActionWidgetLister::generatedScript(QString &script, QStringList &requ
 
 void SieveActionWidgetLister::reconnectWidget(SieveActionWidget *w)
 {
-    connect(w, SIGNAL(addWidget(QWidget*)), this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection);
-    connect(w, SIGNAL(removeWidget(QWidget*)), this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection);
-    connect(w, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()), Qt::UniqueConnection);
+    connect(w, &SieveActionWidget::addWidget, this, &SieveActionWidgetLister::slotAddWidget, Qt::UniqueConnection);
+    connect(w, &SieveActionWidget::removeWidget, this, &SieveActionWidgetLister::slotRemoveWidget, Qt::UniqueConnection);
+    connect(w, &SieveActionWidget::valueChanged, this, &SieveActionWidgetLister::valueChanged, Qt::UniqueConnection);
 }
 
 void SieveActionWidgetLister::clearWidget(QWidget *aWidget)

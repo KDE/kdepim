@@ -49,14 +49,14 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     connect(mHelpButton, &SieveHelpButton::clicked, this, &SieveForEveryPartWidget::slotHelp);
 
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
-    connect(mForLoop, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
+    connect(mForLoop, &QCheckBox::toggled, this, &SieveForEveryPartWidget::valueChanged);
     topLayout->addWidget(mForLoop);
 
     QLabel *lab = new QLabel(i18n("Name (optional):"));
     lay->addWidget(lab);
 
     mName = new QLineEdit;
-    connect(mName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(mName, &QLineEdit::textChanged, this, &SieveForEveryPartWidget::valueChanged);
     mName->setEnabled(false);
     lay->addWidget(mName);
 

@@ -51,7 +51,7 @@ QWidget *SieveConditionEnvelope::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     SelectAddressPartComboBox *selectAddressPart = new SelectAddressPartComboBox;
-    connect(selectAddressPart, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(selectAddressPart, &SelectAddressPartComboBox::valueChanged, this, &SieveConditionEnvelope::valueChanged);
     selectAddressPart->setObjectName(QLatin1String("addresspartcombobox"));
     lay->addWidget(selectAddressPart);
 
@@ -61,19 +61,19 @@ QWidget *SieveConditionEnvelope::createParamWidget(QWidget *parent) const
 
     SelectMatchTypeComboBox *selectMatchCombobox = new SelectMatchTypeComboBox;
     selectMatchCombobox->setObjectName(QLatin1String("matchtypecombobox"));
-    connect(selectMatchCombobox, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(selectMatchCombobox, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionEnvelope::valueChanged);
     grid->addWidget(selectMatchCombobox, 0, 0);
 
     SelectHeaderTypeComboBox *selectHeaderType = new SelectHeaderTypeComboBox(true);
     selectHeaderType->setObjectName(QLatin1String("headertypecombobox"));
-    connect(selectHeaderType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(selectHeaderType, &SelectHeaderTypeComboBox::valueChanged, this, &SieveConditionEnvelope::valueChanged);
     grid->addWidget(selectHeaderType, 0, 1);
 
     QLabel *lab = new QLabel(i18n("address:"));
     grid->addWidget(lab, 1, 0);
 
     QLineEdit *edit = new QLineEdit;
-    connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(edit, &QLineEdit::textChanged, this, &SieveConditionEnvelope::valueChanged);
     edit->setClearButtonEnabled(true);
     edit->setPlaceholderText(i18n("Use ; to separate emails"));
     grid->addWidget(edit, 1, 1);

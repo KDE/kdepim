@@ -82,7 +82,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTabWidget = new SieveEditorTabWidget;
 
     mTextEdit = new SieveTextEdit;
-    connect(mTextEdit, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
+    connect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveEditorTextModeWidget::valueChanged);
     mTabWidget->addTab(mTextEdit, i18n("Editor"));
     mTabWidget->tabBar()->hide();
     textEditLayout->addWidget(mTabWidget);
@@ -100,7 +100,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     textEditLayout->addWidget(mSieveEditorWarning);
 
     mSieveParsingWarning = new SieveEditorParsingMissingFeatureWarning(SieveEditorParsingMissingFeatureWarning::TextEditor);
-    connect(mSieveParsingWarning, SIGNAL(switchToGraphicalMode()), SIGNAL(switchToGraphicalMode()));
+    connect(mSieveParsingWarning, &SieveEditorParsingMissingFeatureWarning::switchToGraphicalMode, this, &SieveEditorTextModeWidget::switchToGraphicalMode);
     textEditLayout->addWidget(mSieveParsingWarning);
 
     textEditWidget->setLayout(textEditLayout);

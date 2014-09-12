@@ -48,7 +48,7 @@ QWidget *SieveConditionServerMetaDataExists::createParamWidget(QWidget *parent) 
 
     QLineEdit *value = new QLineEdit;
     value->setObjectName(QLatin1String("value"));
-    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(value, &QLineEdit::textChanged, this, &SieveConditionServerMetaDataExists::valueChanged);
     lay->addWidget(value);
 
     return w;

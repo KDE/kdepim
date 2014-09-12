@@ -114,19 +114,19 @@ QWidget *SieveActionFileInto::createParamWidget(QWidget *parent) const
         QCheckBox *copy = new QCheckBox(i18n("Keep a copy"));
         copy->setObjectName(QLatin1String("copy"));
         lay->addWidget(copy);
-        connect(copy, SIGNAL(clicked(bool)), this, SIGNAL(valueChanged()));
+        connect(copy, &QCheckBox::clicked, this, &SieveActionFileInto::valueChanged);
     }
     if (mHasMailBoxSupport) {
         QCheckBox *create = new QCheckBox(i18n("Create folder"));
         create->setObjectName(QLatin1String("create"));
-        connect(create, SIGNAL(clicked(bool)), this, SIGNAL(valueChanged()));
+        connect(create, &QCheckBox::clicked, this, &SieveActionFileInto::valueChanged);
         lay->addWidget(create);
     }
 
     //TODO improve it.
     //Use widgets/selectfileintowidget
     QLineEdit *edit = new QLineEdit;
-    connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(edit, &QLineEdit::textChanged, this, &SieveActionFileInto::valueChanged);
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("fileintolineedit"));
     return w;

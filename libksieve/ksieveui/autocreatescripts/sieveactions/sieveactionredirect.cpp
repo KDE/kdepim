@@ -52,18 +52,18 @@ QWidget *SieveActionRedirect::createParamWidget(QWidget *parent) const
     if (mHasCopySupport) {
         QCheckBox *copy = new QCheckBox(i18n("Keep a copy"));
         copy->setObjectName(QLatin1String("copy"));
-        connect(copy, SIGNAL(clicked(bool)), this, SIGNAL(valueChanged()));
+        connect(copy, &QCheckBox::clicked, this, &SieveActionRedirect::valueChanged);
         lay->addWidget(copy);
     }
     if (mHasListSupport) {
         QCheckBox *list = new QCheckBox(i18n("Use list"));
         list->setObjectName(QLatin1String("list"));
-        connect(list, SIGNAL(clicked(bool)), this, SIGNAL(valueChanged()));
+        connect(list, &QCheckBox::clicked, this, &SieveActionRedirect::valueChanged);
         lay->addWidget(list);
     }
     AddressLineEdit *edit = new AddressLineEdit;
     edit->setObjectName(QLatin1String("RedirectEdit"));
-    connect(edit, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(edit, &AddressLineEdit::valueChanged, this, &SieveActionRedirect::valueChanged);
     lay->addWidget(edit);
     return w;
 }

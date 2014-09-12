@@ -49,7 +49,7 @@ QWidget *SieveConditionHeader::createParamWidget(QWidget *parent) const
 
     SelectMatchTypeComboBox *matchTypeCombo = new SelectMatchTypeComboBox;
     matchTypeCombo->setObjectName(QLatin1String("matchtypecombobox"));
-    connect(matchTypeCombo, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(matchTypeCombo, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionHeader::valueChanged);
     lay->addWidget(matchTypeCombo);
 
     QGridLayout *grid = new QGridLayout;
@@ -57,14 +57,14 @@ QWidget *SieveConditionHeader::createParamWidget(QWidget *parent) const
 
     SelectHeaderTypeComboBox *headerType = new SelectHeaderTypeComboBox;
     headerType->setObjectName(QLatin1String("headertype"));
-    connect(headerType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(headerType, &SelectHeaderTypeComboBox::valueChanged, this, &SieveConditionHeader::valueChanged);
     grid->addWidget(headerType, 0, 0, 1, 2);
 
     QLabel *lab = new QLabel(i18n("With value:"));
     grid->addWidget(lab, 1, 0);
 
     QLineEdit *value = new QLineEdit;
-    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(value, &QLineEdit::textChanged, this, &SieveConditionHeader::valueChanged);
     value->setObjectName(QLatin1String("value"));
     grid->addWidget(value, 1, 1);
     return w;

@@ -34,10 +34,10 @@ SelectSizeWidget::SelectSizeWidget(QWidget *parent)
     mSpinBoxSize->setMinimum(1);
     mSpinBoxSize->setMaximum(9999);
     hbox->addWidget(mSpinBoxSize);
-    connect(mSpinBoxSize, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
+    connect(mSpinBoxSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SelectSizeWidget::valueChanged);
 
     mSelectSizeType = new SelectSizeTypeComboBox;
-    connect(mSelectSizeType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(mSelectSizeType, &SelectSizeTypeComboBox::valueChanged, this, &SelectSizeWidget::valueChanged);
     hbox->addWidget(mSelectSizeType);
 
     setLayout(hbox);

@@ -45,11 +45,11 @@ SieveEditor::SieveEditor(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveEditor::slotCanceled);
     setModal(true);
     mSieveEditorWidget = new SieveEditorWidget;
-    connect(mSieveEditorWidget, SIGNAL(valueChanged(bool)), this, SIGNAL(valueChanged(bool)));
+    connect(mSieveEditorWidget, &SieveEditorWidget::valueChanged, this, &SieveEditor::valueChanged);
     mainLayout->addWidget(mSieveEditorWidget);
     mainLayout->addWidget(buttonBox);
     connect(mSieveEditorWidget, &SieveEditorWidget::enableButtonOk, this, &SieveEditor::slotEnableButtonOk);
-    connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SIGNAL(checkSyntax()));
+    connect(mSieveEditorWidget, &SieveEditorWidget::checkSyntax, this, &SieveEditor::checkSyntax);
     readConfig();
 }
 

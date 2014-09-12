@@ -48,7 +48,7 @@ QWidget *SieveActionReject::createParamWidget(QWidget *parent) const
     lay->addWidget(lab);
 
     MultiLineEdit *edit = new MultiLineEdit;
-    connect(edit, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
+    connect(edit, &MultiLineEdit::textChanged, this, &SieveActionReject::valueChanged);
     edit->setObjectName(QLatin1String("rejectmessage"));
     lay->addWidget(edit);
     return w;

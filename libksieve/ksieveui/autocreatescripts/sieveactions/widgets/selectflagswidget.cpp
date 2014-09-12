@@ -124,7 +124,7 @@ SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
     lay->setMargin(0);
     mEdit = new QLineEdit;
     mEdit->setReadOnly(true);
-    connect(mEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(mEdit, &QLineEdit::textChanged, this, &SelectFlagsWidget::valueChanged);
     lay->addWidget(mEdit);
     QPushButton *selectFlags = new QPushButton(i18n("..."));
     connect(selectFlags, &QPushButton::clicked, this, &SelectFlagsWidget::slotSelectFlags);

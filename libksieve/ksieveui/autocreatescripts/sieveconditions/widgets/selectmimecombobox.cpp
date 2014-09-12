@@ -26,7 +26,7 @@ SelectMimeComboBox::SelectMimeComboBox(QWidget *parent)
     : KComboBox(parent)
 {
     initialize();
-    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
+    connect(this, static_cast<void (SelectMimeComboBox::*)(int)>(&SelectMimeComboBox::activated), this, &SelectMimeComboBox::valueChanged);
 }
 
 SelectMimeComboBox::~SelectMimeComboBox()

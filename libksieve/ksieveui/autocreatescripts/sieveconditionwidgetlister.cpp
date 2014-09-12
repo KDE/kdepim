@@ -258,7 +258,7 @@ void SieveConditionWidgetLister::reconnectWidget(SieveConditionWidget *w)
 {
     connect(w, &SieveConditionWidget::addWidget, this, &SieveConditionWidgetLister::slotAddWidget, Qt::UniqueConnection);
     connect(w, &SieveConditionWidget::removeWidget, this, &SieveConditionWidgetLister::slotRemoveWidget, Qt::UniqueConnection);
-    connect(w, SIGNAL(valueChanged()),  this, SIGNAL(valueChanged()), Qt::UniqueConnection);
+    connect(w, &SieveConditionWidget::valueChanged, this, &SieveConditionWidgetLister::valueChanged, Qt::UniqueConnection);
 }
 
 void SieveConditionWidgetLister::clearWidget(QWidget *aWidget)

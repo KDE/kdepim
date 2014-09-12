@@ -49,7 +49,7 @@ QWidget *SieveConditionDate::createParamWidget(QWidget *parent) const
 
     SelectMatchTypeComboBox *matchTypeCombo = new SelectMatchTypeComboBox;
     matchTypeCombo->setObjectName(QLatin1String("matchtype"));
-    connect(matchTypeCombo, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(matchTypeCombo, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionDate::valueChanged);
     lay->addWidget(matchTypeCombo);
 
     QGridLayout *grid = new QGridLayout;
@@ -59,12 +59,12 @@ QWidget *SieveConditionDate::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 0, 0);
 
     QLineEdit *header = new QLineEdit;
-    connect(header, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(header, &QLineEdit::textChanged, this, &SieveConditionDate::valueChanged);
     header->setObjectName(QLatin1String("header"));
     grid->addWidget(header, 0, 1);
 
     SelectDateWidget *dateWidget = new SelectDateWidget;
-    connect(dateWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(dateWidget, &SelectDateWidget::valueChanged, this, &SieveConditionDate::valueChanged);
     dateWidget->setObjectName(QLatin1String("datewidget"));
     grid->addWidget(dateWidget, 1, 0, 1, 2);
 

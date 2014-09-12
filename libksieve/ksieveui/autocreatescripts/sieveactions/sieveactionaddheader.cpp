@@ -49,14 +49,14 @@ QWidget *SieveActionAddHeader::createParamWidget(QWidget *parent) const
 
     SelectAddHeaderPositionCombobox *combo = new SelectAddHeaderPositionCombobox;
     combo->setObjectName(QLatin1String("selectposition"));
-    connect(combo, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(combo, &SelectAddHeaderPositionCombobox::valueChanged, this, &SieveActionAddHeader::valueChanged);
     grid->addWidget(combo, 0, 0);
 
     QLabel *lab = new QLabel(i18n("header:"));
     grid->addWidget(lab, 0, 1);
 
     QLineEdit *headerEdit = new QLineEdit;
-    connect(headerEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(headerEdit, &QLineEdit::textChanged, this, &SieveActionAddHeader::valueChanged);
     headerEdit->setObjectName(QLatin1String("headeredit"));
     grid->addWidget(headerEdit, 0, 2);
 
@@ -64,7 +64,7 @@ QWidget *SieveActionAddHeader::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 1, 1);
 
     QLineEdit *valueEdit = new QLineEdit;
-    connect(valueEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    connect(valueEdit, &QLineEdit::textChanged, this, &SieveActionAddHeader::valueChanged);
     valueEdit->setObjectName(QLatin1String("valueedit"));
     grid->addWidget(valueEdit, 1, 2);
 

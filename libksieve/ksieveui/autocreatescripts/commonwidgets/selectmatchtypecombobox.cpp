@@ -28,7 +28,7 @@ SelectMatchTypeComboBox::SelectMatchTypeComboBox(QWidget *parent)
 {
     mHasRegexCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("regex"));
     initialize();
-    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
+    connect(this, static_cast<void (SelectMatchTypeComboBox::*)(int)>(&SelectMatchTypeComboBox::activated), this, &SelectMatchTypeComboBox::valueChanged);
 }
 
 SelectMatchTypeComboBox::~SelectMatchTypeComboBox()
