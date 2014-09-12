@@ -634,8 +634,8 @@ private:
             vlay.addWidget( &quickModeCB, 0, Qt::AlignCenter );
             vlay.addWidget( &buttonBox );
 
-            connect( &buttonBox, SIGNAL(accepted()), q, SLOT(accept()) );
-            connect( &buttonBox, SIGNAL(rejected()), q, SLOT(reject()) );
+            connect(&buttonBox, &QDialogButtonBox::accepted, q, &SignEncryptEMailConflictDialog::accept);
+            connect(&buttonBox, &QDialogButtonBox::rejected, q, &SignEncryptEMailConflictDialog::reject);
 
             connect( &showAllRecipientsCB, SIGNAL(toggled(bool)),
                      q, SLOT(slotShowAllRecipientsToggled(bool)) );

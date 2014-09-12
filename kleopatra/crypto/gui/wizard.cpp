@@ -95,7 +95,7 @@ Wizard::Private::Private( Wizard * qq )
 {
     nextPageTimer = new QTimer( q );
     nextPageTimer->setInterval( 0 );
-    connect( nextPageTimer, SIGNAL(timeout()), q, SLOT(next()) );
+    connect(nextPageTimer, &QTimer::timeout, q, &Wizard::next);
     nextItem = KGuiItem( i18n( "&Next" ) );
     finishItem = KStandardGuiItem::ok();
     QVBoxLayout * const top = new QVBoxLayout( q );
@@ -131,22 +131,22 @@ Wizard::Private::Private( Wizard * qq )
     QDialogButtonBox * const box = new QDialogButtonBox;
     
     cancelButton = box->addButton( QDialogButtonBox::Cancel );
-    q->connect( cancelButton, SIGNAL(clicked()), q, SLOT(reject()) );
+    q->connect(cancelButton, &QPushButton::clicked, q, &Wizard::reject);
 
     backButton = new QPushButton;
     backButton->setText( i18n( "Back" ) );
-    q->connect( backButton, SIGNAL(clicked()), q, SLOT(back()) );
+    q->connect(backButton, &QPushButton::clicked, q, &Wizard::back);
     box->addButton( backButton, QDialogButtonBox::ActionRole );
 
     nextButton = new QPushButton;
     KGuiItem::assign(nextButton, nextItem );
-    q->connect( nextButton, SIGNAL(clicked()), q, SLOT(next()) );
+    q->connect(nextButton, &QPushButton::clicked, q, &Wizard::next);
     box->addButton( nextButton, QDialogButtonBox::ActionRole );
     buttonLayout->addWidget( box );
     
     top->addWidget( buttonWidget );
     
-    q->connect( q, SIGNAL(rejected()), q, SIGNAL(canceled()) ); 
+    q->connect(q, &Wizard::rejected, q, &Wizard::canceled);
 }
 
 Wizard::Private::~Private() { qDebug(); }

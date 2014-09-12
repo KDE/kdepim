@@ -47,9 +47,9 @@ ModelTest::ModelTest(QAbstractItemModel *_model, QObject *parent) : QObject(pare
             this, SLOT(runAllTests()));
     connect(model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)),
             this, SLOT(runAllTests()));
-    connect(model, SIGNAL(layoutAboutToBeChanged()), this, SLOT(runAllTests()));
-    connect(model, SIGNAL(layoutChanged()), this, SLOT(runAllTests()));
-    connect(model, SIGNAL(modelReset()), this, SLOT(runAllTests()));
+    connect(model, &QAbstractItemModel::layoutAboutToBeChanged, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::layoutChanged, this, &ModelTest::runAllTests);
+    connect(model, &QAbstractItemModel::modelReset, this, &ModelTest::runAllTests);
     connect(model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
             this, SLOT(runAllTests()));
     connect(model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),

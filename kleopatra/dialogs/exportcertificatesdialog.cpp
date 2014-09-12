@@ -73,8 +73,8 @@ ExportCertificatesDialog::Private::Private( ExportCertificatesDialog * qq )
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, q, &ExportCertificatesDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, q, &ExportCertificatesDialog::reject);
 
     KGuiItem::assign(mOkButton, KGuiItem( i18n( "Export" ) ) );
     QWidget* const main = new QWidget;

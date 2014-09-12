@@ -145,7 +145,7 @@ namespace {
             hlay.addWidget( &listWidget );
             hlay.addWidget( &buttonBox );
 
-            connect( &buttonBox, SIGNAL(rejected()), this, SLOT(reject()) );
+            connect(&buttonBox, &QDialogButtonBox::rejected, this, &NewSignEncryptFilesWizard::reject);
         }
 
     private:

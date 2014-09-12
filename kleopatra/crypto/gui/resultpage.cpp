@@ -85,7 +85,7 @@ ResultPage::Private::Private( ResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 
     m_progressBar = new QProgressBar;
     layout->addWidget( m_progressBar );
     m_resultList = new ResultListWidget;
-    connect( m_resultList, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
+    connect(m_resultList, &ResultListWidget::linkActivated, q, &ResultPage::linkActivated);
     layout->addWidget( m_resultList );
     m_keepOpenCB = new QCheckBox;
     m_keepOpenCB->setText( i18n( "Keep open after operation completed" ) );

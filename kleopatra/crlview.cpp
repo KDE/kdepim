@@ -85,7 +85,7 @@ CRLView::CRLView( QWidget* parent )
           _textView->fontMetrics().lineSpacing() * 25 );
 
   _timer = new QTimer( this );
-  connect( _timer, SIGNAL(timeout()), SLOT(slotAppendBuffer()) );
+  connect(_timer, &QTimer::timeout, this, &CRLView::slotAppendBuffer);
 }
 
 CRLView::~CRLView()
@@ -106,7 +106,7 @@ void CRLView::slotUpdateView()
   if( !_process ) {
     _process = new KProcess();
     *_process << "gpgsm" << "--call-dirmngr" << "listcrls";
-    connect( _process, SIGNAL(readyReadStandardOutput()), this, SLOT(slotReadStdout()));
+    connect(_process, &KProcess::readyReadStandardOutput, this, &CRLView::slotReadStdout);
     connect( _process, SIGNAL(finished(int,QProcess::ExitStatus)),
              this, SLOT(slotProcessExited(int,QProcess::ExitStatus)));
   }

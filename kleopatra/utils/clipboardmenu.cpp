@@ -56,11 +56,11 @@ ClipboardMenu::ClipboardMenu(QObject *parent)
     KDAB_SET_OBJECT_NAME( mOpenPGPSignClipboardAction );
     KDAB_SET_OBJECT_NAME( mDecryptVerifyClipboardAction );
 
-    connect( mImportClipboardAction, SIGNAL(triggered()), this, SLOT(slotImportClipboard()) );
-    connect( mEncryptClipboardAction, SIGNAL(triggered()), this, SLOT(slotEncryptClipboard()) );
-    connect( mSmimeSignClipboardAction, SIGNAL(triggered()), this, SLOT(slotSMIMESignClipboard()) );
-    connect( mOpenPGPSignClipboardAction, SIGNAL(triggered()), this, SLOT(slotOpenPGPSignClipboard()) );
-    connect( mDecryptVerifyClipboardAction, SIGNAL(triggered()), this, SLOT(slotDecryptVerifyClipboard()) );
+    connect(mImportClipboardAction, &QAction::triggered, this, &ClipboardMenu::slotImportClipboard);
+    connect(mEncryptClipboardAction, &QAction::triggered, this, &ClipboardMenu::slotEncryptClipboard);
+    connect(mSmimeSignClipboardAction, &QAction::triggered, this, &ClipboardMenu::slotSMIMESignClipboard);
+    connect(mOpenPGPSignClipboardAction, &QAction::triggered, this, &ClipboardMenu::slotOpenPGPSignClipboard);
+    connect(mDecryptVerifyClipboardAction, &QAction::triggered, this, &ClipboardMenu::slotDecryptVerifyClipboard);
     mClipboardMenu->addAction( mImportClipboardAction );
     mClipboardMenu->addAction( mEncryptClipboardAction );
     mClipboardMenu->addAction( mSmimeSignClipboardAction );

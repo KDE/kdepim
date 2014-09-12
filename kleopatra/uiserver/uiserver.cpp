@@ -166,8 +166,8 @@ bool UiServer::waitForStopped( unsigned int ms ) {
     QTimer timer;
     timer.setInterval( ms );
     timer.setSingleShot( true );
-    connect( &timer, SIGNAL(timeout()), &loop, SLOT(quit()) );
-    connect( this,   SIGNAL(stopped()), &loop, SLOT(quit()) );
+    connect(&timer, &QTimer::timeout, &loop, &QEventLoop::quit);
+    connect(this, &UiServer::stopped, &loop, &QEventLoop::quit);
     loop.exec();
     return !timer.isActive();
 }

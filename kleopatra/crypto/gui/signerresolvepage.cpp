@@ -135,7 +135,7 @@ SigningProtocolSelectionWidget::SigningProtocolSelectionWidget( QWidget* parent,
     : AbstractSigningProtocolSelectionWidget( parent, f ) {
 
     m_buttonGroup = new QButtonGroup( this );
-    connect( m_buttonGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(userSelectionChanged()) );
+    connect(m_buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &SigningProtocolSelectionWidget::userSelectionChanged);
 
     QVBoxLayout * const layout = new QVBoxLayout( this );
     layout->setMargin( 0 );

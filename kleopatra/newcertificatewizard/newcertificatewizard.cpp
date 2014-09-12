@@ -741,7 +741,7 @@ namespace {
             if ( !pgp() || exportCertificateCommand )
                 return;
             ExportCertificateCommand * cmd = new ExportCertificateCommand( key() );
-            connect( cmd, SIGNAL(finished()), SLOT(slotSendCertificateByEMailContinuation()) );
+            connect(cmd, &ExportCertificateCommand::finished, this, &ResultPage::slotSendCertificateByEMailContinuation);
             cmd->setOpenPGPFileName( tmpDir().absoluteFilePath( fingerprint() + QLatin1String(".asc") ) );
             cmd->start();
             exportCertificateCommand = cmd;

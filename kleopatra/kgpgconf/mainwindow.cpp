@@ -60,10 +60,10 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
              SLOT(treeWidgetItemSelectionChanged()) );
     connect( m_ui.treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
              SLOT(treeWidgetItemChanged(QTreeWidgetItem*,int)) );
-    connect( m_ui.readOnlyBox, SIGNAL(stateChanged(int)), SLOT(readOnlyStateChanged(int)) );
-    connect( m_ui.valueLE, SIGNAL(textChanged(QString)), SLOT(optionValueChanged()) );
-    connect( m_ui.useCustomRB, SIGNAL(toggled(bool)), m_ui.valueLE, SLOT(setEnabled(bool)) );
-    connect( m_ui.useDefaultRB, SIGNAL(toggled(bool)), SLOT(useDefaultToggled(bool)) );
+    connect(m_ui.readOnlyBox, &QCheckBox::stateChanged, this, &MainWindow::readOnlyStateChanged);
+    connect(m_ui.valueLE, &QLineEdit::textChanged, this, &MainWindow::optionValueChanged);
+    connect(m_ui.useCustomRB, &QRadioButton::toggled, m_ui.valueLE, &QLineEdit::setEnabled);
+    connect(m_ui.useDefaultRB, &QRadioButton::toggled, this, &MainWindow::useDefaultToggled);
 
     QMenu* const fileMenu = menuBar()->addMenu( i18n( "&File" ) );
     fileMenu->addAction( i18n( "Save As..." ), this, SLOT(saveAs()) );

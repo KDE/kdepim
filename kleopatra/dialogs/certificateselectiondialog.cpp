@@ -153,8 +153,8 @@ private:
             reload->setToolTip( i18nc("@info:tooltip","Refresh certificate list") );
             create->setToolTip( i18nc("@info:tooltip","Create a new certificate") );
 
-            connect( &buttonBox, SIGNAL(accepted()), q, SLOT(accept()) );
-            connect( &buttonBox, SIGNAL(rejected()), q, SLOT(reject()) );
+            connect(&buttonBox, &QDialogButtonBox::accepted, q, &CertificateSelectionDialog::accept);
+            connect(&buttonBox, &QDialogButtonBox::rejected, q, &CertificateSelectionDialog::reject);
             connect( reload,     SIGNAL(clicked()),  q, SLOT(reload()) );
             connect( lookup,     SIGNAL(clicked()),  q, SLOT(lookup()) );
             connect( create,     SIGNAL(clicked()),  q, SLOT(create()) );

@@ -105,7 +105,7 @@ ResultListWidget::Private::Private( ResultListWidget* qq )
     
     m_closeButton = new QPushButton;
     KGuiItem::assign(m_closeButton, KStandardGuiItem::close() );
-    q->connect( m_closeButton, SIGNAL(clicked()), q, SLOT(close()) );
+    q->connect(m_closeButton, &QPushButton::clicked, q, &ResultListWidget::close);
     m_layout->addWidget( m_closeButton );
     m_closeButton->setVisible( false );
 }
@@ -177,8 +177,8 @@ void ResultListWidget::Private::result( const shared_ptr<const Task::Result> & r
     assert( kdtools::any( m_collections, !boost::bind( &TaskCollection::isEmpty, _1 ) ) );
     ResultItemWidget* wid = new ResultItemWidget( result );
     q->connect( wid, SIGNAL(detailsToggled(bool)), q, SLOT(detailsToggled(bool)) );
-    q->connect( wid, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
-    q->connect( wid, SIGNAL(closeButtonClicked()), q, SLOT(close()) );
+    q->connect(wid, &ResultItemWidget::linkActivated, q, &ResultListWidget::linkActivated);
+    q->connect(wid, &ResultItemWidget::closeButtonClicked, q, &ResultListWidget::close);
     addResultWidget( wid );
 }
 

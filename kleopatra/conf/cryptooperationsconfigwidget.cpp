@@ -69,10 +69,10 @@ private:
             if ( QLayout * const l = q->layout() )
                 l->setMargin( 0 );
 
-            connect( quickSignCB,    SIGNAL(toggled(bool)), q, SIGNAL(changed()) );
-            connect( quickEncryptCB, SIGNAL(toggled(bool)), q, SIGNAL(changed()) );
-            connect( checksumDefinitionCB, SIGNAL(currentIndexChanged(int)), q, SIGNAL(changed()) );
-            connect( pgpFileExtCB, SIGNAL(toggled(bool)), q, SIGNAL(changed()) );
+            connect(quickSignCB, &QCheckBox::toggled, q, &CryptoOperationsConfigWidget::changed);
+            connect(quickEncryptCB, &QCheckBox::toggled, q, &CryptoOperationsConfigWidget::changed);
+            connect(checksumDefinitionCB, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), q, &CryptoOperationsConfigWidget::changed);
+            connect(pgpFileExtCB, &QCheckBox::toggled, q, &CryptoOperationsConfigWidget::changed);
         }
 
     } ui;

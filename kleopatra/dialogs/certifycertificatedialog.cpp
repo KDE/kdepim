@@ -137,7 +137,7 @@ SelectUserIDsPage::SelectUserIDsPage( QWidget * parent ) : QWizardPage( parent )
     m_checkbox->setChecked( false );
     m_checkbox->setText( i18n("I have verified the fingerprint") );
     layout->addWidget( m_checkbox );
-    connect( m_checkbox, SIGNAL(toggled(bool)), this, SIGNAL(completeChanged()) );
+    connect(m_checkbox, &QCheckBox::toggled, this, &SelectUserIDsPage::completeChanged);
     connect( &m_userIDModel, SIGNAL(itemChanged(QStandardItem*)), this, SIGNAL(completeChanged()) );
 }
 
@@ -315,7 +315,7 @@ public:
         q->addPage( optionsPage );
         summaryPage = new SummaryPage( q );
         summaryPageId = q->addPage( summaryPage );
-        connect( optionsPage, SIGNAL(nextClicked()), q, SIGNAL(certificationPrepared()) );
+        connect(optionsPage, &OptionsPage::nextClicked, q, &CertifyCertificateDialog::certificationPrepared);
     }
 
     Key key() const {

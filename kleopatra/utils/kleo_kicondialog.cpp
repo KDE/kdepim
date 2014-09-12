@@ -298,8 +298,8 @@ void KIconDialog::KIconDialogPrivate::init()
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &KIconDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &KIconDialog::reject);
     okButton->setDefault(true);
 
     mGroupOrSize = KIconLoader::Desktop;
@@ -373,7 +373,7 @@ void KIconDialog::KIconDialogPrivate::init()
     connect(mpCanvas, SIGNAL(finished()), q, SLOT(_k_slotFinished()));
 
     // When pressing Ok or Cancel, stop loading icons
-    connect(q, SIGNAL(hidden()), mpCanvas, SLOT(stopLoading()));
+    connect(q, &KIconDialog::hidden, mpCanvas, &KIconCanvas::stopLoading);
 
     static const char* const context_text[] = {
         I18N_NOOP( "Actions" ),
@@ -424,7 +424,7 @@ void KIconDialog::KIconDialogPrivate::init()
 
     // Make the dialog a little taller
     q->incrementInitialSize(QSize(0,100));
-    connect(q, SIGNAL(clicked()), q, SLOT(slotOk()));
+    connect(q, &KIconDialog::clicked, q, &KIconDialog::slotOk);
 }
 
 

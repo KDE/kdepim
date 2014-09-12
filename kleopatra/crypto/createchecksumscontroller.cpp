@@ -119,8 +119,8 @@ namespace {
             if ( errors.empty() )
                 errorsLW.hide();
 
-            connect( &buttonBox, SIGNAL(accepted()), this, SLOT(accept()) );
-            connect( &buttonBox, SIGNAL(rejected()), this, SLOT(reject()) );
+            connect(&buttonBox, &QDialogButtonBox::accepted, this, &ResultDialog::accept);
+            connect(&buttonBox, &QDialogButtonBox::rejected, this, &ResultDialog::reject);
             readConfig();
         }
         ~ResultDialog()

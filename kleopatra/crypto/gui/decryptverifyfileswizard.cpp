@@ -182,7 +182,7 @@ DecryptVerifyFilesWizard::Private::Private( DecryptVerifyFilesWizard * qq )
 {
     q->setPage( DecryptVerifyFilesWizard::OperationsPage, &operationsPage );
     q->setPage( DecryptVerifyFilesWizard::ResultPage, &resultPage );
-    connect( &resultPage, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
+    connect(&resultPage, &Gui::ResultPage::linkActivated, q, &DecryptVerifyFilesWizard::linkActivated);
 
     std::vector<int> order;
     order.push_back( DecryptVerifyFilesWizard::OperationsPage );
@@ -230,8 +230,8 @@ OperationsWidget::UI::UI( OperationsWidget * q )
     outputDirectoryFNR.setFilter( QDir::Dirs );
 
     useOutputDirectoryCB.setChecked( true );
-    connect( &useOutputDirectoryCB, SIGNAL(toggled(bool)), &outputDirectoryLB, SLOT(setEnabled(bool)) );
-    connect( &useOutputDirectoryCB, SIGNAL(toggled(bool)), &outputDirectoryFNR, SLOT(setEnabled(bool)) );
+    connect(&useOutputDirectoryCB, &QCheckBox::toggled, &outputDirectoryLB, &QLabel::setEnabled);
+    connect(&useOutputDirectoryCB, &QCheckBox::toggled, &outputDirectoryFNR, &FileNameRequester::setEnabled);
 
     assert( qobject_cast<QBoxLayout*>(scrollArea.widget()->layout()) );
     static_cast<QBoxLayout*>(scrollArea.widget()->layout())->addStretch( 1 );

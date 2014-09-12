@@ -293,8 +293,8 @@ private:
 
             QPushButton * close = closeButton();
 
-            connect( close, SIGNAL(clicked()), q, SIGNAL(canceled()) );
-            connect( close, SIGNAL(clicked()), q, SLOT(accept()) );
+            connect(close, &QPushButton::clicked, q, &VerifyChecksumsDialog::canceled);
+            connect(close, &QPushButton::clicked, q, &VerifyChecksumsDialog::accept);
 
             connect( &errorButton, SIGNAL(clicked()), q, SLOT(slotErrorButtonClicked()) );
         }

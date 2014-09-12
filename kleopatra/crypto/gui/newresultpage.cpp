@@ -95,7 +95,7 @@ NewResultPage::Private::Private( NewResultPage* qq ) : q( qq ), m_lastErrorItemI
     m_progressBar = new QProgressBar;
     layout->addWidget( m_progressBar );
     m_resultList = new ResultListWidget;
-    connect( m_resultList, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
+    connect(m_resultList, &ResultListWidget::linkActivated, q, &NewResultPage::linkActivated);
     layout->addWidget( m_resultList, 1 );
     m_keepOpenCB = new QCheckBox;
     m_keepOpenCB->setText( i18n( "Keep open after operation completed" ) );
@@ -103,7 +103,7 @@ NewResultPage::Private::Private( NewResultPage* qq ) : q( qq ), m_lastErrorItemI
     connect( m_keepOpenCB, SIGNAL(toggled(bool)), q, SLOT(keepOpenWhenDone(bool)) );
     layout->addWidget( m_keepOpenCB );
 
-    connect( &m_hideProgressTimer, SIGNAL(timeout()), m_progressBar, SLOT(hide()) );
+    connect(&m_hideProgressTimer, &QTimer::timeout, m_progressBar, &QProgressBar::hide);
 }
 
 void NewResultPage::Private::progress( const QString & msg, int progress, int total )
