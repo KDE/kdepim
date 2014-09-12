@@ -20,11 +20,11 @@
 
 #include <kaboutdata.h>
 #include <KLocalizedString>
-#include <KUniqueApplication>
 #include <KDBusService>
 #include <QDebug>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QApplication>
 #include "kdepim-version.h"
 #include <kdelibs4configmigrator.h>
 

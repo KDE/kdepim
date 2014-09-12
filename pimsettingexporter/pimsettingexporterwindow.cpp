@@ -64,7 +64,6 @@
 #include <KLocalizedString>
 #include <QStatusBar>
 #include <KRecentFilesAction>
-#include <KCmdLineArgs>
 #include <QPointer>
 #include <KSharedConfig>
 #include <QStandardPaths>
