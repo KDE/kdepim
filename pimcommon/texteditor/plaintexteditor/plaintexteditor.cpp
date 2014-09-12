@@ -120,7 +120,7 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
-        connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
+        connect(speakAction, &QAction::triggered, this, &PlainTextEditor::slotSpeakText);
         addExtraMenuEntry(popup, event->pos());
         popup->exec( event->globalPos() );
 

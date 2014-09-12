@@ -36,7 +36,7 @@ PimCommonSettings::PimCommonSettings()
 {
     mConfigSyncTimer = new QTimer( this );
     mConfigSyncTimer->setSingleShot( true );
-    connect( mConfigSyncTimer, SIGNAL(timeout()), this, SLOT(slotSyncNow()) );
+    connect(mConfigSyncTimer, &QTimer::timeout, this, &PimCommonSettings::slotSyncNow);
 }
 
 void PimCommonSettings::requestSync()

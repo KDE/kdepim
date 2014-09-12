@@ -36,7 +36,7 @@ ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
     lay->addWidget(lab);
 
     mShortUrlServer = new QComboBox;
-    connect(mShortUrlServer, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+    connect(mShortUrlServer, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &ShortUrlConfigureWidget::slotChanged);
     lay->addWidget(mShortUrlServer);
     setLayout(lay);
     init();

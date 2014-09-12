@@ -102,7 +102,7 @@ void WebDavJob::requestTokenAccess()
     delete dlg;
     QUrl url(mServiceLocation);
     QNetworkReply *reply = accountInfo(url.toString());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &WebDavJob::slotError);
 }
 
 void WebDavJob::copyFile(const QString &source, const QString &destination)
@@ -242,8 +242,8 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
             mCacheValue = destinationToString;
             QNetworkReply *reply = put(destinationToString,file);
             file->setParent(reply);
-            connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
-            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+            connect(reply, &QNetworkReply::uploadProgress, this, &WebDavJob::slotuploadDownloadFileProgress);
+            connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &WebDavJob::slotError);
             return reply;
         }
     }
@@ -585,7 +585,7 @@ void WebDavJob::shareLink(const QString &/*root*/, const QString &path)
     postData.addQueryItem(QLatin1String("path"), filePath);
     postData.addQueryItem(QLatin1String("shareType"), QString::number(3)); //public link
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &WebDavJob::slotError);
 }
 
 void WebDavJob::createServiceFolder()
@@ -609,9 +609,9 @@ QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileI
         req.setUrl(sourceFile);
         QNetworkReply *reply = mNetworkAccessManager->get(req);
         mDownloadFile->setParent(reply);
-        connect(reply, SIGNAL(readyRead()), this, SLOT(slotDownloadReadyRead()));
-        connect(reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
-        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        connect(reply, &QNetworkReply::readyRead, this, &WebDavJob::slotDownloadReadyRead);
+        connect(reply, &QNetworkReply::downloadProgress, this, &WebDavJob::slotuploadDownloadFileProgress);
+        connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &WebDavJob::slotError);
         return reply;
     } else {
         delete mDownloadFile;

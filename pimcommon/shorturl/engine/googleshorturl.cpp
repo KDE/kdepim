@@ -43,7 +43,7 @@ void GoogleShortUrl::start()
     const QString data = QString::fromLatin1("{\"longUrl\": \"%1/\"}").arg(mOriginalUrl);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toUtf8());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotErrorFound(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &GoogleShortUrl::slotErrorFound);
 }
 
 QString GoogleShortUrl::shortUrlName() const

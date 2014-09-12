@@ -47,8 +47,8 @@ CheckedCollectionWidget::CheckedCollectionWidget(const QString &mimetype, QWidge
     changeRecorder->fetchCollection( true );
     changeRecorder->setAllMonitored( true );
     changeRecorder->setMimeTypeMonitored( mimetype );
-    connect(changeRecorder, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)));
-    connect(changeRecorder, SIGNAL(collectionRemoved(Akonadi::Collection)), SIGNAL(collectionRemoved(Akonadi::Collection)));
+    connect(changeRecorder, &Akonadi::ChangeRecorder::collectionAdded, this, &CheckedCollectionWidget::collectionAdded);
+    connect(changeRecorder, &Akonadi::ChangeRecorder::collectionRemoved, this, &CheckedCollectionWidget::collectionRemoved);
 
     mEntityTreeModel = new Akonadi::EntityTreeModel( changeRecorder, this );
     // Set the model to show only collections, not items.

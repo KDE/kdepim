@@ -41,11 +41,11 @@ TextReplaceWidget::TextReplaceWidget(QWidget *parent)
     lay->addWidget(mReplace);
 
     mReplaceBtn = new QPushButton( i18n( "Replace" ), this );
-    connect( mReplaceBtn, SIGNAL(clicked()), this, SIGNAL(replaceText()) );
+    connect(mReplaceBtn, &QPushButton::clicked, this, &TextReplaceWidget::replaceText);
     lay->addWidget( mReplaceBtn );
 
     mReplaceAllBtn = new QPushButton( i18n( "Replace All" ), this );
-    connect( mReplaceAllBtn, SIGNAL(clicked()), this, SIGNAL(replaceAllText()) );
+    connect(mReplaceAllBtn, &QPushButton::clicked, this, &TextReplaceWidget::replaceAllText);
     lay->addWidget( mReplaceAllBtn );
 
     setLayout(lay);
@@ -104,11 +104,11 @@ TextFindWidget::TextFindWidget(QWidget *parent)
     optionsBtn->setMenu( optionsMenu );
     lay->addWidget( optionsBtn );
 
-    connect( mFindNextBtn, SIGNAL(clicked()), this, SIGNAL(findNext()) );
-    connect( mFindPrevBtn, SIGNAL(clicked()), this, SIGNAL(findPrev()) );
-    connect( mCaseSensitiveAct, SIGNAL(toggled(bool)), this, SIGNAL(updateSearchOptions()) );
-    connect( mWholeWordAct, SIGNAL(toggled(bool)), this, SIGNAL(updateSearchOptions()) );
-    connect( mSearch, SIGNAL(textChanged(QString)), this, SLOT(slotAutoSearch(QString)) );
+    connect(mFindNextBtn, &QPushButton::clicked, this, &TextFindWidget::findNext);
+    connect(mFindPrevBtn, &QPushButton::clicked, this, &TextFindWidget::findPrev);
+    connect(mCaseSensitiveAct, &QAction::toggled, this, &TextFindWidget::updateSearchOptions);
+    connect(mWholeWordAct, &QAction::toggled, this, &TextFindWidget::updateSearchOptions);
+    connect(mSearch, &QLineEdit::textChanged, this, &TextFindWidget::slotAutoSearch);
     setLayout(lay);
 }
 

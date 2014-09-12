@@ -106,9 +106,9 @@ void HubicStorageService::removeConfig()
 void HubicStorageService::storageServiceauthentication()
 {
     HubicJob *job = new HubicJob(this);
-    connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
-    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
-    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
+    connect(job, &HubicJob::authorizationDone, this, &HubicStorageService::slotAuthorizationDone);
+    connect(job, &HubicJob::authorizationFailed, this, &HubicStorageService::slotAuthorizationFailed);
+    connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
     job->requestTokenAccess();
 }
 
@@ -141,9 +141,9 @@ void HubicStorageService::refreshToken()
 {
     HubicJob *job = new HubicJob(this);
     job->initializeToken(mRefreshToken, mToken);
-    connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
-    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
-    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
+    connect(job, &HubicJob::authorizationDone, this, &HubicStorageService::slotAuthorizationDone);
+    connect(job, &HubicJob::authorizationFailed, this, &HubicStorageService::slotAuthorizationFailed);
+    connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
     job->refreshToken();
 }
 
@@ -161,8 +161,8 @@ void HubicStorageService::storageServicelistFolder(const QString &folder)
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(listFolderDone(QVariant)), this, SLOT(slotListFolderDone(QVariant)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::listFolderDone, this, &HubicStorageService::slotListFolderDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->listFolder(folder);
     }
 }
@@ -182,8 +182,8 @@ void HubicStorageService::storageServicecreateFolder(const QString &name, const 
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::createFolderDone, this, &HubicStorageService::slotCreateFolderDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->createFolder(name, destination);
     }
 }
@@ -201,8 +201,8 @@ void HubicStorageService::storageServiceaccountInfo()
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::accountInfoDone, this, &HubicStorageService::slotAccountInfoDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->accountInfo();
     }
 }
@@ -228,11 +228,11 @@ void HubicStorageService::storageServiceuploadFile(const QString &filename, cons
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
-        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
-        connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
+        connect(job, &HubicJob::uploadFileDone, this, &HubicStorageService::slotUploadFileDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
+        connect(job, &HubicJob::shareLinkDone, this, &HubicStorageService::slotShareLinkDone);
+        connect(job, &HubicJob::uploadDownloadFileProgress, this, &HubicStorageService::slotuploadDownloadFileProgress);
+        connect(job, &HubicJob::uploadFileFailed, this, &HubicStorageService::slotUploadFileFailed);
         mUploadReply = job->uploadFile(filename, uploadAsName, destination);
     }
 }
@@ -295,8 +295,8 @@ void HubicStorageService::storageServiceShareLink(const QString &root, const QSt
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::shareLinkDone, this, &HubicStorageService::slotShareLinkDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->shareLink(root, path);
     }
 }
@@ -322,10 +322,10 @@ void HubicStorageService::storageServicedownloadFile(const QString &name, const 
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
+        connect(job, &HubicJob::downLoadFileDone, this, &HubicStorageService::slotDownLoadFileDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
+        connect(job, &HubicJob::downLoadFileFailed, this, &HubicStorageService::slotDownLoadFileFailed);
+        connect(job, &HubicJob::uploadDownloadFileProgress, this, &HubicStorageService::slotuploadDownloadFileProgress);
         mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
@@ -343,8 +343,8 @@ void HubicStorageService::storageServicecreateServiceFolder()
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::createFolderDone, this, &HubicStorageService::slotCreateFolderDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->createServiceFolder();
     }
 }
@@ -363,8 +363,8 @@ void HubicStorageService::storageServicedeleteFile(const QString &filename)
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::deleteFileDone, this, &HubicStorageService::slotDeleteFileDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->deleteFile(filename);
     }
 }
@@ -383,8 +383,8 @@ void HubicStorageService::storageServicedeleteFolder(const QString &foldername)
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::deleteFolderDone, this, &HubicStorageService::slotDeleteFolderDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->deleteFolder(foldername);
     }
 }
@@ -403,8 +403,8 @@ void HubicStorageService::storageServiceRenameFolder(const QString &source, cons
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::renameFolderDone, this, &HubicStorageService::slotRenameFolderDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->renameFolder(source, destination);
     }
 }
@@ -423,8 +423,8 @@ void HubicStorageService::storageServiceRenameFile(const QString &source, const 
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::renameFileDone, this, &HubicStorageService::slotRenameFileDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->renameFile(source, destination);
     }
 }
@@ -443,8 +443,8 @@ void HubicStorageService::storageServiceMoveFolder(const QString &source, const 
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::moveFolderDone, this, &HubicStorageService::slotMoveFolderDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->moveFolder(source, destination);
     }
 }
@@ -463,8 +463,8 @@ void HubicStorageService::storageServiceMoveFile(const QString &source, const QS
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::moveFileDone, this, &HubicStorageService::slotMoveFileDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->moveFile(source, destination);
     }
 }
@@ -483,8 +483,8 @@ void HubicStorageService::storageServiceCopyFile(const QString &source, const QS
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::copyFileDone, this, &HubicStorageService::slotCopyFileDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->copyFile(source, destination);
     }
 }
@@ -503,8 +503,8 @@ void HubicStorageService::storageServiceCopyFolder(const QString &source, const 
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
-        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, &HubicJob::copyFolderDone, this, &HubicStorageService::slotCopyFolderDone);
+        connect(job, &HubicJob::actionFailed, this, &HubicStorageService::slotActionFailed);
         job->copyFolder(source, destination);
     }
 }

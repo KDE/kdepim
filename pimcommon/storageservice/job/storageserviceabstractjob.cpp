@@ -31,7 +31,7 @@ StorageServiceAbstractJob::StorageServiceAbstractJob(QObject *parent)
       mActionType(PimCommon::StorageServiceAbstract::NoneAction),
       mError(false)
 {
-    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(slotSslErrors(QNetworkReply*,QList<QSslError>)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::sslErrors, this, &StorageServiceAbstractJob::slotSslErrors);
     qDebug()<<"StorageServiceAbstractJob::StorageServiceAbstractJob() "<<this;
 }
 

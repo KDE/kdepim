@@ -239,10 +239,10 @@ void StorageServiceManager::slotShareFile()
                     }
 
                     defaultConnect(service);
-                    connect(service,SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
-                    connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
-                    connect(service,SIGNAL(uploadFileFailed(QString,QString)), this, SIGNAL(uploadFileFailed(QString,QString)), Qt::UniqueConnection);
-                    connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
+                    connect(service, &StorageServiceAbstract::uploadDownloadFileProgress, this, &StorageServiceManager::uploadDownloadFileProgress, Qt::UniqueConnection);
+                    connect(service, &StorageServiceAbstract::uploadFileDone, this, &StorageServiceManager::uploadFileDone, Qt::UniqueConnection);
+                    connect(service, &StorageServiceAbstract::uploadFileFailed, this, &StorageServiceManager::uploadFileFailed, Qt::UniqueConnection);
+                    connect(service, &StorageServiceAbstract::shareLinkDone, this, &StorageServiceManager::shareLinkDone, Qt::UniqueConnection);
                     Q_EMIT uploadFileStart(service);
                     PimCommon::StorageServiceProgressManager::self()->addProgress(service, StorageServiceProgressManager::Upload);
                     service->uploadFile(fileName, newName, QString());
@@ -269,9 +269,9 @@ void StorageServiceManager::slotDownloadFile()
 
 void StorageServiceManager::defaultConnect(StorageServiceAbstract *service)
 {
-    connect(service,SIGNAL(actionFailed(QString,QString)), this, SIGNAL(actionFailed(QString,QString)), Qt::UniqueConnection);
-    connect(service,SIGNAL(authenticationDone(QString)), this, SIGNAL(authenticationDone(QString)), Qt::UniqueConnection);
-    connect(service,SIGNAL(authenticationFailed(QString,QString)), this, SIGNAL(authenticationFailed(QString,QString)), Qt::UniqueConnection);
+    connect(service, &StorageServiceAbstract::actionFailed, this, &StorageServiceManager::actionFailed, Qt::UniqueConnection);
+    connect(service, &StorageServiceAbstract::authenticationDone, this, &StorageServiceManager::authenticationDone, Qt::UniqueConnection);
+    connect(service, &StorageServiceAbstract::authenticationFailed, this, &StorageServiceManager::authenticationFailed, Qt::UniqueConnection);
 }
 
 void StorageServiceManager::slotDeleteFile()
@@ -314,7 +314,7 @@ void StorageServiceManager::slotAccountInfo()
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
             defaultConnect(service);
-            connect(service,SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), Qt::UniqueConnection);
+            connect(service, &StorageServiceAbstract::accountInfoDone, this, &StorageServiceManager::accountInfoDone, Qt::UniqueConnection);
             service->accountInfo();
         }
     }

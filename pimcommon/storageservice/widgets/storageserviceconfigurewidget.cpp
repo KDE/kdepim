@@ -35,8 +35,8 @@ StorageServiceConfigureWidget::StorageServiceConfigureWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     setLayout(lay);
     mStorageSettings = new PimCommon::StorageServiceSettingsWidget;
-    connect(mStorageSettings, SIGNAL(serviceRemoved(QString)), this, SIGNAL(serviceRemoved(QString)));
-    connect(mStorageSettings, SIGNAL(changed()), this, SIGNAL(changed()));
+    connect(mStorageSettings, &PimCommon::StorageServiceSettingsWidget::serviceRemoved, this, &StorageServiceConfigureWidget::serviceRemoved);
+    connect(mStorageSettings, &PimCommon::StorageServiceSettingsWidget::changed, this, &StorageServiceConfigureWidget::changed);
     lay->addWidget(mStorageSettings);
 
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -44,7 +44,7 @@ StorageServiceConfigureWidget::StorageServiceConfigureWidget(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Default Download Folder:"));
     lay->addWidget(lab);
     mDownloadFolder = new KUrlRequester;
-    connect(mDownloadFolder, SIGNAL(textChanged(QString)), SIGNAL(changed()));
+    connect(mDownloadFolder, &KUrlRequester::textChanged, this, &StorageServiceConfigureWidget::changed);
     mDownloadFolder->setMode(KFile::Directory|KFile::LocalOnly);
     lay->addWidget(mDownloadFolder);
 }

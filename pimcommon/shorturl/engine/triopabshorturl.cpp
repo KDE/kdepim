@@ -36,7 +36,7 @@ void TriopabShortUrl::start()
 {
     const QString requestUrl = QString::fromLatin1("http://to.ly/api.php?longurl=%1").arg(mOriginalUrl);
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(requestUrl));
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotErrorFound(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &TriopabShortUrl::slotErrorFound);
 }
 
 QString TriopabShortUrl::shortUrlName() const
