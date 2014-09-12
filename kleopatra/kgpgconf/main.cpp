@@ -37,7 +37,7 @@
 int main( int argc, char** argv )
 {
     QApplication app( argc, argv );
-
+    KGlobal::locale()->insertCatalog( QLatin1String("kleopatra") );
     MainWindow* wid = new MainWindow;
     wid->setVisible( true );
     return app.exec();

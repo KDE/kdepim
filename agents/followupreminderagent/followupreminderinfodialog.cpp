@@ -92,7 +92,7 @@ void FollowUpReminderInfoDialog::readConfig()
 
 void FollowUpReminderInfoDialog::writeConfig()
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "SendLaterConfigureDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "FollowUpReminderInfoDialog");
     group.writeEntry("Size", size());
     mWidget->saveTreeWidgetHeader(group);
 }
