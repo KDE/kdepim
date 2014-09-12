@@ -143,7 +143,7 @@ void NotesManager::load()
     updateNetworkListener();
     if (!mCheckAlarm) {
         mCheckAlarm = new QTimer(this);
-    } else if (mCheckAlarm->isActive())
+    } else if (mCheckAlarm->isActive()) {
         mCheckAlarm->stop();
     }
 
