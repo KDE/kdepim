@@ -228,7 +228,7 @@ void NotesAgentAlarmDialog::slotFetchAlarmItem(KJob *job)
             QPointer<NoteShared::NoteAlarmDialog> dlg = new NoteShared::NoteAlarmDialog(caption, this);
             dlg->setAlarm(attr->dateTime());
             if (dlg->exec()) {
-                const KDateTime date = dlg->alarm();
+                const QDateTime date = dlg->alarm();
                 if (date.isValid()) {
                     attr->setDateTime(dlg->alarm());
                 } else {

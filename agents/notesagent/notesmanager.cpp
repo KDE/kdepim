@@ -123,7 +123,7 @@ void NotesManager::slotCheckAlarm()
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         NoteShared::NoteAlarmAttribute *attrAlarm = item.attribute<NoteShared::NoteAlarmAttribute>();
         if (attrAlarm) {
-            if (attrAlarm->dateTime() < KDateTime::currentDateTime(KDateTime::LocalZone)) {
+            if (attrAlarm->dateTime() < QDateTime::currentDateTime()) {
                 lst.append(item);
             }
         }
