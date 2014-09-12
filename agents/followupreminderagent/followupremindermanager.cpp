@@ -20,6 +20,7 @@
 #include "followupremindernoanswerdialog.h"
 #include "jobs/followupreminderjob.h"
 #include "jobs/followupreminderfinishtaskjob.h"
+#include <Akonadi/KMime/SpecialMailCollections>
 
 #include <KGlobal>
 #include <KConfigGroup>
@@ -71,6 +72,10 @@ void FollowUpReminderManager::load()
 
 void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col)
 {
+    //If we move to trash directly => exclude it.
+    if (Akonadi::SpecialMailCollections::self()->specialCollectionType(col) == Akonadi::SpecialMailCollections::Trash)
+        return;
+
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
     connect(job, SIGNAL(finished(QString)), SLOT(slotCheckFollowUpFinished(QString)));
     job->setItem(item);
