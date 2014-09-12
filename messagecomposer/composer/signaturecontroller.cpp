@@ -76,7 +76,7 @@ void SignatureController::identityChanged ( uint id )
 void SignatureController::suspend()
 {
     if ( m_identityCombo )
-        disconnect( m_identityCombo, SIGNAL(identityChanged(uint)), this, SLOT(identityChanged(uint)) );
+        disconnect(m_identityCombo, &KIdentityManagement::IdentityCombo::identityChanged, this, &SignatureController::identityChanged);
 }
 
 void SignatureController::resume()

@@ -47,7 +47,7 @@ NoteCreatorAndSelector::NoteCreatorAndSelector(QItemSelectionModel* primaryModel
 {
   // If the note doesn't exist after 5 seconds, give up waiting for it.
   m_giveupTimer->setInterval(5000);
-  connect(m_giveupTimer, SIGNAL(timeout()), SLOT(deleteLater()));
+  connect(m_giveupTimer, &QTimer::timeout, this, &NoteCreatorAndSelector::deleteLater);
 }
 
 NoteCreatorAndSelector::~NoteCreatorAndSelector()
@@ -109,7 +109,7 @@ void NoteCreatorAndSelector::doCreateNote()
   newItem.addAttribute(eda);
 
   Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, Collection(m_containerCollectionId), this );
-  connect( job, SIGNAL(result(KJob*)), SLOT(noteCreationFinished(KJob*)) );
+  connect(job, &Akonadi::ItemCreateJob::result, this, &NoteCreatorAndSelector::noteCreationFinished);
 
 }
 

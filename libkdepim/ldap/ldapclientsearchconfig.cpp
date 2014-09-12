@@ -109,7 +109,7 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
                 QLatin1String("DoAskToStoreToKwallet"))) {
             d->wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
             if (d->wallet) {
-                connect(d->wallet, SIGNAL(walletClosed()), SLOT(slotWalletClosed()));
+                connect(d->wallet, &KWallet::Wallet::walletClosed, this, &LdapClientSearchConfig::slotWalletClosed);
                 d->useWallet = true;
                 if (!d->wallet->hasFolder(QLatin1String("ldapclient"))) {
                     d->wallet->createFolder(QLatin1String("ldapclient"));

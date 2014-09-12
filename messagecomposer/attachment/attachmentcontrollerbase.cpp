@@ -729,7 +729,7 @@ void AttachmentControllerBase::saveAttachmentAs( AttachmentPart::Ptr part )
 void AttachmentControllerBase::byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite)
 {
     KIO::StoredTransferJob *job = KIO::storedPut( aData, aURL, -1, overwrite ? KIO::Overwrite : KIO::DefaultFlags );
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotPutResult(KJob*)) );
+    connect(job, &KIO::StoredTransferJob::result, this, &AttachmentControllerBase::slotPutResult);
 }
 
 void AttachmentControllerBase::slotPutResult(KJob *job)

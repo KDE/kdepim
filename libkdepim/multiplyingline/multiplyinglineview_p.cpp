@@ -90,7 +90,7 @@ MultiplyingLine *MultiplyingLineView::addLine()
             SLOT(slotUpPressed(KPIM::MultiplyingLine*)));
     connect(line, SIGNAL(downPressed(KPIM::MultiplyingLine*)),
             SLOT(slotDownPressed(KPIM::MultiplyingLine*)));
-    connect(line, SIGNAL(rightPressed()), SIGNAL(focusRight()));
+    connect(line, &MultiplyingLine::rightPressed, this, &MultiplyingLineView::focusRight);
     connect(line, SIGNAL(deleteLine(KPIM::MultiplyingLine*)),
             SLOT(slotDecideLineDeletion(KPIM::MultiplyingLine*)));
     connect(line, SIGNAL(completionModeChanged(KCompletion::CompletionMode)),

@@ -43,7 +43,7 @@ MessageComposerSettings::MessageComposerSettings()
 {
     mConfigSyncTimer = new QTimer( this );
     mConfigSyncTimer->setSingleShot( true );
-    connect( mConfigSyncTimer, SIGNAL(timeout()), this, SLOT(slotSyncNow()) );
+    connect(mConfigSyncTimer, &QTimer::timeout, this, &MessageComposerSettings::slotSyncNow);
 }
 
 void MessageComposerSettings::requestSync()
