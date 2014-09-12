@@ -32,6 +32,9 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QWebElement>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace ComposerEditorNG
 {
@@ -47,6 +50,7 @@ public:
     void _k_slotOkClicked();
     void _k_slotApplyClicked();
     void _k_slotWebElementChanged();
+    void _k_slotEnableButtonOk(bool b);
     void initialize();
 
     QString html() const;
@@ -59,8 +63,14 @@ public:
     KPIMTextEdit::InsertImageWidget *imageWidget;
     QLineEdit *title;
     QLineEdit *alternateTitle;
+    QPushButton *okButton;
     ComposerImageDialog *q;
 };
+
+void ComposerImageDialogPrivate::_k_slotEnableButtonOk(bool b)
+{
+    okButton->setEnabled(b);
+}
 
 void ComposerImageDialogPrivate::_k_slotWebElementChanged()
 {
@@ -121,11 +131,18 @@ void ComposerImageDialogPrivate::updateImageHtml()
 
 void ComposerImageDialogPrivate::initialize()
 {
-    q->setCaption(webElement.isNull() ? i18n("Insert Image") : i18n("Edit Image"));
-    q->setButtons(webElement.isNull() ? KDialog::Ok | KDialog::Cancel : KDialog::Ok | KDialog::Apply | KDialog::Cancel);
-    q->setButtonText(KDialog::Ok, i18n("Insert"));
+    q->setWindowTitle(webElement.isNull() ? i18n("Insert Image") : i18n("Edit Image"));
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox( webElement.isNull() ? QDialogButtonBox::Ok : QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Apply);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    q->setLayout(mainLayout);
+    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(_k_slotOkClicked()));
+    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setText(i18n("Insert"));
 
     QWidget *w = new QWidget;
+    mainLayout->addWidget(buttonBox);
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     lay->setSpacing(0);
@@ -159,17 +176,19 @@ void ComposerImageDialogPrivate::initialize()
         ExtendAttributesButton *button = new ExtendAttributesButton(webElement, ExtendAttributesDialog::Image, q);
         q->connect(button, SIGNAL(webElementChanged()), q, SLOT(_k_slotWebElementChanged()));
         lay->addWidget(button);
-        q->connect(q, SIGNAL(applyClicked()), q, SLOT(_k_slotApplyClicked()));
+        q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotApplyClicked()));
     }
 
     sep = new KSeparator;
     lay->addWidget(sep);
 
-    q->connect(imageWidget, &KPIMTextEdit::InsertImageWidget::enableButtonOk, q, &ComposerImageDialog::enableButtonOk);
-    q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 
-    q->setMainWidget(w);
-    q->enableButtonOk(false);
+    q->connect(imageWidget, SIGNAL(enableButtonOk(bool)), q, SLOT(_k_slotEnableButtonOk(bool)));
+
+
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
+    okButton->setEnabled(false);
 
     updateSettings();
 }
@@ -217,13 +236,13 @@ QString ComposerImageDialogPrivate::html() const
 }
 
 ComposerImageDialog::ComposerImageDialog(QWidget *parent)
-    : KDialog(parent), d(new ComposerImageDialogPrivate(this))
+    : QDialog(parent), d(new ComposerImageDialogPrivate(this))
 {
     d->initialize();
 }
 
 ComposerImageDialog::ComposerImageDialog(const QWebElement &element, QWidget *parent)
-    : KDialog(parent), d(new ComposerImageDialogPrivate(this))
+    : QDialog(parent), d(new ComposerImageDialogPrivate(this))
 {
     d->webElement = element;
     d->initialize();

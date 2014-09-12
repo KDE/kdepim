@@ -77,7 +77,6 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     q->connect(buttonBox, &QDialogButtonBox::accepted, q, &ComposerLinkDialog::accept);
     q->connect(buttonBox, &QDialogButtonBox::rejected, q, &ComposerLinkDialog::reject);
-    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     webElement = element;
 

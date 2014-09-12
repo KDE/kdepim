@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013-2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -21,14 +21,14 @@
 #ifndef COMPOSERIMAGEDIALOG_H
 #define COMPOSERIMAGEDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class QWebElement;
 
 namespace ComposerEditorNG
 {
 class ComposerImageDialogPrivate;
-class ComposerImageDialog : public KDialog
+class ComposerImageDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -48,6 +48,8 @@ private:
     Q_PRIVATE_SLOT(d, void _k_slotOkClicked())
     Q_PRIVATE_SLOT(d, void _k_slotApplyClicked())
     Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged())
+    Q_PRIVATE_SLOT(d, void _k_slotEnableButtonOk(bool b))
+
 };
 }
 
