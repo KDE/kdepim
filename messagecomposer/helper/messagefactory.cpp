@@ -826,7 +826,7 @@ bool MessageFactory::MDNConfirmMultipleRecipients( const KMime::Message::Ptr& ms
     // RFC 2298: [ Confirmation from the user SHOULD be obtained (or no
     // MDN sent) ] if there is more than one distinct address in the
     // Disposition-Notification-To header.
-    qDebug() << "KPIMUtils::splitAddressList(receiptTo):" // krazy:exclude=kdebug
+    qDebug() << "KPIMUtils::splitAddressList(receiptTo):" 
              << KPIMUtils::splitAddressList(receiptTo).join(QString::fromLatin1("\n"));
 
     return KPIMUtils::splitAddressList(receiptTo).count() > 1;
