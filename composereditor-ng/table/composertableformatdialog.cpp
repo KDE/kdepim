@@ -98,8 +98,8 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
-    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    q->connect(buttonBox, &QDialogButtonBox::accepted, q, &ComposerTableFormatDialog::accept);
+    q->connect(buttonBox, &QDialogButtonBox::rejected, q, &ComposerTableFormatDialog::reject);
     mainLayout->addWidget(buttonBox);
     okButton->setText(i18n("Edit"));
     QWidget *page = new QWidget(q);
@@ -133,7 +133,7 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
     q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotApplyClicked()));
 
-    q->connect(useBackgroundColor, SIGNAL(toggled(bool)), backgroundColor, SLOT(setEnabled(bool)));
+    q->connect(useBackgroundColor, &QCheckBox::toggled, backgroundColor, &KColorButton::setEnabled);
     updateSettings();
 }
 

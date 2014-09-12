@@ -52,7 +52,7 @@ BilboBrowser::BilboBrowser( QWidget *parent )
 
     connect( mWebView, SIGNAL(loadProgress(int)),
             browserProgress, SLOT(setValue(int)) );
-    connect( mWebView, SIGNAL(loadFinished(bool)) , this, SLOT(slotCompleted(bool)) );
+    connect(mWebView, &KWebView::loadFinished, this, &BilboBrowser::slotCompleted);
     connect( mWebView, SIGNAL(statusBarMessage(QString)), this,
             SLOT(slotSetStatusBarText(QString)) );
 }
@@ -66,7 +66,7 @@ void BilboBrowser::createUi( QWidget *parent )
 {
     btnGetStyle = new QPushButton( this );
     btnGetStyle->setText( i18n( "Get blog style" ) );
-    connect( btnGetStyle, SIGNAL(clicked(bool)), this, SLOT(slotGetBlogStyle()) );
+    connect(btnGetStyle, &QPushButton::clicked, this, &BilboBrowser::slotGetBlogStyle);
 
     viewInBlogStyle = new QCheckBox( i18n("View post in the blog style"), this );
     viewInBlogStyle->setChecked( Settings::previewInBlogStyle() );
@@ -140,7 +140,7 @@ void BilboBrowser::slotGetBlogStyle()
     StyleGetter *styleGetter = new StyleGetter( __currentBlogId, this );
     connect( styleGetter, SIGNAL(sigGetStyleProgress(int)), browserProgress,
             SLOT(setValue(int)) );
-    connect( styleGetter, SIGNAL(sigStyleFetched()), this, SLOT(slotSetBlogStyle()) );
+    connect(styleGetter, &StyleGetter::sigStyleFetched, this, &BilboBrowser::slotSetBlogStyle);
 }
 
 void BilboBrowser::slotSetBlogStyle()

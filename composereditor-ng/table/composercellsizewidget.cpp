@@ -59,8 +59,8 @@ public:
         typeSize->addItem(i18nc("@item:inlistbox size type", "pixels"), Fixed);
         layout->addWidget(typeSize);
 
-        q->connect(check, SIGNAL(toggled(bool)), typeSize, SLOT(setEnabled(bool)));
-        q->connect(check, SIGNAL(toggled(bool)), size, SLOT(setEnabled(bool)));
+        q->connect(check, &QCheckBox::toggled, typeSize, &KComboBox::setEnabled);
+        q->connect(check, &QCheckBox::toggled, size, &QSpinBox::setEnabled);
         check->setChecked(false);
         size->setEnabled(false);
         typeSize->setEnabled(false);

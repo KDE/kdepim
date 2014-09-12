@@ -165,7 +165,7 @@ void ComposerImageDialogPrivate::initialize()
     sep = new KSeparator;
     lay->addWidget(sep);
 
-    q->connect(imageWidget, SIGNAL(enableButtonOk(bool)), q, SLOT(enableButtonOk(bool)));
+    q->connect(imageWidget, &KPIMTextEdit::InsertImageWidget::enableButtonOk, q, &ComposerImageDialog::enableButtonOk);
     q->connect(q, SIGNAL(okClicked()), q, SLOT(_k_slotOkClicked()));
 
     q->setMainWidget(w);

@@ -175,7 +175,7 @@ void AddEditBlog::autoConfigure()
     }
     qDebug() << "Trying to guess API type by Homepage contents";
     KIO::StoredTransferJob *httpGetJob = KIO::storedGet( d->ui.txtUrl->text() , KIO::NoReload, KIO::HideProgressInfo );
-    connect( httpGetJob, SIGNAL(result(KJob*)), this, SLOT(gotHtml(KJob*)) );
+    connect(httpGetJob, &KIO::StoredTransferJob::result, this, &AddEditBlog::gotHtml);
     d->mFetchAPITimer = new QTimer( this );
     d->mFetchAPITimer->setSingleShot( true );
     connect(d->mFetchAPITimer, &QTimer::timeout, this, &AddEditBlog::handleFetchAPITimeout);
@@ -241,7 +241,7 @@ void AddEditBlog::gotHtml( KJob *job )
     KIO::StoredTransferJob *testXmlRpcJob = KIO::storedGet( QString::fromLatin1("%1/xmlrpc.php").arg(textUrl),
                                                             KIO::NoReload, KIO::HideProgressInfo );
 
-    connect( testXmlRpcJob, SIGNAL(result(KJob*)), this, SLOT(gotXmlRpcTest(KJob*)) );
+    connect(testXmlRpcJob, &KIO::StoredTransferJob::result, this, &AddEditBlog::gotXmlRpcTest);
 }
 
 void AddEditBlog::gotXmlRpcTest( KJob *job )

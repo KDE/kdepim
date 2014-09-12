@@ -55,8 +55,8 @@ SendToBlogDialog::SendToBlogDialog( bool isNew, bool isPrivate, QWidget *parent 
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SendToBlogDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SendToBlogDialog::reject);
     mainLayout->addWidget(dialog);
     mainLayout->addWidget(buttonBox);
     setWindowTitle( i18n( "Submitting as..." ) );

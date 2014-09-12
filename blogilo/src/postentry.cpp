@@ -100,7 +100,7 @@ PostEntry::PostEntry( QWidget *parent )
     layout()->addWidget( d->tabWidget );
     d->mTimer = new QTimer(this);
     d->mTimer->start(Settings::autosaveInterval() * MINUTE);
-    connect( d->mTimer, SIGNAL(timeout()), this, SLOT(saveTemporary()) );
+    connect(d->mTimer, &QTimer::timeout, this, &PostEntry::saveTemporary);
     d->progress = 0L;
     d->mCurrentPostBlogId = -1;
     d->mNumOfFilesToBeUploaded = 0;
@@ -132,7 +132,7 @@ void PostEntry::createUi()
     d->tabWidget->addTab( d->tabVisual, i18nc( "Software", "Visual Editor" ) );
     d->tabWidget->addTab( d->tabHtml, i18nc( "Software", "Html Editor" ) );
     d->tabWidget->addTab( d->tabPreview, i18nc( "preview of the edited post", "Post Preview" ) );
-    connect( d->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(slotSyncEditors(int)) );
+    connect(d->tabWidget, &QTabWidget::currentChanged, this, &PostEntry::slotSyncEditors);
     d->prev_index = 0;
 
     /// WYSIWYG Editor:
@@ -151,7 +151,7 @@ void PostEntry::createUi()
     QGridLayout *gLayout = new QGridLayout( d->tabPreview );
     gLayout->addWidget( d->previewer );
 
-    connect( d->previewer, SIGNAL(sigSetBlogStyle()), this, SLOT(slotSetPostPreview()) );
+    connect(d->previewer, &BilboBrowser::sigSetBlogStyle, this, &PostEntry::slotSetPostPreview);
 
 
     d->tabWidget->setCurrentIndex( 0 );
@@ -170,7 +170,7 @@ void PostEntry::createUi()
     d->labelTitle->setBuddy( d->txtTitle );
     connect( d->txtTitle, SIGNAL(textChanged()), this,
              SLOT(slotTitleChanged()) );
-    connect( d->txtTitle, SIGNAL(focusDown()), SLOT(slotFocusEditor()) );
+    connect(d->txtTitle, &KPIM::SpellCheckLineEdit::focusDown, this, &PostEntry::slotFocusEditor);
 
     d->gridLayout->addLayout( d->horizontalLayout, 0, 0, 1, 1 );
 }
@@ -513,7 +513,7 @@ void PostEntry::saveTemporary()
 void PostEntry::slotPostModified()
 {
     qDebug();
-    disconnect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+    disconnect(this, &PostEntry::textChanged, this, &PostEntry::slotPostModified);
     //         disconnect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
     //     emit postModified();
     d->isPostContentModified = true;

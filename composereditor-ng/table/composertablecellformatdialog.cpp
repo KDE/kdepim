@@ -82,7 +82,7 @@ public:
         horizontalAlignment->setEnabled(false);
         hbox->addWidget(horizontalAlignment);
         layout->addLayout(hbox);
-        q->connect(useHorizontalAlignment, SIGNAL(toggled(bool)), horizontalAlignment, SLOT(setEnabled(bool)));
+        q->connect(useHorizontalAlignment, &QCheckBox::toggled, horizontalAlignment, &KComboBox::setEnabled);
 
         hbox = new QHBoxLayout;
         useVerticalAlignment = new QCheckBox(i18n("Vertical Alignment:"));
@@ -96,7 +96,7 @@ public:
         verticalAlignment->setEnabled(false);
         hbox->addWidget(verticalAlignment);
         layout->addLayout(hbox);
-        q->connect(useVerticalAlignment, SIGNAL(toggled(bool)), verticalAlignment, SLOT(setEnabled(bool)));
+        q->connect(useVerticalAlignment, &QCheckBox::toggled, verticalAlignment, &KComboBox::setEnabled);
 
         sep = new KSeparator;
         layout->addWidget(sep);
@@ -119,7 +119,7 @@ public:
         sep = new KSeparator;
         layout->addWidget(sep);
 
-        q->connect(useBackgroundColor, SIGNAL(toggled(bool)), backgroundColor, SLOT(setEnabled(bool)));
+        q->connect(useBackgroundColor, &QCheckBox::toggled, backgroundColor, &KColorButton::setEnabled);
 
         q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
 

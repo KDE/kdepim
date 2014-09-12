@@ -69,8 +69,8 @@ void ComposerAnchorDialogPrivate::initialize(const QWebElement &element)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
-    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    q->connect(buttonBox, &QDialogButtonBox::accepted, q, &ComposerAnchorDialog::accept);
+    q->connect(buttonBox, &QDialogButtonBox::rejected, q, &ComposerAnchorDialog::reject);
     //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
 

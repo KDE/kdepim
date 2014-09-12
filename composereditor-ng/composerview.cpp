@@ -63,7 +63,7 @@ ComposerView::ComposerView(QWidget *parent)
 
     page()->setContentEditable(true);
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    connect(this, SIGNAL(linkClicked(QUrl)), SIGNAL(openLink(QUrl)));
+    connect(this, &ComposerView::linkClicked, this, &ComposerView::openLink);
     connect(page(), SIGNAL(selectionChanged()), this, SLOT(_k_slotAdjustActions()));
 
     setWindowModified(false);

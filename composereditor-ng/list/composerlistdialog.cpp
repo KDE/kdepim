@@ -86,8 +86,8 @@ void ComposerListDialogPrivate::initialize()
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
-    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    q->connect(buttonBox, &QDialogButtonBox::accepted, q, &ComposerListDialog::accept);
+    q->connect(buttonBox, &QDialogButtonBox::rejected, q, &ComposerListDialog::reject);
     mainLayout->addWidget(buttonBox);
     q->setWindowTitle(i18n("Edit List"));
 

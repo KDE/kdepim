@@ -82,8 +82,8 @@ void ComposerTableDialogPrivate::initialize()
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
-    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    q->connect(buttonBox, &QDialogButtonBox::accepted, q, &ComposerTableDialog::accept);
+    q->connect(buttonBox, &QDialogButtonBox::rejected, q, &ComposerTableDialog::reject);
     mainLayout->addWidget(buttonBox);
     okButton->setText(i18n("Insert"));
 

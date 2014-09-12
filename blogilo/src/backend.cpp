@@ -250,7 +250,7 @@ void Backend::uploadMedia( BilboMedia * media )
                 return;
             }
             d->mPublishMediaMap[ m ] = media;
-            connect( MWBlog, SIGNAL(createdMedia(KBlog::BlogMedia*)), this, SLOT(mediaUploaded(KBlog::BlogMedia*)) );
+            connect(MWBlog, &KBlog::MetaWeblog::createdMedia, this, &Backend::mediaUploaded);
             connect( MWBlog, SIGNAL(errorMedia(KBlog::Blog::ErrorType,QString,KBlog::BlogMedia*)),
                      this, SLOT(slotMediaError(KBlog::Blog::ErrorType,QString,KBlog::BlogMedia*)) );
             MWBlog->createMedia( m );

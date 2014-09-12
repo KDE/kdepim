@@ -36,7 +36,7 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
 //QT5
     //ui->backgroundImage->fileDialog()->setFilter(mimetypes.join( QLatin1String( " " ) ));
     ui->groupBox->setEnabled(false);
-    connect(ui->customColors, SIGNAL(toggled(bool)), ui->groupBox, SLOT(setEnabled(bool)));
+    connect(ui->customColors, &QRadioButton::toggled, ui->groupBox, &QGroupBox::setEnabled);
 }
 
 PageColorBackgroundWidget::~PageColorBackgroundWidget()

@@ -105,7 +105,7 @@ AlarmDockWindow::AlarmDockWindow()
     qDebug() << "No Quit standard action.";
   } else {
     quit->disconnect( SIGNAL(triggered(bool)), this, SLOT(maybeQuit()) );
-    connect( quit, SIGNAL(activated()), SLOT(slotQuit()) );
+    connect(quit, &QAction::activated, this, &AlarmDockWindow::slotQuit);
   }
 #endif
   mAutostartSet = autostartSet;

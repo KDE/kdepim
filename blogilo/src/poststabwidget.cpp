@@ -42,7 +42,7 @@ PostsTabWidget::PostsTabWidget(QWidget *parent)
     mNewTabButton->setAccessibleName( i18n( "New tab" ) );
 #endif
     setCornerWidget( mNewTabButton, Qt::TopLeftCorner );
-    connect( mNewTabButton, SIGNAL(clicked()), this, SIGNAL(createNewPost()) );
+    connect(mNewTabButton, &QToolButton::clicked, this, &PostsTabWidget::createNewPost);
 
     mCloseTabButton = new QToolButton( this );
     mCloseTabButton->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
@@ -52,7 +52,7 @@ PostsTabWidget::PostsTabWidget(QWidget *parent)
     mCloseTabButton->setAccessibleName( i18n( "Close tab" ) );
 #endif
     setCornerWidget( mCloseTabButton, Qt::TopRightCorner );
-    connect( mCloseTabButton, SIGNAL(clicked()), this, SIGNAL(closeTabClicked()) );
+    connect(mCloseTabButton, &QToolButton::clicked, this, &PostsTabWidget::closeTabClicked);
 
     setContextMenuPolicy( Qt::CustomContextMenu );
     connect( this, SIGNAL(customContextMenuRequested(QPoint)),

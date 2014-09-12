@@ -279,7 +279,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
 
   mSuspendUnit->setCurrentIndex( defSuspendUnit );
 
-  connect( &mSuspendTimer, SIGNAL(timeout()), SLOT(wakeUp()) );
+  connect(&mSuspendTimer, &QTimer::timeout, this, &AlarmDialog::wakeUp);
 
   connect(this, &AlarmDialog::okClicked, this, &AlarmDialog::slotOk);
   connect(this, &AlarmDialog::user1Clicked, this, &AlarmDialog::slotUser1);
@@ -642,7 +642,7 @@ void AlarmDialog::eventNotification()
           Phonon::createPlayer( Phonon::NotificationCategory,
                                 KUrl( alarm->audioFile() ) );
         player->setParent( this );
-        connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
+        connect(player, &Phonon::MediaObject::finished, player, &Phonon::MediaObject::deleteLater);
         player->play();
       } else if ( alarm->type() == Alarm::Email ) {
         QString from = CalendarSupport::KCalPrefs::instance()->email();
