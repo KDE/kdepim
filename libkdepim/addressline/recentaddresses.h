@@ -132,7 +132,7 @@ public:
 
     /**
      * Saves the list of recently used addresses to the configfile.
-     * Make sure to call KGlobal::config()->sync() afterwards, to really save.
+     * Make sure to call KSharedConfig::openConfig()->sync() afterwards, to really save.
      */
     void save(KConfig *);
 

@@ -54,7 +54,7 @@ void SendLaterInfoTest::shouldRestoreFromSettings()
     info.setDateTime(QDateTime(date));
     info.setLastDateTimeSend(QDateTime(date));
 
-    KConfigGroup grp(KGlobal::config(), "testsettings");
+    KConfigGroup grp(KSharedConfig::openConfig(), "testsettings");
     info.writeConfig(grp);
 
     SendLater::SendLaterInfo restoreInfo(grp);
