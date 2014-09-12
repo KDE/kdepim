@@ -118,7 +118,7 @@ void SoundTestWidget::playSound()
                           parameter);
     Phonon::MediaObject *player = Phonon::createPlayer(Phonon::NotificationCategory, QUrl::fromLocalFile(play));
     player->play();
-    connect(player, SIGNAL(finished()), player, SLOT(deleteLater()));
+    connect(player, &Phonon::MediaObject::finished, player, &Phonon::MediaObject::deleteLater);
 }
 
 QString SoundTestWidget::url() const

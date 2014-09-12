@@ -42,7 +42,7 @@ QWidget *FilterActionWithString::createParamWidget(QWidget *parent) const
     //QT5 lineEdit->setTrapReturnKey(true);
     lineEdit->setText(mParameter);
 
-    connect(lineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()));
+    connect(lineEdit, &QLineEdit::textChanged, this, &FilterActionWithString::filterActionModified);
 
     return lineEdit;
 }

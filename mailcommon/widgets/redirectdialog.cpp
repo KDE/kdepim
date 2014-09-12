@@ -88,7 +88,7 @@ RedirectWidget::RedirectWidget(QWidget *parent)
     hbox->addWidget(BtnTo);
     connect(BtnTo, &QPushButton::clicked, this, &RedirectWidget::slotAddressSelection);
 
-    connect(mEdit, SIGNAL(textChanged(QString)), SIGNAL(addressChanged(QString)));
+    connect(mEdit, &MessageComposer::ComposerLineEdit::textChanged, this, &RedirectWidget::addressChanged);
 }
 
 RedirectWidget::~RedirectWidget()

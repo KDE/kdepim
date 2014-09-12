@@ -142,7 +142,7 @@ FilterActionWidget::FilterActionWidget(QWidget *parent)
         d->mComboBox->addItem((*it)->label, (*it)->name);
 
         // Register the FilterAction modification signal
-        connect(action, SIGNAL(filterActionModified()), this, SIGNAL(filterModified()));
+        connect(action, &FilterAction::filterActionModified, this, &FilterActionWidget::filterModified);
     }
 
     // widget for the case where no action is selected.

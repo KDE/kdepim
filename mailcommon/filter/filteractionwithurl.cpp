@@ -44,7 +44,7 @@ QWidget *FilterActionWithUrl::createParamWidget(QWidget *parent) const
     KUrlRequester *requester = new KUrlRequester(parent);
     requester->setUrl(QUrl::fromLocalFile(mParameter));
 
-    connect(requester, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()));
+    connect(requester, &KUrlRequester::textChanged, this, &FilterActionWithUrl::filterActionModified);
 
     return requester;
 }

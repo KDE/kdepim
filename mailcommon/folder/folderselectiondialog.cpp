@@ -75,8 +75,8 @@ FolderSelectionDialog::FolderSelectionDialog(QWidget *parent, SelectionFolderOpt
     d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     d->mOkButton->setDefault(true);
     d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FolderSelectionDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FolderSelectionDialog::reject);
 
 
     if (!d->mNotAllowToCreateNewFolder) {

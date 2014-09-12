@@ -101,7 +101,7 @@ QWidget *FilterActionSetIdentity::createParamWidget(QWidget *parent) const
     KIdentityManagement::IdentityCombo *comboBox = new KIdentityManagement::IdentityCombo(KernelIf->identityManager(), parent);
     comboBox->setCurrentIdentity(mParameter);
 
-    connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(filterActionModified()));
+    connect(comboBox, static_cast<void (KIdentityManagement::IdentityCombo::*)(int)>(&KIdentityManagement::IdentityCombo::currentIndexChanged), this, &FilterActionSetIdentity::filterActionModified);
 
     return comboBox;
 }

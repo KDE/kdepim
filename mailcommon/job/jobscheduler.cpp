@@ -46,7 +46,7 @@ JobScheduler::JobScheduler(QObject *parent)
       mPendingImmediateTasks(0),
       mCurrentTask(0), mCurrentJob(0)
 {
-    connect(&mTimer, SIGNAL(timeout()), SLOT(slotRunNextJob()));
+    connect(&mTimer, &QTimer::timeout, this, &JobScheduler::slotRunNextJob);
     // No need to start the internal timer yet, we wait for a task to be scheduled
 }
 
@@ -202,7 +202,7 @@ void JobScheduler::runTaskNow(ScheduledTask *task)
 #if 0
     mCurrentTask->folder()->storage()->addJob(mCurrentJob);
 #endif
-    connect(mCurrentJob, SIGNAL(finished()), this, SLOT(slotJobFinished()));
+    connect(mCurrentJob, &ScheduledJob::finished, this, &JobScheduler::slotJobFinished);
     mCurrentJob->start();
 }
 

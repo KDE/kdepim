@@ -443,7 +443,7 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog(
         mTagList->addItem(item);
     }
 
-    connect(this, SIGNAL(user1Clicked()), SLOT(slotAddTag()));
+    connect(this, &FilterActionMissingTagDialog::user1Clicked, this, &FilterActionMissingTagDialog::slotAddTag);
     connect(mTagList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
             this, SLOT(accept()));
     lay->addWidget(mTagList);

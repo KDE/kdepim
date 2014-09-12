@@ -174,7 +174,7 @@ bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
             new QDBusServiceWatcher(QLatin1String("org.kde.korganizer"), QDBusConnection::sessionBus(),
                                     QDBusServiceWatcher::WatchForRegistration);
         QEventLoop loop;
-        watcher->connect(watcher, SIGNAL(serviceRegistered(QString)), &loop, SLOT(quit()));
+        watcher->connect(watcher, &QDBusServiceWatcher::serviceRegistered, &loop, &QEventLoop::quit);
         result = QProcess::startDetached(QLatin1String("korganizer-mobile"));
         if (result) {
             qDebug() << "Starting loop";

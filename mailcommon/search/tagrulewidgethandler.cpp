@@ -70,7 +70,7 @@ void FillTagComboJob::start()
 {
     Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
     fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
-    connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(onTagsFetched(KJob*)));
+    connect(fetchJob, &Akonadi::TagFetchJob::result, this, &FillTagComboJob::onTagsFetched);
 }
 
 void FillTagComboJob::onTagsFetched(KJob *job)

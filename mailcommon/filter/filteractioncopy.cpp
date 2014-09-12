@@ -37,7 +37,7 @@ FilterAction::ReturnCode FilterActionCopy::process(ItemContext &context , bool) 
 {
     // copy the message 1:1
     Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob(context.item(), mFolder, 0);
-    connect(job, SIGNAL(result(KJob*)), this, SLOT(jobFinished(KJob*)));
+    connect(job, &Akonadi::ItemCopyJob::result, this, &FilterActionCopy::jobFinished);
 
     return GoOn;
 }

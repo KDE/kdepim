@@ -115,7 +115,7 @@ void ExpireJob::slotDoWork()
 {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(mSrcFolder, this);
     job->fetchScope().fetchPayloadPart(Akonadi::MessagePart::Envelope);
-    connect(job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)));
+    connect(job, &Akonadi::ItemFetchJob::result, this, &ExpireJob::itemFetchResult);
 }
 
 void ExpireJob::itemFetchResult(KJob *job)
@@ -175,7 +175,7 @@ void ExpireJob::done()
                      << mSrcFolder.name()
                      << count << "messages to remove.";
             Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(mRemovedMsgs, this);
-            connect(job, SIGNAL(result(KJob*)), this, SLOT(slotExpireDone(KJob*)));
+            connect(job, &Akonadi::ItemDeleteJob::result, this, &ExpireJob::slotExpireDone);
             moving = true;
             str = i18np("Removing 1 old message from folder %2...",
                         "Removing %1 old messages from folder %2...",
@@ -194,7 +194,7 @@ void ExpireJob::done()
                          << mRemovedMsgs.count() << "messages to move to"
                          << mMoveToFolder.name();
                 Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob(mRemovedMsgs, mMoveToFolder, this);
-                connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMoveDone(KJob*)));
+                connect(job, &Akonadi::ItemMoveJob::result, this, &ExpireJob::slotMoveDone);
                 moving = true;
                 str = i18np("Moving 1 old message from folder %2 to folder %3...",
                             "Moving %1 old messages from folder %2 to folder %3...",
@@ -233,7 +233,7 @@ void ExpireJob::slotMoveDone(KJob *job)
             if (!newLst.isEmpty()) {
                 Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(newLst, this);
                 modifyJob->disableRevisionCheck();
-                connect(modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotExpireDone(KJob*)));
+                connect(modifyJob, &Akonadi::ItemModifyJob::result, this, &ExpireJob::slotExpireDone);
             } else {
                 slotExpireDone(job);
             }

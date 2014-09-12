@@ -33,7 +33,7 @@ QWidget *FilterActionWithAddress::createParamWidget(QWidget *parent) const
     MessageCore::EmailAddressRequester *requester = new MessageCore::EmailAddressRequester(parent);
     requester->setText(mParameter);
 
-    connect(requester, SIGNAL(textChanged()), this, SIGNAL(filterActionModified()));
+    connect(requester, &MessageCore::EmailAddressRequester::textChanged, this, &FilterActionWithAddress::filterActionModified);
 
     return requester;
 }
