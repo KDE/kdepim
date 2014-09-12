@@ -39,7 +39,7 @@ TodoViewView::TodoViewView( QWidget *parent )
 {
   header()->installEventFilter( this );
   setAlternatingRowColors( true );
-  connect( &mExpandTimer, SIGNAL(timeout()), SLOT(expandParent()) );
+  connect(&mExpandTimer, &QTimer::timeout, this, &TodoViewView::expandParent);
   mExpandTimer.setInterval( 1000 );
   header()->setStretchLastSection( false );
 }

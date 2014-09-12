@@ -205,7 +205,7 @@ CategorySelectDialog::CategorySelectDialog( CategoryConfig *cc, QWidget *parent 
   mWidgets->setCategories();
   mWidgets->listView()->setFocus();
 
-  connect( mWidgets, SIGNAL(editCategories()), SIGNAL(editCategories()) );
+  connect(mWidgets, &CategorySelectWidget::editCategories, this, &CategorySelectDialog::editCategories);
 
   connect(okButton, &QPushButton::clicked, this, &CategorySelectDialog::slotOk);
   connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &CategorySelectDialog::slotApply);

@@ -331,7 +331,7 @@ void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 
   Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
   job->setQuery( Akonadi::ContactGroupSearchJob::Name, data->name() );
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(groupSearchResult(KJob*)) );
+  connect(job, &Akonadi::ContactGroupSearchJob::result, this, &IncidenceAttendee::groupSearchResult);
 
   mMightBeGroupLines.insert( job, QWeakPointer<KPIM::MultiplyingLine>( line ) );
 }
@@ -367,7 +367,7 @@ void IncidenceAttendee::groupSearchResult( KJob *job )
   }
 
   Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
-  connect( expandJob, SIGNAL(result(KJob*)), this, SLOT(expandResult(KJob*)) );
+  connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &IncidenceAttendee::expandResult);
   expandJob->start();
 }
 
@@ -393,7 +393,7 @@ void IncidenceAttendee::slotSelectAddresses()
           Akonadi::ContactGroupExpandJob *job =
             new Akonadi::ContactGroupExpandJob(
               selection.item().payload<KABC::ContactGroup>(), this );
-          connect( job, SIGNAL(result(KJob*)), this, SLOT(expandResult(KJob*)) );
+          connect(job, &Akonadi::ContactGroupExpandJob::result, this, &IncidenceAttendee::expandResult);
           job->start();
         } else {
           KABC::Addressee contact;

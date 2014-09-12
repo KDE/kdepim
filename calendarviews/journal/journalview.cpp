@@ -69,7 +69,7 @@ void JournalView::appendJournal( const Akonadi::Item &journal, const QDate &dt )
     entry->setDate( dt );
     entry->setIncidenceChanger( mChanger );
     entry->show();
-    connect( this, SIGNAL(flushEntries()), entry, SIGNAL(flushEntries()) );
+    connect(this, &JournalView::flushEntries, entry, &JournalDateView::flushEntries);
     connect( this, SIGNAL(setIncidenceChangerSignal(Akonadi::IncidenceChanger*)),
              entry, SLOT(setIncidenceChanger(Akonadi::IncidenceChanger*)) );
     connect( this, SIGNAL(journalEdited(Akonadi::Item)),

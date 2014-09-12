@@ -96,8 +96,8 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig,
            this, SLOT(addSubcategory()) );
   connect( mWidgets->mButtonRemove, SIGNAL(clicked()),
            this, SLOT(remove()) );
-  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()) );
-  connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()) );
+  connect(this, &CategoryEditDialog::okClicked, this, &CategoryEditDialog::slotOk);
+  connect(this, &CategoryEditDialog::cancelClicked, this, &CategoryEditDialog::slotCancel);
   //connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
 }
 

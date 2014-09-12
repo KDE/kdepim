@@ -61,8 +61,8 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
   mOkButton = buttonBox->button(QDialogButtonBox::Ok);
   mOkButton->setDefault(true);
   mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &AttachmentEditDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &AttachmentEditDialog::reject);
   mainLayout->addWidget(page);
   mainLayout->addWidget(buttonBox);
 

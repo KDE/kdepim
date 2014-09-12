@@ -56,9 +56,9 @@ ConflictResolver::ConflictResolver( QWidget *parentWidget, QObject *parent )
                   << KCalCore::Attendee::NonParticipant
                   << KCalCore::Attendee::Chair;
 
-  connect( mFBModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(freebusyDataChanged()) );
+  connect(mFBModel, &FreeBusyItemModel::dataChanged, this, &ConflictResolver::freebusyDataChanged);
 
-  connect( &mCalculateTimer, SIGNAL(timeout()), SLOT(findAllFreeSlots()) );
+  connect(&mCalculateTimer, &QTimer::timeout, this, &ConflictResolver::findAllFreeSlots);
   mCalculateTimer.setSingleShot( true );
 }
 

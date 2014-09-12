@@ -251,8 +251,8 @@ CategoryDialog::CategoryDialog( CategoryConfig *cc, QWidget *parent )
   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &CategoryDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &CategoryDialog::reject);
 
 
   QWidget *page = new QWidget;
@@ -273,8 +273,8 @@ CategoryDialog::CategoryDialog( CategoryConfig *cc, QWidget *parent )
   mWidgets->setCategories();
   mWidgets->listView()->setFocus();
 
-  connect(okButton, SIGNAL(clicked()), this, SLOT(slotOk()) );
-  connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(slotApply()) );
+  connect(okButton, &QPushButton::clicked, this, &CategoryDialog::slotOk);
+  connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &CategoryDialog::slotApply);
 }
 
 CategoryDialog::~CategoryDialog()

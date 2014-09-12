@@ -155,7 +155,7 @@ void XXPortManager::import(const KABC::Addressee::List &contacts)
         item.setMimeType( KABC::Addressee::mimeType() );
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotImportJobDone(KJob*)) );
+        connect(job, &Akonadi::ItemCreateJob::result, this, &XXPortManager::slotImportJobDone);
     }
 }
 

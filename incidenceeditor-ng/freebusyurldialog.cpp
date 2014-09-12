@@ -51,8 +51,8 @@ FreeBusyUrlDialog::FreeBusyUrlDialog( AttendeeData::Ptr attendee, QWidget *paren
   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &FreeBusyUrlDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &FreeBusyUrlDialog::reject);
   mainLayout->addWidget(buttonBox);
   okButton->setDefault(true);
 
@@ -64,7 +64,7 @@ FreeBusyUrlDialog::FreeBusyUrlDialog( AttendeeData::Ptr attendee, QWidget *paren
   topLayout->addWidget( mWidget );
 
   mWidget->loadConfig();
-  connect(okButton, SIGNAL(clicked()), this, SLOT(slotOk()) );
+  connect(okButton, &QPushButton::clicked, this, &FreeBusyUrlDialog::slotOk);
 }
 
 void FreeBusyUrlDialog::slotOk()

@@ -63,7 +63,7 @@ TemplateManagementDialog::TemplateManagementDialog(
   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
   okButton->setDefault(true);
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateManagementDialog::reject);
   setObjectName( "template_management_dialog" );
   //QT5 setHelp( "entering-data-events-template-buttons", "korganizer" );
   QWidget *widget = new QWidget( this );

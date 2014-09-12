@@ -96,7 +96,7 @@ FreeBusyItemModel::FreeBusyItemModel( QObject *parent )
   connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy::Ptr,QString)),
            SLOT(slotInsertFreeBusy(KCalCore::FreeBusy::Ptr,QString)) );
 
-  connect( &mReloadTimer, SIGNAL(timeout()), SLOT(autoReload()) );
+  connect(&mReloadTimer, &QTimer::timeout, this, &FreeBusyItemModel::autoReload);
   mReloadTimer.setSingleShot( true );
 
   mRootData = new ItemPrivateData( 0 );

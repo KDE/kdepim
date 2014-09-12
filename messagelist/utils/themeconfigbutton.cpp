@@ -52,7 +52,7 @@ void ThemeConfigButtonPrivate::slotConfigureThemes()
     ConfigureThemesDialog *dialog = new ConfigureThemesDialog(q->window());
     dialog->selectTheme(currentThemeID);
 
-    QObject::connect(dialog, SIGNAL(okClicked()), q, SIGNAL(configureDialogCompleted()));
+    QObject::connect(dialog, &ConfigureThemesDialog::okClicked, q, &ThemeConfigButton::configureDialogCompleted);
 
     dialog->show();
 }

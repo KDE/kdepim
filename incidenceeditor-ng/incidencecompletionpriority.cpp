@@ -82,7 +82,7 @@ IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop
 #endif
 
   connect( d->mUi->mCompletionSlider, SIGNAL(valueChanged(int)), SLOT(sliderValueChanged(int)) );
-  connect( d->mUi->mPriorityCombo, SIGNAL(currentIndexChanged(int)), SLOT(checkDirtyStatus()) );
+  connect(d->mUi->mPriorityCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceCompletionPriority::checkDirtyStatus);
 }
 
 IncidenceCompletionPriority::~IncidenceCompletionPriority()

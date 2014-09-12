@@ -53,7 +53,7 @@ StylePage::StylePage( QWidget *parent, const char *name )
     mSortTypeCombo->addItem( i18nc( "@item:inlistbox Ascending sort order", "Ascending" ) );
     mSortTypeCombo->addItem( i18nc( "@item:inlistbox Descending sort order", "Descending" ) );
 
-    connect( mStyleCombo, SIGNAL(activated(int)), SIGNAL(styleChanged(int)) );
+    connect(mStyleCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &StylePage::styleChanged);
 }
 
 StylePage::~StylePage()

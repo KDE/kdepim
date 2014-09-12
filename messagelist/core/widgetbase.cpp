@@ -134,11 +134,11 @@ Widget::Widget(QWidget *pParent)
     g->setSpacing(0);
 
     d->quickSearchLine = new QuickSearchLine;
-    connect(d->quickSearchLine, SIGNAL(clearButtonClicked()), SLOT(searchEditClearButtonClicked()));
+    connect(d->quickSearchLine, &QuickSearchLine::clearButtonClicked, this, &Widget::searchEditClearButtonClicked);
 
-    connect(d->quickSearchLine, SIGNAL(searchEditTextEdited(QString)), SLOT(searchEditTextEdited()));
-    connect(d->quickSearchLine, SIGNAL(searchOptionChanged()), SLOT(searchEditTextEdited()));
-    connect(d->quickSearchLine, SIGNAL(statusButtonsClicked()), SLOT(slotStatusButtonsClicked()));
+    connect(d->quickSearchLine, &QuickSearchLine::searchEditTextEdited, this, &Widget::searchEditTextEdited);
+    connect(d->quickSearchLine, &QuickSearchLine::searchOptionChanged, this, &Widget::searchEditTextEdited);
+    connect(d->quickSearchLine, &QuickSearchLine::statusButtonsClicked, this, &Widget::slotStatusButtonsClicked);
     g->addWidget(d->quickSearchLine, 0);
 
     d->mView = new View(this);
@@ -197,7 +197,7 @@ void Widget::populateStatusFilterCombo()
     d->mStatusFilterComboPopulationInProgress = true;
     KComboBox *tagFilterComboBox = d->quickSearchLine->tagFilterComboBox();
     d->mCurrentStatusFilterIndex = (tagFilterComboBox->currentIndex() != -1) ?  tagFilterComboBox->currentIndex() : 0;
-    disconnect(tagFilterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)));
+    disconnect(tagFilterComboBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &Widget::statusSelected);
 
     tagFilterComboBox->clear();
 

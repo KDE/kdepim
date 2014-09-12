@@ -254,7 +254,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
   connect( d->scene, SIGNAL(showNewEventPopupSignal()),
            SIGNAL(showNewEventPopupSignal()) );
 
-  connect( &d->reloadTimer, SIGNAL(timeout()), this, SLOT(reloadIncidences()) );
+  connect(&d->reloadTimer, &QTimer::timeout, this, &MonthView::reloadIncidences);
   updateConfig();
 
   // d->setUpModels();
