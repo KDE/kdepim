@@ -205,8 +205,11 @@ void NotesAgentAlarmDialog::slotFetchAlarmItem(KJob *job)
         NoteShared::NoteAlarmAttribute *attr = item.attribute<NoteShared::NoteAlarmAttribute>();
         if (attr) {
             KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
-            if (!noteMessage)
+            if (!noteMessage) {
+                qDebug()<<"Error this note doesn't have payload ";
+                KMessageBox::error(this, i18n("Error during fetch alarm info."), i18n("Alarm"));
                 return;
+            }
             const KMime::Headers::Subject * const subject = noteMessage->subject(false);
             QString caption;
             if (subject) {
