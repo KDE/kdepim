@@ -324,7 +324,7 @@ void AgentWidget::cloneAgent()
 void AgentWidget::cloneAgent( KJob* job )
 {
   if ( job->error() ) {
-    KMessageBox::error( this, i18n("Cloneing agent failed: %1.", job->errorText() ) );
+    KMessageBox::error( this, i18n("Cloning agent failed: %1.", job->errorText() ) );
     return;
   }
 
