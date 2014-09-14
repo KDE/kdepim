@@ -363,7 +363,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   hlay->addWidget( le, 1 );
   le->setFocus();
 
-  connect( le, SIGNAL(textChanged(QString)), this, SLOT(slotSearch(QString)) );
+  connect(le, &QLineEdit::textChanged, this, &KeySelectionDialog::slotSearch);
   connect(mStartSearchTimer, &QTimer::timeout, this, &KeySelectionDialog::slotFilter);
 
   mListView = new QTreeWidget( page );
