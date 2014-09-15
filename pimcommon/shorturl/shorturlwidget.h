@@ -21,13 +21,12 @@
 #include <QWidget>
 #include "pimcommon_export.h"
 
-#include <Solid/Networking>
-
 class KLineEdit;
 class KToggleAction;
 class QPushButton;
 class QLabel;
 class QLineEdit;
+class QNetworkConfigurationManager;
 namespace KPIMUtils {
 class ProgressIndicatorLabel;
 }
@@ -55,7 +54,6 @@ private Q_SLOTS:
     void slotShortUrlChanged(const QString &text);
     void slotShortUrlDone(const QString &url);
     void slotShortUrlFailed(const QString &errMsg);
-    void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
     void slotCloseWidget();    
     void slotConfigure();
     void slotInsertShortUrl();
@@ -76,8 +74,8 @@ private:
     QPushButton *mOpenShortUrl;
     AbstractShortUrl *mEngine;
     KPIMUtils::ProgressIndicatorLabel *mIndicatorLabel;
+    QNetworkConfigurationManager *mNetworkConfigurationManager;
     KToggleAction *mToggleAction;
-    bool mNetworkUp;
     bool mStandalone;
 };
 }

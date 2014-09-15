@@ -23,7 +23,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 #include <kio/job.h>
 #include <KTextEdit>
-#include <Solid/Networking>
+class QNetworkConfigurationManager;
 class KToggleAction;
 namespace PimCommon {
 
@@ -83,7 +83,6 @@ private Q_SLOTS:
     void slotTranslateFailed(bool result, const QString &message);
     void slotDebug();
     void slotConfigChanged();
-    void slotSystemNetworkStatusChanged(Solid::Networking::Status);
 
 protected:
     bool event(QEvent* e);

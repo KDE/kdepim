@@ -27,6 +27,7 @@
 #include <KToggleAction>
 #include <KRun>
 #include <QIcon>
+#include <QNetworkConfigurationManager>
 
 #include <QLabel>
 #include <QGridLayout>
@@ -116,19 +117,12 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     mInsertShortUrl->setEnabled(false);
     mOpenShortUrl->setEnabled(false);
 
-    connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
-              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
-    Solid::Networking::Status networkStatus = Solid::Networking::status();
-    if ( ( networkStatus == Solid::Networking::Unconnected ) ||
-         ( networkStatus == Solid::Networking::Disconnecting ) ||
-         ( networkStatus == Solid::Networking::Connecting ))
-        mNetworkUp = false;
-    else
-        mNetworkUp = true;
+    mNetworkConfigurationManager = new QNetworkConfigurationManager();
 }
 
 ShortUrlWidget::~ShortUrlWidget()
 {
+    delete mNetworkConfigurationManager;
 }
 
 void ShortUrlWidget::slotInsertShortUrl()
@@ -165,7 +159,7 @@ void ShortUrlWidget::loadEngine()
 
 void ShortUrlWidget::slotConvertUrl()
 {
-    if (!mNetworkUp) {
+    if (!mNetworkConfigurationManager->isOnline()) {
         KMessageBox::information(this, i18n("No network connection detected, we cannot shorten url."), i18n("No network"));
         return;
     }
@@ -209,14 +203,6 @@ void ShortUrlWidget::slotShortUrlFailed(const QString &errMsg)
     mIndicatorLabel->stop();
 }
 
-void ShortUrlWidget::slotSystemNetworkStatusChanged( Solid::Networking::Status status )
-{
-    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
-        mNetworkUp = true;
-    } else {
-        mNetworkUp = false;
-    }
-}
 
 void ShortUrlWidget::slotCloseWidget()
 {

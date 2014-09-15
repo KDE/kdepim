@@ -31,6 +31,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QStandardPaths>
+#include <QNetworkConfigurationManager>
 
 using namespace MessageViewer;
 QStringList ScamCheckShortUrl::sSupportedServices = QStringList();
@@ -41,19 +42,17 @@ ScamCheckShortUrl::ScamCheckShortUrl(QObject *parent)
 {
     loadLongUrlServices();
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExpandFinished(QNetworkReply*)));
-    connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
-              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
-    const Solid::Networking::Status networkStatus = Solid::Networking::status();
-    slotSystemNetworkStatusChanged(networkStatus);
+    mNetworkConfigurationManager = new QNetworkConfigurationManager();
 }
 
 ScamCheckShortUrl::~ScamCheckShortUrl()
 {
+    delete mNetworkConfigurationManager;
 }
 
 void ScamCheckShortUrl::expandedUrl(const QUrl &url)
 {
-    if (!mNetworkUp) {
+    if (!mNetworkConfigurationManager->isOnline()) {
         KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "No network connection detected, we cannot expand url.") );
         return;
     }
@@ -121,13 +120,3 @@ void ScamCheckShortUrl::loadLongUrlServices()
         qDebug()<<" json file \'longurlServices.json\' not found";
     }
 }
-
-void ScamCheckShortUrl::slotSystemNetworkStatusChanged( Solid::Networking::Status status )
-{
-    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
-        mNetworkUp = true;
-    } else {
-        mNetworkUp = false;
-    }
-}
-
