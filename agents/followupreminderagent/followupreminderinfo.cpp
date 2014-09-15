@@ -21,12 +21,14 @@
 using namespace FollowUpReminder;
 
 FollowUpReminderInfo::FollowUpReminderInfo()
-    : mId(-1)
+    : mId(-1),
+      mAnswerWasReceived(false)
 {
 }
 
 FollowUpReminderInfo::FollowUpReminderInfo(const KConfigGroup &config)
-    : mId(-1)
+    : mId(-1),
+      mAnswerWasReceived(false)
 {
     readConfig(config);
 }
@@ -38,6 +40,7 @@ FollowUpReminderInfo::FollowUpReminderInfo(const FollowUpReminderInfo &info)
     mMessageId = info.messageId();
     mTo = info.to();
     mSubject = info.subject();
+    mAnswerWasReceived = info.answerWasReceived();
 }
 
 void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
@@ -49,7 +52,18 @@ void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
     mMessageId = config.readEntry("messageId", QString());
     mTo = config.readEntry("to", QString());
     mSubject = config.readEntry("subject", QString());
+    mAnswerWasReceived = config.readEntry("answerWasReceived", false);
 }
+bool FollowUpReminderInfo::answerWasReceived() const
+{
+    return mAnswerWasReceived;
+}
+
+void FollowUpReminderInfo::setAnswerWasReceived(bool answerWasReceived)
+{
+    mAnswerWasReceived = answerWasReceived;
+}
+
 QString FollowUpReminderInfo::subject() const
 {
     return mSubject;
@@ -69,6 +83,7 @@ void FollowUpReminderInfo::writeConfig(KConfigGroup &config )
     config.writeEntry("itemId", mId);
     config.writeEntry("to", mTo);
     config.writeEntry("subject", mSubject);
+    config.writeEntry("answerWasReceived", mAnswerWasReceived);
     config.sync();
 }
 
@@ -126,6 +141,7 @@ bool FollowUpReminderInfo::operator==( const FollowUpReminderInfo& other ) const
             && mMessageId == other.messageId()
             && mTo == other.to()
             && mFollowUpReminderDate == other.followUpReminderDate()
-            && mSubject == other.subject();
+            && mSubject == other.subject()
+            && mAnswerWasReceived == other.answerWasReceived();
 }
 

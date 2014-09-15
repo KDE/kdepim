@@ -52,6 +52,10 @@ public:
 
     bool operator ==(const FollowUpReminderInfo &other) const;
 
+
+    bool answerWasReceived() const;
+    void setAnswerWasReceived(bool answerWasReceived);
+
 private:
     void readConfig(const KConfigGroup &config);
     Akonadi::Item::Id mId;
@@ -59,6 +63,7 @@ private:
     QDateTime mFollowUpReminderDate;
     QString mTo;
     QString mSubject;
+    bool mAnswerWasReceived;
 };
 }
 #endif // FOLLOWUPREMINDERINFO_H
