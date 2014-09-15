@@ -28,6 +28,7 @@
 
 #include "eventviews_export.h"
 #include "eventview.h"
+#include "viewcalendar.h"
 
 #include <KCalCore/Todo>
 
@@ -103,7 +104,7 @@ public:
     virtual ~AgendaView();
 
     enum {
-        MAX_DAY_COUNT = 42 // ( 6 * 7)
+        MAX_DAY_COUNT = 42 // (6 * 7)
     };
 
     /** Returns number of currently shown dates. */
@@ -137,6 +138,7 @@ public:
 
     /* reimp from EventView */
     void setCalendar(const Akonadi::ETMCalendar::Ptr &cal) Q_DECL_OVERRIDE;
+    virtual void addCalendar(const ViewCalendar::Ptr &cal);
 
     QSplitter *splitter() const;
 
@@ -155,9 +157,14 @@ public:
 
     QVector<bool> busyDayMask() const;
 
-public Q_SLOTS:
-    void updateView() Q_DECL_OVERRIDE;
-    void updateConfig() Q_DECL_OVERRIDE;
+    /**
+     * Return calendar object for a concrete incidence.
+     * this function is able to use multiple calenders
+     * TODO: replace EventsView::calendar()
+     */
+    virtual KCalCore::Calendar::Ptr calendar2(const KCalCore::Incidence::Ptr &incidence) const;
+    virtual KCalCore::Calendar::Ptr calendar2(const QString &incidenceIdentifier) const;
+
 
     virtual void showDates(const QDate &start, const QDate &end,
                            const QDate &preferredMonth = QDate()) Q_DECL_OVERRIDE;
@@ -166,6 +173,7 @@ public Q_SLOTS:
 
     void clearSelection() Q_DECL_OVERRIDE;
 
+    void startDrag(const KCalCore::Incidence::Ptr &);
     void startDrag(const Akonadi::Item &);
 
     void readSettings();
@@ -223,6 +231,10 @@ protected:
 
     void resizeEvent(QResizeEvent *resizeEvent) Q_DECL_OVERRIDE;
 
+public Q_SLOTS:
+    void updateView() Q_DECL_OVERRIDE;
+    void updateConfig() Q_DECL_OVERRIDE;
+
 protected Q_SLOTS:
     void updateEventIndicatorTop(int newY);
     void updateEventIndicatorBottom(int newY);
@@ -241,11 +253,18 @@ protected Q_SLOTS:
 
     void alignAgendas();
 
+private slots:
+    void slotIncidenceSelected(const KCalCore::Incidence::Ptr& incidence, const QDate& date);
+    void slotShowIncidencePopup(const KCalCore::Incidence::Ptr& incidence, const QDate& date);
+    void slotEditIncidence(const KCalCore::Incidence::Ptr &incidence);
+    void slotShowIncidence(const KCalCore::Incidence::Ptr &incidence);
+    void slotDeleteIncidence(const KCalCore::Incidence::Ptr &incidence);
+
 private:
     void init(const QDate &start, const QDate &end);
-    bool filterByCollectionSelection(const Akonadi::Item &incidence);
+    bool filterByCollectionSelection(const  KCalCore::Incidence::Ptr &incidence);
     void setupTimeLabel(TimeLabels *timeLabel);
-    bool displayIncidence(const Akonadi::Item &incidence, bool createSelected);
+    bool displayIncidence(const KCalCore::Incidence::Ptr &incidence, bool createSelected);
 
 #ifndef EVENTVIEWS_NODECOS
     typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;
