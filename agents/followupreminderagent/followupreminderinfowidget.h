@@ -63,6 +63,7 @@ private:
         To = 0,
         Subject,
         DeadLine,
+        AnswerWasReceived,
         MessageId
     };
     QTreeWidget *mTreeWidget;
