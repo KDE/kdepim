@@ -21,14 +21,14 @@
 #ifndef STORAGESERVICEACCOUNTINFODIALOG_H
 #define STORAGESERVICEACCOUNTINFODIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 namespace PimCommon
 {
 class AccountInfo;
 }
 
-class StorageServiceAccountInfoDialog : public KDialog
+class StorageServiceAccountInfoDialog : public QDialog
 {
     Q_OBJECT
 public:

@@ -69,6 +69,7 @@ using MailCommon::FilterImporterExporter;
 #include <QPointer>
 #include <QKeyEvent>
 #include <QHBoxLayout>
+#include <QDialogButtonBox>
 
 Q_DECLARE_METATYPE(MailCommon::FilterImporterExporter::FilterType)
 using namespace MailCommon;
@@ -299,24 +300,39 @@ const char *_wt_filterdlg_showLater =
 
 KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollection,
                                QWidget *parent, bool createDummyFilter)
-    : KDialog(parent),
+    : QDialog(parent),
       mFilter(0),
       mDoNotClose(false),
       mIgnoreFilterUpdates(true)
 {
-    setCaption(i18n("Filter Rules"));
-    setButtons(Help | Ok | Apply | Cancel | User1 | User2 | User3);
+    setWindowTitle(i18n("Filter Rules"));
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Apply);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    QPushButton *user2Button = new QPushButton;
+    buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+    QPushButton *user3Button = new QPushButton;
+    buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setModal(false);
-    setButtonFocus(Ok);
+    okButton->setFocus();
     KWindowSystem::setIcons(winId(),
                             qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),
                                     IconSize(KIconLoader::Desktop)),
                             qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),
                                     IconSize(KIconLoader::Small)));
-    setHelp(QLatin1String("filters"), QLatin1String("kmail"));
-    setButtonText(User1, i18n("Import..."));
-    setButtonText(User2, i18n("Export..."));
-    setButtonText(User3, i18n("Convert to..."));
+    //QT5 port setHelp(QLatin1String("filters"), QLatin1String("kmail"));
+    user1Button->setText(i18n("Import..."));
+    user2Button->setText(i18n("Export..."));
+    user3Button->setText(i18n("Convert to..."));
     QMenu *menu = new QMenu();
 
     QAction *act = new QAction(i18n("KMail filters"), this);
@@ -349,25 +365,26 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
 
     connect(menu, &QMenu::triggered, this, &KMFilterDialog::slotImportFilter);
 
-    button(KDialog::User1)->setMenu(menu);
+    user1Button->setMenu(menu);
 
     menu = new QMenu();
 
     act = new QAction(i18n("Sieve script"), this);
     connect(act, &QAction::triggered, this, &KMFilterDialog::slotExportAsSieveScript);
     menu->addAction(act);
-    button(KDialog::User3)->setMenu(menu);
+    user3Button->setMenu(menu);
 
-    connect(this, SIGNAL(user2Clicked()),
+    connect(user2Button, SIGNAL(clicked()),
             this, SLOT(slotExportFilters()));
-    enableButtonApply(false);
+    buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 
     QWidget *w = new QWidget(this);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     QVBoxLayout *topVLayout = new QVBoxLayout(w);
     QHBoxLayout *topLayout = new QHBoxLayout;
     topVLayout->addLayout(topLayout);
-    topLayout->setSpacing(spacingHint());
+    //QT5 topLayout->setSpacing(spacingHint());
     topLayout->setMargin(0);
     QVBoxLayout *vbl2 = 0;
 
@@ -383,18 +400,18 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     QWidget *page1 = new QWidget(tabWidget);
     tabWidget->addTab(page1, i18nc("General mail filter settings.", "General"));
     QHBoxLayout *hbl = new QHBoxLayout(page1);
-    hbl->setSpacing(spacingHint());
-    hbl->setMargin(marginHint());
+    //QT5 hbl->setSpacing(spacingHint());
+    //QT5 hbl->setMargin(marginHint());
 
     QWidget *page2 = new QWidget(tabWidget);
     tabWidget->addTab(page2, i18nc("Advanced mail filter settings.", "Advanced"));
     vbl2 = new QVBoxLayout(page2);
-    vbl2->setSpacing(spacingHint());
-    vbl2->setMargin(marginHint());
+    //QT5 vbl2->setSpacing(spacingHint());
+    //QT5 vbl2->setMargin(marginHint());
 
     QVBoxLayout *vbl = new QVBoxLayout();
     hbl->addLayout(vbl);
-    vbl->setSpacing(spacingHint());
+    //QT5 vbl->setSpacing(spacingHint());
     hbl->setStretchFactor(vbl, 2);
 
     QGroupBox *patternGroupBox = new QGroupBox(i18n("Filter Criteria"), page1);
@@ -418,7 +435,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
         QGridLayout *gl = new QGridLayout();
         QVBoxLayout *vbl3 = new QVBoxLayout();
         gl->addLayout(vbl3, 0, 0);
-        vbl3->setSpacing(spacingHint());
+        //QT5 vbl3->setSpacing(spacingHint());
         vbl3->addStretch(1);
 
         mApplyOnIn = new QCheckBox(i18n("Apply this filter to incoming messages:"), mAdvOptsGroup);
@@ -561,19 +578,17 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     connect(mPatternEdit, &MailCommon::SearchPatternEdit::maybeNameChanged, mFilterList, &KMFilterListBox::slotUpdateFilterName);
 
     // save filters on 'Apply' or 'OK'
-    connect(this, SIGNAL(buttonClicked(KDialog::ButtonCode)), 
-           mFilterList, SLOT(slotApplyFilterChanges(KDialog::ButtonCode)));
-    connect(button(KDialog::Apply), SIGNAL(clicked(bool)), 
+    connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)), 
            this, SLOT(slotApply()));
 
     // save dialog size on 'OK'
-    connect(this, SIGNAL(okClicked()),
+    connect(okButton, SIGNAL(clicked()),
              this, SLOT(slotSaveSize()));
 
     // destruct the dialog on close and Cancel
-    connect(this, SIGNAL(closeClicked()),
+    connect(buttonBox->button(QDialogButtonBox::Close), SIGNAL(clicked()),
             this, SLOT(slotFinished()));
-    connect(this, SIGNAL(cancelClicked()),
+    connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
             this, SLOT(slotFinished()));
 
     // disable closing when user wants to continue editing
@@ -609,7 +624,7 @@ void KMFilterDialog::accept()
     if (mDoNotClose) {
         mDoNotClose = false; // only abort current close attempt
     } else {
-        KDialog::accept();
+        QDialog::accept();
         slotFinished();
     }
 }
@@ -628,12 +643,13 @@ bool KMFilterDialog::event(QEvent *e)
             return true;
         }
     }
-    return KDialog::event(e);
+    return QDialog::event(e);
 }
 
 void KMFilterDialog::slotApply()
 {
-    enableButtonApply(false);
+    buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+    mFilterList->slotApplied();
 }
 
 void KMFilterDialog::slotFinished()
@@ -657,7 +673,7 @@ void KMFilterDialog::slotRunFilters()
         return;
     }
 
-    if (isButtonEnabled(KDialog::Apply)) {
+    if (buttonBox->button(QDialogButtonBox::Apply)->isEnabled()) {
         KMessageBox::information(
             this,
             i18nc("@info",
@@ -707,6 +723,7 @@ void KMFilterDialog::slotFetchItemsForFolderDone(KJob *job)
 
 void KMFilterDialog::slotSaveSize()
 {
+    mFilterList->slotAccepted();
     KConfigGroup myGroup(KernelIf->config(), "Geometry");
     myGroup.writeEntry("filterDialogSize", size());
     myGroup.sync();
@@ -1137,17 +1154,18 @@ void KMFilterListBox::slotUpdateFilterName()
     mListWidget->blockSignals(false);
 }
 
-void KMFilterListBox::slotApplyFilterChanges(KDialog::ButtonCode button)
+void KMFilterListBox::slotAccepted()
 {
-    bool closeAfterSaving;
-    if (button == KDialog::Ok) {
-        closeAfterSaving = true;
-    } else if (button == KDialog::Apply) {
-        closeAfterSaving = false;
-    } else {
-        return; // ignore close and cancel
-    }
+    applyFilterChanged(true);
+}
 
+void KMFilterListBox::slotApplied()
+{
+    applyFilterChanged(false);
+}
+
+void KMFilterListBox::applyFilterChanged(bool closeAfterSaving)
+{
     if (mListWidget->currentItem()) {
         emit applyWidgets();
         slotSelected(mListWidget->currentRow());
@@ -1708,13 +1726,13 @@ void KMFilterDialog::slotDialogUpdated()
 {
     qDebug() << "Detected a change in data bound to the dialog!";
     if (!mIgnoreFilterUpdates) {
-        enableButtonApply(true);
+        buttonBox->button(QDialogButtonBox::Apply)->setEnabled(true);
     }
 }
 
 void KMFilterDialog::slotExportAsSieveScript()
 {
-    if (isButtonEnabled(KDialog::Apply)) {
+    if (buttonBox->button(QDialogButtonBox::Apply)->isEnabled()) {
         KMessageBox::information(
             this,
             i18nc("@info",

@@ -27,15 +27,23 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <KFormat>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const QString &serviceName, const PimCommon::AccountInfo &accountInfo, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption(i18n("Account Info"));
-    setButtons(Close);
+    setWindowTitle(i18n("Account Info"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     QGroupBox *grp = new QGroupBox(serviceName);
-    setMainWidget(grp);
+    mainLayout->addWidget(grp);
+    mainLayout->addWidget(buttonBox);
 
     QVBoxLayout *vbox = new QVBoxLayout;
     grp->setLayout(vbox);

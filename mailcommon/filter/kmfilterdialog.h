@@ -29,7 +29,7 @@
 #include "mailfilter.h"
 #include "search/searchpattern.h"
 
-#include <KDialog>
+#include <QDialog>
 
 #include <QGroupBox>
 #include <QList>
@@ -47,6 +47,7 @@ class QModelIndex;
 class QPushButton;
 class QRadioButton;
 class QPushButton;
+class QDialogButtonBox;
 namespace MailCommon
 {
 class SearchPatternEdit;
@@ -196,11 +197,9 @@ public slots:
      */
     void slotUpdateFilterName();
 
-    /**
-     * Called when the user clicks either 'Apply' or 'OK' in
-     * KMFilterDialog. Updates the filter list in the FilterManager.
-     */
-    void slotApplyFilterChanges(KDialog::ButtonCode);
+
+    void slotAccepted();
+    void slotApplied();
 
 protected slots:
     /**
@@ -278,6 +277,7 @@ protected:
     QPushButton *mBtnBottom;
 
 private:
+    void applyFilterChanged(bool closeAfterSaving);
     void enableControls();
     bool itemIsValid(QListWidgetItem *item) const;
     QList<QListWidgetItem *> selectedFilter();
@@ -338,7 +338,7 @@ private:
  * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>.
  * @see MailCommon::MailFilter KMFilterActionEdit SearchPatternEdit KMFilterListBox
  */
-class MAILCOMMON_EXPORT KMFilterDialog : public KDialog
+class MAILCOMMON_EXPORT KMFilterDialog : public QDialog
 {
     Q_OBJECT
 
@@ -473,6 +473,7 @@ protected:
     MailCommon::MailFilter *mFilter;
     MailCommon::FolderRequester *mFolderRequester;
     QPushButton *mRunNow;
+    QDialogButtonBox *buttonBox;
     bool mDoNotClose;
     bool mIgnoreFilterUpdates;
 };
