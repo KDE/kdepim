@@ -31,6 +31,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QApplication>
 
 FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     : QDialog(parent)
@@ -64,7 +65,6 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     aboutData.addAuthor(i18n("Laurent Montel"),
                         i18n("Maintainer"), QLatin1String("montel@kde.org"));
 
-    aboutData.setProgramIconName(QLatin1String("kmail"));
     aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
                             i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 
