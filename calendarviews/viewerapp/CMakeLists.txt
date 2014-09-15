@@ -13,7 +13,7 @@ set(viewerapp_SRCS
 
 kconfig_add_kcfg_files(viewerapp_SRCS settings.kcfgc)
 
-qt5_wrap_ui(viewerapp_SRCS
+ki18n_wrap_ui(viewerapp_SRCS
   mainwindow.ui
 )
 
