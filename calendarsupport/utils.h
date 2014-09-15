@@ -72,6 +72,11 @@ namespace CalendarSupport {
   CALENDARSUPPORT_EXPORT KCalCore::Event::Ptr event( const Akonadi::Item &item );
 
   /**
+   * returns the event from an incidence, or a null pointer if the item has no such payload
+   */
+  CALENDARSUPPORT_EXPORT KCalCore::Event::Ptr event( const KCalCore::Incidence::Ptr &incidence );
+
+  /**
    * returns event pointers from an akonadi item, or a null pointer if the item has no such payload
    */
   CALENDARSUPPORT_EXPORT KCalCore::Event::List eventsFromItems( const Akonadi::Item::List &items );
@@ -88,9 +93,19 @@ namespace CalendarSupport {
   CALENDARSUPPORT_EXPORT KCalCore::Todo::Ptr todo( const Akonadi::Item &item );
 
   /**
+   * returns the todo from an incidence, or a null pointer if the item has no such payload
+   */
+  CALENDARSUPPORT_EXPORT KCalCore::Todo::Ptr todo( const  KCalCore::Incidence::Ptr &incidence );
+
+  /**
    * returns the journal from an akonadi item, or a null pointer if the item has no such payload
    */
   CALENDARSUPPORT_EXPORT KCalCore::Journal::Ptr journal( const Akonadi::Item &item );
+
+  /**
+   * returns the journal from an incidence, or a null pointer if the item has no such payload
+   */
+  CALENDARSUPPORT_EXPORT KCalCore::Journal::Ptr journal( const KCalCore::Incidence::Ptr &incidence );
 
   /**
    * returns whether an Akonadi item contains an incidence
@@ -103,14 +118,29 @@ namespace CalendarSupport {
   CALENDARSUPPORT_EXPORT bool hasEvent( const Akonadi::Item &item );
 
   /**
+   * returns whether an incidence contains an event
+   */
+  CALENDARSUPPORT_EXPORT bool hasEvent( const KCalCore::Incidence::Ptr &incidence );
+
+  /**
    * returns whether an Akonadi item contains a todo
    */
   CALENDARSUPPORT_EXPORT bool hasTodo( const Akonadi::Item &item );
 
   /**
+   * returns whether an incidence contains a todo
+   */
+  CALENDARSUPPORT_EXPORT bool hasTodo( const KCalCore::Incidence::Ptr &incidence );
+
+  /**
    * returns whether an Akonadi item contains a journal
    */
   CALENDARSUPPORT_EXPORT bool hasJournal( const Akonadi::Item &item );
+
+  /**
+   * returns whether an incidence contains a journal
+   */
+  CALENDARSUPPORT_EXPORT bool hasJournal( const KCalCore::Incidence::Ptr &incidence );
 
   /**
    * returns whether this item can be deleted

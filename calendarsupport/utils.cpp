@@ -87,13 +87,21 @@ KCalCore::Event::Ptr CalendarSupport::event( const Akonadi::Item &item )
   //relying on exception for performance reasons
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-    if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent ) {
+    if ( hasEvent(incidence) ) {
       return item.payload<KCalCore::Event::Ptr>();
     }
   } catch( Akonadi::PayloadException ) {
     return KCalCore::Event::Ptr();
   }
   return KCalCore::Event::Ptr();
+}
+
+KCalCore::Event::Ptr CalendarSupport::event(const KCalCore::Incidence::Ptr &incidence)
+{
+    if (hasEvent(incidence)) {
+        return incidence.dynamicCast<KCalCore::Event>();
+    }
+    return KCalCore::Event::Ptr();
 }
 
 KCalCore::Event::List CalendarSupport::eventsFromItems( const Akonadi::Item::List &items )
@@ -122,7 +130,7 @@ KCalCore::Todo::Ptr CalendarSupport::todo( const Akonadi::Item &item )
 {
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-    if ( incidence && incidence->type() == KCalCore::Incidence::TypeTodo ) {
+    if ( hasTodo(incidence) ) {
       return item.payload<KCalCore::Todo::Ptr>();
     }
   } catch( Akonadi::PayloadException ) {
@@ -131,17 +139,33 @@ KCalCore::Todo::Ptr CalendarSupport::todo( const Akonadi::Item &item )
   return KCalCore::Todo::Ptr();
 }
 
+KCalCore::Todo::Ptr CalendarSupport::todo(const KCalCore::Incidence::Ptr &incidence)
+{
+    if (hasTodo(incidence)) {
+        return incidence.dynamicCast<KCalCore::Todo>();
+    }
+    return KCalCore::Todo::Ptr();
+}
+
 KCalCore::Journal::Ptr CalendarSupport::journal( const Akonadi::Item &item )
 {
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-    if ( incidence && incidence->type() == KCalCore::Incidence::TypeJournal ) {
+    if ( hasJournal(incidence) ) {
       return item.payload<KCalCore::Journal::Ptr>();
     }
   } catch( Akonadi::PayloadException ) {
     return KCalCore::Journal::Ptr();
   }
   return KCalCore::Journal::Ptr();
+}
+
+KCalCore::Journal::Ptr CalendarSupport::journal(const KCalCore::Incidence::Ptr &incidence)
+{
+    if (hasJournal(incidence)) {
+        return incidence.dynamicCast<KCalCore::Journal>();
+    }
+    return KCalCore::Journal::Ptr();
 }
 
 bool CalendarSupport::hasIncidence( const Akonadi::Item &item )
@@ -154,14 +178,29 @@ bool CalendarSupport::hasEvent( const Akonadi::Item &item )
   return item.hasPayload<KCalCore::Event::Ptr>();
 }
 
+bool CalendarSupport::hasEvent(const KCalCore::Incidence::Ptr &incidence)
+{
+    return incidence && incidence->type() ==  KCalCore::Incidence::TypeEvent;
+}
+
 bool CalendarSupport::hasTodo( const Akonadi::Item &item )
 {
   return item.hasPayload<KCalCore::Todo::Ptr>();
 }
 
+bool CalendarSupport::hasTodo(const KCalCore::Incidence::Ptr &incidence)
+{
+    return incidence && incidence->type() ==  KCalCore::Incidence::TypeTodo;
+}
+
 bool CalendarSupport::hasJournal( const Akonadi::Item &item )
 {
   return item.hasPayload<KCalCore::Journal::Ptr>();
+}
+
+bool CalendarSupport::hasJournal(const KCalCore::Incidence::Ptr &incidence)
+{
+    return incidence && incidence->type() ==  KCalCore::Incidence::TypeJournal;
 }
 
 QMimeData *CalendarSupport::createMimeData( const Akonadi::Item::List &items,
