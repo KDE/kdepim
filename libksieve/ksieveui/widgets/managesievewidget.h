@@ -21,12 +21,11 @@
 
 #include <QUrl>
 
-#include <Solid/Networking>
-
 #include <QWidget>
 #include <QMap>
 
 class QTreeWidgetItem;
+class QNetworkConfigurationManager;
 
 namespace KManageSieve
 {
@@ -65,7 +64,7 @@ private Q_SLOTS:
     void slotContextMenuRequested(const QPoint &p);
     void slotUpdateButtons();
     void slotDoubleClicked(QTreeWidgetItem *item);
-    void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
+    void slotSystemNetworkOnlineStateChanged(bool state);
     void slotCheckNetworkStatus();
 
 public Q_SLOTS:
@@ -97,6 +96,7 @@ private:
     // Maps top-level items to their child which has the radio button selection
     QMap<QTreeWidgetItem *, QTreeWidgetItem *> mSelectedItems;
     ManageSieveTreeView *mTreeView;
+    QNetworkConfigurationManager *mNetworkConfigurationManager;
     bool mClearAll : 1;
     bool mBlockSignal : 1;
 };

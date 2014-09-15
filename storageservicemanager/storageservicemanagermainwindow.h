@@ -22,7 +22,8 @@
 #define STORAGESERVICEMANAGERMAINWINDOW_H
 
 #include <KXmlGuiWindow>
-#include <Solid/Networking>
+
+class QNetworkConfigurationManager;
 
 namespace PimCommon
 {
@@ -48,13 +49,13 @@ protected:
 private slots:
     void slotConfigure();
     void slotUpdateActions();
-    void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
     void slotServiceRemoved(const QString &serviceName);
     void slotLogout();
     void slotShutdownAllServices();
     void slotRefreshAll();
     void slotShowNotificationOptions();
     void slotServicesChanged();
+    void slotSystemNetworkOnlineStateChanged(bool state);
 private:
     void setupActions();
     void readConfig();
@@ -74,7 +75,7 @@ private:
     QAction *mRefreshAll;
     QAction *mRenameItem;
     QLabel *mStatusBarInfo;
-    bool mNetworkIsDown;
+    QNetworkConfigurationManager *mNetworkConfigurationManager;
 };
 
 #endif // STORAGESERVICEMANAGERMAINWINDOW_H

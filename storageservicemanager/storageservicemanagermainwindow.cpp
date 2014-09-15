@@ -48,10 +48,10 @@
 #include <QDebug>
 #include <KSharedConfig>
 #include <QAction>
+#include <QNetworkConfigurationManager>
 
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
-    : KXmlGuiWindow(),
-      mNetworkIsDown(false)
+    : KXmlGuiWindow()
 {
     StorageServiceManagerSettingsJob *settingsJob = new StorageServiceManagerSettingsJob(this);
     PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
@@ -67,8 +67,8 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(selectionChanged()), this, SLOT(slotUpdateActions()));
     setCentralWidget(mStorageServiceMainWidget);
 
-    connect(Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
-            this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)));
+    mNetworkConfigurationManager = new QNetworkConfigurationManager();
+    connect(mNetworkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(slotSystemNetworkOnlineStateChanged(bool)));
 
     setupActions();
     setupGUI(Keys | StatusBar | Save | Create);
@@ -76,8 +76,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     mStorageServiceMainWidget->storageServiceTabWidget()->setListStorageService(mStorageManager->listService());
     slotUpdateActions();
     initStatusBar();
-    const Solid::Networking::Status status = Solid::Networking::status();
-    slotSystemNetworkStatusChanged(status);
+    slotSystemNetworkOnlineStateChanged(mNetworkConfigurationManager->isOnline());
 }
 
 StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
@@ -91,6 +90,7 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
     if (StorageServiceManagerGlobalConfig::self()->closeWallet()) {
         PimCommon::StorageServiceSettings::self()->closeWallet();
     }
+    delete mNetworkConfigurationManager;
 }
 
 void StorageServiceManagerMainWindow::slotServicesChanged()
@@ -106,23 +106,21 @@ void StorageServiceManagerMainWindow::initStatusBar()
     statusBar()->addPermanentWidget(progressBar->littleProgress(), 0);
 }
 
-void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
+void StorageServiceManagerMainWindow::slotSystemNetworkOnlineStateChanged(bool state)
 {
-    if (status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+    if (state) {
         mStorageServiceMainWidget->storageServiceTabWidget()->setNetworkIsDown(false);
         slotSetStatusBarMessage(i18n("Network connection is up."));
-        mNetworkIsDown = false;
     } else {
         mStorageServiceMainWidget->storageServiceTabWidget()->setNetworkIsDown(true);
         slotSetStatusBarMessage(i18n("Network connection is down."));
-        mNetworkIsDown = true;
     }
     slotUpdateActions();
 }
 
 void StorageServiceManagerMainWindow::slotUpdateActions()
 {
-    if (mNetworkIsDown) {
+    if (!mNetworkConfigurationManager->isOnline()) {
         mDownloadFile->setDisabled(true);
         mCreateFolder->setDisabled(true);
         mAccountInfo->setDisabled(true);

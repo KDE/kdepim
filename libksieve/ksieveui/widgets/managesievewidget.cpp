@@ -30,6 +30,7 @@
 #include <QMenu>
 #include <QTimer>
 #include <QDebug>
+#include <QNetworkConfigurationManager>
 
 using namespace KSieveUi;
 ManageSieveWidget::ManageSieveWidget(QWidget *parent)
@@ -47,8 +48,9 @@ ManageSieveWidget::ManageSieveWidget(QWidget *parent)
     connect(mTreeView, &ManageSieveTreeView::itemDoubleClicked, this, &ManageSieveWidget::slotDoubleClicked);
     connect(mTreeView, &ManageSieveTreeView::itemSelectionChanged, this, &ManageSieveWidget::slotUpdateButtons);
     connect(mTreeView, &ManageSieveTreeView::itemChanged, this, &ManageSieveWidget::slotItemChanged);
-    connect(Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
-            this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)));
+
+    mNetworkConfigurationManager = new QNetworkConfigurationManager();
+    connect(mNetworkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(slotSystemNetworkOnlineStateChanged(bool)));
 
     lay->addWidget(mTreeView);
     setLayout(lay);
@@ -58,16 +60,17 @@ ManageSieveWidget::ManageSieveWidget(QWidget *parent)
 ManageSieveWidget::~ManageSieveWidget()
 {
     clear();
+    delete mNetworkConfigurationManager;
 }
 
 void ManageSieveWidget::slotCheckNetworkStatus()
 {
-    slotSystemNetworkStatusChanged(Solid::Networking::status());
+    slotSystemNetworkOnlineStateChanged(mNetworkConfigurationManager->isOnline());
 }
 
-void ManageSieveWidget::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
+void ManageSieveWidget::slotSystemNetworkOnlineStateChanged(bool state)
 {
-    if (status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+    if (state) {
         mTreeView->setEnabled(true);
         slotRefresh();
     } else {

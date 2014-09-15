@@ -39,10 +39,10 @@
 #include <QPointer>
 #include <QLabel>
 #include <QCloseEvent>
+#include <QNetworkConfigurationManager>
 
 SieveEditorMainWindow::SieveEditorMainWindow()
-    : KXmlGuiWindow(),
-      mNetworkIsDown(false)
+    : KXmlGuiWindow()
 {
     mMainWidget = new SieveEditorCentralWidget;
     connect(mMainWidget, &SieveEditorCentralWidget::configureClicked, this, &SieveEditorMainWindow::slotConfigure);
@@ -52,12 +52,12 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     setupGUI();
     readConfig();
     initStatusBar();
-    connect(Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
-            this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)));
+    mNetworkConfigurationManager = new QNetworkConfigurationManager();
+    connect(mNetworkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(slotSystemNetworkOnlineStateChanged(bool)));
+
     connect(mMainWidget->sieveEditorMainWidget()->tabWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
     connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SLOT(slotUpdateActions()));
-    const Solid::Networking::Status status = Solid::Networking::status();
-    slotSystemNetworkStatusChanged(status);
+    slotSystemNetworkOnlineStateChanged(mNetworkConfigurationManager->isOnline());
     slotRefreshList();
 }
 
@@ -78,16 +78,14 @@ void SieveEditorMainWindow::initStatusBar()
     statusBar()->insertWidget(0, mStatusBarInfo, 4);
 }
 
-void SieveEditorMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
+void SieveEditorMainWindow::slotSystemNetworkOnlineStateChanged(bool state)
 {
-    if (status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
-        mNetworkIsDown = false;
+    if (state) {
         mStatusBarInfo->setText(i18n("Network is Up."));
     } else {
-        mNetworkIsDown = true;
         mStatusBarInfo->setText(i18n("Network is Down."));
     }
-    mMainWidget->sieveEditorMainWidget()->setEnabled(!mNetworkIsDown);
+    mMainWidget->sieveEditorMainWidget()->setEnabled(state);
     slotUpdateActions();
 }
 
@@ -153,7 +151,7 @@ void SieveEditorMainWindow::setupActions()
 
 void SieveEditorMainWindow::slotRefreshList()
 {
-    if (!mNetworkIsDown) {
+    if (mNetworkConfigurationManager->isOnline()) {
         mMainWidget->sieveEditorMainWidget()->refreshList();
     }
 }
@@ -219,7 +217,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count() > 0);
     mSaveScript->setEnabled(hasPage);
     mGoToLine->setEnabled(hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
-    mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
-    mRefreshList->setEnabled(!mNetworkIsDown);
+    mSaveScript->setEnabled(hasPage && mNetworkConfigurationManager->isOnline());
+    mRefreshList->setEnabled(mNetworkConfigurationManager->isOnline());
 }
 
