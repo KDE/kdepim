@@ -356,12 +356,10 @@ void Widget::viewGroupHeaderContextPopupRequest(MessageList::Core::GroupHeaderIt
 
     if (view()->isExpanded(index)) {
         act = menu.addAction(i18n("Collapse Group"));
-        connect(act, SIGNAL(triggered(bool)),
-                this, SLOT(slotCollapseItem()));
+        connect(act, &QAction::triggered, this, &Widget::slotCollapseItem);
     } else {
         act = menu.addAction(i18n("Expand Group"));
-        connect(act, SIGNAL(triggered(bool)),
-                this, SLOT(slotExpandItem()));
+        connect(act, &QAction::triggered, this, &Widget::slotExpandItem);
     }
 
     menu.addSeparator();
