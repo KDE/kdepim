@@ -38,6 +38,7 @@ FollowUpReminderJob::~FollowUpReminderJob()
 void FollowUpReminderJob::start()
 {
     if (!mItem.isValid()) {
+        qDebug()<<" item is not valid";
         deleteLater();
         return;
     }
@@ -76,12 +77,11 @@ void FollowUpReminderJob::slotItemFetchJobDone(KJob *job)
     }
     const KMime::Message::Ptr msg = items.at(0).payload<KMime::Message::Ptr>();
     if (msg) {
-        KMime::Headers::MessageID *msgID = msg->messageID(false);
-        if (msgID) {
-            //FIXME It's not the messageID to look at!
-            const QString messageIdStr = msgID->asUnicodeString();
-            qDebug() << " messageIdStr" << messageIdStr;
-            Q_EMIT finished(messageIdStr);
+        KMime::Headers::InReplyTo *replyTo = msg->inReplyTo(false);
+        if (replyTo) {
+            const QString replyToIdStr = replyTo->asUnicodeString();
+            qDebug()<<"Reply to"<<replyToIdStr;
+            Q_EMIT finished(replyToIdStr);
         }
     }
     deleteLater();
