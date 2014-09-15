@@ -26,12 +26,19 @@
 
 #include "instanceselector.h"
 
+#include <Kdelibs4ConfigMigrator>
+
 #include <stdlib.h>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
 int main( int argc, char **argv )
 {
+  Kdelibs4ConfigMigrator migrate(QLatin1String("akonadiconsole"));
+  migrate.setConfigFiles(QStringList() << QLatin1String("akonadiconsolerc"));
+  migrate.setUiFiles(QStringList() << QLatin1String("akonadiconsoleui.rc"));
+  migrate.migrate();
+
   QApplication app(argc, argv);
   KAboutData aboutData( QStringLiteral("akonadiconsole"),
                         i18n( "Akonadi Console" ),
@@ -40,7 +47,7 @@ int main( int argc, char **argv )
                         KAboutLicense::GPL,
                         i18n( "(c) 2006-2014 the Akonadi developer" ),
                         QStringLiteral("http://pim.kde.org/akonadi/") );
-  aboutData.setProgramIconName( "akonadi" );
+  QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("akonadi")));
   aboutData.addAuthor( i18n( "Tobias König" ), i18n( "Author" ), QStringLiteral("tokoe@kde.org") );
   aboutData.addAuthor( i18n( "Volker Krause" ),  i18n( "Author" ), QStringLiteral("vkrause@kde.org") );
   KAboutData::setApplicationData(aboutData);

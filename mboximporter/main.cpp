@@ -21,6 +21,7 @@
 
 #include <KLocalizedString>
 #include <QFileDialog>
+#include <QIcon>
 #include <qcommandlineparser.h>
 #include <qcommandlineoption.h>
 #include "kdepim-version.h"
@@ -38,7 +39,7 @@ int main(int argc, char *argv[])
                          i18n("Copyright © 2013 MBoxImporter authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
 
-    aboutData.setProgramIconName(QLatin1String("kmail"));
+    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setProductName(QByteArray("mboximporter"));
 

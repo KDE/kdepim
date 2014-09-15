@@ -68,7 +68,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     setCentralWidget(mStorageServiceMainWidget);
 
     mNetworkConfigurationManager = new QNetworkConfigurationManager();
-    connect(mNetworkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(slotSystemNetworkOnlineStateChanged(bool)));
+    connect(mNetworkConfigurationManager, &QNetworkConfigurationManager::onlineStateChanged, this, &StorageServiceManagerMainWindow::slotSystemNetworkOnlineStateChanged);
 
     setupActions();
     setupGUI(Keys | StatusBar | Save | Create);

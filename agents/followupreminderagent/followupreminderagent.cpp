@@ -27,6 +27,8 @@
 #include <AkonadiCore/ItemFetchScope>
 #include <AkonadiCore/dbusconnectionpool.h>
 
+#include <Kdelibs4ConfigMigrator>
+
 #include <QPointer>
 #include <QDebug>
 #include <QTimer>
@@ -34,6 +36,10 @@
 FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     : Akonadi::AgentBase(id)
 {
+    Kdelibs4ConfigMigrator migrate(QLatin1String("followupreminderagent"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_followupreminder_agentrc") << QLatin1String("akonadi_followupreminder_agent.notifyrc"));
+    migrate.migrate();
+
     new FollowUpReminderAgentAdaptor(this);
     Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/FollowUpReminder"), this, QDBusConnection::ExportAdaptors);
     Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.FollowUpReminder"));

@@ -20,7 +20,7 @@
 #include <KLocalizedString>
 #include <Kdelibs4ConfigMigrator>
 #include <QApplication>
-
+#include <QIcon>
 #include "importwizard.h"
 
 #include "kdepim-version.h"
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
                          i18n("Copyright © 2012-2013-2014 importwizard authors"));
 
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
-    aboutData.setProgramIconName(QLatin1String("kontact-import-wizard"));
+    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kontact-import-wizard")));
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setProductName(QByteArray("importwizard"));
 

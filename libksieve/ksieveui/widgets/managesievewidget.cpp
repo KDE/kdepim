@@ -50,7 +50,7 @@ ManageSieveWidget::ManageSieveWidget(QWidget *parent)
     connect(mTreeView, &ManageSieveTreeView::itemChanged, this, &ManageSieveWidget::slotItemChanged);
 
     mNetworkConfigurationManager = new QNetworkConfigurationManager();
-    connect(mNetworkConfigurationManager, SIGNAL(onlineStateChanged(bool)), this, SLOT(slotSystemNetworkOnlineStateChanged(bool)));
+    connect(mNetworkConfigurationManager, &QNetworkConfigurationManager::onlineStateChanged, this, &ManageSieveWidget::slotSystemNetworkOnlineStateChanged);
 
     lay->addWidget(mTreeView);
     setLayout(lay);

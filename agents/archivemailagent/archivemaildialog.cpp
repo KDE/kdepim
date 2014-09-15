@@ -81,7 +81,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     aboutData.addAuthor(i18n("Laurent Montel"),
                         i18n("Maintainer"), QLatin1String("montel@kde.org"));
 
-    aboutData.setProgramIconName(QLatin1String("kmail"));
+    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
     aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
                             i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 

@@ -34,6 +34,7 @@
 #include <KConfigGroup>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QApplication>
 
 NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     : QDialog(parent)
@@ -83,7 +84,7 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     aboutData.addAuthor(i18n("Laurent Montel"),
                         i18n("Maintainer"), QLatin1String("montel@kde.org"));
 
-    aboutData.setProgramIconName(QLatin1String("knotes"));
+    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("knotes")));
     aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
                             i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 

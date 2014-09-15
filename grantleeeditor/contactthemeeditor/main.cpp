@@ -42,7 +42,7 @@ int main(int argc, char **argv)
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013-2014 contactthemeeditor authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
-    aboutData.setProgramIconName(QLatin1String("kaddressbook"));
+    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kaddressbook")));
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setProductName(QByteArray("contactthemeeditor"));
 

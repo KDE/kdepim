@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
                          i18n("Test app for EntityTreeModel"),
                          KAboutLicense::GPL,
                          QLatin1String("http://pim.kde.org/akonadi/"));
-    aboutData.setProgramIconName(QLatin1String("akonadi"));
+    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("akonadi")));
     aboutData.addAuthor(i18n("Stephen Kelly"), i18n("Author"), QLatin1String("steveire@gmail.com"));
 
     QApplication app(argc, argv);

@@ -45,7 +45,7 @@ int main(int argc, char **argv)
                          i18n("Copyright © 2013, 2014 sieveeditor authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QLatin1String("montel@kde.org"));
 
-    aboutData.setProgramIconName(QLatin1String("kmail"));
+    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

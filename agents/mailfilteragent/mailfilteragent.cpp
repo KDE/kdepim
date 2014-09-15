@@ -65,7 +65,7 @@ MailFilterAgent::MailFilterAgent(const QString &id)
       m_filterLogDialog(0)
 {
     Kdelibs4ConfigMigrator migrate(QLatin1String("mailfilteragent"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_mailfilter_agentrc"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_mailfilter_agentrc") << QLatin1String("akonadi_mailfilter_agent.notifyrc"));
     migrate.migrate();
 
     Akonadi::AttributeFactory::registerAttribute<Pop3ResourceAttribute>();
