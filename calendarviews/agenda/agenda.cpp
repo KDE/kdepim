@@ -29,7 +29,7 @@
 #include "agenda.h"
 #include "agendaitem.h"
 #include "agendaview.h"
-#include "helper.h"
+#include "viewcalendar.h"
 #include "prefs.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
@@ -207,7 +207,7 @@ class Agenda::Private
              int columns, int rows, int rowSize, bool isInteractive )
       : mAgendaView( agendaView ), mScrollArea( scrollArea ), mAllDayMode( false ),
         mColumns( columns ), mRows( rows ), mGridSpacingX( 0.0 ), mGridSpacingY( rowSize ),
-        mDesiredGridSpacingY( rowSize ), mCalendar( 0 ), mChanger( 0 ),
+        mDesiredGridSpacingY( rowSize ), mChanger( 0 ),
         mResizeBorderWidth( 0 ), mScrollBorderWidth( 0 ), mScrollDelay( 0 ), mScrollOffset( 0 ),
         mWorkingHoursEnable( false ), mHolidayMask( 0 ), mWorkingHoursYTop( 0 ),
         mWorkingHoursYBottom( 0 ), mHasSelection( 0 ), mSelectedId( -1 ), mMarcusBains( 0 ),
@@ -225,15 +225,15 @@ class Agenda::Private
       return mAgendaView->preferences();
     }
 
-    bool isQueuedForDeletion( Akonadi::Item::Id id ) const
+    bool isQueuedForDeletion( const QString &uid ) const
     {
       // if mAgendaItemsById contains it it means that a createAgendaItem() was called
       // before the previous agenda items were deleted.
-      return mItemsQueuedForDeletion.contains( id ) && !mAgendaItemsById.contains( id );
+      return mItemsQueuedForDeletion.contains( uid ) && !mAgendaItemsById.contains( uid );
     }
 
-    QMultiHash<Akonadi::Item::Id, AgendaItem::QPtr> mAgendaItemsById; // It's a QMultiHash because recurring incidences might have many agenda items
-    QSet<Akonadi::Item::Id> mItemsQueuedForDeletion;
+    QMultiHash<QString, AgendaItem::QPtr> mAgendaItemsById; // It's a QMultiHash because recurring incidences might have many agenda items
+    QSet<QString> mItemsQueuedForDeletion;
 
     AgendaView *mAgendaView;
     QScrollArea *mScrollArea;
@@ -251,8 +251,6 @@ class Agenda::Private
     double mGridSpacingY;
     double mDesiredGridSpacingY;
 
-    // We need the calendar for drag'n'drop and for paint the ResourceColor
-    Akonadi::ETMCalendar::Ptr mCalendar;
     Akonadi::IncidenceChanger *mChanger;
 
     // size of border, where mouse action will resize the AgendaItem
@@ -293,10 +291,10 @@ class Agenda::Private
 
     // Currently selected item
     QPointer<AgendaItem> mSelectedItem;
-    // Id of the last selected item. Used for reselecting in situations
+    // Uid of the last selected incidence. Used for reselecting in situations
     // where the selected item points to a no longer valid incidence, for
     // example during resource reload.
-    Akonadi::Item::Id mSelectedId;
+    QString mSelectedId;
 
     // The Marcus Bains Line widget.
     MarcusBains *mMarcusBains;
@@ -314,6 +312,8 @@ class Agenda::Private
 
     bool mReturnPressed;
     bool mIsInteractive;
+
+    MultiViewCalendar::Ptr mCalendar;
 };
 
 /*
@@ -349,9 +349,9 @@ Agenda::~Agenda()
   delete d;
 }
 
-Akonadi::Item Agenda::selectedIncidence() const
+KCalCore::Incidence::Ptr Agenda::selectedIncidence() const
 {
-  return d->mSelectedItem ? d->mSelectedItem->incidence() : Akonadi::Item();
+  return d->mSelectedItem ? d->mSelectedItem->incidence() : KCalCore::Incidence::Ptr();
 }
 
 QDate Agenda::selectedIncidenceDate() const
@@ -359,7 +359,7 @@ QDate Agenda::selectedIncidenceDate() const
   return d->mSelectedItem ? d->mSelectedItem->occurrenceDate() : QDate();
 }
 
-Akonadi::Item::Id Agenda::lastSelectedItemId() const
+QString Agenda::lastSelectedItemId() const
 {
   return d->mSelectedId;
 }
@@ -583,7 +583,7 @@ bool Agenda::eventFilter_drag( QObject *obj, QDropEvent *de )
 
     const QList<KUrl> incidenceUrls = CalendarSupport::incidenceItemUrls( md );
     const KCalCore::Incidence::List incidences =
-      CalendarSupport::incidences( md, d->mCalendar->timeSpec() );
+      CalendarSupport::incidences( md, d->mCalendar->mETMCalendar->timeSpec() );
 
     Q_ASSERT( !incidenceUrls.isEmpty() || !incidences.isEmpty() );
 
@@ -674,8 +674,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
       } else {
         AgendaItem::QPtr item = dynamic_cast<AgendaItem *>(object);
         if (item) {
-          const Akonadi::Item aitem = item->incidence();
-          KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+          KCalCore::Incidence::Ptr incidence = item->incidence();
           if ( incidence->isReadOnly() ) {
             d->mActionItem = 0;
           } else {
@@ -736,8 +735,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
     QPoint indicatorPos = gridToContents( contentsToGrid( viewportPos ) );
     if ( object != this ) {
       AgendaItem::QPtr moveItem = dynamic_cast<AgendaItem *>( object );
-      const Akonadi::Item aitem = moveItem ? moveItem->incidence() : Akonadi::Item();
-      KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+      KCalCore::Incidence::Ptr incidence =  moveItem ? moveItem->incidence() : KCalCore::Incidence::Ptr();
       if ( incidence && !incidence->isReadOnly() ) {
         if ( !d->mActionItem ) {
           setNoActionCursor( moveItem, viewportPos );
@@ -1165,8 +1163,7 @@ void Agenda::endItemAction()
 
   bool multiModify = false;
   // FIXME: do the cloning here...
-  Akonadi::Item inc = d->mActionItem->incidence();
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( inc );
+  const KCalCore::Incidence::Ptr incidence = d->mActionItem->incidence();
   d->mItemMoved = d->mItemMoved && !( d->mStartCell.x() == d->mEndCell.x() &&
                                       d->mStartCell.y() == d->mEndCell.y() );
 
@@ -1174,8 +1171,7 @@ void Agenda::endItemAction()
   if ( d->mItemMoved ) {
     bool modify = false;
     if ( incidence->recurs() ) {
-      const int res = d->mAgendaView->showMoveRecurDialog(
-        CalendarSupport::incidence( d->mActionItem->incidence() ), d->mActionItem->occurrenceDate() );
+      const int res = d->mAgendaView->showMoveRecurDialog( d->mActionItem->incidence(), d->mActionItem->occurrenceDate() );
       switch ( res ) {
       case KCalUtils::RecurrenceActions::AllOccurrences: // All occurrences
         // Moving the whole sequene of events is handled by the itemModified below.
@@ -1194,9 +1190,7 @@ void Agenda::endItemAction()
           // don't recreate items, they already have the correct position
           d->mAgendaView->enableAgendaUpdate( false );
 
-          Akonadi::Item item;
-          item.setPayload( newInc );
-          d->mActionItem->setIncidence( item );
+          d->mActionItem->setIncidence( newInc );
           d->mActionItem->dissociateFromMultiItem();
 
           addIncidence = true;
@@ -1248,8 +1242,10 @@ void Agenda::endItemAction()
       // calling when we move item.
       // Not perfect need to improve it!
       //mChanger->endChange( inc );
-      d->mAgendaView->updateEventDates( modif, addIncidence, inc.parentCollection().id() );
-
+      Akonadi::Item item = d->mCalendar->item(incidence);
+      if (item.isValid()) {
+        d->mAgendaView->updateEventDates( modif, addIncidence, item.parentCollection().id() );
+      }
       if ( addIncidence ) {
         // delete the one we dragged, there's a new one being added async, due to dissociation.
         delete modif;
@@ -1257,7 +1253,10 @@ void Agenda::endItemAction()
     } else {
       // the item was moved, but not further modified, since it's not recurring
       // make sure the view updates anyhow, with the right item
-      d->mAgendaView->updateEventDates( placeItem, addIncidence, inc.parentCollection().id() );
+      Akonadi::Item item = d->mCalendar->item(incidence);
+      if (item.isValid()) {
+        d->mAgendaView->updateEventDates( placeItem, addIncidence, item.parentCollection().id() );
+      }
     }
   }
 
@@ -1296,7 +1295,7 @@ void Agenda::setActionCursor( int actionType, bool acting )
 
 void Agenda::setNoActionCursor( AgendaItem::QPtr moveItem, const QPoint &pos )
 {
-  const Akonadi::Item item = moveItem ? moveItem->incidence() : Akonadi::Item();
+  const KCalCore::Incidence::Ptr item = moveItem ? moveItem->incidence() : KCalCore::Incidence::Ptr();
 
   const bool noResize = CalendarSupport::hasTodo( item );
 
@@ -1697,7 +1696,7 @@ void Agenda::setStartTime( const QTime &startHour )
 /*
   Insert AgendaItem into agenda.
 */
-AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const KDateTime &qd,
+AgendaItem::QPtr Agenda::insertItem( const KCalCore::Incidence::Ptr &incidence, const KDateTime &qd,
                                      int X, int YTop, int YBottom, int itemPos, int itemCount,
                                      bool isSelected )
 {
@@ -1724,8 +1723,7 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const KDate
                       int( ( YBottom + 1 ) * d->mGridSpacingY ) );
   agendaItem->setCellXY( X, YTop, YBottom );
   agendaItem->setCellXRight( X );
-  agendaItem->setResourceColor( EventViews::resourceColor( incidence,
-                                                           d->preferences() ) );
+  agendaItem->setResourceColor(d->mCalendar->resourceColor(incidence));
   agendaItem->installEventFilter( this );
 
   agendaItem->move( int( X * d->mGridSpacingX ), int( YTop * d->mGridSpacingY ) );
@@ -1744,7 +1742,7 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const KDate
 /*
   Insert all-day AgendaItem into agenda.
 */
-AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const KDateTime &occurrenceDateTime,
+AgendaItem::QPtr Agenda::insertAllDayItem( const KCalCore::Incidence::Ptr &incidence, const KDateTime &occurrenceDateTime,
                                            int XBegin, int XEnd, bool isSelected )
 {
   if ( !d->mAllDayMode ) {
@@ -1769,8 +1767,7 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
   agendaItem->resize( int( endIt ) - int( startIt ), int( d->mGridSpacingY ) );
 
   agendaItem->installEventFilter( this );
-  agendaItem->setResourceColor( EventViews::resourceColor( incidence,
-                                                           d->preferences() ) );
+  agendaItem->setResourceColor(d->mCalendar->resourceColor(incidence));
   agendaItem->move( int( XBegin * d->mGridSpacingX ), 0 ) ;
   d->mItems.append( agendaItem );
 
@@ -1781,26 +1778,26 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
   return agendaItem;
 }
 
-AgendaItem::QPtr Agenda::createAgendaItem( const Akonadi::Item &item, int itemPos,
+AgendaItem::QPtr Agenda::createAgendaItem( const KCalCore::Incidence::Ptr &incidence, int itemPos,
                                            int itemCount, const KDateTime &qd, bool isSelected )
 {
-  if ( !item.isValid() ) {
+  if ( !incidence ) {
     kWarning() << "Agenda::createAgendaItem() item is invalid.";
     return AgendaItem::QPtr();
   }
 
-  AgendaItem::QPtr agendaItem = new AgendaItem( d->mAgendaView, d->mCalendar, item,
+  AgendaItem::QPtr agendaItem = new AgendaItem( d->mAgendaView, d->mCalendar, incidence,
                                                 itemPos, itemCount, qd, isSelected, this );
 
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)), SLOT(removeAgendaItem(AgendaItem::QPtr)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)), SLOT(showAgendaItem(AgendaItem::QPtr)) );
 
-  d->mAgendaItemsById.insert( item.id(), agendaItem );
+  d->mAgendaItemsById.insert( incidence->uid(), agendaItem );
 
   return agendaItem;
 }
 
-void Agenda::insertMultiItem( const Akonadi::Item &event, const KDateTime &occurrenceDateTime, int XBegin,
+void Agenda::insertMultiItem( const KCalCore::Incidence::Ptr &event, const KDateTime &occurrenceDateTime, int XBegin,
                               int XEnd, int YTop, int YBottom, bool isSelected )
 {
   KCalCore::Event::Ptr ev = CalendarSupport::event( event );
@@ -1873,26 +1870,19 @@ void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
     return;
   }
 
-  // we get the id from the property, because the item might have been deleted from the etm/mCalendar
-  bool ok = false;
-  Akonadi::Item::Id id = incidence->customProperty( "VOLATILE", "AKONADI-ID" ).toLongLong( &ok );
-
-  if ( id == -1 || !ok ) {
-    id = d->mCalendar->item( incidence->instanceIdentifier() ).id();
-
-    if ( id == -1 ) {
+  /*
+  if ( !d->mViewCalendar->item(incidence).isValid() ) {
       // Ok, we really don't know the ID, give up.
       kWarning() << "Agenda::removeIncidence() Item to remove is invalid. uid = "
                  << incidence->instanceIdentifier();
       return;
-    }
-  }
+  } */
 
-  if ( d->isQueuedForDeletion( id ) ) {
+  if ( d->isQueuedForDeletion( incidence->uid() ) ) {
     return; // It's already queued for deletion
   }
 
-  AgendaItem::List agendaItems = d->mAgendaItemsById.values( id );
+  AgendaItem::List agendaItems = d->mAgendaItemsById.values( incidence->uid() );
   if ( agendaItems.isEmpty() ) {
     // We're not displaying such item
     // kDebug() << "Ignoring";
@@ -1933,7 +1923,7 @@ bool Agenda::removeAgendaItem( AgendaItem::QPtr agendaItem )
   // removeChild( thisItem );
 
   taken = d->mItems.removeAll( agendaItem ) > 0;
-  d->mAgendaItemsById.remove( agendaItem->incidence().id(), agendaItem );
+  d->mAgendaItemsById.remove( agendaItem->incidence()->uid(), agendaItem );
 
   QList<AgendaItem::QPtr>::iterator it;
   for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
@@ -1949,7 +1939,7 @@ bool Agenda::removeAgendaItem( AgendaItem::QPtr agendaItem )
     }
   }
   d->mItemsToDelete.append( agendaItem );
-  d->mItemsQueuedForDeletion.insert( agendaItem->incidence().id() );
+  d->mItemsQueuedForDeletion.insert( agendaItem->incidence()->uid() );
   agendaItem->setVisible( false );
   QTimer::singleShot( 0, this, SLOT(deleteItemsToDelete()) );
   return taken;
@@ -2132,12 +2122,12 @@ void Agenda::deselectItem()
     return;
   }
 
-  const Akonadi::Item selectedItem = d->mSelectedItem->incidence();
+  const KCalCore::Incidence::Ptr selectedItem = d->mSelectedItem->incidence();
 
   foreach ( AgendaItem::QPtr item, d->mItems ) {
     if ( item ) {
-      const Akonadi::Item itemInc = item->incidence();
-      if( itemInc.isValid() && selectedItem.isValid() && itemInc.id() == selectedItem.id() ) {
+      const KCalCore::Incidence::Ptr itemInc = item->incidence();
+      if( itemInc && selectedItem && itemInc->uid() == selectedItem->uid() ) {
         item->select( false );
       }
     }
@@ -2153,26 +2143,26 @@ void Agenda::selectItem( AgendaItem::QPtr item )
   }
   deselectItem();
   if ( item == 0 ) {
-    emit incidenceSelected( Akonadi::Item(), QDate() );
+    emit incidenceSelected( KCalCore::Incidence::Ptr(), QDate() );
     return;
   }
   d->mSelectedItem = item;
   d->mSelectedItem->select();
-  Q_ASSERT( CalendarSupport::hasIncidence( d->mSelectedItem->incidence() ) );
-  d->mSelectedId = d->mSelectedItem->incidence().id();
+  Q_ASSERT( d->mSelectedItem->incidence() );
+  d->mSelectedId = d->mSelectedItem->incidence()->uid();
 
   foreach ( AgendaItem::QPtr item, d->mItems ) {
-    if( item && item->incidence().id() == d->mSelectedId ) {
+    if( item && item->incidence()->uid() == d->mSelectedId ) {
       item->select();
     }
   }
   emit incidenceSelected( d->mSelectedItem->incidence(), d->mSelectedItem->occurrenceDate() );
 }
 
-void Agenda::selectItemByItemId( const Akonadi::Item::Id &id )
+void Agenda::selectIncidenceByUid( const QString &uid )
 {
   foreach ( AgendaItem::QPtr item, d->mItems ) {
-    if ( item && item->incidence().id() == id ) {
+    if ( item && item->incidence()->uid() == uid ) {
       selectItem( item );
       break;
     }
@@ -2181,7 +2171,7 @@ void Agenda::selectItemByItemId( const Akonadi::Item::Id &id )
 
 void Agenda::selectItem( const Akonadi::Item &item )
 {
-  selectItemByItemId( item.id() );
+  selectIncidenceByUid( CalendarSupport::incidence(item)->uid() );
 }
 
 // This function seems never be called.
@@ -2230,7 +2220,7 @@ KCalCore::DateList Agenda::dateList() const
   return d->mSelectedDates;
 }
 
-void Agenda::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
+void Agenda::setCalendar( const MultiViewCalendar::Ptr &cal )
 {
   d->mCalendar = cal;
 }
@@ -2269,9 +2259,9 @@ QScrollArea *Agenda::scrollArea() const
   return d->mScrollArea;
 }
 
-AgendaItem::List Agenda::agendaItems( Akonadi::Item::Id id ) const
+AgendaItem::List Agenda::agendaItems( const QString &uid ) const
 {
-  return d->mAgendaItemsById.values( id );
+  return d->mAgendaItemsById.values( uid );
 }
 
 AgendaScrollArea::AgendaScrollArea( bool isAllDay, AgendaView *agendaView,

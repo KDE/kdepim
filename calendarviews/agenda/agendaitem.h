@@ -24,6 +24,7 @@
 #define EVENTVIEWS_AGENDAITEM_H
 
 #include "eventviews_export.h"
+#include "viewcalendar.h"
 
 #include <calendarsupport/cellitem.h>
 
@@ -85,8 +86,8 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CalendarSupport::Cel
     typedef QList<QPtr> List;
 
     AgendaItem( EventView *eventView,
-                const Akonadi::ETMCalendar::Ptr &calendar,
-                const Akonadi::Item &incidence,
+                const MultiViewCalendar::Ptr &calendar,
+                const KCalCore::Incidence::Ptr &incidence,
                 int itemPos,
                 int itemCount,
                 const KDateTime &qd,
@@ -207,9 +208,9 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CalendarSupport::Cel
 
     bool dissociateFromMultiItem();
 
-    void setIncidence( const Akonadi::Item &incidence );
+    void setIncidence( const KCalCore::Incidence::Ptr &incidence );
 
-    const Akonadi::Item & incidence() const
+    const KCalCore::Incidence::Ptr& incidence() const
     {
       return mIncidence;
     }
@@ -295,8 +296,8 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CalendarSupport::Cel
     int mCellYTop, mCellYBottom;
 
     EventView *mEventView;
-    Akonadi::ETMCalendar::Ptr mCalendar;
-    Akonadi::Item mIncidence;
+    MultiViewCalendar::Ptr mCalendar;
+    KCalCore::Incidence::Ptr mIncidence;
     KDateTime mOccurrenceDateTime;
     bool mValid;
     bool mCloned;

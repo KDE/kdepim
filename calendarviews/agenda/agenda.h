@@ -27,6 +27,7 @@
 
 #include "eventviews_export.h"
 #include "agendaitem.h"
+#include "viewcalendar.h"
 
 #include <Akonadi/Item>
 
@@ -72,7 +73,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     virtual ~Agenda();
 
-    Akonadi::Item selectedIncidence() const;
+    KCalCore::Incidence::Ptr selectedIncidence() const;
     QDate selectedIncidenceDate() const;
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
@@ -93,14 +94,14 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     QScrollArea *scrollArea() const;
 
-    AgendaItem::List agendaItems( Akonadi::Entity::Id id ) const;
+    AgendaItem::List agendaItems( const QString &uid ) const;
 
     /**
       Returns the uid of the last incidence that was selected. This
       persists across reloads and clear, so that if the same uid
       reappears, it can be reselected.
     */
-    Akonadi::Item::Id lastSelectedItemId() const;
+    QString lastSelectedItemId() const;
 
     bool eventFilter ( QObject *, QEvent * );
 
@@ -120,13 +121,13 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setStartTime( const QTime &startHour );
 
-    AgendaItem::QPtr insertItem ( const Akonadi::Item &incidence, const KDateTime &occurrenceDateTime, int X, int YTop,
+    AgendaItem::QPtr insertItem ( const KCalCore::Incidence::Ptr &incidence, const KDateTime &occurrenceDateTime, int X, int YTop,
                                   int YBottom, int itemPos, int itemCount, bool isSelected );
 
-    AgendaItem::QPtr insertAllDayItem ( const Akonadi::Item &event, const KDateTime &occurrenceDateTime, int XBegin,
+    AgendaItem::QPtr insertAllDayItem ( const KCalCore::Incidence::Ptr &event, const KDateTime &occurrenceDateTime, int XBegin,
                                         int XEnd, bool isSelected );
 
-    void insertMultiItem ( const Akonadi::Item &event, const KDateTime &occurrenceDateTime, int XBegin, int XEnd,
+    void insertMultiItem ( const KCalCore::Incidence::Ptr &event, const KDateTime &occurrenceDateTime, int XBegin, int XEnd,
                            int YTop, int YBottom, bool isSelected );
 
     /**
@@ -158,7 +159,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void setDateList( const KCalCore::DateList &selectedDates );
     KCalCore::DateList dateList() const;
 
-    void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
+    void setCalendar( const EventViews::MultiViewCalendar::Ptr &cal );
 
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
@@ -186,7 +187,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
       @param id the item id of the item that should be selected. If no such
       item exists, the selection is not changed.
     */
-    void selectItemByItemId( const Akonadi::Item::Id &id );
+    void selectIncidenceByUid( const QString &id );
     void selectItem( const Akonadi::Item &item );
 
     bool removeAgendaItem( AgendaItem::QPtr item );
@@ -197,19 +198,19 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void newTimeSpanSignal( const QPoint &, const QPoint & );
     void newStartSelectSignal();
 
-    void showIncidenceSignal( const Akonadi::Item & );
-    void editIncidenceSignal( const Akonadi::Item & );
-    void deleteIncidenceSignal( const Akonadi::Item & );
-    void showIncidencePopupSignal( const Akonadi::Item &, const QDate &);
+    void showIncidenceSignal( const KCalCore::Incidence::Ptr & );
+    void editIncidenceSignal( const KCalCore::Incidence::Ptr & );
+    void deleteIncidenceSignal( const KCalCore::Incidence::Ptr & );
+    void showIncidencePopupSignal( const KCalCore::Incidence::Ptr &, const QDate &);
 
     void showNewEventPopupSignal();
 
-    void incidenceSelected( const Akonadi::Item &, const QDate & );
+    void incidenceSelected( const KCalCore::Incidence::Ptr &, const QDate & );
 
     void lowerYChanged( int );
     void upperYChanged( int );
 
-    void startDragSignal( const Akonadi::Item & );
+    void startDragSignal( const KCalCore::Incidence::Ptr & );
     void droppedIncidences( const KCalCore::Incidence::List &, const QPoint &gpos, bool allDay );
     void droppedIncidences( const QList<KUrl> &, const QPoint &gpos, bool allDay );
 
@@ -233,7 +234,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
       RESIZERIGHT
     };
 
-    AgendaItem::QPtr createAgendaItem( const Akonadi::Item &item, int itemPos,
+    AgendaItem::QPtr createAgendaItem( const KCalCore::Incidence::Ptr &item, int itemPos,
                                        int itemCount, const KDateTime &qd, bool isSelected );
 
   protected:

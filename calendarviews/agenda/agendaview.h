@@ -28,6 +28,7 @@
 
 #include "eventviews_export.h"
 #include "eventview.h"
+#include "viewcalendar.h"
 
 #include <KCalCore/Todo>
 
@@ -135,6 +136,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     /* reimp from EventView */
     virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
+    virtual void addCalendar( const ViewCalendar::Ptr &cal);
 
     QSplitter *splitter() const;
 
@@ -164,6 +166,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     void clearSelection();
 
+    void startDrag( const KCalCore::Incidence::Ptr & );
     void startDrag( const Akonadi::Item & );
 
     void readSettings();
@@ -239,11 +242,18 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     void alignAgendas();
 
+  private slots:
+    void slotIncidenceSelected(const KCalCore::Incidence::Ptr &incidence, QDate date);
+    void slotShowIncidencePopup(const KCalCore::Incidence::Ptr &incidence, QDate date);
+    void slotEditIncidence(const KCalCore::Incidence::Ptr &incidence);
+    void slotShowIncidence(const KCalCore::Incidence::Ptr &incidence);
+    void slotDeleteIncidence(const KCalCore::Incidence::Ptr &incidence);
+
   private:
     void init( const QDate &start, const QDate &end );
-    bool filterByCollectionSelection( const Akonadi::Item &incidence );
+    bool filterByCollectionSelection( const  KCalCore::Incidence::Ptr &incidence );
     void setupTimeLabel( TimeLabels *timeLabel );
-    bool displayIncidence( const Akonadi::Item &incidence, bool createSelected );
+    bool displayIncidence( const KCalCore::Incidence::Ptr &incidence, bool createSelected );
 
 #ifndef EVENTVIEWS_NODECOS
     typedef QList<EventViews::CalendarDecoration::Decoration *> DecorationList;
