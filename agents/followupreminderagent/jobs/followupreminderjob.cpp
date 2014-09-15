@@ -38,6 +38,7 @@ FollowUpReminderJob::~FollowUpReminderJob()
 void FollowUpReminderJob::start()
 {
     if (!mItem.isValid()) {
+        qDebug()<<" item is not valid";
         deleteLater();
         return;
     }
