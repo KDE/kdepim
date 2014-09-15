@@ -62,6 +62,7 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
     headers << i18n("To")
             << i18n("Subject")
             << i18n("Dead Line")
+            << i18n("Answer")
 #ifdef DEBUG_MESSAGE_ID
             << i18n("Message Id");
 #else
@@ -96,6 +97,7 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
         item->setText(Subject, info->subject());
         const QString date = KLocale::global()->formatDateTime(info->followUpReminderDate(), KLocale::LongDate);
         item->setText(DeadLine, date);
+        item->setText(AnswerWasReceived, info->answerWasReceived() ? i18n("Received") : i18n("On hold"));
     }
 }
 

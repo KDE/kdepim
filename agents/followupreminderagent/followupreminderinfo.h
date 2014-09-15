@@ -52,13 +52,22 @@ public:
 
     bool operator ==(const FollowUpReminderInfo &other) const;
 
+
+    bool answerWasReceived() const;
+    void setAnswerWasReceived(bool answerWasReceived);
+
+    Akonadi::Item::Id answerMessageItemId() const;
+    void setAnswerMessageItemId(const Akonadi::Item::Id &answerMessageItemId);
+
 private:
     void readConfig(const KConfigGroup &config);
-    Akonadi::Item::Id mId;
+    Akonadi::Item::Id mOriginalMessageItemId;
+    Akonadi::Item::Id mAnswerMessageItemId;
     QString mMessageId;
     QDateTime mFollowUpReminderDate;
     QString mTo;
     QString mSubject;
+    bool mAnswerWasReceived;
 };
 }
 #endif // FOLLOWUPREMINDERINFO_H

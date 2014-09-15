@@ -55,10 +55,12 @@ void FollowUpReminderManager::load()
 
         FollowUpReminderInfo *info = new FollowUpReminderInfo(group);
         if (info->isValid()) {
-            mFollowUpReminderInfoList.append(info);
-            if (info->followUpReminderDate().date() > currentDate) {
-                FollowUpReminderInfo *noAnswerInfo = new FollowUpReminderInfo(*info);
-                noAnswerList.append(noAnswerInfo);
+            if (!info->answerWasReceived()) {
+                mFollowUpReminderInfoList.append(info);
+                if( info->followUpReminderDate().date() > currentDate) {
+                    FollowUpReminderInfo *noAnswerInfo = new FollowUpReminderInfo(*info);
+                    noAnswerList.append(noAnswerInfo);
+                }
             }
         } else {
             delete info;
