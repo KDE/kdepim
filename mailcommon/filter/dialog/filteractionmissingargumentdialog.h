@@ -23,7 +23,7 @@
 
 #include <Collection>
 
-#include <KDialog>
+#include <QDialog>
 
 class KComboBox;
 class KUrlRequester;
@@ -32,6 +32,7 @@ class QAbstractItemModel;
 class QListWidget;
 class QListWidgetItem;
 class QModelIndex;
+class QPushButton;
 
 namespace MailCommon
 {
@@ -49,7 +50,7 @@ namespace MailTransport
 class TransportComboBox;
 }
 
-class MAILCOMMON_EXPORT FilterActionMissingCollectionDialog : public KDialog
+class MAILCOMMON_EXPORT FilterActionMissingCollectionDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -82,9 +83,10 @@ private:
     void readConfig();
     MailCommon::FolderRequester *mFolderRequester;
     QListWidget *mListwidget;
+    QPushButton *mOkButton;
 };
 
-class FilterActionMissingIdentityDialog : public KDialog
+class FilterActionMissingIdentityDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -99,7 +101,7 @@ private:
     KIdentityManagement::IdentityCombo *mComboBoxIdentity;
 };
 
-class FilterActionMissingTransportDialog : public KDialog
+class FilterActionMissingTransportDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -114,7 +116,7 @@ private:
     MailTransport::TransportComboBox *mComboBoxTransport;
 };
 
-class FilterActionMissingTemplateDialog : public KDialog
+class FilterActionMissingTemplateDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -130,7 +132,7 @@ private:
     KComboBox *mComboBoxTemplate;
 };
 
-class FilterActionMissingAccountDialog : public KDialog
+class FilterActionMissingAccountDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -147,7 +149,7 @@ private:
     MailCommon::AccountList *mAccountList;
 };
 
-class FilterActionMissingTagDialog : public KDialog
+class FilterActionMissingTagDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -171,7 +173,7 @@ private:
     QListWidget *mTagList;
 };
 
-class FilterActionMissingSoundUrlDialog : public KDialog
+class FilterActionMissingSoundUrlDialog : public QDialog
 {
     Q_OBJECT
 public:

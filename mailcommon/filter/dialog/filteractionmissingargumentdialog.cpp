@@ -37,19 +37,31 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QListWidget>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
     const Akonadi::Collection::List &list, const QString &filtername,
     const QString &argStr, QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mListwidget(0)
 {
     setModal(true);
-    setCaption(i18n("Select Folder"));
-    setButtons(Ok | Cancel);
-    setDefaultButton(Ok);
-    showButtonSeparator(true);
-    QVBoxLayout *lay = new QVBoxLayout(mainWidget());
+    setWindowTitle(i18n("Select Folder"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    mOkButton->setDefault(true);
+    QVBoxLayout *lay = new QVBoxLayout(mainWidget);
     QLabel *lab = new QLabel(i18n("Folder path was \"%1\".", argStr));
     lab->setWordWrap(true);
     lay->addWidget(lab);
@@ -86,7 +98,7 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
     connect(mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)),
             this, SLOT(slotFolderChanged(Akonadi::Collection)));
     lay->addWidget(mFolderRequester);
-    enableButtonOk(false);
+    mOkButton->setEnabled(false);
     readConfig();
 }
 
@@ -113,7 +125,7 @@ void FilterActionMissingCollectionDialog::writeConfig()
 
 void FilterActionMissingCollectionDialog::slotFolderChanged(const Akonadi::Collection &col)
 {
-    enableButtonOk(col.isValid());
+    mOkButton->setEnabled(col.isValid());
 }
 
 void FilterActionMissingCollectionDialog::slotDoubleItemClicked(QListWidgetItem *item)
@@ -196,14 +208,25 @@ Akonadi::Collection::List FilterActionMissingCollectionDialog::potentialCorrectF
 
 FilterActionMissingIdentityDialog::FilterActionMissingIdentityDialog(const QString &filtername,
         QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     setModal(true);
-    setCaption(i18n("Select Identity"));
-    setButtons(Ok | Cancel);
-    setDefaultButton(Ok);
-    showButtonSeparator(true);
-    QVBoxLayout *lay = new QVBoxLayout(mainWidget());
+    setWindowTitle(i18n("Select Identity"));
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
+    mainLayout->addWidget(buttonBox);
+    okButton->setDefault(true);
+    QVBoxLayout *lay = new QVBoxLayout(mainWidget);
     QLabel *label = new QLabel(this);
     label->setText(i18n("Filter identity is missing. "
                         "Please select an identity to use with filter \"%1\"",
@@ -243,14 +266,25 @@ int FilterActionMissingIdentityDialog::selectedIdentity() const
 
 FilterActionMissingTransportDialog::FilterActionMissingTransportDialog(const QString &filtername,
         QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     setModal(true);
-    setCaption(i18n("Select Transport"));
-    setButtons(Ok | Cancel);
-    setDefaultButton(Ok);
-    showButtonSeparator(true);
-    QVBoxLayout *lay = new QVBoxLayout(mainWidget());
+    setWindowTitle(i18n("Select Transport"));
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
+    mainLayout->addWidget(buttonBox);
+    okButton->setDefault(true);
+    QVBoxLayout *lay = new QVBoxLayout(mainWidget);
     QLabel *label = new QLabel(this);
     label->setText(i18n("Filter transport is missing. "
                         "Please select a transport to use with filter \"%1\"",
@@ -290,14 +324,25 @@ int FilterActionMissingTransportDialog::selectedTransport() const
 
 FilterActionMissingTemplateDialog::FilterActionMissingTemplateDialog(
     const QStringList &templateList, const QString &filtername, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     setModal(true);
-    setCaption(i18n("Select Template"));
-    setButtons(Ok | Cancel);
-    setDefaultButton(Ok);
-    showButtonSeparator(true);
-    QVBoxLayout *lay = new QVBoxLayout(mainWidget());
+    setWindowTitle(i18n("Select Template"));
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
+    mainLayout->addWidget(buttonBox);
+    okButton->setDefault(true);
+    QVBoxLayout *lay = new QVBoxLayout(mainWidget);
     QLabel *label = new QLabel(this);
     label->setText(i18n("Filter template is missing. "
                         "Please select a template to use with filter \"%1\"",
@@ -343,14 +388,25 @@ QString FilterActionMissingTemplateDialog::selectedTemplate() const
 FilterActionMissingAccountDialog::FilterActionMissingAccountDialog(const QStringList &lstAccount,
         const QString &filtername,
         QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     setModal(true);
-    setCaption(i18n("Select Account"));
-    setButtons(Ok | Cancel);
-    setDefaultButton(Ok);
-    showButtonSeparator(true);
-    QVBoxLayout *lay = new QVBoxLayout(mainWidget());
+    setWindowTitle(i18n("Select Account"));
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
+    mainLayout->addWidget(buttonBox);
+    okButton->setDefault(true);
+    QVBoxLayout *lay = new QVBoxLayout(mainWidget);
     QLabel *label = new QLabel(this);
     label->setText(i18n("Filter account is missing. "
                         "Please select account to use with filter \"%1\"",
@@ -415,15 +471,28 @@ bool FilterActionMissingAccountDialog::allAccountExist(const QStringList &lst)
 FilterActionMissingTagDialog::FilterActionMissingTagDialog(
     const QMap<QUrl, QString> &tagList, const QString &filtername,
     const QString &argsStr, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     setModal(true);
-    setCaption(i18n("Select Tag"));
-    setButtons(Ok | User1 | Cancel);
-    setDefaultButton(Ok);
-    setButtonText(KDialog::User1, i18n("Add Tag..."));
-    showButtonSeparator(true);
-    QVBoxLayout *lay = new QVBoxLayout(mainWidget());
+    setWindowTitle(i18n("Select Tag"));
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
+    mainLayout->addWidget(buttonBox);
+    okButton->setDefault(true);
+    user1Button->setText(i18n("Add Tag..."));
+    QVBoxLayout *lay = new QVBoxLayout(mainWidget);
     QLabel *label = new QLabel(i18n("Tag was \"%1\".", argsStr));
     lay->addWidget(label);
 
@@ -443,7 +512,7 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog(
         mTagList->addItem(item);
     }
 
-    connect(this, &FilterActionMissingTagDialog::user1Clicked, this, &FilterActionMissingTagDialog::slotAddTag);
+    connect(user1Button, &QPushButton::clicked, this, &FilterActionMissingTagDialog::slotAddTag);
     connect(mTagList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
             this, SLOT(accept()));
     lay->addWidget(mTagList);
@@ -493,14 +562,27 @@ void FilterActionMissingTagDialog::slotAddTag()
 FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog(const QString &filtername,
         const QString &argStr,
         QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     setModal(true);
-    setButtons(Ok | Cancel);
-    setDefaultButton(Ok);
-    setCaption(i18n("Select sound"));
-    showButtonSeparator(true);
-    QVBoxLayout *lay = new QVBoxLayout(mainWidget());
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
+    mainLayout->addWidget(buttonBox);
+    okButton->setDefault(true);
+    setWindowTitle(i18n("Select sound"));
+    QVBoxLayout *lay = new QVBoxLayout(mainWidget);
     QLabel *label = new QLabel(i18n("Sound file was \"%1\".", argStr));
     lay->addWidget(label);
 
