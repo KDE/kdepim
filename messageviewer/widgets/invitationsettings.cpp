@@ -47,44 +47,36 @@ InvitationSettings::InvitationSettings( QWidget *parent )
     mInvitationUi->mDeleteInvitations->setWhatsThis(
                 i18n( GlobalSettings::self()->
                       deleteInvitationEmailsAfterSendingReplyItem()->whatsThis().toUtf8() ) );
-    connect( mInvitationUi->mDeleteInvitations, SIGNAL(toggled(bool)),
-             SIGNAL(changed()) );
+    connect(mInvitationUi->mDeleteInvitations, &QCheckBox::toggled, this, &InvitationSettings::changed);
 
     mInvitationUi->mLegacyMangleFromTo->setWhatsThis(
                 i18n( GlobalSettings::self()->legacyMangleFromToHeadersItem()->whatsThis().toUtf8() ) );
-    connect( mInvitationUi->mLegacyMangleFromTo, SIGNAL(stateChanged(int)),
-             this, SIGNAL(changed()) );
+    connect(mInvitationUi->mLegacyMangleFromTo, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 
     mInvitationUi->mLegacyBodyInvites->setWhatsThis(
                 i18n( GlobalSettings::self()->legacyBodyInvitesItem()->whatsThis().toUtf8() ) );
-    connect( mInvitationUi->mLegacyBodyInvites, SIGNAL(toggled(bool)),
-             this, SLOT(slotLegacyBodyInvitesToggled(bool)) );
-    connect( mInvitationUi->mLegacyBodyInvites, SIGNAL(stateChanged(int)),
-             this, SIGNAL(changed()) );
+    connect(mInvitationUi->mLegacyBodyInvites, &QCheckBox::toggled, this, &InvitationSettings::slotLegacyBodyInvitesToggled);
+    connect(mInvitationUi->mLegacyBodyInvites, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 
     mInvitationUi->mExchangeCompatibleInvitations->setWhatsThis(
                 i18n( GlobalSettings::self()->exchangeCompatibleInvitationsItem()->whatsThis().toUtf8() ) );
-    connect( mInvitationUi->mExchangeCompatibleInvitations, SIGNAL(stateChanged(int)),
-             this, SIGNAL(changed()) );
+    connect(mInvitationUi->mExchangeCompatibleInvitations, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 
     mInvitationUi->mOutlookCompatibleInvitationComments->setWhatsThis(
                 i18n( GlobalSettings::self()->
                       outlookCompatibleInvitationReplyCommentsItem()->whatsThis().toUtf8() ) );
-    connect( mInvitationUi->mOutlookCompatibleInvitationComments, SIGNAL(stateChanged(int)),
-             this, SIGNAL(changed()) );
+    connect(mInvitationUi->mOutlookCompatibleInvitationComments, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 
     mInvitationUi->mOutlookCompatibleInvitationComparisons->setWhatsThis(
                 i18n( GlobalSettings::self()->
                       outlookCompatibleInvitationComparisonsItem()->whatsThis().toUtf8() ) );
-    connect( mInvitationUi->mOutlookCompatibleInvitationComparisons, SIGNAL(stateChanged(int)),
-             this, SIGNAL(changed()) );
+    connect(mInvitationUi->mOutlookCompatibleInvitationComparisons, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 
     //Laurent BUG:257723: in kmail2 it's not possible to not send automatically.
     mInvitationUi->mAutomaticSending->hide();
     mInvitationUi->mAutomaticSending->setWhatsThis(
                 i18n( GlobalSettings::self()->automaticSendingItem()->whatsThis().toUtf8() ) );
-    connect( mInvitationUi->mAutomaticSending, SIGNAL(stateChanged(int)),
-             this, SIGNAL(changed()) );
+    connect(mInvitationUi->mAutomaticSending, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 }
 
 InvitationSettings::~InvitationSettings()

@@ -50,8 +50,7 @@ GpgME::VerificationResult KleoJobExecutor::exec(
         const QByteArray & signedData )
 {
     qDebug() << "Starting detached verification job";
-    connect( job, SIGNAL(result(GpgME::VerificationResult)),
-             SLOT(verificationResult(GpgME::VerificationResult)) );
+    connect( job, SIGNAL(result(GpgME::VerificationResult)), SLOT(verificationResult(GpgME::VerificationResult)) );
     GpgME::Error err = job->start( signature, signedData );
     if ( err )
         return VerificationResult( err );
@@ -65,8 +64,7 @@ GpgME::VerificationResult KleoJobExecutor::exec(
         QByteArray & plainText )
 {
     qDebug() << "Starting opaque verification job";
-    connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
-             SLOT(verificationResult(GpgME::VerificationResult,QByteArray)) );
+    connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)), SLOT(verificationResult(GpgME::VerificationResult,QByteArray)) );
     GpgME::Error err = job->start( signedData );
     if ( err ) {
         plainText.clear();
@@ -83,8 +81,7 @@ std::pair< GpgME::DecryptionResult, GpgME::VerificationResult > KleoJobExecutor:
         QByteArray & plainText )
 {
     qDebug() << "Starting decryption job";
-    connect( job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)),
-             SLOT(decryptResult(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)) );
+    connect( job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)), SLOT(decryptResult(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)) );
     GpgME::Error err = job->start( cipherText );
     if ( err ) {
         plainText.clear();

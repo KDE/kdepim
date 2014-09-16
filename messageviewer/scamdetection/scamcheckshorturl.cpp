@@ -41,7 +41,7 @@ ScamCheckShortUrl::ScamCheckShortUrl(QObject *parent)
       mNetworkAccessManager(new QNetworkAccessManager(this))
 {
     loadLongUrlServices();
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExpandFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &ScamCheckShortUrl::slotExpandFinished);
     mNetworkConfigurationManager = new QNetworkConfigurationManager();
 }
 
@@ -61,7 +61,7 @@ void ScamCheckShortUrl::expandedUrl(const QUrl &url)
     //qDebug()<<" newUrl "<<newUrl;
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(newUrl));
     reply->setProperty("shortUrl", url.url());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &ScamCheckShortUrl::slotError);
 }
 
 void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)

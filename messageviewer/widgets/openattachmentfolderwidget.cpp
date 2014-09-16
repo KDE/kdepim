@@ -33,7 +33,7 @@ OpenAttachmentFolderWidget::OpenAttachmentFolderWidget(QWidget *parent)
     mTimer = new QTimer(this);
     mTimer->setSingleShot(true);
     mTimer->setInterval(5000); // 5 seconds
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(slotTimeOut()));
+    connect(mTimer, &QTimer::timeout, this, &OpenAttachmentFolderWidget::slotTimeOut);
     setVisible(false);
     setCloseButtonVisible(true);
     setMessageType(Positive);
