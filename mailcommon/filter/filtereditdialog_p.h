@@ -20,7 +20,7 @@
 #ifndef MAILCOMMON_FILTEREDITDIALOG_P_H
 #define MAILCOMMON_FILTEREDITDIALOG_P_H
 
-#include <kdialog.h>
+#include <QDialog>
 
 class Ui_FilterConfigWidget;
 
@@ -31,7 +31,7 @@ class MailFilter;
 class SearchPatternEdit;
 class FilterActionWidgetLister;
 
-class FilterEditDialog : public KDialog
+class FilterEditDialog : public QDialog
 {
     Q_OBJECT
 

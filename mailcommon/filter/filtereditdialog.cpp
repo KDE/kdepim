@@ -24,14 +24,32 @@
 #include "mailfilter.h"
 #include "search/searchpatternedit.h"
 #include "ui_filterconfigwidget.h"
+#include <QDialogButtonBox>
+#include <QPushButton>
+
 
 using namespace MailCommon;
 
 FilterEditDialog::FilterEditDialog(QWidget *parent)
-    : KDialog(parent), mFilter(0)
+    : QDialog(parent), mFilter(0)
 {
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+
     mUi = new Ui_FilterConfigWidget;
-    mUi->setupUi(mainWidget());
+    mUi->setupUi(mainWidget);
+
+    mainLayout->addWidget(mainWidget);
+    mainLayout->addWidget(buttonBox);
+
 
     mPatternEdit = new SearchPatternEdit(this, MailCommon::SearchPatternEdit::MatchAllMessages);
     mUi->criteriaLayout->addWidget(mPatternEdit, 0, Qt::AlignTop);
