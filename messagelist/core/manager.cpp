@@ -99,8 +99,7 @@ Manager::Manager()
     mCachedLocalizedUnknownText = i18nc("Unknown date", "Unknown") ;
 
     loadConfiguration();
-    connect(Settings::self(), SIGNAL(configChanged()),
-            this, SLOT(reloadGlobalConfiguration()));
+    connect(Settings::self(), &Settings::configChanged, this, &Manager::reloadGlobalConfiguration);
 }
 
 Manager::~Manager()

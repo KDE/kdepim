@@ -17,7 +17,6 @@
 
 #include "filtertestkernel.h"
 
-#include <kglobal.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <messagecomposer/sender/akonadisender.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>

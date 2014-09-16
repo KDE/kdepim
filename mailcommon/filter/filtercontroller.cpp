@@ -75,7 +75,7 @@ void FilterController::Private::addFilter()
     mModel->insertRow(mModel->rowCount());
 
     FilterEditDialog dlg;
-    dlg.setCaption(i18n("Add Filter"));
+    dlg.setWindowTitle(i18n("Add Filter"));
     dlg.load(mModel->rowCount() - 1);
 
     if (dlg.exec()) {
@@ -94,7 +94,7 @@ void FilterController::Private::editFilter()
     const QModelIndex index = mSelectionModel->selectedRows().first();
 
     FilterEditDialog dlg;
-    dlg.setCaption(i18n("Edit Filter"));
+    dlg.setWindowTitle(i18n("Edit Filter"));
     dlg.load(index.row());
     if (dlg.exec()) {
         dlg.save();

@@ -66,7 +66,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
               "locked when moving to other folders or when narrowing the search "
               "by message status."));
     slotLockSearchClicked(false);
-    connect(mLockSearch, SIGNAL(toggled(bool)), SLOT(slotLockSearchClicked(bool)));
+    connect(mLockSearch, &QToolButton::toggled, this, &QuickSearchLine::slotLockSearchClicked);
     hbox->addWidget(mLockSearch);
 
     mQuickSearchFilterWidget = new QWidget;
@@ -84,8 +84,8 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchEdit->setObjectName(QLatin1String("quicksearch"));
     mSearchEdit->setClearButtonShown(true);
 
-    connect(mSearchEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchEditTextEdited(QString)));
-    connect(mSearchEdit, SIGNAL(clearButtonClicked()), this, SLOT(slotClearButtonClicked()));
+    connect(mSearchEdit, &KLineEdit::textChanged, this, &QuickSearchLine::slotSearchEditTextEdited);
+    connect(mSearchEdit, &KLineEdit::clearButtonClicked, this, &QuickSearchLine::slotClearButtonClicked);
 
     hbox->addWidget(mSearchEdit);
 
@@ -93,7 +93,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mMoreOptions->setObjectName(QLatin1String("moreoptions"));
     mMoreOptions->setFlat(true);
     mMoreOptions->setCheckable(true);
-    connect(mMoreOptions, SIGNAL(toggled(bool)), SLOT(slotMoreOptionClicked(bool)));
+    connect(mMoreOptions, &QPushButton::toggled, this, &QuickSearchLine::slotMoreOptionClicked);
     hbox->addWidget(mMoreOptions);
 
     // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
@@ -124,21 +124,21 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchEveryWhere->setFlat(true);
     mSearchEveryWhere->setCheckable(true);
     mSearchEveryWhere->setChecked(true);
-    connect(mSearchEveryWhere, SIGNAL(clicked()), this, SLOT(slotSearchBy()));
+    connect(mSearchEveryWhere, &QPushButton::clicked, this, &QuickSearchLine::slotSearchBy);
     hbox->addWidget(mSearchEveryWhere);
 
     mSearchAgainstBody = new QPushButton(i18n("Body"));
     mSearchAgainstBody->setObjectName(QLatin1String("body"));
     mSearchAgainstBody->setFlat(true);
     mSearchAgainstBody->setCheckable(true);
-    connect(mSearchAgainstBody, SIGNAL(clicked()), this, SLOT(slotSearchBy()));
+    connect(mSearchAgainstBody, &QPushButton::clicked, this, &QuickSearchLine::slotSearchBy);
     hbox->addWidget(mSearchAgainstBody);
 
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
     mSearchAgainstSubject->setCheckable(true);
     mSearchAgainstSubject->setFlat(true);
     mSearchAgainstSubject->setObjectName(QLatin1String("subject"));
-    connect(mSearchAgainstSubject, SIGNAL(clicked()), this, SLOT(slotSearchBy()));
+    connect(mSearchAgainstSubject, &QPushButton::clicked, this, &QuickSearchLine::slotSearchBy);
     hbox->addWidget(mSearchAgainstSubject);
 
     mSearchAgainstFromOrTo = new QPushButton;
@@ -146,14 +146,14 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchAgainstFromOrTo->setObjectName(QLatin1String("fromorto"));
     mSearchAgainstFromOrTo->setCheckable(true);
     mSearchAgainstFromOrTo->setFlat(true);
-    connect(mSearchAgainstFromOrTo, SIGNAL(clicked()), this, SLOT(slotSearchBy()));
+    connect(mSearchAgainstFromOrTo, &QPushButton::clicked, this, &QuickSearchLine::slotSearchBy);
     hbox->addWidget(mSearchAgainstFromOrTo);
 
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
     mSearchAgainstBcc->setObjectName(QLatin1String("bcc"));
     mSearchAgainstBcc->setCheckable(true);
     mSearchAgainstBcc->setFlat(true);
-    connect(mSearchAgainstBcc, SIGNAL(clicked()), this, SLOT(slotSearchBy()));
+    connect(mSearchAgainstBcc, &QPushButton::clicked, this, &QuickSearchLine::slotSearchBy);
     hbox->addWidget(mSearchAgainstBcc);
 
     mQuickSearchFilterWidget->hide();
@@ -364,7 +364,7 @@ void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLay
 {
     //Bug Qt we can't use QButtonGroup + QToolButton + change focus. => use QSignalMapper();
     mFilterStatusMapper = new QSignalMapper(this);
-    connect(mFilterStatusMapper, SIGNAL(mapped(int)), this, SIGNAL(statusButtonsClicked()));
+    connect(mFilterStatusMapper, static_cast<void (QSignalMapper::*)(int)>(&QSignalMapper::mapped), this, &QuickSearchLine::statusButtonsClicked);
 
     createQuickSearchButton(SmallIcon(QLatin1String("mail-unread")), i18nc("@action:inmenu Status of a message", "Unread"), Akonadi::MessageStatus::statusUnread().toQInt32(), quickSearchButtonLayout);
 
