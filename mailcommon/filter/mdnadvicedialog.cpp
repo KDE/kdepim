@@ -41,6 +41,10 @@ using MessageComposer::MessageFactory;
 #include <QPointer>
 
 #include <boost/shared_ptr.hpp>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace MailCommon;
 
@@ -99,28 +103,47 @@ static const int numMdnMessageBoxes =
     sizeof mdnMessageBoxes / sizeof * mdnMessageBoxes;
 
 MDNAdviceDialog::MDNAdviceDialog(const QString &text, bool canDeny, QWidget *parent)
-    : KDialog(parent), m_result(MessageComposer::MDNIgnore)
+    : QDialog(parent), m_result(MessageComposer::MDNIgnore)
 {
-    setCaption(i18n("Message Disposition Notification Request"));
+    setWindowTitle(i18n("Message Disposition Notification Request"));
+    QDialogButtonBox *buttonBox = 0;
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *user1Button = 0;
     if (canDeny) {
-        setButtons(KDialog::Yes | KDialog::User1 | KDialog::User2);
-        setButtonText(KDialog::User2, i18n("Send \"&denied\""));
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Yes);
+        user1Button = new QPushButton;
+        buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+        connect(user1Button, SIGNAL(clicked()), SLOT(slotUser1Clicked()));
+        QPushButton *user2Button = new QPushButton;
+        connect(user2Button, SIGNAL(clicked()), SLOT(slotUser2Clicked()));
+
+        buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+        user2Button->setText(i18n("Send \"&denied\""));
     } else {
-        setButtons(KDialog::Yes | KDialog::User1);
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Yes);
+        user1Button = new QPushButton;
+        buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+        connect(user1Button, SIGNAL(clicked()), SLOT(slotUser1Clicked()));
+        connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     }
-    setButtonText(KDialog::Yes, i18n("&Ignore"));
-    setButtonText(KDialog::User1, i18n("&Send"));
-    setEscapeButton(KDialog::Yes);
-#if 0 //QT5
+    buttonBox->button(QDialogButtonBox::Yes)->setText(i18n("&Ignore"));
+    connect(buttonBox->button(QDialogButtonBox::Yes), SIGNAL(clicked()), SLOT(slotYesClicked()));
+    user1Button->setText(i18n("&Send"));
+    buttonBox->button(QDialogButtonBox::Yes)->setShortcut(Qt::Key_Escape);
     KMessageBox::createKMessageBox(
-        this,
+        this, buttonBox,
         QMessageBox::Question,
         text,
         QStringList(),
         QString(),
         0,
         KMessageBox::NoExec);
-#endif
 }
 
 MDNAdviceDialog::~MDNAdviceDialog()
@@ -287,26 +310,21 @@ int MDNAdviceHelper::requestAdviceOnMDN(const char *what)
     return MessageComposer::MDNIgnore;
 }
 
-void MDNAdviceDialog::slotButtonClicked(int button)
+void MDNAdviceDialog::slotUser1Clicked()
 {
-    switch (button) {
-    case KDialog::User1:
-        m_result = MessageComposer::MDNSend;
-        accept();
-        break;
+    m_result = MessageComposer::MDNSend;
+    accept();
+}
 
-    case KDialog::User2:
-        m_result = MessageComposer::MDNSendDenied;
-        accept();
-        break;
+void MDNAdviceDialog::slotUser2Clicked()
+{
+    m_result = MessageComposer::MDNSendDenied;
+    accept();
+}
 
-    case KDialog::Yes:
-    default:
-        m_result = MessageComposer::MDNIgnore;
-        accept();
-        break;
-
-    }
-    reject();
+void MDNAdviceDialog::slotYesClicked()
+{
+    m_result = MessageComposer::MDNIgnore;
+    accept();
 }
 

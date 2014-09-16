@@ -25,7 +25,7 @@
 
 #include <KMime/KMimeMessage>
 
-#include <KDialog>
+#include <QDialog>
 
 namespace MailCommon
 {
@@ -75,7 +75,7 @@ private:
     static MDNAdviceHelper *s_instance;
 };
 
-class MDNAdviceDialog : public KDialog
+class MDNAdviceDialog : public QDialog
 {
     Q_OBJECT
 
@@ -84,6 +84,12 @@ public:
     ~MDNAdviceDialog();
 
     MessageComposer::MDNAdvice result() const;
+
+private slots:
+    void slotUser1Clicked();
+    void slotUser2Clicked();
+    void slotYesClicked();
+
 
 private:
     MessageComposer::MDNAdvice m_result;
