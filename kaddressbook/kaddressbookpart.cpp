@@ -19,7 +19,6 @@
 */
 
 #include "kaddressbookpart.h"
-#include "aboutdata.h"
 #include "mainwidget.h"
 
 #include <QDebug>
