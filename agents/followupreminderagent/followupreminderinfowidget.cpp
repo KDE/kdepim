@@ -91,6 +91,8 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
     mTreeWidget->clear();
     Q_FOREACH(FollowUpReminder::FollowUpReminderInfo *info, infoList) {
         FollowUpReminderInfoItem *item = new FollowUpReminderInfoItem(mTreeWidget);
+        item->setData(0, AnswerItemId, info->answerMessageItemId());
+        item->setData(0, AnswerItemFound, info->answerWasReceived());
         item->setText(To, info->to());
 #ifdef DEBUG_MESSAGE_ID
         item->setText(MessageId, info->messageId());
@@ -131,16 +133,33 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
 {
     const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
     if ( !listItems.isEmpty() ) {
+        FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(listItems.at(0));
         KMenu menu;
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
-        menu.exec(QCursor::pos());
+        QAction *showMessage = 0;
+        if (mailItem && mailItem->data(0, AnswerItemFound).toBool()) {
+            showMessage = menu.addAction(i18n("Show Message"));
+        }
+        QAction *deleteItem = menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"));
+        QAction *result = menu.exec(QCursor::pos());
+        if (result) {
+            if (result == showMessage) {
+                openShowMessage(mailItem->data(0, AnswerItemId).toLongLong());
+            } else if (result == deleteItem) {
+                removeItem(mailItem);
+            }
+        }
     }
 }
 
-void FollowUpReminderInfoWidget::slotRemoveItem()
+void FollowUpReminderInfoWidget::openShowMessage(Akonadi::Item::Id id)
 {
-    if (mTreeWidget->currentItem()) {
-        delete mTreeWidget->currentItem();
+    //TODO
+}
+
+void FollowUpReminderInfoWidget::removeItem(FollowUpReminderInfoItem *mailItem)
+{
+    if (mailItem) {
+        delete mailItem;
         mChanged = true;
     }
 }
