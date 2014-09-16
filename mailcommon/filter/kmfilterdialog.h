@@ -433,7 +433,8 @@ protected slots:
     void slotFolderChanged(const Akonadi::Collection &);
 
 private Q_SLOTS:
-    void slotExportAsSieveScript();
+    void slotExportAsSieveScript();    
+    void slotHelp();
 
 private:
     void importFilters(MailCommon::FilterImporterExporter::FilterType type);

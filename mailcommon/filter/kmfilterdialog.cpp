@@ -51,6 +51,7 @@ using MailCommon::FilterImporterExporter;
 #include <QTabWidget>
 #include <KWindowSystem>
 #include <KIconButton>
+#include <KHelpClient>
 #include <QIcon>
 
 #include <QApplication>
@@ -322,6 +323,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox->button(QDialogButtonBox::Help), SIGNAL(clicked()), this, SLOT(slotHelp()));
     setModal(false);
     okButton->setFocus();
     KWindowSystem::setIcons(winId(),
@@ -329,7 +331,6 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
                                     IconSize(KIconLoader::Desktop)),
                             qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),
                                     IconSize(KIconLoader::Small)));
-    //QT5 port setHelp(QLatin1String("filters"), QLatin1String("kmail"));
     user1Button->setText(i18n("Import..."));
     user2Button->setText(i18n("Export..."));
     user3Button->setText(i18n("Convert to..."));
@@ -1756,6 +1757,11 @@ void KMFilterDialog::slotExportAsSieveScript()
         }
     }
     delete dlg;
+}
+
+void KMFilterDialog::slotHelp()
+{
+    KHelpClient::invokeHelp(QLatin1String("filters"), QLatin1String("kmail"));
 }
 
 }

@@ -48,6 +48,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <KHelpClient>
 
 using namespace IncidenceEditorNG;
 
@@ -65,7 +66,7 @@ TemplateManagementDialog::TemplateManagementDialog(
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
   connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateManagementDialog::reject);
   setObjectName( "template_management_dialog" );
-  //QT5 setHelp( "entering-data-events-template-buttons", "korganizer" );
+  connect(buttonBox->button(QDialogButtonBox::Help), SIGNAL(clicked()), this, SLOT(slotHelp()));
   QWidget *widget = new QWidget( this );
   mainLayout->addWidget(widget);
   mainLayout->addWidget(buttonBox);
@@ -91,6 +92,11 @@ TemplateManagementDialog::TemplateManagementDialog(
 
   m_base.m_buttonRemove->setEnabled( false );
   m_base.m_buttonApply->setEnabled( false );
+}
+
+void TemplateManagementDialog::slotHelp()
+{
+    KHelpClient::invokeHelp(QLatin1String("entering-data-events-template-buttons"), QLatin1String("korganizer"));
 }
 
 void TemplateManagementDialog::slotItemSelected()

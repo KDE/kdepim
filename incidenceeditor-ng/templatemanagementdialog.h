@@ -78,7 +78,9 @@ class INCIDENCEEDITORS_NG_EXPORT TemplateManagementDialog: public QDialog
     void slotApplyTemplate();
     void slotOk();
 
-  private:
+private slots:
+    void slotHelp();
+private:
     void updateButtons();
     Ui::TemplateManagementDialog_base m_base;
     QStringList m_templates;
