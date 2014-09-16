@@ -95,8 +95,7 @@ FolderTreeWidget::FolderTreeWidget(
     d->folderTreeView = new FolderTreeView(xmlGuiClient, this, options & ShowUnreadCount);
     d->folderTreeView->showStatisticAnimation(options & ShowCollectionStatisticAnimation);
 
-    connect(d->folderTreeView, SIGNAL(manualSortingChanged(bool)),
-            this, SLOT(slotManualSortingChanged(bool)));
+    connect(d->folderTreeView, &FolderTreeView::manualSortingChanged, this, &FolderTreeWidget::slotManualSortingChanged);
 
     QVBoxLayout *lay = new QVBoxLayout(this);
     lay->setMargin(0);
@@ -123,8 +122,7 @@ FolderTreeWidget::FolderTreeWidget(
     d->readableproxy->setSourceModel(d->filterModel);
     d->readableproxy->addContentMimeTypeInclusionFilter(KMime::Message::mimeType());
 
-    connect(d->folderTreeView, SIGNAL(changeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)),
-            this, SLOT(slotChangeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy)));
+    connect(d->folderTreeView, &FolderTreeView::changeTooltipsPolicy, this, &FolderTreeWidget::slotChangeTooltipsPolicy);
 
     d->folderTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
     d->folderTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -146,17 +144,14 @@ FolderTreeWidget::FolderTreeWidget(
     d->dontKeyFilter = (options & DontKeyFilter);
 
     if ((options & UseLineEditForFiltering)) {
-        connect(d->filterFolderLineEdit, SIGNAL(textChanged(QString)),
-                this, SLOT(slotFilterFixedString(QString)));
+        connect(d->filterFolderLineEdit, &QLineEdit::textChanged, this, &FolderTreeWidget::slotFilterFixedString);
         d->label->hide();
     } else {
         d->filterFolderLineEdit->hide();
     }
 
-    connect(KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
-            this, SLOT(slotGeneralFontChanged()));
-    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-            this, SLOT(slotGeneralPaletteChanged()));
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &FolderTreeWidget::slotGeneralFontChanged);
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &FolderTreeWidget::slotGeneralPaletteChanged);
 }
 
 FolderTreeWidget::~FolderTreeWidget()

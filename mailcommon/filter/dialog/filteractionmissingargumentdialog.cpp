@@ -57,8 +57,8 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterActionMissingCollectionDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterActionMissingCollectionDialog::reject);
     mainLayout->addWidget(buttonBox);
     mOkButton->setDefault(true);
     QVBoxLayout *lay = new QVBoxLayout(mainWidget);
@@ -221,8 +221,8 @@ FilterActionMissingIdentityDialog::FilterActionMissingIdentityDialog(const QStri
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterActionMissingIdentityDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterActionMissingIdentityDialog::reject);
     //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     okButton->setDefault(true);
@@ -279,8 +279,8 @@ FilterActionMissingTransportDialog::FilterActionMissingTransportDialog(const QSt
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterActionMissingTransportDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterActionMissingTransportDialog::reject);
     //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     okButton->setDefault(true);
@@ -337,8 +337,8 @@ FilterActionMissingTemplateDialog::FilterActionMissingTemplateDialog(
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterActionMissingTemplateDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterActionMissingTemplateDialog::reject);
     //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     okButton->setDefault(true);
@@ -401,8 +401,8 @@ FilterActionMissingAccountDialog::FilterActionMissingAccountDialog(const QString
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterActionMissingAccountDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterActionMissingAccountDialog::reject);
     //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     okButton->setDefault(true);
@@ -486,8 +486,8 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog(
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterActionMissingTagDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterActionMissingTagDialog::reject);
     //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     okButton->setDefault(true);
@@ -576,8 +576,8 @@ FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog(const QStri
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterActionMissingSoundUrlDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterActionMissingSoundUrlDialog::reject);
     //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     okButton->setDefault(true);

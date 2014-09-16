@@ -128,8 +128,7 @@ void FolderRequester::setCollection(const Akonadi::Collection &collection, bool 
             Akonadi::CollectionFetchJob *job =
                 new Akonadi::CollectionFetchJob(mCollection, Akonadi::CollectionFetchJob::Base, this);
 
-            connect(job, SIGNAL(result(KJob*)),
-                    this, SLOT(slotCollectionsReceived(KJob*)));
+            connect(job, &Akonadi::CollectionFetchJob::result, this, &FolderRequester::slotCollectionsReceived);
         } else {
             setCollectionFullPath(mCollection);
         }

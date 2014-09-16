@@ -132,8 +132,7 @@ FilterManager::FilterManager()
     if (state == Akonadi::ServerManager::Running) {
         QTimer::singleShot(0, this, SLOT(slotReadConfig()));
     } else {
-        connect(Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-                SLOT(slotServerStateChanged(Akonadi::ServerManager::State)));
+        connect(Akonadi::ServerManager::self(), &Akonadi::ServerManager::stateChanged, this, &FilterManager::slotServerStateChanged);
     }
 }
 
