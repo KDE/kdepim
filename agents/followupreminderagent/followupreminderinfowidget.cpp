@@ -139,7 +139,7 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
         if (mailItem && mailItem->data(0, AnswerItemFound).toBool()) {
             showMessage = menu.addAction(i18n("Show Message"));
         }
-        QAction *deleteItem = menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"));
+        QAction *deleteItem = menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"));
         QAction *result = menu.exec(QCursor::pos());
         if (result) {
             if (result == showMessage) {
