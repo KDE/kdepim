@@ -92,7 +92,6 @@ void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId
     Q_FOREACH (FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
         if (info->messageId() == messageId) {
             answerReceived(info->to());
-            //Remove info in list and settings
             //Close task
             FollowUpReminderFinishTaskJob *job = new FollowUpReminderFinishTaskJob(this);
             //TODO

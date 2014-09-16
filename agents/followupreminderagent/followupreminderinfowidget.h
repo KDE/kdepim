@@ -21,6 +21,7 @@
 #include <QWidget>
 #include <KConfigGroup>
 #include <QTreeWidgetItem>
+#include <Akonadi/Item>
 class QTreeWidget;
 namespace FollowUpReminder
 {
@@ -56,9 +57,15 @@ public:
 
 private slots:
     void customContextMenuRequested(const QPoint &pos);
-    void slotRemoveItem();
 
 private:
+    void removeItem(FollowUpReminderInfoItem *mailItem);
+    void openShowMessage(Akonadi::Item::Id id);
+    enum ItemData {
+        AnswerItemId = Qt::UserRole + 1,
+        AnswerItemFound = Qt::UserRole + 2
+    };
+
     enum FollowUpReminderColumn {
         To = 0,
         Subject,
