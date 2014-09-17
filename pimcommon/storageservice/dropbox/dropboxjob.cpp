@@ -33,6 +33,7 @@
 #include <QDebug>
 #include <QPointer>
 #include <QFile>
+#include <QJsonDocument>
 
 using namespace PimCommon;
 
@@ -104,14 +105,16 @@ void DropBoxJob::getTokenAccess()
 
 void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
 {
-#if 0 //QT5
     const QString data = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
     if (mError) {
-        QJson::Parser parser;
-        bool ok;
-
-        QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
+        QJsonDocument jsonDoc = QJsonDocument::fromBinaryData(reply->readAll());
+        if (jsonDoc.isNull()) {
+            errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            deleteLater();
+            return;
+        }
+        const QMap<QString, QVariant> error = jsonDoc.toVariant().toMap();
         if (error.contains(QLatin1String("error"))) {
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch(mActionType) {
@@ -214,16 +217,14 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         parseCopyFolder(data);
         break;
     }
-#endif
 }
 
 QString DropBoxJob::extractPathFromData(const QString &data)
-{
+{    
     QString name;
 #if 0 //QT5
     QJson::Parser parser;
     bool ok;
-    QString name;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (info.contains(QLatin1String("path"))) {
         name = info.value(QLatin1String("path")).toString();
