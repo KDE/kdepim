@@ -482,7 +482,7 @@ void ComposerView::setEditor( MessageComposer::KMeditor* editor )
 {
     new ComposerAutoResizer(editor);
     m_composerBase->setEditor( editor );
-    //QT5 m_composerBase->editor()->createActions( actionCollection() );
+    actionCollection()->addActions(m_composerBase->editor()->createActions());
     m_composerBase->editor()->setAutocorrection(MobileKernel::self()->composerAutoCorrection());
     connect( actionCollection()->action( QLatin1String("composer_add_quote_char") ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotAddQuotes()) );
     connect( actionCollection()->action( QLatin1String("composer_remove_quote_char") ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotRemoveQuotes()) );
