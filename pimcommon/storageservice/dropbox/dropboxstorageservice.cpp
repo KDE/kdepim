@@ -33,6 +33,7 @@
 #include <QDebug>
 #include <KFormat>
 #include <QLocale>
+#include <QJsonParseError>
 
 
 using namespace PimCommon;
@@ -451,13 +452,14 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();
+    QJsonParseError error;
     QString parentFolder;
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
-    QString parentFolder;
+    const QJsonDocument json = QJsonDocument::fromJson(data.toString().toUtf8(), &error);
+    if (error.error != QJsonParseError::NoError || json.isNull()) {
+        return parentFolder;
+    }
+    const QMap<QString, QVariant> info = json.toVariant().toMap();
     listWidget->createMoveUpItem();
-    QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
     if (info.contains(QLatin1String("path"))) {
         const QString path = info.value(QLatin1String("path")).toString();
         if (parentFolder.isEmpty()) {
@@ -512,7 +514,6 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             }
         }
     }
-#endif
     return parentFolder;
 }
 

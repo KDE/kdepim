@@ -106,11 +106,11 @@ void DropBoxJob::getTokenAccess()
 void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
 {
     const QString data = QString::fromUtf8(reply->readAll());
-    qDebug()<<" data "<<data;
     reply->deleteLater();
     if (mError) {
-        QJsonDocument jsonDoc = QJsonDocument::fromBinaryData(reply->readAll());
-        if (jsonDoc.isNull()) {
+        QJsonParseError parsingError;
+        const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
+        if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
             errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
             deleteLater();
             return;
@@ -223,14 +223,15 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
 QString DropBoxJob::extractPathFromData(const QString &data)
 {    
     QString name;
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QJsonParseError parsingError;
+    const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
+    if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
+        return name;
+    }
+    QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     if (info.contains(QLatin1String("path"))) {
         name = info.value(QLatin1String("path")).toString();
     }
-#endif
     return name;
 }
 
@@ -298,14 +299,14 @@ void DropBoxJob::parseDeleteFile(const QString &data)
 
 void DropBoxJob::parseAccountInfo(const QString &data)
 {
-    qDebug()<<" data "<<data;
-    QJsonDocument jsonDoc = QJsonDocument::fromBinaryData(data.toUtf8());
-    if (jsonDoc.isNull()) {
+    QJsonParseError error;
+    const QJsonDocument json = QJsonDocument::fromJson(data.toUtf8(), &error);
+    if (error.error != QJsonParseError::NoError || json.isNull()) {
         errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
         deleteLater();
         return;
     }
-    const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
+    const QMap<QString, QVariant> info = json.toVariant().toMap();
 
     PimCommon::AccountInfo accountInfo;
     if (info.contains(QLatin1String("display_name")))
@@ -453,11 +454,14 @@ void DropBoxJob::listFolder(const QString &folder)
 
 void DropBoxJob::parseUploadFile(const QString &data)
 {
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
-
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QJsonParseError error;
+    const QJsonDocument json = QJsonDocument::fromJson(data.toUtf8(), &error);
+    if (error.error != QJsonParseError::NoError || json.isNull()) {
+        errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+        deleteLater();
+        return;
+    }
+    const QMap<QString, QVariant> info = json.toVariant().toMap();
     QString root;
     QString path;
     if (info.contains(QLatin1String("root"))) {
@@ -472,7 +476,6 @@ void DropBoxJob::parseUploadFile(const QString &data)
     }
     Q_EMIT uploadFileDone(itemName);
     shareLink(root, path);
-#endif
 }
 
 void DropBoxJob::shareLink(const QString &root, const QString &path)
@@ -683,16 +686,19 @@ void DropBoxJob::addDefaultUrlItem(QUrl &url)
 
 void DropBoxJob::parseShareLink(const QString &data)
 {
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
+    QJsonParseError error;
+    const QJsonDocument json = QJsonDocument::fromJson(data.toUtf8(), &error);
+    if (error.error != QJsonParseError::NoError || json.isNull()) {
+        errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+        deleteLater();
+        return;
+    }
+    const QMap<QString, QVariant> info = json.toVariant().toMap();
     QString url;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (info.contains(QLatin1String("url"))) {
         url = info.value(QLatin1String("url")).toString();
     }
     Q_EMIT shareLinkDone(url);
-#endif
     deleteLater();
 }
 

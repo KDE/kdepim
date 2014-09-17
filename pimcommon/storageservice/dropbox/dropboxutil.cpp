@@ -19,16 +19,18 @@
 #include <QVariant>
 #include <QLocale>
 #include <QDateTime>
+#include <QJsonParseError>
 
 QStringList PimCommon::DropBoxUtil::getListFolder(const QString &data)
 {
-QStringList listFolder;
-#if 0
-    QJson::Parser parser;
-    bool ok;
-
     QStringList listFolder;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QJsonParseError error;
+    const QJsonDocument json = QJsonDocument::fromJson(data.toUtf8(), &error);
+    if (error.error != QJsonParseError::NoError || json.isNull()) {
+        return listFolder;
+    }
+    const QMap<QString, QVariant> info = json.toVariant().toMap();
+
     if (info.contains(QLatin1String("contents"))) {
         const QVariantList lst = info.value(QLatin1String("contents")).toList();
         Q_FOREACH (const QVariant &variant, lst) {
@@ -42,7 +44,6 @@ QStringList listFolder;
             }
         }
     }
-#endif
     return listFolder;
 }
 
