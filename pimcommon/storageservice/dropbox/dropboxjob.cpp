@@ -106,6 +106,7 @@ void DropBoxJob::getTokenAccess()
 void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
 {
     const QString data = QString::fromUtf8(reply->readAll());
+    qDebug()<<" data "<<data;
     reply->deleteLater();
     if (mError) {
         QJsonDocument jsonDoc = QJsonDocument::fromBinaryData(reply->readAll());
@@ -297,11 +298,15 @@ void DropBoxJob::parseDeleteFile(const QString &data)
 
 void DropBoxJob::parseAccountInfo(const QString &data)
 {
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
+    qDebug()<<" data "<<data;
+    QJsonDocument jsonDoc = QJsonDocument::fromBinaryData(data.toUtf8());
+    if (jsonDoc.isNull()) {
+        errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+        deleteLater();
+        return;
+    }
+    const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
 
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     PimCommon::AccountInfo accountInfo;
     if (info.contains(QLatin1String("display_name")))
         accountInfo.displayName = info.value(QLatin1String("display_name")).toString();
@@ -320,7 +325,6 @@ void DropBoxJob::parseAccountInfo(const QString &data)
 
 
     Q_EMIT accountInfoDone(accountInfo);
-#endif
     deleteLater();
 }
 
