@@ -22,7 +22,7 @@
 #ifndef CHARSETSELECTIONDIALOG_H
 #define CHARSETSELECTIONDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
 
 class KComboBox;
 
@@ -32,7 +32,7 @@ class KComboBox;
  * This dialog is used to select an override charset
  * for the message viewer.
  */
-class CharsetSelectionDialog : public KDialog
+class CharsetSelectionDialog : public QDialog
 {
   public:
     /**

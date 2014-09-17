@@ -25,14 +25,26 @@
 
 #include <KLocalizedString>
 #include <kcombobox.h>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 CharsetSelectionDialog::CharsetSelectionDialog( QWidget *parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setButtons( Ok | Cancel );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
   mCharsetCombo = new KComboBox;
-  setMainWidget( mCharsetCombo );
+  mainLayout->addWidget(mCharsetCombo);
+  mainLayout->addWidget(buttonBox);
 
   QStringList charsets = MessageViewer::NodeHelper::supportedEncodings( false );
   charsets.prepend( i18n( "Auto" ) );

@@ -22,7 +22,7 @@
 #ifndef CRYPTOFORMATSELECTIONDIALOG_H
 #define CRYPTOFORMATSELECTIONDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
 
 #include <kleo/enum.h>
 
@@ -34,7 +34,7 @@ class KComboBox;
  * This dialog is used to select a crypto format
  * for the message viewer.
  */
-class CryptoFormatSelectionDialog : public KDialog
+class CryptoFormatSelectionDialog : public QDialog
 {
   public:
     /**
