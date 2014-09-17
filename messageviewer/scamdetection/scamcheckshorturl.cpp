@@ -32,6 +32,7 @@
 #include <QNetworkRequest>
 #include <QStandardPaths>
 #include <QNetworkConfigurationManager>
+#include <QJsonDocument>
 
 using namespace MessageViewer;
 QStringList ScamCheckShortUrl::sSupportedServices = QStringList();
@@ -71,27 +72,18 @@ void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
         shortUrl.setUrl(reply->property("shortUrl").toString());
     }
     reply->deleteLater();
-#if 0 //QT5
-    const QString jsonData = QString::fromUtf8(reply->readAll());
+    QJsonDocument jsonDoc = QJsonDocument::fromBinaryData(reply->readAll());
+    if (!jsonDoc.isNull()) {
+        const QMap<QString, QVariant> map = jsonDoc.toVariant().toMap();
+        QUrl longUrl;
+        if (map.contains(QLatin1String("long-url"))) {
+            longUrl.setUrl(map.value(QLatin1String("long-url")).toString());
+        } else {
+            return;
+        }
+        KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Short url \'%1\' redirects to \'%2\'.", shortUrl.url(), longUrl.toDisplayString() ) );
 
-    //qDebug() << jsonData;
-
-    QJson::Parser parser;
-    bool ok;
-
-    const QMap<QString, QVariant> map = parser.parse(jsonData.toUtf8(), &ok).toMap();
-    if (!ok) {
-        return;
     }
-
-    QUrl longUrl;
-    if (map.contains(QLatin1String("long-url"))) {
-        longUrl.setUrl(map.value(QLatin1String("long-url")).toString());
-    } else {
-        return;
-    }
-    KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Short url \'%1\' redirects to \'%2\'.", shortUrl.url(), longUrl.toDisplayString() ) );
-#endif
 }
 
 void ScamCheckShortUrl::slotError(QNetworkReply::NetworkError error)
