@@ -23,7 +23,6 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 #include <kio/job.h>
 #include <KTextEdit>
-class QNetworkConfigurationManager;
 class KToggleAction;
 namespace PimCommon {
 

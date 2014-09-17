@@ -19,7 +19,6 @@
 #define THEMECONFIGUREDIALOG_H
 
 #include <QDialog>
-class KTextEdit;
 
 namespace PimCommon
 {

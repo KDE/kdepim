@@ -22,7 +22,6 @@
 #include <AkonadiCore/Item>
 #include "kaddressbook_export.h"
 
-class QListWidget;
 class QPushButton;
 namespace Akonadi {
 class CollectionComboBox;

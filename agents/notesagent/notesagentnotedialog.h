@@ -20,7 +20,6 @@
 
 #include <QDialog>
 #include <Item>
-class QTextEdit;
 class QLineEdit;
 class KJob;
 namespace PimCommon

@@ -22,7 +22,6 @@
 #include <QDialog>
 #include <AkonadiCore/Item>
 #include <KConfigGroup>
-class QItemSelectionModel;
 class QDialogButtonBox;
 namespace KABMergeContacts {
 class MergeContactWidget;
