@@ -71,7 +71,8 @@ private:
         Subject,
         DeadLine,
         AnswerWasReceived,
-        MessageId
+        MessageId,
+        AnswerMessageId
     };
     QTreeWidget *mTreeWidget;
     bool mChanged;

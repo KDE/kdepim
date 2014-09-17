@@ -28,7 +28,7 @@ FollowUpReminderInfoTest::FollowUpReminderInfoTest()
 void FollowUpReminderInfoTest::shouldHaveDefaultValue()
 {
     FollowUpReminder::FollowUpReminderInfo info;
-    QCOMPARE(info.id(), Akonadi::Item::Id(-1));
+    QCOMPARE(info.originalMessageItemId(), Akonadi::Item::Id(-1));
     QCOMPARE(info.messageId(), QString());
     QCOMPARE(info.isValid(), false);
     QCOMPARE(info.to(), QString());
@@ -50,7 +50,7 @@ void FollowUpReminderInfoTest::shoudBeNotValid()
     info.setTo(to);
     QCOMPARE(info.isValid(), false);
 
-    info.setId(Akonadi::Item::Id(42));
+    info.setOriginalMessageItemId(Akonadi::Item::Id(42));
     QCOMPARE(info.isValid(), true);
 }
 
@@ -63,7 +63,7 @@ void FollowUpReminderInfoTest::shoudBeValidEvenIfSubjectIsEmpty()
     info.setFollowUpReminderDate(QDateTime(date));
     const QString to = QLatin1String("kde.org");
     info.setTo(to);
-    info.setId(Akonadi::Item::Id(42));
+    info.setOriginalMessageItemId(Akonadi::Item::Id(42));
     QCOMPARE(info.isValid(), true);
 }
 
@@ -75,7 +75,7 @@ void FollowUpReminderInfoTest::shouldRestoreFromSettings()
     info.setFollowUpReminderDate(QDateTime(date));
     const QString to = QLatin1String("kde.org");
     info.setTo(to);
-    info.setId(Akonadi::Item::Id(42));
+    info.setOriginalMessageItemId(Akonadi::Item::Id(42));
     info.setSubject(QLatin1String("Subject"));
 
     KConfigGroup grp(KSharedConfig::openConfig(), "testsettings");
@@ -93,7 +93,7 @@ void FollowUpReminderInfoTest::shouldCopyReminderInfo()
     info.setFollowUpReminderDate(QDateTime(date));
     const QString to = QLatin1String("kde.org");
     info.setTo(to);
-    info.setId(Akonadi::Item::Id(42));
+    info.setOriginalMessageItemId(Akonadi::Item::Id(42));
     info.setSubject(QLatin1String("Subject"));
 
     FollowUpReminder::FollowUpReminderInfo copyInfo(info);

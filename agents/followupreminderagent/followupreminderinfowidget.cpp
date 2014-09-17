@@ -28,7 +28,7 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
-//#define DEBUG_MESSAGE_ID
+// #define DEBUG_MESSAGE_ID
 static QString followUpItemPattern = QLatin1String("FollowupReminderItem \\d+");
 
 FollowUpReminderInfoItem::FollowUpReminderInfoItem(QTreeWidget *parent)
@@ -64,10 +64,10 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
             << i18n("Dead Line")
             << i18n("Answer")
 #ifdef DEBUG_MESSAGE_ID
-            << i18n("Message Id");
-#else
-               ;
+            << QLatin1String("Message Id")
+            << QLatin1String("Answer Message Id")
 #endif
+               ;
 
     mTreeWidget->setHeaderLabels(headers);
     mTreeWidget->setSortingEnabled(true);
@@ -94,7 +94,8 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
         item->setData(0, AnswerItemFound, info->answerWasReceived());
         item->setText(To, info->to());
 #ifdef DEBUG_MESSAGE_ID
-        item->setText(MessageId, info->messageId());
+        item->setText(MessageId, QString::number(info->originalMessageItemId()));
+        item->setText(AnswerMessageId, QString::number(info->answerMessageItemId()));
 #endif
         item->setText(Subject, info->subject());
         const QString date = KLocale::global()->formatDateTime(info->followUpReminderDate(), KLocale::LongDate);
@@ -121,7 +122,7 @@ void FollowUpReminderInfoWidget::save()
     for (int i = 0; i < numberOfItem; ++i) {
         FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(mTreeWidget->topLevelItem(i));
         if (mailItem->info()) {
-            KConfigGroup group = config->group(QString::fromLatin1("FollowupReminderItem %1").arg(mailItem->info()->id()));
+            KConfigGroup group = config->group(QString::fromLatin1("FollowupReminderItem %1").arg(mailItem->info()->originalMessageItemId()));
             mailItem->info()->writeConfig(group);
         }
     }
