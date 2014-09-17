@@ -63,7 +63,6 @@ LoginDialog::LoginDialog(QWidget *parent)
     grid->addWidget(mPassword, 1, 1);
     mPassword->setEchoMode(QLineEdit::Password);
 
-    mainLayout->addWidget(w);
     connect(mUsername, &QLineEdit::textChanged, this, &LoginDialog::slotUserNameChanged);
     mOkButton->setEnabled(false);
     resize(300,100);

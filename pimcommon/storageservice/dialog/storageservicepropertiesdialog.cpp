@@ -48,15 +48,14 @@ StorageServicePropertiesDialog::~StorageServicePropertiesDialog()
 void StorageServicePropertiesDialog::createInformationWidget(const QMap<QString, QString> &information)
 {
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-    QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    mainLayout->addWidget(mainWidget);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &StorageServicePropertiesDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageServicePropertiesDialog::reject);
 
     QWidget *parent = new QWidget;
     QGridLayout *grid = new QGridLayout;
+    parent->setLayout(grid);
 
     QMapIterator<QString, QString> i(information);
     int row = 0;
