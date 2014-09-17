@@ -135,7 +135,7 @@ QPixmap AttachmentIconItem::icon( KMimeType::Ptr mimeType,
                                   const QString &uri,
                                   bool binary )
 {
-//QT5
+//QT5 use KIconEngine
 #if 0
   QString iconStr = mimeType->iconName( uri );
   QStringList overlays;
