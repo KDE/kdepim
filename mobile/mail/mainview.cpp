@@ -1246,14 +1246,12 @@ bool MainView::folderIsDrafts( const Collection &collection )
   const QString idString = QString::number( collection.id() );
   if ( idString.isEmpty() )
     return false;
-#if 0 //QT5
   // search the identities if the folder matches the drafts-folder
   const KIdentityManagement::IdentityManager *im = MobileKernel::self()->identityManager();
   for ( KIdentityManagement::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).drafts() == idString )
       return true;
   }
-#endif
   return false;
 }
 
@@ -1269,14 +1267,12 @@ bool MainView::folderIsTemplates( const Collection &collection )
   const QString idString = QString::number( collection.id() );
   if ( idString.isEmpty() )
     return false;
-#if 0 //QT5
   // search the identities if the folder matches the drafts-folder
   const KIdentityManagement::IdentityManager *im = MobileKernel::self()->identityManager();
   for ( KIdentityManagement::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).templates() == idString )
       return true;
   }
-#endif
   return false;
 }
 
