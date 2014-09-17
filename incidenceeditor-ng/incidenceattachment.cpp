@@ -270,7 +270,6 @@ void IncidenceAttachment::saveAttachment( QListWidgetItem *item )
     sourceUrl = mAttachmentView->tempFileForAttachment( att );
   }
   // save the attachment url
-  //QT5 verify QUrl(...)
   if ( !KIO::NetAccess::file_copy( sourceUrl, QUrl::fromLocalFile( saveAsFile ) ) &&
        KIO::NetAccess::lastError() ) {
     KMessageBox::error( 0, KIO::NetAccess::lastErrorString() );
