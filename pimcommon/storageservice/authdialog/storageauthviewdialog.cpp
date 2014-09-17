@@ -43,7 +43,6 @@ StorageAuthViewDialog::StorageAuthViewDialog(QWidget *parent)
     mainLayout->addWidget(buttonBox);
 
     connect(mView, &StorageAuthViewWidget::urlChanged, this, &StorageAuthViewDialog::urlChanged);
-    mainLayout->addWidget(mView);
     readConfig();
 }
 
