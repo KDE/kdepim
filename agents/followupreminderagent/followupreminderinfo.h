@@ -31,8 +31,8 @@ public:
     FollowUpReminderInfo(const FollowUpReminderInfo &info);
 
 
-    Akonadi::Item::Id id() const;
-    void setId(Akonadi::Item::Id value);
+    Akonadi::Item::Id originalMessageItemId() const;
+    void setOriginalMessageItemId(Akonadi::Item::Id value);
 
     bool isValid() const;
 

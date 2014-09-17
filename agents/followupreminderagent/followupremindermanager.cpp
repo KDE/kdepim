@@ -129,7 +129,7 @@ QString FollowUpReminderManager::infoToStr(FollowUpReminder::FollowUpReminderInf
 {
     QString infoStr;
     infoStr = QLatin1String("****************************************");
-    infoStr += QString::fromLatin1("Akonadi Item id :%1\n").arg(info->id());
+    infoStr += QString::fromLatin1("Akonadi Item id :%1\n").arg(info->originalMessageItemId());
     infoStr += QString::fromLatin1("MessageId :%1\n").arg(info->messageId());
     infoStr += QString::fromLatin1("Subject :%1\n").arg(info->subject());
     infoStr += QString::fromLatin1("To :%1\n").arg(info->to());

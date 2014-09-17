@@ -38,7 +38,7 @@ FollowUpReminderInfo::FollowUpReminderInfo(const KConfigGroup &config)
 FollowUpReminderInfo::FollowUpReminderInfo(const FollowUpReminderInfo &info)
 {
     mFollowUpReminderDate = info.followUpReminderDate();
-    mOriginalMessageItemId = info.id();
+    mOriginalMessageItemId = info.originalMessageItemId();
     mMessageId = info.messageId();
     mTo = info.to();
     mSubject = info.subject();
@@ -103,12 +103,12 @@ void FollowUpReminderInfo::writeConfig(KConfigGroup &config )
     config.sync();
 }
 
-Akonadi::Item::Id FollowUpReminderInfo::id() const
+Akonadi::Item::Id FollowUpReminderInfo::originalMessageItemId() const
 {
     return mOriginalMessageItemId;
 }
 
-void FollowUpReminderInfo::setId(Akonadi::Item::Id value)
+void FollowUpReminderInfo::setOriginalMessageItemId(Akonadi::Item::Id value)
 {
     mOriginalMessageItemId = value;
 }
@@ -153,7 +153,7 @@ void FollowUpReminderInfo::setFollowUpReminderDate(const QDateTime &followUpRemi
 
 bool FollowUpReminderInfo::operator==( const FollowUpReminderInfo& other ) const
 {
-    return mOriginalMessageItemId == other.id()
+    return mOriginalMessageItemId == other.originalMessageItemId()
             && mMessageId == other.messageId()
             && mTo == other.to()
             && mFollowUpReminderDate == other.followUpReminderDate()
