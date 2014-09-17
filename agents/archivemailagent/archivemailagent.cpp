@@ -44,7 +44,7 @@ ArchiveMailAgent::ArchiveMailAgent(const QString &id)
     migrate.migrate();
 
     mArchiveManager = new ArchiveMailManager(this);
-    connect(mArchiveManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
+    connect(mArchiveManager, &ArchiveMailManager::needUpdateConfigDialogBox, this, &ArchiveMailAgent::needUpdateConfigDialogBox);
 
     Akonadi::Monitor *collectionMonitor = new Akonadi::Monitor(this);
     collectionMonitor->fetchCollection(true);
@@ -67,7 +67,7 @@ ArchiveMailAgent::ArchiveMailAgent(const QString &id)
     }
 
     mTimer = new QTimer(this);
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
+    connect(mTimer, &QTimer::timeout, this, &ArchiveMailAgent::reload);
     mTimer->start(24 * 60 * 60 * 1000);
 }
 
@@ -109,8 +109,8 @@ void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
         KWindowSystem::setMainWindow(dialog, (HWND)windowId);
 #endif
     }
-    connect(dialog, SIGNAL(archiveNow(ArchiveMailInfo*)), mArchiveManager, SLOT(slotArchiveNow(ArchiveMailInfo*)));
-    connect(this, SIGNAL(needUpdateConfigDialogBox()), dialog, SLOT(slotNeedReloadConfig()));
+    connect(dialog.data(), &ArchiveMailDialog::archiveNow, mArchiveManager, &ArchiveMailManager::slotArchiveNow);
+    connect(this, &ArchiveMailAgent::needUpdateConfigDialogBox, dialog.data(), &ArchiveMailDialog::slotNeedReloadConfig);
     if (dialog->exec()) {
         mArchiveManager->load();
     }

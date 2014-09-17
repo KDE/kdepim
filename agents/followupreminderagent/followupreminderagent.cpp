@@ -51,7 +51,7 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
         mManager->load();
     }
     mTimer = new QTimer(this);
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
+    connect(mTimer, &QTimer::timeout, this, &FollowUpReminderAgent::reload);
     //Reload all each 24hours
     mTimer->start(24 * 60 * 60 * 1000);
 }
