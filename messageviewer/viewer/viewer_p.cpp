@@ -544,13 +544,10 @@ void ViewerPrivate::createOpenWithMenu( QMenu *topMenu, const QString &contentTy
         KService::List::ConstIterator it = offers.constBegin();
         KService::List::ConstIterator end = offers.constEnd();
         for(; it != end; ++it) {
-//QT5
-#if 0
             QAction * act = MessageViewer::Util::createAppAction(*it,
                                                                 // no submenu -> prefix single offer
                                                                 menu == topMenu, actionGroup, menu);
             menu->addAction(act);
-#endif
         }
 
         QString openWithActionName;
