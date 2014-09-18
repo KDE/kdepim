@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class MailPlugin : public QDeclarativeExtensionPlugin
 {
     Q_OBJECT
-
+    Q_PLUGIN_METADATA(IID "org.kde.akonadi.MailPlugin")
 public:
     void registerTypes(const char *uri);
 };
