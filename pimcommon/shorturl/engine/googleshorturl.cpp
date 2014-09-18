@@ -62,12 +62,15 @@ void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     if (mErrorFound)
         return;
 
-    QJsonDocument jsonDoc = QJsonDocument::fromBinaryData(reply->readAll());
-    if (jsonDoc.isNull()) {
-        qDebug()<<" Error during parsing";
+    qDebug()<<"void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) "<<reply->readAll();
+    QJsonParseError error;
+    const QJsonDocument json = QJsonDocument::fromJson(reply->readAll(), &error);
+    if (error.error != QJsonParseError::NoError || json.isNull()) {
+        qDebug()<<" Error during parsing"<<error.errorString();
         return;
     }
-    const QMap<QString, QVariant> map = jsonDoc.toVariant().toMap();
+    const QMap<QString, QVariant> map = json.toVariant().toMap();
+
     if (map.contains(QLatin1String("id")) && map.contains(QLatin1String("kind"))) {
         Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
     }
