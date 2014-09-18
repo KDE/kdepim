@@ -82,7 +82,6 @@
 #include <kdeprintdialog.h>
 #include <KPrintPreview>
 #include <KXMLGUIClient>
-#include <KToolInvocation>
 #include <KIconLoader>
 #include <KMessageBox>
 
@@ -95,6 +94,7 @@
 #include <QSplitter>
 #include <QStackedWidget>
 #include <QDBusConnection>
+#include <QDesktopServices>
 
 namespace {
 static bool isStructuralCollection( const Akonadi::Collection &collection )
@@ -1018,6 +1018,6 @@ void MainWidget::slotSendMails(const QStringList &emails)
         QUrl url;
         url.setScheme( QLatin1String( "mailto" ) );
         url.setPath( emails.join(QLatin1String(";")) );
-        KToolInvocation::invokeMailer( url );
+        QDesktopServices::openUrl(url);
     }
 }
