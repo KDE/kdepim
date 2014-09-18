@@ -16,4 +16,5 @@ Doxyfile
 Makefile
 avail
 random_seed
-svnmerge-commit-message.txt
+/build/
+CMakeLists.txt.user*
