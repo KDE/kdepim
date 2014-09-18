@@ -25,7 +25,7 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/utils/storageserviceutils.h"
 
-//#include <qjson/parser.h>
+#include <QJsonDocument>
 
 #include <kwallet.h>
 
@@ -525,13 +525,15 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
-
-    const QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
-    listWidget->createMoveUpItem();
+    QJsonParseError error;
     QString parentId;
+    const QJsonDocument json = QJsonDocument::fromJson(data.toString().toUtf8(), &error);
+    if (error.error != QJsonParseError::NoError || json.isNull()) {
+        return parentId;
+    }
+
+    listWidget->createMoveUpItem();
+    const QMap<QString, QVariant> info = json.toVariant().toMap();
 
     if (info.contains(QLatin1String("entries"))) {
         const QVariantList entries = info.value(QLatin1String("entries")).toList();
@@ -564,8 +566,6 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     }
     //qDebug()<<" parentId"<<parentId;
     return parentId;
-#endif
-return QString();
 }
 
 QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &variantMap)

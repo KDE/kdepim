@@ -228,7 +228,7 @@ QString DropBoxJob::extractPathFromData(const QString &data)
     if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
         return name;
     }
-    QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
+    const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     if (info.contains(QLatin1String("path"))) {
         name = info.value(QLatin1String("path")).toString();
     }

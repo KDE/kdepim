@@ -20,7 +20,7 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "storageservice/authdialog/storageauthviewdialog.h"
 
-//#include <qjson/parser.h>
+#include <QJsonDocument>
 
 #include <KLocalizedString>
 
@@ -149,15 +149,17 @@ void BoxJob::getTokenAccess(const QString &authorizeCode)
 
 void BoxJob::slotSendDataFinished(QNetworkReply *reply)
 {
-#if 0 //QT5
     const QString data = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
     if (mError) {
-        qDebug()<<" error type "<<data;
-        QJson::Parser parser;
-        bool ok;
-
-        QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
+        QJsonParseError parsingError;
+        const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
+        if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
+            errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            deleteLater();
+            return;
+        }
+        const QMap<QString, QVariant> error = jsonDoc.toVariant().toMap();
         qDebug()<<" error "<<error;
         if (error.contains(QLatin1String("message")) || error.contains(QLatin1String("error_description"))) {
             QString errorStr;
@@ -271,18 +273,20 @@ void BoxJob::slotSendDataFinished(QNetworkReply *reply)
         parseDownloadFile(data);
         break;
     }
-#endif
 }
 
 
 void BoxJob::parseAccountInfo(const QString &data)
 {
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
-
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     //qDebug()<<" info"<<info;
+    QJsonParseError parsingError;
+    const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
+    if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
+        qDebug()<<"parseAccountInfo parse error "<<data;
+        return;
+    }
+    const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
+
     PimCommon::AccountInfo accountInfo;
     if (info.contains(QLatin1String("space_used"))) {
         accountInfo.shared = info.value(QLatin1String("space_used")).toLongLong();
@@ -291,7 +295,6 @@ void BoxJob::parseAccountInfo(const QString &data)
         accountInfo.quota = info.value(QLatin1String("space_amount")).toLongLong();
     }
     Q_EMIT accountInfoDone(accountInfo);
-#endif
     deleteLater();
 }
 
@@ -623,27 +626,29 @@ void BoxJob::parseMoveFile(const QString &data)
 QString BoxJob::parseNameInfo(const QString &data)
 {
     QString filename;
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
+    QJsonParseError parsingError;
+    const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
+    if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
+        return filename;
+    }
+    const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
 
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (info.contains(QLatin1String("name"))) {
         filename = info.value(QLatin1String("name")).toString();
     }
-#endif
     return filename;
 }
 
 void BoxJob::parseShareLink(const QString &data)
 {
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
-
     QString url;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QJsonParseError parsingError;
+    const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
+    if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
+        qDebug()<<"parseShareLink error "<<data;
+        return;
+    }
+    const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     if (info.contains(QLatin1String("shared_link"))) {
         const QVariantMap map = info.value(QLatin1String("shared_link")).toMap();
         if (map.contains(QLatin1String("url"))) {
@@ -651,7 +656,6 @@ void BoxJob::parseShareLink(const QString &data)
         }
     }
     Q_EMIT shareLinkDone(url);
-#endif
     deleteLater();
 }
 
@@ -693,11 +697,14 @@ QNetworkReply * BoxJob::downloadFile(const QString &name, const QString &fileId,
 
 void BoxJob::parseAccessToken(const QString &data)
 {
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
+    QJsonParseError parsingError;
+    const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
+    if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
+        qDebug()<<"parseAccessToken error "<<data;
+        return;
+    }
+    const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
 
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     //qDebug()<<" info"<<info;
     if (info.contains(QLatin1String("refresh_token"))) {
         mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
@@ -711,6 +718,5 @@ void BoxJob::parseAccessToken(const QString &data)
     }
     //qDebug()<<" parseAccessToken";
     Q_EMIT authorizationDone(mRefreshToken, mToken, expireInTime);
-#endif
     deleteLater();
 }
