@@ -19,7 +19,7 @@
 #define SELECTTHUNDERBIRDFILTERFILESWIDGET_H
 
 #include <QWidget>
-class KUrl;
+class QUrl;
 class QAbstractButton;
 
 namespace Ui
@@ -36,7 +36,7 @@ public:
     ~SelectThunderbirdFilterFilesWidget();
     QStringList selectedFiles() const;
 
-    void setStartDir(const KUrl &);
+    void setStartDir(const QUrl &);
 
 Q_SIGNALS:
     void enableOkButton(bool);

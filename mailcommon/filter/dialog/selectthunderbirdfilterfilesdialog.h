@@ -19,7 +19,7 @@
 #define SELECTTHUNDERBIRDFILTERFILESDIALOG_H
 
 #include <QDialog>
-class KUrl;
+class QUrl;
 class SelectThunderbirdFilterFilesWidget;
 
 namespace MailCommon
@@ -32,7 +32,7 @@ public:
 
     QStringList selectedFiles() const;
 
-    void setStartDir(const KUrl &);
+    void setStartDir(const QUrl &);
 
 private:
     void readConfig();

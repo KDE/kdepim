@@ -60,7 +60,7 @@ QStringList SelectThunderbirdFilterFilesDialog::selectedFiles() const
     return mSelectFilterFilesWidget->selectedFiles();
 }
 
-void SelectThunderbirdFilterFilesDialog::setStartDir(const KUrl &url)
+void SelectThunderbirdFilterFilesDialog::setStartDir(const QUrl &url)
 {
     mSelectFilterFilesWidget->setStartDir(url);
 }
