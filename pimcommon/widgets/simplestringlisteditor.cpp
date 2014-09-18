@@ -114,8 +114,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
         mRemoveButton->setAutoDefault( false );
         mRemoveButton->setEnabled( false ); // no selection yet
         mButtonLayout->addWidget( mRemoveButton );
-        connect( mRemoveButton, SIGNAL(clicked()),
-                 this, SLOT(slotRemove()) );
+        connect(mRemoveButton, &QPushButton::clicked, this, &SimpleStringListEditor::slotRemove);
     }
 
     if ( buttons & Up ) {

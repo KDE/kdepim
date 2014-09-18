@@ -224,20 +224,15 @@ void PlainTextEditor::slotCheckSpelling()
     Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, 0);
     backgroundSpellCheck->setParent(spellDialog);
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
-    connect(spellDialog, SIGNAL(replace(QString,int,QString)),
-            this, SLOT(slotSpellCheckerCorrected(QString,int,QString)));
-    connect(spellDialog, SIGNAL(misspelling(QString,int)),
-            this, SLOT(slotSpellCheckerMisspelling(QString,int)));
-    connect(spellDialog, SIGNAL(autoCorrect(QString,QString)),
-            this, SLOT(slotSpellCheckerAutoCorrect(QString,QString)));
+    connect(spellDialog, &Sonnet::Dialog::replace, this, &PlainTextEditor::slotSpellCheckerCorrected);
+    connect(spellDialog, &Sonnet::Dialog::misspelling, this, &PlainTextEditor::slotSpellCheckerMisspelling);
+    connect(spellDialog, &Sonnet::Dialog::autoCorrect, this, &PlainTextEditor::slotSpellCheckerAutoCorrect);
     connect(spellDialog, SIGNAL(done(QString)),
             this, SLOT(slotSpellCheckerFinished()));
-    connect(spellDialog, SIGNAL(cancel()),
-            this, SLOT(slotSpellCheckerCanceled()));
-    connect(spellDialog, SIGNAL(spellCheckStatus(QString)),
-            this, SIGNAL(spellCheckStatus(QString)));
-    connect(spellDialog, SIGNAL(languageChanged(QString)),
-            this, SIGNAL(languageChanged(QString)));
+
+    connect(spellDialog, &Sonnet::Dialog::cancel, this, &PlainTextEditor::slotSpellCheckerCanceled);
+    connect(spellDialog, &Sonnet::Dialog::spellCheckStatus, this, &PlainTextEditor::spellCheckStatus);
+    connect(spellDialog, &Sonnet::Dialog::languageChanged, this, &PlainTextEditor::languageChanged);
     d->originalDoc = QTextDocumentFragment(document());
     spellDialog->setBuffer(toPlainText());
     spellDialog->show();
