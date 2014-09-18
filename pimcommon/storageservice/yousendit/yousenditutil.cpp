@@ -18,15 +18,19 @@
 #include "yousenditutil.h"
 #include <QVariant>
 #include <QDateTime>
+#include <QJsonParseError>
 
 QStringList PimCommon::YouSendItUtil::getListFolder(const QString &data)
 {
     QStringList listFolder;
-#if 0 //QT5
-    QJson::Parser parser;
-    bool ok;
-    QStringList listFolder;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+
+    QJsonParseError parsingError;
+    const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
+    if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
+        return listFolder;
+    }
+    const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
+
     if (info.contains(QLatin1String("folders"))) {
         QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
@@ -37,7 +41,6 @@ QStringList PimCommon::YouSendItUtil::getListFolder(const QString &data)
             }
         }
     }
-#endif
     return listFolder;
 }
 
