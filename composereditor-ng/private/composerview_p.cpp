@@ -46,7 +46,6 @@
 #include <KMessageBox>
 #include <QDebug>
 #include <KFontAction>
-#include <KFileDialog>
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
 #include <KRun>
@@ -64,6 +63,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QClipboard>
+#include <QFileDialog>
 
 namespace ComposerEditorNG
 {
@@ -766,7 +766,7 @@ void ComposerViewPrivate::_k_slotReplace()
 
 void ComposerViewPrivate::_k_slotSaveAs()
 {
-    QString fn = KFileDialog::getSaveFileName(QString(), i18n("HTML-Files (*.htm *.html);;All Files (*)") , q, i18n("Save as..."));
+    QString fn = QFileDialog::getSaveFileName(q, i18n("Save as..."), QString(), i18n("HTML-Files (*.htm *.html);;All Files (*)") );
     if (fn.isEmpty()) {
         KMessageBox::error(q, i18n("Not file selected."), i18n("Save as"));
         return;

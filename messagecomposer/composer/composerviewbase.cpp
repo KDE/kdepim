@@ -1046,7 +1046,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Messag
     }
 
     if ( !errorMessage.isEmpty() ) {
-        qWarning() << "Auto saving failed:" << errorMessage << file.errorString();
+        qWarning() << "Auto saving failed:" << errorMessage << file.errorString()<<" m_autoSaveUUID"<<m_autoSaveUUID;
         if ( !m_autoSaveErrorShown ) {
             KMessageBox::sorry( m_parentWidget, i18n( "Autosaving the message as %1 failed.\n"
                                                       "%2\n"

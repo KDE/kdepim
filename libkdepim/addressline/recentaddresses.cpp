@@ -232,8 +232,7 @@ RecentAddressDialog::RecentAddressDialog(QWidget *parent)
     hboxLayout->addWidget(mListView);
     hboxLayout->addLayout(btnsLayout);
     layout->addLayout(hboxLayout);
-    connect(mListView, SIGNAL(itemSelectionChanged()),
-            SLOT(slotSelectionChanged()));
+    connect(mListView, &QListWidget::itemSelectionChanged, this, &RecentAddressDialog::slotSelectionChanged);
     // maybe supplied lineedit has some text already
     slotTypedSomething(mLineEdit->text());
     mainLayout->addWidget(page);
