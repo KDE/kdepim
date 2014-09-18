@@ -26,7 +26,7 @@
 
 #include "attachmentpart.h"
 
-#include <KDialog>
+#include <QDialog>
 
 namespace MessageCore {
 
@@ -35,7 +35,7 @@ namespace MessageCore {
  *
  * @author Constantin Berzan <exit3219@gmail.com>
  */
-class MESSAGECORE_EXPORT AttachmentPropertiesDialog: public KDialog
+class MESSAGECORE_EXPORT AttachmentPropertiesDialog: public QDialog
 {
     Q_OBJECT
 
@@ -95,6 +95,7 @@ public:
 public Q_SLOTS:
     /* reimpl */
     virtual void accept();
+    void slotHelp();
 
 private:
     //@cond PRIVATE

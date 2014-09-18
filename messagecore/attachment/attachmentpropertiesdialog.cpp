@@ -39,8 +39,13 @@
 #include <boost/shared_ptr.hpp>
 #include <KLocalizedString>
 #include <KFormat>
+#include <KHelpClient>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace MessageCore;
 
@@ -51,7 +56,8 @@ public:
         : q( qq ),
           mReadOnly( false ),
           ui(0),
-          uiReadOnly(0)
+          uiReadOnly(0),
+          mainLayout(0)
     {
     }
     ~Private()
@@ -75,6 +81,7 @@ public:
 
     Ui::AttachmentPropertiesDialog *ui;
     Ui::AttachmentPropertiesDialogReadOnly *uiReadOnly;
+    QVBoxLayout *mainLayout;
 };
 
 void AttachmentPropertiesDialog::Private::init( const AttachmentPart::Ptr &part, bool readOnly )
@@ -83,7 +90,10 @@ void AttachmentPropertiesDialog::Private::init( const AttachmentPart::Ptr &part,
     mPart = part;
 
     QWidget *widget = new QWidget( q );
-    q->setMainWidget( widget );
+    mainLayout = new QVBoxLayout;
+    q->setLayout(mainLayout);
+
+    mainLayout->addWidget(widget);
     if(mReadOnly) {
         uiReadOnly = new Ui::AttachmentPropertiesDialogReadOnly;
         uiReadOnly->setupUi( widget );
@@ -93,8 +103,6 @@ void AttachmentPropertiesDialog::Private::init( const AttachmentPart::Ptr &part,
     }
     polishUi();
     q->setModal( true );
-    q->showButtonSeparator( true );
-    q->setHelp( QString::fromLatin1( "attachments" ) );
 
     loadFromPart();
 }
@@ -102,8 +110,10 @@ void AttachmentPropertiesDialog::Private::init( const AttachmentPart::Ptr &part,
 void AttachmentPropertiesDialog::Private::polishUi()
 {
     // Tweak the dialog, depending on whether it is read-only or not.
+    QDialogButtonBox *buttonBox = 0;
+
     if ( mReadOnly ) {
-        q->setButtons( Close | Help );
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Help|QDialogButtonBox::Close);
     } else {
         // Update the icon when the selected mime type changes.
 
@@ -111,10 +121,15 @@ void AttachmentPropertiesDialog::Private::polishUi()
                  q, SLOT(mimeTypeChanged(QString)) );
         populateMimeTypes();
         populateEncodings();
-        q->setButtons( Ok | Cancel | Help );
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
+        q->connect(buttonBox->button(QDialogButtonBox::Help), SIGNAL(clicked()), q, SLOT(slotHelp()));
     }
-
-    q->setDefaultButton( Ok );
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
+    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
     populateWhatsThis();
 }
 
@@ -298,7 +313,7 @@ void AttachmentPropertiesDialog::Private::saveToPart()
 
 AttachmentPropertiesDialog::AttachmentPropertiesDialog( const AttachmentPart::Ptr &part,
                                                         bool readOnly, QWidget *parent )
-    : KDialog( parent ),
+    : QDialog( parent ),
       d( new Private( this ) )
 {
     d->init( part, readOnly );
@@ -307,7 +322,7 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog( const AttachmentPart::Pt
 
 AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *content,
                                                         QWidget *parent )
-    : KDialog( parent ),
+    : QDialog( parent ),
       d( new Private( this ) )
 {
     AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob( content, this );
@@ -363,7 +378,12 @@ void AttachmentPropertiesDialog::accept()
         d->saveToPart();
     }
 
-    KDialog::accept();
+    QDialog::accept();
+}
+
+void AttachmentPropertiesDialog::slotHelp()
+{
+    KHelpClient::invokeHelp(QString::fromLatin1( "attachments" ), QLatin1String("kmail"));
 }
 
 #include "moc_attachmentpropertiesdialog.cpp"
