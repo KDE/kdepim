@@ -20,6 +20,7 @@
 #include "translatordebugdialog.h"
 
 #include <QDebug>
+#include <QJsonParseError>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QPointer>
@@ -150,8 +151,6 @@ void GoogleTranslator::slotError(QNetworkReply::NetworkError /*error*/)
 
 void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
 {
-//QT5
-#if 0
     mJsonData = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
     //  jsonData contains arrays like this: ["foo",,"bar"]
@@ -160,14 +159,13 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
     mJsonData = mJsonData.replace(QRegExp(QLatin1String(",{2,2}")), QLatin1String(",\"\","));
     //qDebug() << mJsonData;
 
-    QJson::Parser parser;
-    bool ok;
-
-    const QVariantList json = parser.parse(mJsonData.toUtf8(), &ok).toList();
-    if (!ok) {
-        Q_EMIT translateFailed(ok);
+    QJsonParseError parsingError;
+    const QJsonDocument jsonDoc = QJsonDocument::fromJson(mJsonData.toUtf8(), &parsingError);
+    if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
+        Q_EMIT translateFailed(false);
         return;
     }
+    const QVariantList json = jsonDoc.toVariant().toList();
     //qDebug()<<" json"<<json;
     bool oldVersion = true;
     QMultiMap<int, QPair<QString, double> > sentences;
@@ -238,7 +236,6 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
         mResult = mInputText;
         Q_EMIT translateDone();
     }
-#endif
 }
 
 void GoogleTranslator::debug()
