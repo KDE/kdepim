@@ -247,4 +247,4 @@ void StorageServiceTreeWidget::slotProperties()
     }
 }
 
-#include "moc_storageservicetreewidget.cpp"
+

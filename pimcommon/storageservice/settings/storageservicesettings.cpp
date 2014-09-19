@@ -98,4 +98,4 @@ void StorageServiceSettings::slotWalletClosed()
 
 
 }
-#include "moc_storageservicesettings.cpp"
+

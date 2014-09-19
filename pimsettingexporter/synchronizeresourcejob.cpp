@@ -79,4 +79,4 @@ void SynchronizeResourceJob::setListResources(const QStringList &resources)
     mListResources = resources;
 }
 
-#include "moc_synchronizeresourcejob.cpp"
+

@@ -454,4 +454,4 @@ void StorageServiceAbstract::slotUploadFileFailed(const QString &filename)
     changeProgressState(false);
 }
 
-#include "moc_storageserviceabstract.cpp"
+

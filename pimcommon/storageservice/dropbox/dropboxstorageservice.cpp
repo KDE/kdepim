@@ -568,4 +568,4 @@ qlonglong DropBoxStorageService::maximumUploadFileSize() const
     return 150000000;
 }
 
-#include "moc_dropboxstorageservice.cpp"
+

@@ -520,4 +520,4 @@ QString StorageServiceManager::kconfigName()
     return QLatin1String("storageservicerc");
 }
 
-#include "moc_storageservicemanager.cpp"
+

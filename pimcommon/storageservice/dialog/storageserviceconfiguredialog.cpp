@@ -94,4 +94,4 @@ void StorageServiceConfigureDialog::writeConfig()
     group.writeEntry( "Size", size() );
 }
 
-#include "moc_storageserviceconfiguredialog.cpp"
+

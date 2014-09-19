@@ -172,4 +172,4 @@ void ShowArchiveStructureDialog::readConfig()
     }
 }
 
-#include "moc_showarchivestructuredialog.cpp"
+

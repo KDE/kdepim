@@ -234,4 +234,4 @@ void StorageServiceDeleteDialog::slotDelete()
     }
 }
 
-#include "moc_storageservicedeletedialog.cpp"
+

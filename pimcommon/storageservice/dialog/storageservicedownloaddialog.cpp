@@ -263,4 +263,4 @@ void StorageServiceDownloadDialog::downloadItem(StorageServiceTreeWidgetItem *it
     }
 }
 
-#include "moc_storageservicedownloaddialog.cpp"
+

@@ -538,4 +538,4 @@ QIcon YouSendItStorageService::icon() const
     return QIcon();
 }
 
-#include "moc_yousenditstorageservice.cpp"
+

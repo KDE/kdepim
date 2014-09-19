@@ -659,4 +659,4 @@ void YouSendItJob::shareLink(const QString &root, const QString &path)
     deleteLater();
 }
 
-#include "moc_yousenditjob.cpp"
+

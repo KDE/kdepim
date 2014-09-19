@@ -123,4 +123,4 @@ void StorageServiceProgressWidget::hideEvent(QHideEvent *e)
     QFrame::hideEvent(e);
 }
 
-#include "moc_storageserviceprogresswidget.cpp"
+

@@ -619,4 +619,4 @@ QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileI
     return 0;
 }
 
-#include "moc_webdavjob.cpp"
+
