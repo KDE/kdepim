@@ -119,6 +119,7 @@
       <li xml:lang="x-test">xxReads .vcf format files, and can import and export vCards and csv format filesxx</li>
       <li>Can use multiple LDAPservers</li>
       <li xml:lang="ca">Pot usar múltiples servidors LDAP</li>
+      <li xml:lang="de">Kann mehrere LDAP-Server verwenden</li>
       <li xml:lang="en-GB">Can use multiple LDAPservers</li>
       <li xml:lang="es">Puede usar varios servidores LDAP</li>
       <li xml:lang="fr">Peut utiliser plusieurs serveurs LDAP</li>
