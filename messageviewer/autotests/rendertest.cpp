@@ -19,7 +19,7 @@
 
 #include "htmlwriter/filehtmlwriter.h"
 #include "viewer/objecttreeparser.h"
-#include "tests/testcsshelper.h"
+#include "testcsshelper.h"
 #include "messagecore/autotests/util.h"
 
 #include <KMime/Message>

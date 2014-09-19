@@ -30,6 +30,7 @@ macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
 configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messageviewer.h)
 
 add_subdirectory(about)
+add_subdirectory(autotests)
 add_subdirectory(tests)
 add_subdirectory(pics)
 
