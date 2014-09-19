@@ -65,6 +65,7 @@ option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative OpenGL)
 find_package(Qt5X11Extras NO_MODULE)
+find_package(Qt5TextToSpeech)
 #Need to use volatile_qt5_port branch from grantlee
 find_package(Grantlee "1.0" CONFIG REQUIRED)
 
@@ -123,6 +124,7 @@ if (NOT APPLE)
 endif()
 
 set(KDEPIM_HAVE_X11 ${X11_FOUND})
+set(KDEPIM_HAVE_TEXTTOSPEECH ${Qt5TextToSpeech_FOUND})
 configure_file(config-kdepim.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kdepim.h )
 
 

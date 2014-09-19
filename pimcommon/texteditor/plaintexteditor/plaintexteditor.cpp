@@ -16,6 +16,7 @@
 */
 
 #include "plaintexteditor.h"
+#include "config-kdepim.h"
 
 #include <KLocalizedString>
 #include <KIconTheme>
@@ -116,11 +117,13 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
                 spellCheckAction->setEnabled(false);
             popup->addSeparator();
         }
-
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
         connect(speakAction, &QAction::triggered, this, &PlainTextEditor::slotSpeakText);
+#endif
+
         addExtraMenuEntry(popup, event->pos());
         popup->exec( event->globalPos() );
 

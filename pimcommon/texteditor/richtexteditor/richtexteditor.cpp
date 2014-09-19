@@ -16,6 +16,7 @@
 */
 
 #include "richtexteditor.h"
+#include "config-kdepim.h"
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -160,11 +161,12 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
             }
             popup->addSeparator();
         }
-
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
         connect(speakAction, &QAction::triggered, this, &RichTextEditor::slotSpeakText);
+#endif
         addExtraMenuEntry(popup, pos);
         popup->exec( pos );
 
@@ -174,23 +176,15 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
 
 void RichTextEditor::slotSpeakText()
 {
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
     //Port to QtSpeech
-    // If KTTSD not running, start it.
-    QDBusConnectionInterface *bus = QDBusConnection::sessionBus().interface();
-    if (!bus->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
-        QDBusReply<void> reply = bus->startService(QLatin1String("org.kde.kttsd"));
-        if (!reply.isValid()) {
-            KMessageBox::error(this, i18n("Starting Jovie Text-to-Speech Service Failed"), reply.error().message());
-            return;
-        }
-    }
-    QDBusInterface ktts(QLatin1String("org.kde.kttsd"), QLatin1String("/KSpeech"), QLatin1String("org.kde.KSpeech"));
     QString text;
     if (textCursor().hasSelection())
         text = textCursor().selectedText();
     else
         text = toPlainText();
-    ktts.asyncCall(QLatin1String("say"), text, 0);
+    //PORT ME ktts.asyncCall(QLatin1String("say"), text, 0);
+#endif
 }
 
 void RichTextEditor::setSearchSupport(bool b)
