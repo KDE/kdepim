@@ -39,6 +39,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
 {
     setWindowTitle(defaultTemplate ? i18n("Default template") : i18n("Template"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
     QDialogButtonBox *buttonBox = 0;
     if (defaultTemplate) {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
@@ -54,7 +55,6 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
         mOkButton->setDefault(true);
     }
     QWidget *w = new QWidget;
-    mainLayout->addWidget(w);
 
     QVBoxLayout *vbox = new QVBoxLayout;
 
