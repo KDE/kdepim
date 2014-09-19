@@ -108,4 +108,4 @@ void ConfigureStorageServiceWidget::doLoadFromGlobalSettings()
     mStorageServiceConfigureWidget->loadSettings();
 }
 
-#include "moc_configurestorageservicewidget.cpp"
+
