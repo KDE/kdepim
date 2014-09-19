@@ -122,4 +122,3 @@ void MergeContactsDialog::writeConfig()
     grp.sync();
 }
 
-#include "moc_mergecontactsdialog.cpp"
