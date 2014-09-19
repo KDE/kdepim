@@ -674,17 +674,32 @@ bool SearchRuleString::isEmpty() const
 SearchRule::RequiredPart SearchRuleString::requiredPart() const
 {
     const QByteArray f = field();
-    SearchRule::RequiredPart part = Header;
-    if (qstricmp(f, "<recipients>") == 0 ||
-            qstricmp(f, "<status>") == 0 ||
-            qstricmp(f, "<tag>") == 0 ||
-            qstricmp(f, "Subject") == 0 ||
-            qstricmp(f, "From") == 0) {
+    SearchRule::RequiredPart part = Envelope;
+    if ( kasciistricmp( f, "<recipients>" ) == 0 ||
+         kasciistricmp( f, "<status>" ) == 0 ||
+         kasciistricmp( f, "<tag>" ) == 0 ||
+         kasciistricmp( f, "Subject" ) == 0 ||
+         kasciistricmp( f, "list-id" ) == 0 ||
+         kasciistricmp( f, "from" ) == 0 ||
+         kasciistricmp( f, "<any header>" )== 0) {
         part = Envelope;
     } else if (qstricmp(f, "<message>") == 0 ||
                qstricmp(f, "<body>") == 0) {
         part = CompleteMessage;
+    } else if (kasciistricmp( f, "reply-to" ) == 0 ||
+               kasciistricmp( f, "cc" ) == 0 ||
+               kasciistricmp( f, "bcc" ) == 0 ||
+               kasciistricmp( f, "resent-from" ) == 0 ||
+               kasciistricmp( f, "x-loop" ) == 0 ||
+               kasciistricmp( f, "x-mailing-list" ) == 0 ||
+               kasciistricmp( f, "x-spam-flag" ) == 0 ||
+               kasciistricmp( f, "organization" ) == 0 ||
+               kasciistricmp( f, "to" ) == 0 ) {
+        part = Header;
+    } else {
+        qDebug()<< "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Envelope\" for field :"<<f;
     }
+
 
     return part;
 }
