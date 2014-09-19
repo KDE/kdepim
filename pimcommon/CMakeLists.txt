@@ -164,6 +164,10 @@ set(libpimcommon_widgets_SRCS
   widgets/configureimmutablewidgetutils.cpp
 )
 
+set(libtexttospeech_SRCS
+  texttospeech/texttospeech.cpp
+  texttospeech/texttospeechwidget.cpp
+)
 
 
 set(libpimcommon_SRCS
@@ -181,6 +185,7 @@ set(libpimcommon_SRCS
   ${libpimcommon_acl_SRCS}
   ${libpimcommon_sieve_SRCS}
   ${libpimcommon_widgets_SRCS}
+  ${libtexttospeech_SRCS}
 )
 
 ki18n_wrap_ui(libpimcommon_SRCS
@@ -210,6 +215,11 @@ if( KF5GAPI_FOUND )
   )
 endif()
 
+if ( Qt5TextToSpeech_FOUND ) 
+  target_link_libraries(pimcommon
+    Qt5::TextToSpeech
+  )
+endif()
 
 target_link_libraries(pimcommon
     KF5::Abc
@@ -245,6 +255,8 @@ add_subdirectory(storageservice/yousendit/tests)
 #add_subdirectory(storageservice/webdav/tests)
 add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
+add_subdirectory(texttospeech/autotests)
+
 
 if( LibKGAPI2_FOUND )
   add_subdirectory(storageservice/gdrive/tests/)

@@ -42,6 +42,9 @@
 #include <QScrollBar>
 #include <QApplication>
 #include <QClipboard>
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#include <QtTextToSpeech/QTextToSpeech>
+#endif
 
 using namespace PimCommon;
 class RichTextEditor::RichTextEditorPrivate

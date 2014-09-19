@@ -38,6 +38,10 @@
 #include <QScrollBar>
 #include <QApplication>
 #include <QClipboard>
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#include <QtTextToSpeech/QTextToSpeech>
+#endif
+
 
 using namespace PimCommon;
 
@@ -139,23 +143,15 @@ void PlainTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 
 void PlainTextEditor::slotSpeakText()
 {
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
     //Port to QtSpeech
-    // If KTTSD not running, start it.
-    QDBusConnectionInterface *bus = QDBusConnection::sessionBus().interface();
-    if (!bus->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
-        QDBusReply<void> reply = bus->startService(QLatin1String("org.kde.kttsd"));
-        if (!reply.isValid()) {
-            KMessageBox::error(this, i18n("Starting Jovie Text-to-Speech Service Failed"), reply.error().message());
-            return;
-        }
-    }
-    QDBusInterface ktts(QLatin1String("org.kde.kttsd"), QLatin1String("/KSpeech"), QLatin1String("org.kde.KSpeech"));
     QString text;
     if (textCursor().hasSelection())
         text = textCursor().selectedText();
     else
         text = toPlainText();
-    ktts.asyncCall(QLatin1String("say"), text, 0);
+    //PORT ME ktts.asyncCall(QLatin1String("say"), text, 0);
+#endif
 }
 
 void PlainTextEditor::slotUndoableClear()
