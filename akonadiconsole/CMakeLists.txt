@@ -114,7 +114,7 @@ target_link_libraries(akonadiconsole_bin
 )
 
 install(TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS akonadiconsole.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.akonadiconsole.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES akonadiconsoleui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/akonadiconsole)
 
 add_subdirectory(icons)
