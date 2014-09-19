@@ -71,8 +71,6 @@ AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    QPushButton *user1Button = new QPushButton;
-    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &AnnotationEditDialog::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AnnotationEditDialog::reject);
 
