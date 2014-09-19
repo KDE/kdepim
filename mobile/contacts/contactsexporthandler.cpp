@@ -21,7 +21,6 @@
 
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
-#include <kfiledialog.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <KUrl>
@@ -98,7 +97,7 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
 
   bool ok = true;
   if ( contacts.count() == 1 ) {
-    fileName = KFileDialog::getSaveFileName( QString(contactFileName( contacts.first() ) + QLatin1String( ".vcf" )), QLatin1String( "*.vcf" )  );
+    fileName = QFileDialog::getSaveFileName(0, QString(), QString(contactFileName(contacts.first())+QLatin1String(".vcf")), QLatin1String( "*.vcf" )  );
     if ( fileName.isEmpty() ) // user canceled export
       return true;
 
@@ -127,7 +126,7 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
       case KMessageBox::No: // fall through
       default:
         {
-          fileName = KFileDialog::getSaveFileName( QUrl( QLatin1String("addressbook.vcf") ), QLatin1String( "*.vcf" ) );
+          fileName = QFileDialog::getSaveFileName(0, QString(), QLatin1String("addressbook.vcf"), QLatin1String( "*.vcf" ) );
           if ( fileName.isEmpty() )
             return true; // user canceled export
 

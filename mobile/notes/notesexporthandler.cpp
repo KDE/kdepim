@@ -19,11 +19,11 @@
 
 #include "notesexporthandler.h"
 
-#include <kfiledialog.h>
 #include <KLocalizedString>
 #include <kmbox/mbox.h>
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>
+#include <QFileDialog>
 
 QString NotesExportHandler::dialogText() const
 {
@@ -54,7 +54,7 @@ bool NotesExportHandler::exportItems( const Akonadi::Item::List &items )
       notes << item.payload<KMime::Message::Ptr>();
   }
 
-  const QString fileName = KFileDialog::getSaveFileName( QUrl( QLatin1String( "notes.mbox" ) ), QLatin1String( "*.mbox" ) );
+  const QString fileName = QFileDialog::getSaveFileName(0, QString(), QLatin1String("notes.mbox"), QLatin1String( "*.mbox" ) );
   if ( fileName.isEmpty() ) // user canceled export
     return true;
 

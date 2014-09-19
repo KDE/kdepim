@@ -19,11 +19,11 @@
 
 #include "emailsexporthandler.h"
 
-#include <kfiledialog.h>
 #include <KLocalizedString>
 #include <kmbox/mbox.h>
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>
+#include <QFileDialog>
 
 QString EmailsExportHandler::dialogText() const
 {
@@ -54,7 +54,7 @@ bool EmailsExportHandler::exportItems( const Akonadi::Item::List &items )
       messages << item.payload<KMime::Message::Ptr>();
   }
 
-  const QString fileName = KFileDialog::getSaveFileName( QUrl( QLatin1String( "emails.mbox" ) ), QLatin1String( "*.mbox" ) );
+  const QString fileName = QFileDialog::getSaveFileName(0, QString(), QLatin1String("emails.mbox"), QLatin1String( "*.mbox" ) );
   if ( fileName.isEmpty() ) // user canceled export
     return true;
 

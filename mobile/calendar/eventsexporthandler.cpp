@@ -23,8 +23,8 @@
 #include <KCalCore/FileStorage>
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
-#include <kfiledialog.h>
 #include <KLocalizedString>
+#include <QFileDialog>
 
 QString EventsExportHandler::dialogText() const
 {
@@ -48,7 +48,7 @@ QStringList EventsExportHandler::mimeTypes() const
 
 bool EventsExportHandler::exportItems( const Akonadi::Item::List &items )
 {
-  const QString fileName = KFileDialog::getSaveFileName( QUrl( QLatin1String("calendar.ics") ), QLatin1String( "*.ics" ) );
+  const QString fileName = QFileDialog::getSaveFileName(0, QString(), QLatin1String("calendar.ics"), QLatin1String( "*.ics" ) );
   if ( fileName.isEmpty() )
     return true;
 
