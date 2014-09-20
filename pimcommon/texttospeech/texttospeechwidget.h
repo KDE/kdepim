@@ -20,7 +20,7 @@
 
 #include <QWidget>
 #include "pimcommon_export.h"
-
+class QToolButton;
 namespace PimCommon {
 class PIMCOMMON_EXPORT TextToSpeechWidget : public QWidget
 {
@@ -34,11 +34,15 @@ public:
         Play,
         Pause
     };
+
     State state() const;
+    void setState(PimCommon::TextToSpeechWidget::State state);
 
 private:
+    void updateButtonState();
     State mState;
-
+    QToolButton *mStopButton;
+    QToolButton *mPlayPauseButton;
 };
 }
 #endif // TEXTTOSPEECHWIDGET_H

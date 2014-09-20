@@ -18,6 +18,7 @@
 #include "texttospeechwidget.h"
 #include <KLocalizedString>
 #include <QHBoxLayout>
+#include <QToolButton>
 
 using namespace PimCommon;
 
@@ -25,6 +26,15 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     : QWidget(parent),
       mState(Stop)
 {
+    QHBoxLayout *hbox = new QHBoxLayout;
+    setLayout(hbox);
+    mStopButton = new QToolButton;
+    mStopButton->setObjectName(QLatin1String("stopbutton"));
+    hbox->addWidget(mStopButton);
+    mPlayPauseButton = new QToolButton;
+    mPlayPauseButton->setObjectName(QLatin1String("playpausebutton"));
+    hbox->addWidget(mPlayPauseButton);
+    updateButtonState();
 }
 
 TextToSpeechWidget::~TextToSpeechWidget()
@@ -34,4 +44,17 @@ TextToSpeechWidget::~TextToSpeechWidget()
 TextToSpeechWidget::State TextToSpeechWidget::state() const
 {
     return mState;
+}
+
+void TextToSpeechWidget::setState(TextToSpeechWidget::State state)
+{
+    if (mState != state) {
+        mState = state;
+        updateButtonState();
+    }
+}
+
+void TextToSpeechWidget::updateButtonState()
+{
+
 }
