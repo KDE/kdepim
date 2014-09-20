@@ -33,7 +33,6 @@
 
 #include "tripmodel.h"
 #include "stackedwidgetview.h"
-#include <KGlobal>
 #include "createtripwidget.h"
 
 using namespace Akonadi;

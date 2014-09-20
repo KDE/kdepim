@@ -26,7 +26,6 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 
-#include <KStandardDirs>
 
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/ItemFetchScope>

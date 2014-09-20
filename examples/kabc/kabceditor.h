@@ -22,7 +22,7 @@
 #ifndef KABCEDITOR_H
 #define KABCEDITOR_H
 
-#include "kdialog.h"
+#include <QDialog>
 
 class QLineEdit;
 
