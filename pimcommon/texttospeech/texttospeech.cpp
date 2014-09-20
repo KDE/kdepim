@@ -76,4 +76,52 @@ void TextToSpeech::say(const QString &text)
 #endif
 
 }
+
+void TextToSpeech::stop()
+{
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+    mTextToSpeech->stop();
+#endif
+}
+
+void TextToSpeech::pause()
+{
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+    mTextToSpeech->pause();
+#endif
+}
+
+void TextToSpeech::resume()
+{
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+    mTextToSpeech->resume();
+#endif
+}
+
+void TextToSpeech::setRate(double rate)
+{
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+    mTextToSpeech->setRate(rate);
+#else
+    Q_UNUSED(rate);
+#endif
+}
+
+void TextToSpeech::setPitch(double pitch)
+{
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+    mTextToSpeech->setPitch(pitch);
+#else
+    Q_UNUSED(pitch);
+#endif
+}
+
+void TextToSpeech::setVolume(double volume)
+{
+#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+    mTextToSpeech->setVolume(volume);
+#else
+    Q_UNUSED(volume);
+#endif
+}
 }

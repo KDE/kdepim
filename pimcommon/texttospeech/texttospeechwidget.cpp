@@ -16,6 +16,8 @@
 */
 
 #include "texttospeechwidget.h"
+#include <KLocalizedString>
+#include <QHBoxLayout>
 
 using namespace PimCommon;
 

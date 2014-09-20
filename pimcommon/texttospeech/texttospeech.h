@@ -39,7 +39,15 @@ public:
 
     bool isReady() const;
 
+public Q_SLOTS:
     void say(const QString &text);
+    void stop();
+    void pause();
+    void resume();
+
+    void setRate(double rate);
+    void setPitch(double pitch);
+    void setVolume(double volume);
 
 private:
     explicit TextToSpeech(QObject *parent=0);
