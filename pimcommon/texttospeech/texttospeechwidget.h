@@ -28,6 +28,17 @@ class PIMCOMMON_EXPORT TextToSpeechWidget : public QWidget
 public:
     explicit TextToSpeechWidget(QWidget *parent=0);
     ~TextToSpeechWidget();
+
+    enum State {
+        Stop = 0,
+        Play,
+        Pause
+    };
+    State state() const;
+
+private:
+    State mState;
+
 };
 }
 #endif // TEXTTOSPEECHWIDGET_H

@@ -27,6 +27,9 @@ class TextToSpeechWidgetTest : public QObject
 public:
     explicit TextToSpeechWidgetTest(QObject *parent=0);
 
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+
 };
 
 #endif // TEXTTOSPEECHWIDGETTEST_H

@@ -22,10 +22,16 @@
 using namespace PimCommon;
 
 TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mState(Stop)
 {
 }
 
 TextToSpeechWidget::~TextToSpeechWidget()
 {
+}
+
+TextToSpeechWidget::State TextToSpeechWidget::state() const
+{
+    return mState;
 }

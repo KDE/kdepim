@@ -17,10 +17,18 @@
 
 #include "texttospeechwidgettest.h"
 #include <qtest.h>
+#include "texttospeech/texttospeechwidget.h"
 
 TextToSpeechWidgetTest::TextToSpeechWidgetTest(QObject *parent)
+    : QObject(parent)
 {
 
+}
+
+void TextToSpeechWidgetTest::shouldHaveDefaultValue()
+{
+    PimCommon::TextToSpeechWidget textToSpeechWidget;
+    QCOMPARE( textToSpeechWidget.state(), PimCommon::TextToSpeechWidget::Stop);
 }
 
 
