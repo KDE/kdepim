@@ -30,15 +30,27 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     setLayout(hbox);
     mStopButton = new QToolButton;
     mStopButton->setObjectName(QLatin1String("stopbutton"));
+    connect(mStopButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotStop);
     hbox->addWidget(mStopButton);
     mPlayPauseButton = new QToolButton;
     mPlayPauseButton->setObjectName(QLatin1String("playpausebutton"));
+    connect(mPlayPauseButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotPlayPause);
     hbox->addWidget(mPlayPauseButton);
     updateButtonState();
 }
 
 TextToSpeechWidget::~TextToSpeechWidget()
 {
+}
+
+void TextToSpeechWidget::slotPlayPause()
+{
+    //TODO
+}
+
+void TextToSpeechWidget::slotStop()
+{
+    //TODO
 }
 
 TextToSpeechWidget::State TextToSpeechWidget::state() const
@@ -56,5 +68,5 @@ void TextToSpeechWidget::setState(TextToSpeechWidget::State state)
 
 void TextToSpeechWidget::updateButtonState()
 {
-
+    mPlayPauseButton->setEnabled((mState != Stop));
 }

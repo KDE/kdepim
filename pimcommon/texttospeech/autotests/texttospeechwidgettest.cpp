@@ -18,6 +18,7 @@
 #include "texttospeechwidgettest.h"
 #include <qtest.h>
 #include "texttospeech/texttospeechwidget.h"
+#include <QToolButton>
 
 TextToSpeechWidgetTest::TextToSpeechWidgetTest(QObject *parent)
     : QObject(parent)
@@ -29,6 +30,15 @@ void TextToSpeechWidgetTest::shouldHaveDefaultValue()
 {
     PimCommon::TextToSpeechWidget textToSpeechWidget;
     QCOMPARE( textToSpeechWidget.state(), PimCommon::TextToSpeechWidget::Stop);
+
+    QToolButton *stopButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("stopbutton"));
+    QVERIFY(stopButton);
+    QVERIFY(stopButton->isEnabled());
+
+    QToolButton *playPauseButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("playpausebutton"));
+    QVERIFY(playPauseButton);
+    QVERIFY(!playPauseButton->isEnabled());
+
 }
 
 

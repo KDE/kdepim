@@ -38,6 +38,13 @@ public:
     State state() const;
     void setState(PimCommon::TextToSpeechWidget::State state);
 
+Q_SIGNALS:
+    void stateChanges(PimCommon::TextToSpeechWidget::State state);
+
+private slots:
+    void slotStop();
+
+    void slotPlayPause();
 private:
     void updateButtonState();
     State mState;
