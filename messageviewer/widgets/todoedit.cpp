@@ -146,8 +146,10 @@ void TodoEdit::showToDoWidget()
 
 void TodoEdit::writeConfig()
 {
-    if (MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder() != mCollectionCombobox->currentCollection().id()) {
-        MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(mCollectionCombobox->currentCollection().id());
+    const Akonadi::Collection col = mCollectionCombobox->currentCollection();
+    const qint64 id = col.isValid() ? col.id() : -1;
+    if (id != MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder()) {
+        MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(id);
         MessageViewer::GlobalSettingsBase::self()->writeConfig();
     }
 }

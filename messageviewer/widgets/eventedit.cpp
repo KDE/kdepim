@@ -160,8 +160,10 @@ EventEdit::~EventEdit()
 
 void EventEdit::writeConfig()
 {
-    if (mCollectionCombobox->currentCollection().id() != MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder()) {
-        MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(mCollectionCombobox->currentCollection().id());
+    const Akonadi::Collection col = mCollectionCombobox->currentCollection();
+    const qint64 id = col.isValid() ? col.id() : -1;
+    if (id != MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder()) {
+        MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(id);
         MessageViewer::GlobalSettingsBase::self()->writeConfig();
     }
 }
@@ -182,7 +184,7 @@ void EventEdit::showEventEdit()
 void EventEdit::readConfig()
 {
     const qint64 id = MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder();
-    if (id!=-1) {
+    if (id >= 0) {
         mCollectionCombobox->setDefaultCollection(Akonadi::Collection(id));
     }
 }
