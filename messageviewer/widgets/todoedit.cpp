@@ -147,9 +147,9 @@ void TodoEdit::showToDoWidget()
 void TodoEdit::writeConfig()
 {
     const Akonadi::Collection col = mCollectionCombobox->currentCollection();
-    const qint64 id = col.isValid() ? col.id() : -1;
-    if (id != MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder()) {
-        MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(id);
+    // col might not be valid if the collection wasn't found yet (the combo is async), skip saving in that case
+    if (col.isValid() && col.id() != MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder()) {
+        MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(col.id());
         MessageViewer::GlobalSettingsBase::self()->writeConfig();
     }
 }
