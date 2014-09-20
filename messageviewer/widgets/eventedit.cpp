@@ -230,10 +230,12 @@ void EventEdit::setMessage(const KMime::Message::Ptr &value)
 
 void EventEdit::slotCloseWidget()
 {
-    writeConfig();
-    mEventEdit->clear();
-    mMessage = KMime::Message::Ptr();
-    hide();
+    if (isVisible()) {
+        writeConfig();
+        mEventEdit->clear();
+        mMessage = KMime::Message::Ptr();
+        hide();
+    }
 }
 
 void EventEdit::slotReturnPressed()

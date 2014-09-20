@@ -203,11 +203,13 @@ void TodoEdit::setMessage(const KMime::Message::Ptr &value)
 
 void TodoEdit::slotCloseWidget()
 {
-    writeConfig();
-    mNoteEdit->clear();
-    mMessage = KMime::Message::Ptr();
-    mMsgWidget->hide();
-    hide();
+    if (isVisible()) {
+        writeConfig();
+        mNoteEdit->clear();
+        mMessage = KMime::Message::Ptr();
+        mMsgWidget->hide();
+        hide();
+    }
 }
 
 void TodoEdit::slotReturnPressed()
