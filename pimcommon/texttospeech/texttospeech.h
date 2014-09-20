@@ -39,6 +39,10 @@ public:
 
     bool isReady() const;
 
+Q_SIGNALS:
+    //TODO rename it.
+    void emitSay();
+
 public Q_SLOTS:
     void say(const QString &text);
     void stop();

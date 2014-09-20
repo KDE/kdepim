@@ -71,6 +71,7 @@ void TextToSpeech::say(const QString &text)
 {
 #ifdef KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->say(text);
+    Q_EMIT emitSay();
 #else
     Q_UNUSED(text);
 #endif
