@@ -32,7 +32,7 @@ private Q_SLOTS:
     void shouldChangeButtonEnableStateWhenChangeState();
     void shouldChangeStateWhenClickOnPlayPause();
     void shouldChangeStateWhenClickOnStop();
-
+    void shouldEmitStateChanged();
 };
 
 #endif // TEXTTOSPEECHWIDGETTEST_H

@@ -34,6 +34,7 @@ public:
         Play,
         Pause
     };
+    Q_ENUMS(State)
 
     State state() const;
     void setState(PimCommon::TextToSpeechWidget::State state);

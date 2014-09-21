@@ -20,6 +20,11 @@
 #include "texttospeech/texttospeechwidget.h"
 #include <QToolButton>
 #include <qtestmouse.h>
+#include <QSignalSpy>
+
+
+//TODO fix me !
+//qRegisterMetaType<PimCommon::TextToSpeechWidget::State>();
 
 TextToSpeechWidgetTest::TextToSpeechWidgetTest(QObject *parent)
     : QObject(parent)
@@ -89,6 +94,28 @@ void TextToSpeechWidgetTest::shouldChangeStateWhenClickOnStop()
     QCOMPARE( textToSpeechWidget.state(), PimCommon::TextToSpeechWidget::Stop);
 
 }
+
+void TextToSpeechWidgetTest::shouldEmitStateChanged()
+{
+    PimCommon::TextToSpeechWidget textToSpeechWidget;
+    QSignalSpy spy(&textToSpeechWidget, SIGNAL(stateChange(PimCommon::TextToSpeechWidget::State)));
+    textToSpeechWidget.setState(PimCommon::TextToSpeechWidget::Play);
+    QCOMPARE(spy.count(), 0);
+
+    QToolButton *stopButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("stopbutton"));
+
+    QToolButton *playPauseButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("playpausebutton"));
+
+    QTest::mouseClick(playPauseButton, Qt::LeftButton);
+    QCOMPARE(spy.count(), 1);
+    QTest::mouseClick(playPauseButton, Qt::LeftButton);
+    QCOMPARE(spy.count(), 2);
+    QTest::mouseClick(playPauseButton, Qt::LeftButton);
+    QCOMPARE(spy.count(), 3);
+    QTest::mouseClick(stopButton, Qt::LeftButton);
+    QCOMPARE(spy.count(), 4);
+}
+
 
 
 QTEST_MAIN(TextToSpeechWidgetTest)

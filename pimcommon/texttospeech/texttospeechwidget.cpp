@@ -47,14 +47,15 @@ void TextToSpeechWidget::slotPlayPause()
 {
     if (mState == Pause) {
         mState = Play;
-        updateButtonState();
     } else if (mState == Play) {
         mState = Pause;
-        updateButtonState();
     } else if (mState == Stop) {
         mState = Play;
-        updateButtonState();
+    } else {
+        return;
     }
+    updateButtonState();
+    Q_EMIT stateChange(mState);
 }
 
 void TextToSpeechWidget::slotStop()
@@ -62,7 +63,8 @@ void TextToSpeechWidget::slotStop()
     if (mState != Stop) {
         mState = Stop;
         updateButtonState();
-    }    
+        Q_EMIT stateChange(mState);
+    }
 }
 
 TextToSpeechWidget::State TextToSpeechWidget::state() const
