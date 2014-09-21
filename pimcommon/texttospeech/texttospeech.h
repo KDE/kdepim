@@ -23,7 +23,7 @@
 #include "config-kdepim.h"
 #include <QObject>
 
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
 class QTextToSpeech;
 #endif
 
@@ -57,7 +57,7 @@ private:
     explicit TextToSpeech(QObject *parent=0);
     friend class TextToSpeechPrivate;
 
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     QTextToSpeech *mTextToSpeech;
 #endif
 };

@@ -38,7 +38,7 @@
 #include <QScrollBar>
 #include <QApplication>
 #include <QClipboard>
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
 #include <QtTextToSpeech/QTextToSpeech>
 #endif
 
@@ -121,7 +121,7 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
                 spellCheckAction->setEnabled(false);
             popup->addSeparator();
         }
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
@@ -143,7 +143,7 @@ void PlainTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 
 void PlainTextEditor::slotSpeakText()
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     //Port to QtSpeech
     QString text;
     if (textCursor().hasSelection())

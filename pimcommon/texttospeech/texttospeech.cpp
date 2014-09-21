@@ -16,7 +16,7 @@
 */
 
 #include "texttospeech.h"
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
 #include <QtTextToSpeech/QTextToSpeech>
 #endif
 
@@ -42,7 +42,7 @@ Q_GLOBAL_STATIC(TextToSpeechPrivate, sInstance)
 
 TextToSpeech::TextToSpeech(QObject *parent)
     : QObject(parent)
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     ,mTextToSpeech(new QTextToSpeech(this))
 #endif
 {
@@ -60,7 +60,7 @@ TextToSpeech *TextToSpeech::self()
 
 bool TextToSpeech::isReady() const
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     return (mTextToSpeech->state() != QTextToSpeech::BackendError);
 #else
     return false;
@@ -69,7 +69,7 @@ bool TextToSpeech::isReady() const
 
 void TextToSpeech::say(const QString &text)
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->say(text);
     Q_EMIT emitSay();
 #else
@@ -80,28 +80,28 @@ void TextToSpeech::say(const QString &text)
 
 void TextToSpeech::stop()
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->stop();
 #endif
 }
 
 void TextToSpeech::pause()
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->pause();
 #endif
 }
 
 void TextToSpeech::resume()
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->resume();
 #endif
 }
 
 void TextToSpeech::setRate(double rate)
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setRate(rate);
 #else
     Q_UNUSED(rate);
@@ -110,7 +110,7 @@ void TextToSpeech::setRate(double rate)
 
 void TextToSpeech::setPitch(double pitch)
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setPitch(pitch);
 #else
     Q_UNUSED(pitch);
@@ -119,7 +119,7 @@ void TextToSpeech::setPitch(double pitch)
 
 void TextToSpeech::setVolume(double volume)
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setVolume(volume);
 #else
     Q_UNUSED(volume);
