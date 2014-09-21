@@ -177,7 +177,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemUi.modelBox->addItem( "Generic" );
   itemUi.modelBox->addItem( "Mail" );
   itemUi.modelBox->addItem( "Contacts" );
-  itemUi.modelBox->addItem( "Calendar" );
+  itemUi.modelBox->addItem( "Calendar/Tasks" );
   connect( itemUi.modelBox, SIGNAL(activated(int)), SLOT(modelChanged()) );
   QTimer::singleShot( 0, this, SLOT(modelChanged()) );
 
