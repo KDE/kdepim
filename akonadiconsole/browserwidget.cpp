@@ -156,6 +156,8 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemFilter->addMimeTypeExclusionFilter( Collection::mimeType() );
   itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
+  connect( mBrowserModel, SIGNAL(columnsChanged()), itemFilter, SLOT(invalidate()) );
+
   AkonadiBrowserSortModel *sortModel = new AkonadiBrowserSortModel( mBrowserModel, this );
   sortModel->setDynamicSortFilter( true );
   sortModel->setSourceModel( itemFilter );
