@@ -43,8 +43,8 @@ Q_SIGNALS:
 
 private slots:
     void slotStop();
-
     void slotPlayPause();
+
 private:
     void updateButtonState();
     State mState;

@@ -45,12 +45,24 @@ TextToSpeechWidget::~TextToSpeechWidget()
 
 void TextToSpeechWidget::slotPlayPause()
 {
-    //TODO
+    if (mState == Pause) {
+        mState = Play;
+        updateButtonState();
+    } else if (mState == Play) {
+        mState = Pause;
+        updateButtonState();
+    } else if (mState == Stop) {
+        mState = Play;
+        updateButtonState();
+    }
 }
 
 void TextToSpeechWidget::slotStop()
 {
-    //TODO
+    if (mState != Stop) {
+        mState = Stop;
+        updateButtonState();
+    }    
 }
 
 TextToSpeechWidget::State TextToSpeechWidget::state() const

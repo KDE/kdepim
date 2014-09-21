@@ -29,6 +29,9 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldChangeButtonEnableStateWhenChangeState();
+    void shouldChangeStateWhenClickOnPlayPause();
+    void shouldChangeStateWhenClickOnStop();
 
 };
 

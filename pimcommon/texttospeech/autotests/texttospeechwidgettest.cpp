@@ -19,6 +19,7 @@
 #include <qtest.h>
 #include "texttospeech/texttospeechwidget.h"
 #include <QToolButton>
+#include <qtestmouse.h>
 
 TextToSpeechWidgetTest::TextToSpeechWidgetTest(QObject *parent)
     : QObject(parent)
@@ -38,6 +39,54 @@ void TextToSpeechWidgetTest::shouldHaveDefaultValue()
     QToolButton *playPauseButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("playpausebutton"));
     QVERIFY(playPauseButton);
     QVERIFY(!playPauseButton->isEnabled());
+
+}
+
+void TextToSpeechWidgetTest::shouldChangeButtonEnableStateWhenChangeState()
+{
+    PimCommon::TextToSpeechWidget textToSpeechWidget;
+    textToSpeechWidget.setState(PimCommon::TextToSpeechWidget::Play);
+
+    QToolButton *stopButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("stopbutton"));
+    QVERIFY(stopButton->isEnabled());
+
+    QToolButton *playPauseButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("playpausebutton"));
+    QVERIFY(playPauseButton->isEnabled());
+
+    textToSpeechWidget.setState(PimCommon::TextToSpeechWidget::Pause);
+    QVERIFY(stopButton->isEnabled());
+    QVERIFY(playPauseButton->isEnabled());
+
+
+    textToSpeechWidget.setState(PimCommon::TextToSpeechWidget::Stop);
+    QVERIFY(stopButton->isEnabled());
+    QVERIFY(!playPauseButton->isEnabled());
+
+}
+
+void TextToSpeechWidgetTest::shouldChangeStateWhenClickOnPlayPause()
+{
+    PimCommon::TextToSpeechWidget textToSpeechWidget;
+
+    textToSpeechWidget.setState(PimCommon::TextToSpeechWidget::Play);
+    QToolButton *playPauseButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("playpausebutton"));
+    QCOMPARE( textToSpeechWidget.state(), PimCommon::TextToSpeechWidget::Play);
+
+    QTest::mouseClick(playPauseButton, Qt::LeftButton);
+    QCOMPARE( textToSpeechWidget.state(), PimCommon::TextToSpeechWidget::Pause);
+
+    QTest::mouseClick(playPauseButton, Qt::LeftButton);
+    QCOMPARE( textToSpeechWidget.state(), PimCommon::TextToSpeechWidget::Play);
+}
+
+void TextToSpeechWidgetTest::shouldChangeStateWhenClickOnStop()
+{
+    PimCommon::TextToSpeechWidget textToSpeechWidget;
+    textToSpeechWidget.setState(PimCommon::TextToSpeechWidget::Play);
+
+    QToolButton *stopButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("stopbutton"));
+    QTest::mouseClick(stopButton, Qt::LeftButton);
+    QCOMPARE( textToSpeechWidget.state(), PimCommon::TextToSpeechWidget::Stop);
 
 }
 
