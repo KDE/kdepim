@@ -39,7 +39,7 @@ public:
     void setState(PimCommon::TextToSpeechWidget::State state);
 
 Q_SIGNALS:
-    void stateChanges(PimCommon::TextToSpeechWidget::State state);
+    void stateChange(PimCommon::TextToSpeechWidget::State state);
 
 private slots:
     void slotStop();
