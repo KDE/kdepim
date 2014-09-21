@@ -11,4 +11,4 @@ macro(add_texttospeech_unittest _source)
 endmacro ()
 
 add_texttospeech_unittest( texttospeechwidgettest.cpp )
-
+add_texttospeech_unittest( texttospeechconfigwidgettest.cpp )
