@@ -46,6 +46,7 @@ TextToSpeech::TextToSpeech(QObject *parent)
     ,mTextToSpeech(new QTextToSpeech(this))
 #endif
 {
+    connect(this, &TextToSpeech::emitSay, this, &TextToSpeech::slotNextSay);
 }
 
 TextToSpeech::~TextToSpeech()
@@ -56,6 +57,11 @@ TextToSpeech::~TextToSpeech()
 TextToSpeech *TextToSpeech::self()
 {
     return sInstance->textToSpeech; //will create it
+}
+
+void TextToSpeech::slotNextSay()
+{
+    //TODO
 }
 
 bool TextToSpeech::isReady() const

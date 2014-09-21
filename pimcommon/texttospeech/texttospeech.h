@@ -53,6 +53,9 @@ public Q_SLOTS:
     void setPitch(double pitch);
     void setVolume(double volume);
 
+private Q_SLOTS:
+    void slotNextSay();
+
 private:
     explicit TextToSpeech(QObject *parent=0);
     friend class TextToSpeechPrivate;
