@@ -17,13 +17,44 @@
 
 #include "texttospeechconfigwidget.h"
 
+#include <KLocalizedString>
+
+#include <QFormLayout>
+#include <QSlider>
+
+
 using namespace PimCommon;
 TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
     : QWidget(parent)
 {
+    QFormLayout *layout = new QFormLayout;
+    setLayout(layout);
+    mVolume = new QSlider;
+    mVolume->setObjectName(QLatin1String("volume"));
+    layout->addRow(i18n("Volume:"), mVolume);
+
+    mRate = new QSlider;
+    mRate->setObjectName(QLatin1String("rate"));
+    layout->addRow(i18n("Rate:"), mRate);
+
+    mPitch = new QSlider;
+    mPitch->setObjectName(QLatin1String("pitch"));
+    layout->addRow(i18n("Pitch:"), mPitch);
+
+    readConfig();
 }
 
 TextToSpeechConfigWidget::~TextToSpeechConfigWidget()
 {
 
+}
+
+void TextToSpeechConfigWidget::readConfig()
+{
+    //TODO
+}
+
+void TextToSpeechConfigWidget::writeConfig()
+{
+    //TODO
 }

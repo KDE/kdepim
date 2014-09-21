@@ -16,7 +16,11 @@
 */
 
 #include "texttospeechconfigwidgettest.h"
+#include "pimcommon/texttospeech/texttospeechconfigwidget.h"
+
 #include <qtest.h>
+#include <QSlider>
+#include <QSignalSpy>
 
 TextToSpeechConfigWidgetTest::TextToSpeechConfigWidgetTest(QObject *parent)
     : QObject(parent)
@@ -30,7 +34,25 @@ TextToSpeechConfigWidgetTest::~TextToSpeechConfigWidgetTest()
 
 void TextToSpeechConfigWidgetTest::shouldHaveDefaultValue()
 {
-    //TODO
+    PimCommon::TextToSpeechConfigWidget textToSpeechConfigWidget;
+    QSlider *volume = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("volume"));
+    QVERIFY(volume);
+
+    QSlider *rate = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("rate"));
+    QVERIFY(rate);
+
+    QSlider *pitch = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("pitch"));
+    QVERIFY(pitch);
+
 }
+
+void TextToSpeechConfigWidgetTest::shouldEmitConfigChangedWhenChangeSliderValue()
+{
+    PimCommon::TextToSpeechConfigWidget textToSpeechConfigWidget;
+    QSignalSpy spy(&textToSpeechConfigWidget, SIGNAL(configChanged()));
+    //TODO
+
+}
+
 
 QTEST_MAIN(TextToSpeechConfigWidgetTest)

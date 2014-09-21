@@ -20,6 +20,7 @@
 #define TEXTTOSPEECHCONFIGWIDGET_H
 #include <QWidget>
 #include "pimcommon_export.h"
+class QSlider;
 namespace PimCommon {
 class PIMCOMMON_EXPORT TextToSpeechConfigWidget : public QWidget
 {
@@ -27,6 +28,17 @@ class PIMCOMMON_EXPORT TextToSpeechConfigWidget : public QWidget
 public:
     explicit TextToSpeechConfigWidget(QWidget *parent=0);
     ~TextToSpeechConfigWidget();
+
+Q_SIGNALS:
+    void configChanged();
+
+private:
+    void readConfig();
+    void writeConfig();
+
+    QSlider *mVolume;
+    QSlider *mRate;
+    QSlider *mPitch;
 };
 }
 
