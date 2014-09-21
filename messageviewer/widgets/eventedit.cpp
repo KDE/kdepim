@@ -165,8 +165,10 @@ EventEdit::~EventEdit()
 
 void EventEdit::writeConfig()
 {
-    if (mCollectionCombobox->currentCollection().id() != MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder()) {
-        MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(mCollectionCombobox->currentCollection().id());
+    const Akonadi::Collection col = mCollectionCombobox->currentCollection();
+    // col might not be valid if the collection wasn't found yet (the combo is async), skip saving in that case.
+    if (col.isValid() && col.id() != MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder()) {
+        MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(col.id());
         MessageViewer::GlobalSettingsBase::self()->save();
     }
 }
@@ -187,7 +189,7 @@ void EventEdit::showEventEdit()
 void EventEdit::readConfig()
 {
     const qint64 id = MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder();
-    if (id!=-1) {
+    if (id >= 0) {
         mCollectionCombobox->setDefaultCollection(Akonadi::Collection(id));
     }
 }
@@ -233,10 +235,12 @@ void EventEdit::setMessage(const KMime::Message::Ptr &value)
 
 void EventEdit::slotCloseWidget()
 {
-    writeConfig();
-    mEventEdit->clear();
-    mMessage = KMime::Message::Ptr();
-    hide();
+    if (isVisible()) {
+        writeConfig();
+        mEventEdit->clear();
+        mMessage = KMime::Message::Ptr();
+        hide();
+    }
 }
 
 void EventEdit::slotReturnPressed()

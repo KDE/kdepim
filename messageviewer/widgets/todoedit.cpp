@@ -150,8 +150,10 @@ void TodoEdit::showToDoWidget()
 
 void TodoEdit::writeConfig()
 {
-    if (MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder() != mCollectionCombobox->currentCollection().id()) {
-        MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(mCollectionCombobox->currentCollection().id());
+    const Akonadi::Collection col = mCollectionCombobox->currentCollection();
+    // col might not be valid if the collection wasn't found yet (the combo is async), skip saving in that case
+    if (col.isValid() && col.id() != MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder()) {
+        MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(col.id());
         MessageViewer::GlobalSettingsBase::self()->save();
     }
 }
@@ -205,11 +207,13 @@ void TodoEdit::setMessage(const KMime::Message::Ptr &value)
 
 void TodoEdit::slotCloseWidget()
 {
-    writeConfig();
-    mNoteEdit->clear();
-    mMessage = KMime::Message::Ptr();
-    mMsgWidget->hide();
-    hide();
+    if (isVisible()) {
+        writeConfig();
+        mNoteEdit->clear();
+        mMessage = KMime::Message::Ptr();
+        mMsgWidget->hide();
+        hide();
+    }
 }
 
 void TodoEdit::slotReturnPressed()
