@@ -44,7 +44,7 @@ public:
     {
         engine = new Grantlee::Engine;
         engine->setPluginPaths( QStringList() << QLatin1String(GRANTLEE_PLUGIN_PATH) << QLatin1String(MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH));
-        templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
+        templateLoader = QSharedPointer<Grantlee::FileSystemTemplateLoader>( new Grantlee::FileSystemTemplateLoader );
         engine->addTemplateLoader( templateLoader );
     }
     ~Private()
@@ -52,7 +52,7 @@ public:
         delete engine;
     }
 
-    Grantlee::FileSystemTemplateLoader::Ptr templateLoader;
+    QSharedPointer<Grantlee::FileSystemTemplateLoader> templateLoader;
     Grantlee::Engine *engine;
 };
 

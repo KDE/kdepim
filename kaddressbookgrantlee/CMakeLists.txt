@@ -25,7 +25,7 @@ set(kaddressbook_grantlee_LIB_SRCS
 add_library(kaddressbookgrantlee ${LIBRARY_TYPE} ${kaddressbook_grantlee_LIB_SRCS})
 generate_export_header(kaddressbookgrantlee BASE_NAME kaddressbook_grantlee)
 target_link_libraries(kaddressbookgrantlee
-  Grantlee::Templates
+  Grantlee5::Templates
   grantleetheme
   KF5::AkonadiCore
   KF5::Abc

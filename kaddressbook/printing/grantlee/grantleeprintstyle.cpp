@@ -86,7 +86,7 @@ GrantleePrintStyle::GrantleePrintStyle( const QString &themePath, PrintingWizard
     : PrintStyle( parent )
 {
     mEngine = new Grantlee::Engine;
-    mTemplateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
+    mTemplateLoader = QSharedPointer<Grantlee::FileSystemTemplateLoader>( new Grantlee::FileSystemTemplateLoader );
     QFile previewFile(QString(themePath + QDir::separator() + QLatin1String("preview.png")));
     if (previewFile.exists()) {
         setPreview( previewFile.fileName() );

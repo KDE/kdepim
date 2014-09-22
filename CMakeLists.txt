@@ -66,8 +66,7 @@ option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative OpenGL)
 find_package(Qt5X11Extras NO_MODULE)
 find_package(Qt5TextToSpeech)
-#Need to use volatile_qt5_port branch from grantlee
-find_package(Grantlee "1.0" CONFIG REQUIRED)
+find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 
 find_package(Qt5Designer NO_MODULE)
 set_package_properties(Qt5Designer PROPERTIES

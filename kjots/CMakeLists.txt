@@ -74,8 +74,8 @@ target_link_libraries(kjots
   KF5::AkonadiCore
   KF5::Mime
   KF5::AkonadiMime
-  Grantlee::TextDocument
-  Grantlee::Templates
+  Grantlee5::TextDocument
+  Grantlee5::Templates
   KF5::PimTextEdit
   KF5::KontactInterface
   akonadi_next
@@ -111,8 +111,8 @@ target_link_libraries(kjotspart
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Mime
-  Grantlee::Templates
-  Grantlee::TextDocument
+  Grantlee5::Templates
+  Grantlee5::TextDocument
   KF5::PimTextEdit
   akonadi_next
   noteshared

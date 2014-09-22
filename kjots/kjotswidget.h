@@ -189,7 +189,7 @@ private:
     QString activeAnchor;
 
     Grantlee::Engine *m_templateEngine;
-    Grantlee::FileSystemTemplateLoader::Ptr m_loader;
+    QSharedPointer<Grantlee::FileSystemTemplateLoader> m_loader;
 
     KFindDialog *searchDialog;
     QStringList searchHistory;

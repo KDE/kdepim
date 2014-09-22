@@ -140,7 +140,7 @@ KJotsWidget::KJotsWidget(QWidget *parent, KXMLGUIClient *xmlGuiClient, Qt::Windo
     m_templateEngine = new Engine(this);
     m_templateEngine->setPluginPaths(KStd.findDirs("lib", QString()));
 
-    m_loader = FileSystemTemplateLoader::Ptr(new FileSystemTemplateLoader());
+    m_loader = QSharedPointer<FileSystemTemplateLoader>(new FileSystemTemplateLoader());
     m_loader->setTemplateDirs(KStd.findDirs("data", QLatin1String("kjots/themes")));
     m_loader->setTheme(QLatin1String("default"));
 

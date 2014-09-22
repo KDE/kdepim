@@ -45,8 +45,7 @@ public:
     {
         mEngine = new Grantlee::Engine;
 
-        mTemplateLoader =
-                Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
+        mTemplateLoader = QSharedPointer<Grantlee::FileSystemTemplateLoader>( new Grantlee::FileSystemTemplateLoader );
     }
 
     ~Private()
@@ -72,7 +71,7 @@ public:
 
     QVector<QObject*> mObjects;
     Grantlee::Engine *mEngine;
-    Grantlee::FileSystemTemplateLoader::Ptr mTemplateLoader;
+    QSharedPointer<Grantlee::FileSystemTemplateLoader> mTemplateLoader;
     Grantlee::Template mSelfcontainedTemplate;
     Grantlee::Template mEmbeddableTemplate;
     QString mErrorMessage;
