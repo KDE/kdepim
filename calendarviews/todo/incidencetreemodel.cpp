@@ -325,7 +325,10 @@ void IncidenceTreeModel::Private::insertNode( const PreNode::Ptr &prenode, bool 
   m_itemByUid.insert( node->uid, item );
   //kDebug() << "New node " << node.data() << node->uid << node->id;
   node->parentUid = incidence->relatedTo();
-  Q_ASSERT( node->uid != node->parentUid );
+  if ( node->uid == node->parentUid ) {
+    kWarning() << "Incidence with itself as parent!" << node->uid << "Akonadi item" << item.id() << "remoteId=" << item.remoteId();
+    node->parentUid.clear();
+  }
 
   if (m_uidMap.contains(node->uid)) {
     kWarning() << "Duplicate incidence detected. File a bug against the resource. collection=" << item.storageCollectionId();
