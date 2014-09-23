@@ -171,6 +171,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
   const KConfigGroup group = KSharedConfig::openConfig()->group( "FavoriteCollectionsModel" );
+  connect( mBrowserModel, SIGNAL(columnsChanged()), itemFilter, SLOT(invalidate()) );
   AkonadiBrowserSortModel *sortModel = new AkonadiBrowserSortModel( mBrowserModel, this );
   sortModel->setDynamicSortFilter( true );
   sortModel->setSourceModel( itemFilter );
@@ -189,6 +190,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemUi.modelBox->addItem( "Mail" );
   itemUi.modelBox->addItem( "Contacts" );
   itemUi.modelBox->addItem( "Calendar" );
+  itemUi.modelBox->addItem( "Calendar/Tasks" );
   connect(itemUi.modelBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &BrowserWidget::modelChanged);
   QTimer::singleShot( 0, this, SLOT(modelChanged()) );
 

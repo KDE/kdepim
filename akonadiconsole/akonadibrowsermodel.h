@@ -54,6 +54,9 @@ public:
 
   class State;
 
+Q_SIGNALS:
+  void columnsChanged();
+
 private:
   State *m_currentState;
   State *m_genericState;

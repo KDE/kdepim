@@ -291,25 +291,44 @@ AkonadiBrowserModel::ItemDisplayMode AkonadiBrowserModel::itemDisplayMode() cons
 
 void AkonadiBrowserModel::setItemDisplayMode( AkonadiBrowserModel::ItemDisplayMode itemDisplayMode )
 {
-  emit layoutAboutToBeChanged();
+  const int oldColumnCount = columnCount();
   m_itemDisplayMode = itemDisplayMode;
+  AkonadiBrowserModel::State* newState = 0;
   switch (itemDisplayMode)
   {
   case MailMode:
-    m_currentState = m_mailState;
+    newState = m_mailState;
     break;
   case ContactsMode:
-    m_currentState = m_contactsState;
+    newState = m_contactsState;
     break;
   case CalendarMode:
-    m_currentState = m_calendarState;
+    newState = m_calendarState;
     break;
   case GenericMode:
   default:
-    m_currentState = m_genericState;
+    newState = m_genericState;
     break;
   }
-  emit layoutChanged();
+  const int newColumnCount = qMax(newState->m_collectionHeaders.count(), newState->m_itemHeaders.count());
+
+  //kDebug() << "column count changed from" << oldColumnCount << "to" << newColumnCount;
+  if ( newColumnCount > oldColumnCount ) {
+    beginInsertColumns(QModelIndex(), oldColumnCount, newColumnCount - 1);
+    m_currentState = newState;
+    endInsertColumns();
+  } else if ( newColumnCount < oldColumnCount ) {
+    beginRemoveColumns(QModelIndex(), newColumnCount, oldColumnCount - 1);
+    m_currentState = newState;
+    endRemoveColumns();
+  } else {
+    m_currentState = newState;
+  }
+  headerDataChanged(Qt::Horizontal, 0, newColumnCount - 1);
+
+  // The above is not enough to see the new headers, because EntityMimeTypeFilterModel gets column count and headers from our data,
+  // and doesn't listen to dataChanged/headerDataChanged...
+  columnsChanged();
 }
 
 AkonadiBrowserSortModel::AkonadiBrowserSortModel( AkonadiBrowserModel *model, QObject *parent )
