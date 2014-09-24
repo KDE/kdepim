@@ -184,6 +184,8 @@ class EVENTVIEWS_EXPORT MonthGraphicsItem : public QObject, public QGraphicsItem
     virtual void paint( QPainter *, const QStyleOptionGraphicsItem *, QWidget * );
     virtual QPainterPath shape() const;
 
+    QString getToolTip() const;
+
   private:
     // Shape of the item, see shape()
     QPainterPath widgetPath( bool border ) const;
@@ -196,8 +198,6 @@ class EVENTVIEWS_EXPORT MonthGraphicsItem : public QObject, public QGraphicsItem
 
     // The current item is part of a MonthItem
     MonthItem *mMonthItem;
-
-    bool mToolTipNeedsUpdate;
 };
 
 }

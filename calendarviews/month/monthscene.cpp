@@ -33,6 +33,7 @@
 
 #include <QGraphicsSceneMouseEvent>
 #include <QResizeEvent>
+#include <QToolTip>
 
 static const int AUTO_REPEAT_DELAY = 600;
 
@@ -645,6 +646,23 @@ void MonthScene::timerEvent( QTimerEvent *e )
       repeatTimer.stop();
     }
   }
+}
+
+void MonthScene::helpEvent( QGraphicsSceneHelpEvent *helpEvent )
+{
+  // Find the first item that does tooltips
+  const QPointF pos = helpEvent->scenePos();
+  MonthGraphicsItem *toolTipItem = dynamic_cast<MonthGraphicsItem*>( itemAt( pos ) );
+
+  // Show or hide the tooltip
+  QString text;
+  QPoint point;
+  if (toolTipItem) {
+    text = toolTipItem->getToolTip();
+    point = helpEvent->screenPos();
+  }
+  QToolTip::showText(point, text, helpEvent->widget());
+  helpEvent->setAccepted(!text.isEmpty());
 }
 
 void MonthScene::mouseReleaseEvent ( QGraphicsSceneMouseEvent *mouseEvent )

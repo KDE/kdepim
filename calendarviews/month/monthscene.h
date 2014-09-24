@@ -176,6 +176,7 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
     virtual void mouseReleaseEvent( QGraphicsSceneMouseEvent *mouseEvent );
     virtual void wheelEvent( QGraphicsSceneWheelEvent *wheelEvent );
     virtual void timerEvent( QTimerEvent *e );
+    virtual void helpEvent( QGraphicsSceneHelpEvent *helpEvent );
     /**
        Scrolls all incidences in cells up
      */
