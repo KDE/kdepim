@@ -31,22 +31,29 @@ TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
     setLayout(layout);
     mVolume = new QSlider;
     mVolume->setObjectName(QLatin1String("volume"));
+    connect(mVolume, &QSlider::valueChanged, this, &TextToSpeechConfigWidget::valueChanged);
+
     layout->addRow(i18n("Volume:"), mVolume);
 
     mRate = new QSlider;
     mRate->setObjectName(QLatin1String("rate"));
     layout->addRow(i18n("Rate:"), mRate);
+    connect(mRate, &QSlider::valueChanged, this, &TextToSpeechConfigWidget::valueChanged);
 
     mPitch = new QSlider;
+    connect(mPitch, &QSlider::valueChanged, this, &TextToSpeechConfigWidget::valueChanged);
     mPitch->setObjectName(QLatin1String("pitch"));
     layout->addRow(i18n("Pitch:"), mPitch);
-
-    readConfig();
 }
 
 TextToSpeechConfigWidget::~TextToSpeechConfigWidget()
 {
 
+}
+
+void TextToSpeechConfigWidget::valueChanged()
+{
+    Q_EMIT configChanged(true);
 }
 
 void TextToSpeechConfigWidget::readConfig()

@@ -29,13 +29,16 @@ public:
     explicit TextToSpeechConfigWidget(QWidget *parent=0);
     ~TextToSpeechConfigWidget();
 
+    void writeConfig();
+    void readConfig();
+
+private Q_SLOTS:
+    void valueChanged();
+
 Q_SIGNALS:
-    void configChanged();
+    void configChanged(bool state);
 
 private:
-    void readConfig();
-    void writeConfig();
-
     QSlider *mVolume;
     QSlider *mRate;
     QSlider *mPitch;

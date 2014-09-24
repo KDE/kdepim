@@ -49,9 +49,18 @@ void TextToSpeechConfigWidgetTest::shouldHaveDefaultValue()
 void TextToSpeechConfigWidgetTest::shouldEmitConfigChangedWhenChangeSliderValue()
 {
     PimCommon::TextToSpeechConfigWidget textToSpeechConfigWidget;
-    QSignalSpy spy(&textToSpeechConfigWidget, SIGNAL(configChanged()));
-    //TODO
+    QSignalSpy spy(&textToSpeechConfigWidget, SIGNAL(configChanged(bool)));
+    QSlider *volume = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("volume"));
+    volume->setValue(5);
+    QCOMPARE(spy.count(), 1);
 
+    QSlider *rate = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("rate"));
+    rate->setValue(5);
+    QCOMPARE(spy.count(), 2);
+
+    QSlider *pitch = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("pitch"));
+    pitch->setValue(5);
+    QCOMPARE(spy.count(), 3);
 }
 
 
