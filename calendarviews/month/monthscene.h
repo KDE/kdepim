@@ -220,6 +220,7 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) Q_DECL_OVERRIDE;
     void wheelEvent(QGraphicsSceneWheelEvent *wheelEvent) Q_DECL_OVERRIDE;
     void timerEvent(QTimerEvent *e) Q_DECL_OVERRIDE;
+    void helpEvent(QGraphicsSceneHelpEvent *helpEvent) Q_DECL_OVERRIDE;
     /**
        Scrolls all incidences in cells up
      */

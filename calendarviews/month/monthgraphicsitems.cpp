@@ -131,9 +131,10 @@ int MonthCell::firstFreeSpace()
 // MONTHGRAPHICSITEM
 static const int ft = 2; // frame thickness
 
+
 MonthGraphicsItem::MonthGraphicsItem(MonthItem *manager)
     : QGraphicsItem(Q_NULLPTR),
-      mMonthItem(manager), mToolTipNeedsUpdate(false)
+    mMonthItem(manager)
 {
     manager->monthScene()->addItem(this);
     QTransform transform;
@@ -163,7 +164,7 @@ bool MonthGraphicsItem::isBeginItem() const
 QPainterPath MonthGraphicsItem::shape() const
 {
     // The returned shape must be a closed path,
-    // otherwise MonthScene:itemAt( pos ) can have
+    // otherwise MonthScene:itemAt(pos) can have
     // problems detecting the item
     return widgetPath(false);
 }
@@ -333,7 +334,6 @@ void MonthGraphicsItem::paint(QPainter *p, const QStyleOptionGraphicsItem *, QWi
 void MonthGraphicsItem::setStartDate(const QDate &date)
 {
     mStartDate = date;
-    mToolTipNeedsUpdate = true;
 }
 
 QDate MonthGraphicsItem::endDate() const
@@ -386,12 +386,13 @@ void MonthGraphicsItem::updateGeometry()
             mMonthItem->monthScene()->maxRowCount()) {
         hide();
     } else {
-        if (mToolTipNeedsUpdate) {
-            setToolTip(mMonthItem->toolTipText(mStartDate));
-            mToolTipNeedsUpdate = false;
-        }
         show();
         update();
     }
+}
+
+QString MonthGraphicsItem::getToolTip() const
+{
+    return mMonthItem->toolTipText(mStartDate);
 }
 

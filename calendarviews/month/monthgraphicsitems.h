@@ -205,6 +205,8 @@ public:
     void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE;
     QPainterPath shape() const Q_DECL_OVERRIDE;
 
+    QString getToolTip() const;
+
 private:
     // Shape of the item, see shape()
     QPainterPath widgetPath(bool border) const;
@@ -217,8 +219,6 @@ private:
 
     // The current item is part of a MonthItem
     MonthItem *mMonthItem;
-
-    bool mToolTipNeedsUpdate;
 };
 
 }

@@ -34,6 +34,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QResizeEvent>
 #include <KLocalizedString>
+#include <QToolTip>
 
 static const int AUTO_REPEAT_DELAY = 600;
 
@@ -419,40 +420,40 @@ void MonthScene::wheelEvent(QGraphicsSceneWheelEvent *event)
     /*  int numDegrees = -event->delta() / 8;
       int numSteps = numDegrees / 15;
 
-      if ( startHeight() + numSteps < 0 ) {
+      if (startHeight() + numSteps < 0) {
         numSteps = -startHeight();
       }
 
       int cellHeight = 0;
 
-      MonthCell *currentCell = getCellFromPos( event->scenePos() );
-      if ( currentCell ) {
+      MonthCell *currentCell = getCellFromPos(event->scenePos());
+      if (currentCell) {
         cellHeight = currentCell->firstFreeSpace();
       }
-      if ( cellHeight == 0 ) {
+      if (cellHeight == 0) {
         // no items in this cell, there's no point to scroll
         return;
       }
 
       int newHeight;
-      int maxStartHeight = qMax( 0, cellHeight - maxRowCount() );
-      if ( numSteps > 0  && startHeight() + numSteps >= maxStartHeight ) {
+      int maxStartHeight = qMax(0, cellHeight - maxRowCount());
+      if (numSteps > 0  && startHeight() + numSteps >= maxStartHeight) {
         newHeight = maxStartHeight;
       } else {
         newHeight = startHeight() + numSteps;
       }
 
-      if ( newHeight == startHeight() ) {
+      if (newHeight == startHeight()) {
         return;
       }
 
-      setStartHeight( newHeight );
+      setStartHeight(newHeight);
 
-      foreach ( MonthItem *manager, mManagerList ) {
+      foreach (MonthItem *manager, mManagerList) {
         manager->updateGeometry();
       }
 
-      invalidate( QRectF(), BackgroundLayer );
+      invalidate(QRectF(), BackgroundLayer);
 
       event->accept();
     */
@@ -648,6 +649,23 @@ void MonthScene::timerEvent(QTimerEvent *e)
     }
 }
 
+void MonthScene::helpEvent(QGraphicsSceneHelpEvent *helpEvent)
+{
+    // Find the first item that does tooltips
+    const QPointF pos = helpEvent->scenePos();
+    MonthGraphicsItem *toolTipItem = dynamic_cast<MonthGraphicsItem*>(itemAt(pos));
+
+    // Show or hide the tooltip
+    QString text;
+    QPoint point;
+    if (toolTipItem) {
+        text = toolTipItem->getToolTip();
+        point = helpEvent->screenPos();
+    }
+    QToolTip::showText(point, text, helpEvent->widget());
+    helpEvent->setAccepted(!text.isEmpty());
+}
+
 void MonthScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QPointF pos = mouseEvent->scenePos();
@@ -702,7 +720,7 @@ MonthCell *MonthScene::getCellFromPos(const QPointF &pos)
 void MonthScene::selectItem(MonthItem *item)
 {
     /*
-      if ( mSelectedItem == item ) {
+      if (mSelectedItem == item) {
         return;
       }
 
