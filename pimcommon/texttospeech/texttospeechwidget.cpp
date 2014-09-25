@@ -20,6 +20,7 @@
 #include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QToolButton>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -87,7 +88,7 @@ void TextToSpeechWidget::updateButtonState()
     mPlayPauseButton->setEnabled((mState != Stop));
 }
 
-void TextToSpeechWidget::setTextToSpeechInterface(TextToSpeechInterface *interface)
+void TextToSpeechWidget::setTextToSpeechInterface(AbstractTextToSpeechInterface *interface)
 {
     delete mTextToSpeechInterface;
     mTextToSpeechInterface = interface;

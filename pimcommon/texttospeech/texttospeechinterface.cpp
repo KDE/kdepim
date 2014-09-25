@@ -17,11 +17,12 @@
 
 #include "texttospeechinterface.h"
 #include "texttospeech.h"
+#include <QDebug>
 
 using namespace PimCommon;
 
 TextToSpeechInterface::TextToSpeechInterface(TextToSpeechWidget *textToSpeechWidget, QObject *parent)
-    : QObject(parent),
+    : AbstractTextToSpeechInterface(parent),
       mTextToSpeechWidget(textToSpeechWidget)
 {
     connect(PimCommon::TextToSpeech::self(), &PimCommon::TextToSpeech::emitSay, this, &TextToSpeechInterface::say);
@@ -30,7 +31,6 @@ TextToSpeechInterface::TextToSpeechInterface(TextToSpeechWidget *textToSpeechWid
 
 TextToSpeechInterface::~TextToSpeechInterface()
 {
-
 }
 
 void TextToSpeechInterface::say()

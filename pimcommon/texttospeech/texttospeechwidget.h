@@ -22,7 +22,7 @@
 #include "pimcommon_export.h"
 class QToolButton;
 namespace PimCommon {
-class TextToSpeechInterface;
+class AbstractTextToSpeechInterface;
 class PIMCOMMON_EXPORT TextToSpeechWidget : public QWidget
 {
     Q_OBJECT
@@ -40,7 +40,7 @@ public:
     State state() const;
     void setState(PimCommon::TextToSpeechWidget::State state);
 
-    void setTextToSpeechInterface(TextToSpeechInterface *interface);
+    void setTextToSpeechInterface(AbstractTextToSpeechInterface *interface);
 
 
 Q_SIGNALS:
@@ -55,7 +55,7 @@ private:
     State mState;
     QToolButton *mStopButton;
     QToolButton *mPlayPauseButton;
-    TextToSpeechInterface *mTextToSpeechInterface;
+    AbstractTextToSpeechInterface *mTextToSpeechInterface;
 };
 }
 #endif // TEXTTOSPEECHWIDGET_H

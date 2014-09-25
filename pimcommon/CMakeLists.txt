@@ -169,6 +169,7 @@ set(libtexttospeech_SRCS
   texttospeech/texttospeechwidget.cpp
   texttospeech/texttospeechconfigwidget.cpp
   texttospeech/texttospeechinterface.cpp
+  texttospeech/abstracttexttospeechinterface.cpp
 )
 
 

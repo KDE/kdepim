@@ -16,7 +16,7 @@
 */
 
 #include "texttospeechwidgettest.h"
-#include "texttospeechinterfacetest.h"
+#include "../abstracttexttospeechinterface.h"
 #include <qtest.h>
 #include "texttospeech/texttospeechwidget.h"
 #include <QToolButton>
@@ -35,7 +35,7 @@ TextToSpeechWidgetTest::TextToSpeechWidgetTest(QObject *parent)
 
 void TextToSpeechWidgetTest::addInterface(PimCommon::TextToSpeechWidget *widget)
 {
-    TextToSpeechInterfaceTest *interface = new TextToSpeechInterfaceTest(widget, this);
+    PimCommon::AbstractTextToSpeechInterface *interface = new PimCommon::AbstractTextToSpeechInterface(this);
     widget->setTextToSpeechInterface(interface);
 }
 

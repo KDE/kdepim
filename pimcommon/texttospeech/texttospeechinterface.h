@@ -21,10 +21,11 @@
 
 #include <QObject>
 #include "texttospeechwidget.h"
+#include "abstracttexttospeechinterface.h"
 #include "pimcommon_export.h"
 namespace PimCommon {
 class TextToSpeechWidget;
-class PIMCOMMON_EXPORT TextToSpeechInterface : public QObject
+class PIMCOMMON_EXPORT TextToSpeechInterface : public AbstractTextToSpeechInterface
 {
     Q_OBJECT
 public:
