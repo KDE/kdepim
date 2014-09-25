@@ -15,29 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
-#ifndef TEXTTOSPEECHINTERFACE_H
-#define TEXTTOSPEECHINTERFACE_H
-
-#include <QObject>
-#include "texttospeechwidget.h"
-#include "pimcommon_export.h"
+#ifndef TEXTTOSPEECHINTERFACETEST_H
+#define TEXTTOSPEECHINTERFACETEST_H
+#include "../texttospeechinterface.h"
 namespace PimCommon {
 class TextToSpeechWidget;
-class PIMCOMMON_EXPORT TextToSpeechInterface : public QObject
-{
-    Q_OBJECT
-public:
-    explicit TextToSpeechInterface(TextToSpeechWidget *textToSpeechWidget, QObject *parent=0);
-    ~TextToSpeechInterface();
-
-private Q_SLOTS:
-    void say();
-    void stateChanged(PimCommon::TextToSpeechWidget::State state);
-
-private:
-    TextToSpeechWidget *mTextToSpeechWidget;
-};
 }
 
-#endif // TEXTTOSPEECHINTERFACE_H
+class TextToSpeechInterfaceTest : public PimCommon::TextToSpeechInterface
+{
+public:
+    explicit TextToSpeechInterfaceTest(PimCommon::TextToSpeechWidget *textToSpeechWidget, QObject *parent=0);
+    ~TextToSpeechInterfaceTest();
+};
+
+#endif // TEXTTOSPEECHINTERFACETEST_H

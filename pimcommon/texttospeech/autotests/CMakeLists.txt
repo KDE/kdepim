@@ -1,5 +1,5 @@
 macro(add_texttospeech_unittest _source)
-  set(_test ${_source})
+  set(_test ${_source} texttospeechinterfacetest.cpp)
   get_filename_component(_name ${_source} NAME_WE)
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )

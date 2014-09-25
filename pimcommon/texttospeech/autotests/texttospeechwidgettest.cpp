@@ -16,6 +16,7 @@
 */
 
 #include "texttospeechwidgettest.h"
+#include "texttospeechinterfacetest.h"
 #include <qtest.h>
 #include "texttospeech/texttospeechwidget.h"
 #include <QToolButton>
@@ -32,9 +33,16 @@ TextToSpeechWidgetTest::TextToSpeechWidgetTest(QObject *parent)
 
 }
 
+void TextToSpeechWidgetTest::addInterface(PimCommon::TextToSpeechWidget *widget)
+{
+    TextToSpeechInterfaceTest *interface = new TextToSpeechInterfaceTest(widget, this);
+    widget->setTextToSpeechInterface(interface);
+}
+
 void TextToSpeechWidgetTest::shouldHaveDefaultValue()
 {
     PimCommon::TextToSpeechWidget textToSpeechWidget;
+    addInterface(&textToSpeechWidget);
     QCOMPARE( textToSpeechWidget.state(), PimCommon::TextToSpeechWidget::Stop);
 
     QToolButton *stopButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("stopbutton"));
@@ -50,6 +58,7 @@ void TextToSpeechWidgetTest::shouldHaveDefaultValue()
 void TextToSpeechWidgetTest::shouldChangeButtonEnableStateWhenChangeState()
 {
     PimCommon::TextToSpeechWidget textToSpeechWidget;
+    addInterface(&textToSpeechWidget);
     textToSpeechWidget.setState(PimCommon::TextToSpeechWidget::Play);
 
     QToolButton *stopButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("stopbutton"));
@@ -72,6 +81,7 @@ void TextToSpeechWidgetTest::shouldChangeButtonEnableStateWhenChangeState()
 void TextToSpeechWidgetTest::shouldChangeStateWhenClickOnPlayPause()
 {
     PimCommon::TextToSpeechWidget textToSpeechWidget;
+    addInterface(&textToSpeechWidget);
 
     textToSpeechWidget.setState(PimCommon::TextToSpeechWidget::Play);
     QToolButton *playPauseButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("playpausebutton"));
@@ -87,6 +97,7 @@ void TextToSpeechWidgetTest::shouldChangeStateWhenClickOnPlayPause()
 void TextToSpeechWidgetTest::shouldChangeStateWhenClickOnStop()
 {
     PimCommon::TextToSpeechWidget textToSpeechWidget;
+    addInterface(&textToSpeechWidget);
     textToSpeechWidget.setState(PimCommon::TextToSpeechWidget::Play);
 
     QToolButton *stopButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("stopbutton"));
@@ -98,7 +109,8 @@ void TextToSpeechWidgetTest::shouldChangeStateWhenClickOnStop()
 void TextToSpeechWidgetTest::shouldEmitStateChanged()
 {
     PimCommon::TextToSpeechWidget textToSpeechWidget;
-    QSignalSpy spy(&textToSpeechWidget, SIGNAL(stateChange(PimCommon::TextToSpeechWidget::State)));
+    addInterface(&textToSpeechWidget);
+    QSignalSpy spy(&textToSpeechWidget, SIGNAL(stateChanged(PimCommon::TextToSpeechWidget::State)));
     textToSpeechWidget.setState(PimCommon::TextToSpeechWidget::Play);
     QCOMPARE(spy.count(), 0);
 

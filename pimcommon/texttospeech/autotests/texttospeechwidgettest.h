@@ -20,12 +20,17 @@
 #define TEXTTOSPEECHWIDGETTEST_H
 
 #include <QObject>
-
+namespace PimCommon {
+class TextToSpeechWidget;
+}
 class TextToSpeechWidgetTest : public QObject
 {
     Q_OBJECT
 public:
     explicit TextToSpeechWidgetTest(QObject *parent=0);
+
+private:
+    void addInterface(PimCommon::TextToSpeechWidget *widget);
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();

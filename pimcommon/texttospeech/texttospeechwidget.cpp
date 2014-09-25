@@ -16,6 +16,7 @@
 */
 
 #include "texttospeechwidget.h"
+#include "texttospeechinterface.h"
 #include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QToolButton>
@@ -37,6 +38,7 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     connect(mPlayPauseButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotPlayPause);
     hbox->addWidget(mPlayPauseButton);
     updateButtonState();
+    mTextToSpeechInterface = new TextToSpeechInterface(this, this);
 }
 
 TextToSpeechWidget::~TextToSpeechWidget()
@@ -55,7 +57,7 @@ void TextToSpeechWidget::slotPlayPause()
         return;
     }
     updateButtonState();
-    Q_EMIT stateChange(mState);
+    Q_EMIT stateChanged(mState);
 }
 
 void TextToSpeechWidget::slotStop()
@@ -63,7 +65,7 @@ void TextToSpeechWidget::slotStop()
     if (mState != Stop) {
         mState = Stop;
         updateButtonState();
-        Q_EMIT stateChange(mState);
+        Q_EMIT stateChanged(mState);
     }
 }
 
@@ -83,4 +85,10 @@ void TextToSpeechWidget::setState(TextToSpeechWidget::State state)
 void TextToSpeechWidget::updateButtonState()
 {
     mPlayPauseButton->setEnabled((mState != Stop));
+}
+
+void TextToSpeechWidget::setTextToSpeechInterface(TextToSpeechInterface *interface)
+{
+    delete mTextToSpeechInterface;
+    mTextToSpeechInterface = interface;
 }

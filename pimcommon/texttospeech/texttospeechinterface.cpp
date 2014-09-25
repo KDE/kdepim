@@ -16,15 +16,39 @@
 */
 
 #include "texttospeechinterface.h"
+#include "texttospeech.h"
 
 using namespace PimCommon;
 
-TextToSpeechInterface::TextToSpeechInterface(QObject *parent)
-    : QObject(parent)
+TextToSpeechInterface::TextToSpeechInterface(TextToSpeechWidget *textToSpeechWidget, QObject *parent)
+    : QObject(parent),
+      mTextToSpeechWidget(textToSpeechWidget)
 {
+    connect(PimCommon::TextToSpeech::self(), &PimCommon::TextToSpeech::emitSay, this, &TextToSpeechInterface::say);
+    connect(mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::stateChanged, this, &TextToSpeechInterface::stateChanged);
 }
 
 TextToSpeechInterface::~TextToSpeechInterface()
 {
 
+}
+
+void TextToSpeechInterface::say()
+{
+    mTextToSpeechWidget->setState(PimCommon::TextToSpeechWidget::Play);
+}
+
+void TextToSpeechInterface::stateChanged(TextToSpeechWidget::State state)
+{
+    switch(state) {
+    case TextToSpeechWidget::Stop:
+        PimCommon::TextToSpeech::self()->stop();
+        break;
+    case TextToSpeechWidget::Play:
+        PimCommon::TextToSpeech::self()->resume();
+        break;
+    case TextToSpeechWidget::Pause:
+        PimCommon::TextToSpeech::self()->pause();
+        break;
+    }
 }
