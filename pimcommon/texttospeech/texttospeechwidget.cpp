@@ -30,6 +30,7 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
+    //TODO add icons
     mStopButton = new QToolButton;
     mStopButton->setObjectName(QLatin1String("stopbutton"));
     connect(mStopButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotStop);
@@ -57,12 +58,14 @@ void TextToSpeechWidget::slotPlayPause()
     } else {
         return;
     }
+    //TODO update icons
     updateButtonState();
     Q_EMIT stateChanged(mState);
 }
 
 void TextToSpeechWidget::slotStop()
 {
+    //TODO update icons.
     if (mState != Stop) {
         mState = Stop;
         updateButtonState();
@@ -85,6 +88,7 @@ void TextToSpeechWidget::setState(TextToSpeechWidget::State state)
 
 void TextToSpeechWidget::updateButtonState()
 {
+    //TODO update icons.
     mPlayPauseButton->setEnabled((mState != Stop));
 }
 
