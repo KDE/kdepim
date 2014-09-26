@@ -87,17 +87,17 @@ void QuickSearchLineTest::shouldEmitTextChanged()
     searchLine.searchEdit()->clear();
     QSignalSpy spy3(&searchLine, SIGNAL(searchEditTextEdited(QString)));
     QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOO"));
-    QCOMPARE(spy3.count(), 0);
+    QCOMPARE(spy3.count(), 1);
 
     searchLine.searchEdit()->clear();
     QSignalSpy spy4(&searchLine, SIGNAL(searchEditTextEdited(QString)));
     QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOO"));
-    QCOMPARE(spy4.count(), 1);
+    QCOMPARE(spy4.count(), 2);
 
     searchLine.searchEdit()->clear();
     QSignalSpy spy5(&searchLine, SIGNAL(searchEditTextEdited(QString)));
     QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOO0"));
-    QCOMPARE(spy5.count(), 2);
+    QCOMPARE(spy5.count(), 3);
 
 }
 

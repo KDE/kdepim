@@ -220,7 +220,7 @@ void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
         minimumStringLength = 5;
     }
     if (!text.trimmed().isEmpty()) {
-        if (text.length() > minimumStringLength) {
+        if (text.length() >= minimumStringLength) {
             mExtraOption->show();
             Q_EMIT searchEditTextEdited(text);
         } else {
