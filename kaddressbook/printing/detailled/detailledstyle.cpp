@@ -37,7 +37,6 @@
 #include <QPrinter>
 #include <QTextDocument>
 #include <KSharedConfig>
-#include <KLocale>
 #include <QLocale>
 
 using namespace KABPrinting;
