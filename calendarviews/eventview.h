@@ -142,6 +142,8 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     /**
       Return calendar object of this view.
+      TODO: replace with a version that returns a KCalcCore::Calendar to be able to use it in different enviroments
+           see agendaview for example calendar2(incidence)
     */
     virtual Akonadi::ETMCalendar::Ptr calendar() const;
 

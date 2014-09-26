@@ -416,7 +416,7 @@ void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr
 
   if ( incidence->hasRecurrenceId() && mViewCalendar->isValid(incidence)) {
     // Reevaluate the main event instead, if it was inserted before this one
-    KCalCore::Incidence::Ptr mainIncidence = mViewCalendar->findCalendar(incidence)->getCalendar()->incidence( incidence->uid() );
+    KCalCore::Incidence::Ptr mainIncidence = q->calendar2(incidence)->incidence( incidence->uid() );
     if ( mainIncidence ) {
       reevaluateIncidence( mainIncidence );
     }
@@ -456,7 +456,7 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
 
     if ( incidence->hasRecurrenceId() && mViewCalendar->isValid(incidence) ) {
     // Reevaluate the main event instead, if it exists
-    KCalCore::Incidence::Ptr mainIncidence = mViewCalendar->findCalendar(incidence)->getCalendar()->incidence( incidence->uid() );
+    KCalCore::Incidence::Ptr mainIncidence = q->calendar2(incidence)->incidence( incidence->uid() );
     reevaluateIncidence( mainIncidence ? mainIncidence : incidence );
   } else {
     reevaluateIncidence( incidence );
@@ -480,7 +480,7 @@ void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::P
     // Reevaluate the main event, if it exists. The exception was removed so the main recurrent series
     // will no be bigger.
     if ( mViewCalendar->isValid(incidence) ) {
-      KCalCore::Incidence::Ptr mainIncidence = mViewCalendar->findCalendar(incidence)->getCalendar()->incidence( incidence->uid() );
+      KCalCore::Incidence::Ptr mainIncidence = q->calendar2(incidence)->incidence( incidence->uid() );
       if ( mainIncidence ) {
         reevaluateIncidence( mainIncidence  );
       }
@@ -839,6 +839,12 @@ AgendaView::~AgendaView()
 
   delete d;
 }
+
+KCalCore::Calendar::Ptr AgendaView::calendar2(KCalCore::Incidence::Ptr incidence) const
+{
+  return d->mViewCalendar->findCalendar(incidence)->getCalendar();
+}
+
 
 void AgendaView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
@@ -2174,7 +2180,7 @@ void AgendaView::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
   d->mAgenda->removeIncidence( incidence );
 
   if ( !incidence->hasRecurrenceId() && d->mViewCalendar->isValid(incidence)) {
-    KCalCore::Incidence::List exceptions = d->mViewCalendar->findCalendar(incidence)->getCalendar()->instances( incidence );
+    KCalCore::Incidence::List exceptions = calendar2(incidence)->instances( incidence );
     foreach ( const KCalCore::Incidence::Ptr &exception, exceptions ) {
       if ( exception->allDay() ) {
         d->mAllDayAgenda->removeIncidence( exception );

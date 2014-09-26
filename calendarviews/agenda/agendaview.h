@@ -155,6 +155,13 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
 
     QVector<bool> busyDayMask() const;
 
+    /**
+     * Return calendar object for an congrete incidence.
+     * this function is able to use mutiple calenders
+     * TODO: replace EventsView::calendar()
+     */
+    virtual KCalCore::Calendar::Ptr calendar2(KCalCore::Incidence::Ptr incidence) const;
+
   public slots:
     virtual void updateView();
     virtual void updateConfig();
