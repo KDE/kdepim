@@ -16,6 +16,7 @@
 */
 
 #include "texttospeechconfigwidget.h"
+#include "settings/pimcommonsettings.h"
 
 #include <KLocalizedString>
 
@@ -58,10 +59,14 @@ void TextToSpeechConfigWidget::valueChanged()
 
 void TextToSpeechConfigWidget::readConfig()
 {
-    //TODO
+    PimCommon::PimCommonSettings::self()->setVolume(mVolume->value());
+    PimCommon::PimCommonSettings::self()->setRate(mRate->value());
+    PimCommon::PimCommonSettings::self()->setPitch(mPitch->value());
 }
 
 void TextToSpeechConfigWidget::writeConfig()
 {
-    //TODO
+    mVolume->setValue(PimCommon::PimCommonSettings::self()->volume());
+    mRate->setValue(PimCommon::PimCommonSettings::self()->rate());
+    mPitch->setValue(PimCommon::PimCommonSettings::self()->pitch());
 }

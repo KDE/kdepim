@@ -4,6 +4,17 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
 
   <kcfgfile name="pimcommonrc" />
+  <group name="TextToSpeech">
+    <entry name="Volume" type="Int" key="volume">
+      <default>1</default>
+    </entry>
+    <entry name="Rate" type="Int" key="rate">
+      <default>1</default>
+    </entry>
+    <entry name="Pitch" type="Int" key="pitch">
+      <default>1</default>
+    </entry>
+  </group>
   <group name="Autocorrect">
     <entry name="Enabled" type="Bool" key="enabled">
       <default>false</default>
