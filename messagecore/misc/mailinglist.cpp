@@ -201,7 +201,7 @@ static QString check_x_ml_name( const KMime::Message::Ptr &message,
     return header;
 }
 
-MagicDetectorFunc magic_detector[] =
+static const MagicDetectorFunc magic_detector[] =
 {
     check_list_id,
     check_list_post,

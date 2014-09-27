@@ -28,7 +28,7 @@
 using namespace MessageViewer;
 
 //10 secondes
-static int DELETEAFTER = 10000;
+static const int DELETEAFTER = 10000;
 
 AttachmentTemporaryFilesDirs::AttachmentTemporaryFilesDirs(QObject *parent)
     : QObject(parent)

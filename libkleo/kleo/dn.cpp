@@ -449,11 +449,11 @@ namespace {
   };
 }
 
-static const char * defaultOrder[] = {
+static const char *const defaultOrder[] = {
   "CN", "L", "_X_", "OU", "O", "C"
 };
 
-std::pair<const char*,const char*> attributeLabels[] = {
+static std::pair<const char*,const char*> const attributeLabels[] = {
 #define MAKE_PAIR(x,y) std::pair<const char*,const char*>( x, y )
   MAKE_PAIR( "CN", I18N_NOOP("Common name") ),
   MAKE_PAIR( "SN", I18N_NOOP("Surname") ),

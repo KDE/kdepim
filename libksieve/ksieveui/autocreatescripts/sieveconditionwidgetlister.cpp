@@ -36,8 +36,8 @@
 
 using namespace KSieveUi;
 
-static int MINIMUMCONDITION = 1;
-static int MAXIMUMCONDITION = 8;
+static const int MINIMUMCONDITION = 1;
+static const int MAXIMUMCONDITION = 8;
 
 SieveConditionWidget::SieveConditionWidget(QWidget *parent)
     : QWidget(parent)

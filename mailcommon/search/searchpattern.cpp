@@ -45,7 +45,7 @@ using MailCommon::FilterLog;
 
 using namespace MailCommon;
 
-static const char *funcConfigNames[] = {
+static const char *const funcConfigNames[] = {
     "contains", "contains-not",
     "equals", "not-equal",
     "regexp", "not-regexp",
@@ -65,7 +65,7 @@ struct _statusNames {
     Akonadi::MessageStatus status;
 };
 
-static struct _statusNames statusNames[] = {
+static const struct _statusNames statusNames[] = {
     { "Important", Akonadi::MessageStatus::statusImportant() },
     { "Unread", Akonadi::MessageStatus::statusUnread() },
     { "Read", Akonadi::MessageStatus::statusRead() },

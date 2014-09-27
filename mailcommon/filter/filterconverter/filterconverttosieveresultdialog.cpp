@@ -82,7 +82,7 @@ void FilterConvertToSieveResultDialog::setCode(const QString &code)
     mEditor->editor()->setPlainText(code);
 }
 
-static const char *myConfigGroupName = "FilterConvertToSieveResultDialog";
+static const char myConfigGroupName[] = "FilterConvertToSieveResultDialog";
 
 void FilterConvertToSieveResultDialog::readConfig()
 {

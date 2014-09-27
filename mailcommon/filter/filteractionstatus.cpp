@@ -21,7 +21,7 @@
 #include <KLocalizedString>
 using namespace MailCommon;
 
-Akonadi::MessageStatus MailCommon::FilterActionStatus::stati[] = {
+const Akonadi::MessageStatus MailCommon::FilterActionStatus::stati[] = {
     Akonadi::MessageStatus::statusImportant(),
     Akonadi::MessageStatus::statusRead(),
     Akonadi::MessageStatus::statusUnread(),
@@ -34,7 +34,7 @@ Akonadi::MessageStatus MailCommon::FilterActionStatus::stati[] = {
     Akonadi::MessageStatus::statusToAct()
 };
 
-int MailCommon::FilterActionStatus::StatiCount = sizeof(MailCommon::FilterActionStatus::stati) / sizeof(Akonadi::MessageStatus);
+const int MailCommon::FilterActionStatus::StatiCount = sizeof(MailCommon::FilterActionStatus::stati) / sizeof(Akonadi::MessageStatus);
 
 FilterActionStatus::FilterActionStatus(const QString &name, const QString &label, QObject *parent)
     : FilterActionWithStringList(name, label, parent)

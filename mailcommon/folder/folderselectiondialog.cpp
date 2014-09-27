@@ -277,7 +277,7 @@ Akonadi::Collection::List FolderSelectionDialog::selectedCollections() const
     return d->folderTreeWidget->selectedCollections();
 }
 
-static const char *myConfigGroupName = "FolderSelectionDialog";
+static const char myConfigGroupName[] = "FolderSelectionDialog";
 
 void FolderSelectionDialog::readConfig()
 {

@@ -37,8 +37,8 @@ public:
 
     static QString realStatusString(const QString &statusStr);
 
-    static Akonadi::MessageStatus stati[];
-    static int StatiCount;
+    static const Akonadi::MessageStatus stati[];
+    static const int StatiCount;
 };
 
 }

@@ -35,8 +35,8 @@
 
 namespace KSieveUi
 {
-static int MINIMUMGLOBALVARIABLEACTION = 1;
-static int MAXIMUMGLOBALVARIABLEACTION = 15;
+static const int MINIMUMGLOBALVARIABLEACTION = 1;
+static const int MAXIMUMGLOBALVARIABLEACTION = 15;
 
 SieveGlobalVariableActionWidget::SieveGlobalVariableActionWidget(QWidget *parent)
     : QWidget(parent)

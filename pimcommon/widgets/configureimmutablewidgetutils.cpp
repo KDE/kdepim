@@ -36,7 +36,7 @@
 
 using namespace PimCommon;
 
-static const char * lockedDownWarning =
+static const char lockedDownWarning[] =
         I18N_NOOP("<qt><p>This setting has been fixed by your administrator.</p>"
                   "<p>If you think this is an error, please contact him.</p></qt>");
 

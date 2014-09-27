@@ -10,7 +10,7 @@
 
 #include <qmath.h>
 
-static double sDirectionThreshHold = 8.5; /// Threshold in pixels
+static const double sDirectionThreshHold = 8.5; /// Threshold in pixels
 
 /// DeclarativeAkonadiItemPrivate
 

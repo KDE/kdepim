@@ -157,7 +157,7 @@ void FolderTreeView::slotHeaderContextMenuRequested(const QPoint &pnt)
 
     menu.addSection(i18n("Icon Size"));
 
-    static int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
+    static const int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
 
     QActionGroup *grp = new QActionGroup(&menu);
     const int nbElement((int)(sizeof(icon_sizes) / sizeof(int)));

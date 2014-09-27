@@ -33,7 +33,7 @@
 #ifndef __KLEO_OIDMAP_H__
 #define __KLEO_OIDMAP_H__
 
-static struct {
+static const struct {
   const char * name;
   const char * oid;
 } oidmap[] = {

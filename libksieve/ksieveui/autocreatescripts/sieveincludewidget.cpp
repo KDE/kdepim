@@ -36,8 +36,8 @@
 
 namespace KSieveUi
 {
-static int MINIMUMINCLUDEACTION = 1;
-static int MAXIMUMINCLUDEACTION = 20;
+static const int MINIMUMINCLUDEACTION = 1;
+static const int MAXIMUMINCLUDEACTION = 20;
 
 SieveIncludeLocation::SieveIncludeLocation(QWidget *parent)
     : KComboBox(parent)

@@ -57,7 +57,7 @@
 
 Kleo::CryptoBackendFactory * Kleo::CryptoBackendFactory::mSelf = 0;
 
-static const char * availableProtocols[] = {
+static const char *const availableProtocols[] = {
 #ifndef KDEPIM_ONLY_KLEO
   "Chiasmus",
 #endif

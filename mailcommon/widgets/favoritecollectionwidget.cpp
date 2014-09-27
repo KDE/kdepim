@@ -83,7 +83,7 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
     KActionMenu *iconSizeMenu  = new KActionMenu(i18n("Icon size"), this);
     ac->addAction(QLatin1String("favorite_icon_size"), iconSizeMenu);
 
-    static int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
+    static const int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
 
     QActionGroup *grp = new QActionGroup(iconSizeMenu);
     const int nbElement((int)(sizeof(icon_sizes) / sizeof(int)));

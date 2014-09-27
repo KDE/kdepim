@@ -38,9 +38,9 @@
 
 using namespace KSieveUi;
 
-static int MINIMUMACTION = 1;
-static int MAXIMUMACTION = 8;
-static QString INDENTACTION = QLatin1String("    ");
+static const int MINIMUMACTION = 1;
+static const int MAXIMUMACTION = 8;
+static const QString INDENTACTION = QLatin1String("    ");
 
 SieveActionWidget::SieveActionWidget(QWidget *parent)
     : QWidget(parent)

@@ -35,7 +35,7 @@
 #include <QDomElement>
 #include <QDebug>
 
-static QString defaultScriptName = QLatin1String("SCRIPTNAME: ");
+static const QString defaultScriptName = QLatin1String("SCRIPTNAME: ");
 
 using namespace KSieveUi;
 

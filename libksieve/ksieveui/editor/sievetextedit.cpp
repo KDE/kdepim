@@ -256,7 +256,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
 
 QString SieveTextEdit::wordUnderCursor() const
 {
-    static QString eow = QLatin1String("~!@#$%^&*()+{}|\"<>,./;'[]\\-= ");   // everything without ':', '?' and '_'
+    static const QString eow = QLatin1String("~!@#$%^&*()+{}|\"<>,./;'[]\\-= ");   // everything without ':', '?' and '_'
     QTextCursor tc = textCursor();
 
     tc.anchor();

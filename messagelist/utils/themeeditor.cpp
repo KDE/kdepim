@@ -63,7 +63,7 @@
 using namespace MessageList::Utils;
 using namespace MessageList::Core;
 
-static const char *gThemeContentItemTypeDndMimeDataFormat = "application/x-kmail-messagelistview-theme-contentitem-type";
+static const char gThemeContentItemTypeDndMimeDataFormat[] = "application/x-kmail-messagelistview-theme-contentitem-type";
 
 ThemeColumnPropertiesDialog::ThemeColumnPropertiesDialog(QWidget *parent, Theme::Column *column, const QString &title)
     : QDialog(parent), mColumn(column)

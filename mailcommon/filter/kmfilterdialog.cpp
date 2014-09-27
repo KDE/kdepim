@@ -217,14 +217,14 @@ MailCommon::MailFilter *QListWidgetFilterItem::filter()
 }
 
 // What's this help texts
-const char *_wt_filterlist =
+const char _wt_filterlist[] =
     I18N_NOOP("<qt><p>This is the list of defined filters. "
               "They are processed top-to-bottom.</p>"
               "<p>Click on any filter to edit it "
               "using the controls in the right-hand half "
               "of the dialog.</p></qt>");
 
-const char *_wt_filterlist_new =
+const char _wt_filterlist_new[] =
     I18N_NOOP("<qt><p>Click this button to create a new filter.</p>"
               "<p>The filter will be inserted just before the currently-"
               "selected one, but you can always change that "
@@ -232,12 +232,12 @@ const char *_wt_filterlist_new =
               "<p>If you have clicked this button accidentally, you can undo this "
               "by clicking on the <em>Delete</em> button.</p></qt>");
 
-const char *_wt_filterlist_copy =
+const char _wt_filterlist_copy[] =
     I18N_NOOP("<qt><p>Click this button to copy a filter.</p>"
               "<p>If you have clicked this button accidentally, you can undo this "
               "by clicking on the <em>Delete</em> button.</p></qt>");
 
-const char *_wt_filterlist_delete =
+const char _wt_filterlist_delete[] =
     I18N_NOOP("<qt><p>Click this button to <em>delete</em> the currently-"
               "selected filter from the list above.</p>"
               "<p>There is no way to get the filter back once "
@@ -245,7 +245,7 @@ const char *_wt_filterlist_delete =
               "dialog by clicking <em>Cancel</em> to discard the "
               "changes made.</p></qt>");
 
-const char *_wt_filterlist_up =
+const char _wt_filterlist_up[] =
     I18N_NOOP("<qt><p>Click this button to move the currently-"
               "selected filter <em>up</em> one in the list above.</p>"
               "<p>This is useful since the order of the filters in the list "
@@ -254,7 +254,7 @@ const char *_wt_filterlist_up =
               "<p>If you have clicked this button accidentally, you can undo this "
               "by clicking on the <em>Down</em> button.</p></qt>");
 
-const char *_wt_filterlist_down =
+const char _wt_filterlist_down[] =
     I18N_NOOP("<qt><p>Click this button to move the currently-"
               "selected filter <em>down</em> one in the list above.</p>"
               "<p>This is useful since the order of the filters in the list "
@@ -263,21 +263,21 @@ const char *_wt_filterlist_down =
               "<p>If you have clicked this button accidentally, you can undo this "
               "by clicking on the <em>Up</em> button.</p></qt>");
 
-const char *_wt_filterlist_top =
+const char _wt_filterlist_top[] =
     I18N_NOOP("<qt><p>Click this button to move the currently-"
               "selected filter to top of list.</p>"
               "<p>This is useful since the order of the filters in the list "
               "determines the order in which they are tried on messages: "
               "The topmost filter gets tried first.</p></qt>");
 
-const char *_wt_filterlist_bottom =
+const char _wt_filterlist_bottom[] =
     I18N_NOOP("<qt><p>Click this button to move the currently-"
               "selected filter to bottom of list.</p>"
               "<p>This is useful since the order of the filters in the list "
               "determines the order in which they are tried on messages: "
               "The topmost filter gets tried first.</p></qt>");
 
-const char *_wt_filterlist_rename =
+const char _wt_filterlist_rename[] =
     I18N_NOOP("<qt><p>Click this button to rename the currently-selected filter.</p>"
               "<p>Filters are named automatically, as long as they start with "
               "\"&lt;\".</p>"
@@ -285,7 +285,7 @@ const char *_wt_filterlist_rename =
               "naming back, click this button and select <em>Clear</em> followed "
               "by <em>OK</em> in the appearing dialog.</p></qt>");
 
-const char *_wt_filterdlg_showLater =
+const char _wt_filterdlg_showLater[] =
     I18N_NOOP("<qt><p>Check this button to force the confirmation dialog to be "
               "displayed.</p><p>This is useful if you have defined a ruleset that tags "
               "messages to be downloaded later. Without the possibility to force "

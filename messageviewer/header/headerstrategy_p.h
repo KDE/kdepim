@@ -43,19 +43,19 @@
 // Header tables:
 //
 namespace MessageViewer {
-static const char * briefHeaders[] = {
+static const char *const briefHeaders[] = {
     "subject", "from", "cc", "bcc", "date"
 };
 static const int numBriefHeaders = sizeof briefHeaders / sizeof *briefHeaders;
 
 
-static const char * standardHeaders[] = {
+static const char *const standardHeaders[] = {
     "subject", "from", "cc", "bcc", "to"
 };
 static const int numStandardHeaders = sizeof standardHeaders / sizeof *standardHeaders;
 
 
-static const char * richHeaders[] = {
+static const char *const richHeaders[] = {
     "subject", "date", "from", "cc", "bcc", "to",
     "organization", "organisation", "reply-to",
     "user-agent", "x-mailer", "x-bugzilla-url"
@@ -66,7 +66,7 @@ static const int numRichHeaders = sizeof richHeaders / sizeof *richHeaders;
 // Convenience function
 //
 
-static QStringList stringList( const char * headers[], int numHeaders ) {
+static QStringList stringList( const char *const headers[], int numHeaders ) {
     QStringList sl;
     for ( int i = 0 ; i < numHeaders ; ++i )
         sl.push_back( QLatin1String(headers[i]) );
