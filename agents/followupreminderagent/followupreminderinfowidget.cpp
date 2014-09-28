@@ -67,7 +67,7 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
             << QLatin1String("Message Id")
             << QLatin1String("Answer Message Id")
 #endif
-               ;
+            ;
 
     mTreeWidget->setHeaderLabels(headers);
     mTreeWidget->setSortingEnabled(true);
@@ -133,7 +133,7 @@ void FollowUpReminderInfoWidget::save()
 void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
 {
     const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
-    if ( !listItems.isEmpty() ) {
+    if (!listItems.isEmpty()) {
         FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(listItems.at(0));
         QMenu menu;
         QAction *showMessage = 0;

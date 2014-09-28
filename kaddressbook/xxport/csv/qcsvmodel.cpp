@@ -26,10 +26,10 @@
 #include <QtCore/QStringList>
 #include <QtCore/QVector>
 
-CsvParser::CsvParser( QObject *parent )
-    : QThread( parent ), mDevice( 0 ), mRowCount( 0 ), mColumnCount( 0 ), mCacheCounter( 0 )
+CsvParser::CsvParser(QObject *parent)
+    : QThread(parent), mDevice(0), mRowCount(0), mColumnCount(0), mCacheCounter(0)
 {
-    mReader = new QCsvReader( this );
+    mReader = new QCsvReader(this);
 }
 
 CsvParser::~CsvParser()
@@ -37,7 +37,7 @@ CsvParser::~CsvParser()
     delete mReader;
 }
 
-void CsvParser::load( QIODevice *device )
+void CsvParser::load(QIODevice *device)
 {
     mDevice = device;
 
@@ -56,58 +56,58 @@ void CsvParser::beginLine()
     mRowCount++;
 }
 
-void CsvParser::field( const QString &data, uint row, uint column )
+void CsvParser::field(const QString &data, uint row, uint column)
 {
-    const int tmp = qMax( mColumnCount, (int)column + 1 );
-    if ( tmp != mColumnCount ) {
+    const int tmp = qMax(mColumnCount, (int)column + 1);
+    if (tmp != mColumnCount) {
         mColumnCount = tmp;
-        emit columnCountChanged( tmp );
+        emit columnCountChanged(tmp);
     }
 
-    emit dataChanged( data, row, column );
+    emit dataChanged(data, row, column);
 }
 
 void CsvParser::endLine()
 {
     mCacheCounter++;
-    if ( mCacheCounter == 50 ) {
-        emit rowCountChanged( mRowCount );
+    if (mCacheCounter == 50) {
+        emit rowCountChanged(mRowCount);
         mCacheCounter = 0;
     }
 }
 
 void CsvParser::end()
 {
-    emit rowCountChanged( mRowCount );
+    emit rowCountChanged(mRowCount);
     emit ended();
 }
 
-void CsvParser::error( const QString & )
+void CsvParser::error(const QString &)
 {
 }
 
 void CsvParser::run()
 {
-    if ( !mDevice->isOpen() ) {
-        mDevice->open( QIODevice::ReadOnly );
+    if (!mDevice->isOpen()) {
+        mDevice->open(QIODevice::ReadOnly);
     }
 
     mDevice->reset();
-    mReader->read( mDevice );
+    mReader->read(mDevice);
 }
 
 class QCsvModel::Private
 {
 public:
-    Private( QCsvModel *model )
-        : mParent( model ), mParser( 0 ),
-          mDevice( 0 ), mRowCount( 0 ), mColumnCount( 0 )
+    Private(QCsvModel *model)
+        : mParent(model), mParser(0),
+          mDevice(0), mRowCount(0), mColumnCount(0)
     {
     }
 
-    void columnCountChanged( int columns );
-    void rowCountChanged( int rows );
-    void fieldChanged( const QString &data, int row, int column );
+    void columnCountChanged(int columns);
+    void rowCountChanged(int rows);
+    void fieldChanged(const QString &data, int row, int column);
     void finishedLoading();
 
     QCsvModel *mParent;
@@ -120,23 +120,23 @@ public:
     int mColumnCount;
 };
 
-void QCsvModel::Private::columnCountChanged( int columns )
+void QCsvModel::Private::columnCountChanged(int columns)
 {
     mColumnCount = columns;
-    mFieldIdentifiers.resize( columns );
-    mFieldIdentifiers[ columns - 1 ] = QLatin1String( "0" );
+    mFieldIdentifiers.resize(columns);
+    mFieldIdentifiers[ columns - 1 ] = QLatin1String("0");
     emit mParent->layoutChanged();
 }
 
-void QCsvModel::Private::rowCountChanged( int rows )
+void QCsvModel::Private::rowCountChanged(int rows)
 {
     mRowCount = rows;
     emit mParent->layoutChanged();
 }
 
-void QCsvModel::Private::fieldChanged( const QString &data, int row, int column )
+void QCsvModel::Private::fieldChanged(const QString &data, int row, int column)
 {
-    mFields.insert( QPair<int, int>( row, column ), data );
+    mFields.insert(QPair<int, int>(row, column), data);
 }
 
 void QCsvModel::Private::finishedLoading()
@@ -144,18 +144,18 @@ void QCsvModel::Private::finishedLoading()
     emit mParent->finishedLoading();
 }
 
-QCsvModel::QCsvModel( QObject *parent )
-    : QAbstractTableModel( parent ), d( new Private( this ) )
+QCsvModel::QCsvModel(QObject *parent)
+    : QAbstractTableModel(parent), d(new Private(this))
 {
-    d->mParser = new CsvParser( this );
+    d->mParser = new CsvParser(this);
 
-    connect( d->mParser, SIGNAL(columnCountChanged(int)),
-             this, SLOT(columnCountChanged(int)), Qt::QueuedConnection );
-    connect( d->mParser, SIGNAL(rowCountChanged(int)),
-             this, SLOT(rowCountChanged(int)), Qt::QueuedConnection );
-    connect( d->mParser, SIGNAL(dataChanged(QString,int,int)),
-             this, SLOT(fieldChanged(QString,int,int)), Qt::QueuedConnection );
-    connect( d->mParser, SIGNAL(ended()), this, SLOT(finishedLoading()) );
+    connect(d->mParser, SIGNAL(columnCountChanged(int)),
+            this, SLOT(columnCountChanged(int)), Qt::QueuedConnection);
+    connect(d->mParser, SIGNAL(rowCountChanged(int)),
+            this, SLOT(rowCountChanged(int)), Qt::QueuedConnection);
+    connect(d->mParser, SIGNAL(dataChanged(QString,int,int)),
+            this, SLOT(fieldChanged(QString,int,int)), Qt::QueuedConnection);
+    connect(d->mParser, SIGNAL(ended()), this, SLOT(finishedLoading()));
 }
 
 QCsvModel::~QCsvModel()
@@ -163,7 +163,7 @@ QCsvModel::~QCsvModel()
     delete d;
 }
 
-bool QCsvModel::load( QIODevice *device )
+bool QCsvModel::load(QIODevice *device)
 {
     d->mDevice = device;
     d->mRowCount = 0;
@@ -171,24 +171,24 @@ bool QCsvModel::load( QIODevice *device )
 
     emit layoutChanged();
 
-    d->mParser->load( device );
+    d->mParser->load(device);
 
     return true;
 }
 
-void QCsvModel::setTextQuote( const QChar &textQuote )
+void QCsvModel::setTextQuote(const QChar &textQuote)
 {
     const bool isRunning = d->mParser->isRunning();
 
-    if ( isRunning ) {
+    if (isRunning) {
         d->mParser->reader()->terminate();
         d->mParser->wait();
     }
 
-    d->mParser->reader()->setTextQuote( textQuote );
+    d->mParser->reader()->setTextQuote(textQuote);
 
-    if ( isRunning ) {
-        load( d->mDevice );
+    if (isRunning) {
+        load(d->mDevice);
     }
 }
 
@@ -197,19 +197,19 @@ QChar QCsvModel::textQuote() const
     return d->mParser->reader()->textQuote();
 }
 
-void QCsvModel::setDelimiter( const QChar &delimiter )
+void QCsvModel::setDelimiter(const QChar &delimiter)
 {
     const bool isRunning = d->mParser->isRunning();
 
-    if ( isRunning ) {
+    if (isRunning) {
         d->mParser->reader()->terminate();
         d->mParser->wait();
     }
 
-    d->mParser->reader()->setDelimiter( delimiter );
+    d->mParser->reader()->setDelimiter(delimiter);
 
-    if ( isRunning ) {
-        load( d->mDevice );
+    if (isRunning) {
+        load(d->mDevice);
     }
 }
 
@@ -218,19 +218,19 @@ QChar QCsvModel::delimiter() const
     return d->mParser->reader()->delimiter();
 }
 
-void QCsvModel::setStartRow( uint startRow )
+void QCsvModel::setStartRow(uint startRow)
 {
     const bool isRunning = d->mParser->isRunning();
 
-    if ( isRunning ) {
+    if (isRunning) {
         d->mParser->reader()->terminate();
         d->mParser->wait();
     }
 
-    d->mParser->reader()->setStartRow( startRow );
+    d->mParser->reader()->setStartRow(startRow);
 
-    if ( isRunning ) {
-        load( d->mDevice );
+    if (isRunning) {
+        load(d->mDevice);
     }
 }
 
@@ -239,19 +239,19 @@ uint QCsvModel::startRow() const
     return d->mParser->reader()->startRow();
 }
 
-void QCsvModel::setTextCodec( QTextCodec *textCodec )
+void QCsvModel::setTextCodec(QTextCodec *textCodec)
 {
     const bool isRunning = d->mParser->isRunning();
 
-    if ( isRunning ) {
+    if (isRunning) {
         d->mParser->reader()->terminate();
         d->mParser->wait();
     }
 
-    d->mParser->reader()->setTextCodec( textCodec );
+    d->mParser->reader()->setTextCodec(textCodec);
 
-    if ( isRunning ) {
-        load( d->mDevice );
+    if (isRunning) {
+        load(d->mDevice);
     }
 }
 
@@ -260,73 +260,73 @@ QTextCodec *QCsvModel::textCodec() const
     return d->mParser->reader()->textCodec();
 }
 
-int QCsvModel::columnCount( const QModelIndex &parent ) const
+int QCsvModel::columnCount(const QModelIndex &parent) const
 {
-    if ( !parent.isValid() ) {
+    if (!parent.isValid()) {
         return d->mColumnCount;
     } else {
         return 0;
     }
 }
 
-int QCsvModel::rowCount( const QModelIndex &parent ) const
+int QCsvModel::rowCount(const QModelIndex &parent) const
 {
-    if ( !parent.isValid() ) {
+    if (!parent.isValid()) {
         return d->mRowCount + 1; // +1 for the header row
     } else {
         return 0;
     }
 }
 
-QVariant QCsvModel::data( const QModelIndex &index, int role ) const
+QVariant QCsvModel::data(const QModelIndex &index, int role) const
 {
-    if ( !index.isValid() ) {
+    if (!index.isValid()) {
         return QVariant();
     }
 
-    if ( index.row() == 0 ) {
-        if ( index.column() >= d->mFieldIdentifiers.count() ) {
+    if (index.row() == 0) {
+        if (index.column() >= d->mFieldIdentifiers.count()) {
             return QVariant();
         }
 
-        if ( role == Qt::DisplayRole || role == Qt::EditRole ) {
-            return d->mFieldIdentifiers.at( index.column() );
+        if (role == Qt::DisplayRole || role == Qt::EditRole) {
+            return d->mFieldIdentifiers.at(index.column());
         }
 
         return QVariant();
     }
 
-    const QPair<int, int> pair( index.row() - 1, index.column() );
-    if ( !d->mFields.contains( pair ) ) {
+    const QPair<int, int> pair(index.row() - 1, index.column());
+    if (!d->mFields.contains(pair)) {
         return QVariant();
     }
 
-    const QString data = d->mFields.value( pair );
+    const QString data = d->mFields.value(pair);
 
-    if ( role == Qt::DisplayRole ) {
+    if (role == Qt::DisplayRole) {
         return data;
     } else {
         return QVariant();
     }
 }
 
-bool QCsvModel::setData( const QModelIndex &index, const QVariant &data, int role )
+bool QCsvModel::setData(const QModelIndex &index, const QVariant &data, int role)
 {
-    if ( role == Qt::EditRole && index.row() == 0 &&
-         index.column() <= d->mFieldIdentifiers.count() ) {
+    if (role == Qt::EditRole && index.row() == 0 &&
+            index.column() <= d->mFieldIdentifiers.count()) {
         d->mFieldIdentifiers[ index.column() ] = data.toString();
 
-        emit dataChanged( index, index );
+        emit dataChanged(index, index);
         return true;
     }
 
     return false;
 }
 
-Qt::ItemFlags QCsvModel::flags( const QModelIndex &index ) const
+Qt::ItemFlags QCsvModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-    if ( index.row() == 0 ) {
+    if (index.row() == 0) {
         flags |= Qt::ItemIsEditable;
     }
 

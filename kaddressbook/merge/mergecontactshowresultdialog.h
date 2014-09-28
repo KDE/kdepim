@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef MERGECONTACTSHOWRESULTDIALOG_H
 #define MERGECONTACTSHOWRESULTDIALOG_H
 
@@ -24,7 +23,8 @@
 
 #include <AkonadiCore/Item>
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class MergeContactShowResultTabWidget;
 class KADDRESSBOOK_EXPORT MergeContactShowResultDialog : public QDialog
 {

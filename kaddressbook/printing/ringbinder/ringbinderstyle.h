@@ -28,17 +28,18 @@
 
 #include "printstyle.h"
 
-namespace KABPrinting {
+namespace KABPrinting
+{
 
 class RingBinderStyleAppearanceForm;
 
 class RingBinderPrintStyle : public PrintStyle
 {
 public:
-    explicit RingBinderPrintStyle( PrintingWizard *parent );
+    explicit RingBinderPrintStyle(PrintingWizard *parent);
     ~RingBinderPrintStyle();
 
-    void print( const KABC::Addressee::List &contacts, PrintProgress * );
+    void print(const KABC::Addressee::List &contacts, PrintProgress *);
 
 private:
     RingBinderStyleAppearanceForm *mPageAppearance;
@@ -47,7 +48,7 @@ private:
 class RingBinderPrintStyleFactory : public PrintStyleFactory
 {
 public:
-    explicit RingBinderPrintStyleFactory( PrintingWizard *parent );
+    explicit RingBinderPrintStyleFactory(PrintingWizard *parent);
 
     PrintStyle *create() const;
     QString description() const;
@@ -56,4 +57,3 @@ public:
 }
 
 #endif
-// vim:tw=78 cin et sw=2 comments=sr\:/*,mb\:\ ,ex\:*/,\://

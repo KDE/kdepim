@@ -22,12 +22,13 @@
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/Item>
 #include <KABC/Addressee>
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class MergeContactsJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit MergeContactsJob(QObject *parent=0);
+    explicit MergeContactsJob(QObject *parent = 0);
     ~MergeContactsJob();
 
     void start();

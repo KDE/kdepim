@@ -29,8 +29,8 @@
 
 #include <QtCore/QPointer>
 
-LDAPXXPort::LDAPXXPort( QWidget *parentWidget )
-    : XXPort( parentWidget )
+LDAPXXPort::LDAPXXPort(QWidget *parentWidget)
+    : XXPort(parentWidget)
 {
 }
 
@@ -38,9 +38,9 @@ KABC::Addressee::List LDAPXXPort::importContacts() const
 {
     KABC::Addressee::List contacts;
 
-    QPointer<KLDAP::LdapSearchDialog> dlg = new KLDAP::LdapSearchDialog( parentWidget() );
+    QPointer<KLDAP::LdapSearchDialog> dlg = new KLDAP::LdapSearchDialog(parentWidget());
 
-    if ( dlg->exec() && dlg ) {
+    if (dlg->exec() && dlg) {
         contacts = dlg->selectedContacts();
     }
 
@@ -49,7 +49,7 @@ KABC::Addressee::List LDAPXXPort::importContacts() const
     return contacts;
 }
 
-bool LDAPXXPort::exportContacts( const KABC::Addressee::List & ) const
+bool LDAPXXPort::exportContacts(const KABC::Addressee::List &) const
 {
     return false;
 }

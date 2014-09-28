@@ -32,7 +32,6 @@
 
 using namespace Akonadi;
 
-
 class CategoryFilterProxyModelPrivate : public QObject
 {
     Q_OBJECT
@@ -48,14 +47,12 @@ private:
     CategoryFilterProxyModel *q_ptr;
 };
 
-
 CategoryFilterProxyModelPrivate::CategoryFilterProxyModelPrivate(CategoryFilterProxyModel *parent)
     : QObject(),
       filterEnabled(false),
       q_ptr(parent)
 {
 }
-
 
 CategoryFilterProxyModel::CategoryFilterProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent),
@@ -64,12 +61,10 @@ CategoryFilterProxyModel::CategoryFilterProxyModel(QObject *parent)
     setDynamicSortFilter(true);
 }
 
-
 CategoryFilterProxyModel::~CategoryFilterProxyModel()
 {
     delete d_ptr;
 }
-
 
 bool CategoryFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &parent) const
 {
@@ -78,10 +73,16 @@ bool CategoryFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &pare
     const QModelIndex index = sourceModel()->index(row, 0, parent);
     const Akonadi::Item item = index.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
-    if (!d->filterEnabled) return true;			// filter not enabled
-    if (d->filterIdList.isEmpty()) return false;	// nothing accepted
-							// all accepted
-    if (d->filterIdList.first()==CategorySelectWidget::FilterAll) return true;
+    if (!d->filterEnabled) {
+        return true;    // filter not enabled
+    }
+    if (d->filterIdList.isEmpty()) {
+        return false;    // nothing accepted
+    }
+    // all accepted
+    if (d->filterIdList.first() == CategorySelectWidget::FilterAll) {
+        return true;
+    }
 
     //qDebug() << "for row" << row << "item" << item.url() << "filter" << d->filterIdList;
     if (item.hasPayload<KABC::Addressee>()) {
@@ -92,59 +93,55 @@ bool CategoryFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &pare
 
         int validCategories = 0;
         int count = categories.count();
-        for (int i = 0; i<count; ++i) {
+        for (int i = 0; i < count; ++i) {
             const QString cat = categories.at(i);
             if (cat.startsWith(QLatin1String("akonadi:"))) {
                 const int idx = cat.indexOf(QLatin1String("?tag="));
-                if (idx>=0) {
+                if (idx >= 0) {
                     ++validCategories;
-                    Tag::Id id = cat.mid(idx+5).toInt();
+                    Tag::Id id = cat.mid(idx + 5).toInt();
                     if (d->filterIdList.contains(id)) {
                         //qDebug() << "matches category" << cat;
-                        return true;			// a category matches filter
+                        return true;            // a category matches filter
                     }
                 }
             }
         }
 
-        if (validCategories>0) {
+        if (validCategories > 0) {
             //qDebug() << "valid item but no match";
-            return false;				// categorised but no match
+            return false;               // categorised but no match
         } else {
             //qDebug() << "item with no categories";
             return d->filterIdList.contains(CategorySelectWidget::FilterUntagged);
         }
-    }
-    else if (item.hasPayload<KABC::ContactGroup>()) {	// a contact group item
+    } else if (item.hasPayload<KABC::ContactGroup>()) { // a contact group item
         return d->filterIdList.contains(CategorySelectWidget::FilterGroups);
     }
 
-    return true;					// not a recognised item
+    return true;                    // not a recognised item
 }
-
 
 void CategoryFilterProxyModel::setFilterCategories(const QList<Akonadi::Tag::Id> &idList)
 {
     Q_D(CategoryFilterProxyModel);
 
-    if (idList!=d->filterIdList) {
+    if (idList != d->filterIdList) {
         //qDebug() << idList;
         d->filterIdList = idList;
         invalidateFilter();
     }
 }
 
-
 void CategoryFilterProxyModel::setFilterEnabled(bool enable)
 {
     Q_D(CategoryFilterProxyModel);
 
-    if (enable!=d->filterEnabled) {
+    if (enable != d->filterEnabled) {
         //qDebug() << enable;
         d->filterEnabled = enable;
         invalidateFilter();
     }
 }
-
 
 #include "categoryfilterproxymodel.moc"

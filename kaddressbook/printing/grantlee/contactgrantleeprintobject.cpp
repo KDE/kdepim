@@ -30,27 +30,26 @@
 #include <grantlee/metatype.h>
 #include <QLocale>
 
-
 using namespace KABPrinting;
 
 ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent)
     : QObject(parent),
       mAddress(address)
 {
-    Q_FOREACH ( const KABC::Address &addr, address.addresses() ) {
-        mListAddress<<new ContactGrantleePrintAddressObject(addr);
+    Q_FOREACH (const KABC::Address &addr, address.addresses()) {
+        mListAddress << new ContactGrantleePrintAddressObject(addr);
     }
-    Q_FOREACH ( const KABC::PhoneNumber &phone, address.phoneNumbers() ) {
-        mListPhones<<new ContactGrantleePrintPhoneObject(phone);
+    Q_FOREACH (const KABC::PhoneNumber &phone, address.phoneNumbers()) {
+        mListPhones << new ContactGrantleePrintPhoneObject(phone);
     }
     const QStringList customs = mAddress.customs();
-    if ( !customs.empty() ) {
-        Q_FOREACH ( const QString &custom, customs ) {
-            if ( custom.startsWith( QLatin1String( "messaging/" ) ) ) {
-                const int pos = custom.indexOf( QLatin1Char( ':' ) );
-                QString key = custom.left( pos );
-                key.remove( QLatin1String( "-All" ) );
-                const QString value = custom.mid( pos + 1 );
+    if (!customs.empty()) {
+        Q_FOREACH (const QString &custom, customs) {
+            if (custom.startsWith(QLatin1String("messaging/"))) {
+                const int pos = custom.indexOf(QLatin1Char(':'));
+                QString key = custom.left(pos);
+                key.remove(QLatin1String("-All"));
+                const QString value = custom.mid(pos + 1);
                 mListIm << new ContactGrantleePrintImObject(key, value);
             }
         }
@@ -116,11 +115,11 @@ QString ContactGrantleePrintObject::name() const
 QStringList ContactGrantleePrintObject::emails() const
 {
     QStringList emails;
-    Q_FOREACH ( const QString &email, mAddress.emails() ) {
-        const QString fullEmail = QString::fromLatin1( QUrl::toPercentEncoding( mAddress.fullEmail( email ) ) );
+    Q_FOREACH (const QString &email, mAddress.emails()) {
+        const QString fullEmail = QString::fromLatin1(QUrl::toPercentEncoding(mAddress.fullEmail(email)));
 
-        const QString url = QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
-                .arg( fullEmail, email );
+        const QString url = QString::fromLatin1("<a href=\"mailto:%1\">%2</a>")
+                            .arg(fullEmail, email);
         emails << url;
     }
     return emails;
@@ -158,7 +157,7 @@ QString ContactGrantleePrintObject::role() const
 
 QString ContactGrantleePrintObject::birthday() const
 {
-    return QLocale().toString( mAddress.birthday().date(), QLocale::LongFormat );
+    return QLocale().toString(mAddress.birthday().date(), QLocale::LongFormat);
 }
 
 QString ContactGrantleePrintObject::department() const
@@ -193,7 +192,7 @@ QVariant ContactGrantleePrintObject::crypto() const
 
 QString ContactGrantleePrintObject::addressBookName() const
 {
-    const QString addressBookName = mAddress.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "AddressBook" ) );
+    const QString addressBookName = mAddress.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("AddressBook"));
     return addressBookName;
 }
 
@@ -203,18 +202,18 @@ QString ContactGrantleePrintObject::photo() const
         return QString();
     } else {
         const QString photoStr = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
-                .arg( imgToDataUrl( mAddress.photo().data() ), QString::number( 60 ), QString::number( 60 ));
+                                 .arg(imgToDataUrl(mAddress.photo().data()), QString::number(60), QString::number(60));
         return photoStr;
     }
 }
 
-QString ContactGrantleePrintObject::imgToDataUrl( const QImage &image ) const
+QString ContactGrantleePrintObject::imgToDataUrl(const QImage &image) const
 {
     QByteArray ba;
-    QBuffer buffer( &ba );
-    buffer.open( QIODevice::WriteOnly );
-    image.save( &buffer, "PNG" );
-    return QString::fromLatin1("data:image/%1;base64,%2").arg( QString::fromLatin1( "PNG" ), QString::fromLatin1( ba.toBase64() ) );
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "PNG");
+    return QString::fromLatin1("data:image/%1;base64,%2").arg(QString::fromLatin1("PNG"), QString::fromLatin1(ba.toBase64()));
 }
 
 QString ContactGrantleePrintObject::logo() const
@@ -223,47 +222,47 @@ QString ContactGrantleePrintObject::logo() const
         return QString();
     } else {
         const QString photoStr = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
-                .arg( imgToDataUrl( mAddress.logo().data() ), QString::number( 60 ), QString::number( 60 ));
+                                 .arg(imgToDataUrl(mAddress.logo().data()), QString::number(60), QString::number(60));
         return photoStr;
     }
 }
 
 QString ContactGrantleePrintObject::anniversary() const
 {
-    const QDate anniversary = QDate::fromString( mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
-                                                  QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
-    if ( anniversary.isValid() ) {
-        return (QLocale().toString( anniversary ) );
+    const QDate anniversary = QDate::fromString(mAddress.custom(QLatin1String("KADDRESSBOOK"),
+                              QLatin1String("X-Anniversary")), Qt::ISODate);
+    if (anniversary.isValid()) {
+        return (QLocale().toString(anniversary));
     }
     return QString();
 }
 
 QString ContactGrantleePrintObject::profession() const
 {
-    return mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
-                            QLatin1String( "X-Profession" ) );
+    return mAddress.custom(QLatin1String("KADDRESSBOOK"),
+                           QLatin1String("X-Profession"));
 }
 
 QString ContactGrantleePrintObject::office() const
 {
-    return mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
-                            QLatin1String( "X-Office" ) );
+    return mAddress.custom(QLatin1String("KADDRESSBOOK"),
+                           QLatin1String("X-Office"));
 }
 
 QString ContactGrantleePrintObject::manager() const
 {
-    return mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
-                            QLatin1String( "X-ManagersName" ) );
+    return mAddress.custom(QLatin1String("KADDRESSBOOK"),
+                           QLatin1String("X-ManagersName"));
 }
 
 QString ContactGrantleePrintObject::assistant() const
 {
-    return mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
-                            QLatin1String( "X-AssistantsName" ) );
+    return mAddress.custom(QLatin1String("KADDRESSBOOK"),
+                           QLatin1String("X-AssistantsName"));
 }
 
 QString ContactGrantleePrintObject::spouse() const
 {
-    return mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
-                            QLatin1String( "X-SpousesName" ) );
+    return mAddress.custom(QLatin1String("KADDRESSBOOK"),
+                           QLatin1String("X-SpousesName"));
 }

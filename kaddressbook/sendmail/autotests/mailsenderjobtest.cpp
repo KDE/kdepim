@@ -42,7 +42,7 @@ void MailSenderJobTest::shouldNotSendSignalWhenNoValidAddressItem()
     Akonadi::Item item;
     KABC::Addressee address;
     address.setName(QLatin1String("foo1"));
-    lst <<item<<item;
+    lst << item << item;
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
     mailsender.start();
@@ -55,8 +55,8 @@ void MailSenderJobTest::shouldNotSendSignalWhenNoEmails()
     Akonadi::Item item;
     KABC::Addressee address;
     address.setName(QLatin1String("foo1"));
-    item.setPayload<KABC::Addressee>( address );
-    lst <<item<<item;
+    item.setPayload<KABC::Addressee>(address);
+    lst << item << item;
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
     mailsender.start();
@@ -70,8 +70,8 @@ void MailSenderJobTest::shouldSendSignalWhenOneEmail()
     KABC::Addressee address;
     address.setName(QLatin1String("foo1"));
     address.insertEmail(QLatin1String("foo@kde.org"), true);
-    item.setPayload<KABC::Addressee>( address );
-    lst <<item;
+    item.setPayload<KABC::Addressee>(address);
+    lst << item;
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
     mailsender.start();
@@ -87,8 +87,8 @@ void MailSenderJobTest::shouldNotSendTwiceEmails()
     KABC::Addressee address;
     address.setName(QLatin1String("foo1"));
     address.insertEmail(QLatin1String("foo@kde.org"), true);
-    item.setPayload<KABC::Addressee>( address );
-    lst <<item<<item;
+    item.setPayload<KABC::Addressee>(address);
+    lst << item << item;
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
     mailsender.start();
@@ -104,8 +104,8 @@ void MailSenderJobTest::shouldNotAddInvalidEmail()
     address.setName(QLatin1String("foo1"));
     //Invalid email
     address.insertEmail(QLatin1String("foo2"), true);
-    item.setPayload<KABC::Addressee>( address );
-    lst <<item<<item;
+    item.setPayload<KABC::Addressee>(address);
+    lst << item << item;
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
     mailsender.start();
@@ -120,29 +120,29 @@ void MailSenderJobTest::shouldEmitSignalIfThereIsAValidEmail()
     address.setName(QLatin1String("foo1"));
     //Invalid email
     address.insertEmail(QLatin1String("foo2"), true);
-    item.setPayload<KABC::Addressee>( address );
-    lst <<item;
+    item.setPayload<KABC::Addressee>(address);
+    lst << item;
 
     Akonadi::Item item2;
     KABC::Addressee address2;
     address2.setName(QLatin1String("foo2"));
     address2.insertEmail(QLatin1String("foo2@kde.org"), true);
-    item2.setPayload<KABC::Addressee>( address2 );
-    lst <<item2;
+    item2.setPayload<KABC::Addressee>(address2);
+    lst << item2;
 
     Akonadi::Item item3;
     KABC::Addressee address3;
     address3.setName(QLatin1String("foo3"));
     address3.insertEmail(QLatin1String("foo3@"), true);
-    item3.setPayload<KABC::Addressee>( address3 );
-    lst <<item3;
+    item3.setPayload<KABC::Addressee>(address3);
+    lst << item3;
 
     Akonadi::Item item4;
     KABC::Addressee address4;
     address4.setName(QLatin1String("foo4"));
     address4.insertEmail(QLatin1String("foo4@kde.org"), true);
-    item4.setPayload<KABC::Addressee>( address4 );
-    lst <<item4;
+    item4.setPayload<KABC::Addressee>(address4);
+    lst << item4;
 
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));

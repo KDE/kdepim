@@ -49,5 +49,4 @@ void MergeContactDuplicateContactDialogTest::shouldShowNoEnoughPageWhenSelectOne
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("noenoughcontactselected"));
 }
 
-
 QTEST_MAIN(MergeContactDuplicateContactDialogTest)

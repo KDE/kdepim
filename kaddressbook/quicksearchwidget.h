@@ -38,15 +38,15 @@ class QLineEdit;
  */
 class QuickSearchWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates the quick search widget.
      *
      * @param parent The parent widget.
      */
-    explicit QuickSearchWidget( QWidget *parent = 0 );
+    explicit QuickSearchWidget(QWidget *parent = 0);
 
     /**
      * Destroys the quick search widget.
@@ -70,7 +70,7 @@ Q_SIGNALS:
      *
      * @param filterString The new filter string.
      */
-    void filterStringChanged( const QString &filterString );
+    void filterStringChanged(const QString &filterString);
 
     /**
      * This signal is emitted whenever the user pressed the
@@ -80,14 +80,14 @@ Q_SIGNALS:
      */
     void arrowDownKeyPressed();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void resetTimer();
     void delayedTextChanged();
 
-  protected:
-    void keyPressEvent( QKeyEvent * );
+protected:
+    void keyPressEvent(QKeyEvent *);
 
-  private:
+private:
     QLineEdit *mEdit;
     QTimer *mTimer;
 };

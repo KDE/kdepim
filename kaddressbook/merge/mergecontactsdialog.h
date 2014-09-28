@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef MERGECONTACTSDIALOG_H
 #define MERGECONTACTSDIALOG_H
 
@@ -23,13 +22,14 @@
 #include <AkonadiCore/Item>
 #include <KConfigGroup>
 class QDialogButtonBox;
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class MergeContactWidget;
 class MergeContactsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent=0);
+    explicit MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent = 0);
     ~MergeContactsDialog();
 
 private slots:

@@ -39,7 +39,7 @@ public:
      *
      * The caller has to take ownership of the created module.
      */
-    XXPort *createXXPort( const QString &identifier, QWidget *parentWidget ) const;
+    XXPort *createXXPort(const QString &identifier, QWidget *parentWidget) const;
 };
 
 #endif

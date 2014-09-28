@@ -19,14 +19,15 @@
 #define CONTACTGRANTLEEPRINTCRYPTOOBJECT_H
 #include <QObject>
 #include <KABC/Addressee>
-namespace KABPrinting {
+namespace KABPrinting
+{
 class ContactGrantleePrintCryptoObject : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString signaturePreference READ signaturePreference)
     Q_PROPERTY(QString cryptoPreference READ cryptoPreference)
 public:
-    explicit ContactGrantleePrintCryptoObject(const KABC::Addressee &address, QObject *parent=0);
+    explicit ContactGrantleePrintCryptoObject(const KABC::Addressee &address, QObject *parent = 0);
     ~ContactGrantleePrintCryptoObject();
 
     QString signaturePreference() const;

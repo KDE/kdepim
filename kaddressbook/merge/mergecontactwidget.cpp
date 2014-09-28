@@ -28,10 +28,10 @@
 #include <QPushButton>
 #include <QLabel>
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 KADDRESSBOOK_EXPORT QAbstractItemModel *_k_mergeStubModel = 0;
 }
-
 
 using namespace KABMergeContacts;
 MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent)
@@ -58,7 +58,7 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_mergeStubModel);
     mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
-    mCollectionCombobox->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+    mCollectionCombobox->setMimeTypeFilter(QStringList() << KABC::Addressee::mimeType());
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
     hbox->addWidget(mCollectionCombobox);
 
@@ -108,7 +108,7 @@ void MergeContactWidget::slotUpdateMergeButton()
     const Akonadi::Item::List listCheckedItems = listSelectedContacts();
     Akonadi::Item item = currentItem();
     Q_EMIT contactSelected(item);
-    mMergeButton->setEnabled(listCheckedItems.count()>=2);
+    mMergeButton->setEnabled(listCheckedItems.count() >= 2);
 }
 
 void MergeContactWidget::slotMergeContacts()

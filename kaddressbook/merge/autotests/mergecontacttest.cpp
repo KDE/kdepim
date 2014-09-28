@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "mergecontacttest.h"
 #include "../mergecontacts.h"
 #include <qtest.h>
@@ -39,8 +38,8 @@ void MergeContactTest::shouldReturnDefaultAddressWhenOneItem()
     Akonadi::Item item;
     KABC::Addressee address;
     address.setName(QLatin1String("foo1"));
-    item.setPayload<KABC::Addressee>( address );
-    lst<<item;
+    item.setPayload<KABC::Addressee>(address);
+    lst << item;
 
     MergeContacts contacts(lst);
     KABC::Addressee result = contacts.mergedContact();
@@ -60,12 +59,11 @@ void MergeContactTest::noNneedManualSelectionCheckWhenOneItem()
     KABC::Addressee address;
     Akonadi::Item item;
     address.setName(QLatin1String("foo1"));
-    item.setPayload<KABC::Addressee>( address );
-    lst<<item;
+    item.setPayload<KABC::Addressee>(address);
+    lst << item;
     MergeContacts contacts(lst);
     const bool result = contacts.needManualSelectInformations();
     QCOMPARE(result, false);
 }
-
 
 QTEST_MAIN(MergeContactTest)

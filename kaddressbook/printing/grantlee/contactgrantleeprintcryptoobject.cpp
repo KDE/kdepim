@@ -19,9 +19,9 @@
 #include "libkleo/kleo/enum.h"
 
 using namespace KABPrinting;
-static QString loadCustom( const KABC::Addressee &contact, const QString &key )
+static QString loadCustom(const KABC::Addressee &contact, const QString &key)
 {
-    return contact.custom( QLatin1String( "KADDRESSBOOK" ), key );
+    return contact.custom(QLatin1String("KADDRESSBOOK"), key);
 }
 
 ContactGrantleePrintCryptoObject::ContactGrantleePrintCryptoObject(const KABC::Addressee &address, QObject *parent)
@@ -37,10 +37,10 @@ ContactGrantleePrintCryptoObject::~ContactGrantleePrintCryptoObject()
 
 QString ContactGrantleePrintCryptoObject::signaturePreference() const
 {
-    return Kleo::signingPreferenceToLabel( Kleo::stringToSigningPreference( loadCustom( mAddress, QLatin1String( "CRYPTOSIGNPREF" ) ) ) );
+    return Kleo::signingPreferenceToLabel(Kleo::stringToSigningPreference(loadCustom(mAddress, QLatin1String("CRYPTOSIGNPREF"))));
 }
 
 QString ContactGrantleePrintCryptoObject::cryptoPreference() const
 {
-    return Kleo::encryptionPreferenceToLabel( Kleo::stringToEncryptionPreference( loadCustom( mAddress, QLatin1String( "CRYPTOENCRYPTPREF" ) ) ) );
+    return Kleo::encryptionPreferenceToLabel(Kleo::stringToEncryptionPreference(loadCustom(mAddress, QLatin1String("CRYPTOENCRYPTPREF"))));
 }

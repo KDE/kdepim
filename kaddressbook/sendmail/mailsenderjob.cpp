@@ -52,7 +52,7 @@ void MailSenderJob::start()
         if (item.hasPayload<KABC::Addressee>()) {
             const KABC::Addressee contact = item.payload<KABC::Addressee>();
             const QString preferredEmail = contact.preferredEmail();
-            if( !preferredEmail.isEmpty() && !mEmailAddresses.contains(preferredEmail) ){
+            if (!preferredEmail.isEmpty() && !mEmailAddresses.contains(preferredEmail)) {
                 if (KPIMUtils::isValidSimpleAddress(contact.preferredEmail())) {
                     mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), preferredEmail);
                 }
@@ -60,7 +60,7 @@ void MailSenderJob::start()
         } else if (item.hasPayload<KABC::ContactGroup>()) {
             const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
             unsigned int nbDataCount(group.dataCount());
-            for(unsigned int i=0; i<nbDataCount; ++i) {
+            for (unsigned int i = 0; i < nbDataCount; ++i) {
                 const QString currentEmail(group.data(i).email());
                 if (KPIMUtils::isValidSimpleAddress(currentEmail)) {
                     const QString email = KPIMUtils::normalizedAddress(group.data(i).name(), currentEmail);
@@ -70,21 +70,21 @@ void MailSenderJob::start()
                 }
             }
             const unsigned int nbContactReference(group.contactReferenceCount());
-            for(unsigned int i=0; i<nbContactReference; ++i){
+            for (unsigned int i = 0; i < nbContactReference; ++i) {
                 KABC::ContactGroup::ContactReference reference = group.contactReference(i);
 
                 Akonadi::Item item;
                 if (reference.gid().isEmpty()) {
-                    item.setId( reference.uid().toLongLong() );
+                    item.setId(reference.uid().toLongLong());
                 } else {
-                    item.setGid( reference.gid() );
+                    item.setGid(reference.gid());
                 }
                 mItemToFetch << item;
             }
         }
     }
 
-    if(mItemToFetch.isEmpty()) {
+    if (mItemToFetch.isEmpty()) {
         finishJob();
     } else {
         fetchNextItem();
@@ -103,7 +103,7 @@ void MailSenderJob::fetchNextItem()
 
 void MailSenderJob::fetchItem(const Akonadi::Item &item)
 {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item, this);
     job->fetchScope().fetchFullPayload();
 
     connect(job, &Akonadi::ItemFetchJob::result, this, &MailSenderJob::fetchJobFinished);
@@ -111,15 +111,15 @@ void MailSenderJob::fetchItem(const Akonadi::Item &item)
 
 void MailSenderJob::fetchJobFinished(KJob *job)
 {
-    if ( job->error() ) {
-        qDebug()<<" error during fetching "<<job->errorString();
+    if (job->error()) {
+        qDebug() << " error during fetching " << job->errorString();
         fetchNextItem();
         return;
     }
 
-    Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+    Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob *>(job);
 
-    if ( fetchJob->items().count() != 1 ) {
+    if (fetchJob->items().count() != 1) {
         fetchNextItem();
         return;
     }
@@ -127,7 +127,7 @@ void MailSenderJob::fetchJobFinished(KJob *job)
     const Akonadi::Item item = fetchJob->items().first();
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
 
-    if( !contact.preferredEmail().isEmpty()) {
+    if (!contact.preferredEmail().isEmpty()) {
         if (KPIMUtils::isValidSimpleAddress(contact.preferredEmail())) {
             mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), contact.preferredEmail());
         }

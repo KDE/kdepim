@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "mergecontactshowresulttabwidget.h"
 #include "mergecontactinfowidget.h"
 #include <KABC/Addressee>
@@ -36,7 +35,7 @@ MergeContactShowResultTabWidget::~MergeContactShowResultTabWidget()
 
 void MergeContactShowResultTabWidget::updateTabWidget()
 {
-    tabBar()->setVisible(count()>1);
+    tabBar()->setVisible(count() > 1);
 }
 
 bool MergeContactShowResultTabWidget::tabBarVisible() const
@@ -47,7 +46,7 @@ bool MergeContactShowResultTabWidget::tabBarVisible() const
 void MergeContactShowResultTabWidget::setContacts(const Akonadi::Item::List &lstItem)
 {
     clear();
-    Q_FOREACH(const Akonadi::Item &item, lstItem) {
+    Q_FOREACH (const Akonadi::Item &item, lstItem) {
         if (item.hasPayload<KABC::Addressee>()) {
             const KABC::Addressee address = item.payload<KABC::Addressee>();
             MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;

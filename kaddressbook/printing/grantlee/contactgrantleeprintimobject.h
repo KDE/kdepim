@@ -18,7 +18,8 @@
 #ifndef CONTACTGRANTLEEPRINTIMOBJECT_H
 #define CONTACTGRANTLEEPRINTIMOBJECT_H
 #include <QObject>
-namespace KABPrinting {
+namespace KABPrinting
+{
 class ContactGrantleePrintImObject : public QObject
 {
     Q_OBJECT
@@ -26,7 +27,7 @@ class ContactGrantleePrintImObject : public QObject
     Q_PROPERTY(QString address READ address)
 
 public:
-    explicit ContactGrantleePrintImObject(const QString &type, const QString &address, QObject *parent=0);
+    explicit ContactGrantleePrintImObject(const QString &type, const QString &address, QObject *parent = 0);
     ~ContactGrantleePrintImObject();
 
     QString type() const;

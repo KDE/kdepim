@@ -37,46 +37,46 @@
 #include <QItemSelectionModel>
 #include <QWidget>
 
-XXPortManager::XXPortManager( QWidget *parent )
-    : QObject( parent ), mSelectionModel( 0 ),
-      mParentWidget( parent ), mImportProgressDialog( 0 )
+XXPortManager::XXPortManager(QWidget *parent)
+    : QObject(parent), mSelectionModel(0),
+      mParentWidget(parent), mImportProgressDialog(0)
 {
-    mImportMapper = new QSignalMapper( this );
-    mExportMapper = new QSignalMapper( this );
+    mImportMapper = new QSignalMapper(this);
+    mExportMapper = new QSignalMapper(this);
 
-    connect( mImportMapper, SIGNAL(mapped(QString)),
-             this, SLOT(slotImport(QString)) );
-    connect( mExportMapper, SIGNAL(mapped(QString)),
-             this, SLOT(slotExport(QString)) );
+    connect(mImportMapper, SIGNAL(mapped(QString)),
+            this, SLOT(slotImport(QString)));
+    connect(mExportMapper, SIGNAL(mapped(QString)),
+            this, SLOT(slotExport(QString)));
 }
 
 XXPortManager::~XXPortManager()
 {
 }
 
-void XXPortManager::addImportAction( QAction *action, const QString &identifier )
+void XXPortManager::addImportAction(QAction *action, const QString &identifier)
 {
-    mImportMapper->setMapping( action, identifier );
-    connect( action, SIGNAL(triggered(bool)), mImportMapper, SLOT(map()) );
+    mImportMapper->setMapping(action, identifier);
+    connect(action, SIGNAL(triggered(bool)), mImportMapper, SLOT(map()));
 }
 
-void XXPortManager::addExportAction( QAction *action, const QString &identifier )
+void XXPortManager::addExportAction(QAction *action, const QString &identifier)
 {
-    mExportMapper->setMapping( action, identifier );
-    connect( action, SIGNAL(triggered(bool)), mExportMapper, SLOT(map()) );
+    mExportMapper->setMapping(action, identifier);
+    connect(action, SIGNAL(triggered(bool)), mExportMapper, SLOT(map()));
 }
 
-void XXPortManager::setSelectionModel( QItemSelectionModel *selectionModel )
+void XXPortManager::setSelectionModel(QItemSelectionModel *selectionModel)
 {
     mSelectionModel = selectionModel;
 }
 
-void XXPortManager::setDefaultAddressBook( const Akonadi::Collection &addressBook )
+void XXPortManager::setDefaultAddressBook(const Akonadi::Collection &addressBook)
 {
     mDefaultAddressBook = addressBook;
 }
 
-void XXPortManager::importFile( const QUrl &url)
+void XXPortManager::importFile(const QUrl &url)
 {
     QString identifier;
     if (url.path().endsWith(QLatin1String("vcf"))) {
@@ -86,10 +86,11 @@ void XXPortManager::importFile( const QUrl &url)
     } else if (url.path().endsWith(QLatin1String("gmx"))) {
         identifier = QLatin1String("gmx");
     }
-    if (identifier.isEmpty())
+    if (identifier.isEmpty()) {
         return;
-    XXPort *xxport = mFactory.createXXPort( identifier, mParentWidget );
-    if( !xxport ) {
+    }
+    XXPort *xxport = mFactory.createXXPort(identifier, mParentWidget);
+    if (!xxport) {
         return;
     }
     xxport->setOption(QLatin1String("importUrl"), url.path());
@@ -99,10 +100,10 @@ void XXPortManager::importFile( const QUrl &url)
     import(contacts);
 }
 
-void XXPortManager::slotImport( const QString &identifier )
+void XXPortManager::slotImport(const QString &identifier)
 {
-    const XXPort *xxport = mFactory.createXXPort( identifier, mParentWidget );
-    if( !xxport ) {
+    const XXPort *xxport = mFactory.createXXPort(identifier, mParentWidget);
+    if (!xxport) {
         return;
     }
 
@@ -114,21 +115,21 @@ void XXPortManager::slotImport( const QString &identifier )
 
 void XXPortManager::import(const KABC::Addressee::List &contacts)
 {
-    if ( contacts.isEmpty() ) { // nothing to import
+    if (contacts.isEmpty()) {   // nothing to import
         return;
     }
 
-    const QStringList mimeTypes( KABC::Addressee::mimeType() );
+    const QStringList mimeTypes(KABC::Addressee::mimeType());
 
-    QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mParentWidget );
-    dlg->setMimeTypeFilter( mimeTypes );
-    dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    dlg->setCaption( i18n( "Select Address Book" ) );
+    QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog(mParentWidget);
+    dlg->setMimeTypeFilter(mimeTypes);
+    dlg->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+    dlg->setCaption(i18n("Select Address Book"));
     dlg->setDescription(
-                i18n( "Select the address book the imported contact(s) shall be saved in:" ) );
-    dlg->setDefaultCollection( mDefaultAddressBook );
+        i18n("Select the address book the imported contact(s) shall be saved in:"));
+    dlg->setDefaultCollection(mDefaultAddressBook);
 
-    if ( !dlg->exec() || !dlg ) {
+    if (!dlg->exec() || !dlg) {
         delete dlg;
         return;
     }
@@ -136,56 +137,55 @@ void XXPortManager::import(const KABC::Addressee::List &contacts)
     const Akonadi::Collection collection = dlg->selectedCollection();
     delete dlg;
 
-    if ( !mImportProgressDialog ) {
-        mImportProgressDialog = new QProgressDialog( mParentWidget);
-        mImportProgressDialog->setWindowTitle(i18n( "Import Contacts" ) );
+    if (!mImportProgressDialog) {
+        mImportProgressDialog = new QProgressDialog(mParentWidget);
+        mImportProgressDialog->setWindowTitle(i18n("Import Contacts"));
         mImportProgressDialog->setLabelText(
-                    i18np( "Importing one contact to %2", "Importing %1 contacts to %2",
-                           contacts.count(), collection.name() ) );
+            i18np("Importing one contact to %2", "Importing %1 contacts to %2",
+                  contacts.count(), collection.name()));
         mImportProgressDialog->setCancelButton(0);
-        mImportProgressDialog->setAutoClose( true );
-        mImportProgressDialog->setRange( 1, contacts.count() );
+        mImportProgressDialog->setAutoClose(true);
+        mImportProgressDialog->setRange(1, contacts.count());
     }
 
     mImportProgressDialog->show();
 
-    for ( int i = 0; i < contacts.count(); ++i ) {
+    for (int i = 0; i < contacts.count(); ++i) {
         Akonadi::Item item;
-        item.setPayload<KABC::Addressee>( contacts.at( i ) );
-        item.setMimeType( KABC::Addressee::mimeType() );
+        item.setPayload<KABC::Addressee>(contacts.at(i));
+        item.setMimeType(KABC::Addressee::mimeType());
 
-        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
+        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, collection);
         connect(job, &Akonadi::ItemCreateJob::result, this, &XXPortManager::slotImportJobDone);
     }
 }
 
-void XXPortManager::slotImportJobDone( KJob * )
+void XXPortManager::slotImportJobDone(KJob *)
 {
-    if ( !mImportProgressDialog ) {
+    if (!mImportProgressDialog) {
         return;
     }
 
-
-    mImportProgressDialog->setValue( mImportProgressDialog->value() + 1 );
+    mImportProgressDialog->setValue(mImportProgressDialog->value() + 1);
 
     // cleanup on last step
-    if ( mImportProgressDialog->value() == mImportProgressDialog->maximum() ) {
+    if (mImportProgressDialog->value() == mImportProgressDialog->maximum()) {
         mImportProgressDialog->deleteLater();
         mImportProgressDialog = 0;
     }
 }
 
-void XXPortManager::slotExport( const QString &identifier )
+void XXPortManager::slotExport(const QString &identifier)
 {
-    if ( !mSelectionModel ) {
+    if (!mSelectionModel) {
         return;
     }
 
     QPointer<ContactSelectionDialog> dlg =
-            new ContactSelectionDialog( mSelectionModel, mParentWidget );
-    dlg->setMessageText( i18n( "Which contact do you want to export?" ) );
-    dlg->setDefaultAddressBook( mDefaultAddressBook );
-    if ( !dlg->exec() || !dlg ) {
+        new ContactSelectionDialog(mSelectionModel, mParentWidget);
+    dlg->setMessageText(i18n("Which contact do you want to export?"));
+    dlg->setDefaultAddressBook(mDefaultAddressBook);
+    if (!dlg->exec() || !dlg) {
         delete dlg;
         return;
     }
@@ -193,17 +193,17 @@ void XXPortManager::slotExport( const QString &identifier )
     const KABC::AddresseeList contacts = dlg->selectedContacts();
     delete dlg;
 
-    if ( contacts.isEmpty() ) {
-        KMessageBox::sorry( 0, i18n( "You have not selected any contacts to export." ) );
+    if (contacts.isEmpty()) {
+        KMessageBox::sorry(0, i18n("You have not selected any contacts to export."));
         return;
     }
 
-    const XXPort *xxport = mFactory.createXXPort( identifier, mParentWidget );
-    if ( !xxport ) {
+    const XXPort *xxport = mFactory.createXXPort(identifier, mParentWidget);
+    if (!xxport) {
         return;
     }
 
-    xxport->exportContacts( contacts );
+    xxport->exportContacts(contacts);
 
     delete xxport;
 }

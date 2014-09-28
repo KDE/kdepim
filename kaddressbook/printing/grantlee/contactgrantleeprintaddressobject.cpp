@@ -30,7 +30,7 @@ ContactGrantleePrintAddressObject::~ContactGrantleePrintAddressObject()
 
 QString ContactGrantleePrintAddressObject::type() const
 {
-    return KABC::Address::typeLabel( mAddress.type() );
+    return KABC::Address::typeLabel(mAddress.type());
 }
 
 QString ContactGrantleePrintAddressObject::street() const

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SEARCHPOTENTIALDUPLICATECONTACTJOB_H
 #define SEARCHPOTENTIALDUPLICATECONTACTJOB_H
 
@@ -24,7 +23,8 @@
 
 #include "kaddressbook_export.h"
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class KADDRESSBOOK_EXPORT SearchPotentialDuplicateContactJob : public QObject
 {
     Q_OBJECT
@@ -37,7 +37,7 @@ public:
     QList<Akonadi::Item::List> potentialDuplicateContacts() const;
 
 Q_SIGNALS:
-    void finished(const QList<Akonadi::Item::List>&);
+    void finished(const QList<Akonadi::Item::List> &);
 
 private:
     Akonadi::Item::List checkList(const Akonadi::Item::List &lstItem);

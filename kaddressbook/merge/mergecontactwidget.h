@@ -23,17 +23,19 @@
 #include "kaddressbook_export.h"
 
 class QPushButton;
-namespace Akonadi {
+namespace Akonadi
+{
 class CollectionComboBox;
 }
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class MergeContactWidgetList;
 
 class KADDRESSBOOK_EXPORT MergeContactWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent=0);
+    explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent = 0);
     ~MergeContactWidget();
 
     void clear();

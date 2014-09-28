@@ -33,9 +33,7 @@
 
 using namespace Akonadi;
 
-
-static const int FILTER_ROLE = Qt::UserRole+1;
-
+static const int FILTER_ROLE = Qt::UserRole + 1;
 
 class CategorySelectWidgetPrivate : public QObject
 {
@@ -70,7 +68,6 @@ private:
     CategorySelectWidget *q_ptr;
 };
 
-
 CategorySelectWidgetPrivate::CategorySelectWidgetPrivate(CategorySelectWidget *parent)
     : QObject(),
       tagModel(0),
@@ -80,7 +77,6 @@ CategorySelectWidgetPrivate::CategorySelectWidgetPrivate(CategorySelectWidget *p
       q_ptr(parent)
 {
 }
-
 
 void CategorySelectWidgetPrivate::init()
 {
@@ -141,26 +137,23 @@ void CategorySelectWidgetPrivate::init()
     rowOffset = itemModel()->rowCount();
 }
 
-
 QStandardItemModel *CategorySelectWidgetPrivate::itemModel() const
 {
     QStandardItemModel *m = qobject_cast<QStandardItemModel *>(checkCombo->model());
-    Q_ASSERT(m!=NULL);
+    Q_ASSERT(m != NULL);
     return m;
 }
 
-
 void CategorySelectWidgetPrivate::slotTagsRemoved(const QModelIndex &parent, int start, int end)
 {
-    itemModel()->removeRows(start+rowOffset, end+rowOffset, parent);
+    itemModel()->removeRows(start + rowOffset, end + rowOffset, parent);
 }
-
 
 void CategorySelectWidgetPrivate::slotTagsChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
-    for (int row = topLeft.row(); row<=bottomRight.row(); ++row) {
-        QStandardItem *it = itemModel()->item(row+rowOffset);
-        Q_ASSERT(it!=NULL);
+    for (int row = topLeft.row(); row <= bottomRight.row(); ++row) {
+        QStandardItem *it = itemModel()->item(row + rowOffset);
+        Q_ASSERT(it != NULL);
 
         QModelIndex idx = tagModel->index(row, 0);
         it->setText(tagModel->data(idx, TagModel::NameRole).toString());
@@ -169,16 +162,15 @@ void CategorySelectWidgetPrivate::slotTagsChanged(const QModelIndex &topLeft, co
     }
 }
 
-
 void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, int start, int end)
 {
-    for (int row = start; row<=end; ++row) {
+    for (int row = start; row <= end; ++row) {
         QModelIndex idx = tagModel->index(row, 0, parent);
 #if 0
         qDebug() << "idx" << idx << "=" << tagModel->data(idx, Qt::DisplayRole).toString()
-            << "name" << tagModel->data(idx, TagModel::NameRole).toString()
-            << "tag" << tagModel->data(idx, TagModel::TagRole)
-            << "id" << tagModel->data(idx, TagModel::IdRole).toInt();
+                 << "name" << tagModel->data(idx, TagModel::NameRole).toString()
+                 << "tag" << tagModel->data(idx, TagModel::TagRole)
+                 << "id" << tagModel->data(idx, TagModel::IdRole).toInt();
 #endif
         QStandardItem *it = new QStandardItem(tagModel->data(idx, TagModel::NameRole).toString());
         it->setIcon(tagModel->data(idx, Qt::DecorationRole).value<QIcon>());
@@ -190,61 +182,56 @@ void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, in
         // tags, as is required in Akonadi::TagModel.
         //
         // FIXME: not tested (no way to create hierarchial tags at present)
-        if (parent!=QModelIndex()) {
+        if (parent != QModelIndex()) {
             const Tag::Id parentId = tagModel->data(idx, TagModel::IdRole).value<Tag::Id>();
             QModelIndexList matchList = itemModel()->match(itemModel()->index(0, 0), FILTER_ROLE,
-                                                           parentId, 1,
-                                                           Qt::MatchExactly|Qt::MatchRecursive);
-            if (matchList.count()==1) {			// found the parent tag
+                                        parentId, 1,
+                                        Qt::MatchExactly | Qt::MatchRecursive);
+            if (matchList.count() == 1) {       // found the parent tag
                 QModelIndex parentIndex = matchList.first();
                 itemModel()->itemFromIndex(parentIndex)->appendRow(it);
             } else {
                 qWarning() << "Cannot find parent with ID" << parentId;
-                itemModel()->insertRow(row+rowOffset, it);
+                itemModel()->insertRow(row + rowOffset, it);
             }
         } else {
-            itemModel()->insertRow(row+rowOffset, it);
+            itemModel()->insertRow(row + rowOffset, it);
         }
     }
 }
 
-
 void CategorySelectWidgetPrivate::selectAll(Qt::CheckState state) const
 {
-    for (int row = 0; row<itemModel()->rowCount(); ++row) {
+    for (int row = 0; row < itemModel()->rowCount(); ++row) {
         QStandardItem *it = itemModel()->item(row);
         it->setCheckState(state);
     }
 }
-
 
 void CategorySelectWidgetPrivate::slotSelectAll()
 {
     selectAll(Qt::Checked);
 }
 
-
 void CategorySelectWidgetPrivate::slotSelectNone()
 {
     selectAll(Qt::Unchecked);
 }
-
 
 void CategorySelectWidgetPrivate::slotCheckedItemsChanged()
 {
     updateTimer->start();
 }
 
-
 void CategorySelectWidgetPrivate::slotCheckedItemsTimer()
 {
     Q_Q(CategorySelectWidget);
 
     bool allOn = true;
-    for (int row = 0; row<itemModel()->rowCount(); ++row) {
+    for (int row = 0; row < itemModel()->rowCount(); ++row) {
         const QStandardItem *it = itemModel()->item(row);
         Qt::CheckState rowState = static_cast<Qt::CheckState>(it->data(Qt::CheckStateRole).toInt());
-        if (rowState!=Qt::Checked) {
+        if (rowState != Qt::Checked) {
             allOn = false;
             break;
         }
@@ -268,17 +255,18 @@ void CategorySelectWidgetPrivate::slotCheckedItemsTimer()
     emit q->filterChanged(filterTags());
 }
 
-
 QList<Akonadi::Tag::Id> CategorySelectWidgetPrivate::filterTags() const
 {
     QList<Tag::Id> filter;
     bool allOn = true;
-    for (int row = 0; row<itemModel()->rowCount(); ++row) {
+    for (int row = 0; row < itemModel()->rowCount(); ++row) {
         const QStandardItem *it = itemModel()->item(row);
-        Q_ASSERT(it!=NULL);
-        if (it->checkState()==Qt::Checked) {
+        Q_ASSERT(it != NULL);
+        if (it->checkState() == Qt::Checked) {
             Tag::Id id = it->data(FILTER_ROLE).toInt();
-            if (id!=0) filter.append(id);
+            if (id != 0) {
+                filter.append(id);
+            }
         } else {
             allOn = false;
         }
@@ -293,7 +281,6 @@ QList<Akonadi::Tag::Id> CategorySelectWidgetPrivate::filterTags() const
     return filter;
 }
 
-
 CategorySelectWidget::CategorySelectWidget(QWidget *parent)
     : QWidget(parent),
       d_ptr(new CategorySelectWidgetPrivate(this))
@@ -302,18 +289,15 @@ CategorySelectWidget::CategorySelectWidget(QWidget *parent)
     d->init();
 }
 
-
 CategorySelectWidget::~CategorySelectWidget()
 {
     delete d_ptr;
 }
-
 
 QList<Akonadi::Tag::Id> CategorySelectWidget::filterTags() const
 {
     Q_D(const CategorySelectWidget);
     return d->filterTags();
 }
-
 
 #include "categoryselectwidget.moc"

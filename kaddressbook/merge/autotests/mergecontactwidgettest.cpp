@@ -29,10 +29,10 @@
 #include <QSignalSpy>
 using namespace KABMergeContacts;
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 extern KADDRESSBOOK_EXPORT QAbstractItemModel *_k_mergeStubModel;
 }
-
 
 MergeContactWidgetTest::MergeContactWidgetTest()
 {
@@ -61,7 +61,7 @@ MergeContactWidgetTest::MergeContactWidgetTest()
 Akonadi::Item::List MergeContactWidgetTest::createItems()
 {
     Akonadi::Item::List lst;
-    for (int i=0; i <10; ++i) {
+    for (int i = 0; i < 10; ++i) {
         Akonadi::Item item(i);
         KABC::Addressee address;
         item.setPayload(address);
@@ -160,5 +160,4 @@ void MergeContactWidgetTest::shouldEmitSignalsWhenSelectContact()
     QCOMPARE(spy.count(), 2);
 }
 
-
-QTEST_MAIN(MergeContactWidgetTest  )
+QTEST_MAIN(MergeContactWidgetTest)

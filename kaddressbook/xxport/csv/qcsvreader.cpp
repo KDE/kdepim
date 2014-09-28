@@ -32,18 +32,18 @@ QCsvBuilderInterface::~QCsvBuilderInterface()
 class QCsvReader::Private
 {
 public:
-    Private( QCsvBuilderInterface *builder )
-        : mBuilder( builder ), mNotTerminated( true )
+    Private(QCsvBuilderInterface *builder)
+        : mBuilder(builder), mNotTerminated(true)
     {
-        mTextQuote = QLatin1Char( '"' );
-        mDelimiter = QLatin1Char( ' ' );
+        mTextQuote = QLatin1Char('"');
+        mDelimiter = QLatin1Char(' ');
         mStartRow = 0;
         mCodec = QTextCodec::codecForLocale();
     }
 
-    void emitBeginLine( uint row );
-    void emitEndLine( uint row );
-    void emitField( const QString &data, int row, int column );
+    void emitBeginLine(uint row);
+    void emitEndLine(uint row);
+    void emitField(const QString &data, int row, int column);
 
     QCsvBuilderInterface *mBuilder;
     QTextCodec *mCodec;
@@ -54,31 +54,31 @@ public:
     bool mNotTerminated;
 };
 
-void QCsvReader::Private::emitBeginLine( uint row )
+void QCsvReader::Private::emitBeginLine(uint row)
 {
-    if ( ( row - mStartRow ) > 0 ) {
+    if ((row - mStartRow) > 0) {
         mBuilder->beginLine();
     }
 }
 
-void QCsvReader::Private::emitEndLine( uint row )
+void QCsvReader::Private::emitEndLine(uint row)
 {
-    if ( ( row - mStartRow ) > 0 ) {
+    if ((row - mStartRow) > 0) {
         mBuilder->endLine();
     }
 }
 
-void QCsvReader::Private::emitField( const QString &data, int row, int column )
+void QCsvReader::Private::emitField(const QString &data, int row, int column)
 {
-    if ( ( row - mStartRow ) > 0 ) {
-        mBuilder->field( data, row - mStartRow - 1, column - 1 );
+    if ((row - mStartRow) > 0) {
+        mBuilder->field(data, row - mStartRow - 1, column - 1);
     }
 }
 
-QCsvReader::QCsvReader( QCsvBuilderInterface *builder )
-    : d( new Private( builder ) )
+QCsvReader::QCsvReader(QCsvBuilderInterface *builder)
+    : d(new Private(builder))
 {
-    Q_ASSERT( builder );
+    Q_ASSERT(builder);
 }
 
 QCsvReader::~QCsvReader()
@@ -86,7 +86,7 @@ QCsvReader::~QCsvReader()
     delete d;
 }
 
-bool QCsvReader::read( QIODevice *device )
+bool QCsvReader::read(QIODevice *device)
 {
     enum State {
         StartLine,
@@ -106,157 +106,157 @@ bool QCsvReader::read( QIODevice *device )
 
     d->mBuilder->begin();
 
-    if ( !device->isOpen() ) {
-        d->emitBeginLine( row );
-        d->mBuilder->error( i18n("Device is not open") );
-        d->emitEndLine( row );
+    if (!device->isOpen()) {
+        d->emitBeginLine(row);
+        d->mBuilder->error(i18n("Device is not open"));
+        d->emitEndLine(row);
         d->mBuilder->end();
         return false;
     }
 
-    QTextStream inputStream( device );
-    inputStream.setCodec( d->mCodec );
+    QTextStream inputStream(device);
+    inputStream.setCodec(d->mCodec);
 
     /**
-   * We use the following state machine to parse CSV:
-   *
-   * digraph {
-   *   StartLine -> StartLine [label="\\r\\n"]
-   *   StartLine -> QuotedField [label="Quote"]
-   *   StartLine -> EmptyField [label="Delimiter"]
-   *   StartLine -> NormalField [label="Other Char"]
-   *
-   *   QuotedField -> QuotedField [label="\\r\\n"]
-   *   QuotedField -> QuotedFieldEnd [label="Quote"]
-   *   QuotedField -> QuotedField [label="Delimiter"]
-   *   QuotedField -> QuotedField [label="Other Char"]
-   *
-   *   QuotedFieldEnd -> StartLine [label="\\r\\n"]
-   *   QuotedFieldEnd -> QuotedField [label="Quote"]
-   *   QuotedFieldEnd -> EmptyField [label="Delimiter"]
-   *   QuotedFieldEnd -> EmptyField [label="Other Char"]
-   *
-   *   EmptyField -> StartLine [label="\\r\\n"]
-   *   EmptyField -> QuotedField [label="Quote"]
-   *   EmptyField -> EmptyField [label="Delimiter"]
-   *   EmptyField -> NormalField [label="Other Char"]
-   *
-   *   NormalField -> StartLine [label="\\r\\n"]
-   *   NormalField -> NormalField [label="Quote"]
-   *   NormalField -> EmptyField [label="Delimiter"]
-   *   NormalField -> NormalField [label="Other Char"]
-   * }
-   */
+    * We use the following state machine to parse CSV:
+    *
+    * digraph {
+    *   StartLine -> StartLine [label="\\r\\n"]
+    *   StartLine -> QuotedField [label="Quote"]
+    *   StartLine -> EmptyField [label="Delimiter"]
+    *   StartLine -> NormalField [label="Other Char"]
+    *
+    *   QuotedField -> QuotedField [label="\\r\\n"]
+    *   QuotedField -> QuotedFieldEnd [label="Quote"]
+    *   QuotedField -> QuotedField [label="Delimiter"]
+    *   QuotedField -> QuotedField [label="Other Char"]
+    *
+    *   QuotedFieldEnd -> StartLine [label="\\r\\n"]
+    *   QuotedFieldEnd -> QuotedField [label="Quote"]
+    *   QuotedFieldEnd -> EmptyField [label="Delimiter"]
+    *   QuotedFieldEnd -> EmptyField [label="Other Char"]
+    *
+    *   EmptyField -> StartLine [label="\\r\\n"]
+    *   EmptyField -> QuotedField [label="Quote"]
+    *   EmptyField -> EmptyField [label="Delimiter"]
+    *   EmptyField -> NormalField [label="Other Char"]
+    *
+    *   NormalField -> StartLine [label="\\r\\n"]
+    *   NormalField -> NormalField [label="Quote"]
+    *   NormalField -> EmptyField [label="Delimiter"]
+    *   NormalField -> NormalField [label="Other Char"]
+    * }
+    */
 
-    while ( !inputStream.atEnd() && d->mNotTerminated ) {
+    while (!inputStream.atEnd() && d->mNotTerminated) {
         inputStream >> input;
 
-        switch ( currentState ) {
+        switch (currentState) {
         case StartLine:
-            if ( input == QLatin1Char( '\r' ) || input == QLatin1Char( '\n' ) ) {
+            if (input == QLatin1Char('\r') || input == QLatin1Char('\n')) {
                 currentState = StartLine;
-            } else if ( input == d->mTextQuote ) {
-                d->emitBeginLine( row );
+            } else if (input == d->mTextQuote) {
+                d->emitBeginLine(row);
                 currentState = QuotedField;
-            } else if ( input == d->mDelimiter ) {
-                d->emitBeginLine( row );
-                d->emitField( field, row, column );
+            } else if (input == d->mDelimiter) {
+                d->emitBeginLine(row);
+                d->emitField(field, row, column);
                 column++;
                 currentState = EmptyField;
             } else {
-                d->emitBeginLine( row );
-                field.append( input );
+                d->emitBeginLine(row);
+                field.append(input);
                 currentState = NormalField;
             }
             break;
         case QuotedField:
-            if ( input == QLatin1Char( '\r' ) || input == QLatin1Char( '\n' ) ) {
-                field.append( input );
+            if (input == QLatin1Char('\r') || input == QLatin1Char('\n')) {
+                field.append(input);
                 currentState = QuotedField;
-            } else if ( input == d->mTextQuote ) {
+            } else if (input == d->mTextQuote) {
                 currentState = QuotedFieldEnd;
-            } else if ( input == d->mDelimiter ) {
-                field.append( input );
+            } else if (input == d->mDelimiter) {
+                field.append(input);
                 currentState = QuotedField;
             } else {
-                field.append( input );
+                field.append(input);
                 currentState = QuotedField;
             }
             break;
         case QuotedFieldEnd:
-            if ( input == QLatin1Char( '\r' ) || input == QLatin1Char( '\n' ) ) {
-                d->emitField( field, row, column );
+            if (input == QLatin1Char('\r') || input == QLatin1Char('\n')) {
+                d->emitField(field, row, column);
                 field.clear();
-                d->emitEndLine( row );
+                d->emitEndLine(row);
                 column = 1;
                 row++;
                 currentState = StartLine;
-            } else if ( input == d->mTextQuote ) {
-                field.append( input );
+            } else if (input == d->mTextQuote) {
+                field.append(input);
                 currentState = QuotedField;
-            } else if ( input == d->mDelimiter ) {
-                d->emitField( field, row, column );
+            } else if (input == d->mDelimiter) {
+                d->emitField(field, row, column);
                 field.clear();
                 column++;
                 currentState = EmptyField;
             } else {
-                d->emitField( field, row, column );
+                d->emitField(field, row, column);
                 field.clear();
                 column++;
-                field.append( input );
+                field.append(input);
                 currentState = EmptyField;
             }
             break;
         case NormalField:
-            if ( input == QLatin1Char( '\r' ) || input == QLatin1Char( '\n' ) ) {
-                d->emitField( field, row, column );
+            if (input == QLatin1Char('\r') || input == QLatin1Char('\n')) {
+                d->emitField(field, row, column);
                 field.clear();
-                d->emitEndLine( row );
+                d->emitEndLine(row);
                 row++;
                 column = 1;
                 currentState = StartLine;
-            } else if ( input == d->mTextQuote ) {
-                field.append( input );
+            } else if (input == d->mTextQuote) {
+                field.append(input);
                 currentState = NormalField;
-            } else if ( input == d->mDelimiter ) {
-                d->emitField( field, row, column );
+            } else if (input == d->mDelimiter) {
+                d->emitField(field, row, column);
                 field.clear();
                 column++;
                 currentState = EmptyField;
             } else {
-                field.append( input );
+                field.append(input);
                 currentState = NormalField;
             }
             break;
         case EmptyField:
-            if ( input == QLatin1Char( '\r' ) || input == QLatin1Char( '\n' ) ) {
-                d->emitField( QString(), row, column );
+            if (input == QLatin1Char('\r') || input == QLatin1Char('\n')) {
+                d->emitField(QString(), row, column);
                 field.clear();
-                d->emitEndLine( row );
+                d->emitEndLine(row);
                 column = 1;
                 row++;
                 currentState = StartLine;
-            } else if ( input == d->mTextQuote ) {
+            } else if (input == d->mTextQuote) {
                 currentState = QuotedField;
-            } else if ( input == d->mDelimiter ) {
-                d->emitField( QString(), row, column );
+            } else if (input == d->mDelimiter) {
+                d->emitField(QString(), row, column);
                 column++;
                 currentState = EmptyField;
             } else {
-                field.append( input );
+                field.append(input);
                 currentState = NormalField;
             }
             break;
         }
     }
 
-    if ( currentState != StartLine ) {
-        if ( field.length() > 0 ) {
-            d->emitField( field, row, column );
+    if (currentState != StartLine) {
+        if (field.length() > 0) {
+            d->emitField(field, row, column);
             ++row;
             field.clear();
         }
-        d->emitEndLine( row );
+        d->emitEndLine(row);
     }
 
     d->mBuilder->end();
@@ -264,7 +264,7 @@ bool QCsvReader::read( QIODevice *device )
     return true;
 }
 
-void QCsvReader::setTextQuote( const QChar &textQuote )
+void QCsvReader::setTextQuote(const QChar &textQuote)
 {
     d->mTextQuote = textQuote;
 }
@@ -274,7 +274,7 @@ QChar QCsvReader::textQuote() const
     return d->mTextQuote;
 }
 
-void QCsvReader::setDelimiter( const QChar &delimiter )
+void QCsvReader::setDelimiter(const QChar &delimiter)
 {
     d->mDelimiter = delimiter;
 }
@@ -284,7 +284,7 @@ QChar QCsvReader::delimiter() const
     return d->mDelimiter;
 }
 
-void QCsvReader::setStartRow( uint startRow )
+void QCsvReader::setStartRow(uint startRow)
 {
     d->mStartRow = startRow;
 }
@@ -294,7 +294,7 @@ uint QCsvReader::startRow() const
     return d->mStartRow;
 }
 
-void QCsvReader::setTextCodec( QTextCodec *textCodec )
+void QCsvReader::setTextCodec(QTextCodec *textCodec)
 {
     d->mCodec = textCodec;
 }
@@ -334,7 +334,7 @@ void QCsvStandardBuilder::Private::init()
 }
 
 QCsvStandardBuilder::QCsvStandardBuilder()
-    : d( new Private )
+    : d(new Private)
 {
 }
 
@@ -358,9 +358,9 @@ uint QCsvStandardBuilder::columnCount() const
     return d->mColumnCount;
 }
 
-QString QCsvStandardBuilder::data( uint row, uint column ) const
+QString QCsvStandardBuilder::data(uint row, uint column) const
 {
-    if ( row > d->mRowCount || column > d->mColumnCount || column >= (uint)d->mRows[ row ].count() ) {
+    if (row > d->mRowCount || column > d->mColumnCount || column >= (uint)d->mRows[ row ].count()) {
         return QString();
     }
 
@@ -374,22 +374,22 @@ void QCsvStandardBuilder::begin()
 
 void QCsvStandardBuilder::beginLine()
 {
-    d->mRows.append( QStringList() );
+    d->mRows.append(QStringList());
     d->mRowCount++;
 }
 
-void QCsvStandardBuilder::field( const QString &data, uint row, uint column )
+void QCsvStandardBuilder::field(const QString &data, uint row, uint column)
 {
     const uint size = d->mRows[ row ].size();
-    if ( column >= size ) {
-        for ( uint i = column; i < size + 1; ++i ) {
-            d->mRows[ row ].append( QString() );
+    if (column >= size) {
+        for (uint i = column; i < size + 1; ++i) {
+            d->mRows[ row ].append(QString());
         }
     }
 
     d->mRows[ row ][ column ] = data;
 
-    d->mColumnCount = qMax( d->mColumnCount, column + 1 );
+    d->mColumnCount = qMax(d->mColumnCount, column + 1);
 }
 
 void QCsvStandardBuilder::endLine()
@@ -400,7 +400,7 @@ void QCsvStandardBuilder::end()
 {
 }
 
-void QCsvStandardBuilder::error( const QString &errorMsg )
+void QCsvStandardBuilder::error(const QString &errorMsg)
 {
     d->mLastErrorString = errorMsg;
 }

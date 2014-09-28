@@ -154,11 +154,11 @@ void FollowUpReminderInfo::setFollowUpReminderDate(const QDateTime &followUpRemi
 bool FollowUpReminderInfo::operator==(const FollowUpReminderInfo &other) const
 {
     return mOriginalMessageItemId == other.originalMessageItemId()
-            && mMessageId == other.messageId()
-            && mTo == other.to()
-            && mFollowUpReminderDate == other.followUpReminderDate()
-            && mSubject == other.subject()
-            && mAnswerWasReceived == other.answerWasReceived()
-            && mAnswerMessageItemId == other.answerMessageItemId();
+           && mMessageId == other.messageId()
+           && mTo == other.to()
+           && mFollowUpReminderDate == other.followUpReminderDate()
+           && mSubject == other.subject()
+           && mAnswerWasReceived == other.answerWasReceived()
+           && mAnswerMessageItemId == other.answerMessageItemId();
 }
 

@@ -19,7 +19,8 @@
 #define CONTACTGRANTLEEPRINTPHONEOBJECT_H
 #include <QObject>
 #include <KABC/PhoneNumber>
-namespace KABPrinting {
+namespace KABPrinting
+{
 class ContactGrantleePrintPhoneObject : public QObject
 {
     Q_OBJECT
@@ -27,7 +28,7 @@ class ContactGrantleePrintPhoneObject : public QObject
     Q_PROPERTY(QString number READ number)
 
 public:
-    explicit ContactGrantleePrintPhoneObject(const KABC::PhoneNumber &phone, QObject *parent=0);
+    explicit ContactGrantleePrintPhoneObject(const KABC::PhoneNumber &phone, QObject *parent = 0);
     ~ContactGrantleePrintPhoneObject();
 
     QString type() const;

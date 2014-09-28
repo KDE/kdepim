@@ -18,7 +18,6 @@
 
 #include "kaddressbookgrantlee/widget/grantleecontactviewer.h"
 
-
 #include <AkonadiCore/Item>
 
 #include <QHBoxLayout>
@@ -48,7 +47,6 @@ MergeContactInfoWidget::MergeContactInfoWidget(QWidget *parent)
     setLayout(lay);
     mStackWidget->setCurrentWidget(mNoContactSelected);
 }
-
 
 MergeContactInfoWidget::~MergeContactInfoWidget()
 {

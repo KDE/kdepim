@@ -30,7 +30,6 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-
 #include <QLabel>
 #include <QSplitter>
 #include <QPointer>
@@ -43,7 +42,7 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
     : QDialog(parent),
       mContactWidget(0)
 {
-    setWindowTitle( i18n( "Select Contacts to merge" ) );
+    setWindowTitle(i18n("Select Contacts to merge"));
     mButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -55,7 +54,7 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
         mainLayout->addWidget(new QLabel(i18n("You must select at least two elements.")));
     } else {
         if (!MergeContactUtil::hasSameNames(lst)) {
-           mainLayout->addWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
+            mainLayout->addWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
         } else {
             QSplitter *mainWidget = new QSplitter;
             mainWidget->setChildrenCollapsible(false);
@@ -108,17 +107,17 @@ void MergeContactsDialog::slotMergeContactFinished(const Akonadi::Item &item)
 
 void MergeContactsDialog::readConfig()
 {
-    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactsDialog" );
-    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup grp(KSharedConfig::openConfig(), "MergeContactsDialog");
+    const QSize size = grp.readEntry("Size", QSize(300, 200));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void MergeContactsDialog::writeConfig()
 {
-    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactsDialog");
-    grp.writeEntry( "Size", size() );
+    KConfigGroup grp(KSharedConfig::openConfig(), "MergeContactsDialog");
+    grp.writeEntry("Size", size());
     grp.sync();
 }
 

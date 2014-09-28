@@ -20,7 +20,6 @@
 #include "mergecontactshowresulttabwidget.h"
 #include <qtest.h>
 
-
 using namespace KABMergeContacts;
 
 MergeContactSelectInformationDialogTest::MergeContactSelectInformationDialogTest()
@@ -39,4 +38,4 @@ void MergeContactSelectInformationDialogTest::shouldHaveDefaultValueOnCreation()
 
 }
 
-QTEST_MAIN(MergeContactSelectInformationDialogTest )
+QTEST_MAIN(MergeContactSelectInformationDialogTest)

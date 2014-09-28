@@ -47,7 +47,7 @@ public:
      *
      * @param parent The widget that is used as parent for dialogs.
      */
-    explicit XXPortManager( QWidget *parent = 0 );
+    explicit XXPortManager(QWidget *parent = 0);
 
     /**
      * Destroys the xxport manager.
@@ -60,7 +60,7 @@ public:
      * @param action The action object.
      * @param identifier The identifier that will be passed to the xxport module.
      */
-    void addImportAction( QAction *action, const QString &identifier );
+    void addImportAction(QAction *action, const QString &identifier);
 
     /**
      * Adds a new action to export contacts.
@@ -68,30 +68,29 @@ public:
      * @param action The action object.
      * @param identifier The identifier that will be passed to the xxport module.
      */
-    void addExportAction( QAction *action, const QString &identifier );
+    void addExportAction(QAction *action, const QString &identifier);
 
     /**
      * Sets the @p model that contains the current selection.
      *
      * @note This model is used by the ContactSelectionDialog.
      */
-    void setSelectionModel( QItemSelectionModel *model );
+    void setSelectionModel(QItemSelectionModel *model);
 
-    void importFile( const QUrl &url);
-
+    void importFile(const QUrl &url);
 
 public Q_SLOTS:
     /**
      * Sets the @p addressBook that shall be preselected in the
      * ContactSelectionDialog.
      */
-    void setDefaultAddressBook( const Akonadi::Collection &addressBook );
+    void setDefaultAddressBook(const Akonadi::Collection &addressBook);
 
 private Q_SLOTS:
-    void slotImport( const QString & );
-    void slotExport( const QString & );
+    void slotImport(const QString &);
+    void slotExport(const QString &);
 
-    void slotImportJobDone( KJob * );
+    void slotImportJobDone(KJob *);
 
 private:
     void import(const KABC::Addressee::List &contacts);

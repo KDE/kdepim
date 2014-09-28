@@ -39,216 +39,216 @@
 #include <QDialogButtonBox>
 
 typedef struct {
-  QString displayName;
-  QString fileName;
-  bool isDeletable;
+    QString displayName;
+    QString fileName;
+    bool isDeletable;
 } TemplateInfo;
 
 class TemplatesModel : public QAbstractTableModel
 {
-  public:
-    TemplatesModel( QObject *parent = 0 )
-      : QAbstractTableModel( parent )
+public:
+    TemplatesModel(QObject *parent = 0)
+        : QAbstractTableModel(parent)
     {
-      update();
+        update();
     }
 
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const
     {
-      if ( !parent.isValid() ) {
-        return mTemplates.count();
-      } else {
-        return 0;
-      }
-    }
-
-    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const
-    {
-      if ( !parent.isValid() ) {
-        return 2;
-      } else {
-        return 0;
-      }
-    }
-
-    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const
-    {
-      if ( !index.isValid() || index.row() >= mTemplates.count() || index.column() >= 2 ) {
-        return QVariant();
-      }
-
-      if ( role == Qt::DisplayRole ) {
-        if ( index.column() == 0 ) {
-          return mTemplates[ index.row() ].displayName;
+        if (!parent.isValid()) {
+            return mTemplates.count();
         } else {
-          return mTemplates[ index.row() ].fileName;
+            return 0;
         }
-      }
-
-      if ( role == Qt::UserRole ) {
-        return mTemplates[ index.row() ].isDeletable;
-      }
-
-      return QVariant();
     }
 
-    virtual bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() )
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
     {
-      if ( parent.isValid() || row < 0 || row >= mTemplates.count() ) {
-        return false;
-      }
-
-      beginRemoveRows( parent, row, row + count - 1 );
-      for ( int i = 0; i < count; ++i ) {
-        if ( !QFile::remove( mTemplates[ row ].fileName ) ) {
-          return false;
+        if (!parent.isValid()) {
+            return 2;
+        } else {
+            return 0;
         }
-        mTemplates.removeAt( row );
-      }
+    }
 
-      endRemoveRows();
-      return true;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
+    {
+        if (!index.isValid() || index.row() >= mTemplates.count() || index.column() >= 2) {
+            return QVariant();
+        }
+
+        if (role == Qt::DisplayRole) {
+            if (index.column() == 0) {
+                return mTemplates[ index.row() ].displayName;
+            } else {
+                return mTemplates[ index.row() ].fileName;
+            }
+        }
+
+        if (role == Qt::UserRole) {
+            return mTemplates[ index.row() ].isDeletable;
+        }
+
+        return QVariant();
+    }
+
+    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex())
+    {
+        if (parent.isValid() || row < 0 || row >= mTemplates.count()) {
+            return false;
+        }
+
+        beginRemoveRows(parent, row, row + count - 1);
+        for (int i = 0; i < count; ++i) {
+            if (!QFile::remove(mTemplates[ row ].fileName)) {
+                return false;
+            }
+            mTemplates.removeAt(row);
+        }
+
+        endRemoveRows();
+        return true;
     }
 
     void update()
     {
-      beginResetModel();
-      mTemplates.clear();
-      const QStringList files =
-        KGlobal::dirs()->findAllResources( "data", QLatin1String("kaddressbook/csv-templates/*.desktop"),
-                                           KStandardDirs::Recursive | KStandardDirs::NoDuplicates );
-      for ( int i = 0; i < files.count(); ++i ) {
-        KConfig config( files.at( i ), KConfig::SimpleConfig );
+        beginResetModel();
+        mTemplates.clear();
+        const QStringList files =
+            KGlobal::dirs()->findAllResources("data", QLatin1String("kaddressbook/csv-templates/*.desktop"),
+                                              KStandardDirs::Recursive | KStandardDirs::NoDuplicates);
+        for (int i = 0; i < files.count(); ++i) {
+            KConfig config(files.at(i), KConfig::SimpleConfig);
 
-        if ( !config.hasGroup( "csv column map" ) ) {
-          continue;
+            if (!config.hasGroup("csv column map")) {
+                continue;
+            }
+
+            KConfigGroup group(&config, "Misc");
+            TemplateInfo info;
+            info.displayName = group.readEntry("Name");
+            info.fileName = files.at(i);
+
+            const QFileInfo fileInfo(info.fileName);
+            info.isDeletable = QFileInfo(fileInfo.absolutePath()).isWritable();
+
+            mTemplates.append(info);
         }
-
-        KConfigGroup group( &config, "Misc" );
-        TemplateInfo info;
-        info.displayName = group.readEntry( "Name" );
-        info.fileName = files.at( i );
-
-        const QFileInfo fileInfo( info.fileName );
-        info.isDeletable = QFileInfo( fileInfo.absolutePath() ).isWritable();
-
-        mTemplates.append( info );
-      }
-      endResetModel();
+        endResetModel();
     }
 
     bool templatesAvailable() const
     {
-      return !mTemplates.isEmpty();
+        return !mTemplates.isEmpty();
     }
 
-  private:
+private:
     QList<TemplateInfo> mTemplates;
 };
 
 class TemplateSelectionDelegate : public QStyledItemDelegate
 {
-  public:
-    explicit TemplateSelectionDelegate( QObject *parent = 0 )
-      : QStyledItemDelegate( parent ), mIcon( QLatin1String("list-remove") )
+public:
+    explicit TemplateSelectionDelegate(QObject *parent = 0)
+        : QStyledItemDelegate(parent), mIcon(QLatin1String("list-remove"))
     {
     }
 
-    void paint( QPainter *painter, const QStyleOptionViewItem &option,
-                        const QModelIndex &index ) const
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const
     {
-      QStyledItemDelegate::paint( painter, option, index );
+        QStyledItemDelegate::paint(painter, option, index);
 
-      if ( index.data( Qt::UserRole ).toBool() ) {
-        mIcon.paint( painter, option.rect, Qt::AlignRight );
-      }
-    }
-
-    QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
-    {
-      QSize hint = QStyledItemDelegate::sizeHint( option, index );
-
-      if ( index.data( Qt::UserRole ).toBool() ) {
-        hint.setWidth( hint.width() + 16 );
-      }
-
-      return hint;
-    }
-
-    bool editorEvent( QEvent *event, QAbstractItemModel *model,
-                              const QStyleOptionViewItem &option, const QModelIndex &index )
-    {
-      if ( event->type() == QEvent::MouseButtonRelease && index.data( Qt::UserRole ).toBool() ) {
-        const QMouseEvent *mouseEvent = static_cast<QMouseEvent*>( event );
-        QRect buttonRect = option.rect;
-        buttonRect.setLeft( buttonRect.right() - 16 );
-
-        if ( buttonRect.contains( mouseEvent->pos() ) ) {
-          const QString templateName = index.data( Qt::DisplayRole ).toString();
-          if ( KMessageBox::questionYesNo(
-                 0,
-                 i18nc( "@label", "Do you really want to delete template '%1'?",
-                        templateName ) ) == KMessageBox::Yes ) {
-            model->removeRows( index.row(), 1 );
-            return true;
-          }
+        if (index.data(Qt::UserRole).toBool()) {
+            mIcon.paint(painter, option.rect, Qt::AlignRight);
         }
-      }
-
-      return QStyledItemDelegate::editorEvent( event, model, option, index );
     }
 
-  private:
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+    {
+        QSize hint = QStyledItemDelegate::sizeHint(option, index);
+
+        if (index.data(Qt::UserRole).toBool()) {
+            hint.setWidth(hint.width() + 16);
+        }
+
+        return hint;
+    }
+
+    bool editorEvent(QEvent *event, QAbstractItemModel *model,
+                     const QStyleOptionViewItem &option, const QModelIndex &index)
+    {
+        if (event->type() == QEvent::MouseButtonRelease && index.data(Qt::UserRole).toBool()) {
+            const QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+            QRect buttonRect = option.rect;
+            buttonRect.setLeft(buttonRect.right() - 16);
+
+            if (buttonRect.contains(mouseEvent->pos())) {
+                const QString templateName = index.data(Qt::DisplayRole).toString();
+                if (KMessageBox::questionYesNo(
+                            0,
+                            i18nc("@label", "Do you really want to delete template '%1'?",
+                                  templateName)) == KMessageBox::Yes) {
+                    model->removeRows(index.row(), 1);
+                    return true;
+                }
+            }
+        }
+
+        return QStyledItemDelegate::editorEvent(event, model, option, index);
+    }
+
+private:
     QIcon mIcon;
 };
 
-TemplateSelectionDialog::TemplateSelectionDialog( QWidget *parent )
-  : QDialog( parent )
+TemplateSelectionDialog::TemplateSelectionDialog(QWidget *parent)
+    : QDialog(parent)
 {
-  setWindowTitle( i18nc( "@title:window", "Template Selection" ) );
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-  mOkButton->setDefault(true);
-  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &TemplateSelectionDialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateSelectionDialog::reject);
+    setWindowTitle(i18nc("@title:window", "Template Selection"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &TemplateSelectionDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateSelectionDialog::reject);
 
-  QWidget *wdg = new QWidget( this );
-  QVBoxLayout *wdgVBoxLayout = new QVBoxLayout(wdg);
-  wdgVBoxLayout->setMargin(0);
+    QWidget *wdg = new QWidget(this);
+    QVBoxLayout *wdgVBoxLayout = new QVBoxLayout(wdg);
+    wdgVBoxLayout->setMargin(0);
 
-  new QLabel( i18nc( "@info", "Please select a template, that matches the CSV file:" ), wdg );
+    new QLabel(i18nc("@info", "Please select a template, that matches the CSV file:"), wdg);
 
-  mView = new QListView( wdg );
-  wdgVBoxLayout->addWidget(mView);
+    mView = new QListView(wdg);
+    wdgVBoxLayout->addWidget(mView);
 
-  mView->setModel( new TemplatesModel( this ) );
-  mView->setItemDelegate( new TemplateSelectionDelegate( this ) );
+    mView->setModel(new TemplatesModel(this));
+    mView->setItemDelegate(new TemplateSelectionDelegate(this));
 
-  mOkButton->setEnabled( false );
-  mainLayout->addWidget(wdg);
-  mainLayout->addWidget(buttonBox);
-  connect( mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-           this, SLOT(updateButtons()) );
+    mOkButton->setEnabled(false);
+    mainLayout->addWidget(wdg);
+    mainLayout->addWidget(buttonBox);
+    connect(mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(updateButtons()));
 }
 
 bool TemplateSelectionDialog::templatesAvailable() const
 {
-  return static_cast<TemplatesModel*>( mView->model() )->templatesAvailable();
+    return static_cast<TemplatesModel *>(mView->model())->templatesAvailable();
 }
 
 QString TemplateSelectionDialog::selectedTemplate() const
 {
-  const QModelIndex rowIndex = mView->currentIndex();
-  const QModelIndex index = mView->model()->index( rowIndex.row(), 1 );
+    const QModelIndex rowIndex = mView->currentIndex();
+    const QModelIndex index = mView->model()->index(rowIndex.row(), 1);
 
-  return index.data( Qt::DisplayRole ).toString();
+    return index.data(Qt::DisplayRole).toString();
 }
 
 void TemplateSelectionDialog::updateButtons()
 {
-  mOkButton->setEnabled( mView->currentIndex().isValid() );
+    mOkButton->setEnabled(mView->currentIndex().isValid());
 }
 

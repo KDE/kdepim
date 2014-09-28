@@ -32,8 +32,9 @@ MergeContacts::~MergeContacts()
 KABC::Addressee MergeContacts::mergedContact()
 {
     KABC::Addressee newContact;
-    if (mListItem.count() == 1)
+    if (mListItem.count() == 1) {
         return newContact;
+    }
     bool firstAddress = true;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         if (item.hasPayload<KABC::Addressee>()) {
@@ -63,8 +64,9 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
 bool MergeContacts::needManualSelectInformations()
 {
     bool result = false;
-    if (mListItem.count() < 2)
+    if (mListItem.count() < 2) {
         return result;
+    }
     //TODO
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         if (item.hasPayload<KABC::Addressee>()) {

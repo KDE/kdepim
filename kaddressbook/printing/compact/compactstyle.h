@@ -26,7 +26,8 @@
 
 #include "printstyle.h"
 
-namespace KABPrinting {
+namespace KABPrinting
+{
 
 class CompactStyleForm;
 
@@ -35,16 +36,16 @@ class CompactStyle : public PrintStyle
     Q_OBJECT
 
 public:
-    explicit CompactStyle( PrintingWizard *parent );
+    explicit CompactStyle(PrintingWizard *parent);
     ~CompactStyle();
 
     /**
      * prints the contacts
      */
-    void print( const KABC::Addressee::List &, PrintProgress * );
+    void print(const KABC::Addressee::List &, PrintProgress *);
 
 private:
-    QString contactsToHtml( const KABC::Addressee::List &contacts ) const;
+    QString contactsToHtml(const KABC::Addressee::List &contacts) const;
 
     CompactStyleForm *mPageSettings;
 
@@ -70,7 +71,7 @@ private Q_SLOTS:
 class CompactStyleFactory : public PrintStyleFactory
 {
 public:
-    explicit CompactStyleFactory( PrintingWizard *parent );
+    explicit CompactStyleFactory(PrintingWizard *parent);
 
     PrintStyle *create() const;
     QString description() const;

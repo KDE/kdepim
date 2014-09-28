@@ -23,7 +23,8 @@
 
 #include "kaddressbook_export.h"
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class KADDRESSBOOK_EXPORT MergeContacts
 {
 public:

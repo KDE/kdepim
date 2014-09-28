@@ -48,17 +48,17 @@ public:
      * @param selectionModel The model that contains the currently selected contacts.
      * @param parent The parent widget.
      */
-    explicit ContactSelectionDialog( QItemSelectionModel *selectionModel, QWidget *parent = 0 );
+    explicit ContactSelectionDialog(QItemSelectionModel *selectionModel, QWidget *parent = 0);
 
     /**
      * Sets the @p message text.
      */
-    void setMessageText( const QString &message );
+    void setMessageText(const QString &message);
 
     /**
      * Sets the default addressbook.
      */
-    void setDefaultAddressBook( const Akonadi::Collection &addressBook );
+    void setDefaultAddressBook(const Akonadi::Collection &addressBook);
 
     /**
      * Returns the list of selected contacts.

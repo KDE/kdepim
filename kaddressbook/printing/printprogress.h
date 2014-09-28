@@ -31,7 +31,8 @@ class QString;
 
 class QTextBrowser;
 
-namespace KABPrinting {
+namespace KABPrinting
+{
 
 /**
   This defines a simple widget to display print progress
@@ -43,18 +44,18 @@ class PrintProgress : public QWidget
     Q_OBJECT
 
 public:
-    explicit PrintProgress( QWidget *parent, const char *name = 0 );
+    explicit PrintProgress(QWidget *parent, const char *name = 0);
     ~PrintProgress();
 
     /**
       Add a message to the message log. Give the user something to admire :-)
      */
-    void addMessage( const QString & );
+    void addMessage(const QString &);
 
     /**
       Set the progress to a certain amount. Steps are from 0 to 100.
      */
-    void setProgress( int );
+    void setProgress(int);
 
 private:
     QStringList mMessages;

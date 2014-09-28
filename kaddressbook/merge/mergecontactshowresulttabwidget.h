@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef MERGECONTACTSHOWRESULTTABWIDGET_H
 #define MERGECONTACTSHOWRESULTTABWIDGET_H
 
@@ -23,13 +22,14 @@
 #include "kaddressbook_export.h"
 #include <AkonadiCore/item.h>
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 
 class KADDRESSBOOK_EXPORT MergeContactShowResultTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactShowResultTabWidget(QWidget *parent=0);
+    explicit MergeContactShowResultTabWidget(QWidget *parent = 0);
     ~MergeContactShowResultTabWidget();
 
     void updateTabWidget();

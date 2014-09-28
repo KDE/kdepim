@@ -25,10 +25,10 @@
 #ifndef MIKESSTYLE_H
 #define MIKESSTYLE_H
 
-
 #include "printstyle.h"
 
-namespace KABPrinting {
+namespace KABPrinting
+{
 
 class PrintProgress;
 
@@ -37,16 +37,16 @@ class MikesStyle : public PrintStyle
     Q_OBJECT
 
 public:
-    explicit MikesStyle( PrintingWizard *parent );
+    explicit MikesStyle(PrintingWizard *parent);
     ~MikesStyle();
 
-    void print( const KABC::Addressee::List &, PrintProgress * );
+    void print(const KABC::Addressee::List &, PrintProgress *);
 };
 
 class MikesStyleFactory : public PrintStyleFactory
 {
 public:
-    explicit MikesStyleFactory( PrintingWizard *parent );
+    explicit MikesStyleFactory(PrintingWizard *parent);
 
     PrintStyle *create() const;
     QString description() const;

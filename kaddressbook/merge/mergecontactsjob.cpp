@@ -40,13 +40,13 @@ MergeContactsJob::~MergeContactsJob()
 void MergeContactsJob::start()
 {
     if (!mCollection.isValid()) {
-        qDebug()<<" mCollection is not valid !";
+        qDebug() << " mCollection is not valid !";
         Q_EMIT finished(mCreatedContact);
         deleteLater();
         return;
     }
     if (mListItem.isEmpty()) {
-        qDebug()<<" list item is empty !";
+        qDebug() << " list item is empty !";
         Q_EMIT finished(mCreatedContact);
         deleteLater();
         return;
@@ -79,8 +79,8 @@ void MergeContactsJob::setDestination(const Akonadi::Collection &collection)
 void MergeContactsJob::createMergedContact(const KABC::Addressee &addressee)
 {
     Akonadi::Item item;
-    item.setMimeType( KABC::Addressee::mimeType() );
-    item.setPayload<KABC::Addressee>( addressee );
+    item.setMimeType(KABC::Addressee::mimeType());
+    item.setPayload<KABC::Addressee>(addressee);
 
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, mCollection, this);
     connect(job, &Akonadi::ItemCreateJob::result, this, &MergeContactsJob::slotCreateMergedContactFinished);

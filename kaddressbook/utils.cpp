@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "utils.h"
 
 #include <QItemSelectionModel>
@@ -28,14 +27,14 @@ Akonadi::Item::List Utils::collectSelectedContactsItem(QItemSelectionModel *mode
 {
     Akonadi::Item::List lst;
 
-    const QModelIndexList indexes = model->selectedRows( 0 );
-    for ( int i = 0; i < indexes.count(); ++i ) {
-        const QModelIndex index = indexes.at( i );
-        if ( index.isValid() ) {
+    const QModelIndexList indexes = model->selectedRows(0);
+    for (int i = 0; i < indexes.count(); ++i) {
+        const QModelIndex index = indexes.at(i);
+        if (index.isValid()) {
             const Akonadi::Item item =
-                    index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-            if ( item.isValid() && item.hasPayload<KABC::Addressee>() ) {
-                lst.append( item );
+                index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+            if (item.isValid() && item.hasPayload<KABC::Addressee>()) {
+                lst.append(item);
             }
         }
     }
@@ -46,15 +45,15 @@ Akonadi::Item::List Utils::collectSelectedAllContactsItem(QItemSelectionModel *m
 {
     Akonadi::Item::List lst;
 
-    const QModelIndexList indexes = model->selectedRows( 0 );
-    for ( int i = 0; i < indexes.count(); ++i ) {
-        const QModelIndex index = indexes.at( i );
-        if ( index.isValid() ) {
+    const QModelIndexList indexes = model->selectedRows(0);
+    for (int i = 0; i < indexes.count(); ++i) {
+        const QModelIndex index = indexes.at(i);
+        if (index.isValid()) {
             const Akonadi::Item item =
-                    index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-            if ( item.isValid() ) {
-                if ( item.hasPayload<KABC::Addressee>()  || item.hasPayload<KABC::ContactGroup>() ) {
-                    lst.append( item );
+                index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+            if (item.isValid()) {
+                if (item.hasPayload<KABC::Addressee>()  || item.hasPayload<KABC::ContactGroup>()) {
+                    lst.append(item);
                 }
             }
         }

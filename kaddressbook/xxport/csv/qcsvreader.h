@@ -58,7 +58,7 @@ public:
      * @param row The row of the field.
      * @param column The column of the field.
      */
-    virtual void field( const QString &data, uint row, uint column ) = 0;
+    virtual void field(const QString &data, uint row, uint column) = 0;
 
     /**
      * This method is called whenever a line ends.
@@ -75,7 +75,7 @@ public:
      *
      * @param errorMsg The error message.
      */
-    virtual void error( const QString &errorMsg ) = 0;
+    virtual void error(const QString &errorMsg) = 0;
 };
 
 /**
@@ -92,9 +92,9 @@ class QCsvReader : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY( QChar textQuote READ textQuote WRITE setTextQuote )
-    Q_PROPERTY( QChar delimiter READ delimiter WRITE setDelimiter )
-    Q_PROPERTY( uint startRow READ startRow WRITE setStartRow )
+    Q_PROPERTY(QChar textQuote READ textQuote WRITE setTextQuote)
+    Q_PROPERTY(QChar delimiter READ delimiter WRITE setDelimiter)
+    Q_PROPERTY(uint startRow READ startRow WRITE setStartRow)
 
 public:
     /**
@@ -102,7 +102,7 @@ public:
      *
      * @param builder The builder to use.
      */
-    explicit QCsvReader( QCsvBuilderInterface *builder );
+    explicit QCsvReader(QCsvBuilderInterface *builder);
 
     /**
      * Destroys the csv reader.
@@ -114,12 +114,12 @@ public:
      *
      * @return true on success, false otherwise.
      */
-    bool read( QIODevice *device );
+    bool read(QIODevice *device);
 
     /**
      * Sets the character that is used for quoting. The default is '"'.
      */
-    void setTextQuote( const QChar &textQuote );
+    void setTextQuote(const QChar &textQuote);
 
     /**
      * Returns the character that is used for quoting.
@@ -130,7 +130,7 @@ public:
      * Sets the character that is used as delimiter for fields.
      * The default is ' '.
      */
-    void setDelimiter( const QChar &delimiter );
+    void setDelimiter(const QChar &delimiter);
 
     /**
      * Returns the delimiter that is used as delimiter for fields.
@@ -146,7 +146,7 @@ public:
      *
      * The default start row is 0.
      */
-    void setStartRow( uint startRow );
+    void setStartRow(uint startRow);
 
     /**
      * Returns the start row.
@@ -158,7 +158,7 @@ public:
      *
      * The default is the system locale.
      */
-    void setTextCodec( QTextCodec *textCodec );
+    void setTextCodec(QTextCodec *textCodec);
 
     /**
      * Returns the text codec that is used for parsing the csv list.
@@ -215,23 +215,23 @@ public:
      * Returns the data of the field at the given
      * @p row and @p column.
      */
-    QString data( uint row, uint column ) const;
+    QString data(uint row, uint column) const;
 
     /**
      * @internal
      */
     void begin();
     void beginLine();
-    void field( const QString &data, uint row, uint column );
+    void field(const QString &data, uint row, uint column);
     void endLine();
     void end();
-    void error( const QString &errorMsg );
+    void error(const QString &errorMsg);
 
 private:
     class Private;
     Private *const d;
 
-    Q_DISABLE_COPY( QCsvStandardBuilder )
+    Q_DISABLE_COPY(QCsvStandardBuilder)
 };
 
 #endif

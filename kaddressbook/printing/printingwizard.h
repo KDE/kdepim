@@ -38,11 +38,13 @@ class StylePage;
 class QItemSelectionModel;
 class QPrinter;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Collection;
 }
 
-namespace KABPrinting {
+namespace KABPrinting
+{
 
 class PrintProgress;
 class PrintStyle;
@@ -64,9 +66,9 @@ public:
      * @param selectionModel The selection model to get the selected contacts from.
      * @param parent The parent widget.
      */
-    PrintingWizard( QPrinter *printer,
-                    QItemSelectionModel *selectionModel,
-                    QWidget *parent = 0 );
+    PrintingWizard(QPrinter *printer,
+                   QItemSelectionModel *selectionModel,
+                   QWidget *parent = 0);
 
     /**
      * Destroys the printing wizard.
@@ -76,7 +78,7 @@ public:
     /**
      * Sets the default addressbook of the contact selection.
      */
-    void setDefaultAddressBook( const Akonadi::Collection &addressBook );
+    void setDefaultAddressBook(const Akonadi::Collection &addressBook);
 
     /**
      * Registers all available printing styles.
@@ -111,8 +113,8 @@ protected Q_SLOTS:
     void slotStyleSelected(int);
 
 protected:
-    QList<PrintStyleFactory*> mStyleFactories;
-    QList<PrintStyle*> mStyleList;
+    QList<PrintStyleFactory *> mStyleFactories;
+    QList<PrintStyle *> mStyleList;
     QPrinter *mPrinter;
     PrintStyle *mStyle;
     PrintProgress *mProgress;

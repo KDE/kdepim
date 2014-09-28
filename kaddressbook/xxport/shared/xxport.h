@@ -38,7 +38,7 @@ public:
      * @param parent The parent widget that shall be used as parent
      *               for GUI components.
      */
-    explicit XXPort( QWidget *parent = 0 );
+    explicit XXPort(QWidget *parent = 0);
 
     /**
      * Destroys the xxport object.
@@ -53,7 +53,7 @@ public:
     /**
      * Exports the list of @p contacts.
      */
-    virtual bool exportContacts( const KABC::Addressee::List &contacts ) const = 0;
+    virtual bool exportContacts(const KABC::Addressee::List &contacts) const = 0;
 
     /**
      * Sets module specific options.
@@ -61,12 +61,12 @@ public:
      * @param key The option key.
      * @param value The option value.
      */
-    void setOption( const QString &key, const QString &value );
+    void setOption(const QString &key, const QString &value);
 
     /**
      * Returns the module specific option value for the given @p key.
      */
-    QString option( const QString &key ) const;
+    QString option(const QString &key) const;
 
 protected:
     /**
@@ -78,7 +78,7 @@ protected:
     /**
      * Returns a file name depending on the passed @p contact.
      */
-    QString contactFileName( const KABC::Addressee &contact ) const;
+    QString contactFileName(const KABC::Addressee &contact) const;
 
 private:
     QWidget *mParentWidget;

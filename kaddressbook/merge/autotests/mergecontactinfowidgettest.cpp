@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "mergecontactinfowidgettest.h"
 
 #include "../mergecontactinfowidget.h"
@@ -55,4 +54,4 @@ void MergeContactInfoWidgetTest::shouldHaveActivateNoWidgetWhenSelectNoContact()
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontact"));
 }
 
-QTEST_MAIN(MergeContactInfoWidgetTest )
+QTEST_MAIN(MergeContactInfoWidgetTest)

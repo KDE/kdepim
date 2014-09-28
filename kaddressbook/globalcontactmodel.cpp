@@ -29,26 +29,25 @@
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
-
 GlobalContactModel *GlobalContactModel::mInstance = 0;
 
 GlobalContactModel::GlobalContactModel()
 {
-    mSession = new Akonadi::Session( "KAddressBook::GlobalContactSession" );
+    mSession = new Akonadi::Session("KAddressBook::GlobalContactSession");
 
     Akonadi::ItemFetchScope scope;
-    scope.fetchFullPayload( true );
+    scope.fetchFullPayload(true);
     scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
 
     mMonitor = new Akonadi::ChangeRecorder;
     mMonitor->setSession(mSession);
-    mMonitor->fetchCollection( true );
-    mMonitor->setItemFetchScope( scope );
-    mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
-    mMonitor->setMimeTypeMonitored( KABC::Addressee::mimeType(), true );
-    mMonitor->setMimeTypeMonitored( KABC::ContactGroup::mimeType(), true );
+    mMonitor->fetchCollection(true);
+    mMonitor->setItemFetchScope(scope);
+    mMonitor->setCollectionMonitored(Akonadi::Collection::root());
+    mMonitor->setMimeTypeMonitored(KABC::Addressee::mimeType(), true);
+    mMonitor->setMimeTypeMonitored(KABC::ContactGroup::mimeType(), true);
 
-    mModel = new Akonadi::ContactsTreeModel( mMonitor );
+    mModel = new Akonadi::ContactsTreeModel(mMonitor);
 }
 
 GlobalContactModel::~GlobalContactModel()
@@ -60,7 +59,7 @@ GlobalContactModel::~GlobalContactModel()
 
 GlobalContactModel *GlobalContactModel::instance()
 {
-    if ( !mInstance ) {
+    if (!mInstance) {
         mInstance = new GlobalContactModel();
     }
     return mInstance;

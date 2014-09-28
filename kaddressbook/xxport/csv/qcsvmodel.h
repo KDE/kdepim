@@ -30,7 +30,7 @@ public:
     /**
      * Creates a new csv model.
      */
-    explicit QCsvModel( QObject *parent );
+    explicit QCsvModel(QObject *parent);
 
     /**
      * Destroys the csv model.
@@ -40,12 +40,12 @@ public:
     /**
      * Loads the data from the @p device into the model.
      */
-    bool load( QIODevice *device );
+    bool load(QIODevice *device);
 
     /**
      * Sets the character that is used for quoting. The default is '"'.
      */
-    void setTextQuote( const QChar &textQuote );
+    void setTextQuote(const QChar &textQuote);
 
     /**
      * Returns the character that is used for quoting.
@@ -56,7 +56,7 @@ public:
      * Sets the character that is used as delimiter for fields.
      * The default is ' '.
      */
-    void setDelimiter( const QChar &delimiter );
+    void setDelimiter(const QChar &delimiter);
 
     /**
      * Returns the delimiter that is used as delimiter for fields.
@@ -72,7 +72,7 @@ public:
      *
      * The default start row is 0.
      */
-    void setStartRow( uint startRow );
+    void setStartRow(uint startRow);
 
     /**
      * Returns the start row.
@@ -84,7 +84,7 @@ public:
      *
      * The default is the system locale.
      */
-    void setTextCodec( QTextCodec *textCodec );
+    void setTextCodec(QTextCodec *textCodec);
 
     /**
      * Returns the text codec that is used for parsing the csv list.
@@ -94,27 +94,27 @@ public:
     /**
      * Inherited from QAbstractTableModel.
      */
-    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
     /**
      * Inherited from QAbstractTableModel.
      */
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     /**
      * Inherited from QAbstractTableModel.
      */
-    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     /**
      * Inherited from QAbstractTableModel.
      */
-    virtual bool setData( const QModelIndex &index, const QVariant &data, int role = Qt::EditRole );
+    virtual bool setData(const QModelIndex &index, const QVariant &data, int role = Qt::EditRole);
 
     /**
      * Inherited from QAbstractTableModel.
      */
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
 Q_SIGNALS:
     /**
@@ -126,10 +126,10 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void columnCountChanged( int ) )
-    Q_PRIVATE_SLOT( d, void rowCountChanged( int ) )
-    Q_PRIVATE_SLOT( d, void fieldChanged( const QString&, int, int ) )
-    Q_PRIVATE_SLOT( d, void finishedLoading() )
+    Q_PRIVATE_SLOT(d, void columnCountChanged(int))
+    Q_PRIVATE_SLOT(d, void rowCountChanged(int))
+    Q_PRIVATE_SLOT(d, void fieldChanged(const QString &, int, int))
+    Q_PRIVATE_SLOT(d, void finishedLoading())
 };
 
 #endif

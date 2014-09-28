@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef MERGECONTACTSELECTINFORMATIONDIALOG_H
 #define MERGECONTACTSELECTINFORMATIONDIALOG_H
 
@@ -24,13 +23,14 @@
 
 #include <AkonadiCore/Item>
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class MergeContactShowResultTabWidget;
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactSelectInformationDialog(const Akonadi::Item::List &lst, QWidget *parent=0);
+    explicit MergeContactSelectInformationDialog(const Akonadi::Item::List &lst, QWidget *parent = 0);
     ~MergeContactSelectInformationDialog();
 
 private:

@@ -28,7 +28,8 @@
 
 #include <KABC/Addressee>
 
-namespace KABPrinting {
+namespace KABPrinting
+{
 
 class AppearancePage;
 
@@ -37,10 +38,10 @@ class DetailledPrintStyle : public PrintStyle
     Q_OBJECT
 
 public:
-    explicit DetailledPrintStyle( PrintingWizard *parent );
+    explicit DetailledPrintStyle(PrintingWizard *parent);
     ~DetailledPrintStyle();
 
-    void print( const KABC::Addressee::List &contacts, PrintProgress * );
+    void print(const KABC::Addressee::List &contacts, PrintProgress *);
 
 private:
     AppearancePage *mPageAppearance;
@@ -49,7 +50,7 @@ private:
 class DetailledPrintStyleFactory : public PrintStyleFactory
 {
 public:
-    explicit DetailledPrintStyleFactory( PrintingWizard *parent );
+    explicit DetailledPrintStyleFactory(PrintingWizard *parent);
 
     PrintStyle *create() const;
     QString description() const;

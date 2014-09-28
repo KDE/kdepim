@@ -35,7 +35,8 @@
 
 class KPageWidgetItem;
 
-namespace KABPrinting {
+namespace KABPrinting
+{
 
 class PrintingWizard;
 class PrintProgress;
@@ -74,7 +75,7 @@ public:
      *
      * @wizard The wizard the style belongs to.
      */
-    explicit PrintStyle( PrintingWizard *wizard );
+    explicit PrintStyle(PrintingWizard *wizard);
 
     /**
      * Destroys the print style.
@@ -87,7 +88,7 @@ public:
      * @param contacts The filtered and sorted list of contacts.
      * @param progress The object to inform the user about the progress of printing.
      */
-    virtual void print( const KABC::Addressee::List &contacts, PrintProgress *progress ) = 0;
+    virtual void print(const KABC::Addressee::List &contacts, PrintProgress *progress) = 0;
 
     /**
      * This method should be reimplemented to provide a preview of what
@@ -126,18 +127,18 @@ protected:
      *                 without any prefix.
      * @returns Whether the image was loaded successfully.
      */
-    bool setPreview( const QString &fileName );
+    bool setPreview(const QString &fileName);
 
     /**
      * Sets the preview @p image.
      */
-    void setPreview( const QPixmap &image );
+    void setPreview(const QPixmap &image);
 
     /**
      * Sets the preferred sort options for this printing style.
      */
-    void setPreferredSortOptions( ContactFields::Field,
-                                  Qt::SortOrder sortOrder = Qt::AscendingOrder );
+    void setPreferredSortOptions(ContactFields::Field,
+                                 Qt::SortOrder sortOrder = Qt::AscendingOrder);
 
     /**
      * Returns the printing wizard that is responsible for this style.
@@ -151,13 +152,13 @@ protected:
      * @param page The page widget.
      * @param tile The page title.
      */
-    void addPage( QWidget *page, const QString &title );
+    void addPage(QWidget *page, const QString &title);
 
 private:
     PrintingWizard *mWizard;
     QPixmap mPreview;
-    QList<QWidget*> mPageList;
-    QHash<QWidget*, KPageWidgetItem*> mPageItems;
+    QList<QWidget *> mPageList;
+    QHash<QWidget *, KPageWidgetItem *> mPageItems;
     QStringList mPageTitles;
 
     ContactFields::Field mSortField;
@@ -171,7 +172,7 @@ private:
 class PrintStyleFactory
 {
 public:
-    explicit PrintStyleFactory( PrintingWizard *parent );
+    explicit PrintStyleFactory(PrintingWizard *parent);
     virtual ~PrintStyleFactory();
 
     virtual PrintStyle *create() const = 0;

@@ -28,13 +28,14 @@
 #include <QStringList>
 
 class KJob;
-namespace KABMailSender {
+namespace KABMailSender
+{
 class KADDRESSBOOK_EXPORT MailSenderJob : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit MailSenderJob(const Akonadi::Item::List &listItem, QObject* parent = 0);
+    explicit MailSenderJob(const Akonadi::Item::List &listItem, QObject *parent = 0);
     ~MailSenderJob();
 
     void start();
@@ -43,7 +44,7 @@ Q_SIGNALS:
     void sendMails(const QStringList &emails);
 
 private Q_SLOTS:
-    void fetchJobFinished(KJob* job);
+    void fetchJobFinished(KJob *job);
 
 private:
     void finishJob();

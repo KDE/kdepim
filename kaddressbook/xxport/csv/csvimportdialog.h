@@ -42,25 +42,25 @@ class CSVImportDialog : public KDialog
     Q_OBJECT
 
 public:
-    explicit CSVImportDialog( QWidget *parent = 0 );
+    explicit CSVImportDialog(QWidget *parent = 0);
     ~CSVImportDialog();
 
     KABC::AddresseeList contacts() const;
 
 protected Q_SLOTS:
-    virtual void slotButtonClicked( int );
+    virtual void slotButtonClicked(int);
 
 private Q_SLOTS:
-    void setFile( const QString & );
-    void setFile( const QUrl & );
-    void urlChanged( const QString & );
+    void setFile(const QString &);
+    void setFile(const QUrl &);
+    void urlChanged(const QString &);
 
     void customDelimiterChanged();
-    void customDelimiterChanged( const QString &, bool reload = true );
-    void delimiterClicked( int, bool reload = true );
-    void textQuoteChanged( const QString &, bool reload = true );
-    void skipFirstRowChanged( bool, bool reload = true );
-    void codecChanged( bool reload = true );
+    void customDelimiterChanged(const QString &, bool reload = true);
+    void delimiterClicked(int, bool reload = true);
+    void textQuoteChanged(const QString &, bool reload = true);
+    void skipFirstRowChanged(bool, bool reload = true);
+    void codecChanged(bool reload = true);
 
     void modelFinishedLoading();
     void finalizeApplyTemplate();
@@ -83,7 +83,7 @@ private:
 
     void reloadCodecs();
     QTextCodec *currentCodec();
-    QList<QTextCodec*> mCodecs;
+    QList<QTextCodec *> mCodecs;
 
     QChar mTextQuote;
     QString mDelimiter;

@@ -97,7 +97,7 @@ public:
     /**
      * Returns the i18n label for the @p field.
      */
-    static QString label( Field field );
+    static QString label(Field field);
 
     /**
      * Returns a list of all available fields.
@@ -107,12 +107,12 @@ public:
     /**
      * Sets the @p value of the @p field for the @p contact.
      */
-    static void setValue( Field field, const QString &value, KABC::Addressee &contact );
+    static void setValue(Field field, const QString &value, KABC::Addressee &contact);
 
     /**
      * Returns the value for the @p field of the @p contact.
      */
-    static QString value( Field field, const KABC::Addressee &contact );
+    static QString value(Field field, const KABC::Addressee &contact);
 };
 
 #endif

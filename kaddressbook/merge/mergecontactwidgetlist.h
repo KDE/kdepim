@@ -22,7 +22,8 @@
 #include <AkonadiCore/Item>
 #include <KABC/Addressee>
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 
 class MergeContactWidgetListItem : public QListWidgetItem
 {
@@ -34,12 +35,11 @@ private:
     Akonadi::Item mItem;
 };
 
-
 class MergeContactWidgetList :  public QListWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactWidgetList(QWidget *parent=0);
+    explicit MergeContactWidgetList(QWidget *parent = 0);
     ~MergeContactWidgetList();
 
     void fillListContact(const Akonadi::Item::List &items);

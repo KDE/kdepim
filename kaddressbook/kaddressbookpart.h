@@ -32,7 +32,7 @@ class KAddressBookPart: public KParts::ReadOnlyPart
     Q_OBJECT
 
 public:
-    KAddressBookPart( QWidget *parentWidget, QObject *parent, const QVariantList & );
+    KAddressBookPart(QWidget *parentWidget, QObject *parent, const QVariantList &);
     virtual ~KAddressBookPart();
 
 public Q_SLOTS:
@@ -42,7 +42,7 @@ public Q_SLOTS:
 
 protected:
     virtual bool openFile();
-    virtual void guiActivateEvent( KParts::GUIActivateEvent * );
+    virtual void guiActivateEvent(KParts::GUIActivateEvent *);
     void initAction();
 private:
     MainWidget *mMainWidget;

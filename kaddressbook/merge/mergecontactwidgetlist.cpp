@@ -30,20 +30,20 @@ MergeContactWidgetList::~MergeContactWidgetList()
 
 QString MergeContactWidgetList::itemName(const KABC::Addressee &address) const
 {
-   const QString realName = address.realName();
-   if (!realName.isEmpty()) {
-       return realName;
-   }
-   const QString name = address.name();
-   if (!name.isEmpty()) {
-       return name;
-   }
-   return address.fullEmail();
+    const QString realName = address.realName();
+    if (!realName.isEmpty()) {
+        return realName;
+    }
+    const QString name = address.name();
+    if (!name.isEmpty()) {
+        return name;
+    }
+    return address.fullEmail();
 }
 
 void MergeContactWidgetList::fillListContact(const Akonadi::Item::List &items)
 {
-    Q_FOREACH(const Akonadi::Item &item, items) {
+    Q_FOREACH (const Akonadi::Item &item, items) {
         if (item.hasPayload<KABC::Addressee>()) {
             MergeContactWidgetListItem *widgetItem = new MergeContactWidgetListItem(item, this);
             KABC::Addressee address = item.payload<KABC::Addressee>();
@@ -59,7 +59,7 @@ Akonadi::Item::List MergeContactWidgetList::listSelectedContacts() const
     for (int i = 0; i < count(); ++i) {
         QListWidgetItem *itemWidget = item(i);
         if (itemWidget->checkState() == Qt::Checked) {
-            lstItems.append((static_cast<MergeContactWidgetListItem*>(itemWidget))->item());
+            lstItems.append((static_cast<MergeContactWidgetListItem *>(itemWidget))->item());
         }
     }
     return lstItems;
@@ -69,19 +69,17 @@ Akonadi::Item MergeContactWidgetList::currentAkonadiItem() const
 {
     QListWidgetItem *curr = currentItem();
     if (curr) {
-        return (static_cast<MergeContactWidgetListItem*>(curr))->item();
+        return (static_cast<MergeContactWidgetListItem *>(curr))->item();
     }
     return Akonadi::Item();
 }
-
-
 
 MergeContactWidgetListItem::MergeContactWidgetListItem(const Akonadi::Item &item, QListWidget *parent)
     : QListWidgetItem(parent),
       mItem(item)
 {
-    setFlags( Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable );
-    setCheckState( Qt::Unchecked );
+    setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable);
+    setCheckState(Qt::Unchecked);
 }
 
 Akonadi::Item MergeContactWidgetListItem::item() const

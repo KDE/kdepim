@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "searchpotentialduplicatecontactjob.h"
 
 #include <KABC/Addressee>
@@ -37,7 +36,7 @@ void SearchPotentialDuplicateContactJob::start()
 {
     mListDuplicate.clear();
     Akonadi::Item::List result = mListItem;
-    while(!result.isEmpty()) {
+    while (!result.isEmpty()) {
         result = checkList(result);
     }
     Q_EMIT finished(mListDuplicate);
@@ -67,7 +66,7 @@ Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi:
             lst.append(firstItem);
             mListDuplicate.append(lst);
         }
-        qDebug()<<" duplicate number "<<lst.count();
+        qDebug() << " duplicate number " << lst.count();
     }
     return notDuplicate;
 }

@@ -33,13 +33,13 @@ class QFile;
 class GMXXXPort : public XXPort
 {
 public:
-    explicit GMXXXPort( QWidget *parent = 0 );
+    explicit GMXXXPort(QWidget *parent = 0);
 
-    bool exportContacts( const KABC::AddresseeList &list ) const;
+    bool exportContacts(const KABC::AddresseeList &list) const;
     KABC::Addressee::List importContacts() const;
 
 private:
-    void doExport( QFile *fp, const KABC::AddresseeList &list ) const;
+    void doExport(QFile *fp, const KABC::AddresseeList &list) const;
 };
 
 #endif

@@ -46,7 +46,7 @@ public:
      * @param model The model that shall be managed.
      * @param parent The parent object.
      */
-    explicit ModelColumnManager( Akonadi::ContactsTreeModel *model, QObject *parent = 0 );
+    explicit ModelColumnManager(Akonadi::ContactsTreeModel *model, QObject *parent = 0);
 
     /**
      * Loads the user configuration and applies it to the model.
@@ -62,10 +62,10 @@ public:
      * Sets the widget that shall provide a RMB menu to
      * configure the columns to be shown.
      */
-    void setWidget( QWidget *view );
+    void setWidget(QWidget *view);
 
 protected:
-    virtual bool eventFilter( QObject *watched, QEvent *event );
+    virtual bool eventFilter(QObject *watched, QEvent *event);
 
 private Q_SLOTS:
     void adaptHeaderView();

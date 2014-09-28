@@ -15,10 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "contactgrantleeprintgeoobject.h"
-
-
 
 using namespace KABPrinting;
 
@@ -36,15 +33,17 @@ ContactGrantleePrintGeoObject::~ContactGrantleePrintGeoObject()
 
 float ContactGrantleePrintGeoObject::latitude() const
 {
-    if (mGeo.isValid())
+    if (mGeo.isValid()) {
         return mGeo.latitude();
+    }
     return -1;
 }
 
 float ContactGrantleePrintGeoObject::longitude() const
 {
-    if (mGeo.isValid())
+    if (mGeo.isValid()) {
         return mGeo.longitude();
+    }
     return -1;
 }
 

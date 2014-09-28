@@ -25,11 +25,13 @@
 
 #include <QWidget>
 
-namespace GrantleeTheme {
+namespace GrantleeTheme
+{
 class GrantleeThemeManager;
 }
 class QAction;
-namespace Akonadi {
+namespace Akonadi
+{
 class Collection;
 class ContactGroupViewer;
 class ContactViewer;
@@ -42,7 +44,8 @@ class StandardContactActionManager;
 class EntityTreeModel;
 }
 
-namespace KAddressBookGrantlee {
+namespace KAddressBookGrantlee
+{
 class GrantleeContactFormatter;
 class GrantleeContactGroupFormatter;
 }
@@ -67,7 +70,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit MainWidget( KXMLGUIClient *guiClient, QWidget *parent = 0 );
+    explicit MainWidget(KXMLGUIClient *guiClient, QWidget *parent = 0);
     ~MainWidget();
 
     XXPortManager *importManager() const;
@@ -87,18 +90,18 @@ public Q_SLOTS:
 private Q_SLOTS:
     void delayedInit();
 
-    void itemSelected( const Akonadi::Item &item );
-    void itemSelectionChanged( const QModelIndex &, const QModelIndex & );
+    void itemSelected(const Akonadi::Item &item);
+    void itemSelectionChanged(const QModelIndex &, const QModelIndex &);
     void selectFirstItem();
 
-    void setViewMode( QAction *action );
-    void setQRCodeShow( bool on );
+    void setViewMode(QAction *action);
+    void setQRCodeShow(bool on);
 
     void restoreState();
     void saveState();
 
     void slotGrantleeThemeSelected();
-    void slotGrantleeThemesUpdated();  
+    void slotGrantleeThemesUpdated();
     void slotCheckNewCalendar(const QModelIndex &parent, int begin, int end);
 
     void slotSendMail();
@@ -108,9 +111,9 @@ private Q_SLOTS:
 private:
     void initGrantleeThemeName();
     void setupGui();
-    void setupActions( KActionCollection * );
+    void setupActions(KActionCollection *);
     bool showQRCodes();
-    void setViewMode( int mode );
+    void setViewMode(int mode);
     void saveSplitterStates() const;
     void restoreSplitterStates();
 

@@ -26,35 +26,36 @@
 
 class CsvParser : public QThread, public QCsvBuilderInterface
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit CsvParser( QObject *parent );
+public:
+    explicit CsvParser(QObject *parent);
     ~CsvParser();
 
-    void load( QIODevice *device );
+    void load(QIODevice *device);
 
     void begin();
     void beginLine();
-    void field( const QString &data, uint row, uint column );
+    void field(const QString &data, uint row, uint column);
     void endLine();
     void end();
-    void error( const QString &errorMsg );
+    void error(const QString &errorMsg);
 
-    QCsvReader *reader() {
-      return mReader;
+    QCsvReader *reader()
+    {
+        return mReader;
     }
 
-  Q_SIGNALS:
-    void columnCountChanged( int columns );
-    void rowCountChanged( int rows );
-    void dataChanged( const QString &data, int row, int column );
+Q_SIGNALS:
+    void columnCountChanged(int columns);
+    void rowCountChanged(int rows);
+    void dataChanged(const QString &data, int row, int column);
     void ended();
 
-  protected:
+protected:
     virtual void run();
 
-  private:
+private:
     QCsvReader *mReader;
     QIODevice *mDevice;
     int mRowCount;

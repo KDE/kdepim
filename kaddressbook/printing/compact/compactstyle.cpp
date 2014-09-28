@@ -48,22 +48,23 @@ const char *WithEMail = "WithEMail";
 const char *FirstColor = "FirstColor";
 const char *SecondColor = "SecondColor";
 
-namespace KABPrinting {
+namespace KABPrinting
+{
 
 class CompactStyleForm : public QWidget, public Ui::CompactStyleForm_Base
 {
 public:
-    explicit CompactStyleForm( QWidget *parent )
-        : QWidget( parent )
+    explicit CompactStyleForm(QWidget *parent)
+        : QWidget(parent)
     {
-        setObjectName( QLatin1String("AppearancePage") );
-        setupUi( this );
+        setObjectName(QLatin1String("AppearancePage"));
+        setupUi(this);
     }
 };
 
 }
 
-QString CompactStyle::contactsToHtml( const KABC::Addressee::List &contacts ) const
+QString CompactStyle::contactsToHtml(const KABC::Addressee::List &contacts) const
 {
     // collect the fields are need to print
     ContactFields::Fields fields;
@@ -96,25 +97,25 @@ QString CompactStyle::contactsToHtml( const KABC::Addressee::List &contacts ) co
     content += QLatin1String("  <table style=\"font-size:50%; border-width: 0px; \"width=\"100%\">\n");
 
     bool odd = false;
-    foreach ( const KABC::Addressee &contact, contacts ) {
+    foreach (const KABC::Addressee &contact, contacts) {
         // get the values
         QStringList values;
-        foreach ( const ContactFields::Field &field, fields ) {
+        foreach (const ContactFields::Field &field, fields) {
             // we need only values with content
-            QString value = ContactFields::value( field, contact ).trimmed();
-            if ( value.size() > 0 ) {
+            QString value = ContactFields::value(field, contact).trimmed();
+            if (value.size() > 0) {
                 values << value;
             }
         }
 
         content += QLatin1String("   <tr>\n");
         QString style = QLatin1String("background-color:");
-        if ( this->withAlternating ) {
-            style += ( odd ) ? this->firstColor.name() : this->secondColor.name();
+        if (this->withAlternating) {
+            style += (odd) ? this->firstColor.name() : this->secondColor.name();
         } else {
             style += QLatin1String("#ffffff");
         }
-        content += QLatin1String("    <td style=\"")+ style + QLatin1String(";\">") + values.join(QLatin1String("; ")) + QLatin1String("</td>\n");
+        content += QLatin1String("    <td style=\"") + style + QLatin1String(";\">") + values.join(QLatin1String("; ")) + QLatin1String("</td>\n");
         content += QLatin1String("   </tr>\n");
         odd = !odd;
     }
@@ -126,33 +127,33 @@ QString CompactStyle::contactsToHtml( const KABC::Addressee::List &contacts ) co
     return content;
 }
 
-CompactStyle::CompactStyle( PrintingWizard *parent )
-    : PrintStyle( parent ),
-      mPageSettings( new CompactStyleForm( parent ) )
+CompactStyle::CompactStyle(PrintingWizard *parent)
+    : PrintStyle(parent),
+      mPageSettings(new CompactStyleForm(parent))
 {
-    setPreview( QLatin1String("compact-style.png") );
-    setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
+    setPreview(QLatin1String("compact-style.png"));
+    setPreferredSortOptions(ContactFields::FormattedName, Qt::AscendingOrder);
 
-    addPage( mPageSettings, i18n( "Compact Style" ) );
+    addPage(mPageSettings, i18n("Compact Style"));
 
     connect(mPageSettings->cbAlternating, &QCheckBox::clicked, this, &CompactStyle::setAlternatingColors);
 
     // set the controls, with the values in config
-    KConfigGroup config( KSharedConfig::openConfig(), CompactStyleConfigSectionName );
+    KConfigGroup config(KSharedConfig::openConfig(), CompactStyleConfigSectionName);
 
-    withAlternating = config.readEntry( WithAlternating, true );
-    withHomeAddress = config.readEntry( WithHomeAddress, true );
-    withBusinessAddress = config.readEntry( WithBusinessAddress, false );
-    withBirthday = config.readEntry( WithBirthday, true );
-    withEMail = config.readEntry( WithEMail, true );
+    withAlternating = config.readEntry(WithAlternating, true);
+    withHomeAddress = config.readEntry(WithHomeAddress, true);
+    withBusinessAddress = config.readEntry(WithBusinessAddress, false);
+    withBirthday = config.readEntry(WithBirthday, true);
+    withEMail = config.readEntry(WithEMail, true);
 
-    mPageSettings->cbFirst->setColor( config.readEntry( FirstColor, QColor( 220, 220, 220 ) ) );
-    mPageSettings->cbSecond->setColor( config.readEntry( SecondColor, QColor( 255, 255, 255 ) ) );
-    mPageSettings->cbAlternating->setChecked( withAlternating );
-    mPageSettings->cbWithHomeAddress->setChecked( withHomeAddress );
-    mPageSettings->cbWithBusinessAddress->setChecked( withBusinessAddress );
-    mPageSettings->cbWithBirthday->setChecked( withBirthday );
-    mPageSettings->cbWithEMail->setChecked( withEMail );
+    mPageSettings->cbFirst->setColor(config.readEntry(FirstColor, QColor(220, 220, 220)));
+    mPageSettings->cbSecond->setColor(config.readEntry(SecondColor, QColor(255, 255, 255)));
+    mPageSettings->cbAlternating->setChecked(withAlternating);
+    mPageSettings->cbWithHomeAddress->setChecked(withHomeAddress);
+    mPageSettings->cbWithBusinessAddress->setChecked(withBusinessAddress);
+    mPageSettings->cbWithBirthday->setChecked(withBirthday);
+    mPageSettings->cbWithEMail->setChecked(withEMail);
 
     // set up the color boxes
     setAlternatingColors();
@@ -162,7 +163,7 @@ CompactStyle::~CompactStyle()
 {
 }
 
-void CompactStyle::print( const KABC::Addressee::List &contacts, PrintProgress *progress )
+void CompactStyle::print(const KABC::Addressee::List &contacts, PrintProgress *progress)
 {
     // from UI to members
     withAlternating = mPageSettings->cbAlternating->isChecked();
@@ -174,55 +175,55 @@ void CompactStyle::print( const KABC::Addressee::List &contacts, PrintProgress *
     withEMail = mPageSettings->cbWithEMail->isChecked();
 
     // to config
-    KConfigGroup config( KSharedConfig::openConfig(), CompactStyleConfigSectionName );
+    KConfigGroup config(KSharedConfig::openConfig(), CompactStyleConfigSectionName);
 
-    config.writeEntry( WithAlternating, withAlternating );
-    config.writeEntry( FirstColor, firstColor );
-    config.writeEntry( SecondColor, secondColor );
-    config.writeEntry( WithHomeAddress, withHomeAddress );
-    config.writeEntry( WithBusinessAddress, withBusinessAddress );
-    config.writeEntry( WithBirthday, withBirthday );
-    config.writeEntry( WithEMail, withEMail );
+    config.writeEntry(WithAlternating, withAlternating);
+    config.writeEntry(FirstColor, firstColor);
+    config.writeEntry(SecondColor, secondColor);
+    config.writeEntry(WithHomeAddress, withHomeAddress);
+    config.writeEntry(WithBusinessAddress, withBusinessAddress);
+    config.writeEntry(WithBirthday, withBirthday);
+    config.writeEntry(WithEMail, withEMail);
     config.sync();
 
     // print
     QPrinter *printer = wizard()->printer();
-    printer->setPageMargins( 20, 20, 20, 20, QPrinter::DevicePixel );
+    printer->setPageMargins(20, 20, 20, 20, QPrinter::DevicePixel);
 
-    progress->addMessage( i18n( "Setting up document" ) );
+    progress->addMessage(i18n("Setting up document"));
 
-    const QString html = contactsToHtml( contacts );
+    const QString html = contactsToHtml(contacts);
 
     QTextDocument document;
-    document.setHtml( html );
+    document.setHtml(html);
 
-    progress->addMessage( i18n( "Printing" ) );
+    progress->addMessage(i18n("Printing"));
 
-    document.print( printer );
+    document.print(printer);
 
-    progress->addMessage( i18nc( "Finished printing", "Done" ) );
+    progress->addMessage(i18nc("Finished printing", "Done"));
 }
 
 void CompactStyle::setAlternatingColors()
 {
-    mPageSettings->cbFirst->setEnabled( mPageSettings->cbAlternating->isChecked() );
-    mPageSettings->lbCbFirst->setEnabled( mPageSettings->cbAlternating->isChecked() );
-    mPageSettings->cbSecond->setEnabled( mPageSettings->cbAlternating->isChecked() );
-    mPageSettings->lbCbSecond->setEnabled( mPageSettings->cbAlternating->isChecked() );
+    mPageSettings->cbFirst->setEnabled(mPageSettings->cbAlternating->isChecked());
+    mPageSettings->lbCbFirst->setEnabled(mPageSettings->cbAlternating->isChecked());
+    mPageSettings->cbSecond->setEnabled(mPageSettings->cbAlternating->isChecked());
+    mPageSettings->lbCbSecond->setEnabled(mPageSettings->cbAlternating->isChecked());
 }
 
-CompactStyleFactory::CompactStyleFactory( PrintingWizard *parent )
-    : PrintStyleFactory( parent )
+CompactStyleFactory::CompactStyleFactory(PrintingWizard *parent)
+    : PrintStyleFactory(parent)
 {
 }
 
 PrintStyle *CompactStyleFactory::create() const
 {
-    return new CompactStyle( mParent );
+    return new CompactStyle(mParent);
 }
 
 QString CompactStyleFactory::description() const
 {
-    return i18n( "Compact Printing Style" );
+    return i18n("Compact Printing Style");
 }
 

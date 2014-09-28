@@ -15,14 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef CONTACTGRANTLEEPRINTGEOOBJECT_H
 #define CONTACTGRANTLEEPRINTGEOOBJECT_H
 
 #include <QObject>
 #include <kabc/geo.h>
 
-namespace KABPrinting {
+namespace KABPrinting
+{
 
 class ContactGrantleePrintGeoObject : public QObject
 {
@@ -33,9 +33,8 @@ class ContactGrantleePrintGeoObject : public QObject
     Q_PROPERTY(bool isValid READ isValid)
 
 public:
-    explicit ContactGrantleePrintGeoObject(const KABC::Geo &geo, QObject *parent=0);
+    explicit ContactGrantleePrintGeoObject(const KABC::Geo &geo, QObject *parent = 0);
     ~ContactGrantleePrintGeoObject();
-
 
     float latitude() const;
     float longitude() const;

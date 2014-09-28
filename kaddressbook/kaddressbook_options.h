@@ -23,13 +23,13 @@
 
 static KCmdLineOptions kaddressbook_options()
 {
-  KCmdLineOptions options;
-  options.add("import",                ki18n("Import the given file" ));
-  options.add( "+[urls]",
-               ki18n( "files or urls. "
-                      "The user will be asked whether to import." ) );
+    KCmdLineOptions options;
+    options.add("import",                ki18n("Import the given file"));
+    options.add("+[urls]",
+                ki18n("files or urls. "
+                      "The user will be asked whether to import."));
 
-  return options;
+    return options;
 }
 
 #endif // KADDRESSBOOK_OPTIONS_H

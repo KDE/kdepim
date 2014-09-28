@@ -57,7 +57,7 @@ void FollowUpReminderManager::load()
         if (info->isValid()) {
             if (!info->answerWasReceived()) {
                 mFollowUpReminderInfoList.append(info);
-                if( info->followUpReminderDate().date() > currentDate) {
+                if (info->followUpReminderDate().date() > currentDate) {
                     FollowUpReminderInfo *noAnswerInfo = new FollowUpReminderInfo(*info);
                     noAnswerList.append(noAnswerInfo);
                 }
@@ -78,8 +78,9 @@ void FollowUpReminderManager::load()
 void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col)
 {
     //If we move to trash directly => exclude it.
-    if (Akonadi::SpecialMailCollections::self()->specialCollectionType(col) == Akonadi::SpecialMailCollections::Trash)
+    if (Akonadi::SpecialMailCollections::self()->specialCollectionType(col) == Akonadi::SpecialMailCollections::Trash) {
         return;
+    }
 
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
     connect(job, &FollowUpReminderJob::finished, this, &FollowUpReminderManager::slotCheckFollowUpFinished);

@@ -26,7 +26,6 @@
 
 class CategoryFilterProxyModelPrivate;
 
-
 /**
  * @short A proxy model to filter contacts by categories (tags).
  *
@@ -80,7 +79,7 @@ protected:
     virtual bool filterAcceptsRow(int row, const QModelIndex &parent) const;
 
 private:
-    CategoryFilterProxyModelPrivate * const d_ptr;
+    CategoryFilterProxyModelPrivate *const d_ptr;
 };
 
-#endif							// CATEGORYFILTERPROXYMODEL_H
+#endif                          // CATEGORYFILTERPROXYMODEL_H

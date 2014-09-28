@@ -39,19 +39,19 @@ class StylePage : public QWidget
     Q_OBJECT
 
 public:
-    explicit StylePage( QWidget *parent = 0, const char *name = 0 );
+    explicit StylePage(QWidget *parent = 0, const char *name = 0);
     ~StylePage();
 
     /**
      * Set a preview image. If @ref pixmap is 'null' a text will
      * be displayed instead.
      */
-    void setPreview( const QPixmap &pixmap );
+    void setPreview(const QPixmap &pixmap);
 
     /**
      * Add a style name.
      */
-    void addStyleName( const QString &name );
+    void addStyleName(const QString &name);
 
     /**
      * Clear the style name list.
@@ -61,7 +61,7 @@ public:
     /**
      * Set the sort criterion field.
      */
-    void setSortField( ContactFields::Field field );
+    void setSortField(ContactFields::Field field);
 
     /**
      * Returns the sort criterion field.
@@ -71,7 +71,7 @@ public:
     /**
      * Sets the sort order.
      */
-    void setSortOrder( Qt::SortOrder sortOrder );
+    void setSortOrder(Qt::SortOrder sortOrder);
 
     /**
      * Returns the sort order.
@@ -86,14 +86,14 @@ public:
     /**
      * Returns the sort order.
      */
-    void setPrintingStyle( int index );
+    void setPrintingStyle(int index);
 
 Q_SIGNALS:
     /**
      * This signal is emmited when the user selects a new style in the
      * style combo box.
      */
-    void styleChanged( int index );
+    void styleChanged(int index);
 
 private:
     void initGUI();

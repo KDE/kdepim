@@ -38,7 +38,7 @@ FollowUpReminderJob::~FollowUpReminderJob()
 void FollowUpReminderJob::start()
 {
     if (!mItem.isValid()) {
-        qDebug()<<" item is not valid";
+        qDebug() << " item is not valid";
         deleteLater();
         return;
     }
@@ -80,7 +80,7 @@ void FollowUpReminderJob::slotItemFetchJobDone(KJob *job)
         KMime::Headers::InReplyTo *replyTo = msg->inReplyTo(false);
         if (replyTo) {
             const QString replyToIdStr = replyTo->asUnicodeString();
-            qDebug()<<"Reply to"<<replyToIdStr;
+            qDebug() << "Reply to" << replyToIdStr;
             Q_EMIT finished(replyToIdStr);
         }
     }

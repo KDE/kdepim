@@ -15,13 +15,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef UTILS_H
 #define UTILS_H
 
 #include <AkonadiCore/Item>
 class QItemSelectionModel;
-namespace Utils {
+namespace Utils
+{
 Akonadi::Item::List collectSelectedContactsItem(QItemSelectionModel *model);
 Akonadi::Item::List collectSelectedAllContactsItem(QItemSelectionModel *model);
 }

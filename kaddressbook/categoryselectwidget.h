@@ -53,11 +53,10 @@ public:
     /**
      * Special @c Akonadi::Tag::Id values for filtering.
      **/
-    enum FilterTag
-    {
-        FilterAll = -2,					/**< All items */
-        FilterUntagged = -3,				/**< Untagged items */
-        FilterGroups = -4				/**< Contact groups */
+    enum FilterTag {
+        FilterAll = -2,                 /**< All items */
+        FilterUntagged = -3,                /**< Untagged items */
+        FilterGroups = -4               /**< Contact groups */
     };
 
     /**
@@ -81,7 +80,7 @@ signals:
     void filterChanged(const QList<Akonadi::Tag::Id> &idList);
 
 private:
-    CategorySelectWidgetPrivate * const d_ptr;
+    CategorySelectWidgetPrivate *const d_ptr;
 };
 
-#endif							// CATEGORYSELECTWIDGET_H
+#endif                          // CATEGORYSELECTWIDGET_H

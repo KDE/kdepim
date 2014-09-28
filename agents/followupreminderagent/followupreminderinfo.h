@@ -52,7 +52,6 @@ public:
 
     bool operator ==(const FollowUpReminderInfo &other) const;
 
-
     bool answerWasReceived() const;
     void setAnswerWasReceived(bool answerWasReceived);
 

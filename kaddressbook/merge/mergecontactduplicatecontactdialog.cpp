@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "mergecontactduplicatecontactdialog.h"
 
 #include "mergecontactshowresulttabwidget.h"
@@ -25,7 +24,6 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
-
 
 #include <QStackedWidget>
 #include <QLabel>
@@ -38,7 +36,7 @@ using namespace KABMergeContacts;
 MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Select Contacts to merge" ) );
+    setWindowTitle(i18n("Select Contacts to merge"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -59,11 +57,9 @@ MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Ako
     mNoDuplicateContactFound->setObjectName(QLatin1String("noduplicatecontactfound"));
     mStackedWidget->addWidget(mNoDuplicateContactFound);
 
-
     mNoEnoughContactSelected = new QLabel(i18n("You must select at least two elements."));
     mNoEnoughContactSelected->setObjectName(QLatin1String("noenoughcontactselected"));
     mStackedWidget->addWidget(mNoEnoughContactSelected);
-
 
     mainLayout->addWidget(mStackedWidget);
     mainLayout->addWidget(buttonBox);
@@ -81,7 +77,7 @@ void MergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const 
 {
     if (list.isEmpty()) {
         mStackedWidget->setCurrentWidget(mNoContactSelected);
-    } else if (list.count() < 2){
+    } else if (list.count() < 2) {
         mStackedWidget->setCurrentWidget(mNoEnoughContactSelected);
     } else {
         SearchPotentialDuplicateContactJob *job = new SearchPotentialDuplicateContactJob(list, this);
@@ -92,17 +88,17 @@ void MergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const 
 
 void MergeContactDuplicateContactDialog::readConfig()
 {
-    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactDuplicateContactDialog" );
-    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup grp(KSharedConfig::openConfig(), "MergeContactDuplicateContactDialog");
+    const QSize size = grp.readEntry("Size", QSize(300, 200));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void MergeContactDuplicateContactDialog::writeConfig()
 {
-    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactDuplicateContactDialog");
-    grp.writeEntry( "Size", size() );
+    KConfigGroup grp(KSharedConfig::openConfig(), "MergeContactDuplicateContactDialog");
+    grp.writeEntry("Size", size());
     grp.sync();
 }
 

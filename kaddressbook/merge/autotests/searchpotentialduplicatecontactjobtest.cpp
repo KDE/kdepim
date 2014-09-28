@@ -60,8 +60,8 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenTwoItemsAreDupl
     Akonadi::Item itemA;
     KABC::Addressee address;
     address.setName(QLatin1String("foo1"));
-    itemA.setPayload<KABC::Addressee>( address );
-    itemA.setMimeType( KABC::Addressee::mimeType() );
+    itemA.setPayload<KABC::Addressee>(address);
+    itemA.setMimeType(KABC::Addressee::mimeType());
 
     lst << itemA << itemA;
 

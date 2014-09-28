@@ -35,23 +35,23 @@
 #include <KLocalizedString>
 
 // helper method to sort contact fields by field label
-static bool contactFieldsNameLesser( const ContactFields::Field &field,
-                                     const ContactFields::Field &otherField )
+static bool contactFieldsNameLesser(const ContactFields::Field &field,
+                                    const ContactFields::Field &otherField)
 {
-    return ( QString::localeAwareCompare( ContactFields::label( field ),
-                                          ContactFields::label( otherField ) ) < 0 );
+    return (QString::localeAwareCompare(ContactFields::label(field),
+                                        ContactFields::label(otherField)) < 0);
 }
 
-StylePage::StylePage( QWidget *parent, const char *name )
-    : QWidget( parent )
+StylePage::StylePage(QWidget *parent, const char *name)
+    : QWidget(parent)
 {
-    setObjectName( QLatin1String(name) );
+    setObjectName(QLatin1String(name));
     initGUI();
 
     initFieldCombo();
 
-    mSortTypeCombo->addItem( i18nc( "@item:inlistbox Ascending sort order", "Ascending" ) );
-    mSortTypeCombo->addItem( i18nc( "@item:inlistbox Descending sort order", "Descending" ) );
+    mSortTypeCombo->addItem(i18nc("@item:inlistbox Ascending sort order", "Ascending"));
+    mSortTypeCombo->addItem(i18nc("@item:inlistbox Descending sort order", "Descending"));
 
     connect(mStyleCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &StylePage::styleChanged);
 }
@@ -60,18 +60,18 @@ StylePage::~StylePage()
 {
 }
 
-void StylePage::setPreview( const QPixmap &pixmap )
+void StylePage::setPreview(const QPixmap &pixmap)
 {
-    if ( pixmap.isNull() ) {
-        mPreview->setText( i18nc( "@label", "(No preview available.)" ) );
+    if (pixmap.isNull()) {
+        mPreview->setText(i18nc("@label", "(No preview available.)"));
     } else {
-        mPreview->setPixmap( pixmap );
+        mPreview->setPixmap(pixmap);
     }
 }
 
-void StylePage::addStyleName( const QString &name )
+void StylePage::addStyleName(const QString &name)
 {
-    mStyleCombo->addItem( name );
+    mStyleCombo->addItem(name);
 }
 
 void StylePage::clearStyleNames()
@@ -79,23 +79,23 @@ void StylePage::clearStyleNames()
     mStyleCombo->clear();
 }
 
-void StylePage::setSortField( ContactFields::Field field )
+void StylePage::setSortField(ContactFields::Field field)
 {
-    mFieldCombo->setCurrentIndex( mFields.indexOf( field ) );
+    mFieldCombo->setCurrentIndex(mFields.indexOf(field));
 }
 
-void StylePage::setSortOrder( Qt::SortOrder sortOrder )
+void StylePage::setSortOrder(Qt::SortOrder sortOrder)
 {
-    if ( sortOrder == Qt::AscendingOrder ) {
-        mSortTypeCombo->setCurrentIndex( 0 );
+    if (sortOrder == Qt::AscendingOrder) {
+        mSortTypeCombo->setCurrentIndex(0);
     } else {
-        mSortTypeCombo->setCurrentIndex( 1 );
+        mSortTypeCombo->setCurrentIndex(1);
     }
 }
 
 ContactFields::Field StylePage::sortField() const
 {
-    if ( mFieldCombo->currentIndex() == -1 ) {
+    if (mFieldCombo->currentIndex() == -1) {
         return ContactFields::GivenName;
     }
 
@@ -104,7 +104,7 @@ ContactFields::Field StylePage::sortField() const
 
 Qt::SortOrder StylePage::sortOrder() const
 {
-    return ( mSortTypeCombo->currentIndex() == 0 ? Qt::AscendingOrder : Qt::DescendingOrder );
+    return (mSortTypeCombo->currentIndex() == 0 ? Qt::AscendingOrder : Qt::DescendingOrder);
 }
 
 void StylePage::initFieldCombo()
@@ -112,94 +112,94 @@ void StylePage::initFieldCombo()
     mFieldCombo->clear();
 
     mFields = ContactFields::allFields();
-    mFields.remove( 0 ); // remove ContactFields::Undefined
+    mFields.remove(0);   // remove ContactFields::Undefined
 
-    qSort( mFields.begin(), mFields.end(), contactFieldsNameLesser );
+    qSort(mFields.begin(), mFields.end(), contactFieldsNameLesser);
 
     ContactFields::Fields::ConstIterator it;
     ContactFields::Fields::ConstIterator end(mFields.constEnd());
-    for ( it = mFields.constBegin(); it != end; ++it ) {
-        mFieldCombo->addItem( ContactFields::label( *it ) );
+    for (it = mFields.constBegin(); it != end; ++it) {
+        mFieldCombo->addItem(ContactFields::label(*it));
     }
 }
 
 void StylePage::initGUI()
 {
-    setWindowTitle( i18nc( "@title:window", "Choose Printing Style" ) );
+    setWindowTitle(i18nc("@title:window", "Choose Printing Style"));
 
-    QGridLayout *topLayout = new QGridLayout( this );
+    QGridLayout *topLayout = new QGridLayout(this);
 //TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
 //TODO PORT QT5     topLayout->setMargin( QDialog::marginHint() );
 
     QLabel *label =
-            new QLabel(
-                i18nc( "@label:textbox",
-                       "What should the print look like?\n"
-                       "KAddressBook has several printing styles, designed for different purposes.\n"
-                       "Choose the style that suits your needs below." ), this );
-    topLayout->addWidget( label, 0, 0, 1, 2 );
+        new QLabel(
+        i18nc("@label:textbox",
+              "What should the print look like?\n"
+              "KAddressBook has several printing styles, designed for different purposes.\n"
+              "Choose the style that suits your needs below."), this);
+    topLayout->addWidget(label, 0, 0, 1, 2);
 
-    QGroupBox *group = new QGroupBox( i18nc( "@title:group", "Sorting" ), this );
+    QGroupBox *group = new QGroupBox(i18nc("@title:group", "Sorting"), this);
     QGridLayout *sortLayout = new QGridLayout();
-    group->setLayout( sortLayout );
+    group->setLayout(sortLayout);
 //TODO PORT QT5     sortLayout->setSpacing( QDialog::spacingHint() );
 //TODO PORT QT5     sortLayout->setMargin( QDialog::marginHint() );
-    sortLayout->setAlignment( Qt::AlignTop );
+    sortLayout->setAlignment(Qt::AlignTop);
 
-    label = new QLabel( i18nc( "@label:listbox", "Criterion:" ), group );
-    sortLayout->addWidget( label, 0, 0 );
+    label = new QLabel(i18nc("@label:listbox", "Criterion:"), group);
+    sortLayout->addWidget(label, 0, 0);
 
-    mFieldCombo = new KComboBox( false, group );
+    mFieldCombo = new KComboBox(false, group);
     mFieldCombo->setToolTip(
-                i18nc( "@info:tooltip", "Select the primary sort field" ) );
+        i18nc("@info:tooltip", "Select the primary sort field"));
     mFieldCombo->setWhatsThis(
-                i18nc( "@info:whatsthis",
-                       "From this list you can select the field on which your contacts are sorted "
-                       "in the print output.  Use the sorting order option to determine if the "
-                       "sort will be in ascending or descending order." ) );
-    sortLayout->addWidget( mFieldCombo, 0, 1 );
+        i18nc("@info:whatsthis",
+              "From this list you can select the field on which your contacts are sorted "
+              "in the print output.  Use the sorting order option to determine if the "
+              "sort will be in ascending or descending order."));
+    sortLayout->addWidget(mFieldCombo, 0, 1);
 
-    label = new QLabel( i18nc( "@label:listbox", "Order:" ), group );
-    sortLayout->addWidget( label, 1, 0 );
+    label = new QLabel(i18nc("@label:listbox", "Order:"), group);
+    sortLayout->addWidget(label, 1, 0);
 
-    mSortTypeCombo = new KComboBox( false, group );
+    mSortTypeCombo = new KComboBox(false, group);
     mSortTypeCombo->setToolTip(
-                i18nc( "@info:tooltip", "Select the sorting order" ) );
+        i18nc("@info:tooltip", "Select the sorting order"));
     mSortTypeCombo->setWhatsThis(
-                i18nc( "@info:whatsthis",
-                       "Choose if you want to sort your contacts in ascending or descending order. "
-                       "Use the sorting criterion option to specify on which contact field the sorting "
-                       "will be performed." ) );
-    sortLayout->addWidget( mSortTypeCombo, 1, 1 );
+        i18nc("@info:whatsthis",
+              "Choose if you want to sort your contacts in ascending or descending order. "
+              "Use the sorting criterion option to specify on which contact field the sorting "
+              "will be performed."));
+    sortLayout->addWidget(mSortTypeCombo, 1, 1);
 
-    topLayout->addWidget( group, 1, 0 );
+    topLayout->addWidget(group, 1, 0);
 
-    group = new QGroupBox( i18nc( "@title:group", "Print Style" ), this );
+    group = new QGroupBox(i18nc("@title:group", "Print Style"), this);
     QVBoxLayout *styleLayout = new QVBoxLayout();
-    group->setLayout( styleLayout );
+    group->setLayout(styleLayout);
 //TODO PORT QT5     styleLayout->setSpacing( QDialog::spacingHint() );
 //TODO PORT QT5     styleLayout->setMargin( QDialog::marginHint() );
 
-    mStyleCombo = new KComboBox( false, group );
+    mStyleCombo = new KComboBox(false, group);
     mStyleCombo->setToolTip(
-                i18nc( "@info:tooltip", "Select the print style" ) );
+        i18nc("@info:tooltip", "Select the print style"));
     mStyleCombo->setWhatsThis(
-                i18nc( "@info:whatsthis",
-                       "Choose your desired printing style. See the preview image to help you decide." ) );
+        i18nc("@info:whatsthis",
+              "Choose your desired printing style. See the preview image to help you decide."));
 
-    styleLayout->addWidget( mStyleCombo );
+    styleLayout->addWidget(mStyleCombo);
 
-    mPreview = new QLabel( group );
-    QFont font( mPreview->font() );
-    font.setPointSize( 20 );
-    mPreview->setFont( font );
-    mPreview->setScaledContents( true );
-    mPreview->setAlignment( Qt::AlignCenter );
-    mPreview->setWordWrap( true );
-    styleLayout->addWidget( mPreview );
+    mPreview = new QLabel(group);
+    QFont font(mPreview->font());
+    font.setPointSize(20);
+    mPreview->setFont(font);
+    mPreview->setScaledContents(true);
+    mPreview->setAlignment(Qt::AlignCenter);
+    mPreview->setWordWrap(true);
+    styleLayout->addWidget(mPreview);
 
-    topLayout->addWidget( group, 1, 1 );
-    topLayout->setRowStretch( 1, 1 );
+    topLayout->addWidget(group, 1, 1);
+    topLayout->setRowStretch(1, 1);
 }
 
 int StylePage::printingStyle() const
@@ -207,8 +207,8 @@ int StylePage::printingStyle() const
     return mStyleCombo->currentIndex();
 }
 
-void StylePage::setPrintingStyle( int index )
+void StylePage::setPrintingStyle(int index)
 {
-    mStyleCombo->setCurrentIndex( index );
+    mStyleCombo->setCurrentIndex(index);
 }
 

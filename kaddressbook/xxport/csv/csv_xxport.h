@@ -27,13 +27,13 @@ class QFile;
 class CsvXXPort : public XXPort
 {
 public:
-    explicit CsvXXPort( QWidget *parent = 0 );
+    explicit CsvXXPort(QWidget *parent = 0);
 
-    bool exportContacts( const KABC::Addressee::List &contacts ) const;
+    bool exportContacts(const KABC::Addressee::List &contacts) const;
     KABC::Addressee::List importContacts() const;
 
 private:
-    void exportToFile( QFile *, const KABC::Addressee::List & ) const;
+    void exportToFile(QFile *, const KABC::Addressee::List &) const;
 };
 
 #endif

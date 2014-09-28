@@ -44,12 +44,12 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit ContactSwitcher( QWidget *parent = 0 );
+    explicit ContactSwitcher(QWidget *parent = 0);
 
     /**
      * Sets the @p view the contact switcher shall work on.
      */
-    void setView( QAbstractItemView *view );
+    void setView(QAbstractItemView *view);
 
 private Q_SLOTS:
     /**

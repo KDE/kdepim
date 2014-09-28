@@ -30,7 +30,7 @@ MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const A
       mList(lst)
 {
     setWindowTitle(i18n("Select Which Information to Use for new Contact"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -45,7 +45,6 @@ MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const A
 
     updateTabWidget();
 }
-
 
 MergeContactSelectInformationDialog::~MergeContactSelectInformationDialog()
 {

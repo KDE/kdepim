@@ -21,11 +21,13 @@
 #include "printstyle.h"
 #include <grantlee/templateloader.h>
 
-namespace Grantlee {
+namespace Grantlee
+{
 class Engine;
 }
 
-namespace KABPrinting {
+namespace KABPrinting
+{
 
 class PrintProgress;
 
@@ -34,12 +36,12 @@ class GrantleePrintStyle : public PrintStyle
     Q_OBJECT
 
 public:
-    explicit GrantleePrintStyle(const QString &themePath, PrintingWizard *parent );
+    explicit GrantleePrintStyle(const QString &themePath, PrintingWizard *parent);
     ~GrantleePrintStyle();
 
-    void print( const KABC::Addressee::List &, PrintProgress * );
+    void print(const KABC::Addressee::List &, PrintProgress *);
 private:
-    QString contactsToHtml( const KABC::Addressee::List &contacts );
+    QString contactsToHtml(const KABC::Addressee::List &contacts);
     QString mErrorMessage;
     Grantlee::Engine *mEngine;
     QSharedPointer<Grantlee::FileSystemTemplateLoader> mTemplateLoader;
@@ -49,7 +51,7 @@ private:
 class GrantleeStyleFactory : public PrintStyleFactory
 {
 public:
-    explicit GrantleeStyleFactory( const QString &name, const QString &themePath, PrintingWizard *parent );
+    explicit GrantleeStyleFactory(const QString &name, const QString &themePath, PrintingWizard *parent);
 
     PrintStyle *create() const;
     QString description() const;

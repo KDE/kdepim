@@ -15,12 +15,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef MERGECONTACTUTIL_H
 #define MERGECONTACTUTIL_H
 
 #include <AkonadiCore/Item>
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 namespace MergeContactUtil
 {
 bool hasSameNames(const Akonadi::Item::List &lst);

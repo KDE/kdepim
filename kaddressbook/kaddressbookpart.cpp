@@ -32,49 +32,49 @@
 
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY( KAddressBookFactory, registerPlugin<KAddressBookPart>(); )
+K_PLUGIN_FACTORY(KAddressBookFactory, registerPlugin<KAddressBookPart>();)
 
-KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
-                                    const QVariantList & )
-  : KParts::ReadOnlyPart( parent )
+KAddressBookPart::KAddressBookPart(QWidget *parentWidget, QObject *parent,
+                                   const QVariantList &)
+    : KParts::ReadOnlyPart(parent)
 {
-  //QT5 setComponentData( KAddressBookFactory::componentData() );
+    //QT5 setComponentData( KAddressBookFactory::componentData() );
 
-  KIconLoader::global()->addAppDir( QLatin1String("kaddressbook") );
-  // create a canvas to insert our widget
-  QWidget *canvas = new QWidget( parentWidget );
-  canvas->setFocusPolicy( Qt::ClickFocus );
-  setWidget( canvas );
-  QVBoxLayout *topLayout = new QVBoxLayout( canvas );
+    KIconLoader::global()->addAppDir(QLatin1String("kaddressbook"));
+    // create a canvas to insert our widget
+    QWidget *canvas = new QWidget(parentWidget);
+    canvas->setFocusPolicy(Qt::ClickFocus);
+    setWidget(canvas);
+    QVBoxLayout *topLayout = new QVBoxLayout(canvas);
 
-  mMainWidget = new MainWidget( this, canvas );
-  initAction();
+    mMainWidget = new MainWidget(this, canvas);
+    initAction();
 
-  topLayout->addWidget( mMainWidget );
-  topLayout->setMargin(0);
-  setXMLFile( QLatin1String("kaddressbookui.rc") );
+    topLayout->addWidget(mMainWidget);
+    topLayout->setMargin(0);
+    setXMLFile(QLatin1String("kaddressbookui.rc"));
 }
 
 void KAddressBookPart::updateQuickSearchText()
 {
-  mMainWidget->updateQuickSearchText();
+    mMainWidget->updateQuickSearchText();
 }
 
 void KAddressBookPart::initAction()
 {
-  QAction *action = new QAction( QIcon::fromTheme( QLatin1String("configure") ), i18n( "&Configure KAddressBook..." ), this );
-  actionCollection()->addAction( QLatin1String("kaddressbook_configure"), action );
-  connect(action, &QAction::triggered, mMainWidget, &MainWidget::configure);
+    QAction *action = new QAction(QIcon::fromTheme(QLatin1String("configure")), i18n("&Configure KAddressBook..."), this);
+    actionCollection()->addAction(QLatin1String("kaddressbook_configure"), action);
+    connect(action, &QAction::triggered, mMainWidget, &MainWidget::configure);
 }
 
 void KAddressBookPart::newContact()
 {
-  mMainWidget->newContact();
+    mMainWidget->newContact();
 }
 
 void KAddressBookPart::newGroup()
 {
-  mMainWidget->newGroup();
+    mMainWidget->newGroup();
 }
 
 KAddressBookPart::~KAddressBookPart()
@@ -83,13 +83,13 @@ KAddressBookPart::~KAddressBookPart()
 
 bool KAddressBookPart::openFile()
 {
-  return false;
+    return false;
 }
 
-void KAddressBookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
+void KAddressBookPart::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
-   qDebug();
-   KParts::ReadOnlyPart::guiActivateEvent( e );
+    qDebug();
+    KParts::ReadOnlyPart::guiActivateEvent(e);
 }
 
 #include "kaddressbookpart.moc"

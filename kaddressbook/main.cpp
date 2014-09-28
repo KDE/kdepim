@@ -54,16 +54,16 @@ int KAddressBookApplication::newInstance()
     return 0;
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
     KLocalizedString::setApplicationDomain("kaddressbook");
     AboutData about;
 
-    KCmdLineArgs::init( argc, argv, &about );
+    KCmdLineArgs::init(argc, argv, &about);
 
-    KCmdLineArgs::addCmdLineOptions( kaddressbook_options() ); // Add KAddressBook options
+    KCmdLineArgs::addCmdLineOptions(kaddressbook_options());   // Add KAddressBook options
     KUniqueApplication::addCmdLineOptions();
-    if ( !KAddressBookApplication::start() ) {
+    if (!KAddressBookApplication::start()) {
         return 0;
     }
 
