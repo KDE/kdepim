@@ -64,8 +64,8 @@ IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoDesktop *ui )
   setupAttachmentIconView();
   setObjectName( "IncidenceAttachment" );
 
-  connect( mUi->mAddButton, SIGNAL(clicked()), SLOT(addAttachment()) );
-  connect( mUi->mRemoveButton, SIGNAL(clicked()), SLOT(removeSelectedAttachments()) );
+  connect(mUi->mAddButton, &QPushButton::clicked, this, &IncidenceAttachment::addAttachment);
+  connect(mUi->mRemoveButton, &QPushButton::clicked, this, &IncidenceAttachment::removeSelectedAttachments);
 }
 
 IncidenceAttachment::~IncidenceAttachment()
@@ -476,6 +476,7 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
       for ( QList<QUrl>::ConstIterator it = urls.constBegin();
             it != urls.constEnd(); ++it ) {
         KIO::Job *job = KIO::storedGet( *it );
+        //TODO verify if slot exist !
         connect( job, SIGNAL(result(KJob*)), SLOT(downloadComplete(KJob*)) );
       }
     } else { // we take anything
@@ -491,13 +492,13 @@ void IncidenceAttachment::setupActions()
 
   mOpenAction = new QAction( i18nc( "@action:inmenu open the attachment in a viewer",
                                     "&Open" ), this );
-  connect( mOpenAction, SIGNAL(triggered(bool)), SLOT(showSelectedAttachments()) );
+  connect(mOpenAction, &QAction::triggered, this, &IncidenceAttachment::showSelectedAttachments);
   ac->addAction( "view", mOpenAction );
   mPopupMenu->addAction( mOpenAction );
 
   mSaveAsAction = new QAction( i18nc( "@action:inmenu save the attachment to a file",
                                       "Save As..." ), this );
-  connect( mSaveAsAction, SIGNAL(triggered(bool)), SLOT(saveSelectedAttachments()) );
+  connect(mSaveAsAction, &QAction::triggered, this, &IncidenceAttachment::saveSelectedAttachments);
   mPopupMenu->addAction( mSaveAsAction );
   mPopupMenu->addSeparator();
 
@@ -515,7 +516,7 @@ void IncidenceAttachment::setupActions()
 
   mDeleteAction = new QAction( i18nc( "@action:inmenu remove the attachment",
                                       "&Remove" ), this );
-  connect( mDeleteAction, SIGNAL(triggered(bool)), SLOT(removeSelectedAttachments()) );
+  connect(mDeleteAction, &QAction::triggered, this, &IncidenceAttachment::removeSelectedAttachments);
   ac->addAction( "remove", mDeleteAction );
   mDeleteAction->setShortcut( Qt::Key_Delete );
   mPopupMenu->addAction( mDeleteAction );
@@ -523,7 +524,7 @@ void IncidenceAttachment::setupActions()
 
   mEditAction = new QAction( i18nc( "@action:inmenu show a dialog used to edit the attachment",
                                     "&Properties..." ), this );
-  connect( mEditAction, SIGNAL(triggered(bool)), SLOT(editSelectedAttachments()) );
+  connect(mEditAction, &QAction::triggered, this, &IncidenceAttachment::editSelectedAttachments);
   ac->addAction( "edit", mEditAction );
   mPopupMenu->addAction( mEditAction );
 }
@@ -535,14 +536,10 @@ void IncidenceAttachment::setupAttachmentIconView()
                                      "Displays items (files, mail, etc.) that "
                                      "have been associated with this event or to-do." ) );
 
-  connect( mAttachmentView, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-           SLOT(showAttachment(QListWidgetItem*)) );
-  connect( mAttachmentView, SIGNAL(itemChanged(QListWidgetItem*)),
-           SLOT(slotItemRenamed(QListWidgetItem*)) );
-  connect( mAttachmentView, SIGNAL(itemSelectionChanged()),
-           SLOT(slotSelectionChanged()) );
-  connect( mAttachmentView, SIGNAL(customContextMenuRequested(QPoint)),
-           SLOT(showContextMenu(QPoint)) );
+  connect(mAttachmentView, &AttachmentIconView::itemDoubleClicked, this, &IncidenceAttachment::showAttachment);
+  connect(mAttachmentView, &AttachmentIconView::itemChanged, this, &IncidenceAttachment::slotItemRenamed);
+  connect(mAttachmentView, &AttachmentIconView::itemSelectionChanged, this, &IncidenceAttachment::slotSelectionChanged);
+  connect(mAttachmentView, &AttachmentIconView::customContextMenuRequested, this, &IncidenceAttachment::showContextMenu);
 
   QGridLayout *layout = new QGridLayout( mUi->mAttachmentViewPlaceHolder );
   layout->addWidget( mAttachmentView );

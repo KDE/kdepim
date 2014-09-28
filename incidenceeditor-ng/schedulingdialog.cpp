@@ -67,33 +67,21 @@ SchedulingDialog::SchedulingDialog( const QDate &startDate, const QTime &startTi
   ganttlayout->addWidget( mVisualWidget );
 #endif
 
-  connect( mStartDate, SIGNAL(dateEdited(QDate)),
-           mResolver, SLOT(setEarliestDate(QDate)) );
-  connect( mStartTime, SIGNAL(timeEdited(QTime)),
-           mResolver, SLOT(setEarliestTime(QTime)) );
-  connect( mEndDate, SIGNAL(dateEdited(QDate)),
-           mResolver, SLOT(setLatestDate(QDate)) );
-  connect( mEndTime, SIGNAL(timeEdited(QTime)),
-           mResolver, SLOT(setLatestTime(QTime)) );
+  connect(mStartDate, &KDateComboBox::dateEdited, mResolver, &ConflictResolver::setEarliestDate);
+  connect(mStartTime, &KTimeComboBox::timeEdited, mResolver, &ConflictResolver::setEarliestTime);
+  connect(mEndDate, &KDateComboBox::dateEdited, mResolver, &ConflictResolver::setLatestDate);
+  connect(mEndTime, &KTimeComboBox::timeEdited, mResolver, &ConflictResolver::setLatestTime);
 
-  connect( mStartDate, SIGNAL(dateEdited(QDate)),
-           this, SLOT(slotStartDateChanged(QDate)) );
+  connect(mStartDate, &KDateComboBox::dateEdited, this, &SchedulingDialog::slotStartDateChanged);
 
-  connect( mWeekdayCombo, SIGNAL(checkedItemsChanged(QStringList)),
-           SLOT(slotWeekdaysChanged()) );
-  connect( mWeekdayCombo, SIGNAL(checkedItemsChanged(QStringList)),
-           SLOT(slotMandatoryRolesChanged()) );
+  connect(mWeekdayCombo, &KPIM::KWeekdayCheckCombo::checkedItemsChanged, this, &SchedulingDialog::slotWeekdaysChanged);
+  connect(mWeekdayCombo, &KPIM::KWeekdayCheckCombo::checkedItemsChanged, this, &SchedulingDialog::slotMandatoryRolesChanged);
 
-  connect( mResolver, SIGNAL(freeSlotsAvailable(KCalCore::Period::List)),
-           mPeriodModel, SLOT(slotNewFreePeriods(KCalCore::Period::List)) );
-  connect( mMoveBeginTimeEdit, SIGNAL(timeEdited(QTime)),
-           this, SLOT(slotSetEndTimeLabel(QTime)) );
+  connect(mResolver, &ConflictResolver::freeSlotsAvailable, mPeriodModel, &FreePeriodModel::slotNewFreePeriods);
+  connect(mMoveBeginTimeEdit, &KTimeComboBox::timeEdited, this, &SchedulingDialog::slotSetEndTimeLabel);
 
   mTableView->setModel( mPeriodModel );
-  connect( mTableView->selectionModel(),
-           SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-           this,
-           SLOT(slotRowSelectionChanged(QModelIndex,QModelIndex)) );
+  connect( mTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotRowSelectionChanged(QModelIndex,QModelIndex)) );
 
   mStartDate->setDate( startDate );
   mEndDate->setDate( mStartDate->date().addDays( 7 ) );

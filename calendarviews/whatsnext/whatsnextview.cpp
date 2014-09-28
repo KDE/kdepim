@@ -53,8 +53,7 @@ WhatsNextView::WhatsNextView( QWidget *parent )
   : EventView( parent )
 {
   mView = new WhatsNextTextBrowser( this );
-  connect( mView, SIGNAL(showIncidence(QString)),
-           SLOT(showIncidence(QString)) );
+  connect(mView, &WhatsNextTextBrowser::showIncidence, this, &WhatsNextView::showIncidence);
 
   QBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->addWidget(mView);

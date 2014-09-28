@@ -128,10 +128,8 @@ public:
       delete todoTreeModel;
       todoTreeModel = new IncidenceTreeModel( QStringList() << todoMimeType, parent );
       foreach ( TodoView *view, views ) {
-        QObject::connect( todoTreeModel, SIGNAL(indexChangedParent(QModelIndex)),
-                          view, SLOT(expandIndex(QModelIndex)) );
-        QObject::connect( todoTreeModel, SIGNAL(batchInsertionFinished()),
-                          view, SLOT(restoreViewState()) );
+        QObject::connect( todoTreeModel, SIGNAL(indexChangedParent(QModelIndex)), view, SLOT(expandIndex(QModelIndex)) );
+        QObject::connect( todoTreeModel, SIGNAL(batchInsertionFinished()), view, SLOT(restoreViewState()) );
         view->mView->setDragDropMode( QAbstractItemView::DragDrop );
         view->setFlatView( flat, /**propagate=*/false ); // So other views update their toggle icon
       }
@@ -215,16 +213,11 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
     mQuickSearch->setVisible( prefs->enableTodoQuickSearch() );
     connect( mQuickSearch, SIGNAL(searchTextChanged(QString)),
              mProxyModel, SLOT(setFilterRegExp(QString)) );
-    connect( mQuickSearch, SIGNAL(searchTextChanged(QString)),
-             SLOT(restoreViewState()) );
-    connect( mQuickSearch, SIGNAL(filterCategoryChanged(QStringList)),
-             mProxyModel, SLOT(setCategoryFilter(QStringList)) );
-    connect( mQuickSearch, SIGNAL(filterCategoryChanged(QStringList)),
-             SLOT(restoreViewState()) );
-    connect( mQuickSearch, SIGNAL(filterPriorityChanged(QStringList)),
-             mProxyModel, SLOT(setPriorityFilter(QStringList)) );
-    connect( mQuickSearch, SIGNAL(filterPriorityChanged(QStringList)),
-             SLOT(restoreViewState()) );
+    connect(mQuickSearch, &TodoViewQuickSearch::searchTextChanged, this, &TodoView::restoreViewState);
+    connect(mQuickSearch, &TodoViewQuickSearch::filterCategoryChanged, mProxyModel, &TodoViewSortFilterProxyModel::setCategoryFilter);
+    connect(mQuickSearch, &TodoViewQuickSearch::filterCategoryChanged, this, &TodoView::restoreViewState);
+    connect(mQuickSearch, &TodoViewQuickSearch::filterPriorityChanged, mProxyModel, &TodoViewSortFilterProxyModel::setPriorityFilter);
+    connect(mQuickSearch, &TodoViewQuickSearch::filterPriorityChanged, this, &TodoView::restoreViewState);
   }
 
   mView = new TodoViewView( this );
@@ -263,15 +256,10 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
   mCategoriesDelegate = new TodoCategoriesDelegate( mView );
   mView->setItemDelegateForColumn( TodoModel::CategoriesColumn, mCategoriesDelegate );
 
-  connect( mView, SIGNAL(customContextMenuRequested(QPoint)),
-           this, SLOT(contextMenu(QPoint)) );
-  connect( mView, SIGNAL(doubleClicked(QModelIndex)),
-           this, SLOT(itemDoubleClicked(QModelIndex)) );
+  connect(mView, &TodoViewView::customContextMenuRequested, this, &TodoView::contextMenu);
+  connect(mView, &TodoViewView::doubleClicked, this, &TodoView::itemDoubleClicked);
 
-  connect( mView->selectionModel(),
-           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-           this,
-           SLOT(selectionChanged(QItemSelection,QItemSelection)) );
+  connect( mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)) );
 
   mQuickAdd = new TodoViewQuickAddLine( this );
   mQuickAdd->setClearButtonEnabled( true );
@@ -404,11 +392,9 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
                                 QDate::currentDate(), this );
   mCopyPopupMenu->setTitle( i18nc( "@title:menu", "&Copy To" ) );
 
-  connect( mCopyPopupMenu, SIGNAL(dateChanged(QDate)),
-           SLOT(copyTodoToDate(QDate)) );
+  connect(mCopyPopupMenu, &KPIM::KDatePickerPopup::dateChanged, this, &TodoView::copyTodoToDate);
 
-  connect( mCopyPopupMenu, SIGNAL(dateChanged(QDate)),
-           mItemPopupMenu, SLOT(hide()) );
+  connect(mCopyPopupMenu, &KPIM::KDatePickerPopup::dateChanged, mItemPopupMenu, &QMenu::hide);
 
   mMovePopupMenu =
     new KPIM:: KDatePickerPopup( KPIM::KDatePickerPopup::NoDate |
@@ -417,11 +403,9 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
                                  QDate::currentDate(), this );
   mMovePopupMenu->setTitle( i18nc( "@title:menu", "&Move To" ) );
 
-  connect( mMovePopupMenu, SIGNAL(dateChanged(QDate)),
-           SLOT(setNewDate(QDate)) );
+  connect(mMovePopupMenu, &KPIM::KDatePickerPopup::dateChanged, this, &TodoView::setNewDate);
 
-  connect( mMovePopupMenu, SIGNAL(dateChanged(QDate)),
-           mItemPopupMenu, SLOT(hide()) );
+  connect(mMovePopupMenu, &KPIM::KDatePickerPopup::dateChanged, mItemPopupMenu, &QMenu::hide);
 
   mItemPopupMenu->insertMenu( 0, mCopyPopupMenu );
   mItemPopupMenu->insertMenu( 0, mMovePopupMenu );
@@ -452,16 +436,14 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
                i18nc( "@action:inmenu priority value=8", "8" ) ) ] = 8;
   mPriority[ mPriorityPopupMenu->addAction(
                i18nc( "@action:inmenu lowest priority", "9 (lowest)" ) ) ] = 9;
-  connect( mPriorityPopupMenu, SIGNAL(triggered(QAction*)),
-           SLOT(setNewPriority(QAction*)) );
+  connect(mPriorityPopupMenu, &QMenu::triggered, this, &TodoView::setNewPriority);
 
   mPercentageCompletedPopupMenu = new QMenu(this);
   for ( int i = 0; i <= 100; i+=10 ) {
     const QString label = QString::fromLatin1( "%1 %" ).arg( i );
     mPercentage[mPercentageCompletedPopupMenu->addAction( label )] = i;
   }
-  connect( mPercentageCompletedPopupMenu, SIGNAL(triggered(QAction*)),
-           SLOT(setNewPercentage(QAction*)) );
+  connect(mPercentageCompletedPopupMenu, &QMenu::triggered, this, &TodoView::setNewPercentage);
 
   setMinimumHeight( 50 );
 
@@ -926,10 +908,8 @@ QMenu *TodoView::createCategoryPopupMenu()
   tagFetchJob->setProperty("menu", QVariant::fromValue(QPointer<QMenu>(tempMenu)));
   tagFetchJob->setProperty("checkedCategories", checkedCategories);
 
-  connect( tempMenu, SIGNAL(triggered(QAction*)),
-           SLOT(changedCategories(QAction*)) );
-  connect( tempMenu, SIGNAL(aboutToHide()),
-           tempMenu, SLOT(deleteLater()) );
+  connect(tempMenu, &QMenu::triggered, this, &TodoView::changedCategories);
+  connect(tempMenu, &QMenu::aboutToHide, tempMenu, &QMenu::deleteLater);
   return tempMenu;
 }
 

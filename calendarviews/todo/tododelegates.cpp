@@ -161,8 +161,7 @@ void TodoCompleteDelegate::updateEditorGeometry( QWidget *editor,
 TodoCompleteSlider::TodoCompleteSlider( QWidget *parent )
   : QSlider( parent )
 {
-  connect( this, SIGNAL(valueChanged(int)),
-           this, SLOT(updateTip(int)) );
+  connect(this, &TodoCompleteSlider::valueChanged, this, &TodoCompleteSlider::updateTip);
 }
 
 void TodoCompleteSlider::updateTip( int value )

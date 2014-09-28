@@ -77,7 +77,7 @@ class EVENTVIEWS_EXPORT WhatsNextView : public EventViews::EventView
     void showIncidence( const QString & );
 
   private:
-    QTextBrowser *mView;
+    WhatsNextTextBrowser *mView;
     QString mText;
     QDate mStartDate;
     QDate mEndDate;
