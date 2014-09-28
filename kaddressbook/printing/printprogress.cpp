@@ -23,7 +23,7 @@
 
 #include "printprogress.h"
 
-#include <KApplication>
+#include <QApplication>
 #include <QDialog>
 #include <KLocalizedString>
 #include <QTextBrowser>
@@ -74,12 +74,12 @@ void PrintProgress::addMessage( const QString &msg )
     }
 
     mLogBrowser->setText( head + body + foot );
-    kapp->processEvents();
+    qApp->processEvents();
 }
 
 void PrintProgress::setProgress( int step )
 {
     mProgressBar->setValue( step );
-    kapp->processEvents();
+    qApp->processEvents();
 }
 
