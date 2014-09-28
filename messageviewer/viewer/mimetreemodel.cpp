@@ -28,7 +28,7 @@
 #include <KMime/Message>
 
 #include <QDebug>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KMimeType>
 #include <KGlobal>
@@ -100,7 +100,7 @@ public:
         return KFormat().formatByteSize( content->body().size() );
     }
 
-    KIcon iconForContent( KMime::Content *content )
+    QIcon iconForContent( KMime::Content *content )
     {
         if ( content->contentType( false ) )
         {
@@ -110,13 +110,13 @@ public:
                 mimeType = MessageViewer::Util::mimetype(name);
             }
             if ( !mimeType || mimeType->iconName().isEmpty() )
-                return KIcon();
+                return QIcon();
             if( mimeType->name().startsWith( QLatin1String( "multipart/" ) ) )
-                return KIcon( QLatin1String("folder") );
-            return KIcon( mimeType->iconName() );
+                return QIcon::fromTheme( QLatin1String("folder") );
+            return QIcon::fromTheme( mimeType->iconName() );
         }
         else
-            return KIcon();
+            return QIcon();
     }
 
     KMime::Content *root;
