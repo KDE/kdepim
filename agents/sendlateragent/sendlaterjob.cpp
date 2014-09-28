@@ -68,7 +68,7 @@ void SendLaterJob::start()
             sendError(i18n("Not message found."), SendLaterManager::ItemNotFound);
         }
     } else {
-      sendError(i18n("Not message found."), SendLaterManager::UnknownError);
+        sendError(i18n("Not message found."), SendLaterManager::UnknownError);
     }
 }
 

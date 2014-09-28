@@ -157,7 +157,7 @@ SendLaterWidget::SendLaterWidget(QWidget *parent)
 #ifdef DEBUG_MESSAGE_ID
             << i18n("Message Id");
 #else
-               ;
+            ;
 #endif
 
     mWidget->treeWidget->setHeaderLabels(headers);

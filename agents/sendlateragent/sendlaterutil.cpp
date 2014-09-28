@@ -41,12 +41,12 @@ void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *inf
         //qDebug()<<" SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
         QDateTime newInfoDateTime = info->dateTime();
         while (newInfoDateTime < QDateTime::currentDateTime()) {
-            switch(info->recurrenceUnit()) {
+            switch (info->recurrenceUnit()) {
             case SendLater::SendLaterInfo::Days:
                 newInfoDateTime = newInfoDateTime.addDays(info->recurrenceEachValue());
                 break;
             case SendLater::SendLaterInfo::Weeks:
-                newInfoDateTime = newInfoDateTime.addDays(info->recurrenceEachValue()*7);
+                newInfoDateTime = newInfoDateTime.addDays(info->recurrenceEachValue() * 7);
                 break;
             case SendLater::SendLaterInfo::Months:
                 newInfoDateTime = newInfoDateTime.addMonths(info->recurrenceEachValue());
