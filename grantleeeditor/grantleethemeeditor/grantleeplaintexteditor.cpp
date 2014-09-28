@@ -48,7 +48,7 @@ void GrantleePlainTextEditor::initCompleter()
     mCompleter->setWidget(this);
     mCompleter->setCompletionMode(QCompleter::PopupCompletion);
 
-    connect(mCompleter, static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated), this, &GrantleePlainTextEditor::slotInsertCompletion);
+    connect(mCompleter, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &GrantleePlainTextEditor::slotInsertCompletion);
 }
 
 void GrantleePlainTextEditor::createCompleterList(const QStringList &extraCompletion)
