@@ -50,6 +50,7 @@ public:
     {
         supportFeatures |= PlainTextEditor::Search;
         supportFeatures |= PlainTextEditor::SpellChecking;
+        supportFeatures |= PlainTextEditor::TextToSpeech;
     }
     ~PlainTextEditorPrivate()
     {
@@ -171,6 +172,21 @@ bool PlainTextEditor::searchSupport() const
 {
     return (d->supportFeatures & Search);
 }
+
+void PlainTextEditor::setTextToSpeechSupport(bool b)
+{
+    if (b) {
+        d->supportFeatures |= TextToSpeech;
+    } else {
+        d->supportFeatures = (d->supportFeatures &~ TextToSpeech);
+    }
+}
+
+bool PlainTextEditor::textToSpeechSupport() const
+{
+    return (d->supportFeatures & TextToSpeech);
+}
+
 
 bool PlainTextEditor::spellCheckingSupport() const
 {
@@ -352,7 +368,7 @@ bool PlainTextEditor::overrideShortcut(const QKeyEvent* event)
         return true;
     } else if (searchSupport() && KStandardShortcut::replace().contains(key)) {
         return true;
-    } else if (d->hasSearchSupport && KStandardShortcut::findNext().contains(key)) {
+    } else if (searchSupport() && KStandardShortcut::findNext().contains(key)) {
         return true;
     } else if (event->matches(QKeySequence::SelectAll)) { // currently missing in QTextEdit
         return true;

@@ -31,6 +31,8 @@ class PIMCOMMON_EXPORT RichTextEditor : public QTextEdit
 {
     Q_OBJECT
     Q_PROPERTY(bool searchSupport READ searchSupport WRITE setSearchSupport)
+    Q_PROPERTY(bool spellCheckingSupport READ spellCheckingSupport WRITE setSpellCheckingSupport)
+    Q_PROPERTY(bool textToSpeechSupport READ textToSpeechSupport WRITE setTextToSpeechSupport)
 public:
     explicit RichTextEditor(QWidget *parent=0);
     ~RichTextEditor();
@@ -59,6 +61,8 @@ public:
     virtual void setReadOnly( bool readOnly );
     virtual void createHighlighter();
 
+    bool textToSpeechSupport() const;
+    void setTextToSpeechSupport(bool b);
 Q_SIGNALS:
     void say(const QString &text);
 

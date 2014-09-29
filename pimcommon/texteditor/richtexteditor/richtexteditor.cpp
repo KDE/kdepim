@@ -57,6 +57,7 @@ public:
         checkSpellingEnabled = group.readEntry("checkerEnabledByDefault", false);
         supportFeatures |= RichTextEditor::Search;
         supportFeatures |= RichTextEditor::SpellChecking;
+        supportFeatures |= RichTextEditor::TextToSpeech;
     }
     ~RichTextEditorPrivate()
     {
@@ -210,6 +211,21 @@ void RichTextEditor::setSpellCheckingSupport( bool check )
         d->supportFeatures = (d->supportFeatures &~ SpellChecking);
     }
 }
+
+void RichTextEditor::setTextToSpeechSupport(bool b)
+{
+    if (b) {
+        d->supportFeatures |= TextToSpeech;
+    } else {
+        d->supportFeatures = (d->supportFeatures &~ TextToSpeech);
+    }
+}
+
+bool RichTextEditor::textToSpeechSupport() const
+{
+    return (d->supportFeatures & TextToSpeech);
+}
+
 
 void RichTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {

@@ -29,6 +29,8 @@ class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
 {
     Q_OBJECT
     Q_PROPERTY(bool searchSupport READ searchSupport WRITE setSearchSupport)
+    Q_PROPERTY(bool spellCheckingSupport READ spellCheckingSupport WRITE setSpellCheckingSupport)
+    Q_PROPERTY(bool textToSpeechSupport READ textToSpeechSupport WRITE setTextToSpeechSupport)
 public:
     explicit PlainTextEditor(QWidget *parent=0);
     ~PlainTextEditor();
@@ -48,6 +50,9 @@ public:
     void setSpellCheckingSupport( bool check );
 
     virtual void setReadOnly( bool readOnly );
+
+    void setTextToSpeechSupport(bool b);
+    bool textToSpeechSupport() const;
 
 private Q_SLOTS:
     void slotUndoableClear();
