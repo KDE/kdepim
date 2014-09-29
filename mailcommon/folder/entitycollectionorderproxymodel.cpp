@@ -88,10 +88,8 @@ EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModel(QObject *parent
 {
     setDynamicSortFilter(true);
     setSortCaseSensitivity(Qt::CaseInsensitive);
-    connect(Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
-            this, SLOT(slotSpecialCollectionsChanged()));
-    connect(Akonadi::SpecialMailCollections::self(), SIGNAL(collectionsChanged(Akonadi::AgentInstance)),
-            this, SLOT(slotSpecialCollectionsChanged()));
+    connect(Akonadi::SpecialMailCollections::self(), &Akonadi::SpecialMailCollections::defaultCollectionsChanged, this, &EntityCollectionOrderProxyModel::slotSpecialCollectionsChanged);
+    connect(Akonadi::SpecialMailCollections::self(), &Akonadi::SpecialMailCollections::collectionsChanged, this, &EntityCollectionOrderProxyModel::slotSpecialCollectionsChanged);
 }
 
 EntityCollectionOrderProxyModel::~EntityCollectionOrderProxyModel()

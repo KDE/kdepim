@@ -67,20 +67,17 @@ Backend::Backend( int blog_id, QObject* parent )
     d->kBlog = d->bBlog->blogBackend();
     if ( d->bBlog->api() == BilboBlog::BLOGGER_API ) {
         KBlog::Blogger *blogger = qobject_cast<KBlog::Blogger*>( d->kBlog );
-        connect( blogger, SIGNAL(authenticated(QMap<QString,QString>)),
-                 this, SLOT(bloggerAuthenticated(QMap<QString,QString>)) );
+        connect(blogger, &KBlog::Blogger::authenticated, this, &Backend::bloggerAuthenticated);
         blogger->authenticate( DBMan::self()->getAuthData( blog_id ) );
     }
 
-    connect( d->kBlog, SIGNAL(error(KBlog::Blog::ErrorType,QString)),
-             this, SLOT(error(KBlog::Blog::ErrorType,QString)) );
-    connect( d->kBlog, SIGNAL(errorPost(KBlog::Blog::ErrorType,QString,KBlog::BlogPost*)),
-             this, SLOT(error(KBlog::Blog::ErrorType,QString)) );
+    connect(d->kBlog, &KBlog::Blog::error, this, &Backend::error);
+    connect(d->kBlog, &KBlog::Blog::errorPost, this, &Backend::error);
     connect( d->kBlog, SIGNAL( errorComment( KBlog::Blog::ErrorType, const QString &, KBlog::BlogPost*,
                                            KBlog::BlogComment* ) ),
              this, SLOT(error(KBlog::Blog::ErrorType,QString)) );
-    connect( d->kBlog, SIGNAL(errorMedia(KBlog::Blog::ErrorType,QString,KBlog::BlogMedia*)),
-             this, SLOT(error(KBlog::Blog::ErrorType,QString)) );
+
+    connect(d->kBlog, &KBlog::Blog::errorMedia, this, &Backend::error);
 }
 
 Backend::~Backend()
@@ -96,8 +93,7 @@ void Backend::getCategoryListFromServer()
          d->bBlog->api() == BilboBlog::MOVABLETYPE_API ||
          d->bBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) {
         KBlog::MetaWeblog *tmp = static_cast<KBlog::MetaWeblog*>( d->kBlog );
-        connect( tmp, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
-                 this, SLOT(categoriesListed(QList<QMap<QString,QString> >)) );
+        connect(tmp, &KBlog::MetaWeblog::listedCategories, this, &Backend::categoriesListed);
         tmp->listCategories();
     } else {
         error( KBlog::Blog::NotSupported, i18n( "Blog API doesn't support getting Category list." ) );
@@ -133,8 +129,7 @@ void Backend::categoriesListed( const QList< QMap < QString , QString > > & cate
 void Backend::getEntriesListFromServer( int count )
 {
     qDebug() << "Blog Id: " << d->bBlog->id();
-    connect( d->kBlog, SIGNAL(listedRecentPosts(QList<KBlog::BlogPost>)),
-             this, SLOT(entriesListed(QList<KBlog::BlogPost>)) );
+    connect(d->kBlog, &KBlog::Blog::listedRecentPosts, this, &Backend::entriesListed);
     d->kBlog->listRecentPosts( count );
 }
 
@@ -166,8 +161,7 @@ void Backend::publishPost( BilboPost* post )
         post->setContent(post->content() + poweredStr);
     }
     preparePost( post );
-    connect( d->kBlog, SIGNAL(createdPost(KBlog::BlogPost*)),
-             this, SLOT(postPublished(KBlog::BlogPost*)) );
+    connect(d->kBlog, &KBlog::Blog::createdPost, this, &Backend::postPublished);
     d->kBlog->createPost( post );
 }
 
@@ -183,8 +177,7 @@ void Backend::postPublished( KBlog::BlogPost *post )
     }
     qDebug()<<"isPrivate: "<<post->isPrivate();
     d->mSubmitPostStatusMap[ post ] = post->status();
-    connect( d->kBlog, SIGNAL(fetchedPost(KBlog::BlogPost*)),
-             this, SLOT(savePostInDbAndEmitResult(KBlog::BlogPost*)) );
+    connect(d->kBlog, &KBlog::Blog::fetchedPost, this, &Backend::savePostInDbAndEmitResult);
     d->kBlog->fetchPost( post );
 }
 
@@ -251,8 +244,7 @@ void Backend::uploadMedia( BilboMedia * media )
             }
             d->mPublishMediaMap[ m ] = media;
             connect(MWBlog, &KBlog::MetaWeblog::createdMedia, this, &Backend::mediaUploaded);
-            connect( MWBlog, SIGNAL(errorMedia(KBlog::Blog::ErrorType,QString,KBlog::BlogMedia*)),
-                     this, SLOT(slotMediaError(KBlog::Blog::ErrorType,QString,KBlog::BlogMedia*)) );
+            connect(MWBlog, &KBlog::MetaWeblog::errorMedia, this, &Backend::slotMediaError);
             MWBlog->createMedia( m );
             return;
     }
@@ -303,8 +295,7 @@ void Backend::modifyPost( BilboPost* post )
     qDebug() << "Blog Id: " << d->bBlog->id();
 //     BilboPost tmpPost = post;
     preparePost( post );
-    connect( d->kBlog, SIGNAL(modifiedPost(KBlog::BlogPost*)),
-             this, SLOT(postPublished(KBlog::BlogPost*)) );
+    connect(d->kBlog, &KBlog::Blog::modifiedPost, this, &Backend::postPublished);
     d->kBlog->modifyPost( post );
 }
 
@@ -313,8 +304,7 @@ void Backend::removePost( BilboPost* post )
     qDebug() << "Blog Id: " << d->bBlog->id();
 
 //     KBlog::BlogPost *bp = post.toKBlogPost();
-    connect( d->kBlog, SIGNAL(removedPost(KBlog::BlogPost*)),
-             this, SLOT(slotPostRemoved(KBlog::BlogPost*)) );
+    connect(d->kBlog, &KBlog::Blog::removedPost, this, &Backend::slotPostRemoved);
     d->kBlog->removePost( post );
 }
 
@@ -333,8 +323,7 @@ void Backend::slotPostRemoved( KBlog::BlogPost *post )
 void Backend::fetchPost( BilboPost* post )
 {
 //     KBlog::BlogPost *bp = post.toKBlogPost();
-    connect( d->kBlog, SIGNAL(fetchedPost(KBlog::BlogPost*)),
-             this, SLOT(slotPostFetched(KBlog::BlogPost*)) );
+    connect(d->kBlog, &KBlog::Blog::fetchedPost, this, &Backend::slotPostFetched);
     d->kBlog->fetchPost( post );
 }
 

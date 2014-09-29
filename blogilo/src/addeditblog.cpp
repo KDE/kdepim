@@ -280,8 +280,7 @@ void AddEditBlog::fetchBlogId()
         d->mBlog = blog;
         blog->setUsername( d->ui.txtUser->text() );
         blog->setPassword( d->ui.txtPass->text() );
-        connect( blog , SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
-                 this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
+        connect(blog, &KBlog::Blogger1::listedBlogs, this, &AddEditBlog::fetchedBlogId);
         d->mFetchBlogIdTimer = new QTimer( this );
         d->mFetchBlogIdTimer->setSingleShot( true );
         connect(d->mFetchBlogIdTimer, &QTimer::timeout, this, &AddEditBlog::handleFetchIDTimeout);
@@ -297,8 +296,7 @@ void AddEditBlog::fetchBlogId()
         blog->setPassword( d->ui.txtPass->text() );
         blog->setApiKey( QLatin1String("500754804903-g6n1rfjjcmhct64p3qgj6ma3oo8l8s6a.apps.googleusercontent.com") );
         blog->setSecretKey( QLatin1String("jzSzkrD7ert2z0v5VEq6CcSs") );
-        connect( blog, SIGNAL(authenticated(QMap<QString,QString>)),
-                 this, SLOT(bloggerAuthenticated(QMap<QString,QString>)) );
+        connect(blog, &KBlog::Blogger::authenticated, this, &AddEditBlog::bloggerAuthenticated);
         blog->authenticate();
         break;
     }
@@ -307,8 +305,7 @@ void AddEditBlog::fetchBlogId()
         return;
     }
 
-    connect( d->mBlog, SIGNAL(error(KBlog::Blog::ErrorType,QString)),
-             this, SLOT(handleFetchError(KBlog::Blog::ErrorType,QString)) );
+    connect(d->mBlog, &KBlog::Blog::error, this, &AddEditBlog::handleFetchError);
     d->ui.txtId->setText( i18n( "Please wait..." ) );
     d->ui.txtId->setEnabled( false );
     showWaitWidget( i18n( "Fetching Blog Id..." ) );
@@ -619,8 +616,7 @@ void AddEditBlog::bloggerAuthenticated(const QMap< QString, QString > &authData)
 {
     d->bBlog->setAuthData(authData);
     KBlog::Blogger *blogger = qobject_cast<KBlog::Blogger*>(d->mBlog);
-    connect( blogger, SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
-             this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
+    connect(blogger, &KBlog::Blogger::listedBlogs, this, &AddEditBlog::fetchedBlogId);
     d->mFetchBlogIdTimer = new QTimer( this );
     d->mFetchBlogIdTimer->setSingleShot( true );
     connect(d->mFetchBlogIdTimer, &QTimer::timeout, this, &AddEditBlog::handleFetchIDTimeout);

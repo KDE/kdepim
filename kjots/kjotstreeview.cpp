@@ -93,12 +93,9 @@ void KJotsTreeView::contextMenuEvent(QContextMenuEvent *event)
 
 void KJotsTreeView::delayedInitialization()
 {
-    connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("rename_entry")), SIGNAL(triggered()),
-            this, SLOT(renameEntry()));
-    connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("copy_link_address")), SIGNAL(triggered()),
-            this, SLOT(copyLinkAddress()));
-    connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("change_color")), SIGNAL(triggered()),
-            this, SLOT(changeColor()));
+    connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("rename_entry")), &QAction::triggered, this, &KJotsTreeView::renameEntry);
+    connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("copy_link_address")), &QAction::triggered, this, &KJotsTreeView::copyLinkAddress);
+    connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("change_color")), &QAction::triggered, this, &KJotsTreeView::changeColor);
 }
 
 QString KJotsTreeView::captionForSelection(const QString &sep) const

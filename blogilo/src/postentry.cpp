@@ -168,8 +168,7 @@ void PostEntry::createUi()
     d->txtTitle = new KPIM::SpellCheckLineEdit( this, QLatin1String( "blogilorc" ) );
     d->horizontalLayout->addWidget( d->txtTitle );
     d->labelTitle->setBuddy( d->txtTitle );
-    connect( d->txtTitle, SIGNAL(textChanged()), this,
-             SLOT(slotTitleChanged()) );
+    connect(d->txtTitle, &KPIM::SpellCheckLineEdit::textChanged, this, &PostEntry::slotTitleChanged);
     connect(d->txtTitle, &KPIM::SpellCheckLineEdit::focusDown, this, &PostEntry::slotFocusEditor);
 
     d->gridLayout->addLayout( d->horizontalLayout, 0, 0, 1, 1 );
@@ -428,8 +427,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
         if ( uploadMediaFiles(b) ) {
             qDebug()<<"Uploading";
             showProgressBar();
-            connect( b, SIGNAL(sigPostPublished(int,BilboPost*)),
-                     this, SLOT(slotPostPublished(int,BilboPost*)) );
+            connect(b, &Backend::sigPostPublished, this, &PostEntry::slotPostPublished);
             if (d->isNewPost)
                 b->publishPost( &d->mCurrentPost );
             else

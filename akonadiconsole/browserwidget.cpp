@@ -121,10 +121,8 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   splitter2->addWidget( mTagView );
 
   mTagView->setContextMenuPolicy(Qt::CustomContextMenu);
-  connect( mTagView, SIGNAL(customContextMenuRequested(QPoint)),
-           this, SLOT(tagViewContextMenuRequested(QPoint)) );
-  connect( mTagView, SIGNAL(doubleClicked(QModelIndex)),
-           this, SLOT(tagViewDoubleClicked(QModelIndex)) );
+  connect(mTagView, &QTreeView::customContextMenuRequested, this, &BrowserWidget::tagViewContextMenuRequested);
+  connect(mTagView, &QTreeView::doubleClicked, this, &BrowserWidget::tagViewDoubleClicked);
 
   Session *session = new Session( "AkonadiConsole Browser Widget", this );
 
@@ -171,7 +169,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
   const KConfigGroup group = KSharedConfig::openConfig()->group( "FavoriteCollectionsModel" );
-  connect( mBrowserModel, SIGNAL(columnsChanged()), itemFilter, SLOT(invalidate()) );
+  connect(mBrowserModel, &AkonadiBrowserModel::columnsChanged, itemFilter, &EntityMimeTypeFilterModel::invalidate);
   AkonadiBrowserSortModel *sortModel = new AkonadiBrowserSortModel( mBrowserModel, this );
   sortModel->setDynamicSortFilter( true );
   sortModel->setSourceModel( itemFilter );
@@ -197,8 +195,9 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemUi.itemView->setXmlGuiClient( xmlGuiWindow );
   itemUi.itemView->setModel( sortModel );
   itemUi.itemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
-  connect( itemUi.itemView, SIGNAL(activated(QModelIndex)), SLOT(itemActivated(QModelIndex)) );
+  connect(itemUi.itemView, &Akonadi::EntityTreeView::activated, this, &BrowserWidget::itemActivated);
   connect( itemUi.itemView, SIGNAL(clicked(QModelIndex)), SLOT(itemActivated(QModelIndex)) );
+
 
   splitter3->addWidget( itemViewParent );
   itemViewParent->layout()->setMargin( 0 );
@@ -360,7 +359,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
   mMonitor->itemFetchScope().fetchFullPayload();
   mMonitor->itemFetchScope().fetchAllAttributes();
   qRegisterMetaType<QSet<QByteArray> >();
-  connect( mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(setItem(Akonadi::Item)), Qt::QueuedConnection );
+  connect(mMonitor, &Akonadi::Monitor::itemChanged, this, &BrowserWidget::setItem, Qt::QueuedConnection );
 }
 
 void BrowserWidget::modelChanged()
