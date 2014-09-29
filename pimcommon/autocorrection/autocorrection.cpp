@@ -63,7 +63,7 @@ AutoCorrection::~AutoCorrection()
 {
 }
 
-void AutoCorrection::selectWord(QTextCursor &cursor, int cursorPosition)
+void AutoCorrection::selectPreviousWord(QTextCursor &cursor, int cursorPosition)
 {
     cursor.setPosition(cursorPosition);
     QTextBlock block = cursor.block();
@@ -91,31 +91,39 @@ void AutoCorrection::selectWord(QTextCursor &cursor, int cursorPosition)
 }
 
 
-void AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int &position)
+bool AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int &position)
 {
     if (!mEnabled)
-        return;
+        return true;
     mCursor =  QTextCursor(&document);
     int oldPosition = position;
-    selectWord(mCursor,position);
+    selectPreviousWord(mCursor,position);
     mWord = mCursor.selectedText();
-    if (mWord.isEmpty())
-        return;
+    if (mWord.isEmpty()) {
+        return singleSpaces();
+    }
     mCursor.beginEditBlock();
     bool done = false;
     if (htmlMode) {
         done = autoFormatURLs();
         if (!done) {
             done = autoBoldUnderline();
+            //We replace */- by format => remove cursor position by 2
+            if (done) {
+                oldPosition -= 2;
+            }
         }
         if (!done) {
             superscriptAppendix();
         }
     }
-    if (!done)
-        done = singleSpaces();
-    if (!done)
+    if (!done) {
         done = autoFractions();
+        //We replace three characters with 1
+        if (done) {
+            oldPosition -= 2;
+        }
+    }
     if (!done) {
         const int newPos = advancedAutocorrect();
         if (newPos != -1) {
@@ -135,6 +143,7 @@ void AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int &po
         mCursor.insertText(mWord);
     position = oldPosition;
     mCursor.endEditBlock();
+    return true;
 }
 
 void AutoCorrection::readConfig()
@@ -372,7 +381,6 @@ bool AutoCorrection::autoBoldUnderline()
 {
     if (!mAutoBoldUnderline)
         return false;
-
     const QString trimmed = mWord.trimmed();
 
     if (trimmed.length() < 3)
@@ -398,7 +406,6 @@ bool AutoCorrection::autoBoldUnderline()
         // if no letter/number found, don't apply autocorrection like in OOo 2.x
         if (!foundLetterNumber)
             return false;
-
         mCursor.setPosition(startPos);
         mCursor.setPosition(startPos + trimmed.length(), QTextCursor::KeepAnchor);
         mCursor.insertText(replacement);
@@ -413,15 +420,7 @@ bool AutoCorrection::autoBoldUnderline()
 
         // to avoid the selection being replaced by mWord
         mWord = mCursor.selectedText();
-
-        // don't do this again if the text is already underlined and bold
-        if (mCursor.charFormat().fontUnderline()
-                && mCursor.charFormat().fontWeight() == QFont::Bold
-                && mCursor.charFormat().fontStrikeOut()) {
-            return true;
-        } else {
-            return autoBoldUnderline();
-        }
+        return true;
     }
     else
         return false;
@@ -570,20 +569,20 @@ void AutoCorrection::fixTwoUppercaseChars()
 }
 
 
+//Return true if we can add space
 bool AutoCorrection::singleSpaces()
 {
     if (!mSingleSpaces)
-        return false;
-    if (!mCursor.atBlockStart() && mWord.length() == 1 && mWord.at(0) == QLatin1Char(' ')) {
+        return true;
+    if (!mCursor.atBlockStart()) {
         // then when the prev char is also a space, don't insert one.
         const QTextBlock block = mCursor.block();
         const QString text = block.text();
         if (text.at(mCursor.position() -1 - block.position()) == QLatin1Char(' ')) {
-            mWord.clear();
-            return true;
+            return false;
         }
     }
-    return false;
+    return true;
 }
 
 void AutoCorrection::capitalizeWeekDays()
@@ -647,7 +646,7 @@ void AutoCorrection::uppercaseFirstCharOfSentence()
                     --position;
                     --constIter;
                 }
-                selectWord(mCursor, --position);
+                selectPreviousWord(mCursor, --position);
                 const QString prevWord = mCursor.selectedText();
 
                 // search for exception
