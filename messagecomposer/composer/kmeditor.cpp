@@ -255,26 +255,30 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
                     const QTextCharFormat initialTextFormat = textCursor().charFormat();
                     const bool richText = (textMode() == KRichTextEdit::Rich);
                     int position = textCursor().position();
-                    d->mAutoCorrection->autocorrect(richText, *document(), position);
+                    const bool addChar = d->mAutoCorrection->autocorrect(richText, *document(), position);
                     QTextCursor cur = textCursor();
                     cur.setPosition(position);
                     if (overwriteMode() && e->key() == Qt::Key_Space) {
-                        const QChar insertChar = QLatin1Char(' ');
-                        if (!cur.atBlockEnd()) {
-                            cur.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, 1);
+                        if (addChar) {
+                            const QChar insertChar = QLatin1Char(' ');
+                            if (!cur.atBlockEnd()) {
+                                cur.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, 1);
+                            }
+                            if (richText && !isSpecial(initialTextFormat))
+                                cur.insertText(insertChar, initialTextFormat);
+                            else
+                                cur.insertText(insertChar);
+                            setTextCursor(cur);
                         }
-                        if (richText && !isSpecial(initialTextFormat))
-                            cur.insertText(insertChar, initialTextFormat);
-                        else
-                            cur.insertText(insertChar);
-                        setTextCursor(cur);
                     } else {
-                        const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
-                        if (richText && !isSpecial(initialTextFormat))
-                            cur.insertText(insertChar, initialTextFormat);
-                        else
-                            cur.insertText(insertChar);
-                        setTextCursor(cur);
+                        if (addChar) {
+                            const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
+                            if (richText && !isSpecial(initialTextFormat))
+                                cur.insertText(insertChar, initialTextFormat);
+                            else
+                                cur.insertText(insertChar);
+                            setTextCursor(cur);
+                        }
                     }
                     return;
                 }

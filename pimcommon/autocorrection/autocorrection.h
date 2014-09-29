@@ -80,7 +80,7 @@ public:
     QSet<QString> twoUpperLetterExceptions() const;
     QHash<QString, QString> autocorrectEntries() const;
 
-    void autocorrect(bool htmlMode, QTextDocument &document, int &position);
+    bool autocorrect(bool htmlMode, QTextDocument &document, int &position);
     void writeConfig();
 
     bool addAutoCorrect(const QString& currentWord, const QString& replaceWord);
@@ -100,7 +100,7 @@ private:
     void replaceTypographicQuotes();
     void superscriptAppendix();
 
-    void selectWord(QTextCursor &cursor, int cursorPosition);
+    void selectPreviousWord(QTextCursor &cursor, int cursorPosition);
 
     bool autoFormatURLs();
     bool autoBoldUnderline();
