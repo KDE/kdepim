@@ -26,7 +26,7 @@
 
 using namespace MessageComposer;
 
-class testKMeditorWindow  : public QMainWindow
+class testKMeditorWindow : public QMainWindow
 {
     Q_OBJECT
 
