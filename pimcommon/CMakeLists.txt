@@ -259,6 +259,7 @@ add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
 add_subdirectory(texttospeech/autotests)
+add_subdirectory(texttospeech/tests)
 
 
 if( LibKGAPI2_FOUND )

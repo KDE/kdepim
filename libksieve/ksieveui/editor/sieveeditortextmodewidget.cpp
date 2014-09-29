@@ -122,9 +122,9 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect(shortcut, &QShortcut::activated, this, &SieveEditorTextModeWidget::slotReplace);
     connect(mTextEdit, &SieveTextEdit::replaceText, this, &SieveEditorTextModeWidget::slotReplace);
 
-    mDebugTextEdit = new PimCommon::PlainTextEditor;
-    mDebugTextEdit->setSearchSupport(false);
-    mDebugTextEdit->setReadOnly(true);
+    mDebugTextEdit = new PimCommon::PlainTextEditorWidget;
+    mDebugTextEdit->editor()->setSearchSupport(false);
+    mDebugTextEdit->editor()->setReadOnly(true);
     mMainSplitter->addWidget(mTemplateSplitter);
     mMainSplitter->addWidget(mDebugTextEdit);
     mMainSplitter->setChildrenCollapsible(false);
@@ -257,8 +257,8 @@ void SieveEditorTextModeWidget::setScript(const QString &script)
 
 void SieveEditorTextModeWidget::setDebugScript(const QString &debug)
 {
-    mDebugTextEdit->clear();
-    mDebugTextEdit->appendHtml(debug);
+    mDebugTextEdit->editor()->clear();
+    mDebugTextEdit->editor()->appendHtml(debug);
 }
 
 void SieveEditorTextModeWidget::setSieveCapabilities(const QStringList &capabilities)

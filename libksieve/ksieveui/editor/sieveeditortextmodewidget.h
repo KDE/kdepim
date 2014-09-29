@@ -28,6 +28,7 @@ namespace PimCommon
 class PlainTextEditFindBar;
 class PlainTextEditor;
 class TextGoToLineWidget;
+class PlainTextEditorWidget;
 }
 
 namespace KSieveUi
@@ -82,7 +83,7 @@ private:
     QString mOriginalScript;
     QStringList mSieveCapabilities;
     SieveTextEdit *mTextEdit;
-    PimCommon::PlainTextEditor *mDebugTextEdit;
+    PimCommon::PlainTextEditorWidget *mDebugTextEdit;
     PimCommon::PlainTextEditFindBar *mFindBar;
     SieveInfoWidget *mSieveInfo;
     QSplitter *mMainSplitter;
