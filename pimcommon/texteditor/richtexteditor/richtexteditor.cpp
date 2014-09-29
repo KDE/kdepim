@@ -57,6 +57,8 @@ public:
         KConfig sonnetKConfig(QLatin1String("sonnetrc"));
         KConfigGroup group(&sonnetKConfig, "Spelling");
         checkSpellingEnabled = group.readEntry("checkerEnabledByDefault", false);
+        supportFeatures |= RichTextEditor::Search;
+        supportFeatures |= RichTextEditor::SpellChecking;
     }
     ~RichTextEditorPrivate()
     {
@@ -69,6 +71,7 @@ public:
     QTextDocumentFragment originalDoc;
     Sonnet::Highlighter *highLighter;
     Sonnet::Speller* speller;
+    RichTextEditor::SupportFeatures supportFeatures;
     bool hasSearchSupport;
     bool customPalette;
     bool checkSpellingEnabled;

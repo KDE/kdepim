@@ -50,6 +50,8 @@ public:
           customPalette(false),
           hasSpellCheckingSupport(true)
     {
+        supportFeatures |= PlainTextEditor::Search;
+        supportFeatures |= PlainTextEditor::SpellChecking;
     }
     ~PlainTextEditorPrivate()
     {
@@ -57,6 +59,7 @@ public:
 
     QString spellCheckingLanguage;
     QTextDocumentFragment originalDoc;
+    PlainTextEditor::SupportFeatures supportFeatures;
     bool hasSearchSupport;
     bool customPalette;
     bool hasSpellCheckingSupport;

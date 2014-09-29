@@ -33,6 +33,14 @@ public:
     explicit PlainTextEditor(QWidget *parent=0);
     ~PlainTextEditor();
 
+    enum SupportFeature {
+        None = 0,
+        Search = 1,
+        SpellChecking = 2,
+        TextToSpeech = 4
+    };
+    Q_DECLARE_FLAGS(SupportFeatures, SupportFeature)
+
     void setSearchSupport(bool b);
     bool searchSupport() const;
 
