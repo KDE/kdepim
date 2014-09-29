@@ -27,6 +27,7 @@
 
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
+#include "pimcommon/texttospeech/texttospeech.h"
 
 #include <QMenu>
 #include <QDBusInterface>
@@ -37,8 +38,6 @@
 #include <QScrollBar>
 #include <QApplication>
 #include <QClipboard>
-
-#include "pimcommon/texttospeech/texttospeechwidget.h"
 
 
 using namespace PimCommon;
@@ -119,14 +118,12 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
                 spellCheckAction->setEnabled(false);
             popup->addSeparator();
         }
-#if 0
         if (PimCommon::TextToSpeech::self()->isReady()) {
             QAction *speakAction = popup->addAction(i18n("Speak Text"));
             speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
             speakAction->setEnabled(!emptyDocument );
             connect(speakAction, &QAction::triggered, this, &PlainTextEditor::slotSpeakText);
         }
-#endif
         addExtraMenuEntry(popup, event->pos());
         popup->exec( event->globalPos() );
 
@@ -142,17 +139,12 @@ void PlainTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 
 void PlainTextEditor::slotSpeakText()
 {
-#if 0
-#if KDEPIM_HAVE_TEXTTOSPEECH
-    //Port to QtSpeech
     QString text;
     if (textCursor().hasSelection())
         text = textCursor().selectedText();
     else
         text = toPlainText();
-    //PORT ME ktts.asyncCall(QLatin1String("say"), text, 0);
-#endif
-#endif
+    Q_EMIT say(text);
 }
 
 void PlainTextEditor::slotUndoableClear()

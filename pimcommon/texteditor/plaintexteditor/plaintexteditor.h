@@ -72,6 +72,7 @@ Q_SIGNALS:
     void checkSpellingChanged(bool);
     void languageChanged(const QString &);
     void spellCheckStatus(const QString &);
+    void say(const QString &text);
 
 private:
     bool handleShortcut(const QKeyEvent *event);

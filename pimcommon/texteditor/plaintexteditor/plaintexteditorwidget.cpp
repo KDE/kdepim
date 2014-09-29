@@ -18,6 +18,7 @@
 #include "plaintexteditorwidget.h"
 #include "plaintexteditor.h"
 #include "plaintexteditfindbar.h"
+#include "pimcommon/texttospeech/texttospeechwidget.h"
 
 #include <QVBoxLayout>
 #include <QShortcut>
@@ -56,12 +57,15 @@ void PlainTextEditorWidget::init(PlainTextEditor *customEditor)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
+    mTextToSpeechWidget = new PimCommon::TextToSpeechWidget(this);
+    lay->addWidget(mTextToSpeechWidget);
     if (customEditor) {
         mEditor = customEditor;
     } else {
         mEditor = new PlainTextEditor;
     }
     lay->addWidget(mEditor);
+    connect(mEditor, &PlainTextEditor::say, mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::say);
 
     mFindBar = new PimCommon::PlainTextEditFindBar( mEditor, this );
     lay->addWidget(mFindBar);

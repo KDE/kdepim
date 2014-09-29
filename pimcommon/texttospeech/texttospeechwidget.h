@@ -44,6 +44,7 @@ public:
 
     bool isReady() const;
 
+public Q_SLOTS:
     void say(const QString &text);
 
 Q_SIGNALS:

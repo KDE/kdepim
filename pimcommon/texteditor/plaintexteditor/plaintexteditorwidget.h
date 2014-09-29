@@ -24,6 +24,7 @@
 namespace PimCommon {
 class PlainTextEditor;
 class PlainTextEditFindBar;
+class TextToSpeechWidget;
 class PIMCOMMON_EXPORT PlainTextEditorWidget : public QWidget
 {
     Q_OBJECT
@@ -49,6 +50,7 @@ private:
     void init(PlainTextEditor *customEditor = 0);
     PimCommon::PlainTextEditFindBar *mFindBar;
     PlainTextEditor *mEditor;
+    PimCommon::TextToSpeechWidget *mTextToSpeechWidget;
 };
 }
 
