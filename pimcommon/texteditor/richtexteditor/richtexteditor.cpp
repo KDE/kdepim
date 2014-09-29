@@ -50,9 +50,7 @@ public:
     RichTextEditorPrivate()
         : highLighter(0),
           speller(0),
-          hasSearchSupport(true),
-          customPalette(false),
-          hasSpellCheckingSupport(true)
+          customPalette(false)
     {
         KConfig sonnetKConfig(QLatin1String("sonnetrc"));
         KConfigGroup group(&sonnetKConfig, "Spelling");
@@ -72,10 +70,8 @@ public:
     Sonnet::Highlighter *highLighter;
     Sonnet::Speller* speller;
     RichTextEditor::SupportFeatures supportFeatures;
-    bool hasSearchSupport;
     bool customPalette;
     bool checkSpellingEnabled;
-    bool hasSpellCheckingSupport;
 };
 
 
@@ -114,7 +110,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                                            : KIconTheme::TextEditor,
                                               popup->actions() );
-        if (d->hasSearchSupport) {
+        if (searchSupport()) {
             popup->addSeparator();
             QAction *findAct = popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this, SIGNAL(findText()), Qt::Key_F+Qt::CTRL);
             if ( emptyDocument )
@@ -130,7 +126,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
             popup->addSeparator();
         }
 
-        if( !isReadOnly() && d->hasSpellCheckingSupport) {
+        if( !isReadOnly() && spellCheckingSupport()) {
             QAction *spellCheckAction = popup->addAction( QIcon::fromTheme( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
             if (emptyDocument)
                 spellCheckAction->setEnabled(false);
@@ -189,22 +185,30 @@ void RichTextEditor::slotSpeakText()
 
 void RichTextEditor::setSearchSupport(bool b)
 {
-    d->hasSearchSupport = b;
+    if (b) {
+        d->supportFeatures |= Search;
+    } else {
+        d->supportFeatures = (d->supportFeatures &~ Search);
+    }
 }
 
 bool RichTextEditor::searchSupport() const
 {
-    return d->hasSearchSupport;
+    return (d->supportFeatures & Search);
 }
 
 bool RichTextEditor::spellCheckingSupport() const
 {
-    return d->hasSpellCheckingSupport;
+    return (d->supportFeatures & SpellChecking);
 }
 
 void RichTextEditor::setSpellCheckingSupport( bool check )
 {
-    d->hasSpellCheckingSupport = check;
+    if (check) {
+        d->supportFeatures |= SpellChecking;
+    } else {
+        d->supportFeatures = (d->supportFeatures &~ SpellChecking);
+    }
 }
 
 void RichTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
@@ -339,7 +343,7 @@ void RichTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
 
 void RichTextEditor::focusInEvent( QFocusEvent *event )
 {
-    if ( d->checkSpellingEnabled && !isReadOnly() && !d->highLighter && d->hasSpellCheckingSupport)
+    if ( d->checkSpellingEnabled && !isReadOnly() && !d->highLighter && spellCheckingSupport())
         createHighlighter();
 
     QTextEdit::focusInEvent( event );
@@ -634,10 +638,10 @@ bool RichTextEditor::handleShortcut(const QKeyEvent* event)
         cursor.movePosition( QTextCursor::EndOfLine );
         setTextCursor( cursor );
         return true;
-    } else if (d->hasSearchSupport && KStandardShortcut::find().contains(key)) {
+    } else if (searchSupport() && KStandardShortcut::find().contains(key)) {
         Q_EMIT findText();
         return true;
-    } else if (d->hasSearchSupport && KStandardShortcut::replace().contains(key)) {
+    } else if (searchSupport() && KStandardShortcut::replace().contains(key)) {
         if (!isReadOnly())
             Q_EMIT replaceText();
         return true;
@@ -687,11 +691,11 @@ bool RichTextEditor::overrideShortcut(const QKeyEvent* event)
         return true;
     } else if ( KStandardShortcut::pasteSelection().contains( key ) ) {
         return true;
-    } else if (d->hasSearchSupport && KStandardShortcut::find().contains(key)) {
+    } else if (searchSupport() && KStandardShortcut::find().contains(key)) {
         return true;
-    } else if (d->hasSearchSupport && KStandardShortcut::findNext().contains(key)) {
+    } else if (searchSupport() && KStandardShortcut::findNext().contains(key)) {
         return true;
-    } else if (d->hasSearchSupport && KStandardShortcut::replace().contains(key)) {
+    } else if (searchSupport() && KStandardShortcut::replace().contains(key)) {
         return true;
     } else if (event->matches(QKeySequence::SelectAll)) { // currently missing in QTextEdit
         return true;
