@@ -25,7 +25,6 @@ TextToSpeechInterface::TextToSpeechInterface(TextToSpeechWidget *textToSpeechWid
     : AbstractTextToSpeechInterface(parent),
       mTextToSpeechWidget(textToSpeechWidget)
 {
-    connect(PimCommon::TextToSpeech::self(), &PimCommon::TextToSpeech::emitSay, this, &TextToSpeechInterface::say);
     connect(mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::stateChanged, this, &TextToSpeechInterface::stateChanged);
 }
 
@@ -33,10 +32,16 @@ TextToSpeechInterface::~TextToSpeechInterface()
 {
 }
 
-void TextToSpeechInterface::say()
+bool TextToSpeechInterface::isReady() const
+{
+    return PimCommon::TextToSpeech::self()->isReady();
+}
+
+void TextToSpeechInterface::say(const QString &text)
 {
     mTextToSpeechWidget->setState(PimCommon::TextToSpeechWidget::Play);
     mTextToSpeechWidget->show();
+    PimCommon::TextToSpeech::self()->say(text);
 }
 
 void TextToSpeechInterface::stateChanged(TextToSpeechWidget::State state)

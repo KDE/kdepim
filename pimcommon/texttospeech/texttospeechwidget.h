@@ -42,6 +42,9 @@ public:
 
     void setTextToSpeechInterface(AbstractTextToSpeechInterface *interface);
 
+    bool isReady() const;
+
+    void say(const QString &text);
 
 Q_SIGNALS:
     void stateChanged(PimCommon::TextToSpeechWidget::State state);

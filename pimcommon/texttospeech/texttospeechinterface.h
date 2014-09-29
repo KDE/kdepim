@@ -32,12 +32,15 @@ public:
     explicit TextToSpeechInterface(TextToSpeechWidget *textToSpeechWidget, QObject *parent=0);
     ~TextToSpeechInterface();
 
+    bool isReady() const;
+    void say(const QString &text);
+
+
 private Q_SLOTS:
-    void say();
     void stateChanged(PimCommon::TextToSpeechWidget::State state);
 
 private:
-    TextToSpeechWidget *mTextToSpeechWidget;
+    TextToSpeechWidget *mTextToSpeechWidget;    
 };
 }
 

@@ -25,3 +25,13 @@ AbstractTextToSpeechInterface::AbstractTextToSpeechInterface(QObject *parent)
 AbstractTextToSpeechInterface::~AbstractTextToSpeechInterface()
 {
 }
+
+bool AbstractTextToSpeechInterface::isReady() const
+{
+    return true;
+}
+
+void AbstractTextToSpeechInterface::say(const QString &text)
+{
+    Q_UNUSED(text);
+}

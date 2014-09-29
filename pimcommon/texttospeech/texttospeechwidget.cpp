@@ -41,10 +41,23 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     hbox->addWidget(mPlayPauseButton);
     updateButtonState();
     mTextToSpeechInterface = new TextToSpeechInterface(this, this);
+    hide();
 }
 
 TextToSpeechWidget::~TextToSpeechWidget()
 {
+}
+
+bool TextToSpeechWidget::isReady() const
+{
+    return mTextToSpeechInterface->isReady();
+}
+
+void TextToSpeechWidget::say(const QString &text)
+{
+    if (mTextToSpeechInterface->isReady()) {
+        mTextToSpeechInterface->say(text);
+    }
 }
 
 void TextToSpeechWidget::slotPlayPause()

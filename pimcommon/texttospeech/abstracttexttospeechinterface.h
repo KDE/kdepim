@@ -26,6 +26,9 @@ class PIMCOMMON_EXPORT AbstractTextToSpeechInterface : public QObject
 public:
     explicit AbstractTextToSpeechInterface(QObject *parent=0);
     ~AbstractTextToSpeechInterface();
+
+    virtual bool isReady() const;
+    virtual void say(const QString &text);
 };
 }
 
