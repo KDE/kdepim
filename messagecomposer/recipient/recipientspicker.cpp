@@ -209,8 +209,7 @@ void RecipientsPicker::slotSearchLDAP()
 {
     if ( !mLdapSearchDialog ) {
         mLdapSearchDialog = new KLDAP::LdapSearchDialog( this );
-        connect( mLdapSearchDialog, SIGNAL(contactsAdded()),
-                 SLOT(ldapSearchResult()) );
+        connect(mLdapSearchDialog, &KLDAP::LdapSearchDialog::contactsAdded, this, &RecipientsPicker::ldapSearchResult);
     }
 
     mLdapSearchDialog->setSearchText( mView->searchLineEdit()->text() );
