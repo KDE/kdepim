@@ -366,6 +366,8 @@ bool PlainTextEditor::overrideShortcut(const QKeyEvent* event)
         return true;
     } else if (d->hasSearchSupport && KStandardShortcut::replace().contains(key)) {
         return true;
+    } else if (d->hasSearchSupport && KStandardShortcut::findNext().contains(key)) {
+        return true;
     } else if (event->matches(QKeySequence::SelectAll)) { // currently missing in QTextEdit
         return true;
     } else if (event->modifiers() == Qt::ControlModifier &&
