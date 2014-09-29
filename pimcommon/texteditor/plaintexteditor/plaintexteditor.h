@@ -36,14 +36,8 @@ public:
     void setSearchSupport(bool b);
     bool searchSupport() const;
 
-    bool checkSpellingEnabled() const;
-    void setCheckSpellingEnabled( bool check );
-
     bool spellCheckingSupport() const;
     void setSpellCheckingSupport( bool check );
-
-    void setSpellCheckingLanguage(const QString &_language);
-    const QString& spellCheckingLanguage() const;
 
     virtual void setReadOnly( bool readOnly );
 
