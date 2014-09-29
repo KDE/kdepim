@@ -16,7 +16,6 @@
 */
 
 #include "richtexteditor.h"
-#include "config-kdepim.h"
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -31,6 +30,7 @@
 #include <Sonnet/Dialog>
 #include <Sonnet/Highlighter>
 #include <sonnet/speller.h>
+#include <pimcommon/texttospeech/texttospeech.h>
 
 #include <QMenu>
 #include <QContextMenuEvent>
@@ -42,9 +42,6 @@
 #include <QScrollBar>
 #include <QApplication>
 #include <QClipboard>
-#if KDEPIM_HAVE_TEXTTOSPEECH
-#include <QtTextToSpeech/QTextToSpeech>
-#endif
 
 using namespace PimCommon;
 class RichTextEditor::RichTextEditorPrivate
@@ -164,12 +161,12 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
             }
             popup->addSeparator();
         }
-#if KDEPIM_HAVE_TEXTTOSPEECH
-        QAction *speakAction = popup->addAction(i18n("Speak Text"));
-        speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
-        speakAction->setEnabled(!emptyDocument );
-        connect(speakAction, &QAction::triggered, this, &RichTextEditor::slotSpeakText);
-#endif
+        if (PimCommon::TextToSpeech::self()->isReady()) {
+            QAction *speakAction = popup->addAction(i18n("Speak Text"));
+            speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
+            speakAction->setEnabled(!emptyDocument );
+            connect(speakAction, &QAction::triggered, this, &RichTextEditor::slotSpeakText);
+        }
         addExtraMenuEntry(popup, pos);
         popup->exec( pos );
 
@@ -179,15 +176,12 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
 
 void RichTextEditor::slotSpeakText()
 {
-#if KDEPIM_HAVE_TEXTTOSPEECH
-    //Port to QtSpeech
     QString text;
     if (textCursor().hasSelection())
         text = textCursor().selectedText();
     else
         text = toPlainText();
-    //PORT ME ktts.asyncCall(QLatin1String("say"), text, 0);
-#endif
+    Q_EMIT say(text);
 }
 
 void RichTextEditor::setSearchSupport(bool b)

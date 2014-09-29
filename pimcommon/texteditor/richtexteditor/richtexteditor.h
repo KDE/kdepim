@@ -52,6 +52,9 @@ public:
     virtual void setReadOnly( bool readOnly );
     virtual void createHighlighter();
 
+Q_SIGNALS:
+    void say(const QString &text);
+
 
 private Q_SLOTS:
     void slotSpeakText();

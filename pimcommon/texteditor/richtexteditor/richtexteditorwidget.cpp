@@ -22,6 +22,7 @@
 #include <QVBoxLayout>
 #include <QShortcut>
 #include <QTextCursor>
+#include <pimcommon/texttospeech/texttospeechwidget.h>
 
 using namespace PimCommon;
 
@@ -81,11 +82,14 @@ void RichTextEditorWidget::init(RichTextEditor *customEditor)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
+    mTextToSpeechWidget = new PimCommon::TextToSpeechWidget(this);
+    lay->addWidget(mTextToSpeechWidget);
     if (customEditor) {
         mEditor = customEditor;
     } else {
         mEditor = new RichTextEditor;
     }
+    connect(mEditor, &RichTextEditor::say, mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::say);
     lay->addWidget(mEditor);
 
     mFindBar = new PimCommon::RichTextEditFindBar( mEditor, this );
