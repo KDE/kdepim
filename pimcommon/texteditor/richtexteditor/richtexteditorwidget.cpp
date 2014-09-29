@@ -116,16 +116,20 @@ void RichTextEditorWidget::setReadOnly(bool readOnly)
 
 void RichTextEditorWidget::slotReplace()
 {
-    mFindBar->showReplace();
-    mFindBar->focusAndSetCursor();
+    if ( mEditor->searchSupport() ) {
+        mFindBar->showReplace();
+        mFindBar->focusAndSetCursor();
+    }
 }
 
 void RichTextEditorWidget::slotFind()
 {
-    if ( mEditor->textCursor().hasSelection() )
-        mFindBar->setText( mEditor->textCursor().selectedText() );
-    mEditor->moveCursor(QTextCursor::Start);
-    mFindBar->showFind();
-    mFindBar->focusAndSetCursor();
+    if ( mEditor->searchSupport() ) {
+        if ( mEditor->textCursor().hasSelection() )
+            mFindBar->setText( mEditor->textCursor().selectedText() );
+        mEditor->moveCursor(QTextCursor::Start);
+        mFindBar->showFind();
+        mFindBar->focusAndSetCursor();
+    }
 }
 

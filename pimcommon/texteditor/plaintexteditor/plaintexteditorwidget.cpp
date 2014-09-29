@@ -43,6 +43,11 @@ PlainTextEditorWidget::~PlainTextEditorWidget()
 
 }
 
+PlainTextEditor *PlainTextEditorWidget::editor() const
+{
+    return mEditor;
+}
+
 void PlainTextEditorWidget::setPlainText(const QString &text)
 {
     mEditor->setPlainText(text);
@@ -95,17 +100,21 @@ void PlainTextEditorWidget::setReadOnly(bool readOnly)
 
 void PlainTextEditorWidget::slotReplace()
 {
-    mFindBar->showReplace();
-    mFindBar->focusAndSetCursor();
+    if ( mEditor->searchSupport() ) {
+        mFindBar->showReplace();
+        mFindBar->focusAndSetCursor();
+    }
 }
 
 void PlainTextEditorWidget::slotFind()
 {
-    if ( mEditor->textCursor().hasSelection() )
-        mFindBar->setText( mEditor->textCursor().selectedText() );
-    mEditor->moveCursor(QTextCursor::Start);
-    mFindBar->showFind();
-    mFindBar->focusAndSetCursor();
+    if ( mEditor->searchSupport() ) {
+        if ( mEditor->textCursor().hasSelection() )
+            mFindBar->setText( mEditor->textCursor().selectedText() );
+        mEditor->moveCursor(QTextCursor::Start);
+        mFindBar->showFind();
+        mFindBar->focusAndSetCursor();
+    }
 }
 
 

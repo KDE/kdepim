@@ -34,7 +34,7 @@ public:
     explicit PlainTextEditorWidget(PlainTextEditor *customEditor, QWidget *parent=0);
     ~PlainTextEditorWidget();
 
-    PlainTextEditor *editor() const { return mEditor; }
+    PlainTextEditor *editor() const;
 
     void setReadOnly(bool readOnly);
     bool isReadOnly() const;
