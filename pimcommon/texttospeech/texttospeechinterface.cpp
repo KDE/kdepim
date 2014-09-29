@@ -36,6 +36,7 @@ TextToSpeechInterface::~TextToSpeechInterface()
 void TextToSpeechInterface::say()
 {
     mTextToSpeechWidget->setState(PimCommon::TextToSpeechWidget::Play);
+    mTextToSpeechWidget->show();
 }
 
 void TextToSpeechInterface::stateChanged(TextToSpeechWidget::State state)
@@ -43,6 +44,7 @@ void TextToSpeechInterface::stateChanged(TextToSpeechWidget::State state)
     switch(state) {
     case TextToSpeechWidget::Stop:
         PimCommon::TextToSpeech::self()->stop();
+        //TODO hide widget
         break;
     case TextToSpeechWidget::Play:
         PimCommon::TextToSpeech::self()->resume();

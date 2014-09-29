@@ -58,14 +58,12 @@ void TextToSpeechWidget::slotPlayPause()
     } else {
         return;
     }
-    //TODO update icons
     updateButtonState();
     Q_EMIT stateChanged(mState);
 }
 
 void TextToSpeechWidget::slotStop()
 {
-    //TODO update icons.
     if (mState != Stop) {
         mState = Stop;
         updateButtonState();
