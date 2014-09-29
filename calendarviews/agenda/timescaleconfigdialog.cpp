@@ -125,11 +125,17 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
     widgetItem->setData( TimeZoneNameRole, item.second );
     listWidget->addItem( widgetItem );
   }
+  slotUpdateButton();
 }
 
 TimeScaleConfigDialog::~TimeScaleConfigDialog()
 {
   delete d;
+}
+
+void TimeScaleConfigDialog::slotUpdateButton()
+{
+    removeButton->setEnabled(listWidget->count() > 0);
 }
 
 void TimeScaleConfigDialog::okClicked()
@@ -154,13 +160,14 @@ void TimeScaleConfigDialog::add()
     listWidget->addItem( item );
     zoneCombo->removeItem( zoneCombo->currentIndex() );
   }
-
+  slotUpdateButton();
 }
 
 void TimeScaleConfigDialog::remove()
 {
   zoneCombo->insertItem( 0, listWidget->currentItem()->text(), zoneCombo->itemData( zoneCombo->currentIndex(), TimeZoneNameRole ).toString() );
   delete listWidget->takeItem( listWidget->currentRow() );
+  slotUpdateButton();
 }
 
 void TimeScaleConfigDialog::up()

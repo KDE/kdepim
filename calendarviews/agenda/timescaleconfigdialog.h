@@ -49,7 +49,8 @@ class EVENTVIEWS_EXPORT TimeScaleConfigDialog : public KDialog, private Ui::Time
     void down();
     void okClicked();
 
-  private:
+    void slotUpdateButton();
+private:
     QStringList zones();
 
   private:
