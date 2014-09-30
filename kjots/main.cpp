@@ -38,7 +38,6 @@
 
 int main(int argc, char **argv)
 {
-    KLocalizedString::setApplicationDomain("kjots");
     AboutData aboutData;
     KCmdLineArgs::init(argc, argv, &aboutData);
 
