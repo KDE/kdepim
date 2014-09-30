@@ -264,10 +264,8 @@ void EventEdit::slotReturnPressed()
 
     if (!mEventEdit->text().trimmed().isEmpty()) {
         KCalCore::Event::Ptr event( new KCalCore::Event );
-#if 0 //QT5
-        event->setDtStart(dtstart);
-        event->setDtEnd(dtend);
-#endif
+        event->setDtStart(KDateTime(dtstart));
+        event->setDtEnd(KDateTime(dtend));
         event->setSummary(mEventEdit->text());
         Q_EMIT createEvent(event, collection);
         mEventEdit->clear();
@@ -328,8 +326,8 @@ void EventEdit::slotOpenEditor()
 
     KCalCore::Event::Ptr event(new KCalCore::Event);
     event->setSummary(mEventEdit->text());
-    //QT5 event->setDtStart(mStartDateTimeEdit->dateTime());
-    //QT5 event->setDtEnd(mEndDateTimeEdit->dateTime());
+    event->setDtStart(KDateTime(mStartDateTimeEdit->dateTime()));
+    event->setDtEnd(KDateTime(mEndDateTimeEdit->dateTime()));
     event->addAttachment(attachment);
 
     Akonadi::Item item;
