@@ -66,7 +66,7 @@ TemplateManagementDialog::TemplateManagementDialog(
   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
   connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateManagementDialog::reject);
   setObjectName( "template_management_dialog" );
-  connect(buttonBox->button(QDialogButtonBox::Help), SIGNAL(clicked()), this, SLOT(slotHelp()));
+  connect(buttonBox->button(QDialogButtonBox::Help), &QPushButton::clicked, this, &TemplateManagementDialog::slotHelp);
   QWidget *widget = new QWidget( this );
   mainLayout->addWidget(widget);
   mainLayout->addWidget(buttonBox);
@@ -77,17 +77,12 @@ TemplateManagementDialog::TemplateManagementDialog(
   m_base.m_listBox->addItems( m_templates );
   m_base.m_listBox->setSelectionMode( QAbstractItemView::SingleSelection );
 
-  connect( m_base.m_buttonAdd, SIGNAL(clicked()),
-           SLOT(slotAddTemplate()) );
-  connect( m_base.m_buttonRemove, SIGNAL(clicked()),
-           SLOT(slotRemoveTemplate()) );
-  connect( m_base.m_buttonApply, SIGNAL(clicked()),
-           SLOT(slotApplyTemplate()) );
+  connect(m_base.m_buttonAdd, &QPushButton::clicked, this, &TemplateManagementDialog::slotAddTemplate);
+  connect(m_base.m_buttonRemove, &QPushButton::clicked, this, &TemplateManagementDialog::slotRemoveTemplate);
+  connect(m_base.m_buttonApply, &QPushButton::clicked, this, &TemplateManagementDialog::slotApplyTemplate);
 
-  connect( m_base.m_listBox, SIGNAL(itemSelectionChanged()),
-           SLOT(slotItemSelected()) );
-  connect( m_base.m_listBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-           SLOT(slotApplyTemplate()) );
+  connect(m_base.m_listBox, &QListWidget::itemSelectionChanged, this, &TemplateManagementDialog::slotItemSelected);
+  connect(m_base.m_listBox, &QListWidget::itemDoubleClicked, this, &TemplateManagementDialog::slotApplyTemplate);
   connect(okButton, &QPushButton::clicked, this, &TemplateManagementDialog::slotOk);
 
   m_base.m_buttonRemove->setEnabled( false );

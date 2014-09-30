@@ -156,8 +156,7 @@ Config::Config( QWidget *parent, bool encrypt )
                                << i18n("Do not use any encryption tool") );
   label->setBuddy( toolCombo );
   hboxHBoxLayout->setStretchFactor( toolCombo, 1 );
-  connect( toolCombo, SIGNAL(activated(int)),
-           this, SIGNAL(changed()) );
+  connect(toolCombo, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &Config::changed);
   // This is the place to add a KUrlRequester to be used for asking
   // the user for the path to the executable...
   topLayout->addWidget( group );
@@ -168,8 +167,7 @@ Config::Config( QWidget *parent, bool encrypt )
   storePass = new QCheckBox( i18n("&Keep passphrase in memory"),
                              mpOptionsGroupBox );
   lay->addWidget( storePass );
-  connect( storePass, SIGNAL(toggled(bool)),
-           this, SIGNAL(changed()) );
+  connect(storePass, &QCheckBox::toggled, this, &Config::changed);
   msg = i18n( "<qt><p>When this option is enabled, the passphrase of your "
               "private key will be remembered by the application as long "
               "as the application is running. Thus you will only have to "
@@ -185,8 +183,7 @@ Config::Config( QWidget *parent, bool encrypt )
   if( encrypt ) {
     encToSelf = new QCheckBox( i18n("Always encr&ypt to self"),
                                mpOptionsGroupBox );
-   connect( encToSelf, SIGNAL(toggled(bool)),
-           this, SIGNAL(changed()) );
+   connect(encToSelf, &QCheckBox::toggled, this, &Config::changed);
 
     msg = i18n( "<qt><p>When this option is enabled, the message/file "
                 "will not only be encrypted with the receiver's public key, "
@@ -200,8 +197,7 @@ Config::Config( QWidget *parent, bool encrypt )
   showCipherText = new QCheckBox( i18n("&Show signed/encrypted text after "
                                        "composing"));
   lay->addWidget( showCipherText );
-  connect( showCipherText, SIGNAL(toggled(bool)),
-           this, SIGNAL(changed()) );
+  connect(showCipherText, &QCheckBox::toggled, this, &Config::changed);
 
   msg = i18n( "<qt><p>When this option is enabled, the signed/encrypted text "
               "will be shown in a separate window, enabling you to know how "
@@ -212,8 +208,7 @@ Config::Config( QWidget *parent, bool encrypt )
     showKeyApprovalDlg = new QCheckBox( i18n("Always show the encryption "
                                              "keys &for approval"));
     lay->addWidget( showKeyApprovalDlg );
-    connect( showKeyApprovalDlg, SIGNAL(toggled(bool)),
-           this, SIGNAL(changed()) );
+    connect(showKeyApprovalDlg, &QCheckBox::toggled, this, &Config::changed);
     msg = i18n( "<qt><p>When this option is enabled, the application will "
                 "always show you a list of public keys from which you can "
                 "choose the one it will use for encryption. If it is off, "
@@ -410,22 +405,18 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   if( extendedSelection ) {
     connect( mCheckSelectionTimer, SIGNAL(timeout()),
              this,                 SLOT(slotCheckSelection()) );
-    connect( mListView, SIGNAL(itemSelectionChanged()),
-             this,      SLOT(slotSelectionChanged()) );
+    connect(mListView, &QTreeWidget::itemSelectionChanged, this, &KeySelectionDialog::slotSelectionChanged);
   }
   else {
-    connect( mListView, SIGNAL(itemSelectionChanged()),
-             this,      SLOT(slotSelectionChanged()) );
+    connect(mListView, &QTreeWidget::itemSelectionChanged, this, &KeySelectionDialog::slotSelectionChanged);
   }
   connect(mListView, &QTreeWidget::itemDoubleClicked, this, &KeySelectionDialog::accept);
 
   mListView->setContextMenuPolicy( Qt::CustomContextMenu );
-  connect( mListView, SIGNAL(customContextMenuRequested(QPoint)),
-           this,      SLOT(slotRMB(QPoint)) );
+  connect(mListView, &QTreeWidget::customContextMenuRequested, this, &KeySelectionDialog::slotRMB);
 
   KGuiItem::assign(buttonBox->button(QDialogButtonBox::RestoreDefaults), KGuiItem(i18n("&Reread Keys")));
-  connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()),
-           this, SLOT(slotRereadKeys()) );
+  connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &KeySelectionDialog::slotRereadKeys);
   connect(mOkButton, &QPushButton::clicked, this, &KeySelectionDialog::slotOk);
   connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &KeySelectionDialog::slotCancel);
   mainLayout->addWidget(buttonBox);
@@ -864,14 +855,12 @@ void KeySelectionDialog::slotRereadKeys()
   // save the current position of the contents
   int offsetY = mListView->verticalScrollBar()->value();
 
-  disconnect( mListView, SIGNAL(itemSelectionChanged()),
-              this,      SLOT(slotSelectionChanged()) );
+  disconnect(mListView, &QTreeWidget::itemSelectionChanged, this, &KeySelectionDialog::slotSelectionChanged);
 
   initKeylist( keys, KeyIDList( mKeyIds ) );
   slotFilter();
 
-  connect( mListView, SIGNAL(itemSelectionChanged()),
-           this,      SLOT(slotSelectionChanged()) );
+  connect(mListView, &QTreeWidget::itemSelectionChanged, this, &KeySelectionDialog::slotSelectionChanged);
   slotSelectionChanged();
 
   // restore the saved position of the contents
@@ -915,8 +904,7 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
 
     // As we might change the selection, we have to disconnect the slot
     // to prevent recursion
-    disconnect( mListView, SIGNAL(itemSelectionChanged()),
-                this,      SLOT(slotSelectionChanged()) );
+    disconnect(mListView, &QTreeWidget::itemSelectionChanged, this, &KeySelectionDialog::slotSelectionChanged);
 
     KeyIDList newKeyIdList;
     QList<QTreeWidgetItem*> keysToBeChecked;
@@ -1016,6 +1004,7 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
 
     connect( mListView, SIGNAL(selectionChanged()),
              this,      SLOT(slotSelectionChanged()) );
+
   }
 }
 
@@ -1546,12 +1535,10 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
       default:
         encrPrefCombo->setCurrentIndex( 0 );
     }
-    connect( encrPrefCombo, SIGNAL(activated(int)),
-             this, SLOT(slotPrefsChanged(int)) );
+    connect(encrPrefCombo, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &KeyApprovalDialog::slotPrefsChanged);
     mEncrPrefCombos.insert( i, encrPrefCombo );
   }
-  connect( mChangeButtonGroup, SIGNAL(buttonClicked(int)),
-           this, SLOT(slotChangeEncryptionKey(int)) );
+  connect(mChangeButtonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &KeyApprovalDialog::slotChangeEncryptionKey);
 
   QSize size = sizeHint();
 

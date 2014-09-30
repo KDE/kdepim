@@ -104,8 +104,7 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   mUi->mEndTimeEdit->installEventFilter( this );
 #else
   mUi->mTimeZoneLabel->setVisible( !mUi->mWholeDayCheck->isChecked() );
-  connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
-           SLOT(toggleTimeZoneVisibility()) );
+  connect(mUi->mTimeZoneLabel, &QLabel::linkActivated, this, &IncidenceDateTime::toggleTimeZoneVisibility);
 #endif
 
   QList<QLineEdit*> lineEdits;
@@ -581,25 +580,16 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event, bool isTemplate
            SLOT(updateStartTime(QTime)) );
   connect( mUi->mStartTimeEdit, SIGNAL(timeEdited(QTime)), // When editing with any key except up/down
            SLOT(updateStartTime(QTime)) );
-  connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)),
-           SLOT(updateStartDate(QDate)) );
-  connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)),
-           SLOT(updateStartSpec()) );
+  connect(mUi->mStartDateEdit, &KDateComboBox::dateChanged, this, &IncidenceDateTime::updateStartDate);
+  connect(mUi->mTimeZoneComboStart, static_cast<void (IncidenceEditorNG::KTimeZoneComboBox::*)(int)>(&IncidenceEditorNG::KTimeZoneComboBox::currentIndexChanged), this, &IncidenceDateTime::updateStartSpec);
   // End time
-  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mEndTimeEdit, SIGNAL(timeEdited(QTime)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mEndTimeEdit, SIGNAL(timeChanged(QTime)),
-           SIGNAL(endTimeChanged(QTime)) );
-  connect( mUi->mEndTimeEdit, SIGNAL(timeEdited(QTime)),
-           SIGNAL(endTimeChanged(QTime)) );
-  connect( mUi->mEndDateEdit, SIGNAL(dateChanged(QDate)),
-           SIGNAL(endDateChanged(QDate)) );
-  connect( mUi->mTimeZoneComboEnd, SIGNAL(currentIndexChanged(int)),
-           SLOT(checkDirtyStatus()) );
+  connect(mUi->mEndTimeEdit, &KTimeComboBox::timeChanged, this, &IncidenceDateTime::checkDirtyStatus);
+  connect(mUi->mEndTimeEdit, &KTimeComboBox::timeEdited, this, &IncidenceDateTime::checkDirtyStatus);
+  connect(mUi->mEndDateEdit, &KDateComboBox::dateChanged, this, &IncidenceDateTime::checkDirtyStatus);
+  connect(mUi->mEndTimeEdit, &KTimeComboBox::timeChanged, this, &IncidenceDateTime::endTimeChanged);
+  connect(mUi->mEndTimeEdit, &KTimeComboBox::timeEdited, this, &IncidenceDateTime::endTimeChanged);
+  connect(mUi->mEndDateEdit, &KDateComboBox::dateChanged, this, &IncidenceDateTime::endDateChanged);
+  connect(mUi->mTimeZoneComboEnd, static_cast<void (IncidenceEditorNG::KTimeZoneComboBox::*)(int)>(&IncidenceEditorNG::KTimeZoneComboBox::currentIndexChanged), this, &IncidenceDateTime::checkDirtyStatus);
 
   mUi->mWholeDayCheck->setChecked( event->allDay() );
   enableTimeEdits();
@@ -639,12 +629,9 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal, bool isTemp
   mUi->mFreeBusyCheck->setVisible( false );
 
   // Start time
-  connect( mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)),
-           SLOT(updateStartTime(QTime)) );
-  connect( mUi->mStartDateEdit, SIGNAL(dateChanged(QDate)),
-           SLOT(updateStartDate(QDate)) );
-  connect( mUi->mTimeZoneComboStart, SIGNAL(currentIndexChanged(int)),
-           SLOT(updateStartSpec()) );
+  connect(mUi->mStartTimeEdit, &KTimeComboBox::timeChanged, this, &IncidenceDateTime::updateStartTime);
+  connect(mUi->mStartDateEdit, &KDateComboBox::dateChanged, this, &IncidenceDateTime::updateStartDate);
+  connect(mUi->mTimeZoneComboStart, static_cast<void (IncidenceEditorNG::KTimeZoneComboBox::*)(int)>(&IncidenceEditorNG::KTimeZoneComboBox::currentIndexChanged), this, &IncidenceDateTime::updateStartSpec);
 
   mUi->mWholeDayCheck->setChecked( journal->allDay() );
   enableTimeEdits();

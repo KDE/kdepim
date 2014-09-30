@@ -45,11 +45,9 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
   setObjectName( "IncidenceCategories" );
 
 #ifdef KDEPIM_MOBILE_UI
-connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
-          SLOT(selectCategories()) );
+connect(mUi->mSelectCategoriesButton, &QPushButton::clicked, this, &IncidenceCategories::selectCategories);
 #else
-  connect( mUi->mTagWidget, SIGNAL(selectionChanged(QStringList)),
-          SLOT(onSelectionChanged(QStringList)) );
+  connect(mUi->mTagWidget, &KPIM::TagWidget::selectionChanged, this, &IncidenceCategories::onSelectionChanged);
 #endif
 }
 

@@ -67,11 +67,9 @@ IncidenceDescription::IncidenceDescription( Ui::EventOrTodoDesktop *ui )
   mUi->mRichTextLabel->hide();
 #else
   setupToolBar();
-  connect( mUi->mRichTextLabel, SIGNAL(linkActivated(QString)),
-           this, SLOT(toggleRichTextDescription()) );
+  connect(mUi->mRichTextLabel, &QLabel::linkActivated, this, &IncidenceDescription::toggleRichTextDescription);
 #endif
-  connect( mUi->mDescriptionEdit, SIGNAL(textChanged()),
-           this, SLOT(checkDirtyStatus()) );
+  connect(mUi->mDescriptionEdit, &KRichTextWidget::textChanged, this, &IncidenceDescription::checkDirtyStatus);
 }
 
 IncidenceDescription::~IncidenceDescription()

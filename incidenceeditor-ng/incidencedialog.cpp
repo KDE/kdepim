@@ -138,8 +138,7 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   layout->addWidget( mCalSelector );
   mCalSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
 
-  q->connect( mCalSelector, SIGNAL(currentChanged(Akonadi::Collection)),
-              SLOT(handleSelectedCollectionChange(Akonadi::Collection)) );
+  q->connect(mCalSelector, &Akonadi::CollectionComboBox::currentChanged, q, &IncidenceDialog::handleSelectedCollectionChange);
 
   // Now instantiate the logic of the dialog. These editors update the ui, validate
   // fields and load/store incidences in the ui.
@@ -177,11 +176,9 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
               SLOT(showMessage(QString,KMessageWidget::MessageType)) );
   q->connect( mEditor, SIGNAL(dirtyStatusChanged(bool)),
               SLOT(updateButtonStatus(bool)) );
-  q->connect( mItemManager,
-              SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
+  q->connect( mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
               SLOT(handleItemSaveFinish(IncidenceEditorNG::EditorItemManager::SaveAction)));
-  q->connect( mItemManager,
-              SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)),
+  q->connect( mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)),
               SLOT(handleItemSaveFail(IncidenceEditorNG::EditorItemManager::SaveAction,QString)));
   q->connect( ieAlarm, SIGNAL(alarmCountChanged(int)),
               SLOT(handleAlarmCountChange(int)) );

@@ -29,7 +29,6 @@
 #include <KCalendarSystem>
 
 #include <QDebug>
-
 #include <KLocalizedString>
 #include <QLocale>
 
@@ -101,48 +100,33 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   }
 #endif
 
-  connect( mDateTime, SIGNAL(startDateTimeToggled(bool)),
-           SLOT(handleDateTimeToggle()) );
+  connect(mDateTime, &IncidenceDateTime::startDateTimeToggled, this, &IncidenceRecurrence::handleDateTimeToggle);
 
-  connect( mDateTime, SIGNAL(startDateChanged(QDate)),
-           SLOT(handleStartDateChange(QDate)) );
+  connect(mDateTime, &IncidenceDateTime::startDateChanged, this, &IncidenceRecurrence::handleStartDateChange);
 
-  connect( mUi->mExceptionAddButton, SIGNAL(clicked()),
-           SLOT(addException()));
-  connect( mUi->mExceptionRemoveButton, SIGNAL(clicked()),
-           SLOT(removeExceptions()) );
-  connect( mUi->mExceptionDateEdit, SIGNAL(dateChanged(QDate)),
-           SLOT(handleExceptionDateChange(QDate)) );
-  connect( mUi->mExceptionList, SIGNAL(itemSelectionChanged()),
-           SLOT(updateRemoveExceptionButton()) );
-  connect( mUi->mRecurrenceTypeCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(handleRecurrenceTypeChange(int)));
-  connect( mUi->mEndDurationEdit, SIGNAL(valueChanged(int)),
-           SLOT(handleEndAfterOccurrencesChange(int)) );
-  connect( mUi->mFrequencyEdit, SIGNAL(valueChanged(int)),
-           SLOT(handleFrequencyChange()) );
+  connect(mUi->mExceptionAddButton, &QPushButton::clicked, this, &IncidenceRecurrence::addException);
+  connect(mUi->mExceptionRemoveButton, &QPushButton::clicked, this, &IncidenceRecurrence::removeExceptions);
+#ifndef KDEPIM_MOBILE_UI
+  connect(mUi->mExceptionDateEdit, &KDateComboBox::dateChanged, this, &IncidenceRecurrence::handleExceptionDateChange);
+#endif
+  connect(mUi->mExceptionList, &QListWidget::itemSelectionChanged, this, &IncidenceRecurrence::updateRemoveExceptionButton);
+  connect(mUi->mRecurrenceTypeCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceRecurrence::handleRecurrenceTypeChange);
+  connect(mUi->mEndDurationEdit, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &IncidenceRecurrence::handleEndAfterOccurrencesChange);
+  connect(mUi->mFrequencyEdit, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &IncidenceRecurrence::handleFrequencyChange);
 
   // Check the dirty status when the user changes values.
-  connect( mUi->mRecurrenceTypeCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mFrequencyEdit, SIGNAL(valueChanged(int)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mFrequencyEdit, SIGNAL(valueChanged(int)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mWeekDayCombo, SIGNAL(checkedItemsChanged(QStringList)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mMonthlyCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mYearlyCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mRecurrenceEndCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mEndDurationEdit, SIGNAL(valueChanged(int)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mRecurrenceEndDate, SIGNAL(dateChanged(QDate)),
-           SLOT(checkDirtyStatus()) );
-  connect( mUi->mThisAndFutureCheck, SIGNAL(stateChanged(int)),
-           SLOT(checkDirtyStatus()) );
+  connect(mUi->mRecurrenceTypeCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceRecurrence::checkDirtyStatus);
+  connect(mUi->mFrequencyEdit, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &IncidenceRecurrence::checkDirtyStatus);
+  connect(mUi->mFrequencyEdit, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &IncidenceRecurrence::checkDirtyStatus);
+  connect(mUi->mWeekDayCombo, &KPIM::KWeekdayCheckCombo::checkedItemsChanged, this, &IncidenceRecurrence::checkDirtyStatus);
+  connect(mUi->mMonthlyCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceRecurrence::checkDirtyStatus);
+  connect(mUi->mYearlyCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceRecurrence::checkDirtyStatus);
+  connect(mUi->mRecurrenceEndCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceRecurrence::checkDirtyStatus);
+  connect(mUi->mEndDurationEdit, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &IncidenceRecurrence::checkDirtyStatus);
+#ifndef KDEPIM_MOBILE_UI
+  connect(mUi->mRecurrenceEndDate, &KDateComboBox::dateChanged, this, &IncidenceRecurrence::checkDirtyStatus);
+#endif
+  connect(mUi->mThisAndFutureCheck, &QCheckBox::stateChanged, this, &IncidenceRecurrence::checkDirtyStatus);
 }
 
 // this method must be at the top of this file in order to ensure
