@@ -119,12 +119,16 @@ void TextToSpeechWidgetTest::shouldEmitStateChanged()
 
     QTest::mouseClick(playPauseButton, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0).at(0).value<PimCommon::TextToSpeechWidget::State>(), PimCommon::TextToSpeechWidget::Pause);
     QTest::mouseClick(playPauseButton, Qt::LeftButton);
     QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy.at(1).at(0).value<PimCommon::TextToSpeechWidget::State>(), PimCommon::TextToSpeechWidget::Play);
     QTest::mouseClick(playPauseButton, Qt::LeftButton);
     QCOMPARE(spy.count(), 3);
+    QCOMPARE(spy.at(2).at(0).value<PimCommon::TextToSpeechWidget::State>(), PimCommon::TextToSpeechWidget::Pause);
     QTest::mouseClick(stopButton, Qt::LeftButton);
     QCOMPARE(spy.count(), 4);
+    QCOMPARE(spy.at(3).at(0).value<PimCommon::TextToSpeechWidget::State>(), PimCommon::TextToSpeechWidget::Stop);
 }
 
 
