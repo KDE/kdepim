@@ -102,11 +102,17 @@ bool AutoCorrection::autocorrect(bool htmlMode, QTextDocument &document, int &po
         return true;
     }
     mCursor =  QTextCursor(&document);
+    mCursor.setPosition(position);
+
+    //If we already have a space not necessary to look at other autocorrect feature.
+    if (!singleSpaces())
+        return false;
+
     int oldPosition = position;
     selectPreviousWord(mCursor, position);
     mWord = mCursor.selectedText();
     if (mWord.isEmpty()) {
-        return singleSpaces();
+        return true;
     }
     mCursor.beginEditBlock();
     bool done = false;
