@@ -243,6 +243,7 @@ set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSI
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(translator/tests)
+add_subdirectory(translator/autotests)
 add_subdirectory(texteditor/plaintexteditor/tests)
 add_subdirectory(texteditor/plaintexteditor/autotests)
 add_subdirectory(texteditor/richtexteditor/tests)

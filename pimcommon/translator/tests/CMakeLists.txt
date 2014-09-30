@@ -8,4 +8,3 @@ target_link_libraries(translator_gui
   pimcommon
 )
 
-ecm_add_tests( translatortest.cpp  NAME_PREFIX "pimcommon-" LINK_LIBRARIES pimcommon Qt5::Test)
