@@ -255,11 +255,11 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
                     const QTextCharFormat initialTextFormat = textCursor().charFormat();
                     const bool richText = (textMode() == KRichTextEdit::Rich);
                     int position = textCursor().position();
-                    const bool addChar = d->mAutoCorrection->autocorrect(richText, *document(), position);
+                    const bool addSpace = d->mAutoCorrection->autocorrect(richText, *document(), position);
                     QTextCursor cur = textCursor();
                     cur.setPosition(position);
                     if (overwriteMode() && e->key() == Qt::Key_Space) {
-                        if (addChar) {
+                        if (addSpace) {
                             const QChar insertChar = QLatin1Char(' ');
                             if (!cur.atBlockEnd()) {
                                 cur.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, 1);
@@ -271,14 +271,18 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
                             setTextCursor(cur);
                         }
                     } else {
-                        if (addChar) {
-                            const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
-                            if (richText && !isSpecial(initialTextFormat))
+                        const bool spacePressed = (e->key() == Qt::Key_Space);
+                        const QChar insertChar = spacePressed ? QLatin1Char(' ') : QLatin1Char('\n');
+                        if (richText && !isSpecial(initialTextFormat)) {
+                            if ((spacePressed && addSpace) || !spacePressed) {
                                 cur.insertText(insertChar, initialTextFormat);
-                            else
+                            }
+                        } else {
+                            if ((spacePressed && addSpace) || !spacePressed) {
                                 cur.insertText(insertChar);
-                            setTextCursor(cur);
+                            }
                         }
+                        setTextCursor(cur);
                     }
                     return;
                 }
