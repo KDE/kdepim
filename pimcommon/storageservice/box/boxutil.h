@@ -19,7 +19,8 @@
 #define BOXUTIL_H
 
 #include <QDateTime>
-namespace PimCommon {
+namespace PimCommon
+{
 namespace BoxUtil
 {
 QDateTime convertToDateTime(QString dateTime);

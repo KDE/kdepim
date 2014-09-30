@@ -73,9 +73,7 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     connect(mModifyService, &QPushButton::clicked, this, &StorageServiceSettingsWidget::slotModifyService);
     hlay->addWidget(mModifyService);
 
-
     vlay->addLayout(hlay);
-
 
     mainLayout->addLayout(vlay);
 
@@ -83,7 +81,6 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mDescription = new QTextBrowser;
     mDescription->setReadOnly(true);
     vbox->addWidget(mDescription);
-
 
     mStackWidget = new QStackedWidget;
 
@@ -109,7 +106,6 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mAuthenticate = new QPushButton(i18n("Authenticate"));
     errorLayout->addWidget(mAuthenticate);
     connect(mAuthenticate, &QPushButton::clicked, this, &StorageServiceSettingsWidget::slotAuthenticate);
-
 
     mCanNotGetInfo = new QLabel(i18n("Unable to get account information."));
     mStackWidget->addWidget(mCanNotGetInfo);
@@ -156,7 +152,7 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
 {
     mListStorageService = lst;
     mNeedCapability = lstCap;
-    QMapIterator<QString, StorageServiceAbstract*> i(mListStorageService);
+    QMapIterator<QString, StorageServiceAbstract *> i(mListStorageService);
     while (i.hasNext()) {
         i.next();
         QString serviceName;
@@ -209,7 +205,7 @@ PimCommon::StorageListWidgetItem *StorageServiceSettingsWidget::createItem(const
 {
     PimCommon::StorageListWidgetItem *item = new PimCommon::StorageListWidgetItem;
     item->setText(serviceName);
-    item->setData(Name,service);
+    item->setData(Name, service);
     item->setData(Type, type);
     if (!icon.isNull()) {
         item->setDefaultIcon(icon);
@@ -228,7 +224,7 @@ void StorageServiceSettingsWidget::slotRemoveService()
 {
     QListWidgetItem *item = mListService->currentItem();
     if (item) {
-        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to delete this service '%1'?", item->text()), i18n("Delete Service") )) {
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to delete this service '%1'?", item->text()), i18n("Delete Service"))) {
             const QString serviceName = item->data(Name).toString();
             if (mListStorageService.contains(serviceName)) {
                 Q_EMIT serviceRemoved(serviceName);
@@ -251,7 +247,7 @@ void StorageServiceSettingsWidget::slotAddService()
             const QString serviceName = PimCommon::StorageServiceManager::serviceToI18n(type);
             const QString service = PimCommon::StorageServiceManager::serviceName(type);
             StorageServiceAbstract *storage = 0;
-            switch(type) {
+            switch (type) {
             case PimCommon::StorageServiceManager::DropBox: {
                 storage = new PimCommon::DropBoxStorageService;
                 break;
@@ -304,9 +300,9 @@ void StorageServiceSettingsWidget::defaultConnection(StorageServiceAbstract *sto
 void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)
 {
     PimCommon::StorageListWidgetItem *item = 0;
-    for (int i=0; i <mListService->count(); ++i) {
+    for (int i = 0; i < mListService->count(); ++i) {
         if (mListService->item(i)->data(Name).toString() == serviceName) {
-            item = static_cast<PimCommon::StorageListWidgetItem*>(mListService->item(i));
+            item = static_cast<PimCommon::StorageListWidgetItem *>(mListService->item(i));
             item->stopAnimation();
             if (mListStorageService.contains(serviceName)) {
                 mListStorageService.value(serviceName)->removeConfig();
@@ -321,9 +317,9 @@ void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &servi
 
 void StorageServiceSettingsWidget::slotAuthenticationDone(const QString &serviceName)
 {
-    for (int i=0; i <mListService->count(); ++i) {
+    for (int i = 0; i < mListService->count(); ++i) {
         if (mListService->item(i)->data(Name).toString() == serviceName) {
-            PimCommon::StorageListWidgetItem *item = static_cast<PimCommon::StorageListWidgetItem*>(mListService->item(i));
+            PimCommon::StorageListWidgetItem *item = static_cast<PimCommon::StorageListWidgetItem *>(mListService->item(i));
             item->stopAnimation();
             Q_EMIT changed();
             break;
@@ -339,8 +335,8 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         const QString description = PimCommon::StorageServiceManager::description(type);
         const QString name = PimCommon::StorageServiceManager::serviceToI18n(type);
         const QUrl serviceUrl = PimCommon::StorageServiceManager::serviceUrl(type);
-        const QString descriptionStr = QLatin1String("<b>") + i18n("Name: %1",name) + QLatin1String("</b><br>") + description + QLatin1String("<br>") +
-                QString::fromLatin1("<a href=\"%1\">").arg(serviceUrl.toString()) + serviceUrl.toString() + QLatin1String("</a>");
+        const QString descriptionStr = QLatin1String("<b>") + i18n("Name: %1", name) + QLatin1String("</b><br>") + description + QLatin1String("<br>") +
+                                       QString::fromLatin1("<a href=\"%1\">").arg(serviceUrl.toString()) + serviceUrl.toString() + QLatin1String("</a>");
         mDescription->setText(descriptionStr);
         if (mListStorageService.contains(mListService->currentItem()->data(Name).toString())) {
             StorageServiceAbstract *storage = mListStorageService.value(mListService->currentItem()->data(Name).toString());
@@ -356,7 +352,7 @@ void StorageServiceSettingsWidget::slotServiceSelected()
 void StorageServiceSettingsWidget::slotUpdateAccountInfoFailed(const QString &serviceName, const QString &error)
 {
     Q_UNUSED(error);
-    if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
+    if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString() == serviceName)) {
         mStackWidget->setCurrentWidget(mErrorPage);
         setDefaultLabel();
     }
@@ -364,21 +360,21 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfoFailed(const QString &se
 
 void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
 {
-    if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
+    if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString() == serviceName)) {
         if (info.isValid()) {
             mStackWidget->setCurrentWidget(mInformationPage);
             if (info.accountSize >= 0) {
-                mAccountSize->setText(i18n("Account size: %1", KFormat().formatByteSize(info.accountSize,1)));
+                mAccountSize->setText(i18n("Account size: %1", KFormat().formatByteSize(info.accountSize, 1)));
             } else {
                 mAccountSize->setText(i18n("Account size:"));
             }
             if (info.quota >= 0) {
-                mQuota->setText(i18n("Quota: %1", KFormat().formatByteSize(info.quota,1)));
+                mQuota->setText(i18n("Quota: %1", KFormat().formatByteSize(info.quota, 1)));
             } else {
                 mQuota->setText(i18n("Quota:"));
             }
             if (info.shared >= 0) {
-                mShared->setText(i18n("Shared: %1", KFormat().formatByteSize(info.shared,1)));
+                mShared->setText(i18n("Shared: %1", KFormat().formatByteSize(info.shared, 1)));
             } else {
                 mShared->setText(i18n("Shared:"));
             }

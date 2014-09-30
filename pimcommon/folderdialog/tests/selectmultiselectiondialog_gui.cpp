@@ -17,7 +17,6 @@
 
 #include <qdebug.h>
 
-
 #include "pimcommon/folderdialog/selectmulticollectiondialog.h"
 #include <KMime/Message>
 #include <QApplication>
@@ -25,10 +24,9 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 
-
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("selectmulticollection_gui"), i18n("SelectMultiCollectiontest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("selectmulticollection_gui"), i18n("SelectMultiCollectiontest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for selectmulticollection dialog"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

@@ -23,13 +23,13 @@
 #include <QObject>
 #include <QNetworkReply>
 
-
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT AbstractShortUrl : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractShortUrl(QObject *parent=0);
+    explicit AbstractShortUrl(QObject *parent = 0);
     ~AbstractShortUrl();
 
     virtual QString shortUrlName() const = 0;

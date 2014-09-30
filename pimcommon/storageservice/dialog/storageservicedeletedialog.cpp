@@ -54,18 +54,21 @@ void StorageServiceDeleteTreeWidget::createMenuActions(QMenu *menu)
     StorageServiceTreeWidget::createMenuActions(menu);
     const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
 
-    switch(mDeleteType) {
+    switch (mDeleteType) {
     case PimCommon::StorageServiceDeleteDialog::DeleteAll:
-        if (type != StorageServiceTreeWidget::UnKnown)
+        if (type != StorageServiceTreeWidget::UnKnown) {
             menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SIGNAL(deleteFileFolder()));
+        }
         break;
     case PimCommon::StorageServiceDeleteDialog::DeleteFiles:
-        if (type == StorageServiceTreeWidget::File)
+        if (type == StorageServiceTreeWidget::File) {
             menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete File"), this, SIGNAL(deleteFileFolder()));
+        }
         break;
     case PimCommon::StorageServiceDeleteDialog::DeleteFolders:
-        if (type != StorageServiceTreeWidget::Folder)
+        if (type != StorageServiceTreeWidget::Folder) {
             menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete Folder"), this, SIGNAL(deleteFileFolder()));
+        }
         break;
     }
 }
@@ -75,7 +78,7 @@ StorageServiceDeleteDialog::StorageServiceDeleteDialog(DeleteType type, PimCommo
       mDeleteType(type),
       mStorage(storage)
 {
-    switch(mDeleteType) {
+    switch (mDeleteType) {
     case DeleteAll:
         setWindowTitle(i18n("Delete"));
         break;
@@ -175,11 +178,11 @@ void StorageServiceDeleteDialog::slotUpdatePixmap(const QPixmap &pix)
 
 void StorageServiceDeleteDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "StorageServiceDeleteDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    mTreeWidget->header()->restoreState( group.readEntry( mStorage->storageServiceName(), QByteArray() ) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "StorageServiceDeleteDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    mTreeWidget->header()->restoreState(group.readEntry(mStorage->storageServiceName(), QByteArray()));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
@@ -187,8 +190,8 @@ void StorageServiceDeleteDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group( QLatin1String("StorageServiceDeleteDialog") );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group = config->group(QLatin1String("StorageServiceDeleteDialog"));
+    group.writeEntry("Size", size());
     group.writeEntry(mStorage->storageServiceName(), mTreeWidget->header()->saveState());
 }
 
@@ -200,7 +203,7 @@ void StorageServiceDeleteDialog::slotItemActivated(QTreeWidgetItem *item, int)
 
 void StorageServiceDeleteDialog::slotItemDoubleClicked(QTreeWidgetItem *item, int)
 {
-    StorageServiceTreeWidgetItem *storageServiceItem = dynamic_cast<StorageServiceTreeWidgetItem*>(item);
+    StorageServiceTreeWidgetItem *storageServiceItem = dynamic_cast<StorageServiceTreeWidgetItem *>(item);
     if (storageServiceItem) {
         if (mTreeWidget->type(storageServiceItem) == StorageServiceTreeWidget::File) {
             deleteFile(storageServiceItem);
@@ -222,16 +225,17 @@ void StorageServiceDeleteDialog::deleteFolder(StorageServiceTreeWidgetItem *stor
 
 void StorageServiceDeleteDialog::slotDelete()
 {
-    StorageServiceTreeWidgetItem *storageServiceItem = dynamic_cast<StorageServiceTreeWidgetItem*>(mTreeWidget->currentItem());
+    StorageServiceTreeWidgetItem *storageServiceItem = dynamic_cast<StorageServiceTreeWidgetItem *>(mTreeWidget->currentItem());
     if (storageServiceItem) {
         if (mTreeWidget->type(storageServiceItem) == StorageServiceTreeWidget::File) {
-            if ((mDeleteType == DeleteFiles) || (mDeleteType == DeleteAll))
+            if ((mDeleteType == DeleteFiles) || (mDeleteType == DeleteAll)) {
                 deleteFile(storageServiceItem);
+            }
         } else if (mTreeWidget->type(storageServiceItem) == StorageServiceTreeWidget::Folder) {
-            if ((mDeleteType == DeleteFolders) || (mDeleteType == DeleteAll))
+            if ((mDeleteType == DeleteFolders) || (mDeleteType == DeleteAll)) {
                 deleteFolder(storageServiceItem);
+            }
         }
     }
 }
-
 

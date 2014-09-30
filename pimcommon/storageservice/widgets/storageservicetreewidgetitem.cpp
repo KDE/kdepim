@@ -35,7 +35,7 @@ StorageServiceTreeWidgetItem::StorageServiceTreeWidgetItem(StorageServiceTreeWid
 bool StorageServiceTreeWidgetItem::operator<(const QTreeWidgetItem &other) const
 {
     const QTreeWidgetItem *otherItem = &other;
-    const StorageServiceTreeWidgetItem *storageItem = static_cast<const StorageServiceTreeWidgetItem*>( otherItem );
+    const StorageServiceTreeWidgetItem *storageItem = static_cast<const StorageServiceTreeWidgetItem *>(otherItem);
 
     StorageServiceTreeWidget::ItemType sourceType = static_cast<StorageServiceTreeWidget::ItemType>(data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::ElementType).toInt());
     StorageServiceTreeWidget::ItemType otherType = static_cast<StorageServiceTreeWidget::ItemType>(other.data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::ElementType).toInt());
@@ -45,7 +45,7 @@ bool StorageServiceTreeWidgetItem::operator<(const QTreeWidgetItem &other) const
         return false;
     }
 
-    switch(treeWidget()->sortColumn()) {
+    switch (treeWidget()->sortColumn()) {
     case StorageServiceTreeWidget::ColumnName: {
         if (sourceType == otherType) {
             return text(StorageServiceTreeWidget::ColumnName) < other.text(StorageServiceTreeWidget::ColumnName);
@@ -95,7 +95,7 @@ bool StorageServiceTreeWidgetItem::operator<(const QTreeWidgetItem &other) const
         break;
     }
     }
-    return QTreeWidgetItem::operator < ( other );
+    return QTreeWidgetItem::operator < (other);
 }
 
 void StorageServiceTreeWidgetItem::setSize(qulonglong size)

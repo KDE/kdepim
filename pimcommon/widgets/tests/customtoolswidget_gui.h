@@ -19,7 +19,8 @@
 #define TEST_CUSTOMTOOLWIDGETTEST_GUI_H
 
 #include <QWidget>
-namespace PimCommon {
+namespace PimCommon
+{
 class CustomToolsWidget;
 }
 
@@ -27,7 +28,7 @@ class CustomToolWidgetTest : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CustomToolWidgetTest(QWidget *parent=0);
+    explicit CustomToolWidgetTest(QWidget *parent = 0);
     ~CustomToolWidgetTest();
 
 private Q_SLOTS:

@@ -33,48 +33,48 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-DelegateSelector::DelegateSelector(QWidget * parent)
-  : QDialog( parent )
+DelegateSelector::DelegateSelector(QWidget *parent)
+    : QDialog(parent)
 {
-  setWindowTitle( i18n("Select delegate") );
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-  mOkButton->setDefault(true);
-  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &DelegateSelector::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &DelegateSelector::reject);
-  mOkButton->setDefault(true);
+    setWindowTitle(i18n("Select delegate"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &DelegateSelector::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &DelegateSelector::reject);
+    mOkButton->setDefault(true);
 
-  QWidget *delegateBox = new QWidget(this);
-  QHBoxLayout *delegateBoxHBoxLayout = new QHBoxLayout(delegateBox);
-  delegateBoxHBoxLayout->setMargin(0);
-  new QLabel( i18n("Delegate:"), delegateBox );
-  mDelegate = new KPIM::AddresseeLineEdit( delegateBox );
-  connect(mDelegate, &KPIM::AddresseeLineEdit::textChanged, this, &DelegateSelector::slotTextChanged);
-  mRsvp = new QCheckBox( i18n("Keep me informed about status changes of this incidence."), this );
-  mRsvp->setChecked( true );
+    QWidget *delegateBox = new QWidget(this);
+    QHBoxLayout *delegateBoxHBoxLayout = new QHBoxLayout(delegateBox);
+    delegateBoxHBoxLayout->setMargin(0);
+    new QLabel(i18n("Delegate:"), delegateBox);
+    mDelegate = new KPIM::AddresseeLineEdit(delegateBox);
+    connect(mDelegate, &KPIM::AddresseeLineEdit::textChanged, this, &DelegateSelector::slotTextChanged);
+    mRsvp = new QCheckBox(i18n("Keep me informed about status changes of this incidence."), this);
+    mRsvp->setChecked(true);
 
-  mainLayout->addWidget( delegateBox );
-  mainLayout->addWidget( mRsvp );
-  mainLayout->addWidget(buttonBox);
+    mainLayout->addWidget(delegateBox);
+    mainLayout->addWidget(mRsvp);
+    mainLayout->addWidget(buttonBox);
 
-  mOkButton->setEnabled( false );
+    mOkButton->setEnabled(false);
 }
 
-void DelegateSelector::slotTextChanged( const QString& text )
+void DelegateSelector::slotTextChanged(const QString &text)
 {
-  mOkButton->setEnabled( !text.isEmpty() );
+    mOkButton->setEnabled(!text.isEmpty());
 }
 
 QString DelegateSelector::delegate() const
 {
-  return mDelegate->text();
+    return mDelegate->text();
 }
 
 bool DelegateSelector::rsvp() const
 {
-  return mRsvp->isChecked();
+    return mRsvp->isChecked();
 }
 

@@ -28,21 +28,22 @@
 
 #include <QMap>
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class PIMCOMMON_EXPORT ImapAclAttribute : public Akonadi::Attribute
 {
 public:
     ImapAclAttribute();
-    ImapAclAttribute( const QMap<QByteArray, KIMAP::Acl::Rights> &rights,
-                      const QMap<QByteArray, KIMAP::Acl::Rights> &oldRights );
-    void setRights( const QMap<QByteArray, KIMAP::Acl::Rights> &rights );
+    ImapAclAttribute(const QMap<QByteArray, KIMAP::Acl::Rights> &rights,
+                     const QMap<QByteArray, KIMAP::Acl::Rights> &oldRights);
+    void setRights(const QMap<QByteArray, KIMAP::Acl::Rights> &rights);
     QMap<QByteArray, KIMAP::Acl::Rights> rights() const;
     QMap<QByteArray, KIMAP::Acl::Rights> oldRights() const;
     QByteArray type() const;
     Attribute *clone() const;
     QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
 private:
     QMap<QByteArray, KIMAP::Acl::Rights> mRights;

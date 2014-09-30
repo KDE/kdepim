@@ -28,51 +28,51 @@ using namespace MessageViewer;
 using namespace Akonadi;
 
 MemoryCalendarMemento::MemoryCalendarMemento()
-  : QObject( 0 ), mFinished( false )
+    : QObject(0), mFinished(false)
 {
 
-  Akonadi::ETMCalendar::Ptr etmCalendar = CalendarSupport::calendarSingleton(/*createIfNull=*/false);
-  if (etmCalendar && etmCalendar->isLoaded()) {
-    // Good, either korganizer or kontact summary view are already running, so reuse ETM to save memory
-    mCalendar = etmCalendar;
-    QMetaObject::invokeMethod( this, "finalize", Qt::QueuedConnection );
-  } else {
-    FetchJobCalendar::Ptr calendar = FetchJobCalendar::Ptr( new FetchJobCalendar( this ) );
-    mCalendar = calendar;
-    connect(calendar.data(), SIGNAL(loadFinished(bool,QString)),
-            SLOT(slotCalendarLoaded(bool,QString)) );
-  }
+    Akonadi::ETMCalendar::Ptr etmCalendar = CalendarSupport::calendarSingleton(/*createIfNull=*/false);
+    if (etmCalendar && etmCalendar->isLoaded()) {
+        // Good, either korganizer or kontact summary view are already running, so reuse ETM to save memory
+        mCalendar = etmCalendar;
+        QMetaObject::invokeMethod(this, "finalize", Qt::QueuedConnection);
+    } else {
+        FetchJobCalendar::Ptr calendar = FetchJobCalendar::Ptr(new FetchJobCalendar(this));
+        mCalendar = calendar;
+        connect(calendar.data(), SIGNAL(loadFinished(bool,QString)),
+                SLOT(slotCalendarLoaded(bool,QString)));
+    }
 }
 
-void MemoryCalendarMemento::slotCalendarLoaded( bool success, const QString &errorMessage )
+void MemoryCalendarMemento::slotCalendarLoaded(bool success, const QString &errorMessage)
 {
-  qDebug();
-  if ( !success ) {
-    qWarning() << "Unable to fetch incidences:" << errorMessage;
-  }
+    qDebug();
+    if (!success) {
+        qWarning() << "Unable to fetch incidences:" << errorMessage;
+    }
 
-  finalize();
+    finalize();
 }
 
 void MemoryCalendarMemento::finalize()
 {
-  mFinished = true;
-  emit update( Viewer::Delayed );
+    mFinished = true;
+    emit update(Viewer::Delayed);
 }
 
 bool MemoryCalendarMemento::finished() const
 {
-  return mFinished;
+    return mFinished;
 }
 
 KCalCore::MemoryCalendar::Ptr MemoryCalendarMemento::calendar() const
 {
-  Q_ASSERT( mFinished );
-  return mCalendar;
+    Q_ASSERT(mFinished);
+    return mCalendar;
 }
 
 void MemoryCalendarMemento::detach()
 {
-  disconnect( this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0 );
+    disconnect(this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0);
 }
 

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef WEBDAVSETTINGSDIALOG_H
 #define WEBDAVSETTINGSDIALOG_H
 
@@ -23,12 +22,13 @@
 
 class QLineEdit;
 class QPushButton;
-namespace PimCommon {
+namespace PimCommon
+{
 class WebDavSettingsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit WebDavSettingsDialog(QWidget *parent=0);
+    explicit WebDavSettingsDialog(QWidget *parent = 0);
     ~WebDavSettingsDialog();
 
     QString serviceLocation() const;

@@ -20,7 +20,8 @@
 
 #include "shorturl/abstractshorturl.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class GoogleShortUrl : public PimCommon::AbstractShortUrl
 {
     Q_OBJECT
@@ -32,8 +33,8 @@ public:
     QString shortUrlName() const;
 
 private Q_SLOTS:
-    void slotShortUrlFinished(QNetworkReply*reply);
-    void slotSslErrors(QNetworkReply *, const QList<QSslError> &error);    
+    void slotShortUrlFinished(QNetworkReply *reply);
+    void slotSslErrors(QNetworkReply *, const QList<QSslError> &error);
 };
 }
 

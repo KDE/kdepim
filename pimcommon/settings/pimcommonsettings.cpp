@@ -24,7 +24,7 @@ PimCommonSettings *PimCommonSettings::mSelf = 0;
 
 PimCommonSettings *PimCommonSettings::self()
 {
-    if ( !mSelf ) {
+    if (!mSelf) {
         mSelf = new PimCommonSettings();
         mSelf->load();
     }
@@ -34,15 +34,16 @@ PimCommonSettings *PimCommonSettings::self()
 
 PimCommonSettings::PimCommonSettings()
 {
-    mConfigSyncTimer = new QTimer( this );
-    mConfigSyncTimer->setSingleShot( true );
+    mConfigSyncTimer = new QTimer(this);
+    mConfigSyncTimer->setSingleShot(true);
     connect(mConfigSyncTimer, &QTimer::timeout, this, &PimCommonSettings::slotSyncNow);
 }
 
 void PimCommonSettings::requestSync()
 {
-    if ( !mConfigSyncTimer->isActive() )
-        mConfigSyncTimer->start( 0 );
+    if (!mConfigSyncTimer->isActive()) {
+        mConfigSyncTimer->start(0);
+    }
 }
 
 void PimCommonSettings::slotSyncNow()

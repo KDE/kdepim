@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "storageservicechecknamedialog.h"
 
 #include <KLocalizedString>
@@ -35,7 +34,7 @@ StorageServiceCheckNameDialog::StorageServiceCheckNameDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("New name"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -83,8 +82,9 @@ void StorageServiceCheckNameDialog::setDisallowedSymbols(const QRegExp &regExp)
 
 void StorageServiceCheckNameDialog::setDisallowedSymbolsStr(const QString &str)
 {
-    if (!str.isEmpty())
+    if (!str.isEmpty()) {
         mInfo->setText(i18n("Some characters (%1) are not allowed.", str));
+    }
 }
 
 void StorageServiceCheckNameDialog::setOldName(const QString &name)
@@ -96,6 +96,4 @@ QString StorageServiceCheckNameDialog::newName() const
 {
     return mName->text();
 }
-
-
 

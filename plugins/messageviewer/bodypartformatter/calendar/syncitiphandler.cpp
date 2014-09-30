@@ -37,7 +37,7 @@ using namespace Akonadi;
 
 SyncItipHandler::SyncItipHandler(const QString &receiver, const QString &iCal,
                                  const QString &type, QObject *parent) : QObject(parent)
-                                                                       , m_result(Akonadi::ITIPHandler::ResultSuccess)
+    , m_result(Akonadi::ITIPHandler::ResultSuccess)
 {
     Akonadi::ITIPHandler *handler = new Akonadi::ITIPHandler(this);
     QObject::connect(handler, &Akonadi::ITIPHandler::iTipMessageProcessed, this, &SyncItipHandler::onITipMessageProcessed);

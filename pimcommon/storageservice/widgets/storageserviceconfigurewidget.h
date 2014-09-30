@@ -24,13 +24,14 @@
 #include <QWidget>
 #include "pimcommon_export.h"
 class KUrlRequester;
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceSettingsWidget;
 class PIMCOMMON_EXPORT StorageServiceConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceConfigureWidget(QWidget *parent=0);
+    explicit StorageServiceConfigureWidget(QWidget *parent = 0);
     ~StorageServiceConfigureWidget();
 
     virtual void loadSettings();

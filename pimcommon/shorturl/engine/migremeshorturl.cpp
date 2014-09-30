@@ -15,11 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "migremeshorturl.h"
 
 #include <QNetworkRequest>
-
 
 using namespace PimCommon;
 
@@ -47,13 +45,13 @@ void MigremeShortUrl::start()
 void MigremeShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
     reply->deleteLater();
-    if (mErrorFound)
+    if (mErrorFound) {
         return;
+    }
 
     const QString data = QString::fromUtf8(reply->readAll());
     if (!data.isEmpty()) {
         Q_EMIT shortUrlDone(data);
     }
 }
-
 

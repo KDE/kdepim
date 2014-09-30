@@ -27,14 +27,15 @@
 
 class QTextDocument;
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class PIMCOMMON_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 
 public:
-    explicit SieveSyntaxHighlighter( QTextDocument *doc );
+    explicit SieveSyntaxHighlighter(QTextDocument *doc);
     ~SieveSyntaxHighlighter();
 
     void highlightBlock(const QString &text);
@@ -48,7 +49,7 @@ private:
         QRegExp pattern;
         QTextCharFormat format;
 
-        Rule( const QRegExp &r, const QTextCharFormat &f )
+        Rule(const QRegExp &r, const QTextCharFormat &f)
             : pattern(r), format(f) {}
     };
 

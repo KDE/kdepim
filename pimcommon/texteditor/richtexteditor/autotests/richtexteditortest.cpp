@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "richtexteditortest.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 #include <qtest.h>
@@ -24,7 +23,6 @@ RichTextEditorTest::RichTextEditorTest(QObject *parent)
     : QObject(parent)
 {
 }
-
 
 RichTextEditorTest::~RichTextEditorTest()
 {

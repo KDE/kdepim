@@ -35,9 +35,9 @@
 #include <collectionpropertiespage.h>
 #include "pimcommon_export.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class AclManager;
-
 
 /**
  * "Access Control" tab in the folder dialog
@@ -47,12 +47,12 @@ class PIMCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionPropertiesP
     Q_OBJECT
 
 public:
-    explicit CollectionAclPage( QWidget *parent = 0 );
+    explicit CollectionAclPage(QWidget *parent = 0);
 
-    void load( const Akonadi::Collection &collection );
-    void save( Akonadi::Collection &collection );
+    void load(const Akonadi::Collection &collection);
+    void save(Akonadi::Collection &collection);
 
-    bool canHandle( const Akonadi::Collection &collection ) const;
+    bool canHandle(const Akonadi::Collection &collection) const;
 
 protected:
     void init();
@@ -60,7 +60,7 @@ protected:
 private:
     PimCommon::AclManager *mAclManager;
 };
-AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CollectionAclPageFactory, CollectionAclPage )
+AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionAclPageFactory, CollectionAclPage)
 }
 
 #endif

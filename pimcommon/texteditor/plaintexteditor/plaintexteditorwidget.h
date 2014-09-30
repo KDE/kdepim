@@ -21,7 +21,8 @@
 #include "pimcommon_export.h"
 #include <QWidget>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditor;
 class PlainTextEditFindBar;
 class TextToSpeechWidget;
@@ -30,8 +31,8 @@ class PIMCOMMON_EXPORT PlainTextEditorWidget : public QWidget
     Q_OBJECT
     Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
 public:
-    explicit PlainTextEditorWidget(QWidget *parent=0);
-    explicit PlainTextEditorWidget(PlainTextEditor *customEditor, QWidget *parent=0);
+    explicit PlainTextEditorWidget(QWidget *parent = 0);
+    explicit PlainTextEditorWidget(PlainTextEditor *customEditor, QWidget *parent = 0);
     ~PlainTextEditorWidget();
 
     PlainTextEditor *editor() const;

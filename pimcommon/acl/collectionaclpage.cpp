@@ -53,107 +53,108 @@ using namespace PimCommon;
 class ActionButton : public QPushButton
 {
 public:
-    ActionButton( QWidget *parent = 0 )
-        : QPushButton( parent ),
-          mDefaultAction( 0 )
+    ActionButton(QWidget *parent = 0)
+        : QPushButton(parent),
+          mDefaultAction(0)
     {
     }
 
-    void setDefaultAction( QAction *action )
+    void setDefaultAction(QAction *action)
     {
-        if ( !actions().contains( action ) ) {
-            addAction( action );
+        if (!actions().contains(action)) {
+            addAction(action);
             connect(this, &ActionButton::clicked, action, &QAction::trigger);
         }
 
-        setText( action->text() );
-        setEnabled( action->isEnabled() );
+        setText(action->text());
+        setEnabled(action->isEnabled());
 
         mDefaultAction = action;
     }
 
 protected:
-    virtual void actionEvent( QActionEvent *event )
+    virtual void actionEvent(QActionEvent *event)
     {
         QAction *action = event->action();
-        switch ( event->type() ) {
+        switch (event->type()) {
         case QEvent::ActionChanged:
-            if ( action == mDefaultAction )
-                setDefaultAction( mDefaultAction );
+            if (action == mDefaultAction) {
+                setDefaultAction(mDefaultAction);
+            }
             return;
             break;
         default:
             break;
         }
 
-        QPushButton::actionEvent( event );
+        QPushButton::actionEvent(event);
     }
 
 private:
     QAction *mDefaultAction;
 };
 
-CollectionAclPage::CollectionAclPage( QWidget *parent )
-    : CollectionPropertiesPage( parent ),
-      mAclManager( new PimCommon::AclManager( this ) )
+CollectionAclPage::CollectionAclPage(QWidget *parent)
+    : CollectionPropertiesPage(parent),
+      mAclManager(new PimCommon::AclManager(this))
 {
-    setObjectName( QLatin1String( "PimCommon::CollectionAclPage" ) );
+    setObjectName(QLatin1String("PimCommon::CollectionAclPage"));
 
-    setPageTitle( i18n( "Access Control" ) );
+    setPageTitle(i18n("Access Control"));
     init();
 }
 
 void CollectionAclPage::init()
 {
-    QHBoxLayout *layout = new QHBoxLayout( this );
+    QHBoxLayout *layout = new QHBoxLayout(this);
 
     QListView *view = new QListView;
-    layout->addWidget( view );
+    layout->addWidget(view);
 
-    view->setAlternatingRowColors( true );
-    view->setModel( mAclManager->model() );
-    view->setSelectionModel( mAclManager->selectionModel() );
+    view->setAlternatingRowColors(true);
+    view->setModel(mAclManager->model());
+    view->setSelectionModel(mAclManager->selectionModel());
 
     QWidget *buttonBox = new QWidget;
     QVBoxLayout *buttonBoxVBoxLayout = new QVBoxLayout(buttonBox);
     buttonBoxVBoxLayout->setMargin(0);
 //TODO PORT QT5     buttonBoxVBoxLayout->setSpacing( QDialog::spacingHint() );
-    layout->addWidget( buttonBox );
+    layout->addWidget(buttonBox);
 
-    ActionButton *button = new ActionButton( buttonBox );
+    ActionButton *button = new ActionButton(buttonBox);
     buttonBoxVBoxLayout->addWidget(button);
-    button->setDefaultAction( mAclManager->addAction() );
+    button->setDefaultAction(mAclManager->addAction());
 
-    button = new ActionButton( buttonBox );
+    button = new ActionButton(buttonBox);
     buttonBoxVBoxLayout->addWidget(button);
-    button->setDefaultAction( mAclManager->editAction() );
+    button->setDefaultAction(mAclManager->editAction());
 
-    button = new ActionButton( buttonBox );
+    button = new ActionButton(buttonBox);
     buttonBoxVBoxLayout->addWidget(button);
-    button->setDefaultAction( mAclManager->deleteAction() );
+    button->setDefaultAction(mAclManager->deleteAction());
 
-    QWidget *spacer = new QWidget( buttonBox );
+    QWidget *spacer = new QWidget(buttonBox);
     buttonBoxVBoxLayout->addWidget(spacer);
-    spacer->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
+    spacer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 }
 
-bool CollectionAclPage::canHandle( const Akonadi::Collection &collection ) const
+bool CollectionAclPage::canHandle(const Akonadi::Collection &collection) const
 {
     return collection.hasAttribute<PimCommon::ImapAclAttribute>();
 }
 
-void CollectionAclPage::load( const Akonadi::Collection &collection )
+void CollectionAclPage::load(const Akonadi::Collection &collection)
 {
-    mAclManager->setCollection( collection );
+    mAclManager->setCollection(collection);
 }
 
-void CollectionAclPage::save( Akonadi::Collection &collection )
+void CollectionAclPage::save(Akonadi::Collection &collection)
 {
     mAclManager->save();
 
     // The collection dialog expects the changed collection to run
     // its own ItemModifyJob, so make him happy...
     PimCommon::ImapAclAttribute *attribute = mAclManager->collection().attribute<PimCommon::ImapAclAttribute>();
-    collection.addAttribute( attribute->clone() );
+    collection.addAttribute(attribute->clone());
 }
 

@@ -24,7 +24,7 @@ class BoxTestWidget : public ServiceTestWidget
 {
     Q_OBJECT
 public:
-    explicit BoxTestWidget(QWidget *parent=0);
+    explicit BoxTestWidget(QWidget *parent = 0);
 };
 
 #endif

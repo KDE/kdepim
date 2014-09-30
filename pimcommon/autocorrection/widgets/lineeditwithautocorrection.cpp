@@ -22,7 +22,7 @@
 
 using namespace PimCommon;
 
-LineEditWithAutoCorrection::LineEditWithAutoCorrection(QWidget* parent, const QString& configFile)
+LineEditWithAutoCorrection::LineEditWithAutoCorrection(QWidget *parent, const QString &configFile)
     : KPIM::SpellCheckLineEdit(parent, configFile),
       mAutoCorrection(new PimCommon::AutoCorrection()),
       mNeedToDeleteAutoCorrection(true)
@@ -41,7 +41,7 @@ AutoCorrection *LineEditWithAutoCorrection::autocorrection() const
     return mAutoCorrection;
 }
 
-void LineEditWithAutoCorrection::setAutocorrection(PimCommon::AutoCorrection* autocorrect)
+void LineEditWithAutoCorrection::setAutocorrection(PimCommon::AutoCorrection *autocorrect)
 {
     mNeedToDeleteAutoCorrection = false;
     delete mAutoCorrection;
@@ -53,7 +53,7 @@ void LineEditWithAutoCorrection::setAutocorrectionLanguage(const QString &langua
     mAutoCorrection->setLanguage(language);
 }
 
-void LineEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
+void LineEditWithAutoCorrection::keyPressEvent(QKeyEvent *e)
 {
     if (mAutoCorrection && mAutoCorrection->isEnabledAutoCorrection()) {
         if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
@@ -73,6 +73,6 @@ void LineEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
             }
         }
     }
-    KPIM::SpellCheckLineEdit::keyPressEvent( e );
+    KPIM::SpellCheckLineEdit::keyPressEvent(e);
 }
 

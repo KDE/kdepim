@@ -22,8 +22,8 @@
 #include <QWidget>
 #include <QTextDocument>
 
-
-namespace PimCommon {
+namespace PimCommon
+{
 class TextFindWidget;
 class TextReplaceWidget;
 class PIMCOMMON_EXPORT TextEditFindBarBase : public QWidget
@@ -31,11 +31,11 @@ class PIMCOMMON_EXPORT TextEditFindBarBase : public QWidget
     Q_OBJECT
 
 public:
-    explicit TextEditFindBarBase( QWidget *parent = 0 );
+    explicit TextEditFindBarBase(QWidget *parent = 0);
     ~TextEditFindBarBase();
 
     QString text() const;
-    void setText( const QString &text );
+    void setText(const QString &text);
 
     void focusAndSetCursor();
 
@@ -48,20 +48,20 @@ protected:
     virtual bool searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions) = 0;
     virtual void autoSearchMoveCursor() = 0;
 
-    bool event(QEvent* e);
+    bool event(QEvent *e);
     void clearSelections();
     void updateHighLight(bool);
-    bool searchText( bool backward, bool isAutoSearch );
-    void updateSensitivity( bool );
+    bool searchText(bool backward, bool isAutoSearch);
+    void updateSensitivity(bool);
 
-    void setFoundMatch( bool match );
-    void messageInfo( bool backward, bool isAutoSearch, bool found );
+    void setFoundMatch(bool match);
+    void messageInfo(bool backward, bool isAutoSearch, bool found);
 
 public slots:
     void findNext();
     void findPrev();
-    void autoSearch( const QString &str );
-    virtual void slotSearchText( bool backward = false, bool isAutoSearch = true ) = 0;
+    void autoSearch(const QString &str);
+    virtual void slotSearchText(bool backward = false, bool isAutoSearch = true) = 0;
     void closeBar();
 
 private slots:

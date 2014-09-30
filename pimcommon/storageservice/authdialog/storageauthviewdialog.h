@@ -20,13 +20,14 @@
 
 #include <QDialog>
 #include <KConfigGroup>
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageAuthViewWidget;
 class StorageAuthViewDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit StorageAuthViewDialog(QWidget *parent=0);
+    explicit StorageAuthViewDialog(QWidget *parent = 0);
     ~StorageAuthViewDialog();
 
     void setUrl(const QUrl &url);

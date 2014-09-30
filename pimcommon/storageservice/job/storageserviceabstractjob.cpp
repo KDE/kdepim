@@ -32,24 +32,24 @@ StorageServiceAbstractJob::StorageServiceAbstractJob(QObject *parent)
       mError(false)
 {
     connect(mNetworkAccessManager, &QNetworkAccessManager::sslErrors, this, &StorageServiceAbstractJob::slotSslErrors);
-    qDebug()<<"StorageServiceAbstractJob::StorageServiceAbstractJob() "<<this;
+    qDebug() << "StorageServiceAbstractJob::StorageServiceAbstractJob() " << this;
 }
 
 StorageServiceAbstractJob::~StorageServiceAbstractJob()
 {
-    qDebug()<<"StorageServiceAbstractJob::~StorageServiceAbstractJob() "<<this;
+    qDebug() << "StorageServiceAbstractJob::~StorageServiceAbstractJob() " << this;
 }
 
 void StorageServiceAbstractJob::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)
 {
-    qDebug()<<" void StorageServiceAbstractJob::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)"<<error.count();
+    qDebug() << " void StorageServiceAbstractJob::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)" << error.count();
     reply->ignoreSslErrors(error);
 }
 
 void StorageServiceAbstractJob::slotError(QNetworkReply::NetworkError error)
 {
-    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
-    qDebug()<<" Error "<<error<<" reply"<<reply->errorString();
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    qDebug() << " Error " << error << " reply" << reply->errorString();
     mError = true;
     mErrorMsg = reply->errorString();
 }
@@ -57,63 +57,64 @@ void StorageServiceAbstractJob::slotError(QNetworkReply::NetworkError error)
 void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr)
 {
     QString error;
-    switch(type) {
+    switch (type) {
     case PimCommon::StorageServiceAbstract::NoneAction:
         break;
     case PimCommon::StorageServiceAbstract::RequestTokenAction:
-        error = i18n("Request Token returns an error: %1",errorStr);
+        error = i18n("Request Token returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::AccessTokenAction:
-        error = i18n("Access Token returns an error: %1",errorStr);
+        error = i18n("Access Token returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::UploadFileAction:
-        error = i18n("Upload File returns an error: %1",errorStr);
+        error = i18n("Upload File returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::CreateFolderAction:
-        error = i18n("Create Folder returns an error: %1",errorStr);
+        error = i18n("Create Folder returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::AccountInfoAction:
-        error = i18n("Get account info returns an error: %1",errorStr);
+        error = i18n("Get account info returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::ListFolderAction:
-        error = i18n("List folder returns an error: %1",errorStr);
+        error = i18n("List folder returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::ShareLinkAction:
-        error = i18n("Share Link returns an error: %1",errorStr);
+        error = i18n("Share Link returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::CreateServiceFolderAction:
-        error = i18n("Create Service Folder returns an error: %1",errorStr);
+        error = i18n("Create Service Folder returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFileAction:
-        error = i18n("Download file returns an error: %1",errorStr);
+        error = i18n("Download file returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::DeleteFileAction:
-        error = i18n("Delete File returns an error: %1",errorStr);
+        error = i18n("Delete File returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::DeleteFolderAction:
-        error = i18n("Delete Folder returns an error: %1",errorStr);
+        error = i18n("Delete Folder returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::RenameFolderAction:
-        error = i18n("Rename Folder returns an error: %1",errorStr);
+        error = i18n("Rename Folder returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::RenameFileAction:
-        error = i18n("Rename File returns an error: %1",errorStr);
+        error = i18n("Rename File returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::MoveFileAction:
-        error = i18n("Move File returns an error: %1",errorStr);
+        error = i18n("Move File returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::MoveFolderAction:
-        error = i18n("Move Folder returns an error: %1",errorStr);
+        error = i18n("Move Folder returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::CopyFileAction:
-        error = i18n("Copy File returns an error: %1",errorStr);
+        error = i18n("Copy File returns an error: %1", errorStr);
         break;
     case PimCommon::StorageServiceAbstract::CopyFolderAction:
-        error = i18n("Copy Folder returns an error: %1",errorStr);
+        error = i18n("Copy Folder returns an error: %1", errorStr);
         break;
     }
-    if (!error.isEmpty())
+    if (!error.isEmpty()) {
         Q_EMIT actionFailed(error);
+    }
 }
 
 void StorageServiceAbstractJob::slotDownloadReadyRead()

@@ -21,12 +21,10 @@
 
 #include <qdebug.h>
 
-
 #include <KLocalizedString>
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
-
 
 BoxTestWidget::BoxTestWidget(QWidget *parent)
     : ServiceTestWidget(parent)
@@ -34,10 +32,9 @@ BoxTestWidget::BoxTestWidget(QWidget *parent)
     setStorageService(new PimCommon::BoxStorageService(this));
 }
 
-
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("box_gui"), i18n("box_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("box_gui"), i18n("box_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for box"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -47,7 +44,6 @@ int main (int argc, char **argv)
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-
 
     BoxTestWidget *w = new BoxTestWidget;
     w->show();

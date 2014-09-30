@@ -71,7 +71,7 @@ void BoxStorageService::readConfig()
             QStringList lst = wallet->entryList();
             if (lst.contains(storageServiceName())) {
                 QMap<QString, QString> map;
-                wallet->readMap( storageServiceName(), map );
+                wallet->readMap(storageServiceName(), map);
                 if (map.contains(QLatin1String("Refresh Token"))) {
                     mRefreshToken = map.value(QLatin1String("Refresh Token"));
                 }
@@ -92,8 +92,9 @@ void BoxStorageService::removeConfig()
     if (StorageServiceSettings::self()->createDefaultFolder()) {
         const QString walletEntry = storageServiceName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
-        if (wallet)
+        if (wallet) {
             wallet->removeEntry(walletEntry);
+        }
     }
 }
 
@@ -124,10 +125,10 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String( "Refresh Token" )] = mRefreshToken;
-            map[QLatin1String( "Token" )] = mToken;
-            map[QLatin1String( "Expire Time" )] = mExpireDateTime.toString();
-            wallet->writeMap( walletEntry, map);
+            map[QLatin1String("Refresh Token")] = mRefreshToken;
+            map[QLatin1String("Token")] = mToken;
+            map[QLatin1String("Expire Time")] = mExpireDateTime.toString();
+            wallet->writeMap(walletEntry, map);
         }
     }
     emitAuthentificationDone();
@@ -135,12 +136,14 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
 
 bool BoxStorageService::needToRefreshToken()
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
-    if (mExpireDateTime < QDateTime::currentDateTime())
+    }
+    if (mExpireDateTime < QDateTime::currentDateTime()) {
         return true;
-    else
+    } else {
         return false;
+    }
 }
 
 void BoxStorageService::refreshToken()
@@ -570,7 +573,7 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
 
 QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    qDebug()<<" variantMap" <<variantMap;
+    qDebug() << " variantMap" << variantMap;
     QMap<QString, QString> information;
     if (variantMap.contains(QLatin1String("type"))) {
         const QString type = variantMap.value(QLatin1String("type")).toString();
@@ -584,11 +587,11 @@ QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &var
     }
     if (variantMap.contains(QLatin1String("created_at"))) {
         const QString tmp = variantMap.value(QLatin1String("created_at")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((PimCommon::BoxUtil::convertToDateTime( tmp )), QLocale::ShortFormat));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((PimCommon::BoxUtil::convertToDateTime(tmp)), QLocale::ShortFormat));
     }
     if (variantMap.contains(QLatin1String("modified_at"))) {
         const QString tmp = variantMap.value(QLatin1String("modified_at")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((PimCommon::BoxUtil::convertToDateTime( tmp )), QLocale::ShortFormat));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((PimCommon::BoxUtil::convertToDateTime(tmp)), QLocale::ShortFormat));
     }
     return information;
 }
@@ -616,5 +619,4 @@ QString BoxStorageService::disallowedSymbolsStr() const
 {
     return QLatin1String("\\ / : ? * < > |");
 }
-
 

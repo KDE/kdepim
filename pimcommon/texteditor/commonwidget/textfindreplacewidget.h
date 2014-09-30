@@ -24,20 +24,21 @@
 class QAction;
 class QLineEdit;
 class QPushButton;
-namespace PimCommon {
+namespace PimCommon
+{
 
 class TextFindWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextFindWidget(QWidget *parent=0);
+    explicit TextFindWidget(QWidget *parent = 0);
     ~TextFindWidget();
 
     QTextDocument::FindFlags searchOptions() const;
 
     QLineEdit *search() const;
 
-    void setFoundMatch( bool match );
+    void setFoundMatch(bool match);
     QRegExp findRegExp() const;
 
 private Q_SLOTS:
@@ -64,7 +65,7 @@ class TextReplaceWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextReplaceWidget(QWidget *parent=0);
+    explicit TextReplaceWidget(QWidget *parent = 0);
     ~TextReplaceWidget();
 
     QLineEdit *replace() const;

@@ -23,19 +23,19 @@
 
 #include <QDialog>
 #include "pimcommon_export.h"
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceAbstract;
 class StorageServiceConfigureWidget;
 class PIMCOMMON_EXPORT StorageServiceConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceConfigureDialog(QWidget *parent=0);
+    explicit StorageServiceConfigureDialog(QWidget *parent = 0);
     ~StorageServiceConfigureDialog();
 
     QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
     void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
-
 
     virtual void writeSettings();
 

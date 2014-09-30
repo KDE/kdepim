@@ -24,7 +24,8 @@
 #include "storageserviceabstract.h"
 
 class KActionMenu;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT StorageServiceManager : public QObject
 {
     Q_OBJECT
@@ -43,7 +44,7 @@ public:
         EndListService
     };
 
-    explicit StorageServiceManager(QObject *parent=0);
+    explicit StorageServiceManager(QObject *parent = 0);
     ~StorageServiceManager();
 
     QString ourIdentifier() const;
@@ -52,7 +53,6 @@ public:
     KActionMenu *menuDownloadServices(QWidget *parent) const;
     KActionMenu *menuUploadServices(QWidget *parent) const;
     KActionMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability mainCapability, const QList<PimCommon::StorageServiceAbstract::Capability> &lstCapability, QWidget *parent) const;
-
 
     QMap<QString, StorageServiceAbstract *> listService() const;
     void setListService(const QMap<QString, StorageServiceAbstract *> &lst);
@@ -82,7 +82,7 @@ Q_SIGNALS:
     void deleteFileDone(const QString &serviceName, const QString &filename);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
     void uploadFileStart(PimCommon::StorageServiceAbstract *service);
-    void configChanged( const QString &id );
+    void configChanged(const QString &id);
 
 private Q_SLOTS:
     void slotAccountInfo();

@@ -29,14 +29,13 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-
 using namespace PimCommon;
 
 StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Configure" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Configure"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -79,10 +78,10 @@ void StorageServiceConfigureDialog::setListService(const QMap<QString, PimCommon
 
 void StorageServiceConfigureDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "StorageServiceConfigureDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "StorageServiceConfigureDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
@@ -90,8 +89,7 @@ void StorageServiceConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group( QLatin1String("StorageServiceConfigureDialog") );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group = config->group(QLatin1String("StorageServiceConfigureDialog"));
+    group.writeEntry("Size", size());
 }
-
 

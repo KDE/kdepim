@@ -58,146 +58,160 @@
 #include <QDir>
 #include <KLocalizedString>
 
-namespace {
+namespace
+{
 
-  class Formatter : public MessageViewer::Interface::BodyPartFormatter {
-  public:
-    Result format( MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer ) const {
+class Formatter : public MessageViewer::Interface::BodyPartFormatter
+{
+public:
+    Result format(MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer) const
+    {
 
-      if ( !writer ) return Ok;
-
-      const QString dir = QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
-      QString htmlStr = QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">");
-      QString startRow = QLatin1String("<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">");
-      QString endRow = QLatin1String("</td></tr>");
-
-      const QString fileName = bodyPart->nodeHelper()->writeNodeToTempFile( bodyPart->content() );
-      KTnef::KTNEFParser parser;
-      if ( !parser.openFile( fileName ) || !parser.message()) {
-        qDebug() << "Could not parse" << fileName;
-        return Failed;
-      }
-
-      // Look for an invitation
-      QString inviteStr;
-      QByteArray buf = KPIMUtils::kFileToByteArray( fileName, false, false );
-      if ( !buf.isEmpty() ) {
-        KCalCore::MemoryCalendar::Ptr cl(
-          new KCalCore::MemoryCalendar( KSystemTimeZones::local() ) );
-        KCalUtils::InvitationFormatterHelper helper;
-        const QString invite = KTnef::formatTNEFInvitation( buf, cl, &helper );
-        KCalCore::ICalFormat format;
-        KCalCore::Incidence::Ptr inc = format.fromString( invite );
-        KCalCore::Event::Ptr event = inc.dynamicCast<KCalCore::Event>();
-        if ( event && event->hasEndDate() ) {
-          // no enddate => not a valid invitation
-          inviteStr = KCalUtils::IncidenceFormatter::extensiveDisplayStr( cl, inc );
+        if (!writer) {
+            return Ok;
         }
-      }
 
-      QList<KTnef::KTNEFAttach*> tnefatts = parser.message()->attachmentList();
-      if ( tnefatts.isEmpty() && inviteStr.isEmpty() ) {
-        qDebug() << "No attachments or invitation found in" << fileName;
+        const QString dir = QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
+        QString htmlStr = QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">");
+        QString startRow = QLatin1String("<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">");
+        QString endRow = QLatin1String("</td></tr>");
 
-        QString label = MessageViewer::NodeHelper::fileName( bodyPart->content() );
-        label = MessageCore::StringUtil::quoteHtmlChars( label, true );
+        const QString fileName = bodyPart->nodeHelper()->writeNodeToTempFile(bodyPart->content());
+        KTnef::KTNEFParser parser;
+        if (!parser.openFile(fileName) || !parser.message()) {
+            qDebug() << "Could not parse" << fileName;
+            return Failed;
+        }
+
+        // Look for an invitation
+        QString inviteStr;
+        QByteArray buf = KPIMUtils::kFileToByteArray(fileName, false, false);
+        if (!buf.isEmpty()) {
+            KCalCore::MemoryCalendar::Ptr cl(
+                new KCalCore::MemoryCalendar(KSystemTimeZones::local()));
+            KCalUtils::InvitationFormatterHelper helper;
+            const QString invite = KTnef::formatTNEFInvitation(buf, cl, &helper);
+            KCalCore::ICalFormat format;
+            KCalCore::Incidence::Ptr inc = format.fromString(invite);
+            KCalCore::Event::Ptr event = inc.dynamicCast<KCalCore::Event>();
+            if (event && event->hasEndDate()) {
+                // no enddate => not a valid invitation
+                inviteStr = KCalUtils::IncidenceFormatter::extensiveDisplayStr(cl, inc);
+            }
+        }
+
+        QList<KTnef::KTNEFAttach *> tnefatts = parser.message()->attachmentList();
+        if (tnefatts.isEmpty() && inviteStr.isEmpty()) {
+            qDebug() << "No attachments or invitation found in" << fileName;
+
+            QString label = MessageViewer::NodeHelper::fileName(bodyPart->content());
+            label = MessageCore::StringUtil::quoteHtmlChars(label, true);
+            const QString comment =
+                MessageCore::StringUtil::quoteHtmlChars(
+                    bodyPart->content()->contentDescription()->asUnicodeString(), true);
+
+            htmlStr += startRow;
+            htmlStr += label;
+            if (!comment.isEmpty()) {
+                htmlStr += QLatin1String("<br/>") + comment;
+            }
+            htmlStr += QLatin1String("&nbsp;&lt;") + i18nc("TNEF attachment has no content", "empty") + QLatin1String("&gt;");
+            htmlStr += endRow;
+            htmlStr += QLatin1String("</table>");
+            writer->queue(htmlStr);
+
+            return NeedContent;
+        }
+
+        QString label = MessageViewer::NodeHelper::fileName(bodyPart->content());
+        label = MessageCore::StringUtil::quoteHtmlChars(label, true);
         const QString comment =
-          MessageCore::StringUtil::quoteHtmlChars(
-            bodyPart->content()->contentDescription()->asUnicodeString(), true );
+            MessageCore::StringUtil::quoteHtmlChars(
+                bodyPart->content()->contentDescription()->asUnicodeString(), true);
 
         htmlStr += startRow;
         htmlStr += label;
-        if ( !comment.isEmpty() ) {
-          htmlStr += QLatin1String("<br/>") + comment;
+        if (!comment.isEmpty()) {
+            htmlStr += QLatin1String("<br/>") + comment;
         }
-        htmlStr += QLatin1String("&nbsp;&lt;") + i18nc( "TNEF attachment has no content", "empty" ) + QLatin1String("&gt;");
         htmlStr += endRow;
-        htmlStr += QLatin1String("</table>");
-        writer->queue( htmlStr );
+        if (!inviteStr.isEmpty()) {
+            htmlStr += startRow;
+            htmlStr += inviteStr;
+            htmlStr += endRow;
+        }
 
-        return NeedContent;
-      }
+        if (tnefatts.count() > 0) {
+            htmlStr += startRow;
+        }
+        writer->queue(htmlStr);
+        const int numberOfTnef(tnefatts.count());
+        for (int i = 0; i < numberOfTnef; ++i) {
+            KTnef::KTNEFAttach *att = tnefatts.at(i);
+            QString label = att->displayName();
+            if (label.isEmpty()) {
+                label = att->name();
+            }
+            label = MessageCore::StringUtil::quoteHtmlChars(label, true);
 
-      QString label = MessageViewer::NodeHelper::fileName( bodyPart->content() );
-      label = MessageCore::StringUtil::quoteHtmlChars( label, true );
-      const QString comment =
-        MessageCore::StringUtil::quoteHtmlChars(
-          bodyPart->content()->contentDescription()->asUnicodeString(), true );
+            const QString dir = bodyPart->nodeHelper()->createTempDir(QLatin1String("ktnef-") + QString::number(i));
+            parser.extractFileTo(att->name(), dir);
+            bodyPart->nodeHelper()->addTempFile(dir + QDir::separator() + att->name());
+            const QString href = QLatin1String("file:") + QString::fromLatin1(QUrl::toPercentEncoding(dir + QDir::separator() + att->name()));
 
-      htmlStr += startRow;
-      htmlStr += label;
-      if ( !comment.isEmpty() ) {
-        htmlStr += QLatin1String("<br/>") + comment;
-      }
-      htmlStr += endRow;
-      if ( !inviteStr.isEmpty() ) {
-        htmlStr += startRow;
-        htmlStr += inviteStr;
-        htmlStr += endRow;
-      }
+            const QString iconName = MessageViewer::Util::fileNameForMimetype(att->mimeTag(),
+                                     KIconLoader::Desktop, att->name());
 
-      if ( tnefatts.count() > 0 ) {
-        htmlStr += startRow;
-      }
-      writer->queue( htmlStr );
-      const int numberOfTnef( tnefatts.count() );
-      for ( int i = 0; i < numberOfTnef; ++i ) {
-        KTnef::KTNEFAttach *att = tnefatts.at( i );
-        QString label = att->displayName();
-        if( label.isEmpty() )
-          label = att->name();
-        label = MessageCore::StringUtil::quoteHtmlChars( label, true );
+            writer->queue(QLatin1String("<div><a href=\"") + href + QLatin1String("\"><img src=\"file:///") +
+                          iconName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\"/>") + label +
+                          QLatin1String("</a></div><br/>"));
+        }
 
-        const QString dir = bodyPart->nodeHelper()->createTempDir( QLatin1String("ktnef-") + QString::number( i ) );
-        parser.extractFileTo( att->name(), dir );
-        bodyPart->nodeHelper()->addTempFile( dir + QDir::separator() + att->name() );
-        const QString href = QLatin1String("file:") + QString::fromLatin1(QUrl::toPercentEncoding( dir + QDir::separator() + att->name() ));
+        if (tnefatts.count() > 0) {
+            writer->queue(endRow);
+        }
+        writer->queue(QLatin1String("</table>"));
 
-        const QString iconName = MessageViewer::Util::fileNameForMimetype( att->mimeTag(),
-                                                            KIconLoader::Desktop, att->name() );
-
-        writer->queue( QLatin1String("<div><a href=\"") + href + QLatin1String("\"><img src=\"file:///") +
-                              iconName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\"/>") + label +
-                              QLatin1String("</a></div><br/>") );
-      }
-
-      if ( tnefatts.count() > 0 ) {
-        writer->queue( endRow );
-      }
-      writer->queue( QLatin1String("</table>") );
-
-      return Ok;
+        return Ok;
     }
-    
+
     // unhide the overload with three arguments
     using MessageViewer::Interface::BodyPartFormatter::format;
-  };
+};
 
-  class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin {
-  public:
-    const MessageViewer::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const {
-      return idx == 0 ? new Formatter() : 0 ;
+class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
+{
+public:
+    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
+    {
+        return idx == 0 ? new Formatter() : 0 ;
     }
-    const char * type( int idx ) const {
-      return idx == 0 ? "application" : 0 ;
+    const char *type(int idx) const
+    {
+        return idx == 0 ? "application" : 0 ;
     }
-    const char * subtype( int idx ) const {
-      if ( idx == 0 ) {
-        return "ms-tnef";
-      } else if ( idx == 1 ) {
-        return "vnd.ms-tnef";
-      } else {
+    const char *subtype(int idx) const
+    {
+        if (idx == 0) {
+            return "ms-tnef";
+        } else if (idx == 1) {
+            return "vnd.ms-tnef";
+        } else {
+            return 0;
+        }
+    }
+
+    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int) const
+    {
         return 0;
-      }
     }
-
-    const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int ) const { return 0; }
-  };
+};
 
 }
 
 extern "C"
 Q_DECL_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
-messageviewer_bodypartformatter_application_mstnef_create_bodypart_formatter_plugin() {
-  return new Plugin();
+messageviewer_bodypartformatter_application_mstnef_create_bodypart_formatter_plugin()
+{
+    return new Plugin();
 }

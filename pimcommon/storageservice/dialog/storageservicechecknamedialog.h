@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef STORAGESERVICECHECKNAMEDIALOG_H
 #define STORAGESERVICECHECKNAMEDIALOG_H
 
@@ -25,12 +24,13 @@
 class QLineEdit;
 class QLabel;
 class QPushButton;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT StorageServiceCheckNameDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceCheckNameDialog(QWidget *parent=0);
+    explicit StorageServiceCheckNameDialog(QWidget *parent = 0);
     ~StorageServiceCheckNameDialog();
 
     void setDisallowedSymbols(const QRegExp &regExp);

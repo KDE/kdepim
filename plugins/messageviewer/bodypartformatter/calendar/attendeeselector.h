@@ -29,22 +29,21 @@
 */
 class AttendeeSelector : public QDialog
 {
-  Q_OBJECT
-  public:
-    explicit AttendeeSelector( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit AttendeeSelector(QWidget *parent = 0);
 
     QStringList attendees() const;
 
-  private slots:
+private slots:
     void addClicked();
     void removeClicked();
-    void textChanged( const QString &text );
+    void textChanged(const QString &text);
     void selectionChanged();
 
-  private:
+private:
     Ui::AttendeeSelectorWidget ui;
     QPushButton *mOkButton;
 };
-
 
 #endif

@@ -22,13 +22,14 @@
 #include <KConfigGroup>
 #include "pimcommon/pimcommon_export.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class ShortUrlConfigureWidget;
 class PIMCOMMON_EXPORT ShortUrlConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ShortUrlConfigureDialog(QWidget *parent=0);
+    explicit ShortUrlConfigureDialog(QWidget *parent = 0);
     ~ShortUrlConfigureDialog();
 
 private Q_SLOTS:

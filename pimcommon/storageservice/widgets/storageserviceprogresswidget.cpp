@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "storageserviceprogresswidget.h"
 #include "storageservice/storageserviceabstract.h"
 
@@ -37,7 +36,7 @@ StorageServiceProgressWidget::StorageServiceProgressWidget(PimCommon::StorageSer
       mCancel(0),
       mStorageService(service)
 {
-    QHBoxLayout *box = new QHBoxLayout( this );
+    QHBoxLayout *box = new QHBoxLayout(this);
     box->setMargin(0);
     box->setSpacing(0);
     mProgressInfo = new QLabel;
@@ -66,10 +65,11 @@ StorageServiceProgressWidget::~StorageServiceProgressWidget()
 void StorageServiceProgressWidget::setService(PimCommon::StorageServiceAbstract *service)
 {
     mStorageService = service;
-    if (service)
+    if (service) {
         mCancel->show();
-    else
+    } else {
         mCancel->hide();
+    }
 }
 
 void StorageServiceProgressWidget::setProgressBarType(StorageServiceProgressWidget::ProgressBarType type)
@@ -79,7 +79,7 @@ void StorageServiceProgressWidget::setProgressBarType(StorageServiceProgressWidg
 
 void StorageServiceProgressWidget::slotCancelTask()
 {
-    switch(mType) {
+    switch (mType) {
     case DownloadBar:
         mStorageService->cancelDownloadFile();
         break;
@@ -109,10 +109,11 @@ void StorageServiceProgressWidget::setBusyIndicator(bool busy)
 void StorageServiceProgressWidget::setProgressValue(qint64 done, qint64 total)
 {
     mProgressInfo->setText(i18n("%1 on %2", KFormat().formatByteSize(done), KFormat().formatByteSize(total)));
-    if (total > 0)
-       mProgressBar->setValue((100*done)/total);
-    else
-       mProgressBar->setValue(100);
+    if (total > 0) {
+        mProgressBar->setValue((100 * done) / total);
+    } else {
+        mProgressBar->setValue(100);
+    }
 }
 
 void StorageServiceProgressWidget::hideEvent(QHideEvent *e)
@@ -122,5 +123,4 @@ void StorageServiceProgressWidget::hideEvent(QHideEvent *e)
     }
     QFrame::hideEvent(e);
 }
-
 

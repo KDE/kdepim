@@ -22,9 +22,11 @@
 
 #include <KImap/kimap/Acl>
 
-namespace PimCommon {
+namespace PimCommon
+{
 
-namespace AclUtils {
+namespace AclUtils
+{
 
 /**
  * Returns the number of standard permissions available.
@@ -34,19 +36,19 @@ uint standardPermissionsCount();
 /**
  * Returns the standard permissions at the given @p index.
  */
-KIMAP::Acl::Rights permissionsForIndex( uint index );
+KIMAP::Acl::Rights permissionsForIndex(uint index);
 
 /**
  * Returns the index of the given standard @p permissions.
  *
  * If there are no matching permissions, @c -1 is returned.
  */
-int indexForPermissions( KIMAP::Acl::Rights permissions );
+int indexForPermissions(KIMAP::Acl::Rights permissions);
 
 /**
  * Returns the i18n'd representation of the given @p permissions.
  */
-QString permissionsToUserString( KIMAP::Acl::Rights permissions );
+QString permissionsToUserString(KIMAP::Acl::Rights permissions);
 
 }
 

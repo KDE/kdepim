@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 /* This file is part of QWebdav
  *
  * Copyright (C) 2009-2010 Corentin Chary <corentin.chary@gmail.com>
@@ -45,16 +44,17 @@
 #include <QUrlInfo>
 #include <QVariant>
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class QWebdavUrlInfo : public QUrlInfo
 {
 public:
-    QWebdavUrlInfo ();
-    QWebdavUrlInfo ( const QDomElement &dom );
-    QWebdavUrlInfo ( const QWebdavUrlInfo &wui );
+    QWebdavUrlInfo();
+    QWebdavUrlInfo(const QDomElement &dom);
+    QWebdavUrlInfo(const QWebdavUrlInfo &wui);
 
-    ~QWebdavUrlInfo ();
+    ~QWebdavUrlInfo();
 
     void setCreatedAt(const QDateTime &date);
     void setDisplayName(const QString &name);
@@ -75,9 +75,9 @@ public:
 
     static QList<QWebdavUrlInfo> parseListInfo(const QString &lst);
 private:
-    int codeFromResponse( const QString & response );
-    QDateTime parseDateTime( const QString& input, const QString& type );
-    void davParsePropstats(const QString & path, const QDomNodeList & propstat);
+    int codeFromResponse(const QString &response);
+    QDateTime parseDateTime(const QString &input, const QString &type);
+    void davParsePropstats(const QString &path, const QDomNodeList &propstat);
 
     QDomNode mNode;
     QVariantMap mProperties;

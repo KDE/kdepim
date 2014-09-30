@@ -24,7 +24,8 @@
 #include <QPointer>
 #include <QNetworkReply>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceTreeWidget;
 struct AccountInfo {
     AccountInfo()
@@ -35,8 +36,9 @@ struct AccountInfo {
 
     }
 
-    bool isValid() const {
-        return (accountSize >=0) || (quota >= 0) || (shared >= 0);
+    bool isValid() const
+    {
+        return (accountSize >= 0) || (quota >= 0) || (shared >= 0);
     }
 
     qint64 accountSize;
@@ -45,13 +47,12 @@ struct AccountInfo {
     QString displayName;
 };
 
-
 class NextAction;
 class PIMCOMMON_EXPORT StorageServiceAbstract : public QObject
 {
     Q_OBJECT
 public:
-    explicit StorageServiceAbstract(QObject *parent=0);
+    explicit StorageServiceAbstract(QObject *parent = 0);
     ~StorageServiceAbstract();
 
     enum Capability {
@@ -110,7 +111,7 @@ public:
     virtual void uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination);
     virtual void accountInfo();
     virtual void createFolder(const QString &foldername, const QString &destination);
-    virtual void listFolder(const QString &folder=QString());
+    virtual void listFolder(const QString &folder = QString());
     virtual void authentication();
     virtual void shareLink(const QString &root, const QString &path);
     virtual void createServiceFolder();
@@ -224,7 +225,8 @@ private:
     bool mInProgress;
 };
 
-class NextAction {
+class NextAction
+{
 public:
     NextAction()
         : mNextAction(StorageServiceAbstract::NoneAction)
@@ -232,29 +234,86 @@ public:
     }
 
     //Action Type
-    void setNextActionType(StorageServiceAbstract::ActionType type) { mNextAction = type; }
-    StorageServiceAbstract::ActionType nextActionType() const { return mNextAction; }
+    void setNextActionType(StorageServiceAbstract::ActionType type)
+    {
+        mNextAction = type;
+    }
+    StorageServiceAbstract::ActionType nextActionType() const
+    {
+        return mNextAction;
+    }
 
+    void setNextActionName(const QString &filename)
+    {
+        mNextActionFileName = filename;
+    }
+    void setNextActionFolder(const QString &foldername)
+    {
+        mNextActionFolder = foldername;
+    }
+    void setRootPath(const QString &path)
+    {
+        mRootPath = path;
+    }
+    void setPath(const QString &path)
+    {
+        mPath = path;
+    }
 
-    void setNextActionName(const QString &filename) { mNextActionFileName = filename; }
-    void setNextActionFolder(const QString &foldername) { mNextActionFolder = foldername; }
-    void setRootPath(const QString &path) { mRootPath = path; }
-    void setPath(const QString &path) { mPath = path; }
+    void setRenameFolder(const QString &source, const QString &destination)
+    {
+        mRenameSource = source;
+        mRenameDestination = destination;
+    }
+    void setDownloadDestination(const QString &destination)
+    {
+        mDownLoadDestination = destination;
+    }
+    void setFileId(const QString &fileid)
+    {
+        mFileId = fileid;
+    }
+    void setUploadAsName(const QString &name)
+    {
+        mUploadAsName = name;
+    }
 
-    void setRenameFolder(const QString &source, const QString &destination) { mRenameSource = source; mRenameDestination = destination; }
-    void setDownloadDestination(const QString &destination) { mDownLoadDestination = destination; }
-    void setFileId(const QString &fileid) { mFileId = fileid; }
-    void setUploadAsName(const QString &name) { mUploadAsName = name; }
-
-    QString nextActionName() const { return mNextActionFileName; }
-    QString nextActionFolder() const { return mNextActionFolder; }
-    QString rootPath() const { return mRootPath; }
-    QString path() const { return mPath; }
-    QString renameSource() const { return mRenameSource; }
-    QString renameDestination() const { return mRenameDestination; }
-    QString downloadDestination() const { return mDownLoadDestination; }
-    QString fileId() const { return mFileId; }
-    QString uploadAsName() const { return mUploadAsName; }
+    QString nextActionName() const
+    {
+        return mNextActionFileName;
+    }
+    QString nextActionFolder() const
+    {
+        return mNextActionFolder;
+    }
+    QString rootPath() const
+    {
+        return mRootPath;
+    }
+    QString path() const
+    {
+        return mPath;
+    }
+    QString renameSource() const
+    {
+        return mRenameSource;
+    }
+    QString renameDestination() const
+    {
+        return mRenameDestination;
+    }
+    QString downloadDestination() const
+    {
+        return mDownLoadDestination;
+    }
+    QString fileId() const
+    {
+        return mFileId;
+    }
+    QString uploadAsName() const
+    {
+        return mUploadAsName;
+    }
 
 private:
     StorageServiceAbstract::ActionType mNextAction;

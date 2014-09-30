@@ -23,7 +23,6 @@
 
 #include <qdebug.h>
 
-
 #include <KLocalizedString>
 #include <KSharedConfig>
 
@@ -39,12 +38,11 @@
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 
-
 ConfigureTestDialog::ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( QLatin1String("Configure Autocorrection") );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(QLatin1String("Configure Autocorrection"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -84,10 +82,10 @@ TextEditAutoCorrectionWidget::~TextEditAutoCorrectionWidget()
 {
 }
 
-void TextEditAutoCorrectionWidget::keyPressEvent ( QKeyEvent *e )
+void TextEditAutoCorrectionWidget::keyPressEvent(QKeyEvent *e)
 {
-    if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
-        if(mAutoCorrection && mAutoCorrection->isEnabledAutoCorrection()) {
+    if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
+        if (mAutoCorrection && mAutoCorrection->isEnabledAutoCorrection()) {
             const QTextCharFormat initialTextFormat = textCursor().charFormat();
             int position = textCursor().position();
             mAutoCorrection->autocorrect(acceptRichText(), *document(), position);
@@ -100,14 +98,14 @@ void TextEditAutoCorrectionWidget::keyPressEvent ( QKeyEvent *e )
             return;
         }
     }
-    QTextEdit::keyPressEvent( e );
+    QTextEdit::keyPressEvent(e);
 }
 
 AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
     : QWidget(parent)
 {
-    mConfig = KSharedConfig::openConfig( QLatin1String("autocorrectionguirc") );
-    PimCommon::PimCommonSettings::self()->setSharedConfig( mConfig );
+    mConfig = KSharedConfig::openConfig(QLatin1String("autocorrectionguirc"));
+    PimCommon::PimCommonSettings::self()->setSharedConfig(mConfig);
     PimCommon::PimCommonSettings::self()->load();
 
     mAutoCorrection = new PimCommon::AutoCorrection;
@@ -127,7 +125,6 @@ AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
     mEdit = new TextEditAutoCorrectionWidget(mAutoCorrection);
     lay->addWidget(mEdit);
 
-
     setLayout(lay);
 }
 
@@ -145,14 +142,15 @@ void AutocorrectionTestWidget::slotChangeMode(bool mode)
 void AutocorrectionTestWidget::slotConfigure()
 {
     QPointer<ConfigureTestDialog> dlg = new ConfigureTestDialog(mAutoCorrection, this);
-    if(dlg->exec())
+    if (dlg->exec()) {
         PimCommon::PimCommonSettings::self()->save();
+    }
     delete dlg;
 }
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("autocorrectiontest_gui"), i18n("AutoCorrectionTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("autocorrectiontest_gui"), i18n("AutoCorrectionTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for autocorrection widget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -164,7 +162,7 @@ int main (int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     AutocorrectionTestWidget *w = new AutocorrectionTestWidget();
-    w->resize(800,600);
+    w->resize(800, 600);
 
     w->show();
     app.exec();

@@ -47,8 +47,8 @@ void TranslatorTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(translate);
     QVERIFY(from);
     QVERIFY(to);
-    QCOMPARE(from->count()>0, true);
-    QCOMPARE(to->count()>0, true);
+    QCOMPARE(from->count() > 0, true);
+    QCOMPARE(to->count() > 0, true);
     QVERIFY(edit.toggleAction());
     QVERIFY(inputtext);
     QVERIFY(translatedText);
@@ -118,4 +118,4 @@ void TranslatorTest::shouldEmitTranslatorWasClosedSignalWhenCloseIt()
     QCOMPARE(spy.count(), 1);
 }
 
-QTEST_MAIN( TranslatorTest )
+QTEST_MAIN(TranslatorTest)

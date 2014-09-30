@@ -46,8 +46,8 @@ SelectMultiCollectionDialog::~SelectMultiCollectionDialog()
 
 void SelectMultiCollectionDialog::initialize(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection)
 {
-    setWindowTitle( i18n( "Select Multiple Folders" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Close);
+    setWindowTitle(i18n("Select Multiple Folders"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -55,7 +55,6 @@ void SelectMultiCollectionDialog::initialize(const QString &mimetype, const QLis
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SelectMultiCollectionDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectMultiCollectionDialog::reject);
-
 
     mSelectMultiCollection = new SelectMultiCollectionWidget(mimetype, selectedCollection);
     mainLayout->addWidget(mSelectMultiCollection);
@@ -65,22 +64,21 @@ void SelectMultiCollectionDialog::initialize(const QString &mimetype, const QLis
 
 void SelectMultiCollectionDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SelectMultiCollectionDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectMultiCollectionDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void SelectMultiCollectionDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "SelectMultiCollectionDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectMultiCollectionDialog");
+    group.writeEntry("Size", size());
 }
 
 QList<Akonadi::Collection> SelectMultiCollectionDialog::selectedCollection() const
 {
     return mSelectMultiCollection->selectedCollection();
 }
-
 

@@ -24,7 +24,7 @@ class DropboxTestWidget : public ServiceTestWidget
 {
     Q_OBJECT
 public:
-    explicit DropboxTestWidget(QWidget *parent=0);
+    explicit DropboxTestWidget(QWidget *parent = 0);
 };
 
 #endif

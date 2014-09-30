@@ -26,7 +26,6 @@
 
 #include <libkdepim/widgets/kwidgetlister.h>
 
-
 namespace MailCommon
 {
 

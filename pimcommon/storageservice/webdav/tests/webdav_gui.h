@@ -24,7 +24,7 @@ class WebDavTestWidget : public ServiceTestWidget
 {
     Q_OBJECT
 public:
-    explicit WebDavTestWidget(QWidget *parent=0);
+    explicit WebDavTestWidget(QWidget *parent = 0);
 };
 
 #endif

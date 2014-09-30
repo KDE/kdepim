@@ -32,7 +32,7 @@ TemplateManager::TemplateManager(const QString &relativeTemplateDir, PimCommon::
     : QObject(templateListWidget),
       mTemplateListWidget(templateListWidget)
 {
-    mDirWatch = new KDirWatch( this );
+    mDirWatch = new KDirWatch(this);
     initTemplatesDirectories(relativeTemplateDir);
 
     connect(mDirWatch, &KDirWatch::dirty, this, &TemplateManager::slotDirectoryChanged);
@@ -52,7 +52,7 @@ void TemplateManager::slotDirectoryChanged()
 void TemplateManager::initTemplatesDirectories(const QString &templatesRelativePath)
 {
     if (!templatesRelativePath.isEmpty()) {
-        mTemplatesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, templatesRelativePath,QStandardPaths::LocateDirectory);
+        mTemplatesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, templatesRelativePath, QStandardPaths::LocateDirectory);
         if (mTemplatesDirectories.count() < 2) {
             //Make sure to add local directory
             const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + templatesRelativePath;
@@ -65,24 +65,24 @@ void TemplateManager::initTemplatesDirectories(const QString &templatesRelativeP
 
 void TemplateManager::loadTemplates()
 {
-    if ( !mTemplatesDirectories.isEmpty() ) {
+    if (!mTemplatesDirectories.isEmpty()) {
         Q_FOREACH (const QString &directory, mTemplatesDirectories) {
-            mDirWatch->removeDir( directory );
+            mDirWatch->removeDir(directory);
         }
     } else {
         return;
     }
 
     Q_FOREACH (const QString &directory, mTemplatesDirectories) {
-        QDirIterator dirIt( directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
-        while ( dirIt.hasNext() ) {
+        QDirIterator dirIt(directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot);
+        while (dirIt.hasNext()) {
             dirIt.next();
             TemplateInfo info = loadTemplate(dirIt.filePath(), QLatin1String("template.desktop"));
             if (info.isValid()) {
                 mTemplateListWidget->addDefaultTemplate(info.name, info.script);
             }
         }
-        mDirWatch->addDir( directory );
+        mDirWatch->addDir(directory);
     }
     mDirWatch->startScan();
 }
@@ -91,11 +91,11 @@ TemplateInfo TemplateManager::loadTemplate(const QString &themePath, const QStri
 {
     TemplateInfo info;
     const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
-    KConfig config( themeInfoFile );
-    KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
+    KConfig config(themeInfoFile);
+    KConfigGroup group(&config, QLatin1String("Desktop Entry"));
 
-    info.name = group.readEntry( "Name", QString() );
-    const QString filename = group.readEntry( "FileName" , QString() );
+    info.name = group.readEntry("Name", QString());
+    const QString filename = group.readEntry("FileName" , QString());
     if (!filename.isEmpty()) {
         QFile file(themePath + QDir::separator() + filename);
         if (file.exists()) {

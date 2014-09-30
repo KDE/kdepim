@@ -22,9 +22,11 @@
 
 #include <QPlainTextEdit>
 
-namespace Sonnet {
+namespace Sonnet
+{
 }
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
 {
     Q_OBJECT
@@ -32,7 +34,7 @@ class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
     Q_PROPERTY(bool spellCheckingSupport READ spellCheckingSupport WRITE setSpellCheckingSupport)
     Q_PROPERTY(bool textToSpeechSupport READ textToSpeechSupport WRITE setTextToSpeechSupport)
 public:
-    explicit PlainTextEditor(QWidget *parent=0);
+    explicit PlainTextEditor(QWidget *parent = 0);
     ~PlainTextEditor();
 
     enum SupportFeature {
@@ -47,9 +49,9 @@ public:
     bool searchSupport() const;
 
     bool spellCheckingSupport() const;
-    void setSpellCheckingSupport( bool check );
+    void setSpellCheckingSupport(bool check);
 
-    virtual void setReadOnly( bool readOnly );
+    virtual void setReadOnly(bool readOnly);
 
     void setTextToSpeechSupport(bool b);
     bool textToSpeechSupport() const;
@@ -58,9 +60,9 @@ private Q_SLOTS:
     void slotUndoableClear();
     void slotSpeakText();
     void slotCheckSpelling();
-    void slotSpellCheckerMisspelling( const QString &text, int pos );
-    void slotSpellCheckerCorrected( const QString &, int,const QString &);
-    void slotSpellCheckerAutoCorrect(const QString&, const QString&);
+    void slotSpellCheckerMisspelling(const QString &text, int pos);
+    void slotSpellCheckerCorrected(const QString &, int, const QString &);
+    void slotSpellCheckerAutoCorrect(const QString &, const QString &);
     void slotSpellCheckerCanceled();
     void slotSpellCheckerFinished();
 
@@ -68,14 +70,14 @@ protected:
     virtual void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
 
 protected:
-    void contextMenuEvent( QContextMenuEvent *event );
-    bool event(QEvent* ev);    
+    void contextMenuEvent(QContextMenuEvent *event);
+    bool event(QEvent *ev);
     void keyPressEvent(QKeyEvent *event);
 
 Q_SIGNALS:
     void findText();
     void replaceText();
-    void spellCheckerAutoCorrect(const QString& currentWord, const QString& autoCorrectWord);
+    void spellCheckerAutoCorrect(const QString &currentWord, const QString &autoCorrectWord);
     void checkSpellingChanged(bool);
     void languageChanged(const QString &);
     void spellCheckStatus(const QString &);
@@ -83,10 +85,10 @@ Q_SIGNALS:
 
 private:
     bool handleShortcut(const QKeyEvent *event);
-    bool overrideShortcut(const QKeyEvent* event);
+    bool overrideShortcut(const QKeyEvent *event);
     void deleteWordBack();
     void deleteWordForward();
-    void highlightWord( int length, int pos );
+    void highlightWord(int length, int pos);
     class PlainTextEditorPrivate;
     PlainTextEditorPrivate *const d;
 };

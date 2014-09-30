@@ -24,22 +24,23 @@
 
 #include <QDialog>
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 /**
  * @short A dialog for editing an IMAP ACL entry.
  */
 class AclEntryDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new ACL entry dialog.
      *
      * @param parent The parent widget.
      */
-    explicit AclEntryDialog( QWidget *parent = 0 );
+    explicit AclEntryDialog(QWidget *parent = 0);
 
     /**
      * Destroys the ACL entry dialog.
@@ -49,7 +50,7 @@ class AclEntryDialog : public QDialog
     /**
      * Sets the user @p id of the ACL entry.
      */
-    void setUserId( const QString &id );
+    void setUserId(const QString &id);
 
     /**
      * Returns the user id of the ACL entry.
@@ -59,20 +60,20 @@ class AclEntryDialog : public QDialog
     /**
      * Sets the permissions of the ACL entry.
      */
-    void setPermissions( KIMAP::Acl::Rights permissions );
+    void setPermissions(KIMAP::Acl::Rights permissions);
 
     /**
      * Returns the permissions of the ACL entry.
      */
     KIMAP::Acl::Rights permissions() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotSelectAddresses() )
-    Q_PRIVATE_SLOT( d, void slotChanged() )
+    Q_PRIVATE_SLOT(d, void slotSelectAddresses())
+    Q_PRIVATE_SLOT(d, void slotChanged())
     //@endcond
 };
 

@@ -15,18 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef TEXTTOSPEECHCONFIGWIDGET_H
 #define TEXTTOSPEECHCONFIGWIDGET_H
 #include <QWidget>
 #include "pimcommon_export.h"
 class QSlider;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT TextToSpeechConfigWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechConfigWidget(QWidget *parent=0);
+    explicit TextToSpeechConfigWidget(QWidget *parent = 0);
     ~TextToSpeechConfigWidget();
 
     void writeConfig();

@@ -21,7 +21,8 @@
 #include "pimcommon_export.h"
 #include <KComboBox>
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class PIMCOMMON_EXPORT AutoCorrectionLanguage : public KComboBox
 {

@@ -34,7 +34,7 @@ QNetworkReply *WebDavJob::accountInfo(const QString &dir)
     return propfind(dir, query, 0);
 }
 
-QNetworkReply *WebDavJob::list ( const QString & dir)
+QNetworkReply *WebDavJob::list(const QString &dir)
 {
     WebDavJob::PropNames query;
     QStringList props;
@@ -54,13 +54,13 @@ QNetworkReply *WebDavJob::list ( const QString & dir)
     return propfind(dir, query, 1);
 }
 
-QNetworkReply *WebDavJob::search ( const QString & path, const QString & q )
+QNetworkReply *WebDavJob::search(const QString &path, const QString &q)
 {
     QByteArray query = "<?xml version=\"1.0\"?>\r\n";
 
-    query.append( "<D:searchrequest xmlns:D=\"DAV:\">\r\n" );
-    query.append( q.toUtf8() );
-    query.append( "</D:searchrequest>\r\n" );
+    query.append("<D:searchrequest xmlns:D=\"DAV:\">\r\n");
+    query.append(q.toUtf8());
+    query.append("</D:searchrequest>\r\n");
 
     QNetworkRequest req;
     req.setUrl(path);
@@ -68,7 +68,7 @@ QNetworkReply *WebDavJob::search ( const QString & path, const QString & q )
     return davRequest(QLatin1String("SEARCH"), req);
 }
 
-QNetworkReply *WebDavJob::put ( const QString & path, QIODevice * data )
+QNetworkReply *WebDavJob::put(const QString &path, QIODevice *data)
 {
     QNetworkRequest req;
     req.setUrl(QUrl(path));
@@ -76,14 +76,14 @@ QNetworkReply *WebDavJob::put ( const QString & path, QIODevice * data )
     return davRequest(QLatin1String("PUT"), req, data);
 }
 
-QNetworkReply *WebDavJob::put ( const QString & path, QByteArray & data )
+QNetworkReply *WebDavJob::put(const QString &path, QByteArray &data)
 {
     QBuffer buffer(&data);
 
     return put(path, &buffer);
 }
 
-QNetworkReply *WebDavJob::propfind( const QUrl &path, const WebDavJob::PropNames & props, int depth)
+QNetworkReply *WebDavJob::propfind(const QUrl &path, const WebDavJob::PropNames &props, int depth)
 {
     QByteArray query;
 
@@ -92,17 +92,18 @@ QNetworkReply *WebDavJob::propfind( const QUrl &path, const WebDavJob::PropNames
     query += "<D:prop>";
     foreach (const QString &ns, props.keys()) {
         foreach (const QString &key, props[ns])
-            if (ns == QLatin1String("DAV:"))
+            if (ns == QLatin1String("DAV:")) {
                 query += "<D:" + key.toLatin1() + "/>";
-            else
+            } else {
                 query += "<" + key.toLatin1() + " xmlns=\"" + ns.toLatin1() + "\"/>";
+            }
     }
     query += "</D:prop>";
     query += "</D:propfind>";
     return propfind(path, query, depth);
 }
 
-QNetworkReply *WebDavJob::propfind( const QUrl & path, const QByteArray & query, int depth )
+QNetworkReply *WebDavJob::propfind(const QUrl &path, const QByteArray &query, int depth)
 {
     QNetworkRequest req;
     QUrl url(path);
@@ -110,23 +111,23 @@ QNetworkReply *WebDavJob::propfind( const QUrl & path, const QByteArray & query,
 
     QString value;
 
-    if (depth == 2)
+    if (depth == 2) {
         value = QLatin1String("infinity");
-    else
+    } else {
         value = QString::fromLatin1("%1").arg(depth);
+    }
     req.setRawHeader(QByteArray("Depth"), value.toUtf8());
     return davRequest(QLatin1String("PROPFIND"), req, query);
 }
 
-QNetworkReply *WebDavJob::proppatch( const QUrl & path, const WebDavJob::PropValues & props)
+QNetworkReply *WebDavJob::proppatch(const QUrl &path, const WebDavJob::PropValues &props)
 {
     QByteArray query;
 
     query = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
     query += "<D:proppatch xmlns:D=\"DAV:\" >";
     query += "<D:prop>";
-    foreach (const QString &ns, props.keys())
-    {
+    foreach (const QString &ns, props.keys()) {
         QMap < QString , QVariant >::const_iterator i;
 
         for (i = props[ns].constBegin(); i != props[ns].constEnd(); ++i) {
@@ -147,7 +148,7 @@ QNetworkReply *WebDavJob::proppatch( const QUrl & path, const WebDavJob::PropVal
     return proppatch(path, query);
 }
 
-QNetworkReply *WebDavJob::proppatch( const QUrl & path, const QByteArray & query)
+QNetworkReply *WebDavJob::proppatch(const QUrl &path, const QByteArray &query)
 {
     QNetworkRequest req;
     req.setUrl(path);
@@ -155,7 +156,7 @@ QNetworkReply *WebDavJob::proppatch( const QUrl & path, const QByteArray & query
     return davRequest(QLatin1String("PROPPATCH"), req, query);
 }
 
-void WebDavJob::setupHeaders(QNetworkRequest & req, quint64 size)
+void WebDavJob::setupHeaders(QNetworkRequest &req, quint64 size)
 {
     req.setRawHeader(QByteArray("Connection"), QByteArray("Keep-Alive"));
     if (size > 0) {
@@ -164,7 +165,7 @@ void WebDavJob::setupHeaders(QNetworkRequest & req, quint64 size)
     }
 }
 
-QNetworkReply *WebDavJob::davRequest(const QString & reqVerb,  QNetworkRequest & req, const QByteArray & data)
+QNetworkReply *WebDavJob::davRequest(const QString &reqVerb,  QNetworkRequest &req, const QByteArray &data)
 {
     QByteArray dataClone(data);
     QBuffer *buffer = new QBuffer(this);
@@ -172,20 +173,20 @@ QNetworkReply *WebDavJob::davRequest(const QString & reqVerb,  QNetworkRequest &
     return davRequest(reqVerb, req, buffer);
 }
 
-QNetworkReply *WebDavJob::davRequest(const QString & reqVerb,  QNetworkRequest & req, QIODevice * data)
+QNetworkReply *WebDavJob::davRequest(const QString &reqVerb,  QNetworkRequest &req, QIODevice *data)
 {
     setupHeaders(req, data->size());
     return mNetworkAccessManager->sendCustomRequest(req, reqVerb.toUtf8(), data);
 }
 
-QNetworkReply *WebDavJob::mkdir ( const QUrl & dir )
+QNetworkReply *WebDavJob::mkdir(const QUrl &dir)
 {
     QNetworkRequest req;
     req.setUrl(QUrl(dir));
     return davRequest(QLatin1String("MKCOL"), req);
 }
 
-QNetworkReply *WebDavJob::copy ( const QString & oldname, const QString & newname, bool overwrite)
+QNetworkReply *WebDavJob::copy(const QString &oldname, const QString &newname, bool overwrite)
 {
     QNetworkRequest req;
 
@@ -196,12 +197,12 @@ QNetworkReply *WebDavJob::copy ( const QString & oldname, const QString & newnam
     return davRequest(QLatin1String("COPY"), req);
 }
 
-QNetworkReply *WebDavJob::rename ( const QString & oldname, const QString & newname, bool overwrite)
+QNetworkReply *WebDavJob::rename(const QString &oldname, const QString &newname, bool overwrite)
 {
     return move(oldname, newname, overwrite);
 }
 
-QNetworkReply *WebDavJob::move ( const QString & oldname, const QString & newname, bool overwrite)
+QNetworkReply *WebDavJob::move(const QString &oldname, const QString &newname, bool overwrite)
 {
     QNetworkRequest req;
     req.setUrl(QUrl(oldname));
@@ -212,19 +213,19 @@ QNetworkReply *WebDavJob::move ( const QString & oldname, const QString & newnam
     return davRequest(QLatin1String("MOVE"), req);
 }
 
-QNetworkReply *WebDavJob::rmdir ( const QUrl &url )
+QNetworkReply *WebDavJob::rmdir(const QUrl &url)
 {
     return remove(url);
 }
 
-QNetworkReply *WebDavJob::remove ( const QUrl & url )
+QNetworkReply *WebDavJob::remove(const QUrl &url)
 {
     QNetworkRequest req;
     req.setUrl(url);
     return davRequest(QLatin1String("DELETE"), req);
 }
 
-QNetworkReply *WebDavJob::exists( const QUrl &dir )
+QNetworkReply *WebDavJob::exists(const QUrl &dir)
 {
     WebDavJob::PropNames query;
     QStringList props;

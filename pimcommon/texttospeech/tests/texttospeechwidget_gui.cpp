@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include <qdebug.h>
 
 #include "pimcommon/texttospeech/texttospeechwidget.h"
@@ -25,9 +24,9 @@
 #include <KAboutData>
 #include <QCommandLineParser>
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("texttospeechwidget_gui"), i18n("texttospeechwidget_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("texttospeechwidget_gui"), i18n("texttospeechwidget_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for text to speech widget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

@@ -17,7 +17,7 @@
 
 #include "editorutil.h"
 
-void PimCommon::EditorUtil::upperCase( QTextCursor &cursor )
+void PimCommon::EditorUtil::upperCase(QTextCursor &cursor)
 {
     if (cursor.hasSelection()) {
         const QString newText = cursor.selectedText().toUpper();
@@ -25,7 +25,7 @@ void PimCommon::EditorUtil::upperCase( QTextCursor &cursor )
     }
 }
 
-void PimCommon::EditorUtil::lowerCase( QTextCursor &cursor )
+void PimCommon::EditorUtil::lowerCase(QTextCursor &cursor)
 {
     if (cursor.hasSelection()) {
         const QString newText = cursor.selectedText().toLower();
@@ -33,19 +33,19 @@ void PimCommon::EditorUtil::lowerCase( QTextCursor &cursor )
     }
 }
 
-void PimCommon::EditorUtil::sentenceCase( QTextCursor &cursor )
+void PimCommon::EditorUtil::sentenceCase(QTextCursor &cursor)
 {
     if (cursor.hasSelection()) {
         QString newText = cursor.selectedText();
         const int nbChar(newText.count());
-        for (int i = 0; i <nbChar; ++i) {
-            if (i==0 && newText.at(0).isLetter()) {
-                newText.replace(0, 1,newText.at(0).toUpper());
+        for (int i = 0; i < nbChar; ++i) {
+            if (i == 0 && newText.at(0).isLetter()) {
+                newText.replace(0, 1, newText.at(0).toUpper());
             } else if (newText.at(i) == QChar::ParagraphSeparator || newText.at(i) == QChar::LineSeparator) {
                 ++i;
-                if (i <nbChar) {
+                if (i < nbChar) {
                     if (newText.at(i).isLetter()) {
-                        newText.replace(i, 1,newText.at(i).toUpper());
+                        newText.replace(i, 1, newText.at(i).toUpper());
                     }
                 }
             }

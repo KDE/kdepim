@@ -1,18 +1,18 @@
-    /*
-  Copyright (c) 2014 Montel Laurent <montel@kde.org>
+/*
+Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
-  This program is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License, version 2, as
-  published by the Free Software Foundation.
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License, version 2, as
+published by the Free Software Foundation.
 
-  This program is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-  You should have received a copy of the GNU General Public License along
-  with this program; if not, write to the Free Software Foundation, Inc.,
-  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include "gdrivestorageservice.h"
@@ -61,10 +61,11 @@ bool GDriveStorageService::hasValidSettings() const
 
 bool GDriveStorageService::needToRefreshToken() const
 {
-    if (mExpireDateTime < QDateTime::currentDateTime())
+    if (mExpireDateTime < QDateTime::currentDateTime()) {
         return true;
-    else
+    } else {
         return false;
+    }
 }
 
 void GDriveStorageService::readConfig()
@@ -79,7 +80,7 @@ void GDriveStorageService::readConfig()
             QStringList lst = wallet->entryList();
             if (lst.contains(storageServiceName())) {
                 QMap<QString, QString> map;
-                wallet->readMap( storageServiceName(), map );
+                wallet->readMap(storageServiceName(), map);
                 if (map.contains(QLatin1String("Account Name"))) {
                     accountName = map.value(QLatin1String("Account Name"));
                 }
@@ -98,10 +99,10 @@ void GDriveStorageService::readConfig()
     }
     QList<QUrl> scopeUrls;
 
-    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive") );
-    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive.file"));
-    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive.metadata.readonly" ));
-    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive.readonly") );
+    scopeUrls << QUrl(QLatin1String("https://www.googleapis.com/auth/drive"));
+    scopeUrls << QUrl(QLatin1String("https://www.googleapis.com/auth/drive.file"));
+    scopeUrls << QUrl(QLatin1String("https://www.googleapis.com/auth/drive.metadata.readonly"));
+    scopeUrls << QUrl(QLatin1String("https://www.googleapis.com/auth/drive.readonly"));
 
     if (accountName.isEmpty() || refreshTokenStr.isEmpty() || accessTokenStr.isEmpty()) {
         mAccount = KGAPI2::AccountPtr(new KGAPI2::Account());
@@ -116,8 +117,9 @@ void GDriveStorageService::removeConfig()
     if (StorageServiceSettings::self()->createDefaultFolder()) {
         const QString walletEntry = storageServiceName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
-        if (wallet)
+        if (wallet) {
             wallet->removeEntry(walletEntry);
+        }
     }
 }
 
@@ -158,11 +160,11 @@ void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, co
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String( "Account Name" )] = accountName;
-            map[QLatin1String( "Token" )] = token;
-            map[QLatin1String( "Refresh Token" )] = refreshToken;
-            map[QLatin1String( "Expire Time" )] = mExpireDateTime.toString();
-            wallet->writeMap( walletEntry, map);
+            map[QLatin1String("Account Name")] = accountName;
+            map[QLatin1String("Token")] = token;
+            map[QLatin1String("Refresh Token")] = refreshToken;
+            map[QLatin1String("Expire Time")] = mExpireDateTime.toString();
+            wallet->writeMap(walletEntry, map);
         }
     }
     emitAuthentificationDone();
@@ -170,8 +172,9 @@ void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, co
 
 void GDriveStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(ShareLinkAction);
         mNextAction->setPath(path);
@@ -192,8 +195,9 @@ void GDriveStorageService::storageServiceShareLink(const QString &root, const QS
 
 void GDriveStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(DownLoadFileAction);
@@ -218,8 +222,9 @@ void GDriveStorageService::storageServicedownloadFile(const QString &name, const
 
 void GDriveStorageService::storageServicedeleteFile(const QString &filename)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(DeleteFileAction);
@@ -240,8 +245,9 @@ void GDriveStorageService::storageServicedeleteFile(const QString &filename)
 
 void GDriveStorageService::storageServicedeleteFolder(const QString &foldername)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(DeleteFolderAction);
@@ -262,8 +268,9 @@ void GDriveStorageService::storageServicedeleteFolder(const QString &foldername)
 
 void GDriveStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(RenameFolderAction);
@@ -284,8 +291,9 @@ void GDriveStorageService::storageServiceRenameFolder(const QString &source, con
 
 void GDriveStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(RenameFileAction);
@@ -306,8 +314,9 @@ void GDriveStorageService::storageServiceRenameFile(const QString &source, const
 
 void GDriveStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(MoveFolderAction);
@@ -328,8 +337,9 @@ void GDriveStorageService::storageServiceMoveFolder(const QString &source, const
 
 void GDriveStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(MoveFileAction);
@@ -350,8 +360,9 @@ void GDriveStorageService::storageServiceMoveFile(const QString &source, const Q
 
 void GDriveStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(CopyFileAction);
@@ -372,8 +383,9 @@ void GDriveStorageService::storageServiceCopyFile(const QString &source, const Q
 
 void GDriveStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(CopyFolderAction);
@@ -414,8 +426,9 @@ QMap<QString, QString> GDriveStorageService::itemInformation(const QVariantMap &
 
 void GDriveStorageService::storageServicelistFolder(const QString &folder)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(ListFolderAction);
@@ -436,8 +449,9 @@ void GDriveStorageService::storageServicelistFolder(const QString &folder)
 
 void GDriveStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(CreateFolderAction);
@@ -459,8 +473,9 @@ void GDriveStorageService::storageServicecreateFolder(const QString &name, const
 
 void GDriveStorageService::storageServiceaccountInfo()
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(AccountInfoAction);
@@ -485,8 +500,9 @@ QString GDriveStorageService::name()
 
 void GDriveStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(UploadFileAction);
@@ -550,7 +566,6 @@ StorageServiceAbstract::Capabilities GDriveStorageService::serviceCapabilities()
     return cap;
 }
 
-
 QString GDriveStorageService::storageServiceName() const
 {
     return serviceName();
@@ -579,8 +594,9 @@ StorageServiceAbstract::Capabilities GDriveStorageService::capabilities() const
 
 void GDriveStorageService::storageServicecreateServiceFolder()
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(CreateServiceFolderAction);
@@ -604,7 +620,7 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     listWidget->clear();
     listWidget->createMoveUpItem();
     const QStringList lst = data.toStringList();
-    Q_FOREACH(const QString &item, lst) {
+    Q_FOREACH (const QString &item, lst) {
         const QByteArray dataItem = item.toLatin1();
         QJson::Parser parser;
         bool ok;
@@ -636,6 +652,4 @@ bool GDriveStorageService::hasCancelSupport() const
 {
     return false;
 }
-
-
 

@@ -24,8 +24,8 @@
 
 AutoCorrectionTest::AutoCorrectionTest()
 {
-    mConfig = KSharedConfig::openConfig( QLatin1String("autocorrectiontestrc") );
-    PimCommon::PimCommonSettings::self()->setSharedConfig( mConfig );
+    mConfig = KSharedConfig::openConfig(QLatin1String("autocorrectiontestrc"));
+    PimCommon::PimCommonSettings::self()->setSharedConfig(mConfig);
     PimCommon::PimCommonSettings::self()->load();
 }
 
@@ -92,7 +92,6 @@ void AutoCorrectionTest::shouldUpperCaseFirstCharOfSentence()
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), QLatin1String("Foo. Foo"));
 
-
 }
 
 void AutoCorrectionTest::shouldFixTwoUpperCaseChars()
@@ -129,15 +128,12 @@ void AutoCorrectionTest::shouldFixTwoUpperCaseChars()
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), text);
 
-
-
     //Exclude 2 upper letter
     text = QLatin1String("ABc");
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), QLatin1String("Abc"));
-
 
     QSet<QString> exception;
     exception.insert(QLatin1String("ABc"));
@@ -171,13 +167,13 @@ void AutoCorrectionTest::shouldReplaceSingleQuote()
     doc.setPlainText(text + QLatin1String("'"));
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
-    QCOMPARE(doc.toPlainText(), QString(text + simpleQuote.end ));
+    QCOMPARE(doc.toPlainText(), QString(text + simpleQuote.end));
 
     text = QLatin1String("sss");
     doc.setPlainText(QLatin1String("'") + text + QLatin1String("'"));
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
-    QCOMPARE(doc.toPlainText(), QString(simpleQuote.begin + text + simpleQuote.end ));
+    QCOMPARE(doc.toPlainText(), QString(simpleQuote.begin + text + simpleQuote.end));
 
 }
 
@@ -204,13 +200,13 @@ void AutoCorrectionTest::shouldReplaceDoubleQuote()
     doc.setPlainText(text + QLatin1String("\""));
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
-    QCOMPARE(doc.toPlainText(), QString(text + doubleQuote.end ));
+    QCOMPARE(doc.toPlainText(), QString(text + doubleQuote.end));
 
     text = QLatin1String("sss");
     doc.setPlainText(QLatin1String("\"") + text + QLatin1String("\""));
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
-    QCOMPARE(doc.toPlainText(), QString(doubleQuote.begin + text + doubleQuote.end ));
+    QCOMPARE(doc.toPlainText(), QString(doubleQuote.begin + text + doubleQuote.end));
 }
 
 void AutoCorrectionTest::shouldNotReplaceUppercaseLetter()
@@ -273,6 +269,5 @@ void AutoCorrectionTest::shouldReplaceAutoFraction()
     QCOMPARE(position, 1);
 
 }
-
 
 QTEST_MAIN(AutoCorrectionTest)

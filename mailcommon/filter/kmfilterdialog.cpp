@@ -307,7 +307,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
       mIgnoreFilterUpdates(true)
 {
     setWindowTitle(i18n("Filter Rules"));
-    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Apply);
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help | QDialogButtonBox::Apply);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -579,12 +579,12 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     connect(mPatternEdit, &MailCommon::SearchPatternEdit::maybeNameChanged, mFilterList, &KMFilterListBox::slotUpdateFilterName);
 
     // save filters on 'Apply' or 'OK'
-    connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)), 
-           this, SLOT(slotApply()));
+    connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
+            this, SLOT(slotApply()));
 
     // save dialog size on 'OK'
     connect(okButton, SIGNAL(clicked()),
-             this, SLOT(slotSaveSize()));
+            this, SLOT(slotSaveSize()));
 
     // destruct the dialog on close and Cancel
     connect(buttonBox->button(QDialogButtonBox::Close), SIGNAL(clicked()),

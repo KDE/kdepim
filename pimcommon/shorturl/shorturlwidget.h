@@ -27,22 +27,23 @@ class QPushButton;
 class QLabel;
 class QLineEdit;
 class QNetworkConfigurationManager;
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 class ProgressIndicatorLabel;
 }
 
-namespace PimCommon {
+namespace PimCommon
+{
 class AbstractShortUrl;
 class PIMCOMMON_EXPORT ShortUrlWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ShortUrlWidget(QWidget *parent=0);
+    explicit ShortUrlWidget(QWidget *parent = 0);
     ~ShortUrlWidget();
 
     void setStandalone(bool b);
     KToggleAction *toggleAction();
-
 
 public Q_SLOTS:
     void settingsUpdated();
@@ -54,7 +55,7 @@ private Q_SLOTS:
     void slotShortUrlChanged(const QString &text);
     void slotShortUrlDone(const QString &url);
     void slotShortUrlFailed(const QString &errMsg);
-    void slotCloseWidget();    
+    void slotCloseWidget();
     void slotConfigure();
     void slotInsertShortUrl();
     void slotOpenShortUrl();

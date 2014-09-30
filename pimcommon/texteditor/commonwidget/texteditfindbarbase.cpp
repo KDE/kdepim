@@ -33,35 +33,34 @@
 
 using namespace PimCommon;
 
-TextEditFindBarBase::TextEditFindBarBase(QWidget * parent )
-    : QWidget( parent )
+TextEditFindBarBase::TextEditFindBarBase(QWidget *parent)
+    : QWidget(parent)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
     topLayout->setMargin(0);
-    QHBoxLayout * lay = new QHBoxLayout;
-    lay->setMargin( 2 );
+    QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(2);
 
     topLayout->addLayout(lay);
 
-    QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
-    closeBtn->setIconSize( QSize( 16, 16 ) );
-    closeBtn->setToolTip( i18n( "Close" ) );
+    QToolButton *closeBtn = new QToolButton(this);
+    closeBtn->setIcon(QIcon::fromTheme(QLatin1String("dialog-close")));
+    closeBtn->setIconSize(QSize(16, 16));
+    closeBtn->setToolTip(i18n("Close"));
 
 #ifndef QT_NO_ACCESSIBILITY
-    closeBtn->setAccessibleName( i18n( "Close" ) );
+    closeBtn->setAccessibleName(i18n("Close"));
 #endif
 
-    closeBtn->setAutoRaise( true );
-    lay->addWidget( closeBtn );
+    closeBtn->setAutoRaise(true);
+    lay->addWidget(closeBtn);
 
     mFindWidget = new TextFindWidget;
-    lay->addWidget( mFindWidget );
+    lay->addWidget(mFindWidget);
 
     mReplaceWidget = new TextReplaceWidget;
     topLayout->addWidget(mReplaceWidget);
     mReplaceWidget->hide();
-
 
     connect(closeBtn, &QToolButton::clicked, this, &TextEditFindBarBase::closeBar);
     connect(mFindWidget, &TextFindWidget::findNext, this, &TextEditFindBarBase::findNext);
@@ -73,7 +72,7 @@ TextEditFindBarBase::TextEditFindBarBase(QWidget * parent )
     connect(mFindWidget, &TextFindWidget::searchStringEmpty, mReplaceWidget, &TextReplaceWidget::slotSearchStringEmpty);
     connect(mReplaceWidget, &TextReplaceWidget::replaceText, this, &TextEditFindBarBase::slotReplaceText);
     connect(mReplaceWidget, &TextReplaceWidget::replaceAllText, this, &TextEditFindBarBase::slotReplaceAllText);
-    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
     hide();
     setLayout(topLayout);
 }
@@ -84,8 +83,9 @@ TextEditFindBarBase::~TextEditFindBarBase()
 
 void TextEditFindBarBase::showFind()
 {
-    if (documentIsEmpty())
+    if (documentIsEmpty()) {
         return;
+    }
     mReplaceWidget->slotSearchStringEmpty(mFindWidget->search()->text().isEmpty());
     show();
     if (mReplaceWidget->isVisible()) {
@@ -96,10 +96,12 @@ void TextEditFindBarBase::showFind()
 
 void TextEditFindBarBase::showReplace()
 {
-    if (viewIsReadOnly())
+    if (viewIsReadOnly()) {
         return;
-    if (documentIsEmpty())
+    }
+    if (documentIsEmpty()) {
         return;
+    }
     mReplaceWidget->slotSearchStringEmpty(mFindWidget->search()->text().isEmpty());
     show();
     if (!mReplaceWidget->isVisible()) {
@@ -108,9 +110,9 @@ void TextEditFindBarBase::showReplace()
     }
 }
 
-void TextEditFindBarBase::setText( const QString&text )
+void TextEditFindBarBase::setText(const QString &text)
 {
-    mFindWidget->search()->setText( text );
+    mFindWidget->search()->setText(text);
 }
 
 QString TextEditFindBarBase::text() const
@@ -130,81 +132,79 @@ void TextEditFindBarBase::slotClearSearch()
     clearSelections();
 }
 
-void TextEditFindBarBase::autoSearch( const QString& str )
+void TextEditFindBarBase::autoSearch(const QString &str)
 {
-    const bool isNotEmpty = ( !str.isEmpty() );
-    if ( isNotEmpty ) {
-        QTimer::singleShot( 0, this, SLOT(slotSearchText()) );
-    }
-    else
+    const bool isNotEmpty = (!str.isEmpty());
+    if (isNotEmpty) {
+        QTimer::singleShot(0, this, SLOT(slotSearchText()));
+    } else {
         clearSelections();
+    }
 }
 
-
-void TextEditFindBarBase::messageInfo( bool backward, bool isAutoSearch, bool found )
+void TextEditFindBarBase::messageInfo(bool backward, bool isAutoSearch, bool found)
 {
-    if ( !found && !isAutoSearch ) {
-        if ( backward ) {
-            KMessageBox::information( this, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ) );
+    if (!found && !isAutoSearch) {
+        if (backward) {
+            KMessageBox::information(this, i18n("Beginning of message reached.\nPhrase '%1' could not be found." , mLastSearchStr));
         } else {
-            KMessageBox::information( this, i18n( "End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr ) );
+            KMessageBox::information(this, i18n("End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr));
         }
     }
 }
 
-
-bool TextEditFindBarBase::searchText( bool backward, bool isAutoSearch )
+bool TextEditFindBarBase::searchText(bool backward, bool isAutoSearch)
 {
     mLastSearchStr = mFindWidget->search()->text();
     QTextDocument::FindFlags searchOptions = mFindWidget->searchOptions();
-    if ( backward )
+    if (backward) {
         searchOptions |= QTextDocument::FindBackward;
+    }
 
-    if ( isAutoSearch ) {
+    if (isAutoSearch) {
         autoSearchMoveCursor();
-    } else if ( !mLastSearchStr.contains( mFindWidget->search()->text(), Qt::CaseSensitive )) {
+    } else if (!mLastSearchStr.contains(mFindWidget->search()->text(), Qt::CaseSensitive)) {
         clearSelections();
     }
 
-
-    const bool found = searchInDocument( mLastSearchStr, searchOptions );
-    mFindWidget->setFoundMatch( found );
-    messageInfo( backward, isAutoSearch, found );
+    const bool found = searchInDocument(mLastSearchStr, searchOptions);
+    mFindWidget->setFoundMatch(found);
+    messageInfo(backward, isAutoSearch, found);
     return found;
 }
 
 void TextEditFindBarBase::findNext()
 {
-    searchText( false, false );
+    searchText(false, false);
 }
 
 void TextEditFindBarBase::findPrev()
 {
-    searchText( true, false );
+    searchText(true, false);
 }
 
 void TextEditFindBarBase::slotUpdateSearchOptions()
 {
     const QTextDocument::FindFlags searchOptions = mFindWidget->searchOptions();
     mLastSearchStr = mFindWidget->search()->text();
-    searchInDocument( mLastSearchStr, searchOptions );
+    searchInDocument(mLastSearchStr, searchOptions);
 }
 
 void TextEditFindBarBase::clearSelections()
 {
-    mFindWidget->setFoundMatch( false );
+    mFindWidget->setFoundMatch(false);
 }
 
 void TextEditFindBarBase::closeBar()
 {
     // Make sure that all old searches are cleared
-    mFindWidget->search()->setText( QString() );
-    mReplaceWidget->replace()->setText( QString() );
+    mFindWidget->search()->setText(QString());
+    mReplaceWidget->replace()->setText(QString());
     clearSelections();
     hide();
 }
 
-bool TextEditFindBarBase::event(QEvent* e)
+bool TextEditFindBarBase::event(QEvent *e)
 {
     // Close the bar when pressing Escape.
     // Not using a QShortcut for this because it could conflict with
@@ -212,29 +212,30 @@ bool TextEditFindBarBase::event(QEvent* e)
     // With a shortcut override we can catch this before it gets to kactions.
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
     if (shortCutOverride || e->type() == QEvent::KeyPress) {
-        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+        QKeyEvent *kev = static_cast<QKeyEvent * >(e);
         if (kev->key() == Qt::Key_Escape) {
-            if ( shortCutOverride ) {
+            if (shortCutOverride) {
                 e->accept();
                 return true;
             }
             e->accept();
             closeBar();
             return true;
-        }
-        else if ( kev->key() == Qt::Key_Enter ||
-                  kev->key() == Qt::Key_Return ) {
+        } else if (kev->key() == Qt::Key_Enter ||
+                   kev->key() == Qt::Key_Return) {
             e->accept();
-            if ( shortCutOverride ) {
+            if (shortCutOverride) {
                 return true;
             }
-            if (mFindWidget->search()->text().isEmpty())
+            if (mFindWidget->search()->text().isEmpty()) {
                 return true;
+            }
 
-            if ( kev->modifiers() & Qt::ShiftModifier )
+            if (kev->modifiers() & Qt::ShiftModifier) {
                 findPrev();
-            else if ( kev->modifiers() == Qt::NoModifier )
+            } else if (kev->modifiers() == Qt::NoModifier) {
                 findNext();
+            }
             return true;
         }
     }

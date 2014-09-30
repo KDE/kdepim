@@ -25,11 +25,13 @@
 #include <QHash>
 #include <QPointer>
 
-namespace KPIM {
+namespace KPIM
+{
 class ProgressItem;
 }
 
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceAbstract;
 class ProgressJob;
 class PIMCOMMON_EXPORT StorageServiceProgressManager : public QObject

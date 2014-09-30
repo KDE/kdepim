@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "checkedcollectionwidget.h"
 #include <RecursiveCollectionFilterProxyModel>
 #include <CollectionFilterProxyModel>
@@ -24,7 +23,6 @@
 #include <EntityTreeModel>
 #include <EntityRightsFilterModel>
 #include <KRecursiveFilterProxyModel>
-
 
 #include <KCheckableProxyModel>
 #include <QLineEdit>
@@ -43,27 +41,27 @@ CheckedCollectionWidget::CheckedCollectionWidget(const QString &mimetype, QWidge
     setLayout(vbox);
 
     // Create a new change recorder.
-    Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder( this );
-    changeRecorder->fetchCollection( true );
-    changeRecorder->setAllMonitored( true );
-    changeRecorder->setMimeTypeMonitored( mimetype );
+    Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder(this);
+    changeRecorder->fetchCollection(true);
+    changeRecorder->setAllMonitored(true);
+    changeRecorder->setMimeTypeMonitored(mimetype);
     connect(changeRecorder, &Akonadi::ChangeRecorder::collectionAdded, this, &CheckedCollectionWidget::collectionAdded);
     connect(changeRecorder, &Akonadi::ChangeRecorder::collectionRemoved, this, &CheckedCollectionWidget::collectionRemoved);
 
-    mEntityTreeModel = new Akonadi::EntityTreeModel( changeRecorder, this );
+    mEntityTreeModel = new Akonadi::EntityTreeModel(changeRecorder, this);
     // Set the model to show only collections, not items.
-    mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::NoItemPopulation );
+    mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::NoItemPopulation);
 
-    Akonadi::CollectionFilterProxyModel *mimeTypeProxy = new Akonadi::CollectionFilterProxyModel( this );
-    mimeTypeProxy->setExcludeVirtualCollections( true );
-    mimeTypeProxy->addMimeTypeFilters( QStringList() << mimetype );
-    mimeTypeProxy->setSourceModel( mEntityTreeModel );
+    Akonadi::CollectionFilterProxyModel *mimeTypeProxy = new Akonadi::CollectionFilterProxyModel(this);
+    mimeTypeProxy->setExcludeVirtualCollections(true);
+    mimeTypeProxy->addMimeTypeFilters(QStringList() << mimetype);
+    mimeTypeProxy->setSourceModel(mEntityTreeModel);
 
     // Create the Check proxy model.
-    mSelectionModel = new QItemSelectionModel( mimeTypeProxy );
-    mCheckProxy = new KCheckableProxyModel( this );
-    mCheckProxy->setSelectionModel( mSelectionModel );
-    mCheckProxy->setSourceModel( mimeTypeProxy );
+    mSelectionModel = new QItemSelectionModel(mimeTypeProxy);
+    mCheckProxy = new KCheckableProxyModel(this);
+    mCheckProxy->setSelectionModel(mSelectionModel);
+    mCheckProxy->setSourceModel(mimeTypeProxy);
 
     mCollectionFilter = new KRecursiveFilterProxyModel(this);
     mCollectionFilter->setSourceModel(mCheckProxy);

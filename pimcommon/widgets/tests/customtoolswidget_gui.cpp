@@ -15,12 +15,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "customtoolswidget_gui.h"
 #include "pimcommon/widgets/customtoolswidget.h"
 
 #include <qdebug.h>
-
 
 #include <KLocalizedString>
 
@@ -43,7 +41,7 @@ CustomToolWidgetTest::CustomToolWidgetTest(QWidget *parent)
 
     QComboBox *style = new QComboBox;
     hbox->addWidget(style);
-    style->addItems(QStringList()<< i18n("Translate") << i18n("Short url"));
+    style->addItems(QStringList() << i18n("Translate") << i18n("Short url"));
     connect(style, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &CustomToolWidgetTest::slotSwitchComponent);
 
     mCustomTools = new PimCommon::CustomToolsWidget;
@@ -61,9 +59,9 @@ void CustomToolWidgetTest::slotSwitchComponent(int index)
     mCustomTools->switchToTool(static_cast<PimCommon::CustomToolsWidget::ToolType>(index));
 }
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("customtoolswidget_gui"), i18n("CustomToolWidgetsTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("customtoolswidget_gui"), i18n("CustomToolWidgetsTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for customtoolswidget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -73,7 +71,6 @@ int main (int argc, char **argv)
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-
 
     CustomToolWidgetTest *w = new CustomToolWidgetTest();
     w->resize(800, 200);

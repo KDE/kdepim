@@ -20,8 +20,10 @@
 
 #include <QString>
 #include "storageservice/storageserviceabstract.h"
-namespace PimCommon {
-namespace StorageServiceUtils {
+namespace PimCommon
+{
+namespace StorageServiceUtils
+{
 enum PropertyName {
     Type = 0,
     Name,

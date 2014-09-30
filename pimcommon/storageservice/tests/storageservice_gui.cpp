@@ -24,7 +24,6 @@
 
 #include <qdebug.h>
 
-
 #include <KLocalizedString>
 #include <QDialog>
 #include <KActionMenu>
@@ -44,7 +43,7 @@
 StorageServiceSettingsDialog::StorageServiceSettingsDialog(QWidget *parent)
     : QDialog(parent)
 {
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -129,14 +128,14 @@ void StorageServiceTestWidget::slotUploadFileDone(const QString &serviceName, co
 
 void StorageServiceTestWidget::slotServiceMenu()
 {
-    QMenu *menu = qobject_cast<QMenu*>(sender());
+    QMenu *menu = qobject_cast<QMenu *>(sender());
     if (menu) {
         menu->clear();
         menu->addAction(mStorageManager->menuUploadServices(menu));
         menu->addAction(mStorageManager->menuDownloadServices(menu));
         menu->addAction(mStorageManager->menuShareLinkServices(menu));
         QList<PimCommon::StorageServiceAbstract::Capability> lst;
-        lst <<PimCommon::StorageServiceAbstract::DeleteFileCapability;
+        lst << PimCommon::StorageServiceAbstract::DeleteFileCapability;
         menu->addAction(mStorageManager->menuWithCapability(PimCommon::StorageServiceAbstract::DeleteFileCapability, lst, menu));
     }
 }
@@ -151,9 +150,9 @@ void StorageServiceTestWidget::slotSettings()
     delete dlg;
 }
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("storageservice_gui"), i18n("storageservice_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("storageservice_gui"), i18n("storageservice_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for storageservice"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

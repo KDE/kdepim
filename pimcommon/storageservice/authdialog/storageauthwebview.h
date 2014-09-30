@@ -15,21 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef STORAGEAUTHWEBVIEW_H
 #define STORAGEAUTHWEBVIEW_H
 
 #include <QWebView>
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageAuthWebView : public QWebView
 {
     Q_OBJECT
 public:
-    explicit StorageAuthWebView(QWidget *parent=0);
+    explicit StorageAuthWebView(QWidget *parent = 0);
     ~StorageAuthWebView();
 
 protected:
-    void contextMenuEvent( QContextMenuEvent *);
+    void contextMenuEvent(QContextMenuEvent *);
 };
 }
 #endif // STORAGEAUTHWEBVIEW_H

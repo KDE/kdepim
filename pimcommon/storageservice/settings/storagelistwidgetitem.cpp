@@ -22,7 +22,6 @@
 
 using namespace PimCommon;
 
-
 StorageListWidgetItemProgress::StorageListWidgetItemProgress(StorageListWidgetItem *item, QObject *parent)
     : QObject(parent),
       mProgressCount(0),
@@ -41,8 +40,9 @@ void StorageListWidgetItemProgress::slotTimerDone()
 {
     mItem->setProgressAnimation(mProgressPix.frameAt(mProgressCount));
     ++mProgressCount;
-    if (mProgressCount == 8)
+    if (mProgressCount == 8) {
         mProgressCount = 0;
+    }
 
     mProgressTimer->start(300);
 }
@@ -55,11 +55,11 @@ void StorageListWidgetItemProgress::startAnimation()
 
 void StorageListWidgetItemProgress::stopAnimation()
 {
-    if (mProgressTimer->isActive())
+    if (mProgressTimer->isActive()) {
         mProgressTimer->stop();
+    }
     mItem->resetToDefaultIcon();
 }
-
 
 StorageListWidgetItem::StorageListWidgetItem(QListWidget *parent)
     : QListWidgetItem(parent)

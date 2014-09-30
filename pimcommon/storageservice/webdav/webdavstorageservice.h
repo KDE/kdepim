@@ -21,13 +21,14 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon_export.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class WebDavJob;
 class PIMCOMMON_EXPORT WebDavStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
-    explicit WebDavStorageService(QObject *parent=0);
+    explicit WebDavStorageService(QObject *parent = 0);
     ~WebDavStorageService();
 
     static QString name();
@@ -61,14 +62,13 @@ public:
     QString fileIdentifier(const QVariantMap &variantMap);
     QString fileShareRoot(const QVariantMap &variantMap);
 
-
     QString storageServiceName() const;
     QIcon icon() const;
     void shutdownService();
     bool hasValidSettings() const;
 
 private slots:
-    void slotAuthorizationFailed(const QString &errorMessage);    
+    void slotAuthorizationFailed(const QString &errorMessage);
     void slotAuthorizationDone(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password);
 
 private:

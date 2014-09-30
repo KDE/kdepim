@@ -24,7 +24,7 @@ class YouSendItTestWidget : public ServiceTestWidget
 {
     Q_OBJECT
 public:
-    explicit YouSendItTestWidget(QWidget *parent=0);
+    explicit YouSendItTestWidget(QWidget *parent = 0);
 };
 
 #endif

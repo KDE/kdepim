@@ -22,7 +22,8 @@
 #include <Collection>
 #include <KConfigGroup>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class SelectMultiCollectionWidget;
 class PIMCOMMON_EXPORT SelectMultiCollectionDialog : public QDialog
 {

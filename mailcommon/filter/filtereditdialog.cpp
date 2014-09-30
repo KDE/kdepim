@@ -27,13 +27,12 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-
 using namespace MailCommon;
 
 FilterEditDialog::FilterEditDialog(QWidget *parent)
     : QDialog(parent), mFilter(0)
 {
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -49,7 +48,6 @@ FilterEditDialog::FilterEditDialog(QWidget *parent)
 
     mainLayout->addWidget(mainWidget);
     mainLayout->addWidget(buttonBox);
-
 
     mPatternEdit = new SearchPatternEdit(this, MailCommon::SearchPatternEdit::MatchAllMessages);
     mUi->criteriaLayout->addWidget(mPatternEdit, 0, Qt::AlignTop);

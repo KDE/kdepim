@@ -92,16 +92,16 @@ void RichTextEditorWidget::init(RichTextEditor *customEditor)
     connect(mEditor, &RichTextEditor::say, mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::say);
     lay->addWidget(mEditor);
 
-    mFindBar = new PimCommon::RichTextEditFindBar( mEditor, this );
+    mFindBar = new PimCommon::RichTextEditFindBar(mEditor, this);
     lay->addWidget(mFindBar);
 
-    QShortcut *shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::Key_F+Qt::CTRL );
+    QShortcut *shortcut = new QShortcut(this);
+    shortcut->setKey(Qt::Key_F + Qt::CTRL);
     connect(shortcut, &QShortcut::activated, this, &RichTextEditorWidget::slotFind);
     connect(mEditor, &RichTextEditor::findText, this, &RichTextEditorWidget::slotFind);
 
-    shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::Key_R+Qt::CTRL );
+    shortcut = new QShortcut(this);
+    shortcut->setKey(Qt::Key_R + Qt::CTRL);
     connect(shortcut, &QShortcut::activated, this, &RichTextEditorWidget::slotReplace);
     connect(mEditor, &RichTextEditor::replaceText, this, &RichTextEditorWidget::slotReplace);
 
@@ -120,7 +120,7 @@ void RichTextEditorWidget::setReadOnly(bool readOnly)
 
 void RichTextEditorWidget::slotReplace()
 {
-    if ( mEditor->searchSupport() ) {
+    if (mEditor->searchSupport()) {
         mFindBar->showReplace();
         mFindBar->focusAndSetCursor();
     }
@@ -128,9 +128,10 @@ void RichTextEditorWidget::slotReplace()
 
 void RichTextEditorWidget::slotFind()
 {
-    if ( mEditor->searchSupport() ) {
-        if ( mEditor->textCursor().hasSelection() )
-            mFindBar->setText( mEditor->textCursor().selectedText() );
+    if (mEditor->searchSupport()) {
+        if (mEditor->textCursor().hasSelection()) {
+            mFindBar->setText(mEditor->textCursor().selectedText());
+        }
         mEditor->moveCursor(QTextCursor::Start);
         mFindBar->showFind();
         mFindBar->focusAndSetCursor();

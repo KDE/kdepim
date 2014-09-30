@@ -34,14 +34,14 @@
 
 #include "pimcommon_export.h"
 
-
-namespace PimCommon {
+namespace PimCommon
+{
 class RenameFileDialogPrivate;
 class PIMCOMMON_EXPORT RenameFileDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * parent);
+    explicit RenameFileDialog(const KUrl &url, bool multiFiles, QWidget *parent);
     ~RenameFileDialog();
 
     enum RenameFileDialogResult {
@@ -51,7 +51,6 @@ public:
         RENAMEFILE_OVERWRITE = 3,
         RENAMEFILE_OVERWRITEALL = 4
     };
-
 
     KUrl newName() const;
 

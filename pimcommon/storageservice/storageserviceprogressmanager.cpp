@@ -19,13 +19,13 @@
 #include "libkdepim/progresswidget/progressmanager.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
-
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceProgressManagerPrivate
 {
 public:
     StorageServiceProgressManagerPrivate()
-        : storageServiceProgressManager( new StorageServiceProgressManager )
+        : storageServiceProgressManager(new StorageServiceProgressManager)
     {
     }
 
@@ -37,7 +37,7 @@ public:
     StorageServiceProgressManager *storageServiceProgressManager;
 };
 
-Q_GLOBAL_STATIC( StorageServiceProgressManagerPrivate, sInstance )
+Q_GLOBAL_STATIC(StorageServiceProgressManagerPrivate, sInstance)
 
 StorageServiceProgressManager::StorageServiceProgressManager(QObject *parent)
     : QObject(parent)
@@ -59,11 +59,10 @@ StorageServiceProgressManager *StorageServiceProgressManager::self()
     return sInstance->storageServiceProgressManager; //will create it
 }
 
-
 void StorageServiceProgressManager::addProgress(PimCommon::StorageServiceAbstract *storageService, ProgressType type)
 {
     if (!mHashList.contains(storageService->storageServiceName())) {
-        KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem( StorageServiceProgressManager::progressTypeValue(), storageService->storageServiceName() );
+        KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem(StorageServiceProgressManager::progressTypeValue(), storageService->storageServiceName());
         progressItem->setCryptoStatus(KPIM::ProgressItem::Unknown);
         progressItem->setCanBeCanceled(storageService->hasCancelSupport());
         ProgressJob *job = new ProgressJob(progressItem, type);
@@ -98,10 +97,11 @@ void StorageServiceProgressManager::slotDownloadFileProgress(const QString &serv
         ProgressJob *job = mHashList.value(serviceName);
         KPIM::ProgressItem *mProgressItem = job->item();
         if (mProgressItem) {
-            if (total > 0)
-                mProgressItem->setProgress((100*done)/total);
-            else
+            if (total > 0) {
+                mProgressItem->setProgress((100 * done) / total);
+            } else {
                 mProgressItem->setProgress(100);
+            }
         }
     }
 }
@@ -129,7 +129,6 @@ void StorageServiceProgressManager::slotDownloadFileFailed(const QString &servic
         mHashList.remove(serviceName);
     }
 }
-
 
 void StorageServiceProgressManager::slotUploadFileDone(const QString &serviceName, const QString &)
 {
@@ -162,7 +161,7 @@ void StorageServiceProgressManager::slotProgressItemCanceled(KPIM::ProgressItem 
         i.next();
         if (i.value()->item() == item) {
             ProgressType type = i.value()->type();
-            switch(type) {
+            switch (type) {
             case DownLoad:
                 i.value()->storageService()->cancelDownloadFile();
                 break;
@@ -173,7 +172,6 @@ void StorageServiceProgressManager::slotProgressItemCanceled(KPIM::ProgressItem 
         }
     }
 }
-
 
 ProgressJob::ProgressJob(KPIM::ProgressItem *item, StorageServiceProgressManager::ProgressType type)
     : mType(type),

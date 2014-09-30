@@ -15,12 +15,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef TINYURLSHORTURL_H
 #define TINYURLSHORTURL_H
 #include "abstractshorturl.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class TinyurlShortUrl : public PimCommon::AbstractShortUrl
 {
     Q_OBJECT
@@ -33,7 +33,7 @@ public:
     QString shortUrlName() const;
 
 private Q_SLOTS:
-    void slotShortUrlFinished(QNetworkReply*reply);
+    void slotShortUrlFinished(QNetworkReply *reply);
 };
 }
 

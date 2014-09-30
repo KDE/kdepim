@@ -21,13 +21,14 @@
 #include <QWidget>
 #include "pimcommon_export.h"
 class QToolButton;
-namespace PimCommon {
+namespace PimCommon
+{
 class AbstractTextToSpeechInterface;
 class PIMCOMMON_EXPORT TextToSpeechWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechWidget(QWidget *parent=0);
+    explicit TextToSpeechWidget(QWidget *parent = 0);
     ~TextToSpeechWidget();
 
     enum State {

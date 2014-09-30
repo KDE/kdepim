@@ -28,9 +28,9 @@
 
 using namespace PimCommon;
 
-PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * parent )
-    : TextEditFindBarBase( parent ),
-      mView( view )
+PlainTextEditFindBar::PlainTextEditFindBar(QPlainTextEdit *view, QWidget *parent)
+    : TextEditFindBarBase(parent),
+      mView(view)
 {
 }
 
@@ -38,10 +38,10 @@ PlainTextEditFindBar::~PlainTextEditFindBar()
 {
 }
 
-void PlainTextEditFindBar::slotSearchText( bool backward, bool isAutoSearch )
+void PlainTextEditFindBar::slotSearchText(bool backward, bool isAutoSearch)
 {
     mView->moveCursor(QTextCursor::Start);
-    searchText( backward, isAutoSearch );
+    searchText(backward, isAutoSearch);
 }
 
 bool PlainTextEditFindBar::viewIsReadOnly() const
@@ -56,16 +56,16 @@ bool PlainTextEditFindBar::documentIsEmpty() const
 
 bool PlainTextEditFindBar::searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions)
 {
-    const bool found = mView->find( text, searchOptions );
-    mFindWidget->setFoundMatch( found );
+    const bool found = mView->find(text, searchOptions);
+    mFindWidget->setFoundMatch(found);
     return found;
 }
 
 void PlainTextEditFindBar::autoSearchMoveCursor()
 {
     QTextCursor cursor = mView->textCursor();
-    cursor.setPosition( cursor.selectionStart() );
-    mView->setTextCursor( cursor );
+    cursor.setPosition(cursor.selectionStart());
+    mView->setTextCursor(cursor);
 }
 
 void PlainTextEditFindBar::slotReplaceText()
@@ -77,7 +77,7 @@ void PlainTextEditFindBar::slotReplaceText()
             searchText(false, false);
         }
     } else {
-        searchText( false, false );
+        searchText(false, false);
     }
 }
 

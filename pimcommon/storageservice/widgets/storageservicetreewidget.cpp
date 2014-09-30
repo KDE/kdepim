@@ -42,7 +42,7 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(StorageServiceAbstract *stora
     : QTreeWidget(parent),
       mStorageService(storageService)
 {
-    setContextMenuPolicy( Qt::CustomContextMenu );
+    setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &StorageServiceTreeWidget::customContextMenuRequested, this, &StorageServiceTreeWidget::slotContextMenu);
     setSortingEnabled(true);
     setAlternatingRowColors(true);
@@ -61,15 +61,16 @@ StorageServiceTreeWidget::~StorageServiceTreeWidget()
 
 void StorageServiceTreeWidget::slotMoveUp()
 {
-    if (parentFolder() == currentFolder())
+    if (parentFolder() == currentFolder()) {
         return;
+    }
     setCurrentFolder(parentFolder());
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
 void StorageServiceTreeWidget::createUpAction(QMenu *menu)
 {
-    menu->addAction( QIcon::fromTheme(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
+    menu->addAction(QIcon::fromTheme(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
 }
 
 void StorageServiceTreeWidget::createPropertiesAction(QMenu *menu)
@@ -89,9 +90,9 @@ void StorageServiceTreeWidget::createMenuActions(QMenu *menu)
 
 void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
 {
-    QMenu *menu = new QMenu( this );
+    QMenu *menu = new QMenu(this);
     createMenuActions(menu);
-    menu->exec( mapToGlobal( pos ) );
+    menu->exec(mapToGlobal(pos));
     delete menu;
 }
 
@@ -121,9 +122,10 @@ StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFile(const QString &n
     item->setData(ColumnName, ElementType, File);
     if (!mimetype.isEmpty()) {
         QMimeDatabase db;
-        QMimeType mime = db.mimeTypeForName( mimetype );
-        if (mime.isValid())
+        QMimeType mime = db.mimeTypeForName(mimetype);
+        if (mime.isValid()) {
             item->setIcon(ColumnName, QIcon::fromTheme(mime.iconName()));
+        }
     }
     return item;
 }
@@ -166,7 +168,7 @@ QVariantMap StorageServiceTreeWidget::itemInformationSelected() const
 {
     QTreeWidgetItem *item = currentItem();
     if (item) {
-        return static_cast<StorageServiceTreeWidgetItem*>(item)->storeInfo();
+        return static_cast<StorageServiceTreeWidgetItem *>(item)->storeInfo();
     }
     return QVariantMap();
 }
@@ -205,10 +207,12 @@ void StorageServiceTreeWidget::slotListFolderDone(const QString &serviceName, co
 
 void StorageServiceTreeWidget::goToFolder(const QString &folder, bool addToHistory)
 {
-    if (folder == currentFolder())
+    if (folder == currentFolder()) {
         return;
-    if (addToHistory)
+    }
+    if (addToHistory) {
         Q_EMIT changeFolder(currentFolder(), parentFolder());
+    }
     setCurrentFolder(folder);
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
@@ -219,9 +223,8 @@ void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int 
     if (item) {
         StorageServiceTreeWidget::ItemType itemType = type(item);
         switch (itemType) {
-        case StorageServiceTreeWidget::Folder:
-        {
-            const QString folder = itemIdentifierSelected();            
+        case StorageServiceTreeWidget::Folder: {
+            const QString folder = itemIdentifierSelected();
             goToFolder(folder);
             break;
         }
@@ -246,5 +249,4 @@ void StorageServiceTreeWidget::slotProperties()
         delete dlg;
     }
 }
-
 

@@ -21,7 +21,6 @@
 #include "../autocorrection.h"
 #include <qtestkeyboard.h>
 
-
 RichTextEditWithAutoCorrectionTest::RichTextEditWithAutoCorrectionTest()
 {
 }
@@ -38,7 +37,7 @@ void RichTextEditWithAutoCorrectionTest::shouldNotAutocorrectWhenDisabled()
     QTest::qWaitForWindowShown(&richtext);
     QTest::keyClicks(&richtext, originalWord);
     QTest::keyClick(&richtext, ' ');
-    QCOMPARE(richtext.toPlainText(), QString(originalWord + QLatin1Char(' ')) );
+    QCOMPARE(richtext.toPlainText(), QString(originalWord + QLatin1Char(' ')));
 }
 
 void RichTextEditWithAutoCorrectionTest::shouldReplaceWordWhenExactText()
@@ -55,7 +54,7 @@ void RichTextEditWithAutoCorrectionTest::shouldReplaceWordWhenExactText()
     QTest::qWaitForWindowShown(&richtext);
     QTest::keyClicks(&richtext, originalWord);
     QTest::keyClick(&richtext, ' ');
-    QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char(' ')) );
+    QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char(' ')));
 }
 
 void RichTextEditWithAutoCorrectionTest::shouldNotReplaceWordWhenInexactText()
@@ -73,7 +72,7 @@ void RichTextEditWithAutoCorrectionTest::shouldNotReplaceWordWhenInexactText()
     QTest::qWaitForWindowShown(&richtext);
     QTest::keyClicks(&richtext, nonExactText);
     QTest::keyClick(&richtext, ' ');
-    QCOMPARE(richtext.toPlainText(), QString(nonExactText + QLatin1Char(' ')) );
+    QCOMPARE(richtext.toPlainText(), QString(nonExactText + QLatin1Char(' ')));
 }
 
 void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressEnter()
@@ -90,7 +89,7 @@ void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressEnter()
     QTest::qWaitForWindowShown(&richtext);
     QTest::keyClicks(&richtext, originalWord);
     QTest::keyPress(&richtext, Qt::Key_Enter);
-    QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char('\n')) );
+    QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char('\n')));
 }
 
 void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressReturn()
@@ -107,8 +106,7 @@ void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressReturn()
     QTest::qWaitForWindowShown(&richtext);
     QTest::keyClicks(&richtext, originalWord);
     QTest::keyPress(&richtext, Qt::Key_Return);
-    QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char('\n')) );
+    QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char('\n')));
 }
-
 
 QTEST_MAIN(RichTextEditWithAutoCorrectionTest)

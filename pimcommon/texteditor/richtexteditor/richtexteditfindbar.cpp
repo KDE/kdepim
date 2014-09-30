@@ -27,9 +27,9 @@
 
 using namespace PimCommon;
 
-RichTextEditFindBar::RichTextEditFindBar( QTextEdit * view, QWidget * parent )
-    : TextEditFindBarBase( parent ),
-      mView( view )
+RichTextEditFindBar::RichTextEditFindBar(QTextEdit *view, QWidget *parent)
+    : TextEditFindBarBase(parent),
+      mView(view)
 {
 }
 
@@ -37,10 +37,10 @@ RichTextEditFindBar::~RichTextEditFindBar()
 {
 }
 
-void RichTextEditFindBar::slotSearchText( bool backward, bool isAutoSearch )
+void RichTextEditFindBar::slotSearchText(bool backward, bool isAutoSearch)
 {
     mView->moveCursor(QTextCursor::Start);
-    searchText( backward, isAutoSearch );
+    searchText(backward, isAutoSearch);
 }
 
 bool RichTextEditFindBar::viewIsReadOnly() const
@@ -55,16 +55,16 @@ bool RichTextEditFindBar::documentIsEmpty() const
 
 bool RichTextEditFindBar::searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions)
 {
-    const bool found = mView->find( text, searchOptions );
-    mFindWidget->setFoundMatch( found );
+    const bool found = mView->find(text, searchOptions);
+    mFindWidget->setFoundMatch(found);
     return found;
 }
 
 void RichTextEditFindBar::autoSearchMoveCursor()
 {
     QTextCursor cursor = mView->textCursor();
-    cursor.setPosition( cursor.selectionStart() );
-    mView->setTextCursor( cursor );
+    cursor.setPosition(cursor.selectionStart());
+    mView->setTextCursor(cursor);
 }
 
 void RichTextEditFindBar::slotReplaceText()
@@ -77,7 +77,7 @@ void RichTextEditFindBar::slotReplaceText()
             searchText(false, false);
         }
     } else {
-        searchText( false, false );
+        searchText(false, false);
     }
 }
 

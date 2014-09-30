@@ -23,7 +23,8 @@
 
 #include <QString>
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class ISettingsJob
 {
@@ -51,7 +52,6 @@ public:
     //GDrive
     virtual QString gdriveClientId() const = 0;
     virtual QString gdriveClientSecret() const = 0;
-
 
     virtual QString defaultUploadFolder() const = 0;
 };

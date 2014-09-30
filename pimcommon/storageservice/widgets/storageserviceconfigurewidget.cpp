@@ -45,7 +45,7 @@ StorageServiceConfigureWidget::StorageServiceConfigureWidget(QWidget *parent)
     lay->addWidget(lab);
     mDownloadFolder = new KUrlRequester;
     connect(mDownloadFolder, &KUrlRequester::textChanged, this, &StorageServiceConfigureWidget::changed);
-    mDownloadFolder->setMode(KFile::Directory|KFile::LocalOnly);
+    mDownloadFolder->setMode(KFile::Directory | KFile::LocalOnly);
     lay->addWidget(mDownloadFolder);
 }
 

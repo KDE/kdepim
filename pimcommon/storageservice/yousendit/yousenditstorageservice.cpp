@@ -30,7 +30,6 @@
 
 #include <KLocalizedString>
 
-
 #include <QDebug>
 #include <KFormat>
 #include <QLocale>
@@ -61,8 +60,9 @@ bool YouSendItStorageService::hasValidSettings() const
 
 bool YouSendItStorageService::needAuthenticate()
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
     return (mToken.isEmpty() || mUsername.isEmpty() || mPassword.isEmpty());
 }
 
@@ -74,7 +74,7 @@ void YouSendItStorageService::readConfig()
             QStringList lst = wallet->entryList();
             if (lst.contains(storageServiceName())) {
                 QMap<QString, QString> map;
-                wallet->readMap( storageServiceName(), map );
+                wallet->readMap(storageServiceName(), map);
                 if (map.contains(QLatin1String("Username"))) {
                     mUsername = map.value(QLatin1String("Username"));
                 }
@@ -95,8 +95,9 @@ void YouSendItStorageService::removeConfig()
     if (StorageServiceSettings::self()->createDefaultFolder()) {
         const QString walletEntry = storageServiceName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
-        if (wallet)
+        if (wallet) {
             wallet->removeEntry(walletEntry);
+        }
     }
 }
 
@@ -127,10 +128,10 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String( "Username" )] = username;
-            map[QLatin1String( "Token" )] = token;
-            map[QLatin1String( "Password" )] = mPassword;
-            wallet->writeMap( walletEntry, map);
+            map[QLatin1String("Username")] = username;
+            map[QLatin1String("Token")] = token;
+            map[QLatin1String("Password")] = mPassword;
+            wallet->writeMap(walletEntry, map);
         }
     }
     emitAuthentificationDone();
@@ -245,7 +246,6 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
     //Can not be implemented.
     //cap |= CopyFileCapability;
     //cap |= CopyFolderCapability;
-
 
     return cap;
 }
@@ -422,20 +422,20 @@ void YouSendItStorageService::storageServiceCopyFolder(const QString &source, co
 QMap<QString, QString> YouSendItStorageService::itemInformation(const QVariantMap &variantMap)
 {
     QMap<QString, QString> information;
-    qDebug()<<" variantMap "<<variantMap;
+    qDebug() << " variantMap " << variantMap;
     bool folder = false;
     if (variantMap.contains(QLatin1String("name"))) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QLatin1String("name")).toString());
     }
     if (variantMap.contains(QLatin1String("updatedOn"))) {
         const QString t = variantMap.value(QLatin1String("updatedOn")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString(YouSendItUtil::convertToDateTime(t,true)));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString(YouSendItUtil::convertToDateTime(t, true)));
         folder = true;
     }
     information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), folder ? i18n("Directory") : i18n("File"));
     if (variantMap.contains(QLatin1String("createdOn"))) {
         const QString t = variantMap.value(QLatin1String("createdOn")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString(YouSendItUtil::convertToDateTime(t,folder ? true : false)));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString(YouSendItUtil::convertToDateTime(t, folder ? true : false)));
     }
     if (variantMap.contains(QLatin1String("lastUpdatedOn"))) {
         const QString t = variantMap.value(QLatin1String("lastUpdatedOn")).toString();
@@ -488,11 +488,11 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                 StorageServiceTreeWidgetItem *item = listWidget->addFolder(name, folderId);
                 if (map.contains(QLatin1String("createdOn"))) {
                     const QString t = map.value(QLatin1String("createdOn")).toString();
-                    item->setDateCreated(YouSendItUtil::convertToDateTime(t,true));
+                    item->setDateCreated(YouSendItUtil::convertToDateTime(t, true));
                 }
                 if (map.contains(QLatin1String("updatedOn"))) {
                     const QString t = map.value(QLatin1String("updatedOn")).toString();
-                    item->setLastModification(YouSendItUtil::convertToDateTime(t,true));
+                    item->setLastModification(YouSendItUtil::convertToDateTime(t, true));
                 }
                 item->setStoreInfo(map);
             }
@@ -504,7 +504,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
             //qDebug()<<" file map !"<<map;
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
-                qDebug()<<" name !"<<name;
+                qDebug() << " name !" << name;
                 const QString fileId = map.value(QLatin1String("id")).toString();
                 StorageServiceTreeWidgetItem *item = listWidget->addFile(name, fileId);
                 if (map.contains(QLatin1String("size"))) {
@@ -537,5 +537,4 @@ QIcon YouSendItStorageService::icon() const
 {
     return QIcon();
 }
-
 

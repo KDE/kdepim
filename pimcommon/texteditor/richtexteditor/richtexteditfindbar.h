@@ -23,12 +23,13 @@
 #include <QTextDocument>
 
 class QTextEdit;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT RichTextEditFindBar : public TextEditFindBarBase
 {
     Q_OBJECT
 public:
-    explicit RichTextEditFindBar( QTextEdit *view, QWidget *parent = 0 );
+    explicit RichTextEditFindBar(QTextEdit *view, QWidget *parent = 0);
     ~RichTextEditFindBar();
 
 protected:
@@ -38,7 +39,7 @@ protected:
     virtual void autoSearchMoveCursor();
 
 public slots:
-    virtual void slotSearchText( bool backward = false, bool isAutoSearch = true );
+    virtual void slotSearchText(bool backward = false, bool isAutoSearch = true);
 
 private slots:
     virtual void slotReplaceText();

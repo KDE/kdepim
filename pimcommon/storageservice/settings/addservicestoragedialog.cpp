@@ -34,7 +34,7 @@ using namespace PimCommon;
 AddServiceStorageDialog::AddServiceStorageDialog(const QList<StorageServiceAbstract::Capability> &lstCap, const QStringList &excludeService, QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Add Service" ) );
+    setWindowTitle(i18n("Add Service"));
     mService = new StorageServiceComboBox(lstCap, excludeService);
     mStackedWidget = new QStackedWidget;
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -49,7 +49,7 @@ AddServiceStorageDialog::AddServiceStorageDialog(const QList<StorageServiceAbstr
     mStackedWidget->addWidget(mComboboxWidget);
     if (mService->count() > 0) {
         mStackedWidget->setCurrentWidget(mComboboxWidget);
-        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
         QWidget *mainWidget = new QWidget(this);
         QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
         okButton->setDefault(true);
@@ -73,8 +73,9 @@ AddServiceStorageDialog::~AddServiceStorageDialog()
 
 PimCommon::StorageServiceManager::ServiceType AddServiceStorageDialog::serviceSelected() const
 {
-    if (mStackedWidget->currentWidget() == mComboboxWidget)
+    if (mStackedWidget->currentWidget() == mComboboxWidget) {
         return mService->service();
-    else
+    } else {
         return PimCommon::StorageServiceManager::Unknown;
+    }
 }

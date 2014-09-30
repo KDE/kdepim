@@ -15,13 +15,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef TRIOPABSHORTURL_H
 #define TRIOPABSHORTURL_H
 
 #include "abstractshorturl.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class TriopabShortUrl : public PimCommon::AbstractShortUrl
 {
     Q_OBJECT
@@ -34,10 +34,9 @@ public:
     QString shortUrlName() const;
 
 private Q_SLOTS:
-    void slotShortUrlFinished(QNetworkReply*reply);
+    void slotShortUrlFinished(QNetworkReply *reply);
 
 };
 }
-
 
 #endif // TRIOPABSHORTURL_H

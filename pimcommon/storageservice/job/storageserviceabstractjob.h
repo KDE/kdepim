@@ -24,7 +24,8 @@
 
 class QFile;
 class QNetworkAccessManager;
-namespace PimCommon {
+namespace PimCommon
+{
 class AccountInfo;
 class StorageServiceAbstractJob : public QObject
 {
@@ -33,7 +34,7 @@ public:
     explicit StorageServiceAbstractJob(QObject *parent = 0);
     ~StorageServiceAbstractJob();
 
-    virtual QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination=QString()) = 0;
+    virtual QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString()) = 0;
     virtual QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination) = 0;
 
     virtual void requestTokenAccess() = 0;
@@ -71,7 +72,6 @@ Q_SIGNALS:
     void moveFileDone(const QString &folder);
     void copyFileDone(const QString &folder);
     void copyFolderDone(const QString &folder);
-
 
 protected:
     void errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr);

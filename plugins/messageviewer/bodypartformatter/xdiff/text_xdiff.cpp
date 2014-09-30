@@ -39,102 +39,117 @@
 #include <qdebug.h>
 #include <kmessagebox.h>
 
-
 #include <QUrl>
 #include <QFile>
 #include <QDir>
 #include <QTextDocument>
 
-namespace {
+namespace
+{
 
-  // TODO: Show filename header to make it possible to save the patch.
-  // FIXME: The box should only be as wide as necessary.
+// TODO: Show filename header to make it possible to save the patch.
+// FIXME: The box should only be as wide as necessary.
 
-  class Formatter : public MessageViewer::Interface::BodyPartFormatter {
-  public:
-    Result format( MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer ) const {
+class Formatter : public MessageViewer::Interface::BodyPartFormatter
+{
+public:
+    Result format(MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer) const
+    {
 
-      if ( !writer ) return Ok;
-
-      if (  bodyPart->defaultDisplay() == MessageViewer::Interface::BodyPart::AsIcon )
-        return AsIcon;
-
-      const QString diff = bodyPart->asText();
-      if ( diff.isEmpty() ) return AsIcon;
-
-      static const QLatin1String addedLineStyle( "style=\"" "color: green;\"" );
-      static const QLatin1String fileAddStyle( "style=\"font-weight: bold; " "color: green; \"" );
-
-      static const QLatin1String removedLineStyle( "style=\"" "color: red;\"" );
-      static const QLatin1String fileRemoveStyle( "style=\"font-weight: bold; "
-                               "color: red ;\"" );
-
-      static const QLatin1String tableStyle(
-        "style=\""
-        "text-align: left; "
-        "border: solid black 1px; "
-        "padding: 0.5em; "
-        "margin: 0em;\"");
-
-      static const QLatin1String sepStyle( "style=\"color: black; font-weight: bold;\"" );
-      static const QLatin1String chunkStyle( "style=\"color: blue;\"" );
-
-      QString html = QLatin1String("<br><div align=\"center\">");
-      html += QLatin1String("<pre ") + tableStyle + QLatin1Char('>');
-
-      const QStringList lines = diff.split( QLatin1Char('\n') );
-      QStringList::ConstIterator end( lines.end() );
-      for ( QStringList::ConstIterator it = lines.begin(); it != end; ++it ) {
-        const QString line( (*it).toHtmlEscaped() );
-        QString style;
-        if ( !line.isEmpty() ) {
-          if ( line.startsWith( QLatin1String("+++") ) ) {
-            style = fileAddStyle;
-          } else if ( line.startsWith( QLatin1String("---") ) ) {
-            style = fileRemoveStyle;
-          } else if ( line.startsWith( QLatin1Char('+') ) || line.startsWith( QLatin1Char('>') ) ) {
-            style = addedLineStyle;
-          } else if ( line.startsWith( QLatin1Char('-') ) || line.startsWith( QLatin1Char('<') ) ) {
-            style = removedLineStyle;
-          } else if ( line.startsWith( QLatin1String("==") ) ) {
-            style = sepStyle;
-          } else if ( line.startsWith( QLatin1String("@@") ) ) {
-            style = chunkStyle;
-          }
+        if (!writer) {
+            return Ok;
         }
-        html += QLatin1String("<span ") + style + QLatin1Char('>') + line + QLatin1String("</span><br/>");
-      }
 
-      html += QLatin1String("</pre></div>");
-      //qDebug( "%s", html.toLatin1() );
-      writer->queue( html );
+        if (bodyPart->defaultDisplay() == MessageViewer::Interface::BodyPart::AsIcon) {
+            return AsIcon;
+        }
 
-      return Ok;
+        const QString diff = bodyPart->asText();
+        if (diff.isEmpty()) {
+            return AsIcon;
+        }
+
+        static const QLatin1String addedLineStyle("style=\"" "color: green;\"");
+        static const QLatin1String fileAddStyle("style=\"font-weight: bold; " "color: green; \"");
+
+        static const QLatin1String removedLineStyle("style=\"" "color: red;\"");
+        static const QLatin1String fileRemoveStyle("style=\"font-weight: bold; "
+                "color: red ;\"");
+
+        static const QLatin1String tableStyle(
+            "style=\""
+            "text-align: left; "
+            "border: solid black 1px; "
+            "padding: 0.5em; "
+            "margin: 0em;\"");
+
+        static const QLatin1String sepStyle("style=\"color: black; font-weight: bold;\"");
+        static const QLatin1String chunkStyle("style=\"color: blue;\"");
+
+        QString html = QLatin1String("<br><div align=\"center\">");
+        html += QLatin1String("<pre ") + tableStyle + QLatin1Char('>');
+
+        const QStringList lines = diff.split(QLatin1Char('\n'));
+        QStringList::ConstIterator end(lines.end());
+        for (QStringList::ConstIterator it = lines.begin(); it != end; ++it) {
+            const QString line((*it).toHtmlEscaped());
+            QString style;
+            if (!line.isEmpty()) {
+                if (line.startsWith(QLatin1String("+++"))) {
+                    style = fileAddStyle;
+                } else if (line.startsWith(QLatin1String("---"))) {
+                    style = fileRemoveStyle;
+                } else if (line.startsWith(QLatin1Char('+')) || line.startsWith(QLatin1Char('>'))) {
+                    style = addedLineStyle;
+                } else if (line.startsWith(QLatin1Char('-')) || line.startsWith(QLatin1Char('<'))) {
+                    style = removedLineStyle;
+                } else if (line.startsWith(QLatin1String("=="))) {
+                    style = sepStyle;
+                } else if (line.startsWith(QLatin1String("@@"))) {
+                    style = chunkStyle;
+                }
+            }
+            html += QLatin1String("<span ") + style + QLatin1Char('>') + line + QLatin1String("</span><br/>");
+        }
+
+        html += QLatin1String("</pre></div>");
+        //qDebug( "%s", html.toLatin1() );
+        writer->queue(html);
+
+        return Ok;
     }
 
     // unhide the overload with three arguments
     using MessageViewer::Interface::BodyPartFormatter::format;
-  };
+};
 
-  class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin {
-  public:
-    const MessageViewer::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const {
-      return idx == 0 ? new Formatter() : 0 ;
+class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
+{
+public:
+    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
+    {
+        return idx == 0 ? new Formatter() : 0 ;
     }
-    const char * type( int idx ) const {
-      return idx == 0 ? "text" : 0 ;
+    const char *type(int idx) const
+    {
+        return idx == 0 ? "text" : 0 ;
     }
-    const char * subtype( int idx ) const {
-      return idx == 0 ? "x-diff" : 0 ;
+    const char *subtype(int idx) const
+    {
+        return idx == 0 ? "x-diff" : 0 ;
     }
 
-    const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int ) const { return 0; }
-  };
+    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int) const
+    {
+        return 0;
+    }
+};
 
 }
 
 extern "C"
 Q_DECL_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
-messageviewer_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
-  return new Plugin();
+messageviewer_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin()
+{
+    return new Plugin();
 }

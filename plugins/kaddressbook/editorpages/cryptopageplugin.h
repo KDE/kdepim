@@ -26,7 +26,8 @@
 
 #include <Akonadi/Contact/ContactEditorPagePlugin>
 
-namespace Kleo {
+namespace Kleo
+{
 class KeyRequester;
 }
 
@@ -37,25 +38,25 @@ using namespace Akonadi;
 
 class CryptoPagePlugin : public Akonadi::ContactEditorPagePlugin
 {
-  Q_OBJECT
-  Q_INTERFACES( Akonadi::ContactEditorPagePlugin )
-  Q_PLUGIN_METADATA(IID "org.kde.kaddressbook.CryptoPagePlugin");
-  public:
+    Q_OBJECT
+    Q_INTERFACES(Akonadi::ContactEditorPagePlugin)
+    Q_PLUGIN_METADATA(IID "org.kde.kaddressbook.CryptoPagePlugin");
+public:
     CryptoPagePlugin();
     ~CryptoPagePlugin();
 
     virtual QString title() const;
-    virtual void loadContact( const KABC::Addressee &contact );
-    virtual void storeContact( KABC::Addressee &contact ) const;
-    virtual void setReadOnly( bool readOnly );
+    virtual void loadContact(const KABC::Addressee &contact);
+    virtual void storeContact(KABC::Addressee &contact) const;
+    virtual void setReadOnly(bool readOnly);
 
-  private:
+private:
     enum { NumberOfProtocols = 4 };
-    QCheckBox* mProtocolCB[NumberOfProtocols];
-    KComboBox* mSignPref;
-    KComboBox* mCryptPref;
-    Kleo::KeyRequester* mPgpKey;
-    Kleo::KeyRequester* mSmimeCert;
+    QCheckBox *mProtocolCB[NumberOfProtocols];
+    KComboBox *mSignPref;
+    KComboBox *mCryptPref;
+    Kleo::KeyRequester *mPgpKey;
+    Kleo::KeyRequester *mSmimeCert;
     bool mReadOnly;
 };
 

@@ -59,7 +59,7 @@ void WebDavJob::initializeToken(const QString &publicLocation, const QString &se
     mServiceLocation = serviceLocation;
 }
 
-void WebDavJob::slotAuthenticationRequired(QNetworkReply *,QAuthenticator *auth)
+void WebDavJob::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *auth)
 {
     if ((mNbAuthCheck > 2) || (mUserName.isEmpty() || mPassword.isEmpty())) {
         QPointer<LoginDialog> dlg = new LoginDialog;
@@ -121,7 +121,7 @@ void WebDavJob::copyFile(const QString &source, const QString &destination)
     sourceFile.setPath(source);
     QUrl destinationFile(mServiceLocation);
     destinationFile.setPath(destinationFolder);
-    copy(sourceFile.toString(), destinationFile.toString(),false);
+    copy(sourceFile.toString(), destinationFile.toString(), false);
 }
 
 void WebDavJob::copyFolder(const QString &source, const QString &destination)
@@ -219,7 +219,7 @@ void WebDavJob::renameFile(const QString &oldName, const QString &newName)
     QUrl destinationFile(mServiceLocation);
     destinationFile.setPath(destination);
 
-    rename(sourceFile.toString(), destinationFile.toString(),false);
+    rename(sourceFile.toString(), destinationFile.toString(), false);
 }
 
 QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
@@ -240,7 +240,7 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
                 destinationToString = destinationFile.toString();
             }
             mCacheValue = destinationToString;
-            QNetworkReply *reply = put(destinationToString,file);
+            QNetworkReply *reply = put(destinationToString, file);
             file->setParent(reply);
             connect(reply, &QNetworkReply::uploadProgress, this, &WebDavJob::slotuploadDownloadFileProgress);
             connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &WebDavJob::slotError);
@@ -256,8 +256,9 @@ void WebDavJob::listFolder(const QString &folder)
     mActionType = PimCommon::StorageServiceAbstract::ListFolderAction;
     mError = false;
     QUrl url(mServiceLocation);
-    if (!folder.isEmpty())
+    if (!folder.isEmpty()) {
         url.setPath(folder);
+    }
     list(url.toString());
 }
 
@@ -314,10 +315,11 @@ void WebDavJob::createFolderJob(const QString &foldername, const QString &destin
 {
     mCacheValue = foldername;
     QUrl url(mServiceLocation);
-    if (destination.isEmpty())
+    if (destination.isEmpty()) {
         url.setPath(url.path() + QLatin1Char('/') + foldername);
-    else
+    } else {
         url.setPath(destination + QLatin1Char('/') + foldername);
+    }
     //qDebug()<<" url"<<url;
     mkdir(url);
 }
@@ -353,7 +355,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         const QString data = QString::fromUtf8(reply->readAll());
         //qDebug()<<" data "<<data;
         reply->deleteLater();
-        switch(mActionType) {
+        switch (mActionType) {
         case PimCommon::StorageServiceAbstract::NoneAction:
             deleteLater();
             break;
@@ -420,7 +422,7 @@ void WebDavJob::parseCreateServiceFolder(const QString &/*data*/)
 
 void WebDavJob::parseShareLink(const QString &data)
 {
-    qDebug()<<" data"<<data;
+    qDebug() << " data" << data;
     Q_EMIT shareLinkDone(data);
     deleteLater();
 }
@@ -515,36 +517,39 @@ void WebDavJob::parseAccountInfo(const QString &data)
     PimCommon::AccountInfo accountInfo;
     QDomDocument dom;
     dom.setContent(data.toLatin1(), true);
-    for ( QDomNode n = dom.documentElement().firstChild(); !n.isNull(); n = n.nextSibling()) {
+    for (QDomNode n = dom.documentElement().firstChild(); !n.isNull(); n = n.nextSibling()) {
         QDomElement thisResponse = n.toElement();
-        if (thisResponse.isNull())
+        if (thisResponse.isNull()) {
             continue;
+        }
 
-        QDomElement href = n.namedItem( QLatin1String("href") ).toElement();
+        QDomElement href = n.namedItem(QLatin1String("href")).toElement();
 
-        if ( !href.isNull() ) {
+        if (!href.isNull()) {
 
-            QDomNodeList propstats = thisResponse.elementsByTagName( QLatin1String("propstat") );
-            for (int i=0; i<propstats.count(); ++i) {
+            QDomNodeList propstats = thisResponse.elementsByTagName(QLatin1String("propstat"));
+            for (int i = 0; i < propstats.count(); ++i) {
                 QDomNodeList propstat = propstats.item(i).childNodes();
-                for (int j=0; j<propstat.count();++j) {
+                for (int j = 0; j < propstat.count(); ++j) {
                     QDomElement element = propstat.item(j).toElement();
                     QString tagName = element.tagName();
                     if (tagName == QLatin1String("prop")) {
                         QDomNodeList prop = element.childNodes();
-                        for (int t=0; t<prop.count();++t) {
+                        for (int t = 0; t < prop.count(); ++t) {
                             const QDomElement propElement = prop.item(t).toElement();
                             tagName = propElement.tagName();
                             if (tagName == QLatin1String("quota-available-bytes")) {
                                 bool ok;
                                 qlonglong val = propElement.text().toLongLong(&ok);
-                                if (ok)
+                                if (ok) {
                                     accountInfo.accountSize = val;
+                                }
                             } else if (tagName == QLatin1String("quota-used-bytes")) {
                                 bool ok;
                                 qlonglong val = propElement.text().toLongLong(&ok);
-                                if (ok)
+                                if (ok) {
                                     accountInfo.shared = val;
+                                }
                             }
                         }
                     }
@@ -578,8 +583,8 @@ void WebDavJob::shareLink(const QString &/*root*/, const QString &path)
     }
     QUrl path2(mServiceLocation);
     QNetworkRequest request(QUrl(path2.scheme() + QLatin1String("://") + path2.host() + mShareApi));
-    qDebug()<<" filePath"<<filePath;
-    qDebug()<<" url"<<(path2.scheme() + QLatin1String("://") + path2.host() + mShareApi);
+    qDebug() << " filePath" << filePath;
+    qDebug() << " url" << (path2.scheme() + QLatin1String("://") + path2.host() + mShareApi);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
     postData.addQueryItem(QLatin1String("path"), filePath);
@@ -601,7 +606,7 @@ QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileI
     mError = false;
     const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
     delete mDownloadFile;
-    mDownloadFile = new QFile(defaultDestination+ QLatin1Char('/') + name);
+    mDownloadFile = new QFile(defaultDestination + QLatin1Char('/') + name);
     if (mDownloadFile->open(QIODevice::WriteOnly)) {
         QNetworkRequest req;
         QUrl sourceFile(mServiceLocation);
@@ -618,5 +623,4 @@ QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileI
     }
     return 0;
 }
-
 

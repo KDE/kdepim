@@ -46,7 +46,7 @@ void TextToSpeechInterface::say(const QString &text)
 
 void TextToSpeechInterface::stateChanged(TextToSpeechWidget::State state)
 {
-    switch(state) {
+    switch (state) {
     case TextToSpeechWidget::Stop:
         PimCommon::TextToSpeech::self()->stop();
         //TODO hide widget

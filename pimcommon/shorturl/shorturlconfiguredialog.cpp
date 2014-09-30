@@ -29,8 +29,8 @@ using namespace PimCommon;
 ShortUrlConfigureDialog::ShortUrlConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Configure engine" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    setWindowTitle(i18n("Configure engine"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -52,7 +52,6 @@ ShortUrlConfigureDialog::ShortUrlConfigureDialog(QWidget *parent)
     lay->addWidget(mConfigureWidget);
     lay->addWidget(new KSeparator);
 }
-
 
 ShortUrlConfigureDialog::~ShortUrlConfigureDialog()
 {

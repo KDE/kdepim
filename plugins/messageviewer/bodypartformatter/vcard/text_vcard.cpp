@@ -60,295 +60,294 @@ using MessageViewer::Interface::BodyPart;
 #include <KIO/NetAccess>
 #include <QDebug>
 
-namespace {
+namespace
+{
 
 class Formatter : public MessageViewer::Interface::BodyPartFormatter
 {
-  public:
+public:
     Formatter()
     {
     }
 
-    Result format( BodyPart * part, MessageViewer::HtmlWriter * writer ) const
+    Result format(BodyPart *part, MessageViewer::HtmlWriter *writer) const
     {
-      return format ( part, writer, 0 );
+        return format(part, writer, 0);
     }
 
-    Result format( BodyPart *bodyPart, MessageViewer::HtmlWriter *writer, QObject* asyncResultObserver ) const
+    Result format(BodyPart *bodyPart, MessageViewer::HtmlWriter *writer, QObject *asyncResultObserver) const
     {
-      if ( !writer ) {
-        return Ok;
-      }
-
-      const QString vCard = bodyPart->asText();
-      if ( vCard.isEmpty() ) {
-        return AsIcon;
-      }
-
-      KABC::VCardConverter vcc;
-      const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-
-      MessageViewer::VcardMemento *memento = dynamic_cast<MessageViewer::VcardMemento*>( bodyPart->memento() );
-      QStringList lst;
-
-      // Pre-count the number of non-empty addressees
-      int count = 0;
-      foreach ( const KABC::Addressee &a, al ) {
-        if ( a.isEmpty() ) {
-          continue;
+        if (!writer) {
+            return Ok;
         }
-        if(!memento) {
-          if(!a.emails().isEmpty()) {
-            lst.append(a.emails().first());
-            count++;
-          }
+
+        const QString vCard = bodyPart->asText();
+        if (vCard.isEmpty()) {
+            return AsIcon;
         }
-      }
-      if ( !count ) {
-        return AsIcon;
-      }
 
-      writer->queue( QLatin1String("<div align=\"center\"><h2>") +
-                     i18np( "Attached business card", "Attached business cards", count ) +
-                     QLatin1String("</h2></div>") );
+        KABC::VCardConverter vcc;
+        const KABC::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
 
-      count = 0;
-      static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( QLatin1String("user-identity"), KIconLoader::Desktop );
-      static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( QLatin1String("document-open-remote"), KIconLoader::Small );
+        MessageViewer::VcardMemento *memento = dynamic_cast<MessageViewer::VcardMemento *>(bodyPart->memento());
+        QStringList lst;
 
-
-      if ( !memento ) {
-        MessageViewer::VcardMemento *memento = new MessageViewer::VcardMemento(lst);
-        bodyPart->setBodyPartMemento( memento );
-
-        if ( asyncResultObserver ) {
-          QObject::connect( memento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), asyncResultObserver, SLOT(update(MessageViewer::Viewer::UpdateMode)) );
-        }
-      }
-
-
-      foreach ( const KABC::Addressee &a, al ) {
-        if ( a.isEmpty() ) {
-          continue;
-        }        
-        Akonadi::StandardContactFormatter formatter;
-        formatter.setContact( a );
-        formatter.setDisplayQRCode(false);
-        QString htmlStr = formatter.toHtml( Akonadi::StandardContactFormatter::EmbeddableForm );
-        const KABC::Picture photo = a.photo();
-        htmlStr.replace(QLatin1String("<img src=\"map_icon\""),QString::fromLatin1("<img src=\"%1\"").arg(defaultMapIconPath));
-        if(photo.isEmpty()) {
-          htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(defaultPixmapPath));
-        } else {
-          QImage img = a.photo().data();
-          const QString dir = bodyPart->nodeHelper()->createTempDir( QLatin1String("vcard-") + a.uid() );
-          const QString filename = dir + QDir::separator() + a.uid();
-          img.save(filename,"PNG");
-          bodyPart->nodeHelper()->addTempFile( filename );
-          const QString href = QLatin1String("file:") + QLatin1String(QUrl::toPercentEncoding( filename ));
-          htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(href));
-        }
-        writer->queue( htmlStr );
-
-        if(!memento ||
-                (memento && !memento->finished()) ||
-                (memento && memento->finished() && !memento->vcardExist(count)) ) {
-          const QString addToLinkText = i18n( "[Add this contact to the address book]" );
-          QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
-          writer->queue( QLatin1String("<div align=\"center\"><a href=\"") +
-                         bodyPart->makeLink( op ) +
-                         QLatin1String("\">") +
-                         addToLinkText +
-                         QLatin1String("</a></div><br><br>") );
-        } else {
-            if(memento->address(count) != a) {
-              const QString addToLinkText = i18n( "[Update this contact to the address book]" );
-              QString op = QString::fromLatin1( "updateToAddressBook:%1" ).arg( count );
-              writer->queue( QLatin1String("<div align=\"center\"><a href=\"") +
-                             bodyPart->makeLink( op ) +
-                             QLatin1String("\">") +
-                             addToLinkText +
-                            QLatin1String("</a></div><br><br>") );
-            } else {
-                const QString addToLinkText = i18n( "[This contact is already in addressbook]" );
-                writer->queue( QLatin1String("<div align=\"center\">") +
-                               addToLinkText +
-                              QLatin1String("</a></div><br><br>") );
+        // Pre-count the number of non-empty addressees
+        int count = 0;
+        foreach (const KABC::Addressee &a, al) {
+            if (a.isEmpty()) {
+                continue;
+            }
+            if (!memento) {
+                if (!a.emails().isEmpty()) {
+                    lst.append(a.emails().first());
+                    count++;
+                }
             }
         }
-        count++;
-      }
+        if (!count) {
+            return AsIcon;
+        }
 
-      return Ok;
+        writer->queue(QLatin1String("<div align=\"center\"><h2>") +
+                      i18np("Attached business card", "Attached business cards", count) +
+                      QLatin1String("</h2></div>"));
+
+        count = 0;
+        static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath(QLatin1String("user-identity"), KIconLoader::Desktop);
+        static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath(QLatin1String("document-open-remote"), KIconLoader::Small);
+
+        if (!memento) {
+            MessageViewer::VcardMemento *memento = new MessageViewer::VcardMemento(lst);
+            bodyPart->setBodyPartMemento(memento);
+
+            if (asyncResultObserver) {
+                QObject::connect(memento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), asyncResultObserver, SLOT(update(MessageViewer::Viewer::UpdateMode)));
+            }
+        }
+
+        foreach (const KABC::Addressee &a, al) {
+            if (a.isEmpty()) {
+                continue;
+            }
+            Akonadi::StandardContactFormatter formatter;
+            formatter.setContact(a);
+            formatter.setDisplayQRCode(false);
+            QString htmlStr = formatter.toHtml(Akonadi::StandardContactFormatter::EmbeddableForm);
+            const KABC::Picture photo = a.photo();
+            htmlStr.replace(QLatin1String("<img src=\"map_icon\""), QString::fromLatin1("<img src=\"%1\"").arg(defaultMapIconPath));
+            if (photo.isEmpty()) {
+                htmlStr.replace(QLatin1String("img src=\"contact_photo\""), QString::fromLatin1("img src=\"%1\"").arg(defaultPixmapPath));
+            } else {
+                QImage img = a.photo().data();
+                const QString dir = bodyPart->nodeHelper()->createTempDir(QLatin1String("vcard-") + a.uid());
+                const QString filename = dir + QDir::separator() + a.uid();
+                img.save(filename, "PNG");
+                bodyPart->nodeHelper()->addTempFile(filename);
+                const QString href = QLatin1String("file:") + QLatin1String(QUrl::toPercentEncoding(filename));
+                htmlStr.replace(QLatin1String("img src=\"contact_photo\""), QString::fromLatin1("img src=\"%1\"").arg(href));
+            }
+            writer->queue(htmlStr);
+
+            if (!memento ||
+                    (memento && !memento->finished()) ||
+                    (memento && memento->finished() && !memento->vcardExist(count))) {
+                const QString addToLinkText = i18n("[Add this contact to the address book]");
+                QString op = QString::fromLatin1("addToAddressBook:%1").arg(count);
+                writer->queue(QLatin1String("<div align=\"center\"><a href=\"") +
+                              bodyPart->makeLink(op) +
+                              QLatin1String("\">") +
+                              addToLinkText +
+                              QLatin1String("</a></div><br><br>"));
+            } else {
+                if (memento->address(count) != a) {
+                    const QString addToLinkText = i18n("[Update this contact to the address book]");
+                    QString op = QString::fromLatin1("updateToAddressBook:%1").arg(count);
+                    writer->queue(QLatin1String("<div align=\"center\"><a href=\"") +
+                                  bodyPart->makeLink(op) +
+                                  QLatin1String("\">") +
+                                  addToLinkText +
+                                  QLatin1String("</a></div><br><br>"));
+                } else {
+                    const QString addToLinkText = i18n("[This contact is already in addressbook]");
+                    writer->queue(QLatin1String("<div align=\"center\">") +
+                                  addToLinkText +
+                                  QLatin1String("</a></div><br><br>"));
+                }
+            }
+            count++;
+        }
+
+        return Ok;
     }
 };
 
 class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 {
-  public:
-    bool handleClick( MessageViewer::Viewer *viewerInstance, BodyPart *bodyPart,
-                      const QString &path ) const
+public:
+    bool handleClick(MessageViewer::Viewer *viewerInstance, BodyPart *bodyPart,
+                     const QString &path) const
     {
 
-      Q_UNUSED( viewerInstance );
-      const QString vCard = bodyPart->asText();
-      if ( vCard.isEmpty() ) {
-        return true;
-      }
-      KABC::VCardConverter vcc;
-      const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-      const int index = path.right( path.length() - path.lastIndexOf( QLatin1Char(':') ) - 1 ).toInt();
-      if ( index == -1 || index >= al.count() ) {
-        return true;
-      }
-      const KABC::Addressee a = al.at(index);
-      if ( a.isEmpty() ) {
-        return true;
-      }
-
-      if(path.startsWith(QLatin1String("addToAddressBook"))) {
-
-        KPIM::AddContactJob *job = new KPIM::AddContactJob( a, 0 );
-        job->start();
-      } else if( path.startsWith(QLatin1String("updateToAddressBook"))) {
-        UpdateContactJob *job = new UpdateContactJob(a.emails().first(), a, 0);
-        job->start();
-      }
-
-      return true;
-    }
-
-    static KABC::Addressee findAddressee( BodyPart *part, const QString &path )
-    {
-      const QString vCard = part->asText();
-      if ( !vCard.isEmpty() ) {
-        KABC::VCardConverter vcc;
-        const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-        const int index = path.right( path.length() - path.lastIndexOf( QLatin1Char(':') ) - 1 ).toInt();
-        if ( index >= 0 && index < al.count() ) {
-          return al.at(index);
+        Q_UNUSED(viewerInstance);
+        const QString vCard = bodyPart->asText();
+        if (vCard.isEmpty()) {
+            return true;
         }
-      }
-      return KABC::Addressee();
-    }
+        KABC::VCardConverter vcc;
+        const KABC::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
+        const int index = path.right(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
+        if (index == -1 || index >= al.count()) {
+            return true;
+        }
+        const KABC::Addressee a = al.at(index);
+        if (a.isEmpty()) {
+            return true;
+        }
 
-    bool handleContextMenuRequest( BodyPart *part, const QString &path, const QPoint &point ) const
-    {
-      const QString vCard = part->asText();
-      if ( vCard.isEmpty() ) {
+        if (path.startsWith(QLatin1String("addToAddressBook"))) {
+
+            KPIM::AddContactJob *job = new KPIM::AddContactJob(a, 0);
+            job->start();
+        } else if (path.startsWith(QLatin1String("updateToAddressBook"))) {
+            UpdateContactJob *job = new UpdateContactJob(a.emails().first(), a, 0);
+            job->start();
+        }
+
         return true;
-      }
-      KABC::Addressee a = findAddressee( part, path );
-      if ( a.isEmpty() ) {
+    }
+
+    static KABC::Addressee findAddressee(BodyPart *part, const QString &path)
+    {
+        const QString vCard = part->asText();
+        if (!vCard.isEmpty()) {
+            KABC::VCardConverter vcc;
+            const KABC::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
+            const int index = path.right(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
+            if (index >= 0 && index < al.count()) {
+                return al.at(index);
+            }
+        }
+        return KABC::Addressee();
+    }
+
+    bool handleContextMenuRequest(BodyPart *part, const QString &path, const QPoint &point) const
+    {
+        const QString vCard = part->asText();
+        if (vCard.isEmpty()) {
+            return true;
+        }
+        KABC::Addressee a = findAddressee(part, path);
+        if (a.isEmpty()) {
+            return true;
+        }
+
+        QMenu *menu = new QMenu();
+        QAction *open =
+            menu->addAction(QIcon::fromTheme(QLatin1String("document-open")), i18n("View Business Card"));
+        QAction *saveas =
+            menu->addAction(QIcon::fromTheme(QLatin1String("document-save-as")), i18n("Save Business Card As..."));
+
+        QAction *action = menu->exec(point, 0);
+        if (action == open) {
+            openVCard(a, vCard);
+        } else if (action == saveas) {
+            saveAsVCard(a, vCard);
+        }
+        delete menu;
         return true;
-      }
-
-      QMenu *menu = new QMenu();
-      QAction *open =
-        menu->addAction( QIcon::fromTheme( QLatin1String("document-open") ), i18n( "View Business Card" ) );
-      QAction *saveas =
-        menu->addAction( QIcon::fromTheme( QLatin1String("document-save-as") ), i18n( "Save Business Card As..." ) );
-
-      QAction *action = menu->exec( point, 0 );
-      if ( action == open ) {
-        openVCard( a, vCard );
-      } else if ( action == saveas ) {
-        saveAsVCard( a, vCard );
-      }
-      delete menu;
-      return true;
     }
 
-    QString statusBarMessage( BodyPart *part, const QString &path ) const
+    QString statusBarMessage(BodyPart *part, const QString &path) const
     {
-      KABC::Addressee a = findAddressee( part, path );
-      const bool addToAddressBook = path.startsWith(QLatin1String("addToAddressBook"));
-      if ( a.realName().isEmpty() ) {
-        return addToAddressBook ? i18n( "Add this contact to the address book." ) : i18n("Update this contact to the address book.");
-      } else {
-        return addToAddressBook ? i18n( "Add \"%1\" to the address book.", a.realName() ) : i18n("Update \"%1\" to the address book.", a.realName());
-     }
+        KABC::Addressee a = findAddressee(part, path);
+        const bool addToAddressBook = path.startsWith(QLatin1String("addToAddressBook"));
+        if (a.realName().isEmpty()) {
+            return addToAddressBook ? i18n("Add this contact to the address book.") : i18n("Update this contact to the address book.");
+        } else {
+            return addToAddressBook ? i18n("Add \"%1\" to the address book.", a.realName()) : i18n("Update \"%1\" to the address book.", a.realName());
+        }
     }
 
-    bool openVCard( const KABC::Addressee &a, const QString &vCard ) const
+    bool openVCard(const KABC::Addressee &a, const QString &vCard) const
     {
-      Q_UNUSED( vCard );
-      Akonadi::ContactViewer *view = new Akonadi::ContactViewer( 0 );
-      view->setRawContact( a );
-      view->setMinimumSize( 300, 400 );
-      view->show();
-      return true;
+        Q_UNUSED(vCard);
+        Akonadi::ContactViewer *view = new Akonadi::ContactViewer(0);
+        view->setRawContact(a);
+        view->setMinimumSize(300, 400);
+        view->show();
+        return true;
     }
 
-    bool saveAsVCard( const KABC::Addressee &a, const QString &vCard ) const
+    bool saveAsVCard(const KABC::Addressee &a, const QString &vCard) const
     {
-      QString fileName;
-      const QString givenName(a.givenName());
-      if(givenName.isEmpty()) {
-        fileName = a.familyName() + QLatin1String(".vcf");
-      } else {
-        fileName = givenName + QLatin1Char('_') + a.familyName() + QLatin1String(".vcf");
-      }
-      // get the saveas file name
-      KUrl saveAsUrl =
-        KFileDialog::getSaveUrl( fileName,
-                                 QString(), 0,
-                                 i18n( "Save Business Card" ) );
-      if ( saveAsUrl.isEmpty() ||
-           ( QFileInfo( saveAsUrl.path() ).exists() &&
-             ( KMessageBox::warningYesNo(
-               0,
-               i18n( "%1 already exists. Do you want to overwrite it?",
-                     saveAsUrl.path() ) ) == KMessageBox::No ) ) ) {
-        return false;
-      }
+        QString fileName;
+        const QString givenName(a.givenName());
+        if (givenName.isEmpty()) {
+            fileName = a.familyName() + QLatin1String(".vcf");
+        } else {
+            fileName = givenName + QLatin1Char('_') + a.familyName() + QLatin1String(".vcf");
+        }
+        // get the saveas file name
+        KUrl saveAsUrl =
+            KFileDialog::getSaveUrl(fileName,
+                                    QString(), 0,
+                                    i18n("Save Business Card"));
+        if (saveAsUrl.isEmpty() ||
+                (QFileInfo(saveAsUrl.path()).exists() &&
+                 (KMessageBox::warningYesNo(
+                      0,
+                      i18n("%1 already exists. Do you want to overwrite it?",
+                           saveAsUrl.path())) == KMessageBox::No))) {
+            return false;
+        }
 
-      // put the attachment in a temporary file and save it
-      QTemporaryFile tmpFile;
-      tmpFile.open();
+        // put the attachment in a temporary file and save it
+        QTemporaryFile tmpFile;
+        tmpFile.open();
 
-      QByteArray data = vCard.toUtf8();
-      tmpFile.write( data );
-      tmpFile.flush();
+        QByteArray data = vCard.toUtf8();
+        tmpFile.write(data);
+        tmpFile.flush();
 
-      return KIO::NetAccess::upload( tmpFile.fileName(), saveAsUrl, 0 );
+        return KIO::NetAccess::upload(tmpFile.fileName(), saveAsUrl, 0);
     }
 };
 
 class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
 {
-  public:
-    const MessageViewer::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const
+public:
+    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
     {
-      return validIndex( idx ) ? new Formatter() : 0 ;
+        return validIndex(idx) ? new Formatter() : 0 ;
     }
-    const char * type( int idx ) const
+    const char *type(int idx) const
     {
-      return validIndex( idx ) ? "text" : 0 ;
+        return validIndex(idx) ? "text" : 0 ;
     }
-    const char * subtype( int idx ) const
+    const char *subtype(int idx) const
     {
-      switch( idx ) {
-      case 0:
-        return "x-vcard";
-      case 1:
-        return "vcard";
-      case 2:
-        return "directory";
-      default:
-        return 0;
-      }
-    }
-
-    const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int idx ) const
-    {
-       return validIndex( idx ) ? new UrlHandler() : 0 ;
+        switch (idx) {
+        case 0:
+            return "x-vcard";
+        case 1:
+            return "vcard";
+        case 2:
+            return "directory";
+        default:
+            return 0;
+        }
     }
 
-  private:
-    bool validIndex( int idx ) const
+    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int idx) const
     {
-      return ( idx >= 0 && idx <= 2 );
+        return validIndex(idx) ? new UrlHandler() : 0 ;
+    }
+
+private:
+    bool validIndex(int idx) const
+    {
+        return (idx >= 0 && idx <= 2);
     }
 };
 
@@ -358,6 +357,6 @@ extern "C"
 Q_DECL_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_vcard_create_bodypart_formatter_plugin()
 {
-  return new Plugin();
+    return new Plugin();
 }
 

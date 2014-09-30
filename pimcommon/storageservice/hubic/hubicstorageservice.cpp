@@ -26,9 +26,7 @@
 
 #include <kwallet.h>
 
-
 #include <KLocalizedString>
-
 
 using namespace PimCommon;
 
@@ -44,12 +42,14 @@ HubicStorageService::~HubicStorageService()
 
 bool HubicStorageService::needToRefreshToken()
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
-    if (mExpireDateTime < QDateTime::currentDateTime())
+    }
+    if (mExpireDateTime < QDateTime::currentDateTime()) {
         return true;
-    else
+    } else {
         return false;
+    }
 }
 
 void HubicStorageService::shutdownService()
@@ -77,7 +77,7 @@ void HubicStorageService::readConfig()
             QStringList lst = wallet->entryList();
             if (lst.contains(storageServiceName())) {
                 QMap<QString, QString> map;
-                wallet->readMap( storageServiceName(), map );
+                wallet->readMap(storageServiceName(), map);
                 if (map.contains(QLatin1String("Refresh Token"))) {
                     mRefreshToken = map.value(QLatin1String("Refresh Token"));
                 }
@@ -98,8 +98,9 @@ void HubicStorageService::removeConfig()
     if (StorageServiceSettings::self()->createDefaultFolder()) {
         const QString walletEntry = storageServiceName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
-        if (wallet)
+        if (wallet) {
             wallet->removeEntry(walletEntry);
+        }
     }
 }
 
@@ -128,10 +129,10 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String( "Refresh Token" )] = mRefreshToken;
-            map[QLatin1String( "Token" )] = mToken;
-            map[QLatin1String( "Expire Time" )] = mExpireDateTime.toString();
-            wallet->writeMap( walletEntry, map);
+            map[QLatin1String("Refresh Token")] = mRefreshToken;
+            map[QLatin1String("Token")] = mToken;
+            map[QLatin1String("Expire Time")] = mExpireDateTime.toString();
+            wallet->writeMap(walletEntry, map);
         }
     }
     emitAuthentificationDone();
@@ -541,5 +542,4 @@ QString HubicStorageService::fileShareRoot(const QVariantMap &variantMap)
 {
     return QString();
 }
-
 

@@ -20,13 +20,14 @@
 
 #include <QObject>
 #include "storageservice/job/storageserviceabstractjob.h"
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageAuthViewDialog;
 class BoxJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit BoxJob(QObject *parent=0);
+    explicit BoxJob(QObject *parent = 0);
     ~BoxJob();
 
     void deleteFile(const QString &filename);

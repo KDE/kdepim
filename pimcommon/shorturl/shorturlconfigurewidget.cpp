@@ -55,7 +55,7 @@ void ShortUrlConfigureWidget::slotChanged()
 
 void ShortUrlConfigureWidget::init()
 {
-    for (int i=0; i <PimCommon::ShortUrlUtils::EndListEngine; ++i) {
+    for (int i = 0; i < PimCommon::ShortUrlUtils::EndListEngine; ++i) {
         mShortUrlServer->addItem(PimCommon::ShortUrlUtils::stringFromEngineType(static_cast<PimCommon::ShortUrlUtils::EngineType>(i)), i);
     }
 }

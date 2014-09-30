@@ -32,7 +32,8 @@
 #include <QDropEvent>
 #include <QFileDialog>
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class TemplateListWidgetPrivate
 {
@@ -58,7 +59,7 @@ public:
     {
         QString templateName;
         QString templateScript;
-        if (q->addNewTemplate(templateName, templateScript) ) {
+        if (q->addNewTemplate(templateName, templateScript)) {
             createListWidgetItem(templateName, templateScript, false);
             dirty = true;
         }
@@ -68,7 +69,7 @@ public:
     {
         QString templateName;
         QString templateScript = newTemplateScript;
-        if (q->modifyTemplate(templateName, templateScript, false) ) {
+        if (q->modifyTemplate(templateName, templateScript, false)) {
             createListWidgetItem(templateName, templateScript, false);
             dirty = true;
         }
@@ -79,8 +80,9 @@ public:
         if (KMessageBox::Yes == KMessageBox::questionYesNo(q, i18n("Do you want to delete selected template?"), i18n("Delete template"))) {
             const QList<QListWidgetItem *> lstSelectedItems = q->selectedItems();
             Q_FOREACH (QListWidgetItem *item, lstSelectedItems) {
-                if (item->data(TemplateListWidget::DefaultTemplate).toBool() == false)
+                if (item->data(TemplateListWidget::DefaultTemplate).toBool() == false) {
                     delete item;
+                }
             }
             dirty = true;
         }
@@ -88,13 +90,13 @@ public:
 
     void slotModify()
     {
-        QListWidgetItem * item = q->currentItem();
+        QListWidgetItem *item = q->currentItem();
         if (item) {
             const bool defaultTemplate = item->data(TemplateListWidget::DefaultTemplate).toBool();
 
             QString templateName = item->text();
             QString templateScript = item->data(TemplateListWidget::Text).toString();
-            if (q->modifyTemplate(templateName, templateScript, defaultTemplate) ) {
+            if (q->modifyTemplate(templateName, templateScript, defaultTemplate)) {
                 if (!defaultTemplate) {
                     item->setText(templateName);
                     item->setData(TemplateListWidget::Text, templateScript);
@@ -118,7 +120,7 @@ public:
         QListWidgetItem *item = q->currentItem();
         if (item) {
             QStringList name;
-            for ( int i = 0; i < q->count(); ++i ) {
+            for (int i = 0; i < q->count(); ++i) {
                 name.append(q->item(i)->text());
             }
             QString templateName = item->text() + QString::fromLatin1(" (%1)");
@@ -127,7 +129,7 @@ public:
             do {
                 newName = templateName.arg(i);
                 i++;
-            } while(name.contains(newName));
+            } while (name.contains(newName));
 
             const QString templateScript = item->data(TemplateListWidget::Text).toString();
             createListWidgetItem(newName, templateScript, false);
@@ -137,7 +139,7 @@ public:
 
     void slotImportTemplates()
     {
-        const QString templateFile = QFileDialog::getOpenFileName(); 
+        const QString templateFile = QFileDialog::getOpenFileName();
         if (!templateFile.isEmpty()) {
             KConfig conf(templateFile);
             loadTemplates(&conf);
@@ -157,38 +159,38 @@ public:
     {
         const QList<QListWidgetItem *> lstSelectedItems = q->selectedItems();
         const bool listSelectedIsEmpty = lstSelectedItems.isEmpty();
-        QMenu *menu = new QMenu( q );
+        QMenu *menu = new QMenu(q);
 
         if (!listSelectedIsEmpty) {
-            menu->addAction( i18n("Insert template"), q, SLOT(slotInsertTemplate()));
+            menu->addAction(i18n("Insert template"), q, SLOT(slotInsertTemplate()));
             menu->addSeparator();
         }
 
-
-        menu->addAction( i18n("Add..."), q, SLOT(slotAdd()));
+        menu->addAction(i18n("Add..."), q, SLOT(slotAdd()));
         if (!listSelectedIsEmpty) {
             const bool defaultTemplate = lstSelectedItems.first()->data(TemplateListWidget::DefaultTemplate).toBool();
             if (lstSelectedItems.count() == 1) {
-                menu->addAction( defaultTemplate ? i18n("Show...") : i18n("Modify..."), q, SLOT(slotModify()));
-                menu->addAction( i18n("Duplicate"), q, SLOT(slotDuplicate()));
+                menu->addAction(defaultTemplate ? i18n("Show...") : i18n("Modify..."), q, SLOT(slotModify()));
+                menu->addAction(i18n("Duplicate"), q, SLOT(slotDuplicate()));
             }
             if (lstSelectedItems.count() == 1 && !defaultTemplate) {
                 menu->addSeparator();
-                menu->addAction( QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Remove"), q, SLOT(slotRemove()));
+                menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Remove"), q, SLOT(slotRemove()));
             }
         }
         menu->addSeparator();
-        if (q->count()>0)
-            menu->addAction( i18n("Export..."), q, SLOT(slotExportTemplates()));
-        menu->addAction( i18n("Import..."), q, SLOT(slotImportTemplates()));
+        if (q->count() > 0) {
+            menu->addAction(i18n("Export..."), q, SLOT(slotExportTemplates()));
+        }
+        menu->addAction(i18n("Import..."), q, SLOT(slotImportTemplates()));
 
         if (!knewstuffConfigName.isEmpty()) {
             menu->addSeparator();
-            QAction *act = menu->addAction( i18n("Download new Templates..."), q, SLOT(slotDownloadTemplates()));
+            QAction *act = menu->addAction(i18n("Download new Templates..."), q, SLOT(slotDownloadTemplates()));
             act->setIcon(QIcon::fromTheme(QLatin1String("get-hot-new-stuff")));
         }
 
-        menu->exec( q->mapToGlobal( pos ) );
+        menu->exec(q->mapToGlobal(pos));
         delete menu;
     }
 
@@ -205,38 +207,38 @@ public:
 
     void loadTemplates(KConfig *configFile)
     {
-        KConfigGroup group = configFile->group( "template" );
+        KConfigGroup group = configFile->group("template");
         if (group.hasKey(QLatin1String("templateCount"))) {
-            const int numberTemplate = group.readEntry( "templateCount", 0 );
+            const int numberTemplate = group.readEntry("templateCount", 0);
             for (int i = 0; i < numberTemplate; ++i) {
-                KConfigGroup group = configFile->group( QString::fromLatin1( "templateDefine_%1" ).arg ( i ) );
-                const QString name = group.readEntry( "Name", QString() );
-                const QString text = group.readEntry( "Text", QString() );
+                KConfigGroup group = configFile->group(QString::fromLatin1("templateDefine_%1").arg(i));
+                const QString name = group.readEntry("Name", QString());
+                const QString text = group.readEntry("Text", QString());
 
                 createListWidgetItem(name, text, false);
             }
-        }   
+        }
     }
 
     void saveTemplates(KConfig *configFile)
     {
         // clear everything
-        foreach ( const QString &group, configFile->groupList() ) {
-            configFile->deleteGroup( group );
+        foreach (const QString &group, configFile->groupList()) {
+            configFile->deleteGroup(group);
         }
 
         int numberOfTemplate = 0;
-        for ( int i = 0; i < q->count(); ++i ) {
+        for (int i = 0; i < q->count(); ++i) {
             QListWidgetItem *templateItem = q->item(i);
             if (templateItem->data(TemplateListWidget::DefaultTemplate).toBool() == false) {
-                KConfigGroup group = configFile->group( QString::fromLatin1( "templateDefine_%1" ).arg ( numberOfTemplate ) );
-                group.writeEntry( "Name", templateItem->text() );
-                group.writeEntry( "Text", templateItem->data(TemplateListWidget::Text) );
+                KConfigGroup group = configFile->group(QString::fromLatin1("templateDefine_%1").arg(numberOfTemplate));
+                group.writeEntry("Name", templateItem->text());
+                group.writeEntry("Text", templateItem->data(TemplateListWidget::Text));
                 ++numberOfTemplate;
             }
         }
-        KConfigGroup group = configFile->group( "template" );
-        group.writeEntry( "templateCount", numberOfTemplate );
+        KConfigGroup group = configFile->group("template");
+        group.writeEntry("templateCount", numberOfTemplate);
         configFile->sync();
     }
 
@@ -249,8 +251,9 @@ public:
 
     void save()
     {
-        if (!dirty)
+        if (!dirty) {
             return;
+        }
 
         saveTemplates(&(*config));
         dirty = false;
@@ -261,15 +264,14 @@ public:
     TemplateListWidget *q;
 };
 
-
 TemplateListWidget::TemplateListWidget(const QString &configName, QWidget *parent)
     : QListWidget(parent), d(new TemplateListWidgetPrivate(configName, this))
 {
-    setContextMenuPolicy( Qt::CustomContextMenu );
+    setContextMenuPolicy(Qt::CustomContextMenu);
     setDragDropMode(QAbstractItemView::DragDrop);
 
-    connect( this, SIGNAL(customContextMenuRequested(QPoint)),
-             SLOT(slotContextMenu(QPoint)) );
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)),
+            SLOT(slotContextMenu(QPoint)));
     connect(this, SIGNAL(doubleClicked(QModelIndex)), SLOT(slotModify()));
     connect(this, SIGNAL(insertNewTemplate(QString)), SLOT(slotInsertNewTemplate(QString)));
 }
@@ -292,18 +294,18 @@ QList<PimCommon::defaultTemplate> TemplateListWidget::defaultTemplates()
 QStringList TemplateListWidget::mimeTypes() const
 {
     QStringList lst;
-    lst << QLatin1String( "text/plain" );
+    lst << QLatin1String("text/plain");
     return lst;
 }
 
-QMimeData *TemplateListWidget::mimeData ( const QList<QListWidgetItem *> items ) const
+QMimeData *TemplateListWidget::mimeData(const QList<QListWidgetItem *> items) const
 {
-    if ( items.isEmpty() ) {
+    if (items.isEmpty()) {
         return 0;
     }
     QMimeData *mimeData = new QMimeData();
     QListWidgetItem *item = items.first();
-    mimeData->setText( item->data(TemplateListWidget::Text).toString() );
+    mimeData->setText(item->data(TemplateListWidget::Text).toString());
     return mimeData;
 }
 
@@ -337,18 +339,18 @@ bool TemplateListWidget::modifyTemplate(QString &templateName, QString &template
     return result;
 }
 
-void TemplateListWidget::dropEvent( QDropEvent * event )
+void TemplateListWidget::dropEvent(QDropEvent *event)
 {
-    if ( event->source() == this ) {
+    if (event->source() == this) {
         event->ignore();
         return;
     }
-     if (event->mimeData()->hasText()) {
-        event->setDropAction( Qt::CopyAction );
+    if (event->mimeData()->hasText()) {
+        event->setDropAction(Qt::CopyAction);
         Q_EMIT insertNewTemplate(event->mimeData()->text());
         event->accept();
     }
-    QListWidget::dropEvent( event );
+    QListWidget::dropEvent(event);
 }
 
 void TemplateListWidget::setKNewStuffConfigFile(const QString &configName)

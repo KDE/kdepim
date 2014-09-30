@@ -23,12 +23,13 @@
 
 #include <QDateTime>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT BoxStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
-    explicit BoxStorageService(QObject *parent=0);
+    explicit BoxStorageService(QObject *parent = 0);
     ~BoxStorageService();
 
     static QString name();
@@ -37,7 +38,6 @@ public:
     static QString serviceName();
     static QString iconName();
     static StorageServiceAbstract::Capabilities serviceCapabilities();
-
 
     void storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString());
     void storageServiceaccountInfo();

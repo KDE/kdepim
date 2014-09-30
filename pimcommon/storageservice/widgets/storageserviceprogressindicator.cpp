@@ -42,8 +42,9 @@ void StorageServiceProgressIndicator::slotTimerDone()
 {
     Q_EMIT updatePixmap(mProgressPix.frameAt(mProgressCount));
     ++mProgressCount;
-    if (mProgressCount == 8)
+    if (mProgressCount == 8) {
         mProgressCount = 0;
+    }
 
     mProgressTimer->start(300);
 }
@@ -56,7 +57,8 @@ void StorageServiceProgressIndicator::startAnimation()
 
 void StorageServiceProgressIndicator::stopAnimation()
 {
-    if (mProgressTimer->isActive())
+    if (mProgressTimer->isActive()) {
         mProgressTimer->stop();
+    }
     Q_EMIT updatePixmap();
 }

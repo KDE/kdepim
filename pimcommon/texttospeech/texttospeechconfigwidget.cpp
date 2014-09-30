@@ -23,7 +23,6 @@
 #include <QFormLayout>
 #include <QSlider>
 
-
 using namespace PimCommon;
 TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
     : QWidget(parent)

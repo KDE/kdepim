@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "servicetestwidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/storageservice/tests/testsettingsjob.h"
@@ -32,7 +31,6 @@
 #include <QPointer>
 #include <QDir>
 #include <QFileDialog>
-
 
 ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     : QWidget(parent),
@@ -67,7 +65,7 @@ ServiceTestWidget::~ServiceTestWidget()
 
 void ServiceTestWidget::slotDeleteFile()
 {
-    const QString filename = QInputDialog::getText(this,i18n("Filename"), i18n("Filename:"));
+    const QString filename = QInputDialog::getText(this, i18n("Filename"), i18n("Filename:"));
     if (!filename.isEmpty()) {
         mStorageService->deleteFile(filename);
     }
@@ -75,7 +73,7 @@ void ServiceTestWidget::slotDeleteFile()
 
 void ServiceTestWidget::slotDeleteFolder()
 {
-    const QString folder = QInputDialog::getText(this,i18n("Folder Name"), i18n("Folder:"));
+    const QString folder = QInputDialog::getText(this, i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
         mStorageService->deleteFolder(folder);
     }
@@ -124,7 +122,7 @@ void ServiceTestWidget::slotActionFailed(const QString &serviceName, const QStri
     mEdit->insertPlainText(serviceName + QString::fromLatin1(" return an error: %1\n").arg(error));
 }
 
-void ServiceTestWidget::slotuploadDownloadFileProgress(const QString &serviceName, qint64 done ,qint64 total)
+void ServiceTestWidget::slotuploadDownloadFileProgress(const QString &serviceName, qint64 done , qint64 total)
 {
     mEdit->insertPlainText(serviceName + QString::fromLatin1(" upload in progress: send:%1 total:%2\n").arg(done).arg(total));
 }
@@ -177,7 +175,7 @@ void ServiceTestWidget::slotAccountInfo()
 
 void ServiceTestWidget::slotCreateFolder()
 {
-    const QString folder = QInputDialog::getText(this,i18n("Folder Name"), i18n("Folder:"));
+    const QString folder = QInputDialog::getText(this, i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
         mStorageService->createFolder(folder, QString());
     }

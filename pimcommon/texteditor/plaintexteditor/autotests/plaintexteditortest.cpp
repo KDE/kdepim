@@ -24,7 +24,6 @@ PlainTextEditorTest::PlainTextEditorTest(QObject *parent)
 {
 }
 
-
 PlainTextEditorTest::~PlainTextEditorTest()
 {
 
@@ -59,6 +58,5 @@ void PlainTextEditorTest::shouldChangeSpellCheckValue()
     editor.setSearchSupport(true);
     QCOMPARE(editor.searchSupport(), true);
 }
-
 
 QTEST_MAIN(PlainTextEditorTest)

@@ -69,12 +69,11 @@ public:
     QString spellCheckingLanguage;
     QTextDocumentFragment originalDoc;
     Sonnet::Highlighter *highLighter;
-    Sonnet::Speller* speller;
+    Sonnet::Speller *speller;
     RichTextEditor::SupportFeatures supportFeatures;
     bool customPalette;
     bool checkSpellingEnabled;
 };
-
 
 RichTextEditor::RichTextEditor(QWidget *parent)
     : QTextEdit(parent),
@@ -98,61 +97,67 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
             QList<QAction *> actionList = popup->actions();
             enum { UndoAct, RedoAct, CutAct, CopyAct, PasteAct, ClearAct, SelectAllAct, NCountActs };
             QAction *separatorAction = 0L;
-            const int idx = actionList.indexOf( actionList[SelectAllAct] ) + 1;
-            if ( idx < actionList.count() )
-                separatorAction = actionList.at( idx );
-            if ( separatorAction ) {
+            const int idx = actionList.indexOf(actionList[SelectAllAct]) + 1;
+            if (idx < actionList.count()) {
+                separatorAction = actionList.at(idx);
+            }
+            if (separatorAction) {
                 QAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
-                if ( emptyDocument )
-                    clearAllAction->setEnabled( false );
-                popup->insertAction( separatorAction, clearAllAction );
+                if (emptyDocument) {
+                    clearAllAction->setEnabled(false);
+                }
+                popup->insertAction(separatorAction, clearAllAction);
             }
         }
-        KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
-                                                           : KIconTheme::TextEditor,
-                                              popup->actions() );
+        KIconTheme::assignIconsToContextMenu(isReadOnly() ? KIconTheme::ReadOnlyText
+                                             : KIconTheme::TextEditor,
+                                             popup->actions());
         if (searchSupport()) {
             popup->addSeparator();
-            QAction *findAct = popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this, SIGNAL(findText()), Qt::Key_F+Qt::CTRL);
-            if ( emptyDocument )
+            QAction *findAct = popup->addAction(KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(), this, SIGNAL(findText()), Qt::Key_F + Qt::CTRL);
+            if (emptyDocument) {
                 findAct->setEnabled(false);
+            }
             popup->addSeparator();
             if (!isReadOnly()) {
-                QAction *act = popup->addAction(i18n("Replace..."),this, SIGNAL(replaceText()), Qt::Key_R+Qt::CTRL);
-                if ( emptyDocument )
-                    act->setEnabled( false );
+                QAction *act = popup->addAction(i18n("Replace..."), this, SIGNAL(replaceText()), Qt::Key_R + Qt::CTRL);
+                if (emptyDocument) {
+                    act->setEnabled(false);
+                }
                 popup->addSeparator();
             }
         } else {
             popup->addSeparator();
         }
 
-        if( !isReadOnly() && spellCheckingSupport()) {
-            QAction *spellCheckAction = popup->addAction( QIcon::fromTheme( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
-            if (emptyDocument)
+        if (!isReadOnly() && spellCheckingSupport()) {
+            QAction *spellCheckAction = popup->addAction(QIcon::fromTheme(QLatin1String("tools-check-spelling")), i18n("Check Spelling..."), this, SLOT(slotCheckSpelling()));
+            if (emptyDocument) {
                 spellCheckAction->setEnabled(false);
+            }
             popup->addSeparator();
-            QAction *autoSpellCheckAction = popup->addAction( i18n( "Auto Spell Check" ), this, SLOT(slotToggleAutoSpellCheck()) );
-            autoSpellCheckAction->setCheckable( true );
-            autoSpellCheckAction->setChecked( checkSpellingEnabled() );
+            QAction *autoSpellCheckAction = popup->addAction(i18n("Auto Spell Check"), this, SLOT(slotToggleAutoSpellCheck()));
+            autoSpellCheckAction->setCheckable(true);
+            autoSpellCheckAction->setChecked(checkSpellingEnabled());
             popup->addAction(autoSpellCheckAction);
 
             if (checkSpellingEnabled()) {
-                QMenu* languagesMenu = new QMenu(i18n("Spell Checking Language"), popup);
-                QActionGroup* languagesGroup = new QActionGroup(languagesMenu);
+                QMenu *languagesMenu = new QMenu(i18n("Spell Checking Language"), popup);
+                QActionGroup *languagesGroup = new QActionGroup(languagesMenu);
                 languagesGroup->setExclusive(true);
-                if (!d->speller)
+                if (!d->speller) {
                     d->speller = new Sonnet::Speller();
+                }
 
                 QMapIterator<QString, QString> i(d->speller->availableDictionaries());
 
                 while (i.hasNext()) {
                     i.next();
 
-                    QAction* languageAction = languagesMenu->addAction(i.key());
+                    QAction *languageAction = languagesMenu->addAction(i.key());
                     languageAction->setCheckable(true);
                     languageAction->setChecked(spellCheckingLanguage() == i.value() || (spellCheckingLanguage().isEmpty()
-                                                                                        && d->speller->defaultLanguage() == i.value()));
+                                               && d->speller->defaultLanguage() == i.value()));
                     languageAction->setData(i.value());
                     languageAction->setActionGroup(languagesGroup);
                     connect(languageAction, &QAction::triggered, this, &RichTextEditor::slotLanguageSelected);
@@ -164,11 +169,11 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         if (PimCommon::TextToSpeech::self()->isReady()) {
             QAction *speakAction = popup->addAction(i18n("Speak Text"));
             speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
-            speakAction->setEnabled(!emptyDocument );
+            speakAction->setEnabled(!emptyDocument);
             connect(speakAction, &QAction::triggered, this, &RichTextEditor::slotSpeakText);
         }
         addExtraMenuEntry(popup, pos);
-        popup->exec( pos );
+        popup->exec(pos);
 
         delete popup;
     }
@@ -177,10 +182,11 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
 void RichTextEditor::slotSpeakText()
 {
     QString text;
-    if (textCursor().hasSelection())
+    if (textCursor().hasSelection()) {
         text = textCursor().selectedText();
-    else
+    } else {
         text = toPlainText();
+    }
     Q_EMIT say(text);
 }
 
@@ -189,7 +195,7 @@ void RichTextEditor::setSearchSupport(bool b)
     if (b) {
         d->supportFeatures |= Search;
     } else {
-        d->supportFeatures = (d->supportFeatures &~ Search);
+        d->supportFeatures = (d->supportFeatures & ~ Search);
     }
 }
 
@@ -203,12 +209,12 @@ bool RichTextEditor::spellCheckingSupport() const
     return (d->supportFeatures & SpellChecking);
 }
 
-void RichTextEditor::setSpellCheckingSupport( bool check )
+void RichTextEditor::setSpellCheckingSupport(bool check)
 {
     if (check) {
         d->supportFeatures |= SpellChecking;
     } else {
-        d->supportFeatures = (d->supportFeatures &~ SpellChecking);
+        d->supportFeatures = (d->supportFeatures & ~ SpellChecking);
     }
 }
 
@@ -217,7 +223,7 @@ void RichTextEditor::setTextToSpeechSupport(bool b)
     if (b) {
         d->supportFeatures |= TextToSpeech;
     } else {
-        d->supportFeatures = (d->supportFeatures &~ TextToSpeech);
+        d->supportFeatures = (d->supportFeatures & ~ TextToSpeech);
     }
 }
 
@@ -225,7 +231,6 @@ bool RichTextEditor::textToSpeechSupport() const
 {
     return (d->supportFeatures & TextToSpeech);
 }
-
 
 void RichTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {
@@ -243,47 +248,51 @@ void RichTextEditor::slotUndoableClear()
     cursor.endEditBlock();
 }
 
-void RichTextEditor::setReadOnly( bool readOnly )
+void RichTextEditor::setReadOnly(bool readOnly)
 {
-    if ( !readOnly && hasFocus() && d->checkSpellingEnabled && !d->highLighter )
+    if (!readOnly && hasFocus() && d->checkSpellingEnabled && !d->highLighter) {
         createHighlighter();
+    }
 
-    if ( readOnly == isReadOnly() )
+    if (readOnly == isReadOnly()) {
         return;
+    }
 
-    if ( readOnly ) {
+    if (readOnly) {
         delete d->highLighter;
         d->highLighter = 0;
 
-        d->customPalette = testAttribute( Qt::WA_SetPalette );
+        d->customPalette = testAttribute(Qt::WA_SetPalette);
         QPalette p = palette();
-        QColor color = p.color( QPalette::Disabled, QPalette::Background );
-        p.setColor( QPalette::Base, color );
-        p.setColor( QPalette::Background, color );
-        setPalette( p );
+        QColor color = p.color(QPalette::Disabled, QPalette::Background);
+        p.setColor(QPalette::Base, color);
+        p.setColor(QPalette::Background, color);
+        setPalette(p);
     } else {
-        if ( d->customPalette && testAttribute( Qt::WA_SetPalette ) ) {
+        if (d->customPalette && testAttribute(Qt::WA_SetPalette)) {
             QPalette p = palette();
-            QColor color = p.color( QPalette::Normal, QPalette::Base );
-            p.setColor( QPalette::Base, color );
-            p.setColor( QPalette::Background, color );
-            setPalette( p );
-        } else
-            setPalette( QPalette() );
+            QColor color = p.color(QPalette::Normal, QPalette::Base);
+            p.setColor(QPalette::Base, color);
+            p.setColor(QPalette::Background, color);
+            setPalette(p);
+        } else {
+            setPalette(QPalette());
+        }
     }
 
-    QTextEdit::setReadOnly( readOnly );
+    QTextEdit::setReadOnly(readOnly);
 }
 
 void RichTextEditor::slotCheckSpelling()
 {
-    if(document()->isEmpty()) {
+    if (document()->isEmpty()) {
         KMessageBox::information(this, i18n("Nothing to spell check."));
         return;
     }
     Sonnet::BackgroundChecker *backgroundSpellCheck = new Sonnet::BackgroundChecker;
-    if(!d->spellCheckingLanguage.isEmpty())
+    if (!d->spellCheckingLanguage.isEmpty()) {
         backgroundSpellCheck->changeLanguage(d->spellCheckingLanguage);
+    }
     Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, 0);
     backgroundSpellCheck->setParent(spellDialog);
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -308,22 +317,22 @@ void RichTextEditor::slotSpellCheckerCanceled()
     slotSpellCheckerFinished();
 }
 
-void RichTextEditor::slotSpellCheckerAutoCorrect(const QString& currentWord,const QString& autoCorrectWord)
+void RichTextEditor::slotSpellCheckerAutoCorrect(const QString &currentWord, const QString &autoCorrectWord)
 {
     Q_EMIT spellCheckerAutoCorrect(currentWord, autoCorrectWord);
 }
 
-void RichTextEditor::slotSpellCheckerMisspelling( const QString &text, int pos )
+void RichTextEditor::slotSpellCheckerMisspelling(const QString &text, int pos)
 {
-    highlightWord( text.length(), pos );
+    highlightWord(text.length(), pos);
 }
 
-void RichTextEditor::slotSpellCheckerCorrected( const QString& oldWord, int pos,const QString &newWord)
+void RichTextEditor::slotSpellCheckerCorrected(const QString &oldWord, int pos, const QString &newWord)
 {
-    if (oldWord != newWord ) {
+    if (oldWord != newWord) {
         QTextCursor cursor(document());
         cursor.setPosition(pos);
-        cursor.setPosition(pos+oldWord.length(),QTextCursor::KeepAnchor);
+        cursor.setPosition(pos + oldWord.length(), QTextCursor::KeepAnchor);
         cursor.insertText(newWord);
     }
 }
@@ -333,15 +342,16 @@ void RichTextEditor::slotSpellCheckerFinished()
     QTextCursor cursor(document());
     cursor.clearSelection();
     setTextCursor(cursor);
-    if (d->highLighter)
+    if (d->highLighter) {
         d->highLighter->rehighlight();
+    }
 }
 
-void RichTextEditor::highlightWord( int length, int pos )
+void RichTextEditor::highlightWord(int length, int pos)
 {
     QTextCursor cursor(document());
     cursor.setPosition(pos);
-    cursor.setPosition(pos+length,QTextCursor::KeepAnchor);
+    cursor.setPosition(pos + length, QTextCursor::KeepAnchor);
     setTextCursor(cursor);
     ensureCursorVisible();
 }
@@ -357,12 +367,13 @@ void RichTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
     d->highLighter = _highLighter;
 }
 
-void RichTextEditor::focusInEvent( QFocusEvent *event )
+void RichTextEditor::focusInEvent(QFocusEvent *event)
 {
-    if ( d->checkSpellingEnabled && !isReadOnly() && !d->highLighter && spellCheckingSupport())
+    if (d->checkSpellingEnabled && !isReadOnly() && !d->highLighter && spellCheckingSupport()) {
         createHighlighter();
+    }
 
-    QTextEdit::focusInEvent( event );
+    QTextEdit::focusInEvent(event);
 }
 
 void RichTextEditor::setSpellCheckingConfigFileName(const QString &_fileName)
@@ -375,21 +386,23 @@ bool RichTextEditor::checkSpellingEnabled() const
     return d->checkSpellingEnabled;
 }
 
-void RichTextEditor::setCheckSpellingEnabled( bool check )
+void RichTextEditor::setCheckSpellingEnabled(bool check)
 {
-    if ( check == d->checkSpellingEnabled )
+    if (check == d->checkSpellingEnabled) {
         return;
-    Q_EMIT checkSpellingChanged( check );
+    }
+    Q_EMIT checkSpellingChanged(check);
     // From the above statment we know know that if we're turning checking
     // on that we need to create a new highlighter and if we're turning it
     // off we should remove the old one.
 
     d->checkSpellingEnabled = check;
-    if ( check ) {
-        if ( hasFocus() ) {
+    if (check) {
+        if (hasFocus()) {
             createHighlighter();
-            if (!d->spellCheckingLanguage.isEmpty())
+            if (!d->spellCheckingLanguage.isEmpty()) {
                 setSpellCheckingLanguage(spellCheckingLanguage());
+            }
         }
     } else {
         delete d->highLighter;
@@ -397,7 +410,7 @@ void RichTextEditor::setCheckSpellingEnabled( bool check )
     }
 }
 
-const QString& RichTextEditor::spellCheckingLanguage() const
+const QString &RichTextEditor::spellCheckingLanguage() const
 {
     return d->spellCheckingLanguage;
 }
@@ -417,12 +430,12 @@ void RichTextEditor::setSpellCheckingLanguage(const QString &_language)
 
 void RichTextEditor::slotToggleAutoSpellCheck()
 {
-    setCheckSpellingEnabled( !checkSpellingEnabled() );
+    setCheckSpellingEnabled(!checkSpellingEnabled());
 }
 
 void RichTextEditor::slotLanguageSelected()
 {
-    QAction* languageAction = static_cast<QAction*>(QObject::sender());
+    QAction *languageAction = static_cast<QAction *>(QObject::sender());
     setSpellCheckingLanguage(languageAction->data().toString());
 }
 
@@ -435,8 +448,8 @@ void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
 
     // Check if the user clicked a selected word
     const bool selectedWordClicked = cursor.hasSelection() &&
-            mousePos >= cursor.selectionStart() &&
-            mousePos <= cursor.selectionEnd();
+                                     mousePos >= cursor.selectionStart() &&
+                                     mousePos <= cursor.selectionEnd();
 
     // Get the word under the (mouse-)cursor and see if it is misspelled.
     // Don't include apostrophes at the start/end of the word in the selection.
@@ -447,38 +460,40 @@ void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
 
     bool isMouseCursorInsideWord = true;
     if ((mousePos < wordSelectCursor.selectionStart() ||
-         mousePos >= wordSelectCursor.selectionEnd())
+            mousePos >= wordSelectCursor.selectionEnd())
             && (selectedWord.length() > 1)) {
         isMouseCursorInsideWord = false;
     }
 
     // Clear the selection again, we re-select it below (without the apostrophes).
-    wordSelectCursor.setPosition(wordSelectCursor.position()-selectedWord.size());
+    wordSelectCursor.setPosition(wordSelectCursor.position() - selectedWord.size());
     if (selectedWord.startsWith(QLatin1Char('\'')) || selectedWord.startsWith(QLatin1Char('\"'))) {
         selectedWord = selectedWord.right(selectedWord.size() - 1);
         wordSelectCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::MoveAnchor);
     }
-    if (selectedWord.endsWith(QLatin1Char('\'')) || selectedWord.endsWith(QLatin1Char('\"')))
+    if (selectedWord.endsWith(QLatin1Char('\'')) || selectedWord.endsWith(QLatin1Char('\"'))) {
         selectedWord.chop(1);
+    }
 
     wordSelectCursor.movePosition(QTextCursor::NextCharacter,
                                   QTextCursor::KeepAnchor, selectedWord.size());
 
     const bool wordIsMisspelled = isMouseCursorInsideWord &&
-            checkSpellingEnabled() &&
-            !selectedWord.isEmpty() &&
-            d->highLighter &&
-            d->highLighter->isWordMisspelled(selectedWord);
+                                  checkSpellingEnabled() &&
+                                  !selectedWord.isEmpty() &&
+                                  d->highLighter &&
+                                  d->highLighter->isWordMisspelled(selectedWord);
 
     // If the user clicked a selected word, do nothing.
     // If the user clicked somewhere else, move the cursor there.
     // If the user clicked on a misspelled word, select that word.
     // Same behavior as in OpenOffice Writer.
     if (!selectedWordClicked) {
-        if (wordIsMisspelled)
+        if (wordIsMisspelled) {
             setTextCursor(wordSelectCursor);
-        else
+        } else {
             setTextCursor(cursorAtMouse);
+        }
         cursor = textCursor();
     }
 
@@ -487,7 +502,7 @@ void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
     if (!wordIsMisspelled || selectedWordClicked) {
         defaultPopupMenu(event->globalPos());
     } else {
-        QMenu menu; 
+        QMenu menu;
 
         //Add the suggestions to the menu
         const QStringList reps = d->highLighter->suggestionsForWord(selectedWord);
@@ -533,7 +548,7 @@ void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
 static void deleteWord(QTextCursor cursor, QTextCursor::MoveOperation op)
 {
     cursor.clearSelection();
-    cursor.movePosition( op, QTextCursor::KeepAnchor );
+    cursor.movePosition(op, QTextCursor::KeepAnchor);
     cursor.removeSelectedText();
 }
 
@@ -547,10 +562,10 @@ void RichTextEditor::deleteWordForward()
     deleteWord(textCursor(), QTextCursor::WordRight);
 }
 
-bool RichTextEditor::event(QEvent* ev)
+bool RichTextEditor::event(QEvent *ev)
 {
     if (ev->type() == QEvent::ShortcutOverride) {
-        QKeyEvent *e = static_cast<QKeyEvent *>( ev );
+        QKeyEvent *e = static_cast<QKeyEvent *>(ev);
         if (overrideShortcut(e)) {
             e->accept();
             return true;
@@ -559,46 +574,50 @@ bool RichTextEditor::event(QEvent* ev)
     return QTextEdit::event(ev);
 }
 
-bool RichTextEditor::handleShortcut(const QKeyEvent* event)
+bool RichTextEditor::handleShortcut(const QKeyEvent *event)
 {
     const int key = event->key() | event->modifiers();
 
-    if ( KStandardShortcut::copy().contains( key ) ) {
+    if (KStandardShortcut::copy().contains(key)) {
         copy();
         return true;
-    } else if ( KStandardShortcut::paste().contains( key ) ) {
+    } else if (KStandardShortcut::paste().contains(key)) {
         paste();
         return true;
-    } else if ( KStandardShortcut::cut().contains( key ) ) {
+    } else if (KStandardShortcut::cut().contains(key)) {
         cut();
         return true;
-    } else if ( KStandardShortcut::undo().contains( key ) ) {
-        if (!isReadOnly())
+    } else if (KStandardShortcut::undo().contains(key)) {
+        if (!isReadOnly()) {
             undo();
+        }
         return true;
-    } else if ( KStandardShortcut::redo().contains( key ) ) {
-        if (!isReadOnly())
+    } else if (KStandardShortcut::redo().contains(key)) {
+        if (!isReadOnly()) {
             redo();
+        }
         return true;
-    } else if ( KStandardShortcut::deleteWordBack().contains( key ) ) {
-        if (!isReadOnly())
+    } else if (KStandardShortcut::deleteWordBack().contains(key)) {
+        if (!isReadOnly()) {
             deleteWordBack();
+        }
         return true;
-    } else if ( KStandardShortcut::deleteWordForward().contains( key ) ) {
-        if (!isReadOnly())
+    } else if (KStandardShortcut::deleteWordForward().contains(key)) {
+        if (!isReadOnly()) {
             deleteWordForward();
+        }
         return true;
-    } else if ( KStandardShortcut::backwardWord().contains( key ) ) {
+    } else if (KStandardShortcut::backwardWord().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::PreviousWord );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::PreviousWord);
+        setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::forwardWord().contains( key ) ) {
+    } else if (KStandardShortcut::forwardWord().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::NextWord );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::NextWord);
+        setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::next().contains( key ) ) {
+    } else if (KStandardShortcut::next().contains(key)) {
         QTextCursor cursor = textCursor();
         bool moved = false;
         qreal lastY = cursorRect(cursor).bottom();
@@ -616,7 +635,7 @@ bool RichTextEditor::handleShortcut(const QKeyEvent* event)
         }
         setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::prior().contains( key ) ) {
+    } else if (KStandardShortcut::prior().contains(key)) {
         QTextCursor cursor = textCursor();
         bool moved = false;
         qreal lastY = cursorRect(cursor).bottom();
@@ -634,78 +653,79 @@ bool RichTextEditor::handleShortcut(const QKeyEvent* event)
         }
         setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::begin().contains( key ) ) {
+    } else if (KStandardShortcut::begin().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::Start );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::Start);
+        setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::end().contains( key ) ) {
+    } else if (KStandardShortcut::end().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::End );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::End);
+        setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::beginningOfLine().contains( key ) ) {
+    } else if (KStandardShortcut::beginningOfLine().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::StartOfLine );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::StartOfLine);
+        setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::endOfLine().contains( key ) ) {
+    } else if (KStandardShortcut::endOfLine().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::EndOfLine );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::EndOfLine);
+        setTextCursor(cursor);
         return true;
     } else if (searchSupport() && KStandardShortcut::find().contains(key)) {
         Q_EMIT findText();
         return true;
     } else if (searchSupport() && KStandardShortcut::replace().contains(key)) {
-        if (!isReadOnly())
+        if (!isReadOnly()) {
             Q_EMIT replaceText();
+        }
         return true;
-    } else if ( KStandardShortcut::pasteSelection().contains( key ) ) {
-        QString text = QApplication::clipboard()->text( QClipboard::Selection );
-        if ( !text.isEmpty() )
-            insertPlainText( text );  // TODO: check if this is html? (MiB)
+    } else if (KStandardShortcut::pasteSelection().contains(key)) {
+        QString text = QApplication::clipboard()->text(QClipboard::Selection);
+        if (!text.isEmpty()) {
+            insertPlainText(text);    // TODO: check if this is html? (MiB)
+        }
         return true;
     }
     return false;
 }
 
-
-bool RichTextEditor::overrideShortcut(const QKeyEvent* event)
+bool RichTextEditor::overrideShortcut(const QKeyEvent *event)
 {
     const int key = event->key() | event->modifiers();
 
-    if ( KStandardShortcut::copy().contains( key ) ) {
+    if (KStandardShortcut::copy().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::paste().contains( key ) ) {
+    } else if (KStandardShortcut::paste().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::cut().contains( key ) ) {
+    } else if (KStandardShortcut::cut().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::undo().contains( key ) ) {
+    } else if (KStandardShortcut::undo().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::redo().contains( key ) ) {
+    } else if (KStandardShortcut::redo().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::deleteWordBack().contains( key ) ) {
+    } else if (KStandardShortcut::deleteWordBack().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::deleteWordForward().contains( key ) ) {
+    } else if (KStandardShortcut::deleteWordForward().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::backwardWord().contains( key ) ) {
+    } else if (KStandardShortcut::backwardWord().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::forwardWord().contains( key ) ) {
+    } else if (KStandardShortcut::forwardWord().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::next().contains( key ) ) {
+    } else if (KStandardShortcut::next().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::prior().contains( key ) ) {
+    } else if (KStandardShortcut::prior().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::begin().contains( key ) ) {
+    } else if (KStandardShortcut::begin().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::end().contains( key ) ) {
+    } else if (KStandardShortcut::end().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::beginningOfLine().contains( key ) ) {
+    } else if (KStandardShortcut::beginningOfLine().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::endOfLine().contains( key ) ) {
+    } else if (KStandardShortcut::endOfLine().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::pasteSelection().contains( key ) ) {
+    } else if (KStandardShortcut::pasteSelection().contains(key)) {
         return true;
     } else if (searchSupport() && KStandardShortcut::find().contains(key)) {
         return true;
@@ -719,7 +739,7 @@ bool RichTextEditor::overrideShortcut(const QKeyEvent* event)
     return false;
 }
 
-void RichTextEditor::keyPressEvent( QKeyEvent *event )
+void RichTextEditor::keyPressEvent(QKeyEvent *event)
 {
     if (handleShortcut(event)) {
         event->accept();

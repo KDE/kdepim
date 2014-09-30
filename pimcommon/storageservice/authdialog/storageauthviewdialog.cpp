@@ -28,8 +28,8 @@ using namespace PimCommon;
 StorageAuthViewDialog::StorageAuthViewDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Authorize" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Authorize"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -53,17 +53,17 @@ StorageAuthViewDialog::~StorageAuthViewDialog()
 
 void StorageAuthViewDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "StorageAuthViewDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "StorageAuthViewDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void StorageAuthViewDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "StorageAuthViewDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "StorageAuthViewDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }
 

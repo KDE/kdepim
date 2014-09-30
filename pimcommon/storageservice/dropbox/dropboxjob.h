@@ -15,18 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef DROPBOXJOB_H
 #define DROPBOXJOB_H
 #include "storageservice/job/storageserviceabstractjob.h"
 #include <QNetworkReply>
-namespace PimCommon {
+namespace PimCommon
+{
 class AccountInfo;
 class DropBoxJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit DropBoxJob(QObject *parent=0);
+    explicit DropBoxJob(QObject *parent = 0);
     ~DropBoxJob();
 
     void requestTokenAccess();

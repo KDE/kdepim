@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef TEXTTOSPEECHCONFIGWIDGETTEST_H
 #define TEXTTOSPEECHCONFIGWIDGETTEST_H
 
@@ -25,7 +24,7 @@ class TextToSpeechConfigWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechConfigWidgetTest(QObject *parent=0);
+    explicit TextToSpeechConfigWidgetTest(QObject *parent = 0);
     ~TextToSpeechConfigWidgetTest();
 
 private Q_SLOTS:

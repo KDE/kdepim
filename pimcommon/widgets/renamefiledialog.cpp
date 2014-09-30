@@ -43,11 +43,10 @@
 
 using namespace PimCommon;
 
-
 class PimCommon::RenameFileDialog::RenameFileDialogPrivate
 {
 public:
-    RenameFileDialogPrivate(const KUrl& _url, RenameFileDialog *qq)
+    RenameFileDialogPrivate(const KUrl &_url, RenameFileDialog *qq)
         : url(_url),
           applyAll(0),
           rename(0),
@@ -57,7 +56,7 @@ public:
     {
 
     }
-    QString suggestName(const KUrl& baseURL, const QString& oldName);
+    QString suggestName(const KUrl &baseURL, const QString &oldName);
 
     KUrl url;
     QCheckBox *applyAll;
@@ -68,7 +67,7 @@ public:
 
 };
 
-QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const KUrl& baseURL, const QString& oldName)
+QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const KUrl &baseURL, const QString &oldName)
 {
     QString dotSuffix, suggestedName;
     QString basename = oldName;
@@ -101,37 +100,38 @@ QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const 
             basename.replace(pos + 1, tmp.length(), QString::number(number + 1));
             suggestedName = basename + dotSuffix;
         }
-    } else // no spacer yet
+    } else { // no spacer yet
         suggestedName = basename + spacer + QLatin1Char('1') + dotSuffix ;
+    }
 
     // Check if suggested name already exists
     bool exists = false;
     // TODO: network transparency. However, using NetAccess from a modal dialog
     // could be a problem, no? (given that it uses a modal widget itself....)
-    if (baseURL.isLocalFile())
+    if (baseURL.isLocalFile()) {
         exists = QFileInfo(baseURL.toLocalFile(KUrl::AddTrailingSlash) + suggestedName).exists();
+    }
 
-    if (!exists)
+    if (!exists) {
         return suggestedName;
-    else // already exists -> recurse
+    } else { // already exists -> recurse
         return suggestName(baseURL, suggestedName);
+    }
 
 }
 
-
-RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * parent)
+RenameFileDialog::RenameFileDialog(const KUrl &url, bool multiFiles, QWidget *parent)
     : QDialog(parent),
       d(new RenameFileDialogPrivate(url, this))
 {
-    setWindowTitle(i18n( "File Already Exists" ));
-    QVBoxLayout* pLayout = new QVBoxLayout(this);
+    setWindowTitle(i18n("File Already Exists"));
+    QVBoxLayout *pLayout = new QVBoxLayout(this);
 
-    QLabel *label = new QLabel(xi18n( "A file named <filename>%1</filename> already exists. Do you want to overwrite it?", url.fileName()),this);
+    QLabel *label = new QLabel(xi18n("A file named <filename>%1</filename> already exists. Do you want to overwrite it?", url.fileName()), this);
     pLayout->addWidget(label);
 
-    QHBoxLayout* renameLayout = new QHBoxLayout();
+    QHBoxLayout *renameLayout = new QHBoxLayout();
     pLayout->addLayout(renameLayout);
-
 
     d->nameEdit = new QLineEdit(this);
     renameLayout->addWidget(d->nameEdit);
@@ -141,23 +141,22 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
     renameLayout->addWidget(d->suggestNewName);
     connect(d->suggestNewName, &QPushButton::clicked, this, &RenameFileDialog::slotSuggestNewNamePressed);
 
-
-    QPushButton *overWrite = new QPushButton(i18n("&Overwrite"),this);
+    QPushButton *overWrite = new QPushButton(i18n("&Overwrite"), this);
     connect(overWrite, &QPushButton::clicked, this, &RenameFileDialog::slotOverwritePressed);
 
-    QPushButton *ignore = new QPushButton(i18n("&Ignore"),this);
+    QPushButton *ignore = new QPushButton(i18n("&Ignore"), this);
     connect(ignore, &QPushButton::clicked, this, &RenameFileDialog::slotIgnorePressed);
 
-    d->rename = new QPushButton(i18n("&Rename"),this);
+    d->rename = new QPushButton(i18n("&Rename"), this);
     connect(d->rename, &QPushButton::clicked, this, &RenameFileDialog::slotRenamePressed);
 
-    KSeparator* separator = new KSeparator(this);
+    KSeparator *separator = new KSeparator(this);
     pLayout->addWidget(separator);
 
-    QHBoxLayout* layout = new QHBoxLayout();
+    QHBoxLayout *layout = new QHBoxLayout();
     pLayout->addLayout(layout);
 
-    if (multiFiles){
+    if (multiFiles) {
         d->applyAll = new QCheckBox(i18n("Appl&y to All"), this);
         connect(d->applyAll, &QCheckBox::clicked, this, &RenameFileDialog::slotApplyAllPressed);
         layout->addWidget(d->applyAll);
@@ -193,11 +192,12 @@ void RenameFileDialog::slotIgnorePressed()
 
 void RenameFileDialog::slotRenamePressed()
 {
-    if (d->nameEdit->text().isEmpty())
+    if (d->nameEdit->text().isEmpty()) {
         return;
+    }
     const QString name = newName().path();
-    if ( KIO::NetAccess::exists( name, KIO::NetAccess::DestinationSide, this ) ) {
-        KMessageBox::error(this, i18n("This filename \"%1\" already exists.",name), i18n("File already exists"));
+    if (KIO::NetAccess::exists(name, KIO::NetAccess::DestinationSide, this)) {
+        KMessageBox::error(this, i18n("This filename \"%1\" already exists.", name), i18n("File already exists"));
         return;
     }
     done(RENAMEFILE_RENAME);
@@ -213,8 +213,9 @@ void RenameFileDialog::slotApplyAllPressed()
 
 void RenameFileDialog::slotSuggestNewNamePressed()
 {
-    if (d->nameEdit->text().isEmpty())
+    if (d->nameEdit->text().isEmpty()) {
         return;
+    }
 
     KUrl destDirectory(d->url);
 
@@ -231,6 +232,4 @@ KUrl RenameFileDialog::newName() const
 
     return newDest;
 }
-
-
 

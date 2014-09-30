@@ -46,10 +46,10 @@ using namespace PimCommon;
 static QString newDBusObjectName()
 {
     static int s_count = 0;
-    QString name( QLatin1String("/STORAGESERVICE_ServiceManager") );
-    if ( s_count++ ) {
+    QString name(QLatin1String("/STORAGESERVICE_ServiceManager"));
+    if (s_count++) {
         name += QLatin1Char('_');
-        name += QString::number( s_count );
+        name += QString::number(s_count);
     }
     return name;
 }
@@ -57,14 +57,14 @@ static QString newDBusObjectName()
 StorageServiceManager::StorageServiceManager(QObject *parent)
     : QObject(parent)
 {
-    new StorageManagerAdaptor( this );
+    new StorageManagerAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     const QString dbusPath = newDBusObjectName();
-    setProperty( "uniqueDBusPath", dbusPath );
+    setProperty("uniqueDBusPath", dbusPath);
     const QString dbusInterface = QLatin1String("org.kde.pim.StorageManager");
-    dbus.registerObject( dbusPath, this );
-    dbus.connect( QString(), QString(), dbusInterface, QLatin1String("configChanged"), this,
-                  SLOT(slotConfigChanged(QString)) );
+    dbus.registerObject(dbusPath, this);
+    dbus.connect(QString(), QString(), dbusInterface, QLatin1String("configChanged"), this,
+                 SLOT(slotConfigChanged(QString)));
 
     readConfig();
 }
@@ -74,25 +74,25 @@ StorageServiceManager::~StorageServiceManager()
     qDeleteAll(mListService);
 }
 
-
 void StorageServiceManager::removeService(const QString &serviceName)
 {
-    if (mListService.contains(serviceName))
+    if (mListService.contains(serviceName)) {
         mListService.remove(serviceName);
+    }
 }
 
 QString StorageServiceManager::ourIdentifier() const
 {
-    const QString identifier = QString::fromLatin1( "%1/%2" ).
-                                    arg( QDBusConnection::sessionBus().baseService() ).
-                                    arg( property( "uniqueDBusPath" ).toString() );
+    const QString identifier = QString::fromLatin1("%1/%2").
+                               arg(QDBusConnection::sessionBus().baseService()).
+                               arg(property("uniqueDBusPath").toString());
     return identifier;
 }
 
 void StorageServiceManager::slotConfigChanged(const QString &id)
 {
-    qDebug()<<" void StorageServiceManager::slotConfigChanged(const QString &id)"<<id;
-    if ( id != ourIdentifier() ) {
+    qDebug() << " void StorageServiceManager::slotConfigChanged(const QString &id)" << id;
+    if (id != ourIdentifier()) {
         readConfig();
         Q_EMIT servicesChanged();
     }
@@ -109,7 +109,7 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
     writeConfig();
 
     // DBus signal for other IdentityManager instances
-    emit configChanged( ourIdentifier() );
+    emit configChanged(ourIdentifier());
 }
 
 void StorageServiceManager::setDefaultUploadFolder(const QString &folder)
@@ -160,9 +160,10 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                 QAction *act = new QAction(/*serviceToI18n(*/i.key(), menuService);
                 act->setData(i.key());
                 const QIcon icon = i.value()->icon();
-                if (!icon.isNull())
+                if (!icon.isNull()) {
                     act->setIcon(icon);
-                switch(mainCapability) {
+                }
+                switch (mainCapability) {
                 case PimCommon::StorageServiceAbstract::NoCapability:
                 case PimCommon::StorageServiceAbstract::CreateFolderCapability:
                 case PimCommon::StorageServiceAbstract::ListFolderCapability:
@@ -172,7 +173,7 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                 case PimCommon::StorageServiceAbstract::MoveFileCapability:
                 case PimCommon::StorageServiceAbstract::CopyFileCapability:
                 case PimCommon::StorageServiceAbstract::CopyFolderCapability:
-                    qDebug()<<" not implemented ";
+                    qDebug() << " not implemented ";
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
                     menuService->setText(i18n("Delete Folder..."));
@@ -206,11 +207,10 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
     return menuService;
 }
 
-
 void StorageServiceManager::slotShareFile()
 {
-    QAction *act = qobject_cast< QAction* >( sender() );
-    if ( act ) {
+    QAction *act = qobject_cast< QAction * >(sender());
+    if (act) {
         const QString type = act->data().toString();
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
@@ -254,8 +254,8 @@ void StorageServiceManager::slotShareFile()
 
 void StorageServiceManager::slotDownloadFile()
 {
-    QAction *act = qobject_cast< QAction* >( sender() );
-    if ( act ) {
+    QAction *act = qobject_cast< QAction * >(sender());
+    if (act) {
         const QString type = act->data().toString();
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
@@ -276,12 +276,12 @@ void StorageServiceManager::defaultConnect(StorageServiceAbstract *service)
 
 void StorageServiceManager::slotDeleteFile()
 {
-    QAction *act = qobject_cast< QAction* >( sender() );
-    if ( act ) {
+    QAction *act = qobject_cast< QAction * >(sender());
+    if (act) {
         const QString type = act->data().toString();
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
-            QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(StorageServiceDeleteDialog::DeleteFiles,service);
+            QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(StorageServiceDeleteDialog::DeleteFiles, service);
             defaultConnect(service);
             connect(dlg.data(), &StorageServiceDeleteDialog::deleteFileDone, this, &StorageServiceManager::deleteFileDone);
             dlg->exec();
@@ -292,8 +292,8 @@ void StorageServiceManager::slotDeleteFile()
 
 void StorageServiceManager::slotDeleteFolder()
 {
-    QAction *act = qobject_cast< QAction* >( sender() );
-    if ( act ) {
+    QAction *act = qobject_cast< QAction * >(sender());
+    if (act) {
         const QString type = act->data().toString();
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
@@ -308,8 +308,8 @@ void StorageServiceManager::slotDeleteFolder()
 
 void StorageServiceManager::slotAccountInfo()
 {
-    QAction *act = qobject_cast< QAction* >( sender() );
-    if ( act ) {
+    QAction *act = qobject_cast< QAction * >(sender());
+    if (act) {
         const QString type = act->data().toString();
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
@@ -327,7 +327,7 @@ void StorageServiceManager::readConfig()
     KConfigGroup grp(&conf, QLatin1String("General"));
 
     const QStringList services = grp.readEntry("Services", QStringList());
-    Q_FOREACH(const QString &service, services) {
+    Q_FOREACH (const QString &service, services) {
         PimCommon::StorageServiceAbstract *storageService = 0;
         if (service == serviceName(DropBox)) {
             if (!mListService.contains(serviceName(DropBox))) {
@@ -372,13 +372,13 @@ void StorageServiceManager::writeConfig()
 
 QString StorageServiceManager::description(ServiceType type)
 {
-    switch(type) {
+    switch (type) {
     case DropBox:
         return PimCommon::DropBoxStorageService::description();
     case Hubic:
         return PimCommon::HubicStorageService::description();
     case WebDav:
-        //return PimCommon::WebDavStorageService::description();
+    //return PimCommon::WebDavStorageService::description();
     case Box:
         return PimCommon::BoxStorageService::description();
     case YouSendIt:
@@ -396,7 +396,7 @@ QString StorageServiceManager::description(ServiceType type)
 
 QUrl StorageServiceManager::serviceUrl(ServiceType type)
 {
-    switch(type) {
+    switch (type) {
     case DropBox:
         return PimCommon::DropBoxStorageService::serviceUrl();
     case Hubic:
@@ -404,7 +404,7 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceUrl();
     case WebDav:
-        //return PimCommon::WebDavStorageService::serviceUrl();
+    //return PimCommon::WebDavStorageService::serviceUrl();
     case Box:
         return PimCommon::BoxStorageService::serviceUrl();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -418,10 +418,9 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
     return QString();
 }
 
-
 QString StorageServiceManager::serviceName(ServiceType type)
 {
-    switch(type) {
+    switch (type) {
     case DropBox:
         return PimCommon::DropBoxStorageService::serviceName();
     case Hubic:
@@ -429,7 +428,7 @@ QString StorageServiceManager::serviceName(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceName();
     case WebDav:
-        //return PimCommon::WebDavStorageService::serviceName();
+    //return PimCommon::WebDavStorageService::serviceName();
     case Box:
         return PimCommon::BoxStorageService::serviceName();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -445,7 +444,7 @@ QString StorageServiceManager::serviceName(ServiceType type)
 
 QString StorageServiceManager::serviceToI18n(ServiceType type)
 {
-    switch(type) {
+    switch (type) {
     case DropBox:
         return PimCommon::DropBoxStorageService::name();
     case Hubic:
@@ -453,7 +452,7 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::name();
     case WebDav:
-        //return PimCommon::WebDavStorageService::name();
+    //return PimCommon::WebDavStorageService::name();
     case Box:
         return PimCommon::BoxStorageService::name();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -469,7 +468,7 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
 
 QString StorageServiceManager::icon(ServiceType type)
 {
-    switch(type) {
+    switch (type) {
     case DropBox:
         return PimCommon::DropBoxStorageService::iconName();
     case Hubic:
@@ -477,7 +476,7 @@ QString StorageServiceManager::icon(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::iconName();
     case WebDav:
-        //return PimCommon::WebDavStorageService::iconName();
+    //return PimCommon::WebDavStorageService::iconName();
     case Box:
         return PimCommon::BoxStorageService::iconName();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -493,7 +492,7 @@ QString StorageServiceManager::icon(ServiceType type)
 
 StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(ServiceType type)
 {
-    switch(type) {
+    switch (type) {
     case DropBox:
         return PimCommon::DropBoxStorageService::serviceCapabilities();
     case Hubic:
@@ -501,7 +500,7 @@ StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(Service
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceCapabilities();
     case WebDav:
-        ///return PimCommon::WebDavStorageService::serviceCapabilities();
+    ///return PimCommon::WebDavStorageService::serviceCapabilities();
     case Box:
         return PimCommon::BoxStorageService::serviceCapabilities();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -519,5 +518,4 @@ QString StorageServiceManager::kconfigName()
 {
     return QLatin1String("storageservicerc");
 }
-
 

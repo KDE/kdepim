@@ -26,7 +26,8 @@
 #include "pimcommon_export.h"
 class QMenu;
 class QDateTime;
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceAbstract;
 class StorageServiceTreeWidgetItem;
 class PIMCOMMON_EXPORT StorageServiceTreeWidget : public QTreeWidget
@@ -51,7 +52,7 @@ public:
         ColumnLastModification = 3
     };
 
-    explicit StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
+    explicit StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent = 0);
     ~StorageServiceTreeWidget();
 
     void setCurrentFolder(const QString &folder);
@@ -83,18 +84,17 @@ public Q_SLOTS:
     void refreshList();
     void slotListFolderDone(const QString &serviceName, const QVariant &data);
 
-
 protected:
     QString mCurrentFolder;
     QString mParentFolder;
-    PimCommon::StorageServiceAbstract *mStorageService;    
+    PimCommon::StorageServiceAbstract *mStorageService;
     virtual void createMenuActions(QMenu *menu);
 
 private Q_SLOTS:
     void slotItemDoubleClicked(QTreeWidgetItem *item, int column);
     void slotMoveUp();
     void slotContextMenu(const QPoint &pos);
-    void slotProperties();    
+    void slotProperties();
 };
 }
 

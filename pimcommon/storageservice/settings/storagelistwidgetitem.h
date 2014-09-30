@@ -23,19 +23,20 @@
 
 class QTimer;
 class QListWidget;
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageListWidgetItemProgress;
 class StorageListWidgetItem : public QListWidgetItem
 {
 public:
-    explicit StorageListWidgetItem(QListWidget *parent=0);
+    explicit StorageListWidgetItem(QListWidget *parent = 0);
     ~StorageListWidgetItem();
 
     void startAnimation();
     void stopAnimation();
     void resetToDefaultIcon();
     void setProgressAnimation(const QPixmap &pix);
-    void setDefaultIcon(const QString &defaultIconName);    
+    void setDefaultIcon(const QString &defaultIconName);
     void setDefaultIcon(const QIcon &icon);
 
 private:

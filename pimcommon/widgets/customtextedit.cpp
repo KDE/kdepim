@@ -39,7 +39,7 @@ public:
     }
 
     QString configFile;
-    Sonnet::Speller* speller;
+    Sonnet::Speller *speller;
 };
 
 CustomTextEdit::CustomTextEdit(QWidget *parent)
@@ -72,24 +72,28 @@ QString CustomTextEdit::configName() const
 void CustomTextEdit::createHighlighter()
 {
     Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this, d->configFile);
-    highlighter->setAutomatic( false );
+    highlighter->setAutomatic(false);
 
     KTextEdit::setHighlighter(highlighter);
 
     if (!spellCheckingLanguage().isEmpty()) {
-        setSpellCheckingLanguage( spellCheckingLanguage() );
+        setSpellCheckingLanguage(spellCheckingLanguage());
     }
 }
 
-static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString(("kdelibs4")); }
-
-void CustomTextEdit::insertLanguageMenu(QMenu* contextMenu)
+static inline QString i18n_kdelibs4(const char *str)
 {
-    if (!checkSpellingEnabled())
-        return;
-    QAction* spellCheckAction = 0;
+    return ki18n(str).toString(("kdelibs4"));
+}
 
-    foreach (QAction* action, contextMenu->actions()) {
+void CustomTextEdit::insertLanguageMenu(QMenu *contextMenu)
+{
+    if (!checkSpellingEnabled()) {
+        return;
+    }
+    QAction *spellCheckAction = 0;
+
+    foreach (QAction *action, contextMenu->actions()) {
         if (action->text() == i18n_kdelibs4("Auto Spell Check")) {
             spellCheckAction = action;
             break;
@@ -97,22 +101,23 @@ void CustomTextEdit::insertLanguageMenu(QMenu* contextMenu)
     }
 
     if (spellCheckAction) {
-        QMenu* languagesMenu = new QMenu(i18n("Spell Checking Language"), contextMenu);
-        QActionGroup* languagesGroup = new QActionGroup(languagesMenu);
+        QMenu *languagesMenu = new QMenu(i18n("Spell Checking Language"), contextMenu);
+        QActionGroup *languagesGroup = new QActionGroup(languagesMenu);
         languagesGroup->setExclusive(true);
 
-        if (!d->speller)
+        if (!d->speller) {
             d->speller = new Sonnet::Speller();
+        }
 
         QMapIterator<QString, QString> i(d->speller->availableDictionaries());
 
         while (i.hasNext()) {
             i.next();
 
-            QAction* languageAction = languagesMenu->addAction(i.key());
+            QAction *languageAction = languagesMenu->addAction(i.key());
             languageAction->setCheckable(true);
             languageAction->setChecked(spellCheckingLanguage() == i.value() || (spellCheckingLanguage().isEmpty()
-                && d->speller->defaultLanguage() == i.value()));
+                                       && d->speller->defaultLanguage() == i.value()));
             languageAction->setData(i.value());
             languageAction->setActionGroup(languagesGroup);
             connect(languageAction, &QAction::triggered, this, &CustomTextEdit::languageSelected);
@@ -124,8 +129,7 @@ void CustomTextEdit::insertLanguageMenu(QMenu* contextMenu)
 
 void CustomTextEdit::languageSelected()
 {
-    QAction* languageAction = static_cast<QAction*>(QObject::sender());
+    QAction *languageAction = static_cast<QAction *>(QObject::sender());
     setSpellCheckingLanguage(languageAction->data().toString());
 }
-
 

@@ -15,20 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef STORAGEAUTHVIEWWIDGET_H
 #define STORAGEAUTHVIEWWIDGET_H
 
 #include <QWidget>
 #include <QUrl>
 class QProgressBar;
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageAuthWebView;
 class StorageAuthViewWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageAuthViewWidget(QWidget *parent=0);
+    explicit StorageAuthViewWidget(QWidget *parent = 0);
     ~StorageAuthViewWidget();
 
     void setUrl(const QUrl &url);

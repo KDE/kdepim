@@ -21,12 +21,13 @@
 #include <QObject>
 #include "storageservice/job/storageserviceabstractjob.h"
 class QNetworkReply;
-namespace PimCommon {
+namespace PimCommon
+{
 class WebDavJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit WebDavJob(QObject *parent=0);
+    explicit WebDavJob(QObject *parent = 0);
     ~WebDavJob();
 
     void requestTokenAccess();
@@ -42,16 +43,16 @@ public:
     void renameFolder(const QString &source, const QString &destination);
     void renameFile(const QString &oldName, const QString &newName);
     void moveFolder(const QString &source, const QString &destination);
-    void moveFile(const QString &source, const QString &destination);    
+    void moveFile(const QString &source, const QString &destination);
     void copyFile(const QString &source, const QString &destination);
-    void copyFolder(const QString &source, const QString &destination);    
+    void copyFolder(const QString &source, const QString &destination);
     void initializeToken(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password);
 
 Q_SIGNALS:
     void authorizationDone(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password);
 
 private slots:
-    void slotSendDataFinished(QNetworkReply *reply);    
+    void slotSendDataFinished(QNetworkReply *reply);
     void slotAuthenticationRequired(QNetworkReply *, QAuthenticator *);
     void slotListInfo(const QString &data);
 

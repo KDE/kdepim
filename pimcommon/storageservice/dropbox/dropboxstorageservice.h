@@ -20,12 +20,13 @@
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/pimcommon_export.h"
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT DropBoxStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
-    explicit DropBoxStorageService(QObject *parent=0);
+    explicit DropBoxStorageService(QObject *parent = 0);
     ~DropBoxStorageService();
 
     static QString name();
@@ -34,7 +35,6 @@ public:
     static QString serviceName();
     static QString iconName();
     static StorageServiceAbstract::Capabilities serviceCapabilities();
-
 
     void storageServicelistFolder(const QString &folder);
     void storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString());

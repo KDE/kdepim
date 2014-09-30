@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "textgotolinewidget.h"
 
 #include <KLocalizedString>
@@ -34,20 +33,20 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin( 2 );
+    hbox->setMargin(2);
     setLayout(hbox);
-    QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
-    closeBtn->setIconSize( QSize( 16, 16 ) );
-    closeBtn->setToolTip( i18n( "Close" ) );
+    QToolButton *closeBtn = new QToolButton(this);
+    closeBtn->setIcon(QIcon::fromTheme(QLatin1String("dialog-close")));
+    closeBtn->setIconSize(QSize(16, 16));
+    closeBtn->setToolTip(i18n("Close"));
     closeBtn->setObjectName(QLatin1String("closebutton"));
 #ifndef QT_NO_ACCESSIBILITY
-    closeBtn->setAccessibleName( i18n( "Close" ) );
+    closeBtn->setAccessibleName(i18n("Close"));
 #endif
 
-    closeBtn->setAutoRaise( true );
+    closeBtn->setAutoRaise(true);
     connect(closeBtn, &QToolButton::clicked, this, &TextGoToLineWidget::slotCloseBar);
-    hbox->addWidget( closeBtn );
+    hbox->addWidget(closeBtn);
 
     QLabel *lab = new QLabel(i18n("Go to Line:"));
     hbox->addWidget(lab);
@@ -95,15 +94,15 @@ void TextGoToLineWidget::slotCloseBar()
     hide();
 }
 
-bool TextGoToLineWidget::event(QEvent* e)
+bool TextGoToLineWidget::event(QEvent *e)
 {
     // Close the bar when pressing Escape.
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
-        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+    if (shortCutOverride || e->type() == QEvent::KeyPress) {
+        QKeyEvent *kev = static_cast<QKeyEvent * >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->accept();
             slotCloseBar();

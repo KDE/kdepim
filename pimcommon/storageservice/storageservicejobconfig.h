@@ -24,7 +24,8 @@
 #include <QObject>
 #include "pimcommon/pimcommon_export.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class ISettingsJob;
 class PIMCOMMON_EXPORT StorageServiceJobConfig : public QObject
 {
@@ -42,16 +43,15 @@ public:
     QString boxClientId() const;
     QString boxClientSecret() const;
     QString hubicClientId() const;
-    QString hubicClientSecret() const;    
+    QString hubicClientSecret() const;
     QString dropboxRootPath() const;
     QString oauth2RedirectUrl() const;
     QString hubicScope() const;
     QString gdriveClientId() const;
     QString gdriveClientSecret() const;
 
-
 private:
-    StorageServiceJobConfig(QObject *parent=0);
+    StorageServiceJobConfig(QObject *parent = 0);
     friend class StorageServiceJobConfigPrivate;
     ISettingsJob *mSettingsJob;
 };

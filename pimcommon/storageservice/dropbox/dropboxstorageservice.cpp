@@ -27,14 +27,12 @@
 
 #include <kwallet.h>
 
-
 #include <KLocalizedString>
 
 #include <QDebug>
 #include <KFormat>
 #include <QLocale>
 #include <QJsonParseError>
-
 
 using namespace PimCommon;
 
@@ -67,8 +65,9 @@ void DropBoxStorageService::removeConfig()
     if (StorageServiceSettings::self()->createDefaultFolder()) {
         const QString walletEntry = storageServiceName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
-        if (wallet)
+        if (wallet) {
             wallet->removeEntry(walletEntry);
+        }
     }
 }
 
@@ -80,7 +79,7 @@ void DropBoxStorageService::readConfig()
             QStringList lst = wallet->entryList();
             if (lst.contains(storageServiceName())) {
                 QMap<QString, QString> map;
-                wallet->readMap( storageServiceName(), map );
+                wallet->readMap(storageServiceName(), map);
                 if (map.contains(QLatin1String("Access Token"))) {
                     mAccessToken = map.value(QLatin1String("Access Token"));
                 }
@@ -107,8 +106,9 @@ void DropBoxStorageService::storageServiceauthentication()
 
 bool DropBoxStorageService::checkNeedAuthenticate()
 {
-    if (mNeedToReadConfigFirst)
+    if (mNeedToReadConfigFirst) {
         readConfig();
+    }
     return mAccessToken.isEmpty();
 }
 
@@ -121,7 +121,7 @@ void DropBoxStorageService::storageServiceShareLink(const QString &root, const Q
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::shareLinkDone, this, &DropBoxStorageService::slotShareLinkDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->shareLink(root, path);
@@ -135,7 +135,7 @@ void DropBoxStorageService::storageServicecreateServiceFolder()
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::createFolderDone, this, &DropBoxStorageService::slotCreateFolderDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->createServiceFolder();
@@ -153,10 +153,10 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String( "Access Token" )] = mAccessToken;
-            map[QLatin1String( "Access Token Secret" )] = mAccessTokenSecret;
-            map[QLatin1String( "Access Oauth Signature" )] = mAccessOauthSignature;
-            wallet->writeMap( walletEntry, map);
+            map[QLatin1String("Access Token")] = mAccessToken;
+            map[QLatin1String("Access Token Secret")] = mAccessTokenSecret;
+            map[QLatin1String("Access Oauth Signature")] = mAccessOauthSignature;
+            wallet->writeMap(walletEntry, map);
         }
     }
 
@@ -171,7 +171,7 @@ void DropBoxStorageService::storageServicelistFolder(const QString &folder)
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::listFolderDone, this, &DropBoxStorageService::slotListFolderDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->listFolder(folder);
@@ -185,7 +185,7 @@ void DropBoxStorageService::storageServiceaccountInfo()
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::accountInfoDone, this, &DropBoxStorageService::slotAccountInfoDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->accountInfo();
@@ -201,7 +201,7 @@ void DropBoxStorageService::storageServicecreateFolder(const QString &name, cons
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::createFolderDone, this, &DropBoxStorageService::slotCreateFolderDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->createFolder(name, destination);
@@ -218,7 +218,7 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename, co
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::uploadFileDone, this, &DropBoxStorageService::slotUploadFileDone);
         connect(job, &DropBoxJob::shareLinkDone, this, &DropBoxStorageService::slotShareLinkDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
@@ -279,7 +279,6 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities(
     cap |= CopyFileCapability;
     cap |= CopyFolderCapability;
 
-
     return cap;
 }
 
@@ -298,7 +297,7 @@ void DropBoxStorageService::storageServicedownloadFile(const QString &name, cons
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::downLoadFileDone, this, &DropBoxStorageService::slotDownLoadFileDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         connect(job, &DropBoxJob::downLoadFileFailed, this, &DropBoxStorageService::slotDownLoadFileFailed);
@@ -315,7 +314,7 @@ void DropBoxStorageService::storageServicedeleteFile(const QString &filename)
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::deleteFileDone, this, &DropBoxStorageService::slotDeleteFileDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->deleteFile(filename);
@@ -330,7 +329,7 @@ void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::deleteFolderDone, this, &DropBoxStorageService::slotDeleteFolderDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->deleteFolder(foldername);
@@ -345,7 +344,7 @@ void DropBoxStorageService::storageServiceRenameFolder(const QString &source, co
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::renameFolderDone, this, &DropBoxStorageService::slotRenameFolderDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->renameFolder(source, destination);
@@ -360,7 +359,7 @@ void DropBoxStorageService::storageServiceRenameFile(const QString &source, cons
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::renameFileDone, this, &DropBoxStorageService::slotRenameFileDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->renameFile(source, destination);
@@ -375,7 +374,7 @@ void DropBoxStorageService::storageServiceMoveFolder(const QString &source, cons
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::moveFolderDone, this, &DropBoxStorageService::slotMoveFileDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->moveFolder(source, destination);
@@ -390,7 +389,7 @@ void DropBoxStorageService::storageServiceMoveFile(const QString &source, const 
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::moveFileDone, this, &DropBoxStorageService::slotMoveFileDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->moveFile(source, destination);
@@ -405,7 +404,7 @@ void DropBoxStorageService::storageServiceCopyFile(const QString &source, const 
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::copyFileDone, this, &DropBoxStorageService::slotCopyFileDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->copyFile(source, destination);
@@ -420,7 +419,7 @@ void DropBoxStorageService::storageServiceCopyFolder(const QString &source, cons
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
-        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        job->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
         connect(job, &DropBoxJob::copyFolderDone, this, &DropBoxStorageService::slotCopyFolderDone);
         connect(job, &DropBoxJob::actionFailed, this, &DropBoxStorageService::slotActionFailed);
         job->copyFolder(source, destination);
@@ -488,7 +487,6 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
 
                 const QString itemName = name.right((name.length() - name.lastIndexOf(QLatin1Char('/'))) - 1);
 
-
                 StorageServiceTreeWidgetItem *item;
                 if (isDir) {
                     item = listWidget->addFolder(itemName, name);
@@ -504,11 +502,11 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
                 }
                 if (qwer.contains(QLatin1String("client_mtime"))) {
                     QString tmp = qwer.value(QLatin1String("client_mtime")).toString();
-                    item->setDateCreated(PimCommon::DropBoxUtil::convertToDateTime( tmp ));
+                    item->setDateCreated(PimCommon::DropBoxUtil::convertToDateTime(tmp));
                 }
                 if (qwer.contains(QLatin1String("modified"))) {
                     QString tmp = qwer.value(QLatin1String("modified")).toString();
-                    item->setLastModification(PimCommon::DropBoxUtil::convertToDateTime( tmp ));
+                    item->setLastModification(PimCommon::DropBoxUtil::convertToDateTime(tmp));
                 }
                 item->setStoreInfo(qwer);
             }
@@ -536,11 +534,11 @@ QMap<QString, QString> DropBoxStorageService::itemInformation(const QVariantMap 
     }
     if (variantMap.contains(QLatin1String("client_mtime"))) {
         const QString tmp = variantMap.value(QLatin1String("client_mtime")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((PimCommon::DropBoxUtil::convertToDateTime( tmp )), QLocale::ShortFormat));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((PimCommon::DropBoxUtil::convertToDateTime(tmp)), QLocale::ShortFormat));
     }
     if (variantMap.contains(QLatin1String("modified"))) {
         const QString tmp = variantMap.value(QLatin1String("modified")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((PimCommon::DropBoxUtil::convertToDateTime( tmp )), QLocale::ShortFormat));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((PimCommon::DropBoxUtil::convertToDateTime(tmp)), QLocale::ShortFormat));
     }
     if (variantMap.contains(QLatin1String("root"))) {
         information.insert(i18n("Storage path:"), variantMap.value(QLatin1String("root")).toString());
@@ -567,5 +565,4 @@ qlonglong DropBoxStorageService::maximumUploadFileSize() const
 {
     return 150000000;
 }
-
 

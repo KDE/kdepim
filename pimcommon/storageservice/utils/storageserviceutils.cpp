@@ -23,8 +23,8 @@ QString PimCommon::StorageServiceUtils::generateNonce(qint32 length)
 {
     QString clng;
 
-    for(int i=0; i<length; ++i) {
-        clng += QString::number(int( qrand() / (RAND_MAX + 1.0) * (16 + 1 - 0) + 0 ), 16).toUpper();
+    for (int i = 0; i < length; ++i) {
+        clng += QString::number(int(qrand() / (RAND_MAX + 1.0) * (16 + 1 - 0) + 0), 16).toUpper();
     }
 
     return clng;
@@ -53,7 +53,7 @@ bool PimCommon::StorageServiceUtils::hasExactCapabilities(PimCommon::StorageServ
 QString PimCommon::StorageServiceUtils::propertyNameToI18n(PropertyName type)
 {
     QString result;
-    switch(type) {
+    switch (type) {
     case Type:
         result = i18n("Type:");
         break;

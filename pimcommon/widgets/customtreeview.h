@@ -15,14 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef CUSTOMTREEVIEW_H
 #define CUSTOMTREEVIEW_H
 
 #include <QTreeWidget>
 #include "pimcommon_export.h"
 class QPaintEvent;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT CustomTreeView : public QTreeWidget
 {
     Q_OBJECT
@@ -40,7 +40,7 @@ private Q_SLOTS:
     void slotGeneralFontChanged();
 
 protected:
-    void paintEvent( QPaintEvent *event );
+    void paintEvent(QPaintEvent *event);
 
 protected:
     bool mShowDefaultText;

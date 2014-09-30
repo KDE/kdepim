@@ -29,7 +29,7 @@
 TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Translator Debug" ) );
+    setWindowTitle(i18n("Translator Debug"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -62,23 +62,22 @@ void TranslatorDebugDialog::setDebug(const QString &debugStr)
 
 void TranslatorDebugDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "TranslatorDebugDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "TranslatorDebugDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void TranslatorDebugDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "TranslatorDebugDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "TranslatorDebugDialog");
+    group.writeEntry("Size", size());
 }
 
 void TranslatorDebugDialog::slotSaveAs()
 {
-    const QString filter = QLatin1String("*.*|") + i18n( "all files (*)" );
+    const QString filter = QLatin1String("*.*|") + i18n("all files (*)");
     PimCommon::Util::saveTextAs(mEdit->toPlainText(), filter, this);
 }
-
 

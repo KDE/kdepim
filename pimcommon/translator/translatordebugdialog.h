@@ -20,14 +20,15 @@
 
 #include <QDialog>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditorWidget;
 }
 class TranslatorDebugDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit TranslatorDebugDialog(QWidget *parent=0);
+    explicit TranslatorDebugDialog(QWidget *parent = 0);
     ~TranslatorDebugDialog();
 
     void setDebug(const QString &debugStr);

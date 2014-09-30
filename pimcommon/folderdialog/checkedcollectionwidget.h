@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef CHECKEDCOLLECTIONWIDGET_H
 #define CHECKEDCOLLECTIONWIDGET_H
 
@@ -27,17 +26,19 @@ class KRecursiveFilterProxyModel;
 class QTreeView;
 class KCheckableProxyModel;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class EntityTreeModel;
 class Collection;
 }
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT CheckedCollectionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CheckedCollectionWidget(const QString &mimetype, QWidget *parent=0);
+    explicit CheckedCollectionWidget(const QString &mimetype, QWidget *parent = 0);
     ~CheckedCollectionWidget();
 
     Akonadi::EntityTreeModel *entityTreeModel() const;

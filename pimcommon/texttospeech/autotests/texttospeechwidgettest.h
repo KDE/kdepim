@@ -15,19 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef TEXTTOSPEECHWIDGETTEST_H
 #define TEXTTOSPEECHWIDGETTEST_H
 
 #include <QObject>
-namespace PimCommon {
+namespace PimCommon
+{
 class TextToSpeechWidget;
 }
 class TextToSpeechWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechWidgetTest(QObject *parent=0);
+    explicit TextToSpeechWidgetTest(QObject *parent = 0);
 
 private:
     void addInterface(PimCommon::TextToSpeechWidget *widget);

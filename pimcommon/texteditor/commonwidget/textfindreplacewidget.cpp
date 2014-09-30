@@ -33,20 +33,20 @@ TextReplaceWidget::TextReplaceWidget(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
-    QLabel *label = new QLabel( i18nc( "Replace text", "Replace:" ), this );
-    lay->addWidget( label );
+    QLabel *label = new QLabel(i18nc("Replace text", "Replace:"), this);
+    lay->addWidget(label);
 
     mReplace = new QLineEdit;
     mReplace->setClearButtonEnabled(true);
     lay->addWidget(mReplace);
 
-    mReplaceBtn = new QPushButton( i18n( "Replace" ), this );
+    mReplaceBtn = new QPushButton(i18n("Replace"), this);
     connect(mReplaceBtn, &QPushButton::clicked, this, &TextReplaceWidget::replaceText);
-    lay->addWidget( mReplaceBtn );
+    lay->addWidget(mReplaceBtn);
 
-    mReplaceAllBtn = new QPushButton( i18n( "Replace All" ), this );
+    mReplaceAllBtn = new QPushButton(i18n("Replace All"), this);
     connect(mReplaceAllBtn, &QPushButton::clicked, this, &TextReplaceWidget::replaceAllText);
-    lay->addWidget( mReplaceAllBtn );
+    lay->addWidget(mReplaceAllBtn);
 
     setLayout(lay);
 }
@@ -72,37 +72,37 @@ TextFindWidget::TextFindWidget(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
-    QLabel *label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
-    lay->addWidget( label );
+    QLabel *label = new QLabel(i18nc("Find text", "F&ind:"), this);
+    lay->addWidget(label);
 
-    mSearch = new QLineEdit( this );
-    mSearch->setToolTip( i18n( "Text to search for" ) );
-    mSearch->setClearButtonEnabled( true );
-    label->setBuddy( mSearch );
-    lay->addWidget( mSearch );
+    mSearch = new QLineEdit(this);
+    mSearch->setToolTip(i18n("Text to search for"));
+    mSearch->setClearButtonEnabled(true);
+    label->setBuddy(mSearch);
+    lay->addWidget(mSearch);
 
-    mFindNextBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
-    mFindNextBtn->setToolTip( i18n( "Jump to next match" ) );
-    lay->addWidget( mFindNextBtn );
-    mFindNextBtn->setEnabled( false );
+    mFindNextBtn = new QPushButton(QIcon::fromTheme(QLatin1String("go-down-search")), i18nc("Find and go to the next search match", "Next"), this);
+    mFindNextBtn->setToolTip(i18n("Jump to next match"));
+    lay->addWidget(mFindNextBtn);
+    mFindNextBtn->setEnabled(false);
 
-    mFindPrevBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
-    mFindPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
-    lay->addWidget( mFindPrevBtn );
-    mFindPrevBtn->setEnabled( false );
+    mFindPrevBtn = new QPushButton(QIcon::fromTheme(QLatin1String("go-up-search")), i18nc("Find and go to the previous search match", "Previous"), this);
+    mFindPrevBtn->setToolTip(i18n("Jump to previous match"));
+    lay->addWidget(mFindPrevBtn);
+    mFindPrevBtn->setEnabled(false);
 
-    QPushButton * optionsBtn = new QPushButton( this );
-    optionsBtn->setText( i18n( "Options" ) );
-    optionsBtn->setToolTip( i18n( "Modify search behavior" ) );
-    QMenu *optionsMenu = new QMenu( optionsBtn );
-    mCaseSensitiveAct = optionsMenu->addAction( i18n( "Case sensitive" ) );
-    mCaseSensitiveAct->setCheckable( true );
+    QPushButton *optionsBtn = new QPushButton(this);
+    optionsBtn->setText(i18n("Options"));
+    optionsBtn->setToolTip(i18n("Modify search behavior"));
+    QMenu *optionsMenu = new QMenu(optionsBtn);
+    mCaseSensitiveAct = optionsMenu->addAction(i18n("Case sensitive"));
+    mCaseSensitiveAct->setCheckable(true);
 
-    mWholeWordAct = optionsMenu->addAction( i18n( "Whole word" ) );
-    mWholeWordAct->setCheckable( true );
+    mWholeWordAct = optionsMenu->addAction(i18n("Whole word"));
+    mWholeWordAct->setCheckable(true);
 
-    optionsBtn->setMenu( optionsMenu );
-    lay->addWidget( optionsBtn );
+    optionsBtn->setMenu(optionsMenu);
+    lay->addWidget(optionsBtn);
 
     connect(mFindNextBtn, &QPushButton::clicked, this, &TextFindWidget::findNext);
     connect(mFindPrevBtn, &QPushButton::clicked, this, &TextFindWidget::findPrev);
@@ -120,15 +120,17 @@ TextFindWidget::~TextFindWidget()
 QRegExp TextFindWidget::findRegExp() const
 {
     QString str = mSearch->text();
-    if ( mWholeWordAct->isChecked() )
+    if (mWholeWordAct->isChecked()) {
         str = QLatin1String("\\b") + str + QLatin1String("\\b");
-    if ( mCaseSensitiveAct->isChecked() )
+    }
+    if (mCaseSensitiveAct->isChecked()) {
         return QRegExp(str, Qt::CaseSensitive);
-    else
+    } else {
         return QRegExp(str, Qt::CaseInsensitive);
+    }
 }
 
-void TextFindWidget::setFoundMatch( bool match )
+void TextFindWidget::setFoundMatch(bool match)
 {
 #ifndef QT_NO_STYLE_STYLESHEET
     QString styleSheet;
@@ -136,30 +138,31 @@ void TextFindWidget::setFoundMatch( bool match )
     if (! mSearch->text().isEmpty()) {
         KColorScheme::BackgroundRole bgColorScheme;
 
-        if (match)
+        if (match) {
             bgColorScheme = KColorScheme::PositiveBackground;
-        else
+        } else {
             bgColorScheme = KColorScheme::NegativeBackground;
+        }
 
         KStatefulBrush bgBrush(KColorScheme::View, bgColorScheme);
 
         styleSheet = QString::fromLatin1("QLineEdit{ background-color:%1 }")
-                .arg(bgBrush.brush(mSearch).color().name());
+                     .arg(bgBrush.brush(mSearch).color().name());
     }
 
-     mSearch->setStyleSheet(styleSheet);
+    mSearch->setStyleSheet(styleSheet);
 #endif
 }
 
 void TextFindWidget::slotAutoSearch(const QString &str)
 {
-    const bool isNotEmpty = ( !str.isEmpty() );
-    mFindPrevBtn->setEnabled( isNotEmpty );
-    mFindNextBtn->setEnabled( isNotEmpty );
-    Q_EMIT searchStringEmpty( !isNotEmpty );
+    const bool isNotEmpty = (!str.isEmpty());
+    mFindPrevBtn->setEnabled(isNotEmpty);
+    mFindNextBtn->setEnabled(isNotEmpty);
+    Q_EMIT searchStringEmpty(!isNotEmpty);
     Q_EMIT autoSearch(str);
     if (str.isEmpty()) {
-       Q_EMIT clearSearch();
+        Q_EMIT clearSearch();
     }
 }
 
@@ -170,11 +173,13 @@ QLineEdit *TextFindWidget::search() const
 
 QTextDocument::FindFlags TextFindWidget::searchOptions() const
 {
-    QTextDocument::FindFlags opt=0;
-    if ( mCaseSensitiveAct->isChecked() )
+    QTextDocument::FindFlags opt = 0;
+    if (mCaseSensitiveAct->isChecked()) {
         opt |= QTextDocument::FindCaseSensitively;
-    if ( mWholeWordAct->isChecked() )
+    }
+    if (mWholeWordAct->isChecked()) {
         opt |= QTextDocument::FindWholeWords;
+    }
     return opt;
 }
 

@@ -21,7 +21,6 @@
 
 #include <qdebug.h>
 
-
 #include <KLocalizedString>
 #include <QApplication>
 #include <KAboutData>
@@ -33,10 +32,9 @@ HubicTestWidget::HubicTestWidget(QWidget *parent)
     setStorageService(new PimCommon::HubicStorageService(this));
 }
 
-
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("hubic_gui"), i18n("hubic_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("hubic_gui"), i18n("hubic_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for short hubic"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -46,7 +44,6 @@ int main (int argc, char **argv)
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-
 
     HubicTestWidget *w = new HubicTestWidget;
     w->show();

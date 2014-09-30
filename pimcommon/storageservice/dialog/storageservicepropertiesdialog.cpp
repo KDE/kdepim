@@ -84,10 +84,10 @@ void StorageServicePropertiesDialog::createInformationWidget(const QMap<QString,
 
 void StorageServicePropertiesDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "StorageServicePropertiesDialog" );
-    const QSize size = group.readEntry( "Size", QSize(300, 200) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "StorageServicePropertiesDialog");
+    const QSize size = group.readEntry("Size", QSize(300, 200));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
@@ -95,6 +95,6 @@ void StorageServicePropertiesDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group( QLatin1String("StorageServicePropertiesDialog") );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group = config->group(QLatin1String("StorageServicePropertiesDialog"));
+    group.writeEntry("Size", size());
 }

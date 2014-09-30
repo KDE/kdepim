@@ -22,22 +22,23 @@
 
 #include "libkdepim/widgets/spellchecklineedit.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class AutoCorrection;
 class PIMCOMMON_EXPORT LineEditWithAutoCorrection : public KPIM::SpellCheckLineEdit
 {
     Q_OBJECT
 public:
-    explicit LineEditWithAutoCorrection(QWidget* parent, const QString& configFile);
+    explicit LineEditWithAutoCorrection(QWidget *parent, const QString &configFile);
     ~LineEditWithAutoCorrection();
 
-    PimCommon::AutoCorrection* autocorrection() const;
+    PimCommon::AutoCorrection *autocorrection() const;
 
     void setAutocorrection(PimCommon::AutoCorrection *autocorrect);
     void setAutocorrectionLanguage(const QString &language);
 
 protected:
-    void keyPressEvent ( QKeyEvent *e );
+    void keyPressEvent(QKeyEvent *e);
 
 private:
     PimCommon::AutoCorrection *mAutoCorrection;

@@ -24,13 +24,14 @@
 class QProgressBar;
 class QLabel;
 class QToolButton;
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceAbstract;
 class PIMCOMMON_EXPORT StorageServiceProgressWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent=0);
+    explicit StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent = 0);
     ~StorageServiceProgressWidget();
 
     enum ProgressBarType {

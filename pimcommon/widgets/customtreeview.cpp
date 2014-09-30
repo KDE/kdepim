@@ -61,30 +61,30 @@ void CustomTreeView::slotGeneralPaletteChanged()
 {
     const QPalette palette = viewport()->palette();
     QColor color = palette.text().color();
-    color.setAlpha( 128 );
+    color.setAlpha(128);
     mTextColor = color;
 }
 
 void CustomTreeView::slotGeneralFontChanged()
 {
-    setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
+    setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
 }
 
-void CustomTreeView::paintEvent( QPaintEvent *event )
+void CustomTreeView::paintEvent(QPaintEvent *event)
 {
-    if ( mShowDefaultText && !mDefaultText.isEmpty() ) {
-        QPainter p( viewport() );
+    if (mShowDefaultText && !mDefaultText.isEmpty()) {
+        QPainter p(viewport());
 
         QFont font = p.font();
-        font.setItalic( true );
-        p.setFont( font );
+        font.setItalic(true);
+        p.setFont(font);
 
         if (!mTextColor.isValid()) {
             slotGeneralPaletteChanged();
         }
-        p.setPen( mTextColor );
+        p.setPen(mTextColor);
 
-        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, mDefaultText );
+        p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, mDefaultText);
     } else {
         QTreeWidget::paintEvent(event);
     }

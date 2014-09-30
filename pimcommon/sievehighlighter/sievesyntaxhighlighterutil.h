@@ -21,7 +21,8 @@
 #include "pimcommon_export.h"
 #include <QStringList>
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 namespace SieveSyntaxHighlighterUtil
 {

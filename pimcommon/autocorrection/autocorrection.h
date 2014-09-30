@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2012-2013-2014 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -23,7 +23,8 @@
 #include <QHash>
 #include <QSet>
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class PIMCOMMON_EXPORT AutoCorrection
 {
@@ -36,7 +37,7 @@ public:
     explicit AutoCorrection();
     ~AutoCorrection();
 
-    void setLanguage(const QString& lang, bool forceGlobal = false);
+    void setLanguage(const QString &lang, bool forceGlobal = false);
     void setEnabledAutoCorrection(bool b);
     void setUppercaseFirstCharOfSentence(bool b);
     void setFixTwoUppercaseChars(bool b);
@@ -48,9 +49,9 @@ public:
     void setAdvancedAutocorrect(bool b);
     void setTypographicSingleQuotes(TypographicQuotes singleQuote);
     void setTypographicDoubleQuotes(TypographicQuotes doubleQuote);
-    void setUpperCaseExceptions(const QSet<QString>& exceptions);
-    void setTwoUpperLetterExceptions(const QSet<QString>& exceptions);
-    void setAutocorrectEntries(const QHash<QString, QString>& entries);
+    void setUpperCaseExceptions(const QSet<QString> &exceptions);
+    void setTwoUpperLetterExceptions(const QSet<QString> &exceptions);
+    void setAutocorrectEntries(const QHash<QString, QString> &entries);
     void setAutoFormatUrl(bool b);
     void setAutoBoldUnderline(bool b);
     void setSuperScript(bool b);
@@ -83,7 +84,7 @@ public:
     bool autocorrect(bool htmlMode, QTextDocument &document, int &position);
     void writeConfig();
 
-    bool addAutoCorrect(const QString& currentWord, const QString& replaceWord);
+    bool addAutoCorrect(const QString &currentWord, const QString &replaceWord);
 
     void writeAutoCorrectionXmlFile(const QString &filename = QString());
 
@@ -108,9 +109,6 @@ private:
     QString autoDetectURL(const QString &_word) const;
     void readAutoCorrectionXmlFile(bool forceGlobal = false);
     bool excludeToUppercase(const QString &word) const;
-
-
-
 
     bool mSingleSpaces; // suppress double spaces.
     bool mUppercaseFirstCharOfSentence; // convert first letter of a sentence automaticall to uppercase

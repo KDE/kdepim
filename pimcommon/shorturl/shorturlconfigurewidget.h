@@ -23,12 +23,13 @@
 #include <QWidget>
 #include <QComboBox>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT ShortUrlConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ShortUrlConfigureWidget(QWidget *parent=0);
+    explicit ShortUrlConfigureWidget(QWidget *parent = 0);
     ~ShortUrlConfigureWidget();
 
     void loadConfig();

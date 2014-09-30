@@ -37,7 +37,7 @@ void LineEditWithAutocorrectionTest::shouldNotAutocorrectWhenDisabled()
     QTest::qWaitForWindowShown(&lineedit);
     QTest::keyClicks(&lineedit, originalWord);
     QTest::keyClick(&lineedit, ' ');
-    QCOMPARE(lineedit.toPlainText(), QString(originalWord + QLatin1Char(' ')) );
+    QCOMPARE(lineedit.toPlainText(), QString(originalWord + QLatin1Char(' ')));
 }
 
 void LineEditWithAutocorrectionTest::shouldReplaceWordWhenExactText()
@@ -54,7 +54,7 @@ void LineEditWithAutocorrectionTest::shouldReplaceWordWhenExactText()
     QTest::qWaitForWindowShown(&lineedit);
     QTest::keyClicks(&lineedit, originalWord);
     QTest::keyClick(&lineedit, ' ');
-    QCOMPARE(lineedit.toPlainText(), QString(replaceWord + QLatin1Char(' ')) );
+    QCOMPARE(lineedit.toPlainText(), QString(replaceWord + QLatin1Char(' ')));
 
 }
 
@@ -73,7 +73,7 @@ void LineEditWithAutocorrectionTest::shouldNotReplaceWordWhenInexactText()
     QTest::qWaitForWindowShown(&lineedit);
     QTest::keyClicks(&lineedit, nonExactText);
     QTest::keyClick(&lineedit, ' ');
-    QCOMPARE(lineedit.toPlainText(), QString(nonExactText + QLatin1Char(' ')) );
+    QCOMPARE(lineedit.toPlainText(), QString(nonExactText + QLatin1Char(' ')));
 }
 
 void LineEditWithAutocorrectionTest::shouldNotAddTwoSpace()
@@ -86,7 +86,7 @@ void LineEditWithAutocorrectionTest::shouldNotAddTwoSpace()
     QTest::qWaitForWindowShown(&lineedit);
     QTest::keyClicks(&lineedit, originalWord);
     QTest::keyClick(&lineedit, ' ');
-    QCOMPARE(lineedit.toPlainText(), originalWord );
+    QCOMPARE(lineedit.toPlainText(), originalWord);
 }
 
 QTEST_MAIN(LineEditWithAutocorrectionTest)

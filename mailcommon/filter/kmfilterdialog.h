@@ -197,7 +197,6 @@ public slots:
      */
     void slotUpdateFilterName();
 
-
     void slotAccepted();
     void slotApplied();
 
@@ -433,7 +432,7 @@ protected slots:
     void slotFolderChanged(const Akonadi::Collection &);
 
 private Q_SLOTS:
-    void slotExportAsSieveScript();    
+    void slotExportAsSieveScript();
     void slotHelp();
 
 private:

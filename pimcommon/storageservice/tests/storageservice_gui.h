@@ -21,7 +21,8 @@
 #include <QWidget>
 #include <QDialog>
 class QTextEdit;
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceManager;
 class StorageServiceSettingsWidget;
 class StorageServiceAbstract;
@@ -31,7 +32,7 @@ class StorageServiceSettingsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceSettingsDialog(QWidget *parent=0);
+    explicit StorageServiceSettingsDialog(QWidget *parent = 0);
     QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
     void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
 
@@ -43,7 +44,7 @@ class StorageServiceTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceTestWidget(QWidget *parent=0);
+    explicit StorageServiceTestWidget(QWidget *parent = 0);
 
 private slots:
     void slotSettings();

@@ -20,12 +20,13 @@
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon_export.h"
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT YouSendItStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
-    explicit YouSendItStorageService(QObject *parent=0);
+    explicit YouSendItStorageService(QObject *parent = 0);
     ~YouSendItStorageService();
 
     static QString name();
@@ -58,7 +59,6 @@ public:
 
     StorageServiceAbstract::Capabilities capabilities() const;
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder);
-
 
     QString storageServiceName() const;
     QIcon icon() const;

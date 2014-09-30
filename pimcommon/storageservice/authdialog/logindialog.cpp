@@ -32,8 +32,8 @@ using namespace PimCommon;
 LoginDialog::LoginDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n( "Authorize" ) );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Authorize"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -65,7 +65,7 @@ LoginDialog::LoginDialog(QWidget *parent)
 
     connect(mUsername, &QLineEdit::textChanged, this, &LoginDialog::slotUserNameChanged);
     mOkButton->setEnabled(false);
-    resize(300,100);
+    resize(300, 100);
     mLabUsername->setFocus();
 }
 

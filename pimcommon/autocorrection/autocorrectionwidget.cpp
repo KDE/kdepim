@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -92,7 +92,7 @@ AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
     connect(ui->abbreviationList, &PimCommon::AutoCorrectionListWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeAbbreviationEntry);
     connect(ui->twoUpperLetterList, &PimCommon::AutoCorrectionListWidget::itemSelectionChanged, this, &AutoCorrectionWidget::slotEnableDisableTwoUpperEntry);
     connect(ui->twoUpperLetterList, &PimCommon::AutoCorrectionListWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeTwoUpperLetterEntry);
-    connect(ui->autocorrectionLanguage,SIGNAL(activated(int)),SLOT(changeLanguage(int)));
+    connect(ui->autocorrectionLanguage, SIGNAL(activated(int)), SLOT(changeLanguage(int)));
     connect(ui->addNonBreakingSpaceInFrench, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
     connect(ui->twoUpperLetter, &KLineEdit::returnPressed, this, &AutoCorrectionWidget::addTwoUpperLetterEntry);
     connect(ui->abbreviation, &KLineEdit::returnPressed, this, &AutoCorrectionWidget::addAbbreviationEntry);
@@ -100,15 +100,15 @@ AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
     slotEnableDisableTwoUpperEntry();
 
     QMenu *menu = new QMenu();
-    ui->importAutoCorrection->setMenu( menu );
+    ui->importAutoCorrection->setMenu(menu);
 
-    QAction *act = new QAction( i18n( "LibreOffice Autocorrection" ), this );
-    act->setData( QVariant::fromValue( AutoCorrectionWidget::LibreOffice ) );
-    menu->addAction( act );
+    QAction *act = new QAction(i18n("LibreOffice Autocorrection"), this);
+    act->setData(QVariant::fromValue(AutoCorrectionWidget::LibreOffice));
+    menu->addAction(act);
 
-    act = new QAction( i18n( "KMail/Calligra Autocorrection" ), this );
-    act->setData( QVariant::fromValue( AutoCorrectionWidget::KMail ) );
-    menu->addAction( act );
+    act = new QAction(i18n("KMail/Calligra Autocorrection"), this);
+    act->setData(QVariant::fromValue(AutoCorrectionWidget::KMail));
+    menu->addAction(act);
 
     connect(menu, &QMenu::triggered, this, &AutoCorrectionWidget::slotImportAutoCorrection);
 
@@ -120,7 +120,7 @@ AutoCorrectionWidget::~AutoCorrectionWidget()
     delete ui;
 }
 
-void AutoCorrectionWidget::setAutoCorrection(AutoCorrection * autoCorrect)
+void AutoCorrectionWidget::setAutoCorrection(AutoCorrection *autoCorrect)
 {
     mAutoCorrection = autoCorrect;
     setLanguage(ui->autocorrectionLanguage->language());
@@ -128,8 +128,9 @@ void AutoCorrectionWidget::setAutoCorrection(AutoCorrection * autoCorrect)
 
 void AutoCorrectionWidget::loadConfig()
 {
-    if (!mAutoCorrection)
+    if (!mAutoCorrection) {
         return;
+    }
 
     ui->autoChangeFormat->setChecked(mAutoCorrection->isAutoBoldUnderline());
     ui->autoFormatUrl->setChecked(mAutoCorrection->isAutoFormatUrl());
@@ -181,11 +182,11 @@ void AutoCorrectionWidget::addAutoCorrectEntries()
 {
     ui->treeWidget->clear();
     QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
-    QTreeWidgetItem * item = 0;
+    QTreeWidgetItem *item = 0;
     while (i != m_autocorrectEntries.constEnd()) {
-        item = new QTreeWidgetItem( ui->treeWidget, item );
-        item->setText( 0, i.key() );
-        item->setText( 1, i.value() );
+        item = new QTreeWidgetItem(ui->treeWidget, item);
+        item->setText(0, i.key());
+        item->setText(1, i.value());
         ++i;
     }
     ui->treeWidget->setSortingEnabled(true);
@@ -194,8 +195,9 @@ void AutoCorrectionWidget::addAutoCorrectEntries()
 
 void AutoCorrectionWidget::writeConfig()
 {
-    if(!mAutoCorrection)
+    if (!mAutoCorrection) {
         return;
+    }
     mAutoCorrection->setAutoBoldUnderline(ui->autoChangeFormat->isChecked());
     mAutoCorrection->setAutoFormatUrl(ui->autoFormatUrl->isChecked());
     mAutoCorrection->setEnabledAutoCorrection(ui->enabledAutocorrection->isChecked());
@@ -334,18 +336,17 @@ void AutoCorrectionWidget::enableAdvAutocorrection(bool state)
     const QString replace = ui->replace->text();
 
     ui->addButton->setEnabled(state && !find.isEmpty() && !replace.isEmpty());
-    ui->removeButton->setEnabled(state && ui->treeWidget->currentItem ());
+    ui->removeButton->setEnabled(state && ui->treeWidget->currentItem());
     ui->treeWidget->setEnabled(state);
 }
 
-
 void AutoCorrectionWidget::addAutocorrectEntry()
 {
-    QTreeWidgetItem *item = ui->treeWidget->currentItem ();
+    QTreeWidgetItem *item = ui->treeWidget->currentItem();
     const QString find = ui->find->text();
     const QString replace = ui->replace->text();
-    if (find == replace ) {
-        KMessageBox::error( this, i18n("\"Replace\" string is the same as \"Find\" string."),i18n( "Add Autocorrection Entry" ) );
+    if (find == replace) {
+        KMessageBox::error(this, i18n("\"Replace\" string is the same as \"Find\" string."), i18n("Add Autocorrection Entry"));
         return;
     }
 
@@ -360,12 +361,12 @@ void AutoCorrectionWidget::addAutocorrectEntry()
     m_autocorrectEntries.insert(find, replace);
     ui->treeWidget->setSortingEnabled(false);
     if (modify) {
-        item->setText(0,find);
-        item->setText(1,replace);
+        item->setText(0, find);
+        item->setText(1, replace);
     } else {
-        item = new QTreeWidgetItem( ui->treeWidget, item );
-        item->setText( 0, find );
-        item->setText( 1, replace );
+        item = new QTreeWidgetItem(ui->treeWidget, item);
+        item->setText(0, find);
+        item->setText(1, replace);
     }
 
     ui->treeWidget->setSortingEnabled(true);
@@ -375,25 +376,27 @@ void AutoCorrectionWidget::addAutocorrectEntry()
 
 void AutoCorrectionWidget::removeAutocorrectEntry()
 {
-    QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems ();
-    if (listItems.isEmpty())
+    QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems();
+    if (listItems.isEmpty()) {
         return;
+    }
     Q_FOREACH (QTreeWidgetItem *item, listItems) {
-        QTreeWidgetItem *below = ui->treeWidget->itemBelow( item );
+        QTreeWidgetItem *below = ui->treeWidget->itemBelow(item);
 
         QString findStr;
-        if ( below ) {
+        if (below) {
             //qDebug() << "below";
             findStr = item->text(0);
             delete item;
             item = 0;
-        } else if ( ui->treeWidget->topLevelItemCount() > 0 ) {
+        } else if (ui->treeWidget->topLevelItemCount() > 0) {
             findStr = item->text(0);
             delete item;
             item = 0;
         }
-        if(!findStr.isEmpty())
+        if (!findStr.isEmpty()) {
             m_autocorrectEntries.remove(findStr);
+        }
     }
     ui->treeWidget->setSortingEnabled(false);
 
@@ -402,7 +405,7 @@ void AutoCorrectionWidget::removeAutocorrectEntry()
 
 void AutoCorrectionWidget::updateAddRemoveButton()
 {
-    QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems ();
+    QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems();
     ui->removeButton->setEnabled(!listItems.isEmpty());
 }
 
@@ -417,7 +420,7 @@ void AutoCorrectionWidget::enableAddRemoveButton()
     }
 
     bool enable = false;
-    if ( find.isEmpty() || replace.isEmpty()) {// disable if no text in find/replace
+    if (find.isEmpty() || replace.isEmpty()) { // disable if no text in find/replace
         enable = !(find.isEmpty() || replace.isEmpty());
     } else if (item && find == item->text(0)) {
         // We disable add / remove button if no text for the replacement
@@ -428,21 +431,21 @@ void AutoCorrectionWidget::enableAddRemoveButton()
         ui->addButton->setText(i18n("&Add"));
     }
 
-    if (item && replace == item->text(1))
+    if (item && replace == item->text(1)) {
         ui->addButton->setEnabled(false);
-    else
+    } else {
         ui->addButton->setEnabled(enable);
+    }
     ui->removeButton->setEnabled(enable);
 
 }
 
-void AutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem*item ,int column)
+void AutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem *item , int column)
 {
     Q_UNUSED(column);
     ui->find->setText(item->text(0));
     ui->replace->setText(item->text(1));
 }
-
 
 void AutoCorrectionWidget::abbreviationChanged(const QString &text)
 {
@@ -457,8 +460,9 @@ void AutoCorrectionWidget::twoUpperLetterChanged(const QString &text)
 void AutoCorrectionWidget::addAbbreviationEntry()
 {
     const QString text = ui->abbreviation->text();
-    if (text.isEmpty())
+    if (text.isEmpty()) {
         return;
+    }
     if (!m_upperCaseExceptions.contains(text)) {
         m_upperCaseExceptions.insert(text);
         ui->abbreviationList->addItem(text);
@@ -470,10 +474,11 @@ void AutoCorrectionWidget::addAbbreviationEntry()
 
 void AutoCorrectionWidget::removeAbbreviationEntry()
 {
-    QList<QListWidgetItem *> listItem = ui->abbreviationList->selectedItems ();
-    if (listItem.isEmpty())
+    QList<QListWidgetItem *> listItem = ui->abbreviationList->selectedItems();
+    if (listItem.isEmpty()) {
         return;
-    Q_FOREACH( QListWidgetItem *item, listItem ) {
+    }
+    Q_FOREACH (QListWidgetItem *item, listItem) {
         m_upperCaseExceptions.remove(item->text());
         delete item;
     }
@@ -484,8 +489,9 @@ void AutoCorrectionWidget::removeAbbreviationEntry()
 void AutoCorrectionWidget::addTwoUpperLetterEntry()
 {
     const QString text = ui->twoUpperLetter->text();
-    if (text.isEmpty())
+    if (text.isEmpty()) {
         return;
+    }
     if (!m_twoUpperLetterExceptions.contains(text)) {
         m_twoUpperLetterExceptions.insert(text);
         ui->twoUpperLetterList->addItem(text);
@@ -498,10 +504,11 @@ void AutoCorrectionWidget::addTwoUpperLetterEntry()
 
 void AutoCorrectionWidget::removeTwoUpperLetterEntry()
 {
-    QList<QListWidgetItem *> listItem = ui->twoUpperLetterList->selectedItems ();
-    if (listItem.isEmpty())
+    QList<QListWidgetItem *> listItem = ui->twoUpperLetterList->selectedItems();
+    if (listItem.isEmpty()) {
         return;
-    Q_FOREACH( QListWidgetItem *item, listItem ) {
+    }
+    Q_FOREACH (QListWidgetItem *item, listItem) {
         m_twoUpperLetterExceptions.remove(item->text());
         delete item;
     }
@@ -509,24 +516,23 @@ void AutoCorrectionWidget::removeTwoUpperLetterEntry()
     emitChanged();
 }
 
-
 void AutoCorrectionWidget::slotEnableDisableAbreviationList()
 {
-    const bool enable = (!ui->abbreviationList->selectedItems ().isEmpty());
+    const bool enable = (!ui->abbreviationList->selectedItems().isEmpty());
     ui->add1->setEnabled(!ui->abbreviation->text().isEmpty());
     ui->remove1->setEnabled(enable);
 }
 
 void AutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
 {
-    const bool enable = (!ui->twoUpperLetterList->selectedItems ().isEmpty());
-    ui->add2->setEnabled( !ui->twoUpperLetter->text().isEmpty());
+    const bool enable = (!ui->twoUpperLetterList->selectedItems().isEmpty());
+    ui->add2->setEnabled(!ui->twoUpperLetter->text().isEmpty());
     ui->remove2->setEnabled(enable);
 }
 
-void AutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
+void AutoCorrectionWidget::slotImportAutoCorrection(QAction *act)
 {
-    if ( act ) {
+    if (act) {
         AutoCorrectionWidget::ImportFileType type = act->data().value<AutoCorrectionWidget::ImportFileType>();
         QString title;
         QString filter;
@@ -541,9 +547,9 @@ void AutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
             break;
         }
         const QString fileName = QFileDialog::getOpenFileName(this, title ,  QString(), filter);
-        if ( !fileName.isEmpty() ) {
+        if (!fileName.isEmpty()) {
             PimCommon::ImportAbstractAutocorrection *importAutoCorrection = 0;
-            switch(type) {
+            switch (type) {
             case AutoCorrectionWidget::LibreOffice:
                 importAutoCorrection = new PimCommon::ImportLibreOfficeAutocorrection(this);
                 break;
@@ -553,7 +559,7 @@ void AutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
             default:
                 return;
             }
-            if (importAutoCorrection->import(fileName,ImportAbstractAutocorrection::All)) {
+            if (importAutoCorrection->import(fileName, ImportAbstractAutocorrection::All)) {
                 m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
                 addAutoCorrectEntries();
 
@@ -582,15 +588,16 @@ void AutoCorrectionWidget::setLanguage(const QString &lang)
 
 void AutoCorrectionWidget::changeLanguage(int index)
 {
-    if (index == -1)
+    if (index == -1) {
         return;
+    }
     if (mWasChanged) {
-        const int rc = KMessageBox::warningYesNo( this,i18n("Language was changed, do you want to save config for previous language?"),i18n( "Save config" ) );
-        if ( rc == KMessageBox::Yes ) {
+        const int rc = KMessageBox::warningYesNo(this, i18n("Language was changed, do you want to save config for previous language?"), i18n("Save config"));
+        if (rc == KMessageBox::Yes) {
             writeConfig();
         }
     }
-    const QString lang = ui->autocorrectionLanguage->itemData (index).toString();
+    const QString lang = ui->autocorrectionLanguage->itemData(index).toString();
     mAutoCorrection->setLanguage(lang);
     loadAutoCorrectionAndException();
     mWasChanged = false;
@@ -604,8 +611,8 @@ void AutoCorrectionWidget::emitChanged()
 
 void AutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
 {
-    const QString lang = ui->autocorrectionLanguage->itemData (ui->autocorrectionLanguage->currentIndex()).toString();
-    mAutoCorrection->setLanguage(lang,true);
+    const QString lang = ui->autocorrectionLanguage->itemData(ui->autocorrectionLanguage->currentIndex()).toString();
+    mAutoCorrection->setLanguage(lang, true);
     loadAutoCorrectionAndException();
     mWasChanged = true;
     Q_EMIT changed();
@@ -613,8 +620,8 @@ void AutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
 
 void AutoCorrectionWidget::slotExportAutoCorrection()
 {
-    const KUrl saveUrl= KFileDialog::getSaveUrl(QDir::homePath(), QString(), this, i18n( "Export Autocorrection File" ) );
-    if ( saveUrl.isEmpty() ) {
+    const KUrl saveUrl = KFileDialog::getSaveUrl(QDir::homePath(), QString(), this, i18n("Export Autocorrection File"));
+    if (saveUrl.isEmpty()) {
         return;
     }
     mAutoCorrection->writeAutoCorrectionXmlFile(saveUrl.toLocalFile());

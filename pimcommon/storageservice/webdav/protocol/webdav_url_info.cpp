@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 /* This file is part of QWebdav
  *
  * Copyright (C) 2009-2010 Corentin Chary <corentin.chary@gmail.com>
@@ -52,21 +51,21 @@ QWebdavUrlInfo::~QWebdavUrlInfo()
 {
 }
 
-QWebdavUrlInfo::QWebdavUrlInfo(const QDomElement & dom)
+QWebdavUrlInfo::QWebdavUrlInfo(const QDomElement &dom)
 {
     setSize(-1);
-    QDomElement href = dom.namedItem( QLatin1String("href") ).toElement();
+    QDomElement href = dom.namedItem(QLatin1String("href")).toElement();
 
     mNode = dom.cloneNode();
 
-    if ( !href.isNull() ) {
+    if (!href.isNull()) {
         const QString urlStr = QUrl::fromPercentEncoding(href.text().toUtf8());
-        QDomNodeList propstats = dom.elementsByTagName( QLatin1String("propstat") );
-        davParsePropstats( urlStr, propstats );
+        QDomNodeList propstats = dom.elementsByTagName(QLatin1String("propstat"));
+        davParsePropstats(urlStr, propstats);
     }
 }
 
-QWebdavUrlInfo::QWebdavUrlInfo (const QWebdavUrlInfo & wui)
+QWebdavUrlInfo::QWebdavUrlInfo(const QWebdavUrlInfo &wui)
     : QUrlInfo(wui),
       mProperties(wui.mProperties),
       mCreatedAt(wui.mCreatedAt),
@@ -79,39 +78,43 @@ QWebdavUrlInfo::QWebdavUrlInfo (const QWebdavUrlInfo & wui)
     mNode = wui.mNode.cloneNode();
 }
 
-int QWebdavUrlInfo::codeFromResponse( const QString& response )
+int QWebdavUrlInfo::codeFromResponse(const QString &response)
 {
-    const int firstSpace = response.indexOf( QLatin1Char(' ') );
-    const int secondSpace = response.indexOf( QLatin1Char(' '), firstSpace + 1 );
-    return response.mid( firstSpace + 1, secondSpace - firstSpace - 1 ).toInt();
+    const int firstSpace = response.indexOf(QLatin1Char(' '));
+    const int secondSpace = response.indexOf(QLatin1Char(' '), firstSpace + 1);
+    return response.mid(firstSpace + 1, secondSpace - firstSpace - 1).toInt();
 }
 
-QDateTime QWebdavUrlInfo::parseDateTime( const QString& input, const QString& type )
+QDateTime QWebdavUrlInfo::parseDateTime(const QString &input, const QString &type)
 {
     QDateTime datetime;
     QLocale locale(QLocale::C);
 
-    if ( type == QLatin1String("dateTime.tz") )
-        datetime =  QDateTime::fromString( input, Qt::ISODate );
-    else if ( type == QLatin1String("dateTime.rfc1123") )
-        datetime = locale.toDateTime( input );
+    if (type == QLatin1String("dateTime.tz")) {
+        datetime =  QDateTime::fromString(input, Qt::ISODate);
+    } else if (type == QLatin1String("dateTime.rfc1123")) {
+        datetime = locale.toDateTime(input);
+    }
 
-    if (!datetime.isNull())
+    if (!datetime.isNull()) {
         return datetime;
+    }
 
     datetime = locale.toDateTime(input.left(19), QLatin1String("yyyy-MM-dd'T'hh:mm:ss"));
-    if (!datetime.isNull())
+    if (!datetime.isNull()) {
         return datetime;
+    }
     datetime = locale.toDateTime(input.mid(5, 20) , QLatin1String("dd MMM yyyy hh:mm:ss"));
-    if (!datetime.isNull())
+    if (!datetime.isNull()) {
         return datetime;
+    }
 
     const QDate date = locale.toDate(input.mid(5, 11) , QLatin1String("dd MMM yyyy"));
     const QTime time = locale.toTime(input.mid(17, 8) , QLatin1String("hh:mm:ss"));
     return QDateTime(date, time);
 }
 
-void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList & propstats )
+void QWebdavUrlInfo::davParsePropstats(const QString &path, const QDomNodeList &propstats)
 {
     QString mimeType;
     bool foundExecutable = false;
@@ -120,75 +123,80 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
     setName(path);
     QMap<QString, QVariant> map;
 
-
-    for ( int i = 0; i < propstats.count(); ++i) {
+    for (int i = 0; i < propstats.count(); ++i) {
         QDomElement propstat = propstats.item(i).toElement();
-        QDomElement status = propstat.namedItem( QLatin1String("status") ).toElement();
+        QDomElement status = propstat.namedItem(QLatin1String("status")).toElement();
 
-        if ( status.isNull() ) {
+        if (status.isNull()) {
             qDebug() << "Error, no status code in this propstat";
             return;
         }
 
-        const int code = codeFromResponse( status.text() );
+        const int code = codeFromResponse(status.text());
 
-        if (code == 404)
+        if (code == 404) {
             continue ;
+        }
 
-        const QDomElement prop = propstat.namedItem( QLatin1String("prop") ).toElement();
+        const QDomElement prop = propstat.namedItem(QLatin1String("prop")).toElement();
 
-        if ( prop.isNull() ) {
+        if (prop.isNull()) {
             qDebug() << "Error: no prop segment in this propstat.";
             return;
         }
 
-        for ( QDomNode n = prop.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+        for (QDomNode n = prop.firstChild(); !n.isNull(); n = n.nextSibling()) {
             QDomElement property = n.toElement();
 
-            if (property.isNull())
+            if (property.isNull()) {
                 continue;
+            }
 
             //mProperties[property.namespaceURI()][property.tagName()] = property.text();
 
-            if ( property.namespaceURI() != QLatin1String("DAV:") ) {
+            if (property.namespaceURI() != QLatin1String("DAV:")) {
                 // break out - we're only interested in properties from the DAV namespace
                 continue;
             }
             map.insert(property.tagName(), property.text());
 
-            if ( property.tagName() == QLatin1String("creationdate") ) {
-                const QDateTime t = parseDateTime( property.text(), property.attribute(QLatin1String("dt")) );
+            if (property.tagName() == QLatin1String("creationdate")) {
+                const QDateTime t = parseDateTime(property.text(), property.attribute(QLatin1String("dt")));
                 setCreatedAt(t);
                 map.insert(QLatin1String("creationdate"), t.toString());
-            } else if ( property.tagName() == QLatin1String("getcontentlength") ) {
+            } else if (property.tagName() == QLatin1String("getcontentlength")) {
                 setSize(property.text().toULong());
-            } else if ( property.tagName() == QLatin1String("displayname") ) {
+            } else if (property.tagName() == QLatin1String("displayname")) {
                 setDisplayName(property.text());
-            } else if ( property.tagName() == QLatin1String("source") ) {
-                const QDomElement source = property.namedItem( QLatin1String("link") ).toElement().namedItem( QLatin1String("dst") ).toElement();
-                if ( !source.isNull() )
+            } else if (property.tagName() == QLatin1String("source")) {
+                const QDomElement source = property.namedItem(QLatin1String("link")).toElement().namedItem(QLatin1String("dst")).toElement();
+                if (!source.isNull()) {
                     setSource(source.text());
-            } else if ( property.tagName() == QLatin1String("getcontentlanguage") ) {
+                }
+            } else if (property.tagName() == QLatin1String("getcontentlanguage")) {
                 setContentLanguage(property.text());
-            } else if ( property.tagName() == QLatin1String("getcontenttype") ) {
-                if ( property.text() == QLatin1String("httpd/unix-directory") )
+            } else if (property.tagName() == QLatin1String("getcontenttype")) {
+                if (property.text() == QLatin1String("httpd/unix-directory")) {
                     isDirectory = true;
-                else
+                } else {
                     mimeType = property.text();
-            } else if ( property.tagName() == QLatin1String("executable") ) {
-                if ( property.text() == QLatin1String("T") )
+                }
+            } else if (property.tagName() == QLatin1String("executable")) {
+                if (property.text() == QLatin1String("T")) {
                     foundExecutable = true;
-            } else if ( property.tagName() == QLatin1String("getlastmodified") ) {
-                const QDateTime t = parseDateTime( property.text(), property.attribute(QLatin1String("dt")) );
+                }
+            } else if (property.tagName() == QLatin1String("getlastmodified")) {
+                const QDateTime t = parseDateTime(property.text(), property.attribute(QLatin1String("dt")));
                 setLastModified(t);
                 map.insert(QLatin1String("lastmodified"), t.toString());
-            } else if ( property.tagName() == QLatin1String("getetag") ) {
+            } else if (property.tagName() == QLatin1String("getetag")) {
                 setEntitytag(property.text());
-            } else if ( property.tagName() == QLatin1String("resourcetype") ) {
-                if ( !property.namedItem( QLatin1String("collection") ).toElement().isNull() )
+            } else if (property.tagName() == QLatin1String("resourcetype")) {
+                if (!property.namedItem(QLatin1String("collection")).toElement().isNull()) {
                     isDirectory = true;
+                }
             } else {
-                qDebug() << "Found unknown webdav property: "<< property.tagName() << property.text();
+                qDebug() << "Found unknown webdav property: " << property.tagName() << property.text();
             }
         }
     }
@@ -201,49 +209,50 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
     setDir(isDirectory);
     setFile(!isDirectory);
 
-    if (isDirectory && !name().endsWith(QLatin1String("/")))
+    if (isDirectory && !name().endsWith(QLatin1String("/"))) {
         setName(name() + QLatin1String("/"));
+    }
 
-    if ( foundExecutable || isDirectory )
+    if (foundExecutable || isDirectory) {
         setPermissions(0700);
-    else
+    } else {
         setPermissions(0600);
+    }
 
-    if ( !isDirectory && !mimeType.isEmpty() )
+    if (!isDirectory && !mimeType.isEmpty()) {
         setMimeType(mimeType);
+    }
 }
 
-
-void QWebdavUrlInfo::setCreatedAt(const QDateTime & date)
+void QWebdavUrlInfo::setCreatedAt(const QDateTime &date)
 {
     mCreatedAt = date;
 }
 
-void QWebdavUrlInfo::setDisplayName(const QString & name)
+void QWebdavUrlInfo::setDisplayName(const QString &name)
 {
     mDisplayName = name;
 }
 
-void QWebdavUrlInfo::setSource(const QString & source)
+void QWebdavUrlInfo::setSource(const QString &source)
 {
     mSource = source;
 }
 
-void QWebdavUrlInfo::setContentLanguage(const QString & lang)
+void QWebdavUrlInfo::setContentLanguage(const QString &lang)
 {
     mContentLanguage = lang;
 }
 
-void QWebdavUrlInfo::setEntitytag(const QString & etag)
+void QWebdavUrlInfo::setEntitytag(const QString &etag)
 {
     mEntityTag = etag;
 }
 
-void QWebdavUrlInfo::setMimeType(const QString & mime)
+void QWebdavUrlInfo::setMimeType(const QString &mime)
 {
     mMimeType = mime;
 }
-
 
 QDateTime QWebdavUrlInfo::createdAt() const
 {
@@ -290,16 +299,18 @@ QList<QWebdavUrlInfo> QWebdavUrlInfo::parseListInfo(const QString &lst)
     QList<QWebdavUrlInfo> lstUrlInfo;
     QDomDocument dom;
     dom.setContent(lst.toLatin1(), true);
-    for ( QDomNode n = dom.documentElement().firstChild(); !n.isNull(); n = n.nextSibling()) {
+    for (QDomNode n = dom.documentElement().firstChild(); !n.isNull(); n = n.nextSibling()) {
         QDomElement thisResponse = n.toElement();
 
-        if (thisResponse.isNull())
+        if (thisResponse.isNull()) {
             continue;
+        }
 
         QWebdavUrlInfo info(thisResponse);
 
-        if (!info.isValid())
+        if (!info.isValid()) {
             continue;
+        }
         lstUrlInfo.append(info);
     }
     return lstUrlInfo;

@@ -23,7 +23,8 @@
 #include <QWidget>
 class KToggleAction;
 class QStackedWidget;
-namespace PimCommon {
+namespace PimCommon
+{
 class ShortUrlWidget;
 class TranslatorWidget;
 class PIMCOMMON_EXPORT CustomToolsWidget : public QWidget
@@ -35,7 +36,7 @@ public:
         ShortUrlTool = 1
     };
 
-    explicit CustomToolsWidget(QWidget *parent=0);
+    explicit CustomToolsWidget(QWidget *parent = 0);
     ~CustomToolsWidget();
 
     void switchToTool(CustomToolsWidget::ToolType type);
@@ -47,9 +48,8 @@ public:
     ShortUrlWidget *shortUrlWidget() const;
     TranslatorWidget *translatorWidget() const;
 
-
 private Q_SLOTS:
-    void slotHideTools();    
+    void slotHideTools();
     void slotVisibleShortUrlTools(bool b);
     void slotVisibleTranslatorTools(bool b);
 

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef VCARDMEMENTO_H
 #define VCARDMEMENTO_H
 
@@ -29,10 +28,11 @@
 
 class KJob;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 struct VCard {
-    VCard(const QString& str, bool b)
+    VCard(const QString &str, bool b)
         : email(str), found(b)
     {
     }
@@ -43,33 +43,32 @@ struct VCard {
 
 class VcardMemento : public QObject, public Interface::BodyPartMemento
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-  explicit VcardMemento( const QStringList& emails );
-  ~VcardMemento();
+    explicit VcardMemento(const QStringList &emails);
+    ~VcardMemento();
 
-   bool finished() const;
+    bool finished() const;
 
-   virtual void detach();
+    virtual void detach();
 
-   bool vcardExist(int index) const;
+    bool vcardExist(int index) const;
 
-   KABC::Addressee address( int index ) const;
+    KABC::Addressee address(int index) const;
 
 private Q_SLOTS:
-   void slotSearchJobFinished( KJob *job );
-
+    void slotSearchJobFinished(KJob *job);
 
 Q_SIGNALS:
-  // TODO: Factor our update and detach into base class
-  void update( MessageViewer::Viewer::UpdateMode );
+    // TODO: Factor our update and detach into base class
+    void update(MessageViewer::Viewer::UpdateMode);
 
 private:
-  void checkEmail();
-  void continueToCheckEmail();
-  QList<VCard> mVCardList;
-  int mIndex;
-  bool mFinished;
+    void checkEmail();
+    void continueToCheckEmail();
+    QList<VCard> mVCardList;
+    int mIndex;
+    bool mFinished;
 };
 }
 

@@ -23,10 +23,12 @@
 
 class QContextMenuEvent;
 class QMenu;
-namespace Sonnet {
+namespace Sonnet
+{
 class Highlighter;
 }
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT RichTextEditor : public QTextEdit
 {
     Q_OBJECT
@@ -34,7 +36,7 @@ class PIMCOMMON_EXPORT RichTextEditor : public QTextEdit
     Q_PROPERTY(bool spellCheckingSupport READ spellCheckingSupport WRITE setSpellCheckingSupport)
     Q_PROPERTY(bool textToSpeechSupport READ textToSpeechSupport WRITE setTextToSpeechSupport)
 public:
-    explicit RichTextEditor(QWidget *parent=0);
+    explicit RichTextEditor(QWidget *parent = 0);
     ~RichTextEditor();
     enum SupportFeature {
         None = 0,
@@ -48,17 +50,17 @@ public:
     bool searchSupport() const;
 
     bool spellCheckingSupport() const;
-    void setSpellCheckingSupport( bool check );
+    void setSpellCheckingSupport(bool check);
 
     void setSpellCheckingConfigFileName(const QString &_fileName);
 
     bool checkSpellingEnabled() const;
-    void setCheckSpellingEnabled( bool check );
+    void setCheckSpellingEnabled(bool check);
 
     void setSpellCheckingLanguage(const QString &_language);
-    const QString& spellCheckingLanguage() const;
+    const QString &spellCheckingLanguage() const;
 
-    virtual void setReadOnly( bool readOnly );
+    virtual void setReadOnly(bool readOnly);
     virtual void createHighlighter();
 
     bool textToSpeechSupport() const;
@@ -66,43 +68,41 @@ public:
 Q_SIGNALS:
     void say(const QString &text);
 
-
 private Q_SLOTS:
     void slotSpeakText();
     void slotUndoableClear();
     void slotCheckSpelling();
-    void slotSpellCheckerMisspelling( const QString &text, int pos );
-    void slotSpellCheckerCorrected( const QString &, int,const QString &);
-    void slotSpellCheckerAutoCorrect(const QString&,const QString&);
+    void slotSpellCheckerMisspelling(const QString &text, int pos);
+    void slotSpellCheckerCorrected(const QString &, int, const QString &);
+    void slotSpellCheckerAutoCorrect(const QString &, const QString &);
     void slotSpellCheckerCanceled();
     void slotSpellCheckerFinished();
     void slotToggleAutoSpellCheck();
     void slotLanguageSelected();
 
-
 protected:
     virtual void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
-    void contextMenuEvent( QContextMenuEvent *event );
-    void focusInEvent( QFocusEvent *event );
-    bool event(QEvent* ev);
+    void contextMenuEvent(QContextMenuEvent *event);
+    void focusInEvent(QFocusEvent *event);
+    bool event(QEvent *ev);
     void keyPressEvent(QKeyEvent *event);
 
 Q_SIGNALS:
     void findText();
     void replaceText();
-    void spellCheckerAutoCorrect(const QString& currentWord, const QString& autoCorrectWord);
+    void spellCheckerAutoCorrect(const QString &currentWord, const QString &autoCorrectWord);
     void checkSpellingChanged(bool);
     void languageChanged(const QString &);
     void spellCheckStatus(const QString &);
 
 private:
     bool handleShortcut(const QKeyEvent *event);
-    bool overrideShortcut(const QKeyEvent* event);
+    bool overrideShortcut(const QKeyEvent *event);
     void deleteWordBack();
     void deleteWordForward();
     void defaultPopupMenu(const QPoint &pos);
     void setHighlighter(Sonnet::Highlighter *_highLighter);
-    void highlightWord( int length, int pos );
+    void highlightWord(int length, int pos);
     class RichTextEditorPrivate;
     RichTextEditorPrivate *const d;
 };

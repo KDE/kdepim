@@ -51,14 +51,14 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     grid->setMargin(2);
     setLayout(grid);
 
-    QToolButton *closeBtn = new QToolButton( this );
-    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
-    closeBtn->setIconSize( QSize( 16, 16 ) );
-    closeBtn->setToolTip( i18n( "Close" ) );
+    QToolButton *closeBtn = new QToolButton(this);
+    closeBtn->setIcon(QIcon::fromTheme(QLatin1String("dialog-close")));
+    closeBtn->setIconSize(QSize(16, 16));
+    closeBtn->setToolTip(i18n("Close"));
 #ifndef QT_NO_ACCESSIBILITY
-    closeBtn->setAccessibleName( i18n( "Close" ) );
+    closeBtn->setAccessibleName(i18n("Close"));
 #endif
-    closeBtn->setAutoRaise( true );
+    closeBtn->setAutoRaise(true);
     connect(closeBtn, &QToolButton::clicked, this, &ShortUrlWidget::slotCloseWidget);
 
     grid->addWidget(closeBtn, 0, 0);
@@ -95,7 +95,6 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     connect(mCopyToClipboard, &QPushButton::clicked, this, &ShortUrlWidget::slotPasteToClipboard);
     grid->addWidget(mCopyToClipboard, 3, 2);
 
-
     lab = new QLabel(i18n("Short url:"));
     grid->addWidget(lab, 4, 0);
 
@@ -104,14 +103,11 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     mShortUrl->setReadOnly(true);
     grid->addWidget(mShortUrl, 4, 1);
 
-
-
     mOpenShortUrl = new QPushButton(i18n("Open Short Url"));
     connect(mOpenShortUrl, &QPushButton::clicked, this, &ShortUrlWidget::slotOpenShortUrl);
     grid->addWidget(mOpenShortUrl, 4, 2);
 
-
-    grid->setRowStretch(5,1);
+    grid->setRowStretch(5, 1);
     mConvertButton->setEnabled(false);
     mCopyToClipboard->setEnabled(false);
     mInsertShortUrl->setEnabled(false);
@@ -151,8 +147,9 @@ void ShortUrlWidget::loadEngine()
 {
     delete mEngine;
     mEngine = PimCommon::ShortUrlUtils::loadEngine(this);
-    if (mShorturlServiceName)
+    if (mShorturlServiceName) {
         mShorturlServiceName->setText(mEngine->shortUrlName());
+    }
     connect(mEngine, &AbstractShortUrl::shortUrlDone, this, &ShortUrlWidget::slotShortUrlDone);
     connect(mEngine, &AbstractShortUrl::shortUrlFailed, this, &ShortUrlWidget::slotShortUrlFailed);
 }
@@ -163,8 +160,9 @@ void ShortUrlWidget::slotConvertUrl()
         KMessageBox::information(this, i18n("No network connection detected, we cannot shorten url."), i18n("No network"));
         return;
     }
-    if (mOriginalUrl->text().isEmpty())
+    if (mOriginalUrl->text().isEmpty()) {
         return;
+    }
     mIndicatorLabel->start();
     mEngine->shortUrl(mOriginalUrl->text());
     mShortUrl->clear();
@@ -203,15 +201,15 @@ void ShortUrlWidget::slotShortUrlFailed(const QString &errMsg)
     mIndicatorLabel->stop();
 }
 
-
 void ShortUrlWidget::slotCloseWidget()
 {
     mOriginalUrl->clear();
     mShortUrl->clear();
     mIndicatorLabel->stop();
 
-    if (mStandalone)
+    if (mStandalone) {
         hide();
+    }
 
     Q_EMIT shortUrlWasClosed();
 }
@@ -224,7 +222,7 @@ void ShortUrlWidget::setStandalone(bool b)
 KToggleAction *ShortUrlWidget::toggleAction()
 {
     if (!mToggleAction) {
-        mToggleAction = new KToggleAction( i18n("Generate Shorten Url"), this );
+        mToggleAction = new KToggleAction(i18n("Generate Shorten Url"), this);
         mToggleAction->setChecked(false);
     }
     return mToggleAction;
@@ -234,6 +232,6 @@ void ShortUrlWidget::slotOpenShortUrl()
 {
     const QString shortUrl = mShortUrl->text();
     if (!shortUrl.isEmpty()) {
-        new KRun( shortUrl, this );
+        new KRun(shortUrl, this);
     }
 }

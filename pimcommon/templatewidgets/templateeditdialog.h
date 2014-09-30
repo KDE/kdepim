@@ -21,7 +21,8 @@
 #include <QDialog>
 
 class QLineEdit;
-namespace PimCommon {
+namespace PimCommon
+{
 class RichTextEditorWidget;
 class TemplateEditDialog : public QDialog
 {

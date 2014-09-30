@@ -17,20 +17,21 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-
 #ifndef PIMCOMMON_MINIMUMCOMBOBOX_H
 #define PIMCOMMON_MINIMUMCOMBOBOX_H
 
 #include <kcombobox.h>
 #include "pimcommon_export.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 /** @short A KComboBox, which minimum size hint can be really small */
-class PIMCOMMON_EXPORT MinimumComboBox: public KComboBox {
+class PIMCOMMON_EXPORT MinimumComboBox: public KComboBox
+{
     Q_OBJECT
 public:
-    explicit MinimumComboBox(QWidget* parent = 0);
+    explicit MinimumComboBox(QWidget *parent = 0);
 
 protected:
     QSize minimumSizeHint() const;

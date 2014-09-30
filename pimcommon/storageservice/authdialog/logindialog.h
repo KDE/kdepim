@@ -23,12 +23,13 @@
 class QLineEdit;
 class QLabel;
 class QPushButton;
-namespace PimCommon {
+namespace PimCommon
+{
 class LoginDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit LoginDialog(QWidget *parent=0);
+    explicit LoginDialog(QWidget *parent = 0);
     ~LoginDialog();
 
     void setUsernameLabel(const QString &labelName);

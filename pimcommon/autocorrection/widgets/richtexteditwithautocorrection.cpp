@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "richtexteditwithautocorrection.h"
 #include "pimcommon/autocorrection/autocorrection.h"
 
@@ -32,8 +31,9 @@ RichTextEditWithAutoCorrection::RichTextEditWithAutoCorrection(QWidget *parent)
 
 RichTextEditWithAutoCorrection::~RichTextEditWithAutoCorrection()
 {
-    if (mNeedToDelete)
+    if (mNeedToDelete) {
         delete mAutoCorrection;
+    }
 }
 
 void RichTextEditWithAutoCorrection::setAutocorrection(PimCommon::AutoCorrection *autocorrect)
@@ -53,13 +53,13 @@ void RichTextEditWithAutoCorrection::setAutocorrectionLanguage(const QString &la
     mAutoCorrection->setLanguage(language);
 }
 
-static bool isSpecial( const QTextCharFormat &charFormat )
+static bool isSpecial(const QTextCharFormat &charFormat)
 {
     return charFormat.isFrameFormat() || charFormat.isImageFormat() ||
-            charFormat.isListFormat() || charFormat.isTableFormat() || charFormat.isTableCellFormat();
+           charFormat.isListFormat() || charFormat.isTableFormat() || charFormat.isTableCellFormat();
 }
 
-void RichTextEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
+void RichTextEditWithAutoCorrection::keyPressEvent(QKeyEvent *e)
 {
     if (mAutoCorrection && mAutoCorrection->isEnabledAutoCorrection()) {
         if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
@@ -86,5 +86,5 @@ void RichTextEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
             }
         }
     }
-    PimCommon::RichTextEditor::keyPressEvent( e );
+    PimCommon::RichTextEditor::keyPressEvent(e);
 }

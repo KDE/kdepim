@@ -22,7 +22,8 @@
 
 #include <QWidget>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class RichTextEditor;
 class RichTextEditFindBar;
 class TextToSpeechWidget;
@@ -31,13 +32,16 @@ class PIMCOMMON_EXPORT RichTextEditorWidget : public QWidget
     Q_OBJECT
     Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
 public:
-    explicit RichTextEditorWidget(QWidget *parent=0);
-    explicit RichTextEditorWidget(RichTextEditor *customEditor, QWidget *parent=0);
+    explicit RichTextEditorWidget(QWidget *parent = 0);
+    explicit RichTextEditorWidget(RichTextEditor *customEditor, QWidget *parent = 0);
     ~RichTextEditorWidget();
 
     void clear();
 
-    RichTextEditor *editor() const { return mEditor; }
+    RichTextEditor *editor() const
+    {
+        return mEditor;
+    }
 
     void setReadOnly(bool readOnly);
     bool isReadOnly() const;

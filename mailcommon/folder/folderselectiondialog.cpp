@@ -67,7 +67,7 @@ FolderSelectionDialog::FolderSelectionDialog(QWidget *parent, SelectionFolderOpt
     setObjectName(QLatin1String("folder dialog"));
 
     d->mNotAllowToCreateNewFolder = (options & FolderSelectionDialog::NotAllowToCreateNewFolder);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -78,12 +78,11 @@ FolderSelectionDialog::FolderSelectionDialog(QWidget *parent, SelectionFolderOpt
     connect(buttonBox, &QDialogButtonBox::accepted, this, &FolderSelectionDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &FolderSelectionDialog::reject);
 
-
     if (!d->mNotAllowToCreateNewFolder) {
         d->mUser1Button = new QPushButton;
         buttonBox->addButton(d->mUser1Button, QDialogButtonBox::ActionRole);
         KGuiItem::assign(d->mUser1Button, KGuiItem(i18n("&New Subfolder..."), QLatin1String("folder-new"),
-                     i18n("Create a new subfolder under the currently selected folder")));
+                         i18n("Create a new subfolder under the currently selected folder")));
     }
 
     FolderTreeWidget::TreeViewOptions opt = FolderTreeWidget::None;
@@ -117,8 +116,6 @@ FolderSelectionDialog::FolderSelectionDialog(QWidget *parent, SelectionFolderOpt
 #endif
     mainLayout->addWidget(d->folderTreeWidget);
     mainLayout->addWidget(buttonBox);
-
-
 
     d->mOkButton->setEnabled(false);
     if (!d->mNotAllowToCreateNewFolder) {

@@ -23,12 +23,13 @@
 
 class QSpinBox;
 class QPushButton;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT TextGoToLineWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextGoToLineWidget(QWidget *parent=0);
+    explicit TextGoToLineWidget(QWidget *parent = 0);
     ~TextGoToLineWidget();
 
     void goToLine();
@@ -36,9 +37,8 @@ public:
 Q_SIGNALS:
     void moveToLine(int);
 
-
 protected:
-    bool event(QEvent* e);
+    bool event(QEvent *e);
     void showEvent(QShowEvent *e);
 
 private slots:

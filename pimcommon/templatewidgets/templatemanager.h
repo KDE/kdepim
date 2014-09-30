@@ -23,18 +23,20 @@
 #include <QStringList>
 #include <QDebug>
 
-
 class KDirWatch;
-namespace PimCommon {
+namespace PimCommon
+{
 class TemplateListWidget;
 struct TemplateInfo {
     QString name;
     QString script;
-    bool isValid() const {
+    bool isValid() const
+    {
         return (!name.isEmpty() && !script.isEmpty());
     }
-    void debug() const {
-        qDebug()<<" name :"<<name<<" script :"<<script;
+    void debug() const
+    {
+        qDebug() << " name :" << name << " script :" << script;
     }
 };
 

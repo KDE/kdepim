@@ -22,15 +22,17 @@
 #include "storageservice/job/storageserviceabstractjob.h"
 #include <kgapi/account.h>
 
-namespace KGAPI2 {
+namespace KGAPI2
+{
 class Job;
 }
-namespace PimCommon {
+namespace PimCommon
+{
 class GDriveJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit GDriveJob(QObject *parent=0);
+    explicit GDriveJob(QObject *parent = 0);
     ~GDriveJob();
 
     void requestTokenAccess();

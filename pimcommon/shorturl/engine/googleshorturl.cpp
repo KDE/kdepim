@@ -22,7 +22,6 @@
 #include <QDebug>
 #include <QJsonDocument>
 
-
 using namespace PimCommon;
 GoogleShortUrl::GoogleShortUrl(QObject *parent)
     : PimCommon::AbstractShortUrl(parent)
@@ -59,14 +58,15 @@ void GoogleShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> 
 void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
     reply->deleteLater();
-    if (mErrorFound)
+    if (mErrorFound) {
         return;
+    }
 
-    qDebug()<<"void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) "<<reply->readAll();
+    qDebug() << "void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << reply->readAll();
     QJsonParseError error;
     const QJsonDocument json = QJsonDocument::fromJson(reply->readAll(), &error);
     if (error.error != QJsonParseError::NoError || json.isNull()) {
-        qDebug()<<" Error during parsing"<<error.errorString();
+        qDebug() << " Error during parsing" << error.errorString();
         return;
     }
     const QMap<QString, QVariant> map = json.toVariant().toMap();

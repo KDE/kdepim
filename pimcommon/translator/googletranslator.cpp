@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -24,8 +24,6 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QPointer>
-
-
 
 using namespace PimCommon;
 
@@ -106,17 +104,17 @@ QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KCombo
     fullListLanguage.append(TranslatorUtil::cy);
     fullListLanguage.append(TranslatorUtil::yi);
     const int fullListLanguageSize(fullListLanguage.count());
-    for (int i=0;i<fullListLanguageSize;++i) {
+    for (int i = 0; i < fullListLanguageSize; ++i) {
         const QPair<const char *, QString> currentLanguage = fullListLanguage.at(i);
-        PimCommon::TranslatorUtil::addItemToFromComboBox( from, currentLanguage );
+        PimCommon::TranslatorUtil::addItemToFromComboBox(from, currentLanguage);
 
         QMap<QString, QString> toList;
-        for (int j=0;j<fullListLanguageSize;++j) {
-            if (j!=0 && j!=i) { //don't add auto and current language
-                PimCommon::TranslatorUtil::addPairToMap( toList, fullListLanguage.at(j) );
+        for (int j = 0; j < fullListLanguageSize; ++j) {
+            if (j != 0 && j != i) { //don't add auto and current language
+                PimCommon::TranslatorUtil::addPairToMap(toList, fullListLanguage.at(j));
             }
         }
-        listLanguage.insert( currentLanguage.second, toList );
+        listLanguage.insert(currentLanguage.second, toList);
     }
 
     return listLanguage;
@@ -172,18 +170,18 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
 
     // we are going recursively through the nested json-array
     // level0 contains the data of the outer array, level1 of the next one and so on
-    Q_FOREACH (const QVariant& level0, json) {
+    Q_FOREACH (const QVariant &level0, json) {
         const QVariantList listLevel0 = level0.toList();
         if (listLevel0.isEmpty()) {
             continue;
         }
-        Q_FOREACH (const QVariant& level1, listLevel0) {
+        Q_FOREACH (const QVariant &level1, listLevel0) {
             if (level1.toList().size() <= 2 || level1.toList().at(2).toList().isEmpty()) {
                 continue;
             }
             const int indexLevel1 = listLevel0.indexOf(level1);
             const QVariantList listLevel1 = level1.toList().at(2).toList();
-            foreach (const QVariant& level2, listLevel1) {
+            foreach (const QVariant &level2, listLevel1) {
                 const QVariantList listLevel2 = level2.toList();
 
                 // The JSON we get from Google has not always the same structure.

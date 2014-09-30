@@ -20,7 +20,8 @@
 
 #include <QStringList>
 #include <QDateTime>
-namespace PimCommon {
+namespace PimCommon
+{
 namespace DropBoxUtil
 {
 QStringList getListFolder(const QString &data);

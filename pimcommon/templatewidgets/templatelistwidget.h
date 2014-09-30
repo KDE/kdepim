@@ -21,7 +21,8 @@
 #include "pimcommon/pimcommon_export.h"
 #include <QListWidget>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class TemplateListWidgetPrivate;
 
 struct defaultTemplate {
@@ -49,9 +50,9 @@ public:
 
 protected:
     QStringList mimeTypes() const;
-    QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
+    QMimeData *mimeData(const QList<QListWidgetItem *> items) const;
 
-    void dropEvent ( QDropEvent * event );
+    void dropEvent(QDropEvent *event);
 
 Q_SIGNALS:
     void insertTemplate(const QString &);
@@ -59,17 +60,17 @@ Q_SIGNALS:
 
 private:
     friend class TemplateListWidgetPrivate;
-    TemplateListWidgetPrivate * const d;
-    Q_PRIVATE_SLOT( d, void slotAdd() )
-    Q_PRIVATE_SLOT( d, void slotRemove() )
-    Q_PRIVATE_SLOT( d, void slotModify() )
-    Q_PRIVATE_SLOT( d, void slotInsertTemplate() )
-    Q_PRIVATE_SLOT( d, void slotContextMenu(const QPoint &pos) )
-    Q_PRIVATE_SLOT( d, void slotInsertNewTemplate(const QString&) )
-    Q_PRIVATE_SLOT( d, void slotExportTemplates() )
-    Q_PRIVATE_SLOT( d, void slotImportTemplates() )
-    Q_PRIVATE_SLOT( d, void slotDuplicate() )
-    Q_PRIVATE_SLOT( d, void slotDownloadTemplates() )
+    TemplateListWidgetPrivate *const d;
+    Q_PRIVATE_SLOT(d, void slotAdd())
+    Q_PRIVATE_SLOT(d, void slotRemove())
+    Q_PRIVATE_SLOT(d, void slotModify())
+    Q_PRIVATE_SLOT(d, void slotInsertTemplate())
+    Q_PRIVATE_SLOT(d, void slotContextMenu(const QPoint &pos))
+    Q_PRIVATE_SLOT(d, void slotInsertNewTemplate(const QString &))
+    Q_PRIVATE_SLOT(d, void slotExportTemplates())
+    Q_PRIVATE_SLOT(d, void slotImportTemplates())
+    Q_PRIVATE_SLOT(d, void slotDuplicate())
+    Q_PRIVATE_SLOT(d, void slotDownloadTemplates())
     enum TemplateData {
         Text = Qt::UserRole + 1,
         DefaultTemplate = Qt::UserRole + 2

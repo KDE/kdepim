@@ -23,12 +23,13 @@
 
 #include <QDateTime>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT HubicStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
-    explicit HubicStorageService(QObject *parent=0);
+    explicit HubicStorageService(QObject *parent = 0);
     ~HubicStorageService();
 
     static QString name();

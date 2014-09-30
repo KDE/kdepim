@@ -20,7 +20,8 @@
 #include <KConfigGroup>
 #include "storageservice/storageservicemanager.h"
 class QStackedWidget;
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceComboBox;
 class AddServiceStorageDialog : public QDialog
 {

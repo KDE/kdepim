@@ -22,7 +22,6 @@
 
 #include <KLocalizedString>
 
-
 #include <QDebug>
 #include <QJsonParseError>
 #include <QNetworkReply>
@@ -55,7 +54,7 @@ void YouSendItJob::copyFile(const QString &/*source*/, const QString &/*destinat
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFileAction;
     mError = false;
-    qDebug()<<" not implemented";
+    qDebug() << " not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
@@ -64,7 +63,7 @@ void YouSendItJob::copyFolder(const QString &/*source*/, const QString &/*destin
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFolderAction;
     mError = false;
-    qDebug()<<" not implemented";
+    qDebug() << " not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
@@ -78,7 +77,7 @@ void YouSendItJob::createServiceFolder()
 
 QNetworkReply *YouSendItJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    qDebug()<<" not implemented";
+    qDebug() << " not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
     return 0;
@@ -98,7 +97,7 @@ void YouSendItJob::deleteFile(const QString &filename)
     mActionType = PimCommon::StorageServiceAbstract::DeleteFileAction;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1").arg(filename));
-    qDebug()<<" url"<<url;
+    qDebug() << " url" << url;
     QNetworkRequest request = setDefaultHeader(url);
     QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
@@ -124,7 +123,7 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
     QUrl postData;
     postData.addQueryItem(QLatin1String("name"), destination);
 
-    QNetworkReply *reply = mNetworkAccessManager->put(request,postData.encodedQuery());
+    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
 
@@ -230,7 +229,7 @@ void YouSendItJob::listFolder(const QString &folder)
     } else {
         url.setUrl(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1").arg(folder));
     }
-    url.addQueryItem(QLatin1String("email"),mUsername);
+    url.addQueryItem(QLatin1String("email"), mUsername);
     url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
     QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
@@ -243,7 +242,7 @@ void YouSendItJob::accountInfo()
     mActionType = PimCommon::StorageServiceAbstract::AccountInfoAction;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v2/user"));
-    url.addQueryItem(QLatin1String("email"),mUsername);
+    url.addQueryItem(QLatin1String("email"), mUsername);
     url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
     QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
@@ -264,8 +263,9 @@ void YouSendItJob::createFolderJob(const QString &foldername, const QString &des
     QNetworkRequest request = setDefaultHeader(url);
     QUrl postData;
     postData.addQueryItem(QLatin1String("name"), foldername);
-    if (!destination.isEmpty())
+    if (!destination.isEmpty()) {
         postData.addQueryItem(QLatin1String("parentId"), destination);
+    }
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
@@ -293,7 +293,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         } else {
             errorStr = i18n("Unknown Error \"%1\"", data);
         }
-        switch(mActionType) {
+        switch (mActionType) {
         case PimCommon::StorageServiceAbstract::NoneAction:
             deleteLater();
             break;
@@ -334,7 +334,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         }
         return;
     }
-    switch(mActionType) {
+    switch (mActionType) {
     case PimCommon::StorageServiceAbstract::NoneAction:
         deleteLater();
         break;
@@ -413,7 +413,7 @@ void YouSendItJob::parseCopyFolder(const QString &data)
     QJsonParseError parsingError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
     if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
-        qDebug()<<" parseCopyFile error "<<data;
+        qDebug() << " parseCopyFile error " << data;
         return;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
@@ -428,7 +428,7 @@ void YouSendItJob::parseCopyFile(const QString &data)
     QJsonParseError parsingError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
     if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
-        qDebug()<<" parseCopyFile error "<<data;
+        qDebug() << " parseCopyFile error " << data;
         return;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
@@ -469,9 +469,9 @@ void YouSendItJob::parseMoveFile(const QString &data)
 
 bool YouSendItJob::parseError(const QMap<QString, QVariant> &info)
 {
-    qDebug()<<" info"<<info;
+    qDebug() << " info" << info;
     if (info.contains(QLatin1String("errorStatus"))) {
-        const QVariantMap map =info.value(QLatin1String("errorStatus")).toMap();
+        const QVariantMap map = info.value(QLatin1String("errorStatus")).toMap();
         if (map.contains(QLatin1String("message"))) {
             Q_EMIT actionFailed(map.value(QLatin1String("message")).toString());
             return true;
@@ -510,7 +510,7 @@ void YouSendItJob::parseRenameFolder(const QString &data)
 
 void YouSendItJob::parseDownloadFile(const QString &data)
 {
-    qDebug()<<" data :"<<data;
+    qDebug() << " data :" << data;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //Q_EMIT downLoadFileDone(filename);
     //TODO
@@ -534,7 +534,7 @@ void YouSendItJob::parseDeleteFolder(const QString &data)
 
 void YouSendItJob::parseCreateServiceFolder(const QString &data)
 {
-    qDebug()<<" create service folder not implmented";
+    qDebug() << " create service folder not implmented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
@@ -550,11 +550,11 @@ void YouSendItJob::parseRequestToken(const QString &data)
     QJsonParseError parsingError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
     if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
-        qDebug()<<" parseRequestToken error"<<data;
+        qDebug() << " parseRequestToken error" << data;
         return;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
-    qDebug()<<" info"<<info;
+    qDebug() << " info" << info;
     if (info.contains(QLatin1String("authToken"))) {
         const QString authToken = info.value(QLatin1String("authToken")).toString();
         Q_EMIT authorizationDone(mPassword, mUsername, authToken);
@@ -563,7 +563,7 @@ void YouSendItJob::parseRequestToken(const QString &data)
         if (info.contains(QLatin1String("errorStatus"))) {
             QVariantMap map = info.value(QLatin1String("errorStatus")).toMap();
             if (map.contains(QLatin1String("message"))) {
-                error = i18n("Authentication failed. Server returns this error:\n%1",map.value(QLatin1String("message")).toString());
+                error = i18n("Authentication failed. Server returns this error:\n%1", map.value(QLatin1String("message")).toString());
             }
         }
         Q_EMIT authorizationFailed(error);
@@ -579,7 +579,7 @@ void YouSendItJob::parseAccountInfo(const QString &data)
         return;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
-    qDebug()<<" info"<<info;
+    qDebug() << " info" << info;
     if (info.contains(QLatin1String("storage"))) {
         PimCommon::AccountInfo accountInfo;
         const QVariantMap storageMap = info.value(QLatin1String("storage")).toMap();
@@ -610,7 +610,6 @@ void YouSendItJob::parseCreateFolder(const QString &data)
     deleteLater();
 }
 
-
 void YouSendItJob::parseUploadFile(const QString &data)
 {
     QJsonParseError parsingError;
@@ -619,11 +618,11 @@ void YouSendItJob::parseUploadFile(const QString &data)
         return;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
-    qDebug()<<" data "<<data;
-    qDebug()<<" info"<<info;
+    qDebug() << " data " << data;
+    qDebug() << " info" << info;
     QString fileId;
     if (info.contains(QLatin1String("fileId"))) {
-        qDebug()<<" fileId "<<info.value(QLatin1String("fileId")).toString();
+        qDebug() << " fileId " << info.value(QLatin1String("fileId")).toString();
         fileId = info.value(QLatin1String("fileId")).toString();
     }
     startUploadFile(fileId);
@@ -655,8 +654,7 @@ void YouSendItJob::shareLink(const QString &root, const QString &path)
     mError = false;
     mActionType = PimCommon::StorageServiceAbstract::ShareLinkAction;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
+    qDebug() << " not implemented";
     deleteLater();
 }
-
 

@@ -21,10 +21,10 @@
 #include "pimcommon_export.h"
 #include "pimcommonsetting_base.h"
 
-
 class QTimer;
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class PIMCOMMON_EXPORT PimCommonSettings : public PimCommon::PimCommonSettingsBase
 {

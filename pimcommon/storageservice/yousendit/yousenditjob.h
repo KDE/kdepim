@@ -21,12 +21,13 @@
 #include <QObject>
 #include "storageservice/job/storageserviceabstractjob.h"
 class QNetworkReply;
-namespace PimCommon {
+namespace PimCommon
+{
 class YouSendItJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit YouSendItJob(QObject *parent=0);
+    explicit YouSendItJob(QObject *parent = 0);
     ~YouSendItJob();
 
     void requestTokenAccess();
@@ -49,7 +50,6 @@ public:
 
 Q_SIGNALS:
     void authorizationDone(const QString &password, const QString &username, const QString &token);
-
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);

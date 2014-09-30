@@ -24,7 +24,8 @@
 #include <kio/job.h>
 #include <KTextEdit>
 class KToggleAction;
-namespace PimCommon {
+namespace PimCommon
+{
 
 class TranslatorResultTextEdit : public PimCommon::PlainTextEditor
 {
@@ -35,7 +36,7 @@ public:
     void setResultFailed(bool failed);
 
 protected:
-    void paintEvent( QPaintEvent *event );
+    void paintEvent(QPaintEvent *event);
 
 private:
     bool mResultFailed;
@@ -51,18 +52,18 @@ Q_SIGNALS:
     void translateText();
 
 protected:
-    void dropEvent( QDropEvent * );
+    void dropEvent(QDropEvent *);
 };
 
 class PIMCOMMON_EXPORT TranslatorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TranslatorWidget( QWidget* parent = 0 );
-    explicit TranslatorWidget( const QString& text, QWidget* parent = 0 );
+    explicit TranslatorWidget(QWidget *parent = 0);
+    explicit TranslatorWidget(const QString &text, QWidget *parent = 0);
     ~TranslatorWidget();
 
-    void setTextToTranslate( const QString& );
+    void setTextToTranslate(const QString &);
     void writeConfig();
     void readConfig();
     void setStandalone(bool b);
@@ -74,7 +75,7 @@ public Q_SLOTS:
     void slotCloseWidget();
 
 private Q_SLOTS:
-    void slotFromLanguageChanged( int, bool initialize = false );
+    void slotFromLanguageChanged(int, bool initialize = false);
     void slotTextChanged();
     void slotInvertLanguage();
     void slotClear();
@@ -84,7 +85,7 @@ private Q_SLOTS:
     void slotConfigChanged();
 
 protected:
-    bool event(QEvent* e);
+    bool event(QEvent *e);
 
 Q_SIGNALS:
     void translatorWasClosed();

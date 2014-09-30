@@ -28,17 +28,18 @@ class QPushButton;
 class QLabel;
 class QTextBrowser;
 class QStackedWidget;
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageListWidgetItem;
 
 class PIMCOMMON_EXPORT StorageServiceSettingsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceSettingsWidget(QWidget *parent=0);
+    explicit StorageServiceSettingsWidget(QWidget *parent = 0);
     ~StorageServiceSettingsWidget();
 
-    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst, const QList<StorageServiceAbstract::Capability> &lstCap = QList<PimCommon::StorageServiceAbstract::Capability>()<< PimCommon::StorageServiceAbstract::AccountInfoCapability);
+    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst, const QList<StorageServiceAbstract::Capability> &lstCap = QList<PimCommon::StorageServiceAbstract::Capability>() << PimCommon::StorageServiceAbstract::AccountInfoCapability);
     QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
 
 Q_SIGNALS:

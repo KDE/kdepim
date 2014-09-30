@@ -99,7 +99,6 @@ TranslatorWidget *CustomToolsWidget::translatorWidget() const
     return mTranslatorWidget;
 }
 
-
 KToggleAction *CustomToolsWidget::action(CustomToolsWidget::ToolType type)
 {
     KToggleAction *act = 0;
@@ -111,7 +110,7 @@ KToggleAction *CustomToolsWidget::action(CustomToolsWidget::ToolType type)
         act = mShortUrlWidget->toggleAction();
         break;
     default:
-        qDebug()<<" type unknown :"<<type;
+        qDebug() << " type unknown :" << type;
         break;
     }
     return act;
@@ -129,7 +128,7 @@ void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
         mTranslatorWidget->toggleAction()->setChecked(false);
         break;
     default:
-        qDebug()<<" type unknown :"<<type;
+        qDebug() << " type unknown :" << type;
         break;
     }
     Q_EMIT toolSwitched(type);
@@ -137,12 +136,12 @@ void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
 
 CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
 {
-    if (mStackedWidget->currentWidget() == mTranslatorWidget)
+    if (mStackedWidget->currentWidget() == mTranslatorWidget) {
         return TranslatorTool;
-    else if (mStackedWidget->currentWidget() == mShortUrlWidget)
+    } else if (mStackedWidget->currentWidget() == mShortUrlWidget) {
         return ShortUrlTool;
-    else {
-        qDebug()<<" unknow tool";
+    } else {
+        qDebug() << " unknow tool";
         return TranslatorTool;
     }
 }

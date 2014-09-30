@@ -47,7 +47,7 @@ PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(QObject *paren
         break;
     case EndListEngine:
     default:
-        qDebug()<<" Engine type undefined "<<type;
+        qDebug() << " Engine type undefined " << type;
         engine = new PimCommon::GoogleShortUrl(parent);
         break;
     }
@@ -72,20 +72,20 @@ QString PimCommon::ShortUrlUtils::stringFromEngineType(EngineType type)
         break;
     case EndListEngine:
     default:
-        qDebug()<<" not supported engine type "<<type;
+        qDebug() << " not supported engine type " << type;
     }
     return name;
 }
 
 int PimCommon::ShortUrlUtils::readEngineSettings()
 {
-    KConfigGroup grp( KSharedConfig::openConfig(), "ShortUrl" );
+    KConfigGroup grp(KSharedConfig::openConfig(), "ShortUrl");
     const int engineType = grp.readEntry("Engine", static_cast<int>(PimCommon::ShortUrlUtils::Google));
     return engineType;
 }
 
 void PimCommon::ShortUrlUtils::writeEngineSettings(int value)
 {
-    KConfigGroup grp( KSharedConfig::openConfig(), "ShortUrl" );
+    KConfigGroup grp(KSharedConfig::openConfig(), "ShortUrl");
     grp.writeEntry("Engine", value);
 }

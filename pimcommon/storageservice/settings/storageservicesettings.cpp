@@ -22,13 +22,13 @@
 
 #include <kwallet.h>
 
-
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceSettingsPrivate
 {
 public:
     StorageServiceSettingsPrivate()
-        : storageServiceSettings( new StorageServiceSettings )
+        : storageServiceSettings(new StorageServiceSettings)
     {
     }
 
@@ -40,8 +40,7 @@ public:
     StorageServiceSettings *storageServiceSettings;
 };
 
-Q_GLOBAL_STATIC( StorageServiceSettingsPrivate, sInstance )
-
+Q_GLOBAL_STATIC(StorageServiceSettingsPrivate, sInstance)
 
 StorageServiceSettings::StorageServiceSettings(QObject *parent)
     : QObject(parent),
@@ -56,13 +55,13 @@ StorageServiceSettings::~StorageServiceSettings()
 
 StorageServiceSettings *StorageServiceSettings::self()
 {
-  return sInstance->storageServiceSettings; //will create it
+    return sInstance->storageServiceSettings; //will create it
 }
 
 KWallet::Wallet *StorageServiceSettings::wallet()
 {
     if (!mWallet) {
-        mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
+        mWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
         if (mWallet) {
             connect(mWallet, &KWallet::Wallet::walletClosed, this, &StorageServiceSettings::slotWalletClosed);
         }
@@ -79,8 +78,8 @@ bool StorageServiceSettings::createDefaultFolder()
 {
     KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
     const QString folderName = QLatin1String("storageservice");
-    if ( wallet ) {
-        if (!wallet->setFolder( folderName ) ) {
+    if (wallet) {
+        if (!wallet->setFolder(folderName)) {
             wallet->createFolder(folderName);
             wallet->setFolder(folderName);
         }
@@ -95,7 +94,6 @@ void StorageServiceSettings::slotWalletClosed()
     delete mWallet;
     mWallet = 0;
 }
-
 
 }
 

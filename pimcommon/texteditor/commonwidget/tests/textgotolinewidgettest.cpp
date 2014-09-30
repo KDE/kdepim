@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "textgotolinewidgettest.h"
 #include "pimcommon/texteditor/commonwidget/textgotolinewidget.h"
 #include <qtest.h>
@@ -130,5 +129,4 @@ void TextGoToLineWidgetTest::shouldSetFocusWhenWeRecallGotToLine()
     QVERIFY(line->hasFocus());
 }
 
-
-QTEST_MAIN( TextGoToLineWidgetTest )
+QTEST_MAIN(TextGoToLineWidgetTest)

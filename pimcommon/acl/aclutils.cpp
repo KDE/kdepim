@@ -27,46 +27,56 @@ static const struct {
     KIMAP::Acl::Rights permissions;
     const char *userString;
 } standardPermissions[] = {
-    { KIMAP::Acl::None,
-      I18N_NOOP2( "Permissions", "None" ) },
+    {
+        KIMAP::Acl::None,
+        I18N_NOOP2("Permissions", "None")
+    },
 
-    { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen,
-      I18N_NOOP2( "Permissions", "Read" ) },
+    {
+        KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen,
+        I18N_NOOP2("Permissions", "Read")
+    },
 
-    { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen |
-      KIMAP::Acl::Insert | KIMAP::Acl::Post,
-      I18N_NOOP2( "Permissions", "Append" ) },
+    {
+        KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen |
+        KIMAP::Acl::Insert | KIMAP::Acl::Post,
+        I18N_NOOP2("Permissions", "Append")
+    },
 
-    { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen |
-      KIMAP::Acl::Insert | KIMAP::Acl::Post | KIMAP::Acl::Write |
-      KIMAP::Acl::CreateMailbox | KIMAP::Acl::DeleteMailbox |
-      KIMAP::Acl::DeleteMessage | KIMAP::Acl::Expunge,
-      I18N_NOOP2( "Permissions", "Write" ) },
+    {
+        KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen |
+        KIMAP::Acl::Insert | KIMAP::Acl::Post | KIMAP::Acl::Write |
+        KIMAP::Acl::CreateMailbox | KIMAP::Acl::DeleteMailbox |
+        KIMAP::Acl::DeleteMessage | KIMAP::Acl::Expunge,
+        I18N_NOOP2("Permissions", "Write")
+    },
 
-    { KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen |
-      KIMAP::Acl::Insert | KIMAP::Acl::Post | KIMAP::Acl::Write |
-      KIMAP::Acl::CreateMailbox | KIMAP::Acl::DeleteMailbox |
-      KIMAP::Acl::DeleteMessage | KIMAP::Acl::Expunge | KIMAP::Acl::Admin,
-      I18N_NOOP2( "Permissions", "All" ) }
+    {
+        KIMAP::Acl::Lookup | KIMAP::Acl::Read | KIMAP::Acl::KeepSeen |
+        KIMAP::Acl::Insert | KIMAP::Acl::Post | KIMAP::Acl::Write |
+        KIMAP::Acl::CreateMailbox | KIMAP::Acl::DeleteMailbox |
+        KIMAP::Acl::DeleteMessage | KIMAP::Acl::Expunge | KIMAP::Acl::Admin,
+        I18N_NOOP2("Permissions", "All")
+    }
 };
 
 uint AclUtils::standardPermissionsCount()
 {
-    return ( sizeof( standardPermissions ) / sizeof( *standardPermissions ) );
+    return (sizeof(standardPermissions) / sizeof(*standardPermissions));
 }
 
-KIMAP::Acl::Rights AclUtils::permissionsForIndex( uint index )
+KIMAP::Acl::Rights AclUtils::permissionsForIndex(uint index)
 {
-    Q_ASSERT( index < standardPermissionsCount() );
+    Q_ASSERT(index < standardPermissionsCount());
 
     return standardPermissions[ index ].permissions;
 }
 
-int AclUtils::indexForPermissions( KIMAP::Acl::Rights permissions )
+int AclUtils::indexForPermissions(KIMAP::Acl::Rights permissions)
 {
-    const uint maxSize( sizeof( standardPermissions ) / sizeof( *standardPermissions ) );
-    for ( uint i = 0; i < maxSize; ++i ) {
-        if ( KIMAP::Acl::normalizedRights( permissions ) == standardPermissions[i].permissions ) {
+    const uint maxSize(sizeof(standardPermissions) / sizeof(*standardPermissions));
+    for (uint i = 0; i < maxSize; ++i) {
+        if (KIMAP::Acl::normalizedRights(permissions) == standardPermissions[i].permissions) {
             return i;
         }
     }
@@ -74,15 +84,15 @@ int AclUtils::indexForPermissions( KIMAP::Acl::Rights permissions )
     return -1;
 }
 
-QString AclUtils::permissionsToUserString( KIMAP::Acl::Rights permissions )
+QString AclUtils::permissionsToUserString(KIMAP::Acl::Rights permissions)
 {
-    const uint maxSize( sizeof( standardPermissions ) / sizeof( *standardPermissions ) );
-    for ( uint i = 0; i < maxSize; ++i ) {
-        if ( KIMAP::Acl::normalizedRights( permissions ) == standardPermissions[i].permissions ) {
-            return i18nc( "Permissions", standardPermissions[ i ].userString );
+    const uint maxSize(sizeof(standardPermissions) / sizeof(*standardPermissions));
+    for (uint i = 0; i < maxSize; ++i) {
+        if (KIMAP::Acl::normalizedRights(permissions) == standardPermissions[i].permissions) {
+            return i18nc("Permissions", standardPermissions[ i ].userString);
         }
     }
 
-    return i18n( "Custom Permissions (%1)",
-                 QString::fromLatin1( KIMAP::Acl::rightsToString( permissions ) ) );
+    return i18n("Custom Permissions (%1)",
+                QString::fromLatin1(KIMAP::Acl::rightsToString(permissions)));
 }

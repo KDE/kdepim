@@ -23,8 +23,9 @@
 
 #include <QDialog>
 class QPushButton;
-namespace KPIM {
-  class AddresseeLineEdit;
+namespace KPIM
+{
+class AddresseeLineEdit;
 }
 
 class QCheckBox;
@@ -34,16 +35,16 @@ class QCheckBox;
 */
 class DelegateSelector : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit DelegateSelector( QWidget *parent = 0 );
+public:
+    explicit DelegateSelector(QWidget *parent = 0);
 
     QString delegate() const;
     bool rsvp() const;
-  public slots:
-    void slotTextChanged( const QString& text );
-  private:
+public slots:
+    void slotTextChanged(const QString &text);
+private:
     KPIM::AddresseeLineEdit *mDelegate;
     QCheckBox *mRsvp;
     QPushButton *mOkButton;

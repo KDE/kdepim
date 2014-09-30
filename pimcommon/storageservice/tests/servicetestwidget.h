@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SERVICETESTWIDGET_H
 #define SERVICETESTWIDGET_H
 
@@ -23,7 +22,8 @@
 #include "storageservice/storageserviceabstract.h"
 class QTextEdit;
 
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceAbstract;
 class AccountInfo;
 }

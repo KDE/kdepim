@@ -21,11 +21,13 @@
 
 #include <QTextCursor>
 
-namespace PimCommon {
-namespace EditorUtil {
-PIMCOMMON_EXPORT void upperCase( QTextCursor &cursor );
-PIMCOMMON_EXPORT void lowerCase( QTextCursor &cursor );
-PIMCOMMON_EXPORT void sentenceCase( QTextCursor &cursor );
+namespace PimCommon
+{
+namespace EditorUtil
+{
+PIMCOMMON_EXPORT void upperCase(QTextCursor &cursor);
+PIMCOMMON_EXPORT void lowerCase(QTextCursor &cursor);
+PIMCOMMON_EXPORT void sentenceCase(QTextCursor &cursor);
 }
 }
 

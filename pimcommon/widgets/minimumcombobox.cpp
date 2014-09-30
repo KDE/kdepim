@@ -21,16 +21,14 @@
 
 using namespace PimCommon;
 
-MinimumComboBox::MinimumComboBox(QWidget* parent)
-    : KComboBox( parent )
+MinimumComboBox::MinimumComboBox(QWidget *parent)
+    : KComboBox(parent)
 {
 
 }
 
 QSize MinimumComboBox::minimumSizeHint() const
 {
-    return QSize( 50, KComboBox::minimumSizeHint().height() );
+    return QSize(50, KComboBox::minimumSizeHint().height());
 }
-
-
 

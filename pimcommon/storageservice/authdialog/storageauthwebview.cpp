@@ -24,7 +24,6 @@ StorageAuthWebView::StorageAuthWebView(QWidget *parent)
 {
 }
 
-
 StorageAuthWebView::~StorageAuthWebView()
 {
 

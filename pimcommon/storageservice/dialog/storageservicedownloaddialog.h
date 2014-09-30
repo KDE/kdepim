@@ -25,7 +25,8 @@
 
 class QTreeWidgetItem;
 class QLabel;
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceAbstract;
 class StorageServiceProgressWidget;
 class StorageServiceProgressIndicator;
@@ -35,7 +36,7 @@ class PIMCOMMON_EXPORT StorageServiceDownloadDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
+    explicit StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent = 0);
     ~StorageServiceDownloadDialog();
 
     void setDefaultDownloadPath(const QString &path);
@@ -74,7 +75,7 @@ class StorageServiceDownloadTreeWidget : public PimCommon::StorageServiceTreeWid
 {
     Q_OBJECT
 public:
-    explicit StorageServiceDownloadTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
+    explicit StorageServiceDownloadTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent = 0);
 
 Q_SIGNALS:
     void downloadFile();
@@ -82,7 +83,6 @@ Q_SIGNALS:
 protected:
     virtual void createMenuActions(QMenu *menu);
 };
-
 
 }
 

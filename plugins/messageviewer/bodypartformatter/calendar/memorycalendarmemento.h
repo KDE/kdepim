@@ -29,12 +29,13 @@
 
 class KJob;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class MemoryCalendarMemento : public QObject, public Interface::BodyPartMemento
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     MemoryCalendarMemento();
 
     bool finished() const;
@@ -42,15 +43,15 @@ class MemoryCalendarMemento : public QObject, public Interface::BodyPartMemento
 
     virtual void detach();
 
-  signals:
+signals:
     // TODO: Factor our update and detach into base class
-    void update( MessageViewer::Viewer::UpdateMode );
+    void update(MessageViewer::Viewer::UpdateMode);
 
-  private slots:
-    void slotCalendarLoaded( bool success, const QString &errorMessage );
+private slots:
+    void slotCalendarLoaded(bool success, const QString &errorMessage);
     void finalize();
 
-  private:
+private:
     bool mFinished;
     KCalCore::MemoryCalendar::Ptr mCalendar;
 };

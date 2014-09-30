@@ -50,40 +50,42 @@
 
 #include <errno.h>
 
-OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface( const QString &ident )
+OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface(const QString &ident)
 {
     return
-            new OrgKdeAkonadiImapSettingsInterface(
-                QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QLatin1String("/Settings"), QDBusConnection::sessionBus() );
+        new OrgKdeAkonadiImapSettingsInterface(
+            QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QLatin1String("/Settings"), QDBusConnection::sessionBus());
 }
 
-void PimCommon::Util::saveTextAs( const QString &text, const QString &filter, QWidget *parent, const QUrl &url, const QString &caption )
+void PimCommon::Util::saveTextAs(const QString &text, const QString &filter, QWidget *parent, const QUrl &url, const QString &caption)
 {
-    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
-    if (!caption.isEmpty())
+    QPointer<KFileDialog> fdlg(new KFileDialog(url, filter, parent));
+    if (!caption.isEmpty()) {
         fdlg->setWindowTitle(caption);
-    fdlg->setMode( KFile::File );
-    fdlg->setOperationMode( KFileDialog::Saving );
+    }
+    fdlg->setMode(KFile::File);
+    fdlg->setOperationMode(KFileDialog::Saving);
     fdlg->setConfirmOverwrite(true);
-    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
+    if (fdlg->exec() == QDialog::Accepted && fdlg) {
         const QString fileName = fdlg->selectedFile();
-        if ( !saveToFile( fileName, text ) ) {
-            KMessageBox::error( parent,
-                                i18n( "Could not write the file %1:\n"
-                                      "\"%2\" is the detailed error description.",
-                                      fileName,
-                                      QString::fromLocal8Bit( strerror( errno ) ) ),
-                                i18n( "Save File Error" ) );
+        if (!saveToFile(fileName, text)) {
+            KMessageBox::error(parent,
+                               i18n("Could not write the file %1:\n"
+                                    "\"%2\" is the detailed error description.",
+                                    fileName,
+                                    QString::fromLocal8Bit(strerror(errno))),
+                               i18n("Save File Error"));
         }
     }
     delete fdlg;
 }
 
-bool PimCommon::Util::saveToFile( const QString &filename, const QString &text)
+bool PimCommon::Util::saveToFile(const QString &filename, const QString &text)
 {
-    QFile file( filename );
-    if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         return false;
+    }
     QTextStream out(&file);
     out.setCodec("UTF-8");
     out << text;
@@ -93,22 +95,23 @@ bool PimCommon::Util::saveToFile( const QString &filename, const QString &text)
 
 QString PimCommon::Util::loadToFile(const QString &filter, QWidget *parent, const QUrl &url, const QString &caption)
 {
-    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
-    if (!caption.isEmpty())
+    QPointer<KFileDialog> fdlg(new KFileDialog(url, filter, parent));
+    if (!caption.isEmpty()) {
         fdlg->setWindowTitle(caption);
-    fdlg->setMode( KFile::File );
-    fdlg->setOperationMode( KFileDialog::Opening );
+    }
+    fdlg->setMode(KFile::File);
+    fdlg->setOperationMode(KFileDialog::Opening);
     QString result;
-    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
+    if (fdlg->exec() == QDialog::Accepted && fdlg) {
         const QString fileName = fdlg->selectedFile();
-        QFile file( fileName );
-        if (!file.open( QIODevice::ReadOnly|QIODevice::Text ) ) {
-            KMessageBox::error( parent,
-                                i18n( "Could not read the file %1:\n"
-                                      "\"%2\" is the detailed error description.",
-                                      fileName,
-                                      QString::fromLocal8Bit( strerror( errno ) ) ),
-                                i18n( "Load File Error" ) );
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            KMessageBox::error(parent,
+                               i18n("Could not read the file %1:\n"
+                                    "\"%2\" is the detailed error description.",
+                                    fileName,
+                                    QString::fromLocal8Bit(strerror(errno))),
+                               i18n("Load File Error"));
         } else {
             result = QString::fromUtf8(file.readAll());
             file.close();

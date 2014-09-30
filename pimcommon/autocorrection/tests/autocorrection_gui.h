@@ -25,7 +25,8 @@
 #include <QTextEdit>
 #include <KConfigGroup>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class AutoCorrection;
 class AutoCorrectionWidget;
 class LineEditWithAutoCorrection;
@@ -35,7 +36,7 @@ class ConfigureTestDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent=0);
+    explicit ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent = 0);
     ~ConfigureTestDialog();
 
 private Q_SLOTS:
@@ -49,11 +50,11 @@ class TextEditAutoCorrectionWidget : public QTextEdit
 {
     Q_OBJECT
 public:
-    explicit TextEditAutoCorrectionWidget(PimCommon::AutoCorrection *autoCorrection, QWidget *parent=0);
+    explicit TextEditAutoCorrectionWidget(PimCommon::AutoCorrection *autoCorrection, QWidget *parent = 0);
     ~TextEditAutoCorrectionWidget();
 
 protected:
-    void keyPressEvent ( QKeyEvent *e );
+    void keyPressEvent(QKeyEvent *e);
 
 private:
     PimCommon::AutoCorrection *mAutoCorrection;
@@ -63,7 +64,7 @@ class AutocorrectionTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AutocorrectionTestWidget(QWidget *parent=0);
+    explicit AutocorrectionTestWidget(QWidget *parent = 0);
     ~AutocorrectionTestWidget();
 
 private Q_SLOTS:

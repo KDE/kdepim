@@ -49,17 +49,19 @@ class QWidget;
 #define POP3_RESOURCE_IDENTIFIER QLatin1String("akonadi_pop3_resource")
 #define MBOX_RESOURCE_IDENTIFIER QLatin1String("akonadi_mbox_resource")
 #define GMAIL_RESOURCE_IDENTIFIER QLatin1String("akonadi_gmail_resource")
-namespace PimCommon {
+namespace PimCommon
+{
 
 /**
  * The Util namespace contains a collection of helper functions use in
  * various places.
  */
-namespace Util {
+namespace Util
+{
 
-PIMCOMMON_EXPORT OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
-PIMCOMMON_EXPORT void saveTextAs( const QString &text, const QString &filter, QWidget *parent, const QUrl &url = QUrl(), const QString &caption = QString());
-PIMCOMMON_EXPORT bool saveToFile( const QString &filename, const QString &text );
+PIMCOMMON_EXPORT OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface(const QString &ident);
+PIMCOMMON_EXPORT void saveTextAs(const QString &text, const QString &filter, QWidget *parent, const QUrl &url = QUrl(), const QString &caption = QString());
+PIMCOMMON_EXPORT bool saveToFile(const QString &filename, const QString &text);
 PIMCOMMON_EXPORT QString loadToFile(const QString &filter, QWidget *parent, const QUrl &url = QUrl(), const QString &caption = QString());
 PIMCOMMON_EXPORT bool isImapResource(const QString &identifier);
 }

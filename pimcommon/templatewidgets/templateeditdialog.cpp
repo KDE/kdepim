@@ -30,22 +30,21 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-
 using namespace PimCommon;
 
 TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     : QDialog(parent), mOkButton(0)
 {
-    setWindowTitle( defaultTemplate ? i18n("Default template") : i18n("Template") );
+    setWindowTitle(defaultTemplate ? i18n("Default template") : i18n("Template"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    QDialogButtonBox *buttonBox=0;
+    QDialogButtonBox *buttonBox = 0;
     if (defaultTemplate) {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
         connect(buttonBox, &QDialogButtonBox::accepted, this, &TemplateEditDialog::accept);
         connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateEditDialog::reject);
     } else {
-        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
         mOkButton = buttonBox->button(QDialogButtonBox::Ok);
         mOkButton->setDefault(true);
         mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -76,10 +75,11 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
 
     w->setLayout(vbox);
     if (!defaultTemplate) {
-        if (mOkButton)
-           mOkButton->setEnabled(false);
+        if (mOkButton) {
+            mOkButton->setEnabled(false);
+        }
         connect(mTemplateNameEdit, &QLineEdit::textChanged, this, &TemplateEditDialog::slotTemplateChanged);
-        connect(mTextEdit->editor(), SIGNAL(textChanged()),SLOT(slotTemplateChanged()));
+        connect(mTextEdit->editor(), SIGNAL(textChanged()), SLOT(slotTemplateChanged()));
         mTemplateNameEdit->setFocus();
     }
     readConfig();
@@ -90,22 +90,20 @@ TemplateEditDialog::~TemplateEditDialog()
     writeConfig();
 }
 
-
 void TemplateEditDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "TemplateEditDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "TemplateEditDialog");
+    group.writeEntry("Size", size());
 }
 
 void TemplateEditDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "TemplateEditDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "TemplateEditDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(600, 400));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
-
 
 void TemplateEditDialog::slotTemplateChanged()
 {

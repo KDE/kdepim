@@ -65,7 +65,6 @@ public:
         connect(user2Button, SIGNAL(clicked()), this, SLOT(slotUser2Clicked()));
         connect(user3Button, SIGNAL(clicked()), this, SLOT(slotUser3Clicked()));
 
-
         setWindowTitle(i18n("Create Todo/Reminder"));
         user1Button->setText(i18n("Attach inline without attachments"));
         user2Button->setText(i18n("Attach &inline"));
@@ -87,18 +86,18 @@ public:
 protected Q_SLOTS:
     void slotUser1Clicked()
     {
-         mType = AttachWithoutAttachments; 
-         accept();
+        mType = AttachWithoutAttachments;
+        accept();
     }
     void slotUser2Clicked()
     {
-         mType = AttachInline;
-         accept();
+        mType = AttachInline;
+        accept();
     }
     void slotUser3Clicked()
     {
-         mType = AttachAsLink;
-         accept();
+        mType = AttachAsLink;
+        accept();
     }
 
 private:

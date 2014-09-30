@@ -15,30 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef RICHTEXTEDITWITHAUTOCORRECTION_H
 #define RICHTEXTEDITWITHAUTOCORRECTION_H
 
 #include "pimcommon/pimcommon_export.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class AutoCorrection;
 class PIMCOMMON_EXPORT RichTextEditWithAutoCorrection : public PimCommon::RichTextEditor
 {
     Q_OBJECT
 public:
-    explicit RichTextEditWithAutoCorrection(QWidget *parent=0);
+    explicit RichTextEditWithAutoCorrection(QWidget *parent = 0);
     ~RichTextEditWithAutoCorrection();
 
-    PimCommon::AutoCorrection* autocorrection() const;
+    PimCommon::AutoCorrection *autocorrection() const;
 
     void setAutocorrection(PimCommon::AutoCorrection *autocorrect);
 
     void setAutocorrectionLanguage(const QString &language);
 
 protected:
-    void keyPressEvent ( QKeyEvent *e );
+    void keyPressEvent(QKeyEvent *e);
 
 private:
     PimCommon::AutoCorrection *mAutoCorrection;

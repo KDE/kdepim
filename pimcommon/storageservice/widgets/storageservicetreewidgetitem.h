@@ -25,7 +25,8 @@
 #include <QDateTime>
 #include "pimcommon_export.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceTreeWidget;
 class PIMCOMMON_EXPORT StorageServiceTreeWidgetItem : public QTreeWidgetItem
 {
@@ -37,7 +38,6 @@ public:
     void setLastModification(const QDateTime &date);
     void setStoreInfo(const QVariantMap &data);
     QVariantMap storeInfo() const;
-
 
     QDateTime lastModificationDate() const;
     QDateTime createDate() const;

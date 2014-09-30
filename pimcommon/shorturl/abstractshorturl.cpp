@@ -42,8 +42,8 @@ void AbstractShortUrl::shortUrl(const QString &url)
 void AbstractShortUrl::slotErrorFound(QNetworkReply::NetworkError error)
 {
     mErrorFound = true;
-    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
-    Q_EMIT shortUrlFailed(i18n("Error reported by server:\n\'%1\'", (reply ? reply->errorString() : QString::number(error)) ));
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    Q_EMIT shortUrlFailed(i18n("Error reported by server:\n\'%1\'", (reply ? reply->errorString() : QString::number(error))));
 }
 
 void AbstractShortUrl::slotShortUrlFinished(QNetworkReply */*reply*/)

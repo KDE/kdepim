@@ -22,10 +22,12 @@
 
 #include <QObject>
 #include "pimcommon_export.h"
-namespace KWallet {
+namespace KWallet
+{
 class Wallet;
 }
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT StorageServiceSettings : public QObject
 {
     Q_OBJECT
@@ -42,7 +44,7 @@ private slots:
     void slotWalletClosed();
 
 private:
-    explicit StorageServiceSettings(QObject *parent=0);
+    explicit StorageServiceSettings(QObject *parent = 0);
     friend class StorageServiceSettingsPrivate;
     KWallet::Wallet *mWallet;
 };

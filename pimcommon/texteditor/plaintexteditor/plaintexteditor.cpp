@@ -39,7 +39,6 @@
 #include <QApplication>
 #include <QClipboard>
 
-
 using namespace PimCommon;
 
 class PlainTextEditor::PlainTextEditorPrivate
@@ -74,7 +73,7 @@ PlainTextEditor::~PlainTextEditor()
     delete d;
 }
 
-void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
+void PlainTextEditor::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu *popup = createStandardContextMenu();
     if (popup) {
@@ -83,51 +82,56 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
             QList<QAction *> actionList = popup->actions();
             enum { UndoAct, RedoAct, CutAct, CopyAct, PasteAct, ClearAct, SelectAllAct, NCountActs };
             QAction *separatorAction = 0L;
-            const int idx = actionList.indexOf( actionList[SelectAllAct] ) + 1;
-            if ( idx < actionList.count() )
-                separatorAction = actionList.at( idx );
-            if ( separatorAction ) {
+            const int idx = actionList.indexOf(actionList[SelectAllAct]) + 1;
+            if (idx < actionList.count()) {
+                separatorAction = actionList.at(idx);
+            }
+            if (separatorAction) {
                 QAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
-                if ( emptyDocument )
-                    clearAllAction->setEnabled( false );
-                popup->insertAction( separatorAction, clearAllAction );
+                if (emptyDocument) {
+                    clearAllAction->setEnabled(false);
+                }
+                popup->insertAction(separatorAction, clearAllAction);
             }
         }
-        KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
-                                                           : KIconTheme::TextEditor,
-                                              popup->actions() );
+        KIconTheme::assignIconsToContextMenu(isReadOnly() ? KIconTheme::ReadOnlyText
+                                             : KIconTheme::TextEditor,
+                                             popup->actions());
         if (d->supportFeatures & Search) {
             popup->addSeparator();
-            QAction *findAct = popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this, SIGNAL(findText()), Qt::Key_F+Qt::CTRL);
-            if ( emptyDocument )
+            QAction *findAct = popup->addAction(KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(), this, SIGNAL(findText()), Qt::Key_F + Qt::CTRL);
+            if (emptyDocument) {
                 findAct->setEnabled(false);
+            }
             popup->addSeparator();
             if (!isReadOnly()) {
-                QAction *act = popup->addAction(i18n("Replace..."),this, SIGNAL(replaceText()), Qt::Key_R+Qt::CTRL);
-                if ( emptyDocument )
-                    act->setEnabled( false );
+                QAction *act = popup->addAction(i18n("Replace..."), this, SIGNAL(replaceText()), Qt::Key_R + Qt::CTRL);
+                if (emptyDocument) {
+                    act->setEnabled(false);
+                }
                 popup->addSeparator();
             }
         } else {
             popup->addSeparator();
         }
 
-        if( !isReadOnly() && (d->supportFeatures & SpellChecking)) {
-            QAction *spellCheckAction = popup->addAction( QIcon::fromTheme( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
-            if (emptyDocument)
+        if (!isReadOnly() && (d->supportFeatures & SpellChecking)) {
+            QAction *spellCheckAction = popup->addAction(QIcon::fromTheme(QLatin1String("tools-check-spelling")), i18n("Check Spelling..."), this, SLOT(slotCheckSpelling()));
+            if (emptyDocument) {
                 spellCheckAction->setEnabled(false);
+            }
             popup->addSeparator();
         }
         if (d->supportFeatures & TextToSpeech) {
             if (PimCommon::TextToSpeech::self()->isReady()) {
                 QAction *speakAction = popup->addAction(i18n("Speak Text"));
                 speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
-                speakAction->setEnabled(!emptyDocument );
+                speakAction->setEnabled(!emptyDocument);
                 connect(speakAction, &QAction::triggered, this, &PlainTextEditor::slotSpeakText);
             }
         }
         addExtraMenuEntry(popup, event->pos());
-        popup->exec( event->globalPos() );
+        popup->exec(event->globalPos());
 
         delete popup;
     }
@@ -142,10 +146,11 @@ void PlainTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 void PlainTextEditor::slotSpeakText()
 {
     QString text;
-    if (textCursor().hasSelection())
+    if (textCursor().hasSelection()) {
         text = textCursor().selectedText();
-    else
+    } else {
         text = toPlainText();
+    }
     Q_EMIT say(text);
 }
 
@@ -164,7 +169,7 @@ void PlainTextEditor::setSearchSupport(bool b)
     if (b) {
         d->supportFeatures |= Search;
     } else {
-        d->supportFeatures = (d->supportFeatures &~ Search);
+        d->supportFeatures = (d->supportFeatures & ~ Search);
     }
 }
 
@@ -178,7 +183,7 @@ void PlainTextEditor::setTextToSpeechSupport(bool b)
     if (b) {
         d->supportFeatures |= TextToSpeech;
     } else {
-        d->supportFeatures = (d->supportFeatures &~ TextToSpeech);
+        d->supportFeatures = (d->supportFeatures & ~ TextToSpeech);
     }
 }
 
@@ -187,57 +192,58 @@ bool PlainTextEditor::textToSpeechSupport() const
     return (d->supportFeatures & TextToSpeech);
 }
 
-
 bool PlainTextEditor::spellCheckingSupport() const
 {
     return (d->supportFeatures & SpellChecking);
 }
 
-void PlainTextEditor::setSpellCheckingSupport( bool check )
+void PlainTextEditor::setSpellCheckingSupport(bool check)
 {
     if (check) {
         d->supportFeatures |= SpellChecking;
     } else {
-        d->supportFeatures = (d->supportFeatures &~ SpellChecking);
+        d->supportFeatures = (d->supportFeatures & ~ SpellChecking);
     }
 }
 
-void PlainTextEditor::setReadOnly( bool readOnly )
+void PlainTextEditor::setReadOnly(bool readOnly)
 {
-    if ( readOnly == isReadOnly() )
+    if (readOnly == isReadOnly()) {
         return;
-
-    if ( readOnly ) {
-        d->customPalette = testAttribute( Qt::WA_SetPalette );
-        QPalette p = palette();
-        QColor color = p.color( QPalette::Disabled, QPalette::Background );
-        p.setColor( QPalette::Base, color );
-        p.setColor( QPalette::Background, color );
-        setPalette( p );
-    } else {
-        if ( d->customPalette && testAttribute( Qt::WA_SetPalette ) ) {
-            QPalette p = palette();
-            QColor color = p.color( QPalette::Normal, QPalette::Base );
-            p.setColor( QPalette::Base, color );
-            p.setColor( QPalette::Background, color );
-            setPalette( p );
-        } else
-            setPalette( QPalette() );
     }
 
-    QPlainTextEdit::setReadOnly( readOnly );
-}
+    if (readOnly) {
+        d->customPalette = testAttribute(Qt::WA_SetPalette);
+        QPalette p = palette();
+        QColor color = p.color(QPalette::Disabled, QPalette::Background);
+        p.setColor(QPalette::Base, color);
+        p.setColor(QPalette::Background, color);
+        setPalette(p);
+    } else {
+        if (d->customPalette && testAttribute(Qt::WA_SetPalette)) {
+            QPalette p = palette();
+            QColor color = p.color(QPalette::Normal, QPalette::Base);
+            p.setColor(QPalette::Base, color);
+            p.setColor(QPalette::Background, color);
+            setPalette(p);
+        } else {
+            setPalette(QPalette());
+        }
+    }
 
+    QPlainTextEdit::setReadOnly(readOnly);
+}
 
 void PlainTextEditor::slotCheckSpelling()
 {
-    if(document()->isEmpty()) {
+    if (document()->isEmpty()) {
         KMessageBox::information(this, i18n("Nothing to spell check."));
         return;
     }
     Sonnet::BackgroundChecker *backgroundSpellCheck = new Sonnet::BackgroundChecker;
-    if(!d->spellCheckingLanguage.isEmpty())
+    if (!d->spellCheckingLanguage.isEmpty()) {
         backgroundSpellCheck->changeLanguage(d->spellCheckingLanguage);
+    }
     Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, 0);
     backgroundSpellCheck->setParent(spellDialog);
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -264,22 +270,22 @@ void PlainTextEditor::slotSpellCheckerCanceled()
     slotSpellCheckerFinished();
 }
 
-void PlainTextEditor::slotSpellCheckerAutoCorrect(const QString& currentWord,const QString& autoCorrectWord)
+void PlainTextEditor::slotSpellCheckerAutoCorrect(const QString &currentWord, const QString &autoCorrectWord)
 {
     emit spellCheckerAutoCorrect(currentWord, autoCorrectWord);
 }
 
-void PlainTextEditor::slotSpellCheckerMisspelling( const QString &text, int pos )
+void PlainTextEditor::slotSpellCheckerMisspelling(const QString &text, int pos)
 {
-    highlightWord( text.length(), pos );
+    highlightWord(text.length(), pos);
 }
 
-void PlainTextEditor::slotSpellCheckerCorrected( const QString& oldWord, int pos,const QString &newWord)
+void PlainTextEditor::slotSpellCheckerCorrected(const QString &oldWord, int pos, const QString &newWord)
 {
-    if (oldWord != newWord ) {
+    if (oldWord != newWord) {
         QTextCursor cursor(document());
         cursor.setPosition(pos);
-        cursor.setPosition(pos+oldWord.length(),QTextCursor::KeepAnchor);
+        cursor.setPosition(pos + oldWord.length(), QTextCursor::KeepAnchor);
         cursor.insertText(newWord);
     }
 }
@@ -291,11 +297,11 @@ void PlainTextEditor::slotSpellCheckerFinished()
     setTextCursor(cursor);
 }
 
-void PlainTextEditor::highlightWord( int length, int pos )
+void PlainTextEditor::highlightWord(int length, int pos)
 {
     QTextCursor cursor(document());
     cursor.setPosition(pos);
-    cursor.setPosition(pos+length,QTextCursor::KeepAnchor);
+    cursor.setPosition(pos + length, QTextCursor::KeepAnchor);
     setTextCursor(cursor);
     ensureCursorVisible();
 }
@@ -303,7 +309,7 @@ void PlainTextEditor::highlightWord( int length, int pos )
 static void deleteWord(QTextCursor cursor, QTextCursor::MoveOperation op)
 {
     cursor.clearSelection();
-    cursor.movePosition( op, QTextCursor::KeepAnchor );
+    cursor.movePosition(op, QTextCursor::KeepAnchor);
     cursor.removeSelectedText();
 }
 
@@ -317,10 +323,10 @@ void PlainTextEditor::deleteWordForward()
     deleteWord(textCursor(), QTextCursor::WordRight);
 }
 
-bool PlainTextEditor::event(QEvent* ev)
+bool PlainTextEditor::event(QEvent *ev)
 {
     if (ev->type() == QEvent::ShortcutOverride) {
-        QKeyEvent *e = static_cast<QKeyEvent *>( ev );
+        QKeyEvent *e = static_cast<QKeyEvent *>(ev);
         if (overrideShortcut(e)) {
             e->accept();
             return true;
@@ -329,40 +335,40 @@ bool PlainTextEditor::event(QEvent* ev)
     return QPlainTextEdit::event(ev);
 }
 
-bool PlainTextEditor::overrideShortcut(const QKeyEvent* event)
+bool PlainTextEditor::overrideShortcut(const QKeyEvent *event)
 {
     const int key = event->key() | event->modifiers();
-    if ( KStandardShortcut::copy().contains( key ) ) {
+    if (KStandardShortcut::copy().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::paste().contains( key ) ) {
+    } else if (KStandardShortcut::paste().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::cut().contains( key ) ) {
+    } else if (KStandardShortcut::cut().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::undo().contains( key ) ) {
+    } else if (KStandardShortcut::undo().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::redo().contains( key ) ) {
+    } else if (KStandardShortcut::redo().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::deleteWordBack().contains( key ) ) {
+    } else if (KStandardShortcut::deleteWordBack().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::deleteWordForward().contains( key ) ) {
+    } else if (KStandardShortcut::deleteWordForward().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::backwardWord().contains( key ) ) {
+    } else if (KStandardShortcut::backwardWord().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::forwardWord().contains( key ) ) {
+    } else if (KStandardShortcut::forwardWord().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::next().contains( key ) ) {
+    } else if (KStandardShortcut::next().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::prior().contains( key ) ) {
+    } else if (KStandardShortcut::prior().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::begin().contains( key ) ) {
+    } else if (KStandardShortcut::begin().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::end().contains( key ) ) {
+    } else if (KStandardShortcut::end().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::beginningOfLine().contains( key ) ) {
+    } else if (KStandardShortcut::beginningOfLine().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::endOfLine().contains( key ) ) {
+    } else if (KStandardShortcut::endOfLine().contains(key)) {
         return true;
-    } else if ( KStandardShortcut::pasteSelection().contains( key ) ) {
+    } else if (KStandardShortcut::pasteSelection().contains(key)) {
         return true;
     } else if (searchSupport() && KStandardShortcut::find().contains(key)) {
         return true;
@@ -376,46 +382,50 @@ bool PlainTextEditor::overrideShortcut(const QKeyEvent* event)
     return false;
 }
 
-bool PlainTextEditor::handleShortcut(const QKeyEvent* event)
+bool PlainTextEditor::handleShortcut(const QKeyEvent *event)
 {
     const int key = event->key() | event->modifiers();
 
-    if ( KStandardShortcut::copy().contains( key ) ) {
+    if (KStandardShortcut::copy().contains(key)) {
         copy();
         return true;
-    } else if ( KStandardShortcut::paste().contains( key ) ) {
+    } else if (KStandardShortcut::paste().contains(key)) {
         paste();
         return true;
-    } else if ( KStandardShortcut::cut().contains( key ) ) {
+    } else if (KStandardShortcut::cut().contains(key)) {
         cut();
         return true;
-    } else if ( KStandardShortcut::undo().contains( key ) ) {
-        if (!isReadOnly())
+    } else if (KStandardShortcut::undo().contains(key)) {
+        if (!isReadOnly()) {
             undo();
+        }
         return true;
-    } else if ( KStandardShortcut::redo().contains( key ) ) {
-        if (!isReadOnly())
+    } else if (KStandardShortcut::redo().contains(key)) {
+        if (!isReadOnly()) {
             redo();
+        }
         return true;
-    } else if ( KStandardShortcut::deleteWordBack().contains( key ) ) {
-        if (!isReadOnly())
+    } else if (KStandardShortcut::deleteWordBack().contains(key)) {
+        if (!isReadOnly()) {
             deleteWordBack();
+        }
         return true;
-    } else if ( KStandardShortcut::deleteWordForward().contains( key ) ) {
-        if (!isReadOnly())
+    } else if (KStandardShortcut::deleteWordForward().contains(key)) {
+        if (!isReadOnly()) {
             deleteWordForward();
+        }
         return true;
-    } else if ( KStandardShortcut::backwardWord().contains( key ) ) {
+    } else if (KStandardShortcut::backwardWord().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::PreviousWord );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::PreviousWord);
+        setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::forwardWord().contains( key ) ) {
+    } else if (KStandardShortcut::forwardWord().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::NextWord );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::NextWord);
+        setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::next().contains( key ) ) {
+    } else if (KStandardShortcut::next().contains(key)) {
         QTextCursor cursor = textCursor();
         bool moved = false;
         qreal lastY = cursorRect(cursor).bottom();
@@ -433,7 +443,7 @@ bool PlainTextEditor::handleShortcut(const QKeyEvent* event)
         }
         setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::prior().contains( key ) ) {
+    } else if (KStandardShortcut::prior().contains(key)) {
         QTextCursor cursor = textCursor();
         bool moved = false;
         qreal lastY = cursorRect(cursor).bottom();
@@ -451,44 +461,45 @@ bool PlainTextEditor::handleShortcut(const QKeyEvent* event)
         }
         setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::begin().contains( key ) ) {
+    } else if (KStandardShortcut::begin().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::Start );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::Start);
+        setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::end().contains( key ) ) {
+    } else if (KStandardShortcut::end().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::End );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::End);
+        setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::beginningOfLine().contains( key ) ) {
+    } else if (KStandardShortcut::beginningOfLine().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::StartOfLine );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::StartOfLine);
+        setTextCursor(cursor);
         return true;
-    } else if ( KStandardShortcut::endOfLine().contains( key ) ) {
+    } else if (KStandardShortcut::endOfLine().contains(key)) {
         QTextCursor cursor = textCursor();
-        cursor.movePosition( QTextCursor::EndOfLine );
-        setTextCursor( cursor );
+        cursor.movePosition(QTextCursor::EndOfLine);
+        setTextCursor(cursor);
         return true;
     } else if (searchSupport() && KStandardShortcut::find().contains(key)) {
         Q_EMIT findText();
         return true;
     } else if (searchSupport() && KStandardShortcut::replace().contains(key)) {
-        if (!isReadOnly())
+        if (!isReadOnly()) {
             Q_EMIT replaceText();
+        }
         return true;
-    } else if ( KStandardShortcut::pasteSelection().contains( key ) ) {
-        QString text = QApplication::clipboard()->text( QClipboard::Selection );
-        if ( !text.isEmpty() )
-            insertPlainText( text );  // TODO: check if this is html? (MiB)
+    } else if (KStandardShortcut::pasteSelection().contains(key)) {
+        QString text = QApplication::clipboard()->text(QClipboard::Selection);
+        if (!text.isEmpty()) {
+            insertPlainText(text);    // TODO: check if this is html? (MiB)
+        }
         return true;
     }
     return false;
 }
 
-
-void PlainTextEditor::keyPressEvent( QKeyEvent *event )
+void PlainTextEditor::keyPressEvent(QKeyEvent *event)
 {
     if (handleShortcut(event)) {
         event->accept();

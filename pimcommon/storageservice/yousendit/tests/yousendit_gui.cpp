@@ -21,7 +21,6 @@
 
 #include <qdebug.h>
 
-
 #include <KLocalizedString>
 #include <QApplication>
 #include <KAboutData>
@@ -33,9 +32,9 @@ YouSendItTestWidget::YouSendItTestWidget(QWidget *parent)
     setStorageService(new PimCommon::YouSendItStorageService(this));
 }
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("yousendit_gui"), i18n("yousendit_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("yousendit_gui"), i18n("yousendit_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for short yousendit"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -45,7 +44,6 @@ int main (int argc, char **argv)
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-
 
     YouSendItTestWidget *w = new YouSendItTestWidget;
     w->show();

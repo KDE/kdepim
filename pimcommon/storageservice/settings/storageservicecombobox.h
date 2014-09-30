@@ -21,12 +21,13 @@
 #include <QComboBox>
 #include "storageservice/storageservicemanager.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceComboBox : public QComboBox
 {
     Q_OBJECT
 public:
-    explicit StorageServiceComboBox(const QList<PimCommon::StorageServiceAbstract::Capability> &lstCap, const QStringList &excludeService, QWidget *parent=0);
+    explicit StorageServiceComboBox(const QList<PimCommon::StorageServiceAbstract::Capability> &lstCap, const QStringList &excludeService, QWidget *parent = 0);
     ~StorageServiceComboBox();
 
     PimCommon::StorageServiceManager::ServiceType service() const;

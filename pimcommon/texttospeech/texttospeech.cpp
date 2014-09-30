@@ -20,7 +20,8 @@
 #include <QtTextToSpeech/QTextToSpeech>
 #endif
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class TextToSpeechPrivate
 {
@@ -43,7 +44,7 @@ Q_GLOBAL_STATIC(TextToSpeechPrivate, sInstance)
 TextToSpeech::TextToSpeech(QObject *parent)
     : QObject(parent)
 #if KDEPIM_HAVE_TEXTTOSPEECH
-    ,mTextToSpeech(new QTextToSpeech(this))
+    , mTextToSpeech(new QTextToSpeech(this))
 #endif
 {
     connect(this, &TextToSpeech::emitSay, this, &TextToSpeech::slotNextSay);

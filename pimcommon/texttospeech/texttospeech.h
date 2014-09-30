@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef TEXTTOSPEECH_H
 #define TEXTTOSPEECH_H
 
@@ -27,7 +26,8 @@
 class QTextToSpeech;
 #endif
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class PIMCOMMON_EXPORT TextToSpeech : public QObject
 {
@@ -57,7 +57,7 @@ private Q_SLOTS:
     void slotNextSay();
 
 private:
-    explicit TextToSpeech(QObject *parent=0);
+    explicit TextToSpeech(QObject *parent = 0);
     friend class TextToSpeechPrivate;
 
 #if KDEPIM_HAVE_TEXTTOSPEECH

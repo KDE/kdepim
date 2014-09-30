@@ -31,7 +31,6 @@ TextToSpeechConfigWidgetTest::~TextToSpeechConfigWidgetTest()
 {
 }
 
-
 void TextToSpeechConfigWidgetTest::shouldHaveDefaultValue()
 {
     PimCommon::TextToSpeechConfigWidget textToSpeechConfigWidget;
@@ -62,6 +61,5 @@ void TextToSpeechConfigWidgetTest::shouldEmitConfigChangedWhenChangeSliderValue(
     pitch->setValue(5);
     QCOMPARE(spy.count(), 3);
 }
-
 
 QTEST_MAIN(TextToSpeechConfigWidgetTest)

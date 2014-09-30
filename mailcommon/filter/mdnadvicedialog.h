@@ -90,7 +90,6 @@ private slots:
     void slotUser2Clicked();
     void slotYesClicked();
 
-
 private:
     MessageComposer::MDNAdvice m_result;
 
