@@ -382,7 +382,7 @@ void MainWidget::delayedInit()
             SLOT(saveState()));
     connect(GlobalContactModel::instance()->model(), SIGNAL(modelReset()),
             SLOT(restoreState()));
-    connect(kapp, &KApplication::aboutToQuit, this, &MainWidget::saveState);
+    connect(qApp, &QApplication::aboutToQuit, this, &MainWidget::saveState);
 
     restoreState();
     updateQuickSearchText();
