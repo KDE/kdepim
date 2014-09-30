@@ -85,7 +85,7 @@ void EventEditTest::shouldHaveDefaultValuesOnCreation()
     QCOMPARE(openEditor->isEnabled(), false);
     QCOMPARE(save->isEnabled(), false);
 
-    KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
+    QDateTime currentDateTime = QDateTime::currentDateTime();
     KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
     QVERIFY(startDateTime);
     QCOMPARE(startDateTime->dateTime().date(), currentDateTime.date());
@@ -230,10 +230,10 @@ void EventEditTest::shouldNotEmitCreateEventWhenDateIsInvalid()
     KMime::Message::Ptr msg(new KMime::Message);
 
     KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
-    startDateTime->setDateTime(KDateTime());
+    startDateTime->setDateTime(QDateTime());
 
     KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
-    endDateTime->setDateTime(KDateTime());
+    endDateTime->setDateTime(QDateTime());
 
 
     QString subject = QLatin1String("Test Note");
@@ -282,11 +282,11 @@ void EventEditTest::shouldHaveCorrectStartEndDateTime()
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
 
-    KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
+    QDateTime currentDateTime = QDateTime::currentDateTime();
     KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
     startDateTime->setDateTime(currentDateTime);
 
-    KDateTime endDt = currentDateTime.addDays(1);
+    QDateTime endDt = currentDateTime.addDays(1);
     KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
     endDateTime->setDateTime(endDt);
 
@@ -296,8 +296,8 @@ void EventEditTest::shouldHaveCorrectStartEndDateTime()
     QCOMPARE(spy.count(), 1);
     KCalCore::Event::Ptr eventPtr = spy.at(0).at(0).value<KCalCore::Event::Ptr>();
     QVERIFY(eventPtr);
-    QCOMPARE(eventPtr->dtStart(), currentDateTime);
-    QCOMPARE(eventPtr->dtEnd(), endDt);
+    QCOMPARE(eventPtr->dtStart().dateTime(), currentDateTime);
+    QCOMPARE(eventPtr->dtEnd().dateTime(), endDt);
 }
 
 void EventEditTest::shouldSetFocusWhenWeCallTodoEdit()
@@ -319,7 +319,7 @@ void EventEditTest::shouldEnsureEndDateIsNotBeforeStartDate()
     KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
     KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
 
-    KDateTime startDt = startDateTime->dateTime();
+    QDateTime startDt = startDateTime->dateTime();
     QVERIFY(startDt < endDateTime->dateTime());
 
     startDt.setTime(QTime(5, 12));

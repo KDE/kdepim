@@ -39,8 +39,8 @@ add_messageviewer_unittest( rendertest.cpp )
 kde4_handle_crypto_rpath_for_executable( rendertest )
 add_messageviewer_unittest( unencryptedmessagetest.cpp )
 kde4_handle_crypto_rpath_for_executable( unencryptedmessagetest )
-#REACTIVATE add_messageviewer_unittest( todoedittest.cpp )
-#REACTIVATE add_messageviewer_unittest( eventedittest.cpp )
+add_messageviewer_unittest( todoedittest.cpp )
+add_messageviewer_unittest( eventedittest.cpp )
 ########### viewertest_gui ###############
 
 

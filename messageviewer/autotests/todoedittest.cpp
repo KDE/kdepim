@@ -32,6 +32,7 @@
 #include <QHBoxLayout>
 #include <QShortcut>
 #include <QAction>
+#include <QSignalSpy>
 
 namespace MessageViewer {
 extern MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_todoEditStubModel;
