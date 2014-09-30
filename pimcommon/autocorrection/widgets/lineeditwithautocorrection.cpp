@@ -60,12 +60,14 @@ void LineEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
             if (!textCursor().hasSelection()) {
                 // no Html format in subject.
                 int position = textCursor().position();
-                mAutoCorrection->autocorrect(false, *document(), position);
+                const bool addSpace = mAutoCorrection->autocorrect(false, *document(), position);
                 QTextCursor cur = textCursor();
                 cur.setPosition(position);
                 if (e->key() == Qt::Key_Space) {
-                    cur.insertText(QLatin1String(" "));
-                    setTextCursor(cur);
+                    if (addSpace) {
+                        cur.insertText(QLatin1String(" "));
+                        setTextCursor(cur);
+                    }
                     return;
                 }
             }

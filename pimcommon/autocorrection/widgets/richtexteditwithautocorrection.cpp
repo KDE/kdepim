@@ -67,14 +67,20 @@ void RichTextEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
                 const QTextCharFormat initialTextFormat = textCursor().charFormat();
                 const bool richText = acceptRichText();
                 int position = textCursor().position();
-                mAutoCorrection->autocorrect(richText, *document(), position);
+                const bool addSpace = mAutoCorrection->autocorrect(richText, *document(), position);
                 QTextCursor cur = textCursor();
                 cur.setPosition(position);
-                const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
-                if (richText && !isSpecial(initialTextFormat))
-                    cur.insertText(insertChar, initialTextFormat);
-                else
-                    cur.insertText(insertChar);
+                const bool spacePressed = (e->key() == Qt::Key_Space);
+                const QChar insertChar = spacePressed ? QLatin1Char(' ') : QLatin1Char('\n');
+                if (richText && !isSpecial(initialTextFormat)) {
+                    if ((spacePressed && addSpace) || !spacePressed) {
+                        cur.insertText(insertChar, initialTextFormat);
+                    }
+                } else {
+                    if ((spacePressed && addSpace) || !spacePressed) {
+                        cur.insertText(insertChar);
+                    }
+                }
                 setTextCursor(cur);
                 return;
             }
