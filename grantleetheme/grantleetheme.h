@@ -20,7 +20,8 @@
 #include "grantleetheme_export.h"
 #include <QString>
 #include <QStringList>
-namespace GrantleeTheme {
+namespace GrantleeTheme
+{
 class GRANTLEETHEME_EXPORT Theme
 {
 public:

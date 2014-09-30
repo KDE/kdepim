@@ -36,7 +36,7 @@ public:
         @return true if handler handled the URI, otherwise false.
         @param uri The URI of the link that should be handled.
     */
-    static bool process( const QString &uri, const Akonadi::Item & item = Akonadi::Item() );
+    static bool process(const QString &uri, const Akonadi::Item &item = Akonadi::Item());
 };
 
 #endif

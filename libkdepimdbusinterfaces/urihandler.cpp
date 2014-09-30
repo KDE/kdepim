@@ -36,62 +36,62 @@
 #include <QUrl>
 #include <QObject>
 
-bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
+bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
 {
     qDebug() << uri;
 
-    if ( uri.startsWith( QLatin1String( "kmail:" ) ) ) {
+    if (uri.startsWith(QLatin1String("kmail:"))) {
         // make sure kmail is running or the part is shown
-        KToolInvocation::startServiceByDesktopPath( QLatin1String("kmail") );
+        KToolInvocation::startServiceByDesktopPath(QLatin1String("kmail"));
 
         // parse string, show
-        int colon = uri.indexOf( QLatin1Char(':') );
+        int colon = uri.indexOf(QLatin1Char(':'));
         // extract 'number' from 'kmail:<number>/<id>'
-        QString serialNumberStr = uri.mid( colon + 1 );
-        serialNumberStr = serialNumberStr.left( serialNumberStr.indexOf( QLatin1Char('/') ) );
+        QString serialNumberStr = uri.mid(colon + 1);
+        serialNumberStr = serialNumberStr.left(serialNumberStr.indexOf(QLatin1Char('/')));
 
         org::kde::kmail::kmail kmail(
-                    QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QDBusConnection::sessionBus() );
-        kmail.showMail( serialNumberStr.toLongLong() );
+            QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QDBusConnection::sessionBus());
+        kmail.showMail(serialNumberStr.toLongLong());
         return true;
-    } else if ( uri.startsWith( QLatin1String( "mailto:" ) ) ) {
-        KToolInvocation::invokeMailer( uri.mid(7), QString() );
+    } else if (uri.startsWith(QLatin1String("mailto:"))) {
+        KToolInvocation::invokeMailer(uri.mid(7), QString());
         return true;
-    } else if ( uri.startsWith( QLatin1String( "uid:" ) ) ) {
+    } else if (uri.startsWith(QLatin1String("uid:"))) {
 
-        Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode, ( QWidget* )0 );
-        if ( item.isValid() ) {
-            dlg->setContact( item );
+        Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog(Akonadi::ContactEditorDialog::EditMode, (QWidget *)0);
+        if (item.isValid()) {
+            dlg->setContact(item);
             dlg->show();
             return true;
         } else {
-            qDebug()<<"Item is not valid.";
+            qDebug() << "Item is not valid.";
             return false;
         }
-    } else if ( uri.startsWith( QLatin1String( "urn:x-ical" ) ) ) {
+    } else if (uri.startsWith(QLatin1String("urn:x-ical"))) {
         // make sure korganizer is running or the part is shown
-        KToolInvocation::startServiceByDesktopPath( QLatin1String("korganizer") );
+        KToolInvocation::startServiceByDesktopPath(QLatin1String("korganizer"));
 
         // we must work around QUrl breakage (it doesn't know about URNs)
-        const QString uid = QUrl::fromPercentEncoding( uri.toLatin1() ).mid( 11 );
+        const QString uid = QUrl::fromPercentEncoding(uri.toLatin1()).mid(11);
         OrgKdeKorganizerKorganizerInterface korganizerIface(
-                    QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus() );
+            QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus());
 
-        return korganizerIface.showIncidence( uid );
-    } else if ( uri.startsWith( QLatin1String( "akonadi:" ) ) ) {
-        const QUrl url( uri );
-        const QString mimeType = QUrlQuery(url).queryItemValue( QLatin1String( "type" ) );
-        if ( mimeType.toLower() == QLatin1String( "message/rfc822" ) ) {
+        return korganizerIface.showIncidence(uid);
+    } else if (uri.startsWith(QLatin1String("akonadi:"))) {
+        const QUrl url(uri);
+        const QString mimeType = QUrlQuery(url).queryItemValue(QLatin1String("type"));
+        if (mimeType.toLower() == QLatin1String("message/rfc822")) {
             // make sure kmail is running or the part is shown
-            KToolInvocation::startServiceByDesktopPath( QLatin1String("kmail") );
+            KToolInvocation::startServiceByDesktopPath(QLatin1String("kmail"));
 
             org::kde::kmail::kmail kmail(
-                        QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QDBusConnection::sessionBus() );
-            kmail.viewMessage( uri );
+                QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QDBusConnection::sessionBus());
+            kmail.viewMessage(uri);
             return true;
         }
     } else {  // no special URI, let KDE handle it
-        new KRun( QUrl( uri ), 0 );
+        new KRun(QUrl(uri), 0);
     }
 
     return false;

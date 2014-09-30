@@ -23,7 +23,8 @@
 
 #include "kdepimdbusinterfaces_export.h"
 
-namespace KPIM {
+namespace KPIM
+{
 
 /**
   This namespace provides the interface for communicating with the reminder daemon.

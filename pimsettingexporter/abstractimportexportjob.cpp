@@ -365,7 +365,7 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
-                        file->copyTo(newUrl.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path());
+                        file->copyTo(newUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path());
                     }
                     settings.insert(QLatin1String("Path"), newUrl.path());
 

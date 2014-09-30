@@ -176,10 +176,10 @@ QString SieveTextEdit::selectedWord(const QPoint &pos) const
     return word;
 }
 
-bool SieveTextEdit::event(QEvent* ev)
+bool SieveTextEdit::event(QEvent *ev)
 {
     if (ev->type() == QEvent::ShortcutOverride) {
-        QKeyEvent *e = static_cast<QKeyEvent *>( ev );
+        QKeyEvent *e = static_cast<QKeyEvent *>(ev);
         if (overrideShortcut(e)) {
             e->accept();
             return true;
@@ -188,7 +188,7 @@ bool SieveTextEdit::event(QEvent* ev)
     return PimCommon::PlainTextEditor::event(ev);
 }
 
-bool SieveTextEdit::overrideShortcut(QKeyEvent* event)
+bool SieveTextEdit::overrideShortcut(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_F1) {
         if (openVariableHelp()) {
@@ -213,7 +213,7 @@ bool SieveTextEdit::openVariableHelp()
     return false;
 }
 
-void SieveTextEdit::keyPressEvent(QKeyEvent* e)
+void SieveTextEdit::keyPressEvent(QKeyEvent *e)
 {
     if (m_completer->popup()->isVisible()) {
         switch (e->key()) {
@@ -227,7 +227,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
         default:
             break;
         }
-    }    
+    }
     QPlainTextEdit::keyPressEvent(e);
     if (e->key() == Qt::Key_F1 && !textCursor().hasSelection()) {
         const QString word = selectedWord();

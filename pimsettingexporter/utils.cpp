@@ -123,9 +123,9 @@ QUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
     if (QFile(newUrl.path()).exists()) {
         QString newFileName = newUrl.path();
         for (int i = 0;; ++i) {
-            newFileName = newUrl.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path() + QLatin1Char('/') + QString::number(i) + QLatin1Char('/') + newUrl.fileName();
+            newFileName = newUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path() + QLatin1Char('/') + QString::number(i) + QLatin1Char('/') + newUrl.fileName();
             if (!QFile(newFileName).exists()) {
-                QDir dir(newUrl.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path());
+                QDir dir(newUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path());
                 dir.mkdir(QString::number(i));
                 break;
             }

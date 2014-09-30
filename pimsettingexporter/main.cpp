@@ -17,7 +17,6 @@
 
 #include "pimsettingexporterwindow.h"
 
-
 #include <kaboutdata.h>
 #include <KLocalizedString>
 #include <KDBusService>
@@ -38,8 +37,8 @@ int main(int argc, char *argv[])
     migrate.migrate();
 
     KAboutData aboutData(QLatin1String("pimsettingexporter"), i18n("PIM Setting Exporter"),
-                          QLatin1String(KDEPIM_VERSION), i18n("PIM Setting Exporter"), KAboutLicense::GPL_V2,
-                          i18n("Copyright © 2012-2014 pimsettingexporter authors"));
+                         QLatin1String(KDEPIM_VERSION), i18n("PIM Setting Exporter"), KAboutLicense::GPL_V2,
+                         i18n("Copyright © 2012-2014 pimsettingexporter authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kontact")));
     QApplication app(argc, argv);

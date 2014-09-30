@@ -27,7 +27,8 @@ class KActionCollection;
 class KToggleAction;
 class KActionMenu;
 
-namespace GrantleeTheme {
+namespace GrantleeTheme
+{
 class GRANTLEETHEME_EXPORT GrantleeThemeManager : public QObject
 {
     Q_OBJECT
@@ -42,7 +43,7 @@ public:
 
     QMap<QString, GrantleeTheme::Theme> themes() const;
 
-    void setActionGroup( QActionGroup *actionGroup );
+    void setActionGroup(QActionGroup *actionGroup);
 
     KToggleAction *actionForTheme();
 
@@ -63,9 +64,9 @@ Q_SIGNALS:
     void updateThemes();
 
 private:
-    Q_PRIVATE_SLOT( d, void directoryChanged() )
-    Q_PRIVATE_SLOT( d, void slotDownloadHeaderThemes() )
-    Q_PRIVATE_SLOT( d, void slotThemeSelected() )
+    Q_PRIVATE_SLOT(d, void directoryChanged())
+    Q_PRIVATE_SLOT(d, void slotDownloadHeaderThemes())
+    Q_PRIVATE_SLOT(d, void slotThemeSelected())
     class Private;
     Private *const d;
 };
