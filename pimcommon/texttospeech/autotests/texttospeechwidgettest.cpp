@@ -24,13 +24,12 @@
 #include <QSignalSpy>
 
 
-//TODO fix me !
-//qRegisterMetaType<PimCommon::TextToSpeechWidget::State>();
+Q_DECLARE_METATYPE( PimCommon::TextToSpeechWidget::State )
 
 TextToSpeechWidgetTest::TextToSpeechWidgetTest(QObject *parent)
     : QObject(parent)
 {
-
+    qRegisterMetaType<PimCommon::TextToSpeechWidget::State>();
 }
 
 void TextToSpeechWidgetTest::addInterface(PimCommon::TextToSpeechWidget *widget)
