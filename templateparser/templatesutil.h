@@ -22,11 +22,13 @@
 
 class QString;
 class QStringList;
-namespace TemplateParser {
+namespace TemplateParser
+{
 
-namespace Util {
+namespace Util
+{
 
-TEMPLATEPARSER_EXPORT void deleteTemplate( const QString &id );
+TEMPLATEPARSER_EXPORT void deleteTemplate(const QString &id);
 
 TEMPLATEPARSER_EXPORT QStringList keywords();
 TEMPLATEPARSER_EXPORT QStringList keywordsWithArgs();

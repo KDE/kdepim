@@ -20,14 +20,10 @@
 
 #include <qdebug.h>
 
-
 #include <KLocalizedString>
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
-
-
-
 
 TemplateConfigureTestWidget::TemplateConfigureTestWidget(QWidget *parent)
     : QWidget(parent)
@@ -41,10 +37,9 @@ TemplateConfigureTestWidget::~TemplateConfigureTestWidget()
 {
 }
 
-
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("templateconfiguretest_gui"), i18n("TemplateConfigureTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("templateconfiguretest_gui"), i18n("TemplateConfigureTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for template configure widget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -56,7 +51,7 @@ int main (int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     TemplateConfigureTestWidget *w = new TemplateConfigureTestWidget();
-    w->resize(800,600);
+    w->resize(800, 600);
 
     w->show();
     app.exec();

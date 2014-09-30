@@ -23,16 +23,17 @@
 
 #include <QSyntaxHighlighter>
 
-namespace TemplateParser {
+namespace TemplateParser
+{
 
 class TEMPLATEPARSER_EXPORT TemplatesSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
-    explicit TemplatesSyntaxHighlighter( QTextDocument *doc );
+    explicit TemplatesSyntaxHighlighter(QTextDocument *doc);
     ~TemplatesSyntaxHighlighter();
 
-    void highlightBlock( const QString &text );
+    void highlightBlock(const QString &text);
 
 private:
     void init();
@@ -40,8 +41,8 @@ private:
         QRegExp pattern;
         QTextCharFormat format;
 
-        Rule( const QRegExp &r, const QTextCharFormat &f )
-            : pattern( r ), format( f ) {}
+        Rule(const QRegExp &r, const QTextCharFormat &f)
+            : pattern(r), format(f) {}
     };
     QList<Rule> m_rules;
 

@@ -30,7 +30,8 @@ class KActionCollection;
 
 class Ui_CustomTemplatesBase;
 
-namespace TemplateParser {
+namespace TemplateParser
+{
 class CustomTemplateItem;
 
 class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
@@ -45,8 +46,8 @@ public:
     };
 
 public:
-    explicit CustomTemplates( const QList<KActionCollection*> &actionCollection,
-                              QWidget *parent = 0 );
+    explicit CustomTemplates(const QList<KActionCollection *> &actionCollection,
+                             QWidget *parent = 0);
     ~CustomTemplates();
 
     void load();
@@ -57,23 +58,23 @@ signals:
     void templatesUpdated();
 
 private Q_SLOTS:
-    void slotInsertCommand( const QString &cmd, int adjustCursor = 0 );
+    void slotInsertCommand(const QString &cmd, int adjustCursor = 0);
     void slotTextChanged();
     void slotAddClicked();
     void slotRemoveClicked();
     void slotListSelectionChanged();
-    void slotTypeActivated( int index );
-    void slotShortcutChanged( const QKeySequence &newSeq );
-    void slotItemChanged( QTreeWidgetItem *item, int column );
-    void slotHelpLinkClicked( const QString & );
-    void slotNameChanged( const QString &text );
+    void slotTypeActivated(int index);
+    void slotShortcutChanged(const QKeySequence &newSeq);
+    void slotItemChanged(QTreeWidgetItem *item, int column);
+    void slotHelpLinkClicked(const QString &);
+    void slotNameChanged(const QString &text);
     void slotDuplicateClicked();
 
 private:
-    bool nameAlreadyExists( const QString &str, QTreeWidgetItem *item = 0 );
-    QString indexToType( int index );
-    QString createUniqueName( const QString &name ) const;
-    void iconFromType( CustomTemplates::Type type, CustomTemplateItem *item );
+    bool nameAlreadyExists(const QString &str, QTreeWidgetItem *item = 0);
+    QString indexToType(int index);
+    QString createUniqueName(const QString &name) const;
+    void iconFromType(CustomTemplates::Type type, CustomTemplateItem *item);
 
     /// These templates will be deleted when we're saving.
     QStringList mItemsToDelete;
@@ -92,31 +93,31 @@ private:
 class CustomTemplateItem : public QTreeWidgetItem
 {
 public:
-    explicit CustomTemplateItem( QTreeWidget *parent,
-                                 const QString &name,
-                                 const QString &content,
-                                 const QKeySequence &shortcut,
-                                 CustomTemplates::Type type,
-                                 const QString &to,
-                                 const QString &cc );
+    explicit CustomTemplateItem(QTreeWidget *parent,
+                                const QString &name,
+                                const QString &content,
+                                const QKeySequence &shortcut,
+                                CustomTemplates::Type type,
+                                const QString &to,
+                                const QString &cc);
     ~CustomTemplateItem();
-    void setCustomType( CustomTemplates::Type type );
+    void setCustomType(CustomTemplates::Type type);
     CustomTemplates::Type customType() const;
 
     QString to() const;
     QString cc() const;
 
-    void setTo( const QString & );
-    void setCc( const QString & );
+    void setTo(const QString &);
+    void setCc(const QString &);
 
     QString content() const;
-    void setContent( const QString & );
+    void setContent(const QString &);
 
     QKeySequence shortcut() const;
-    void setShortcut( const QKeySequence & );
+    void setShortcut(const QKeySequence &);
 
     QString oldName() const;
-    void setOldName( const QString & );
+    void setOldName(const QString &);
 
 private:
     QString mName, mContent;
@@ -129,13 +130,13 @@ class CustomTemplateItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    explicit CustomTemplateItemDelegate( QObject *parent = 0 );
+    explicit CustomTemplateItemDelegate(QObject *parent = 0);
     ~CustomTemplateItemDelegate();
-    QWidget *createEditor ( QWidget *parent, const QStyleOptionViewItem &option,
-                            const QModelIndex &index ) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const;
 
-    void setModelData( QWidget *editor, QAbstractItemModel *model,
-                       const QModelIndex &index ) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const;
 
 };
 

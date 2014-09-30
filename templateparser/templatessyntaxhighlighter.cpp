@@ -22,8 +22,8 @@
 
 using namespace TemplateParser;
 
-TemplatesSyntaxHighlighter::TemplatesSyntaxHighlighter( QTextDocument *doc )
-    : QSyntaxHighlighter( doc )
+TemplatesSyntaxHighlighter::TemplatesSyntaxHighlighter(QTextDocument *doc)
+    : QSyntaxHighlighter(doc)
 {
     init();
 }
@@ -32,15 +32,15 @@ TemplatesSyntaxHighlighter::~TemplatesSyntaxHighlighter()
 {
 }
 
-void TemplatesSyntaxHighlighter::highlightBlock( const QString &text )
+void TemplatesSyntaxHighlighter::highlightBlock(const QString &text)
 {
-    Q_FOREACH ( const Rule &rule, m_rules ) {
-        const QRegExp expression( rule.pattern );
-        int index = expression.indexIn( text );
+    Q_FOREACH (const Rule &rule, m_rules) {
+        const QRegExp expression(rule.pattern);
+        int index = expression.indexIn(text);
         int length = 0;
-        while ( index >= 0 && ( length = expression.matchedLength() ) > 0 ) {
-            setFormat( index, length, rule.format );
-            index = expression.indexIn( text, index + length );
+        while (index >= 0 && (length = expression.matchedLength()) > 0) {
+            setFormat(index, length, rule.format);
+            index = expression.indexIn(text, index + length);
         }
     }
 }
@@ -49,26 +49,25 @@ void TemplatesSyntaxHighlighter::init()
 {
     QTextCharFormat keywordFormat;
     QPalette palette;
-    keywordFormat.setForeground( palette.link() );
+    keywordFormat.setForeground(palette.link());
 
     QStringList keywords;
     keywords << Util::keywords();
 
-    Q_FOREACH ( const QString & s, keywords ) {
-        const QRegExp regex( s, Qt::CaseInsensitive );
-        m_rules.append( Rule( regex, keywordFormat ) );
+    Q_FOREACH (const QString &s, keywords) {
+        const QRegExp regex(s, Qt::CaseInsensitive);
+        m_rules.append(Rule(regex, keywordFormat));
     }
 
     QTextCharFormat keywordWithArgsFormat;
-    keywordWithArgsFormat.setForeground( palette.link() );
+    keywordWithArgsFormat.setForeground(palette.link());
     QStringList keywordsWithArgs;
     keywordsWithArgs << Util::keywordsWithArgs();
 
-    Q_FOREACH ( const QString & s, keywordsWithArgs ) {
-        const QRegExp regex( s, Qt::CaseInsensitive );
-        m_rules.append( Rule( regex, keywordWithArgsFormat ) );
+    Q_FOREACH (const QString &s, keywordsWithArgs) {
+        const QRegExp regex(s, Qt::CaseInsensitive);
+        m_rules.append(Rule(regex, keywordWithArgsFormat));
     }
 
 }
-
 

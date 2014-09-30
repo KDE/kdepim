@@ -105,8 +105,9 @@ bool AutoCorrection::autocorrect(bool htmlMode, QTextDocument &document, int &po
     mCursor.setPosition(position);
 
     //If we already have a space not necessary to look at other autocorrect feature.
-    if (!singleSpaces())
+    if (!singleSpaces()) {
         return false;
+    }
 
     int oldPosition = position;
     selectPreviousWord(mCursor, position);

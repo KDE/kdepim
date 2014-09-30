@@ -21,8 +21,10 @@
 #include "kaddressbook_grantlee_export.h"
 #include <QString>
 
-namespace KAddressBookGrantlee {
-namespace GrantleeUtil {
+namespace KAddressBookGrantlee
+{
+namespace GrantleeUtil
+{
 KADDRESSBOOK_GRANTLEE_EXPORT QString kaddressBookAbsoluteThemePath();
 }
 }

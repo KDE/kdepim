@@ -21,13 +21,14 @@
 #include "kaddressbook_grantlee_export.h"
 #include <Akonadi/Contact/ContactViewer>
 
-namespace KAddressBookGrantlee {
+namespace KAddressBookGrantlee
+{
 class GrantleeContactFormatter;
 class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactViewer : public Akonadi::ContactViewer
 {
     Q_OBJECT
 public:
-    explicit GrantleeContactViewer(QWidget *parent=0);
+    explicit GrantleeContactViewer(QWidget *parent = 0);
     ~GrantleeContactViewer();
 
     void setForceDisableQRCode(bool b);

@@ -23,12 +23,13 @@
 
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-namespace TemplateParser {
+namespace TemplateParser
+{
 class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public PimCommon::RichTextEditorWidget
 {
     Q_OBJECT
 public:
-    explicit TemplatesTextEdit( QWidget *parent = 0 );
+    explicit TemplatesTextEdit(QWidget *parent = 0);
     ~TemplatesTextEdit();
 };
 

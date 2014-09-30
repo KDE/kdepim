@@ -32,28 +32,28 @@
 
 using namespace TemplateParser;
 
-CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollection,
-                                  QWidget *parent )
-    : QWidget( parent ),
-      mBlockChangeSignal( false )
+CustomTemplates::CustomTemplates(const QList<KActionCollection *> &actionCollection,
+                                 QWidget *parent)
+    : QWidget(parent),
+      mBlockChangeSignal(false)
 {
     mUi = new Ui_CustomTemplatesBase;
-    mUi->setupUi( this );
+    mUi->setupUi(this);
 
-    mUi->mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-    mUi->mAdd->setEnabled( false );
-    mUi->mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
-    mUi->mDuplicate->setIcon( QIcon::fromTheme( QLatin1String("edit-copy") ) );
+    mUi->mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mUi->mAdd->setEnabled(false);
+    mUi->mRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    mUi->mDuplicate->setIcon(QIcon::fromTheme(QLatin1String("edit-copy")));
 
-    mUi->mList->setColumnWidth( 0, 100 );
-    mUi->mList->header()->setStretchLastSection( true );
-    mUi->mList->setItemDelegate( new CustomTemplateItemDelegate( this ) );
-    mUi->mList->header()->setMovable( false );
-    mUi->mEditFrame->setEnabled( false );
+    mUi->mList->setColumnWidth(0, 100);
+    mUi->mList->header()->setStretchLastSection(true);
+    mUi->mList->setItemDelegate(new CustomTemplateItemDelegate(this));
+    mUi->mList->header()->setMovable(false);
+    mUi->mEditFrame->setEnabled(false);
 
-    mUi->mName->setTrapReturnKey( true );
-    connect( mUi->mEdit->editor(), SIGNAL(textChanged()),
-             this, SLOT(slotTextChanged()) );
+    mUi->mName->setTrapReturnKey(true);
+    connect(mUi->mEdit->editor(), SIGNAL(textChanged()),
+            this, SLOT(slotTextChanged()));
     connect(mUi->mToEdit, &MessageCore::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
     connect(mUi->mCCEdit, &MessageCore::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
 
@@ -61,7 +61,7 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
 
     connect(mUi->mName, &KLineEdit::returnPressed, this, &CustomTemplates::slotAddClicked);
 
-    connect( mUi->mInsertCommand, SIGNAL(insertCommand(QString,int)), this, SLOT(slotInsertCommand(QString,int)) );
+    connect(mUi->mInsertCommand, SIGNAL(insertCommand(QString,int)), this, SLOT(slotInsertCommand(QString,int)));
 
     connect(mUi->mAdd, &QPushButton::clicked, this, &CustomTemplates::slotAddClicked);
     connect(mUi->mRemove, &QPushButton::clicked, this, &CustomTemplates::slotRemoveClicked);
@@ -72,44 +72,44 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
 
     connect(mUi->mKeySequenceWidget, &KKeySequenceWidget::keySequenceChanged, this, &CustomTemplates::slotShortcutChanged);
 
-    mUi->mKeySequenceWidget->setCheckActionCollections( actionCollection );
+    mUi->mKeySequenceWidget->setCheckActionCollections(actionCollection);
 
-    mReplyPix = KIconLoader().loadIcon( QLatin1String("mail-reply-sender"), KIconLoader::Small );
-    mReplyAllPix = KIconLoader().loadIcon( QLatin1String("mail-reply-all"), KIconLoader::Small );
-    mForwardPix = KIconLoader().loadIcon( QLatin1String("mail-forward"), KIconLoader::Small );
+    mReplyPix = KIconLoader().loadIcon(QLatin1String("mail-reply-sender"), KIconLoader::Small);
+    mReplyAllPix = KIconLoader().loadIcon(QLatin1String("mail-reply-all"), KIconLoader::Small);
+    mForwardPix = KIconLoader().loadIcon(QLatin1String("mail-forward"), KIconLoader::Small);
 
     mUi->mType->clear();
-    mUi->mType->addItem( QPixmap(), i18nc( "Message->", "Universal" ) );
-    mUi->mType->addItem( mReplyPix, i18nc( "Message->", "Reply" ) );
-    mUi->mType->addItem( mReplyAllPix, i18nc( "Message->", "Reply to All" ) );
-    mUi->mType->addItem( mForwardPix, i18nc( "Message->", "Forward" ) );
+    mUi->mType->addItem(QPixmap(), i18nc("Message->", "Universal"));
+    mUi->mType->addItem(mReplyPix, i18nc("Message->", "Reply"));
+    mUi->mType->addItem(mReplyAllPix, i18nc("Message->", "Reply to All"));
+    mUi->mType->addItem(mForwardPix, i18nc("Message->", "Forward"));
 
-    mUi->mHelp->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
-    connect( mUi->mHelp, SIGNAL(linkActivated(QString)),
-             SLOT(slotHelpLinkClicked(QString)) );
+    mUi->mHelp->setText(i18n("<a href=\"whatsthis\">How does this work?</a>"));
+    connect(mUi->mHelp, SIGNAL(linkActivated(QString)),
+            SLOT(slotHelpLinkClicked(QString)));
 
-    slotNameChanged( mUi->mName->text() );
+    slotNameChanged(mUi->mName->text());
 }
 
-void CustomTemplates::slotHelpLinkClicked( const QString & )
+void CustomTemplates::slotHelpLinkClicked(const QString &)
 {
     const QString help =
-            i18n( "<qt>"
-                  "<p>Here you can add, edit, and delete custom message "
-                  "templates to use when you compose a reply or forwarding message. "
-                  "Create the custom template by typing the name into the input box "
-                  "and press the '+' button. Also, you can bind a keyboard "
-                  "combination to the template for faster operations.</p>"
-                  "<p>Message templates support substitution commands, "
-                  "by simply typing them or selecting them from the "
-                  "<i>Insert command</i> menu.</p>"
-                  "<p>There are four types of custom templates: used to "
-                  "<i>Reply</i>, <i>Reply to All</i>, <i>Forward</i>, and "
-                  "<i>Universal</i> which can be used for all kinds of operations. "
-                  "You cannot bind a keyboard shortcut to <i>Universal</i> templates.</p>"
-                  "</qt>" );
+        i18n("<qt>"
+             "<p>Here you can add, edit, and delete custom message "
+             "templates to use when you compose a reply or forwarding message. "
+             "Create the custom template by typing the name into the input box "
+             "and press the '+' button. Also, you can bind a keyboard "
+             "combination to the template for faster operations.</p>"
+             "<p>Message templates support substitution commands, "
+             "by simply typing them or selecting them from the "
+             "<i>Insert command</i> menu.</p>"
+             "<p>There are four types of custom templates: used to "
+             "<i>Reply</i>, <i>Reply to All</i>, <i>Forward</i>, and "
+             "<i>Universal</i> which can be used for all kinds of operations. "
+             "You cannot bind a keyboard shortcut to <i>Universal</i> templates.</p>"
+             "</qt>");
 
-    QWhatsThis::showText( QCursor::pos(), help );
+    QWhatsThis::showText(QCursor::pos(), help);
 }
 
 CustomTemplates::~CustomTemplates()
@@ -118,32 +118,32 @@ CustomTemplates::~CustomTemplates()
     mUi = 0;
 }
 
-void CustomTemplates::slotNameChanged( const QString &text )
+void CustomTemplates::slotNameChanged(const QString &text)
 {
-    mUi->mAdd->setEnabled( !text.isEmpty() );
+    mUi->mAdd->setEnabled(!text.isEmpty());
 }
 
-QString CustomTemplates::indexToType( int index )
+QString CustomTemplates::indexToType(int index)
 {
     QString typeStr;
-    switch ( index ) {
+    switch (index) {
     case TUniversal:
-        typeStr = i18nc( "Message->", "Universal" );
+        typeStr = i18nc("Message->", "Universal");
         break;
-        /*  case TNewMessage:
+    /*  case TNewMessage:
     typeStr = i18n( "New Message" );
     break; */
     case TReply:
-        typeStr = i18nc( "Message->", "Reply" );
+        typeStr = i18nc("Message->", "Reply");
         break;
     case TReplyAll:
-        typeStr = i18nc( "Message->", "Reply to All" );
+        typeStr = i18nc("Message->", "Reply to All");
         break;
     case TForward:
-        typeStr = i18nc( "Message->", "Forward" );
+        typeStr = i18nc("Message->", "Forward");
         break;
     default:
-        typeStr = i18nc( "Message->", "Unknown" );
+        typeStr = i18nc("Message->", "Unknown");
         break;
     }
     return typeStr;
@@ -152,34 +152,34 @@ QString CustomTemplates::indexToType( int index )
 void CustomTemplates::slotTextChanged()
 {
     QTreeWidgetItem *item = mUi->mList->currentItem();
-    if ( item ) {
-        CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
-        vitem->setContent( mUi->mEdit->toPlainText() );
-        if ( !mBlockChangeSignal ) {
-            vitem->setTo( mUi->mToEdit->text() );
-            vitem->setCc( mUi->mCCEdit->text() );
+    if (item) {
+        CustomTemplateItem *vitem = static_cast<CustomTemplateItem *>(item);
+        vitem->setContent(mUi->mEdit->toPlainText());
+        if (!mBlockChangeSignal) {
+            vitem->setTo(mUi->mToEdit->text());
+            vitem->setCc(mUi->mCCEdit->text());
         }
     }
 
-    if ( !mBlockChangeSignal ) {
+    if (!mBlockChangeSignal) {
         emit changed();
     }
 }
 
-void CustomTemplates::iconFromType( CustomTemplates::Type type, CustomTemplateItem *item )
+void CustomTemplates::iconFromType(CustomTemplates::Type type, CustomTemplateItem *item)
 {
-    switch ( type ) {
+    switch (type) {
     case TReply:
-        item->setIcon( 0, mReplyPix );
+        item->setIcon(0, mReplyPix);
         break;
     case TReplyAll:
-        item->setIcon( 0, mReplyAllPix );
+        item->setIcon(0, mReplyAllPix);
         break;
     case TForward:
-        item->setIcon( 0, mForwardPix );
+        item->setIcon(0, mForwardPix);
         break;
     default:
-        item->setIcon( 0, QPixmap() );
+        item->setIcon(0, QPixmap());
         break;
     };
 
@@ -189,80 +189,80 @@ void CustomTemplates::load()
 {
     const QStringList list = GlobalSettings::self()->customTemplates();
     mUi->mList->clear();
-    QStringList::const_iterator end( list.constEnd() );
-    for ( QStringList::const_iterator it = list.constBegin(); it != end; ++it ) {
+    QStringList::const_iterator end(list.constEnd());
+    for (QStringList::const_iterator it = list.constBegin(); it != end; ++it) {
         CTemplates t(*it);
-        QKeySequence shortcut( t.shortcut() );
-        CustomTemplates::Type type = static_cast<Type>( t.type() );
-        CustomTemplateItem *item = new CustomTemplateItem( mUi->mList, *it, t.content(),
-                                                           shortcut, type, t.to(), t.cC() );
-        item->setText( 1, *it );
-        item->setText( 0, indexToType( type ) );
-        iconFromType( type, item );
+        QKeySequence shortcut(t.shortcut());
+        CustomTemplates::Type type = static_cast<Type>(t.type());
+        CustomTemplateItem *item = new CustomTemplateItem(mUi->mList, *it, t.content(),
+                shortcut, type, t.to(), t.cC());
+        item->setText(1, *it);
+        item->setText(0, indexToType(type));
+        iconFromType(type, item);
     }
 
-    mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 && mUi->mList->currentItem() );
-    mUi->mDuplicate->setEnabled( mUi->mList->topLevelItemCount() > 0 && mUi->mList->currentItem() );
+    mUi->mRemove->setEnabled(mUi->mList->topLevelItemCount() > 0 && mUi->mList->currentItem());
+    mUi->mDuplicate->setEnabled(mUi->mList->topLevelItemCount() > 0 && mUi->mList->currentItem());
 }
 
 void CustomTemplates::save()
 {
     // Before saving the new templates, delete the old ones. That needs to be done before
     // saving, since otherwise a new template with the new name wouldn't get saved.
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("customtemplatesrc"), KConfig::NoGlobals );
-    foreach ( const QString &item, mItemsToDelete ) {
-        CTemplates t( item );
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("customtemplatesrc"), KConfig::NoGlobals);
+    foreach (const QString &item, mItemsToDelete) {
+        CTemplates t(item);
         const QString configGroup = t.currentGroup();
-        config->deleteGroup( configGroup );
+        config->deleteGroup(configGroup);
     }
 
     QStringList list;
-    QTreeWidgetItemIterator lit( mUi->mList );
-    while ( *lit ) {
-        CustomTemplateItem * it = static_cast<CustomTemplateItem*>( *lit );
-        const QString name = it->text( 1 );
+    QTreeWidgetItemIterator lit(mUi->mList);
+    while (*lit) {
+        CustomTemplateItem *it = static_cast<CustomTemplateItem *>(*lit);
+        const QString name = it->text(1);
         list.append(name);
 
         CTemplates t(name);
         QString content = it->content();
-        if ( content.trimmed().isEmpty() ) {
+        if (content.trimmed().isEmpty()) {
             content = QLatin1String("%BLANK");
         }
 
-        t.setContent( content );
-        t.setShortcut( it->shortcut().toString() );
-        t.setType( it->customType() );
-        t.setTo( it->to() );
-        t.setCC( it->cc() );
+        t.setContent(content);
+        t.setShortcut(it->shortcut().toString());
+        t.setType(it->customType());
+        t.setTo(it->to());
+        t.setCC(it->cc());
         t.save();
         ++lit;
     }
 
-    GlobalSettings::self()->setCustomTemplates( list );
+    GlobalSettings::self()->setCustomTemplates(list);
     GlobalSettings::self()->save();
 
     emit templatesUpdated();
 }
 
-void CustomTemplates::slotInsertCommand( const QString &cmd, int adjustCursor )
+void CustomTemplates::slotInsertCommand(const QString &cmd, int adjustCursor)
 {
     QTextCursor cursor = mUi->mEdit->editor()->textCursor();
-    cursor.insertText( cmd );
-    cursor.setPosition( cursor.position() + adjustCursor );
-    mUi->mEdit->editor()->setTextCursor( cursor );
+    cursor.insertText(cmd);
+    cursor.setPosition(cursor.position() + adjustCursor);
+    mUi->mEdit->editor()->setTextCursor(cursor);
     mUi->mEdit->editor()->setFocus();
 }
 
-bool CustomTemplates::nameAlreadyExists( const QString &str, QTreeWidgetItem *item )
+bool CustomTemplates::nameAlreadyExists(const QString &str, QTreeWidgetItem *item)
 {
-    QTreeWidgetItemIterator lit( mUi->mList );
-    while ( *lit ) {
-        const QString name = ( *lit )->text( 1 );
-        if ( ( name == str ) && ( (*lit) != item ) ) {
+    QTreeWidgetItemIterator lit(mUi->mList);
+    while (*lit) {
+        const QString name = (*lit)->text(1);
+        if ((name == str) && ((*lit) != item)) {
             KMessageBox::error(
-                        this,
-                        i18n( "A template with same name already exists." ),
-                        i18n( "Cannot create template" ) );
+                this,
+                i18n("A template with same name already exists."),
+                i18n("Cannot create template"));
             return true;
         }
         ++lit;
@@ -273,8 +273,8 @@ bool CustomTemplates::nameAlreadyExists( const QString &str, QTreeWidgetItem *it
 void CustomTemplates::slotAddClicked()
 {
     const QString str = mUi->mName->text();
-    if ( !str.isEmpty() ) {
-        if ( nameAlreadyExists( str ) ) {
+    if (!str.isEmpty()) {
+        if (nameAlreadyExists(str)) {
             return;
         }
 
@@ -283,39 +283,39 @@ void CustomTemplates::slotAddClicked()
         // FIXME There must be a better way of doing this...
         QKeySequence nullShortcut;
         CustomTemplateItem *item =
-                new CustomTemplateItem( mUi->mList, str, QString(), nullShortcut, TUniversal,
-                                        QString(), QString() );
-        item->setText( 0, indexToType( TUniversal ) );
-        item->setText( 1, str );
-        mUi->mList->setCurrentItem( item );
-        mUi->mRemove->setEnabled( true );
-        mUi->mDuplicate->setEnabled( true );
+            new CustomTemplateItem(mUi->mList, str, QString(), nullShortcut, TUniversal,
+                                   QString(), QString());
+        item->setText(0, indexToType(TUniversal));
+        item->setText(1, str);
+        mUi->mList->setCurrentItem(item);
+        mUi->mRemove->setEnabled(true);
+        mUi->mDuplicate->setEnabled(true);
         mUi->mName->clear();
-        mUi->mKeySequenceWidget->setEnabled( false );
-        if ( !mBlockChangeSignal ) {
+        mUi->mKeySequenceWidget->setEnabled(false);
+        if (!mBlockChangeSignal) {
             emit changed();
         }
     }
 }
 
-QString CustomTemplates::createUniqueName( const QString &name ) const
+QString CustomTemplates::createUniqueName(const QString &name) const
 {
     QString uniqueName = name;
 
     int counter = 0;
     bool found = true;
 
-    while ( found ) {
+    while (found) {
         found = false;
 
-        QTreeWidgetItemIterator lit( mUi->mList );
-        while ( *lit ) {
-            const QString itemName = ( *lit )->text( 1 );
-            if ( !itemName.compare( uniqueName ) ) {
+        QTreeWidgetItemIterator lit(mUi->mList);
+        while (*lit) {
+            const QString itemName = (*lit)->text(1);
+            if (!itemName.compare(uniqueName)) {
                 found = true;
                 ++counter;
                 uniqueName = name;
-                uniqueName += QLatin1String( " (" ) + QString::number( counter ) + QLatin1String( ")" );
+                uniqueName += QLatin1String(" (") + QString::number(counter) + QLatin1String(")");
                 break;
             }
             lit++;
@@ -328,28 +328,28 @@ QString CustomTemplates::createUniqueName( const QString &name ) const
 void CustomTemplates::slotDuplicateClicked()
 {
     QTreeWidgetItem *currentItem = mUi->mList->currentItem();
-    if ( !currentItem ) {
+    if (!currentItem) {
         return;
     }
-    CustomTemplateItem * origItem = static_cast<CustomTemplateItem*>( currentItem );
-    const QString templateName = createUniqueName( origItem->text( 1 ) );
+    CustomTemplateItem *origItem = static_cast<CustomTemplateItem *>(currentItem);
+    const QString templateName = createUniqueName(origItem->text(1));
     // KShortcut::null() doesn't seem to be present, although documented
     // see slotShortcutChanged(). oh, and you should look up documentation on the EBN!
     // FIXME There must be a better way of doing this...
     QKeySequence nullShortcut;
     CustomTemplates::Type type =  origItem->customType();
     CustomTemplateItem *item =
-            new CustomTemplateItem( mUi->mList, templateName, origItem->content(), nullShortcut, type,
-                                    origItem->to(), origItem->cc() );
-    item->setText( 0, indexToType( type ) );
-    item->setText( 1, templateName );
-    iconFromType( type, item );
+        new CustomTemplateItem(mUi->mList, templateName, origItem->content(), nullShortcut, type,
+                               origItem->to(), origItem->cc());
+    item->setText(0, indexToType(type));
+    item->setText(1, templateName);
+    iconFromType(type, item);
 
-    mUi->mList->setCurrentItem( item );
-    mUi->mRemove->setEnabled( true );
-    mUi->mDuplicate->setEnabled( true );
+    mUi->mList->setCurrentItem(item);
+    mUi->mRemove->setEnabled(true);
+    mUi->mDuplicate->setEnabled(true);
     mUi->mName->clear();
-    mUi->mKeySequenceWidget->setEnabled( type != TUniversal );
+    mUi->mKeySequenceWidget->setEnabled(type != TUniversal);
 
     emit changed();
 }
@@ -357,23 +357,23 @@ void CustomTemplates::slotDuplicateClicked()
 void CustomTemplates::slotRemoveClicked()
 {
     QTreeWidgetItem *item = mUi->mList->currentItem();
-    if ( !item ) {
+    if (!item) {
         return;
     }
 
-    const QString templateName = item->text( 1 );
+    const QString templateName = item->text(1);
 
-    if ( KMessageBox::warningContinueCancel(
-             this,
-             i18nc( "@info", "Do you really want to remove template \"%1\"?", templateName ),
-             i18nc( "@title:window", "Remove Template?" ),
-             KStandardGuiItem::remove(),
-             KStandardGuiItem::cancel() ) == KMessageBox::Continue ) {
-        mItemsToDelete.append( templateName );
-        delete mUi->mList->takeTopLevelItem( mUi->mList->indexOfTopLevelItem( item ) );
-        mUi->mRemove->setEnabled( mUi->mList->topLevelItemCount() > 0 );
-        mUi->mDuplicate->setEnabled( mUi->mList->topLevelItemCount() > 0 );
-        if ( !mBlockChangeSignal ) {
+    if (KMessageBox::warningContinueCancel(
+                this,
+                i18nc("@info", "Do you really want to remove template \"%1\"?", templateName),
+                i18nc("@title:window", "Remove Template?"),
+                KStandardGuiItem::remove(),
+                KStandardGuiItem::cancel()) == KMessageBox::Continue) {
+        mItemsToDelete.append(templateName);
+        delete mUi->mList->takeTopLevelItem(mUi->mList->indexOfTopLevelItem(item));
+        mUi->mRemove->setEnabled(mUi->mList->topLevelItemCount() > 0);
+        mUi->mDuplicate->setEnabled(mUi->mList->topLevelItemCount() > 0);
+        if (!mBlockChangeSignal) {
             emit changed();
         }
     }
@@ -382,20 +382,20 @@ void CustomTemplates::slotRemoveClicked()
 void CustomTemplates::slotListSelectionChanged()
 {
     QTreeWidgetItem *item = mUi->mList->currentItem();
-    if ( item ) {
-        mUi->mEditFrame->setEnabled( true );
+    if (item) {
+        mUi->mEditFrame->setEnabled(true);
         mUi->mRemove->setEnabled(true);
         mUi->mDuplicate->setEnabled(true);
-        CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
+        CustomTemplateItem *vitem = static_cast<CustomTemplateItem *>(item);
         mBlockChangeSignal = true;
-        mUi->mEdit->setPlainText( vitem->content() );
-        mUi->mKeySequenceWidget->setKeySequence( vitem->shortcut(),
-                                                 KKeySequenceWidget::NoValidate );
+        mUi->mEdit->setPlainText(vitem->content());
+        mUi->mKeySequenceWidget->setKeySequence(vitem->shortcut(),
+                                                KKeySequenceWidget::NoValidate);
         CustomTemplates::Type type =  vitem->customType();
 
-        mUi->mType->setCurrentIndex( mUi->mType->findText( indexToType ( type ) ) );
-        mUi->mToEdit->setText( vitem->to() );
-        mUi->mCCEdit->setText( vitem->cc() );
+        mUi->mType->setCurrentIndex(mUi->mType->findText(indexToType(type)));
+        mUi->mToEdit->setText(vitem->to());
+        mUi->mCCEdit->setText(vitem->cc());
         mBlockChangeSignal = false;
 
         // I think the logic (originally 'vitem->mType==TUniversal') was inverted here:
@@ -403,68 +403,68 @@ void CustomTemplates::slotListSelectionChanged()
         // a universal, as otherwise we won't know what sort of action to do when the
         // key sequence is activated!
         // This agrees with KMMainWidget::updateCustomTemplateMenus() -- marten
-        mUi->mKeySequenceWidget->setEnabled( type != TUniversal );
+        mUi->mKeySequenceWidget->setEnabled(type != TUniversal);
     } else {
-        mUi->mEditFrame->setEnabled( false );
+        mUi->mEditFrame->setEnabled(false);
         mUi->mEdit->editor()->clear();
         // see above
         mUi->mKeySequenceWidget->clearKeySequence();
-        mUi->mType->setCurrentIndex( 0 );
+        mUi->mType->setCurrentIndex(0);
         mUi->mToEdit->clear();
         mUi->mCCEdit->clear();
     }
 }
 
-void CustomTemplates::slotTypeActivated( int index )
+void CustomTemplates::slotTypeActivated(int index)
 {
     QTreeWidgetItem *item = mUi->mList->currentItem();
-    if ( item ) {
-        CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
+    if (item) {
+        CustomTemplateItem *vitem = static_cast<CustomTemplateItem *>(item);
         CustomTemplates::Type customtype = static_cast<Type>(index);
-        vitem->setCustomType( customtype );
-        vitem->setText( 0, indexToType( customtype ) );
+        vitem->setCustomType(customtype);
+        vitem->setText(0, indexToType(customtype));
 
-        iconFromType( customtype, vitem );
+        iconFromType(customtype, vitem);
 
         // see slotListSelectionChanged() above
-        mUi->mKeySequenceWidget->setEnabled( customtype != TUniversal );
+        mUi->mKeySequenceWidget->setEnabled(customtype != TUniversal);
 
-        if ( !mBlockChangeSignal ) {
+        if (!mBlockChangeSignal) {
             emit changed();
         }
     }
 }
 
-void CustomTemplates::slotShortcutChanged( const QKeySequence &newSeq )
+void CustomTemplates::slotShortcutChanged(const QKeySequence &newSeq)
 {
     QTreeWidgetItem *item = mUi->mList->currentItem();
-    if ( item ) {
-        CustomTemplateItem * vitem = static_cast<CustomTemplateItem*>( item );
-        vitem->setShortcut( newSeq );
+    if (item) {
+        CustomTemplateItem *vitem = static_cast<CustomTemplateItem *>(item);
+        vitem->setShortcut(newSeq);
         mUi->mKeySequenceWidget->applyStealShortcut();
     }
 
-    if ( !mBlockChangeSignal ) {
+    if (!mBlockChangeSignal) {
         emit changed();
     }
 }
 
-void CustomTemplates::slotItemChanged( QTreeWidgetItem *item, int column )
+void CustomTemplates::slotItemChanged(QTreeWidgetItem *item, int column)
 {
-    if ( item ) {
-        CustomTemplateItem * vitem = static_cast<CustomTemplateItem*>( item );
-        if ( column == 1 ) {
-            const QString newName = vitem->text( 1 );
-            if( !newName.isEmpty() ) {
+    if (item) {
+        CustomTemplateItem *vitem = static_cast<CustomTemplateItem *>(item);
+        if (column == 1) {
+            const QString newName = vitem->text(1);
+            if (!newName.isEmpty()) {
                 const QString oldName = vitem->oldName();
-                if ( nameAlreadyExists( newName, item ) ) {
-                    vitem->setText( 1, oldName );
+                if (nameAlreadyExists(newName, item)) {
+                    vitem->setText(1, oldName);
                     return;
                 }
-                if ( newName != oldName ) {
-                    mItemsToDelete.append( oldName );
-                    vitem->setOldName( newName );
-                    if ( !mBlockChangeSignal ) {
+                if (newName != oldName) {
+                    mItemsToDelete.append(oldName);
+                    vitem->setOldName(newName);
+                    if (!mBlockChangeSignal) {
                         emit changed();
                     }
                 }
@@ -473,8 +473,8 @@ void CustomTemplates::slotItemChanged( QTreeWidgetItem *item, int column )
     }
 }
 
-CustomTemplateItemDelegate::CustomTemplateItemDelegate( QObject *parent )
-    : QStyledItemDelegate( parent )
+CustomTemplateItemDelegate::CustomTemplateItemDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -482,49 +482,49 @@ CustomTemplateItemDelegate::~CustomTemplateItemDelegate()
 {
 }
 
-void CustomTemplateItemDelegate::setModelData( QWidget *editor, QAbstractItemModel *model,
-                                               const QModelIndex &index ) const
+void CustomTemplateItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+        const QModelIndex &index) const
 {
-    KLineEdit *lineEdit = static_cast<KLineEdit*>( editor );
+    KLineEdit *lineEdit = static_cast<KLineEdit *>(editor);
     const QString text = lineEdit->text();
-    if( !text.isEmpty() ) {
-        model->setData( index, text, Qt::EditRole );
+    if (!text.isEmpty()) {
+        model->setData(index, text, Qt::EditRole);
     }
 }
 
-QWidget *CustomTemplateItemDelegate::createEditor( QWidget *parent,
-                                                   const QStyleOptionViewItem &option,
-                                                   const QModelIndex &index ) const
+QWidget *CustomTemplateItemDelegate::createEditor(QWidget *parent,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
-    if ( index.column() == 1 ) {
-        return QStyledItemDelegate::createEditor( parent, option, index );
+    if (index.column() == 1) {
+        return QStyledItemDelegate::createEditor(parent, option, index);
     }
     return 0;
 }
 
-CustomTemplateItem::CustomTemplateItem( QTreeWidget *parent,
-                                        const QString &name,
-                                        const QString &content,
-                                        const QKeySequence &shortcut,
-                                        CustomTemplates::Type type,
-                                        const QString &to,
-                                        const QString &cc )
-    : QTreeWidgetItem( parent ),
-      mName( name ),
-      mContent( content ),
+CustomTemplateItem::CustomTemplateItem(QTreeWidget *parent,
+                                       const QString &name,
+                                       const QString &content,
+                                       const QKeySequence &shortcut,
+                                       CustomTemplates::Type type,
+                                       const QString &to,
+                                       const QString &cc)
+    : QTreeWidgetItem(parent),
+      mName(name),
+      mContent(content),
       mShortcut(shortcut),
-      mType( type ),
-      mTo( to ),
-      mCC( cc )
+      mType(type),
+      mTo(to),
+      mCC(cc)
 {
-    setFlags( flags() | Qt::ItemIsEditable );
+    setFlags(flags() | Qt::ItemIsEditable);
 }
 
 CustomTemplateItem::~CustomTemplateItem()
 {
 }
 
-void CustomTemplateItem::setCustomType( CustomTemplates::Type type )
+void CustomTemplateItem::setCustomType(CustomTemplates::Type type)
 {
     mType = type;
 }
@@ -549,17 +549,17 @@ QString CustomTemplateItem::content() const
     return mContent;
 }
 
-void CustomTemplateItem::setContent( const QString &content )
+void CustomTemplateItem::setContent(const QString &content)
 {
     mContent = content;
 }
 
-void CustomTemplateItem::setTo( const QString &to )
+void CustomTemplateItem::setTo(const QString &to)
 {
     mTo = to;
 }
 
-void CustomTemplateItem::setCc( const QString &cc )
+void CustomTemplateItem::setCc(const QString &cc)
 {
     mCC = cc;
 }
@@ -569,7 +569,7 @@ QKeySequence CustomTemplateItem::shortcut() const
     return mShortcut;
 }
 
-void CustomTemplateItem::setShortcut( const QKeySequence &shortcut )
+void CustomTemplateItem::setShortcut(const QKeySequence &shortcut)
 {
     mShortcut = shortcut;
 }
@@ -579,7 +579,7 @@ QString CustomTemplateItem::oldName() const
     return mName;
 }
 
-void CustomTemplateItem::setOldName( const QString &name )
+void CustomTemplateItem::setOldName(const QString &name)
 {
     mName = name;
 }

@@ -25,11 +25,13 @@
 #include <Akonadi/Contact/AbstractContactGroupFormatter>
 #include "kaddressbook_grantlee_export.h"
 
-namespace GrantleeTheme {
+namespace GrantleeTheme
+{
 class Theme;
 }
 
-namespace KAddressBookGrantlee {
+namespace KAddressBookGrantlee
+{
 
 /**
  * @short A class that formats a contact group as HTML code.
@@ -55,7 +57,7 @@ public:
     /**
      * Returns the contact group formatted as HTML
      */
-    virtual QString toHtml( HtmlForm form = SelfcontainedForm ) const;
+    virtual QString toHtml(HtmlForm form = SelfcontainedForm) const;
 
 private:
     //@cond PRIVATE

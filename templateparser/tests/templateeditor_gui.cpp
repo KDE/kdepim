@@ -20,14 +20,12 @@
 
 #include <qdebug.h>
 
-
 #include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
-
 
 TemplateEditorTestWidget::TemplateEditorTestWidget(QWidget *parent)
     : QWidget(parent)
@@ -41,10 +39,9 @@ TemplateEditorTestWidget::~TemplateEditorTestWidget()
 {
 }
 
-
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("templateeditortest_gui"), i18n("TemplateEditorTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("templateeditortest_gui"), i18n("TemplateEditorTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for template editor widget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -56,7 +53,7 @@ int main (int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     TemplateEditorTestWidget *w = new TemplateEditorTestWidget();
-    w->resize(800,600);
+    w->resize(800, 600);
 
     w->show();
     app.exec();

@@ -21,14 +21,12 @@
 
 using namespace TemplateParser;
 
-TemplatesTextEdit::TemplatesTextEdit( QWidget *parent )
-    : PimCommon::RichTextEditorWidget( new TemplatesTextEditor, parent )
+TemplatesTextEdit::TemplatesTextEdit(QWidget *parent)
+    : PimCommon::RichTextEditorWidget(new TemplatesTextEditor, parent)
 {
 }
 
 TemplatesTextEdit::~TemplatesTextEdit()
 {
 }
-
-
 

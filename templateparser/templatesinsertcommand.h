@@ -23,14 +23,15 @@
 
 class KActionMenu;
 
-namespace TemplateParser {
+namespace TemplateParser
+{
 
 class TemplatesInsertCommand : public QPushButton
 {
     Q_OBJECT
 
 public:
-    explicit TemplatesInsertCommand(QWidget *parent, const QString &name = QString() );
+    explicit TemplatesInsertCommand(QWidget *parent, const QString &name = QString());
     ~TemplatesInsertCommand();
 
 public:
@@ -106,11 +107,11 @@ public:
     };
 
 signals:
-    void insertCommand( TemplatesInsertCommand::Command cmd );
-    void insertCommand( const QString &cmd, int adjustCursor = 0 );
+    void insertCommand(TemplatesInsertCommand::Command cmd);
+    void insertCommand(const QString &cmd, int adjustCursor = 0);
 
 public Q_SLOTS:
-    void slotMapped( int cmd );
+    void slotMapped(int cmd);
 
 protected:
     KActionMenu *mMenu;

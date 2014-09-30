@@ -35,7 +35,6 @@
 
 #include <KColorScheme>
 
-
 using namespace KAddressBookGrantlee;
 
 class GrantleeContactGroupFormatter::Private
@@ -45,7 +44,7 @@ public:
     {
         mEngine = new Grantlee::Engine;
 
-        mTemplateLoader = QSharedPointer<Grantlee::FileSystemTemplateLoader>( new Grantlee::FileSystemTemplateLoader );
+        mTemplateLoader = QSharedPointer<Grantlee::FileSystemTemplateLoader>(new Grantlee::FileSystemTemplateLoader);
     }
 
     ~Private()
@@ -55,21 +54,21 @@ public:
 
     void changeGrantleePath(const QString &path)
     {
-        mTemplateLoader->setTemplateDirs( QStringList() << path );
-        mEngine->addTemplateLoader( mTemplateLoader );
+        mTemplateLoader->setTemplateDirs(QStringList() << path);
+        mEngine->addTemplateLoader(mTemplateLoader);
 
-        mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("contactgroup.html") );
-        if ( mSelfcontainedTemplate->error() ) {
+        mSelfcontainedTemplate = mEngine->loadByName(QLatin1String("contactgroup.html"));
+        if (mSelfcontainedTemplate->error()) {
             mErrorMessage += mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
         }
 
-        mEmbeddableTemplate = mEngine->loadByName( QLatin1String("contactgroup_embedded.html") );
-        if ( mEmbeddableTemplate->error() ) {
+        mEmbeddableTemplate = mEngine->loadByName(QLatin1String("contactgroup_embedded.html"));
+        if (mEmbeddableTemplate->error()) {
             mErrorMessage += mEmbeddableTemplate->errorString() + QLatin1String("<br>");
         }
     }
 
-    QVector<QObject*> mObjects;
+    QVector<QObject *> mObjects;
     Grantlee::Engine *mEngine;
     QSharedPointer<Grantlee::FileSystemTemplateLoader> mTemplateLoader;
     Grantlee::Template mSelfcontainedTemplate;
@@ -78,7 +77,7 @@ public:
 };
 
 GrantleeContactGroupFormatter::GrantleeContactGroupFormatter()
-    : d( new Private )
+    : d(new Private)
 {
 }
 
@@ -97,117 +96,117 @@ void GrantleeContactGroupFormatter::setGrantleeTheme(const GrantleeTheme::Theme 
     d->changeGrantleePath(theme.absolutePath());
 }
 
-inline static void setHashField( QVariantHash &hash, const QString &name, const QString &value )
+inline static void setHashField(QVariantHash &hash, const QString &name, const QString &value)
 {
-    if ( !value.isEmpty() ) {
-        hash.insert( name, value );
+    if (!value.isEmpty()) {
+        hash.insert(name, value);
     }
 }
 
-static QVariantHash memberHash( const KABC::ContactGroup::Data &data )
+static QVariantHash memberHash(const KABC::ContactGroup::Data &data)
 {
     QVariantHash memberObject;
 
-    setHashField( memberObject, QLatin1String( "name" ), data.name() );
-    setHashField( memberObject, QLatin1String( "email" ), data.email() );
+    setHashField(memberObject, QLatin1String("name"), data.name());
+    setHashField(memberObject, QLatin1String("email"), data.email());
 
     KABC::Addressee contact;
-    contact.setFormattedName( data.name() );
-    contact.insertEmail( data.email() );
+    contact.setFormattedName(data.name());
+    contact.insertEmail(data.email());
 
-    const QString emailLink = QLatin1String( "<a href=\"mailto:" ) +
-            QString::fromLatin1( QUrl::toPercentEncoding( contact.fullEmail() ) ) +
-            QString::fromLatin1( "\">%1</a>" ).arg( contact.preferredEmail() );
+    const QString emailLink = QLatin1String("<a href=\"mailto:") +
+                              QString::fromLatin1(QUrl::toPercentEncoding(contact.fullEmail())) +
+                              QString::fromLatin1("\">%1</a>").arg(contact.preferredEmail());
 
-    setHashField( memberObject, QLatin1String( "emailLink" ), emailLink );
+    setHashField(memberObject, QLatin1String("emailLink"), emailLink);
 
     return memberObject;
 }
 
-QString GrantleeContactGroupFormatter::toHtml( HtmlForm form ) const
+QString GrantleeContactGroupFormatter::toHtml(HtmlForm form) const
 {
-    if ( !d->mErrorMessage.isEmpty() ) {
+    if (!d->mErrorMessage.isEmpty()) {
         return d->mErrorMessage;
     }
 
     KABC::ContactGroup group;
     const Akonadi::Item localItem = item();
-    if ( localItem.isValid() && localItem.hasPayload<KABC::ContactGroup>() ) {
+    if (localItem.isValid() && localItem.hasPayload<KABC::ContactGroup>()) {
         group = localItem.payload<KABC::ContactGroup>();
     } else {
         group = contactGroup();
     }
 
-    if ( group.name().isEmpty() && group.count() == 0 ) { // empty group
+    if (group.name().isEmpty() && group.count() == 0) {   // empty group
         return QString();
     }
 
-    if ( group.contactReferenceCount() != 0 ) {
+    if (group.contactReferenceCount() != 0) {
         // we got a contact group with unresolved references -> we have to resolve
         // it ourself.  this shouldn't be the normal case, actually the calling
         // code should pass in an already resolved contact group
-        Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( group );
-        if ( job->exec() ) {
+        Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob(group);
+        if (job->exec()) {
             group.removeAllContactData();
-            foreach ( const KABC::Addressee &contact, job->contacts() ) {
-                group.append( KABC::ContactGroup::Data( contact.realName(), contact.preferredEmail() ) );
+            foreach (const KABC::Addressee &contact, job->contacts()) {
+                group.append(KABC::ContactGroup::Data(contact.realName(), contact.preferredEmail()));
             }
         }
     }
 
     QVariantHash contactGroupObject;
 
-    setHashField( contactGroupObject, QLatin1String( "name" ), group.name() );
+    setHashField(contactGroupObject, QLatin1String("name"), group.name());
 
     // Group members
     QVariantList members;
-    for ( uint i = 0; i < group.dataCount(); ++i ) {
-        members << memberHash( group.data( i ) );
+    for (uint i = 0; i < group.dataCount(); ++i) {
+        members << memberHash(group.data(i));
     }
 
-    contactGroupObject.insert( QLatin1String( "members" ), members );
+    contactGroupObject.insert(QLatin1String("members"), members);
 
     // Additional fields
     QVariantList fields;
-    foreach ( const QVariantMap &field, additionalFields() ) {
+    foreach (const QVariantMap &field, additionalFields()) {
         QVariantHash fieldObject;
-        setHashField( fieldObject, QLatin1String( "key" ),
-                      field.value( QLatin1String( "key" ) ).toString() );
+        setHashField(fieldObject, QLatin1String("key"),
+                     field.value(QLatin1String("key")).toString());
 
-        setHashField( fieldObject, QLatin1String( "title" ),
-                      field.value( QLatin1String( "title" ) ).toString() );
+        setHashField(fieldObject, QLatin1String("title"),
+                     field.value(QLatin1String("title")).toString());
 
-        setHashField( fieldObject, QLatin1String( "value" ),
-                      field.value( QLatin1String( "value" ) ).toString() );
+        setHashField(fieldObject, QLatin1String("value"),
+                     field.value(QLatin1String("value")).toString());
 
         fields << fieldObject;
     }
 
-    contactGroupObject.insert( QLatin1String( "additionalFields" ), fields );
+    contactGroupObject.insert(QLatin1String("additionalFields"), fields);
 
     QVariantHash colorsObject;
     colorsObject.insert(
-                QLatin1String("linkColor"),
-                KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
+        QLatin1String("linkColor"),
+        KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name());
 
     colorsObject.insert(
-                QLatin1String("textColor"),
-                KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
+        QLatin1String("textColor"),
+        KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name());
 
     colorsObject.insert(
-                QLatin1String("backgroundColor"),
-                KColorScheme( QPalette::Active, KColorScheme::View ).background().color().name() );
+        QLatin1String("backgroundColor"),
+        KColorScheme(QPalette::Active, KColorScheme::View).background().color().name());
 
     QVariantHash mapping;
-    mapping.insert( QLatin1String("contactGroup"), contactGroupObject );
-    mapping.insert( QLatin1String("colors"), colorsObject );
+    mapping.insert(QLatin1String("contactGroup"), contactGroupObject);
+    mapping.insert(QLatin1String("colors"), colorsObject);
 
-    Grantlee::Context context( mapping );
+    Grantlee::Context context(mapping);
 
-    if ( form == SelfcontainedForm ) {
-        return d->mSelfcontainedTemplate->render( &context );
-    } else if ( form == EmbeddableForm ) {
-        return d->mEmbeddableTemplate->render( &context );
+    if (form == SelfcontainedForm) {
+        return d->mSelfcontainedTemplate->render(&context);
+    } else if (form == EmbeddableForm) {
+        return d->mEmbeddableTemplate->render(&context);
     } else {
         return QString();
     }

@@ -24,7 +24,7 @@ class TemplateConfigureTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TemplateConfigureTestWidget(QWidget *parent=0);
+    explicit TemplateConfigureTestWidget(QWidget *parent = 0);
     ~TemplateConfigureTestWidget();
 };
 

@@ -33,10 +33,10 @@ TemplatesTextEditor::TemplatesTextEditor(QWidget *parent)
 {
     setFocus();
     const QFont f = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-    setFont( f );
+    setFont(f);
 
-    setWordWrapMode ( QTextOption::NoWrap );
-    (void) new TemplatesSyntaxHighlighter( document() );
+    setWordWrapMode(QTextOption::NoWrap);
+    (void) new TemplatesSyntaxHighlighter(document());
     initCompleter();
 }
 
@@ -51,31 +51,31 @@ void TemplatesTextEditor::initCompleter()
     listWord << Util::keywords();
     listWord << Util::keywordsWithArgs();
 
-    m_completer = new QCompleter( this );
-    m_completer->setModel( new QStringListModel( listWord, m_completer ) );
-    m_completer->setModelSorting( QCompleter::CaseSensitivelySortedModel );
-    m_completer->setCaseSensitivity( Qt::CaseInsensitive );
+    m_completer = new QCompleter(this);
+    m_completer->setModel(new QStringListModel(listWord, m_completer));
+    m_completer->setModelSorting(QCompleter::CaseSensitivelySortedModel);
+    m_completer->setCaseSensitivity(Qt::CaseInsensitive);
 
-    m_completer->setWidget( this );
-    m_completer->setCompletionMode( QCompleter::PopupCompletion );
+    m_completer->setWidget(this);
+    m_completer->setCompletionMode(QCompleter::PopupCompletion);
 
-    connect(m_completer, static_cast<void (QCompleter::*)(const QString&)>(&QCompleter::activated), this, &TemplatesTextEditor::slotInsertCompletion);
+    connect(m_completer, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &TemplatesTextEditor::slotInsertCompletion);
 }
 
-void TemplatesTextEditor::slotInsertCompletion( const QString &completion )
+void TemplatesTextEditor::slotInsertCompletion(const QString &completion)
 {
     QTextCursor tc = textCursor();
-    tc.movePosition( QTextCursor::StartOfWord );
-    tc.movePosition( QTextCursor::EndOfWord, QTextCursor::KeepAnchor );
+    tc.movePosition(QTextCursor::StartOfWord);
+    tc.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
     tc.removeSelectedText();
-    tc.insertText( completion.right( completion.length()-1 ) );
-    setTextCursor( tc );
+    tc.insertText(completion.right(completion.length() - 1));
+    setTextCursor(tc);
 }
 
-void TemplatesTextEditor::keyPressEvent( QKeyEvent *e )
+void TemplatesTextEditor::keyPressEvent(QKeyEvent *e)
 {
-    if( m_completer->popup()->isVisible() ) {
-        switch ( e->key() ) {
+    if (m_completer->popup()->isVisible()) {
+        switch (e->key()) {
         case Qt::Key_Enter:
         case Qt::Key_Return:
         case Qt::Key_Escape:
@@ -87,39 +87,39 @@ void TemplatesTextEditor::keyPressEvent( QKeyEvent *e )
             break;
         }
     }
-    PimCommon::RichTextEditor::keyPressEvent( e );
+    PimCommon::RichTextEditor::keyPressEvent(e);
     const QString text = wordUnderCursor();
-    if( text.length() < 2 ) {
+    if (text.length() < 2) {
         // min 2 char for completion
         return;
     }
 
-    m_completer->setCompletionPrefix( text );
+    m_completer->setCompletionPrefix(text);
 
     QRect cr = cursorRect();
-    cr.setWidth( m_completer->popup()->sizeHintForColumn( 0 ) +
-                 m_completer->popup()->verticalScrollBar()->sizeHint().width() );
-    m_completer->complete( cr );
+    cr.setWidth(m_completer->popup()->sizeHintForColumn(0) +
+                m_completer->popup()->verticalScrollBar()->sizeHint().width());
+    m_completer->complete(cr);
 }
 
 QString TemplatesTextEditor::wordUnderCursor()
 {
     static QString eow =
-            QLatin1String( "~!@#$^&*()+{}|\"<>,./;'[]\\-= " ); // everything without ':', '?' and '_'
+        QLatin1String("~!@#$^&*()+{}|\"<>,./;'[]\\-= ");   // everything without ':', '?' and '_'
     QTextCursor tc = textCursor();
 
     tc.anchor();
-    while ( 1 ) {
+    while (1) {
         // vHanda: I don't understand why the cursor seems to give a pos 1 past
         // the last char instead of just the last char.
         int pos = tc.position() - 1;
-        if ( pos < 0 ||
-             eow.contains( document()->characterAt( pos ) ) ||
-             document()->characterAt( pos ) == QChar( QChar::LineSeparator ) ||
-             document()->characterAt( pos ) == QChar( QChar::ParagraphSeparator ) ) {
+        if (pos < 0 ||
+                eow.contains(document()->characterAt(pos)) ||
+                document()->characterAt(pos) == QChar(QChar::LineSeparator) ||
+                document()->characterAt(pos) == QChar(QChar::ParagraphSeparator)) {
             break;
         }
-        tc.movePosition( QTextCursor::Left, QTextCursor::KeepAnchor );
+        tc.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
     }
     return tc.selectedText();
 }

@@ -25,7 +25,7 @@ GrantleeContactViewer::GrantleeContactViewer(QWidget *parent)
     : Akonadi::ContactViewer(parent)
 {
     mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
-    setContactFormatter( mFormatter );
+    setContactFormatter(mFormatter);
     mFormatter->setAbsoluteThemePath(KAddressBookGrantlee::GrantleeUtil::kaddressBookAbsoluteThemePath());
 }
 

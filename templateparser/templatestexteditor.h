@@ -20,21 +20,22 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 class QCompleter;
 class QKeyEvent;
-namespace TemplateParser {
+namespace TemplateParser
+{
 class TemplatesTextEditor : public PimCommon::RichTextEditor
 {
     Q_OBJECT
 public:
-    explicit TemplatesTextEditor(QWidget *parent=0);
+    explicit TemplatesTextEditor(QWidget *parent = 0);
     ~TemplatesTextEditor();
 
 protected Q_SLOTS:
-    void slotInsertCompletion( const QString & );
+    void slotInsertCompletion(const QString &);
     QString wordUnderCursor();
 
 protected:
     void initCompleter();
-    void keyPressEvent( QKeyEvent *e );
+    void keyPressEvent(QKeyEvent *e);
 
 private:
     QCompleter *m_completer;

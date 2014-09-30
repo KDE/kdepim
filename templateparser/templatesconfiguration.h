@@ -22,7 +22,8 @@
 #include "templateparser_export.h"
 #include "ui_templatesconfiguration_base.h"
 class QTextEdit;
-namespace TemplateParser {
+namespace TemplateParser
+{
 
 class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::TemplatesConfigurationBase
 {
@@ -30,39 +31,42 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
 
 public:
 
-    explicit TemplatesConfiguration( QWidget *parent = 0, const QString &name = QString() );
+    explicit TemplatesConfiguration(QWidget *parent = 0, const QString &name = QString());
 
     void loadFromGlobal();
     void saveToGlobal();
-    void loadFromIdentity( uint id );
-    void saveToIdentity( uint id );
-    void loadFromFolder( const QString &id, uint identity = 0 );
-    void saveToFolder( const QString &id );
+    void loadFromIdentity(uint id);
+    void saveToIdentity(uint id);
+    void loadFromFolder(const QString &id, uint identity = 0);
+    void saveToFolder(const QString &id);
     void resetToDefault();
 
-    QLabel *helpLabel() const { return mHelp; }
+    QLabel *helpLabel() const
+    {
+        return mHelp;
+    }
 
     /**
      * Returns the template configuration identifier string for a given identity.
      */
-    static QString configIdString( uint id );
+    static QString configIdString(uint id);
 
 public Q_SLOTS:
-    void slotInsertCommand( const QString &cmd, int adjustCursor = 0 );
+    void slotInsertCommand(const QString &cmd, int adjustCursor = 0);
     void slotTextChanged();
 
 signals:
     void changed();
 
 protected:
-    QString strOrBlank( const QString &str );
+    QString strOrBlank(const QString &str);
     QString mHelpString;
 
 private:
     QTextEdit *currentTextEdit() const;
 
 private Q_SLOTS:
-    void slotHelpLinkClicked( const QString & );
+    void slotHelpLinkClicked(const QString &);
 };
 
 }

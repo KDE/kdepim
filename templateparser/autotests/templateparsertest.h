@@ -19,7 +19,6 @@
 #ifndef TEMPLATEPARSERTEST_H
 #define TEMPLATEPARSERTEST_H
 
-
 #include <QObject>
 #include <KMime/Message>
 

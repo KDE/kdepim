@@ -31,33 +31,33 @@
 
 using namespace TemplateParser;
 
-CustomTemplatesMenu::CustomTemplatesMenu( QWidget *owner, KActionCollection *ac )
+CustomTemplatesMenu::CustomTemplatesMenu(QWidget *owner, KActionCollection *ac)
 {
     mOwnerActionCollection = ac;
 
-    mCustomForwardActionMenu = new KActionMenu( QIcon::fromTheme( QLatin1String("mail-forward-custom") ),
-                                                i18n( "With Custom Template" ), owner );
-    mOwnerActionCollection->addAction( QLatin1String("custom_forward"), mCustomForwardActionMenu );
+    mCustomForwardActionMenu = new KActionMenu(QIcon::fromTheme(QLatin1String("mail-forward-custom")),
+            i18n("With Custom Template"), owner);
+    mOwnerActionCollection->addAction(QLatin1String("custom_forward"), mCustomForwardActionMenu);
 
-    mCustomReplyActionMenu = new KActionMenu( QIcon::fromTheme( QLatin1String("mail-reply-custom") ),
-                                              i18n( "Reply With Custom Template" ), owner );
-    mOwnerActionCollection->addAction( QLatin1String("custom_reply"), mCustomReplyActionMenu );
+    mCustomReplyActionMenu = new KActionMenu(QIcon::fromTheme(QLatin1String("mail-reply-custom")),
+            i18n("Reply With Custom Template"), owner);
+    mOwnerActionCollection->addAction(QLatin1String("custom_reply"), mCustomReplyActionMenu);
 
-    mCustomReplyAllActionMenu = new KActionMenu( QIcon::fromTheme( QLatin1String("mail-reply-all-custom") ),
-                                                 i18n( "Reply to All With Custom Template" ), owner );
-    mOwnerActionCollection->addAction( QLatin1String("custom_reply_all"), mCustomReplyAllActionMenu );
+    mCustomReplyAllActionMenu = new KActionMenu(QIcon::fromTheme(QLatin1String("mail-reply-all-custom")),
+            i18n("Reply to All With Custom Template"), owner);
+    mOwnerActionCollection->addAction(QLatin1String("custom_reply_all"), mCustomReplyAllActionMenu);
 
-    mCustomForwardMapper = new QSignalMapper( this );
-    connect( mCustomForwardMapper, SIGNAL(mapped(int)),
-             this, SLOT(slotForwardSelected(int)) );
+    mCustomForwardMapper = new QSignalMapper(this);
+    connect(mCustomForwardMapper, SIGNAL(mapped(int)),
+            this, SLOT(slotForwardSelected(int)));
 
-    mCustomReplyMapper = new QSignalMapper( this );
-    connect( mCustomReplyMapper, SIGNAL(mapped(int)),
-             this, SLOT(slotReplySelected(int)) );
+    mCustomReplyMapper = new QSignalMapper(this);
+    connect(mCustomReplyMapper, SIGNAL(mapped(int)),
+            this, SLOT(slotReplySelected(int)));
 
-    mCustomReplyAllMapper = new QSignalMapper( this );
-    connect( mCustomReplyAllMapper, SIGNAL(mapped(int)),
-             this, SLOT(slotReplyAllSelected(int)) );
+    mCustomReplyAllMapper = new QSignalMapper(this);
+    connect(mCustomReplyAllMapper, SIGNAL(mapped(int)),
+            this, SLOT(slotReplyAllSelected(int)));
 
     update();
 }
@@ -77,14 +77,14 @@ CustomTemplatesMenu::~CustomTemplatesMenu()
 
 void CustomTemplatesMenu::clear()
 {
-    QListIterator<QAction *> ait( mCustomTemplateActions );
-    while ( ait.hasNext() ) {
+    QListIterator<QAction *> ait(mCustomTemplateActions);
+    while (ait.hasNext()) {
         QAction *action = ait.next();
-        mCustomReplyMapper->removeMappings( action );
-        mCustomReplyAllMapper->removeMappings( action );
-        mCustomForwardMapper->removeMappings( action );
+        mCustomReplyMapper->removeMappings(action);
+        mCustomReplyAllMapper->removeMappings(action);
+        mCustomForwardMapper->removeMappings(action);
     }
-    qDeleteAll( mCustomTemplateActions );
+    qDeleteAll(mCustomTemplateActions);
     mCustomTemplateActions.clear();
 
     mCustomReplyActionMenu->menu()->clear();
@@ -104,69 +104,69 @@ void CustomTemplatesMenu::update()
     int replyc = 0;
     int replyallc = 0;
     int forwardc = 0;
-    for ( ; it != end; ++it ) {
-        CTemplates t( *it );
-        mCustomTemplates.append( *it );
-        QString nameAction( *it );
-        nameAction.replace( QLatin1Char('&'), QLatin1String("&&") );
+    for (; it != end; ++it) {
+        CTemplates t(*it);
+        mCustomTemplates.append(*it);
+        QString nameAction(*it);
+        nameAction.replace(QLatin1Char('&'), QLatin1String("&&"));
 
         const QString nameActionName = nameAction.replace(QLatin1Char(' '), QLatin1Char('_'));
 
         QAction *action;
-        switch ( t.type() ) {
+        switch (t.type()) {
         case CustomTemplates::TReply:
-            action = new QAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
-            action->setShortcut( t.shortcut() );
-            mOwnerActionCollection->addAction(nameActionName,action);
-            connect( action, SIGNAL(triggered(bool)), mCustomReplyMapper, SLOT(map()) );
-            mCustomReplyMapper->setMapping( action, idx );
-            mCustomReplyActionMenu->addAction( action );
-            mCustomTemplateActions.append( action );
+            action = new QAction(nameAction, mOwnerActionCollection);   //krazy:exclude=tipsandthis
+            action->setShortcut(t.shortcut());
+            mOwnerActionCollection->addAction(nameActionName, action);
+            connect(action, SIGNAL(triggered(bool)), mCustomReplyMapper, SLOT(map()));
+            mCustomReplyMapper->setMapping(action, idx);
+            mCustomReplyActionMenu->addAction(action);
+            mCustomTemplateActions.append(action);
             ++replyc;
             break;
 
         case CustomTemplates::TReplyAll:
-            action = new QAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
-            action->setShortcut( t.shortcut() );
-            mOwnerActionCollection->addAction(nameActionName,action);
-            connect( action, SIGNAL(triggered(bool)), mCustomReplyAllMapper, SLOT(map()) );
-            mCustomReplyAllMapper->setMapping( action, idx );
-            mCustomReplyAllActionMenu->addAction( action );
-            mCustomTemplateActions.append( action );
+            action = new QAction(nameAction, mOwnerActionCollection);   //krazy:exclude=tipsandthis
+            action->setShortcut(t.shortcut());
+            mOwnerActionCollection->addAction(nameActionName, action);
+            connect(action, SIGNAL(triggered(bool)), mCustomReplyAllMapper, SLOT(map()));
+            mCustomReplyAllMapper->setMapping(action, idx);
+            mCustomReplyAllActionMenu->addAction(action);
+            mCustomTemplateActions.append(action);
             ++replyallc;
             break;
 
         case CustomTemplates::TForward:
-            action = new QAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
-            mOwnerActionCollection->addAction(nameActionName,action);
-            action->setShortcut( t.shortcut() );
-            connect( action, SIGNAL(triggered(bool)), mCustomForwardMapper, SLOT(map()) );
-            mCustomForwardMapper->setMapping( action, idx );
-            mCustomForwardActionMenu->addAction( action );
-            mCustomTemplateActions.append( action );
+            action = new QAction(nameAction, mOwnerActionCollection);   //krazy:exclude=tipsandthis
+            mOwnerActionCollection->addAction(nameActionName, action);
+            action->setShortcut(t.shortcut());
+            connect(action, SIGNAL(triggered(bool)), mCustomForwardMapper, SLOT(map()));
+            mCustomForwardMapper->setMapping(action, idx);
+            mCustomForwardActionMenu->addAction(action);
+            mCustomTemplateActions.append(action);
             ++forwardc;
             break;
 
         case CustomTemplates::TUniversal:
-            action = new QAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
-            mOwnerActionCollection->addAction(nameActionName,action);
+            action = new QAction(nameAction, mOwnerActionCollection);   //krazy:exclude=tipsandthis
+            mOwnerActionCollection->addAction(nameActionName, action);
 
-            connect( action, SIGNAL(triggered(bool)), mCustomReplyMapper, SLOT(map()) );
-            mCustomReplyMapper->setMapping( action, idx );
-            mCustomReplyActionMenu->addAction( action );
-            mCustomTemplateActions.append( action );
+            connect(action, SIGNAL(triggered(bool)), mCustomReplyMapper, SLOT(map()));
+            mCustomReplyMapper->setMapping(action, idx);
+            mCustomReplyActionMenu->addAction(action);
+            mCustomTemplateActions.append(action);
             ++replyc;
-            action = new QAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
-            connect( action, SIGNAL(triggered(bool)), mCustomReplyAllMapper, SLOT(map()) );
-            mCustomReplyAllMapper->setMapping( action, idx );
-            mCustomReplyAllActionMenu->addAction( action );
-            mCustomTemplateActions.append( action );
+            action = new QAction(nameAction, mOwnerActionCollection);   //krazy:exclude=tipsandthis
+            connect(action, SIGNAL(triggered(bool)), mCustomReplyAllMapper, SLOT(map()));
+            mCustomReplyAllMapper->setMapping(action, idx);
+            mCustomReplyAllActionMenu->addAction(action);
+            mCustomTemplateActions.append(action);
             ++replyallc;
-            action = new QAction( nameAction, mOwnerActionCollection ); //krazy:exclude=tipsandthis
-            connect( action, SIGNAL(triggered(bool)), mCustomForwardMapper, SLOT(map()) );
-            mCustomForwardMapper->setMapping( action, idx );
-            mCustomForwardActionMenu->addAction( action );
-            mCustomTemplateActions.append( action );
+            action = new QAction(nameAction, mOwnerActionCollection);   //krazy:exclude=tipsandthis
+            connect(action, SIGNAL(triggered(bool)), mCustomForwardMapper, SLOT(map()));
+            mCustomForwardMapper->setMapping(action, idx);
+            mCustomForwardActionMenu->addAction(action);
+            mCustomTemplateActions.append(action);
             ++forwardc;
             break;
         }
@@ -174,38 +174,38 @@ void CustomTemplatesMenu::update()
         ++idx;
     }
 
-    if ( !replyc ) {
+    if (!replyc) {
         QAction *noAction =
-                mCustomReplyActionMenu->menu()->addAction( i18n( "(no custom templates)" ) );
-        noAction->setEnabled( false );
-        mCustomReplyActionMenu->setEnabled( false );
+            mCustomReplyActionMenu->menu()->addAction(i18n("(no custom templates)"));
+        noAction->setEnabled(false);
+        mCustomReplyActionMenu->setEnabled(false);
     }
-    if ( !replyallc ) {
+    if (!replyallc) {
         QAction *noAction =
-                mCustomReplyAllActionMenu->menu()->addAction( i18n( "(no custom templates)" ) );
-        noAction->setEnabled( false );
-        mCustomReplyAllActionMenu->setEnabled( false );
+            mCustomReplyAllActionMenu->menu()->addAction(i18n("(no custom templates)"));
+        noAction->setEnabled(false);
+        mCustomReplyAllActionMenu->setEnabled(false);
     }
-    if ( !forwardc ) {
+    if (!forwardc) {
         QAction *noAction =
-                mCustomForwardActionMenu->menu()->addAction( i18n( "(no custom templates)" ) );
-        noAction->setEnabled( false );
-        mCustomForwardActionMenu->setEnabled( false );
+            mCustomForwardActionMenu->menu()->addAction(i18n("(no custom templates)"));
+        noAction->setEnabled(false);
+        mCustomForwardActionMenu->setEnabled(false);
     }
 }
 
-void CustomTemplatesMenu::slotReplySelected( int idx )
+void CustomTemplatesMenu::slotReplySelected(int idx)
 {
-    emit replyTemplateSelected( mCustomTemplates.at( idx ) );
+    emit replyTemplateSelected(mCustomTemplates.at(idx));
 }
 
-void CustomTemplatesMenu::slotReplyAllSelected( int idx )
+void CustomTemplatesMenu::slotReplyAllSelected(int idx)
 {
-    emit replyAllTemplateSelected( mCustomTemplates.at( idx ) );
+    emit replyAllTemplateSelected(mCustomTemplates.at(idx));
 }
 
-void CustomTemplatesMenu::slotForwardSelected( int idx )
+void CustomTemplatesMenu::slotForwardSelected(int idx)
 {
-    emit forwardTemplateSelected( mCustomTemplates.at( idx ) );
+    emit forwardTemplateSelected(mCustomTemplates.at(idx));
 }
 

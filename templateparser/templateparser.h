@@ -30,20 +30,24 @@
 
 #include <QObject>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class ObjectTreeParser;
 }
 
-namespace KIdentityManagement {
+namespace KIdentityManagement
+{
 class IdentityManager;
 }
 
-namespace MessageCore {
+namespace MessageCore
+{
 class AttachmentCollector;
 class ImageCollector;
 }
 
-namespace TemplateParser {
+namespace TemplateParser
+{
 
 /**
  * \brief The TemplateParser transforms a message with a given template.
@@ -168,7 +172,7 @@ public:
     };
 
 public:
-    explicit TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode );
+    explicit TemplateParser(const KMime::Message::Ptr &amsg, const Mode amode);
     ~TemplateParser();
 
     /**
@@ -177,7 +181,7 @@ public:
      * If this is not called at all, the whole message is quoted as well.
      * Call this before calling process().
      */
-    void setSelection( const QString &selection );
+    void setSelection(const QString &selection);
 
     /**
      * Sets whether the template parser is allowed to decrypt the original
@@ -187,7 +191,7 @@ public:
      *
      * The default is false.
      */
-    void setAllowDecryption( const bool allowDecryption );
+    void setAllowDecryption(const bool allowDecryption);
 
     /**
      * Tell template parser whether or not to wrap words, and at what column
@@ -195,27 +199,27 @@ public:
      *
      * Default is true, wrapping at 80chars.
      */
-    void setWordWrap( bool wrap, int wrapColWidth = 80 );
+    void setWordWrap(bool wrap, int wrapColWidth = 80);
 
     /**
      * Set the identity manager to be used when creating the template.
      */
-    void setIdentityManager( KIdentityManagement::IdentityManager *ident );
+    void setIdentityManager(KIdentityManagement::IdentityManager *ident);
 
     /**
      * Sets the list of charsets to try to use to encode the resulting text.
      * They are tried in order until one matches, or utf-8 as a fallback.
      */
-    void setCharsets( const QStringList &charsets );
+    void setCharsets(const QStringList &charsets);
 
-    virtual void process( const KMime::Message::Ptr &aorig_msg,
-                          const Akonadi::Collection &afolder = Akonadi::Collection() );
-    virtual void process( const QString &tmplName, const KMime::Message::Ptr &aorig_msg,
-                          const Akonadi::Collection &afolder = Akonadi::Collection() );
-    virtual void processWithIdentity( uint uoid, const KMime::Message::Ptr &aorig_msg,
-                                      const Akonadi::Collection &afolder = Akonadi::Collection() );
+    virtual void process(const KMime::Message::Ptr &aorig_msg,
+                         const Akonadi::Collection &afolder = Akonadi::Collection());
+    virtual void process(const QString &tmplName, const KMime::Message::Ptr &aorig_msg,
+                         const Akonadi::Collection &afolder = Akonadi::Collection());
+    virtual void processWithIdentity(uint uoid, const KMime::Message::Ptr &aorig_msg,
+                                     const Akonadi::Collection &afolder = Akonadi::Collection());
 
-    virtual void processWithTemplate( const QString &tmpl );
+    virtual void processWithTemplate(const QString &tmpl);
 
     /// This finds the template to use. Either the one from the folder, identity or
     /// finally the global template.
@@ -226,12 +230,12 @@ public:
     /// Finds the template with the given name.
     /// This also reads the To and CC address of the template
     /// @return the contents of the template
-    virtual QString findCustomTemplate( const QString &tmpl );
+    virtual QString findCustomTemplate(const QString &tmpl);
 
-    virtual QString pipe( const QString &cmd, const QString &buf );
+    virtual QString pipe(const QString &cmd, const QString &buf);
 
-    virtual QString getFName( const QString &str );
-    virtual QString getLName( const QString &str );
+    virtual QString getFName(const QString &str);
+    virtual QString getLName(const QString &str);
 
     bool cursorPositionWasSet() const;
 protected:
@@ -269,7 +273,7 @@ protected:
      * and @p htmlBody.
      * Attachments of the original message are also added back to the new message.
      */
-    void addProcessedBodyToMessage( const QString &plainBody, const QString &htmlBody ) const;
+    void addProcessedBodyToMessage(const QString &plainBody, const QString &htmlBody) const;
 
     /**
      * Determines whether the signature should be stripped when getting the text
@@ -277,7 +281,7 @@ protected:
      */
     bool shouldStripSignature() const;
 
-    int parseQuotes( const QString &prefix, const QString &str, QString &quote ) const;
+    int parseQuotes(const QString &prefix, const QString &str, QString &quote) const;
 
 private:
     /**
@@ -300,7 +304,7 @@ private:
      * smart quoting is turned on. Signed or encrypted texts
      * get converted to plain text when allowDecryption is true.
      */
-    QString quotedPlainText( const QString & election=QString() ) const;
+    QString quotedPlainText(const QString &election = QString()) const;
 
     /**
      * Returns HTML message body.
@@ -312,7 +316,7 @@ private:
      * smart quoting is turned on. Signed or encrypted texts
      * get converted to plain text when allowDecryption is true.
      */
-    QString quotedHtmlText( const QString &selection ) const;
+    QString quotedHtmlText(const QString &selection) const;
 
     /**
      * This function return the plain text part from the OTP.
@@ -324,18 +328,18 @@ private:
      * @param aStripSignature strips the signature out of the message
      *
      */
-    QString plainMessageText( bool aStripSignature, AllowSelection isSelectionAllowed ) const;
+    QString plainMessageText(bool aStripSignature, AllowSelection isSelectionAllowed) const;
 
     /**
      * Returns the HTML content of the message as plain text
      */
-    QString htmlMessageText( bool aStripSignature, AllowSelection isSelectionAllowed );
+    QString htmlMessageText(bool aStripSignature, AllowSelection isSelectionAllowed);
 
     /** @return the UOID of the identity for this message.
      * Searches the "x-kmail-identity" header and if that fails,
      * searches with KIdentityManagement::IdentityManager::identityForAddress()
      */
-    uint identityUoid( const KMime::Message::Ptr &msg ) const;
+    uint identityUoid(const KMime::Message::Ptr &msg) const;
 
     /**
      * Returns KMime content of the plain text part of the message after setting
@@ -347,15 +351,15 @@ private:
      * 2) TemplateParser::createMultipartAlternativeContent() which adds this content
      *    to create the multipart/alternative message.
      */
-    KMime::Content *createPlainPartContent( const QString &plainBody ) const;
+    KMime::Content *createPlainPartContent(const QString &plainBody) const;
 
     /**
      * Returns KMime content of the multipart/alternative part of the message
      * after setting the mime type, charset and CTE of its respective text/plain
      * part and text/html part.
      */
-    KMime::Content *createMultipartAlternativeContent( const QString &plainBody,
-                                                       const QString &htmlBody ) const;
+    KMime::Content *createMultipartAlternativeContent(const QString &plainBody,
+            const QString &htmlBody) const;
 
     /**
      * Returns a multipart/mixed KMime::Content that has textPart and all
@@ -365,8 +369,8 @@ private:
      * @param textPart a KMime::Content that is to be added as a child.
      * @since 4.8
      */
-    KMime::Content *createMultipartMixed( const MessageCore::AttachmentCollector &ac,
-                                          KMime::Content *textPart ) const;
+    KMime::Content *createMultipartMixed(const MessageCore::AttachmentCollector &ac,
+                                         KMime::Content *textPart) const;
 
     /**
      * Returnsa multipart/related KMime::Content that has mainTextPart and all
@@ -376,8 +380,8 @@ private:
      * @param mainTextPart a KMime::Content that is to be added as a child.
      * @since 4.8
      */
-    KMime::Content *createMultipartRelated( const MessageCore::ImageCollector &ic,
-                                            KMime::Content *mainTextPart ) const;
+    KMime::Content *createMultipartRelated(const MessageCore::ImageCollector &ic,
+                                           KMime::Content *mainTextPart) const;
 
     /**
      * Checks if the signature is HTML or not.
@@ -388,12 +392,12 @@ private:
      * Does the necessary conversions like escaping charecters, changing "\n" to
      * breakline tag before appending text to htmlBody.
      */
-    QString plainToHtml( const QString &body ) const;
+    QString plainToHtml(const QString &body) const;
 
     /**
      * Make a HTML content valid by adding missing html/head/body tag.
      */
-    void makeValidHtml( QString &body );
+    void makeValidHtml(QString &body);
 };
 
 }

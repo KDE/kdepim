@@ -25,11 +25,13 @@
 #include <Akonadi/Contact/AbstractContactFormatter>
 #include "kaddressbook_grantlee_export.h"
 
-namespace GrantleeTheme {
+namespace GrantleeTheme
+{
 class Theme;
 }
 
-namespace KAddressBookGrantlee {
+namespace KAddressBookGrantlee
+{
 
 /**
  * @short A class that formats a contact as HTML code.
@@ -49,7 +51,6 @@ public:
      */
     virtual ~GrantleeContactFormatter();
 
-
     void setAbsoluteThemePath(const QString &path);
 
     void setGrantleeTheme(const GrantleeTheme::Theme &theme);
@@ -57,11 +58,10 @@ public:
     void setForceDisableQRCode(bool b);
     bool forceDisableQRCode() const;
 
-
     /**
      * Returns the contact formatted as HTML
      */
-    virtual QString toHtml( HtmlForm form = SelfcontainedForm ) const;
+    virtual QString toHtml(HtmlForm form = SelfcontainedForm) const;
 
 private:
     //@cond PRIVATE

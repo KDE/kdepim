@@ -24,7 +24,7 @@ class TemplateEditorTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TemplateEditorTestWidget(QWidget *parent=0);
+    explicit TemplateEditorTestWidget(QWidget *parent = 0);
     ~TemplateEditorTestWidget();
 };
 

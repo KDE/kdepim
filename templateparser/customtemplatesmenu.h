@@ -31,32 +31,42 @@ class KActionCollection;
 class QAction;
 class KActionMenu;
 
-namespace TemplateParser {
+namespace TemplateParser
+{
 
 class TEMPLATEPARSER_EXPORT CustomTemplatesMenu : public QObject
 {
     Q_OBJECT
 
 public:
-    CustomTemplatesMenu( QWidget *parent, KActionCollection *ac );
+    CustomTemplatesMenu(QWidget *parent, KActionCollection *ac);
     ~CustomTemplatesMenu();
 
-    KActionMenu *replyActionMenu() const { return mCustomReplyActionMenu; }
-    KActionMenu *replyAllActionMenu() const { return mCustomReplyAllActionMenu; }
-    KActionMenu *forwardActionMenu() const { return mCustomForwardActionMenu; }
+    KActionMenu *replyActionMenu() const
+    {
+        return mCustomReplyActionMenu;
+    }
+    KActionMenu *replyAllActionMenu() const
+    {
+        return mCustomReplyAllActionMenu;
+    }
+    KActionMenu *forwardActionMenu() const
+    {
+        return mCustomForwardActionMenu;
+    }
 
 public Q_SLOTS:
     void update();
 
 signals:
-    void replyTemplateSelected( const QString &tmpl );
-    void replyAllTemplateSelected( const QString &tmpl );
-    void forwardTemplateSelected( const QString &tmpl );
+    void replyTemplateSelected(const QString &tmpl);
+    void replyAllTemplateSelected(const QString &tmpl);
+    void forwardTemplateSelected(const QString &tmpl);
 
 private Q_SLOTS:
-    void slotReplySelected( int idx );
-    void slotReplyAllSelected( int idx );
-    void slotForwardSelected( int idx );
+    void slotReplySelected(int idx);
+    void slotReplyAllSelected(int idx);
+    void slotForwardSelected(int idx);
 
 private:
     void clear();
