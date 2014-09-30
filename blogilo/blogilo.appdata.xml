@@ -74,7 +74,7 @@
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="cs">Vlastnosti:</p>
     <p xml:lang="en-GB">Features:</p>
-    <p xml:lang="es">Características;</p>
+    <p xml:lang="es">Características:</p>
     <p xml:lang="fr">Fonctionnalités :</p>
     <p xml:lang="hu">Szolgáltatások:</p>
     <p xml:lang="nb">Egenskaper:</p>
@@ -116,6 +116,7 @@
       <li xml:lang="x-test">xxA full featured WYSIWYG editor + An HTML editorxx</li>
       <li>Previewing your post with your blog style</li>
       <li xml:lang="ca">Vista prèvia del vostre article amb l'estil del vostre blog</li>
+      <li xml:lang="de">Vorschau Ihrer Posts im Stil Ihres Blogs</li>
       <li xml:lang="en-GB">Previewing your post with your blog style</li>
       <li xml:lang="es">Previsualiza su envío con su estilo de blog</li>
       <li xml:lang="fr">Afficher un aperçu de votre article avec votre style du blog</li>
@@ -138,7 +139,7 @@
       <li>Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
       <li xml:lang="ca">Implementa les API Blogger1.0, MetaWeblog, MovableType (el Wordpress implementa tots aquests!) i Google GData (usada al blog Blogspot.com)</li>
       <li xml:lang="en-GB">Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
-      <li xml:lang="es">Reconoce las API Blogger1.0, MetaWeblog, MovableType (!Wordpress reconoce todos esos!) y Google GData (usado en blogs de Blogspot.com b)</li>
+      <li xml:lang="es">Reconoce las API Blogger1.0, MetaWeblog, MovableType (¡Wordpress reconoce todos esos!) y Google GData (usado en blogs de Blogspot.com b)</li>
       <li xml:lang="fr">Prise en charge des interfaces Blogger1.0, MetaWeblog, MovableType (Wordpress les gérant tous !) et Google GData (utilisé sur les blogs de Blogspot.com)</li>
       <li xml:lang="hu">A Blogger 1.0, MetaWeblog, MovableType (a Wordpress támogatja mindezeket!) és a Google GData (Blogspot.com blogok) API-k támogatása</li>
       <li xml:lang="nb">Støtte for API-ene Blogger1.0, MetaWeblog, MovableType (Wordpress støtter alle disse!) og Google GData (brukt på blogger på Blogspot.com) </li>
@@ -158,6 +159,7 @@
       <li xml:lang="x-test">xxSupport for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIsxx</li>
       <li>Support for Creating/Modifying/Deleting posts.</li>
       <li xml:lang="ca">Implementa la creació/modificació/eliminació dels articles</li>
+      <li xml:lang="de">Unterstützung für das Erstellen/Verändern/Löschen von Posts.</li>
       <li xml:lang="en-GB">Support for Creating/Modifying/Deleting posts.</li>
       <li xml:lang="es">Implementa creación/modificación/borrado de envíos.</li>
       <li xml:lang="fr">Prise en charge de la création, modification et suppression d'articles.</li>
@@ -243,7 +245,7 @@
       <li>Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="ca">Implementa afegir imatges als articles des del vostre sistema. Les pujarà en entregar l'article al blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
       <li xml:lang="en-GB">Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
-      <li xml:lang="es">Implementa el añadido de imágenes al envió desde su sistema. Las cargará al aplicar los envíos a su blog (solo en las API reconocidas, p. ej., MetaWeblog y MovableType) </li>
+      <li xml:lang="es">Implementa el añadido de imágenes al envió desde su sistema. Las cargará al aplicar los envíos a su blog (solo en las API reconocidas, p. ej., MetaWeblog y MovableType)</li>
       <li xml:lang="fr">Prise en charge de l'ajout d'images de votre système vers l'article. Le fichier sera envoyé lors de la soumission de l'article sur le blog (uniquement avec les interfaces prises en charge comme MetaWeblog et MovableType)</li>
       <li xml:lang="hu">Képek hozzáadása a bejegyzésekhez a rendszeréről, melyek a bejegyzés elküldésekor kerülnek feltöltésre (csak támogatott API-k esetén, például MetaWeblog és MovableType).</li>
       <li xml:lang="nb">Støtte for å legge til bilder til posting fra systemet ditt. De blir lastet opp når posten legges inn til bloggen med Submit (bare på støttede API-er, f.eks. MetaWeblog og MovableType)</li>
@@ -306,7 +308,7 @@
       <li>Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
       <li xml:lang="ca">Un corrector ortogràfic automàtic intern. (El corrector ortogràfic del KDE, usant així la majoria dels idiomes acceptats)</li>
       <li xml:lang="en-GB">Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
-      <li xml:lang="es">Auto corrector ortográfico interno. (El corrector ortográfico de KDE usado para la mayor  parte de los mensajes está reconocido)</li>
+      <li xml:lang="es">Auto corrector ortográfico interno. (El corrector ortográfico de KDE usado para la mayoría de idiomas está reconocido)</li>
       <li xml:lang="fr">Vérificateur orthographique automatique intégré (utilisant le vérificateur de KDE, donc la plupart des langues sont prises en charge)</li>
       <li xml:lang="hu">Belső, automatikus helyesírás-ellenőrző (a KDE helyesírás-ellenőrzője, így a legtöbb nyelv támogatott).</li>
       <li xml:lang="nb">Intern automatisk stavekontroll. (KDE stavekontroll brukes, så de fleste språk er støttet)</li>

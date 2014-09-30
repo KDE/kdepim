@@ -105,6 +105,7 @@
       <li xml:lang="x-test">xxEach book has many named pagesxx</li>
       <li>Books and pages can be rearranged by drag-and-drop</li>
       <li xml:lang="ca">Els llibres i les pàgines es poden tornar a ordenar arrossegant i deixant</li>
+      <li xml:lang="de">Bücher und Seiten können durch Ziehen und Ablegen neu angeordnet werden</li>
       <li xml:lang="en-GB">Books and pages can be rearranged by drag-and-drop</li>
       <li xml:lang="es">Libretas y páginas pueden reorganizarse mediante arrastrar y soltar</li>
       <li xml:lang="fr">Les livres et les pages peuvent être réorganisés par glisser-déposer</li>
@@ -142,6 +143,7 @@
       <li xml:lang="x-test">xxKeyboard shortcuts are available for many functionsxx</li>
       <li>Automatic saving means your notes are safe from loss</li>
       <li xml:lang="ca">El desat automàtic significa que les vostres notes estan resguardades de la pèrdua de les dades</li>
+      <li xml:lang="de">Automatisches Speichern verhindert den Datenverlust Ihrer Notizen</li>
       <li xml:lang="en-GB">Automatic saving means your notes are safe from loss</li>
       <li xml:lang="es">El guardado automáticos significa que sus notas están seguras frente a pérdidas</li>
       <li xml:lang="fr">Enregistrement automatique, ce qui signifie que vos notes sont à l'abri des pertes accidentelles</li>
