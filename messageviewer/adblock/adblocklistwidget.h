@@ -33,7 +33,7 @@ private Q_SLOTS:
     void slotGeneralPaletteChanged();
 
 protected:
-    void paintEvent( QPaintEvent *event );
+    void paintEvent( QPaintEvent *event ) Q_DECL_OVERRIDE;
 
 private:
     QColor mTextColor;

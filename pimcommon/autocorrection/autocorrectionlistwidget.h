@@ -31,7 +31,7 @@ public:
     ~AutoCorrectionListWidget();
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void deleteSelectedItems();

@@ -35,7 +35,7 @@ public:
     explicit ImportLibreOfficeAutocorrection(QWidget *parent = 0);
     ~ImportLibreOfficeAutocorrection();
 
-    bool import(const QString &fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All);
+    bool import(const QString &fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All) Q_DECL_OVERRIDE;
 
 private:
     enum Type {DOCUMENT, SENTENCE, WORD };
