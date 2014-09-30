@@ -96,11 +96,14 @@ bool AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int &po
     if (!mEnabled)
         return true;
     mCursor =  QTextCursor(&document);
+    mCursor.setPosition(position);
+    if (!singleSpaces())
+        return false;
     int oldPosition = position;
     selectPreviousWord(mCursor,position);
     mWord = mCursor.selectedText();
     if (mWord.isEmpty()) {
-        return singleSpaces();
+        return true;
     }
     mCursor.beginEditBlock();
     bool done = false;

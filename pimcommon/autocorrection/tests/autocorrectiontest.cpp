@@ -274,5 +274,34 @@ void AutoCorrectionTest::shouldReplaceAutoFraction()
 
 }
 
+void AutoCorrectionTest::shouldNotAddSpaceWhenWeAlreadyHaveASpace()
+{
+    PimCommon::AutoCorrection autocorrection;
+    autocorrection.setEnabledAutoCorrection(true);
+    autocorrection.setSingleSpaces(true);
+    QTextDocument doc;
+    //We already a space => don't allow to add more
+    QString text = QLatin1String("FOO ");
+    doc.setPlainText(text);
+    int position = text.length();
+    bool result = autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(result, false);
+
+    //We can add a space
+    text = QLatin1String("FOO");
+    doc.setPlainText(text);
+    position = text.length();
+    result = autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(result, true);
+
+    //We have a space => don't add it.
+    text = QLatin1String("FOO ");
+    position = text.length();
+    QString fullText = text + QLatin1String("FOO");
+    doc.setPlainText(fullText);
+    result = autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(result, false);
+}
+
 
 QTEST_KDEMAIN(AutoCorrectionTest, NoGUI)

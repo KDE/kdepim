@@ -37,6 +37,7 @@ private Q_SLOTS:
     void shouldNotReplaceUppercaseLetter();
     void shouldReplaceToBold();
     void shouldReplaceAutoFraction();
+    void shouldNotAddSpaceWhenWeAlreadyHaveASpace();
 
 private:
     KSharedConfig::Ptr mConfig;
