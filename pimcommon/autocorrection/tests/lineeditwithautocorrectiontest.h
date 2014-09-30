@@ -30,6 +30,7 @@ private Q_SLOTS:
     void shouldNotAutocorrectWhenDisabled();
     void shouldReplaceWordWhenExactText();
     void shouldNotReplaceWordWhenInexactText();
+    void shouldNotAddTwoSpace();
 };
 
 #endif // LINEEDITWITHAUTOCORRECTIONTEST_H

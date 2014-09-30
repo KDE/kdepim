@@ -76,4 +76,17 @@ void LineEditWithAutocorrectionTest::shouldNotReplaceWordWhenInexactText()
     QCOMPARE(lineedit.toPlainText(), QString(nonExactText + QLatin1Char(' ')) );
 }
 
+void LineEditWithAutocorrectionTest::shouldNotAddTwoSpace()
+{
+    PimCommon::LineEditWithAutoCorrection lineedit(0, QLatin1String("lineeditwithautocorrecttestrc"));
+    const QString originalWord = QLatin1String("FOOFOO ");
+    lineedit.autocorrection()->setSingleSpaces(true);
+    lineedit.autocorrection()->setEnabledAutoCorrection(true);
+    lineedit.show();
+    QTest::qWaitForWindowShown(&lineedit);
+    QTest::keyClicks(&lineedit, originalWord);
+    QTest::keyClick(&lineedit, ' ');
+    QCOMPARE(lineedit.toPlainText(), originalWord );
+}
+
 QTEST_KDEMAIN(LineEditWithAutocorrectionTest, GUI)
