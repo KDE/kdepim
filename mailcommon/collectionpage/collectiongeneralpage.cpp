@@ -253,7 +253,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
 
     QVBoxLayout *topLayout = new QVBoxLayout(this);
 //TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
-    topLayout->setMargin(0);
 
     // Musn't be able to edit details for a non-resource, system folder.
     if ((!mIsLocalSystemFolder || mIsResourceFolder) &&
