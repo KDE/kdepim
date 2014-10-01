@@ -56,6 +56,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     mMsgWidget->setCloseButtonVisible(true);
     mMsgWidget->setMessageType(KMessageWidget::Positive);
     mMsgWidget->setObjectName(QLatin1String("msgwidget"));
+    mMsgWidget->setWordWrap(true);
     mMsgWidget->setVisible(false);
     vbox->addWidget(mMsgWidget);
 
