@@ -16,6 +16,7 @@
 */
 
 #include "texttospeechgui.h"
+#include "pimcommon/texttospeech/texttospeech.h"
 #include <KLocalizedString>
 #include <QApplication>
 #include <KAboutData>
@@ -26,6 +27,7 @@
 #include <QAction>
 #include <QMenuBar>
 #include <QMenu>
+#include <QDebug>
 
 TextToSpeechGui::TextToSpeechGui(QWidget *parent)
     : QMainWindow(parent)
@@ -39,6 +41,7 @@ TextToSpeechGui::TextToSpeechGui(QWidget *parent)
     QAction *act = new QAction(i18n("Speech text"), this);
     connect(act, &QAction::triggered, this, &TextToSpeechGui::slotTextToSpeech);
     editMenu->addAction(act);
+    qDebug()<<" isReady ? "<<PimCommon::TextToSpeech::self()->isReady();
 }
 
 TextToSpeechGui::~TextToSpeechGui()
@@ -48,12 +51,15 @@ TextToSpeechGui::~TextToSpeechGui()
 
 void TextToSpeechGui::slotTextToSpeech()
 {
+    QString text;
     if (mEdit->textCursor().hasSelection()) {
-
+        text = mEdit->textCursor().selectedText();
     } else {
-
+       text = mEdit->toPlainText();
     }
-    //TODO
+    if (!text.isEmpty()) {
+        PimCommon::TextToSpeech::self()->say(text);
+    }
 }
 
 int main(int argc, char **argv)
