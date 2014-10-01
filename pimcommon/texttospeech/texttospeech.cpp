@@ -16,6 +16,7 @@
 */
 
 #include "texttospeech.h"
+#include "settings/pimcommonsettings.h"
 #if KDEPIM_HAVE_TEXTTOSPEECH
 #include <QtTextToSpeech/QTextToSpeech>
 #endif
@@ -47,12 +48,22 @@ TextToSpeech::TextToSpeech(QObject *parent)
     , mTextToSpeech(new QTextToSpeech(this))
 #endif
 {
+    init();
     connect(this, &TextToSpeech::emitSay, this, &TextToSpeech::slotNextSay);
 }
 
 TextToSpeech::~TextToSpeech()
 {
 
+}
+
+void TextToSpeech::init()
+{
+#if KDEPIM_HAVE_TEXTTOSPEECH
+    mTextToSpeech->setRate(PimCommon::PimCommonSettings::self()->rate());
+    mTextToSpeech->setPitch(PimCommon::PimCommonSettings::self()->pitch());
+    mTextToSpeech->setVolume(PimCommon::PimCommonSettings::self()->volume());
+#endif
 }
 
 TextToSpeech *TextToSpeech::self()

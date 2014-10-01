@@ -31,16 +31,19 @@ TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
     setLayout(layout);
     mVolume = new QSlider;
     mVolume->setObjectName(QLatin1String("volume"));
+    mVolume->setRange(-100, 100);
     connect(mVolume, &QSlider::valueChanged, this, &TextToSpeechConfigWidget::valueChanged);
 
     layout->addRow(i18n("Volume:"), mVolume);
 
     mRate = new QSlider;
     mRate->setObjectName(QLatin1String("rate"));
+    mRate->setRange(-100, 100);
     layout->addRow(i18n("Rate:"), mRate);
     connect(mRate, &QSlider::valueChanged, this, &TextToSpeechConfigWidget::valueChanged);
 
     mPitch = new QSlider;
+    mPitch->setRange(-100, 100);
     connect(mPitch, &QSlider::valueChanged, this, &TextToSpeechConfigWidget::valueChanged);
     mPitch->setObjectName(QLatin1String("pitch"));
     layout->addRow(i18n("Pitch:"), mPitch);
@@ -58,14 +61,14 @@ void TextToSpeechConfigWidget::valueChanged()
 
 void TextToSpeechConfigWidget::readConfig()
 {
-    PimCommon::PimCommonSettings::self()->setVolume(mVolume->value());
-    PimCommon::PimCommonSettings::self()->setRate(mRate->value());
-    PimCommon::PimCommonSettings::self()->setPitch(mPitch->value());
+    PimCommon::PimCommonSettings::self()->setVolume(static_cast<double>(mVolume->value()/100));
+    PimCommon::PimCommonSettings::self()->setRate(static_cast<double>(mRate->value()/100));
+    PimCommon::PimCommonSettings::self()->setPitch(static_cast<double>(mPitch->value()/100));
 }
 
 void TextToSpeechConfigWidget::writeConfig()
 {
-    mVolume->setValue(PimCommon::PimCommonSettings::self()->volume());
-    mRate->setValue(PimCommon::PimCommonSettings::self()->rate());
-    mPitch->setValue(PimCommon::PimCommonSettings::self()->pitch());
+    mVolume->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->volume()*100));
+    mRate->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->rate()*100));
+    mPitch->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->pitch()*100));
 }

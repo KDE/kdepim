@@ -60,6 +60,7 @@ private:
     explicit TextToSpeech(QObject *parent = 0);
     friend class TextToSpeechPrivate;
 
+    void init();
 #if KDEPIM_HAVE_TEXTTOSPEECH
     QTextToSpeech *mTextToSpeech;
 #endif
