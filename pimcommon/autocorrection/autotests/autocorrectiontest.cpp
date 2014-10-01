@@ -240,7 +240,39 @@ void AutoCorrectionTest::shouldReplaceToBold()
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), text);
 
+    QString result = QLatin1String("foo");
+    doc.setHtml(text);
+    position = text.length();
     autocorrection.autocorrect(true, doc, position);
+    QCOMPARE(doc.toPlainText(), result);
+
+    text = QLatin1String("_foo_");
+    doc.setHtml(text);
+    position = text.length();
+    autocorrection.autocorrect(true, doc, position);
+    QCOMPARE(doc.toPlainText(), result);
+
+    text = QLatin1String("-foo-");
+    doc.setHtml(text);
+    position = text.length();
+    autocorrection.autocorrect(true, doc, position);
+    QCOMPARE(doc.toPlainText(), result);
+
+    //Don't convert it.
+    text = QLatin1String("-foo1");
+    doc.setHtml(text);
+    position = text.length();
+    autocorrection.autocorrect(true, doc, position);
+    QCOMPARE(doc.toPlainText(), text);
+
+    text = QLatin1String("*foo* blabla");
+    position = 5;
+    doc.setHtml(text);
+    autocorrection.autocorrect(true, doc, position);
+    result = QLatin1String("foo blabla");
+    QCOMPARE(doc.toPlainText(), result);
+    QCOMPARE(position, 3);
+
     //TODO QCOMPARE(doc.toHtml(), text);
 
 }
