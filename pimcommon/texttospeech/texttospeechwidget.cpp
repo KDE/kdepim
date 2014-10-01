@@ -34,6 +34,7 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     hbox->addStretch(0);
     mStopButton = new QToolButton;
     mStopButton->setObjectName(QLatin1String("stopbutton"));
+    mStopButton->setToolTip(i18n("Stop"));
     connect(mStopButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotStop);
     hbox->addWidget(mStopButton);
     mPlayPauseButton = new QToolButton;
@@ -109,6 +110,7 @@ void TextToSpeechWidget::updateButtonState()
 {
     //TODO update icons.
     mPlayPauseButton->setEnabled((mState != Stop));
+    mPlayPauseButton->setToolTip((mState != Play) ? i18n("Pause") : i18n("Play"));
 }
 
 void TextToSpeechWidget::setTextToSpeechInterface(AbstractTextToSpeechInterface *interface)
