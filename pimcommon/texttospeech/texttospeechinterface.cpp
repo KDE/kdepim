@@ -45,6 +45,17 @@ void TextToSpeechInterface::say(const QString &text)
     PimCommon::TextToSpeech::self()->say(text);
 }
 
+int TextToSpeechInterface::volume() const
+{
+    return PimCommon::TextToSpeech::self()->volume();
+}
+
+void TextToSpeechInterface::setVolume(int value)
+{
+    //TODO verify it
+    PimCommon::TextToSpeech::self()->setVolume(value/100);
+}
+
 void TextToSpeechInterface::stateChanged(TextToSpeechWidget::State state)
 {
     switch (state) {

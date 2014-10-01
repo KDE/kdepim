@@ -21,6 +21,8 @@
 #include <QHBoxLayout>
 #include <QToolButton>
 #include <QDebug>
+#include <QLabel>
+#include <QSlider>
 
 using namespace PimCommon;
 
@@ -32,6 +34,15 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     setLayout(hbox);
     //TODO add icons and tooltips
     hbox->addStretch(0);
+    QLabel *volume = new QLabel(i18n("Volume:"));
+    hbox->addWidget(volume);
+    mVolume = new QSlider;
+    mVolume->setOrientation(Qt::Horizontal);
+    mVolume->setObjectName(QStringLiteral("volumeslider"));
+    mVolume->setRange(0, 100);
+    connect(mVolume, &QSlider::valueChanged, this, &TextToSpeechWidget::slotVolumeChanged);
+    hbox->addWidget(mVolume);
+
     mStopButton = new QToolButton;
     mStopButton->setObjectName(QLatin1String("stopbutton"));
     mStopButton->setToolTip(i18n("Stop"));
@@ -48,6 +59,11 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 
 TextToSpeechWidget::~TextToSpeechWidget()
 {
+}
+
+void TextToSpeechWidget::slotVolumeChanged(int value)
+{
+    mTextToSpeechInterface->setVolume(value);
 }
 
 bool TextToSpeechWidget::isReady() const

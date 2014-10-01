@@ -46,6 +46,8 @@ public:
         BackendError
     };
 
+    int volume() const;
+
 public Q_SLOTS:
     void say(const QString &text);
     void stop();

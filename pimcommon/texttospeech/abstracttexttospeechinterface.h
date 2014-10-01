@@ -30,6 +30,9 @@ public:
 
     virtual bool isReady() const;
     virtual void say(const QString &text);
+    virtual int volume() const;
+    virtual void setVolume(int value);
+
 };
 }
 

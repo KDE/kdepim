@@ -22,6 +22,7 @@
 #include <QToolButton>
 #include <qtestmouse.h>
 #include <QSignalSpy>
+#include <QSlider>
 
 Q_DECLARE_METATYPE(PimCommon::TextToSpeechWidget::State)
 
@@ -51,6 +52,8 @@ void TextToSpeechWidgetTest::shouldHaveDefaultValue()
     QVERIFY(playPauseButton);
     QVERIFY(!playPauseButton->isEnabled());
 
+    QSlider *volume = qFindChild<QSlider *>(&textToSpeechWidget, QLatin1String("volumeslider"));
+    QVERIFY(volume);
 }
 
 void TextToSpeechWidgetTest::shouldChangeButtonEnableStateWhenChangeState()

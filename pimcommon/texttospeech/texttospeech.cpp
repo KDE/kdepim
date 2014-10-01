@@ -74,7 +74,6 @@ TextToSpeech *TextToSpeech::self()
 void TextToSpeech::slotStateChanged()
 {
 #if KDEPIM_HAVE_TEXTTOSPEECH
-    //TODO
     TextToSpeech::State state;
     switch (mTextToSpeech->state()) {
     case QTextToSpeech::Ready:
@@ -160,4 +159,14 @@ void TextToSpeech::setVolume(double volume)
     Q_UNUSED(volume);
 #endif
 }
+
+int TextToSpeech::volume() const
+{
+#if KDEPIM_HAVE_TEXTTOSPEECH
+    return PimCommon::PimCommonSettings::self()->volume();
+#else
+    return 0;
+#endif
+}
+
 }

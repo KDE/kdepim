@@ -35,3 +35,13 @@ void AbstractTextToSpeechInterface::say(const QString &text)
 {
     Q_UNUSED(text);
 }
+
+int AbstractTextToSpeechInterface::volume() const
+{
+    return 50;
+}
+
+void AbstractTextToSpeechInterface::setVolume(int value)
+{
+    Q_UNUSED(value);
+}

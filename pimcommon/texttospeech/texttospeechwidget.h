@@ -22,6 +22,7 @@
 #include "pimcommon_export.h"
 #include "pimcommon/texttospeech/texttospeech.h"
 class QToolButton;
+class QSlider;
 namespace PimCommon
 {
 class AbstractTextToSpeechInterface;
@@ -56,7 +57,8 @@ Q_SIGNALS:
 
 private slots:
     void slotStop();
-    void slotPlayPause();
+    void slotPlayPause();    
+    void slotVolumeChanged(int value);
 
 private:
     void updateButtonState();
@@ -64,6 +66,7 @@ private:
     QToolButton *mStopButton;
     QToolButton *mPlayPauseButton;
     AbstractTextToSpeechInterface *mTextToSpeechInterface;
+    QSlider *mVolume;
 };
 }
 #endif // TEXTTOSPEECHWIDGET_H
