@@ -1131,10 +1131,8 @@ void EnterDetailsPage::updateForm() {
             widgets.push_back( le );
 
         // don't connect twice:
-        disconnect( le, SIGNAL(textChanged(QString)),
-                    this, SLOT(slotUpdateResultLabel()) );
-        connect( le, SIGNAL(textChanged(QString)),
-                 this, SLOT(slotUpdateResultLabel()) );
+        disconnect(le, &QLineEdit::textChanged, this, &EnterDetailsPage::slotUpdateResultLabel);
+        connect(le, &QLineEdit::textChanged, this, &EnterDetailsPage::slotUpdateResultLabel);
     }
 
     // create lineList in visual order, so requirementsAreMet()

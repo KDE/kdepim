@@ -294,8 +294,7 @@ MainWindow::Private::Private( MainWindow * qq )
     setupActions();
 
     connect( &controller, SIGNAL(message(QString,int)),  q->statusBar(), SLOT(showMessage(QString,int)) );
-    connect( &controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)),
-             q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)) );
+    connect( &controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)), q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)) );
 
     q->createGUI( QLatin1String("kleopatra.rc") );
 

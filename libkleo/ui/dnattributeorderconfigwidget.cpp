@@ -106,10 +106,8 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
   prepare( d->currentLV );
   glay->addWidget( d->currentLV, row, 2 );
 
-  connect( d->availableLV, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
-           SLOT(slotAvailableSelectionChanged(QTreeWidgetItem*)) );
-  connect( d->currentLV, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
-           SLOT(slotCurrentOrderSelectionChanged(QTreeWidgetItem*)) );
+  connect(d->availableLV, &QTreeWidget::itemClicked, this, &DNAttributeOrderConfigWidget::slotAvailableSelectionChanged);
+  connect(d->currentLV, &QTreeWidget::itemClicked, this, &DNAttributeOrderConfigWidget::slotCurrentOrderSelectionChanged);
 
   d->placeHolderItem = new QTreeWidgetItem( d->availableLV );
   d->placeHolderItem->setText( 0, QLatin1String("_X_") );

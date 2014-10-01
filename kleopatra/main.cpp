@@ -251,11 +251,9 @@ int main( int argc, char** argv )
 
       qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer created";
 
-      QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
-                        &app, SLOT(openOrRaiseMainWindow()) );
+      QObject::connect(&server, &Kleo::UiServer::startKeyManagerRequested, &app, &KleopatraApplication::openOrRaiseMainWindow);
 
-      QObject::connect( &server, SIGNAL(startConfigDialogRequested()),
-                        &app, SLOT(openOrRaiseConfigDialog()) );
+      QObject::connect(&server, &Kleo::UiServer::startConfigDialogRequested, &app, &KleopatraApplication::openOrRaiseConfigDialog);
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( CreateChecksumsCommand );
@@ -324,10 +322,8 @@ int main( int argc, char** argv )
 
 #ifdef HAVE_USABLE_ASSUAN
       app.setIgnoreNewInstance( true );
-      QObject::disconnect( &server, SIGNAL(startKeyManagerRequested()),
-                           &app, SLOT(openOrRaiseMainWindow()) );
-      QObject::disconnect( &server, SIGNAL(startConfigDialogRequested()),
-                           &app, SLOT(openOrRaiseConfigDialog()) );
+      QObject::disconnect(&server, &Kleo::UiServer::startKeyManagerRequested, &app, &KleopatraApplication::openOrRaiseMainWindow);
+      QObject::disconnect(&server, &Kleo::UiServer::startConfigDialogRequested, &app, &KleopatraApplication::openOrRaiseConfigDialog);
 
       server.stop();
       server.waitForStopped();

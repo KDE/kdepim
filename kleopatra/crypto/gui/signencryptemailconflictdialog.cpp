@@ -637,8 +637,7 @@ private:
             connect(&buttonBox, &QDialogButtonBox::accepted, q, &SignEncryptEMailConflictDialog::accept);
             connect(&buttonBox, &QDialogButtonBox::rejected, q, &SignEncryptEMailConflictDialog::reject);
 
-            connect( &showAllRecipientsCB, SIGNAL(toggled(bool)),
-                     q, SLOT(slotShowAllRecipientsToggled(bool)) );
+            connect( &showAllRecipientsCB, SIGNAL(toggled(bool)), q, SLOT(slotShowAllRecipientsToggled(bool)) );
             connect( &pgpRB, SIGNAL(toggled(bool)),
                      q, SLOT(slotProtocolChanged()) );
             connect( &cmsRB, SIGNAL(toggled(bool)),

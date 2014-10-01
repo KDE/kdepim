@@ -377,12 +377,9 @@ TabWidget::Private::Private( TabWidget * qq )
     tabWidget.setTabBarHidden( true );
     tabWidget.setMovable( true );
 
-    connect( &tabWidget, SIGNAL(currentChanged(int)),
-             q, SLOT(currentIndexChanged(int)) );
-    connect( &tabWidget, SIGNAL(contextMenu(QPoint)),
-             q, SLOT(slotContextMenu(QPoint)) );
-    connect( &tabWidget, SIGNAL(contextMenu(QWidget*,QPoint)),
-             q, SLOT(slotContextMenu(QWidget*,QPoint)) );
+    connect( &tabWidget, SIGNAL(currentChanged(int)), q, SLOT(currentIndexChanged(int)) );
+    connect( &tabWidget, SIGNAL(contextMenu(QPoint)), q, SLOT(slotContextMenu(QPoint)) );
+    connect( &tabWidget, SIGNAL(contextMenu(QWidget*,QPoint)), q, SLOT(slotContextMenu(QWidget*,QPoint)) );
 
     const action_data actionDataNew = {
         "window_new_tab", i18n("New Tab"), i18n("Open a new tab"),
@@ -705,14 +702,10 @@ QTreeView * TabWidget::Private::addView( Page * page, Page * columnReference ) {
     page->setFlatModel( flatModel );
     page->setHierarchicalModel( hierarchicalModel );
 
-    connect( page, SIGNAL(titleChanged(QString)),
-             q, SLOT(slotPageTitleChanged(QString)) );
-    connect( page, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
-             q, SLOT(slotPageKeyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)) );
-    connect( page, SIGNAL(stringFilterChanged(QString)),
-             q, SLOT(slotPageStringFilterChanged(QString)) );
-    connect( page, SIGNAL(hierarchicalChanged(bool)),
-             q, SLOT(slotPageHierarchyChanged(bool)) );
+    connect( page, SIGNAL(titleChanged(QString)), q, SLOT(slotPageTitleChanged(QString)) );
+    connect( page, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)), q, SLOT(slotPageKeyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)) );
+    connect( page, SIGNAL(stringFilterChanged(QString)), q, SLOT(slotPageStringFilterChanged(QString)) );
+    connect( page, SIGNAL(hierarchicalChanged(bool)), q, SLOT(slotPageHierarchyChanged(bool)) );
 
     if ( columnReference ) {
         page->setColumnSizes( columnReference->columnSizes() );

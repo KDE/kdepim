@@ -78,8 +78,7 @@ ObjectsPage::Private::Private( ObjectsPage * qq )
     QVBoxLayout* const top = new QVBoxLayout( q );
     fileListWidget = new QListWidget;
     fileListWidget->setSelectionMode( QAbstractItemView::MultiSelection );
-    connect( fileListWidget, SIGNAL(itemSelectionChanged()), 
-             q, SLOT(listSelectionChanged()) );
+    connect( fileListWidget, SIGNAL(itemSelectionChanged()), q, SLOT(listSelectionChanged()) );
     top->addWidget( fileListWidget );
     QWidget* const buttonWidget = new QWidget;
     QHBoxLayout* const buttonLayout = new QHBoxLayout( buttonWidget );

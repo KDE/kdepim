@@ -99,10 +99,8 @@ SearchBar::Private::Private( SearchBar * qq )
     KDAB_SET_OBJECT_NAME( lineEdit );
     KDAB_SET_OBJECT_NAME( combo );
 
-    connect( lineEdit, SIGNAL(textChanged(QString)),
-             q, SIGNAL(stringFilterChanged(QString)) );
-    connect( combo, SIGNAL(currentIndexChanged(int)),
-             q, SLOT(slotKeyFilterChanged(int)) );
+    connect(lineEdit, &KLineEdit::textChanged, q, &SearchBar::stringFilterChanged);
+    connect( combo, SIGNAL(currentIndexChanged(int)), q, SLOT(slotKeyFilterChanged(int)) );
 }
 
 SearchBar::Private::~Private() {}

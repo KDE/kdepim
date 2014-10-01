@@ -56,10 +56,8 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags ) : QMainWindow( 
     QWidget* mainWidget = new QWidget( this );
     m_ui.setupUi( mainWidget );
     setCentralWidget( mainWidget );
-    connect( m_ui.treeWidget, SIGNAL(itemSelectionChanged()),
-             SLOT(treeWidgetItemSelectionChanged()) );
-    connect( m_ui.treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
-             SLOT(treeWidgetItemChanged(QTreeWidgetItem*,int)) );
+    connect(m_ui.treeWidget, &QTreeWidget::itemSelectionChanged, this, &MainWindow::treeWidgetItemSelectionChanged);
+    connect(m_ui.treeWidget, &QTreeWidget::itemChanged, this, &MainWindow::treeWidgetItemChanged);
     connect(m_ui.readOnlyBox, &QCheckBox::stateChanged, this, &MainWindow::readOnlyStateChanged);
     connect(m_ui.valueLE, &QLineEdit::textChanged, this, &MainWindow::optionValueChanged);
     connect(m_ui.useCustomRB, &QRadioButton::toggled, m_ui.valueLE, &QLineEdit::setEnabled);

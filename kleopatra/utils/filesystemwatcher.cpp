@@ -195,10 +195,8 @@ void FileSystemWatcher::Private::handleTimer()
 void FileSystemWatcher::Private::connectWatcher() {
     if ( !m_watcher )
         return;
-    connect( m_watcher, SIGNAL(directoryChanged(QString)),
-             q, SLOT(onDirectoryChanged(QString)) );
-    connect( m_watcher, SIGNAL(fileChanged(QString)),
-             q, SLOT(onFileChanged(QString)) );
+    connect( m_watcher, SIGNAL(directoryChanged(QString)), q, SLOT(onDirectoryChanged(QString)) );
+    connect( m_watcher, SIGNAL(fileChanged(QString)), q, SLOT(onFileChanged(QString)) );
 }
 
 FileSystemWatcher::FileSystemWatcher( QObject* p )

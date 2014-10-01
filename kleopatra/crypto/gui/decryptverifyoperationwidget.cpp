@@ -141,16 +141,11 @@ DecryptVerifyOperationWidget::Private::UI::UI( DecryptVerifyOperationWidget * q 
     hlay.addWidget( &archiveCB );
     hlay.addWidget( &archivesCB, 1 );
 
-    connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
-             &signedDataLB, SLOT(setEnabled(bool)) );
-    connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
-             &signedDataFileNameLB, SLOT(setEnabled(bool)) );
-    connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
-             &signedDataFileNameRQ, SLOT(setEnabled(bool)) );
-    connect( &verifyDetachedCB, SIGNAL(toggled(bool)),
-             q, SLOT(enableDisableWidgets()) );
-    connect( &archiveCB, SIGNAL(toggled(bool)),
-             q, SLOT(enableDisableWidgets()) );
+    connect(&verifyDetachedCB, &QCheckBox::toggled, &signedDataLB, &QLabel::setEnabled);
+    connect(&verifyDetachedCB, &QCheckBox::toggled, &signedDataFileNameLB, &QLabel::setEnabled);
+    connect(&verifyDetachedCB, &QCheckBox::toggled, &signedDataFileNameRQ, &FileNameRequester::setEnabled);
+    connect( &verifyDetachedCB, SIGNAL(toggled(bool)), q, SLOT(enableDisableWidgets()) );
+    connect( &archiveCB, SIGNAL(toggled(bool)), q, SLOT(enableDisableWidgets()) );
 }
 
 

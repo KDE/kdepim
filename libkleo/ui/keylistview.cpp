@@ -88,7 +88,7 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
 
   d->updateTimer = new QTimer( this );
   d->updateTimer->setSingleShot( true );
-  connect( d->updateTimer, SIGNAL(timeout()), SLOT(slotUpdateTimeout()) );
+  connect(d->updateTimer, &QTimer::timeout, this, &KeyListView::slotUpdateTimeout);
   if ( !columnStrategy ) {
     qCWarning(KLEO_UI_LOG) <<"Kleo::KeyListView: need a column strategy to work with!";
     return;

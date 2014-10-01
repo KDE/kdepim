@@ -76,10 +76,8 @@ CRLView::CRLView( QWidget* parent )
   hbLayout->addWidget( _closeButton );
 
   // connections:
-  connect( _updateButton, SIGNAL(clicked()),
-           this, SLOT(slotUpdateView()) );
-  connect( _closeButton, SIGNAL(clicked()),
-           this, SLOT(close()) );
+  connect(_updateButton, &QPushButton::clicked, this, &CRLView::slotUpdateView);
+  connect(_closeButton, &QPushButton::clicked, this, &CRLView::close);
 
   resize( _textView->fontMetrics().width( 'M' ) * 80,
           _textView->fontMetrics().lineSpacing() * 25 );
@@ -107,8 +105,7 @@ void CRLView::slotUpdateView()
     _process = new KProcess();
     *_process << "gpgsm" << "--call-dirmngr" << "listcrls";
     connect(_process, &KProcess::readyReadStandardOutput, this, &CRLView::slotReadStdout);
-    connect( _process, SIGNAL(finished(int,QProcess::ExitStatus)),
-             this, SLOT(slotProcessExited(int,QProcess::ExitStatus)));
+    connect(_process, &KProcess::finished, this, &CRLView::slotProcessExited);
   }
   if( _process->state() == QProcess::Running ) _process->kill();
   _process->setOutputChannelMode(KProcess::OnlyStdoutChannel);

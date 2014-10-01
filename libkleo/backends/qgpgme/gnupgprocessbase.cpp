@@ -117,7 +117,7 @@ int Kleo::GnuPGProcessBase::commSetupDoneP() {
   if ( d->useStatusFD ) {
     ::close( d->statusFD[1] ); // close the input end of the pipe, we're the reader
     d->statnot = new QSocketNotifier( d->statusFD[0], QSocketNotifier::Read, this );
-    connect( d->statnot, SIGNAL(activated(int)), SLOT(slotChildStatus(int)) );
+    connect(d->statnot, &QSocketNotifier::activated, this, &GnuPGProcessBase::slotChildStatus);
   }
   return K3Process::commSetupDoneP();
 }

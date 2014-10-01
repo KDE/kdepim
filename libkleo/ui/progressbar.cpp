@@ -44,7 +44,7 @@ Kleo::ProgressBar::ProgressBar( QWidget * parent, Qt::WindowFlags f )
 {
   Q_UNUSED(f)
   mBusyTimer = new QTimer( this );
-  connect( mBusyTimer, SIGNAL(timeout()), SLOT(slotBusyTimerTick()) );
+  connect(mBusyTimer, &QTimer::timeout, this, &ProgressBar::slotBusyTimerTick);
   fixup( true );
 }
 

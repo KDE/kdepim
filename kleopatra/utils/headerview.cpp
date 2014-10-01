@@ -97,10 +97,8 @@ public:
           modes(),
           sizes()
     {
-        connect( q, SIGNAL(sectionCountChanged(int,int)),
-                 q, SLOT(_klhv_slotSectionCountChanged(int,int)) );
-        connect( q, SIGNAL(sectionResized(int,int,int)),
-                 q, SLOT(_klhv_slotSectionResized(int,int,int)) );
+        connect( q, SIGNAL(sectionCountChanged(int,int)), q, SLOT(_klhv_slotSectionCountChanged(int,int)) );
+        connect( q, SIGNAL(sectionResized(int,int,int)), q, SLOT(_klhv_slotSectionResized(int,int,int)) );
     }
 
     void _klhv_slotSectionCountChanged( int oldCount, int newCount ) {
