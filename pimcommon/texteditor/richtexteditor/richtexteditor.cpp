@@ -166,7 +166,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
             }
             popup->addSeparator();
         }
-        if (PimCommon::TextToSpeech::self()->isReady()) {
+        if (/*PimCommon::TextToSpeech::self()->isReady()*/1) {
             QAction *speakAction = popup->addAction(i18n("Speak Text"));
             speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
             speakAction->setEnabled(!emptyDocument);

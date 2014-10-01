@@ -38,6 +38,7 @@
 #include <QScrollBar>
 #include <QApplication>
 #include <QClipboard>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -123,7 +124,7 @@ void PlainTextEditor::contextMenuEvent(QContextMenuEvent *event)
             popup->addSeparator();
         }
         if (d->supportFeatures & TextToSpeech) {
-            if (PimCommon::TextToSpeech::self()->isReady()) {
+            if (/*PimCommon::TextToSpeech::self()->isReady()*/1) {
                 QAction *speakAction = popup->addAction(i18n("Speak Text"));
                 speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
                 speakAction->setEnabled(!emptyDocument);
@@ -151,6 +152,7 @@ void PlainTextEditor::slotSpeakText()
     } else {
         text = toPlainText();
     }
+    qDebug()<<" PimCommon::TextToSpeech::self()->isReady() :"<<PimCommon::TextToSpeech::self()->isReady();
     Q_EMIT say(text);
 }
 
