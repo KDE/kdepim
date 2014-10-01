@@ -1535,11 +1535,13 @@ void ViewerPrivate::createWidgets() {
     mViewer->setObjectName( QLatin1String("mViewer") );
 
     mCreateTodo = new MessageViewer::TodoEdit(readerBox);
+    readerBoxVBoxLayout->addWidget(mCreateTodo);
     connect(mCreateTodo, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)), this, SLOT(slotCreateTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     mCreateTodo->setObjectName(QLatin1String("createtodowidget"));
     mCreateTodo->hide();
 
     mCreateEvent = new MessageViewer::EventEdit(readerBox);
+    readerBoxVBoxLayout->addWidget(mCreateEvent);
     connect(mCreateEvent, SIGNAL(createEvent(KCalCore::Event::Ptr,Akonadi::Collection)), this, SLOT(slotCreateEvent(KCalCore::Event::Ptr,Akonadi::Collection)));
     mCreateEvent->setObjectName(QLatin1String("createeventwidget"));
     mCreateEvent->hide();
