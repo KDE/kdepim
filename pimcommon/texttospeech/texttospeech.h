@@ -39,9 +39,12 @@ public:
 
     bool isReady() const;
 
-Q_SIGNALS:
-    //TODO rename it.
-    void emitSay();
+    enum State {
+        Ready = 0,
+        Speaking,
+        Paused,
+        BackendError
+    };
 
 public Q_SLOTS:
     void say(const QString &text);
@@ -53,8 +56,11 @@ public Q_SLOTS:
     void setPitch(double pitch);
     void setVolume(double volume);
 
+Q_SIGNALS:
+    void stateChanged(TextToSpeech::State);
+
 private Q_SLOTS:
-    void slotNextSay();
+    void slotStateChanged();
 
 private:
     explicit TextToSpeech(QObject *parent = 0);

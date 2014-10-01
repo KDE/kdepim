@@ -30,7 +30,8 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
-    //TODO add icons
+    //TODO add icons and tooltips
+    hbox->addStretch(0);
     mStopButton = new QToolButton;
     mStopButton->setObjectName(QLatin1String("stopbutton"));
     connect(mStopButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotStop);
@@ -87,6 +88,13 @@ void TextToSpeechWidget::slotStop()
 TextToSpeechWidget::State TextToSpeechWidget::state() const
 {
     return mState;
+}
+
+void TextToSpeechWidget::slotStateChanged(PimCommon::TextToSpeech::State state)
+{
+    if (state == PimCommon::TextToSpeech::Ready) {
+        hide();
+    }
 }
 
 void TextToSpeechWidget::setState(TextToSpeechWidget::State state)

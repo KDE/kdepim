@@ -32,8 +32,8 @@ public:
     explicit TextToSpeechInterface(TextToSpeechWidget *textToSpeechWidget, QObject *parent = 0);
     ~TextToSpeechInterface();
 
-    bool isReady() const;
-    void say(const QString &text);
+    bool isReady() const Q_DECL_OVERRIDE;
+    void say(const QString &text) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void stateChanged(PimCommon::TextToSpeechWidget::State state);

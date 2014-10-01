@@ -20,6 +20,7 @@
 
 #include <QWidget>
 #include "pimcommon_export.h"
+#include "pimcommon/texttospeech/texttospeech.h"
 class QToolButton;
 namespace PimCommon
 {
@@ -47,6 +48,8 @@ public:
 
 public Q_SLOTS:
     void say(const QString &text);
+
+    void slotStateChanged(PimCommon::TextToSpeech::State state);
 
 Q_SIGNALS:
     void stateChanged(PimCommon::TextToSpeechWidget::State state);

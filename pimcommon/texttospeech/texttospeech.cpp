@@ -49,7 +49,6 @@ TextToSpeech::TextToSpeech(QObject *parent)
 #endif
 {
     init();
-    connect(this, &TextToSpeech::emitSay, this, &TextToSpeech::slotNextSay);
 }
 
 TextToSpeech::~TextToSpeech()
@@ -63,6 +62,7 @@ void TextToSpeech::init()
     mTextToSpeech->setRate(PimCommon::PimCommonSettings::self()->rate());
     mTextToSpeech->setPitch(PimCommon::PimCommonSettings::self()->pitch());
     mTextToSpeech->setVolume(PimCommon::PimCommonSettings::self()->volume());
+    connect(mTextToSpeech, &QTextToSpeech::stateChanged, this, &TextToSpeech::slotStateChanged);
 #endif
 }
 
@@ -71,9 +71,27 @@ TextToSpeech *TextToSpeech::self()
     return sInstance->textToSpeech; //will create it
 }
 
-void TextToSpeech::slotNextSay()
+void TextToSpeech::slotStateChanged()
 {
+#if KDEPIM_HAVE_TEXTTOSPEECH
     //TODO
+    TextToSpeech::State state;
+    switch (mTextToSpeech->state()) {
+    case QTextToSpeech::Ready:
+        state = TextToSpeech::Ready;
+        break;
+    case QTextToSpeech::Speaking:
+        state = TextToSpeech::Speaking;
+        break;
+    case QTextToSpeech::Paused:
+        state = TextToSpeech::Paused;
+        break;
+    case QTextToSpeech::BackendError:
+        state = TextToSpeech::BackendError;
+        break;
+    }
+    Q_EMIT stateChanged(state);
+#endif
 }
 
 bool TextToSpeech::isReady() const
@@ -89,7 +107,6 @@ void TextToSpeech::say(const QString &text)
 {
 #if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->say(text);
-    Q_EMIT emitSay();
 #else
     Q_UNUSED(text);
 #endif
