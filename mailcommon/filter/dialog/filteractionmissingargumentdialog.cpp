@@ -78,10 +78,8 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
             item->setData(FilterActionMissingCollectionDialog::IdentifyCollection, col.id());
             mListwidget->addItem(item);
         }
-        connect(mListwidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-                SLOT(slotCurrentItemChanged()));
-        connect(mListwidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-                SLOT(slotDoubleItemClicked(QListWidgetItem*)));
+        connect(mListwidget, &QListWidget::currentItemChanged, this, &FilterActionMissingCollectionDialog::slotCurrentItemChanged);
+        connect(mListwidget, &QListWidget::itemDoubleClicked, this, &FilterActionMissingCollectionDialog::slotDoubleItemClicked);
 
     }
 
@@ -95,8 +93,7 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
                             filtername));
     lay->addWidget(label);
     mFolderRequester = new MailCommon::FolderRequester(this);
-    connect(mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)),
-            this, SLOT(slotFolderChanged(Akonadi::Collection)));
+    connect(mFolderRequester, &MailCommon::FolderRequester::folderChanged, this, &FilterActionMissingCollectionDialog::slotFolderChanged);
     lay->addWidget(mFolderRequester);
     mOkButton->setEnabled(false);
     readConfig();
@@ -513,8 +510,7 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog(
     }
 
     connect(user1Button, &QPushButton::clicked, this, &FilterActionMissingTagDialog::slotAddTag);
-    connect(mTagList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-            this, SLOT(accept()));
+    connect(mTagList, &QListWidget::itemDoubleClicked, this, &FilterActionMissingTagDialog::accept);
     lay->addWidget(mTagList);
     readConfig();
 }

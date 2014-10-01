@@ -44,8 +44,7 @@ QWidget *FilterActionWithTest::createParamWidget(QWidget *parent) const
     SoundTestWidget *soundWidget = new SoundTestWidget(parent);
     soundWidget->setUrl(mParameter);
 
-    connect(soundWidget, SIGNAL(textChanged(QString)),
-            this, SIGNAL(filterActionModified()));
+    connect(soundWidget, &SoundTestWidget::textChanged, this, &FilterActionWithTest::filterActionModified);
 
     return soundWidget;
 }

@@ -45,8 +45,7 @@ QWidget *FilterActionWithFolder::createParamWidget(QWidget *parent) const
     requester->setShowOutbox(false);
     setParamWidgetValue(requester);
 
-    connect(requester, SIGNAL(folderChanged(Akonadi::Collection)),
-            this, SIGNAL(filterActionModified()));
+    connect(requester, &FolderRequester::folderChanged, this, &FilterActionWithFolder::filterActionModified);
 
     return requester;
 }

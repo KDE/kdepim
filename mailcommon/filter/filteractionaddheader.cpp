@@ -98,12 +98,10 @@ QWidget *FilterActionAddHeader::createParamWidget(QWidget *parent) const
 
     setParamWidgetValue(widget);
 
-    connect(comboBox, SIGNAL(currentIndexChanged(int)),
-            this, SIGNAL(filterActionModified()));
+    connect(comboBox, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::currentIndexChanged), this, &FilterActionAddHeader::filterActionModified);
     connect(comboBox->lineEdit(), SIGNAL(textChanged(QString)),
             this, SIGNAL(filterActionModified()));
-    connect(lineEdit, SIGNAL(textChanged(QString)),
-            this, SIGNAL(filterActionModified()));
+    connect(lineEdit, &QLineEdit::textChanged, this, &FilterActionAddHeader::filterActionModified);
 
     return widget;
 }

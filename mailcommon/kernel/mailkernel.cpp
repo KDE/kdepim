@@ -169,8 +169,7 @@ void Kernel::findCreateDefaultCollection(Akonadi::SpecialMailCollections::Type t
         Akonadi::SpecialMailCollectionsRequestJob *job =
             new Akonadi::SpecialMailCollectionsRequestJob(this);
 
-        connect(job, SIGNAL(result(KJob*)),
-                this, SLOT(createDefaultCollectionDone(KJob*)));
+        connect(job, &Akonadi::SpecialMailCollectionsRequestJob::result, this, &Kernel::createDefaultCollectionDone);
 
         job->requestDefaultCollection(type);
     }
@@ -197,14 +196,12 @@ void Kernel::createDefaultCollectionDone(KJob *job)
     Akonadi::SpecialMailCollections::self()->verifyI18nDefaultCollection(Akonadi::SpecialMailCollections::Trash);
     Akonadi::SpecialMailCollections::self()->verifyI18nDefaultCollection(Akonadi::SpecialMailCollections::Templates);
 
-    connect(Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
-            this, SLOT(slotDefaultCollectionsChanged()), Qt::UniqueConnection);
+    connect(Akonadi::SpecialMailCollections::self(), &Akonadi::SpecialMailCollections::defaultCollectionsChanged, this, &Kernel::slotDefaultCollectionsChanged, Qt::UniqueConnection);
 }
 
 void Kernel::slotDefaultCollectionsChanged()
 {
-    disconnect(Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
-               this, SLOT(slotDefaultCollectionsChanged()));
+    disconnect(Akonadi::SpecialMailCollections::self(), &Akonadi::SpecialMailCollections::defaultCollectionsChanged, this, &Kernel::slotDefaultCollectionsChanged);
     initFolders();
 }
 

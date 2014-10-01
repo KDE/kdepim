@@ -73,10 +73,8 @@ void RegExpLineEdit::initWidget(const QString &str)
     setFocusProxy(mLineEdit);
     hlay->addWidget(mLineEdit);
 
-    connect(mLineEdit, SIGNAL(textChanged(QString)),
-            this, SIGNAL(textChanged(QString)));
-    connect(mLineEdit, SIGNAL(returnPressed()),
-            this, SIGNAL(returnPressed()));
+    connect(mLineEdit, &QLineEdit::textChanged, this, &RegExpLineEdit::textChanged);
+    connect(mLineEdit, &QLineEdit::returnPressed, this, &RegExpLineEdit::returnPressed);
 
     if (!KServiceTypeTrader::self()->query(QLatin1String("KRegExpEditor/KRegExpEditor")).isEmpty()) {
         mRegExpEditButton = new QPushButton(i18n("Edit..."), this);
@@ -85,8 +83,7 @@ void RegExpLineEdit::initWidget(const QString &str)
                                          QSizePolicy::Fixed);
         hlay->addWidget(mRegExpEditButton);
 
-        connect(mRegExpEditButton, SIGNAL(clicked()),
-                this, SLOT(slotEditRegExp()));
+        connect(mRegExpEditButton, &QPushButton::clicked, this, &RegExpLineEdit::slotEditRegExp);
     }
 }
 

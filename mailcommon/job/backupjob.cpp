@@ -243,8 +243,7 @@ void BackupJob::archiveNextMessage()
 
     mCurrentJob = new Akonadi::ItemFetchJob(item);
     mCurrentJob->fetchScope().fetchFullPayload(true);
-    connect(mCurrentJob, SIGNAL(result(KJob*)),
-            this, SLOT(itemFetchJobResult(KJob*)));
+    connect(mCurrentJob, &Akonadi::ItemFetchJob::result, this, &BackupJob::itemFetchJobResult);
 }
 
 void BackupJob::processMessage(const Akonadi::Item &item)
@@ -444,8 +443,7 @@ void BackupJob::start()
                         QString(),
                         true);
     mProgressItem->setUsesBusyIndicator(true);
-    connect(mProgressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
-            this, SLOT(cancelJob()));
+    connect(mProgressItem.data(), &KPIM::ProgressItem::progressItemCanceled, this, &BackupJob::cancelJob);
 
     archiveNextFolder();
 }

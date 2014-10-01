@@ -124,10 +124,8 @@ QWidget *FilterActionForward::createParamWidget(QWidget *parent) const
     templateCombo->setToolTip(i18n("The template used when forwarding"));
     templateCombo->setWhatsThis(i18n("Set the forwarding template that will be used with this filter."));
 
-    connect(templateCombo, SIGNAL(currentIndexChanged(int)),
-            this, SIGNAL(filterActionModified()));
-    connect(addressRequester, SIGNAL(textChanged()),
-            this, SIGNAL(filterActionModified()));
+    connect(templateCombo, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::currentIndexChanged), this, &FilterActionForward::filterActionModified);
+    connect(addressRequester, &MessageCore::EmailAddressRequester::textChanged, this, &FilterActionForward::filterActionModified);
 
     return addressAndTemplate;
 }

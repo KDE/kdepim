@@ -127,15 +127,12 @@ FolderSelectionDialog::FolderSelectionDialog(QWidget *parent, SelectionFolderOpt
 
     }
 
-    connect(d->folderTreeWidget->selectionModel(),
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+    connect(d->folderTreeWidget->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(slotSelectionChanged()));
-    connect(d->folderTreeWidget->folderTreeWidgetProxyModel(),
-            SIGNAL(rowsInserted(QModelIndex,int,int)),
+    connect(d->folderTreeWidget->folderTreeWidgetProxyModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SLOT(rowsInserted(QModelIndex,int,int)));
 
-    connect(d->folderTreeWidget->folderTreeView(),
-            SIGNAL(doubleClicked(QModelIndex)),
+    connect(d->folderTreeWidget->folderTreeView(), SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(slotDoubleClick(QModelIndex)));
 
     d->mUseGlobalSettings = !(options & NotUseGlobalSettings);

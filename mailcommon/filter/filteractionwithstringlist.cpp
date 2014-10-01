@@ -35,8 +35,7 @@ QWidget *FilterActionWithStringList::createParamWidget(QWidget *parent) const
     comboBox->addItems(mParameterList);
     setParamWidgetValue(comboBox);
 
-    connect(comboBox, SIGNAL(currentIndexChanged(int)),
-            this, SIGNAL(filterActionModified()));
+    connect(comboBox, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::currentIndexChanged), this, &FilterActionWithStringList::filterActionModified);
 
     return comboBox;
 }

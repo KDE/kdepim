@@ -168,8 +168,7 @@ FilterActionWidget::FilterActionWidget(QWidget *parent)
     connect(d->mComboBox, SIGNAL(activated(int)),
             this, SLOT(slotFilterTypeChanged(int)));
 
-    connect(d->mComboBox, SIGNAL(activated(int)),
-            this, SIGNAL(filterModified()));
+    connect(d->mComboBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &FilterActionWidget::filterModified);
 
     connect(d->mAdd, SIGNAL(clicked()),
             this, SLOT(slotAddWidget()));
@@ -337,8 +336,7 @@ void FilterActionWidgetLister::setActionList(QList<FilterAction *> *list)
             (aIt != aEnd && wIt != wEnd); ++aIt, ++wIt) {
         FilterActionWidget *w = qobject_cast<FilterActionWidget *>(*wIt);
         w->setAction((*aIt));
-        connect(w, SIGNAL(filterModified()),
-                this, SIGNAL(filterModified()), Qt::UniqueConnection);
+        connect(w, &FilterActionWidget::filterModified, this, &FilterActionWidgetLister::filterModified, Qt::UniqueConnection);
         reconnectWidget(w);
     }
     widgets().first()->blockSignals(false);
@@ -401,11 +399,9 @@ void FilterActionWidgetLister::reset()
 
 void FilterActionWidgetLister::reconnectWidget(FilterActionWidget *w)
 {
-    connect(w, SIGNAL(addWidget(QWidget*)),
-            this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection);
+    connect(w, &FilterActionWidget::addWidget, this, &FilterActionWidgetLister::slotAddWidget, Qt::UniqueConnection);
 
-    connect(w, SIGNAL(removeWidget(QWidget*)),
-            this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection);
+    connect(w, &FilterActionWidget::removeWidget, this, &FilterActionWidgetLister::slotRemoveWidget, Qt::UniqueConnection);
 }
 
 QWidget *FilterActionWidgetLister::createWidget(QWidget *parent)
