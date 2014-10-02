@@ -106,7 +106,7 @@ KPrefsWidBool::KPrefsWidBool(KConfigSkeleton::ItemBool *item, QWidget *parent)
     : mItem(item)
 {
     mCheck = new QCheckBox(mItem->label(), parent);
-    connect(mCheck, SIGNAL(clicked()), SIGNAL(changed()));
+    connect(mCheck, &QCheckBox::clicked, this, &KPrefsWidBool::changed);
     QString toolTip = mItem->toolTip();
     if (!toolTip.isEmpty()) {
         mCheck->setToolTip(toolTip);
@@ -150,7 +150,7 @@ KPrefsWidInt::KPrefsWidInt(KConfigSkeleton::ItemInt *item, QWidget *parent)
     if (!mItem->maxValue().isNull()) {
         mSpin->setMaximum(mItem->maxValue().toInt());
     }
-    connect(mSpin, SIGNAL(valueChanged(int)), SIGNAL(changed()));
+    connect(mSpin, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &KPrefsWidInt::changed);
     mLabel->setBuddy(mSpin);
     QString toolTip = mItem->toolTip();
     if (!toolTip.isEmpty()) {
@@ -196,7 +196,7 @@ KPrefsWidColor::KPrefsWidColor(KConfigSkeleton::ItemColor *item, QWidget *parent
     : mItem(item)
 {
     mButton = new KColorButton(parent);
-    connect(mButton, SIGNAL(changed(QColor)), SIGNAL(changed()));
+    connect(mButton, &KColorButton::changed, this, &KPrefsWidColor::changed);
     mLabel = new QLabel(mItem->label() + QLatin1Char(':'), parent);
     mLabel->setBuddy(mButton);
     QString toolTip = mItem->toolTip();
@@ -303,8 +303,8 @@ KPrefsWidTime::KPrefsWidTime(KConfigSkeleton::ItemDateTime *item, QWidget *paren
     mLabel = new QLabel(mItem->label() + QLatin1Char(':'), parent);
     mTimeEdit = new KTimeComboBox(parent);
     mLabel->setBuddy(mTimeEdit);
-    connect(mTimeEdit, SIGNAL(timeEdited(QTime)), SIGNAL(changed()));
-    connect(mTimeEdit, SIGNAL(timeEntered(QTime)), SIGNAL(changed()));
+    connect(mTimeEdit, &KTimeComboBox::timeEdited, this, &KPrefsWidTime::changed);
+    connect(mTimeEdit, &KTimeComboBox::timeEntered, this, &KPrefsWidTime::changed);
     QString toolTip = mItem->toolTip();
     if (!toolTip.isEmpty()) {
         mTimeEdit->setToolTip(toolTip);
@@ -353,7 +353,7 @@ KPrefsWidDuration::KPrefsWidDuration(KConfigSkeleton::ItemDateTime *item,
     }
     mTimeEdit->setMinimumTime(QTime(0, 1));     // [1 min]
     mTimeEdit->setMaximumTime(QTime(24, 0));     // [24 hr]
-    connect(mTimeEdit, SIGNAL(timeChanged(QTime)), SIGNAL(changed()));
+    connect(mTimeEdit, &QTimeEdit::timeChanged, this, &KPrefsWidDuration::changed);
     QString toolTip = mItem->toolTip();
     if (!toolTip.isEmpty()) {
         mTimeEdit->setToolTip(toolTip);
@@ -392,7 +392,7 @@ KPrefsWidDate::KPrefsWidDate(KConfigSkeleton::ItemDateTime *item, QWidget *paren
     mLabel = new QLabel(mItem->label() + QLatin1Char(':'), parent);
     mDateEdit = new KDateComboBox(parent);
     mLabel->setBuddy(mDateEdit);
-    connect(mDateEdit, SIGNAL(dateEdited(QDate)), SIGNAL(changed()));
+    connect(mDateEdit, &KDateComboBox::dateEdited, this, &KPrefsWidDate::changed);
     QString toolTip = mItem->toolTip();
     if (!toolTip.isEmpty()) {
         mDateEdit->setToolTip(toolTip);
@@ -438,7 +438,7 @@ KPrefsWidRadios::KPrefsWidRadios(KConfigSkeleton::ItemEnum *item, QWidget *paren
     mBox = new QGroupBox(mItem->label(), parent);
     new QVBoxLayout(mBox);
     mGroup = new QButtonGroup(parent);
-    connect(mGroup, SIGNAL(buttonClicked(int)), SIGNAL(changed()));
+    connect(mGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &KPrefsWidRadios::changed);
 }
 
 KPrefsWidRadios::~KPrefsWidRadios()
@@ -493,7 +493,7 @@ KPrefsWidCombo::KPrefsWidCombo(KConfigSkeleton::ItemEnum *item, QWidget *parent)
     new QLabel(mItem->label(), hbox);
     mCombo = new KComboBox(hbox);
     hboxHBoxLayout->addWidget(mCombo);
-    connect(mCombo, SIGNAL(activated(int)), SIGNAL(changed()));
+    connect(mCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &KPrefsWidCombo::changed);
 }
 
 KPrefsWidCombo::~KPrefsWidCombo()
@@ -529,7 +529,7 @@ KPrefsWidString::KPrefsWidString(KConfigSkeleton::ItemString *item, QWidget *par
     mLabel = new QLabel(mItem->label() + QLatin1Char(':'), parent);
     mEdit = new KLineEdit(parent);
     mLabel->setBuddy(mEdit);
-    connect(mEdit, SIGNAL(textChanged(QString)), SIGNAL(changed()));
+    connect(mEdit, &KLineEdit::textChanged, this, &KPrefsWidString::changed);
     mEdit->setEchoMode(echomode);
     QString toolTip = mItem->toolTip();
     if (!toolTip.isEmpty()) {
@@ -582,7 +582,7 @@ KPrefsWidPath::KPrefsWidPath(KConfigSkeleton::ItemPath *item, QWidget *parent,
     mLabel->setBuddy(mURLRequester);
     mURLRequester->setMode(mode);
     mURLRequester->setFilter(filter);
-    connect(mURLRequester, SIGNAL(textChanged(QString)), SIGNAL(changed()));
+    connect(mURLRequester, &KUrlRequester::textChanged, this, &KPrefsWidPath::changed);
     QString toolTip = mItem->toolTip();
     if (!toolTip.isEmpty()) {
         mURLRequester->setToolTip(toolTip);
@@ -788,10 +788,10 @@ KPrefsDialog::KPrefsDialog(KConfigSkeleton *prefs, QWidget *parent, bool modal)
     setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
     button(QDialogButtonBox::Ok)->setDefault(true);
     setModal(modal);
-    connect(this, SIGNAL(okClicked()), SLOT(slotOk()));
-    connect(this, SIGNAL(applyClicked()), SLOT(slotApply()));
-    connect(this, SIGNAL(defaultClicked()), SLOT(slotDefault()));
-    connect(this, SIGNAL(cancelClicked()), SLOT(reject()));
+    connect(button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &KPrefsDialog::slotOk);
+    connect(button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &KPrefsDialog::slotApply);
+    connect(button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &KPrefsDialog::slotDefault);
+    connect(button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &KPrefsDialog::reject);
 }
 
 KPrefsDialog::~KPrefsDialog()
@@ -909,7 +909,7 @@ KPrefsModule::KPrefsModule(KConfigSkeleton *prefs,
 void KPrefsModule::addWid(KPrefsWid *wid)
 {
     KPrefsWidManager::addWid(wid);
-    connect(wid, SIGNAL(changed()), SLOT(slotWidChanged()));
+    connect(wid, &KPrefsWid::changed, this, &KPrefsModule::slotWidChanged);
 }
 
 void KPrefsModule::slotWidChanged()

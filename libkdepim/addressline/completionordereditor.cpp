@@ -249,10 +249,8 @@ CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch
     upDownBoxVBoxLayout->addWidget(spacer);
     upDownBoxVBoxLayout->setStretchFactor(spacer, 100);
 
-    connect(mListView, SIGNAL(itemSelectionChanged()),
-            SLOT(slotSelectionChanged()));
-    connect(mListView, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-            SLOT(slotSelectionChanged()));
+    connect(mListView, &QTreeWidget::itemSelectionChanged, this, &CompletionOrderEditor::slotSelectionChanged);
+    connect(mListView, &QTreeWidget::currentItemChanged, this, &CompletionOrderEditor::slotSelectionChanged);
     connect(mUpButton, &QPushButton::clicked, this, &CompletionOrderEditor::slotMoveUp);
     connect(mDownButton, &QPushButton::clicked, this, &CompletionOrderEditor::slotMoveDown);
 
@@ -322,8 +320,7 @@ void CompletionOrderEditor::loadCompletionItems()
 
     mCollectionModel = mimeTypeProxy;
 
-    connect(mimeTypeProxy, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(rowsInserted(QModelIndex,int,int)));
+    connect(mimeTypeProxy, &Akonadi::CollectionFilterProxyModel::rowsInserted, this, &CompletionOrderEditor::rowsInserted);
 
     for (int row = 0; row < mCollectionModel->rowCount(); ++row) {
         addCompletionItemForIndex(mCollectionModel->index(row, 0));

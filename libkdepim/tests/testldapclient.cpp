@@ -124,17 +124,13 @@ void TestLDAPClient::testIntevation()
     QString filter = QLatin1String("&(|(objectclass=person)(objectclass=groupofnames)(mail=*))"
                                    "(|(cn=*Ägypten MDK*)(sn=*Ägypten MDK*))");
 
-    connect(mClient, SIGNAL(result(KLDAP::LdapClient,KLDAP::LdapObject)),
-            this, SLOT(slotLDAPResult(KLDAP::LdapClient,KLDAP::LdapObject)));
-    connect(mClient, SIGNAL(done()),
-            this, SLOT(slotLDAPDone()));
-    connect(mClient, SIGNAL(error(QString)),
-            this, SLOT(slotLDAPError(QString)));
+    connect(mClient, &KLDAP::LdapClient::result, this, &TestLDAPClient::slotLDAPResult);
+    connect(mClient, &KLDAP::LdapClient::done, this, &TestLDAPClient::slotLDAPDone);
+    connect(mClient, &KLDAP::LdapClient::error, this, &TestLDAPClient::slotLDAPError);
     mClient->startQuery(filter);
 
     QEventLoop eventLoop;
-    connect(this, SIGNAL(leaveModality()),
-            &eventLoop, SLOT(quit()));
+    connect(this, &TestLDAPClient::leaveModality, &eventLoop, &QEventLoop::quit);
     eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
 
     delete mClient;
