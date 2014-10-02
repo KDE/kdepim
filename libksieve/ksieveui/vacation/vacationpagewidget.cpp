@@ -111,16 +111,22 @@ void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool succe
         mStackWidget->setCurrentIndex(ScriptNotSupported);
         return;
     }
+
+    // Whether the server supports the "date" extension
+    const bool supportsSieveDate = mUrl.protocol() == QLatin1String("sieve") && job->sieveCapabilities().contains(QLatin1String("date"));
+
     mVacationEditWidget->setEnabled(true);
     QString messageText = VacationUtils::defaultMessageText();
     int notificationInterval = VacationUtils::defaultNotificationInterval();
     QStringList aliases = VacationUtils::defaultMailAliases();
     bool sendForSpam = VacationUtils::defaultSendForSpam();
     QString domainName = VacationUtils::defaultDomainName();
+    QDate startDate = VacationUtils::defaultStartDate();
+    QDate endDate = VacationUtils::defaultEndDate();
     if ( !success )
         active = false; // default to inactive
 
-    if ( ( !success || !KSieveUi::VacationUtils::parseScript( script, messageText, notificationInterval, aliases, sendForSpam, domainName ) ) )
+    if ( ( !success || !KSieveUi::VacationUtils::parseScript( script, messageText, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate ) ) )
         mVacationWarningWidget->setVisible(true);
 
     mWasActive = active;
@@ -131,6 +137,12 @@ void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool succe
     mVacationEditWidget->setSendForSpam( sendForSpam );
     mVacationEditWidget->setDomainName( domainName );
     mVacationEditWidget->enableDomainAndSendForSpam( !VacationSettings::allowOutOfOfficeUploadButNoSettings() );
+
+    mVacationEditWidget->enableDates( supportsSieveDate );
+    if ( supportsSieveDate ) {
+        mVacationEditWidget->setStartDate( startDate );
+        mVacationEditWidget->setEndDate( endDate );
+    }
 
     //emit scriptActive( mWasActive, mServerName );
 }
@@ -145,7 +157,9 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
                                                              mVacationEditWidget->notificationInterval(),
                                                              mVacationEditWidget->mailAliases(),
                                                              mVacationEditWidget->sendForSpam(),
-                                                             mVacationEditWidget->domainName() );
+                                                             mVacationEditWidget->domainName(),
+                                                             mVacationEditWidget->startDate(),
+                                                             mVacationEditWidget->endDate() );
         const bool active = mVacationEditWidget->activateVacation();
         createJob->setStatus(active, mWasActive);
         //Q_EMIT scriptActive( active, mServerName);

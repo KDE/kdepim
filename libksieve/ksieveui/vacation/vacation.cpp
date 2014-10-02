@@ -102,6 +102,8 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
         return;
     }
 
+    const bool supportsDate = job->sieveCapabilities().contains(QLatin1String("date"));
+
     if ( !mDialog && !mCheckOnly )
         mDialog = new VacationDialog( i18n("Configure \"Out of Office\" Replies"), 0, false );
 
@@ -110,9 +112,11 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
     QStringList aliases = VacationUtils::defaultMailAliases();
     bool sendForSpam = VacationUtils::defaultSendForSpam();
     QString domainName = VacationUtils::defaultDomainName();
+    QDate startDate = VacationUtils::defaultStartDate();
+    QDate endDate = VacationUtils::defaultEndDate();
     if ( !success ) active = false; // default to inactive
 
-    if ( !mCheckOnly && ( !success || !KSieveUi::VacationUtils::parseScript( script, messageText, notificationInterval, aliases, sendForSpam, domainName ) ) )
+    if ( !mCheckOnly && ( !success || !KSieveUi::VacationUtils::parseScript( script, messageText, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate ) ) )
         KMessageBox::information( 0, i18n("Someone (probably you) changed the "
                                           "vacation script on the server.\n"
                                           "KMail is no longer able to determine "
@@ -128,6 +132,12 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
         mDialog->setSendForSpam( sendForSpam );
         mDialog->setDomainName( domainName );
         mDialog->enableDomainAndSendForSpam( !VacationSettings::allowOutOfOfficeUploadButNoSettings() );
+
+        if (supportsDate) {
+            mDialog->enableDates( supportsDate );
+            mDialog->setStartDate( startDate );
+            mDialog->setEndDate( endDate );
+        }
 
         connect( mDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()) );
         connect( mDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCancel()) );
@@ -153,7 +163,9 @@ void Vacation::slotDialogOk() {
                                           mDialog->notificationInterval(),
                                           mDialog->mailAliases(),
                                           mDialog->sendForSpam(),
-                                          mDialog->domainName() );
+                                          mDialog->domainName(),
+                                          mDialog->startDate(),
+                                          mDialog->endDate() );
     const bool active = mDialog->activateVacation();
     emit scriptActive( active, mServerName);
 
