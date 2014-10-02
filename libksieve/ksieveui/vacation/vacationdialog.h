@@ -18,6 +18,8 @@
 
 template <typename T> class QList;
 
+class KDateTime;
+
 namespace KMime {
 namespace Types {
 struct AddrSpec;
@@ -59,6 +61,15 @@ public:
 
     bool sendForSpam() const;
     void setSendForSpam( bool enable );
+
+    void enableDates( bool enable = true );
+
+    QDate startDate() const;
+    void setStartDate( const QDate &startDate );
+
+    QDate endDate() const;
+    void setEndDate( const QDate &endDate );
+
 
 private slots:
     void slotDialogDefaults();

@@ -21,6 +21,9 @@
 #include <KLocalizedString>
 #include <KIntSpinBox>
 #include <KLineEdit>
+#include <KDateTime>
+
+#include <KDebug>
 
 #include <pimcommon/texteditor/richtexteditor/richtexteditorwidget.h>
 
@@ -30,6 +33,7 @@
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <KDateComboBox>
 #include <kdialog.h>
 
 using KMime::Types::AddrSpecList;
@@ -68,6 +72,28 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     mTextEdit->setAcceptRichText( false );
     glay->addWidget( mTextEdit, row, 0, 1, 2 );
 
+    // From date
+    ++row;
+    mStartDate = new KDateComboBox( this );
+    mStartDate->setObjectName( QLatin1String( "mStartDate" ) );
+    mStartDate->setOptions( KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords | KDateComboBox::WarnOnInvalid );
+    mStartDate->setEnabled( false ); // Disable by default - we need an extension to support this
+    QLabel *label = new QLabel( i18n("&Start:"), this );
+    label->setBuddy( mStartDate );
+    glay->addWidget( label, row, 0 );
+    glay->addWidget( mStartDate, row, 1 );
+
+    // End date
+    ++row;
+    mEndDate = new KDateComboBox( this );
+    mEndDate->setObjectName( QLatin1String( "mEndDate" ) );
+    mEndDate->setOptions( KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords | KDateComboBox::WarnOnInvalid );
+    mEndDate->setEnabled( false ); // Disable by default - we need an extension to support this
+    label = new QLabel( i18n("&End:"), this );
+    label->setBuddy( mEndDate );
+    glay->addWidget( label, row, 0 );
+    glay->addWidget( mEndDate, row, 1 );
+
     // "Resent only after" spinbox and label:
     ++row;
     int defDayInterval = 7; //default day interval
@@ -75,7 +101,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     mIntervalSpin->setObjectName( QLatin1String("mIntervalSpin") );
     mIntervalSpin->setSuffix( i18np(" day", " days", defDayInterval) );
     connect(mIntervalSpin, SIGNAL(valueChanged(int)), SLOT(slotIntervalSpinChanged(int)) );
-    QLabel *label = new QLabel( i18n("&Resend notification only after:"), this );
+    label = new QLabel( i18n("&Resend notification only after:"), this );
     label->setBuddy( mIntervalSpin );
     glay->addWidget( label, row, 0 );
     glay->addWidget( mIntervalSpin, row, 1 );
@@ -217,6 +243,41 @@ bool VacationEditWidget::sendForSpam() const
 void VacationEditWidget::setSendForSpam( bool enable )
 {
     mSpamCheck->setChecked( !enable );
+}
+
+QDate VacationEditWidget::endDate()
+{
+    if ( mEndDate->isEnabled() ) {
+        return mEndDate->date();
+    } else {
+        return QDate();
+    }
+}
+
+void VacationEditWidget::setEndDate( const QDate &endDate )
+{
+    mEndDate->setDate( endDate );
+}
+
+QDate VacationEditWidget::startDate() const
+{
+    if ( mStartDate->isEnabled() ) {
+        return mStartDate->date();
+    } else {
+        return QDate();
+    }
+}
+
+void VacationEditWidget::setStartDate( const QDate &startDate )
+{
+    mStartDate->setDate( startDate );
+}
+
+
+void VacationEditWidget::enableDates( bool enable )
+{
+    mStartDate->setEnabled( enable );
+    mEndDate->setEnabled( enable );
 }
 
 void VacationEditWidget::enableDomainAndSendForSpam( bool enable )

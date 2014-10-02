@@ -27,6 +27,8 @@ typedef QList<AddrSpec> AddrSpecList;
 }
 }
 
+class QDate;
+
 namespace KSieveUi {
 namespace VacationUtils {
 QString defaultMessageText();
@@ -34,14 +36,18 @@ int defaultNotificationInterval();
 QStringList defaultMailAliases();
 bool defaultSendForSpam();
 QString defaultDomainName();
+QDate defaultStartDate();
+QDate defaultEndDate();
 
 QString composeScript( const QString & messageText,
-                              int notificationInterval,
-                              const KMime::Types::AddrSpecList & aliases,
-                              bool sendForSpam, const QString & excludeDomain );
+                       int notificationInterval,
+                       const KMime::Types::AddrSpecList & aliases,
+                       bool sendForSpam, const QString & excludeDomain,
+                       const QDate & startDate, const QDate & endDate );
 bool parseScript( const QString & script, QString & messageText,
-                         int & notificationInterval, QStringList & aliases,
-                         bool & sendForSpam, QString & domainName );
+                  int & notificationInterval, QStringList & aliases,
+                  bool & sendForSpam, QString & domainName,
+                  QDate & startDate, QDate & endDate );
 
 }
 }

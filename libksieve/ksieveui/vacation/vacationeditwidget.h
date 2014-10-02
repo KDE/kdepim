@@ -21,6 +21,9 @@
 #include <QWidget>
 class KIntSpinBox;
 class KLineEdit;
+class KDateComboBox;
+
+class QDate;
 
 namespace PimCommon {
 class RichTextEditorWidget;
@@ -43,6 +46,8 @@ class VacationEditWidget : public QWidget
 public:
     explicit VacationEditWidget(QWidget *parent=0);
     ~VacationEditWidget();
+
+    void enableDates( bool enable = true );
 
     void enableDomainAndSendForSpam( bool enable = true );
 
@@ -68,6 +73,12 @@ public:
     bool sendForSpam() const;
     void setSendForSpam( bool enable );
 
+    QDate startDate() const;
+    void setStartDate( const QDate &startDate );
+
+    QDate endDate();
+    void setEndDate( const QDate &endDate );
+
     void setDefault();
 
 private Q_SLOTS:
@@ -81,6 +92,8 @@ protected:
     QCheckBox *mSpamCheck;
     QCheckBox *mDomainCheck;
     KLineEdit *mDomainEdit;
+    KDateComboBox *mStartDate;
+    KDateComboBox *mEndDate;
 };
 }
 
