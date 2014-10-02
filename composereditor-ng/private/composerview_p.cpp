@@ -33,6 +33,7 @@
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
 #include <kpimtextedit/selectspecialchardialog.h>
+#include "pimcommon/texttospeech/texttospeech.h"
 
 #include <Sonnet/Dialog>
 #include <sonnet/backgroundchecker.h>
@@ -911,23 +912,11 @@ bool ComposerViewPrivate::queryCommandState(const QString &cmd)
 
 void ComposerViewPrivate::_k_slotSpeakText()
 {
-    // If KTTSD not running, start it.
-    //QT5 : Port to QtSpeech
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
-        QString error;
-        if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error)) {
-            KMessageBox::error(q, i18n("Starting Jovie Text-to-Speech Service Failed"), error);
-            return;
-        }
-    }
-    QDBusInterface ktts(QLatin1String("org.kde.kttsd"), QLatin1String("/KSpeech"), QLatin1String("org.kde.KSpeech"));
-
     QString text = q->selectedText();
     if (text.isEmpty()) {
         text = q->page()->mainFrame()->toPlainText();
     }
-
-    ktts.asyncCall(QLatin1String("say"), text, 0);
+    PimCommon::TextToSpeech::self()->say(text);
 }
 
 void ComposerViewPrivate::_k_slotPasteWithoutFormatting()
