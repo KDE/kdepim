@@ -91,6 +91,7 @@ void AutoCorrectionTest::shouldUpperCaseFirstCharOfSentence()
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), QLatin1String("Foo. Foo"));
+    QCOMPARE(position, text.length());
 
 }
 
@@ -331,5 +332,44 @@ void AutoCorrectionTest::shouldNotAddSpaceWhenWeAlreadyHaveASpace()
     QCOMPARE(result, false);
 }
 
+void AutoCorrectionTest::shouldAutocorrectWord()
+{
+    PimCommon::AutoCorrection autocorrection;
+    autocorrection.setEnabledAutoCorrection(true);
+    autocorrection.setAdvancedAutocorrect(true);
+
+    QTextDocument doc;
+    //No changes
+    QString text = QLatin1String("FOO");
+    doc.setPlainText(text);
+    int position = text.length();
+    int oldPosition = position;
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), text);
+    QCOMPARE(position, oldPosition);
+
+    //Convert word
+    QHash<QString, QString> entries;
+    const QString convertWord = QLatin1String("BLABLA");
+    entries.insert(text, convertWord);
+    autocorrection.setAutocorrectEntries(entries);
+    text = QLatin1String("FOO");
+    doc.setPlainText(text);
+    position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), convertWord);
+    QCOMPARE(position, convertWord.length());
+
+    QString suffix = QLatin1String(" TOTO");
+    text = QLatin1String("FOO");
+    position = text.length();
+    text += suffix;
+    doc.setPlainText(text);
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), QString(convertWord + suffix));
+    //FIXME ? QCOMPARE(position, convertWord.length());
+
+}
 QTEST_MAIN(AutoCorrectionTest)
+
 

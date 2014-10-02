@@ -34,7 +34,8 @@ FilterAction *FilterActionAddTag::newAction()
 }
 
 FilterActionAddTag::FilterActionAddTag(QObject *parent)
-    : FilterAction(QLatin1String("add tag"), i18n("Add Tag"), parent)
+    : FilterAction(QLatin1String("add tag"), i18n("Add Tag"), parent),
+      mComboBox(0)
 {
     mList = FilterManager::instance()->tagList();
     connect(FilterManager::instance(), SIGNAL(tagListingFinished()), SLOT(slotTagListingFinished()));
@@ -42,19 +43,19 @@ FilterActionAddTag::FilterActionAddTag(QObject *parent)
 
 QWidget *FilterActionAddTag::createParamWidget(QWidget *parent) const
 {
-    PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox(parent);
-    comboBox->setEditable(false);
+    mComboBox = new PimCommon::MinimumComboBox(parent);
+    mComboBox->setEditable(false);
     QMapIterator<QUrl, QString> i(mList);
     while (i.hasNext()) {
         i.next();
-        comboBox->addItem(i.value(), i.key());
+        mComboBox->addItem(i.value(), i.key());
     }
 
-    setParamWidgetValue(comboBox);
+    setParamWidgetValue(mComboBox);
 
-    connect(comboBox, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::currentIndexChanged), this, &FilterActionAddTag::filterActionModified);
+    connect(mComboBox, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::currentIndexChanged), this, &FilterActionAddTag::filterActionModified);
 
-    return comboBox;
+    return mComboBox;
 }
 
 void FilterActionAddTag::applyParamWidgetValue(QWidget *paramWidget)
@@ -82,7 +83,20 @@ bool FilterActionAddTag::isEmpty() const
 
 void FilterActionAddTag::slotTagListingFinished()
 {
-    mList = FilterManager::instance()->tagList();
+    if (mComboBox) {
+        mList = FilterManager::instance()->tagList();
+        mComboBox->clear();
+        fillComboBox();
+    }
+}
+
+void FilterActionAddTag::fillComboBox()
+{
+    QMapIterator<QUrl, QString> i(mList);
+    while (i.hasNext()) {
+        i.next();
+        mComboBox->addItem(i.value(), i.key());
+    }
 }
 
 bool FilterActionAddTag::argsFromStringInteractive(const QString &argsStr, const QString &filterName)
