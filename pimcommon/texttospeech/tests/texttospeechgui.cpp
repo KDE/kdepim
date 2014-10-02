@@ -55,7 +55,7 @@ void TextToSpeechGui::slotTextToSpeech()
     if (mEdit->textCursor().hasSelection()) {
         text = mEdit->textCursor().selectedText();
     } else {
-       text = mEdit->toPlainText();
+        text = mEdit->toPlainText();
     }
     if (!text.isEmpty()) {
         PimCommon::TextToSpeech::self()->say(text);
