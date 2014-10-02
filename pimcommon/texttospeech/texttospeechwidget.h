@@ -57,7 +57,7 @@ Q_SIGNALS:
 
 private slots:
     void slotStop();
-    void slotPlayPause();    
+    void slotPlayPause();
     void slotVolumeChanged(int value);
 
 private:

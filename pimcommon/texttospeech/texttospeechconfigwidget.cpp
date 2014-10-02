@@ -61,14 +61,14 @@ void TextToSpeechConfigWidget::valueChanged()
 
 void TextToSpeechConfigWidget::readConfig()
 {
-    PimCommon::PimCommonSettings::self()->setVolume(static_cast<double>(mVolume->value()/100));
-    PimCommon::PimCommonSettings::self()->setRate(static_cast<double>(mRate->value()/100));
-    PimCommon::PimCommonSettings::self()->setPitch(static_cast<double>(mPitch->value()/100));
+    PimCommon::PimCommonSettings::self()->setVolume(static_cast<double>(mVolume->value() / 100));
+    PimCommon::PimCommonSettings::self()->setRate(static_cast<double>(mRate->value() / 100));
+    PimCommon::PimCommonSettings::self()->setPitch(static_cast<double>(mPitch->value() / 100));
 }
 
 void TextToSpeechConfigWidget::writeConfig()
 {
-    mVolume->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->volume()*100));
-    mRate->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->rate()*100));
-    mPitch->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->pitch()*100));
+    mVolume->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->volume() * 100));
+    mRate->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->rate() * 100));
+    mPitch->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->pitch() * 100));
 }

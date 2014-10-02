@@ -152,7 +152,7 @@ void PlainTextEditor::slotSpeakText()
     } else {
         text = toPlainText();
     }
-    qDebug()<<" PimCommon::TextToSpeech::self()->isReady() :"<<PimCommon::TextToSpeech::self()->isReady();
+    qDebug() << " PimCommon::TextToSpeech::self()->isReady() :" << PimCommon::TextToSpeech::self()->isReady();
     Q_EMIT say(text);
 }
 

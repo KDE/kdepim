@@ -41,7 +41,7 @@ TextToSpeechGui::TextToSpeechGui(QWidget *parent)
     QAction *act = new QAction(i18n("Speech text"), this);
     connect(act, &QAction::triggered, this, &TextToSpeechGui::slotTextToSpeech);
     editMenu->addAction(act);
-    qDebug()<<" isReady ? "<<PimCommon::TextToSpeech::self()->isReady();
+    qDebug() << " isReady ? " << PimCommon::TextToSpeech::self()->isReady();
 }
 
 TextToSpeechGui::~TextToSpeechGui()

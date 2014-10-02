@@ -372,4 +372,3 @@ void AutoCorrectionTest::shouldAutocorrectWord()
 }
 QTEST_MAIN(AutoCorrectionTest)
 
-

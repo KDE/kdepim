@@ -37,7 +37,6 @@ public:
     int volume() const Q_DECL_OVERRIDE;
     void setVolume(int value) Q_DECL_OVERRIDE;
 
-
 private Q_SLOTS:
     void stateChanged(PimCommon::TextToSpeechWidget::State state);
 
