@@ -62,7 +62,6 @@ void FindBarMailWebView::searchText( bool backward, bool isAutoSearch )
     const bool found = mView->findText( mLastSearchStr, searchOptions );
 
     setFoundMatch( found );
-    FindBarBase::messageInfo( backward, isAutoSearch, found );
 }
 
 void FindBarMailWebView::updateHighLight(bool highLight)

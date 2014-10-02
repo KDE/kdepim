@@ -53,7 +53,6 @@ void FindBarSourceView::searchText( bool backward, bool isAutoSearch )
     const bool found = mView->find( mLastSearchStr, searchOptions );
 
     setFoundMatch( found );
-    FindBarBase::messageInfo( backward, isAutoSearch, found );
 }
 
 
