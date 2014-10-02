@@ -150,7 +150,7 @@ Akonadi::AgentInstance::List KSieveUi::Util::imapAgentInstances()
              instance.type().capabilities().contains( QLatin1String("Resource") ) &&
              !instance.type().capabilities().contains( QLatin1String("Virtual") ) ) {
 
-            if ( instance.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) )
+            if ( instance.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) || instance.identifier().contains( KOLAB_RESOURCE_IDENTIFIER ) )
                 relevantInstances << instance;
         }
     }
