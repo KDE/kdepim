@@ -38,6 +38,7 @@ private Q_SLOTS:
     void shouldReplaceToBold();
     void shouldReplaceAutoFraction();
     void shouldNotAddSpaceWhenWeAlreadyHaveASpace();
+    void shouldAutocorrectWord();
 
 private:
     KSharedConfig::Ptr mConfig;
