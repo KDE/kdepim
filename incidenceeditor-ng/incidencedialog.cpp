@@ -55,6 +55,7 @@
 #include <KIconLoader>
 #include <QIcon>
 #include <QDebug>
+#include <KGlobal>
 
 #include <QCloseEvent>
 #include <KSharedConfig>

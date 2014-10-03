@@ -102,9 +102,9 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   mUi->mEndDateEdit->installEventFilter( this );
   mUi->mStartTimeEdit->installEventFilter( this );
   mUi->mEndTimeEdit->installEventFilter( this );
-  mUi->mTimeZoneLabel->setVisible( !mUi->mWholeDayCheck->isChecked() );
-  connect(mUi->mTimeZoneLabel, &QLabel::linkActivated, this, &IncidenceDateTime::toggleTimeZoneVisibility);
-  mUi->mTimeZoneLabel->setContextMenuPolicy(Qt::NoContextMenu);
+  //PORT QT5 mUi->mTimeZoneLabel->setVisible( !mUi->mWholeDayCheck->isChecked() );
+  //PORT QT5 connect(mUi->mTimeZoneLabel, &QLabel::linkActivated, this, &IncidenceDateTime::toggleTimeZoneVisibility);
+  //PORT QT5 mUi->mTimeZoneLabel->setContextMenuPolicy(Qt::NoContextMenu);
 #endif
 
   QList<QLineEdit*> lineEdits;
