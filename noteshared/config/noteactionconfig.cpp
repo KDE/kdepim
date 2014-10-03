@@ -47,6 +47,7 @@ NoteActionConfig::NoteActionConfig(const KComponentData &inst, QWidget *parent )
     layout->addWidget( kcfg_MailAction, 0, 1 );
 
     QLabel *howItWorks = new QLabel(i18n( "<a href=\"whatsthis\">How does this work?</a>" ));
+    howItWorks->setContextMenuPolicy(Qt::NoContextMenu);
     connect( howItWorks, SIGNAL(linkActivated(QString)),SLOT(slotHelpLinkClicked(QString)) );
     layout->addWidget( howItWorks, 1, 0 );
 

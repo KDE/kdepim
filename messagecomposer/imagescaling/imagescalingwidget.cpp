@@ -86,6 +86,7 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
     mRecipientFilterGroup->addButton(ui->doNotResizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern );
 
     ui->help->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
+    ui->help->setContextMenuPolicy(Qt::NoContextMenu);
     connect( ui->help, SIGNAL(linkActivated(QString)),SLOT(slotHelpLinkClicked(QString)) );
 }
 

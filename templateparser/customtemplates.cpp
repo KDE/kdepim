@@ -96,6 +96,7 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
     mUi->mType->addItem( mForwardPix, i18nc( "Message->", "Forward" ) );
 
     mUi->mHelp->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
+    mUi->mHelp->setContextMenuPolicy(Qt::NoContextMenu);
     connect( mUi->mHelp, SIGNAL(linkActivated(QString)),
              SLOT(slotHelpLinkClicked(QString)) );
 
