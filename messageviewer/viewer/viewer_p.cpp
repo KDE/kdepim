@@ -36,6 +36,7 @@
 #include "widgets/eventedit.h"
 #include "viewer/mimeparttreeview.h"
 #include "widgets/openattachmentfolderwidget.h"
+#include "pimcommon/widgets/slidecontainer.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
@@ -220,7 +221,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mPreviouslyViewedItem( -1 ),
       mScamDetectionWarning( 0 ),
       mOpenAttachmentFolderWidget( 0 ),
-      mZoomFactor( 100 )
+      mZoomFactor( 100 ),
+      mSliderContainer( 0 )
 {
     mMimePartTree = 0;
     if ( !mainWindow )
@@ -1521,7 +1523,11 @@ void ViewerPrivate::createWidgets() {
     mCreateEvent->setObjectName(QLatin1String("createeventwidget"));
     mCreateEvent->hide();
 
-    mFindBar = new FindBarMailWebView( mViewer, readerBox );
+    mSliderContainer = new PimCommon::SlideContainer(readerBox);
+    mFindBar = new FindBarMailWebView( mViewer, q );
+    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
+    mSliderContainer->setContent(mFindBar);
+
     mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);
 #ifndef QT_NO_TREEVIEW
     mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
@@ -2194,7 +2200,7 @@ void ViewerPrivate::slotFind()
     if ( mViewer->hasSelection() )
         mFindBar->setText( mViewer->selectedText() );
 #endif
-    mFindBar->show();
+    mSliderContainer->slideIn();
     mFindBar->focusAndSetCursor();
 }
 
