@@ -35,6 +35,8 @@
 #include "templatemanagementdialog.h"
 #include "ui_dialogdesktop.h"
 
+#include <incidenceeditor-ng/globalsettings.h>
+
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
@@ -660,23 +662,43 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
            d->mIeAttendee, SLOT(declineForMe()) );
   connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
            d->mUi->mInvitationBar, SLOT(hide()) );
-  KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
-  const QSize size = group.readEntry( "Size", QSize() );
-  if ( size.isValid() ) {
-      resize( size );
-  } else {
-      resize( QSize( 500, 500 ).expandedTo( minimumSizeHint() ) );
-  }
-
-
+  readConfig();
 }
 
 IncidenceDialog::~IncidenceDialog()
 {
-  KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
-  group.writeEntry( "Size", size() );
+  writeConfig();
   delete d_ptr;
 }
+
+void IncidenceDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
+    group.writeEntry( "Size", size() );
+
+    const Akonadi::Collection col = d_ptr->mCalSelector->currentCollection();
+    // col might not be valid if the collection wasn't found yet (the combo is async), skip saving in that case
+    if (col.isValid() && col.id() != IncidenceEditorNG::GlobalSettings::self()->lastSelectedFolder()) {
+        IncidenceEditorNG::GlobalSettings::self()->setLastSelectedFolder(col.id());
+        IncidenceEditorNG::GlobalSettings::self()->writeConfig();
+    }
+}
+
+void IncidenceDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
+    const QSize size = group.readEntry( "Size", QSize() );
+    if ( size.isValid() ) {
+        resize( size );
+    } else {
+        resize( QSize( 500, 500 ).expandedTo( minimumSizeHint() ) );
+    }
+    const qint64 id = IncidenceEditorNG::GlobalSettings::self()->lastSelectedFolder();
+    if (id!=-1) {
+        d_ptr->mCalSelector->setDefaultCollection(Akonadi::Collection(id));
+    }
+}
+
 
 void IncidenceDialog::load( const Akonadi::Item &item, const QDate &activeDate )
 {
