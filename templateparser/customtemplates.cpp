@@ -87,6 +87,7 @@ CustomTemplates::CustomTemplates(const QList<KActionCollection *> &actionCollect
     mUi->mHelp->setText(i18n("<a href=\"whatsthis\">How does this work?</a>"));
     connect(mUi->mHelp, SIGNAL(linkActivated(QString)),
             SLOT(slotHelpLinkClicked(QString)));
+    mUi->mHelp->setContextMenuPolicy(Qt::NoContextMenu);
 
     slotNameChanged(mUi->mName->text());
 }

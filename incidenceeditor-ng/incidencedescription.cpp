@@ -63,6 +63,7 @@ IncidenceDescription::IncidenceDescription( Ui::EventOrTodoDesktop *ui )
                                              KRichTextWidget::SupportChangeListStyle |
                                              KRichTextWidget::SupportAlignment |
                                              KRichTextWidget::SupportFormatPainting );
+  mUi->mRichTextLabel->setContextMenuPolicy(Qt::NoContextMenu);
 #ifdef KDEPIM_MOBILE_UI
   mUi->mRichTextLabel->hide();
 #else

@@ -80,6 +80,7 @@ TemplatesConfiguration::TemplatesConfiguration(QWidget *parent, const QString &n
     mHelp->setText(i18n("<a href=\"whatsthis\">How does this work?</a>"));
     connect(mHelp, SIGNAL(linkActivated(QString)),
             this, SLOT(slotHelpLinkClicked(QString)));
+    mHelp->setContextMenuPolicy(Qt::NoContextMenu);
 }
 
 void TemplatesConfiguration::slotHelpLinkClicked(const QString &)

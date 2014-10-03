@@ -80,7 +80,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
 
     Akonadi::Item item() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted when an incidence is created.
      * @param collection The collection where it was created.
@@ -98,6 +98,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
     IncidenceDialogPrivate *const d_ptr;
     Q_DECLARE_PRIVATE( IncidenceDialog )
     Q_DISABLE_COPY( IncidenceDialog )
+
+    void writeConfig();
+    void readConfig();
 
     Q_PRIVATE_SLOT( d_ptr, void handleAlarmCountChange(int) )
     Q_PRIVATE_SLOT( d_ptr, void handleItemSaveFinish(IncidenceEditorNG::EditorItemManager::SaveAction) )

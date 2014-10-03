@@ -66,12 +66,14 @@ void FindBarBaseTest::shouldClearLineWhenClose()
     QSignalSpy spy(&bar, SIGNAL(hideFindBar()));
     QTest::qWaitForWindowShown(&bar);
     QVERIFY(bar.isVisible());
-
+    bar.focusAndSetCursor();
     KLineEdit *lineedit = qFindChild<KLineEdit *>(&bar, QLatin1String("searchline"));
     lineedit->setText(QLatin1String("FOO"));
     QVERIFY(!lineedit->text().isEmpty());
+    QVERIFY(lineedit->hasFocus());
     bar.closeBar();
     QVERIFY(lineedit->text().isEmpty());
+    QVERIFY(!lineedit->hasFocus());
     QCOMPARE(spy.count(), 1);
 }
 

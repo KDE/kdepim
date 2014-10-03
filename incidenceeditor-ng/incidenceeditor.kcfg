@@ -29,5 +29,9 @@
       <default>Ask</default>
     </entry>
   </group>
-
+  <group name="Collection">
+      <entry name="LastSelectedFolder" type="LongLong">
+        <default>-1</default>
+      </entry>
+  </group>
 </kcfg>

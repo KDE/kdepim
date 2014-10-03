@@ -87,6 +87,7 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
 
     ui->help->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
     connect(ui->help, &QLabel::linkActivated, this, &ImageScalingWidget::slotHelpLinkClicked);
+    ui->help->setContextMenuPolicy(Qt::NoContextMenu);
 }
 
 ImageScalingWidget::~ImageScalingWidget()

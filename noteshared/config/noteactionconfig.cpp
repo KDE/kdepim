@@ -48,6 +48,7 @@ NoteActionConfig::NoteActionConfig(QWidget *parent)
     QLabel *howItWorks = new QLabel(i18n("<a href=\"whatsthis\">How does this work?</a>"));
     connect(howItWorks, &QLabel::linkActivated, this, &NoteActionConfig::slotHelpLinkClicked);
     layout->addWidget(howItWorks, 1, 0);
+    howItWorks->setContextMenuPolicy(Qt::NoContextMenu);
 
     addConfig(NoteShared::NoteSharedGlobalConfig::self(), w);
     lay->addStretch();
