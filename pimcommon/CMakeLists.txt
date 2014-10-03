@@ -162,6 +162,7 @@ set(libpimcommon_widgets_SRCS
   widgets/customtreeview.cpp
   widgets/customtoolswidget.cpp
   widgets/configureimmutablewidgetutils.cpp
+  widgets/slidecontainer.cpp
 )
 
 
