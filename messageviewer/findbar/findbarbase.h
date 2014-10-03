@@ -1,5 +1,5 @@
 /* Copyright (C) 2010 Torgny Nyblom <nyblom@kde.org>
- * Copyright (C) 2010,2011, 2012, 2013 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2010,2011, 2012, 2013, 2014 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -26,6 +26,7 @@ class QAction;
 class KLineEdit;
 class QPushButton;
 class QMenu;
+class QLabel;
 
 namespace MessageViewer
 {
@@ -48,7 +49,6 @@ protected:
     virtual void updateSensitivity( bool );
 
     void setFoundMatch( bool match );
-    void messageInfo( bool backward, bool isAutoSearch, bool found );
     QMenu *optionsMenu();
 
 public slots:
@@ -64,6 +64,7 @@ private slots:
     void slotClearSearch();
 
 protected:
+    QString mNotFoundString;
     QString mPositiveBackground;
     QString mNegativeBackground;
     QString mLastSearchStr;
@@ -73,6 +74,7 @@ protected:
     QPushButton *mFindPrevBtn;
     QPushButton *mFindNextBtn;
     QMenu *mOptionsMenu;
+    QLabel *mStatus;
 };
 
 }

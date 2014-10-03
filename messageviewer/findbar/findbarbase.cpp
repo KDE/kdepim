@@ -44,6 +44,7 @@ FindBarBase::FindBarBase( QWidget * parent )
 
     QToolButton * closeBtn = new QToolButton( this );
     closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
+    closeBtn->setObjectName(QLatin1String("close"));
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 
@@ -58,6 +59,7 @@ FindBarBase::FindBarBase( QWidget * parent )
     lay->addWidget( label );
 
     mSearch = new KLineEdit( this );
+    mSearch->setObjectName(QLatin1String("searchline"));
     mSearch->setToolTip( i18n( "Text to search for" ) );
     mSearch->setClearButtonShown( true );
     label->setBuddy( mSearch );
@@ -65,11 +67,13 @@ FindBarBase::FindBarBase( QWidget * parent )
 
     mFindNextBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
     mFindNextBtn->setToolTip( i18n( "Jump to next match" ) );
+    mFindNextBtn->setObjectName(QLatin1String("findnext"));
     lay->addWidget( mFindNextBtn );
     mFindNextBtn->setEnabled( false );
 
     mFindPrevBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
     mFindPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
+    mFindPrevBtn->setObjectName(QLatin1String("findprevious"));
     lay->addWidget( mFindPrevBtn );
     mFindPrevBtn->setEnabled( false );
 
@@ -89,7 +93,16 @@ FindBarBase::FindBarBase( QWidget * parent )
     connect(mCaseSensitiveAct, &QAction::toggled, this, &FindBarBase::caseSensitivityChanged);
     connect(mSearch, &KLineEdit::textChanged, this, &FindBarBase::autoSearch);
     connect(mSearch, &KLineEdit::clearButtonClicked, this, &FindBarBase::slotClearSearch);
+    
+    mStatus = new QLabel;
+    mStatus->setObjectName(QLatin1String("status"));
+    QFontMetrics fm(mStatus->font());
+    mNotFoundString = i18n("Phrase not found");
+    mStatus->setFixedWidth(fm.width(mNotFoundString));
+    lay->addWidget(mStatus);
+
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    lay->addStretch();
     hide();
 }
 
@@ -140,18 +153,6 @@ void FindBarBase::slotSearchText( bool backward, bool isAutoSearch )
     searchText( backward, isAutoSearch );
 }
 
-void FindBarBase::messageInfo( bool backward, bool isAutoSearch, bool found )
-{
-    if ( !found && !isAutoSearch ) {
-        if ( backward ) {
-            KMessageBox::information( this, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ) );
-        } else {
-            KMessageBox::information( this, i18n( "End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr ) );
-        }
-    }
-}
-
-
 void FindBarBase::setFoundMatch( bool match )
 {
 #ifndef QT_NO_STYLE_STYLESHEET
@@ -164,10 +165,13 @@ void FindBarBase::setFoundMatch( bool match )
             bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeBackground);
             mNegativeBackground = QString::fromLatin1("QLineEdit{ background-color:%1 }").arg(bgBrush.brush(mSearch).color().name());
         }
-        if (match)
+        if (match) {
             styleSheet = mPositiveBackground;
-        else
+            mStatus->clear();
+        } else {
             styleSheet = mNegativeBackground;
+            mStatus->setText(mNotFoundString);
+        }
     }
     mSearch->setStyleSheet(styleSheet);
 #endif
@@ -217,7 +221,7 @@ void FindBarBase::clearSelections()
 void FindBarBase::closeBar()
 {
     // Make sure that all old searches are cleared
-    mSearch->setText( QString() );
+    mSearch->clear();
     clearSelections();
     hide();
 }
