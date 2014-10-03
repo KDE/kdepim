@@ -23,6 +23,7 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <qtest.h>
+#include <QSignalSpy>
 
 FindBarBaseTest::FindBarBaseTest(QObject *parent)
     : QObject(parent)
