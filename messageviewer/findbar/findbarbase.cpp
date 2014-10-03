@@ -223,6 +223,7 @@ void FindBarBase::closeBar()
     mSearch->clear();
     clearSelections();
     hide();
+    Q_EMIT hideFindBar();
 }
 
 bool FindBarBase::event(QEvent* e)

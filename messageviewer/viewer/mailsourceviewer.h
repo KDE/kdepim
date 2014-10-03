@@ -36,7 +36,10 @@
 #include <QPlainTextEdit>
 #include <KDialog>
 class KTabWidget;
-
+namespace PimCommon
+{
+class SlideContainer;
+}
 namespace MessageViewer {
 class FindBarSourceView;
 
@@ -74,6 +77,7 @@ private slots:
 private:
     MailSourceViewTextBrowser *mTextBrowser;
     FindBarSourceView *mFindBar;
+    PimCommon::SlideContainer *mSliderContainer;
 };
 
 class MailSourceViewTextBrowser: public QPlainTextEdit

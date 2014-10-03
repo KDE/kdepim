@@ -35,6 +35,7 @@
 #include "utils/util.h"
 #include "findbar/findbarsourceview.h"
 #include "kpimtextedit/htmlhighlighter.h"
+#include "pimcommon/widgets/slidecontainer.h"
 #include "pimcommon/util/pimutil.h"
 #include <kiconloader.h>
 #include <KLocalizedString>
@@ -69,8 +70,13 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget( QWidget *paren
     mTextBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
     connect( mTextBrowser, SIGNAL(findText()), SLOT(slotFind()) );
     lay->addWidget( mTextBrowser );
+    mSliderContainer = new PimCommon::SlideContainer(this);
+
     mFindBar = new FindBarSourceView( mTextBrowser, this );
-    lay->addWidget( mFindBar );
+    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
+    mSliderContainer->setContent(mFindBar);
+
+    lay->addWidget( mSliderContainer );
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
     connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
@@ -80,7 +86,7 @@ void MailSourceViewTextBrowserWidget::slotFind()
 {
     if ( mTextBrowser->textCursor().hasSelection() )
         mFindBar->setText( mTextBrowser->textCursor().selectedText() );
-    mFindBar->show();
+    mSliderContainer->slideIn();
     mFindBar->focusAndSetCursor();
 }
 
