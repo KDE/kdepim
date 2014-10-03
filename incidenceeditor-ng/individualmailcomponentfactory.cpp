@@ -96,14 +96,14 @@ void IndividualMessageQueueJob::startQueueJob(const QStringList &to, const QStri
     mQueueJob->addressAttribute().setBcc(addressAttribute().bcc());
 
     mQueueJob = new MailTransport::MessageQueueJob(this);
-    connect(mQueueJob, SIGNAL(finished(KJob*)), SLOT(handleJobFinished(KJob*)));
+    connect(mQueueJob, &MailTransport::MessageQueueJob::finished, this, &IndividualMessageQueueJob::handleJobFinished);
     mQueueJob->start();
 }
 
 void IndividualMessageQueueJob::startComposerJob(const QStringList &to, const QStringList &cc)
 {
     mComposerJob = new OpenComposerJob(this, to.join(QLatin1String(", ")), cc.join(QLatin1String(", ")), QString(), message(), mIdentity);
-    connect(mComposerJob, SIGNAL(finished(KJob*)), SLOT(handleJobFinished(KJob*)));
+    connect(mComposerJob, &OpenComposerJob::finished, this, &IndividualMessageQueueJob::handleJobFinished);
     mComposerJob->start();
 }
 
@@ -233,10 +233,8 @@ Akonadi::ITIPHandlerDialogDelegate *IndividualMailComponentFactory::createITIPHa
                                                                                              KCalCore::iTIPMethod method, QWidget *parent)
 {
     IndividualMailITIPHandlerDialogDelegate *askDelegator =  new IndividualMailITIPHandlerDialogDelegate(incidence, method, parent);
-    connect(askDelegator, SIGNAL(setEdit(KCalCore::Incidence::Ptr,KCalCore::Attendee::List)),
-            SLOT(onSetEdit(KCalCore::Incidence::Ptr,KCalCore::Attendee::List)));
-    connect(askDelegator, SIGNAL(setUpdate(KCalCore::Incidence::Ptr,KCalCore::Attendee::List)),
-            SLOT(onSetUpdate(KCalCore::Incidence::Ptr,KCalCore::Attendee::List)));
+    connect(askDelegator, &IndividualMailITIPHandlerDialogDelegate::setEdit, this, &IndividualMailComponentFactory::onSetEdit);
+    connect(askDelegator, &IndividualMailITIPHandlerDialogDelegate::setUpdate, this, &IndividualMailComponentFactory::onSetUpdate);
 
     return askDelegator;
 }

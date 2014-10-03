@@ -285,8 +285,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
 //connect(mGanttGraphicsView,SIGNAL(intervalColorRectangleMoved(KDateTime,KDateTime)),
 //        this, SLOT(slotIntervalColorRectangleMoved(KDateTime,KDateTime)) );
 
-  connect( mLeftView, SIGNAL(customContextMenuRequested(QPoint)),
-           this, SLOT(showAttendeeStatusMenu()) );
+  connect(mLeftView, &QTreeView::customContextMenuRequested, this, &VisualFreeBusyWidget::showAttendeeStatusMenu);
 
 //   foreach ( FreeBusyItem::Ptr item, mResolver->freeBusyItems() ) {
 //     newFreeBusy( item );

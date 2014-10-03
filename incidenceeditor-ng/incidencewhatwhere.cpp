@@ -35,10 +35,8 @@ IncidenceWhatWhere::IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 ), mUi( ui )
 {
   setObjectName( "IncidenceWhatWhere" );
-  connect( mUi->mSummaryEdit, SIGNAL(textChanged(QString)),
-           SLOT(checkDirtyStatus()));
-  connect( mUi->mLocationEdit, SIGNAL(textChanged(QString)),
-           SLOT(checkDirtyStatus()));
+  connect(mUi->mSummaryEdit, &QLineEdit::textChanged, this, &IncidenceWhatWhere::checkDirtyStatus);
+  connect(mUi->mLocationEdit, &QLineEdit::textChanged, this, &IncidenceWhatWhere::checkDirtyStatus);
 }
 
 void IncidenceWhatWhere::load( const KCalCore::Incidence::Ptr &incidence )

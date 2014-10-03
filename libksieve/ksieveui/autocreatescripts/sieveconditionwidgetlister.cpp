@@ -120,8 +120,7 @@ void SieveConditionWidget::initWidget()
     mComboBox->addItem(QLatin1String(""));
     mComboBox->setCurrentIndex(mComboBox->count() - 1);
     mLayout->addWidget(mComboBox, 1, 1);
-    connect(mComboBox, SIGNAL(activated(int)),
-            this, SLOT(slotConditionChanged(int)));
+    connect(mComboBox, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::activated), this, &SieveConditionWidget::slotConditionChanged);
 
     mComboBox->setMaxCount(mComboBox->count());
     mComboBox->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));

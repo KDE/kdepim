@@ -94,10 +94,8 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
   mAttendeeEditor->setDynamicSizeHint( false );
 #endif
 
-  connect( mAttendeeEditor, SIGNAL(countChanged(int)),
-           SIGNAL(attendeeCountChanged(int)) );
-  connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine*)),
-           SLOT(checkIfExpansionIsNeeded(KPIM::MultiplyingLine*)) );
+  connect(mAttendeeEditor, &AttendeeEditor::countChanged, this, &IncidenceAttendee::attendeeCountChanged);
+  connect(mAttendeeEditor, &AttendeeEditor::editingFinished, this, &IncidenceAttendee::checkIfExpansionIsNeeded);
 
   mUi->mOrganizerStack->setCurrentIndex( 0 );
 
@@ -111,35 +109,24 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
   mConflictResolver->setLatestDate( mDateTime->endDate() );
   mConflictResolver->setLatestTime( mDateTime->endTime() );
 
-  connect( mUi->mSelectButton, SIGNAL(clicked(bool)),
-           this, SLOT(slotSelectAddresses()) );
-  connect( mUi->mSolveButton, SIGNAL(clicked(bool)),
-           this, SLOT(slotSolveConflictPressed()) );
+  connect(mUi->mSelectButton, &QPushButton::clicked, this, &IncidenceAttendee::slotSelectAddresses);
+  connect(mUi->mSolveButton, &QPushButton::clicked, this, &IncidenceAttendee::slotSolveConflictPressed);
   /* Added as part of kolab/issue2297, which is currently under review
-  connect( mUi->mOrganizerCombo, SIGNAL(activated(QString)),
-           this, SLOT(slotOrganizerChanged(QString)) );
+  connect(mUi->mOrganizerCombo, static_cast<void (KComboBox::*)(const QString &)>(&KComboBox::activated), this, &IncidenceAttendee::slotOrganizerChanged);
   */
-  connect( mUi->mOrganizerCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(checkDirtyStatus()) );
+  connect(mUi->mOrganizerCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceAttendee::checkDirtyStatus);
 
-  connect( mDateTime, SIGNAL(startDateChanged(QDate)),
-           this, SLOT(slotEventDurationChanged()) );
-  connect( mDateTime, SIGNAL(endDateChanged(QDate)),
-           this, SLOT(slotEventDurationChanged()) );
-  connect( mDateTime, SIGNAL(startTimeChanged(QTime)),
-           this, SLOT(slotEventDurationChanged()) );
-  connect( mDateTime, SIGNAL(endTimeChanged(QTime)),
-           this, SLOT(slotEventDurationChanged()) );
+  connect(mDateTime, &IncidenceDateTime::startDateChanged, this, &IncidenceAttendee::slotEventDurationChanged);
+  connect(mDateTime, &IncidenceDateTime::endDateChanged, this, &IncidenceAttendee::slotEventDurationChanged);
+  connect(mDateTime, &IncidenceDateTime::startTimeChanged, this, &IncidenceAttendee::slotEventDurationChanged);
+  connect(mDateTime, &IncidenceDateTime::endTimeChanged, this, &IncidenceAttendee::slotEventDurationChanged);
 
-  connect( mConflictResolver, SIGNAL(conflictsDetected(int)),
-           this, SLOT(slotUpdateConflictLabel(int)) );
+  connect(mConflictResolver, &ConflictResolver::conflictsDetected, this, &IncidenceAttendee::slotUpdateConflictLabel);
 
   slotUpdateConflictLabel( 0 ); //initialize label
 
-  connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine*)),
-           SLOT(checkIfExpansionIsNeeded(KPIM::MultiplyingLine*)) );
-  connect( mAttendeeEditor, SIGNAL(changed(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)),
-           SLOT(slotAttendeeChanged(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)) );
+  connect(mAttendeeEditor, &AttendeeEditor::editingFinished, this, &IncidenceAttendee::checkIfExpansionIsNeeded);
+  connect(mAttendeeEditor, &AttendeeEditor::changed, this, &IncidenceAttendee::slotAttendeeChanged);
 }
 
 IncidenceAttendee::~IncidenceAttendee() {}

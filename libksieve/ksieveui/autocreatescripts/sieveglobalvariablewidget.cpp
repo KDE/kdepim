@@ -263,12 +263,9 @@ void SieveGlobalVariableLister::generatedScript(QString &script, QStringList &re
 
 void SieveGlobalVariableLister::reconnectWidget(SieveGlobalVariableActionWidget *w)
 {
-    connect(w, SIGNAL(addWidget(QWidget*)),
-            this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection);
-    connect(w, SIGNAL(removeWidget(QWidget*)),
-            this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection);
-    connect(w, SIGNAL(valueChanged()),
-            this, SIGNAL(valueChanged()), Qt::UniqueConnection);
+    connect(w, &SieveGlobalVariableActionWidget::addWidget, this, &SieveGlobalVariableLister::slotAddWidget, Qt::UniqueConnection);
+    connect(w, &SieveGlobalVariableActionWidget::removeWidget, this, &SieveGlobalVariableLister::slotRemoveWidget, Qt::UniqueConnection);
+    connect(w, &SieveGlobalVariableActionWidget::valueChanged, this, &SieveGlobalVariableLister::valueChanged, Qt::UniqueConnection);
 }
 
 void SieveGlobalVariableLister::clearWidget(QWidget *aWidget)

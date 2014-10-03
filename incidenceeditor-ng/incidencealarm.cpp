@@ -50,22 +50,14 @@ IncidenceAlarm::IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoDesk
   mUi->mAlarmPresetCombo->setCurrentIndex( AlarmPresets::defaultPresetIndex() );
   updateButtons();
 
-  connect( mDateTime, SIGNAL(startDateTimeToggled(bool)),
-           SLOT(handleDateTimeToggle()) );
-  connect( mDateTime, SIGNAL(endDateTimeToggled(bool)),
-           SLOT(handleDateTimeToggle()) );
-  connect( mUi->mAlarmAddPresetButton, SIGNAL(clicked()),
-           SLOT(newAlarmFromPreset()) );
-  connect( mUi->mAlarmList, SIGNAL(itemSelectionChanged()),
-           SLOT(updateButtons()) );
-  connect( mUi->mAlarmNewButton, SIGNAL(clicked()),
-           SLOT(newAlarm()));
-  connect( mUi->mAlarmConfigureButton, SIGNAL(clicked()),
-           SLOT(editCurrentAlarm()) );
-  connect( mUi->mAlarmToggleButton, SIGNAL(clicked()),
-           SLOT(toggleCurrentAlarm()) );
-  connect( mUi->mAlarmRemoveButton, SIGNAL(clicked()),
-           SLOT(removeCurrentAlarm()) );
+  connect(mDateTime, &IncidenceDateTime::startDateTimeToggled, this, &IncidenceAlarm::handleDateTimeToggle);
+  connect(mDateTime, &IncidenceDateTime::endDateTimeToggled, this, &IncidenceAlarm::handleDateTimeToggle);
+  connect(mUi->mAlarmAddPresetButton, &QPushButton::clicked, this, &IncidenceAlarm::newAlarmFromPreset);
+  connect(mUi->mAlarmList, &QListWidget::itemSelectionChanged, this, &IncidenceAlarm::updateButtons);
+  connect(mUi->mAlarmNewButton, &QPushButton::clicked, this, &IncidenceAlarm::newAlarm);
+  connect(mUi->mAlarmConfigureButton, &QPushButton::clicked, this, &IncidenceAlarm::editCurrentAlarm);
+  connect(mUi->mAlarmToggleButton, &QPushButton::clicked, this, &IncidenceAlarm::toggleCurrentAlarm);
+  connect(mUi->mAlarmRemoveButton, &QPushButton::clicked, this, &IncidenceAlarm::removeCurrentAlarm);
 }
 
 void IncidenceAlarm::load( const KCalCore::Incidence::Ptr &incidence )
