@@ -32,6 +32,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldClearLineWhenClose();
     void shouldEnableDisableNextPreviousButton();
+    void shouldClearAllWhenShowBar();
 
 };
 

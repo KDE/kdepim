@@ -94,5 +94,21 @@ void FindBarBaseTest::shouldEnableDisableNextPreviousButton()
 
 }
 
+void FindBarBaseTest::shouldClearAllWhenShowBar()
+{
+    MessageViewer::FindBarBase bar;
+    bar.show();
+    QTest::qWaitForWindowShown(&bar);
+    QLabel *status = qFindChild<QLabel *>(&bar, QLatin1String("status"));
+    status->setText(QLatin1String("FOO"));
+    bar.closeBar();
+
+    bar.show();
+    bar.focusAndSetCursor();
+    KLineEdit *lineedit = qFindChild<KLineEdit *>(&bar, QLatin1String("searchline"));
+    QVERIFY(lineedit->hasFocus());
+    QVERIFY(status->text().isEmpty());
+}
+
 
 QTEST_KDEMAIN( FindBarBaseTest, GUI )

@@ -127,6 +127,7 @@ void FindBarBase::setText( const QString&text )
 void FindBarBase::focusAndSetCursor()
 {
     setFocus();
+    mStatus->clear();
     mSearch->selectAll();
     mSearch->setFocus();
 }
