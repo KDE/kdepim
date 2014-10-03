@@ -64,6 +64,7 @@ class GrantleeThemeManager;
 
 namespace PimCommon {
 class TranslatorWidget;
+class SlideContainer;
 }
 
 namespace MessageViewer {
@@ -734,6 +735,7 @@ public:
     static const qreal zoomBy;
     qreal mZoomFactor;
     Viewer::DisplayFormatMessage mDisplayFormatMessageOverwrite;
+    PimCommon::SlideContainer *mSliderContainer;
 };
 
 }

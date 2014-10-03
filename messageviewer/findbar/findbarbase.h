@@ -58,6 +58,9 @@ public slots:
     void slotSearchText( bool backward = false, bool isAutoSearch = true );
     void closeBar();
 
+Q_SIGNALS:
+    void hideFindBar();
+
 private slots:
     void caseSensitivityChanged(bool);
     void slotHighlightAllChanged(bool);

@@ -127,6 +127,7 @@ void FindBarBase::setText( const QString&text )
 void FindBarBase::focusAndSetCursor()
 {
     setFocus();
+    mStatus->clear();
     mSearch->selectAll();
     mSearch->setFocus();
 }
@@ -222,7 +223,7 @@ void FindBarBase::closeBar()
     // Make sure that all old searches are cleared
     mSearch->clear();
     clearSelections();
-    hide();
+    Q_EMIT hideFindBar();
 }
 
 bool FindBarBase::event(QEvent* e)
