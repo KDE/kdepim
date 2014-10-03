@@ -693,10 +693,6 @@ void IncidenceDialog::readConfig()
     } else {
         resize( QSize( 500, 500 ).expandedTo( minimumSizeHint() ) );
     }
-    const qint64 id = IncidenceEditorNG::GlobalSettings::self()->lastSelectedFolder();
-    if (id!=-1) {
-        d_ptr->mCalSelector->setDefaultCollection(Akonadi::Collection(id));
-    }
 }
 
 
