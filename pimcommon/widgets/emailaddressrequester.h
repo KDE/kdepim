@@ -19,20 +19,20 @@
 #ifndef MESSAGECORE_EMAILADDRESSREQUESTER_H
 #define MESSAGECORE_EMAILADDRESSREQUESTER_H
 
-#include "messagecore_export.h"
+#include "pimcommon_export.h"
 
 #include <QWidget>
 
 class KLineEdit;
 
-namespace MessageCore {
+namespace PimCommon {
 
 /**
  * @short A widget to input one or more email addresses.
  *
  * @author Marc Mutz <mutz@kde.org>
  */
-class MESSAGECORE_EXPORT EmailAddressRequester : public QWidget
+class PIMCOMMON_EXPORT EmailAddressRequester : public QWidget
 {
     Q_OBJECT
 

@@ -23,7 +23,7 @@
 
 #include "messageitem.h"
 #include "item_p.h"
-#include "messagecore/widgets/annotationdialog.h"
+#include "pimcommon/widgets/annotationdialog.h"
 #include <Item>
 #include <Monitor>
 #include <Tag>
@@ -72,7 +72,7 @@ public:
     QByteArray mReferencesIdMD5;         ///< set only if we're doing threading
     QByteArray mStrippedSubjectMD5;      ///< set only if we're doing threading
     Akonadi::Item mAkonadiItem;
-    QWeakPointer<MessageCore::AnnotationEditDialog> mAnnotationDialog;
+    QWeakPointer<PimCommon::AnnotationEditDialog> mAnnotationDialog;
     MessageItem::ThreadingStatus mThreadingStatus : 4;
     MessageItem::EncryptionState mEncryptionState : 4;
     MessageItem::SignatureState mSignatureState : 4;

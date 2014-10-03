@@ -22,7 +22,7 @@
 #include "messageitem.h"
 #include "messageitem_p.h"
 
-#include "messagecore/widgets/annotationdialog.h"
+#include "pimcommon/widgets/annotationdialog.h"
 #include "theme.h"
 
 #include <item.h>
@@ -287,7 +287,7 @@ void MessageItem::editAnnotation()
     if (d->mAnnotationDialog.data()) {
         return;
     }
-    d->mAnnotationDialog = new MessageCore::AnnotationEditDialog(d->mAkonadiItem);
+    d->mAnnotationDialog = new PimCommon::AnnotationEditDialog(d->mAkonadiItem);
     d->mAnnotationDialog.data()->setAttribute(Qt::WA_DeleteOnClose);
     //FIXME make async
     if (d->mAnnotationDialog.data()->exec()) {

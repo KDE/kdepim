@@ -28,9 +28,9 @@
 #include <QPushButton>
 #include <QTreeView>
 
-using namespace MessageCore;
+using namespace PimCommon;
 
-class MessageCore::EmailAddressRequester::Private
+class PimCommon::EmailAddressRequester::Private
 {
 public:
     Private( EmailAddressRequester *qq )
@@ -117,5 +117,4 @@ KLineEdit* EmailAddressRequester::lineEdit() const
 {
     return d->mLineEdit;
 }
-
 #include "moc_emailaddressrequester.cpp"

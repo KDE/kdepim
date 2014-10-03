@@ -20,7 +20,7 @@
 #ifndef MESSAGECORE_ANNOTATIONDIALOG_H
 #define MESSAGECORE_ANNOTATIONDIALOG_H
 
-#include "messagecore_export.h"
+#include "pimcommon_export.h"
 
 #include <QDialog>
 #include <KConfigGroup>
@@ -29,14 +29,14 @@ namespace Akonadi {
 class Item;
 }
 
-namespace MessageCore {
+namespace PimCommon {
 
 /**
  * @short A dialog for editing annotations of an email.
  *
  * @author Thomas McGuire <mcguire@kde.org>
  */
-class MESSAGECORE_EXPORT AnnotationEditDialog : public QDialog
+class PIMCOMMON_EXPORT AnnotationEditDialog : public QDialog
 {
     Q_OBJECT
 

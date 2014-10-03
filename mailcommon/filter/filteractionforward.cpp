@@ -26,7 +26,7 @@
 #include <pimcommon/widgets/minimumcombobox.h>
 #include <messagecomposer/helper/messagefactory.h>
 #include <messagecomposer/sender/messagesender.h>
-#include <messagecore/widgets/emailaddressrequester.h>
+#include <pimcommon/widgets/emailaddressrequester.h>
 #include <messagecore/utils/stringutil.h>
 #include <templateparser/customtemplates.h>
 #include <templateparser/customtemplates_kfg.h>
@@ -97,7 +97,7 @@ QWidget *FilterActionForward::createParamWidget(QWidget *parent) const
     addressEdit->setObjectName(QLatin1String("addressEdit"));
     layout->addWidget(addressEdit);
 
-    MessageCore::EmailAddressRequester *addressRequester = qobject_cast<MessageCore::EmailAddressRequester *>(addressEdit);
+    PimCommon::EmailAddressRequester *addressRequester = qobject_cast<PimCommon::EmailAddressRequester *>(addressEdit);
     Q_ASSERT(addressRequester);
     KLineEdit *lineEdit = addressRequester->lineEdit();
     lineEdit->setClearButtonEnabled(true);
@@ -125,7 +125,7 @@ QWidget *FilterActionForward::createParamWidget(QWidget *parent) const
     templateCombo->setWhatsThis(i18n("Set the forwarding template that will be used with this filter."));
 
     connect(templateCombo, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::currentIndexChanged), this, &FilterActionForward::filterActionModified);
-    connect(addressRequester, &MessageCore::EmailAddressRequester::textChanged, this, &FilterActionForward::filterActionModified);
+    connect(addressRequester, &PimCommon::EmailAddressRequester::textChanged, this, &FilterActionForward::filterActionModified);
 
     return addressAndTemplate;
 }

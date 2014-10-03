@@ -163,6 +163,8 @@ set(libpimcommon_widgets_SRCS
   widgets/customtoolswidget.cpp
   widgets/configureimmutablewidgetutils.cpp
   widgets/slidecontainer.cpp
+  widgets/emailaddressrequester.cpp
+  widgets/annotationdialog.cpp
 )
 
 set(libtexttospeech_SRCS

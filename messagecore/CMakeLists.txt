@@ -32,10 +32,6 @@ set(messagecore_misc_LIB_SRCS
    misc/mdnstateattribute.cpp
 )
 
-set(messagecore_widget_LIB_SRCS
-   widgets/emailaddressrequester.cpp
-   widgets/annotationdialog.cpp
-)
 
 set(messagecore_helper_LIB_SRCS
    helpers/messagehelpers.cpp
@@ -45,7 +41,6 @@ set(messagecore_helper_LIB_SRCS
 set(messagecore_LIB_SRCS
    ${messagecore_attachment_LIB_SRCS}
    ${messagecore_misc_LIB_SRCS}
-   ${messagecore_widget_LIB_SRCS}
    ${messagecore_helper_LIB_SRCS}
    settings/globalsettings.cpp
    utils/stringutil.cpp

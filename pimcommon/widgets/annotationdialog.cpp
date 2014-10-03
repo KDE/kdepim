@@ -39,7 +39,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-using namespace MessageCore;
+using namespace PimCommon;
 
 class AnnotationEditDialog::Private
 {

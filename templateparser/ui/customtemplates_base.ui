@@ -169,7 +169,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <widget class="MessageCore::EmailAddressRequester" name="mToEdit" native="true">
+            <widget class="PimCommon::EmailAddressRequester" name="mToEdit" native="true">
              <property name="sizePolicy">
               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -185,7 +185,7 @@
             </widget>
            </item>
            <item>
-            <widget class="MessageCore::EmailAddressRequester" name="mCCEdit" native="true">
+            <widget class="PimCommon::EmailAddressRequester" name="mCCEdit" native="true">
              <property name="sizePolicy">
               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -330,9 +330,9 @@
    <header>templatesinsertcommand.h</header>
   </customwidget>
   <customwidget>
-   <class>MessageCore::EmailAddressRequester</class>
+   <class>PimCommon::EmailAddressRequester</class>
    <extends>QWidget</extends>
-   <header>widgets/emailaddressrequester.h</header>
+   <header>pimcommon/widgets/emailaddressrequester.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

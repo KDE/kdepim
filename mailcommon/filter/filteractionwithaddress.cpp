@@ -19,7 +19,7 @@
 
 #include "filteractionwithaddress.h"
 
-#include <messagecore/widgets/emailaddressrequester.h>
+#include <pimcommon/widgets/emailaddressrequester.h>
 
 using namespace MailCommon;
 
@@ -30,26 +30,26 @@ FilterActionWithAddress::FilterActionWithAddress(const QString &name, const QStr
 
 QWidget *FilterActionWithAddress::createParamWidget(QWidget *parent) const
 {
-    MessageCore::EmailAddressRequester *requester = new MessageCore::EmailAddressRequester(parent);
+    PimCommon::EmailAddressRequester *requester = new PimCommon::EmailAddressRequester(parent);
     requester->setText(mParameter);
 
-    connect(requester, &MessageCore::EmailAddressRequester::textChanged, this, &FilterActionWithAddress::filterActionModified);
+    connect(requester, &PimCommon::EmailAddressRequester::textChanged, this, &FilterActionWithAddress::filterActionModified);
 
     return requester;
 }
 
 void FilterActionWithAddress::applyParamWidgetValue(QWidget *paramWidget)
 {
-    mParameter = qobject_cast<MessageCore::EmailAddressRequester *>(paramWidget)->text();
+    mParameter = qobject_cast<PimCommon::EmailAddressRequester *>(paramWidget)->text();
 }
 
 void FilterActionWithAddress::setParamWidgetValue(QWidget *paramWidget) const
 {
-    qobject_cast<MessageCore::EmailAddressRequester *>(paramWidget)->setText(mParameter);
+    qobject_cast<PimCommon::EmailAddressRequester *>(paramWidget)->setText(mParameter);
 }
 
 void FilterActionWithAddress::clearParamWidget(QWidget *paramWidget) const
 {
-    qobject_cast<MessageCore::EmailAddressRequester *>(paramWidget)->clear();
+    qobject_cast<PimCommon::EmailAddressRequester *>(paramWidget)->clear();
 }
 
