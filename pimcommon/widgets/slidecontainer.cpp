@@ -18,8 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 */
 #include "slidecontainer.h"
-// KDE
-#include <KDebug>
 
 // Qt
 #include <QEvent>
@@ -31,20 +29,20 @@ namespace PimCommon
 
 static const int SLIDE_DURATION = 250;
 
-SlideContainer::SlideContainer(QWidget* parent)
-: QFrame(parent)
+SlideContainer::SlideContainer(QWidget *parent)
+    : QFrame(parent)
 {
     mContent = 0;
     mSlidingOut = false;
     setFixedHeight(0);
 }
 
-QWidget* SlideContainer::content() const
+QWidget *SlideContainer::content() const
 {
     return mContent;
 }
 
-void SlideContainer::setContent(QWidget* content)
+void SlideContainer::setContent(QWidget *content)
 {
     if (mContent) {
         mContent->setParent(0);
@@ -61,7 +59,7 @@ void SlideContainer::setContent(QWidget* content)
 void SlideContainer::animTo(int newHeight)
 {
     delete mAnim.data();
-    QPropertyAnimation* anim = new QPropertyAnimation(this, "slideHeight", this);
+    QPropertyAnimation *anim = new QPropertyAnimation(this, "slideHeight", this);
     anim->setDuration(SLIDE_DURATION);
     anim->setStartValue(slideHeight());
     anim->setEndValue(newHeight);
@@ -109,7 +107,7 @@ QSize SlideContainer::minimumSizeHint() const
     }
 }
 
-void SlideContainer::resizeEvent(QResizeEvent* event)
+void SlideContainer::resizeEvent(QResizeEvent *event)
 {
     if (mContent) {
         if (event->oldSize().width() != width()) {
@@ -125,7 +123,7 @@ void SlideContainer::adjustContentGeometry()
     }
 }
 
-bool SlideContainer::eventFilter(QObject*, QEvent* event)
+bool SlideContainer::eventFilter(QObject *, QEvent *event)
 {
     if (event->type() == QEvent::Resize) {
         if (!mSlidingOut && height() != 0) {

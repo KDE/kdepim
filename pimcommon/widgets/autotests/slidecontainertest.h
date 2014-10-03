@@ -1,4 +1,3 @@
-// vim: set tabstop=4 shiftwidth=4 expandtab:
 /*
 Gwenview: an image viewer
 Copyright 2011 Aurélien Gâteau <agateau@kde.org>

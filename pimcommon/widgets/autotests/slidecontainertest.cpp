@@ -1,4 +1,3 @@
-// vim: set tabstop=4 shiftwidth=4 expandtab:
 /*
 Gwenview: an image viewer
 Copyright 2011 Aurélien Gâteau <agateau@kde.org>
@@ -24,28 +23,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Cambridge, MA 02110-1301, USA
 // Local
 #include "pimcommon/widgets/slidecontainer.h"
 
-// KDE
-#include <qtest_kde.h>
-#include <KDebug>
-
-// Qt
+#include <qtest.h>
 #include <QTextEdit>
 #include <QVBoxLayout>
-
-
+#include <QSignalSpy>
 
 using namespace PimCommon;
 
-struct TestWindow : public QWidget
-{
-    explicit TestWindow(QWidget* parent = 0)
+struct TestWindow : public QWidget {
+    explicit TestWindow(QWidget *parent = 0)
         : QWidget(parent)
         , mContainer(new SlideContainer)
-        , mContent(0) {
+        , mContent(0)
+    {
         createContent();
 
         mMainWidget = new QTextEdit();
-        QVBoxLayout* layout = new QVBoxLayout(this);
+        QVBoxLayout *layout = new QVBoxLayout(this);
         layout->setSpacing(0);
         layout->setMargin(0);
         layout->addWidget(mMainWidget);
@@ -59,9 +53,9 @@ struct TestWindow : public QWidget
         mContainer->setContent(mContent);
     }
 
-    SlideContainer* mContainer;
-    QWidget* mMainWidget;
-    QWidget* mContent;
+    SlideContainer *mContainer;
+    QWidget *mMainWidget;
+    QWidget *mContent;
 };
 
 void SlideContainerAutoTest::testInit()
@@ -144,4 +138,4 @@ void SlideContainerAutoTest::testHiddenContentResize()
     QCOMPARE(window.mContainer->height(), 0);
 }
 
-QTEST_KDEMAIN(SlideContainerAutoTest, GUI)
+QTEST_MAIN(SlideContainerAutoTest)

@@ -41,17 +41,17 @@ class PIMCOMMON_EXPORT SlideContainer : public QFrame
     Q_OBJECT
     Q_PROPERTY(int slideHeight READ slideHeight WRITE setSlideHeight)
 public:
-    SlideContainer(QWidget* parent = 0);
+    SlideContainer(QWidget *parent = 0);
 
     /**
      * Returns the content widget
      */
-    QWidget* content() const;
+    QWidget *content() const;
 
     /**
      * Defines the content widget
      */
-    void setContent(QWidget* content);
+    void setContent(QWidget *content);
 
     virtual QSize sizeHint() const;
 
@@ -79,14 +79,14 @@ Q_SIGNALS:
     void slidedOut();
 
 protected:
-    void resizeEvent(QResizeEvent*);
-    bool eventFilter(QObject*, QEvent* event);
+    void resizeEvent(QResizeEvent *);
+    bool eventFilter(QObject *, QEvent *event);
 
 private Q_SLOTS:
     void slotAnimFinished();
 
 private:
-    QWidget* mContent;
+    QWidget *mContent;
     QWeakPointer<QPropertyAnimation> mAnim;
     bool mSlidingOut;
 

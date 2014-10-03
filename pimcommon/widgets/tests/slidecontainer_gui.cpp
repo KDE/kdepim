@@ -1,4 +1,3 @@
-// vim: set tabstop=4 shiftwidth=4 expandtab:
 /*
 code based on source from Gwenview
 Copyright 2007 Aurélien Gâteau <agateau@kde.org>
@@ -34,29 +33,29 @@ class Window : public QWidget
 public:
     Window()
         : QWidget()
-        {
-        SlideContainer* container = new SlideContainer(this);
+    {
+        SlideContainer *container = new SlideContainer(this);
 
-        QPushButton* inButton = new QPushButton(this);
+        QPushButton *inButton = new QPushButton(this);
         inButton->setText(QLatin1String("Slide &In"));
         connect(inButton, SIGNAL(clicked()), container, SLOT(slideIn()));
 
-        QPushButton* outButton = new QPushButton(this);
+        QPushButton *outButton = new QPushButton(this);
         outButton->setText(QLatin1String("Slide &Out"));
         connect(outButton, SIGNAL(clicked()), container, SLOT(slideOut()));
 
-        QVBoxLayout* layout = new QVBoxLayout(this);
+        QVBoxLayout *layout = new QVBoxLayout(this);
         layout->addWidget(inButton);
         layout->addWidget(outButton);
         layout->addWidget(container);
 
-        QLineEdit* content = new QLineEdit(container);
+        QLineEdit *content = new QLineEdit(container);
         content->setText(QLatin1String("Some long text. Some long text. Some long text. Some long text."));
         container->setContent(content);
     }
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     Window window;
