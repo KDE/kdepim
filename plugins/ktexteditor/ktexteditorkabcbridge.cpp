@@ -27,8 +27,11 @@ using namespace KIdentityManagement;
 
 // extern "C" is needed here because this function must be located using
 // QLibrary resolve() that only knows how to resolve C functions
-// This function is used by kate/kwrite
-extern "C" Q_DECL_EXPORT QString ktexteditorkabcbridge(const QString &placeHolder, QWidget *widget, bool *ok)
+// This function is used by kate/kwrite ( only gcc )
+#if defined(__GCC__)
+extern "C" 
+#endif
+Q_DECL_EXPORT QString ktexteditorkabcbridge(const QString &placeHolder, QWidget *widget, bool *ok)
 {
     IdentityManager manager(true, widget);
     Identity defaultIdentity = manager.defaultIdentity();
