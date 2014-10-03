@@ -104,6 +104,7 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   mUi->mEndTimeEdit->installEventFilter( this );
 #else
   mUi->mTimeZoneLabel->setVisible( !mUi->mWholeDayCheck->isChecked() );
+  mUi->mTimeZoneLabel->setContextMenuPolicy(Qt::NoContextMenu);
   connect( mUi->mTimeZoneLabel, SIGNAL(linkActivated(QString)),
            SLOT(toggleTimeZoneVisibility()) );
 #endif
