@@ -223,6 +223,7 @@ void FindBarBase::closeBar()
     // Make sure that all old searches are cleared
     mSearch->clear();
     clearSelections();
+    mSearch->clearFocus();
     Q_EMIT hideFindBar();
 }
 
