@@ -22,7 +22,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QToolButton>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FindBarBaseTest::FindBarBaseTest(QObject *parent)
     : QObject(parent)
@@ -92,4 +92,4 @@ void FindBarBaseTest::shouldEnableDisableNextPreviousButton()
 }
 
 
-QTEST_KDEMAIN( FindBarBaseTest, GUI )
+QTEST_MAIN( FindBarBaseTest )

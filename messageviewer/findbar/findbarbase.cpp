@@ -22,7 +22,6 @@
 #include <qicon.h>
 #include <KLocalizedString>
 #include <klineedit.h>
-#include <kmessagebox.h>
 #include <KColorScheme>
 
 #include <QPushButton>

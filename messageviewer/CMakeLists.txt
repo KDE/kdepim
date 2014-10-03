@@ -235,6 +235,6 @@ install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${CONFIG
 add_subdirectory(scamdetection/autotests)
 add_subdirectory(scamdetection/tests)
 add_subdirectory(adblock/tests/)
-add_subdirectory(findbar/tests)
+add_subdirectory(findbar/autotests)
 install(FILES notify/messageviewer.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
 install(FILES scamdetection/data/longurlServices.json DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
