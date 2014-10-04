@@ -1,4 +1,3 @@
-// -*- Mode: C++; c-basic-offset: 2; indent-tabs-mode: nil; -*-
 
 #ifndef MESSAGECORE_MAILINGLIST_H
 #define MESSAGECORE_MAILINGLIST_H
@@ -52,16 +51,16 @@ public:
         Owner        = 1 << 6, ///< List-Owner header exists.
         ArchivedAt   = 1 << 7  ///< Archive-At header exists.
     };
-    Q_DECLARE_FLAGS( Features, Feature )
+    Q_DECLARE_FLAGS(Features, Feature)
 
 public:
     /**
      * Extracts the information about a mailing list from the given @p message.
      */
-    static MailingList detect(  const KMime::Message::Ptr &message );
+    static MailingList detect(const KMime::Message::Ptr &message);
 
-    static QString name( const KMime::Message::Ptr &message, QByteArray &headerName,
-                         QString &headerValue );
+    static QString name(const KMime::Message::Ptr &message, QByteArray &headerName,
+                        QString &headerValue);
 
 public:
     /**
@@ -72,14 +71,14 @@ public:
     /**
      * Creates a mailing list from an @p other mailing list.
      */
-    MailingList( const MailingList &other );
+    MailingList(const MailingList &other);
 
     /**
      * Overwrites this mailing list with an @p other mailing list.
      */
-    MailingList &operator=( const MailingList &other );
+    MailingList &operator=(const MailingList &other);
 
-    bool operator==( const MailingList &other ) const;
+    bool operator==(const MailingList &other) const;
     /**
      * Destroys the mailing list.
      */
@@ -93,7 +92,7 @@ public:
     /**
      * Sets the @p handler for the mailing list.
      */
-    void setHandler( Handler handler );
+    void setHandler(Handler handler);
 
     /**
      * Returns the handler for the mailing list.
@@ -103,7 +102,7 @@ public:
     /**
      * Sets the list of List-Post @p urls.
      */
-    void setPostUrls( const KUrl::List &urls );
+    void setPostUrls(const KUrl::List &urls);
 
     /**
      * Returns the list of List-Post urls.
@@ -113,7 +112,7 @@ public:
     /**
      * Sets the list of List-Subscribe @p urls.
      */
-    void setSubscribeUrls( const KUrl::List &urls );
+    void setSubscribeUrls(const KUrl::List &urls);
 
     /**
      * Returns the list of List-Subscribe urls.
@@ -123,7 +122,7 @@ public:
     /**
      * Sets the list of List-Unsubscribe @p urls.
      */
-    void setUnsubscribeUrls( const KUrl::List &urls );
+    void setUnsubscribeUrls(const KUrl::List &urls);
 
     /**
      * Returns the list of List-Unsubscribe urls.
@@ -133,7 +132,7 @@ public:
     /**
      * Sets the list of List-Help @p urls.
      */
-    void setHelpUrls( const KUrl::List &urls );
+    void setHelpUrls(const KUrl::List &urls);
 
     /**
      * Returns the list of List-Help urls.
@@ -143,7 +142,7 @@ public:
     /**
      * Sets the list of List-Archive @p urls.
      */
-    void setArchiveUrls( const KUrl::List &urls );
+    void setArchiveUrls(const KUrl::List &urls);
 
     /**
      * Returns the list of List-Archive urls.
@@ -153,7 +152,7 @@ public:
     /**
      * Sets the list of List-Owner @p urls.
      */
-    void setOwnerUrls( const KUrl::List &urls );
+    void setOwnerUrls(const KUrl::List &urls);
 
     /**
      * Returns the list of List-Owner urls.
@@ -163,7 +162,7 @@ public:
     /**
      * Sets the Archived-At @p url.
      */
-    void setArchivedAtUrls( const KUrl::List &url );
+    void setArchivedAtUrls(const KUrl::List &url);
 
     /**
      * Returns the Archived-At @p url.
@@ -173,7 +172,7 @@ public:
     /**
      * Sets the @p id of the mailing list.
      */
-    void setId( const QString &id );
+    void setId(const QString &id);
 
     /**
      * Returns the @p id of the mailing list.
@@ -183,12 +182,12 @@ public:
     /**
      * Saves the configuration for the mailing list to the config @p group.
      */
-    void writeConfig( KConfigGroup &group ) const;
+    void writeConfig(KConfigGroup &group) const;
 
     /**
      * Restores the configuration for the mailing list from the config @p group.
      */
-    void readConfig( const KConfigGroup &group );
+    void readConfig(const KConfigGroup &group);
 
 private:
     class Private;
@@ -197,7 +196,7 @@ private:
 
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( MessageCore::MailingList::Features )
-Q_DECLARE_METATYPE( MessageCore::MailingList::Features )
+Q_DECLARE_OPERATORS_FOR_FLAGS(MessageCore::MailingList::Features)
+Q_DECLARE_METATYPE(MessageCore::MailingList::Features)
 
 #endif

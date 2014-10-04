@@ -27,7 +27,8 @@
 
 #include <attribute.h>
 
-namespace MessageCore {
+namespace MessageCore
+{
 
 /**
  * @short An Attribute that keeps track of the MDN state of a mail message.
@@ -45,8 +46,7 @@ public:
     /**
      * Describes the "MDN sent" state.
      */
-    enum MDNSentState
-    {
+    enum MDNSentState {
         MDNStateUnknown, ///< The state is unknown.
         MDNNone,         ///< No MDN has been set.
         MDNIgnore,       ///< Ignore sending a MDN.
@@ -63,54 +63,54 @@ public:
      *
      * @param state The state the attribute will have.
      */
-    explicit MDNStateAttribute( const MDNSentState &state = MDNStateUnknown );
+    explicit MDNStateAttribute(const MDNSentState &state = MDNStateUnknown);
 
     /**
      * Creates a new MDN state attribute.
      *
      * @param state The string representation of the state the attribute will have.
      */
-    explicit MDNStateAttribute( const QByteArray &state );
-    
+    explicit MDNStateAttribute(const QByteArray &state);
+
     /**
      * Destroys the MDN state attribute.
      */
     ~MDNStateAttribute();
-    
+
     /**
      * Reimplemented from Attribute
      */
     QByteArray type() const;
-    
+
     /**
      * Reimplemented from Attribute
      */
-    MDNStateAttribute* clone() const;
-    
+    MDNStateAttribute *clone() const;
+
     /**
      * Reimplemented from Attribute
      */
     QByteArray serialized() const;
-    
+
     /**
      * Reimplemented from Attribute
      */
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
     /**
      * Sets the MDN @p state.
      */
-    void setMDNState( const MDNSentState &state );
+    void setMDNState(const MDNSentState &state);
 
     /**
      * Returns the MDN state.
      */
     MDNStateAttribute::MDNSentState mdnState() const;
-    
+
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

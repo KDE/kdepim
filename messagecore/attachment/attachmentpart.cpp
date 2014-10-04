@@ -25,18 +25,18 @@
 
 using namespace MessageCore;
 
-uint MessageCore::qHash( const MessageCore::AttachmentPart::Ptr &ptr )
+uint MessageCore::qHash(const MessageCore::AttachmentPart::Ptr &ptr)
 {
-    return ::qHash( ptr.get() );
+    return ::qHash(ptr.get());
 }
 
 // TODO move to kmime_util?
-static qint64 sizeWithEncoding( const QByteArray &data,
-                                KMime::Headers::contentEncoding encoding ) // local
+static qint64 sizeWithEncoding(const QByteArray &data,
+                               KMime::Headers::contentEncoding encoding)  // local
 {
     KMime::Content *content = new KMime::Content;
-    content->setBody( data );
-    content->contentTransferEncoding()->setEncoding( encoding );
+    content->setBody(data);
+    content->contentTransferEncoding()->setEncoding(encoding);
 
     const int size = content->size();
     delete content;
@@ -48,13 +48,13 @@ class MessageCore::AttachmentPart::Private
 {
 public:
     Private()
-        : mIsInline( false ),
-          mAutoEncoding( true ),
-          mEncoding( KMime::Headers::CE7Bit ),
-          mCompressed( false ),
-          mToEncrypt( false ),
-          mToSign( false ),
-          mSize( -1 )
+        : mIsInline(false),
+          mAutoEncoding(true),
+          mEncoding(KMime::Headers::CE7Bit),
+          mCompressed(false),
+          mToEncrypt(false),
+          mToSign(false),
+          mSize(-1)
     {
     }
 
@@ -74,7 +74,7 @@ public:
 };
 
 AttachmentPart::AttachmentPart()
-    : d( new Private )
+    : d(new Private)
 {
 }
 
@@ -88,7 +88,7 @@ QString AttachmentPart::name() const
     return d->mName;
 }
 
-void AttachmentPart::setName( const QString &name )
+void AttachmentPart::setName(const QString &name)
 {
     d->mName = name;
 }
@@ -98,7 +98,7 @@ QString AttachmentPart::fileName() const
     return d->mFileName;
 }
 
-void AttachmentPart::setFileName( const QString &name )
+void AttachmentPart::setFileName(const QString &name)
 {
     d->mFileName = name;
 }
@@ -108,7 +108,7 @@ QString AttachmentPart::description() const
     return d->mDescription;
 }
 
-void AttachmentPart::setDescription( const QString &description )
+void AttachmentPart::setDescription(const QString &description)
 {
     d->mDescription = description;
 }
@@ -118,7 +118,7 @@ bool AttachmentPart::isInline() const
     return d->mIsInline;
 }
 
-void AttachmentPart::setInline( bool inl )
+void AttachmentPart::setInline(bool inl)
 {
     d->mIsInline = inl;
 }
@@ -128,15 +128,15 @@ bool AttachmentPart::isAutoEncoding() const
     return d->mAutoEncoding;
 }
 
-void AttachmentPart::setAutoEncoding( bool enabled )
+void AttachmentPart::setAutoEncoding(bool enabled)
 {
     d->mAutoEncoding = enabled;
 
-    if ( enabled ) {
-        d->mEncoding = KMime::encodingsForData( d->mData ).first();
+    if (enabled) {
+        d->mEncoding = KMime::encodingsForData(d->mData).first();
     }
 
-    d->mSize = sizeWithEncoding( d->mData, d->mEncoding );
+    d->mSize = sizeWithEncoding(d->mData, d->mEncoding);
 }
 
 KMime::Headers::contentEncoding AttachmentPart::encoding() const
@@ -144,11 +144,11 @@ KMime::Headers::contentEncoding AttachmentPart::encoding() const
     return d->mEncoding;
 }
 
-void AttachmentPart::setEncoding( KMime::Headers::contentEncoding encoding )
+void AttachmentPart::setEncoding(KMime::Headers::contentEncoding encoding)
 {
     d->mAutoEncoding = false;
     d->mEncoding = encoding;
-    d->mSize = sizeWithEncoding( d->mData, d->mEncoding );
+    d->mSize = sizeWithEncoding(d->mData, d->mEncoding);
 }
 
 QByteArray AttachmentPart::charset() const
@@ -156,7 +156,7 @@ QByteArray AttachmentPart::charset() const
     return d->mCharset;
 }
 
-void AttachmentPart::setCharset( const QByteArray &charset )
+void AttachmentPart::setCharset(const QByteArray &charset)
 {
     d->mCharset = charset;
 }
@@ -166,7 +166,7 @@ QByteArray AttachmentPart::mimeType() const
     return d->mMimeType;
 }
 
-void AttachmentPart::setMimeType( const QByteArray &mimeType )
+void AttachmentPart::setMimeType(const QByteArray &mimeType)
 {
     d->mMimeType = mimeType;
 }
@@ -176,7 +176,7 @@ bool AttachmentPart::isCompressed() const
     return d->mCompressed;
 }
 
-void AttachmentPart::setCompressed( bool compressed )
+void AttachmentPart::setCompressed(bool compressed)
 {
     d->mCompressed = compressed;
 }
@@ -186,7 +186,7 @@ bool AttachmentPart::isEncrypted() const
     return d->mToEncrypt;
 }
 
-void AttachmentPart::setEncrypted( bool encrypted )
+void AttachmentPart::setEncrypted(bool encrypted)
 {
     d->mToEncrypt = encrypted;
 }
@@ -196,7 +196,7 @@ bool AttachmentPart::isSigned() const
     return d->mToSign;
 }
 
-void AttachmentPart::setSigned( bool sign )
+void AttachmentPart::setSigned(bool sign)
 {
     d->mToSign = sign;
 }
@@ -206,17 +206,17 @@ QByteArray AttachmentPart::data() const
     return d->mData;
 }
 
-void AttachmentPart::setData( const QByteArray &data )
+void AttachmentPart::setData(const QByteArray &data)
 {
     d->mData = data;
 
-    if ( d->mAutoEncoding ) {
-        QList<KMime::Headers::contentEncoding> possibleEncodings = KMime::encodingsForData( data );
-        possibleEncodings.removeAll( KMime::Headers::CE8Bit );
+    if (d->mAutoEncoding) {
+        QList<KMime::Headers::contentEncoding> possibleEncodings = KMime::encodingsForData(data);
+        possibleEncodings.removeAll(KMime::Headers::CE8Bit);
         d->mEncoding = possibleEncodings.first();
     }
 
-    d->mSize = sizeWithEncoding( d->mData, d->mEncoding );
+    d->mSize = sizeWithEncoding(d->mData, d->mEncoding);
 }
 
 qint64 AttachmentPart::size() const
@@ -226,5 +226,5 @@ qint64 AttachmentPart::size() const
 
 bool AttachmentPart::isMessageOrMessageCollection() const
 {
-    return ( mimeType() == "message/rfc822" ) || ( mimeType() == "multipart/digest" );
+    return (mimeType() == "message/rfc822") || (mimeType() == "multipart/digest");
 }

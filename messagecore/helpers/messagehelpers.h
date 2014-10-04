@@ -27,15 +27,17 @@
 #include <boost/shared_ptr.hpp>
 #include <KMime/Message>
 
-namespace MessageCore {
+namespace MessageCore
+{
 
-namespace Util {
+namespace Util
+{
 /**
    * Retrieve the KMime::Message from the item, if there is one.
    * @returns A valid message pointer, or 0, is the item does not contain
    * a valid message.
    */
-MESSAGECORE_EXPORT KMime::Message::Ptr message( const Akonadi::Item &item );
+MESSAGECORE_EXPORT KMime::Message::Ptr message(const Akonadi::Item &item);
 
 /**
    * Returns whether the item represents a valid KMime::Message that is not
@@ -44,12 +46,12 @@ MESSAGECORE_EXPORT KMime::Message::Ptr message( const Akonadi::Item &item );
    * the akonadi sense, since jobs cannot sensibly use them, but they do
    * contain a valid message pointer.
    */
-MESSAGECORE_EXPORT bool isStandaloneMessage( const Akonadi::Item &item );
+MESSAGECORE_EXPORT bool isStandaloneMessage(const Akonadi::Item &item);
 
 /**
    * Get the message id as a string from the @p message.
    */
-MESSAGECORE_EXPORT QString messageId( const KMime::Message::Ptr &message );
+MESSAGECORE_EXPORT QString messageId(const KMime::Message::Ptr &message);
 
 /**
    * Adds private headers to the given @p message that links it to the original message.
@@ -58,7 +60,7 @@ MESSAGECORE_EXPORT QString messageId( const KMime::Message::Ptr &message );
    * @param id The item id of the original message.
    * @param status The status (replied or forwarded) that links the message to the original message.
    */
-MESSAGECORE_EXPORT void addLinkInformation( const KMime::Message::Ptr &message, Akonadi::Item::Id item, const Akonadi::MessageStatus &status );
+MESSAGECORE_EXPORT void addLinkInformation(const KMime::Message::Ptr &message, Akonadi::Item::Id item, const Akonadi::MessageStatus &status);
 
 /**
    * Reads the private headers of the given @p message to extract link information to its original message.
@@ -68,7 +70,7 @@ MESSAGECORE_EXPORT void addLinkInformation( const KMime::Message::Ptr &message, 
    * @param status Will contain the status (replied or forwarded) that linked the message to the original message.
    * @returns Whether the mail contains valid link information or not.
    */
-MESSAGECORE_EXPORT bool getLinkInformation( const KMime::Message::Ptr &msg, QList<Akonadi::Item::Id> &id, QList<Akonadi::MessageStatus> &status );
+MESSAGECORE_EXPORT bool getLinkInformation(const KMime::Message::Ptr &msg, QList<Akonadi::Item::Id> &id, QList<Akonadi::MessageStatus> &status);
 }
 }
 

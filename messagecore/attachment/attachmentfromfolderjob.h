@@ -16,7 +16,6 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-
 #ifndef MESSAGECORE_ATTACHMENTFROMFOLDERJOB_H
 #define MESSAGECORE_ATTACHMENTFROMFOLDERJOB_H
 
@@ -24,11 +23,10 @@
 
 #include "attachmentfromurlbasejob.h"
 
-
 #include <KZip>
 
-
-namespace MessageCore {
+namespace MessageCore
+{
 
 class MESSAGECORE_EXPORT AttachmentFromFolderJob : public AttachmentFromUrlBaseJob
 {
@@ -44,7 +42,7 @@ public:
     * @param parent The parent object.
     */
 
-    explicit AttachmentFromFolderJob( const KUrl &url = KUrl(), QObject *parent = 0 );
+    explicit AttachmentFromFolderJob(const KUrl &url = KUrl(), QObject *parent = 0);
 
     /**
     * Destroys the job.
@@ -55,13 +53,12 @@ public:
     /**
      * Sets the @p compression method, either KZip::Deflate or KZip::NoCompression.
      */
-    void setCompression( KZip::Compression compression );
+    void setCompression(KZip::Compression compression);
 
     /**
      * Returns the compression method used
      */
     KZip::Compression compression() const;
-
 
 protected Q_SLOTS:
     void doStart();

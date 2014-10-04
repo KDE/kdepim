@@ -26,7 +26,8 @@
 
 #include <KJob>
 
-namespace MessageCore {
+namespace MessageCore
+{
 
 /**
  * @short A base class for jobs to load attachments from different sources.
@@ -43,7 +44,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit AttachmentLoadJob( QObject *parent = 0 );
+    explicit AttachmentLoadJob(QObject *parent = 0);
 
     /**
      * Destroys the attachment load job.
@@ -64,7 +65,7 @@ protected:
     /**
      * Subclasses use this method to set the loaded @p part.
      */
-    void setAttachmentPart( const AttachmentPart::Ptr &part );
+    void setAttachmentPart(const AttachmentPart::Ptr &part);
 
 protected Q_SLOTS:
     virtual void doStart() = 0;

@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
-  
+
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
   the Free Software Foundation; either version 2 of the License, or (at your
@@ -31,10 +31,9 @@ public:
     AttachmentPart::Ptr mPart;
 };
 
-
-AttachmentLoadJob::AttachmentLoadJob( QObject *parent )
-    : KJob( parent ),
-      d( new Private )
+AttachmentLoadJob::AttachmentLoadJob(QObject *parent)
+    : KJob(parent),
+      d(new Private)
 {
 }
 
@@ -45,7 +44,7 @@ AttachmentLoadJob::~AttachmentLoadJob()
 
 void AttachmentLoadJob::start()
 {
-    QTimer::singleShot( 0, this, SLOT(doStart()) );
+    QTimer::singleShot(0, this, SLOT(doStart()));
 }
 
 AttachmentPart::Ptr AttachmentLoadJob::attachmentPart() const
@@ -53,7 +52,7 @@ AttachmentPart::Ptr AttachmentLoadJob::attachmentPart() const
     return d->mPart;
 }
 
-void AttachmentLoadJob::setAttachmentPart( const AttachmentPart::Ptr &part )
+void AttachmentLoadJob::setAttachmentPart(const AttachmentPart::Ptr &part)
 {
     d->mPart = part;
 }

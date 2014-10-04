@@ -34,11 +34,11 @@ using namespace MessageCore;
 class MDNStateAttribute::Private
 {
 public:
-    MDNSentState dataToState( const QByteArray &data )
+    MDNSentState dataToState(const QByteArray &data)
     {
         MDNSentState state = MDNStateUnknown;
 
-        switch ( data.at( 0 ) ) {
+        switch (data.at(0)) {
         case 'N': state = MDNNone; break;
         case 'I': state = MDNIgnore; break;
         case 'R': state = MDNDisplayed; break;
@@ -54,11 +54,11 @@ public:
         return state;
     }
 
-    QByteArray stateToData( const MDNSentState &state )
+    QByteArray stateToData(const MDNSentState &state)
     {
         QByteArray data = "U"; // Unknown
 
-        switch ( state ) {
+        switch (state) {
         case MDNNone:         data = "N"; break;
         case MDNIgnore:       data = "I"; break;
         case MDNDisplayed:    data = "R"; break;
@@ -72,18 +72,18 @@ public:
 
         return data;
     }
-    
+
     QByteArray mSentState;
 };
 
-MDNStateAttribute::MDNStateAttribute( const MDNSentState &state )
-    : d( new Private )
+MDNStateAttribute::MDNStateAttribute(const MDNSentState &state)
+    : d(new Private)
 {
-    d->mSentState = d->stateToData( state );
+    d->mSentState = d->stateToData(state);
 }
 
-MDNStateAttribute::MDNStateAttribute( const QByteArray &stateData )
-    : d( new Private )
+MDNStateAttribute::MDNStateAttribute(const QByteArray &stateData)
+    : d(new Private)
 {
     d->mSentState = stateData;
 }
@@ -93,14 +93,14 @@ MDNStateAttribute::~MDNStateAttribute()
     delete d;
 }
 
-MDNStateAttribute* MDNStateAttribute::clone() const
+MDNStateAttribute *MDNStateAttribute::clone() const
 {
-    return new MDNStateAttribute( d->mSentState );
+    return new MDNStateAttribute(d->mSentState);
 }
 
 QByteArray MDNStateAttribute::type() const
 {
-    static const QByteArray sType( "MDNStateAttribute" );
+    static const QByteArray sType("MDNStateAttribute");
     return sType;
 }
 
@@ -109,23 +109,24 @@ QByteArray MDNStateAttribute::serialized() const
     return d->mSentState;
 }
 
-void MDNStateAttribute::deserialize( const QByteArray &data )
+void MDNStateAttribute::deserialize(const QByteArray &data)
 {
     d->mSentState = data;
 }
 
-void MDNStateAttribute::setMDNState( const MDNSentState &state )
+void MDNStateAttribute::setMDNState(const MDNSentState &state)
 {
-    d->mSentState = d->stateToData( state );
+    d->mSentState = d->stateToData(state);
 }
 
 MDNStateAttribute::MDNSentState MDNStateAttribute::mdnState() const
 {
-    return d->dataToState( d->mSentState );
+    return d->dataToState(d->mSentState);
 }
 
 // Register the attribute when the library is loaded.
-namespace {
+namespace
+{
 
 bool dummyMDNStateAttribute()
 {

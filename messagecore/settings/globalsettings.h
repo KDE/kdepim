@@ -24,7 +24,8 @@
 
 #include "messagecore/globalsettings_base.h"
 
-namespace MessageCore {
+namespace MessageCore
+{
 
 class MESSAGECORE_EXPORT GlobalSettings : public MessageCore::GlobalSettingsBase
 {

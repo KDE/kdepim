@@ -36,11 +36,13 @@
 
 #include <vector>
 #include <QObject>
-namespace KMime {
+namespace KMime
+{
 class Content;
 }
 
-namespace MessageCore {
+namespace MessageCore
+{
 
 /**
  * @short A helper class to collect the attachments of a email.
@@ -66,19 +68,19 @@ public:
      *
      * @param content The email content that contains the attachments.
      */
-    void collectAttachmentsFrom( KMime::Content *content );
+    void collectAttachmentsFrom(KMime::Content *content);
 
     /**
      * Returns the collected attachments.
      */
-    const std::vector<KMime::Content*>& attachments() const;
+    const std::vector<KMime::Content *> &attachments() const;
 
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_DISABLE_COPY( AttachmentCollector )
+    Q_DISABLE_COPY(AttachmentCollector)
     //@endcond
 };
 

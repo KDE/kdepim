@@ -29,7 +29,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace MessageCore {
+namespace MessageCore
+{
 
 /**
  * @short A class that encapsulates an attachment.
@@ -65,7 +66,7 @@ public:
      * The name will be used in the 'name=' part of
      * the Content-Type header.
      */
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /**
      * Returns the name of the attachment.
@@ -78,7 +79,7 @@ public:
      * The name will be used in the 'filename=' part of
      * the Content-Disposition header.
      */
-    void setFileName( const QString &name );
+    void setFileName(const QString &name);
 
     /**
      * Returns the file name of the attachment.
@@ -88,7 +89,7 @@ public:
     /**
      * Sets the @p description of the attachment.
      */
-    void setDescription( const QString &description );
+    void setDescription(const QString &description);
 
     /**
      * Returns the description of the attachment.
@@ -98,7 +99,7 @@ public:
     /**
      * Sets whether the attachment will be displayed inline the message.
      */
-    void setInline( bool value );
+    void setInline(bool value);
 
     /**
      * Returns whether the attachment will be displayed inline the message.
@@ -108,7 +109,7 @@ public:
     /**
      * Sets whether encoding of the attachment will be determined automatically.
      */
-    void setAutoEncoding( bool enabled );
+    void setAutoEncoding(bool enabled);
 
     /**
      * Returns whether encoding of the attachment will be determined automatically.
@@ -120,7 +121,7 @@ public:
      *
      * @note only applies if isAutoEncoding is @c false
      */
-    void setEncoding( KMime::Headers::contentEncoding encoding );
+    void setEncoding(KMime::Headers::contentEncoding encoding);
 
     /**
      * Returns the encoding that will be used for the attachment.
@@ -130,7 +131,7 @@ public:
     /**
      * Sets the @p charset that will be used for the attachment.
      */
-    void setCharset( const QByteArray &charset );
+    void setCharset(const QByteArray &charset);
 
     /**
      * Returns the charset that will be used for the attachment.
@@ -140,7 +141,7 @@ public:
     /**
      * Sets the @p mimeType of the attachment.
      */
-    void setMimeType( const QByteArray &mimeType );
+    void setMimeType(const QByteArray &mimeType);
 
     /**
      * Returns the mime type of the attachment.
@@ -150,7 +151,7 @@ public:
     /**
      * Sets whether the attachment is @p compressed.
      */
-    void setCompressed( bool compressed );
+    void setCompressed(bool compressed);
 
     /**
      * Returns whether the attachment is compressed.
@@ -160,7 +161,7 @@ public:
     /**
      * Sets whether the attachment is @p encrypted.
      */
-    void setEncrypted( bool encrypted );
+    void setEncrypted(bool encrypted);
 
     /**
      * Returns whether the attachment is encrypted.
@@ -170,7 +171,7 @@ public:
     /**
      * Sets whether the attachment is @p signed.
      */
-    void setSigned( bool sign );
+    void setSigned(bool sign);
 
     /**
      * Returns whether the attachment is signed.
@@ -180,7 +181,7 @@ public:
     /**
      * Sets the payload @p data of the attachment.
      */
-    void setData( const QByteArray &data );
+    void setData(const QByteArray &data);
 
     /**
      * Returns the payload data of the attachment.
@@ -205,10 +206,10 @@ private:
 };
 
 // FIXME I don't understand why this doesn't work if I put it outside namespace KPIM.
-MESSAGECORE_EXPORT uint qHash( const boost::shared_ptr<MessageCore::AttachmentPart>& );
+MESSAGECORE_EXPORT uint qHash(const boost::shared_ptr<MessageCore::AttachmentPart> &);
 
 }
 
-Q_DECLARE_METATYPE( MessageCore::AttachmentPart::Ptr )
+Q_DECLARE_METATYPE(MessageCore::AttachmentPart::Ptr)
 
 #endif

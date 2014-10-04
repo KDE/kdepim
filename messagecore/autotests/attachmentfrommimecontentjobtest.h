@@ -25,8 +25,8 @@
 // 33-byte class names say I suck?
 class AttachmentFromMimeContentJobTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testAttachment();
 };
 

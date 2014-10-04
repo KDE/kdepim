@@ -16,7 +16,6 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-
 #ifndef MESSAGECORE_ATTACHMENTFROMURLBASE_H
 #define MESSAGECORE_ATTACHMENTFROMURLBASE_H
 
@@ -26,16 +25,17 @@
 
 #include <KUrl>
 
-namespace MessageCore {
+namespace MessageCore
+{
 
 class MESSAGECORE_EXPORT AttachmentFromUrlBaseJob : public AttachmentLoadJob
 {
     Q_OBJECT
 
 public:
-    explicit AttachmentFromUrlBaseJob( const KUrl &url = KUrl(), QObject *parent = 0 );
+    explicit AttachmentFromUrlBaseJob(const KUrl &url = KUrl(), QObject *parent = 0);
     virtual ~AttachmentFromUrlBaseJob();
-    
+
     /**
      * Returns the url that will be loaded as attachment.
      */
@@ -45,16 +45,16 @@ public:
      * Returns the maximum size the attachment is allowed to have.
      */
     qint64 maximumAllowedSize() const;
-    
+
     /**
     * Sets the @p url of the folder that will be loaded as attachment.
     */
-    void setUrl( const KUrl &url );
+    void setUrl(const KUrl &url);
 
     /**
      * Sets the maximum @p size the attachment is allowed to have.
      */
-    void setMaximumAllowedSize( qint64 size );
+    void setMaximumAllowedSize(qint64 size);
 
 protected Q_SLOTS:
     virtual void doStart() = 0;

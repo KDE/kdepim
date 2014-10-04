@@ -29,7 +29,6 @@
     your version.
 */
 
-
 #include "attachmentcollector.h"
 
 #include "helpers/nodehelper.h"
@@ -37,27 +36,28 @@
 #include <qdebug.h>
 #include <kmime/kmime_content.h>
 
-static bool isInSkipMimeContentList( KMime::Content* )
+static bool isInSkipMimeContentList(KMime::Content *)
 {
     return false;
 }
 
-static bool isInExclusionFileTypeList( KMime::Content * node )
+static bool isInExclusionFileTypeList(KMime::Content *node)
 {
-    if ( !node )
+    if (!node) {
         return true;
+    }
 
-    if ( node->contentType()->mediaType() == "application" ) {
+    if (node->contentType()->mediaType() == "application") {
         const QByteArray subType = node->contentType()->subType();
-        if ( subType == "pkcs7-mime"   ||
-             subType == "pkcs7-signature" ||
-             subType == "pgp-signature" ||
-             subType == "pgp-encrypted" ) {
+        if (subType == "pkcs7-mime"   ||
+                subType == "pkcs7-signature" ||
+                subType == "pgp-signature" ||
+                subType == "pgp-encrypted") {
             return true;
         }
     }
 
-    if ( node->contentType()->isMultipart()) {
+    if (node->contentType()->isMultipart()) {
         return true;
     }
 
@@ -67,11 +67,11 @@ static bool isInExclusionFileTypeList( KMime::Content * node )
 class MessageCore::AttachmentCollector::Private
 {
 public:
-    std::vector<KMime::Content*> mAttachments;
+    std::vector<KMime::Content *> mAttachments;
 };
 
 MessageCore::AttachmentCollector::AttachmentCollector()
-    : d( new Private )
+    : d(new Private)
 {
 }
 
@@ -80,45 +80,45 @@ MessageCore::AttachmentCollector::~AttachmentCollector()
     delete d;
 }
 
-void MessageCore::AttachmentCollector::collectAttachmentsFrom( KMime::Content *node )
+void MessageCore::AttachmentCollector::collectAttachmentsFrom(KMime::Content *node)
 {
     KMime::Content *parent;
 
-    while ( node ) {
+    while (node) {
         parent = node->parent();
 
-        if ( node->topLevel()->textContent() == node ) {
-            node = MessageCore::NodeHelper::next( node );
+        if (node->topLevel()->textContent() == node) {
+            node = MessageCore::NodeHelper::next(node);
             continue;
         }
 
-        if ( isInSkipMimeContentList( node ) ) {
-            node = MessageCore::NodeHelper::next( node, false ); // skip even the children
+        if (isInSkipMimeContentList(node)) {
+            node = MessageCore::NodeHelper::next(node, false);   // skip even the children
             continue;
         }
 
-        if ( isInExclusionFileTypeList( node ) ) {
-            node = MessageCore::NodeHelper::next( node );
+        if (isInExclusionFileTypeList(node)) {
+            node = MessageCore::NodeHelper::next(node);
             continue;
         }
 
-        if ( parent && parent->contentType()->isMultipart() &&
-             parent->contentType()->subType() == "related" ) {
-            node = MessageCore::NodeHelper::next( node );  // skip embedded images
+        if (parent && parent->contentType()->isMultipart() &&
+                parent->contentType()->subType() == "related") {
+            node = MessageCore::NodeHelper::next(node);    // skip embedded images
             continue;
         }
 
-        if ( MessageCore::NodeHelper::isHeuristicalAttachment( node ) ) {
-            d->mAttachments.push_back( node );
-            node = MessageCore::NodeHelper::next( node, false ); // just make double sure
+        if (MessageCore::NodeHelper::isHeuristicalAttachment(node)) {
+            d->mAttachments.push_back(node);
+            node = MessageCore::NodeHelper::next(node, false);   // just make double sure
             continue;
         }
 
-        node = MessageCore::NodeHelper::next( node );
+        node = MessageCore::NodeHelper::next(node);
     }
 }
 
-const std::vector<KMime::Content*>& MessageCore::AttachmentCollector::attachments() const
+const std::vector<KMime::Content *> &MessageCore::AttachmentCollector::attachments() const
 {
     return d->mAttachments;
 }

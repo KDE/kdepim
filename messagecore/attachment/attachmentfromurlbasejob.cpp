@@ -16,33 +16,32 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-
 #include "attachmentfromurlbasejob.h"
 
 using namespace MessageCore;
 
-class AttachmentFromUrlBaseJob::Private {
+class AttachmentFromUrlBaseJob::Private
+{
 
 public:
-    Private( AttachmentFromUrlBaseJob *qq );
+    Private(AttachmentFromUrlBaseJob *qq);
 
     AttachmentFromUrlBaseJob *const q;
     qint64 mMaxSize;
     KUrl mUrl;
 };
 
-AttachmentFromUrlBaseJob::Private::Private( AttachmentFromUrlBaseJob* qq ):
-    q( qq ),
-    mMaxSize ( -1 )
+AttachmentFromUrlBaseJob::Private::Private(AttachmentFromUrlBaseJob *qq):
+    q(qq),
+    mMaxSize(-1)
 {
 }
 
-
-AttachmentFromUrlBaseJob::AttachmentFromUrlBaseJob( const KUrl &url, QObject *parent ):
-    AttachmentLoadJob( parent ),
-    d( new Private( this ) )
+AttachmentFromUrlBaseJob::AttachmentFromUrlBaseJob(const KUrl &url, QObject *parent):
+    AttachmentLoadJob(parent),
+    d(new Private(this))
 {
-    d->mUrl=url;
+    d->mUrl = url;
 }
 
 AttachmentFromUrlBaseJob::~AttachmentFromUrlBaseJob()
@@ -50,7 +49,7 @@ AttachmentFromUrlBaseJob::~AttachmentFromUrlBaseJob()
     delete d;
 }
 
-void AttachmentFromUrlBaseJob::setMaximumAllowedSize( qint64 size )
+void AttachmentFromUrlBaseJob::setMaximumAllowedSize(qint64 size)
 {
     d->mMaxSize = size;
 }
@@ -60,7 +59,7 @@ qint64 AttachmentFromUrlBaseJob::maximumAllowedSize() const
     return d->mMaxSize;
 }
 
-void AttachmentFromUrlBaseJob::setUrl( const KUrl& url )
+void AttachmentFromUrlBaseJob::setUrl(const KUrl &url)
 {
     d->mUrl = url;
 }

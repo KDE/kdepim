@@ -28,7 +28,8 @@
 
 #include <QDialog>
 
-namespace MessageCore {
+namespace MessageCore
+{
 
 /**
  * @short A dialog for editing attachment properties.
@@ -47,8 +48,8 @@ public:
      * @param readOnly Whether the dialog should be in read-only mode.
      * @param parent The parent object.
      */
-    explicit AttachmentPropertiesDialog( const AttachmentPart::Ptr &part,
-                                         bool readOnly = false, QWidget *parent = 0 );
+    explicit AttachmentPropertiesDialog(const AttachmentPart::Ptr &part,
+                                        bool readOnly = false, QWidget *parent = 0);
 
     /**
      * Creates a new attachment properties dialog.
@@ -60,7 +61,7 @@ public:
      *       Therefore, saving the changes to the KMime::Content is not supported,
      *       and the dialog is in readOnly mode.
      */
-    explicit AttachmentPropertiesDialog( const KMime::Content *content, QWidget *parent = 0 );
+    explicit AttachmentPropertiesDialog(const KMime::Content *content, QWidget *parent = 0);
 
     /**
      * Destroys the attachment properties dialog.
@@ -75,7 +76,7 @@ public:
     /**
      * Sets whether the encryption status of the attachment can be changed.
      */
-    void setEncryptEnabled( bool enabled );
+    void setEncryptEnabled(bool enabled);
 
     /**
      * Returns whether the encryption status of the attachment can be changed.
@@ -85,7 +86,7 @@ public:
     /**
      * Sets whether the signature status of the attachment can be changed.
      */
-    void setSignEnabled( bool enabled );
+    void setSignEnabled(bool enabled);
 
     /**
      * Returns whether the signature status of the attachment can be changed.
@@ -102,7 +103,7 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void mimeTypeChanged( const QString& ) )
+    Q_PRIVATE_SLOT(d, void mimeTypeChanged(const QString &))
     //@endcond
 };
 

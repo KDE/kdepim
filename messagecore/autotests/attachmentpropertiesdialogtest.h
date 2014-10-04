@@ -24,8 +24,8 @@
 
 class AttachmentPropertiesDialogTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testAttachmentPartReadWrite();
     void testAttachmentPartReadOnly();
     void testAttachmentPartCancel();

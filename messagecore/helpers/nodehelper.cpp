@@ -23,38 +23,40 @@
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>
 
-KMime::Content *MessageCore::NodeHelper::nextSibling( const KMime::Content *node )
+KMime::Content *MessageCore::NodeHelper::nextSibling(const KMime::Content *node)
 {
-    if ( !node )
+    if (!node) {
         return 0;
+    }
 
     KMime::Content *next = 0;
     KMime::Content *parent = node->parent();
-    if ( parent ) {
+    if (parent) {
         const KMime::Content::List contents = parent->contents();
-        const int index = contents.indexOf( const_cast<KMime::Content*>( node ) ) + 1;
-        if ( index < contents.size() ) //next on the same level
-            next =  contents.at( index );
+        const int index = contents.indexOf(const_cast<KMime::Content *>(node)) + 1;
+        if (index < contents.size()) { //next on the same level
+            next =  contents.at(index);
+        }
     }
 
     return next;
 }
 
-KMime::Content *MessageCore::NodeHelper::next( KMime::Content *node, bool allowChildren )
+KMime::Content *MessageCore::NodeHelper::next(KMime::Content *node, bool allowChildren)
 {
-    if ( allowChildren ) {
-        if ( KMime::Content *child = firstChild( node ) ) {
+    if (allowChildren) {
+        if (KMime::Content *child = firstChild(node)) {
             return child;
         }
     }
 
-    if ( KMime::Content *sibling = nextSibling( node ) ) {
+    if (KMime::Content *sibling = nextSibling(node)) {
         return sibling;
     }
 
-    for ( KMime::Content *parent = node->parent() ; parent ;
-          parent = parent->parent() ) {
-        if ( KMime::Content *sibling = nextSibling( parent ) ) {
+    for (KMime::Content *parent = node->parent() ; parent ;
+            parent = parent->parent()) {
+        if (KMime::Content *sibling = nextSibling(parent)) {
             return sibling;
         }
     }
@@ -62,47 +64,53 @@ KMime::Content *MessageCore::NodeHelper::next( KMime::Content *node, bool allowC
     return 0;
 }
 
-KMime::Content *MessageCore::NodeHelper::firstChild( const KMime::Content *node )
+KMime::Content *MessageCore::NodeHelper::firstChild(const KMime::Content *node)
 {
-    if ( !node )
+    if (!node) {
         return 0;
+    }
 
     KMime::Content *child = 0;
-    if ( !node->contents().isEmpty() )
-        child = node->contents().at( 0 );
+    if (!node->contents().isEmpty()) {
+        child = node->contents().at(0);
+    }
 
     return child;
 }
 
-bool MessageCore::NodeHelper::isAttachment( KMime::Content *node )
+bool MessageCore::NodeHelper::isAttachment(KMime::Content *node)
 {
-    if ( node->head().isEmpty() )
+    if (node->head().isEmpty()) {
         return false;
+    }
 
-    const KMime::Headers::ContentType* const contentType = node ? node->contentType( false ) : 0;
-    if ( contentType &&
-         contentType->mediaType().toLower() == "message" &&
-         contentType->subType().toLower() == "rfc822" ) {
+    const KMime::Headers::ContentType *const contentType = node ? node->contentType(false) : 0;
+    if (contentType &&
+            contentType->mediaType().toLower() == "message" &&
+            contentType->subType().toLower() == "rfc822") {
         // Messages are always attachments. Normally message attachments created from KMail have a content
         // disposition, but some mail clients omit that.
         return true;
     }
 
-    if ( !node->contentDisposition( false ) )
+    if (!node->contentDisposition(false)) {
         return false;
+    }
 
     return (node->contentDisposition()->disposition() == KMime::Headers::CDattachment);
 }
 
-bool MessageCore::NodeHelper::isHeuristicalAttachment( KMime::Content *node )
+bool MessageCore::NodeHelper::isHeuristicalAttachment(KMime::Content *node)
 {
-    if ( isAttachment( node ) )
+    if (isAttachment(node)) {
         return true;
+    }
 
-    const KMime::Headers::ContentType* const contentType = node ? node->contentType( false ) : 0;
-    if ( ( contentType && !contentType->name().isEmpty() ) ||
-         ( node->contentDisposition( false ) && !node->contentDisposition()->filename().isEmpty() ) )
+    const KMime::Headers::ContentType *const contentType = node ? node->contentType(false) : 0;
+    if ((contentType && !contentType->name().isEmpty()) ||
+            (node->contentDisposition(false) && !node->contentDisposition()->filename().isEmpty())) {
         return true;
+    }
 
     return false;
 }

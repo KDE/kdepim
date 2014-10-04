@@ -24,43 +24,50 @@
 #include <gpgme++/key.h>
 #include <messageviewer/viewer/objecttreeemptysource.h>
 
-namespace MessageCore {
+namespace MessageCore
+{
 
-namespace Test {
+namespace Test
+{
 
-  /**
-  * setup a environment variables for tests:
-  * * set LC_ALL to C
-  * * set KDEHOME
-  */
-  void setupEnv();
+/**
+* setup a environment variables for tests:
+* * set LC_ALL to C
+* * set KDEHOME
+*/
+void setupEnv();
 
-  /**
-  * Returns list of keys used in various crypto routines
-  */
-  std::vector<GpgME::Key> getKeys( bool smime = false );
+/**
+* Returns list of keys used in various crypto routines
+*/
+std::vector<GpgME::Key> getKeys(bool smime = false);
 
+// We can't use EmptySource, since that doesn't provide a HTML writer. Therefore, derive
+// from EmptySource so we can provide our own HTML writer.
+// This is only needed because ObjectTreeParser has a bug and doesn't decrypt inline PGP messages
+// when there is no HTML writer, see FIXME comment in ObjectTreeParser::writeBodyString().
+class TestObjectTreeSource : public MessageViewer::EmptySource
+{
+public:
+    TestObjectTreeSource(MessageViewer::HtmlWriter *writer,
+                         MessageViewer::CSSHelper *cssHelper)
+        : mWriter(writer), mCSSHelper(cssHelper)
+    {
+    }
 
-  // We can't use EmptySource, since that doesn't provide a HTML writer. Therefore, derive
-  // from EmptySource so we can provide our own HTML writer.
-  // This is only needed because ObjectTreeParser has a bug and doesn't decrypt inline PGP messages
-  // when there is no HTML writer, see FIXME comment in ObjectTreeParser::writeBodyString().
-  class TestObjectTreeSource : public MessageViewer::EmptySource
-  {
-    public:
-      TestObjectTreeSource( MessageViewer::HtmlWriter *writer,
-                            MessageViewer::CSSHelper *cssHelper )
-        : mWriter( writer ), mCSSHelper( cssHelper )
-      {
-      }
+    virtual MessageViewer::HtmlWriter *htmlWriter()
+    {
+        return mWriter;
+    }
+    virtual MessageViewer::CSSHelper *cssHelper()
+    {
+        return mCSSHelper;
+    }
 
-      virtual MessageViewer::HtmlWriter * htmlWriter() { return mWriter; }
-      virtual MessageViewer::CSSHelper * cssHelper() { return mCSSHelper; }
-
-    private:
-      MessageViewer::HtmlWriter *mWriter;
-      MessageViewer::CSSHelper *mCSSHelper;
-  };
+private:
+    MessageViewer::HtmlWriter *mWriter;
+    MessageViewer::CSSHelper *mCSSHelper;
+};
 
 }
 

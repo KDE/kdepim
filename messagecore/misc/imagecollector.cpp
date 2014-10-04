@@ -30,7 +30,6 @@
  *    your version.
  */
 
-
 #include "imagecollector.h"
 
 #include "helpers/nodehelper.h"
@@ -38,21 +37,22 @@
 #include <qdebug.h>
 #include <kmime/kmime_content.h>
 
-static bool isInSkipList( KMime::Content* )
+static bool isInSkipList(KMime::Content *)
 {
     return false;
 }
 
-static bool isInExclusionList( KMime::Content * node )
+static bool isInExclusionList(KMime::Content *node)
 {
-    if ( !node )
-        return true;
-
-    if ( node->contentType()->mediaType() != "image" ) {
+    if (!node) {
         return true;
     }
 
-    if ( node->contentType()->isMultipart()) {
+    if (node->contentType()->mediaType() != "image") {
+        return true;
+    }
+
+    if (node->contentType()->isMultipart()) {
         return true;
     }
 
@@ -62,11 +62,11 @@ static bool isInExclusionList( KMime::Content * node )
 class MessageCore::ImageCollector::Private
 {
 public:
-    std::vector<KMime::Content*> mImages;
+    std::vector<KMime::Content *> mImages;
 };
 
 MessageCore::ImageCollector::ImageCollector()
-    : d( new Private )
+    : d(new Private)
 {
 }
 
@@ -75,41 +75,41 @@ MessageCore::ImageCollector::~ImageCollector()
     delete d;
 }
 
-void MessageCore::ImageCollector::collectImagesFrom( KMime::Content *node )
+void MessageCore::ImageCollector::collectImagesFrom(KMime::Content *node)
 {
     KMime::Content *parent;
 
-    while ( node ) {
+    while (node) {
         parent = node->parent();
 
-        if ( node->topLevel()->textContent() == node ) {
-            node = MessageCore::NodeHelper::next( node );
+        if (node->topLevel()->textContent() == node) {
+            node = MessageCore::NodeHelper::next(node);
             continue;
         }
 
-        if ( isInSkipList( node ) ) {
-            node = MessageCore::NodeHelper::next( node, false ); // skip even the children
+        if (isInSkipList(node)) {
+            node = MessageCore::NodeHelper::next(node, false);   // skip even the children
             continue;
         }
 
-        if ( isInExclusionList( node ) ) {
-            node = MessageCore::NodeHelper::next( node );
+        if (isInExclusionList(node)) {
+            node = MessageCore::NodeHelper::next(node);
             continue;
         }
 
-        if ( parent && parent->contentType()->isMultipart() &&
-             parent->contentType()->subType() == "related" ) {
+        if (parent && parent->contentType()->isMultipart() &&
+                parent->contentType()->subType() == "related") {
             qWarning() << "Adding image" << node->contentID();
-            d->mImages.push_back( node );
-            node = MessageCore::NodeHelper::next( node );  // skip embedded images
+            d->mImages.push_back(node);
+            node = MessageCore::NodeHelper::next(node);    // skip embedded images
             continue;
         }
 
-        node = MessageCore::NodeHelper::next( node );
+        node = MessageCore::NodeHelper::next(node);
     }
 }
 
-const std::vector<KMime::Content*>& MessageCore::ImageCollector::images() const
+const std::vector<KMime::Content *> &MessageCore::ImageCollector::images() const
 {
     return d->mImages;
 }

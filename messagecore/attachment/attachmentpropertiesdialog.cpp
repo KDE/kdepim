@@ -31,7 +31,6 @@
 #include <KGlobal>
 #include <KIconLoader>
 
-
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_headers.h>
@@ -52,9 +51,9 @@ using namespace MessageCore;
 class MessageCore::AttachmentPropertiesDialog::Private
 {
 public:
-    Private( AttachmentPropertiesDialog *qq )
-        : q( qq ),
-          mReadOnly( false ),
+    Private(AttachmentPropertiesDialog *qq)
+        : q(qq),
+          mReadOnly(false),
           ui(0),
           uiReadOnly(0),
           mainLayout(0)
@@ -66,9 +65,9 @@ public:
         delete uiReadOnly;
     }
 
-    void init( const AttachmentPart::Ptr &part, bool readOnly );
+    void init(const AttachmentPart::Ptr &part, bool readOnly);
     void polishUi();
-    void mimeTypeChanged( const QString &type ); // slot
+    void mimeTypeChanged(const QString &type);   // slot
     void populateEncodings();
     void populateMimeTypes();
     void populateWhatsThis();
@@ -84,25 +83,25 @@ public:
     QVBoxLayout *mainLayout;
 };
 
-void AttachmentPropertiesDialog::Private::init( const AttachmentPart::Ptr &part, bool readOnly )
+void AttachmentPropertiesDialog::Private::init(const AttachmentPart::Ptr &part, bool readOnly)
 {
     mReadOnly = readOnly;
     mPart = part;
 
-    QWidget *widget = new QWidget( q );
+    QWidget *widget = new QWidget(q);
     mainLayout = new QVBoxLayout;
     q->setLayout(mainLayout);
 
     mainLayout->addWidget(widget);
-    if(mReadOnly) {
+    if (mReadOnly) {
         uiReadOnly = new Ui::AttachmentPropertiesDialogReadOnly;
-        uiReadOnly->setupUi( widget );
+        uiReadOnly->setupUi(widget);
     } else {
         ui = new Ui::AttachmentPropertiesDialog;
-        ui->setupUi( widget );
+        ui->setupUi(widget);
     }
     polishUi();
-    q->setModal( true );
+    q->setModal(true);
 
     loadFromPart();
 }
@@ -112,16 +111,16 @@ void AttachmentPropertiesDialog::Private::polishUi()
     // Tweak the dialog, depending on whether it is read-only or not.
     QDialogButtonBox *buttonBox = 0;
 
-    if ( mReadOnly ) {
-        buttonBox = new QDialogButtonBox(QDialogButtonBox::Help|QDialogButtonBox::Close);
+    if (mReadOnly) {
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Help | QDialogButtonBox::Close);
     } else {
         // Update the icon when the selected mime type changes.
 
-        connect( ui->mimeType, SIGNAL(currentIndexChanged(QString)),
-                 q, SLOT(mimeTypeChanged(QString)) );
+        connect(ui->mimeType, SIGNAL(currentIndexChanged(QString)),
+                q, SLOT(mimeTypeChanged(QString)));
         populateMimeTypes();
         populateEncodings();
-        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
         q->connect(buttonBox->button(QDialogButtonBox::Help), SIGNAL(clicked()), q, SLOT(slotHelp()));
     }
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -133,17 +132,17 @@ void AttachmentPropertiesDialog::Private::polishUi()
     populateWhatsThis();
 }
 
-void AttachmentPropertiesDialog::Private::mimeTypeChanged( const QString &type )
+void AttachmentPropertiesDialog::Private::mimeTypeChanged(const QString &type)
 {
     QMimeDatabase db;
-    const QMimeType mimeType = db.mimeTypeForName( type );
+    const QMimeType mimeType = db.mimeTypeForName(type);
     QPixmap pix;
     if (mimeType.isValid()) {
-        pix = KIconLoader::global()->loadMimeTypeIcon( mimeType.iconName(), KIconLoader::Desktop );
+        pix = KIconLoader::global()->loadMimeTypeIcon(mimeType.iconName(), KIconLoader::Desktop);
     } else {
-        pix = DesktopIcon( QLatin1String("unknown") );
+        pix = DesktopIcon(QLatin1String("unknown"));
     }
-    if( mReadOnly ) {
+    if (mReadOnly) {
         uiReadOnly->mimeIcon->setPixmap(pix);
     } else {
         ui->mimeIcon->setPixmap(pix);
@@ -154,70 +153,70 @@ void AttachmentPropertiesDialog::Private::populateWhatsThis()
 {
     // FIXME These are such a mess... Make them straightforward and pretty.
 
-    const QString msgMimeType = i18n( "<p>The <em>MIME type</em> of the file:</p>"
-                                      "<p>Normally, you do not need to touch this setting, since the "
-                                      "type of the file is automatically checked; but, sometimes, %1 "
-                                      "may not detect the type correctly -- here is where you can fix "
-                                      "that.</p>", KComponentData::mainComponent().aboutData()->programName() );
+    const QString msgMimeType = i18n("<p>The <em>MIME type</em> of the file:</p>"
+                                     "<p>Normally, you do not need to touch this setting, since the "
+                                     "type of the file is automatically checked; but, sometimes, %1 "
+                                     "may not detect the type correctly -- here is where you can fix "
+                                     "that.</p>", KComponentData::mainComponent().aboutData()->programName());
 
-    const QString msgSize = i18n( "<p>The estimated size of the attachment:</p>"
-                                  "<p>Note that, in an email message, a binary file encoded with "
-                                  "base64 will take up four thirds the actual size of the file.</p>" );
+    const QString msgSize = i18n("<p>The estimated size of the attachment:</p>"
+                                 "<p>Note that, in an email message, a binary file encoded with "
+                                 "base64 will take up four thirds the actual size of the file.</p>");
 
-    const QString msgName = i18n( "<p>The file name of the part:</p>"
-                                  "<p>Although this defaults to the name of the attached file, "
-                                  "it does not specify the file to be attached; rather, it "
-                                  "suggests a file name to be used by the recipient's mail agent "
-                                  "when saving the part to disk.</p>" );
+    const QString msgName = i18n("<p>The file name of the part:</p>"
+                                 "<p>Although this defaults to the name of the attached file, "
+                                 "it does not specify the file to be attached; rather, it "
+                                 "suggests a file name to be used by the recipient's mail agent "
+                                 "when saving the part to disk.</p>");
 
-    const QString msgDescription = i18n( "<p>A description of the part:</p>"
-                                         "<p>This is just an informational description of the part, "
-                                         "much like the Subject is for the whole message; most "
-                                         "mail agents will show this information in their message "
-                                         "previews alongside the attachment's icon.</p>" );
+    const QString msgDescription = i18n("<p>A description of the part:</p>"
+                                        "<p>This is just an informational description of the part, "
+                                        "much like the Subject is for the whole message; most "
+                                        "mail agents will show this information in their message "
+                                        "previews alongside the attachment's icon.</p>");
 
-    const QString msgEncoding = i18n( "<p>The transport encoding of this part:</p>"
-                                      "<p>Normally, you do not need to change this, since %1 will use "
-                                      "a decent default encoding, depending on the MIME type; yet, "
-                                      "sometimes, you can significantly reduce the size of the "
-                                      "resulting message, e.g. if a PostScript file does not contain "
-                                      "binary data, but consists of pure text -- in this case, choosing "
-                                      "\"quoted-printable\" over the default \"base64\" will save up "
-                                      "to 25% in resulting message size.</p>",
-                                      KComponentData::mainComponent().aboutData()->programName() );
+    const QString msgEncoding = i18n("<p>The transport encoding of this part:</p>"
+                                     "<p>Normally, you do not need to change this, since %1 will use "
+                                     "a decent default encoding, depending on the MIME type; yet, "
+                                     "sometimes, you can significantly reduce the size of the "
+                                     "resulting message, e.g. if a PostScript file does not contain "
+                                     "binary data, but consists of pure text -- in this case, choosing "
+                                     "\"quoted-printable\" over the default \"base64\" will save up "
+                                     "to 25% in resulting message size.</p>",
+                                     KComponentData::mainComponent().aboutData()->programName());
 
-    const QString msgAutoDisplay = i18n( "<p>Check this option if you want to suggest to the "
-                                         "recipient the automatic (inline) display of this part in the "
-                                         "message preview, instead of the default icon view;</p>"
-                                         "<p>Technically, this is carried out by setting this part's "
-                                         "<em>Content-Disposition</em> header field to \"inline\" "
-                                         "instead of the default \"attachment\".</p>" );
+    const QString msgAutoDisplay = i18n("<p>Check this option if you want to suggest to the "
+                                        "recipient the automatic (inline) display of this part in the "
+                                        "message preview, instead of the default icon view;</p>"
+                                        "<p>Technically, this is carried out by setting this part's "
+                                        "<em>Content-Disposition</em> header field to \"inline\" "
+                                        "instead of the default \"attachment\".</p>");
 
-    const QString msgSign = i18n( "<p>Check this option if you want this message part to be "
-                                  "signed.</p>"
-                                  "<p>The signature will be made with the key that you associated "
-                                  "with the currently-selected identity.</p>" );
+    const QString msgSign = i18n("<p>Check this option if you want this message part to be "
+                                 "signed.</p>"
+                                 "<p>The signature will be made with the key that you associated "
+                                 "with the currently-selected identity.</p>");
 
-    const QString msgEncrypt = i18n( "<p>Check this option if you want this message part to be "
-                                     "encrypted.</p>"
-                                     "<p>The part will be encrypted for the recipients of this "
-                                     "message.</p>" );
+    const QString msgEncrypt = i18n("<p>Check this option if you want this message part to be "
+                                    "encrypted.</p>"
+                                    "<p>The part will be encrypted for the recipients of this "
+                                    "message.</p>");
 
-    if( mReadOnly ) {
-        uiReadOnly->mimeType->setWhatsThis( msgMimeType );
-        uiReadOnly->size->setWhatsThis( msgSize );
-        uiReadOnly->name->setWhatsThis( msgName );
-        uiReadOnly->encoding->setWhatsThis( msgEncoding );
-        uiReadOnly->description->setWhatsThis( msgDescription );
+    if (mReadOnly) {
+        uiReadOnly->mimeType->setWhatsThis(msgMimeType);
+        uiReadOnly->size->setWhatsThis(msgSize);
+        uiReadOnly->name->setWhatsThis(msgName);
+        uiReadOnly->encoding->setWhatsThis(msgEncoding);
+        uiReadOnly->description->setWhatsThis(msgDescription);
     } else {
-        ui->mimeType->setWhatsThis( msgMimeType );
-        ui->size->setWhatsThis( msgSize );
-        ui->name->setWhatsThis( msgName );
-        ui->encrypt->setWhatsThis( msgEncrypt );
-        ui->sign->setWhatsThis( msgSign );
-        ui->autoDisplay->setWhatsThis( msgAutoDisplay );
-        ui->encoding->setWhatsThis( msgEncoding );
-        ui->description->setWhatsThis( msgDescription );
+        ui->mimeType->setWhatsThis(msgMimeType);
+        ui->size->setWhatsThis(msgSize);
+        ui->name->setWhatsThis(msgName);
+        ui->encrypt->setWhatsThis(msgEncrypt);
+        ui->sign->setWhatsThis(msgSign);
+        ui->autoDisplay->setWhatsThis(msgAutoDisplay);
+        ui->encoding->setWhatsThis(msgEncoding);
+        ui->description->setWhatsThis(msgDescription);
     }
 
 }
@@ -228,10 +227,10 @@ void AttachmentPropertiesDialog::Private::populateEncodings()
     using namespace KMime::Headers;
 
     ui->encoding->clear();
-    ui->encoding->addItem( nameForEncoding( CE7Bit ), int( CE7Bit ) );
-    ui->encoding->addItem( nameForEncoding( CE8Bit ), int( CE8Bit ) );
-    ui->encoding->addItem( nameForEncoding( CEquPr ), int( CEquPr ) );
-    ui->encoding->addItem( nameForEncoding( CEbase64 ), int( CEbase64 ) );
+    ui->encoding->addItem(nameForEncoding(CE7Bit), int(CE7Bit));
+    ui->encoding->addItem(nameForEncoding(CE8Bit), int(CE8Bit));
+    ui->encoding->addItem(nameForEncoding(CEquPr), int(CEquPr));
+    ui->encoding->addItem(nameForEncoding(CEbase64), int(CEbase64));
 
     // TODO 8bit should be disabled if it is disabled in Settings.
     // Also, if it's a message/* part, base64 and qp should be disabled.
@@ -243,96 +242,97 @@ void AttachmentPropertiesDialog::Private::populateEncodings()
 void AttachmentPropertiesDialog::Private::populateMimeTypes()
 {
     QStringList list;
-    list << QString::fromLatin1( "text/html" )
-         << QString::fromLatin1( "text/plain" )
-         << QString::fromLatin1( "image/gif" )
-         << QString::fromLatin1( "image/jpeg" )
-         << QString::fromLatin1( "image/png" )
-         << QString::fromLatin1( "application/octet-stream" )
-         << QString::fromLatin1( "application/x-gunzip" )
-         << QString::fromLatin1( "application/zip" );
+    list << QString::fromLatin1("text/html")
+         << QString::fromLatin1("text/plain")
+         << QString::fromLatin1("image/gif")
+         << QString::fromLatin1("image/jpeg")
+         << QString::fromLatin1("image/png")
+         << QString::fromLatin1("application/octet-stream")
+         << QString::fromLatin1("application/x-gunzip")
+         << QString::fromLatin1("application/zip");
 
-    ui->mimeType->addItems( list );
+    ui->mimeType->addItems(list);
 }
 
 void AttachmentPropertiesDialog::Private::loadFromPart()
 {
-    Q_ASSERT( mPart );
+    Q_ASSERT(mPart);
 
-    if(mReadOnly) {
-        uiReadOnly->mimeType->setText( QString::fromLatin1(mPart->mimeType()) );
-        mimeTypeChanged( QString::fromLatin1(mPart->mimeType()) );
-        uiReadOnly->size->setText( KFormat().formatByteSize( mPart->size() ) );
-        uiReadOnly->name->setText( mPart->name().isEmpty() ? mPart->fileName() : mPart->name()  );
-        uiReadOnly->description->setText( mPart->description() );
-        uiReadOnly->encoding->setText( KMime::nameForEncoding( mPart->encoding() ) );
+    if (mReadOnly) {
+        uiReadOnly->mimeType->setText(QString::fromLatin1(mPart->mimeType()));
+        mimeTypeChanged(QString::fromLatin1(mPart->mimeType()));
+        uiReadOnly->size->setText(KFormat().formatByteSize(mPart->size()));
+        uiReadOnly->name->setText(mPart->name().isEmpty() ? mPart->fileName() : mPart->name());
+        uiReadOnly->description->setText(mPart->description());
+        uiReadOnly->encoding->setText(KMime::nameForEncoding(mPart->encoding()));
     } else {
-        ui->mimeType->setCurrentItem( QString::fromLatin1(mPart->mimeType()), true );
-        ui->size->setText( KFormat().formatByteSize( mPart->size() ) );
-        ui->name->setText( mPart->name().isEmpty() ? mPart->fileName() : mPart->name()  );
-        ui->description->setText( mPart->description() );
-        ui->encoding->setCurrentIndex( int( mPart->encoding() ) );
-        ui->autoDisplay->setChecked( mPart->isInline() );
-        ui->encrypt->setChecked( mPart->isEncrypted() );
-        ui->sign->setChecked( mPart->isSigned() );
+        ui->mimeType->setCurrentItem(QString::fromLatin1(mPart->mimeType()), true);
+        ui->size->setText(KFormat().formatByteSize(mPart->size()));
+        ui->name->setText(mPart->name().isEmpty() ? mPart->fileName() : mPart->name());
+        ui->description->setText(mPart->description());
+        ui->encoding->setCurrentIndex(int(mPart->encoding()));
+        ui->autoDisplay->setChecked(mPart->isInline());
+        ui->encrypt->setChecked(mPart->isEncrypted());
+        ui->sign->setChecked(mPart->isSigned());
     }
 }
 
-static QString removeNewlines( const QString &input )
+static QString removeNewlines(const QString &input)
 {
-    QString ret( input );
-    ret.replace( QLatin1Char('\n'), QLatin1Char(' ') );
+    QString ret(input);
+    ret.replace(QLatin1Char('\n'), QLatin1Char(' '));
     return ret;
 }
 
 void AttachmentPropertiesDialog::Private::saveToPart()
 {
-    Q_ASSERT( mPart );
-    Q_ASSERT( !mReadOnly );
+    Q_ASSERT(mPart);
+    Q_ASSERT(!mReadOnly);
 
-    if(mReadOnly)
+    if (mReadOnly) {
         return;
-    mPart->setMimeType( ui->mimeType->currentText().toLatin1() );
-    mPart->setName( removeNewlines( ui->name->text() ) );
+    }
+    mPart->setMimeType(ui->mimeType->currentText().toLatin1());
+    mPart->setName(removeNewlines(ui->name->text()));
     // TODO what about fileName? Extra field??
-    mPart->setDescription( removeNewlines( ui->description->text() ) );
-    mPart->setInline( ui->autoDisplay->isChecked() );
-    mPart->setSigned( ui->sign->isChecked() );
-    mPart->setEncrypted( ui->encrypt->isChecked() );
-    mPart->setInline( ui->autoDisplay->isChecked() );
+    mPart->setDescription(removeNewlines(ui->description->text()));
+    mPart->setInline(ui->autoDisplay->isChecked());
+    mPart->setSigned(ui->sign->isChecked());
+    mPart->setEncrypted(ui->encrypt->isChecked());
+    mPart->setInline(ui->autoDisplay->isChecked());
 
-    if ( ui->mimeType->currentText().startsWith( QLatin1String( "message" ) ) &&
-         ui->encoding->itemData( ui->encoding->currentIndex() ) != KMime::Headers::CE7Bit &&
-         ui->encoding->itemData( ui->encoding->currentIndex() ) != KMime::Headers::CE8Bit ) {
+    if (ui->mimeType->currentText().startsWith(QLatin1String("message")) &&
+            ui->encoding->itemData(ui->encoding->currentIndex()) != KMime::Headers::CE7Bit &&
+            ui->encoding->itemData(ui->encoding->currentIndex()) != KMime::Headers::CE8Bit) {
         qWarning() << "Encoding on message/rfc822 must be \"7bit\" or \"8bit\".";
     }
 
-    mPart->setEncoding( KMime::Headers::contentEncoding(
-                            ui->encoding->itemData( ui->encoding->currentIndex() ).toInt() ) );
+    mPart->setEncoding(KMime::Headers::contentEncoding(
+                           ui->encoding->itemData(ui->encoding->currentIndex()).toInt()));
 }
 
-AttachmentPropertiesDialog::AttachmentPropertiesDialog( const AttachmentPart::Ptr &part,
-                                                        bool readOnly, QWidget *parent )
-    : QDialog( parent ),
-      d( new Private( this ) )
+AttachmentPropertiesDialog::AttachmentPropertiesDialog(const AttachmentPart::Ptr &part,
+        bool readOnly, QWidget *parent)
+    : QDialog(parent),
+      d(new Private(this))
 {
-    d->init( part, readOnly );
+    d->init(part, readOnly);
     setWindowTitle(i18n("Attachment Properties"));
 }
 
-AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *content,
-                                                        QWidget *parent )
-    : QDialog( parent ),
-      d( new Private( this ) )
+AttachmentPropertiesDialog::AttachmentPropertiesDialog(const KMime::Content *content,
+        QWidget *parent)
+    : QDialog(parent),
+      d(new Private(this))
 {
-    AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob( content, this );
+    AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob(content, this);
     job->exec();
-    if ( job->error() ) {
-        qCritical() << "AttachmentFromMimeContentJob failed."<<job->errorString();
+    if (job->error()) {
+        qCritical() << "AttachmentFromMimeContentJob failed." << job->errorString();
     }
 
     const AttachmentPart::Ptr part = job->attachmentPart();
-    d->init( part, true );
+    d->init(part, true);
     setWindowTitle(i18n("Attachment Properties"));
 }
 
@@ -348,33 +348,37 @@ AttachmentPart::Ptr AttachmentPropertiesDialog::attachmentPart() const
 
 bool AttachmentPropertiesDialog::isEncryptEnabled() const
 {
-    if(d->ui)
+    if (d->ui) {
         return d->ui->encrypt->isEnabled();
+    }
     return false;
 }
 
-void AttachmentPropertiesDialog::setEncryptEnabled( bool enabled )
+void AttachmentPropertiesDialog::setEncryptEnabled(bool enabled)
 {
-    if(d->ui)
-        d->ui->encrypt->setEnabled( enabled );
+    if (d->ui) {
+        d->ui->encrypt->setEnabled(enabled);
+    }
 }
 
 bool AttachmentPropertiesDialog::isSignEnabled() const
 {
-    if(d->ui)
+    if (d->ui) {
         return d->ui->sign->isEnabled();
+    }
     return false;
 }
 
-void AttachmentPropertiesDialog::setSignEnabled( bool enabled )
+void AttachmentPropertiesDialog::setSignEnabled(bool enabled)
 {
-    if(d->ui)
-        d->ui->sign->setEnabled( enabled );
+    if (d->ui) {
+        d->ui->sign->setEnabled(enabled);
+    }
 }
 
 void AttachmentPropertiesDialog::accept()
 {
-    if ( !d->mReadOnly ) {
+    if (!d->mReadOnly) {
         d->saveToPart();
     }
 
@@ -383,7 +387,7 @@ void AttachmentPropertiesDialog::accept()
 
 void AttachmentPropertiesDialog::slotHelp()
 {
-    KHelpClient::invokeHelp(QString::fromLatin1( "attachments" ), QLatin1String("kmail"));
+    KHelpClient::invokeHelp(QString::fromLatin1("attachments"), QLatin1String("kmail"));
 }
 
 #include "moc_attachmentpropertiesdialog.cpp"

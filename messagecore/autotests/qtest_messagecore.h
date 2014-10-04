@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2009 Constantin Berzan <exit3219@gmail.com>
-  
+
   Based on Akonadi code by:
   Copyright (C) 2009 Volker Krause <vkrause@kde.org>
 
@@ -29,6 +29,6 @@
  */
 // TODO move to qtest_kde...
 #define VERIFYEXEC( job ) \
-  QVERIFY2( job->exec(), job->errorString().toUtf8().constData() )
+    QVERIFY2( job->exec(), job->errorString().toUtf8().constData() )
 
 #endif

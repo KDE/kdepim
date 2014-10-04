@@ -24,8 +24,8 @@
 
 #include "attachmentfromurlbasejob.h"
 
-
-namespace MessageCore {
+namespace MessageCore
+{
 
 /**
  * @short A job to load an attachment from an url.
@@ -43,13 +43,12 @@ public:
      * @param url The url that will be loaded as attachment.
      * @param parent The parent object.
      */
-    explicit AttachmentFromUrlJob( const KUrl &url = KUrl(), QObject *parent = 0 );
+    explicit AttachmentFromUrlJob(const KUrl &url = KUrl(), QObject *parent = 0);
 
     /**
      * Destroys the job.
      */
     ~AttachmentFromUrlJob();
-
 
 protected Q_SLOTS:
     void doStart();
@@ -59,8 +58,8 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void transferJobData( KIO::Job*, QByteArray ) )
-    Q_PRIVATE_SLOT( d, void transferJobResult( KJob* ) )
+    Q_PRIVATE_SLOT(d, void transferJobData(KIO::Job *, QByteArray))
+    Q_PRIVATE_SLOT(d, void transferJobResult(KJob *))
     //@endcond
 };
 

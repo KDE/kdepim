@@ -24,11 +24,13 @@
 
 #include "attachmentloadjob.h"
 
-namespace KMime {
+namespace KMime
+{
 class Content;
 }
 
-namespace MessageCore {
+namespace MessageCore
+{
 
 /**
  * @short A job to load an attachment from a mime content.
@@ -46,7 +48,7 @@ public:
      * @param content The mime content to load the attachment from.
      * @param parent The parent object.
      */
-    explicit AttachmentFromMimeContentJob( const KMime::Content *content, QObject *parent = 0 );
+    explicit AttachmentFromMimeContentJob(const KMime::Content *content, QObject *parent = 0);
 
     /**
      * Destroys the job.
@@ -56,7 +58,7 @@ public:
     /**
      * Sets the mime @p content to load the attachment from.
      */
-    void setMimeContent( const KMime::Content *content );
+    void setMimeContent(const KMime::Content *content);
 
     /**
      * Returns the mime content to load the attachment from.

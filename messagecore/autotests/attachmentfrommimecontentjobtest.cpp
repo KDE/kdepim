@@ -32,48 +32,48 @@ using namespace KMime;
 #include <messagecore/attachment/attachmentfrommimecontentjob.h>
 using namespace MessageCore;
 
-QTEST_MAIN( AttachmentFromMimeContentJobTest )
+QTEST_MAIN(AttachmentFromMimeContentJobTest)
 
 void AttachmentFromMimeContentJobTest::testAttachment()
 {
-  const QByteArray mimeType( "x-some/x-type" );
-  const QString name = QString::fromLatin1( "name abcd" );
-  const QString description = QString::fromLatin1( "description" );
-  const QByteArray charset( "utf-8" );
-  const QString fileName = QString::fromLatin1( "filename abcd" );
-  const Headers::contentEncoding encoding = Headers::CEquPr;
-  const Headers::contentDisposition disposition = Headers::CDinline;
-  const QByteArray data( "ocean soul" );
+    const QByteArray mimeType("x-some/x-type");
+    const QString name = QString::fromLatin1("name abcd");
+    const QString description = QString::fromLatin1("description");
+    const QByteArray charset("utf-8");
+    const QString fileName = QString::fromLatin1("filename abcd");
+    const Headers::contentEncoding encoding = Headers::CEquPr;
+    const Headers::contentDisposition disposition = Headers::CDinline;
+    const QByteArray data("ocean soul");
 
-  Content *content = new Content;
-  content->contentType()->setMimeType( mimeType );
-  content->contentType()->setName( name, charset );
-  content->contentType()->setCharset( charset );
-  content->contentTransferEncoding()->setEncoding( encoding );
-  content->contentDisposition()->setDisposition( disposition );
-  content->contentDisposition()->setFilename( fileName );
-  content->contentDescription()->fromUnicodeString( description, charset );
-  content->setBody( data );
-  content->assemble();
-  //qDebug() << "Encoded content:" << content->encodedContent();
-  //qDebug() << "Decoded content:" << content->decodedContent();
+    Content *content = new Content;
+    content->contentType()->setMimeType(mimeType);
+    content->contentType()->setName(name, charset);
+    content->contentType()->setCharset(charset);
+    content->contentTransferEncoding()->setEncoding(encoding);
+    content->contentDisposition()->setDisposition(disposition);
+    content->contentDisposition()->setFilename(fileName);
+    content->contentDescription()->fromUnicodeString(description, charset);
+    content->setBody(data);
+    content->assemble();
+    //qDebug() << "Encoded content:" << content->encodedContent();
+    //qDebug() << "Decoded content:" << content->decodedContent();
 
-  AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob( content, this );
-  QVERIFY( job->uiDelegate() == 0 ); // No GUI thankyouverymuch.
-  VERIFYEXEC( job );
-  delete content;
-  content = 0;
-  AttachmentPart::Ptr part = job->attachmentPart();
-  delete job;
-  job = 0;
+    AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob(content, this);
+    QVERIFY(job->uiDelegate() == 0);   // No GUI thankyouverymuch.
+    VERIFYEXEC(job);
+    delete content;
+    content = 0;
+    AttachmentPart::Ptr part = job->attachmentPart();
+    delete job;
+    job = 0;
 
-  QCOMPARE( part->mimeType(), mimeType );
-  QCOMPARE( part->name(), name );
-  QCOMPARE( part->description(), description );
-  //QCOMPARE( part->charset(), charset ); // TODO will probably need charsets in AttachmentPart :(
-  QCOMPARE( part->fileName(), fileName );
-  QVERIFY( part->encoding() == encoding );
-  QVERIFY( part->isInline() );
-  QCOMPARE( part->data(), data );
+    QCOMPARE(part->mimeType(), mimeType);
+    QCOMPARE(part->name(), name);
+    QCOMPARE(part->description(), description);
+    //QCOMPARE( part->charset(), charset ); // TODO will probably need charsets in AttachmentPart :(
+    QCOMPARE(part->fileName(), fileName);
+    QVERIFY(part->encoding() == encoding);
+    QVERIFY(part->isInline());
+    QCOMPARE(part->data(), data);
 }
 

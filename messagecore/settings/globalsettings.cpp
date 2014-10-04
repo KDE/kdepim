@@ -25,7 +25,7 @@ GlobalSettings *GlobalSettings::mSelf = 0;
 
 GlobalSettings *GlobalSettings::self()
 {
-    if ( !mSelf ) {
+    if (!mSelf) {
         mSelf = new GlobalSettings();
         mSelf->load();
     }
@@ -40,5 +40,4 @@ GlobalSettings::GlobalSettings()
 GlobalSettings::~GlobalSettings()
 {
 }
-
 

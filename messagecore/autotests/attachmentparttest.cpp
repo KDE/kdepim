@@ -29,22 +29,22 @@
 #include <boost/shared_ptr.hpp>
 using namespace MessageCore;
 
-QTEST_MAIN( AttachmentPartTest )
+QTEST_MAIN(AttachmentPartTest)
 
 void AttachmentPartTest::testApi()
 {
-  const QString str = QString::fromLatin1( "test" );
-  AttachmentPart::Ptr part = AttachmentPart::Ptr( new AttachmentPart );
+    const QString str = QString::fromLatin1("test");
+    AttachmentPart::Ptr part = AttachmentPart::Ptr(new AttachmentPart);
 
-  // Test that an AttachmentPart::Ptr can be put in a QHash.
-  QHash<AttachmentPart::Ptr, QString> hash;
-  hash[ part ] = str;
-  QVERIFY( hash.contains( part ) );
+    // Test that an AttachmentPart::Ptr can be put in a QHash.
+    QHash<AttachmentPart::Ptr, QString> hash;
+    hash[ part ] = str;
+    QVERIFY(hash.contains(part));
 
-  // Test that an AttachmentPart::Ptr can be put in a QVariant.
-  QVariant variant = QVariant::fromValue( part );
-  QVERIFY( variant.isValid() );
-  QVERIFY( variant.canConvert<AttachmentPart::Ptr>() );
-  QVERIFY( variant.value<AttachmentPart::Ptr>() == part );
+    // Test that an AttachmentPart::Ptr can be put in a QVariant.
+    QVariant variant = QVariant::fromValue(part);
+    QVERIFY(variant.isValid());
+    QVERIFY(variant.canConvert<AttachmentPart::Ptr>());
+    QVERIFY(variant.value<AttachmentPart::Ptr>() == part);
 }
 

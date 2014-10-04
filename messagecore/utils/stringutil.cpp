@@ -51,58 +51,61 @@ namespace StringUtil
 {
 
 // Removes trailing spaces and tabs at the end of the line
-static void removeTrailingSpace( QString &line )
+static void removeTrailingSpace(QString &line)
 {
     int i = line.length() - 1 ;
-    while( ( i >= 0 ) && ( ( line[i] == QLatin1Char(' ') ) || ( line[i] == QLatin1Char('\t') ) ) )
+    while ((i >= 0) && ((line[i] == QLatin1Char(' ')) || (line[i] == QLatin1Char('\t')))) {
         i--;
-    line.truncate( i + 1 );
+    }
+    line.truncate(i + 1);
 }
 
 // Splits the line off in two parts: The quote prefixes and the actual text of the line.
 // For example, for the string "> > > Hello", it would be split up in "> > > " as the quote
 // prefix, and "Hello" as the actual text.
 // The actual text is written back to the "line" parameter, and the quote prefix is returned.
-static QString splitLine( QString &line )
+static QString splitLine(QString &line)
 {
-    removeTrailingSpace( line );
+    removeTrailingSpace(line);
     int i = 0;
     int startOfActualText = -1;
 
     // TODO: Replace tabs with spaces first.
 
     // Loop through the chars in the line to find the place where the quote prefix stops
-    const int lineLength( line.length() );
-    while ( i < lineLength ) {
+    const int lineLength(line.length());
+    while (i < lineLength) {
         const QChar c = line[i];
         const bool isAllowedQuoteChar = (c == QLatin1Char('>')) || (c == QLatin1Char(':')) || (c == QLatin1Char('|')) ||
-                (c == QLatin1Char(' ')) || (c == QLatin1Char('\t'));
-        if ( isAllowedQuoteChar )
+                                        (c == QLatin1Char(' ')) || (c == QLatin1Char('\t'));
+        if (isAllowedQuoteChar) {
             startOfActualText = i + 1;
-        else
+        } else {
             break;
+        }
         i++;
     }
 
     // If the quote prefix only consists of whitespace, don't consider it as a quote prefix at all
-    if ( line.left( startOfActualText ).trimmed().isEmpty() )
+    if (line.left(startOfActualText).trimmed().isEmpty()) {
         startOfActualText = 0;
+    }
 
     // No quote prefix there -> nothing to do
-    if ( startOfActualText <= 0 ) {
+    if (startOfActualText <= 0) {
         return QString();
     }
 
     // Entire line consists of only the quote prefix
-    if ( i == line.length() ) {
-        const QString quotePrefix = line.left( startOfActualText );
+    if (i == line.length()) {
+        const QString quotePrefix = line.left(startOfActualText);
         line.clear();
         return quotePrefix;
     }
 
     // Line contains both the quote prefix and the actual text, really split it up now
-    const QString quotePrefix = line.left( startOfActualText );
-    line = line.mid( startOfActualText );
+    const QString quotePrefix = line.left(startOfActualText);
+    line = line.mid(startOfActualText);
 
     return quotePrefix;
 }
@@ -124,29 +127,30 @@ static QString splitLine( QString &line )
 // together with a previously broken line.
 //
 // "textParts" is cleared upon return.
-static bool flushPart( QString &msg, QStringList &textParts,
-                       const QString &indent, int maxLength )
+static bool flushPart(QString &msg, QStringList &textParts,
+                      const QString &indent, int maxLength)
 {
-    if ( maxLength < 20 )
+    if (maxLength < 20) {
         maxLength = 20;
+    }
 
     // Remove empty lines at end of quote
-    while ( !textParts.isEmpty() && textParts.last().isEmpty() ) {
+    while (!textParts.isEmpty() && textParts.last().isEmpty()) {
         textParts.removeLast();
     }
 
     QString text;
-    foreach ( const QString &line, textParts ) {
+    foreach (const QString &line, textParts) {
 
         // An empty line in the input means that an empty line should be in the output as well.
         // Therefore, we write all of our text so far to the msg.
-        if ( line.isEmpty() ) {
-            if ( !text.isEmpty() ) {
-                msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength ) + QLatin1Char('\n');
+        if (line.isEmpty()) {
+            if (!text.isEmpty()) {
+                msg += KPIMTextEdit::TextUtils::flowText(text, indent, maxLength) + QLatin1Char('\n');
             }
             msg += indent + QLatin1Char('\n');
         } else {
-            if ( text.isEmpty() ) {
+            if (text.isEmpty()) {
                 text = line;
             } else {
                 text += QLatin1Char(' ') + line.trimmed();
@@ -155,15 +159,15 @@ static bool flushPart( QString &msg, QStringList &textParts,
             // When a line exceeds the maximum length and therefore needs to be broken, this statement
             // if false, and therefore we keep adding lines to our text, so they get ran together in the
             // next flowText call, as "text" contains several text parts/lines then.
-            if ( ( text.length() < maxLength ) || ( line.length() < ( maxLength - 10 ) ) ) {
-                msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength ) + QLatin1Char('\n');
+            if ((text.length() < maxLength) || (line.length() < (maxLength - 10))) {
+                msg += KPIMTextEdit::TextUtils::flowText(text, indent, maxLength) + QLatin1Char('\n');
             }
         }
     }
 
     // Write out pending text to the msg
-    if ( !text.isEmpty() ) {
-        msg += KPIMTextEdit::TextUtils::flowText( text, indent, maxLength );
+    if (!text.isEmpty()) {
+        msg += KPIMTextEdit::TextUtils::flowText(text, indent, maxLength);
     }
 
     const bool appendEmptyLine = !textParts.isEmpty();
@@ -172,118 +176,125 @@ static bool flushPart( QString &msg, QStringList &textParts,
     return appendEmptyLine;
 }
 
-QMap<QString, QString> parseMailtoUrl( const KUrl &url )
+QMap<QString, QString> parseMailtoUrl(const KUrl &url)
 {
-    QMap<QString, QString> values = url.queryItems( KUrl::CaseInsensitiveKeys );
+    QMap<QString, QString> values = url.queryItems(KUrl::CaseInsensitiveKeys);
 
     QStringList to;
-    to << KPIMUtils::decodeMailtoUrl( url );
+    to << KPIMUtils::decodeMailtoUrl(url);
 
-    if ( !values.value( QLatin1String("to") ).isEmpty() )
-        to << values.value( QLatin1String("to") );
+    if (!values.value(QLatin1String("to")).isEmpty()) {
+        to << values.value(QLatin1String("to"));
+    }
 
-    values.insert( QLatin1String("to"), to.join( QLatin1String(", ") ) );
+    values.insert(QLatin1String("to"), to.join(QLatin1String(", ")));
 
     return values;
 }
 
-QString stripSignature( const QString &msg )
+QString stripSignature(const QString &msg)
 {
     // Following RFC 3676, only > before --
     // I prefer to not delete a SB instead of delete good mail content.
-    const QRegExp sbDelimiterSearch = QRegExp( QLatin1String("(^|\n)[> ]*-- \n") );
+    const QRegExp sbDelimiterSearch = QRegExp(QLatin1String("(^|\n)[> ]*-- \n"));
     // The regular expression to look for prefix change
-    const QRegExp commonReplySearch = QRegExp( QLatin1String("^[ ]*>") );
+    const QRegExp commonReplySearch = QRegExp(QLatin1String("^[ ]*>"));
 
     QString res = msg;
     int posDeletingStart = 1; // to start looking at 0
 
     // While there are SB delimiters (start looking just before the deleted SB)
-    while ( ( posDeletingStart = res.indexOf( sbDelimiterSearch , posDeletingStart -1 ) ) >= 0 ) {
+    while ((posDeletingStart = res.indexOf(sbDelimiterSearch , posDeletingStart - 1)) >= 0) {
         QString prefix; // the current prefix
         QString line; // the line to check if is part of the SB
         int posNewLine = -1;
 
         // Look for the SB beginning
-        int posSignatureBlock = res.indexOf( QLatin1Char('-'), posDeletingStart );
+        int posSignatureBlock = res.indexOf(QLatin1Char('-'), posDeletingStart);
         // The prefix before "-- "$
-        if ( res[posDeletingStart] == QLatin1Char('\n') )
+        if (res[posDeletingStart] == QLatin1Char('\n')) {
             ++posDeletingStart;
+        }
 
-        prefix = res.mid( posDeletingStart, posSignatureBlock - posDeletingStart );
-        posNewLine = res.indexOf( QLatin1Char('\n'), posSignatureBlock ) + 1;
+        prefix = res.mid(posDeletingStart, posSignatureBlock - posDeletingStart);
+        posNewLine = res.indexOf(QLatin1Char('\n'), posSignatureBlock) + 1;
 
         // now go to the end of the SB
-        while ( posNewLine < res.size() && posNewLine > 0 ) {
+        while (posNewLine < res.size() && posNewLine > 0) {
             // handle the undefined case for mid ( x , -n ) where n>1
-            int nextPosNewLine = res.indexOf( QLatin1Char('\n'), posNewLine );
+            int nextPosNewLine = res.indexOf(QLatin1Char('\n'), posNewLine);
 
-            if ( nextPosNewLine < 0 )
+            if (nextPosNewLine < 0) {
                 nextPosNewLine = posNewLine - 1;
+            }
 
-            line = res.mid( posNewLine, nextPosNewLine - posNewLine );
+            line = res.mid(posNewLine, nextPosNewLine - posNewLine);
 
             // check when the SB ends:
             // * does not starts with prefix or
             // * starts with prefix+(any substring of prefix)
-            if ( ( prefix.isEmpty() && line.indexOf( commonReplySearch ) < 0 ) ||
-                 ( !prefix.isEmpty() && line.startsWith( prefix ) &&
-                   line.mid( prefix.size() ).indexOf( commonReplySearch ) < 0 ) )
-            {
-                posNewLine = res.indexOf( QLatin1Char('\n'), posNewLine ) + 1;
-            } else
-                break; // end of the SB
+            if ((prefix.isEmpty() && line.indexOf(commonReplySearch) < 0) ||
+                    (!prefix.isEmpty() && line.startsWith(prefix) &&
+                     line.mid(prefix.size()).indexOf(commonReplySearch) < 0)) {
+                posNewLine = res.indexOf(QLatin1Char('\n'), posNewLine) + 1;
+            } else {
+                break;    // end of the SB
+            }
         }
 
         // remove the SB or truncate when is the last SB
-        if ( posNewLine > 0 )
-            res.remove( posDeletingStart, posNewLine - posDeletingStart );
-        else
-            res.truncate( posDeletingStart );
+        if (posNewLine > 0) {
+            res.remove(posDeletingStart, posNewLine - posDeletingStart);
+        } else {
+            res.truncate(posDeletingStart);
+        }
     }
 
     return res;
 }
 
-AddressList splitAddressField( const QByteArray &text )
+AddressList splitAddressField(const QByteArray &text)
 {
     AddressList result;
-    const char* begin = text.begin();
-    if ( !begin )
+    const char *begin = text.begin();
+    if (!begin) {
         return result;
+    }
 
-    const char* const end = text.begin() + text.length();
+    const char *const end = text.begin() + text.length();
 
-    if ( !parseAddressList( begin, end, result ) )
+    if (!parseAddressList(begin, end, result)) {
         qDebug() << "Error in address splitting: parseAddressList returned false!";
+    }
 
     return result;
 }
 
-QString generateMessageId( const QString &address, const QString &suffix )
+QString generateMessageId(const QString &address, const QString &suffix)
 {
     const QDateTime dateTime = QDateTime::currentDateTime();
 
-    QString msgIdStr = QLatin1Char( '<' ) + dateTime.toString( QLatin1String("yyyyMMddhhmm.sszzz") );
+    QString msgIdStr = QLatin1Char('<') + dateTime.toString(QLatin1String("yyyyMMddhhmm.sszzz"));
 
-    if( !suffix.isEmpty() )
-        msgIdStr += QLatin1Char( '@' ) + suffix;
-    else
-        msgIdStr += QLatin1Char( '.' ) + KPIMUtils::toIdn( address );
+    if (!suffix.isEmpty()) {
+        msgIdStr += QLatin1Char('@') + suffix;
+    } else {
+        msgIdStr += QLatin1Char('.') + KPIMUtils::toIdn(address);
+    }
 
-    msgIdStr += QLatin1Char( '>' );
+    msgIdStr += QLatin1Char('>');
 
     return msgIdStr;
 }
 
-QByteArray convertAngleBracketsToHtml( const QByteArray &src )
+QByteArray convertAngleBracketsToHtml(const QByteArray &src)
 {
-    QByteArray result( 1 + (6 * src.length()), '\0' );  // maximal possible length
+    QByteArray result(1 + (6 * src.length()), '\0');    // maximal possible length
 
     QByteArray::ConstIterator s = src.begin();
     QByteArray::Iterator d = result.begin();
-    while ( *s ) {
-        switch ( *s ) {
+    while (*s) {
+        switch (*s) {
         case '<': {
             *d++ = '&';
             *d++ = 'l';
@@ -291,11 +302,11 @@ QByteArray convertAngleBracketsToHtml( const QByteArray &src )
             *d++ = ';';
             ++s;
         }
-            break;
+        break;
         case '\r': {
             ++s;
         }
-            break;
+        break;
         case '\n': {
             *d++ = '<';
             *d++ = 'b';
@@ -304,7 +315,7 @@ QByteArray convertAngleBracketsToHtml( const QByteArray &src )
             *d++ = '>';
             ++s;
         }
-            break;
+        break;
         case '>': {
             *d++ = '&';
             *d++ = 'g';
@@ -312,7 +323,7 @@ QByteArray convertAngleBracketsToHtml( const QByteArray &src )
             *d++ = ';';
             ++s;
         }
-            break;
+        break;
         case '&': {
             *d++ = '&';
             *d++ = 'a';
@@ -321,7 +332,7 @@ QByteArray convertAngleBracketsToHtml( const QByteArray &src )
             *d++ = ';';
             ++s;
         }
-            break;
+        break;
         case '"': {
             *d++ = '&';
             *d++ = 'q';
@@ -331,7 +342,7 @@ QByteArray convertAngleBracketsToHtml( const QByteArray &src )
             *d++ = ';';
             ++s;
         }
-            break;
+        break;
         case '\'': {
             *d++ = '&';
             *d++ = 'a';
@@ -340,19 +351,20 @@ QByteArray convertAngleBracketsToHtml( const QByteArray &src )
             *d++ = ';';
             ++s;
         }
-            break;
+        break;
         default:
             *d++ = *s++;
         }
     }
-    result.truncate( d - result.begin() );
+    result.truncate(d - result.begin());
     return result;
 }
 
-QByteArray stripEmailAddr( const QByteArray& aStr )
+QByteArray stripEmailAddr(const QByteArray &aStr)
 {
-    if ( aStr.isEmpty() )
+    if (aStr.isEmpty()) {
         return QByteArray();
+    }
 
     QByteArray result;
 
@@ -367,99 +379,100 @@ QByteArray stripEmailAddr( const QByteArray& aStr )
     bool inQuotedString = false;
     int commentLevel = 0;
 
-    for ( const char* p = aStr.data(); *p; ++p ) {
-        switch ( context ) {
+    for (const char *p = aStr.data(); *p; ++p) {
+        switch (context) {
         case TopLevel : {
-            switch ( *p ) {
+            switch (*p) {
             case '"' : inQuotedString = !inQuotedString;
                 break;
-            case '(' : if ( !inQuotedString ) {
+            case '(' : if (!inQuotedString) {
                     context = InComment;
                     commentLevel = 1;
-                }
-                else
+                } else {
                     name += *p;
+                }
                 break;
-            case '<' : if ( !inQuotedString ) {
+            case '<' : if (!inQuotedString) {
                     context = InAngleAddress;
-                }
-                else
+                } else {
                     name += *p;
+                }
                 break;
             case '\\' : // quoted character
                 ++p; // skip the '\'
-                if ( *p )
+                if (*p) {
                     name += *p;
+                }
                 break;
-            case ',' : if ( !inQuotedString ) {
+            case ',' : if (!inQuotedString) {
                     // next email address
-                    if ( !result.isEmpty() )
+                    if (!result.isEmpty()) {
                         result += ", ";
+                    }
                     name = name.trimmed();
                     comment = comment.trimmed();
                     angleAddress = angleAddress.trimmed();
-                    if ( angleAddress.isEmpty() && !comment.isEmpty() ) {
+                    if (angleAddress.isEmpty() && !comment.isEmpty()) {
                         // handle Outlook-style addresses like
                         // john.doe@invalid (John Doe)
                         result += comment;
-                    }
-                    else if ( !name.isEmpty() ) {
+                    } else if (!name.isEmpty()) {
                         result += name;
-                    }
-                    else if ( !comment.isEmpty() ) {
+                    } else if (!comment.isEmpty()) {
                         result += comment;
-                    }
-                    else if ( !angleAddress.isEmpty() ) {
+                    } else if (!angleAddress.isEmpty()) {
                         result += angleAddress;
                     }
                     name = QByteArray();
                     comment = QByteArray();
                     angleAddress = QByteArray();
-                }
-                else
+                } else {
                     name += *p;
+                }
                 break;
             default :  name += *p;
             }
             break;
         }
         case InComment : {
-            switch ( *p ) {
+            switch (*p) {
             case '(' : ++commentLevel;
                 comment += *p;
                 break;
             case ')' : --commentLevel;
-                if ( commentLevel == 0 ) {
+                if (commentLevel == 0) {
                     context = TopLevel;
                     comment += ' '; // separate the text of several comments
-                }
-                else
+                } else {
                     comment += *p;
+                }
                 break;
             case '\\' : // quoted character
                 ++p; // skip the '\'
-                if ( *p )
+                if (*p) {
                     comment += *p;
+                }
                 break;
             default :  comment += *p;
             }
             break;
         }
         case InAngleAddress : {
-            switch ( *p ) {
+            switch (*p) {
             case '"' : inQuotedString = !inQuotedString;
                 angleAddress += *p;
                 break;
-            case '>' : if ( !inQuotedString ) {
+            case '>' : if (!inQuotedString) {
                     context = TopLevel;
-                }
-                else
+                } else {
                     angleAddress += *p;
+                }
                 break;
             case '\\' : // quoted character
                 ++p; // skip the '\'
-                if ( *p )
+                if (*p) {
                     angleAddress += *p;
+                }
                 break;
             default :  angleAddress += *p;
             }
@@ -467,23 +480,21 @@ QByteArray stripEmailAddr( const QByteArray& aStr )
         }
         } // switch ( context )
     }
-    if ( !result.isEmpty() )
+    if (!result.isEmpty()) {
         result += ", ";
+    }
     name = name.trimmed();
     comment = comment.trimmed();
     angleAddress = angleAddress.trimmed();
-    if ( angleAddress.isEmpty() && !comment.isEmpty() ) {
+    if (angleAddress.isEmpty() && !comment.isEmpty()) {
         // handle Outlook-style addresses like
         // john.doe@invalid (John Doe)
         result += comment;
-    }
-    else if ( !name.isEmpty() ) {
+    } else if (!name.isEmpty()) {
         result += name;
-    }
-    else if ( !comment.isEmpty() ) {
+    } else if (!comment.isEmpty()) {
         result += comment;
-    }
-    else if ( !angleAddress.isEmpty() ) {
+    } else if (!angleAddress.isEmpty()) {
         result += angleAddress;
     }
 
@@ -492,12 +503,13 @@ QByteArray stripEmailAddr( const QByteArray& aStr )
 }
 
 #ifndef MESSAGECORE_NO_DEPRECATED
-QString stripEmailAddr( const QString& aStr )
+QString stripEmailAddr(const QString &aStr)
 {
     //qDebug() << "(" << aStr << ")";
 
-    if ( aStr.isEmpty() )
+    if (aStr.isEmpty()) {
         return QString();
+    }
 
     QString result;
 
@@ -514,100 +526,101 @@ QString stripEmailAddr( const QString& aStr )
 
     QChar ch;
     int strLength(aStr.length());
-    for ( int index = 0; index < strLength; ++index ) {
+    for (int index = 0; index < strLength; ++index) {
         ch = aStr[index];
-        switch ( context ) {
+        switch (context) {
         case TopLevel : {
-            switch ( ch.toLatin1() ) {
+            switch (ch.toLatin1()) {
             case '"' : inQuotedString = !inQuotedString;
                 break;
-            case '(' : if ( !inQuotedString ) {
+            case '(' : if (!inQuotedString) {
                     context = InComment;
                     commentLevel = 1;
-                }
-                else
+                } else {
                     name += ch;
+                }
                 break;
-            case '<' : if ( !inQuotedString ) {
+            case '<' : if (!inQuotedString) {
                     context = InAngleAddress;
-                }
-                else
+                } else {
                     name += ch;
+                }
                 break;
             case '\\' : // quoted character
                 ++index; // skip the '\'
-                if ( index < aStr.length() )
+                if (index < aStr.length()) {
                     name += aStr[index];
+                }
                 break;
-            case ',' : if ( !inQuotedString ) {
+            case ',' : if (!inQuotedString) {
                     // next email address
-                    if ( !result.isEmpty() )
+                    if (!result.isEmpty()) {
                         result += QLatin1String(", ");
+                    }
                     name = name.trimmed();
                     comment = comment.trimmed();
                     angleAddress = angleAddress.trimmed();
-                    if ( angleAddress.isEmpty() && !comment.isEmpty() ) {
+                    if (angleAddress.isEmpty() && !comment.isEmpty()) {
                         // handle Outlook-style addresses like
                         // john.doe@invalid (John Doe)
                         result += comment;
-                    }
-                    else if ( !name.isEmpty() ) {
+                    } else if (!name.isEmpty()) {
                         result += name;
-                    }
-                    else if ( !comment.isEmpty() ) {
+                    } else if (!comment.isEmpty()) {
                         result += comment;
-                    }
-                    else if ( !angleAddress.isEmpty() ) {
+                    } else if (!angleAddress.isEmpty()) {
                         result += angleAddress;
                     }
                     name.clear();
                     comment.clear();
                     angleAddress.clear();
-                }
-                else
+                } else {
                     name += ch;
+                }
                 break;
             default :  name += ch;
             }
             break;
         }
         case InComment : {
-            switch ( ch.toLatin1() ) {
+            switch (ch.toLatin1()) {
             case '(' : ++commentLevel;
                 comment += ch;
                 break;
             case ')' : --commentLevel;
-                if ( commentLevel == 0 ) {
+                if (commentLevel == 0) {
                     context = TopLevel;
                     comment += QLatin1Char(' '); // separate the text of several comments
-                }
-                else
+                } else {
                     comment += ch;
+                }
                 break;
             case '\\' : // quoted character
                 ++index; // skip the '\'
-                if ( index < aStr.length() )
+                if (index < aStr.length()) {
                     comment += aStr[index];
+                }
                 break;
             default :  comment += ch;
             }
             break;
         }
         case InAngleAddress : {
-            switch ( ch.toLatin1() ) {
+            switch (ch.toLatin1()) {
             case '"' : inQuotedString = !inQuotedString;
                 angleAddress += ch;
                 break;
-            case '>' : if ( !inQuotedString ) {
+            case '>' : if (!inQuotedString) {
                     context = TopLevel;
-                }
-                else
+                } else {
                     angleAddress += ch;
+                }
                 break;
             case '\\' : // quoted character
                 ++index; // skip the '\'
-                if ( index < aStr.length() )
+                if (index < aStr.length()) {
                     angleAddress += aStr[index];
+                }
                 break;
             default :  angleAddress += ch;
             }
@@ -615,23 +628,21 @@ QString stripEmailAddr( const QString& aStr )
         }
         } // switch ( context )
     }
-    if ( !result.isEmpty() )
+    if (!result.isEmpty()) {
         result += QLatin1String(", ");
+    }
     name = name.trimmed();
     comment = comment.trimmed();
     angleAddress = angleAddress.trimmed();
-    if ( angleAddress.isEmpty() && !comment.isEmpty() ) {
+    if (angleAddress.isEmpty() && !comment.isEmpty()) {
         // handle Outlook-style addresses like
         // john.doe@invalid (John Doe)
         result += comment;
-    }
-    else if ( !name.isEmpty() ) {
+    } else if (!name.isEmpty()) {
         result += name;
-    }
-    else if ( !comment.isEmpty() ) {
+    } else if (!comment.isEmpty()) {
         result += comment;
-    }
-    else if ( !angleAddress.isEmpty() ) {
+    } else if (!angleAddress.isEmpty()) {
         result += angleAddress;
     }
 
@@ -640,14 +651,14 @@ QString stripEmailAddr( const QString& aStr )
 }
 #endif
 
-QString quoteHtmlChars( const QString& str, bool removeLineBreaks )
+QString quoteHtmlChars(const QString &str, bool removeLineBreaks)
 {
     QString result;
 
     unsigned int strLength(str.length());
-    result.reserve( 6*strLength ); // maximal possible length
-    for( unsigned int i = 0; i < strLength; ++i ) {
-        switch ( str[i].toLatin1() ) {
+    result.reserve(6 * strLength); // maximal possible length
+    for (unsigned int i = 0; i < strLength; ++i) {
+        switch (str[i].toLatin1()) {
         case '<':
             result += QLatin1String("&lt;");
             break;
@@ -661,8 +672,9 @@ QString quoteHtmlChars( const QString& str, bool removeLineBreaks )
             result += QLatin1String("&quot;");
             break;
         case '\n':
-            if ( !removeLineBreaks )
+            if (!removeLineBreaks) {
                 result += QLatin1String("<br>");
+            }
             break;
         case '\r':
             // ignore CR
@@ -676,173 +688,177 @@ QString quoteHtmlChars( const QString& str, bool removeLineBreaks )
     return result;
 }
 
-void removePrivateHeaderFields( const KMime::Message::Ptr &message, bool removeIdentityTag )
+void removePrivateHeaderFields(const KMime::Message::Ptr &message, bool removeIdentityTag)
 {
-    message->removeHeader( "Status" );
-    message->removeHeader( "X-Status" );
-    message->removeHeader( "X-KMail-EncryptionState" );
-    message->removeHeader( "X-KMail-SignatureState" );
-    message->removeHeader( "X-KMail-MDN-Sent" );
-    message->removeHeader( "X-KMail-Transport" );
-    message->removeHeader( "X-KMail-Fcc" );
-    message->removeHeader( "X-KMail-Redirect-From" );
-    message->removeHeader( "X-KMail-Link-Message" );
-    message->removeHeader( "X-KMail-Link-Type" );
-    message->removeHeader( "X-KMail-QuotePrefix" );
-    message->removeHeader( "X-KMail-CursorPos" );
-    message->removeHeader( "X-KMail-Templates" );
-    message->removeHeader( "X-KMail-Drafts" );
-    message->removeHeader( "X-KMail-Tag" );
-    message->removeHeader( "X-KMail-UnExpanded-To" );
-    message->removeHeader( "X-KMail-UnExpanded-CC" );
-    message->removeHeader( "X-KMail-UnExpanded-BCC" );
-    message->removeHeader( "X-KMail-FccDisabled" );
+    message->removeHeader("Status");
+    message->removeHeader("X-Status");
+    message->removeHeader("X-KMail-EncryptionState");
+    message->removeHeader("X-KMail-SignatureState");
+    message->removeHeader("X-KMail-MDN-Sent");
+    message->removeHeader("X-KMail-Transport");
+    message->removeHeader("X-KMail-Fcc");
+    message->removeHeader("X-KMail-Redirect-From");
+    message->removeHeader("X-KMail-Link-Message");
+    message->removeHeader("X-KMail-Link-Type");
+    message->removeHeader("X-KMail-QuotePrefix");
+    message->removeHeader("X-KMail-CursorPos");
+    message->removeHeader("X-KMail-Templates");
+    message->removeHeader("X-KMail-Drafts");
+    message->removeHeader("X-KMail-Tag");
+    message->removeHeader("X-KMail-UnExpanded-To");
+    message->removeHeader("X-KMail-UnExpanded-CC");
+    message->removeHeader("X-KMail-UnExpanded-BCC");
+    message->removeHeader("X-KMail-FccDisabled");
 
-    if(removeIdentityTag)
-        message->removeHeader( "X-KMail-Identity" );
+    if (removeIdentityTag) {
+        message->removeHeader("X-KMail-Identity");
+    }
 }
 
-QByteArray asSendableString( const KMime::Message::Ptr &originalMessage )
+QByteArray asSendableString(const KMime::Message::Ptr &originalMessage)
 {
-    KMime::Message::Ptr message( new KMime::Message );
-    message->setContent( originalMessage->encodedContent() );
+    KMime::Message::Ptr message(new KMime::Message);
+    message->setContent(originalMessage->encodedContent());
 
-    removePrivateHeaderFields( message );
-    message->removeHeader( "Bcc" );
+    removePrivateHeaderFields(message);
+    message->removeHeader("Bcc");
 
     return message->encodedContent();
 }
 
-QByteArray headerAsSendableString( const KMime::Message::Ptr &originalMessage )
+QByteArray headerAsSendableString(const KMime::Message::Ptr &originalMessage)
 {
-    KMime::Message::Ptr message( new KMime::Message );
-    message->setContent( originalMessage->encodedContent() );
+    KMime::Message::Ptr message(new KMime::Message);
+    message->setContent(originalMessage->encodedContent());
 
-    removePrivateHeaderFields( message );
-    message->removeHeader( "Bcc" );
+    removePrivateHeaderFields(message);
+    message->removeHeader("Bcc");
 
     return message->head();
 }
 
-QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
-                           Display display, const QString &cssStyle,
-                           Link link, AddressMode expandable, const QString& fieldName,
-                           int collapseNumber )
+QString emailAddrAsAnchor(const KMime::Types::Mailbox::List &mailboxList,
+                          Display display, const QString &cssStyle,
+                          Link link, AddressMode expandable, const QString &fieldName,
+                          int collapseNumber)
 {
     QString result;
     int numberAddresses = 0;
     bool expandableInserted = false;
 
-
-    foreach( const KMime::Types::Mailbox& mailbox, mailboxList ) {
-        if( !mailbox.prettyAddress().isEmpty() ) {
+    foreach (const KMime::Types::Mailbox &mailbox, mailboxList) {
+        if (!mailbox.prettyAddress().isEmpty()) {
             numberAddresses++;
-            if( expandable == ExpandableAddresses && !expandableInserted && numberAddresses > collapseNumber ) {
+            if (expandable == ExpandableAddresses && !expandableInserted && numberAddresses > collapseNumber) {
                 result = QLatin1String("<span id=\"icon") + fieldName + QLatin1String("\"></span>") + result;
-                result += QLatin1String("<span id=\"dots") + fieldName + QLatin1String("\">...</span><span id=\"hidden") + fieldName +QLatin1String("\">");
+                result += QLatin1String("<span id=\"dots") + fieldName + QLatin1String("\">...</span><span id=\"hidden") + fieldName + QLatin1String("\">");
                 expandableInserted = true;
             }
 
-            if( link == ShowLink ) {
+            if (link == ShowLink) {
                 result += QLatin1String("<a href=\"mailto:")
-                        + QString::fromLatin1(QUrl::toPercentEncoding( KPIMUtils::encodeMailtoUrl( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ) ).path() ))
-                        + QLatin1String("\" ")+cssStyle+QLatin1Char('>');
+                          + QString::fromLatin1(QUrl::toPercentEncoding(KPIMUtils::encodeMailtoUrl(mailbox.prettyAddress(KMime::Types::Mailbox::QuoteWhenNecessary)).path()))
+                          + QLatin1String("\" ") + cssStyle + QLatin1Char('>');
             }
-            if ( display == DisplayNameOnly ) {
-                if ( !mailbox.name().isEmpty() ) // Fallback to the email address when the name is not set.
-                    result += quoteHtmlChars( mailbox.name(), true );
-                else
-                    result += quoteHtmlChars( mailbox.prettyAddress(), true );
+            if (display == DisplayNameOnly) {
+                if (!mailbox.name().isEmpty()) { // Fallback to the email address when the name is not set.
+                    result += quoteHtmlChars(mailbox.name(), true);
+                } else {
+                    result += quoteHtmlChars(mailbox.prettyAddress(), true);
+                }
             } else {
-                result += quoteHtmlChars( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), true );
+                result += quoteHtmlChars(mailbox.prettyAddress(KMime::Types::Mailbox::QuoteWhenNecessary), true);
             }
-            if( link == ShowLink ) {
+            if (link == ShowLink) {
                 result += QLatin1String("</a>, ");
             }
         }
     }
 
     // cut of the trailing ", "
-    if( link == ShowLink ) {
-        result.truncate( result.length() - 2 );
+    if (link == ShowLink) {
+        result.truncate(result.length() - 2);
     }
 
-    if( expandableInserted ) {
+    if (expandableInserted) {
         result += QLatin1String("</span>");
     }
     return result;
 }
 
-QString emailAddrAsAnchor( KMime::Headers::Generics::MailboxList *mailboxList,
-                           Display display, const QString &cssStyle,
-                           Link link, AddressMode expandable, const QString& fieldName,
-                           int collapseNumber )
+QString emailAddrAsAnchor(KMime::Headers::Generics::MailboxList *mailboxList,
+                          Display display, const QString &cssStyle,
+                          Link link, AddressMode expandable, const QString &fieldName,
+                          int collapseNumber)
 {
-    Q_ASSERT( mailboxList );
-    return emailAddrAsAnchor( mailboxList->mailboxes(), display, cssStyle, link, expandable, fieldName, collapseNumber );
+    Q_ASSERT(mailboxList);
+    return emailAddrAsAnchor(mailboxList->mailboxes(), display, cssStyle, link, expandable, fieldName, collapseNumber);
 }
 
-QString emailAddrAsAnchor( KMime::Headers::Generics::AddressList *addressList,
-                           Display display, const QString &cssStyle,
-                           Link link, AddressMode expandable, const QString& fieldName,
-                           int collapseNumber )
+QString emailAddrAsAnchor(KMime::Headers::Generics::AddressList *addressList,
+                          Display display, const QString &cssStyle,
+                          Link link, AddressMode expandable, const QString &fieldName,
+                          int collapseNumber)
 {
-    Q_ASSERT( addressList );
-    return emailAddrAsAnchor( addressList->mailboxes(), display, cssStyle, link, expandable, fieldName, collapseNumber );
+    Q_ASSERT(addressList);
+    return emailAddrAsAnchor(addressList->mailboxes(), display, cssStyle, link, expandable, fieldName, collapseNumber);
 }
 
-QStringList stripAddressFromAddressList( const QString &address,
-                                         const QStringList &list )
+QStringList stripAddressFromAddressList(const QString &address,
+                                        const QStringList &list)
 {
-    QStringList addresses( list );
-    const QString addrSpec( KPIMUtils::extractEmailAddress( address ) );
+    QStringList addresses(list);
+    const QString addrSpec(KPIMUtils::extractEmailAddress(address));
 
-    for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ) {
-        if ( qstricmp( addrSpec.toUtf8().data(),
-                            KPIMUtils::extractEmailAddress( *it ).toUtf8().data() ) == 0 ) {
-            it = addresses.erase( it );
-        } else
+    for (QStringList::Iterator it = addresses.begin(); it != addresses.end();) {
+        if (qstricmp(addrSpec.toUtf8().data(),
+                     KPIMUtils::extractEmailAddress(*it).toUtf8().data()) == 0) {
+            it = addresses.erase(it);
+        } else {
             ++it;
+        }
     }
 
     return addresses;
 }
 
-bool addressIsInAddressList( const QString &address,
-                             const QStringList &addresses )
+bool addressIsInAddressList(const QString &address,
+                            const QStringList &addresses)
 {
-    const QString addrSpec = KPIMUtils::extractEmailAddress( address );
+    const QString addrSpec = KPIMUtils::extractEmailAddress(address);
 
-    QStringList::ConstIterator end( addresses.constEnd() );
-    for( QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it ) {
-        if ( qstricmp( addrSpec.toUtf8().data(),
-                            KPIMUtils::extractEmailAddress( *it ).toUtf8().data() ) == 0 )
+    QStringList::ConstIterator end(addresses.constEnd());
+    for (QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it) {
+        if (qstricmp(addrSpec.toUtf8().data(),
+                     KPIMUtils::extractEmailAddress(*it).toUtf8().data()) == 0) {
             return true;
+        }
     }
 
     return false;
 }
 
-QString guessEmailAddressFromLoginName( const QString &loginName )
+QString guessEmailAddressFromLoginName(const QString &loginName)
 {
-    if ( loginName.isEmpty() )
+    if (loginName.isEmpty()) {
         return QString();
+    }
 
     QString address = loginName;
     address += QLatin1Char('@');
     address += QHostInfo::localHostName();
 
     // try to determine the real name
-    const KUser user( loginName );
-    if ( user.isValid() ) {
-        QString fullName = user.property( KUser::FullName ).toString();
+    const KUser user(loginName);
+    if (user.isValid()) {
+        QString fullName = user.property(KUser::FullName).toString();
         address = KPIMUtils::quoteNameIfNecessary(fullName) + QLatin1String(" <") + address + QLatin1Char('>');
     }
 
     return address;
 }
 
-QString smartQuote( const QString &msg, int maxLineLength )
+QString smartQuote(const QString &msg, int maxLineLength)
 {
     // The algorithm here is as follows:
     // We split up the incoming msg into lines, and then iterate over each line.
@@ -857,25 +873,26 @@ QString smartQuote( const QString &msg, int maxLineLength )
     QString oldIndent;
     bool firstPart = true;
     QString result;
-    foreach ( QString line, msg.split( QLatin1Char('\n') ) ) {
+    foreach (QString line, msg.split(QLatin1Char('\n'))) {
 
         // Split off the indent from the line
-        const QString indent = splitLine( line );
+        const QString indent = splitLine(line);
 
-        if ( line.isEmpty() ) {
-            if ( !firstPart )
-                textParts.append( QString() );
+        if (line.isEmpty()) {
+            if (!firstPart) {
+                textParts.append(QString());
+            }
             continue;
         };
 
-        if ( firstPart ) {
+        if (firstPart) {
             oldIndent = indent;
             firstPart = false;
         }
 
         // The indent changed, that means we have to write everything contained in textParts to the
         // result, which we do by calling flushPart().
-        if ( oldIndent != indent ) {
+        if (oldIndent != indent) {
 
             // Check if the last non-blank line is a "From" line. A from line is the line containing the
             // attribution to a quote, e.g. "Yesterday, you wrote:". We'll just check for the last colon
@@ -883,99 +900,101 @@ QString smartQuote( const QString &msg, int maxLineLength )
             // If there is a From line, remove it from the textParts to that flushPart won't break it.
             // We'll manually add it to the result afterwards.
             QString fromLine;
-            if ( !textParts.isEmpty() ) {
-                for ( int i = textParts.count() - 1; i >= 0; i-- ) {
+            if (!textParts.isEmpty()) {
+                for (int i = textParts.count() - 1; i >= 0; i--) {
 
                     // Check if we have found the From line
-                    if ( textParts[i].endsWith( QLatin1Char(':') ) ) {
+                    if (textParts[i].endsWith(QLatin1Char(':'))) {
                         fromLine = oldIndent + textParts[i] + QLatin1Char('\n');
-                        textParts.removeAt( i );
+                        textParts.removeAt(i);
                         break;
                     }
 
                     // Abort on first non-empty line
-                    if ( !textParts[i].trimmed().isEmpty() )
+                    if (!textParts[i].trimmed().isEmpty()) {
                         break;
+                    }
                 }
             }
 
             // Write out all lines with the same indent using flushPart(). The textParts list
             // is cleared for us.
-            if ( flushPart( result, textParts, oldIndent, maxLineLength ) ) {
-                if ( oldIndent.length() > indent.length() )
+            if (flushPart(result, textParts, oldIndent, maxLineLength)) {
+                if (oldIndent.length() > indent.length()) {
                     result += indent + QLatin1Char('\n');
-                else
+                } else {
                     result += oldIndent + QLatin1Char('\n');
+                }
             }
 
-            if ( !fromLine.isEmpty() ) {
+            if (!fromLine.isEmpty()) {
                 result += fromLine;
             }
 
             oldIndent = indent;
         }
 
-        textParts.append( line );
+        textParts.append(line);
     }
 
     // Write out anything still pending
-    flushPart( result, textParts, oldIndent, maxLineLength );
+    flushPart(result, textParts, oldIndent, maxLineLength);
 
     // Remove superfluous newline which was appended in flowText
-    if ( !result.isEmpty() && result.endsWith( QLatin1Char('\n') ) )
-        result.chop( 1 );
+    if (!result.isEmpty() && result.endsWith(QLatin1Char('\n'))) {
+        result.chop(1);
+    }
 
     return result;
 }
 
-bool isCryptoPart( const QString &type, const QString &subType, const QString &fileName )
+bool isCryptoPart(const QString &type, const QString &subType, const QString &fileName)
 {
-    const QString subTypeLower( subType.toLower() );
-    return ( type.toLower() == QLatin1String( "application" ) &&
-             ( subTypeLower == QLatin1String( "pgp-encrypted" ) ||
-               subTypeLower == QLatin1String( "pgp-signature" ) ||
-               subTypeLower == QLatin1String( "pkcs7-mime" ) ||
-               subTypeLower == QLatin1String( "pkcs7-signature" ) ||
-               subTypeLower == QLatin1String( "x-pkcs7-signature" ) ||
-               ( subTypeLower == QLatin1String( "octet-stream" ) &&
-                 ( fileName.toLower() == QLatin1String( "msg.asc" ) ||
-                   fileName.toLower() == QLatin1String( "encrypted.asc" ) ) ) ) );
+    const QString subTypeLower(subType.toLower());
+    return (type.toLower() == QLatin1String("application") &&
+            (subTypeLower == QLatin1String("pgp-encrypted") ||
+             subTypeLower == QLatin1String("pgp-signature") ||
+             subTypeLower == QLatin1String("pkcs7-mime") ||
+             subTypeLower == QLatin1String("pkcs7-signature") ||
+             subTypeLower == QLatin1String("x-pkcs7-signature") ||
+             (subTypeLower == QLatin1String("octet-stream") &&
+              (fileName.toLower() == QLatin1String("msg.asc") ||
+               fileName.toLower() == QLatin1String("encrypted.asc")))));
 }
 
-QString formatString( const QString &wildString, const QString &fromAddr )
+QString formatString(const QString &wildString, const QString &fromAddr)
 {
     QString result;
 
-    if ( wildString.isEmpty() ) {
+    if (wildString.isEmpty()) {
         return wildString;
     }
 
-    unsigned int strLength( wildString.length() );
-    for ( uint i=0; i<strLength; ) {
+    unsigned int strLength(wildString.length());
+    for (uint i = 0; i < strLength;) {
         QChar ch = wildString[i++];
-        if ( ch == QLatin1Char('%') && i<strLength ) {
+        if (ch == QLatin1Char('%') && i < strLength) {
             ch = wildString[i++];
-            switch ( ch.toLatin1() ) {
-            case 'f': // sender's initals
-            {
-                QString str = stripEmailAddr( fromAddr );
+            switch (ch.toLatin1()) {
+            case 'f': { // sender's initals
+                QString str = stripEmailAddr(fromAddr);
 
                 uint j = 0;
-                for ( ; str[j]>QLatin1Char(' '); j++ )
+                for (; str[j] > QLatin1Char(' '); j++)
                     ;
-                unsigned int strLength( str.length() );
-                for ( ; j < strLength && str[j] <= QLatin1Char(' '); ++j )
+                unsigned int strLength(str.length());
+                for (; j < strLength && str[j] <= QLatin1Char(' '); ++j)
                     ;
                 result += str[0];
-                if ( str[j] > QLatin1Char(' ') ) {
+                if (str[j] > QLatin1Char(' ')) {
                     result += str[j];
                 } else {
-                    if ( str[1] > QLatin1Char(' ') ) {
+                    if (str[1] > QLatin1Char(' ')) {
                         result += str[1];
                     }
                 }
             }
-                break;
+            break;
             case '_':
                 result += QLatin1Char(' ');
                 break;
@@ -994,7 +1013,7 @@ QString formatString( const QString &wildString, const QString &fromAddr )
     return result;
 }
 
-QString cleanFileName( const QString &name )
+QString cleanFileName(const QString &name)
 {
     QString fileName = name.trimmed();
 
@@ -1003,70 +1022,73 @@ QString cleanFileName( const QString &name )
     // We also look at the special case of ": ", since converting that to "_ "
     // would look strange, simply "_" looks better.
     // https://issues.kolab.org/issue3805
-    fileName.replace( QLatin1String(": "), QLatin1String("_") );
+    fileName.replace(QLatin1String(": "), QLatin1String("_"));
     // replace all ':' with '_' because ':' isn't allowed on FAT volumes
-    fileName.replace( QLatin1Char(':'), QLatin1Char('_') );
+    fileName.replace(QLatin1Char(':'), QLatin1Char('_'));
     // better not use a dir-delimiter in a filename
-    fileName.replace( QLatin1Char('/'), QLatin1Char('_') );
-    fileName.replace( QLatin1Char('\\'), QLatin1Char('_') );
+    fileName.replace(QLatin1Char('/'), QLatin1Char('_'));
+    fileName.replace(QLatin1Char('\\'), QLatin1Char('_'));
 
 #ifdef KDEPIM_ENTERPRISE_BUILD
     // replace all '.' with '_', not just at the start of the filename
     // but don't replace the last '.' before the file extension.
-    int i = fileName.lastIndexOf( QLatin1Char('.') );
-    if ( i != -1 )
-        i = fileName.lastIndexOf( QLatin1Char('.') , i - 1 );
+    int i = fileName.lastIndexOf(QLatin1Char('.'));
+    if (i != -1) {
+        i = fileName.lastIndexOf(QLatin1Char('.') , i - 1);
+    }
 
-    while( i != -1 ) {
-        fileName.replace( i, 1, QLatin1Char('_') );
-        i = fileName.lastIndexOf( QLatin1Char('.'), i - 1 );
+    while (i != -1) {
+        fileName.replace(i, 1, QLatin1Char('_'));
+        i = fileName.lastIndexOf(QLatin1Char('.'), i - 1);
     }
 #endif
 
     // replace all '~' with '_', not just leading '~' either.
-    fileName.replace( QLatin1Char('~'), QLatin1Char('_') );
+    fileName.replace(QLatin1Char('~'), QLatin1Char('_'));
 
     return fileName;
 }
 
-QString stripOffPrefixes( const QString &subject )
+QString stripOffPrefixes(const QString &subject)
 {
-    static QStringList defaultReplyPrefixes = QStringList() << QLatin1String( "Re\\s*:" )
-                                                            << QLatin1String( "Re\\[\\d+\\]:" )
-                                                            << QLatin1String( "Re\\d+:" );
+    static QStringList defaultReplyPrefixes = QStringList() << QLatin1String("Re\\s*:")
+            << QLatin1String("Re\\[\\d+\\]:")
+            << QLatin1String("Re\\d+:");
 
-    static QStringList defaultForwardPrefixes = QStringList() << QLatin1String( "Fwd:" )
-                                                              << QLatin1String( "FW:" );
+    static QStringList defaultForwardPrefixes = QStringList() << QLatin1String("Fwd:")
+            << QLatin1String("FW:");
 
     QStringList replyPrefixes = GlobalSettings::self()->replyPrefixes();
-    if ( replyPrefixes.isEmpty() )
+    if (replyPrefixes.isEmpty()) {
         replyPrefixes = defaultReplyPrefixes;
+    }
 
     QStringList forwardPrefixes = GlobalSettings::self()->forwardPrefixes();
-    if ( forwardPrefixes.isEmpty() )
+    if (forwardPrefixes.isEmpty()) {
         forwardPrefixes = defaultReplyPrefixes;
+    }
 
     const QStringList prefixRegExps = replyPrefixes + forwardPrefixes;
 
     // construct a big regexp that
     // 1. is anchored to the beginning of str (sans whitespace)
     // 2. matches at least one of the part regexps in prefixRegExps
-    const QString bigRegExp = QString::fromLatin1( "^(?:\\s+|(?:%1))+\\s*" ).arg( prefixRegExps.join( QLatin1String( ")|(?:" ) ) );
+    const QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*").arg(prefixRegExps.join(QLatin1String(")|(?:")));
 
     static QString regExpPattern;
     static QRegExp regExp;
 
-    regExp.setCaseSensitivity( Qt::CaseInsensitive );
-    if ( regExpPattern != bigRegExp ) {
+    regExp.setCaseSensitivity(Qt::CaseInsensitive);
+    if (regExpPattern != bigRegExp) {
         // the prefixes have changed, so update the regexp
         regExpPattern = bigRegExp;
-        regExp.setPattern( regExpPattern );
+        regExp.setPattern(regExpPattern);
     }
 
-    if( regExp.isValid() ) {
+    if (regExp.isValid()) {
         QString tmp = subject;
-        if ( regExp.indexIn( tmp ) == 0 ) {
-            return tmp.remove( 0, regExp.matchedLength() );
+        if (regExp.indexIn(tmp) == 0) {
+            return tmp.remove(0, regExp.matchedLength());
         }
     } else {
         qWarning() << "bigRegExp = \""
@@ -1083,63 +1105,64 @@ QString stripOffPrefixes( const QString &subject )
 class DummyHeader : public KMime::Headers::Generics::MailboxList
 {
 public:
-    void parseData( const QByteArray &data )
+    void parseData(const QByteArray &data)
     {
         const char *cursor = data.constData();
-        KMime::Headers::Generics::MailboxList::parse( cursor, cursor + data.length() );
+        KMime::Headers::Generics::MailboxList::parse(cursor, cursor + data.length());
     }
 };
 
-KMime::Types::Mailbox::List mailboxListFromUnicodeString( const QString &addresses )
+KMime::Types::Mailbox::List mailboxListFromUnicodeString(const QString &addresses)
 {
     DummyHeader header;
-    header.fromUnicodeString( addresses, "utf-8" );
+    header.fromUnicodeString(addresses, "utf-8");
     return header.mailboxes();
 }
 
-KMime::Types::Mailbox mailboxFromUnicodeString( const QString &address )
+KMime::Types::Mailbox mailboxFromUnicodeString(const QString &address)
 {
     DummyHeader header;
-    header.fromUnicodeString( address, "utf-8" );
+    header.fromUnicodeString(address, "utf-8");
 
     const KMime::Types::Mailbox::List mailboxes = header.mailboxes();
-    if( mailboxes.isEmpty() ) {
+    if (mailboxes.isEmpty()) {
         return KMime::Types::Mailbox();
     }
 
-    if( mailboxes.size() > 1 ) {
-        qDebug()<<" mailboxes size > 1 ";
+    if (mailboxes.size() > 1) {
+        qDebug() << " mailboxes size > 1 ";
     }
     return mailboxes.first();
 }
 
-KMime::Types::Mailbox::List mailboxListFrom7BitString( const QByteArray &addresses )
+KMime::Types::Mailbox::List mailboxListFrom7BitString(const QByteArray &addresses)
 {
     DummyHeader header;
-    header.from7BitString( addresses );
+    header.from7BitString(addresses);
     return header.mailboxes();
 }
 
-KMime::Types::Mailbox mailboxFrom7BitString( const QByteArray &address )
+KMime::Types::Mailbox mailboxFrom7BitString(const QByteArray &address)
 {
     DummyHeader header;
-    header.from7BitString( address );
+    header.from7BitString(address);
 
     const KMime::Types::Mailbox::List mailboxes = header.mailboxes();
-    if( mailboxes.isEmpty() ) {
+    if (mailboxes.isEmpty()) {
         return KMime::Types::Mailbox();
     }
-    if( mailboxes.size() > 1 ) {
-        qDebug()<<" mailboxes size > 1 ";
+    if (mailboxes.size() > 1) {
+        qDebug() << " mailboxes size > 1 ";
     }
     return mailboxes.first();
 }
 
-QString mailboxListToUnicodeString( const KMime::Types::Mailbox::List &addresses )
+QString mailboxListToUnicodeString(const KMime::Types::Mailbox::List &addresses)
 {
     DummyHeader header;
-    foreach ( const KMime::Types::Mailbox &mailbox, addresses )
-        header.addAddress( mailbox );
+    foreach (const KMime::Types::Mailbox &mailbox, addresses) {
+        header.addAddress(mailbox);
+    }
 
     return header.asUnicodeString();
 }

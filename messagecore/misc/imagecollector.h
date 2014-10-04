@@ -38,11 +38,13 @@
 #include <vector>
 #include <QObject>
 
-namespace KMime {
+namespace KMime
+{
 class Content;
 }
 
-namespace MessageCore {
+namespace MessageCore
+{
 
 /**
    * @short A helper class to collect the embedded images of a email.
@@ -58,30 +60,30 @@ public:
      * Creates a new image collector.
      */
     ImageCollector();
-    
+
     /**
      * Destroys the image collector.
      */
     ~ImageCollector();
-    
+
     /**
      * Starts collecting the images.
      *
      * @param content The email content that contains the images.
      */
-    void collectImagesFrom( KMime::Content *content );
-    
+    void collectImagesFrom(KMime::Content *content);
+
     /**
      * Returns the collected images.
      */
-    const std::vector<KMime::Content*>& images() const;
-    
+    const std::vector<KMime::Content *> &images() const;
+
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
-    
-    Q_DISABLE_COPY( ImageCollector )
+    Private *const d;
+
+    Q_DISABLE_COPY(ImageCollector)
     //@endcond
 };
 

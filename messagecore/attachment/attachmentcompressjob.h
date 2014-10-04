@@ -26,7 +26,8 @@
 
 #include <KJob>
 
-namespace MessageCore {
+namespace MessageCore
+{
 
 /**
  * @short A job to compress the attachment of an email.
@@ -44,7 +45,7 @@ public:
      * @param part The part of the attachment to compress.
      * @param parent The parent object.
      */
-    explicit AttachmentCompressJob( const AttachmentPart::Ptr &part, QObject *parent = 0 );
+    explicit AttachmentCompressJob(const AttachmentPart::Ptr &part, QObject *parent = 0);
 
     /**
      * Destroys the attachment compress job.
@@ -59,7 +60,7 @@ public:
     /**
      * Sets the original @p part of the compressed attachment.
      */
-    void setOriginalPart( const AttachmentPart::Ptr &part );
+    void setOriginalPart(const AttachmentPart::Ptr &part);
 
     /**
      * Returns the original part of the compressed attachment.
@@ -83,7 +84,7 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void doStart() )
+    Q_PRIVATE_SLOT(d, void doStart())
     //@endcond
 };
 

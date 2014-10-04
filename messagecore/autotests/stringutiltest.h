@@ -19,14 +19,13 @@
 #ifndef STRINGUTILTEST_H
 #define STRINGUTILTEST_H
 
-
 #include <qobject.h>
 
 class StringUtilTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private slots:
+private slots:
     void test_SmartQuote_data();
     void test_SmartQuote();
     void test_signatureStripping();

@@ -28,40 +28,42 @@
 #include <QDebug>
 #include <QDir>
 
-void MessageCore::Test::setupEnv() {
-  setenv( "LC_ALL", "C", 1 );
-  setenv( "KDEHOME", QFile::encodeName(  QDir::homePath() + QString::fromLatin1(  "/.kde-unit-test" ) ), 1 );
+void MessageCore::Test::setupEnv()
+{
+    setenv("LC_ALL", "C", 1);
+    setenv("KDEHOME", QFile::encodeName(QDir::homePath() + QString::fromLatin1("/.kde-unit-test")), 1);
 }
 
 std::vector< GpgME::Key, std::allocator< GpgME::Key > > MessageCore::Test::getKeys(bool smime)
 {
-  Kleo::KeyListJob * job = 0;
+    Kleo::KeyListJob *job = 0;
 
-  if( smime ) {
-    const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "smime" );
-    job = backend->keyListJob( false );
-  } else {
-    const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
-    job = backend->keyListJob( false );
-  }
-  Q_ASSERT( job );
-
-  std::vector< GpgME::Key > keys;
-  GpgME::KeyListResult res = job->exec( QStringList(), true, keys );
-
-  if( !smime )
-    Q_ASSERT( keys.size() == 3 );
-
-  Q_ASSERT( !res.error() );
-  qDebug() << "got private keys:" << keys.size();
-
-  for(std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i ) {
-    qDebug() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
-    qDebug() << "key numuserIds:" << i->numUserIDs();
-    for(uint k = 0; k < i->numUserIDs(); ++k ) {
-      qDebug() << "userIDs:" << i->userID( k ).email();
+    if (smime) {
+        const Kleo::CryptoBackend::Protocol *const backend = Kleo::CryptoBackendFactory::instance()->protocol("smime");
+        job = backend->keyListJob(false);
+    } else {
+        const Kleo::CryptoBackend::Protocol *const backend = Kleo::CryptoBackendFactory::instance()->protocol("openpgp");
+        job = backend->keyListJob(false);
     }
-  }
+    Q_ASSERT(job);
 
-  return keys;
+    std::vector< GpgME::Key > keys;
+    GpgME::KeyListResult res = job->exec(QStringList(), true, keys);
+
+    if (!smime) {
+        Q_ASSERT(keys.size() == 3);
+    }
+
+    Q_ASSERT(!res.error());
+    qDebug() << "got private keys:" << keys.size();
+
+    for (std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i) {
+        qDebug() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
+        qDebug() << "key numuserIds:" << i->numUserIDs();
+        for (uint k = 0; k < i->numUserIDs(); ++k) {
+            qDebug() << "userIDs:" << i->userID(k).email();
+        }
+    }
+
+    return keys;
 }

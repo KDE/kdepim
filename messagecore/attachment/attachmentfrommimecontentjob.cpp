@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
-  
+
   Based on KMail code by:
   Copyright (c) 1997 Markus Wuebben <markus.wuebben@kde.org>
 
@@ -36,10 +36,9 @@ public:
     const Content *mMimeContent;
 };
 
-
-AttachmentFromMimeContentJob::AttachmentFromMimeContentJob( const Content *content, QObject *parent )
-    : AttachmentLoadJob( parent ),
-      d( new Private )
+AttachmentFromMimeContentJob::AttachmentFromMimeContentJob(const Content *content, QObject *parent)
+    : AttachmentLoadJob(parent),
+      d(new Private)
 {
     d->mMimeContent = content;
 }
@@ -54,7 +53,7 @@ const Content *AttachmentFromMimeContentJob::mimeContent() const
     return d->mMimeContent;
 }
 
-void AttachmentFromMimeContentJob::setMimeContent( const Content *content )
+void AttachmentFromMimeContentJob::setMimeContent(const Content *content)
 {
     d->mMimeContent = content;
 }
@@ -62,32 +61,32 @@ void AttachmentFromMimeContentJob::setMimeContent( const Content *content )
 void AttachmentFromMimeContentJob::doStart()
 {
     // Create the AttachmentPart.
-    Q_ASSERT( attachmentPart() == 0 );
+    Q_ASSERT(attachmentPart() == 0);
 
-    AttachmentPart::Ptr part = AttachmentPart::Ptr( new AttachmentPart );
-    Content *content = const_cast<Content*>( d->mMimeContent );
-    part->setData( content->decodedContent() );
+    AttachmentPart::Ptr part = AttachmentPart::Ptr(new AttachmentPart);
+    Content *content = const_cast<Content *>(d->mMimeContent);
+    part->setData(content->decodedContent());
 
     // Get the details from the MIME headers.
-    if ( content->contentType( false ) ) {
-        part->setMimeType( content->contentType()->mimeType() );
-        part->setName( content->contentType()->name() );
+    if (content->contentType(false)) {
+        part->setMimeType(content->contentType()->mimeType());
+        part->setName(content->contentType()->name());
     }
 
-    if ( content->contentTransferEncoding( false ) ) {
-        part->setEncoding( content->contentTransferEncoding()->encoding() );
+    if (content->contentTransferEncoding(false)) {
+        part->setEncoding(content->contentTransferEncoding()->encoding());
     }
 
-    if ( content->contentDisposition( false ) ) {
-        part->setFileName( content->contentDisposition()->filename() );
-        part->setInline( content->contentDisposition()->disposition() == KMime::Headers::CDinline );
+    if (content->contentDisposition(false)) {
+        part->setFileName(content->contentDisposition()->filename());
+        part->setInline(content->contentDisposition()->disposition() == KMime::Headers::CDinline);
     }
 
-    if ( content->contentDescription( false ) ) {
-        part->setDescription( content->contentDescription()->asUnicodeString() );
+    if (content->contentDescription(false)) {
+        part->setDescription(content->contentDescription()->asUnicodeString());
     }
 
-    setAttachmentPart( part );
+    setAttachmentPart(part);
     emitResult(); // Success.
 }
 
