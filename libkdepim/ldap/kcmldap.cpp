@@ -103,12 +103,9 @@ KCMLdap::KCMLdap(QWidget *parent, const QVariantList &)
     mClientSearchConfig = new KLDAP::LdapClientSearchConfig;
     initGUI();
 
-    connect(mHostListView, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(slotSelectionChanged(QListWidgetItem*)));
-    connect(mHostListView, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-            this, SLOT(slotEditHost()));
-    connect(mHostListView, SIGNAL(itemClicked(QListWidgetItem*)),
-            this, SLOT(slotItemClicked(QListWidgetItem*)));
+    connect(mHostListView, &QListWidget::currentItemChanged, this, &KCMLdap::slotSelectionChanged);
+    connect(mHostListView, &QListWidget::itemDoubleClicked, this, &KCMLdap::slotEditHost);
+    connect(mHostListView, &QListWidget::itemClicked, this, &KCMLdap::slotItemClicked);
 
     connect(mUpButton, &QToolButton::clicked, this, &KCMLdap::slotMoveUp);
     connect(mDownButton, &QToolButton::clicked, this, &KCMLdap::slotMoveDown);

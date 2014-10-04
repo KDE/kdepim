@@ -38,11 +38,11 @@ public:
 
         QPushButton *inButton = new QPushButton(this);
         inButton->setText(QLatin1String("Slide &In"));
-        connect(inButton, SIGNAL(clicked()), container, SLOT(slideIn()));
+        connect(inButton, &QPushButton::clicked, container, &SlideContainer::slideIn);
 
         QPushButton *outButton = new QPushButton(this);
         outButton->setText(QLatin1String("Slide &Out"));
-        connect(outButton, SIGNAL(clicked()), container, SLOT(slideOut()));
+        connect(outButton, &QPushButton::clicked, container, &SlideContainer::slideOut);
 
         QVBoxLayout *layout = new QVBoxLayout(this);
         layout->addWidget(inButton);

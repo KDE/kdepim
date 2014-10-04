@@ -151,14 +151,11 @@ void KWidgetLister::init(bool fewerMoreButton)
 
     //---------- connect everything
     if (fewerMoreButton) {
-        connect(d->mBtnMore, SIGNAL(clicked()),
-                this, SLOT(slotMore()));
-        connect(d->mBtnFewer, SIGNAL(clicked()),
-                this, SLOT(slotFewer()));
+        connect(d->mBtnMore, &QPushButton::clicked, this, &KWidgetLister::slotMore);
+        connect(d->mBtnFewer, &QPushButton::clicked, this, &KWidgetLister::slotFewer);
     }
 
-    connect(d->mBtnClear, SIGNAL(clicked()),
-            this, SLOT(slotClear()));
+    connect(d->mBtnClear, &QPushButton::clicked, this, &KWidgetLister::slotClear);
 
     d->enableControls();
 

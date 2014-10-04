@@ -626,8 +626,7 @@ LdapSearchDialog::LdapSearchDialog(QWidget *parent)
     topLayout->addWidget(d->mResultView);
 
     d->mResultView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(d->mResultView, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(slotCustomContextMenuRequested(QPoint)));
+    connect(d->mResultView, &QTableView::customContextMenuRequested, this, &LdapSearchDialog::slotCustomContextMenuRequested);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->setMargin(0);
@@ -734,12 +733,9 @@ void LdapSearchDialog::Private::restoreSettings()
 
             ldapClient->setAttributes(attrs);
 
-            q->connect(ldapClient, SIGNAL(result(KLDAP::LdapClient,KLDAP::LdapObject)),
-                       q, SLOT(slotAddResult(KLDAP::LdapClient,KLDAP::LdapObject)));
-            q->connect(ldapClient, SIGNAL(done()),
-                       q, SLOT(slotSearchDone()));
-            q->connect(ldapClient, SIGNAL(error(QString)),
-                       q, SLOT(slotError(QString)));
+            q->connect(ldapClient, SIGNAL(result(KLDAP::LdapClient,KLDAP::LdapObject)), q, SLOT(slotAddResult(KLDAP::LdapClient,KLDAP::LdapObject)));
+            q->connect(ldapClient, SIGNAL(done()), q, SLOT(slotSearchDone()));
+            q->connect(ldapClient, SIGNAL(error(QString)), q, SLOT(slotError(QString)));
 
             mLdapClientList.append(ldapClient);
         }
@@ -816,10 +812,8 @@ void LdapSearchDialog::Private::slotStartSearch()
     KGuiItem::assign(mSearchButton, stopSearchGuiItem);
     progressIndication->start();
 
-    q->disconnect(mSearchButton, SIGNAL(clicked()),
-                  q, SLOT(slotStartSearch()));
-    q->connect(mSearchButton, SIGNAL(clicked()),
-               q, SLOT(slotStopSearch()));
+    q->disconnect(mSearchButton, SIGNAL(clicked()), q, SLOT(slotStartSearch()));
+    q->connect(mSearchButton, SIGNAL(clicked()), q, SLOT(slotStopSearch()));
 
     const bool startsWith = (mSearchType->currentIndex() == 1);
 
@@ -850,10 +844,8 @@ void LdapSearchDialog::Private::slotSearchDone()
         }
     }
 
-    q->disconnect(mSearchButton, SIGNAL(clicked()),
-                  q, SLOT(slotStopSearch()));
-    q->connect(mSearchButton, SIGNAL(clicked()),
-               q, SLOT(slotStartSearch()));
+    q->disconnect(mSearchButton, SIGNAL(clicked()), q, SLOT(slotStopSearch()));
+    q->connect(mSearchButton, SIGNAL(clicked()), q, SLOT(slotStartSearch()));
 
     KGuiItem::assign(mSearchButton, startSearchGuiItem);
     progressIndication->stop();
