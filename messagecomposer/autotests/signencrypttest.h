@@ -23,15 +23,14 @@
 
 #include <QtCore/QObject>
 
-
 class SignEncryptTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public slots:
+public slots:
     void initTestCase();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void testContent();
     void testHeaders();
 };

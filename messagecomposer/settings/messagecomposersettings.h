@@ -27,10 +27,10 @@
 #include "messagecomposer_export.h"
 #include "messagecomposersettings_base.h"
 
-
 class QTimer;
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class MESSAGECOMPOSER_EXPORT MessageComposerSettings : public MessageComposer::MessageComposerSettingsBase
 {

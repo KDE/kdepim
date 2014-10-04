@@ -23,7 +23,8 @@
 #include "contentjobbase.h"
 #include "messagecomposer_export.h"
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class MultipartJobPrivate;
 
@@ -34,17 +35,17 @@ class MESSAGECOMPOSER_EXPORT MultipartJob : public ContentJobBase
     Q_OBJECT
 
 public:
-    explicit MultipartJob( QObject *parent = 0 );
+    explicit MultipartJob(QObject *parent = 0);
     virtual ~MultipartJob();
 
     QByteArray multipartSubtype() const;
-    void setMultipartSubtype( const QByteArray &subtype );
+    void setMultipartSubtype(const QByteArray &subtype);
 
 protected Q_SLOTS:
     virtual void process();
 
 private:
-    Q_DECLARE_PRIVATE( MultipartJob )
+    Q_DECLARE_PRIVATE(MultipartJob)
 };
 
 }

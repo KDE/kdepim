@@ -23,14 +23,15 @@
 
 #include <QtCore/QObject>
 
-namespace MessageComposer {
-  class Composer;
+namespace MessageComposer
+{
+class Composer;
 }
 
 class ComposerTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testAttachments();
     void testAutoSave();
     void testNonAsciiHeaders();
@@ -38,8 +39,8 @@ class ComposerTest : public QObject
 
     // TODO test the code for autodetecting the charset of a text attachment.
     // TODO figure out what CTE testing has to be done.
-  private:
-    void fillComposerData( MessageComposer::Composer* composer );
+private:
+    void fillComposerData(MessageComposer::Composer *composer);
 };
 
 #endif

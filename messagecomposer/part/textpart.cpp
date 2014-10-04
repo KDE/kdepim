@@ -33,9 +33,9 @@ public:
     ImageList embeddedImages;
 };
 
-TextPart::TextPart( QObject *parent )
-    : MessagePart( parent )
-    , d( new Private )
+TextPart::TextPart(QObject *parent)
+    : MessagePart(parent)
+    , d(new Private)
 {
     d->wordWrappingEnabled = true;
     d->warnBadCharset = true;
@@ -51,7 +51,7 @@ bool TextPart::isWordWrappingEnabled() const
     return d->wordWrappingEnabled;
 }
 
-void TextPart::setWordWrappingEnabled( bool enabled )
+void TextPart::setWordWrappingEnabled(bool enabled)
 {
     d->wordWrappingEnabled = enabled;
 }
@@ -61,7 +61,7 @@ bool TextPart::warnBadCharset() const
     return d->warnBadCharset;
 }
 
-void TextPart::setWarnBadCharset( bool warn )
+void TextPart::setWarnBadCharset(bool warn)
 {
     d->warnBadCharset = warn;
 }
@@ -71,7 +71,7 @@ QString TextPart::cleanPlainText() const
     return d->cleanPlainText;
 }
 
-void TextPart::setCleanPlainText( const QString &text )
+void TextPart::setCleanPlainText(const QString &text)
 {
     d->cleanPlainText = text;
 }
@@ -81,7 +81,7 @@ QString TextPart::wrappedPlainText() const
     return d->wrappedPlainText;
 }
 
-void TextPart::setWrappedPlainText( const QString &text )
+void TextPart::setWrappedPlainText(const QString &text)
 {
     d->wrappedPlainText = text;
 }
@@ -96,7 +96,7 @@ QString TextPart::cleanHtml() const
     return d->cleanHtml;
 }
 
-void TextPart::setCleanHtml( const QString &text )
+void TextPart::setCleanHtml(const QString &text)
 {
     d->cleanHtml = text;
 }
@@ -111,7 +111,7 @@ ImageList TextPart::embeddedImages() const
     return d->embeddedImages;
 }
 
-void TextPart::setEmbeddedImages( const ImageList &images )
+void TextPart::setEmbeddedImages(const ImageList &images)
 {
     d->embeddedImages = images;
 }

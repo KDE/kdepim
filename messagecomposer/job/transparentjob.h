@@ -21,13 +21,11 @@
 #ifndef MESSAGECOMPOSER_TRANSPARENTJOB_H
 #define MESSAGECOMPOSER_TRANSPARENTJOB_H
 
-
 #include "contentjobbase.h"
 #include "messagecomposer_export.h"
 
-
-
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class TransparentJobPrivate;
 
@@ -40,14 +38,14 @@ class MESSAGECOMPOSER_EXPORT TransparentJob : public MessageComposer::ContentJob
     Q_OBJECT
 
 public:
-    explicit TransparentJob( QObject *parent = 0 );
+    explicit TransparentJob(QObject *parent = 0);
     virtual ~TransparentJob();
 
-    void setContent( KMime::Content* content );
+    void setContent(KMime::Content *content);
     void process();
-    
+
 private:
-    Q_DECLARE_PRIVATE( TransparentJob )
+    Q_DECLARE_PRIVATE(TransparentJob)
 };
 
 }

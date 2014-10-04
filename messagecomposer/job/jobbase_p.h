@@ -22,13 +22,14 @@
 
 #include "jobbase.h"
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class JobBasePrivate
 {
-  public:
-    explicit JobBasePrivate( JobBase *qq )
-      : q_ptr( qq )
+public:
+    explicit JobBasePrivate(JobBase *qq)
+        : q_ptr(qq)
     {
     }
 
@@ -37,7 +38,7 @@ class JobBasePrivate
     }
 
     JobBase *q_ptr;
-    Q_DECLARE_PUBLIC( JobBase )
+    Q_DECLARE_PUBLIC(JobBase)
 };
 
 }

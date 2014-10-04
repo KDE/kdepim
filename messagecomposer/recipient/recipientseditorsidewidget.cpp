@@ -36,36 +36,36 @@
 
 using namespace MessageComposer;
 
-RecipientsEditorSideWidget::RecipientsEditorSideWidget( RecipientsEditor *view, QWidget *parent )
-    : QWidget( parent ), mEditor( view ), mRecipientPicker( 0 ), mPickerPositioner( 0 )
+RecipientsEditorSideWidget::RecipientsEditorSideWidget(RecipientsEditor *view, QWidget *parent)
+    : QWidget(parent), mEditor(view), mRecipientPicker(0), mPickerPositioner(0)
 {
-    QBoxLayout *topLayout = new QVBoxLayout( this );
+    QBoxLayout *topLayout = new QVBoxLayout(this);
 
 //TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
-    topLayout->setMargin( 0 );
-    topLayout->addStretch( 1 );
+    topLayout->setMargin(0);
+    topLayout->addStretch(1);
 
-    mTotalLabel = new QLabel( this );
-    mTotalLabel->setAlignment( Qt::AlignCenter );
-    topLayout->addWidget( mTotalLabel );
+    mTotalLabel = new QLabel(this);
+    mTotalLabel->setAlignment(Qt::AlignCenter);
+    topLayout->addWidget(mTotalLabel);
     mTotalLabel->hide();
 
-    topLayout->addStretch( 1 );
+    topLayout->addStretch(1);
 
     mDistributionListButton = new QPushButton(
-                i18nc("@action:button","Save List..."), this );
-    topLayout->addWidget( mDistributionListButton );
+        i18nc("@action:button", "Save List..."), this);
+    topLayout->addWidget(mDistributionListButton);
     mDistributionListButton->hide();
-    connect( mDistributionListButton, SIGNAL(clicked()),
-             SIGNAL(saveDistributionList()) );
+    connect(mDistributionListButton, SIGNAL(clicked()),
+            SIGNAL(saveDistributionList()));
     mDistributionListButton->setToolTip(
-                i18nc( "@info:tooltip", "Save recipients as distribution list") );
+        i18nc("@info:tooltip", "Save recipients as distribution list"));
 
     mSelectButton = new QPushButton(
-                i18nc( "@action:button Open recipient selection dialog.", "Se&lect..."), this );
-    topLayout->addWidget( mSelectButton );
+        i18nc("@action:button Open recipient selection dialog.", "Se&lect..."), this);
+    topLayout->addWidget(mSelectButton);
     connect(mSelectButton, &QPushButton::clicked, this, &RecipientsEditorSideWidget::pickRecipient);
-    mSelectButton->setToolTip( i18nc("@info:tooltip","Select recipients from address book") );
+    mSelectButton->setToolTip(i18nc("@info:tooltip", "Select recipients from address book"));
     updateTotalToolTip();
 }
 
@@ -73,16 +73,15 @@ RecipientsEditorSideWidget::~RecipientsEditorSideWidget()
 {
 }
 
-
-RecipientsPicker* RecipientsEditorSideWidget::picker() const
+RecipientsPicker *RecipientsEditorSideWidget::picker() const
 {
-    if ( !mRecipientPicker ) {
+    if (!mRecipientPicker) {
         // hacks to allow picker() to be const in the presence of lazy loading
-        RecipientsEditorSideWidget *non_const_this = const_cast<RecipientsEditorSideWidget*>( this );
-        mRecipientPicker = new RecipientsPicker( non_const_this );
-        connect( mRecipientPicker, SIGNAL(pickedRecipient(Recipient,bool&)),
-                 non_const_this, SIGNAL(pickedRecipient(Recipient,bool&)) );
-        mPickerPositioner = new KWindowPositioner( mSelectButton, mRecipientPicker );
+        RecipientsEditorSideWidget *non_const_this = const_cast<RecipientsEditorSideWidget *>(this);
+        mRecipientPicker = new RecipientsPicker(non_const_this);
+        connect(mRecipientPicker, SIGNAL(pickedRecipient(Recipient,bool&)),
+                non_const_this, SIGNAL(pickedRecipient(Recipient,bool&)));
+        mPickerPositioner = new KWindowPositioner(mSelectButton, mRecipientPicker);
     }
     return mRecipientPicker;
 }
@@ -92,27 +91,33 @@ void RecipientsEditorSideWidget::setFocus()
     mSelectButton->setFocus();
 }
 
-void RecipientsEditorSideWidget::setTotal( int recipients, int lines )
+void RecipientsEditorSideWidget::setTotal(int recipients, int lines)
 {
     QString labelText;
-    if ( recipients == 0 ) labelText = i18nc("@info:status No recipients selected"
-                                             , "No recipients");
+    if (recipients == 0) labelText = i18nc("@info:status No recipients selected"
+                                               , "No recipients");
     else labelText = i18ncp("@info:status Number of recipients selected"
-                            , "1 recipient","%1 recipients", recipients );
-    mTotalLabel->setText( labelText );
+                                , "1 recipient", "%1 recipients", recipients);
+    mTotalLabel->setText(labelText);
 
-    if ( lines > 3 ) mTotalLabel->show();
-    else mTotalLabel->hide();
+    if (lines > 3) {
+        mTotalLabel->show();
+    } else {
+        mTotalLabel->hide();
+    }
 
-    if ( lines > 2 ) mDistributionListButton->show();
-    else mDistributionListButton->hide();
+    if (lines > 2) {
+        mDistributionListButton->show();
+    } else {
+        mDistributionListButton->hide();
+    }
 
     updateTotalToolTip();
 }
 
 void RecipientsEditorSideWidget::updateTotalToolTip()
 {
-    QString text = QLatin1String( "<qt>" );
+    QString text = QLatin1String("<qt>");
 
     QString to;
     QString cc;
@@ -120,9 +125,9 @@ void RecipientsEditorSideWidget::updateTotalToolTip()
 
     Recipient::List recipients = mEditor->recipients();
     Recipient::List::ConstIterator it;
-    for( it = recipients.constBegin(); it != recipients.constEnd(); ++it ) {
+    for (it = recipients.constBegin(); it != recipients.constEnd(); ++it) {
         QString emailLine = QLatin1String("&nbsp;&nbsp;") + (*it)->email().toHtmlEscaped() + QLatin1String("<br/>");
-        switch( (*it)->type() ) {
+        switch ((*it)->type()) {
         case Recipient::To:
             to += emailLine;
             break;
@@ -138,24 +143,24 @@ void RecipientsEditorSideWidget::updateTotalToolTip()
     }
 
     text += xi18nc("@info:tooltip %1 list of emails", "<interface>To:</interface><nl/>%1", to);
-    if ( !cc.isEmpty() ) {
+    if (!cc.isEmpty()) {
         text += xi18nc("@info:tooltip %1 list of emails", "<interface>CC:</interface><nl/>%1", cc);
     }
-    if ( !bcc.isEmpty() ) {
+    if (!bcc.isEmpty()) {
         text += xi18nc("@info:tooltip %1 list of emails", "<interface>BCC:</interface><nl/>%1", bcc);
     }
 
-    text.append( QLatin1String("</qt>") );
-    mTotalLabel->setToolTip( text );
+    text.append(QLatin1String("</qt>"));
+    mTotalLabel->setToolTip(text);
 }
 
 void RecipientsEditorSideWidget::pickRecipient()
 {
     MessageComposer::RecipientsPicker *p = picker();
     Recipient::Ptr rec = mEditor->activeRecipient();
-    if( rec ) {
-        p->setDefaultType( rec->type() );
-        p->setRecipients( mEditor->recipients() );
+    if (rec) {
+        p->setDefaultType(rec->type());
+        p->setRecipients(mEditor->recipients());
         mPickerPositioner->reposition();
         p->show();
     }

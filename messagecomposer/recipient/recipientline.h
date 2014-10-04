@@ -30,26 +30,27 @@
 
 #include <KComboBox>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class RecipientComboBox : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit RecipientComboBox( QWidget *parent );
+    explicit RecipientComboBox(QWidget *parent);
 
 signals:
     void rightPressed();
 
 protected:
-    void keyPressEvent( QKeyEvent *ev );
+    void keyPressEvent(QKeyEvent *ev);
 };
 
 class RecipientLineEdit : public MessageComposer::ComposerLineEdit
 {
     Q_OBJECT
 public:
-    explicit RecipientLineEdit( QWidget * parent );
+    explicit RecipientLineEdit(QWidget *parent);
 
 signals:
     void deleteMe();
@@ -57,56 +58,56 @@ signals:
     void rightPressed();
 
 protected:
-    void keyPressEvent( QKeyEvent *ev );
+    void keyPressEvent(QKeyEvent *ev);
 };
 
 class RecipientLineNG : public KPIM::MultiplyingLine
 {
     Q_OBJECT
 public:
-    explicit RecipientLineNG( QWidget* parent );
-    virtual ~RecipientLineNG(){}
+    explicit RecipientLineNG(QWidget *parent);
+    virtual ~RecipientLineNG() {}
 
     virtual void activate();
     virtual bool isActive() const;
 
     virtual bool isEmpty() const;
     virtual void clear();
-    
+
     virtual bool isModified() const;
     virtual void clearModified();
 
     virtual KPIM::MultiplyingLineData::Ptr data() const;
-    virtual void setData( const KPIM::MultiplyingLineData::Ptr &data );
+    virtual void setData(const KPIM::MultiplyingLineData::Ptr &data);
 
-    virtual void fixTabOrder( QWidget* previous );
-    virtual QWidget* tabOut() const;
-    
+    virtual void fixTabOrder(QWidget *previous);
+    virtual QWidget *tabOut() const;
+
     virtual void moveCompletionPopup();
-    virtual void setCompletionMode( KCompletion::CompletionMode mode );
-    
-    virtual int setColumnWidth( int w );
+    virtual void setCompletionMode(KCompletion::CompletionMode mode);
+
+    virtual int setColumnWidth(int w);
 
     // recipient specific methods
     int recipientsCount() const;
 
-    void setRecipientType( Recipient::Type );
+    void setRecipientType(Recipient::Type);
     Recipient::Type recipientType() const;
     QSharedPointer<Recipient> recipient() const;
 
     /**
      * Sets the config file used for storing recent addresses.
      */
-    void setRecentAddressConfig( KConfig *config );
+    void setRecentAddressConfig(KConfig *config);
 
 signals:
-    void typeModified( RecipientLineNG* );
+    void typeModified(RecipientLineNG *);
     void countChanged();
 
 protected slots:
     void slotEditingFinished();
     void slotTypeModified();
-    void analyzeLine( const QString & );
+    void analyzeLine(const QString &);
 
 private:
     void dataFromFields();

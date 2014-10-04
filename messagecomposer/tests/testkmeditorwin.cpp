@@ -27,27 +27,26 @@
 #include <KAboutData>
 #include <KLocalizedString>
 
-
 testKMeditorWindow::testKMeditorWindow()
 {
-  setWindowTitle(QLatin1String("test kmeditor window"));
-  editor = new KMeditor;
-  editor->setAcceptRichText(false);
-  setCentralWidget(editor);
+    setWindowTitle(QLatin1String("test kmeditor window"));
+    editor = new KMeditor;
+    editor->setAcceptRichText(false);
+    setCentralWidget(editor);
 
-  QMenu *editMenu = menuBar()->addMenu(tr("Edit"));
+    QMenu *editMenu = menuBar()->addMenu(tr("Edit"));
 
-  QAction *act = new QAction(tr("Paste as quote"), this);
-  connect(act, &QAction::triggered, editor, &KMeditor::slotPasteAsQuotation);
-  editMenu->addAction(act);
+    QAction *act = new QAction(tr("Paste as quote"), this);
+    connect(act, &QAction::triggered, editor, &KMeditor::slotPasteAsQuotation);
+    editMenu->addAction(act);
 
-  act = new QAction(tr("Remove  quote"), this);
-  connect(act, &QAction::triggered, editor, &KMeditor::slotRemoveQuotes);
-  editMenu->addAction(act);
+    act = new QAction(tr("Remove  quote"), this);
+    connect(act, &QAction::triggered, editor, &KMeditor::slotRemoveQuotes);
+    editMenu->addAction(act);
 
-  act = new QAction(tr("Add quote"), this);
-  connect(act, &QAction::triggered, editor, &KMeditor::slotAddQuotes);
-  editMenu->addAction(act);
+    act = new QAction(tr("Add quote"), this);
+    connect(act, &QAction::triggered, editor, &KMeditor::slotAddQuotes);
+    editMenu->addAction(act);
 
 }
 
@@ -55,12 +54,11 @@ testKMeditorWindow::~testKMeditorWindow()
 {
 }
 
-
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QStringLiteral("testkmeditorwin"),
-                          i18n("KMeditorTestWin"),
-                          QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("testkmeditorwin"),
+                         i18n("KMeditorTestWin"),
+                         QLatin1String("1.0"));
 
     KAboutData::setApplicationData(aboutData);
 
@@ -72,7 +70,6 @@ int main( int argc, char **argv )
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-
 
     testKMeditorWindow *edit = new testKMeditorWindow();
     edit->show();

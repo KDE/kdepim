@@ -35,53 +35,61 @@
 #include <QString>
 
 #include <kmime/kmime_message.h>
-namespace MessageComposer {
-class MessageSender {
+namespace MessageComposer
+{
+class MessageSender
+{
 protected:
-  virtual ~MessageSender() = 0;
+    virtual ~MessageSender() = 0;
 
 public:
-  enum SendMethod {
-    SendDefault = -1,
-    SendImmediate = true,
-    SendLater = false
-  };
-  enum SaveIn {
-    SaveInNone,
-    SaveInDrafts,
-    SaveInTemplates
-  };
-  /**
-     Send given message.
+    enum SendMethod {
+        SendDefault = -1,
+        SendImmediate = true,
+        SendLater = false
+    };
+    enum SaveIn {
+        SaveInNone,
+        SaveInDrafts,
+        SaveInTemplates
+    };
+    /**
+       Send given message.
 
-     The message is either queued (@p method == SendLater) or sent
-     immediately (@p method = SendImmediate). The default behaviour,
-     as selected with setSendImmediate(), can be overwritten with the
-     parameter @p method.  The sender takes ownership of the given
-     message on success, so DO NOT DELETE OR MODIFY the message
-     further.
+       The message is either queued (@p method == SendLater) or sent
+       immediately (@p method = SendImmediate). The default behaviour,
+       as selected with setSendImmediate(), can be overwritten with the
+       parameter @p method.  The sender takes ownership of the given
+       message on success, so DO NOT DELETE OR MODIFY the message
+       further.
 
-     FIXME: what about send() == false?
+       FIXME: what about send() == false?
 
-     @return true on success.
-  */
-  bool send( const KMime::Message::Ptr &msg, SendMethod method=SendDefault ) { return doSend( msg, method ); }
+       @return true on success.
+    */
+    bool send(const KMime::Message::Ptr &msg, SendMethod method = SendDefault)
+    {
+        return doSend(msg, method);
+    }
 
-  /**
-     Start sending all queued messages.
+    /**
+       Start sending all queued messages.
 
-     FIXME: what does success mean here, if it's only _start_ sending?
+       FIXME: what does success mean here, if it's only _start_ sending?
 
-     Optionally a transport can be specified that will be used as the
-     default transport.
+       Optionally a transport can be specified that will be used as the
+       default transport.
 
-     @return true on success.
-  */
-  bool sendQueued( const QString & transport=QString() ) { return doSendQueued( transport ); }
+       @return true on success.
+    */
+    bool sendQueued(const QString &transport = QString())
+    {
+        return doSendQueued(transport);
+    }
 
 protected:
-  virtual bool doSend( const KMime::Message::Ptr &msg, short sendNow ) = 0;
-  virtual bool doSendQueued( const QString& transport ) = 0;
+    virtual bool doSend(const KMime::Message::Ptr &msg, short sendNow) = 0;
+    virtual bool doSendQueued(const QString &transport) = 0;
 };
 
 inline MessageSender::~MessageSender() {}

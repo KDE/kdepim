@@ -26,7 +26,8 @@
 
 #include <KCompositeJob>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class GlobalPart;
 class JobBasePrivate;
@@ -40,17 +41,16 @@ class MESSAGECOMPOSER_EXPORT JobBase : public KCompositeJob
     Q_OBJECT
 
 public:
-    typedef QList<JobBase*> List;
+    typedef QList<JobBase *> List;
 
-    enum Error
-    {
+    enum Error {
         BugError = UserDefinedError + 1,
         IncompleteError,
         UserCancelledError,
         UserError = UserDefinedError + 42
     };
 
-    explicit JobBase( QObject *parent = 0 );
+    explicit JobBase(QObject *parent = 0);
     virtual ~JobBase();
 
     // asserts if no Composer parent
@@ -58,10 +58,10 @@ public:
 
 protected:
     JobBasePrivate *const d_ptr;
-    JobBase( JobBasePrivate &dd, QObject *parent );
+    JobBase(JobBasePrivate &dd, QObject *parent);
 
 private:
-    Q_DECLARE_PRIVATE( JobBase )
+    Q_DECLARE_PRIVATE(JobBase)
 };
 
 } // namespace MessageComposer

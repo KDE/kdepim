@@ -24,43 +24,43 @@
 #include <messagecomposer/utils/util.h>
 using namespace MessageComposer;
 
-QTEST_MAIN( UtilTest )
+QTEST_MAIN(UtilTest)
 
 void UtilTest::testSelectCharset()
 {
-  // Pick a charset that actually works.
-  {
-    QString text = QString::fromUtf8( "text 123 ăîşţâ" );
-    QList<QByteArray> charsets;
-    charsets << "us-ascii";
-    charsets << "iso-8859-1";
-    charsets << "iso-8859-2"; // This one works.
-    QByteArray choice = Util::selectCharset( charsets, text );
-    QCOMPARE( choice, QByteArray( "iso-8859-2" ) );
-  }
+    // Pick a charset that actually works.
+    {
+        QString text = QString::fromUtf8("text 123 ăîşţâ");
+        QList<QByteArray> charsets;
+        charsets << "us-ascii";
+        charsets << "iso-8859-1";
+        charsets << "iso-8859-2"; // This one works.
+        QByteArray choice = Util::selectCharset(charsets, text);
+        QCOMPARE(choice, QByteArray("iso-8859-2"));
+    }
 
-  // Pick as simple a charset as possible.
-  {
-    QString text = QString::fromUtf8( "plain English text" );
-    QList<QByteArray> charsets;
-    charsets << "us-ascii"; // This one works.
-    charsets << "iso-8859-1";
-    charsets << "utf-8";
-    QByteArray choice = Util::selectCharset( charsets, text );
-    QCOMPARE( choice, QByteArray( "us-ascii" ) );
-  }
+    // Pick as simple a charset as possible.
+    {
+        QString text = QString::fromUtf8("plain English text");
+        QList<QByteArray> charsets;
+        charsets << "us-ascii"; // This one works.
+        charsets << "iso-8859-1";
+        charsets << "utf-8";
+        QByteArray choice = Util::selectCharset(charsets, text);
+        QCOMPARE(choice, QByteArray("us-ascii"));
+    }
 
-  // Return empty charset if none works.
-  {
-    QString text = QString::fromUtf8( "text 123 ăîşţâ" );
-    QList<QByteArray> charsets;
-    QByteArray choice = Util::selectCharset( charsets, text );
-    QVERIFY( choice.isEmpty() );
-    charsets << "us-ascii";
-    charsets << "iso-8859-1";
-    choice = Util::selectCharset( charsets, text );
-    QVERIFY( choice.isEmpty() );
-  }
+    // Return empty charset if none works.
+    {
+        QString text = QString::fromUtf8("text 123 ăîşţâ");
+        QList<QByteArray> charsets;
+        QByteArray choice = Util::selectCharset(charsets, text);
+        QVERIFY(choice.isEmpty());
+        charsets << "us-ascii";
+        charsets << "iso-8859-1";
+        choice = Util::selectCharset(charsets, text);
+        QVERIFY(choice.isEmpty());
+    }
 
 }
 

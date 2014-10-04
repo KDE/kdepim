@@ -30,7 +30,8 @@
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 /**
  * @short A job to expand aliases to email addresses.
@@ -50,7 +51,7 @@ public:
      * @param defaultDomain The default domain that shall be used when expanding aliases.
      * @param parent The parent object.
      */
-    AliasesExpandJob( const QString &recipients, const QString &defaultDomain, QObject *parent = 0 );
+    AliasesExpandJob(const QString &recipients, const QString &defaultDomain, QObject *parent = 0);
 
     /**
      * Destroys the aliases expand job.
@@ -73,8 +74,8 @@ public:
     QStringList emptyDistributionLists() const;
 
 private Q_SLOTS:
-    void slotDistributionListExpansionDone( KJob* );
-    void slotNicknameExpansionDone( KJob* );
+    void slotDistributionListExpansionDone(KJob *);
+    void slotNicknameExpansionDone(KJob *);
 
 private:
     void finishExpansion();
@@ -88,8 +89,7 @@ private:
     uint mDistributionListExpansionJobs;
     uint mNicknameExpansionJobs;
 
-    struct DistributionListExpansionResult
-    {
+    struct DistributionListExpansionResult {
         QString addresses;
         bool isEmpty;
     };

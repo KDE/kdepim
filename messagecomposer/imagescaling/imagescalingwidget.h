@@ -21,13 +21,15 @@
 #include "messagecomposer_export.h"
 
 class KComboBox;
-namespace Ui {
+namespace Ui
+{
 class ImageScalingWidget;
 }
 
 class QButtonGroup;
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class MESSAGECOMPOSER_EXPORT ImageScalingWidget : public QWidget
 {
     Q_OBJECT
@@ -46,7 +48,7 @@ private Q_SLOTS:
     void slotComboboxChanged(int index);
     void slotSourceFilterClicked(int);
     void slotRecipientFilterClicked(int);
-    void slotHelpLinkClicked(const QString&);
+    void slotHelpLinkClicked(const QString &);
 
 private:
     void updateFilterSourceTypeSettings();

@@ -23,8 +23,10 @@
 #include "contentjobbase.h"
 #include "messagecomposer_export.h"
 
-namespace KMime {
-namespace Headers {
+namespace KMime
+{
+namespace Headers
+{
 class ContentDescription;
 class ContentDisposition;
 class ContentID;
@@ -33,7 +35,8 @@ class ContentType;
 }
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class SinglepartJobPrivate;
 
@@ -44,11 +47,11 @@ class MESSAGECOMPOSER_EXPORT SinglepartJob : public ContentJobBase
     Q_OBJECT
 
 public:
-    explicit SinglepartJob( QObject *parent = 0 );
+    explicit SinglepartJob(QObject *parent = 0);
     virtual ~SinglepartJob();
 
     QByteArray data() const;
-    void setData( const QByteArray &data );
+    void setData(const QByteArray &data);
 
     /// created on first call. delete them if you don't use the content
     KMime::Headers::ContentDescription *contentDescription();
@@ -61,7 +64,7 @@ protected Q_SLOTS:
     virtual void process();
 
 private:
-    Q_DECLARE_PRIVATE( SinglepartJob )
+    Q_DECLARE_PRIVATE(SinglepartJob)
 };
 
 }

@@ -46,132 +46,130 @@
 #include <stdlib.h>
 #include <KCharsets>
 
-QTEST_MAIN( EncryptJobTest )
+QTEST_MAIN(EncryptJobTest)
 
 void EncryptJobTest::initTestCase()
 {
-  MessageCore::Test::setupEnv();
+    MessageCore::Test::setupEnv();
 }
 
-void EncryptJobTest::testContentDirect() {
+void EncryptJobTest::testContentDirect()
+{
 
+    MessageComposer::Composer *composer = new MessageComposer::Composer;
+    QList<QByteArray> charsets;
+    charsets << "us-ascii";
+    composer->globalPart()->setCharsets(charsets);
+    MessageComposer::TextPart *part = new MessageComposer::TextPart(this);
+    part->setWordWrappingEnabled(false);
+    part->setCleanPlainText(QString::fromLatin1("one flew over the cuckoo's nest"));
 
-  MessageComposer::Composer *composer = new MessageComposer::Composer;
-  QList<QByteArray> charsets;
-  charsets << "us-ascii";
-  composer->globalPart()->setCharsets( charsets );
-  MessageComposer::TextPart* part = new MessageComposer::TextPart( this );
-  part->setWordWrappingEnabled(false);
-  part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
+    MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob(part, composer);
 
-  MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob( part, composer );
+    QVERIFY(composer);
+    QVERIFY(mainTextJob);
 
-  QVERIFY( composer );
-  QVERIFY( mainTextJob );
+    VERIFYEXEC(mainTextJob);
 
-  VERIFYEXEC( mainTextJob );
+    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    MessageComposer::EncryptJob *eJob = new MessageComposer::EncryptJob(composer);
 
-  MessageComposer::EncryptJob* eJob = new MessageComposer::EncryptJob( composer );
+    QVERIFY(eJob);
 
-  QVERIFY( eJob );
+    QStringList recipients;
+    recipients << QString::fromLocal8Bit("test@kolab.org");
 
-  QStringList recipients;
-  recipients << QString::fromLocal8Bit( "test@kolab.org" );
+    eJob->setContent(mainTextJob->content());
+    eJob->setCryptoMessageFormat(Kleo::OpenPGPMIMEFormat);
+    eJob->setRecipients(recipients);
+    eJob->setEncryptionKeys(keys);
 
-  eJob->setContent( mainTextJob->content() );
-  eJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
-  eJob->setRecipients( recipients );
-  eJob->setEncryptionKeys( keys );
-
-  checkEncryption( eJob );
+    checkEncryption(eJob);
 
 }
 
 void EncryptJobTest::testContentChained()
 {
-  MessageComposer::Composer *composer = new MessageComposer::Composer;
-  QList<QByteArray> charsets;
-  charsets << "us-ascii";
-  composer->globalPart()->setCharsets( charsets );
-  MessageComposer::TextPart* part = new MessageComposer::TextPart( this );
-  part->setWordWrappingEnabled(false);
-  part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
+    MessageComposer::Composer *composer = new MessageComposer::Composer;
+    QList<QByteArray> charsets;
+    charsets << "us-ascii";
+    composer->globalPart()->setCharsets(charsets);
+    MessageComposer::TextPart *part = new MessageComposer::TextPart(this);
+    part->setWordWrappingEnabled(false);
+    part->setCleanPlainText(QString::fromLatin1("one flew over the cuckoo's nest"));
 
-  MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob( part, composer );
+    MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob(part, composer);
 
-  QVERIFY( composer );
-  QVERIFY( mainTextJob );
+    QVERIFY(composer);
+    QVERIFY(mainTextJob);
 
-  VERIFYEXEC( mainTextJob );
+    VERIFYEXEC(mainTextJob);
 
-  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
-  qDebug() << "done getting keys";
-  MessageComposer::EncryptJob* eJob = new MessageComposer::EncryptJob( composer );
+    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    qDebug() << "done getting keys";
+    MessageComposer::EncryptJob *eJob = new MessageComposer::EncryptJob(composer);
 
-  QStringList recipients;
-  recipients << QString::fromLocal8Bit( "test@kolab.org" );
+    QStringList recipients;
+    recipients << QString::fromLocal8Bit("test@kolab.org");
 
-  eJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
-  eJob->setRecipients( recipients );
-  eJob->setEncryptionKeys( keys );
-  eJob->setContent( mainTextJob->content() );
+    eJob->setCryptoMessageFormat(Kleo::OpenPGPMIMEFormat);
+    eJob->setRecipients(recipients);
+    eJob->setEncryptionKeys(keys);
+    eJob->setContent(mainTextJob->content());
 
-  checkEncryption( eJob );
+    checkEncryption(eJob);
 
 }
 
-
 void EncryptJobTest::testHeaders()
 {
-   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  MessageComposer::Composer *composer = new MessageComposer::Composer;
-  MessageComposer::EncryptJob* eJob = new MessageComposer::EncryptJob( composer );
+    MessageComposer::Composer *composer = new MessageComposer::Composer;
+    MessageComposer::EncryptJob *eJob = new MessageComposer::EncryptJob(composer);
 
-  QVERIFY( composer );
-  QVERIFY( eJob );
+    QVERIFY(composer);
+    QVERIFY(eJob);
 
-  QByteArray data( QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8() );
-  KMime::Content* content = new KMime::Content;
-  content->setBody( data );
+    QByteArray data(QString::fromLocal8Bit("one flew over the cuckoo's nest").toUtf8());
+    KMime::Content *content = new KMime::Content;
+    content->setBody(data);
 
-  QStringList recipients;
-  recipients << QString::fromLocal8Bit( "test@kolab.org" );
+    QStringList recipients;
+    recipients << QString::fromLocal8Bit("test@kolab.org");
 
-  eJob->setContent( content );
-  eJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
-  eJob->setRecipients( recipients );
-  eJob->setEncryptionKeys( keys );
+    eJob->setContent(content);
+    eJob->setCryptoMessageFormat(Kleo::OpenPGPMIMEFormat);
+    eJob->setRecipients(recipients);
+    eJob->setEncryptionKeys(keys);
 
-  VERIFYEXEC( eJob );
+    VERIFYEXEC(eJob);
 
-  QByteArray mimeType( "multipart/encrypted" );
-  QByteArray charset( "ISO-8859-1" );
+    QByteArray mimeType("multipart/encrypted");
+    QByteArray charset("ISO-8859-1");
 
-  KMime::Content *result = eJob->content();
-  result->assemble();
-  qDebug() << result->encodedContent();
+    KMime::Content *result = eJob->content();
+    result->assemble();
+    qDebug() << result->encodedContent();
 
-  QVERIFY( result->contentType( false ) );
-  QCOMPARE( result->contentType()->mimeType(), mimeType );
-  QCOMPARE( result->contentType()->charset(), charset );
-  QCOMPARE( result->contentType()->parameter( QString::fromLocal8Bit( "protocol" ) ), QString::fromLocal8Bit( "application/pgp-encrypted" ) );
-  QCOMPARE( result->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit );
-} 
+    QVERIFY(result->contentType(false));
+    QCOMPARE(result->contentType()->mimeType(), mimeType);
+    QCOMPARE(result->contentType()->charset(), charset);
+    QCOMPARE(result->contentType()->parameter(QString::fromLocal8Bit("protocol")), QString::fromLocal8Bit("application/pgp-encrypted"));
+    QCOMPARE(result->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit);
+}
 
-
-void EncryptJobTest::checkEncryption( MessageComposer::EncryptJob* eJob )
+void EncryptJobTest::checkEncryption(MessageComposer::EncryptJob *eJob)
 {
 
-  VERIFYEXEC( eJob );
+    VERIFYEXEC(eJob);
 
-  KMime::Content* result = eJob->content();
-  Q_ASSERT( result );
-  result->assemble();
+    KMime::Content *result = eJob->content();
+    Q_ASSERT(result);
+    result->assemble();
 
-  ComposerTestUtil::verifyEncryption( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat );
+    ComposerTestUtil::verifyEncryption(result, QString::fromLocal8Bit("one flew over the cuckoo's nest").toUtf8(), Kleo::OpenPGPMIMEFormat);
 
 }
 

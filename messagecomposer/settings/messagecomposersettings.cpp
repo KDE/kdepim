@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-
 #include "messagecomposersettings.h"
 #include <QTimer>
 
@@ -31,7 +30,7 @@ MessageComposerSettings *MessageComposerSettings::mSelf = 0;
 
 MessageComposerSettings *MessageComposerSettings::self()
 {
-    if ( !mSelf ) {
+    if (!mSelf) {
         mSelf = new MessageComposerSettings();
         mSelf->load();
     }
@@ -41,15 +40,16 @@ MessageComposerSettings *MessageComposerSettings::self()
 
 MessageComposerSettings::MessageComposerSettings()
 {
-    mConfigSyncTimer = new QTimer( this );
-    mConfigSyncTimer->setSingleShot( true );
+    mConfigSyncTimer = new QTimer(this);
+    mConfigSyncTimer->setSingleShot(true);
     connect(mConfigSyncTimer, &QTimer::timeout, this, &MessageComposerSettings::slotSyncNow);
 }
 
 void MessageComposerSettings::requestSync()
 {
-    if ( !mConfigSyncTimer->isActive() )
-        mConfigSyncTimer->start( 0 );
+    if (!mConfigSyncTimer->isActive()) {
+        mConfigSyncTimer->start(0);
+    }
 }
 
 void MessageComposerSettings::slotSyncNow()

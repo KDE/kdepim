@@ -22,12 +22,13 @@
 #include <KABC/Addressee>
 #include "keyresolver.h"
 
-namespace Kleo {
+namespace Kleo
+{
 class SaveContactPreferenceJob : public KJob
 {
     Q_OBJECT
 public:
-    explicit SaveContactPreferenceJob(const QString &email, const Kleo::KeyResolver::ContactPreferences &pref, QObject *parent=0);
+    explicit SaveContactPreferenceJob(const QString &email, const Kleo::KeyResolver::ContactPreferences &pref, QObject *parent = 0);
     ~SaveContactPreferenceJob();
     void start();
 

@@ -23,7 +23,8 @@ class QLineEdit;
 class QPushButton;
 class QListWidget;
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class ImageScalingSelectFormatDialog : public QDialog
 {
@@ -55,7 +56,7 @@ public:
     QString format() const;
 
 Q_SIGNALS:
-    void textChanged(const QString&);
+    void textChanged(const QString &);
 
 private Q_SLOTS:
     void slotSelectFormat();

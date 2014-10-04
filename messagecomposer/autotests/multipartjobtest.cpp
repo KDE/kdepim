@@ -31,74 +31,74 @@ using namespace KMime;
 #include <messagecomposer/job/multipartjob.h>
 using namespace MessageComposer;
 
-QTEST_MAIN( MultipartJobTest )
+QTEST_MAIN(MultipartJobTest)
 
 void MultipartJobTest::testMultipartMixed()
 {
-  Composer *composer = new Composer;
-  MultipartJob *mjob = new MultipartJob( composer );
-  mjob->setMultipartSubtype( "mixed" );
+    Composer *composer = new Composer;
+    MultipartJob *mjob = new MultipartJob(composer);
+    mjob->setMultipartSubtype("mixed");
 
-  QByteArray data1( "one" );
-  QByteArray data2( "two" );
-  QByteArray type1( "text/plain" );
-  QByteArray type2( "application/x-mors-ontologica" );
-  
-  {
-    SinglepartJob *cjob = new SinglepartJob( mjob );
-    cjob->setData( data1 );
-    cjob->contentType()->setMimeType( type1 );
-  }
+    QByteArray data1("one");
+    QByteArray data2("two");
+    QByteArray type1("text/plain");
+    QByteArray type2("application/x-mors-ontologica");
 
-  {
-    SinglepartJob *cjob = new SinglepartJob( mjob );
-    cjob->setData( data2 );
-    cjob->contentType()->setMimeType( type2 );
-  }
+    {
+        SinglepartJob *cjob = new SinglepartJob(mjob);
+        cjob->setData(data1);
+        cjob->contentType()->setMimeType(type1);
+    }
 
-  QVERIFY( mjob->exec() );
-  Content *result = mjob->content();
-  result->assemble();
-  qDebug() << result->encodedContent();
+    {
+        SinglepartJob *cjob = new SinglepartJob(mjob);
+        cjob->setData(data2);
+        cjob->contentType()->setMimeType(type2);
+    }
 
-  QVERIFY( result->contentType( false ) );
-  QCOMPARE( result->contentType()->mimeType(), QByteArray( "multipart/mixed" ) );
-  QCOMPARE( result->contents().count(), 2 );
+    QVERIFY(mjob->exec());
+    Content *result = mjob->content();
+    result->assemble();
+    qDebug() << result->encodedContent();
 
-  {
-    Content *c = result->contents().at( 0 );
-    QCOMPARE( c->body(), data1 );
-    QVERIFY( c->contentType( false ) );
-    QCOMPARE( c->contentType()->mimeType(), type1 );
-  }
+    QVERIFY(result->contentType(false));
+    QCOMPARE(result->contentType()->mimeType(), QByteArray("multipart/mixed"));
+    QCOMPARE(result->contents().count(), 2);
 
-  {
-    Content *c = result->contents().at( 1 );
-    QCOMPARE( c->body(), data2 );
-    QVERIFY( c->contentType( false ) );
-    QCOMPARE( c->contentType()->mimeType(), type2 );
-  }
+    {
+        Content *c = result->contents().at(0);
+        QCOMPARE(c->body(), data1);
+        QVERIFY(c->contentType(false));
+        QCOMPARE(c->contentType()->mimeType(), type1);
+    }
+
+    {
+        Content *c = result->contents().at(1);
+        QCOMPARE(c->body(), data2);
+        QVERIFY(c->contentType(false));
+        QCOMPARE(c->contentType()->mimeType(), type2);
+    }
 }
 
 void MultipartJobTest::test8BitPropagation()
 {
-  // If a subpart is 8bit, its parent must be 8bit too.
+    // If a subpart is 8bit, its parent must be 8bit too.
 
-  Composer *composer = new Composer;
-  composer->globalPart()->set8BitAllowed( true );
-  MultipartJob *mjob = new MultipartJob( composer );
-  mjob->setMultipartSubtype( "mixed" );
-  MultipartJob *mjob2 = new MultipartJob( mjob );
-  mjob2->setMultipartSubtype( "mixed" );
-  SinglepartJob *cjob = new SinglepartJob( mjob2 );
-  QByteArray data( "time is so short and I'm sure there must be something more" );
-  cjob->setData( data );
-  cjob->contentTransferEncoding()->setEncoding( Headers::CE8Bit );
-  QVERIFY( mjob->exec() );
-  Content *content = mjob->content();
-  content->assemble();
-  qDebug() << content->encodedContent();
-  QVERIFY( content->contentTransferEncoding( false ) );
-  QCOMPARE( content->contentTransferEncoding()->encoding(), Headers::CE8Bit );
+    Composer *composer = new Composer;
+    composer->globalPart()->set8BitAllowed(true);
+    MultipartJob *mjob = new MultipartJob(composer);
+    mjob->setMultipartSubtype("mixed");
+    MultipartJob *mjob2 = new MultipartJob(mjob);
+    mjob2->setMultipartSubtype("mixed");
+    SinglepartJob *cjob = new SinglepartJob(mjob2);
+    QByteArray data("time is so short and I'm sure there must be something more");
+    cjob->setData(data);
+    cjob->contentTransferEncoding()->setEncoding(Headers::CE8Bit);
+    QVERIFY(mjob->exec());
+    Content *content = mjob->content();
+    content->assemble();
+    qDebug() << content->encodedContent();
+    QVERIFY(content->contentTransferEncoding(false));
+    QCOMPARE(content->contentTransferEncoding()->encoding(), Headers::CE8Bit);
 }
 

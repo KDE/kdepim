@@ -35,25 +35,27 @@
 #include "messagecomposer_export.h"
 class KActionCollection;
 class QAction;
-namespace MessageCore {
+namespace MessageCore
+{
 class AttachmentFromUrlBaseJob;
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class AttachmentModel;
 class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
 {
     Q_OBJECT
 
 public:
-    AttachmentControllerBase( MessageComposer::AttachmentModel *model, QWidget *wParent, KActionCollection *actionCollection );
+    AttachmentControllerBase(MessageComposer::AttachmentModel *model, QWidget *wParent, KActionCollection *actionCollection);
     ~AttachmentControllerBase();
 
     void createActions();
 
     // TODO dnd stuff...
 
-    void setSelectedParts( const MessageCore::AttachmentPart::List &selectedParts );
+    void setSelectedParts(const MessageCore::AttachmentPart::List &selectedParts);
 
     void setAttachOwnVcard(bool attachVcard);
     bool attachOwnVcard() const;
@@ -61,64 +63,64 @@ public:
 
 public slots:
     /// model sets these
-    void setEncryptEnabled( bool enabled );
-    void setSignEnabled( bool enabled );
+    void setEncryptEnabled(bool enabled);
+    void setSignEnabled(bool enabled);
     /// compression is async...
-    void compressAttachment( MessageCore::AttachmentPart::Ptr part, bool compress );
+    void compressAttachment(MessageCore::AttachmentPart::Ptr part, bool compress);
     void showContextMenu();
-    void openAttachment( MessageCore::AttachmentPart::Ptr part );
-    void viewAttachment( MessageCore::AttachmentPart::Ptr part );
-    void editAttachment( MessageCore::AttachmentPart::Ptr part, bool openWith = false );
-    void editAttachmentWith( MessageCore::AttachmentPart::Ptr part );
-    void saveAttachmentAs( MessageCore::AttachmentPart::Ptr part );
-    void attachmentProperties( MessageCore::AttachmentPart::Ptr part );
+    void openAttachment(MessageCore::AttachmentPart::Ptr part);
+    void viewAttachment(MessageCore::AttachmentPart::Ptr part);
+    void editAttachment(MessageCore::AttachmentPart::Ptr part, bool openWith = false);
+    void editAttachmentWith(MessageCore::AttachmentPart::Ptr part);
+    void saveAttachmentAs(MessageCore::AttachmentPart::Ptr part);
+    void attachmentProperties(MessageCore::AttachmentPart::Ptr part);
     void showAddAttachmentDialog();
     /// sets sign, encrypt, shows properties dialog if so configured
-    void addAttachment( MessageCore::AttachmentPart::Ptr part );
-    void addAttachment( const KUrl &url );
+    void addAttachment(MessageCore::AttachmentPart::Ptr part);
+    void addAttachment(const KUrl &url);
     void addAttachmentUrlSync(const KUrl &url);
-    void addAttachments( const KUrl::List &urls );
+    void addAttachments(const KUrl::List &urls);
     void showAttachPublicKeyDialog();
     virtual void attachMyPublicKey() {}
 
 signals:
     void actionsCreated();
     void refreshSelection();
-    void showAttachment( KMime::Content *content, const QByteArray &charset );
+    void showAttachment(KMime::Content *content, const QByteArray &charset);
     void selectedAllAttachment();
     void addOwnVcard(bool);
     void fileAttached();
 
 protected:
-    void exportPublicKey( const QString &fingerprint );
-    void enableAttachPublicKey( bool enable );
-    void enableAttachMyPublicKey( bool enable );
+    void exportPublicKey(const QString &fingerprint);
+    void enableAttachPublicKey(bool enable);
+    void enableAttachMyPublicKey(bool enable);
     void byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite = false);
     void openWith(KService::Ptr offer = KService::Ptr());
 private:
-    MessageCore::AttachmentFromUrlBaseJob * createAttachmentJob(const KUrl &url);
+    MessageCore::AttachmentFromUrlBaseJob *createAttachmentJob(const KUrl &url);
 private slots:
     void slotPutResult(KJob *job);
     void slotOpenWithDialog();
-    void slotOpenWithAction(QAction*act);
+    void slotOpenWithAction(QAction *act);
 
 private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void attachmentRemoved( MessageCore::AttachmentPart::Ptr ) )
-    Q_PRIVATE_SLOT( d, void compressJobResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void loadJobResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void openSelectedAttachments() )
-    Q_PRIVATE_SLOT( d, void viewSelectedAttachments() )
-    Q_PRIVATE_SLOT( d, void editSelectedAttachment() )
-    Q_PRIVATE_SLOT( d, void editSelectedAttachmentWith() )
-    Q_PRIVATE_SLOT( d, void removeSelectedAttachments() )
-    Q_PRIVATE_SLOT( d, void saveSelectedAttachmentAs() )
-    Q_PRIVATE_SLOT( d, void selectedAttachmentProperties() )
-    Q_PRIVATE_SLOT( d, void editDone( MessageViewer::EditorWatcher* ) )
-    Q_PRIVATE_SLOT( d, void attachPublicKeyJobResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotAttachmentContentCreated( KJob * ) )
+    Q_PRIVATE_SLOT(d, void attachmentRemoved(MessageCore::AttachmentPart::Ptr))
+    Q_PRIVATE_SLOT(d, void compressJobResult(KJob *))
+    Q_PRIVATE_SLOT(d, void loadJobResult(KJob *))
+    Q_PRIVATE_SLOT(d, void openSelectedAttachments())
+    Q_PRIVATE_SLOT(d, void viewSelectedAttachments())
+    Q_PRIVATE_SLOT(d, void editSelectedAttachment())
+    Q_PRIVATE_SLOT(d, void editSelectedAttachmentWith())
+    Q_PRIVATE_SLOT(d, void removeSelectedAttachments())
+    Q_PRIVATE_SLOT(d, void saveSelectedAttachmentAs())
+    Q_PRIVATE_SLOT(d, void selectedAttachmentProperties())
+    Q_PRIVATE_SLOT(d, void editDone(MessageViewer::EditorWatcher *))
+    Q_PRIVATE_SLOT(d, void attachPublicKeyJobResult(KJob *))
+    Q_PRIVATE_SLOT(d, void slotAttachmentContentCreated(KJob *))
 };
 
 } //

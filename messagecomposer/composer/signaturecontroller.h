@@ -34,7 +34,8 @@ namespace KIdentityManagement
 class IdentityCombo;
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class KMeditor;
 
 /** Controls signature (the footer thing, not the crypto thing) operations
@@ -45,10 +46,10 @@ class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
 {
     Q_OBJECT
 public:
-    explicit SignatureController( QObject* parent = 0 );
+    explicit SignatureController(QObject *parent = 0);
 
-    void setEditor( MessageComposer::KMeditor* editor );
-    void setIdentityCombo( KIdentityManagement::IdentityCombo* combo );
+    void setEditor(MessageComposer::KMeditor *editor);
+    void setIdentityCombo(KIdentityManagement::IdentityCombo *combo);
 
     /** Temporarily disable identity tracking, useful for initial loading for example. */
     void suspend();
@@ -57,7 +58,7 @@ public:
 
     /** Adds the given signature to the editor, taking user preferences into account.
     */
-    void applySignature( const KIdentityManagement::Signature& signature );
+    void applySignature(const KIdentityManagement::Signature &signature);
 
     /** Applys the currently selected signature according to user preferences. */
     void applyCurrentSignature();
@@ -93,14 +94,14 @@ private:
      * in the editor, connecting slot functions to KMeditor::insertSignature().
      * @param placement the position of the signature
      */
-    void insertSignatureHelper( KIdentityManagement::Signature::Placement placement );
+    void insertSignatureHelper(KIdentityManagement::Signature::Placement placement);
 
 private slots:
-    void identityChanged ( uint id );
+    void identityChanged(uint id);
 
 private:
-    MessageComposer::KMeditor* m_editor;
-    KIdentityManagement::IdentityCombo* m_identityCombo;
+    MessageComposer::KMeditor *m_editor;
+    KIdentityManagement::IdentityCombo *m_identityCombo;
     uint m_currentIdentityId;
 };
 

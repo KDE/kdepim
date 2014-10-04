@@ -29,7 +29,7 @@
 using namespace MessageComposer;
 
 ImageScalingWidget::ImageScalingWidget(QWidget *parent)
-    :QWidget(parent),
+    : QWidget(parent),
       ui(new Ui::ImageScalingWidget),
       mWasChanged(false)
 {
@@ -71,21 +71,21 @@ ImageScalingWidget::ImageScalingWidget(QWidget *parent)
     ui->pattern->setEnabled(false);
     mSourceFilenameFilterGroup = new QButtonGroup(ui->filterSourceGroupBox);
     connect(mSourceFilenameFilterGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &ImageScalingWidget::slotSourceFilterClicked);
-    mSourceFilenameFilterGroup->addButton( ui->notFilterFilename, MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter );
-    mSourceFilenameFilterGroup->addButton( ui->includeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern );
-    mSourceFilenameFilterGroup->addButton( ui->excludeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern );
+    mSourceFilenameFilterGroup->addButton(ui->notFilterFilename, MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter);
+    mSourceFilenameFilterGroup->addButton(ui->includeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::IncludeFilesWithPattern);
+    mSourceFilenameFilterGroup->addButton(ui->excludeFilesWithPattern, MessageComposer::MessageComposerSettings::EnumFilterSourceType::ExcludeFilesWithPattern);
 
     mRecipientFilterGroup = new QButtonGroup(ui->tab_4);
     connect(mRecipientFilterGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &ImageScalingWidget::slotRecipientFilterClicked);
     ui->doNotResizePattern->setEnabled(false);
     ui->resizeEmailsPattern->setEnabled(false);
-    mRecipientFilterGroup->addButton(ui->doNotFilterRecipients,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter );
-    mRecipientFilterGroup->addButton(ui->resizeEachEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern );
-    mRecipientFilterGroup->addButton(ui->resizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern );
-    mRecipientFilterGroup->addButton(ui->doNotResizeEachEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern );
-    mRecipientFilterGroup->addButton(ui->doNotResizeOneEmails,MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern );
+    mRecipientFilterGroup->addButton(ui->doNotFilterRecipients, MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter);
+    mRecipientFilterGroup->addButton(ui->resizeEachEmails, MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern);
+    mRecipientFilterGroup->addButton(ui->resizeOneEmails, MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern);
+    mRecipientFilterGroup->addButton(ui->doNotResizeEachEmails, MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern);
+    mRecipientFilterGroup->addButton(ui->doNotResizeOneEmails, MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern);
 
-    ui->help->setText( i18n( "<a href=\"whatsthis\">How does this work?</a>" ) );
+    ui->help->setText(i18n("<a href=\"whatsthis\">How does this work?</a>"));
     connect(ui->help, &QLabel::linkActivated, this, &ImageScalingWidget::slotHelpLinkClicked);
     ui->help->setContextMenuPolicy(Qt::NoContextMenu);
 }
@@ -95,22 +95,22 @@ ImageScalingWidget::~ImageScalingWidget()
     delete ui;
 }
 
-void ImageScalingWidget::slotHelpLinkClicked(const QString&)
+void ImageScalingWidget::slotHelpLinkClicked(const QString &)
 {
     const QString help =
-            i18n( "<qt>"
-                  "<p>Here you can define image filename. "
-                  "You can use:</p>"
-                  "<ul>"
-                  "<li>%t set current time</li>"
-                  "<li>%d set current date</li>"
-                  "<li>%n original filename</li>"
-                  "<li>%e original extension</li>"
-                  "<li>%x new extension</li>"
-                  "</ul>"
-                  "</qt>" );
+        i18n("<qt>"
+             "<p>Here you can define image filename. "
+             "You can use:</p>"
+             "<ul>"
+             "<li>%t set current time</li>"
+             "<li>%d set current date</li>"
+             "<li>%n original filename</li>"
+             "<li>%e original extension</li>"
+             "<li>%x new extension</li>"
+             "</ul>"
+             "</qt>");
 
-    QWhatsThis::showText( QCursor::pos(), help );
+    QWhatsThis::showText(QCursor::pos(), help);
 }
 
 void ImageScalingWidget::slotSourceFilterClicked(int button)
@@ -121,25 +121,25 @@ void ImageScalingWidget::slotSourceFilterClicked(int button)
 
 void ImageScalingWidget::slotRecipientFilterClicked(int button)
 {
-    ui->resizeEmailsPattern->setEnabled( (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern) ||
-                                         (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern) );
+    ui->resizeEmailsPattern->setEnabled((button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern) ||
+                                        (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern));
     ui->doNotResizePattern->setEnabled((button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern) ||
-                                       (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern) );
+                                       (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern));
     Q_EMIT changed();
 }
 
 void ImageScalingWidget::slotComboboxChanged(int index)
 {
-    KComboBox* combo = qobject_cast< KComboBox* >( sender() );
+    KComboBox *combo = qobject_cast< KComboBox * >(sender());
     if (combo) {
         const bool isCustom = combo->itemData(index) == -1;
-        if(combo == ui->CBMaximumWidth) {
+        if (combo == ui->CBMaximumWidth) {
             ui->customMaximumWidth->setEnabled(isCustom);
-        } else if(combo == ui->CBMaximumHeight) {
+        } else if (combo == ui->CBMaximumHeight) {
             ui->customMaximumHeight->setEnabled(isCustom);
-        } else if(combo == ui->CBMinimumWidth) {
+        } else if (combo == ui->CBMinimumWidth) {
             ui->customMinimumWidth->setEnabled(isCustom);
-        } else if(combo == ui->CBMinimumHeight) {
+        } else if (combo == ui->CBMinimumHeight) {
             ui->customMinimumHeight->setEnabled(isCustom);
         }
         Q_EMIT changed();
@@ -149,8 +149,8 @@ void ImageScalingWidget::slotComboboxChanged(int index)
 void ImageScalingWidget::initComboBox(KComboBox *combo)
 {
     QList<int> size;
-    size <<240 <<320 <<512 <<640 <<800 <<1024 <<1600 <<2048;
-    Q_FOREACH(int val, size) {
+    size << 240 << 320 << 512 << 640 << 800 << 1024 << 1600 << 2048;
+    Q_FOREACH (int val, size) {
         combo->addItem(QString::number(val), val);
     }
     combo->addItem(i18n("Custom"), -1);
@@ -201,7 +201,7 @@ void ImageScalingWidget::updateSettings()
     ui->customMinimumHeight->setEnabled(ui->CBMinimumHeight->itemData(index) == -1);
 
     index = ui->WriteToImageFormat->findData(MessageComposer::MessageComposerSettings::self()->writeFormat());
-    if(index == -1) {
+    if (index == -1) {
         ui->WriteToImageFormat->setCurrentIndex(0);
     } else {
         ui->WriteToImageFormat->setCurrentIndex(index);
@@ -220,7 +220,6 @@ void ImageScalingWidget::updateSettings()
     ui->resizeImageWithFormatsType->setFormat(MessageComposer::MessageComposerSettings::self()->resizeImagesWithFormatsType());
     ui->resizeImageWithFormatsType->setEnabled(ui->resizeImageWithFormats->isChecked());
 
-
     updateFilterSourceTypeSettings();
     updateEmailsFilterTypeSettings();
 }
@@ -233,7 +232,7 @@ void ImageScalingWidget::loadConfig()
 
 void ImageScalingWidget::updateFilterSourceTypeSettings()
 {
-    switch(MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
+    switch (MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
     case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
         ui->notFilterFilename->setChecked(true);
         ui->pattern->setEnabled(false);
@@ -254,7 +253,7 @@ void ImageScalingWidget::updateEmailsFilterTypeSettings()
     ui->doNotResizePattern->setEnabled(false);
     ui->resizeEmailsPattern->setEnabled(false);
 
-    switch(MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
+    switch (MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
     case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter:
         ui->doNotFilterRecipients->setChecked(true);
         break;
@@ -280,8 +279,8 @@ void ImageScalingWidget::updateEmailsFilterTypeSettings()
 void ImageScalingWidget::writeConfig()
 {
     if (ui->EnlargeImageToMinimum->isChecked() && ui->ReduceImageToMaximum->isChecked()) {
-        if ((ui->customMinimumWidth->value()>=ui->customMaximumWidth->value()) ||
-                (ui->customMinimumHeight->value()>=ui->customMaximumHeight->value())) {
+        if ((ui->customMinimumWidth->value() >= ui->customMaximumWidth->value()) ||
+                (ui->customMinimumHeight->value() >= ui->customMaximumHeight->value())) {
             KMessageBox::error(this, i18n("Please verify minimum and maximum values."), i18n("Error in minimum Maximum value"));
             return;
         }
@@ -325,8 +324,8 @@ void ImageScalingWidget::writeConfig()
 
 void ImageScalingWidget::resetToDefault()
 {
-    const bool bUseDefaults = MessageComposer::MessageComposerSettings::self()->useDefaults( true );
+    const bool bUseDefaults = MessageComposer::MessageComposerSettings::self()->useDefaults(true);
     updateSettings();
-    MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
+    MessageComposer::MessageComposerSettings::self()->useDefaults(bUseDefaults);
 }
 

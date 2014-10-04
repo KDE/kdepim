@@ -42,21 +42,21 @@ using namespace MessageComposer;
 class MessageComposer::EncryptJobPrivate : public ContentJobBasePrivate
 {
 public:
-    EncryptJobPrivate( EncryptJob *qq )
-        : ContentJobBasePrivate( qq )
-        , content( 0 )
+    EncryptJobPrivate(EncryptJob *qq)
+        : ContentJobBasePrivate(qq)
+        , content(0)
     {
     }
 
-    KMime::Content* content;
+    KMime::Content *content;
     std::vector<GpgME::Key> keys;
     Kleo::CryptoMessageFormat format;
     QStringList recipients;
 
     // copied from messagecomposer.cpp
-    bool binaryHint( Kleo::CryptoMessageFormat f )
+    bool binaryHint(Kleo::CryptoMessageFormat f)
     {
-        switch ( f ) {
+        switch (f) {
         case Kleo::SMIMEFormat:
         case Kleo::SMIMEOpaqueFormat:
             return true;
@@ -67,10 +67,9 @@ public:
         }
     }
 
-
-    GpgME::SignatureMode signingMode( Kleo::CryptoMessageFormat f )
+    GpgME::SignatureMode signingMode(Kleo::CryptoMessageFormat f)
     {
-        switch ( f ) {
+        switch (f) {
         case Kleo::SMIMEOpaqueFormat:
             return GpgME::NormalSignatureMode;
         case Kleo::InlineOpenPGPFormat:
@@ -82,12 +81,11 @@ public:
         }
     }
 
-
-    Q_DECLARE_PUBLIC( EncryptJob )
+    Q_DECLARE_PUBLIC(EncryptJob)
 };
 
-EncryptJob::EncryptJob( QObject *parent )
-    : ContentJobBase( *new EncryptJobPrivate( this ), parent )
+EncryptJob::EncryptJob(QObject *parent)
+    : ContentJobBase(*new EncryptJobPrivate(this), parent)
 {
 }
 
@@ -95,107 +93,109 @@ EncryptJob::~EncryptJob()
 {
 }
 
-
-void EncryptJob::setContent( KMime::Content* content )
+void EncryptJob::setContent(KMime::Content *content)
 {
-    Q_D( EncryptJob );
+    Q_D(EncryptJob);
 
     d->content = content;
     d->content->assemble();
 }
 
-void EncryptJob::setCryptoMessageFormat( Kleo::CryptoMessageFormat format)
+void EncryptJob::setCryptoMessageFormat(Kleo::CryptoMessageFormat format)
 {
-    Q_D( EncryptJob );
+    Q_D(EncryptJob);
 
     d->format = format;
 }
 
-void EncryptJob::setEncryptionKeys( const std::vector<GpgME::Key>& keys )
+void EncryptJob::setEncryptionKeys(const std::vector<GpgME::Key> &keys)
 {
-    Q_D( EncryptJob );
+    Q_D(EncryptJob);
 
     d->keys = keys;
 }
 
-void EncryptJob::setRecipients( const QStringList& recipients ) {
-    Q_D( EncryptJob );
+void EncryptJob::setRecipients(const QStringList &recipients)
+{
+    Q_D(EncryptJob);
 
     d->recipients = recipients;
 }
 
-QStringList EncryptJob::recipients() const {
-    Q_D( const EncryptJob );
+QStringList EncryptJob::recipients() const
+{
+    Q_D(const EncryptJob);
 
     return d->recipients;
 }
 
-std::vector<GpgME::Key> EncryptJob::encryptionKeys() const {
-    Q_D( const EncryptJob );
+std::vector<GpgME::Key> EncryptJob::encryptionKeys() const
+{
+    Q_D(const EncryptJob);
 
     return d->keys;
 }
 
 void EncryptJob::process()
 {
-    Q_D( EncryptJob );
-    Q_ASSERT( d->resultContent == 0 ); // Not processed before.
+    Q_D(EncryptJob);
+    Q_ASSERT(d->resultContent == 0);   // Not processed before.
 
-    if( d->keys.size() == 0 ) { // should not happen---resolver should have dealt with it earlier
+    if (d->keys.size() == 0) {  // should not happen---resolver should have dealt with it earlier
         qDebug() << "HELP! Encrypt job but have no keys to encrypt with.";
         return;
     }
 
     // if setContent hasn't been called, we assume that a subjob was added
     // and we want to use that
-    if( !d->content || !d->content->hasContent() ) {
-        Q_ASSERT( d->subjobContents.size() == 1 );
+    if (!d->content || !d->content->hasContent()) {
+        Q_ASSERT(d->subjobContents.size() == 1);
         d->content = d->subjobContents.first();
     }
 
     //d->resultContent = new KMime::Content;
 
     const Kleo::CryptoBackend::Protocol *proto = 0;
-    if( d->format & Kleo::AnyOpenPGP ) {
+    if (d->format & Kleo::AnyOpenPGP) {
         proto = Kleo::CryptoBackendFactory::instance()->openpgp();
-    } else if( d->format & Kleo::AnySMIME ) {
+    } else if (d->format & Kleo::AnySMIME) {
         proto = Kleo::CryptoBackendFactory::instance()->smime();
     } else {
         qDebug() << "HELP! Encrypt job but have protocol to encrypt with.";
         return;
     }
 
-    Q_ASSERT( proto );
+    Q_ASSERT(proto);
 
     qDebug() << "got backend, starting job";
-    Kleo::EncryptJob* seJob = proto->encryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat );
+    Kleo::EncryptJob *seJob = proto->encryptJob(!d->binaryHint(d->format), d->format == Kleo::InlineOpenPGPFormat);
 
     // for now just do the main recipients
     QByteArray encryptedBody;
     QByteArray content;
     d->content->assemble();
-    if( d->format & Kleo::InlineOpenPGPFormat ) {
+    if (d->format & Kleo::InlineOpenPGPFormat) {
         content = d->content->body();
     } else {
         content = d->content->encodedContent();
     }
 
     // FIXME: Make async!
-    const GpgME::EncryptionResult res = seJob->exec( d->keys,
-                                                     content,
-                                                     true, // 'alwaysTrust' provided keys
-                                                     encryptedBody );
+    const GpgME::EncryptionResult res = seJob->exec(d->keys,
+                                        content,
+                                        true, // 'alwaysTrust' provided keys
+                                        encryptedBody);
 
     // exec'ed jobs don't delete themselves
     seJob->deleteLater();
 
-    if ( res.error() ) {
-        setError( res.error().code() );
-        setErrorText( QString::fromLocal8Bit( res.error().asString() ) );
+    if (res.error()) {
+        setError(res.error().code());
+        setErrorText(QString::fromLocal8Bit(res.error().asString()));
         emitResult();
         return;
     }
-    d->resultContent = MessageComposer::Util::composeHeadersAndBody( d->content, encryptedBody, d->format, false );
+    d->resultContent = MessageComposer::Util::composeHeadersAndBody(d->content, encryptedBody, d->format, false);
 
     emitResult();
     return;

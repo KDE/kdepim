@@ -31,7 +31,8 @@
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class Composer;
 
 /**
@@ -47,7 +48,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit EmailAddressResolveJob( QObject *parent = 0 );
+    explicit EmailAddressResolveJob(QObject *parent = 0);
 
     /**
      * Destroys the email address resolve job.
@@ -62,22 +63,22 @@ public:
     /**
      * Sets the from address to expand.
      */
-    virtual void setFrom( const QString& from );
-    
-    /**
-     * Sets the from address to expand.
-     */
-    virtual void setTo( const QStringList& from );
+    virtual void setFrom(const QString &from);
 
     /**
      * Sets the from address to expand.
      */
-    virtual void setCc( const QStringList& from );
+    virtual void setTo(const QStringList &from);
 
     /**
      * Sets the from address to expand.
      */
-    virtual void setBcc( const QStringList& from );
+    virtual void setCc(const QStringList &from);
+
+    /**
+     * Sets the from address to expand.
+     */
+    virtual void setBcc(const QStringList &from);
 
     /**
      * Returns the expanded From field
@@ -101,7 +102,7 @@ public:
 
     void setDefaultDomainName(const QString &domainName);
 private Q_SLOTS:
-    void slotAliasExpansionDone( KJob* );
+    void slotAliasExpansionDone(KJob *);
 
 private:
     int mJobCount;

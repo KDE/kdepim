@@ -30,7 +30,8 @@
 class QLabel;
 class QPushButton;
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class KWindowPositioner;
 
 class RecipientsPicker;
@@ -39,19 +40,19 @@ class RecipientsEditorSideWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit RecipientsEditorSideWidget( RecipientsEditor *editor, QWidget *parent );
+    explicit RecipientsEditorSideWidget(RecipientsEditor *editor, QWidget *parent);
     ~RecipientsEditorSideWidget();
 
-    MessageComposer::RecipientsPicker* picker() const;
+    MessageComposer::RecipientsPicker *picker() const;
 
 public slots:
-    void setTotal( int recipients, int lines );
+    void setTotal(int recipients, int lines);
     void setFocus();
     void updateTotalToolTip();
     void pickRecipient();
 
 signals:
-    void pickedRecipient( const Recipient &, bool & );
+    void pickedRecipient(const Recipient &, bool &);
     void saveDistributionList();
 
 private:

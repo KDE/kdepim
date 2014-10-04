@@ -31,8 +31,8 @@ class testKMeditorWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    testKMeditorWindow ();
-    ~testKMeditorWindow ();
+    testKMeditorWindow();
+    ~testKMeditorWindow();
 
 private:
     KMeditor *editor;

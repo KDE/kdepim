@@ -17,7 +17,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-
 #include <messagecomposer/composer/kmeditor.h>
 #include <KAboutData>
 #include <KLocalizedString>
@@ -27,11 +26,11 @@
 #include <QApplication>
 using namespace MessageComposer;
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QStringLiteral("testkmeditor"),
-                          i18n("KMeditorTest"),
-                          QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("testkmeditor"),
+                         i18n("KMeditorTest"),
+                         QLatin1String("1.0"));
 
     KAboutData::setApplicationData(aboutData);
 
@@ -44,10 +43,9 @@ int main( int argc, char **argv )
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-
     KMeditor *edit = new KMeditor();
     edit->setAcceptRichText(false);
-    edit->resize( 600, 600 );
+    edit->resize(600, 600);
     edit->show();
     return app.exec();
 }

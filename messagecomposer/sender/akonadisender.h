@@ -30,13 +30,14 @@
 
 class KJob;
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class MESSAGECOMPOSER_EXPORT AkonadiSender: public QObject, public MessageSender
 {
     Q_OBJECT
 
 public:
-    explicit AkonadiSender( QObject *parent = 0 );
+    explicit AkonadiSender(QObject *parent = 0);
 
 protected:
     /**
@@ -49,27 +50,27 @@ protected:
     Returns true on success.
 
     TODO cberzan: update docu...
-   */
-    virtual bool doSend( const KMime::Message::Ptr &msg, short sendNow );
+    */
+    virtual bool doSend(const KMime::Message::Ptr &msg, short sendNow);
 
     /**
     Send queued messages, using the specified transport or the
     default, if none is given.
-   */
-    virtual bool doSendQueued( const QString &transport = QString() );
+    */
+    virtual bool doSendQueued(const QString &transport = QString());
 
 private:
     /**
     Queue or send immediately one message using MailTransport::MessageQueueJob.
-  */
-    void sendOrQueueMessage( const KMime::Message::Ptr &msg, MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendDefault );
+    */
+    void sendOrQueueMessage(const KMime::Message::Ptr &msg, MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendDefault);
 
 private slots:
-    void queueJobResult( KJob *job );
+    void queueJobResult(KJob *job);
 
 private:
     QString mCustomTransport;
-    QSet<KJob*> mPendingJobs;
+    QSet<KJob *> mPendingJobs;
 
 };
 }

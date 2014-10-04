@@ -25,26 +25,27 @@
 
 #include <kmime/kmime_content.h>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class ContentJobBasePrivate : public JobBasePrivate
 {
-  public:
-    explicit ContentJobBasePrivate( ContentJobBase *qq )
-      : JobBasePrivate( qq )
-      , resultContent( 0 )
-      , extraContent( 0 )
+public:
+    explicit ContentJobBasePrivate(ContentJobBase *qq)
+        : JobBasePrivate(qq)
+        , resultContent(0)
+        , extraContent(0)
     {
     }
 
-    void init( QObject *parent );
+    void init(QObject *parent);
     void doNextSubjob();
 
     KMime::Content *resultContent;
     KMime::Content::List subjobContents;
-    KMime::Content* extraContent;
+    KMime::Content *extraContent;
 
-    Q_DECLARE_PUBLIC( ContentJobBase )
+    Q_DECLARE_PUBLIC(ContentJobBase)
 };
 
 }

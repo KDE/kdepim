@@ -25,8 +25,8 @@
 
 class SinglepartJobTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testContent();
     void testContentDisposition();
     void testContentID();

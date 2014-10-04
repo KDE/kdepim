@@ -24,14 +24,21 @@
 #include <messageviewer/viewer/csshelper.h>
 
 // Objecttreeparser needs a valid css helper othewise it crashes
-class TestCSSHelper : public MessageViewer::CSSHelper {
-  public:
-    TestCSSHelper() : MessageViewer::CSSHelper( 0 ) {}
+class TestCSSHelper : public MessageViewer::CSSHelper
+{
+public:
+    TestCSSHelper() : MessageViewer::CSSHelper(0) {}
     virtual ~TestCSSHelper() {}
 
-    QString nonQuotedFontTag() const { return QString::fromLatin1( "<" ); }
+    QString nonQuotedFontTag() const
+    {
+        return QString::fromLatin1("<");
+    }
 
-    QString quoteFontTag( int ) const { return QString::fromLatin1( "<" ); }
+    QString quoteFontTag(int) const
+    {
+        return QString::fromLatin1("<");
+    }
 };
 
 #endif

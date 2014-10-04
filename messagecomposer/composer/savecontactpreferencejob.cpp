@@ -30,13 +30,12 @@
 
 using namespace Kleo;
 
-SaveContactPreferenceJob::SaveContactPreferenceJob( const QString& email, const Kleo::KeyResolver::ContactPreferences& pref, QObject *parent)
+SaveContactPreferenceJob::SaveContactPreferenceJob(const QString &email, const Kleo::KeyResolver::ContactPreferences &pref, QObject *parent)
     : KJob(parent),
       mEmail(email),
       mPref(pref)
 {
 }
-
 
 SaveContactPreferenceJob::~SaveContactPreferenceJob()
 {
@@ -47,31 +46,31 @@ void SaveContactPreferenceJob::start()
 {
     Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob(this);
     connect(job, &Akonadi::ContactSearchJob::result, this, &SaveContactPreferenceJob::slotSearchContact);
-    job->setLimit( 1 );
-    job->setQuery( Akonadi::ContactSearchJob::Email, mEmail );
+    job->setLimit(1);
+    job->setQuery(Akonadi::ContactSearchJob::Email, mEmail);
     job->start();
 }
 
-void SaveContactPreferenceJob::slotSearchContact(KJob* job)
+void SaveContactPreferenceJob::slotSearchContact(KJob *job)
 {
     Akonadi::ContactSearchJob *contactSearchJob = qobject_cast<Akonadi::ContactSearchJob *>(job);
 
     const Akonadi::Item::List items = contactSearchJob->items();
 
-    if ( items.isEmpty() ) {
+    if (items.isEmpty()) {
         bool ok = true;
-        const QString fullName = QInputDialog::getText( 0, i18n( "Name Selection" ), i18n( "Which name shall the contact '%1' have in your address book?", mEmail ), QLineEdit::Normal, QString(), &ok );
-        if ( !ok ) {
+        const QString fullName = QInputDialog::getText(0, i18n("Name Selection"), i18n("Which name shall the contact '%1' have in your address book?", mEmail), QLineEdit::Normal, QString(), &ok);
+        if (!ok) {
             emitResult();
             return;
         }
 
         QPointer<Akonadi::CollectionDialog> dlg =
-                new Akonadi::CollectionDialog( Akonadi::CollectionDialog::KeepTreeExpanded );
-        dlg->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
-        dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-        dlg->setDescription( i18n( "Select the address book folder to store the new contact in:" ) );
-        if ( !dlg->exec() ) {
+            new Akonadi::CollectionDialog(Akonadi::CollectionDialog::KeepTreeExpanded);
+        dlg->setMimeTypeFilter(QStringList() << KABC::Addressee::mimeType());
+        dlg->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+        dlg->setDescription(i18n("Select the address book folder to store the new contact in:"));
+        if (!dlg->exec()) {
             delete dlg;
             emitResult();
             return;
@@ -81,42 +80,42 @@ void SaveContactPreferenceJob::slotSearchContact(KJob* job)
         delete dlg;
 
         KABC::Addressee contact;
-        contact.setNameFromString( fullName );
-        contact.insertEmail( mEmail, true );
-        writeCustomContactProperties( contact, mPref );
+        contact.setNameFromString(fullName);
+        contact.insertEmail(mEmail, true);
+        writeCustomContactProperties(contact, mPref);
 
-        Akonadi::Item item( KABC::Addressee::mimeType() );
-        item.setPayload<KABC::Addressee>( contact );
+        Akonadi::Item item(KABC::Addressee::mimeType());
+        item.setPayload<KABC::Addressee>(contact);
 
-        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, targetCollection );
+        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, targetCollection);
         connect(job, &Akonadi::ContactSearchJob::result, this, &SaveContactPreferenceJob::slotModifyCreateItem);
     } else {
         Akonadi::Item item = items.first();
 
         KABC::Addressee contact = item.payload<KABC::Addressee>();
-        writeCustomContactProperties( contact, mPref );
+        writeCustomContactProperties(contact, mPref);
 
-        item.setPayload<KABC::Addressee>( contact );
+        item.setPayload<KABC::Addressee>(contact);
 
-        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( item );
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(item);
         connect(job, &Akonadi::ContactSearchJob::result, this, &SaveContactPreferenceJob::slotModifyCreateItem);
         job->start();
     }
 }
 
-void SaveContactPreferenceJob::writeCustomContactProperties( KABC::Addressee &contact, const Kleo::KeyResolver::ContactPreferences& pref ) const
+void SaveContactPreferenceJob::writeCustomContactProperties(KABC::Addressee &contact, const Kleo::KeyResolver::ContactPreferences &pref) const
 {
-    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"), QLatin1String( Kleo::encryptionPreferenceToString( pref.encryptionPreference ) ) );
-    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"), QLatin1String( Kleo::signingPreferenceToString( pref.signingPreference ) ) );
-    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF"), QLatin1String( cryptoMessageFormatToString( pref.cryptoMessageFormat ) ) );
-    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("OPENPGPFP"), pref.pgpKeyFingerprints.join( QLatin1String(",") ) );
-    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP"), pref.smimeCertFingerprints.join( QLatin1String(",") ) );
+    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"), QLatin1String(Kleo::encryptionPreferenceToString(pref.encryptionPreference)));
+    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"), QLatin1String(Kleo::signingPreferenceToString(pref.signingPreference)));
+    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF"), QLatin1String(cryptoMessageFormatToString(pref.cryptoMessageFormat)));
+    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("OPENPGPFP"), pref.pgpKeyFingerprints.join(QLatin1String(",")));
+    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP"), pref.smimeCertFingerprints.join(QLatin1String(",")));
 }
 
 void SaveContactPreferenceJob::slotModifyCreateItem(KJob *job)
 {
-    if ( job->error() ) {
-        qDebug()<<"modify item failed "<<job->errorString();
+    if (job->error()) {
+        qDebug() << "modify item failed " << job->errorString();
     }
     emitResult();
 }

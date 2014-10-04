@@ -23,7 +23,8 @@
 #include "contentjobbase.h"
 #include "messagecomposer_export.h"
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class MainTextJobPrivate;
 class TextPart;
@@ -33,18 +34,18 @@ class MESSAGECOMPOSER_EXPORT MainTextJob : public ContentJobBase
     Q_OBJECT
 
 public:
-    explicit MainTextJob( TextPart *textPart = 0, QObject *parent = 0 );
+    explicit MainTextJob(TextPart *textPart = 0, QObject *parent = 0);
     virtual ~MainTextJob();
 
     TextPart *textPart() const;
-    void setTextPart( TextPart *part );
+    void setTextPart(TextPart *part);
 
 protected Q_SLOTS:
     virtual void doStart();
     virtual void process();
 
 private:
-    Q_DECLARE_PRIVATE( MainTextJob )
+    Q_DECLARE_PRIVATE(MainTextJob)
 };
 
 } // namespace MessageComposer

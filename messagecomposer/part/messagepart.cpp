@@ -19,7 +19,6 @@
 
 #include "messagepart.h"
 
-
 using namespace MessageComposer;
 
 class MessagePart::Private
@@ -30,11 +29,9 @@ public:
     }
 };
 
-
-
-MessagePart::MessagePart( QObject *parent )
-    : QObject( parent )
-    , d( new Private )
+MessagePart::MessagePart(QObject *parent)
+    : QObject(parent)
+    , d(new Private)
 {
 }
 

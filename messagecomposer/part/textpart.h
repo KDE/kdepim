@@ -27,35 +27,36 @@
 
 #include <kpimtextedit/textedit.h>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class MESSAGECOMPOSER_EXPORT TextPart : public MessagePart
 {
     Q_OBJECT
 
 public:
-    explicit TextPart( QObject *parent = 0 );
+    explicit TextPart(QObject *parent = 0);
     virtual ~TextPart();
 
     // default true
     bool isWordWrappingEnabled() const;
-    void setWordWrappingEnabled( bool enabled );
+    void setWordWrappingEnabled(bool enabled);
     // default true
     bool warnBadCharset() const;
-    void setWarnBadCharset( bool warn );
+    void setWarnBadCharset(bool warn);
 
     QString cleanPlainText() const;
-    void setCleanPlainText( const QString &text );
+    void setCleanPlainText(const QString &text);
     QString wrappedPlainText() const;
-    void setWrappedPlainText( const QString &text );
+    void setWrappedPlainText(const QString &text);
 
     bool isHtmlUsed() const;
     QString cleanHtml() const;
-    void setCleanHtml( const QString &text );
+    void setCleanHtml(const QString &text);
 
     bool hasEmbeddedImages() const;
     KPIMTextEdit::ImageList embeddedImages() const;
-    void setEmbeddedImages( const KPIMTextEdit::ImageList &images );
+    void setEmbeddedImages(const KPIMTextEdit::ImageList &images);
 
 private:
     class Private;

@@ -31,7 +31,8 @@
 
 #include <QString>
 #include <QSharedPointer>
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 /** Represents a mail recipient. */
 class MESSAGECOMPOSER_EXPORT Recipient : public KPIM::MultiplyingLineData
@@ -42,25 +43,25 @@ public:
 
     enum Type { To, Cc, Bcc, Undefined };
 
-    Recipient( const QString &email = QString(), Type type = To ); //krazy:exclude=explicit
+    Recipient(const QString &email = QString(), Type type = To);   //krazy:exclude=explicit
 
-    void setType( Type type );
+    void setType(Type type);
     Type type() const;
 
-    void setEmail( const QString & email );
+    void setEmail(const QString &email);
     QString email() const;
 
-    void setName ( const QString &name );
+    void setName(const QString &name);
     QString name() const;
 
     virtual bool isEmpty() const;
     virtual void clear();
 
-    static int typeToId( Type type);
-    static Type idToType( int id );
+    static int typeToId(Type type);
+    static Type idToType(int id);
 
     QString typeLabel() const;
-    static QString typeLabel( Type type );
+    static QString typeLabel(Type type);
     static QStringList allTypeLabels();
 
 private:

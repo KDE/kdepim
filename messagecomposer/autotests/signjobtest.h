@@ -26,26 +26,26 @@
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 
-
-namespace MessageComposer {
-  class SignJob;
+namespace MessageComposer
+{
+class SignJob;
 }
 
 class SignJobTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public slots:
+public slots:
     void initTestCase();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void testContentDirect();
     void testContentChained();
     void testHeaders();
     void testRecommentationRFC3156();
 
-  private:
-    void checkSignJob( MessageComposer::SignJob* sJob );
+private:
+    void checkSignJob(MessageComposer::SignJob *sJob);
 
 };
 

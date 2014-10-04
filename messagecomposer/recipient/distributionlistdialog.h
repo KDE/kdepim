@@ -29,24 +29,25 @@ class QLineEdit;
 class QTreeWidget;
 class QPushButton;
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class DistributionListDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit DistributionListDialog( QWidget *parent );
+    explicit DistributionListDialog(QWidget *parent);
     ~DistributionListDialog();
-    void setRecipients( const Recipient::List & );
+    void setRecipients(const Recipient::List &);
 
 public slots:
     void slotUser1();
-    void slotTitleChanged( const QString& );
+    void slotTitleChanged(const QString &);
 
 private Q_SLOTS:
-    void slotDelayedSetRecipients( KJob* );
-    void slotDelayedUser1( KJob* );
-    void slotContactGroupCreateJobResult( KJob* );
+    void slotDelayedSetRecipients(KJob *);
+    void slotDelayedUser1(KJob *);
+    void slotContactGroupCreateJobResult(KJob *);
 
 private:
     void readConfig();

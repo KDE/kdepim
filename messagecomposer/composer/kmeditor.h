@@ -28,13 +28,16 @@
 #include <KPIMTextEdit/TextEdit>
 #include <KUrl>
 
-namespace KIdentityManagement {
+namespace KIdentityManagement
+{
 class Signature;
 }
-namespace PimCommon {
+namespace PimCommon
+{
 class AutoCorrection;
 }
-namespace MessageComposer {
+namespace MessageComposer
+{
 class TextPart;
 class KMeditorPrivate;
 
@@ -57,22 +60,21 @@ public:
     /**
      * Constructs a KMeditor object
      */
-    explicit KMeditor( const QString &text, QWidget *parent = 0 );
+    explicit KMeditor(const QString &text, QWidget *parent = 0);
 
     /**
      * Constructs a KMeditor object.
      */
-    explicit KMeditor( QWidget *parent = 0 );
+    explicit KMeditor(QWidget *parent = 0);
 
     /**
      * Constructs a KMeditor object.
      */
-    explicit KMeditor( QWidget *parent, const QString& configFile );
-
+    explicit KMeditor(QWidget *parent, const QString &configFile);
 
     virtual ~KMeditor();
 
-    virtual int quoteLength( const QString& line ) const;
+    virtual int quoteLength(const QString &line) const;
     virtual const QString defaultQuoteSign() const;
 
     /**
@@ -80,7 +82,7 @@ public:
      * be highlighted as quotes (in addition to lines that are starting with
      * '>' and '|').
      */
-    void setQuotePrefixName( const QString &quotePrefix );
+    void setQuotePrefixName(const QString &quotePrefix);
 
     /**
      * @return the quote prefix set before with setQuotePrefixName(), or an empty
@@ -89,10 +91,10 @@ public:
     virtual QString quotePrefixName() const;
 
     //Redefine it for each apps
-    virtual QString smartQuote( const QString & msg ); //need by kmail
+    virtual QString smartQuote(const QString &msg);    //need by kmail
 
-    void setUseExternalEditor( bool use );
-    void setExternalEditorPath( const QString & path );
+    void setUseExternalEditor(bool use);
+    void setExternalEditorPath(const QString &path);
     bool checkExternalEditorFinished();
     void killExternalEditor();
 
@@ -108,7 +110,7 @@ public:
      *
      * @param wrapColumn the column where words will be wrapped
      */
-    void enableWordWrap( int wrapColumn );
+    void enableWordWrap(int wrapColumn);
 
     /**
      * Disables word wrap.
@@ -123,9 +125,9 @@ public:
      *
      * @param font the font that the whole text will get
      */
-    void setFontForWholeText( const QFont &font );
+    void setFontForWholeText(const QFont &font);
 
-    void setCursorPositionFromStart( unsigned int pos );
+    void setCursorPositionFromStart(unsigned int pos);
 
     /**
      * @return the line number where the cursor is. This takes word-wrapping
@@ -155,7 +157,7 @@ public:
      *
      * @param sig text inside this signature will not be cleaned
      */
-    void cleanWhitespace( const KIdentityManagement::Signature &sig );
+    void cleanWhitespace(const KIdentityManagement::Signature &sig);
 
     /**
      * Replaces all occurrences of the old signature with the new signature.
@@ -169,20 +171,20 @@ public:
      * @param newSig the new signature
      * @return @p true if oldSig was found (and replaced) at least once
      */
-    bool replaceSignature( const KIdentityManagement::Signature &oldSig,
-                           const KIdentityManagement::Signature &newSig );
+    bool replaceSignature(const KIdentityManagement::Signature &oldSig,
+                          const KIdentityManagement::Signature &newSig);
 
     /**
      * Fill the given composer MessageComposer::TextPart with what's in the editor currently.
      * @param textPart The MessageComposer::TextPart to fill.
      */
-    void fillComposerTextPart( MessageComposer::TextPart* textPart ) const;
+    void fillComposerTextPart(MessageComposer::TextPart *textPart) const;
 
     PimCommon::AutoCorrection *autocorrection() const;
 
-    void setAutocorrection(PimCommon::AutoCorrection* autocorrect);
+    void setAutocorrection(PimCommon::AutoCorrection *autocorrect);
 
-    void setAutocorrectionLanguage(const QString& lang);
+    void setAutocorrectionLanguage(const QString &lang);
 
     void forcePlainTextMarkup(bool force);
 
@@ -205,7 +207,7 @@ Q_SIGNALS:
      *
      * @param focusGained true if the focus was gained, false when it was lost
      */
-    void focusChanged( bool focusGained );
+    void focusChanged(bool focusGained);
 
     /**
      * Emitted when the user uses the up arrow in the first line. The application
@@ -222,14 +224,14 @@ protected:
     /**
      * Reimplemented to start the external editor and to emit focusUp().
      */
-    virtual void keyPressEvent ( QKeyEvent * e );
+    virtual void keyPressEvent(QKeyEvent *e);
 
 private:
     KMeditorPrivate *const d;
     friend class KMeditorPrivate;
-    Q_PRIVATE_SLOT( d, void ensureCursorVisibleDelayed() )
-    Q_PRIVATE_SLOT( d, void slotEditorFinished( int, QProcess::ExitStatus ) )
-    Q_PRIVATE_SLOT( d, void slotAddAutoCorrect( QString, QString ) )
+    Q_PRIVATE_SLOT(d, void ensureCursorVisibleDelayed())
+    Q_PRIVATE_SLOT(d, void slotEditorFinished(int, QProcess::ExitStatus))
+    Q_PRIVATE_SLOT(d, void slotAddAutoCorrect(QString, QString))
 };
 
 }

@@ -25,34 +25,34 @@
 #include <kmime/kmime_headers.h>
 #include <QByteArray>
 
-namespace KMime {
-  class Content;
+namespace KMime
+{
+class Content;
 }
 
 namespace ComposerTestUtil
 {
 
-  /**
-   * gate function to run verifySignature, verifyEncryption or verifySignatureAndEncryption.
-   */
+/**
+ * gate function to run verifySignature, verifyEncryption or verifySignatureAndEncryption.
+ */
 
-  void verify( bool sign, bool encrypt, KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding );
+void verify(bool sign, bool encrypt, KMime::Content *content, QByteArray origContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding);
 
-  /**
-   * Verifies that the given MIME content is signed and that the text is equal
-   */
-  void verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding );
+/**
+ * Verifies that the given MIME content is signed and that the text is equal
+ */
+void verifySignature(KMime::Content *content, QByteArray signedContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding);
 
-  /**
-   * Verifies that the given MIME content is encrypted, and that the text is equal
-   */
-  void verifyEncryption( KMime::Content* content, QByteArray encrContent, Kleo::CryptoMessageFormat f, bool withAttachment = false );
+/**
+ * Verifies that the given MIME content is encrypted, and that the text is equal
+ */
+void verifyEncryption(KMime::Content *content, QByteArray encrContent, Kleo::CryptoMessageFormat f, bool withAttachment = false);
 
-  /**
-   * Verifies that the given MIME content is signed and then encrypted, and the original text is as specified
-   */
-  void verifySignatureAndEncryption( KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, bool withAttachment = false );
-
+/**
+ * Verifies that the given MIME content is signed and then encrypted, and the original text is as specified
+ */
+void verifySignatureAndEncryption(KMime::Content *content, QByteArray origContent, Kleo::CryptoMessageFormat f, bool withAttachment = false);
 
 }
 

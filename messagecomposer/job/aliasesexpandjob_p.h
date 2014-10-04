@@ -30,16 +30,16 @@
  */
 class DistributionListExpandJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new distribution list expand job.
      *
      * @param name The name of the distribution list to expand.
      * @param parent The parent object.
      */
-    explicit DistributionListExpandJob( const QString &name, QObject *parent = 0 );
+    explicit DistributionListExpandJob(const QString &name, QObject *parent = 0);
 
     /**
      * Destroys the distribution list expand job.
@@ -61,11 +61,11 @@ class DistributionListExpandJob : public KJob
      */
     bool isEmpty() const;
 
-  private Q_SLOTS:
-    void slotSearchDone( KJob* );
-    void slotExpansionDone( KJob* );
+private Q_SLOTS:
+    void slotSearchDone(KJob *);
+    void slotExpansionDone(KJob *);
 
-  private:
+private:
     QString mListName;
     QStringList mEmailAddresses;
     bool mIsEmpty;

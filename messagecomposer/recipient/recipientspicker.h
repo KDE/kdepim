@@ -27,15 +27,18 @@
 #include <QDialog>
 
 class QPushButton;
-namespace Akonadi {
+namespace Akonadi
+{
 class EmailAddressSelectionWidget;
 }
 
-namespace KLDAP {
+namespace KLDAP
+{
 class LdapSearchDialog;
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 // ### temporary export
 class MESSAGECOMPOSER_EXPORT RecipientsPicker : public QDialog
@@ -43,23 +46,23 @@ class MESSAGECOMPOSER_EXPORT RecipientsPicker : public QDialog
     Q_OBJECT
 
 public:
-    explicit RecipientsPicker( QWidget *parent );
+    explicit RecipientsPicker(QWidget *parent);
     ~RecipientsPicker();
 
-    void setRecipients( const Recipient::List & );
+    void setRecipients(const Recipient::List &);
 
-    void setDefaultType( Recipient::Type );
+    void setDefaultType(Recipient::Type);
 
 Q_SIGNALS:
-    void pickedRecipient( const Recipient &, bool & );
+    void pickedRecipient(const Recipient &, bool &);
 
 protected:
     void readConfig();
     void writeConfig();
 
-    void pick( Recipient::Type );
+    void pick(Recipient::Type);
 
-    void keyPressEvent( QKeyEvent* );
+    void keyPressEvent(QKeyEvent *);
 
 protected Q_SLOTS:
     void slotToClicked();

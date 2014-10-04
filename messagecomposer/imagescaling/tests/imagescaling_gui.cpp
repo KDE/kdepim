@@ -18,15 +18,12 @@
 #include "imagescaling_gui.h"
 #include "messagecomposer/imagescaling/imagescalingwidget.h"
 
-
-
 #include <KLocalizedString>
 #include <QHBoxLayout>
 
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
-
 
 ImageScalingTestWidget::ImageScalingTestWidget(QWidget *parent)
     : QWidget(parent)
@@ -40,9 +37,9 @@ ImageScalingTestWidget::~ImageScalingTestWidget()
 {
 }
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("imagescaling_gui"), i18n("ImageScalingTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("imagescaling_gui"), i18n("ImageScalingTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for imagescaling widget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -54,7 +51,7 @@ int main (int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     ImageScalingTestWidget *w = new ImageScalingTestWidget();
-    w->resize(800,600);
+    w->resize(800, 600);
 
     w->show();
     app.exec();

@@ -23,18 +23,19 @@
 
 #include <QtCore/QObject>
 
-namespace MessageComposer {
-  class Composer;
+namespace MessageComposer
+{
+class Composer;
 }
 
 class CryptoComposerTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void initTestCase();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     // openpgp
     void testOpenPGPMime();
     void testOpenPGPMime_data();
@@ -66,12 +67,12 @@ class CryptoComposerTest : public QObject
     void testCTEbase64();
 
     // TODO test the code for autodetecting the charset of a text attachment.
-  private:
-    void fillComposerData( MessageComposer::Composer* composer, QString data );
-    void fillComposerCryptoData( MessageComposer::Composer* composer );
+private:
+    void fillComposerData(MessageComposer::Composer *composer, QString data);
+    void fillComposerCryptoData(MessageComposer::Composer *composer);
 
     // convenience, shared code
-    void runSMIMETest( bool sign, bool enc, bool opaque );
+    void runSMIMETest(bool sign, bool enc, bool opaque);
 };
 
 #endif

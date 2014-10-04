@@ -19,8 +19,10 @@
 #define AUTORESIZEIMAGEUTIL_H
 #include <messagecore/attachment/attachmentpart.h>
 
-namespace MessageComposer {
-namespace Utils {
+namespace MessageComposer
+{
+namespace Utils
+{
 bool containsImage(const MessageCore::AttachmentPart::List &parts);
 bool resizeImage(MessageCore::AttachmentPart::Ptr part);
 void changeFileName(MessageCore::AttachmentPart::Ptr part);

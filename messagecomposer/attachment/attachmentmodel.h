@@ -29,7 +29,8 @@
 #include <messagecore/attachment/attachmentpart.h>
 #include <AkonadiCore/item.h>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 /**
   Columns:
@@ -73,60 +74,59 @@ public:
         LastColumn ///< @internal
     };
 
-    explicit AttachmentModel( QObject *parent );
+    explicit AttachmentModel(QObject *parent);
     ~AttachmentModel();
 
-    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action,
-                               int row, int column, const QModelIndex &parent );
-    virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
+    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action,
+                              int row, int column, const QModelIndex &parent);
+    virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
     virtual QStringList mimeTypes() const;
     virtual Qt::DropActions supportedDropActions() const;
 
     /// for the save/discard warning
     bool isModified() const;
-    void setModified( bool modified );
+    void setModified(bool modified);
 
     bool isEncryptEnabled() const;
-    void setEncryptEnabled( bool enabled );
+    void setEncryptEnabled(bool enabled);
     bool isSignEnabled() const;
-    void setSignEnabled( bool enabled );
+    void setSignEnabled(bool enabled);
     bool isEncryptSelected() const;
     /// sets for all
-    void setEncryptSelected( bool selected );
+    void setEncryptSelected(bool selected);
     bool isSignSelected() const;
     /// sets for all
-    void setSignSelected( bool selected );
+    void setSignSelected(bool selected);
 
     bool isAutoDisplayEnabled() const;
-    void setAutoDisplayEnabled( bool enabled );
+    void setAutoDisplayEnabled(bool enabled);
 
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
-    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-    virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
-
-    bool addAttachment( MessageCore::AttachmentPart::Ptr part );
-    bool updateAttachment( MessageCore::AttachmentPart::Ptr part );
-    bool replaceAttachment( MessageCore::AttachmentPart::Ptr oldPart, MessageCore::AttachmentPart::Ptr newPart );
-    bool removeAttachment( MessageCore::AttachmentPart::Ptr part );
+    bool addAttachment(MessageCore::AttachmentPart::Ptr part);
+    bool updateAttachment(MessageCore::AttachmentPart::Ptr part);
+    bool replaceAttachment(MessageCore::AttachmentPart::Ptr oldPart, MessageCore::AttachmentPart::Ptr newPart);
+    bool removeAttachment(MessageCore::AttachmentPart::Ptr part);
     MessageCore::AttachmentPart::List attachments() const;
 
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation,
-                                 int role = Qt::DisplayRole ) const;
-    virtual QModelIndex index( int row, int column,
-                               const QModelIndex &parent = QModelIndex() ) const;
-    virtual QModelIndex parent( const QModelIndex &index ) const;
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
+    virtual QModelIndex index(int row, int column,
+                              const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &index) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
 signals:
-    void encryptEnabled( bool enabled );
-    void signEnabled( bool enabled );
-    void autoDisplayEnabled( bool enabled );
-    void attachUrlsRequested( const KUrl::List &urls );
-    void attachItemsRequester( const Akonadi::Item::List & );
-    void attachmentRemoved( MessageCore::AttachmentPart::Ptr part );
-    void attachmentCompressRequested( MessageCore::AttachmentPart::Ptr part, bool compress );
+    void encryptEnabled(bool enabled);
+    void signEnabled(bool enabled);
+    void autoDisplayEnabled(bool enabled);
+    void attachUrlsRequested(const KUrl::List &urls);
+    void attachItemsRequester(const Akonadi::Item::List &);
+    void attachmentRemoved(MessageCore::AttachmentPart::Ptr part);
+    void attachmentCompressRequested(MessageCore::AttachmentPart::Ptr part, bool compress);
 
 private:
     class Private;

@@ -32,8 +32,8 @@ using namespace MessageComposer;
 ImageScalingSelectFormatDialog::ImageScalingSelectFormatDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18nc("@title:window", "Select Image Format") );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18nc("@title:window", "Select Image Format"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -56,7 +56,7 @@ ImageScalingSelectFormatDialog::~ImageScalingSelectFormatDialog()
 void ImageScalingSelectFormatDialog::addImageFormat(const QString &format, const QString &mimetype)
 {
     QListWidgetItem *item = new QListWidgetItem(format);
-    item->setFlags(item->flags() | Qt::ItemIsUserCheckable );
+    item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
     item->setData(ImageScalingSelectFormatDialog::ImageRole, mimetype);
     item->setCheckState(Qt::Unchecked);
     mListWidget->addItem(item);
@@ -74,7 +74,7 @@ QString ImageScalingSelectFormatDialog::format() const
 {
     const int numberOfElement(mListWidget->count());
     QString formatStr;
-    for (int i=0; i < numberOfElement;++i) {
+    for (int i = 0; i < numberOfElement; ++i) {
         if (mListWidget->item(i)->checkState() == Qt::Checked) {
             if (!formatStr.isEmpty()) {
                 formatStr += QLatin1Char(';');
@@ -89,7 +89,7 @@ void ImageScalingSelectFormatDialog::setFormat(const QString &format)
 {
     const QStringList listFormat = format.split(QLatin1Char(';'));
     const int numberOfElement(mListWidget->count());
-    for (int i=0; i < numberOfElement;++i) {
+    for (int i = 0; i < numberOfElement; ++i) {
         QListWidgetItem *item = mListWidget->item(i);
         if (listFormat.contains(item->data(ImageScalingSelectFormatDialog::ImageRole).toString())) {
             item->setCheckState(Qt::Checked);

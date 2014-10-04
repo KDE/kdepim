@@ -25,33 +25,34 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class MESSAGECOMPOSER_EXPORT GlobalPart : public MessageComposer::MessagePart
 {
     Q_OBJECT
 
 public:
-    explicit GlobalPart( QObject *parent = 0 );
+    explicit GlobalPart(QObject *parent = 0);
     virtual ~GlobalPart();
 
     // default true
     bool isGuiEnabled() const;
-    void setGuiEnabled( bool enabled );
-    QWidget* parentWidgetForGui() const;
-    void setParentWidgetForGui( QWidget *widget );
+    void setGuiEnabled(bool enabled);
+    QWidget *parentWidgetForGui() const;
+    void setParentWidgetForGui(QWidget *widget);
 
     bool isFallbackCharsetEnabled() const;
-    void setFallbackCharsetEnabled( bool enabled );
-    QList<QByteArray> charsets( bool forceFallback = false ) const;
-    void setCharsets( const QList<QByteArray> &charsets );
+    void setFallbackCharsetEnabled(bool enabled);
+    QList<QByteArray> charsets(bool forceFallback = false) const;
+    void setCharsets(const QList<QByteArray> &charsets);
 
     bool is8BitAllowed() const;
-    void set8BitAllowed( bool allowed );
+    void set8BitAllowed(bool allowed);
 
     // default is false
     bool MDNRequested() const;
-    void setMDNRequested( bool requestMDN );
+    void setMDNRequested(bool requestMDN);
 
 private:
     class Private;

@@ -26,25 +26,25 @@
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 
-
-namespace MessageComposer {
-  class EncryptJob;
+namespace MessageComposer
+{
+class EncryptJob;
 }
 
 class EncryptJobTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public slots:
+public slots:
     void initTestCase();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void testContentDirect();
     void testContentChained();
     void testHeaders();
 
-  private:
-    void checkEncryption( MessageComposer::EncryptJob* eJob );
+private:
+    void checkEncryption(MessageComposer::EncryptJob *eJob);
 
 };
 

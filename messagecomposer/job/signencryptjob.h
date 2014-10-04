@@ -30,12 +30,14 @@
 #include <gpgme++/key.h>
 #include <vector>
 
-namespace KMime {
+namespace KMime
+{
 class Content;
 
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class SignEncryptJobPrivate;
 
@@ -48,27 +50,27 @@ class MESSAGECOMPOSER_EXPORT SignEncryptJob : public ContentJobBase, public Abst
     Q_OBJECT
 
 public:
-    explicit SignEncryptJob( QObject *parent = 0 );
+    explicit SignEncryptJob(QObject *parent = 0);
     virtual ~SignEncryptJob();
 
-    void setContent( KMime::Content* content );
-    void setCryptoMessageFormat( Kleo::CryptoMessageFormat format);
-    void setSigningKeys( std::vector<GpgME::Key>& signers );
+    void setContent(KMime::Content *content);
+    void setCryptoMessageFormat(Kleo::CryptoMessageFormat format);
+    void setSigningKeys(std::vector<GpgME::Key> &signers);
 
-    void setEncryptionKeys( const std::vector<GpgME::Key>& keys );
-    void setRecipients( const QStringList& rec );
+    void setEncryptionKeys(const std::vector<GpgME::Key> &keys);
+    void setRecipients(const QStringList &rec);
 
     std::vector<GpgME::Key> encryptionKeys() const;
     QStringList recipients() const;
-    
-    KMime::Content* origContent();
+
+    KMime::Content *origContent();
 
 protected Q_SLOTS:
     //virtual void doStart();
     virtual void process();
 
 private:
-    Q_DECLARE_PRIVATE( SignEncryptJob )
+    Q_DECLARE_PRIVATE(SignEncryptJob)
 };
 
 }

@@ -25,16 +25,17 @@
 #include "messagecomposer_export.h"
 #include <libkdepim/addressline/addresseelineedit.h>
 class KConfig;
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
 {
     Q_OBJECT
 
 public:
-    explicit ComposerLineEdit( bool useCompletion, QWidget *parent = 0 );
+    explicit ComposerLineEdit(bool useCompletion, QWidget *parent = 0);
 
-    void setRecentAddressConfig( KConfig* config );
+    void setRecentAddressConfig(KConfig *config);
 
 signals:
     void focusUp();
@@ -45,24 +46,24 @@ protected:
     // Inherited. Always called by the parent when this widget is created.
     virtual void loadContacts();
 
-    virtual void keyPressEvent(QKeyEvent*);
+    virtual void keyPressEvent(QKeyEvent *);
 
 #ifndef QT_NO_CONTEXTMENU
-    virtual void contextMenuEvent( QContextMenuEvent*e );
+    virtual void contextMenuEvent(QContextMenuEvent *e);
 #endif
 
 private slots:
     void editRecentAddresses();
-    void groupDropExpandResult( KJob* );
+    void groupDropExpandResult(KJob *);
 
 private:
 #ifndef QT_NO_DRAGANDDROP
-    void dropEvent( QDropEvent *event );
+    void dropEvent(QDropEvent *event);
 #endif
-    void insertEmails( const QStringList & emails );
+    void insertEmails(const QStringList &emails);
 
 private:
-    KConfig* m_recentAddressConfig;
+    KConfig *m_recentAddressConfig;
 };
 
 }

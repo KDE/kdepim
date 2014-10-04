@@ -25,11 +25,13 @@
 #include "jobbase.h"
 #include "messagecomposer_export.h"
 
-namespace KMime {
+namespace KMime
+{
 class Content;
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class ContentJobBasePrivate;
 
@@ -38,7 +40,7 @@ class MESSAGECOMPOSER_EXPORT ContentJobBase : public JobBase
     Q_OBJECT
 
 public:
-    explicit ContentJobBase( QObject *parent = 0 );
+    explicit ContentJobBase(QObject *parent = 0);
     virtual ~ContentJobBase();
 
     /**
@@ -60,25 +62,25 @@ public:
       it possible to add subjobs from the outside.
       Transfers ownership of the @p job to this object.
     */
-    bool appendSubjob( ContentJobBase *job );
+    bool appendSubjob(ContentJobBase *job);
 
     /**
       Set some extra content to be saved with the job, and available
         later, for example, in slot handling result of job.
       Job does not take care of deleting extra content.
       */
-    void setExtraContent( KMime::Content* extra );
+    void setExtraContent(KMime::Content *extra);
 
     /**
       Get extra content that was previously added.
      */
-    KMime::Content* extraContent() const;
+    KMime::Content *extraContent() const;
 
 protected:
-    ContentJobBase( ContentJobBasePrivate &dd, QObject *parent );
+    ContentJobBase(ContentJobBasePrivate &dd, QObject *parent);
 
     /** Use appendSubjob() instead. */
-    virtual bool addSubjob( KJob *job );
+    virtual bool addSubjob(KJob *job);
 
 protected Q_SLOTS:
     /**
@@ -96,10 +98,10 @@ protected Q_SLOTS:
     virtual void process() = 0;
 
     /* reimpl */
-    virtual void slotResult( KJob *job );
+    virtual void slotResult(KJob *job);
 
 private:
-    Q_DECLARE_PRIVATE( ContentJobBase )
+    Q_DECLARE_PRIVATE(ContentJobBase)
 };
 
 } // namespace MessageComposer

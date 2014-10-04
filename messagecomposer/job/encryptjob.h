@@ -21,7 +21,6 @@
 #ifndef MESSAGECOMPOSER_ENCRYPTJOB_H
 #define MESSAGECOMPOSER_ENCRYPTJOB_H
 
-
 #include "abstractencryptjob.h"
 #include "contentjobbase.h"
 #include "part/infopart.h"
@@ -31,12 +30,14 @@
 #include <gpgme++/key.h>
 #include <vector>
 
-namespace KMime {
+namespace KMime
+{
 class Content;
 
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class EncryptJobPrivate;
 
@@ -49,23 +50,23 @@ class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase, public Abstract
     Q_OBJECT
 
 public:
-    explicit EncryptJob( QObject *parent = 0 );
+    explicit EncryptJob(QObject *parent = 0);
     virtual ~EncryptJob();
 
-    void setContent( KMime::Content* content );
-    void setCryptoMessageFormat( Kleo::CryptoMessageFormat format);
-    void setEncryptionKeys( const std::vector<GpgME::Key>& keys );
-    void setRecipients( const QStringList& rec );
-    
+    void setContent(KMime::Content *content);
+    void setCryptoMessageFormat(Kleo::CryptoMessageFormat format);
+    void setEncryptionKeys(const std::vector<GpgME::Key> &keys);
+    void setRecipients(const QStringList &rec);
+
     std::vector<GpgME::Key> encryptionKeys() const;
     QStringList recipients() const;
-    
+
 protected Q_SLOTS:
     //virtual void doStart();
     virtual void process();
 
 private:
-    Q_DECLARE_PRIVATE( EncryptJob )
+    Q_DECLARE_PRIVATE(EncryptJob)
 };
 
 }

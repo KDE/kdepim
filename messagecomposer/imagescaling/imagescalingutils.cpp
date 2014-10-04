@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "imagescalingutils.h"
 #include "settings/messagecomposersettings.h"
 
@@ -31,7 +30,7 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
     if (!pattern.isEmpty()) {
         //TODO use regexp ?
         const QStringList lstPattern = pattern.split(QLatin1Char(';'));
-        Q_FOREACH (const QString& patternStr, lstPattern) {
+        Q_FOREACH (const QString &patternStr, lstPattern) {
             switch (MessageComposer::MessageComposerSettings::self()->filterSourceType()) {
             case MessageComposer::MessageComposerSettings::EnumFilterSourceType::NoFilter:
                 break;
@@ -54,20 +53,21 @@ bool Utils::resizeImage(MessageCore::AttachmentPart::Ptr part)
         if (!formatsType.isEmpty()) {
             const QStringList lstFormat = formatsType.split(QLatin1Char(';'));
             bool willResizeImage = false;
-            Q_FOREACH (const QString& type, lstFormat) {
-                if(QString::fromLatin1(part->mimeType()) == type) {
+            Q_FOREACH (const QString &type, lstFormat) {
+                if (QString::fromLatin1(part->mimeType()) == type) {
                     willResizeImage = true;
                     break;
                 }
             }
-            if(!willResizeImage)
+            if (!willResizeImage) {
                 return false;
+            }
         }
     }
 
-    if (MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled() ) {
-        if (part->size() > MessageComposer::MessageComposerSettings::self()->skipImageLowerSize() *1024) {
-            if (hasImage(part->mimeType()) ) {
+    if (MessageComposer::MessageComposerSettings::self()->skipImageLowerSizeEnabled()) {
+        if (part->size() > MessageComposer::MessageComposerSettings::self()->skipImageLowerSize() * 1024) {
+            if (hasImage(part->mimeType())) {
                 return true;
             } else {
                 return false;
@@ -92,13 +92,14 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
 
             const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
             QString newExtension;
-            if(type == QLatin1String("JPG")) {
+            if (type == QLatin1String("JPG")) {
                 newExtension = QLatin1String("jpg");
-            } else if(type == QLatin1String("PNG")) {
+            } else if (type == QLatin1String("PNG")) {
                 newExtension = QLatin1String("png");
             }
-            if (!newExtension.isEmpty())
-                pattern.replace(QLatin1String("%x"), newExtension); //new Extension
+            if (!newExtension.isEmpty()) {
+                pattern.replace(QLatin1String("%x"), newExtension);    //new Extension
+            }
 
             //Need to define pattern type.
             part->setFileName(pattern);
@@ -107,10 +108,11 @@ void Utils::changeFileName(MessageCore::AttachmentPart::Ptr part)
     }
 }
 
-bool Utils::filterRecipients(const QStringList& recipients)
+bool Utils::filterRecipients(const QStringList &recipients)
 {
-    if (recipients.isEmpty())
+    if (recipients.isEmpty()) {
         return false;
+    }
 
     if (MessageComposer::MessageComposerSettings::self()->filterRecipientType() == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter) {
         return true;
@@ -118,43 +120,48 @@ bool Utils::filterRecipients(const QStringList& recipients)
 
     const QString doNotResizeEmailsPattern = MessageComposer::MessageComposerSettings::self()->doNotResizeEmailsPattern();
     const QString resizeEmailsPattern = MessageComposer::MessageComposerSettings::self()->resizeEmailsPattern();
-    if (doNotResizeEmailsPattern.isEmpty() && resizeEmailsPattern.isEmpty())
+    if (doNotResizeEmailsPattern.isEmpty() && resizeEmailsPattern.isEmpty()) {
         return true;
+    }
 
-    switch(MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
+    switch (MessageComposer::MessageComposerSettings::self()->filterRecipientType()) {
     case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::NoFilter:
         return true;
     case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern:
-        if (resizeEmailsPattern.isEmpty())
+        if (resizeEmailsPattern.isEmpty()) {
             return false;
-        Q_FOREACH( const QString& emails, recipients ) {
+        }
+        Q_FOREACH (const QString &emails, recipients) {
             if (!emails.contains(resizeEmailsPattern)) {
                 return false;
             }
         }
         return true;
     case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern:
-        if (resizeEmailsPattern.isEmpty())
+        if (resizeEmailsPattern.isEmpty()) {
             return false;
-        Q_FOREACH( const QString& emails, recipients ) {
+        }
+        Q_FOREACH (const QString &emails, recipients) {
             if (emails.contains(resizeEmailsPattern)) {
                 return true;
             }
         }
         return false;
     case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern:
-        if (doNotResizeEmailsPattern.isEmpty())
+        if (doNotResizeEmailsPattern.isEmpty()) {
             return false;
-        Q_FOREACH( const QString& emails, recipients ) {
+        }
+        Q_FOREACH (const QString &emails, recipients) {
             if (!emails.contains(doNotResizeEmailsPattern)) {
                 return false;
             }
         }
         return true;
     case MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern:
-        if (doNotResizeEmailsPattern.isEmpty())
+        if (doNotResizeEmailsPattern.isEmpty()) {
             return false;
-        Q_FOREACH( const QString& emails, recipients ) {
+        }
+        Q_FOREACH (const QString &emails, recipients) {
             if (emails.contains(doNotResizeEmailsPattern)) {
                 return true;
             }
@@ -167,9 +174,9 @@ bool Utils::filterRecipients(const QStringList& recipients)
 
 bool Utils::hasImage(const QByteArray &mimetype)
 {
-    if ( mimetype == "image/gif" ||
-         mimetype == "image/jpeg" ||
-         mimetype == "image/png" ) {
+    if (mimetype == "image/gif" ||
+            mimetype == "image/jpeg" ||
+            mimetype == "image/png") {
         return true;
     }
     return false;
@@ -177,7 +184,7 @@ bool Utils::hasImage(const QByteArray &mimetype)
 
 bool Utils::containsImage(const MessageCore::AttachmentPart::List &parts)
 {
-    foreach( MessageCore::AttachmentPart::Ptr part, parts ) {
+    foreach (MessageCore::AttachmentPart::Ptr part, parts) {
         if (hasImage(part->mimeType())) {
             return true;
         }

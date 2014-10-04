@@ -24,8 +24,8 @@
 
 class SkeletonMessageJobTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testSubject_data();
     void testSubject();
     void testAddresses_data();

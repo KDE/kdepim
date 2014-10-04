@@ -20,26 +20,25 @@
 #include "contentjobbase.h"
 #include "contentjobbase_p.h"
 
-
 #include <QDebug>
 
 #include <kmime/kmime_content.h>
 
 using namespace MessageComposer;
 
-void ContentJobBasePrivate::init( QObject *parent )
+void ContentJobBasePrivate::init(QObject *parent)
 {
-    Q_Q( ContentJobBase );
-    ContentJobBase *parentJob = dynamic_cast<ContentJobBase*>( parent );
-    if( parentJob ) {
-        parentJob->appendSubjob( q );
+    Q_Q(ContentJobBase);
+    ContentJobBase *parentJob = dynamic_cast<ContentJobBase *>(parent);
+    if (parentJob) {
+        parentJob->appendSubjob(q);
     }
 }
 
 void ContentJobBasePrivate::doNextSubjob()
 {
-    Q_Q( ContentJobBase );
-    if( q->hasSubjobs() ) {
+    Q_Q(ContentJobBase);
+    if (q->hasSubjobs()) {
         q->subjobs().first()->start();
     } else {
         qDebug() << "Calling process.";
@@ -47,20 +46,18 @@ void ContentJobBasePrivate::doNextSubjob()
     }
 }
 
-
-
-ContentJobBase::ContentJobBase( QObject *parent )
-    : JobBase( *new ContentJobBasePrivate( this ), parent )
+ContentJobBase::ContentJobBase(QObject *parent)
+    : JobBase(*new ContentJobBasePrivate(this), parent)
 {
-    Q_D( ContentJobBase );
-    d->init( parent );
+    Q_D(ContentJobBase);
+    d->init(parent);
 }
 
-ContentJobBase::ContentJobBase( ContentJobBasePrivate &dd, QObject *parent )
-    : JobBase( dd, parent )
+ContentJobBase::ContentJobBase(ContentJobBasePrivate &dd, QObject *parent)
+    : JobBase(dd, parent)
 {
-    Q_D( ContentJobBase );
-    d->init( parent );
+    Q_D(ContentJobBase);
+    d->init(parent);
 }
 
 ContentJobBase::~ContentJobBase()
@@ -74,59 +71,60 @@ void ContentJobBase::start()
 
 KMime::Content *ContentJobBase::content() const
 {
-    Q_D( const ContentJobBase );
+    Q_D(const ContentJobBase);
     //Q_ASSERT( !hasSubjobs() ); // Finished. // JobBase::hasSubjobs is not const :-/ TODO const_cast??
-    Q_ASSERT( d->resultContent ); // process() should do something.
+    Q_ASSERT(d->resultContent);   // process() should do something.
     return d->resultContent;
 }
 
-bool ContentJobBase::appendSubjob( ContentJobBase *job )
+bool ContentJobBase::appendSubjob(ContentJobBase *job)
 {
-    job->setParent( this );
-    return KCompositeJob::addSubjob( job );
+    job->setParent(this);
+    return KCompositeJob::addSubjob(job);
 }
 
-void ContentJobBase::setExtraContent( KMime::Content* extra )
+void ContentJobBase::setExtraContent(KMime::Content *extra)
 {
-    Q_D( ContentJobBase );
+    Q_D(ContentJobBase);
 
     d->extraContent = extra;
 }
 
-KMime::Content* ContentJobBase::extraContent() const {
-    Q_D( const ContentJobBase );
+KMime::Content *ContentJobBase::extraContent() const
+{
+    Q_D(const ContentJobBase);
 
     return d->extraContent;
 }
 
-bool ContentJobBase::addSubjob( KJob *job )
+bool ContentJobBase::addSubjob(KJob *job)
 {
-    Q_UNUSED( job );
+    Q_UNUSED(job);
     qCritical() << "Use appendJob() instead.";
-    Q_ASSERT( false );
+    Q_ASSERT(false);
     return false;
 }
 
 void ContentJobBase::doStart()
 {
-    Q_D( ContentJobBase );
-    Q_ASSERT( d->resultContent == 0 && d->subjobContents.isEmpty() ); // Not started.
-    Q_ASSERT( !error() ); // Jobs emitting an error in doStart should not call ContentJobBase::doStart().
+    Q_D(ContentJobBase);
+    Q_ASSERT(d->resultContent == 0 && d->subjobContents.isEmpty());   // Not started.
+    Q_ASSERT(!error());   // Jobs emitting an error in doStart should not call ContentJobBase::doStart().
     d->doNextSubjob();
 }
 
-void ContentJobBase::slotResult( KJob *job )
+void ContentJobBase::slotResult(KJob *job)
 {
-    Q_D( ContentJobBase );
-    KCompositeJob::slotResult( job ); // Handles errors and removes subjob.
+    Q_D(ContentJobBase);
+    KCompositeJob::slotResult(job);   // Handles errors and removes subjob.
     qDebug() << "A subjob finished." << subjobs().count() << "more to go.";
-    if( error() ) {
+    if (error()) {
         return;
     }
 
-    Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
-    ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
-    d->subjobContents.append( cjob->content() );
+    Q_ASSERT(dynamic_cast<ContentJobBase *>(job));
+    ContentJobBase *cjob = static_cast<ContentJobBase *>(job);
+    d->subjobContents.append(cjob->content());
     d->doNextSubjob();
 }
 

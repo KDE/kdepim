@@ -39,8 +39,8 @@ using namespace MessageCore;
 class MessageComposer::AttachmentJobPrivate : public ContentJobBasePrivate
 {
 public:
-    AttachmentJobPrivate( AttachmentJob *qq )
-        : ContentJobBasePrivate( qq )
+    AttachmentJobPrivate(AttachmentJob *qq)
+        : ContentJobBasePrivate(qq)
     {
     }
 
@@ -48,35 +48,33 @@ public:
 
     AttachmentPart::Ptr part;
 
-    Q_DECLARE_PUBLIC( AttachmentJob )
+    Q_DECLARE_PUBLIC(AttachmentJob)
 };
 
 #if 0
-QByteArray AttachmentJobPrivate::detectCharset( const QByteArray &data )
+QByteArray AttachmentJobPrivate::detectCharset(const QByteArray &data)
 {
     KEncodingProber prober;
-    prober.feed( data );
+    prober.feed(data);
     qDebug() << "Autodetected charset" << prober.encoding() << "with confidence" << prober.confidence();
 
     // The prober detects binary attachments as UTF-16LE with confidence 99%, which
     // obviously is wrong, so work around this here (most mail clients don't understand
     // UTF-16LE).
     const QByteArray detectedEncoding = prober.encoding();
-    if( prober.confidence() > 0.6 && !detectedEncoding.toLower().contains( "utf-16" ) ) {
+    if (prober.confidence() > 0.6 && !detectedEncoding.toLower().contains("utf-16")) {
         return detectedEncoding;
     } else {
         qWarning() << "Could not autodetect charset; using UTF-8.";
-        return QByteArray( "utf-8" );
+        return QByteArray("utf-8");
     }
 }
 #endif
 
-
-
-AttachmentJob::AttachmentJob( AttachmentPart::Ptr part, QObject *parent )
-    : ContentJobBase( *new AttachmentJobPrivate( this ), parent )
+AttachmentJob::AttachmentJob(AttachmentPart::Ptr part, QObject *parent)
+    : ContentJobBase(*new AttachmentJobPrivate(this), parent)
 {
-    Q_D( AttachmentJob );
+    Q_D(AttachmentJob);
     d->part = part;
 }
 
@@ -86,29 +84,29 @@ AttachmentJob::~AttachmentJob()
 
 AttachmentPart::Ptr AttachmentJob::attachmentPart() const
 {
-    Q_D( const AttachmentJob );
+    Q_D(const AttachmentJob);
     return d->part;
 }
 
-void AttachmentJob::setAttachmentPart( AttachmentPart::Ptr part )
+void AttachmentJob::setAttachmentPart(AttachmentPart::Ptr part)
 {
-    Q_D( AttachmentJob );
+    Q_D(AttachmentJob);
     d->part = part;
 }
 
 void AttachmentJob::doStart()
 {
-    Q_D( AttachmentJob );
-    Q_ASSERT( d->part );
+    Q_D(AttachmentJob);
+    Q_ASSERT(d->part);
 
-    if( d->part->mimeType() == "multipart/digest" ||
-            d->part->mimeType() == "message/rfc822" ) {
+    if (d->part->mimeType() == "multipart/digest" ||
+            d->part->mimeType() == "message/rfc822") {
         // this is actually a digest, so we don't want any additional headers
         // the attachment is really a complete multipart/digest subtype
         // and us adding our own headers would break it. so copy over the content
         // and leave it alone
-        KMime::Content* part = new KMime::Content;
-        part->setContent( d->part->data() );
+        KMime::Content *part = new KMime::Content;
+        part->setContent(d->part->data());
         part->parse();
         d->subjobContents << part;
         process();
@@ -116,24 +114,25 @@ void AttachmentJob::doStart()
     }
 
     // Set up a subjob to generate the attachment content.
-    SinglepartJob *sjob = new SinglepartJob( this );
-    sjob->setData( d->part->data() );
+    SinglepartJob *sjob = new SinglepartJob(this);
+    sjob->setData(d->part->data());
 
     // Figure out a charset to encode parts of the headers with.
     const QString dataToEncode = d->part->name() + d->part->description() + d->part->fileName();
-    const QByteArray charset = MessageComposer::Util::selectCharset( globalPart()->charsets( true ), dataToEncode );
+    const QByteArray charset = MessageComposer::Util::selectCharset(globalPart()->charsets(true), dataToEncode);
 
     // Set up the headers.
     // rfc822 forwarded messages have 7bit CTE, the message itself will have
     //  its own CTE for the content
-    if( d->part->mimeType() == "message/rfc822" )
-        sjob->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
-    else
-        sjob->contentTransferEncoding()->setEncoding( d->part->encoding() );
+    if (d->part->mimeType() == "message/rfc822") {
+        sjob->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
+    } else {
+        sjob->contentTransferEncoding()->setEncoding(d->part->encoding());
+    }
 
-    sjob->contentType()->setMimeType( d->part->mimeType() ); // setMimeType() clears all other params.
-    sjob->contentType()->setName( d->part->name(), charset );
-    if( sjob->contentType()->isText() ) {
+    sjob->contentType()->setMimeType(d->part->mimeType());   // setMimeType() clears all other params.
+    sjob->contentType()->setName(d->part->name(), charset);
+    if (sjob->contentType()->isText()) {
         // If it is a text file, detect its charset.
         //sjob->contentType()->setCharset( d->detectCharset( d->part->data() ) );
 
@@ -141,21 +140,21 @@ void AttachmentJob::doStart()
         // Therefore, if we do not know which charset to use, just use UTF-8.
         // (cberzan)
         QByteArray textCharset = d->part->charset();
-        if( textCharset.isEmpty() ) {
+        if (textCharset.isEmpty()) {
             qWarning() << "No charset specified. Using UTF-8.";
             textCharset = "utf-8";
         }
-        sjob->contentType()->setCharset( textCharset );
+        sjob->contentType()->setCharset(textCharset);
     }
 
-    sjob->contentDescription()->fromUnicodeString( d->part->description(), charset );
+    sjob->contentDescription()->fromUnicodeString(d->part->description(), charset);
 
-    sjob->contentDisposition()->setFilename( d->part->fileName() );
-    sjob->contentDisposition()->setRFC2047Charset( charset );
-    if( d->part->isInline() ) {
-        sjob->contentDisposition()->setDisposition( KMime::Headers::CDinline );
+    sjob->contentDisposition()->setFilename(d->part->fileName());
+    sjob->contentDisposition()->setRFC2047Charset(charset);
+    if (d->part->isInline()) {
+        sjob->contentDisposition()->setDisposition(KMime::Headers::CDinline);
     } else {
-        sjob->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
+        sjob->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
     }
 
     ContentJobBase::doStart();
@@ -163,9 +162,9 @@ void AttachmentJob::doStart()
 
 void AttachmentJob::process()
 {
-    Q_D( AttachmentJob );
+    Q_D(AttachmentJob);
     // The content has been created by our subjob.
-    Q_ASSERT( d->subjobContents.count() == 1 );
+    Q_ASSERT(d->subjobContents.count() == 1);
     d->resultContent = d->subjobContents.first();
     emitResult();
 }

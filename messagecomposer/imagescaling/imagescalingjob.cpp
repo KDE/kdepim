@@ -17,11 +17,10 @@
 #include "imagescalingjob.h"
 #include "settings/messagecomposersettings.h"
 
-
 using namespace MessageComposer;
 
 ImageScalingJob::ImageScalingJob(QObject *parent)
-    :QObject(parent)
+    : QObject(parent)
 {
 }
 
@@ -29,7 +28,7 @@ ImageScalingJob::~ImageScalingJob()
 {
 }
 
-bool ImageScalingJob::loadImageFromData(const QByteArray& data)
+bool ImageScalingJob::loadImageFromData(const QByteArray &data)
 {
     if (!mImage.loadFromData(data)) {
         return false;
@@ -39,8 +38,9 @@ bool ImageScalingJob::loadImageFromData(const QByteArray& data)
 
 bool ImageScalingJob::resizeImage()
 {
-    if (mImage.isNull())
+    if (mImage.isNull()) {
         return false;
+    }
     const int width = mImage.width();
     const int height = mImage.height();
     int newWidth = -1;
@@ -55,7 +55,7 @@ bool ImageScalingJob::resizeImage()
         if (maximumHeight == -1) {
             maximumHeight = MessageComposer::MessageComposerSettings::self()->customMaximumHeight();
         }
-        if ( width > maximumWidth ) {
+        if (width > maximumWidth) {
             newWidth = maximumWidth;
         } else {
             newWidth = width;
@@ -90,8 +90,8 @@ bool ImageScalingJob::resizeImage()
     }
     if ((newHeight != height) || (newWidth != width)) {
         mBuffer.open(QIODevice::WriteOnly);
-        mImage = mImage.scaled(newWidth,newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
-        const bool result = mImage.save(&mBuffer,MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
+        mImage = mImage.scaled(newWidth, newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
+        const bool result = mImage.save(&mBuffer, MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
         mBuffer.close();
         return result;
     } else {

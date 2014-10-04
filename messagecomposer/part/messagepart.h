@@ -26,7 +26,8 @@
 
 #include <kmime/kmime_headers.h>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class MessagePartPrivate;
 
@@ -37,7 +38,7 @@ class MESSAGECOMPOSER_EXPORT MessagePart : public QObject
     Q_OBJECT
 
 public:
-    explicit MessagePart( QObject *parent = 0 );
+    explicit MessagePart(QObject *parent = 0);
     virtual ~MessagePart();
 
 private:

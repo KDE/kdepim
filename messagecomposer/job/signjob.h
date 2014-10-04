@@ -21,7 +21,6 @@
 #ifndef MESSAGECOMPOSER_SIGNJOB_H
 #define MESSAGECOMPOSER_SIGNJOB_H
 
-
 #include "contentjobbase.h"
 #include "part/infopart.h"
 #include "messagecomposer_export.h"
@@ -30,12 +29,14 @@
 #include <gpgme++/key.h>
 #include <vector>
 
-namespace KMime {
+namespace KMime
+{
 class Content;
 
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class SignJobPrivate;
 
@@ -48,21 +49,21 @@ class MESSAGECOMPOSER_EXPORT SignJob : public ContentJobBase
     Q_OBJECT
 
 public:
-    explicit SignJob( QObject *parent = 0 );
+    explicit SignJob(QObject *parent = 0);
     virtual ~SignJob();
 
-    void setContent( KMime::Content* content );
-    void setCryptoMessageFormat( Kleo::CryptoMessageFormat format);
-    void setSigningKeys( std::vector<GpgME::Key>& signers );
+    void setContent(KMime::Content *content);
+    void setCryptoMessageFormat(Kleo::CryptoMessageFormat format);
+    void setSigningKeys(std::vector<GpgME::Key> &signers);
 
-    KMime::Content* origContent();
+    KMime::Content *origContent();
 
 protected Q_SLOTS:
     //virtual void doStart();
     virtual void process();
 
 private:
-    Q_DECLARE_PRIVATE( SignJob )
+    Q_DECLARE_PRIVATE(SignJob)
 };
 
 }

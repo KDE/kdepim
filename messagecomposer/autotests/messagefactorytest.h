@@ -24,11 +24,10 @@
 #include <QtCore/QObject>
 #include <kmime/kmime_message.h>
 
-
 class MessageFactoryTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
 
     void testCreateReply();
     void testCreateReplyHtml();
@@ -38,11 +37,11 @@ class MessageFactoryTest : public QObject
     void testCreateResend();
     void testCreateMDN();
 
-  private:
+private:
     KMime::Message::Ptr createPlainTestMessage();
-    KMime::Message::Ptr loadMessageFromFile( QString filename );
+    KMime::Message::Ptr loadMessageFromFile(QString filename);
 
-  private slots:
+private slots:
     void test_multipartAlternative_data();
     void test_multipartAlternative();
 };

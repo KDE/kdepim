@@ -32,9 +32,9 @@ public:
     bool MDNRequested;
 };
 
-GlobalPart::GlobalPart( QObject *parent )
-    : MessagePart( parent )
-    , d( new Private )
+GlobalPart::GlobalPart(QObject *parent)
+    : MessagePart(parent)
+    , d(new Private)
 {
     d->guiEnabled = true;
     d->parentWidgetForGui = 0;
@@ -53,17 +53,17 @@ bool GlobalPart::isGuiEnabled() const
     return d->guiEnabled;
 }
 
-void GlobalPart::setGuiEnabled( bool enabled )
+void GlobalPart::setGuiEnabled(bool enabled)
 {
     d->guiEnabled = enabled;
 }
 
-QWidget* GlobalPart::parentWidgetForGui() const
+QWidget *GlobalPart::parentWidgetForGui() const
 {
     return d->parentWidgetForGui;
 }
 
-void GlobalPart::setParentWidgetForGui( QWidget *widget )
+void GlobalPart::setParentWidgetForGui(QWidget *widget)
 {
     d->parentWidgetForGui = widget;
 }
@@ -73,22 +73,22 @@ bool GlobalPart::isFallbackCharsetEnabled() const
     return d->fallbackCharsetEnabled;
 }
 
-void GlobalPart::setFallbackCharsetEnabled( bool enabled )
+void GlobalPart::setFallbackCharsetEnabled(bool enabled)
 {
     d->fallbackCharsetEnabled = enabled;
 }
 
-QList<QByteArray> GlobalPart::charsets( bool forceFallback ) const
+QList<QByteArray> GlobalPart::charsets(bool forceFallback) const
 {
     QList<QByteArray> ret = d->charsets;
-    if( d->fallbackCharsetEnabled || forceFallback ) {
+    if (d->fallbackCharsetEnabled || forceFallback) {
         ret << "us-ascii";
         ret << "utf-8";
     }
     return ret;
 }
 
-void GlobalPart::setCharsets( const QList<QByteArray> &charsets )
+void GlobalPart::setCharsets(const QList<QByteArray> &charsets)
 {
     d->charsets = charsets;
 }
@@ -98,7 +98,7 @@ bool GlobalPart::is8BitAllowed() const
     return d->allow8Bit;
 }
 
-void GlobalPart::set8BitAllowed( bool allowed )
+void GlobalPart::set8BitAllowed(bool allowed)
 {
     d->allow8Bit = allowed;
 }

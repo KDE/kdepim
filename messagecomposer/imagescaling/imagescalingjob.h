@@ -22,7 +22,8 @@
 #include <QImage>
 #include <QBuffer>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class ImageScalingJob : public QObject
 {
     Q_OBJECT
@@ -35,7 +36,7 @@ public:
      * @param data
      * @return true if we can load image.
      */
-    bool loadImageFromData(const QByteArray& data);
+    bool loadImageFromData(const QByteArray &data);
 
     /**
      * @brief resizeImage

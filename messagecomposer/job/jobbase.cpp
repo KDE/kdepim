@@ -26,15 +26,15 @@
 
 using namespace MessageComposer;
 
-JobBase::JobBase( QObject *parent )
-    : KCompositeJob( parent )
-    , d_ptr( new JobBasePrivate( this ) )
+JobBase::JobBase(QObject *parent)
+    : KCompositeJob(parent)
+    , d_ptr(new JobBasePrivate(this))
 {
 }
 
-JobBase::JobBase( JobBasePrivate &dd, QObject *parent )
-    : KCompositeJob( parent )
-    , d_ptr( &dd )
+JobBase::JobBase(JobBasePrivate &dd, QObject *parent)
+    : KCompositeJob(parent)
+    , d_ptr(&dd)
 {
 }
 
@@ -45,9 +45,9 @@ JobBase::~JobBase()
 
 GlobalPart *JobBase::globalPart()
 {
-    for( QObject *obj = this; obj != 0; obj = obj->parent() ) {
-        Composer *composer = qobject_cast<Composer*>( obj );
-        if( composer ) {
+    for (QObject *obj = this; obj != 0; obj = obj->parent()) {
+        Composer *composer = qobject_cast<Composer *>(obj);
+        if (composer) {
             return composer->globalPart();
         }
     }

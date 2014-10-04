@@ -34,11 +34,13 @@
 #include <vector>
 #include <gpgme++/key.h>
 
-namespace boost {
+namespace boost
+{
 template <typename T> class shared_ptr;
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class ComposerPrivate;
 class GlobalPart;
@@ -53,7 +55,7 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     Q_OBJECT
 
 public:
-    explicit Composer( QObject *parent = 0 );
+    explicit Composer(QObject *parent = 0);
     virtual ~Composer();
 
     QList<KMime::Message::Ptr> resultMessages() const;
@@ -63,19 +65,19 @@ public:
     TextPart *textPart() const;
     MessageCore::AttachmentPart::List attachmentParts() const;
     void addAttachmentPart(MessageCore::AttachmentPart::Ptr part , bool autoresizeImage = false);
-    void addAttachmentParts( const MessageCore::AttachmentPart::List &parts, bool autoresizeImage = false );
-    void removeAttachmentPart( MessageCore::AttachmentPart::Ptr part );
+    void addAttachmentParts(const MessageCore::AttachmentPart::List &parts, bool autoresizeImage = false);
+    void removeAttachmentPart(MessageCore::AttachmentPart::Ptr part);
 
     // if the message and attachments should not be encrypted regardless of settings
-    void setNoCrypto( bool noCrypto );
-    void setSignAndEncrypt( const bool doSign, const bool doEncrypt );
-    void setMessageCryptoFormat( Kleo::CryptoMessageFormat format );
-    void setSigningKeys( std::vector<GpgME::Key>& signers );
-    void setEncryptionKeys(const QList<QPair<QStringList, std::vector<GpgME::Key> > > &data );
+    void setNoCrypto(bool noCrypto);
+    void setSignAndEncrypt(const bool doSign, const bool doEncrypt);
+    void setMessageCryptoFormat(Kleo::CryptoMessageFormat format);
+    void setSigningKeys(std::vector<GpgME::Key> &signers);
+    void setEncryptionKeys(const QList<QPair<QStringList, std::vector<GpgME::Key> > > &data);
 
     /// Sets if this message being composed is an auto-saved message
     ///  if so, might need different handling, such as no crypto attachments.
-    void setAutoSave( bool isAutoSave );
+    void setAutoSave(bool isAutoSave);
     bool autoSave() const;
 
     bool finished() const;
@@ -84,15 +86,15 @@ public Q_SLOTS:
     virtual void start();
 
 protected Q_SLOTS:
-    virtual void slotResult( KJob *job );
+    virtual void slotResult(KJob *job);
 
 private:
-    Q_DECLARE_PRIVATE( Composer )
+    Q_DECLARE_PRIVATE(Composer)
 
-    Q_PRIVATE_SLOT( d_func(), void doStart() )
-    Q_PRIVATE_SLOT( d_func(), void skeletonJobFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void contentJobFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void attachmentsFinished(KJob*) )
+    Q_PRIVATE_SLOT(d_func(), void doStart())
+    Q_PRIVATE_SLOT(d_func(), void skeletonJobFinished(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void contentJobFinished(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void attachmentsFinished(KJob *))
 };
 
 }

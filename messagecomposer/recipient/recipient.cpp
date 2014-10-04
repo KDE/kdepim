@@ -22,7 +22,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-
 #include "recipient.h"
 
 #include <KLocalizedString>
@@ -30,12 +29,12 @@
 using namespace KPIM;
 using namespace MessageComposer;
 
-Recipient::Recipient( const QString &email, Recipient::Type type )
-    : mEmail( email ), mType( type )
+Recipient::Recipient(const QString &email, Recipient::Type type)
+    : mEmail(email), mType(type)
 {
 }
 
-void Recipient::setType( Type type )
+void Recipient::setType(Type type)
 {
     mType = type;
 }
@@ -45,7 +44,7 @@ Recipient::Type Recipient::type() const
     return mType;
 }
 
-void Recipient::setEmail( const QString &email )
+void Recipient::setEmail(const QString &email)
 {
     mEmail = email;
 }
@@ -55,7 +54,7 @@ QString Recipient::email() const
     return mEmail;
 }
 
-void Recipient::setName( const QString &name )
+void Recipient::setName(const QString &name)
 {
     mName = name;
 }
@@ -76,24 +75,24 @@ void Recipient::clear()
     mType = Recipient::To;
 }
 
-int Recipient::typeToId( Recipient::Type type )
+int Recipient::typeToId(Recipient::Type type)
 {
-    return static_cast<int>( type );
+    return static_cast<int>(type);
 }
 
-Recipient::Type Recipient::idToType( int id )
+Recipient::Type Recipient::idToType(int id)
 {
-    return static_cast<Type>( id );
+    return static_cast<Type>(id);
 }
 
 QString Recipient::typeLabel() const
 {
-    return typeLabel( mType );
+    return typeLabel(mType);
 }
 
-QString Recipient::typeLabel( Recipient::Type type )
+QString Recipient::typeLabel(Recipient::Type type)
 {
-    switch( type ) {
+    switch (type) {
     case To:
         return i18nc("@label:listbox Recipient of an email message.", "To");
     case Cc:
@@ -110,8 +109,8 @@ QString Recipient::typeLabel( Recipient::Type type )
 QStringList Recipient::allTypeLabels()
 {
     QStringList types;
-    types.append( typeLabel( To ) );
-    types.append( typeLabel( Cc ) );
-    types.append( typeLabel( Bcc ) );
+    types.append(typeLabel(To));
+    types.append(typeLabel(Cc));
+    types.append(typeLabel(Bcc));
     return types;
 }

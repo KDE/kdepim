@@ -23,11 +23,13 @@
 #include "jobbase.h"
 #include "messagecomposer_export.h"
 
-namespace KMime {
+namespace KMime
+{
 class Message;
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class SkeletonMessageJobPrivate;
 class InfoPart;
@@ -41,23 +43,23 @@ class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
     Q_OBJECT
 
 public:
-    explicit SkeletonMessageJob( InfoPart *infoPart = 0, GlobalPart* globalPart = 0, QObject *parent = 0 );
+    explicit SkeletonMessageJob(InfoPart *infoPart = 0, GlobalPart *globalPart = 0, QObject *parent = 0);
     virtual ~SkeletonMessageJob();
 
     InfoPart *infoPart() const;
-    void setInfoPart( InfoPart *part );
+    void setInfoPart(InfoPart *part);
 
-    GlobalPart* globalPart() const;
-    void setGlobalPart( GlobalPart* part );
+    GlobalPart *globalPart() const;
+    void setGlobalPart(GlobalPart *part);
 
     KMime::Message *message() const;
 
     virtual void start();
 
 private:
-    Q_DECLARE_PRIVATE( SkeletonMessageJob )
+    Q_DECLARE_PRIVATE(SkeletonMessageJob)
 
-    Q_PRIVATE_SLOT( d_func(), void doStart() )
+    Q_PRIVATE_SLOT(d_func(), void doStart())
 };
 
 } // namespace MessageComposer

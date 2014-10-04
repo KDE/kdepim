@@ -48,9 +48,8 @@
 
 class QStringList;
 
-
-namespace Kleo {
-
+namespace Kleo
+{
 
 /**
      \short A class to resolve signing/encryption keys w.r.t. per-recipient preferences
@@ -125,16 +124,17 @@ namespace Kleo {
      a copy of it's own to hide the other secondary recipients.
     */
 
-class MESSAGECOMPOSER_EXPORT KeyResolver {
+class MESSAGECOMPOSER_EXPORT KeyResolver
+{
 public:
-    KeyResolver( bool encToSelf, bool showApproval, bool oppEncryption,
-                 unsigned int format,
-                 int encrKeyNearExpiryThresholdDays,
-                 int signKeyNearExpiryThresholdDays,
-                 int encrRootCertNearExpiryThresholdDays,
-                 int signRootCertNearExpiryThresholdDays,
-                 int encrChainCertNearExpiryThresholdDays,
-                 int signChainCertNearExpiryThresholdDays );
+    KeyResolver(bool encToSelf, bool showApproval, bool oppEncryption,
+                unsigned int format,
+                int encrKeyNearExpiryThresholdDays,
+                int signKeyNearExpiryThresholdDays,
+                int encrRootCertNearExpiryThresholdDays,
+                int signRootCertNearExpiryThresholdDays,
+                int encrChainCertNearExpiryThresholdDays,
+                int signChainCertNearExpiryThresholdDays);
 
     ~KeyResolver();
 
@@ -150,79 +150,77 @@ public:
     struct Item : public KeyApprovalDialog::Item {
         Item()
             : KeyApprovalDialog::Item(),
-              signPref( UnknownSigningPreference ),
-              format( AutoFormat ),
-              needKeys( true ) {}
-        Item( const QString & a,
-              EncryptionPreference e, SigningPreference s,
-              CryptoMessageFormat f )
-            : KeyApprovalDialog::Item( a, std::vector<GpgME::Key>(), e ),
-              signPref( s ), format( f ), needKeys( true ) {}
-        Item( const QString & a, const std::vector<GpgME::Key> & k,
-              EncryptionPreference e, SigningPreference s,
-              CryptoMessageFormat f )
-            : KeyApprovalDialog::Item( a, k, e ),
-              signPref( s ), format( f ), needKeys( false ) {}
+              signPref(UnknownSigningPreference),
+              format(AutoFormat),
+              needKeys(true) {}
+        Item(const QString &a,
+             EncryptionPreference e, SigningPreference s,
+             CryptoMessageFormat f)
+            : KeyApprovalDialog::Item(a, std::vector<GpgME::Key>(), e),
+              signPref(s), format(f), needKeys(true) {}
+        Item(const QString &a, const std::vector<GpgME::Key> &k,
+             EncryptionPreference e, SigningPreference s,
+             CryptoMessageFormat f)
+            : KeyApprovalDialog::Item(a, k, e),
+              signPref(s), format(f), needKeys(false) {}
 
         SigningPreference signPref;
         CryptoMessageFormat format;
         bool needKeys;
     };
 
-
     /**
        Set the fingerprints of keys to be used for encrypting to
        self. Also looks them up and complains if they're not usable or
        found.
     */
-    Kpgp::Result setEncryptToSelfKeys( const QStringList & fingerprints );
+    Kpgp::Result setEncryptToSelfKeys(const QStringList &fingerprints);
     /**
         Set the fingerprints of keys to be used for signing. Also
         looks them up and complains if they're not usable or found.
     */
-    Kpgp::Result setSigningKeys( const QStringList & fingerprints );
+    Kpgp::Result setSigningKeys(const QStringList &fingerprints);
     /**
        Set the list of primary (To/CC) recipient addresses. Also looks
        up possible keys, but doesn't interact with the user.
     */
-    void setPrimaryRecipients( const QStringList & addresses );
+    void setPrimaryRecipients(const QStringList &addresses);
     /**
        Set the list of secondary (BCC) recipient addresses. Also looks
        up possible keys, but doesn't interact with the user.
     */
-    void setSecondaryRecipients( const QStringList & addresses );
-
+    void setSecondaryRecipients(const QStringList &addresses);
 
     /**
        Determine whether to sign or not, depending on the
        per-recipient signing preferences, as well as the availability
        of usable signing keys.
     */
-    Action checkSigningPreferences( bool signingRequested ) const;
+    Action checkSigningPreferences(bool signingRequested) const;
     /**
        Determine whether to encrypt or not, depending on the
        per-recipient encryption preferences, as well as the availability
        of usable encryption keys.
     */
-    Action checkEncryptionPreferences( bool encryptionRequested ) const;
+    Action checkEncryptionPreferences(bool encryptionRequested) const;
 
     /**
        Queries the user for missing keys and displays a key approval
        dialog if needed.
     */
-    Kpgp::Result resolveAllKeys( bool& signingRequested, bool& encryptionRequested );
+    Kpgp::Result resolveAllKeys(bool &signingRequested, bool &encryptionRequested);
 
     /**
        @return the signing keys to use (if any) for the given message
        format.
     */
-    std::vector<GpgME::Key> signingKeys( CryptoMessageFormat f ) const;
+    std::vector<GpgME::Key> signingKeys(CryptoMessageFormat f) const;
 
     struct SplitInfo {
         SplitInfo() {}
-        SplitInfo( const QStringList & r ) : recipients( r ) {}
-        SplitInfo( const QStringList & r, const std::vector<GpgME::Key> & k )
-            : recipients( r ), keys( k ) {}
+        SplitInfo(const QStringList &r) : recipients(r) {}
+        SplitInfo(const QStringList &r, const std::vector<GpgME::Key> &k)
+            : recipients(r), keys(k) {}
         QStringList recipients;
         std::vector<GpgME::Key> keys;
     };
@@ -230,41 +228,41 @@ public:
         returned vector will contain more than one item only if
         secondary recipients have been specified.
     */
-    std::vector<SplitInfo> encryptionItems( CryptoMessageFormat f ) const;
+    std::vector<SplitInfo> encryptionItems(CryptoMessageFormat f) const;
 
 private:
     void dump() const;
-    std::vector<Item> getEncryptionItems( const QStringList & recipients );
-    std::vector<GpgME::Key> getEncryptionKeys( const QString & recipient, bool quiet ) const;
+    std::vector<Item> getEncryptionItems(const QStringList &recipients);
+    std::vector<GpgME::Key> getEncryptionKeys(const QString &recipient, bool quiet) const;
 
     Kpgp::Result showKeyApprovalDialog();
 
     bool encryptionPossible() const;
     bool signingPossible() const;
-    Kpgp::Result resolveEncryptionKeys( bool signingRequested );
+    Kpgp::Result resolveEncryptionKeys(bool signingRequested);
     Kpgp::Result resolveSigningKeysForEncryption();
     Kpgp::Result resolveSigningKeysForSigningOnly();
-    Kpgp::Result checkKeyNearExpiry( const GpgME::Key & key,
-                                     const char * dontAskAgainName, bool mine,
-                                     bool sign, bool ca=false, int recurse_limit=100,
-                                     const GpgME::Key & orig_key=GpgME::Key::null ) const;
+    Kpgp::Result checkKeyNearExpiry(const GpgME::Key &key,
+                                    const char *dontAskAgainName, bool mine,
+                                    bool sign, bool ca = false, int recurse_limit = 100,
+                                    const GpgME::Key &orig_key = GpgME::Key::null) const;
     void collapseAllSplitInfos();
-    void addToAllSplitInfos( const std::vector<GpgME::Key> & keys, unsigned int formats );
-    void addKeys( const std::vector<Item> & items, CryptoMessageFormat f );
-    void addKeys( const std::vector<Item> & items );
+    void addToAllSplitInfos(const std::vector<GpgME::Key> &keys, unsigned int formats);
+    void addKeys(const std::vector<Item> &items, CryptoMessageFormat f);
+    void addKeys(const std::vector<Item> &items);
     QStringList allRecipients() const;
-    std::vector<GpgME::Key> signingKeysFor( CryptoMessageFormat f ) const;
-    std::vector<GpgME::Key> encryptToSelfKeysFor( CryptoMessageFormat f ) const;
+    std::vector<GpgME::Key> signingKeysFor(CryptoMessageFormat f) const;
+    std::vector<GpgME::Key> encryptToSelfKeysFor(CryptoMessageFormat f) const;
 
-    std::vector<GpgME::Key> lookup( const QStringList & patterns, bool secret=false ) const;
+    std::vector<GpgME::Key> lookup(const QStringList &patterns, bool secret = false) const;
 
-    bool haveTrustedEncryptionKey( const QString & person ) const;
+    bool haveTrustedEncryptionKey(const QString &person) const;
 
-    std::vector<GpgME::Key> selectKeys( const QString & person, const QString & msg,
-                                        const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>() ) const;
+    std::vector<GpgME::Key> selectKeys(const QString &person, const QString &msg,
+                                       const std::vector<GpgME::Key> &selectedKeys = std::vector<GpgME::Key>()) const;
 
-    QStringList keysForAddress( const QString & address ) const;
-    void setKeysForAddress( const QString & address, const QStringList& pgpKeyFingerprints, const QStringList& smimeCertFingerprints ) const;
+    QStringList keysForAddress(const QString &address) const;
+    void setKeysForAddress(const QString &address, const QStringList &pgpKeyFingerprints, const QStringList &smimeCertFingerprints) const;
 
     bool encryptToSelf() const;
     bool showApprovalDialog() const;
@@ -278,9 +276,8 @@ private:
     int encryptChainCertNearExpiryWarningThresholdInDays() const;
     int signingChainCertNearExpiryWarningThresholdInDays() const;
 
-
-    ContactPreferences lookupContactPreferences( const QString& address ) const;
-    void saveContactPreference( const QString& email, const ContactPreferences& pref ) const;
+    ContactPreferences lookupContactPreferences(const QString &address) const;
+    void saveContactPreference(const QString &email, const ContactPreferences &pref) const;
 
 private:
     class EncryptionPreferenceCounter;
@@ -289,7 +286,7 @@ private:
     friend class ::Kleo::KeyResolver::SigningPreferenceCounter;
 
     struct Private;
-    Private * d;
+    Private *d;
 
     bool mEncryptToSelf;
     const bool mShowApprovalDialog : 1;

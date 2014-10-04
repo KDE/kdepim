@@ -25,7 +25,6 @@
 #include "recipientseditortest.h"
 #include <messagecomposer/recipient/recipientseditor.h>
 
-
 #include <qdebug.h>
 #include <KLocalizedString>
 
@@ -42,79 +41,78 @@
 
 using namespace MessageComposer;
 
-Composer::Composer( QWidget *parent )
-  : QWidget( parent )
+Composer::Composer(QWidget *parent)
+    : QWidget(parent)
 {
-  QGridLayout *topLayout = new QGridLayout( this );
-  topLayout->setMargin( 4 );
-  topLayout->setSpacing( 4 );
+    QGridLayout *topLayout = new QGridLayout(this);
+    topLayout->setMargin(4);
+    topLayout->setSpacing(4);
 
-  QLabel *label = new QLabel( QLatin1String("From:"), this );
-  topLayout->addWidget( label, 0, 0 );
-  QLineEdit *edit = new QLineEdit( this );
-  topLayout->addWidget( edit, 0, 1 );
+    QLabel *label = new QLabel(QLatin1String("From:"), this);
+    topLayout->addWidget(label, 0, 0);
+    QLineEdit *edit = new QLineEdit(this);
+    topLayout->addWidget(edit, 0, 1);
 
-  mRecipients = new RecipientsEditor( this );
-  topLayout->addWidget( mRecipients, 1, 0, 1, 2 );
+    mRecipients = new RecipientsEditor(this);
+    topLayout->addWidget(mRecipients, 1, 0, 1, 2);
 
-  qDebug() << "SIZEHINT:" << mRecipients->sizeHint();
+    qDebug() << "SIZEHINT:" << mRecipients->sizeHint();
 
 //  mRecipients->setFixedHeight( 10 );
 
-  QTextEdit *editor = new QTextEdit( this );
-  topLayout->addWidget( editor, 2, 0, 1, 2 );
-  topLayout->setRowStretch( 2, 1 );
+    QTextEdit *editor = new QTextEdit(this);
+    topLayout->addWidget(editor, 2, 0, 1, 2);
+    topLayout->setRowStretch(2, 1);
 
-  QPushButton *button = new QPushButton( QLatin1String("&Close"), this );
-  topLayout->addWidget( button, 3, 0, 1, 2 );
-  connect(button, &QPushButton::clicked, this, &Composer::slotClose);
+    QPushButton *button = new QPushButton(QLatin1String("&Close"), this);
+    topLayout->addWidget(button, 3, 0, 1, 2);
+    connect(button, &QPushButton::clicked, this, &Composer::slotClose);
 }
 
 void Composer::slotClose()
 {
 #if 0
-  QString text;
+    QString text;
 
-  text += "<qt>";
+    text += "<qt>";
 
-  Recipient::List recipients = mRecipients->recipients();
-  Recipient::List::ConstIterator it;
-  for( it = recipients.begin(); it != recipients.end(); ++it ) {
-    text += "<b>" + (*it).typeLabel() + ":</b> " + (*it).email() + "<br/>";
-  }
+    Recipient::List recipients = mRecipients->recipients();
+    Recipient::List::ConstIterator it;
+    for (it = recipients.begin(); it != recipients.end(); ++it) {
+        text += "<b>" + (*it).typeLabel() + ":</b> " + (*it).email() + "<br/>";
+    }
 
-  text += "</qt>";
+    text += "</qt>";
 
-  KMessageBox::information( this, text );
+    KMessageBox::information(this, text);
 #endif
 
-  close();
+    close();
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( QLatin1String("testrecipienteditor"),
-   i18n("Test Recipient Editor"), QLatin1String("0.1") );
-  QApplication app(argc, argv);
-  QCommandLineParser parser;
-  KAboutData::setApplicationData(aboutData);
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    KAboutData aboutData(QLatin1String("testrecipienteditor"),
+                         i18n("Test Recipient Editor"), QLatin1String("0.1"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
+    QObject::connect(&app, &QApplication::lastWindowClosed, &app, &QApplication::quit);
 
-  QObject::connect(&app, &QApplication::lastWindowClosed, &app, &QApplication::quit);
+    QWidget *wid = new Composer(0);
 
-  QWidget *wid = new Composer( 0 );
+    wid->show();
 
-  wid->show();
+    int ret = app.exec();
 
-  int ret = app.exec();
+    delete wid;
 
-  delete wid;
-
-  return ret;
+    return ret;
 }
 

@@ -25,7 +25,8 @@
 
 #include "messagecomposer_export.h"
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 /**
 */
@@ -35,11 +36,11 @@ class MESSAGECOMPOSER_EXPORT AttachmentFromPublicKeyJob : public MessageCore::At
     Q_OBJECT
 
 public:
-    explicit AttachmentFromPublicKeyJob( const QString &fingerprint, QObject *parent = 0 );
+    explicit AttachmentFromPublicKeyJob(const QString &fingerprint, QObject *parent = 0);
     virtual ~AttachmentFromPublicKeyJob();
 
     QString fingerprint() const;
-    void setFingerprint( const QString &fingerprint );
+    void setFingerprint(const QString &fingerprint);
 
 protected slots:
     virtual void doStart();
@@ -49,7 +50,7 @@ private:
     friend class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void exportResult( GpgME::Error, QByteArray ) )
+    Q_PRIVATE_SLOT(d, void exportResult(GpgME::Error, QByteArray))
 };
 
 } //

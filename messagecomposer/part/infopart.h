@@ -28,51 +28,52 @@
 #include <kmime/kmime_headers.h>
 #include <boost/shared_ptr.hpp>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class MESSAGECOMPOSER_EXPORT InfoPart : public MessageComposer::MessagePart
 {
     Q_OBJECT
 
 public:
-    explicit InfoPart( QObject *parent = 0 );
+    explicit InfoPart(QObject *parent = 0);
     virtual ~InfoPart();
 
     QString from() const;
-    void setFrom( const QString &from );
+    void setFrom(const QString &from);
     QStringList to() const;
-    void setTo( const QStringList &to );
+    void setTo(const QStringList &to);
     QStringList cc() const;
-    void setCc( const QStringList &cc );
+    void setCc(const QStringList &cc);
     QStringList bcc() const;
-    void setBcc( const QStringList &bcc );
+    void setBcc(const QStringList &bcc);
 
     QString replyTo() const;
-    void setReplyTo( const QString& replyTo );
+    void setReplyTo(const QString &replyTo);
 
     QString subject() const;
-    void setSubject( const QString &subject );
+    void setSubject(const QString &subject);
 
     QString fcc() const;
-    void setFcc( const QString &fcc );
+    void setFcc(const QString &fcc);
 
     QString userAgent() const;
-    void setUserAgent( const QString &userAgent );
+    void setUserAgent(const QString &userAgent);
 
     bool urgent() const;
-    void setUrgent( bool );
+    void setUrgent(bool);
 
     QString inReplyTo() const;
-    void setInReplyTo( const QString& inReplyTo );
+    void setInReplyTo(const QString &inReplyTo);
 
     QString references() const;
-    void setReferences( const QString& references );
+    void setReferences(const QString &references);
 
-    void setExtraHeaders( KMime::Headers::Base::List headers );
+    void setExtraHeaders(KMime::Headers::Base::List headers);
     KMime::Headers::Base::List extraHeaders() const;
 
     int transportId() const;
-    void setTransportId( int tid );
+    void setTransportId(int tid);
 
 private:
     class Private;

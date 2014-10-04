@@ -31,81 +31,83 @@
 using namespace MessageComposer;
 using namespace KPIM;
 
-RecipientComboBox::RecipientComboBox( QWidget *parent )
-    : KComboBox( parent )
+RecipientComboBox::RecipientComboBox(QWidget *parent)
+    : KComboBox(parent)
 {
 }
 
-void RecipientComboBox::keyPressEvent( QKeyEvent *ev )
+void RecipientComboBox::keyPressEvent(QKeyEvent *ev)
 {
-    if ( ev->key() == Qt::Key_Right ) emit rightPressed();
-    else KComboBox::keyPressEvent( ev );
+    if (ev->key() == Qt::Key_Right) {
+        emit rightPressed();
+    } else {
+        KComboBox::keyPressEvent(ev);
+    }
 }
 
-RecipientLineEdit::RecipientLineEdit ( QWidget* parent ) : ComposerLineEdit ( parent )
+RecipientLineEdit::RecipientLineEdit(QWidget *parent) : ComposerLineEdit(parent)
 {
 }
 
-void RecipientLineEdit::keyPressEvent( QKeyEvent *ev )
+void RecipientLineEdit::keyPressEvent(QKeyEvent *ev)
 {
     //Laurent Bug:280153
     /*if ( ev->key() == Qt::Key_Backspace  &&  text().isEmpty() ) {
     ev->accept();
     emit deleteMe();
-  } else */
-    if ( ev->key() == Qt::Key_Left && cursorPosition() == 0 &&
-         !ev->modifiers().testFlag( Qt::ShiftModifier ) ) {  // Shift would be pressed during selection
+    } else */
+    if (ev->key() == Qt::Key_Left && cursorPosition() == 0 &&
+            !ev->modifiers().testFlag(Qt::ShiftModifier)) {     // Shift would be pressed during selection
         emit leftPressed();
-    } else if ( ev->key() == Qt::Key_Right && cursorPosition() == (int)text().length() &&
-                !ev->modifiers().testFlag( Qt::ShiftModifier ) ) {  // Shift would be pressed during selection
+    } else if (ev->key() == Qt::Key_Right && cursorPosition() == (int)text().length() &&
+               !ev->modifiers().testFlag(Qt::ShiftModifier)) {     // Shift would be pressed during selection
         emit rightPressed();
     } else {
-        MessageComposer::ComposerLineEdit::keyPressEvent( ev );
+        MessageComposer::ComposerLineEdit::keyPressEvent(ev);
     }
 }
 
-
-RecipientLineNG::RecipientLineNG( QWidget* parent )
-    : MultiplyingLine( parent ), mRecipientsCount( 0 ), mModified( false ), mData( new Recipient )
+RecipientLineNG::RecipientLineNG(QWidget *parent)
+    : MultiplyingLine(parent), mRecipientsCount(0), mModified(false), mData(new Recipient)
 {
-    setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    QBoxLayout *topLayout = new QHBoxLayout( this );
+    QBoxLayout *topLayout = new QHBoxLayout(this);
 //TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
-    topLayout->setMargin( 0 );
+    topLayout->setMargin(0);
 
     const QStringList recipientTypes = Recipient::allTypeLabels();
 
-    mCombo = new RecipientComboBox( this );
-    mCombo->addItems( recipientTypes );
-    topLayout->addWidget( mCombo );
-    mCombo->setToolTip( i18nc("@label:listbox","Select type of recipient") );
-    mEdit = new RecipientLineEdit( this );
-    mEdit->setToolTip( i18n( "Set the list of email addresses to receive this message" ) );
-    mEdit->setClearButtonEnabled( true );
-    topLayout->addWidget( mEdit );
+    mCombo = new RecipientComboBox(this);
+    mCombo->addItems(recipientTypes);
+    topLayout->addWidget(mCombo);
+    mCombo->setToolTip(i18nc("@label:listbox", "Select type of recipient"));
+    mEdit = new RecipientLineEdit(this);
+    mEdit->setToolTip(i18n("Set the list of email addresses to receive this message"));
+    mEdit->setClearButtonEnabled(true);
+    topLayout->addWidget(mEdit);
 
     connect(mEdit, &RecipientLineEdit::returnPressed, this, &RecipientLineNG::slotReturnPressed);
     connect(mEdit, &RecipientLineEdit::deleteMe, this, &RecipientLineNG::slotPropagateDeletion);
-    connect( mEdit, SIGNAL(textChanged(QString)),
-             SLOT(analyzeLine(QString)) );
+    connect(mEdit, SIGNAL(textChanged(QString)),
+            SLOT(analyzeLine(QString)));
     connect(mEdit, &RecipientLineEdit::focusUp, this, &RecipientLineNG::slotFocusUp);
     connect(mEdit, &RecipientLineEdit::focusDown, this, &RecipientLineNG::slotFocusDown);
     connect(mEdit, &RecipientLineEdit::rightPressed, this, &RecipientLineNG::rightPressed);
 
-    connect( mEdit, SIGNAL(leftPressed()), mCombo, SLOT(setFocus()) );
+    connect(mEdit, SIGNAL(leftPressed()), mCombo, SLOT(setFocus()));
     connect(mEdit, &RecipientLineEdit::editingFinished, this, &RecipientLineNG::slotEditingFinished);
     connect(mEdit, &RecipientLineEdit::clearButtonClicked, this, &RecipientLineNG::slotPropagateDeletion);
-    connect( mCombo, SIGNAL(rightPressed()), mEdit, SLOT(setFocus()) );
+    connect(mCombo, SIGNAL(rightPressed()), mEdit, SLOT(setFocus()));
 
-    connect( mCombo, SIGNAL(activated(int)),
-             this, SLOT(slotTypeModified()) );
+    connect(mCombo, SIGNAL(activated(int)),
+            this, SLOT(slotTypeModified()));
 }
 
 void RecipientLineNG::slotEditingFinished()
 {
-    if ( mEdit->text().isEmpty() ) {
-        emit deleteLine( this );
+    if (mEdit->text().isEmpty()) {
+        emit deleteLine(this);
     }
 }
 
@@ -113,13 +115,13 @@ void RecipientLineNG::slotTypeModified()
 {
     mModified = true;
 
-    emit typeModified( this );
+    emit typeModified(this);
 }
 
-void RecipientLineNG::analyzeLine( const QString &text )
+void RecipientLineNG::analyzeLine(const QString &text)
 {
-    const QStringList r = KPIMUtils::splitAddressList( text );
-    if ( int( r.count() ) != mRecipientsCount ) {
+    const QStringList r = KPIMUtils::splitAddressList(text);
+    if (int(r.count()) != mRecipientsCount) {
         mRecipientsCount = r.count();
     }
     mModified = true;
@@ -131,11 +133,12 @@ int RecipientLineNG::recipientsCount() const
     return mRecipientsCount;
 }
 
-void RecipientLineNG::setData( const MultiplyingLineData::Ptr &data )
+void RecipientLineNG::setData(const MultiplyingLineData::Ptr &data)
 {
-    Recipient::Ptr rec = qSharedPointerDynamicCast<Recipient>( data );
-    if( !rec )
+    Recipient::Ptr rec = qSharedPointerDynamicCast<Recipient>(data);
+    if (!rec) {
         return;
+    }
     //TODO laurent: mem leak ????? mData(new Recipient) in constructor, never deleted.
     mData = rec;
     fieldsFromData();
@@ -143,26 +146,29 @@ void RecipientLineNG::setData( const MultiplyingLineData::Ptr &data )
 
 MultiplyingLineData::Ptr RecipientLineNG::data() const
 {
-    if( isModified() )
-        const_cast<RecipientLineNG*>(this)->dataFromFields();
+    if (isModified()) {
+        const_cast<RecipientLineNG *>(this)->dataFromFields();
+    }
     return mData;
 }
 
 void RecipientLineNG::dataFromFields()
 {
-    if( !mData )
+    if (!mData) {
         return;
-    mData->setEmail(  mEdit->text() );
-    mData->setType( Recipient::idToType( mCombo->currentIndex() ) );
+    }
+    mData->setEmail(mEdit->text());
+    mData->setType(Recipient::idToType(mCombo->currentIndex()));
     mModified = false;
 }
 
 void RecipientLineNG::fieldsFromData()
 {
-    if( !mData )
+    if (!mData) {
         return;
-    mCombo->setCurrentIndex( Recipient::typeToId( mData->type() ) );
-    mEdit->setText( mData->email() );
+    }
+    mCombo->setCurrentIndex(Recipient::typeToId(mData->type()));
+    mEdit->setText(mData->email());
 }
 
 void RecipientLineNG::activate()
@@ -188,25 +194,25 @@ bool RecipientLineNG::isModified() const
 void RecipientLineNG::clearModified()
 {
     mModified = false;
-    mEdit->setModified( false );
+    mEdit->setModified(false);
 }
 
-int RecipientLineNG::setColumnWidth( int w )
+int RecipientLineNG::setColumnWidth(int w)
 {
-    w = qMax( w, mCombo->sizeHint().width() );
-    mCombo->setFixedWidth( w );
+    w = qMax(w, mCombo->sizeHint().width());
+    mCombo->setFixedWidth(w);
     mCombo->updateGeometry();
     parentWidget()->updateGeometry();
     return w;
 }
 
-void RecipientLineNG::fixTabOrder( QWidget *previous )
+void RecipientLineNG::fixTabOrder(QWidget *previous)
 {
-    setTabOrder( previous, mCombo );
-    setTabOrder( mCombo, mEdit );
+    setTabOrder(previous, mCombo);
+    setTabOrder(mCombo, mEdit);
 }
 
-QWidget* RecipientLineNG::tabOut() const
+QWidget *RecipientLineNG::tabOut() const
 {
     return mEdit;
 }
@@ -218,8 +224,8 @@ void RecipientLineNG::clear()
 
 void RecipientLineNG::moveCompletionPopup()
 {
-    if ( mEdit->completionBox( false ) ) {
-        if ( mEdit->completionBox()->isVisible() ) {
+    if (mEdit->completionBox(false)) {
+        if (mEdit->completionBox()->isVisible()) {
             // ### trigger moving, is there a nicer way to do that?
             mEdit->completionBox()->hide();
             mEdit->completionBox()->show();
@@ -227,30 +233,29 @@ void RecipientLineNG::moveCompletionPopup()
     }
 }
 
-void RecipientLineNG::setCompletionMode( KCompletion::CompletionMode mode )
+void RecipientLineNG::setCompletionMode(KCompletion::CompletionMode mode)
 {
-    mEdit->setCompletionMode( mode );
+    mEdit->setCompletionMode(mode);
 }
 
 Recipient::Type RecipientLineNG::recipientType() const
 {
-    return Recipient::idToType( mCombo->currentIndex() );
+    return Recipient::idToType(mCombo->currentIndex());
 }
 
-void RecipientLineNG::setRecipientType( Recipient::Type type )
+void RecipientLineNG::setRecipientType(Recipient::Type type)
 {
-    mCombo->setCurrentIndex( Recipient::typeToId( type ) );
+    mCombo->setCurrentIndex(Recipient::typeToId(type));
     slotTypeModified();
 }
 
-void RecipientLineNG::setRecentAddressConfig( KConfig* config )
+void RecipientLineNG::setRecentAddressConfig(KConfig *config)
 {
-    mEdit->setRecentAddressConfig( config );
+    mEdit->setRecentAddressConfig(config);
 }
 
 Recipient::Ptr RecipientLineNG::recipient() const
 {
-    return qSharedPointerDynamicCast<Recipient>( data() );
+    return qSharedPointerDynamicCast<Recipient>(data());
 }
-
 

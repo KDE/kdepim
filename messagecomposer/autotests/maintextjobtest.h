@@ -24,8 +24,8 @@
 
 class MainTextJobTest : public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     // "text/plain" tests:
     void testPlainText();
     void testWrappingErrors();

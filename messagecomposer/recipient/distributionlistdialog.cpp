@@ -19,7 +19,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-
 #include "distributionlistdialog.h"
 
 #include <AkonadiWidgets/collectiondialog.h>
@@ -47,28 +46,29 @@
 
 using namespace MessageComposer;
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class DistributionListItem : public QTreeWidgetItem
 {
 public:
-    DistributionListItem( QTreeWidget *tree )
-        : QTreeWidgetItem( tree )
+    DistributionListItem(QTreeWidget *tree)
+        : QTreeWidgetItem(tree)
     {
-        setFlags( flags() | Qt::ItemIsUserCheckable );
+        setFlags(flags() | Qt::ItemIsUserCheckable);
     }
 
-    void setAddressee( const KABC::Addressee &a, const QString &email )
+    void setAddressee(const KABC::Addressee &a, const QString &email)
     {
-        init( a, email );
+        init(a, email);
     }
 
-    void init( const KABC::Addressee &a, const QString &email )
+    void init(const KABC::Addressee &a, const QString &email)
     {
         mAddressee = a;
         mEmail = email;
         mId = -1;
-        setText( 0, mAddressee.realName() );
-        setText( 1, mEmail );
+        setText(0, mAddressee.realName());
+        setText(1, mEmail);
     }
 
     KABC::Addressee addressee() const
@@ -86,7 +86,7 @@ public:
         return mId == -1;
     }
 
-    void setId( Akonadi::Entity::Id id )
+    void setId(Akonadi::Entity::Id id)
     {
         mId = id;
     }
@@ -103,12 +103,11 @@ private:
 };
 }
 
-
-DistributionListDialog::DistributionListDialog( QWidget *parent )
-    : QDialog( parent )
+DistributionListDialog::DistributionListDialog(QWidget *parent)
+    : QDialog(parent)
 {
-    QFrame *topFrame = new QFrame( this );
-    setWindowTitle( i18nc("@title:window", "Save Distribution List") );
+    QFrame *topFrame = new QFrame(this);
+    setWindowTitle(i18nc("@title:window", "Save Distribution List"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -120,35 +119,35 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
     //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     mUser1Button->setDefault(true);
-    setModal( false );
-    mUser1Button->setText(i18nc("@action:button","Save List"));
+    setModal(false);
+    mUser1Button->setText(i18nc("@action:button", "Save List"));
     mUser1Button->setEnabled(false);
 
-    QBoxLayout *topLayout = new QVBoxLayout( topFrame );
+    QBoxLayout *topLayout = new QVBoxLayout(topFrame);
     //PORT QT5 topLayout->setSpacing( spacingHint() );
 
     QBoxLayout *titleLayout = new QHBoxLayout();
     //PORT QT5 titleLayout->setSpacing( spacingHint() );
-    topLayout->addItem( titleLayout );
+    topLayout->addItem(titleLayout);
 
     QLabel *label = new QLabel(
-                i18nc("@label:textbox Name of the distribution list.", "&Name:"), topFrame );
-    titleLayout->addWidget( label );
+        i18nc("@label:textbox Name of the distribution list.", "&Name:"), topFrame);
+    titleLayout->addWidget(label);
 
-    mTitleEdit = new QLineEdit( topFrame );
-    titleLayout->addWidget( mTitleEdit );
+    mTitleEdit = new QLineEdit(topFrame);
+    titleLayout->addWidget(mTitleEdit);
     mTitleEdit->setFocus();
-    mTitleEdit->setClearButtonEnabled( true );
-    label->setBuddy( mTitleEdit );
+    mTitleEdit->setClearButtonEnabled(true);
+    label->setBuddy(mTitleEdit);
 
-    mRecipientsList = new QTreeWidget( topFrame );
+    mRecipientsList = new QTreeWidget(topFrame);
     mRecipientsList->setHeaderLabels(
-                QStringList() << i18nc( "@title:column Name of the recipient","Name" )
-                << i18nc( "@title:column Email of the recipient", "Email" )
-                );
-    mRecipientsList->setRootIsDecorated( false );
+        QStringList() << i18nc("@title:column Name of the recipient", "Name")
+        << i18nc("@title:column Email of the recipient", "Email")
+    );
+    mRecipientsList->setRootIsDecorated(false);
     mRecipientsList->header()->setMovable(false);
-    topLayout->addWidget( mRecipientsList );
+    topLayout->addWidget(mRecipientsList);
     connect(mUser1Button, &QPushButton::clicked, this, &DistributionListDialog::slotUser1);
     connect(mTitleEdit, &QLineEdit::textChanged, this, &DistributionListDialog::slotTitleChanged);
     readConfig();
@@ -160,21 +159,21 @@ DistributionListDialog::~DistributionListDialog()
 }
 
 // This starts one ContactSearchJob for each of the specified recipients.
-void DistributionListDialog::setRecipients( const Recipient::List &recipients )
+void DistributionListDialog::setRecipients(const Recipient::List &recipients)
 {
-    Recipient::List::ConstIterator end( recipients.constEnd() );
-    for( Recipient::List::ConstIterator it = recipients.constBegin(); it != end; ++it ) {
-        const QStringList emails = KPIMUtils::splitAddressList( (*it)->email() );
-        QStringList::ConstIterator end2( emails.constEnd() );
-        for( QStringList::ConstIterator it2 = emails.constBegin(); it2 != end2; ++it2 ) {
+    Recipient::List::ConstIterator end(recipients.constEnd());
+    for (Recipient::List::ConstIterator it = recipients.constBegin(); it != end; ++it) {
+        const QStringList emails = KPIMUtils::splitAddressList((*it)->email());
+        QStringList::ConstIterator end2(emails.constEnd());
+        for (QStringList::ConstIterator it2 = emails.constBegin(); it2 != end2; ++it2) {
             QString name;
             QString email;
-            KABC::Addressee::parseEmailAddress( *it2, name, email );
-            if ( !email.isEmpty() ) {
+            KABC::Addressee::parseEmailAddress(*it2, name, email);
+            if (!email.isEmpty()) {
                 Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob(this);
-                job->setQuery( Akonadi::ContactSearchJob::Email, email.toLower(), Akonadi::ContactSearchJob::ExactMatch );
-                job->setProperty( "name", name );
-                job->setProperty( "email", email );
+                job->setQuery(Akonadi::ContactSearchJob::Email, email.toLower(), Akonadi::ContactSearchJob::ExactMatch);
+                job->setProperty("name", name);
+                job->setProperty("email", email);
                 connect(job, &Akonadi::ContactSearchJob::result, this, &DistributionListDialog::slotDelayedSetRecipients);
             }
         }
@@ -184,53 +183,53 @@ void DistributionListDialog::setRecipients( const Recipient::List &recipients )
 // This result slot will be called once for each of the original recipients.
 // There could potentially be more than one Akonadi item returned per
 // recipient, in the case where email addresses are duplicated between contacts.
-void DistributionListDialog::slotDelayedSetRecipients( KJob *job )
+void DistributionListDialog::slotDelayedSetRecipients(KJob *job)
 {
-    const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
+    const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob *>(job);
     const Akonadi::Item::List akItems = searchJob->items();
 
-    const QString email = searchJob->property( "email" ).toString();
-    QString name = searchJob->property( "name" ).toString();
-    if ( name.isEmpty() ) {
-        const int index = email.indexOf( QLatin1Char( '@' ) );
-        if ( index != -1 ) {
-            name = email.left( index );
+    const QString email = searchJob->property("email").toString();
+    QString name = searchJob->property("name").toString();
+    if (name.isEmpty()) {
+        const int index = email.indexOf(QLatin1Char('@'));
+        if (index != -1) {
+            name = email.left(index);
         } else {
             name = email;
         }
     }
 
-    if ( akItems.isEmpty() ) {
+    if (akItems.isEmpty()) {
         KABC::Addressee contact;
-        contact.setNameFromString( name );
-        contact.insertEmail( email );
+        contact.setNameFromString(name);
+        contact.insertEmail(email);
 
-        DistributionListItem *item = new DistributionListItem( mRecipientsList );
-        item->setAddressee( contact, email );
-        item->setCheckState( 0, Qt::Checked );
+        DistributionListItem *item = new DistributionListItem(mRecipientsList);
+        item->setAddressee(contact, email);
+        item->setCheckState(0, Qt::Checked);
     } else {
         bool isFirst = true;
-        foreach ( const Akonadi::Item &akItem, akItems ) {
-            if ( akItem.hasPayload<KABC::Addressee>() ) {
+        foreach (const Akonadi::Item &akItem, akItems) {
+            if (akItem.hasPayload<KABC::Addressee>()) {
                 const KABC::Addressee contact = akItem.payload<KABC::Addressee>();
 
-                DistributionListItem *item = new DistributionListItem( mRecipientsList );
-                item->setAddressee( contact, email );
+                DistributionListItem *item = new DistributionListItem(mRecipientsList);
+                item->setAddressee(contact, email);
 
                 // Need to record the Akonadi ID of the contact, so that
                 // it can be added as a reference later.  Setting an ID
                 // makes the item non-transient.
-                item->setId( akItem.id() );
+                item->setId(akItem.id());
 
                 // If there were multiple contacts returned for an email address,
                 // then check the first one and uncheck any subsequent ones.
-                if ( isFirst ) {
-                    item->setCheckState( 0, Qt::Checked );
+                if (isFirst) {
+                    item->setCheckState(0, Qt::Checked);
                     isFirst = false;
                 } else {
                     // Need this to create an unchecked item, as otherwise the
                     // item will have no checkbox at all.
-                    item->setCheckState( 0, Qt::Unchecked );
+                    item->setCheckState(0, Qt::Unchecked);
                 }
             }
         }
@@ -240,102 +239,103 @@ void DistributionListDialog::slotDelayedSetRecipients( KJob *job )
 void DistributionListDialog::slotUser1()
 {
     bool isEmpty = true;
-    const int numberOfTopLevel( mRecipientsList->topLevelItemCount() );
+    const int numberOfTopLevel(mRecipientsList->topLevelItemCount());
     for (int i = 0; i < numberOfTopLevel; ++i) {
         DistributionListItem *item = static_cast<DistributionListItem *>(
-                    mRecipientsList->topLevelItem( i ));
-        if ( item && item->checkState( 0 ) == Qt::Checked ) {
+                                         mRecipientsList->topLevelItem(i));
+        if (item && item->checkState(0) == Qt::Checked) {
             isEmpty = false;
             break;
         }
     }
 
-    if ( isEmpty ) {
-        KMessageBox::information( this,
-                                  i18nc("@info", "There are no recipients in your list. "
-                                        "First select some recipients, "
-                                        "then try again.") );
+    if (isEmpty) {
+        KMessageBox::information(this,
+                                 i18nc("@info", "There are no recipients in your list. "
+                                       "First select some recipients, "
+                                       "then try again."));
         return;
     }
 
     QString name = mTitleEdit->text();
 
-    if ( name.isEmpty() ) {
+    if (name.isEmpty()) {
         bool ok = false;
-        name = QInputDialog::getText( this, i18nc("@title:window","New Distribution List"),
-                                      i18nc("@label:textbox","Please enter name:"), QLineEdit::Normal, QString(), &ok );
-        if ( !ok || name.isEmpty() )
+        name = QInputDialog::getText(this, i18nc("@title:window", "New Distribution List"),
+                                     i18nc("@label:textbox", "Please enter name:"), QLineEdit::Normal, QString(), &ok);
+        if (!ok || name.isEmpty()) {
             return;
+        }
     }
 
     Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
-    job->setQuery( Akonadi::ContactGroupSearchJob::Name, name );
-    job->setProperty( "name", name );
+    job->setQuery(Akonadi::ContactGroupSearchJob::Name, name);
+    job->setProperty("name", name);
     connect(job, &Akonadi::ContactSearchJob::result, this, &DistributionListDialog::slotDelayedUser1);
 }
 
-void DistributionListDialog::slotDelayedUser1( KJob *job )
+void DistributionListDialog::slotDelayedUser1(KJob *job)
 {
-    const Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
-    const QString name = searchJob->property( "name" ).toString();
+    const Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob *>(job);
+    const QString name = searchJob->property("name").toString();
 
-    if ( !searchJob->contactGroups().isEmpty() ) {
-        KMessageBox::information( this,
-                                  xi18nc( "@info", "<para>Distribution list with the given name <resource>%1</resource> "
-                                         "already exists. Please select a different name.</para>", name ) );
+    if (!searchJob->contactGroups().isEmpty()) {
+        KMessageBox::information(this,
+                                 xi18nc("@info", "<para>Distribution list with the given name <resource>%1</resource> "
+                                        "already exists. Please select a different name.</para>", name));
         return;
     }
 
     QPointer<Akonadi::CollectionDialog> dlg =
-            new Akonadi::CollectionDialog( Akonadi::CollectionDialog::KeepTreeExpanded, 0, this );
-    dlg->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType()
-                            << KABC::ContactGroup::mimeType() );
-    dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    dlg->setWindowTitle( i18nc( "@title:window", "Select Address Book" ) );
-    dlg->setDescription( i18n( "Select the address book folder to store the contact group in:" ) );
-    if ( dlg->exec() ) {
+        new Akonadi::CollectionDialog(Akonadi::CollectionDialog::KeepTreeExpanded, 0, this);
+    dlg->setMimeTypeFilter(QStringList() << KABC::Addressee::mimeType()
+                           << KABC::ContactGroup::mimeType());
+    dlg->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+    dlg->setWindowTitle(i18nc("@title:window", "Select Address Book"));
+    dlg->setDescription(i18n("Select the address book folder to store the contact group in:"));
+    if (dlg->exec()) {
         const Akonadi::Collection targetCollection = dlg->selectedCollection();
         delete dlg;
 
-        KABC::ContactGroup group( name );
-        const int numberOfTopLevel( mRecipientsList->topLevelItemCount() );
-        for ( int i = 0; i < numberOfTopLevel; ++i ) {
-            DistributionListItem *item = static_cast<DistributionListItem *>( mRecipientsList->topLevelItem( i ) );
-            if ( item && item->checkState( 0 ) == Qt::Checked ) {
+        KABC::ContactGroup group(name);
+        const int numberOfTopLevel(mRecipientsList->topLevelItemCount());
+        for (int i = 0; i < numberOfTopLevel; ++i) {
+            DistributionListItem *item = static_cast<DistributionListItem *>(mRecipientsList->topLevelItem(i));
+            if (item && item->checkState(0) == Qt::Checked) {
                 qDebug() << item->addressee().fullEmail() << item->addressee().uid();
-                if ( item->isTransient() ) {
-                    group.append( KABC::ContactGroup::Data( item->addressee().realName(), item->email() ) );
+                if (item->isTransient()) {
+                    group.append(KABC::ContactGroup::Data(item->addressee().realName(), item->email()));
                 } else {
-                    KABC::ContactGroup::ContactReference reference( QString::number( item->id() ) );
-                    if ( item->email() != item->addressee().preferredEmail() ) {
-                        reference.setPreferredEmail( item->email() );
+                    KABC::ContactGroup::ContactReference reference(QString::number(item->id()));
+                    if (item->email() != item->addressee().preferredEmail()) {
+                        reference.setPreferredEmail(item->email());
                     }
-                    group.append( reference );
+                    group.append(reference);
                 }
             }
         }
 
-        Akonadi::Item groupItem( KABC::ContactGroup::mimeType() );
-        groupItem.setPayload<KABC::ContactGroup>( group );
+        Akonadi::Item groupItem(KABC::ContactGroup::mimeType());
+        groupItem.setPayload<KABC::ContactGroup>(group);
 
-        Akonadi::Job *createJob = new Akonadi::ItemCreateJob( groupItem, targetCollection );
+        Akonadi::Job *createJob = new Akonadi::ItemCreateJob(groupItem, targetCollection);
         connect(createJob, &Akonadi::ItemCreateJob::result, this, &DistributionListDialog::slotContactGroupCreateJobResult);
     }
 
     delete dlg;
 }
 
-void DistributionListDialog::slotContactGroupCreateJobResult( KJob *job )
+void DistributionListDialog::slotContactGroupCreateJobResult(KJob *job)
 {
-    if ( job->error() ) {
-        KMessageBox::information( this, i18n("Unable to create distribution list: %1", job->errorString() ));
+    if (job->error()) {
+        KMessageBox::information(this, i18n("Unable to create distribution list: %1", job->errorString()));
         qWarning() << "Unable to create distribution list:" << job->errorText();
     } else {
         accept();
     }
 }
 
-void DistributionListDialog::slotTitleChanged( const QString& text )
+void DistributionListDialog::slotTitleChanged(const QString &text)
 {
     mUser1Button->setEnabled(!text.trimmed().isEmpty());
 }
@@ -343,10 +343,10 @@ void DistributionListDialog::slotTitleChanged( const QString& text )
 void DistributionListDialog::readConfig()
 {
     KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
-    KConfigGroup group( cfg, "DistributionListDialog" );
-    const QSize size = group.readEntry( "Size", QSize() );
-    if ( !size.isEmpty() ) {
-        resize( size );
+    KConfigGroup group(cfg, "DistributionListDialog");
+    const QSize size = group.readEntry("Size", QSize());
+    if (!size.isEmpty()) {
+        resize(size);
     }
     mRecipientsList->header()->restoreState(group.readEntry("Header", QByteArray()));
 }
@@ -354,9 +354,8 @@ void DistributionListDialog::readConfig()
 void DistributionListDialog::writeConfig()
 {
     KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
-    KConfigGroup group( cfg, "DistributionListDialog" );
-    group.writeEntry( "Size", size() );
-    group.writeEntry( "Header", mRecipientsList->header()->saveState() );
+    KConfigGroup group(cfg, "DistributionListDialog");
+    group.writeEntry("Size", size());
+    group.writeEntry("Header", mRecipientsList->header()->saveState());
 }
-
 

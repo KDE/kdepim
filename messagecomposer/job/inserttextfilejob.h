@@ -28,11 +28,13 @@
 
 class QTextEdit;
 
-namespace KIO {
+namespace KIO
+{
 class Job;
 }
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 /**
  * A job that downloads a given URL, interprets the result as a text file with the
@@ -43,17 +45,17 @@ class MESSAGECOMPOSER_EXPORT InsertTextFileJob : public KJob
     Q_OBJECT
 
 public:
-    InsertTextFileJob( QTextEdit *editor, const KUrl &url );
+    InsertTextFileJob(QTextEdit *editor, const KUrl &url);
     ~InsertTextFileJob();
 
-    void setEncoding( const QString &encoding );
+    void setEncoding(const QString &encoding);
 
     virtual void start();
 
 private slots:
 
-    void slotGetJobFinished( KJob *job );
-    void slotFileData( KIO::Job *job, const QByteArray &data );
+    void slotGetJobFinished(KJob *job);
+    void slotFileData(KIO::Job *job, const QByteArray &data);
 
 private:
 

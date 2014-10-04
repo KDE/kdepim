@@ -39,9 +39,9 @@ public:
     KMime::Headers::Base::List extraHeaders;
 };
 
-InfoPart::InfoPart( QObject *parent )
-    : MessagePart( parent )
-    , d( new Private )
+InfoPart::InfoPart(QObject *parent)
+    : MessagePart(parent)
+    , d(new Private)
 {
     d->transportId = 0;
     d->urgent = false;
@@ -57,7 +57,7 @@ QString InfoPart::from() const
     return d->from;
 }
 
-void InfoPart::setFrom( const QString &from )
+void InfoPart::setFrom(const QString &from)
 {
     d->from = from;
 }
@@ -67,7 +67,7 @@ QStringList InfoPart::to() const
     return d->to;
 }
 
-void InfoPart::setTo( const QStringList &to )
+void InfoPart::setTo(const QStringList &to)
 {
     d->to = to;
 }
@@ -77,7 +77,7 @@ QStringList InfoPart::cc() const
     return d->cc;
 }
 
-void InfoPart::setCc( const QStringList &cc )
+void InfoPart::setCc(const QStringList &cc)
 {
     d->cc = cc;
 }
@@ -87,7 +87,7 @@ QStringList InfoPart::bcc() const
     return d->bcc;
 }
 
-void InfoPart::setBcc( const QStringList &bcc )
+void InfoPart::setBcc(const QStringList &bcc)
 {
     d->bcc = bcc;
 }
@@ -97,7 +97,7 @@ QString InfoPart::subject() const
     return d->subject;
 }
 
-void InfoPart::setSubject( const QString &subject )
+void InfoPart::setSubject(const QString &subject)
 {
     d->subject = subject;
 }
@@ -107,23 +107,22 @@ QString InfoPart::replyTo() const
     return d->replyTo;
 }
 
-void InfoPart::setReplyTo(const QString& replyTo)
+void InfoPart::setReplyTo(const QString &replyTo)
 {
     d->replyTo = replyTo;
 }
-
 
 int InfoPart::transportId() const
 {
     return d->transportId;
 }
 
-void InfoPart::setTransportId( int tid )
+void InfoPart::setTransportId(int tid)
 {
     d->transportId = tid;
 }
 
-void InfoPart::setFcc( const QString &fcc )
+void InfoPart::setFcc(const QString &fcc)
 {
     d->fcc = fcc;
 }
@@ -138,7 +137,7 @@ bool InfoPart::urgent() const
     return d->urgent;
 }
 
-void InfoPart::setUrgent( bool urgent )
+void InfoPart::setUrgent(bool urgent)
 {
     d->urgent = urgent;
 }
@@ -148,7 +147,7 @@ QString InfoPart::inReplyTo() const
     return d->inReplyTo;
 }
 
-void InfoPart::setInReplyTo( const QString& inReplyTo )
+void InfoPart::setInReplyTo(const QString &inReplyTo)
 {
     d->inReplyTo = inReplyTo;
 }
@@ -158,12 +157,12 @@ QString InfoPart::references() const
     return d->references;
 }
 
-void InfoPart::setReferences( const QString& references )
+void InfoPart::setReferences(const QString &references)
 {
     d->references = references;
 }
 
-void InfoPart::setExtraHeaders( KMime::Headers::Base::List headers )
+void InfoPart::setExtraHeaders(KMime::Headers::Base::List headers)
 {
     d->extraHeaders = headers;
 }
@@ -178,7 +177,7 @@ QString InfoPart::userAgent() const
     return d->userAgent;
 }
 
-void InfoPart::setUserAgent ( const QString& userAgent )
+void InfoPart::setUserAgent(const QString &userAgent)
 {
     d->userAgent = userAgent;
 }

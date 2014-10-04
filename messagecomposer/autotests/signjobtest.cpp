@@ -41,136 +41,136 @@
 
 #include <stdlib.h>
 
-QTEST_MAIN( SignJobTest )
+QTEST_MAIN(SignJobTest)
 
 void SignJobTest::initTestCase()
 {
-  MessageCore::Test::setupEnv();
+    MessageCore::Test::setupEnv();
 }
 
-void SignJobTest::testContentDirect() {
+void SignJobTest::testContentDirect()
+{
 
-  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  MessageComposer::Composer *composer = new MessageComposer::Composer;
-  MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
+    MessageComposer::Composer *composer = new MessageComposer::Composer;
+    MessageComposer::SignJob *sJob = new MessageComposer::SignJob(composer);
 
-  QVERIFY( composer );
-  QVERIFY( sJob );
+    QVERIFY(composer);
+    QVERIFY(sJob);
 
-  QByteArray data( QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8() );
-  KMime::Content* content = new KMime::Content;
-  content->setBody( data );
+    QByteArray data(QString::fromLocal8Bit("one flew over the cuckoo's nest").toUtf8());
+    KMime::Content *content = new KMime::Content;
+    content->setBody(data);
 
-  sJob->setContent( content );
-  sJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
-  sJob->setSigningKeys( keys );
+    sJob->setContent(content);
+    sJob->setCryptoMessageFormat(Kleo::OpenPGPMIMEFormat);
+    sJob->setSigningKeys(keys);
 
-  checkSignJob( sJob );
+    checkSignJob(sJob);
 }
 
 void SignJobTest::testContentChained()
 {
-  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  QByteArray data( QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8() );
-  KMime::Content* content = new KMime::Content;
-  content->setBody( data );
+    QByteArray data(QString::fromLocal8Bit("one flew over the cuckoo's nest").toUtf8());
+    KMime::Content *content = new KMime::Content;
+    content->setBody(data);
 
-  MessageComposer::TransparentJob* tJob =  new MessageComposer::TransparentJob;
-  tJob->setContent( content );
+    MessageComposer::TransparentJob *tJob =  new MessageComposer::TransparentJob;
+    tJob->setContent(content);
 
-  MessageComposer::Composer *composer = new MessageComposer::Composer;
-  MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
+    MessageComposer::Composer *composer = new MessageComposer::Composer;
+    MessageComposer::SignJob *sJob = new MessageComposer::SignJob(composer);
 
-  sJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
-  sJob->setSigningKeys( keys );
+    sJob->setCryptoMessageFormat(Kleo::OpenPGPMIMEFormat);
+    sJob->setSigningKeys(keys);
 
-  sJob->appendSubjob( tJob );
+    sJob->appendSubjob(tJob);
 
-  checkSignJob( sJob );
+    checkSignJob(sJob);
 }
-
 
 void SignJobTest::testHeaders()
 {
-  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  MessageComposer::Composer *composer = new MessageComposer::Composer;
-  MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
+    MessageComposer::Composer *composer = new MessageComposer::Composer;
+    MessageComposer::SignJob *sJob = new MessageComposer::SignJob(composer);
 
-  QVERIFY( composer );
-  QVERIFY( sJob );
+    QVERIFY(composer);
+    QVERIFY(sJob);
 
-  QByteArray data( QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8() );
-  KMime::Content* content = new KMime::Content;
-  content->setBody( data );
+    QByteArray data(QString::fromLocal8Bit("one flew over the cuckoo's nest").toUtf8());
+    KMime::Content *content = new KMime::Content;
+    content->setBody(data);
 
-  sJob->setContent( content );
-  sJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
-  sJob->setSigningKeys( keys );
+    sJob->setContent(content);
+    sJob->setCryptoMessageFormat(Kleo::OpenPGPMIMEFormat);
+    sJob->setSigningKeys(keys);
 
-  VERIFYEXEC( sJob );
+    VERIFYEXEC(sJob);
 
-  QByteArray mimeType( "multipart/signed" );
-  QByteArray charset( "ISO-8859-1" );
+    QByteArray mimeType("multipart/signed");
+    QByteArray charset("ISO-8859-1");
 
-  KMime::Content *result = sJob->content();
-  result->assemble();
-  qDebug() << result->encodedContent();
+    KMime::Content *result = sJob->content();
+    result->assemble();
+    qDebug() << result->encodedContent();
 
-  QVERIFY( result->contentType( false ) );
-  QCOMPARE( result->contentType()->mimeType(), mimeType );
-  QCOMPARE( result->contentType()->charset(), charset );
-  QCOMPARE( result->contentType()->parameter( QString::fromLocal8Bit( "micalg" ) ), QString::fromLocal8Bit( "pgp-sha1" ) );
-  QCOMPARE( result->contentType()->parameter( QString::fromLocal8Bit( "protocol" ) ), QString::fromLocal8Bit( "application/pgp-signature" ) );
-  QCOMPARE( result->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit );
+    QVERIFY(result->contentType(false));
+    QCOMPARE(result->contentType()->mimeType(), mimeType);
+    QCOMPARE(result->contentType()->charset(), charset);
+    QCOMPARE(result->contentType()->parameter(QString::fromLocal8Bit("micalg")), QString::fromLocal8Bit("pgp-sha1"));
+    QCOMPARE(result->contentType()->parameter(QString::fromLocal8Bit("protocol")), QString::fromLocal8Bit("application/pgp-signature"));
+    QCOMPARE(result->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit);
 }
 
 void SignJobTest::testRecommentationRFC3156()
 {
-  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  QString data = QString::fromUtf8( "=2D Magic foo\nFrom test\n\n-- quaak\nOhno");
-  KMime::Headers::contentEncoding cte = KMime::Headers::CEquPr;
+    QString data = QString::fromUtf8("=2D Magic foo\nFrom test\n\n-- quaak\nOhno");
+    KMime::Headers::contentEncoding cte = KMime::Headers::CEquPr;
 
-  MessageComposer::Composer *composer = new MessageComposer::Composer;
-  MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
+    MessageComposer::Composer *composer = new MessageComposer::Composer;
+    MessageComposer::SignJob *sJob = new MessageComposer::SignJob(composer);
 
-  QVERIFY( composer );
-  QVERIFY( sJob );
+    QVERIFY(composer);
+    QVERIFY(sJob);
 
-  KMime::Content* content = new KMime::Content;
-  content->setBody( data.toUtf8() );
+    KMime::Content *content = new KMime::Content;
+    content->setBody(data.toUtf8());
 
-  sJob->setContent( content );
-  sJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
-  sJob->setSigningKeys( keys );
+    sJob->setContent(content);
+    sJob->setCryptoMessageFormat(Kleo::OpenPGPMIMEFormat);
+    sJob->setSigningKeys(keys);
 
-  VERIFYEXEC( sJob );
+    VERIFYEXEC(sJob);
 
-  KMime::Content *result = sJob->content();
-  result->assemble();
-  qDebug() << result->encodedContent();
+    KMime::Content *result = sJob->content();
+    result->assemble();
+    qDebug() << result->encodedContent();
 
-  QByteArray body = MessageCore::NodeHelper::firstChild( result )->body();
-  QCOMPARE( QString::fromUtf8( body ),
-      QString::fromUtf8( "=3D2D Magic foo\nFrom=20test\n\n=2D- quaak\nOhno" ) );
+    QByteArray body = MessageCore::NodeHelper::firstChild(result)->body();
+    QCOMPARE(QString::fromUtf8(body),
+             QString::fromUtf8("=3D2D Magic foo\nFrom=20test\n\n=2D- quaak\nOhno"));
 
-  ComposerTestUtil::verify( true, false, result, data.toUtf8(),
-           Kleo::OpenPGPMIMEFormat, cte );
+    ComposerTestUtil::verify(true, false, result, data.toUtf8(),
+                             Kleo::OpenPGPMIMEFormat, cte);
 
 }
 
-void SignJobTest::checkSignJob( MessageComposer::SignJob* sJob )
+void SignJobTest::checkSignJob(MessageComposer::SignJob *sJob)
 {
 
-  VERIFYEXEC( sJob );
+    VERIFYEXEC(sJob);
 
-  KMime::Content* result = sJob->content();
-  Q_ASSERT( result );
-  result->assemble();
+    KMime::Content *result = sJob->content();
+    Q_ASSERT(result);
+    result->assemble();
 
-  ComposerTestUtil::verifySignature( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat, KMime::Headers::CE7Bit );
+    ComposerTestUtil::verifySignature(result, QString::fromLocal8Bit("one flew over the cuckoo's nest").toUtf8(), Kleo::OpenPGPMIMEFormat, KMime::Headers::CE7Bit);
 }
 

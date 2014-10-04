@@ -28,8 +28,8 @@
 
 using namespace MessageComposer;
 
-InsertTextFileJob::InsertTextFileJob( QTextEdit *editor, const KUrl &url )
-    : KJob( editor ), mEditor( editor ), mUrl( url )
+InsertTextFileJob::InsertTextFileJob(QTextEdit *editor, const KUrl &url)
+    : KJob(editor), mEditor(editor), mUrl(url)
 {
 }
 
@@ -37,29 +37,29 @@ InsertTextFileJob::~InsertTextFileJob()
 {
 }
 
-void InsertTextFileJob::slotFileData ( KIO::Job* job, const QByteArray& data )
+void InsertTextFileJob::slotFileData(KIO::Job *job, const QByteArray &data)
 {
-    Q_UNUSED( job );
+    Q_UNUSED(job);
     mFileData += data;
 }
 
-void InsertTextFileJob::slotGetJobFinished( KJob* job )
+void InsertTextFileJob::slotGetJobFinished(KJob *job)
 {
-    if ( job->error() ) {
+    if (job->error()) {
         qWarning() << job->errorString();
-        setError( job->error() );
-        setErrorText( job->errorText() );
+        setError(job->error());
+        setErrorText(job->errorText());
         emitResult();
         return;
     }
 
-    if ( mEditor ) {
-        if ( !mEncoding.isEmpty() ) {
-            const QTextCodec *fileCodec = KCharsets::charsets()->codecForName( mEncoding );
-            if ( fileCodec ) {
-                mEditor->textCursor().insertText( fileCodec->toUnicode( mFileData.data() ) );
+    if (mEditor) {
+        if (!mEncoding.isEmpty()) {
+            const QTextCodec *fileCodec = KCharsets::charsets()->codecForName(mEncoding);
+            if (fileCodec) {
+                mEditor->textCursor().insertText(fileCodec->toUnicode(mFileData.data()));
             } else {
-                mEditor->textCursor().insertText( QString::fromLocal8Bit( mFileData.data() ) );
+                mEditor->textCursor().insertText(QString::fromLocal8Bit(mFileData.data()));
             }
         }
     }
@@ -67,14 +67,14 @@ void InsertTextFileJob::slotGetJobFinished( KJob* job )
     emitResult();
 }
 
-void InsertTextFileJob::setEncoding( const QString &encoding )
+void InsertTextFileJob::setEncoding(const QString &encoding)
 {
     mEncoding = encoding;
 }
 
 void InsertTextFileJob::start()
 {
-    KIO::TransferJob *job = KIO::get( mUrl );
+    KIO::TransferJob *job = KIO::get(mUrl);
     connect(job, &KIO::TransferJob::result, this, &InsertTextFileJob::slotGetJobFinished);
     connect(job, &KIO::TransferJob::data, this, &InsertTextFileJob::slotFileData);
     job->start();
