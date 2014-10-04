@@ -27,6 +27,9 @@
 
 class MessageHeaderGrantleeFilters : public QObject, public Grantlee::TagLibraryInterface
 {
+    Q_OBJECT
+    Q_INTERFACES(Grantlee::TagLibraryInterface)
+    Q_PLUGIN_METADATA(IID "org.grantlee.TagLibraryInterface")
 public:
     explicit MessageHeaderGrantleeFilters(QObject *parent = 0);
     ~MessageHeaderGrantleeFilters();

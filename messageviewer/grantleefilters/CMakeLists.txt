@@ -1,18 +1,10 @@
-PROJECT(grantleefilters)
+project(grantleefilters)
 
-INCLUDE(${Grantlee_USE_FILE}) # This files defines the grantlee_add_plugin macro
 
-INCLUDE_DIRECTORIES( ${PROJECT_BINARY_DIR} ${Grantlee_INCLUDE_DIRS} 
-)
+add_library(grantlee_messageheaderfilters MODULE messageheadergrantleefilters messageheaderfilter)
+GRANTLEE_ADJUST_PLUGIN_NAME(grantlee_messageheaderfilters)
 
-# Make the following conditional on Grantlee_FOUND despite Grantlee being a
-# hard dependency, since otherwise cmake will terminate prematurely if Grantlee
-# is not found, and will not tell the user about the missing REQUIRED package.
-if(Grantlee_FOUND)
-  grantlee_add_plugin(grantlee_messageheaderfilters messageheadergrantleefilters FILTERS messageheaderfilter )
-  TARGET_LINK_LIBRARIES(grantlee_messageheaderfilters messagecore)
+TARGET_LINK_LIBRARIES(grantlee_messageheaderfilters messagecore Grantlee5::TextDocument Grantlee5::Templates)
 
-########### install files ###############
-  INSTALL(TARGETS grantlee_messageheaderfilters LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/grantlee/${Grantlee_VERSION_MAJOR}.${Grantlee_VERSION_MINOR} )
-endif()
+install(TARGETS grantlee_messageheaderfilters LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}/grantlee/${Grantlee5_VERSION_MAJOR}.${Grantlee5_VERSION_MINOR} )
 

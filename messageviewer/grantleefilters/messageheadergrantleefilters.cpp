@@ -18,8 +18,6 @@
 #include "messageheadergrantleefilters.h"
 #include "messageheaderfilter.h"
 
-#include <QtPlugin>
-
 MessageHeaderGrantleeFilters::MessageHeaderGrantleeFilters(QObject *parent)
     : QObject(parent)
 {
@@ -39,4 +37,3 @@ QHash<QString, Grantlee::Filter *> MessageHeaderGrantleeFilters::filters(const Q
     return filters;
 }
 
-Q_EXPORT_PLUGIN2(grantlee_messageheaderfilters, MessageHeaderGrantleeFilters)
