@@ -101,4 +101,4 @@ void ViewerTest::shouldShowCreateEventWidgetWhenActivateItAndWeHaveAMessage()
     QCOMPARE(createeventwidget->isVisible(), true);
 }
 
-QTEST_MAIN( ViewerTest )
+QTEST_MAIN(ViewerTest)

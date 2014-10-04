@@ -25,17 +25,16 @@
 #include <QAccessible>
 #include <QAccessibleTextInterface>
 
-
 void AccessibleMailWebViewTest::testWebViewText()
 {
-  MessageViewer::MailWebView *widget = new MessageViewer::MailWebView();
-  QAccessibleInterface *interface = QAccessible::queryAccessibleInterface(widget);
-  widget->setHtml(QLatin1String("<html><body><h1>Hi!</h1>This is a KDE test</body></html>"), QUrl());
+    MessageViewer::MailWebView *widget = new MessageViewer::MailWebView();
+    QAccessibleInterface *interface = QAccessible::queryAccessibleInterface(widget);
+    widget->setHtml(QLatin1String("<html><body><h1>Hi!</h1>This is a KDE test</body></html>"), QUrl());
 
-  QVERIFY( interface );
-  QVERIFY( interface->textInterface() );
-  QCOMPARE( interface->textInterface()->characterCount(), 23 );
-  QCOMPARE( interface->textInterface()->text(15, 18), QLatin1String("KDE") );
+    QVERIFY(interface);
+    QVERIFY(interface->textInterface());
+    QCOMPARE(interface->textInterface()->characterCount(), 23);
+    QCOMPARE(interface->textInterface()->text(15, 18), QLatin1String("KDE"));
 }
 
-QTEST_MAIN( AccessibleMailWebViewTest)
+QTEST_MAIN(AccessibleMailWebViewTest)

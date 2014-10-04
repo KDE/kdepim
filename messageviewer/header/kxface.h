@@ -40,28 +40,25 @@
 // #define MAXWORDS ((PIXELS * 2 + BITSPERWORD - 1) / BITSPERWORD)
 // #define BITSPERWORD 8
 
-
-typedef struct guesses
-{
-    char g_00[1<<12];
-    char g_01[1<<7];
-    char g_02[1<<2];
-    char g_10[1<<9];
-    char g_20[1<<6];
-    char g_30[1<<8];
-    char g_40[1<<10];
-    char g_11[1<<5];
-    char g_21[1<<3];
-    char g_31[1<<5];
-    char g_41[1<<6];
-    char g_12[1<<1];
-    char g_22[1<<0];
-    char g_32[1<<2];
-    char g_42[1<<2];
+typedef struct guesses {
+    char g_00[1 << 12];
+    char g_01[1 << 7];
+    char g_02[1 << 2];
+    char g_10[1 << 9];
+    char g_20[1 << 6];
+    char g_30[1 << 8];
+    char g_40[1 << 10];
+    char g_11[1 << 5];
+    char g_21[1 << 3];
+    char g_31[1 << 5];
+    char g_41[1 << 6];
+    char g_12[1 << 1];
+    char g_22[1 << 0];
+    char g_32[1 << 2];
+    char g_42[1 << 2];
 } Guesses;
 
-static const Guesses G =
-{
+static const Guesses G = {
     {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -488,13 +485,10 @@ static const Guesses G =
     }
 };
 
-typedef struct prob
-{
+typedef struct prob {
     int p_range;
     int p_offset;
 } Prob;
-
-
 
 static const Prob levels[4][3] = {
     {{1, 255},  {251, 0}, {4, 251}},        /* Top of tree almost always grey */
@@ -512,11 +506,11 @@ static const Prob freqs[16] = {
 
 static const char HexDigits[] = "0123456789ABCDEF";
 
-
 class QImage;
 class QString;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class MESSAGEVIEWER_EXPORT KXFace : public QObject
 {
@@ -536,11 +530,10 @@ public:
        */
     QImage toImage(const QString &xface);
 
-
 private:
     static const int WIDTH = 48;
     static const int HEIGHT = WIDTH;
-    static const int PIXELS = (WIDTH * HEIGHT);
+    static const int PIXELS = (WIDTH *HEIGHT);
     static const int BITSPERWORD = 8;
     static const int MAXWORDS = ((PIXELS * 2 + BITSPERWORD - 1) / BITSPERWORD);
 
@@ -553,8 +546,7 @@ private:
 
     jmp_buf comp_env;
 
-    typedef struct bigint
-    {
+    typedef struct bigint {
         int b_words;
         unsigned char b_word[MAXWORDS];
     } BigInt;
@@ -585,7 +577,6 @@ private:
     int  AllBlack(char *f, int wid, int hei);
     int  Same(register char *f, register int wid, register int hei);
     void PushGreys(char *f, int wid, int hei);
-
 
 };
 }

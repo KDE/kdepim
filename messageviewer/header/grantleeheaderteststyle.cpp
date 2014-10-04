@@ -26,7 +26,8 @@
 
 using namespace MessageViewer;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 GrantleeHeaderTestStyle::GrantleeHeaderTestStyle()
     : HeaderStyle()
@@ -39,10 +40,11 @@ GrantleeHeaderTestStyle::~GrantleeHeaderTestStyle()
     delete mGrantleeFormatter;
 }
 
-QString GrantleeHeaderTestStyle::format( KMime::Message *message ) const
+QString GrantleeHeaderTestStyle::format(KMime::Message *message) const
 {
-    if ( !message )
+    if (!message) {
         return QString();
+    }
     return mGrantleeFormatter->toHtml(mExtraDisplay, mAbsolutePath, mMainFilename, this, message, isPrinting());
 }
 
@@ -60,6 +62,5 @@ void GrantleeHeaderTestStyle::setExtraDisplayHeaders(const QStringList &extraDis
 {
     mExtraDisplay = extraDisplay;
 }
-
 
 }

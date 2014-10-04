@@ -22,11 +22,13 @@
 
 #include <QAbstractItemModel>
 
-namespace KMime {
+namespace KMime
+{
 class Content;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
   A model representing the mime part tree of a message.
@@ -44,26 +46,25 @@ public:
         AlternativeBodyPartRole,
         UserRole = Qt::UserRole + 100
     };
-    explicit MimeTreeModel( QObject *parent = 0 );
+    explicit MimeTreeModel(QObject *parent = 0);
     ~MimeTreeModel();
 
-    void setRoot( KMime::Content *root );
+    void setRoot(KMime::Content *root);
 
-    KMime::Content* root();
+    KMime::Content *root();
 
-    QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
-    QModelIndex parent( const QModelIndex &index ) const;
-    int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-    int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-    QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-    QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex &index) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 }
-
 
 #endif

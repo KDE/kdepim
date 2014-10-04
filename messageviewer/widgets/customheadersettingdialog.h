@@ -20,13 +20,14 @@
 
 #include <QDialog>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class CustomHeaderSettingWidget;
 class CustomHeaderSettingDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit CustomHeaderSettingDialog(QWidget *parent=0);
+    explicit CustomHeaderSettingDialog(QWidget *parent = 0);
     ~CustomHeaderSettingDialog();
 
     void writeSettings();

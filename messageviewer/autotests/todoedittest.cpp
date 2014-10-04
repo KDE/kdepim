@@ -34,10 +34,10 @@
 #include <QAction>
 #include <QSignalSpy>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 extern MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_todoEditStubModel;
 }
-
 
 Q_DECLARE_METATYPE(KMime::Message::Ptr)
 TodoEditTest::TodoEditTest()
@@ -108,7 +108,6 @@ void TodoEditTest::shouldNotEmitWhenCollectionIsNotChanged()
     edit.setCollection(Akonadi::Collection(42));
     QCOMPARE(spy.count(), 0);
 }
-
 
 void TodoEditTest::shouldNotEmitWhenMessageIsNotChanged()
 {
@@ -258,7 +257,7 @@ void TodoEditTest::shouldClearAllWhenCloseWidget()
     QString subject = QLatin1String("Test Note");
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
-    
+
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     edit.slotCloseWidget();
     QCOMPARE(noteedit->text(), QString());
@@ -378,7 +377,6 @@ void TodoEditTest::shouldSetFocusWhenWeCallTodoEdit()
     edit.showToDoWidget();
     QCOMPARE(noteedit->hasFocus(), true);
 }
-
 
 void TodoEditTest::shouldNotEmitTodoWhenMessageIsNull()
 {
@@ -509,6 +507,4 @@ void TodoEditTest::shouldShouldEnabledSaveOpenEditorButton()
     QCOMPARE(save->isEnabled(), false);
 }
 
-
-
-QTEST_MAIN( TodoEditTest )
+QTEST_MAIN(TodoEditTest)

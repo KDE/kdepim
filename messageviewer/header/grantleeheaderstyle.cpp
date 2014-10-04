@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "grantleeheaderstyle.h"
 #include "header/grantleeheaderformatter.h"
 #include "header/headerstrategy.h"
@@ -24,7 +23,8 @@
 
 using namespace MessageViewer;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 GrantleeHeaderStyle::GrantleeHeaderStyle()
     : HeaderStyle()
@@ -37,9 +37,11 @@ GrantleeHeaderStyle::~GrantleeHeaderStyle()
     delete mGrantleeFormatter;
 }
 
-QString GrantleeHeaderStyle::format( KMime::Message *message ) const {
-    if ( !message )
+QString GrantleeHeaderStyle::format(KMime::Message *message) const
+{
+    if (!message) {
         return QString();
+    }
     return mGrantleeFormatter->toHtml(theme(), isPrinting(), this, message);
 }
 

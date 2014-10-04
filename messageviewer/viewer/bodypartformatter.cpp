@@ -29,9 +29,6 @@
     your version.
 */
 
-
-
-
 #include "bodypartformatter.h"
 #include "viewer/bodypartformatterfactory_p.h"
 #include "interfaces/bodypartformatter.h"
@@ -45,13 +42,16 @@
 
 using namespace MessageViewer;
 
-namespace {
+namespace
+{
 class AnyTypeBodyPartFormatter
-        : public BodyPartFormatter,
-        public MessageViewer::Interface::BodyPartFormatter {
-    static const AnyTypeBodyPartFormatter * self;
+    : public BodyPartFormatter,
+      public MessageViewer::Interface::BodyPartFormatter
+{
+    static const AnyTypeBodyPartFormatter *self;
 public:
-    Result format( Interface::BodyPart *, HtmlWriter * ) const {
+    Result format(Interface::BodyPart *, HtmlWriter *) const
+    {
         qDebug() << "Acting as a Interface::BodyPartFormatter!";
         return AsIcon;
     }
@@ -59,54 +59,59 @@ public:
     // unhide the overload with three arguments
     using MessageViewer::Interface::BodyPartFormatter::format;
 
-    bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & result ) const {
-        result.setNeverDisplayInline( true );
+    bool process(ObjectTreeParser *, KMime::Content *, ProcessResult &result) const
+    {
+        result.setNeverDisplayInline(true);
         return false;
     }
-    static const ::BodyPartFormatter * create() {
-        if ( !self )
+    static const ::BodyPartFormatter *create()
+    {
+        if (!self) {
             self = new AnyTypeBodyPartFormatter();
+        }
         return self;
     }
 };
 
-const AnyTypeBodyPartFormatter * AnyTypeBodyPartFormatter::self = 0;
+const AnyTypeBodyPartFormatter *AnyTypeBodyPartFormatter::self = 0;
 
-
-class ImageTypeBodyPartFormatter : public BodyPartFormatter {
-    static const ImageTypeBodyPartFormatter * self;
+class ImageTypeBodyPartFormatter : public BodyPartFormatter
+{
+    static const ImageTypeBodyPartFormatter *self;
 public:
-    bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & result ) const {
-        result.setIsImage( true );
+    bool process(ObjectTreeParser *, KMime::Content *, ProcessResult &result) const
+    {
+        result.setIsImage(true);
         return false;
     }
-    static const BodyPartFormatter * create() {
-        if ( !self )
+    static const BodyPartFormatter *create()
+    {
+        if (!self) {
             self = new ImageTypeBodyPartFormatter();
+        }
         return self;
     }
 };
 
-const ImageTypeBodyPartFormatter * ImageTypeBodyPartFormatter::self = 0;
+const ImageTypeBodyPartFormatter *ImageTypeBodyPartFormatter::self = 0;
 
 #define CREATE_BODY_PART_FORMATTER(subtype) \
     class subtype##BodyPartFormatter : public BodyPartFormatter { \
-    static const subtype##BodyPartFormatter * self; \
+        static const subtype##BodyPartFormatter * self; \
     public: \
-    bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & ) const; \
-    static const BodyPartFormatter * create() { \
-    if ( !self ) \
-    self = new subtype##BodyPartFormatter(); \
-    return self; \
-} \
-}; \
+        bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & ) const; \
+        static const BodyPartFormatter * create() { \
+            if ( !self ) \
+                self = new subtype##BodyPartFormatter(); \
+            return self; \
+        } \
+    }; \
     \
     const subtype##BodyPartFormatter * subtype##BodyPartFormatter::self; \
     \
     bool subtype##BodyPartFormatter::process( ObjectTreeParser * otp, KMime::Content * node, ProcessResult & result ) const { \
-    return otp->process##subtype##Subtype( node, result ); \
-}
-
+        return otp->process##subtype##Subtype( node, result ); \
+    }
 
 CREATE_BODY_PART_FORMATTER(TextPlain)
 CREATE_BODY_PART_FORMATTER(TextHtml)
@@ -126,20 +131,22 @@ CREATE_BODY_PART_FORMATTER(MultiPartEncrypted)
 
 typedef TextPlainBodyPartFormatter ApplicationPgpBodyPartFormatter;
 
-
 #undef CREATE_BODY_PART_FORMATTER
 } // anon namespace
 
 // FIXME: port some more BodyPartFormatters to Interface::BodyPartFormatters
-void BodyPartFormatterFactoryPrivate::messageviewer_create_builtin_bodypart_formatters( BodyPartFormatterFactoryPrivate::TypeRegistry * reg ) {
-    if ( !reg ) return;
+void BodyPartFormatterFactoryPrivate::messageviewer_create_builtin_bodypart_formatters(BodyPartFormatterFactoryPrivate::TypeRegistry *reg)
+{
+    if (!reg) {
+        return;
+    }
     (*reg)["application"]["octet-stream"] = new AnyTypeBodyPartFormatter();
 }
 
-typedef const BodyPartFormatter * (*BodyPartFormatterCreator)();
+typedef const BodyPartFormatter *(*BodyPartFormatterCreator)();
 
 struct SubtypeBuiltin {
-    const char * subtype;
+    const char *subtype;
     BodyPartFormatterCreator create;
 };
 
@@ -189,100 +196,115 @@ static const SubtypeBuiltin anySubtypeBuiltins[] = {
 #define DIM(x) sizeof(x) / sizeof(*x)
 
 static const struct {
-    const char * type;
-    const SubtypeBuiltin * subtypes;
+    const char *type;
+    const SubtypeBuiltin *subtypes;
     unsigned int num_subtypes;
 } builtins[] = {
-{ "application", applicationSubtypeBuiltins, DIM(applicationSubtypeBuiltins) },
-{ "text", textSubtypeBuiltins, DIM(textSubtypeBuiltins) },
-{ "multipart", multipartSubtypeBuiltins, DIM(multipartSubtypeBuiltins) },
-{ "message", messageSubtypeBuiltins, DIM(messageSubtypeBuiltins) },
-{ "image", imageSubtypeBuiltins, DIM(imageSubtypeBuiltins) },
+    { "application", applicationSubtypeBuiltins, DIM(applicationSubtypeBuiltins) },
+    { "text", textSubtypeBuiltins, DIM(textSubtypeBuiltins) },
+    { "multipart", multipartSubtypeBuiltins, DIM(multipartSubtypeBuiltins) },
+    { "message", messageSubtypeBuiltins, DIM(messageSubtypeBuiltins) },
+    { "image", imageSubtypeBuiltins, DIM(imageSubtypeBuiltins) },
 //{ "audio", audioSubtypeBuiltins, DIM(audioSubtypeBuiltins) },
 //{ "model", modelSubtypeBuiltins, DIM(modelSubtypeBuiltins) },
 //{ "video", videoSubtypeBuiltins, DIM(videoSubtypeBuiltins) },
-{ "*", anySubtypeBuiltins, DIM(anySubtypeBuiltins) },
+    { "*", anySubtypeBuiltins, DIM(anySubtypeBuiltins) },
 };
 
 #undef DIM
 
-static const BodyPartFormatter * createForText( const char * subtype ) {
-    if ( subtype && *subtype )
-        switch ( subtype[0] ) {
+static const BodyPartFormatter *createForText(const char *subtype)
+{
+    if (subtype && *subtype)
+        switch (subtype[0]) {
         case 'h':
         case 'H':
-            if ( qstricmp( subtype, "html" ) == 0 )
+            if (qstricmp(subtype, "html") == 0) {
                 return TextHtmlBodyPartFormatter::create();
+            }
             break;
         case 'r':
         case 'R':
-            if ( qstricmp( subtype, "rtf" ) == 0 )
+            if (qstricmp(subtype, "rtf") == 0) {
                 return AnyTypeBodyPartFormatter::create();
+            }
             break;
         case 'x':
         case 'X':
         case 'v':
         case 'V':
-            if ( qstricmp( subtype, "x-vcard" ) == 0 ||
-                 qstricmp( subtype, "vcard" ) == 0 )
+            if (qstricmp(subtype, "x-vcard") == 0 ||
+                    qstricmp(subtype, "vcard") == 0) {
                 return AnyTypeBodyPartFormatter::create();
+            }
             break;
         }
 
     return TextPlainBodyPartFormatter::create();
 }
 
-static const BodyPartFormatter * createForImage( const char * ) {
+static const BodyPartFormatter *createForImage(const char *)
+{
     return ImageTypeBodyPartFormatter::create();
 }
 
-static const BodyPartFormatter * createForMessage( const char * subtype ) {
-    if ( qstricmp( subtype, "rfc822" ) == 0 )
+static const BodyPartFormatter *createForMessage(const char *subtype)
+{
+    if (qstricmp(subtype, "rfc822") == 0) {
         return MessageRfc822BodyPartFormatter::create();
+    }
     return AnyTypeBodyPartFormatter::create();
 }
 
-static const BodyPartFormatter * createForMultiPart( const char * subtype ) {
-    if ( subtype && *subtype )
-        switch ( subtype[0] ) {
+static const BodyPartFormatter *createForMultiPart(const char *subtype)
+{
+    if (subtype && *subtype)
+        switch (subtype[0]) {
         case 'a':
         case 'A':
-            if ( qstricmp( subtype, "alternative" ) == 0 )
+            if (qstricmp(subtype, "alternative") == 0) {
                 return MultiPartAlternativeBodyPartFormatter::create();
+            }
             break;
         case 'e':
         case 'E':
-            if ( qstricmp( subtype, "encrypted" ) == 0 )
+            if (qstricmp(subtype, "encrypted") == 0) {
                 return MultiPartEncryptedBodyPartFormatter::create();
+            }
             break;
         case 's':
         case 'S':
-            if ( qstricmp( subtype, "signed" ) == 0 )
+            if (qstricmp(subtype, "signed") == 0) {
                 return MultiPartSignedBodyPartFormatter::create();
+            }
             break;
         }
 
     return MultiPartMixedBodyPartFormatter::create();
 }
 
-static const BodyPartFormatter * createForApplication( const char * subtype ) {
-    if ( subtype && *subtype )
-        switch ( subtype[0] ) {
+static const BodyPartFormatter *createForApplication(const char *subtype)
+{
+    if (subtype && *subtype)
+        switch (subtype[0]) {
         case 'p':
         case 'P':
-            if ( qstricmp( subtype, "pgp" ) == 0 )
+            if (qstricmp(subtype, "pgp") == 0) {
                 return ApplicationPgpBodyPartFormatter::create();
-            // fall through
+            }
+        // fall through
         case 'x':
         case 'X':
-            if ( qstricmp( subtype, "pkcs7-mime" ) == 0 ||
-                 qstricmp( subtype, "x-pkcs7-mime" ) == 0 )
+            if (qstricmp(subtype, "pkcs7-mime") == 0 ||
+                    qstricmp(subtype, "x-pkcs7-mime") == 0) {
                 return ApplicationPkcs7MimeBodyPartFormatter::create();
+            }
             break;
         case 'v':
         case 'V':
-            if ( qstricmp( subtype, "vnd.de.bund.bsi.chiasmus-text") == 0)
+            if (qstricmp(subtype, "vnd.de.bund.bsi.chiasmus-text") == 0) {
                 return ApplicationChiasmusTextBodyPartFormatter::create();
+            }
             break;
         }
 
@@ -290,30 +312,35 @@ static const BodyPartFormatter * createForApplication( const char * subtype ) {
 }
 
 // OK, replace this with a factory with plugin support later on...
-const BodyPartFormatter * BodyPartFormatter::createFor( const char * type, const char * subtype ) {
-    if ( type && *type )
-        switch ( type[0] ) {
+const BodyPartFormatter *BodyPartFormatter::createFor(const char *type, const char *subtype)
+{
+    if (type && *type)
+        switch (type[0]) {
         case 'a': // application
         case 'A':
-            if ( qstricmp( type, "application" ) == 0 )
-                return createForApplication( subtype );
+            if (qstricmp(type, "application") == 0) {
+                return createForApplication(subtype);
+            }
             break;
         case 'i': // image
         case 'I':
-            if ( qstricmp( type, "image" ) == 0 )
-                return createForImage( subtype );
+            if (qstricmp(type, "image") == 0) {
+                return createForImage(subtype);
+            }
             break;
         case 'm': // multipart / message
         case 'M':
-            if ( qstricmp( type, "multipart" ) == 0 )
-                return createForMultiPart( subtype );
-            else if ( qstricmp( type, "message" ) == 0 )
-                return createForMessage( subtype );
+            if (qstricmp(type, "multipart") == 0) {
+                return createForMultiPart(subtype);
+            } else if (qstricmp(type, "message") == 0) {
+                return createForMessage(subtype);
+            }
             break;
         case 't': // text
         case 'T':
-            if ( qstricmp( type, "text" ) == 0 )
-                return createForText( subtype );
+            if (qstricmp(type, "text") == 0) {
+                return createForText(subtype);
+            }
             break;
         }
 

@@ -24,7 +24,6 @@
 *
 * ============================================================ */
 
-
 // Self Includes
 #include "adblockmanager.h"
 
@@ -52,19 +51,15 @@
 using namespace MessageViewer;
 QWeakPointer<AdBlockManager> AdBlockManager::s_adBlockManager;
 
-
 AdBlockManager *AdBlockManager::self()
 {
-    if (s_adBlockManager.isNull())
-    {
+    if (s_adBlockManager.isNull()) {
         s_adBlockManager = new AdBlockManager(qApp);
     }
     return s_adBlockManager.data();
 }
 
-
 // ----------------------------------------------------------------------------------------------
-
 
 AdBlockManager::AdBlockManager(QObject *parent)
     : QObject(parent)
@@ -72,19 +67,16 @@ AdBlockManager::AdBlockManager(QObject *parent)
     loadSettings();
 }
 
-
 AdBlockManager::~AdBlockManager()
 {
     _whiteList.clear();
     _blackList.clear();
 }
 
-
 bool AdBlockManager::isEnabled()
 {
     return GlobalSettings::self()->adBlockEnabled();
 }
-
 
 bool AdBlockManager::isHidingElements()
 {
@@ -109,15 +101,16 @@ void AdBlockManager::loadSettings()
 
     _elementHiding.clear();
 
-    if (!isEnabled())
+    if (!isEnabled()) {
         return;
+    }
     // ----------------------------------------------------------
 
     QDateTime today = QDateTime::currentDateTime();
     const int days = GlobalSettings::self()->adBlockUpdateInterval();
 
-    const QStringList itemList = config.groupList().filter( QRegExp( QLatin1String("FilterList \\d+") ) );
-    Q_FOREACH(const QString &item, itemList) {
+    const QStringList itemList = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
+    Q_FOREACH (const QString &item, itemList) {
         KConfigGroup filtersGroup(&config, item);
         const bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled"), false);
         if (!isFilterEnabled) {
@@ -128,8 +121,9 @@ void AdBlockManager::loadSettings()
             continue;
         }
         const QString path = filtersGroup.readEntry(QLatin1String("path"));
-        if (path.isEmpty())
+        if (path.isEmpty()) {
             continue;
+        }
 
         const QDateTime lastDateTime = filtersGroup.readEntry(QLatin1String("lastUpdate"), QDateTime());
         if (!lastDateTime.isValid() || today > lastDateTime.addDays(days) || !QFile(path).exists()) {
@@ -144,7 +138,6 @@ void AdBlockManager::loadSettings()
     loadRules(localRulesFilePath);
 }
 
-
 void AdBlockManager::loadRules(const QString &rulesFilePath)
 {
     QFile ruleFile(rulesFilePath);
@@ -154,38 +147,40 @@ void AdBlockManager::loadRules(const QString &rulesFilePath)
     }
 
     QTextStream in(&ruleFile);
-    while (!in.atEnd())
-    {
+    while (!in.atEnd()) {
         QString stringRule = in.readLine();
         loadRuleString(stringRule);
     }
 }
 
-
 void AdBlockManager::loadRuleString(const QString &stringRule)
 {
     // ! rules are comments
-    if (stringRule.startsWith(QLatin1Char('!')))
+    if (stringRule.startsWith(QLatin1Char('!'))) {
         return;
+    }
 
     // [ rules are ABP info
-    if (stringRule.startsWith(QLatin1Char('[')))
+    if (stringRule.startsWith(QLatin1Char('['))) {
         return;
+    }
 
     // empty rules are just dangerous..
     // (an empty rule in whitelist allows all, in blacklist blocks all..)
-    if (stringRule.isEmpty())
+    if (stringRule.isEmpty()) {
         return;
+    }
 
     // white rules
-    if (stringRule.startsWith(QLatin1String("@@")))
-    {
-        if (_hostWhiteList.tryAddFilter(stringRule))
+    if (stringRule.startsWith(QLatin1String("@@"))) {
+        if (_hostWhiteList.tryAddFilter(stringRule)) {
             return;
+        }
 
         const QString filter = stringRule.mid(2);
-        if (filter.isEmpty())
+        if (filter.isEmpty()) {
             return;
+        }
 
         AdBlockRule rule(filter);
         _whiteList << rule;
@@ -193,36 +188,37 @@ void AdBlockManager::loadRuleString(const QString &stringRule)
     }
 
     // hide (CSS) rules
-    if (stringRule.contains(QLatin1String("##")))
-    {
+    if (stringRule.contains(QLatin1String("##"))) {
         _elementHiding.addRule(stringRule);
         return;
     }
 
-    if (_hostBlackList.tryAddFilter(stringRule))
+    if (_hostBlackList.tryAddFilter(stringRule)) {
         return;
+    }
 
     AdBlockRule rule(stringRule);
     _blackList << rule;
 }
 
-
 bool AdBlockManager::blockRequest(const QNetworkRequest &request)
 {
-    if (!isEnabled())
+    if (!isEnabled()) {
         return false;
+    }
 
     // we (ad)block just http & https traffic
     if (request.url().scheme() != QLatin1String("http")
-            && request.url().scheme() != QLatin1String("https"))
+            && request.url().scheme() != QLatin1String("https")) {
         return false;
+    }
 
     const QStringList whiteRefererList = GlobalSettings::self()->whiteReferer();
     const QString referer = QString::fromLatin1(request.rawHeader("referer"));
-    Q_FOREACH(const QString & host, whiteRefererList)
-    {
-        if (referer.contains(host))
+    Q_FOREACH (const QString &host, whiteRefererList) {
+        if (referer.contains(host)) {
             return false;
+        }
     }
 
     QString urlString = request.url().toString();
@@ -232,32 +228,26 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
     const QString host = request.url().host();
 
     // check white rules before :)
-    if (_hostWhiteList.match(host))
-    {
+    if (_hostWhiteList.match(host)) {
         qDebug() << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
         return false;
     }
 
-    Q_FOREACH(const AdBlockRule & filter, _whiteList)
-    {
-        if (filter.match(request, urlString, urlStringLowerCase))
-        {
+    Q_FOREACH (const AdBlockRule &filter, _whiteList) {
+        if (filter.match(request, urlString, urlStringLowerCase)) {
             qDebug() << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
             return false;
         }
     }
 
     // then check the black ones :(
-    if (_hostBlackList.match(host))
-    {
+    if (_hostBlackList.match(host)) {
         qDebug() << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
         return true;
     }
 
-    Q_FOREACH(const AdBlockRule & filter, _blackList)
-    {
-        if (filter.match(request, urlString, urlStringLowerCase))
-        {
+    Q_FOREACH (const AdBlockRule &filter, _blackList) {
+        if (filter.match(request, urlString, urlStringLowerCase)) {
             qDebug() << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
             return true;
         }
@@ -267,7 +257,6 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
     return false;
 }
 
-
 void AdBlockManager::updateSubscription(const QString &path, const QString &url, const QString &itemName)
 {
     QUrl subUrl = QUrl(url);
@@ -275,7 +264,7 @@ void AdBlockManager::updateSubscription(const QString &path, const QString &url,
     const QString rulesFilePath = path;
     QUrl destUrl = QUrl::fromLocalFile(rulesFilePath);
 
-    KIO::FileCopyJob* job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
+    KIO::FileCopyJob *job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
     job->metaData().insert(QLatin1String("ssl_no_client_cert"), QLatin1String("TRUE"));
     job->metaData().insert(QLatin1String("ssl_no_ui"), QLatin1String("TRUE"));
     job->metaData().insert(QLatin1String("UseCache"), QLatin1String("false"));
@@ -286,20 +275,19 @@ void AdBlockManager::updateSubscription(const QString &path, const QString &url,
     connect(job, SIGNAL(finished(KJob*)), this, SLOT(slotFinished(KJob*)));
 }
 
-
 void AdBlockManager::slotFinished(KJob *job)
 {
     if (job->error()) {
-        KNotification *notify = new KNotification( QLatin1String("adblock-list-download-failed") );
-        notify->setComponentName( QLatin1String("messageviewer") );
-        notify->setText( i18n("Download new ad-block list was failed." ) );
+        KNotification *notify = new KNotification(QLatin1String("adblock-list-download-failed"));
+        notify->setComponentName(QLatin1String("messageviewer"));
+        notify->setText(i18n("Download new ad-block list was failed."));
         notify->sendEvent();
         return;
     }
 
-    KNotification *notify = new KNotification( QLatin1String("adblock-list-download-done") );
-    notify->setComponentName( QLatin1String("messageviewer") );
-    notify->setText( i18n("Download new ad-block list was done." ) );
+    KNotification *notify = new KNotification(QLatin1String("adblock-list-download-done"));
+    notify->setComponentName(QLatin1String("messageviewer"));
+    notify->setText(i18n("Download new ad-block list was done."));
     notify->sendEvent();
     const QString itemName = job->property("itemname").toString();
     if (!itemName.isEmpty()) {
@@ -315,7 +303,6 @@ void AdBlockManager::slotFinished(KJob *job)
     url.setScheme(QString()); // this is needed to load local url well :(
     loadRules(url.url());
 }
-
 
 bool AdBlockManager::subscriptionFileExists(int i)
 {
@@ -359,48 +346,53 @@ void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
     loadRuleString(stringRule);
 
     // eventually reload page
-    if (reloadPage)
+    if (reloadPage) {
         emit reloadCurrentPage();
+    }
 }
-
 
 bool AdBlockManager::isAdblockEnabledForHost(const QString &host)
 {
-    if (!isEnabled())
+    if (!isEnabled()) {
         return false;
+    }
 
     return ! _hostWhiteList.match(host);
 }
 
-
 void AdBlockManager::applyHidingRules(QWebFrame *frame)
 {
-    if (!frame)
+    if (!frame) {
         return;
+    }
 
-    if (!isEnabled())
+    if (!isEnabled()) {
         return;
+    }
 
     connect(frame, SIGNAL(loadFinished(bool)), this, SLOT(applyHidingRules(bool)));
 }
 
-
 void AdBlockManager::applyHidingRules(bool ok)
 {
-    if (!ok)
+    if (!ok) {
         return;
+    }
 
     QWebFrame *frame = qobject_cast<QWebFrame *>(sender());
-    if (!frame)
+    if (!frame) {
         return;
+    }
     MessageViewer::WebPage *page = qobject_cast<MessageViewer::WebPage *>(frame->page());
-    if (!page)
+    if (!page) {
         return;
+    }
 
     QString mainPageHost = page->loadingUrl().host();
     const QStringList hosts = GlobalSettings::self()->whiteReferer();
-    if (hosts.contains(mainPageHost))
+    if (hosts.contains(mainPageHost)) {
         return;
+    }
 
     QWebElement document = frame->documentElement();
 

@@ -24,7 +24,8 @@
 
 class KDialog;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
  * A class which handles the dialog used to present the user a choice what to do
@@ -36,8 +37,7 @@ class AttachmentDialog : public QObject
 
 public:
     /// returncodes for exec()
-    enum
-    {
+    enum {
         Save = 2,
         Open,
         OpenWith,
@@ -46,8 +46,8 @@ public:
 
     // if @application is non-empty, the "open with <application>" button will also be shown,
     // otherwise only save, open with, cancel
-    explicit AttachmentDialog( QWidget *parent, const QString &filenameText, const QString &application,
-                      const QString &dontAskAgainName );
+    explicit AttachmentDialog(QWidget *parent, const QString &filenameText, const QString &application,
+                              const QString &dontAskAgainName);
 
     // executes the modal dialog
     int exec();

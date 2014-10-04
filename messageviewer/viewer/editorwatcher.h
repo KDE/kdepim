@@ -27,8 +27,8 @@
 #include <QTime>
 class KProcess;
 
-namespace MessageViewer {
-
+namespace MessageViewer
+{
 
 /**
   Starts an editor for the given URL and emits an signal when
@@ -48,14 +48,20 @@ public:
      * @param parentWidget the parent widget of this EditorWatcher, which will be used as the parent
      *                     widget for message dialogs.
      */
-    EditorWatcher( const KUrl &url, const QString &mimeType, bool openWith,
-                   QObject *parent, QWidget *parentWidget );
+    EditorWatcher(const KUrl &url, const QString &mimeType, bool openWith,
+                  QObject *parent, QWidget *parentWidget);
 
     bool start();
-    bool fileChanged() const { return mFileModified; }
-    KUrl url() const { return mUrl;}
+    bool fileChanged() const
+    {
+        return mFileModified;
+    }
+    KUrl url() const
+    {
+        return mUrl;
+    }
 signals:
-    void editDone( MessageViewer::EditorWatcher* watcher );
+    void editDone(MessageViewer::EditorWatcher *watcher);
 
 private slots:
     void editorExited();

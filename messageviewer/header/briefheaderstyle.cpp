@@ -44,7 +44,6 @@ using KPIMUtils::LinkLocator;
 #include <qdebug.h>
 #include <KLocalizedString>
 
-
 #include <QRegExp>
 
 #include <QApplication>
@@ -60,12 +59,16 @@ using namespace MessageViewer;
 //   Show everything in a single line, don't show header field names.
 //
 
-QString BriefHeaderStyle::format( KMime::Message *message ) const {
-    if ( !message ) return QString();
+QString BriefHeaderStyle::format(KMime::Message *message) const
+{
+    if (!message) {
+        return QString();
+    }
 
     const HeaderStrategy *strategy = headerStrategy();
-    if ( !strategy )
+    if (!strategy) {
         strategy = HeaderStrategy::brief();
+    }
 
     // The direction of the header is determined according to the direction
     // of the application layout.
@@ -78,40 +81,44 @@ QString BriefHeaderStyle::format( KMime::Message *message ) const {
     // considered left-to-right, they are ignored when determining its
     // direction.
 
-    const QString subjectDir = MessageViewer::HeaderStyleUtil::subjectDirectionString( message );
+    const QString subjectDir = MessageViewer::HeaderStyleUtil::subjectDirectionString(message);
 
     QString headerStr = QLatin1String("<div class=\"header\" dir=\"") + dir + QLatin1String("\">\n");
 
-    if ( strategy->showHeader( QLatin1String("subject") ) ) {
+    if (strategy->showHeader(QLatin1String("subject"))) {
         headerStr += QLatin1String("<div dir=\"") + subjectDir + QLatin1String("\">\n") +
-                QLatin1String("<b style=\"font-size:130%\">");
+                     QLatin1String("<b style=\"font-size:130%\">");
 
-        headerStr += MessageViewer::HeaderStyleUtil::subjectString( message ) + QLatin1String("</b></div>\n");
+        headerStr += MessageViewer::HeaderStyleUtil::subjectString(message) + QLatin1String("</b></div>\n");
     }
     QStringList headerParts;
 
-    if ( strategy->showHeader( QLatin1String("from") ) ) {
+    if (strategy->showHeader(QLatin1String("from"))) {
         /*TODO(Andras) review if it can happen or not
-    if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
-      fromStr = message->fromStrip(); // let's use that
-*/
-        QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly );
-        if ( !vCardName().isEmpty() )
+        if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
+        fromStr = message->fromStrip(); // let's use that
+        */
+        QString fromPart = StringUtil::emailAddrAsAnchor(message->from(), StringUtil::DisplayNameOnly);
+        if (!vCardName().isEmpty()) {
             fromPart += QLatin1String("&nbsp;&nbsp;<a href=\"") + vCardName() + QLatin1String("\">") + i18n("[vCard]") + QLatin1String("</a>");
+        }
         headerParts << fromPart;
     }
 
-    if ( strategy->showHeader( QLatin1String("cc") ) && message->cc(false) )
-        headerParts << i18n("CC: ") + StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly );
+    if (strategy->showHeader(QLatin1String("cc")) && message->cc(false)) {
+        headerParts << i18n("CC: ") + StringUtil::emailAddrAsAnchor(message->cc(), StringUtil::DisplayNameOnly);
+    }
 
-    if ( strategy->showHeader( QLatin1String("bcc") ) && message->bcc(false) )
-        headerParts << i18n("BCC: ") + StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly );
+    if (strategy->showHeader(QLatin1String("bcc")) && message->bcc(false)) {
+        headerParts << i18n("BCC: ") + StringUtil::emailAddrAsAnchor(message->bcc(), StringUtil::DisplayNameOnly);
+    }
 
-    if ( strategy->showHeader( QLatin1String("date") ) )
-        headerParts << MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString( message, isPrinting(), /* shortDate = */ true ) );
+    if (strategy->showHeader(QLatin1String("date"))) {
+        headerParts << MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* shortDate = */ true));
+    }
 
     // remove all empty (modulo whitespace) entries and joins them via ", \n"
-    headerStr += QLatin1String(" (") + headerParts.filter( QRegExp( QLatin1String("\\S") ) ).join( QLatin1String(",\n") ) + QLatin1Char(')');
+    headerStr += QLatin1String(" (") + headerParts.filter(QRegExp(QLatin1String("\\S"))).join(QLatin1String(",\n")) + QLatin1Char(')');
 
     headerStr += QLatin1String("</div>\n");
 

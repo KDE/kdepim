@@ -27,8 +27,8 @@ using namespace MessageViewer;
 AdBlockListWidget::AdBlockListWidget(QWidget *parent)
     : QListWidget(parent)
 {
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-             this, SLOT(slotGeneralPaletteChanged()));
+    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+            this, SLOT(slotGeneralPaletteChanged()));
 }
 
 AdBlockListWidget::~AdBlockListWidget()
@@ -40,28 +40,27 @@ void AdBlockListWidget::slotGeneralPaletteChanged()
 {
     const QPalette palette = viewport()->palette();
     QColor color = palette.text().color();
-    color.setAlpha( 128 );
+    color.setAlpha(128);
     mTextColor = color;
 }
 
-void AdBlockListWidget::paintEvent( QPaintEvent *event )
+void AdBlockListWidget::paintEvent(QPaintEvent *event)
 {
-    if ( !model() || model()->rowCount() == 0 ) {
-        QPainter p( viewport() );
+    if (!model() || model()->rowCount() == 0) {
+        QPainter p(viewport());
 
         QFont font = p.font();
-        font.setItalic( true );
-        p.setFont( font );
+        font.setItalic(true);
+        p.setFont(font);
 
         if (!mTextColor.isValid()) {
             slotGeneralPaletteChanged();
         }
-        p.setPen( mTextColor );
+        p.setPen(mTextColor);
 
-        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n( "Not subscription added..." ) );
+        p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, i18n("Not subscription added..."));
     } else {
-        QListWidget::paintEvent( event );
+        QListWidget::paintEvent(event);
     }
 }
-
 

@@ -23,15 +23,18 @@
 class KJob;
 class QTemporaryFile;
 
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 class ProgressIndicatorLabel;
 }
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditorWidget;
 }
 class QPushButton;
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockShowListDialog : public QDialog
 {
     Q_OBJECT
@@ -43,7 +46,7 @@ public:
 
     void setListName(const QString &listName);
 private Q_SLOTS:
-    void slotFinished(KJob *job);    
+    void slotFinished(KJob *job);
     void slotDeleteBrokenList();
 
 Q_SIGNALS:

@@ -22,7 +22,8 @@
 #include <QList>
 #include <QRegExp>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
@@ -38,7 +39,7 @@ private:
         QRegExp pattern;
         QTextCharFormat format;
 
-        Rule( const QRegExp &r, const QTextCharFormat &f )
+        Rule(const QRegExp &r, const QTextCharFormat &f)
             : pattern(r), format(f) {}
     };
 

@@ -39,37 +39,39 @@
 class QString;
 class QPaintDevice;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-class MESSAGEVIEWER_EXPORT CSSHelperBase {
+class MESSAGEVIEWER_EXPORT CSSHelperBase
+{
 public:
     /** Construct a CSSHelper object and set its font and color settings to
         default values.
         Sub-Classes should put their config loading here.
      */
-    explicit CSSHelperBase( const QPaintDevice *pd );
+    explicit CSSHelperBase(const QPaintDevice *pd);
 
     /** @return HTML head including style sheet definitions and the
         &gt;body&lt; tag */
-    QString htmlHead( bool fixedFont = false ) const;
+    QString htmlHead(bool fixedFont = false) const;
 
     /** @return The collected CSS definitions as a string */
-    QString cssDefinitions( bool fixedFont = false ) const;
+    QString cssDefinitions(bool fixedFont = false) const;
 
     /** @return a &lt;div&gt; start tag with embedded style
         information suitable for quoted text with quote level @p level */
-    QString quoteFontTag( int level ) const;
+    QString quoteFontTag(int level) const;
     /** @return a &lt;div&gt; start tag with embedded style
         information suitable for non-quoted text */
     QString nonQuotedFontTag() const;
 
-    QFont bodyFont( bool fixedFont = false, bool printing = false ) const;
+    QFont bodyFont(bool fixedFont = false, bool printing = false) const;
 
-    void setBodyFont( const QFont& font );
-    void setPrintFont( const QFont& font );
+    void setBodyFont(const QFont &font);
+    void setPrintFont(const QFont &font);
 
     /** @return the quote color for the given level, where level ranges from 0 to 2 **/
-    QColor quoteColor( int level );
+    QColor quoteColor(int level);
 
     QColor pgpWarnColor() const;
 
@@ -89,19 +91,19 @@ protected:
     QColor mForegroundColor, mLinkColor, mVisitedLinkColor, mBackgroundColor;
     // colors for PGP (Frame, Header, Body)
     QColor cPgpOk1F, cPgpOk1H, cPgpOk1B,
-    cPgpOk0F, cPgpOk0H, cPgpOk0B,
-    cPgpWarnF, cPgpWarnH, cPgpWarnB,
-    cPgpErrF, cPgpErrH, cPgpErrB,
-    cPgpEncrF, cPgpEncrH, cPgpEncrB;
+           cPgpOk0F, cPgpOk0H, cPgpOk0B,
+           cPgpWarnF, cPgpWarnH, cPgpWarnB,
+           cPgpErrF, cPgpErrH, cPgpErrB,
+           cPgpEncrF, cPgpEncrH, cPgpEncrB;
     // color of frame of warning preceding the source of HTML messages
     QColor cHtmlWarning;
 
 private:
-    int fontSize( bool fixed, bool print = false ) const;
+    int fontSize(bool fixed, bool print = false) const;
     // returns CSS rules specific to the print media type
-    QString printCssDefinitions( bool fixed ) const;
+    QString printCssDefinitions(bool fixed) const;
     // returns CSS rules specific to the screen media type
-    QString screenCssDefinitions( const CSSHelperBase * helper, bool fixed ) const;
+    QString screenCssDefinitions(const CSSHelperBase *helper, bool fixed) const;
     // returns CSS rules common to both screen and print media types
     QString commonCssDefinitions() const;
 

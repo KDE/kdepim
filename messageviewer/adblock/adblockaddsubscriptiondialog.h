@@ -22,13 +22,14 @@
 
 class QComboBox;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class AdBlockAddSubscriptionDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AdBlockAddSubscriptionDialog(const QStringList &excludeList, QWidget *parent=0);
+    explicit AdBlockAddSubscriptionDialog(const QStringList &excludeList, QWidget *parent = 0);
     ~AdBlockAddSubscriptionDialog();
 
     void selectedList(QString &name, QString &url);

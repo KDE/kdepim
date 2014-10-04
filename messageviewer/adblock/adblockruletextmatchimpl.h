@@ -25,7 +25,6 @@
 *
 * ============================================================ */
 
-
 #ifndef ADBLOCKRULETEXTMATCHIMPL_H
 #define ADBLOCKRULETEXTMATCHIMPL_H
 
@@ -34,13 +33,14 @@
 // Qt Includes
 #include <QString>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 // Simple rule to find a string in the URL
 class AdBlockRuleTextMatchImpl : public AdBlockRuleImpl
 {
 public:
     explicit AdBlockRuleTextMatchImpl(const QString &filter);
-    
+
     bool match(const QNetworkRequest &request, const QString &encodedUrl, const QString &encodedUrlLowerCase) const;
 
     static bool isTextMatchFilter(const QString &filter);

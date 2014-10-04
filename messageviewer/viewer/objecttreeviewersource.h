@@ -24,26 +24,28 @@
 
 class QString;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class ViewerPrivate;
 
 /** An ObjectTreeParser source working on a MailViewer object */
-class MailViewerSource : public ObjectTreeSourceIf {
+class MailViewerSource : public ObjectTreeSourceIf
+{
 public:
-    explicit MailViewerSource( ViewerPrivate * viewer);
+    explicit MailViewerSource(ViewerPrivate *viewer);
     ~MailViewerSource();
     bool htmlMail();
     bool decryptMessage();
     bool htmlLoadExternal();
     bool showSignatureDetails();
-    void setHtmlMode( Util::HtmlMode mode );
+    void setHtmlMode(Util::HtmlMode mode);
     int levelQuote();
-    const QTextCodec * overrideCodec();
-    QString createMessageHeader( KMime::Message *message );
-    const AttachmentStrategy * attachmentStrategy();
-    HtmlWriter * htmlWriter();
-    CSSHelper* cssHelper();
+    const QTextCodec *overrideCodec();
+    QString createMessageHeader(KMime::Message *message);
+    const AttachmentStrategy *attachmentStrategy();
+    HtmlWriter *htmlWriter();
+    CSSHelper *cssHelper();
     QObject *sourceObject();
 
 private:

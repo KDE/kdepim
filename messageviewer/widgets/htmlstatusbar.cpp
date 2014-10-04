@@ -43,12 +43,12 @@
 
 using namespace MessageViewer;
 
-HtmlStatusBar::HtmlStatusBar(QWidget * parent)
-    : QLabel( parent ),
-      mMode( Util::Normal )
+HtmlStatusBar::HtmlStatusBar(QWidget *parent)
+    : QLabel(parent),
+      mMode(Util::Normal)
 {
-    setAlignment( Qt::AlignHCenter | Qt::AlignTop );
-    setAutoFillBackground( true );
+    setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    setAutoFillBackground(true);
     update();
 }
 
@@ -57,63 +57,65 @@ HtmlStatusBar::~HtmlStatusBar() {}
 void HtmlStatusBar::update()
 {
     QPalette pal = palette();
-    pal.setColor( backgroundRole(), bgColor() );
-    pal.setColor( foregroundRole(), fgColor() );
-    setPalette( pal );
-    setText( message() );
-    setToolTip( toolTip() );
+    pal.setColor(backgroundRole(), bgColor());
+    pal.setColor(foregroundRole(), fgColor());
+    setPalette(pal);
+    setText(message());
+    setToolTip(toolTip());
 }
 
 void HtmlStatusBar::setNormalMode()
 {
-    setMode( Util::Normal );
+    setMode(Util::Normal);
 }
 
 void HtmlStatusBar::setHtmlMode()
 {
-    setMode( Util::Html );
+    setMode(Util::Html);
 }
 
 void HtmlStatusBar::setMultipartPlainMode()
 {
-    setMode( Util::MultipartPlain );
+    setMode(Util::MultipartPlain);
 }
 
 void HtmlStatusBar::setMultipartHtmlMode()
 {
-    setMode( Util::MultipartHtml );
+    setMode(Util::MultipartHtml);
 }
 
-void HtmlStatusBar::setMode( Util::HtmlMode m, UpdateMode mode )
+void HtmlStatusBar::setMode(Util::HtmlMode m, UpdateMode mode)
 {
     mMode = m;
-    if ( mode == Update )
+    if (mode == Update) {
         update();
+    }
 }
 
-void HtmlStatusBar::mousePressEvent( QMouseEvent * event )
+void HtmlStatusBar::mousePressEvent(QMouseEvent *event)
 {
-    if ( event->button() == Qt::LeftButton ) {
+    if (event->button() == Qt::LeftButton) {
         emit clicked();
     }
 }
 
-QString HtmlStatusBar::message() const {
-    switch ( mode() ) {
+QString HtmlStatusBar::message() const
+{
+    switch (mode()) {
     case Util::Html: // bold: "HTML Message"
     case Util::MultipartHtml:
-        return i18nc( "'HTML Message' with html linebreaks between each letter and in bold text.",
-                      "<qt><b><br />H<br />T<br />M<br />L<br /> "
-                      "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</b></qt>" );
+        return i18nc("'HTML Message' with html linebreaks between each letter and in bold text.",
+                     "<qt><b><br />H<br />T<br />M<br />L<br /> "
+                     "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</b></qt>");
     case Util::Normal: // normal: "No HTML Message"
         return i18nc("'No HTML Message' with html linebreaks between each letter.",
                      "<qt><br />N<br />o<br /> "
                      "<br />H<br />T<br />M<br />L<br /> "
-                     "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</qt>" );
+                     "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</qt>");
     case Util::MultipartPlain: // normal: "Plain Message"
         return i18nc("'Plain Message' with html linebreaks between each letter.",
                      "<qt><br />P<br />l<br />a<br />i<br />n<br /> "
-                     "<br />M<br />e<br />s<br />s<br />a<br />g<br />e<br /></qt>" );
+                     "<br />M<br />e<br />s<br />s<br />a<br />g<br />e<br /></qt>");
     default:
         return QString();
     }
@@ -121,12 +123,11 @@ QString HtmlStatusBar::message() const {
 
 QString HtmlStatusBar::toolTip() const
 {
-    switch ( mode() )
-    {
+    switch (mode()) {
     case Util::Html:
     case Util::MultipartHtml:
     case Util::MultipartPlain:
-        return i18n( "Click to toggle between HTML and plain text." );
+        return i18n("Click to toggle between HTML and plain text.");
     default:
     case Util::Normal:
         break;
@@ -137,23 +138,23 @@ QString HtmlStatusBar::toolTip() const
 
 QColor HtmlStatusBar::fgColor() const
 {
-    KConfigGroup conf( GlobalSettings::self()->config(), "Reader" );
+    KConfigGroup conf(GlobalSettings::self()->config(), "Reader");
     QColor defaultColor, color;
-    switch ( mode() ) {
+    switch (mode()) {
     case Util::Html:
     case Util::MultipartHtml:
         defaultColor = Qt::white;
         color = defaultColor;
-        if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-            color = conf.readEntry( "ColorbarForegroundHTML", defaultColor );
+        if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
+            color = conf.readEntry("ColorbarForegroundHTML", defaultColor);
         }
         return color;
     case Util::Normal:
     case Util::MultipartPlain:
         defaultColor = Qt::black;
         color = defaultColor;
-        if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-            color = conf.readEntry( "ColorbarForegroundPlain", defaultColor );
+        if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
+            color = conf.readEntry("ColorbarForegroundPlain", defaultColor);
         }
         return color;
     default:
@@ -161,25 +162,26 @@ QColor HtmlStatusBar::fgColor() const
     }
 }
 
-QColor HtmlStatusBar::bgColor() const {
-    KConfigGroup conf( GlobalSettings::self()->config(), "Reader" );
+QColor HtmlStatusBar::bgColor() const
+{
+    KConfigGroup conf(GlobalSettings::self()->config(), "Reader");
 
     QColor defaultColor, color;
-    switch ( mode() ) {
+    switch (mode()) {
     case Util::Html:
     case Util::MultipartHtml:
         defaultColor = Qt::black;
         color = defaultColor;
-        if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-            color = conf.readEntry( "ColorbarBackgroundHTML", defaultColor );
+        if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
+            color = conf.readEntry("ColorbarBackgroundHTML", defaultColor);
         }
         return color;
     case Util::Normal:
     case Util::MultipartPlain:
         defaultColor = Qt::lightGray;
         color = defaultColor;
-        if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-            color = conf.readEntry( "ColorbarBackgroundPlain", defaultColor );
+        if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
+            color = conf.readEntry("ColorbarBackgroundPlain", defaultColor);
         }
         return color;
     default:

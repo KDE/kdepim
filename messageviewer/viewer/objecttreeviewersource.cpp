@@ -17,15 +17,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
-
 #include "objecttreeviewersource.h"
 #include "viewer/viewer_p.h"
 #include "widgets/htmlstatusbar.h"
 
-namespace MessageViewer {
-MailViewerSource::MailViewerSource( ViewerPrivate *viewer ) :
-    ObjectTreeSourceIf(), mViewer( viewer )
+namespace MessageViewer
+{
+MailViewerSource::MailViewerSource(ViewerPrivate *viewer) :
+    ObjectTreeSourceIf(), mViewer(viewer)
 {
 }
 
@@ -53,9 +52,9 @@ bool MailViewerSource::showSignatureDetails()
     return mViewer->mShowSignatureDetails;
 }
 
-void MailViewerSource::setHtmlMode( Util::HtmlMode mode )
+void MailViewerSource::setHtmlMode(Util::HtmlMode mode)
 {
-    mViewer->mColorBar->setMode( mode );
+    mViewer->mColorBar->setMode(mode);
 }
 
 int MailViewerSource::levelQuote()
@@ -63,14 +62,14 @@ int MailViewerSource::levelQuote()
     return mViewer->mLevelQuote;
 }
 
-const QTextCodec * MailViewerSource::overrideCodec()
+const QTextCodec *MailViewerSource::overrideCodec()
 {
     return mViewer->overrideCodec();
 }
 
-QString MailViewerSource::createMessageHeader( KMime::Message *message )
+QString MailViewerSource::createMessageHeader(KMime::Message *message)
 {
-    return mViewer->writeMsgHeader( message );
+    return mViewer->writeMsgHeader(message);
 }
 
 QObject *MailViewerSource::sourceObject()
@@ -78,17 +77,17 @@ QObject *MailViewerSource::sourceObject()
     return mViewer;
 }
 
-const AttachmentStrategy * MailViewerSource::attachmentStrategy()
+const AttachmentStrategy *MailViewerSource::attachmentStrategy()
 {
     return mViewer->attachmentStrategy();
 }
 
-HtmlWriter * MailViewerSource::htmlWriter()
+HtmlWriter *MailViewerSource::htmlWriter()
 {
     return mViewer->htmlWriter();
 }
 
-CSSHelper* MailViewerSource::cssHelper()
+CSSHelper *MailViewerSource::cssHelper()
 {
     return mViewer->cssHelper();
 }

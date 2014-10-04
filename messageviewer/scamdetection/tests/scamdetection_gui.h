@@ -20,7 +20,8 @@
 
 #include <QWidget>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class ScamDetectionWarningWidget;
 class ScamDetection;
 }
@@ -29,7 +30,7 @@ class ScamDetectionTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ScamDetectionTestWidget(const QString &filename, QWidget *parent=0);
+    explicit ScamDetectionTestWidget(const QString &filename, QWidget *parent = 0);
     ~ScamDetectionTestWidget();
 
 private Q_SLOTS:

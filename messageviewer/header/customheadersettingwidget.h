@@ -22,13 +22,15 @@
 
 #include <QWidget>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class SimpleStringListEditor;
 }
 
 class QRadioButton;
 class QButtonGroup;
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class MESSAGEVIEWER_EXPORT CustomHeaderSettingWidget : public QWidget
 {

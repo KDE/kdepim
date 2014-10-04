@@ -5,7 +5,8 @@
 #include <QApplication>
 #include "messageviewer_export.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
  * @short sets a cursor and makes sure it's restored on destruction
@@ -17,30 +18,36 @@ class KCursorSaver
 {
 public:
     /// constructor taking QCursor shapes
-    explicit KCursorSaver(Qt::CursorShape shape) {
-        QApplication::setOverrideCursor( QCursor(shape) );
+    explicit KCursorSaver(Qt::CursorShape shape)
+    {
+        QApplication::setOverrideCursor(QCursor(shape));
         inited = true;
     }
 
     /// copy constructor. The right side won't restore the cursor
-    KCursorSaver( const KCursorSaver &rhs ) {
+    KCursorSaver(const KCursorSaver &rhs)
+    {
         *this = rhs;
     }
 
     /// restore the cursor
-    ~KCursorSaver() {
-        if (inited)
+    ~KCursorSaver()
+    {
+        if (inited) {
             QApplication::restoreOverrideCursor();
+        }
     }
 
     /// call this to explitly restore the cursor
-    inline void restoreCursor(void) {
+    inline void restoreCursor(void)
+    {
         QApplication::restoreOverrideCursor();
         inited = false;
     }
 
 protected:
-    void operator=( const KCursorSaver &rhs ) {
+    void operator=(const KCursorSaver &rhs)
+    {
         inited = rhs.inited;
         rhs.inited = false;
     }
@@ -52,13 +59,16 @@ private:
 /**
  * convenience functions
  */
-namespace KBusyPtr {
-    inline KCursorSaver idle() {
-        return KCursorSaver(Qt::ArrowCursor);
-    }
-    inline KCursorSaver busy() {
-        return KCursorSaver(Qt::WaitCursor);
-    }
+namespace KBusyPtr
+{
+inline KCursorSaver idle()
+{
+    return KCursorSaver(Qt::ArrowCursor);
+}
+inline KCursorSaver busy()
+{
+    return KCursorSaver(Qt::WaitCursor);
+}
 }
 
 }

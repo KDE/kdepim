@@ -21,40 +21,41 @@
 #include <QAccessibleTextInterface>
 #include <QAccessibleWidget>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MailWebView;
 }
 
 class AccessibleMailWebView: public QAccessibleWidgetEx,
-        public QAccessibleTextInterface
+    public QAccessibleTextInterface
 {
     Q_ACCESSIBLE_OBJECT
 public:
-    explicit AccessibleMailWebView( MessageViewer::MailWebView *widget );
+    explicit AccessibleMailWebView(MessageViewer::MailWebView *widget);
 
     virtual int characterCount();
 
     virtual int selectionCount();
-    virtual void addSelection( int startOffset, int endOffset );
-    virtual void removeSelection( int selectionIndex );
-    virtual void setSelection( int selectionIndex, int startOffset, int endOffset );
-    virtual void setCursorPosition( int );
+    virtual void addSelection(int startOffset, int endOffset);
+    virtual void removeSelection(int selectionIndex);
+    virtual void setSelection(int selectionIndex, int startOffset, int endOffset);
+    virtual void setCursorPosition(int);
 
     // unhide overload QString text(Text, int) from QAccessible
     using QAccessibleWidgetEx::text;
 
-    virtual QString text( int startOffset, int endOffset );
+    virtual QString text(int startOffset, int endOffset);
 
-    virtual QString attributes( int offset, int* startOffset, int* endOffset );
+    virtual QString attributes(int offset, int *startOffset, int *endOffset);
 
-    virtual void selection( int selectionIndex, int* startOffset, int* endOffset );
-    virtual QRect characterRect( int offset, QAccessible2::CoordinateType coordType );
-    virtual int offsetAtPoint( const QPoint& point, QAccessible2::CoordinateType coordType );
+    virtual void selection(int selectionIndex, int *startOffset, int *endOffset);
+    virtual QRect characterRect(int offset, QAccessible2::CoordinateType coordType);
+    virtual int offsetAtPoint(const QPoint &point, QAccessible2::CoordinateType coordType);
     virtual int cursorPosition();
-    virtual void scrollToSubstring( int startIndex, int endIndex );
-    virtual QString textAfterOffset( int offset, QAccessible2::BoundaryType boundaryType, int* startOffset, int* endOffset );
-    virtual QString textBeforeOffset( int offset, QAccessible2::BoundaryType boundaryType, int* startOffset, int* endOffset );
-    virtual QString textAtOffset( int offset, QAccessible2::BoundaryType boundaryType, int* startOffset, int* endOffset );
+    virtual void scrollToSubstring(int startIndex, int endIndex);
+    virtual QString textAfterOffset(int offset, QAccessible2::BoundaryType boundaryType, int *startOffset, int *endOffset);
+    virtual QString textBeforeOffset(int offset, QAccessible2::BoundaryType boundaryType, int *startOffset, int *endOffset);
+    virtual QString textAtOffset(int offset, QAccessible2::BoundaryType boundaryType, int *startOffset, int *endOffset);
 private:
     MessageViewer::MailWebView *m_widget;
 };

@@ -24,7 +24,6 @@
 *
 * ============================================================ */
 
-
 // Self Includes
 #include "adblockelementhiding.h"
 #include <QDebug>
@@ -34,14 +33,13 @@ AdBlockElementHiding::AdBlockElementHiding()
 {
 }
 
-
 bool AdBlockElementHiding::addRule(const QString &rule)
 {
-    if (!rule.contains(QLatin1String("##")))
+    if (!rule.contains(QLatin1String("##"))) {
         return false;
+    }
 
-    if (rule.startsWith(QLatin1String("##")))
-    {
+    if (rule.startsWith(QLatin1String("##"))) {
         m_GenericRules.push_back(rule.mid(2));
         return true;
     }
@@ -50,8 +48,8 @@ bool AdBlockElementHiding::addRule(const QString &rule)
     const QString domainSpecificRule = lst[1];
 
     QStringList domains = lst[0].split(QLatin1Char(','));
-    Q_FOREACH(const QString &domain, domains) {
-        if(domain.startsWith(QLatin1Char('~'))) {
+    Q_FOREACH (const QString &domain, domains) {
+        if (domain.startsWith(QLatin1Char('~'))) {
             m_DomainSpecificRulesWhitelist.insert(domain.mid(1),
                                                   domainSpecificRule);
             continue;
@@ -67,7 +65,7 @@ void AdBlockElementHiding::apply(QWebElement &document, const QString &domain) c
 {
 
     //first apply generic rules
-    Q_FOREACH(const QString &rule, m_GenericRules) {
+    Q_FOREACH (const QString &rule, m_GenericRules) {
         applyStringRule(document, rule);
     }
 
@@ -75,16 +73,17 @@ void AdBlockElementHiding::apply(QWebElement &document, const QString &domain) c
     QStringList whiteListedRules;
     const QStringList subdomainList = generateSubdomainList(domain);
 
-    Q_FOREACH(const QString &d, subdomainList) {
+    Q_FOREACH (const QString &d, subdomainList) {
         whiteListedRules.append(m_DomainSpecificRulesWhitelist.values(d));
     }
 
     //apply rules if not whitelisted
-    Q_FOREACH(const QString &d, subdomainList) {
+    Q_FOREACH (const QString &d, subdomainList) {
         QList<QString> ruleList = m_DomainSpecificRules.values(d);
-        Q_FOREACH(const QString &rule, ruleList) {
-            if (!whiteListedRules.contains(rule))
+        Q_FOREACH (const QString &rule, ruleList) {
+            if (!whiteListedRules.contains(rule)) {
                 applyStringRule(document, rule);
+            }
         }
     }
 }
@@ -100,10 +99,10 @@ void AdBlockElementHiding::applyStringRule(QWebElement &document, const QString 
 {
     QWebElementCollection elements = document.findAll(rule);
 
-    Q_FOREACH(QWebElement el, elements)
-    {
-        if (el.isNull())
+    Q_FOREACH (QWebElement el, elements) {
+        if (el.isNull()) {
             continue;
+        }
         qDebug() << "Hide element: " << el.localName();
         el.removeFromDocument();
     }
@@ -115,8 +114,7 @@ QStringList AdBlockElementHiding::generateSubdomainList(const QString &domain) c
 
     int dotPosition = domain.lastIndexOf(QLatin1Char('.'));
     dotPosition = domain.lastIndexOf(QLatin1Char('.'), dotPosition - 1);
-    while (dotPosition != -1)
-    {
+    while (dotPosition != -1) {
         returnList.append(domain.mid(dotPosition + 1));
         dotPosition = domain.lastIndexOf(QLatin1Char('.'), dotPosition - 1);
     }

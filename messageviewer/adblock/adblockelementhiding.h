@@ -31,7 +31,8 @@
 #include <QMultiHash>
 #include <QWebElement>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockElementHiding
 {
 public:

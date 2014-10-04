@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef PRINTINGSETTINGS_H
 #define PRINTINGSETTINGS_H
 
@@ -23,13 +22,14 @@
 #include <QWidget>
 
 class Ui_PrintingSettings;
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class MESSAGEVIEWER_EXPORT PrintingSettings : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PrintingSettings(QWidget *parent=0);
+    explicit PrintingSettings(QWidget *parent = 0);
     ~PrintingSettings();
 
     void save();

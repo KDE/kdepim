@@ -20,19 +20,24 @@
 
 #include "header/headerstyle.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-class CustomHeaderStyle : public HeaderStyle {
+class CustomHeaderStyle : public HeaderStyle
+{
     friend class HeaderStyle;
 protected:
     CustomHeaderStyle() : HeaderStyle() {}
     ~CustomHeaderStyle() {}
 
 public:
-    const char * name() const { return "custom"; }
+    const char *name() const
+    {
+        return "custom";
+    }
 
 private:
-    QString format( KMime::Message *message ) const;
+    QString format(KMime::Message *message) const;
     QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
 };
 }

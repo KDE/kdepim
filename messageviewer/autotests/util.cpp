@@ -21,24 +21,24 @@
 #include <QFile>
 #include <QDebug>
 
-KMime::Message::Ptr readAndParseMail( const QString &mailFile )
+KMime::Message::Ptr readAndParseMail(const QString &mailFile)
 {
-  QFile file( QLatin1String( MAIL_DATA_DIR ) + QLatin1Char('/') + mailFile );
-  bool ok = file.open( QIODevice::ReadOnly );
-  Q_ASSERT( ok );
-  Q_UNUSED( ok );
-  QByteArray rawData;
-  while( !file.atEnd() ) {
-    char buf[1024];
-    qint64 lineLength = file.readLine(buf, sizeof(buf));
-    if(lineLength != -1) {
-      rawData.append( buf );
+    QFile file(QLatin1String(MAIL_DATA_DIR) + QLatin1Char('/') + mailFile);
+    bool ok = file.open(QIODevice::ReadOnly);
+    Q_ASSERT(ok);
+    Q_UNUSED(ok);
+    QByteArray rawData;
+    while (!file.atEnd()) {
+        char buf[1024];
+        qint64 lineLength = file.readLine(buf, sizeof(buf));
+        if (lineLength != -1) {
+            rawData.append(buf);
+        }
     }
-  }
-  const QByteArray data = KMime::CRLFtoLF( rawData );
-  Q_ASSERT( !data.isEmpty() );
-  KMime::Message::Ptr msg( new KMime::Message );
-  msg->setContent( data );
-  msg->parse();
-  return msg;
+    const QByteArray data = KMime::CRLFtoLF(rawData);
+    Q_ASSERT(!data.isEmpty());
+    KMime::Message::Ptr msg(new KMime::Message);
+    msg->setContent(data);
+    msg->parse();
+    return msg;
 }

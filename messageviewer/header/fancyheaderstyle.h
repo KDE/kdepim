@@ -19,25 +19,30 @@
 #define FANCYHEADERSTYLE_H
 
 #include "header/headerstyle.h"
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-
-class FancyHeaderStyle : public HeaderStyle {
+class FancyHeaderStyle : public HeaderStyle
+{
     friend class HeaderStyle;
 protected:
     FancyHeaderStyle() : HeaderStyle() {}
     virtual ~FancyHeaderStyle() {}
 
 public:
-    const char * name() const { return "fancy"; }
+    const char *name() const
+    {
+        return "fancy";
+    }
 
-    QString format( KMime::Message *message ) const;
+    QString format(KMime::Message *message) const;
 
-    bool hasAttachmentQuickList() const {
+    bool hasAttachmentQuickList() const
+    {
         return true;
     }
 private:
-    static QString imgToDataUrl( const QImage & image );
+    static QString imgToDataUrl(const QImage &image);
 };
 
 }

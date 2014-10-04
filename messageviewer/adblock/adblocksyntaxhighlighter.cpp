@@ -35,7 +35,7 @@ void AdBlockSyntaxHighlighter::highlightBlock(const QString &text)
         const QRegExp expression(rule.pattern);
         int index = expression.indexIn(text);
         int length = 0;
-        while (index >= 0 && ( length = expression.matchedLength() ) > 0 ) {
+        while (index >= 0 && (length = expression.matchedLength()) > 0) {
             setFormat(index, length, rule.format);
             index = expression.indexIn(text, index + length);
         }
@@ -45,23 +45,23 @@ void AdBlockSyntaxHighlighter::highlightBlock(const QString &text)
 void AdBlockSyntaxHighlighter::init()
 {
     QTextCharFormat commentFormat;
-    commentFormat.setForeground( Qt::darkYellow );
-    QRegExp commentRegex( QLatin1String( "^!.*" ) );
-    m_rules.append( Rule( commentRegex, commentFormat ) );
+    commentFormat.setForeground(Qt::darkYellow);
+    QRegExp commentRegex(QLatin1String("^!.*"));
+    m_rules.append(Rule(commentRegex, commentFormat));
 
     QTextCharFormat exceptionFormat;
-    exceptionFormat.setForeground( Qt::magenta );
-    QRegExp exceptionRegex( QLatin1String( "^@@.*" ) );
-    m_rules.append( Rule( exceptionRegex, exceptionFormat ) );
+    exceptionFormat.setForeground(Qt::magenta);
+    QRegExp exceptionRegex(QLatin1String("^@@.*"));
+    m_rules.append(Rule(exceptionRegex, exceptionFormat));
 
     QTextCharFormat headerFormat;
-    headerFormat.setForeground( Qt::red );
-    QRegExp headerRegex( QLatin1String( "^\\[.*" ) );
-    m_rules.append( Rule( headerRegex, headerFormat ) );
+    headerFormat.setForeground(Qt::red);
+    QRegExp headerRegex(QLatin1String("^\\[.*"));
+    m_rules.append(Rule(headerRegex, headerFormat));
 
     QTextCharFormat elementFormat;
-    elementFormat.setForeground( Qt::blue );
-    QRegExp elementRegex( QLatin1String( ".*##.*" ) );
-    m_rules.append( Rule( elementRegex, elementFormat ) );
+    elementFormat.setForeground(Qt::blue);
+    QRegExp elementRegex(QLatin1String(".*##.*"));
+    m_rules.append(Rule(elementRegex, elementFormat));
 }
 

@@ -34,12 +34,13 @@
 #include <QRegExp>
 #include <QString>
 #include <QSet>
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockRuleFallbackImpl : public AdBlockRuleImpl
 {
 public:
     explicit AdBlockRuleFallbackImpl(const QString &filter);
-    
+
     bool match(const QNetworkRequest &request, const QString &encodedUrl, const QString &encodedUrlLowerCase) const;
 
     QString ruleString() const;

@@ -29,14 +29,16 @@
 
 class QEventLoop;
 
-namespace Kleo {
+namespace Kleo
+{
 class DecryptVerifyJob;
 class ImportJob;
 class VerifyDetachedJob;
 class VerifyOpaqueJob;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
   Helper class for synchronous execution of Kleo crypto jobs.
@@ -45,29 +47,32 @@ class KleoJobExecutor : public QObject
 {
     Q_OBJECT
 public:
-    explicit KleoJobExecutor( QObject *parent = 0 );
+    explicit KleoJobExecutor(QObject *parent = 0);
 
-    GpgME::VerificationResult exec( Kleo::VerifyDetachedJob* job,
-                                    const QByteArray &signature,
-                                    const QByteArray &signedData );
-    GpgME::VerificationResult exec( Kleo::VerifyOpaqueJob* job,
-                                    const QByteArray &signedData,
-                                    QByteArray &plainText );
-    std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> exec( Kleo::DecryptVerifyJob *job,
-                                                                       const QByteArray &cipherText,
-                                                                       QByteArray &plainText );
-    GpgME::ImportResult exec( Kleo::ImportJob* job, const QByteArray &certData );
+    GpgME::VerificationResult exec(Kleo::VerifyDetachedJob *job,
+                                   const QByteArray &signature,
+                                   const QByteArray &signedData);
+    GpgME::VerificationResult exec(Kleo::VerifyOpaqueJob *job,
+                                   const QByteArray &signedData,
+                                   QByteArray &plainText);
+    std::pair<GpgME::DecryptionResult, GpgME::VerificationResult> exec(Kleo::DecryptVerifyJob *job,
+            const QByteArray &cipherText,
+            QByteArray &plainText);
+    GpgME::ImportResult exec(Kleo::ImportJob *job, const QByteArray &certData);
 
-    GpgME::Error auditLogError() const { return mAuditLogError; }
+    GpgME::Error auditLogError() const
+    {
+        return mAuditLogError;
+    }
     QString auditLogAsHtml() const;
 
 private slots:
-    void verificationResult( const GpgME::VerificationResult &result );
-    void verificationResult( const GpgME::VerificationResult &result, const QByteArray &plainText );
-    void decryptResult( const GpgME::DecryptionResult & decryptionresult,
-                        const GpgME::VerificationResult & verificationresult,
-                        const QByteArray & plainText );
-    void importResult( const GpgME::ImportResult &result );
+    void verificationResult(const GpgME::VerificationResult &result);
+    void verificationResult(const GpgME::VerificationResult &result, const QByteArray &plainText);
+    void decryptResult(const GpgME::DecryptionResult &decryptionresult,
+                       const GpgME::VerificationResult &verificationresult,
+                       const QByteArray &plainText);
+    void importResult(const GpgME::ImportResult &result);
 
 private:
     QEventLoop *mEventLoop;

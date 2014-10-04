@@ -20,10 +20,7 @@
 
 #include <libkdepim/misc/broadcaststatus.h>
 
-
-
 #include <KLocalizedString>
-
 
 #include <QFile>
 #include <QVariantMap>
@@ -54,7 +51,7 @@ ScamCheckShortUrl::~ScamCheckShortUrl()
 void ScamCheckShortUrl::expandedUrl(const QUrl &url)
 {
     if (!mNetworkConfigurationManager->isOnline()) {
-        KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "No network connection detected, we cannot expand url.") );
+        KPIM::BroadcastStatus::instance()->setStatusMsg(i18n("No network connection detected, we cannot expand url."));
         return;
     }
     const QUrl newUrl = QString::fromLatin1("http://api.longurl.org/v2/expand?url=%1&format=json").arg(url.url());
@@ -81,7 +78,7 @@ void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
         } else {
             return;
         }
-        KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Short url \'%1\' redirects to \'%2\'.", shortUrl.url(), longUrl.toDisplayString() ) );
+        KPIM::BroadcastStatus::instance()->setStatusMsg(i18n("Short url \'%1\' redirects to \'%2\'.", shortUrl.url(), longUrl.toDisplayString()));
 
     }
 }
@@ -93,7 +90,7 @@ void ScamCheckShortUrl::slotError(QNetworkReply::NetworkError error)
 
 bool ScamCheckShortUrl::isShortUrl(const QUrl &url)
 {
-    if (!url.path().isEmpty() && QString::compare(url.path(),QLatin1String("/")) && sSupportedServices.contains(url.host())) {
+    if (!url.path().isEmpty() && QString::compare(url.path(), QLatin1String("/")) && sSupportedServices.contains(url.host())) {
         return true;
     } else  {
         return false;
@@ -107,12 +104,12 @@ void ScamCheckShortUrl::loadLongUrlServices()
         QJsonParseError error;
         const QJsonDocument json = QJsonDocument::fromJson(servicesFile.readAll(), &error);
         if (error.error != QJsonParseError::NoError || json.isNull()) {
-            qDebug()<<" Error during read longurlServices.json";
+            qDebug() << " Error during read longurlServices.json";
             return;
         }
         const QMap<QString, QVariant> response = json.toVariant().toMap();
         sSupportedServices = response.uniqueKeys();
     } else {
-        qDebug()<<" json file \'longurlServices.json\' not found";
+        qDebug() << " json file \'longurlServices.json\' not found";
     }
 }

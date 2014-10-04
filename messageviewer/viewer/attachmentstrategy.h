@@ -37,11 +37,13 @@
 #include "messageviewer_export.h"
 
 class QString;
-namespace KMime {
+namespace KMime
+{
 class Content;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class MESSAGEVIEWER_EXPORT AttachmentStrategy
 {
@@ -55,22 +57,22 @@ public:
     //
     enum Type { Iconic, Smart, Inlined, Hidden, HeaderOnly };
 
-    static const AttachmentStrategy * create( Type type );
-    static const AttachmentStrategy * create( const QString & type );
+    static const AttachmentStrategy *create(Type type);
+    static const AttachmentStrategy *create(const QString &type);
 
-    static const AttachmentStrategy * iconic();
-    static const AttachmentStrategy * smart();
-    static const AttachmentStrategy * inlined();
-    static const AttachmentStrategy * hidden();
-    static const AttachmentStrategy * headerOnly();
+    static const AttachmentStrategy *iconic();
+    static const AttachmentStrategy *smart();
+    static const AttachmentStrategy *inlined();
+    static const AttachmentStrategy *hidden();
+    static const AttachmentStrategy *headerOnly();
 
     //
     // Navigation methods:
     //
 
-    virtual const char * name() const = 0;
-    virtual const AttachmentStrategy * next() const = 0;
-    virtual const AttachmentStrategy * prev() const = 0;
+    virtual const char *name() const = 0;
+    virtual const AttachmentStrategy *next() const = 0;
+    virtual const AttachmentStrategy *prev() const = 0;
 
     //
     // Bahavioural:
@@ -79,8 +81,9 @@ public:
     enum Display { None, AsIcon, Inline };
 
     virtual bool inlineNestedMessages() const = 0;
-    virtual Display defaultDisplay( KMime::Content * node ) const = 0;
-    virtual bool requiresAttachmentListInHeader() const {
+    virtual Display defaultDisplay(KMime::Content *node) const = 0;
+    virtual bool requiresAttachmentListInHeader() const
+    {
         return false;
     }
 };

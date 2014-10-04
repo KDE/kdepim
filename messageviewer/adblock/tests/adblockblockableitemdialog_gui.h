@@ -21,17 +21,19 @@
 #include <QWidget>
 #include <QWebPage>
 
-namespace KPIMUtils {
+namespace KPIMUtils
+{
 class ProgressIndicatorLabel;
 }
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockBlockableItemsWidget;
 }
 class AdBlockBlockableItemTestDialog : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AdBlockBlockableItemTestDialog(const QString &filename, QWidget *parent=0);
+    explicit AdBlockBlockableItemTestDialog(const QString &filename, QWidget *parent = 0);
     ~AdBlockBlockableItemTestDialog();
 
 private Q_SLOTS:

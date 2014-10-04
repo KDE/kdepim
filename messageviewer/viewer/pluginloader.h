@@ -75,58 +75,66 @@
  *
  **/
 template< typename T, typename T_config >
-class PluginLoader : public PluginLoaderBase {
+class PluginLoader : public PluginLoaderBase
+{
 protected:
-  PluginLoader() : PluginLoaderBase() {}
+    PluginLoader() : PluginLoaderBase() {}
 
 private:
-  static PluginLoader<T,T_config> * mSelf;
+    static PluginLoader<T, T_config> *mSelf;
 
 public:
-  virtual ~PluginLoader() { mSelf = 0; }
-
-  /** Returns the single instance of this loader. */
-  static PluginLoader<T,T_config> * instance() {
-    if ( !mSelf ) {
-      mSelf = new PluginLoader<T,T_config>();
-      mSelf->scan();
+    virtual ~PluginLoader()
+    {
+        mSelf = 0;
     }
-    return mSelf;
-  }
 
-  /** Rescans the plugin directory to find any newly installed
-      plugins.
-  **/
-  virtual void scan() {
-    doScan( T_config::path );
-  }
+    /** Returns the single instance of this loader. */
+    static PluginLoader<T, T_config> *instance()
+    {
+        if (!mSelf) {
+            mSelf = new PluginLoader<T, T_config>();
+            mSelf->scan();
+        }
+        return mSelf;
+    }
 
-  /** Returns a pointer to a plugin object (of type @p T) or a null
-      pointer if the type wasn't found. You can extend this method
-      for when you want to handle builtin types */
-  virtual T * createForName( const QString & type ) const {
-    KLibrary::void_function_ptr main_func = mainFunc( type, T_config::mainfunc );
-    if ( !main_func ) return 0;
+    /** Rescans the plugin directory to find any newly installed
+        plugins.
+    **/
+    virtual void scan()
+    {
+        doScan(T_config::path);
+    }
 
-    // cast to a pointer to a function returning T*, call it and
-    // return the result; don't you love C? ;-)
-    return ((T* (*)())( main_func ))();
-  }
+    /** Returns a pointer to a plugin object (of type @p T) or a null
+        pointer if the type wasn't found. You can extend this method
+        for when you want to handle builtin types */
+    virtual T *createForName(const QString &type) const
+    {
+        KLibrary::void_function_ptr main_func = mainFunc(type, T_config::mainfunc);
+        if (!main_func) {
+            return 0;
+        }
+
+        // cast to a pointer to a function returning T*, call it and
+        // return the result; don't you love C? ;-)
+        return ((T * (*)())(main_func))();
+    }
 };
 
 template< typename T, typename T_config >
-PluginLoader<T,T_config> * PluginLoader<T,T_config>::mSelf = 0;
+PluginLoader<T, T_config> *PluginLoader<T, T_config>::mSelf = 0;
 
 #define DEFINE_PLUGIN_LOADER( pl, t, mf, p ) \
-  namespace { /* don't pollute namespaces */ \
+    namespace { /* don't pollute namespaces */ \
     struct Q_DECL_EXPORT pl##Config { \
-      static const char * const mainfunc; \
-      static const char * const path; \
+        static const char * const mainfunc; \
+        static const char * const path; \
     }; \
     const char * const pl##Config::mainfunc = mf; \
     const char * const pl##Config::path = p; \
-  } \
-  typedef PluginLoader< t, pl##Config > pl; \
-
+    } \
+    typedef PluginLoader< t, pl##Config > pl; \
 
 #endif // PLUGINLOADER_H

@@ -24,8 +24,8 @@ QVariant MessageHeaderEmailShowLink::doFilter(const QVariant &input, const QVari
 {
     Q_UNUSED(autoescape);
     Q_UNUSED(argument);
-    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( Grantlee::getSafeString(input) );
-    return MessageCore::StringUtil::emailAddrAsAnchor( mailboxes, MessageCore::StringUtil::DisplayFullAddress, QString(), MessageCore::StringUtil::ShowLink );
+    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString(Grantlee::getSafeString(input));
+    return MessageCore::StringUtil::emailAddrAsAnchor(mailboxes, MessageCore::StringUtil::DisplayFullAddress, QString(), MessageCore::StringUtil::ShowLink);
 }
 
 bool MessageHeaderEmailShowLink::isSafe() const
@@ -37,8 +37,8 @@ QVariant MessageHeaderEmailNameOnly::doFilter(const QVariant &input, const QVari
 {
     Q_UNUSED(autoescape);
     Q_UNUSED(argument);
-    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( Grantlee::getSafeString(input) );
-    return MessageCore::StringUtil::emailAddrAsAnchor( mailboxes, MessageCore::StringUtil::DisplayNameOnly );
+    const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString(Grantlee::getSafeString(input));
+    return MessageCore::StringUtil::emailAddrAsAnchor(mailboxes, MessageCore::StringUtil::DisplayNameOnly);
 }
 
 bool MessageHeaderEmailNameOnly::isSafe() const

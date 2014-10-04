@@ -21,7 +21,8 @@
 #include <KWebPage>
 #include <QUrl>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class WebPage : public KWebPage
 {
     Q_OBJECT

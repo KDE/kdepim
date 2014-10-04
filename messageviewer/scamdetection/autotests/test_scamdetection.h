@@ -18,7 +18,6 @@
 #ifndef TEST_SCAMDETECTION_H
 #define TEST_SCAMDETECTION_H
 
-
 #include <qtest.h>
 #include <QObject>
 class QWebFrame;

@@ -24,10 +24,8 @@
 *
 * ============================================================ */
 
-
 #ifndef ADBLOCKRULE_NULL_IMPL_H
 #define ADBLOCKRULE_NULL_IMPL_H
-
 
 // Local Includes
 #include "adblockruleimpl.h"
@@ -35,13 +33,14 @@
 // Qt Includes
 #include <QString>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockRuleNullImpl : public AdBlockRuleImpl
 {
 
 public:
     explicit AdBlockRuleNullImpl(const QString &filter);
-    
+
     bool match(const QNetworkRequest &, const QString &, const QString &) const;
 
     static bool isNullFilter(const QString &filter);

@@ -21,10 +21,12 @@
 #include <QWidget>
 #include "messageviewer_export.h"
 class QWebFrame;
-namespace PimCommon {
+namespace PimCommon
+{
 class CustomTreeView;
 }
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class MESSAGEVIEWER_EXPORT AdBlockBlockableItemsWidget : public QWidget
 {
@@ -44,7 +46,7 @@ public:
 
         MaxTypeElement
     };
-    explicit AdBlockBlockableItemsWidget(QWidget *parent=0);
+    explicit AdBlockBlockableItemsWidget(QWidget *parent = 0);
     ~AdBlockBlockableItemsWidget();
 
     static QString elementTypeToI18n(AdBlockBlockableItemsWidget::TypeElement type);
@@ -68,13 +70,12 @@ private:
         Type
     };
 
-
     enum TypeItem {
         Element = Qt::UserRole + 1
     };
 
     void searchBlockableElement(QWebFrame *frame);
-    void adaptSrc(QString &src,const QString &hostName);
+    void adaptSrc(QString &src, const QString &hostName);
 
 private:
     PimCommon::CustomTreeView *mListItems;

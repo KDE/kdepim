@@ -25,7 +25,7 @@ using namespace MessageViewer;
 CustomHeaderSettingDialog::CustomHeaderSettingDialog(QWidget *parent)
     : QDialog(parent)
 {
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -38,7 +38,7 @@ CustomHeaderSettingDialog::CustomHeaderSettingDialog(QWidget *parent)
     mCustomHeaderWidget = new CustomHeaderSettingWidget();
     connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, mCustomHeaderWidget, &CustomHeaderSettingWidget::resetToDefault);
     mCustomHeaderWidget->readConfig();
-    mainLayout->addWidget (mCustomHeaderWidget );
+    mainLayout->addWidget(mCustomHeaderWidget);
     mainLayout->addWidget(buttonBox);
 
     readConfig();
@@ -51,17 +51,17 @@ CustomHeaderSettingDialog::~CustomHeaderSettingDialog()
 
 void CustomHeaderSettingDialog::readConfig()
 {
-    KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "CustomHeaderSettingDialog" );
-    const QSize size = group.readEntry( "Size", QSize(500, 250) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(MessageViewer::GlobalSettings::self()->config(), "CustomHeaderSettingDialog");
+    const QSize size = group.readEntry("Size", QSize(500, 250));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void CustomHeaderSettingDialog::writeConfig()
 {
-    KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "CustomHeaderSettingDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(MessageViewer::GlobalSettings::self()->config(), "CustomHeaderSettingDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }
 

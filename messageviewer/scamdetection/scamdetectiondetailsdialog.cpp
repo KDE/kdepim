@@ -40,8 +40,8 @@ using namespace MessageViewer;
 ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n("Details") );
-    setAttribute( Qt::WA_DeleteOnClose );
+    setWindowTitle(i18n("Details"));
+    setAttribute(Qt::WA_DeleteOnClose);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -52,7 +52,7 @@ ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::accepted, this, &ScamDetectionDetailsDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ScamDetectionDetailsDialog::reject);
     KGuiItem::assign(user1Button, KStandardGuiItem::saveAs());
-    setModal( false );
+    setModal(false);
     mDetails = new PimCommon::RichTextEditorWidget;
     mainLayout->addWidget(mDetails);
     mainLayout->addWidget(buttonBox);
@@ -69,21 +69,21 @@ ScamDetectionDetailsDialog::~ScamDetectionDetailsDialog()
 void ScamDetectionDetailsDialog::slotSaveAs()
 {
     QUrl url;
-    MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
+    MessageViewer::AutoQPointer<KFileDialog> fdlg(new KFileDialog(url, QString(), this));
 
-    fdlg->setMode( KFile::File );
-    fdlg->setSelection( QLatin1String("scam-detection.html") );
-    fdlg->setOperationMode( KFileDialog::Saving );
+    fdlg->setMode(KFile::File);
+    fdlg->setSelection(QLatin1String("scam-detection.html"));
+    fdlg->setOperationMode(KFileDialog::Saving);
     fdlg->setConfirmOverwrite(true);
-    if ( fdlg->exec() == QDialog::Accepted ) {
+    if (fdlg->exec() == QDialog::Accepted) {
         const QString fileName = fdlg->selectedFile();
-        if ( !fileName.isEmpty() ) {
+        if (!fileName.isEmpty()) {
             QFile file(fileName);
-            if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-                qDebug()<<"We can't save in file :"<<fileName;
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                qDebug() << "We can't save in file :" << fileName;
                 return;
             }
-            QTextStream ts( &file );
+            QTextStream ts(&file);
             ts.setCodec("UTF-8");
             QString htmlStr = mDetails->toHtml();
             htmlStr.replace(QLatin1String("meta name=\"qrichtext\" content=\"1\""), QLatin1String("meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\""));
@@ -100,17 +100,17 @@ void ScamDetectionDetailsDialog::setDetails(const QString &details)
 
 void ScamDetectionDetailsDialog::readConfig()
 {
-    KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "ScamDetectionDetailsDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(MessageViewer::GlobalSettings::self()->config(), "ScamDetectionDetailsDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void ScamDetectionDetailsDialog::writeConfig()
 {
-    KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "ScamDetectionDetailsDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(MessageViewer::GlobalSettings::self()->config(), "ScamDetectionDetailsDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }
 

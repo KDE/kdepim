@@ -30,7 +30,6 @@
  *  your version.
  */
 
-
 #include "mailsourceviewer.h"
 #include "utils/util.h"
 #include "findbar/findbarsourceview.h"
@@ -61,53 +60,54 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-
-MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget( QWidget *parent )
-    :QWidget( parent )
+MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget(QWidget *parent)
+    : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    setLayout( lay );
-    lay->setMargin( 0 );
+    setLayout(lay);
+    lay->setMargin(0);
     mTextBrowser = new MailSourceViewTextBrowser();
-    mTextBrowser->setLineWrapMode( QPlainTextEdit::NoWrap );
-    mTextBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
+    mTextBrowser->setLineWrapMode(QPlainTextEdit::NoWrap);
+    mTextBrowser->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     connect(mTextBrowser, &MailSourceViewTextBrowser::findText, this, &MailSourceViewTextBrowserWidget::slotFind);
-    lay->addWidget( mTextBrowser );
+    lay->addWidget(mTextBrowser);
     mSliderContainer = new PimCommon::SlideContainer(this);
 
-    mFindBar = new FindBarSourceView( mTextBrowser, this );
+    mFindBar = new FindBarSourceView(mTextBrowser, this);
     connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
     mSliderContainer->setContent(mFindBar);
 
-    lay->addWidget( mSliderContainer );
-    QShortcut *shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::Key_F+Qt::CTRL );
+    lay->addWidget(mSliderContainer);
+    QShortcut *shortcut = new QShortcut(this);
+    shortcut->setKey(Qt::Key_F + Qt::CTRL);
     connect(shortcut, &QShortcut::activated, this, &MailSourceViewTextBrowserWidget::slotFind);
 }
 
 void MailSourceViewTextBrowserWidget::slotFind()
 {
-    if ( mTextBrowser->textCursor().hasSelection() )
-        mFindBar->setText( mTextBrowser->textCursor().selectedText() );
+    if (mTextBrowser->textCursor().hasSelection()) {
+        mFindBar->setText(mTextBrowser->textCursor().selectedText());
+    }
     mSliderContainer->slideIn();
     mFindBar->focusAndSetCursor();
 }
 
-void MailSourceViewTextBrowserWidget::setText( const QString& text )
+void MailSourceViewTextBrowserWidget::setText(const QString &text)
 {
-    mTextBrowser->setPlainText( text );
+    mTextBrowser->setPlainText(text);
 }
 
-void MailSourceViewTextBrowserWidget::setPlainText( const QString& text )
+void MailSourceViewTextBrowserWidget::setPlainText(const QString &text)
 {
-    mTextBrowser->setPlainText( text );
+    mTextBrowser->setPlainText(text);
 }
 
 void MailSourceViewTextBrowserWidget::setFixedFont()
 {
-    mTextBrowser->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
+    mTextBrowser->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 }
 
 MessageViewer::MailSourceViewTextBrowser *MailSourceViewTextBrowserWidget::textBrowser() const
@@ -115,91 +115,87 @@ MessageViewer::MailSourceViewTextBrowser *MailSourceViewTextBrowserWidget::textB
     return mTextBrowser;
 }
 
-MailSourceViewTextBrowser::MailSourceViewTextBrowser( QWidget *parent )
-    :QPlainTextEdit( parent )
+MailSourceViewTextBrowser::MailSourceViewTextBrowser(QWidget *parent)
+    : QPlainTextEdit(parent)
 {
 }
 
-void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
+void MailSourceViewTextBrowser::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu *popup = createStandardContextMenu();
     if (popup) {
         popup->addSeparator();
         popup->addAction(KStandardAction::find(this, SIGNAL(findText()), this));
         //Code from KTextBrowser
-        KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
-                                                           : KIconTheme::TextEditor,
-                                              popup->actions() );
+        KIconTheme::assignIconsToContextMenu(isReadOnly() ? KIconTheme::ReadOnlyText
+                                             : KIconTheme::TextEditor,
+                                             popup->actions());
         popup->addSeparator();
-        popup->addAction( QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")),i18n("Speak Text"),this,SLOT(slotSpeakText()));
+        popup->addAction(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")), i18n("Speak Text"), this, SLOT(slotSpeakText()));
 
         popup->addSeparator();
         popup->addAction(KStandardAction::saveAs(this, SLOT(slotSaveAs()), this));
 
-        popup->exec( event->globalPos() );
+        popup->exec(event->globalPos());
         delete popup;
     }
 }
 
 void MailSourceViewTextBrowser::slotSaveAs()
 {
-    PimCommon::Util::saveTextAs( toPlainText(), QString(), this );
+    PimCommon::Util::saveTextAs(toPlainText(), QString(), this);
 }
 
 void MailSourceViewTextBrowser::slotSpeakText()
 {
     QString text;
-    if ( textCursor().hasSelection() ) {
+    if (textCursor().hasSelection()) {
         text = textCursor().selectedText();
     } else {
         text = toPlainText();
     }
-    MessageViewer::Util::speakSelectedText( text, this);
+    MessageViewer::Util::speakSelectedText(text, this);
 }
 
-void MailSourceHighlighter::highlightBlock ( const QString & text ) {
+void MailSourceHighlighter::highlightBlock(const QString &text)
+{
     // all visible ascii except space and :
-    const QRegExp regexp( QLatin1String("^([\\x21-9;-\\x7E]+:\\s)") );
+    const QRegExp regexp(QLatin1String("^([\\x21-9;-\\x7E]+:\\s)"));
 
     // keep the previous state
-    setCurrentBlockState( previousBlockState() );
+    setCurrentBlockState(previousBlockState());
     // If a header is found
-    if( regexp.indexIn( text ) != -1 )
-    {
+    if (regexp.indexIn(text) != -1) {
         const int headersState = -1; // Also the initial State
         // Content- header starts a new mime part, and therefore new headers
         // If a Content-* header is found, change State to headers until a blank line is found.
-        if ( text.startsWith( QLatin1String( "Content-" ) ) )
-        {
-            setCurrentBlockState( headersState );
+        if (text.startsWith(QLatin1String("Content-"))) {
+            setCurrentBlockState(headersState);
         }
         // highligth it if in headers state
-        if( ( currentBlockState() == headersState ) )
-        {
-            QFont font = document()->defaultFont ();
-            font.setBold( true );
-            setFormat( 0, regexp.matchedLength(), font );
+        if ((currentBlockState() == headersState)) {
+            QFont font = document()->defaultFont();
+            font.setBold(true);
+            setFormat(0, regexp.matchedLength(), font);
         }
     }
     // Change to body state
-    else if ( text.isEmpty() )
-    {
+    else if (text.isEmpty()) {
         const int bodyState = 0;
-        setCurrentBlockState( bodyState );
+        setCurrentBlockState(bodyState);
     }
 }
 
-const QString HTMLPrettyFormatter::reformat( const QString &src )
+const QString HTMLPrettyFormatter::reformat(const QString &src)
 {
-    const QRegExp cleanLeadingWhitespace( QLatin1String("(?:\\n)+\\w*") );
+    const QRegExp cleanLeadingWhitespace(QLatin1String("(?:\\n)+\\w*"));
     QStringList tmpSource;
-    QString source( src );
+    QString source(src);
     int pos = 0;
     QString indent;
 
     //First make sure that each tag is surrounded by newlines
-    while( (pos = htmlTagRegExp.indexIn( source, pos ) ) != -1 )
-    {
+    while ((pos = htmlTagRegExp.indexIn(source, pos)) != -1) {
         source.insert(pos, QLatin1Char('\n'));
         pos += htmlTagRegExp.matchedLength() + 1;
         source.insert(pos, QLatin1Char('\n'));
@@ -208,47 +204,45 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
 
     // Then split the source on newlines skiping empty parts.
     // Now a line is either a tag or pure data.
-    tmpSource = source.split(QLatin1Char('\n'), QString::SkipEmptyParts );
+    tmpSource = source.split(QLatin1Char('\n'), QString::SkipEmptyParts);
 
     // Then clean any leading whitespace
-    for( int i = 0; i != tmpSource.length(); ++i )
-    {
-        tmpSource[i] = tmpSource[i].remove( cleanLeadingWhitespace );
+    for (int i = 0; i != tmpSource.length(); ++i) {
+        tmpSource[i] = tmpSource[i].remove(cleanLeadingWhitespace);
     }
 
     // Then indent as appropriate
-    for( int i = 0; i != tmpSource.length(); ++i )  {
-        if( htmlTagRegExp.indexIn( tmpSource.at(i) ) != -1 ) // A tag
-        {
-            if( htmlTagRegExp.cap( 3 ) == QLatin1String( "/" ) ||
-                    htmlTagRegExp.cap( 2 ) == QLatin1String( "img" ) ||
-                    htmlTagRegExp.cap( 2 ) == QLatin1String( "br" ) ) {
+    for (int i = 0; i != tmpSource.length(); ++i)  {
+        if (htmlTagRegExp.indexIn(tmpSource.at(i)) != -1) {  // A tag
+            if (htmlTagRegExp.cap(3) == QLatin1String("/") ||
+                    htmlTagRegExp.cap(2) == QLatin1String("img") ||
+                    htmlTagRegExp.cap(2) == QLatin1String("br")) {
                 //Self closing tag or no closure needed
                 continue;
             }
-            if( htmlTagRegExp.cap( 1 ) == QLatin1String( "/" ) ) {
+            if (htmlTagRegExp.cap(1) == QLatin1String("/")) {
                 // End tag
-                indent.chop( 2 );
-                tmpSource[i].prepend( indent );
+                indent.chop(2);
+                tmpSource[i].prepend(indent);
                 continue;
             }
             // start tag
-            tmpSource[i].prepend( indent );
-            indent.append( QLatin1String("  ") );
+            tmpSource[i].prepend(indent);
+            indent.append(QLatin1String("  "));
             continue;
         }
         // Data
-        tmpSource[i].prepend( indent );
+        tmpSource[i].prepend(indent);
     }
 
     // Finally reassemble and return :)
-    return tmpSource.join( QLatin1String("\n") );
+    return tmpSource.join(QLatin1String("\n"));
 }
 
-MailSourceViewer::MailSourceViewer( QWidget *parent )
-    : QDialog( parent )
+MailSourceViewer::MailSourceViewer(QWidget *parent)
+    : QDialog(parent)
 {
-    setAttribute( Qt::WA_DeleteOnClose );
+    setAttribute(Qt::WA_DeleteOnClose);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -258,42 +252,42 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
     connect(buttonBox, &QDialogButtonBox::rejected, this, &MailSourceViewer::reject);
 
     QVBoxLayout *layout = new QVBoxLayout(mainWidget);
-    layout->setMargin( 0 );
+    layout->setMargin(0);
     connect(buttonBox->button(QDialogButtonBox::Close), &QPushButton::clicked, this, &MailSourceViewer::close);
 
     mRawBrowser = new MailSourceViewTextBrowserWidget();
 
 #ifndef NDEBUG
     mTabWidget = new QTabWidget;
-    layout->addWidget( mTabWidget );
+    layout->addWidget(mTabWidget);
 
-    mTabWidget->addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );
-    mTabWidget->setTabToolTip( 0, i18n( "Raw, unmodified mail as it is stored on the filesystem or on the server" ) );
+    mTabWidget->addTab(mRawBrowser, i18nc("Unchanged mail message", "Raw Source"));
+    mTabWidget->setTabToolTip(0, i18n("Raw, unmodified mail as it is stored on the filesystem or on the server"));
 
     mHtmlBrowser = new MailSourceViewTextBrowserWidget();
-    mTabWidget->addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
-    mTabWidget->setTabToolTip( 1, i18n( "HTML code for displaying the message to the user" ) );
-    new KPIMTextEdit::HtmlHighlighter( mHtmlBrowser->textBrowser()->document() );
+    mTabWidget->addTab(mHtmlBrowser, i18nc("Mail message as shown, in HTML format", "HTML Source"));
+    mTabWidget->setTabToolTip(1, i18n("HTML code for displaying the message to the user"));
+    new KPIMTextEdit::HtmlHighlighter(mHtmlBrowser->textBrowser()->document());
 
-    mTabWidget->setCurrentIndex( 0 );
+    mTabWidget->setCurrentIndex(0);
 #else
-    layout->addWidget( mRawBrowser );
+    layout->addWidget(mRawBrowser);
 #endif
 
     // combining the shortcuts in one qkeysequence() did not work...
-    QShortcut* shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::Key_Escape );
+    QShortcut *shortcut = new QShortcut(this);
+    shortcut->setKey(Qt::Key_Escape);
     connect(shortcut, &QShortcut::activated, this, &MailSourceViewer::close);
-    shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::Key_W+Qt::CTRL );
+    shortcut = new QShortcut(this);
+    shortcut->setKey(Qt::Key_W + Qt::CTRL);
     connect(shortcut, &QShortcut::activated, this, &MailSourceViewer::close);
 
-    KWindowSystem::setIcons( winId(),
-                             qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ),
-                                                        IconSize( KIconLoader::Desktop ) ),
-                             qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
-                                                        IconSize( KIconLoader::Small ) ) );
-    new MailSourceHighlighter( mRawBrowser->textBrowser()->document() );
+    KWindowSystem::setIcons(winId(),
+                            qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),
+                                    IconSize(KIconLoader::Desktop)),
+                            qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),
+                                    IconSize(KIconLoader::Small)));
+    new MailSourceHighlighter(mRawBrowser->textBrowser()->document());
     mRawBrowser->textBrowser()->setFocus();
     mainLayout->addWidget(buttonBox);
 }
@@ -302,17 +296,17 @@ MailSourceViewer::~MailSourceViewer()
 {
 }
 
-void MailSourceViewer::setRawSource( const QString &source )
+void MailSourceViewer::setRawSource(const QString &source)
 {
-    mRawBrowser->setText( source );
+    mRawBrowser->setText(source);
 }
 
-void MailSourceViewer::setDisplayedSource( const QString &source )
+void MailSourceViewer::setDisplayedSource(const QString &source)
 {
 #ifndef NDEBUG
-    mHtmlBrowser->setPlainText( HTMLPrettyFormatter::reformat( source ) );
+    mHtmlBrowser->setPlainText(HTMLPrettyFormatter::reformat(source));
 #else
-    Q_UNUSED( source );
+    Q_UNUSED(source);
 #endif
 }
 

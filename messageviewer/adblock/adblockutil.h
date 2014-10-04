@@ -21,8 +21,10 @@
 #include <QString>
 #include <QMap>
 
-namespace MessageViewer {
-namespace AdBlockUtil {
+namespace MessageViewer
+{
+namespace AdBlockUtil
+{
 QMap<QString, QString> listSubscriptions();
 
 QString localFilterPath();

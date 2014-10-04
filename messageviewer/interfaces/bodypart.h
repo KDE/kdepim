@@ -37,126 +37,131 @@
 class QByteArray;
 class QString;
 
-namespace KMime {
-  class Content;
+namespace KMime
+{
+class Content;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class NodeHelper;
-namespace Interface {
+namespace Interface
+{
 
 /*FIXME(Andras) review, port
   class Observer;
   class Observable;
 */
-  /**
-      @short interface of classes that implement status for BodyPartFormatters.
-  */
-  class BodyPartMemento {
-  public:
+/**
+    @short interface of classes that implement status for BodyPartFormatters.
+*/
+class BodyPartMemento
+{
+public:
     virtual ~BodyPartMemento() {}
 
     virtual void detach() = 0;
 #if 0
 //FIXME(Andras) review, port
     /** If your BodyPartMemento implementation also implements the
-  Observer interface, simply implement these as
-  <code>return this;</code>, else as <code>return
-  0;</code>. This is needed to avoid forcing a dependency of
-  plugins on internal KMail classes.
+    Observer interface, simply implement these as
+    <code>return this;</code>, else as <code>return
+    0;</code>. This is needed to avoid forcing a dependency of
+    plugins on internal KMail classes.
     */
-    virtual Observer * asObserver() = 0;
+    virtual Observer *asObserver() = 0;
 
     /** If your BodyPartMemento implementation also implements the
-  Observable interface, simply implement these as
-  <code>return this;</code>, else as <code>return
-  0;</code>. This is needed to avoid forcing a dependency of
-  plugins on internal KMail classes.
+    Observable interface, simply implement these as
+    <code>return this;</code>, else as <code>return
+    0;</code>. This is needed to avoid forcing a dependency of
+    plugins on internal KMail classes.
     */
-    virtual Observable * asObservable() = 0;
+    virtual Observable *asObservable() = 0;
 #endif
-  };
+};
 
-  /**
-      @short interface of message body parts.
-  */
-  class BodyPart {
-  public:
+/**
+    @short interface of message body parts.
+*/
+class BodyPart
+{
+public:
     virtual ~BodyPart() {}
 
     /**
-  @return a string respresentation of an URL that can be used
-  to invoke a BodyPartURLHandler for this body part.
+    @return a string respresentation of an URL that can be used
+    to invoke a BodyPartURLHandler for this body part.
     */
-    virtual QString makeLink( const QString & path ) const = 0;
+    virtual QString makeLink(const QString &path) const = 0;
 
     /**
-  @return the decoded (CTE, canonicalisation, and charset
-  encoding undone) text contained in the body part, or
-  QString(), it the body part is not of type "text".
+    @return the decoded (CTE, canonicalisation, and charset
+    encoding undone) text contained in the body part, or
+    QString(), it the body part is not of type "text".
     */
     virtual QString asText() const = 0;
 
     /**
-  @return the decoded (CTE undone) content of the body part, or
-  a null array if this body part instance is of type text.
+    @return the decoded (CTE undone) content of the body part, or
+    a null array if this body part instance is of type text.
     */
     virtual QByteArray asBinary() const = 0;
 
     /**
-  @return the value of the content-type header field parameter
-  with name \a parameter, or QString(), if that that
-  parameter is not present in the body's content-type header
-  field. RFC 2231 encoding is removed first.
+    @return the value of the content-type header field parameter
+    with name \a parameter, or QString(), if that that
+    parameter is not present in the body's content-type header
+    field. RFC 2231 encoding is removed first.
 
-  Note that this method will suppress queries to certain
-  standard parameters (most notably "charset") to keep plugins
-  decent.
+    Note that this method will suppress queries to certain
+    standard parameters (most notably "charset") to keep plugins
+    decent.
 
-  Note2 that this method preserves the case of the parameter
-  value returned. So, if the parameter you want to use defines
-  the value to be case-insensitive (such as the smime-type
-  parameter), you need to make sure you do the casemap yourself
-  before comparing to a reference value.
+    Note2 that this method preserves the case of the parameter
+    value returned. So, if the parameter you want to use defines
+    the value to be case-insensitive (such as the smime-type
+    parameter), you need to make sure you do the casemap yourself
+    before comparing to a reference value.
     */
-    virtual QString contentTypeParameter( const char * parameter ) const = 0;
+    virtual QString contentTypeParameter(const char *parameter) const = 0;
 
     /**
-  @return the content of the content-description header field,
-  or QString() if that header is not present in this body
-  part. RFC 2047 encoding is decoded first.
+    @return the content of the content-description header field,
+    or QString() if that header is not present in this body
+    part. RFC 2047 encoding is decoded first.
     */
     virtual QString contentDescription() const = 0;
 
     //virtual int contentDisposition() const = 0;
     /**
-  @return the value of the content-disposition header field
-  parameter with name \a parameter, or QString() if that
-  parameter is not present in the body's content-disposition
-  header field. RFC 2231 encoding is removed first.
+    @return the value of the content-disposition header field
+    parameter with name \a parameter, or QString() if that
+    parameter is not present in the body's content-disposition
+    header field. RFC 2231 encoding is removed first.
 
-  The notes made for contentTypeParameter() above apply here as
-  well.
+    The notes made for contentTypeParameter() above apply here as
+    well.
     */
-    virtual QString contentDispositionParameter( const char * parameter ) const = 0;
+    virtual QString contentDispositionParameter(const char *parameter) const = 0;
 
     /**
-  @return whether this part already has it's complete body
-  fetched e.g. from an IMAP server.
+    @return whether this part already has it's complete body
+    fetched e.g. from an IMAP server.
     */
     virtual bool hasCompleteBody() const = 0;
 
     /**
-  @return the BodyPartMemento set for this part, or null, if
-  none is set.
+    @return the BodyPartMemento set for this part, or null, if
+    none is set.
     */
-    virtual BodyPartMemento * memento() const = 0;
+    virtual BodyPartMemento *memento() const = 0;
 
     /**
-  @return register an implementation of the BodyPartMemento
-  interface as a status object with this part.
+    @return register an implementation of the BodyPartMemento
+    interface as a status object with this part.
     */
-    virtual void setBodyPartMemento( BodyPartMemento * ) = 0;
+    virtual void setBodyPartMemento(BodyPartMemento *) = 0;
 
     enum Display { None, AsIcon, Inline };
     /**
@@ -167,23 +172,23 @@ namespace Interface {
     /** Returns the KMime::Content node represented here. Makes most of the above obsolete
         and probably should be used in the interfaces in the first place.
     */
-    virtual KMime::Content* content() const = 0;
+    virtual KMime::Content *content() const = 0;
 
     /**
      * Returns the top-level content.
      * Note that this is _not_ necessarily the same as content()->topLevel(), for example the later
      * will not work for "extra nodes", i.e. nodes in encrypted parts of the mail.
      * topLevelContent() will return the correct result in this case. Also note that
-     * topLevelContent() 
+     * topLevelContent()
      */
-    virtual KMime::Content* topLevelContent() const = 0;
+    virtual KMime::Content *topLevelContent() const = 0;
 
     /**
      * Ok, this is ugly, exposing the node helper here, but there is too much useful stuff in there
      * for real-world plugins. Still, there should be a nicer way for this.
      */
-    virtual MessageViewer::NodeHelper* nodeHelper() const = 0;
-  };
+    virtual MessageViewer::NodeHelper *nodeHelper() const = 0;
+};
 
 } // namespace Interface
 

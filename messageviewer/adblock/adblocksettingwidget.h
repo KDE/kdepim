@@ -24,7 +24,6 @@
 *
 * ============================================================ */
 
-
 #ifndef AD_BLOCK_SETTINGS_WIDGET_H
 #define AD_BLOCK_SETTINGS_WIDGET_H
 
@@ -34,7 +33,8 @@
 // Qt Includes
 #include <QWidget>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MESSAGEVIEWER_EXPORT AdBlockSettingWidget : public QWidget, private Ui::adblock
 {
     Q_OBJECT
@@ -47,7 +47,6 @@ public:
     void save();
     void doLoadFromGlobalSettings();
     void doResetToDefaultsOther();
-
 
 Q_SIGNALS:
     void changed(bool);

@@ -17,8 +17,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
-
 #include "attachmentdialog.h"
 
 #include <kdialog.h>
@@ -29,57 +27,58 @@ using namespace MessageViewer;
 
 //---------------------------------------------------------------------
 
-AttachmentDialog::AttachmentDialog( QWidget *parent, const QString &filenameText,
-                                    const QString &application, const QString &dontAskAgainName )
-    : dontAskName( dontAskAgainName )
+AttachmentDialog::AttachmentDialog(QWidget *parent, const QString &filenameText,
+                                   const QString &application, const QString &dontAskAgainName)
+    : dontAskName(dontAskAgainName)
 {
-    text = i18n( "Open attachment '%1'?\n"
-                 "Note that opening an attachment may compromise "
-                 "your system's security.",
-                 filenameText );
+    text = i18n("Open attachment '%1'?\n"
+                "Note that opening an attachment may compromise "
+                "your system's security.",
+                filenameText);
 
-    dialog = new KDialog( parent );
-    dialog->setCaption( i18n("Open Attachment?") );
-    dialog->setObjectName( QLatin1String("attachmentSaveOpen") );
+    dialog = new KDialog(parent);
+    dialog->setCaption(i18n("Open Attachment?"));
+    dialog->setObjectName(QLatin1String("attachmentSaveOpen"));
 
-    if ( application.isEmpty() )
-        dialog->setButtons( KDialog::User3 | KDialog::User1 | KDialog::Cancel );
-    else {
-        dialog->setButtons( KDialog::User3 | KDialog::User2 | KDialog::User1 | KDialog::Cancel );
-        dialog->setButtonText( KDialog::User2, i18n("&Open with '%1'", application ) );
+    if (application.isEmpty()) {
+        dialog->setButtons(KDialog::User3 | KDialog::User1 | KDialog::Cancel);
+    } else {
+        dialog->setButtons(KDialog::User3 | KDialog::User2 | KDialog::User1 | KDialog::Cancel);
+        dialog->setButtonText(KDialog::User2, i18n("&Open with '%1'", application));
     }
 
-    dialog->setButtonGuiItem( KDialog::User3, KStandardGuiItem::saveAs() );
-    dialog->setButtonText( KDialog::User1, i18n("&Open With...") );
-    dialog->setDefaultButton( KDialog::User3 );
+    dialog->setButtonGuiItem(KDialog::User3, KStandardGuiItem::saveAs());
+    dialog->setButtonText(KDialog::User1, i18n("&Open With..."));
+    dialog->setDefaultButton(KDialog::User3);
 
-    connect( dialog, SIGNAL(user3Clicked()), this, SLOT(saveClicked()) );
-    connect( dialog, SIGNAL(user2Clicked()), this, SLOT(openClicked()) );
-    connect( dialog, SIGNAL(user1Clicked()), this, SLOT(openWithClicked()) );
+    connect(dialog, SIGNAL(user3Clicked()), this, SLOT(saveClicked()));
+    connect(dialog, SIGNAL(user2Clicked()), this, SLOT(openClicked()));
+    connect(dialog, SIGNAL(user1Clicked()), this, SLOT(openWithClicked()));
 }
 
 //---------------------------------------------------------------------
 
 int AttachmentDialog::exec()
 {
-    KConfigGroup cg( KSharedConfig::openConfig().data(), "Notification Messages" );
-    if ( cg.hasKey( dontAskName ) )
-        return cg.readEntry( dontAskName, 0 );
+    KConfigGroup cg(KSharedConfig::openConfig().data(), "Notification Messages");
+    if (cg.hasKey(dontAskName)) {
+        return cg.readEntry(dontAskName, 0);
+    }
 
     bool again = false;
     const int ret = 0;
 #if 0 //QT5
-            KMessageBox::createKMessageBox( dialog, QMessageBox::Question, text, QStringList(),
-                                            i18n( "Do not ask again" ), &again, 0 );
+    KMessageBox::createKMessageBox(dialog, QMessageBox::Question, text, QStringList(),
+                                   i18n("Do not ask again"), &again, 0);
 #endif
 
-    if ( ret == QDialog::Rejected )
+    if (ret == QDialog::Rejected) {
         return Cancel;
-    else {
-        if ( again ) {
+    } else {
+        if (again) {
             KConfigGroup::WriteConfigFlags flags = KConfig::Persistent;
-            KConfigGroup cg( KSharedConfig::openConfig().data(), "Notification Messages" );
-            cg.writeEntry( dontAskName, ret, flags );
+            KConfigGroup cg(KSharedConfig::openConfig().data(), "Notification Messages");
+            cg.writeEntry(dontAskName, ret, flags);
             cg.sync();
         }
 
@@ -91,21 +90,21 @@ int AttachmentDialog::exec()
 
 void AttachmentDialog::saveClicked()
 {
-    dialog->done( Save );
+    dialog->done(Save);
 }
 
 //---------------------------------------------------------------------
 
 void AttachmentDialog::openClicked()
 {
-    dialog->done( Open );
+    dialog->done(Open);
 }
 
 //---------------------------------------------------------------------
 
 void AttachmentDialog::openWithClicked()
 {
-    dialog->done( OpenWith );
+    dialog->done(OpenWith);
 }
 
 //---------------------------------------------------------------------

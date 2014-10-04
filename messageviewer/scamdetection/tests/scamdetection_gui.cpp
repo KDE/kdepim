@@ -52,7 +52,6 @@ ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidge
     connect(mScamDetection, &MessageViewer::ScamDetection::messageMayBeAScam, mScamWarningWidget, &MessageViewer::ScamDetectionWarningWidget::slotShowWarning);
     connect(mScamWarningWidget, &MessageViewer::ScamDetectionWarningWidget::showDetails, mScamDetection, &MessageViewer::ScamDetection::showDetails);
 
-
     mWebView->load(QUrl::fromLocalFile(filename));
 
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -84,9 +83,9 @@ void ScamDetectionTestWidget::slotOpenHtml()
     }
 }
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("scamdetection_gui"), i18n("ScamDetectionTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("scamdetection_gui"), i18n("ScamDetectionTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for scamdetection widget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

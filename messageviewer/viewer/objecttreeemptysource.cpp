@@ -17,14 +17,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
-
 #include "objecttreeemptysource.h"
 #include "viewer/viewer_p.h"
 
 #include "attachmentstrategy.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 EmptySource::EmptySource() : ObjectTreeSourceIf()
 {
@@ -55,12 +54,12 @@ bool EmptySource::showSignatureDetails()
     return false;
 }
 
-void EmptySource::setHtmlMode( Util::HtmlMode mode )
+void EmptySource::setHtmlMode(Util::HtmlMode mode)
 {
-    Q_UNUSED( mode );
+    Q_UNUSED(mode);
 }
 
-void EmptySource::setAllowDecryption( bool allowDecryption )
+void EmptySource::setAllowDecryption(bool allowDecryption)
 {
     mAllowDecryption = allowDecryption;
 }
@@ -70,14 +69,14 @@ int EmptySource::levelQuote()
     return 1;
 }
 
-const QTextCodec * EmptySource::overrideCodec()
+const QTextCodec *EmptySource::overrideCodec()
 {
     return 0;
 }
 
-QString EmptySource::createMessageHeader( KMime::Message *message )
+QString EmptySource::createMessageHeader(KMime::Message *message)
 {
-    Q_UNUSED( message );
+    Q_UNUSED(message);
     return QString(); //do nothing
 }
 
@@ -86,17 +85,17 @@ QObject *EmptySource::sourceObject()
     return 0;
 }
 
-const AttachmentStrategy * EmptySource::attachmentStrategy()
+const AttachmentStrategy *EmptySource::attachmentStrategy()
 {
     return AttachmentStrategy::smart();
 }
 
-HtmlWriter * EmptySource::htmlWriter()
+HtmlWriter *EmptySource::htmlWriter()
 {
     return 0;
 }
 
-CSSHelper* EmptySource::cssHelper()
+CSSHelper *EmptySource::cssHelper()
 {
     return 0;
 }

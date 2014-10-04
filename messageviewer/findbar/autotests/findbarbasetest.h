@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef FINDBARBASETEST_H
 #define FINDBARBASETEST_H
 
@@ -25,7 +24,7 @@ class FindBarBaseTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FindBarBaseTest(QObject *parent=0);
+    explicit FindBarBaseTest(QObject *parent = 0);
     ~FindBarBaseTest();
 
 private Q_SLOTS:

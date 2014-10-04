@@ -30,9 +30,6 @@
     your version.
 */
 
-
-
-
 #include "webkitparthtmlwriter.h"
 
 #include "viewer/mailwebview.h"
@@ -49,20 +46,22 @@
 
 using namespace MessageViewer;
 
-WebKitPartHtmlWriter::WebKitPartHtmlWriter( MailWebView * view, QObject * parent )
-    : QObject( parent ), HtmlWriter(),
-      mHtmlView( view ), mState( Ended )
+WebKitPartHtmlWriter::WebKitPartHtmlWriter(MailWebView *view, QObject *parent)
+    : QObject(parent), HtmlWriter(),
+      mHtmlView(view), mState(Ended)
 {
-    assert( view );
+    assert(view);
 }
 
-WebKitPartHtmlWriter::~WebKitPartHtmlWriter() {
+WebKitPartHtmlWriter::~WebKitPartHtmlWriter()
+{
 }
 
-void WebKitPartHtmlWriter::begin( const QString & css ) {
+void WebKitPartHtmlWriter::begin(const QString &css)
+{
     // The stylesheet is now included CSSHelper::htmlHead()
-    Q_UNUSED( css );
-    if ( mState != Ended ) {
+    Q_UNUSED(css);
+    if (mState != Ended) {
         qWarning() << "begin() called on non-ended session!";
         reset();
     }
@@ -70,24 +69,25 @@ void WebKitPartHtmlWriter::begin( const QString & css ) {
     mEmbeddedPartMap.clear();
 
     // clear the widget:
-    mHtmlView->setUpdatesEnabled( false );
-    mHtmlView->scrollUp( 10 );
+    mHtmlView->setUpdatesEnabled(false);
+    mHtmlView->scrollUp(10);
 #ifndef KDEPIM_NO_WEBKIT
     // PENDING(marc) push into MailWebView
-    mHtmlView->load( QUrl() );
+    mHtmlView->load(QUrl());
 #endif
     mState = Begun;
 }
 
-void WebKitPartHtmlWriter::end() {
-    if ( mState != Begun ) {
+void WebKitPartHtmlWriter::end()
+{
+    if (mState != Begun) {
         qWarning() << "Called on non-begun or queued session!";
     }
-    if(!mExtraHead.isEmpty()) {
+    if (!mExtraHead.isEmpty()) {
         insertExtraHead();
         mExtraHead.clear();
     }
-    mHtmlView->setHtml( mHtml, QUrl( QLatin1String("file:///") ) );
+    mHtmlView->setHtml(mHtml, QUrl(QLatin1String("file:///")));
     mHtmlView->show();
     mHtml.clear();
 
@@ -95,14 +95,15 @@ void WebKitPartHtmlWriter::end() {
     resolveCidUrls();
     mHtmlView->scamCheck();
 #endif
-    mHtmlView->setUpdatesEnabled( true );
+    mHtmlView->setUpdatesEnabled(true);
     mHtmlView->update();
     mState = Ended;
     emit finished();
 }
 
-void WebKitPartHtmlWriter::reset() {
-    if ( mState != Ended ) {
+void WebKitPartHtmlWriter::reset()
+{
+    if (mState != Ended) {
         mHtml.clear();
         mState = Begun; // don't run into end()'s warning
         end();
@@ -110,24 +111,28 @@ void WebKitPartHtmlWriter::reset() {
     }
 }
 
-void WebKitPartHtmlWriter::write( const QString & str ) {
-    if ( mState != Begun ) {
+void WebKitPartHtmlWriter::write(const QString &str)
+{
+    if (mState != Begun) {
         qWarning() << "Called in Ended or Queued state!";
     }
-    mHtml.append( str );
+    mHtml.append(str);
 }
 
-void WebKitPartHtmlWriter::queue( const QString & str ) {
-    write( str );
+void WebKitPartHtmlWriter::queue(const QString &str)
+{
+    write(str);
 }
 
-void WebKitPartHtmlWriter::flush() {
+void WebKitPartHtmlWriter::flush()
+{
     mState = Begun; // don't run into end()'s warning
     end();
 }
 
-void WebKitPartHtmlWriter::embedPart( const QByteArray & contentId,
-                                      const QString & contentURL ) {
+void WebKitPartHtmlWriter::embedPart(const QByteArray &contentId,
+                                     const QString &contentURL)
+{
     mEmbeddedPartMap[QLatin1String(contentId)] = contentURL;
 }
 
@@ -138,15 +143,15 @@ void WebKitPartHtmlWriter::resolveCidUrls()
     // virtual loadResource() (for QTextBrowser)
 #ifndef KDEPIM_NO_WEBKIT
     QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
-    QWebElementCollection images = root.findAll( QLatin1String("img") );
+    QWebElementCollection images = root.findAll(QLatin1String("img"));
     QWebElementCollection::iterator end(images.end());
-    for( QWebElementCollection::iterator it = images.begin(); it != end; ++it ) {
-        KUrl url( (*it).attribute( QLatin1String("src") ) );
-        if ( url.protocol() == QLatin1String( "cid" ) ) {
-            EmbeddedPartMap::const_iterator cit = mEmbeddedPartMap.constFind( url.path() );
-            if ( cit != mEmbeddedPartMap.constEnd() ) {
+    for (QWebElementCollection::iterator it = images.begin(); it != end; ++it) {
+        KUrl url((*it).attribute(QLatin1String("src")));
+        if (url.protocol() == QLatin1String("cid")) {
+            EmbeddedPartMap::const_iterator cit = mEmbeddedPartMap.constFind(url.path());
+            if (cit != mEmbeddedPartMap.constEnd()) {
                 qDebug() << "Replacing" << url.prettyUrl() << "by" << cit.value();
-                (*it).setAttribute( QLatin1String("src"), cit.value() );
+                (*it).setAttribute(QLatin1String("src"), cit.value());
             }
         }
     }
@@ -157,12 +162,12 @@ void WebKitPartHtmlWriter::insertExtraHead()
 {
     const QString headTag(QLatin1String("<head>"));
     const int index = mHtml.indexOf(headTag);
-    if(index!=-1) {
-        mHtml.insert(index+headTag.length(),mExtraHead);
+    if (index != -1) {
+        mHtml.insert(index + headTag.length(), mExtraHead);
     }
 }
 
-void WebKitPartHtmlWriter::extraHead( const QString& str )
+void WebKitPartHtmlWriter::extraHead(const QString &str)
 {
     mExtraHead = str;
 }

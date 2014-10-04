@@ -25,23 +25,19 @@
 *
 * ============================================================ */
 
-
 // Self Includes
 #include "adblockrulefallbackimpl.h"
-
 
 // Qt Includes
 #include <QWebFrame>
 #include <QNetworkReply>
 #include <QStringList>
 
-
 using namespace MessageViewer;
 static inline bool isRegExpFilter(const QString &filter)
 {
     return filter.startsWith(QLatin1Char('/')) && filter.endsWith(QLatin1Char('/'));
 }
-
 
 AdBlockRuleFallbackImpl::AdBlockRuleFallbackImpl(const QString &filter)
     : AdBlockRuleImpl(filter)
@@ -54,106 +50,98 @@ AdBlockRuleFallbackImpl::AdBlockRuleFallbackImpl(const QString &filter)
 
     QString parsedLine = filter;
 
-    if (isRegExpFilter(parsedLine))
-    {
-        parsedLine = parsedLine.mid(1, parsedLine.length() - 2);        
-    }
-    else
-    {
+    if (isRegExpFilter(parsedLine)) {
+        parsedLine = parsedLine.mid(1, parsedLine.length() - 2);
+    } else {
         const int optionsNumber = parsedLine.lastIndexOf(QLatin1Char('$'));
-    
-        if (optionsNumber >= 0)
-        {
+
+        if (optionsNumber >= 0) {
             QStringList options(parsedLine.mid(optionsNumber + 1).split(QLatin1Char(',')));
             parsedLine = parsedLine.left(optionsNumber);
 
-            if (options.removeOne(QLatin1String("match-case")))
+            if (options.removeOne(QLatin1String("match-case"))) {
                 m_regExp.setCaseSensitivity(Qt::CaseSensitive);
+            }
 
-            if (options.removeOne(QLatin1String("third-party")))
+            if (options.removeOne(QLatin1String("third-party"))) {
                 m_thirdPartyOption = true;
+            }
 
-            if (options.removeOne(QLatin1String("~third-party")))
-            {
+            if (options.removeOne(QLatin1String("~third-party"))) {
                 m_thirdPartyOption = true;
                 m_thirdPartyOptionReversed = true;
             }
-            
-            Q_FOREACH(const QString & option, options)
-            {
+
+            Q_FOREACH (const QString &option, options) {
                 // Domain restricted filter
                 const QString domainKeyword(QLatin1String("domain="));
-                if (option.startsWith(domainKeyword))
-                {
+                if (option.startsWith(domainKeyword)) {
                     options.removeOne(option);
                     const QStringList domainList = option.mid(domainKeyword.length()).split(QLatin1Char('|'));
-                    Q_FOREACH(const QString & domain, domainList)
-                    {
-                        if (domain.startsWith(QLatin1Char('~')))
+                    Q_FOREACH (const QString &domain, domainList) {
+                        if (domain.startsWith(QLatin1Char('~'))) {
                             m_whiteDomains.insert(domain.toLower());
-                        else
+                        } else {
                             m_blackDomains.insert(domain.toLower());
+                        }
                     }
                     break;
                 }
             }
-            
+
             // if there are yet options available we have to whitelist the rule
             // to not be too much restrictive on adblocking
             m_unsupported = (!options.isEmpty());
         }
-        
+
         parsedLine = convertPatternToRegExp(parsedLine);
     }
 
     m_regExp.setPattern(parsedLine);
 }
 
-
 bool AdBlockRuleFallbackImpl::match(const QNetworkRequest &request, const QString &encodedUrl, const QString &) const
 {
-    if (m_unsupported)
+    if (m_unsupported) {
         return false;
-    
-    if (m_thirdPartyOption)
-    {
+    }
+
+    if (m_thirdPartyOption) {
         const QString referer = QString::fromLatin1(request.rawHeader("referer"));
         const QString host = request.url().host();
 
         bool isThirdParty = !referer.contains(host);
-        
-        if (!m_thirdPartyOptionReversed && !isThirdParty)
+
+        if (!m_thirdPartyOptionReversed && !isThirdParty) {
             return false;
-        
-        if (m_thirdPartyOptionReversed && isThirdParty)
+        }
+
+        if (m_thirdPartyOptionReversed && isThirdParty) {
             return false;
+        }
     }
 
     const bool regexpMatch = m_regExp.indexIn(encodedUrl) != -1;
 
-    if (regexpMatch && (!m_whiteDomains.isEmpty() || !m_blackDomains.isEmpty()))
-    {
-        Q_ASSERT(qobject_cast<QWebFrame*>(request.originatingObject()));
-        const QWebFrame *const origin = static_cast<QWebFrame * const>(request.originatingObject());
+    if (regexpMatch && (!m_whiteDomains.isEmpty() || !m_blackDomains.isEmpty())) {
+        Q_ASSERT(qobject_cast<QWebFrame *>(request.originatingObject()));
+        const QWebFrame *const origin = static_cast<QWebFrame *const>(request.originatingObject());
 
         const QString originDomain = origin->url().host();
 
-        if (!m_whiteDomains.isEmpty())
-        {
+        if (!m_whiteDomains.isEmpty()) {
             // In this context, white domains means we block anything but what is in the list.
-            if (m_whiteDomains.contains(originDomain))
+            if (m_whiteDomains.contains(originDomain)) {
                 return false;
+            }
             return true;
-        }
-        else if (m_blackDomains.contains(originDomain))
-        {
+        } else if (m_blackDomains.contains(originDomain)) {
             return true;
         }
         return false;
     }
     return regexpMatch;
 }
-
 
 QString AdBlockRuleFallbackImpl::convertPatternToRegExp(const QString &wildcardPattern)
 {
@@ -193,12 +181,10 @@ QString AdBlockRuleFallbackImpl::convertPatternToRegExp(const QString &wildcardP
     return pattern;
 }
 
-
 QString AdBlockRuleFallbackImpl::ruleString() const
 {
     return m_regExp.pattern();
 }
-
 
 QString AdBlockRuleFallbackImpl::ruleType() const
 {

@@ -19,29 +19,38 @@
 #define MOBILEHEADERSTYLE_H
 #include "header/headerstyle.h"
 
-namespace MessageViewer {
-class MobileHeaderStyle : public HeaderStyle {
+namespace MessageViewer
+{
+class MobileHeaderStyle : public HeaderStyle
+{
     friend class HeaderStyle;
 protected:
     MobileHeaderStyle() : HeaderStyle() {}
     ~MobileHeaderStyle() {}
 
 public:
-    const char * name() const { return "mobile"; }
+    const char *name() const
+    {
+        return "mobile";
+    }
 
-    QString format( KMime::Message *message ) const;
+    QString format(KMime::Message *message) const;
 };
 
-class MobileExtendedHeaderStyle : public HeaderStyle {
+class MobileExtendedHeaderStyle : public HeaderStyle
+{
     friend class HeaderStyle;
 protected:
     MobileExtendedHeaderStyle() : HeaderStyle() {}
     ~MobileExtendedHeaderStyle() {}
 
 public:
-    const char * name() const { return "mobileExtended"; }
+    const char *name() const
+    {
+        return "mobileExtended";
+    }
 
-    QString format( KMime::Message *message ) const;
+    QString format(KMime::Message *message) const;
 };
 }
 

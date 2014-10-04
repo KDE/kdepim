@@ -27,7 +27,8 @@
 
 class QWebFrame;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
   * Re-implemented for internal reasons. API remains unaffected.
@@ -46,7 +47,7 @@ private Q_SLOTS:
     void slotApplyHidingBlockedElements(bool ok);
 
 private:
-    QMultiHash<QWebFrame*, QUrl> mBlockedRequests;
+    QMultiHash<QWebFrame *, QUrl> mBlockedRequests;
     QByteArray mAcceptLanguage;
 };
 

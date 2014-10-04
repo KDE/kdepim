@@ -29,25 +29,27 @@
 
 using KPIMUtils::LinkLocator;
 
-namespace MessageViewer {
-namespace HeaderStyleUtil {
+namespace MessageViewer
+{
+namespace HeaderStyleUtil
+{
 //
 // Convenience functions:
 //
-QString directionOf( const QString &str );
+QString directionOf(const QString &str);
 
-QString strToHtml( const QString &str, int flags = LinkLocator::PreserveSpaces );
+QString strToHtml(const QString &str, int flags = LinkLocator::PreserveSpaces);
 
-QString dateString( KMime::Message *message, bool printing, bool shortDate );
+QString dateString(KMime::Message *message, bool printing, bool shortDate);
 
-QString subjectString( KMime::Message *message, int flags = LinkLocator::PreserveSpaces );
+QString subjectString(KMime::Message *message, int flags = LinkLocator::PreserveSpaces);
 
-QString subjectDirectionString( KMime::Message *message );
+QString subjectDirectionString(KMime::Message *message);
 
-QString drawSpamMeter( SpamError spamError, double percent, double confidence,
-                              const QString &filterHeader, const QString &confidenceHeader );
+QString drawSpamMeter(SpamError spamError, double percent, double confidence,
+                      const QString &filterHeader, const QString &confidenceHeader);
 
-QString imgToDataUrl( const QImage &image );
+QString imgToDataUrl(const QImage &image);
 
 QString spamStatus(KMime::Message *message);
 
@@ -74,6 +76,5 @@ xfaceSettings xface(const HeaderStyle *style, KMime::Message *message);
 
 }
 }
-
 
 #endif // HEADERSTYLE_UTIL_H

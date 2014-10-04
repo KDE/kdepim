@@ -40,7 +40,8 @@
 
 class QString;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /// Valid types of SpamAgent
 enum SpamAgentTypes {
@@ -54,19 +55,40 @@ enum SpamAgentTypes {
 class SpamAgent
 {
 public:
-    SpamAgent() : mType( SpamAgentNone ) {}
-    SpamAgent( const QString & name, SpamAgentTypes type, const QByteArray & field, const QByteArray & cfield,
-               const QRegExp & score, const QRegExp & threshold, const QRegExp & confidence )
-        : mName( name ), mType( type ), mField( field ), mConfidenceField( cfield ),
-          mScore( score ), mThreshold( threshold ), mConfidence( confidence ) {}
+    SpamAgent() : mType(SpamAgentNone) {}
+    SpamAgent(const QString &name, SpamAgentTypes type, const QByteArray &field, const QByteArray &cfield,
+              const QRegExp &score, const QRegExp &threshold, const QRegExp &confidence)
+        : mName(name), mType(type), mField(field), mConfidenceField(cfield),
+          mScore(score), mThreshold(threshold), mConfidence(confidence) {}
 
-    QString name() const { return mName; }
-    SpamAgentTypes scoreType() const { return mType; }
-    QByteArray header() const { return mField; }
-    QByteArray confidenceHeader() const { return mConfidenceField; }
-    QRegExp scorePattern() const { return mScore; }
-    QRegExp thresholdPattern() const { return mThreshold; }
-    QRegExp confidencePattern() const { return mConfidence; }
+    QString name() const
+    {
+        return mName;
+    }
+    SpamAgentTypes scoreType() const
+    {
+        return mType;
+    }
+    QByteArray header() const
+    {
+        return mField;
+    }
+    QByteArray confidenceHeader() const
+    {
+        return mConfidenceField;
+    }
+    QRegExp scorePattern() const
+    {
+        return mScore;
+    }
+    QRegExp thresholdPattern() const
+    {
+        return mThreshold;
+    }
+    QRegExp confidencePattern() const
+    {
+        return mConfidence;
+    }
 
 private:
     QString mName;
@@ -90,7 +112,8 @@ class AntiSpamConfigSingletonProvider;
     by calling @p SpamConfig::instance() and use any of the
     public member functions.
   */
-class MESSAGEVIEWER_EXPORT AntiSpamConfig {
+class MESSAGEVIEWER_EXPORT AntiSpamConfig
+{
     friend class AntiSpamConfigSingletonProvider;
 private:
     AntiSpamConfig();
@@ -98,13 +121,16 @@ private:
 public:
     ~AntiSpamConfig();
 
-    static AntiSpamConfig * instance();
+    static AntiSpamConfig *instance();
 
     /**
     * Returns a list of all agents found on the system. This
     * might list SA twice, if both the C and the Perl version are present.
     */
-    const SpamAgents agents() const { return mAgents; }
+    const SpamAgents agents() const
+    {
+        return mAgents;
+    }
 
     /**
     * Returns a list of unique agents, found on the system. SpamAssassin will

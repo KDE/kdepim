@@ -20,15 +20,18 @@
 
 #include <QString>
 #include <grantlee/templateloader.h>
-namespace KMime {
+namespace KMime
+{
 class Message;
 }
 
-namespace GrantleeTheme {
+namespace GrantleeTheme
+{
 class Theme;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class HeaderStyle;
 class GrantleeHeaderFormatter
 {

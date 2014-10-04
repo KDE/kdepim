@@ -43,7 +43,8 @@ namespace PimCommon
 {
 class SlideContainer;
 }
-namespace MessageViewer {
+namespace MessageViewer
+{
 class FindBarSourceView;
 
 /**
@@ -58,21 +59,21 @@ class MailSourceViewTextBrowser;
 class MailSourceHighlighter : public QSyntaxHighlighter
 {
 public:
-    explicit MailSourceHighlighter( QTextDocument * textdocument )
-        : QSyntaxHighlighter( textdocument )
+    explicit MailSourceHighlighter(QTextDocument *textdocument)
+        : QSyntaxHighlighter(textdocument)
     {}
 protected:
-    void highlightBlock ( const QString & text );
+    void highlightBlock(const QString &text);
 };
 
 class MailSourceViewTextBrowserWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MailSourceViewTextBrowserWidget( QWidget *parent = 0 );
+    explicit MailSourceViewTextBrowserWidget(QWidget *parent = 0);
 
-    void setText( const QString& text );
-    void setPlainText( const QString& text );
+    void setText(const QString &text);
+    void setPlainText(const QString &text);
     void setFixedFont();
     MessageViewer::MailSourceViewTextBrowser *textBrowser() const;
 private slots:
@@ -87,9 +88,9 @@ class MailSourceViewTextBrowser: public QPlainTextEdit
 {
     Q_OBJECT
 public:
-    explicit MailSourceViewTextBrowser( QWidget *parent = 0 );
+    explicit MailSourceViewTextBrowser(QWidget *parent = 0);
 protected:
-    void contextMenuEvent( QContextMenuEvent *event );
+    void contextMenuEvent(QContextMenuEvent *event);
 private slots:
     void slotSpeakText();
     void slotSaveAs();
@@ -100,38 +101,38 @@ signals:
 namespace HTMLPrettyFormatter
 {
 // Best to be really verbose about this one...
-const QRegExp htmlTagRegExp( QLatin1String("<"
-                             "(/)?"    //Captures the / if this is an end tag.
-                             "(\\w+)"    //Captures TagName
-                             "(?:"                //Groups tag contents
-                             "(?:\\s+"            //Groups attributes
-                             "(?:\\w+)"  //Attribute name
-                             "(?:"                //groups =value portion.
-                             "\\s*=\\s*"            // =
-                             "(?:"        //Groups attribute "value" portion.
-                             "\\\"(?:[^\\\"]*)\\\""    // attVal='double quoted'
-                             "|'(?:[^']*)'"        // attVal='single quoted'
-                             "|(?:[^'"">\\s]+)"    // attVal=urlnospaces
-                             ")"
-                             ")?"        //end optional att value portion.
-                             ")+\\s*"        //One or more attribute pairs
-                             "|\\s*"            //Some white space.
-                             ")"
-                             "(/)?>" //Captures the "/" if this is a complete tag.
-                             ));
+const QRegExp htmlTagRegExp(QLatin1String("<"
+                            "(/)?"    //Captures the / if this is an end tag.
+                            "(\\w+)"    //Captures TagName
+                            "(?:"                //Groups tag contents
+                            "(?:\\s+"            //Groups attributes
+                            "(?:\\w+)"  //Attribute name
+                            "(?:"                //groups =value portion.
+                            "\\s*=\\s*"            // =
+                            "(?:"        //Groups attribute "value" portion.
+                            "\\\"(?:[^\\\"]*)\\\""    // attVal='double quoted'
+                            "|'(?:[^']*)'"        // attVal='single quoted'
+                            "|(?:[^'"">\\s]+)"    // attVal=urlnospaces
+                            ")"
+                            ")?"        //end optional att value portion.
+                            ")+\\s*"        //One or more attribute pairs
+                            "|\\s*"            //Some white space.
+                            ")"
+                            "(/)?>" //Captures the "/" if this is a complete tag.
+                                         ));
 
-const QString reformat( const QString &src );
+const QString reformat(const QString &src);
 }
 
 class MailSourceViewer : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MailSourceViewer( QWidget *parent = 0 );
+    explicit MailSourceViewer(QWidget *parent = 0);
     ~MailSourceViewer();
 
-    void setRawSource( const QString &source );
-    void setDisplayedSource( const QString &source );
+    void setRawSource(const QString &source);
+    void setDisplayedSource(const QString &source);
     void setFixedFont();
 private:
     MailSourceViewTextBrowserWidget *mRawBrowser;

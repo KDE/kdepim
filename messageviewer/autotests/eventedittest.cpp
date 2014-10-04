@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "eventedittest.h"
 #include "widgets/eventedit.h"
 #include "messageviewer/globalsettings_base.h"
@@ -38,10 +37,10 @@
 #include <QShortcut>
 #include <QAction>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 extern MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_eventEditStubModel;
 }
-
 
 Q_DECLARE_METATYPE(KMime::Message::Ptr)
 EventEditTest::EventEditTest()
@@ -187,11 +186,10 @@ void EventEditTest::shouldHideWidgetWhenSaveClicked()
     KMime::Message::Ptr msg(new KMime::Message);
     msg->subject(true)->fromUnicodeString(QLatin1String("Test Note"), "us-ascii");
     edit.setMessage(msg);
-    QPushButton *save = qFindChild<QPushButton*>(&edit, QLatin1String("save-button"));
+    QPushButton *save = qFindChild<QPushButton *>(&edit, QLatin1String("save-button"));
     QTest::mouseClick(save, Qt::LeftButton);
     QCOMPARE(edit.isVisible(), false);
 }
-
 
 void EventEditTest::shouldSaveCollectionSettings()
 {
@@ -234,7 +232,6 @@ void EventEditTest::shouldNotEmitCreateEventWhenDateIsInvalid()
 
     KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
     endDateTime->setDateTime(QDateTime());
-
 
     QString subject = QLatin1String("Test Note");
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
@@ -329,7 +326,7 @@ void EventEditTest::shouldEnsureEndDateIsNotBeforeStartDate()
     QCOMPARE(startDt.date(), endDateTime->date());
     QVERIFY(startDt.time() < endDateTime->time());
 
-    startDt = startDt.addSecs(2*3600);
+    startDt = startDt.addSecs(2 * 3600);
     startDateTime->setDateTime(startDt);
     QCOMPARE(startDt.time(), endDateTime->time());
 }
@@ -352,5 +349,4 @@ void EventEditTest::shouldShouldEnabledSaveOpenEditorButton()
     QCOMPARE(save->isEnabled(), false);
 }
 
-
-QTEST_MAIN( EventEditTest )
+QTEST_MAIN(EventEditTest)

@@ -20,7 +20,6 @@
 
 #include <QObject>
 
-
 class TodoEditTest : public QObject
 {
     Q_OBJECT

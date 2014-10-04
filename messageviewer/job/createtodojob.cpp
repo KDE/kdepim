@@ -37,23 +37,23 @@ CreateTodoJob::CreateTodoJob(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::
 
 CreateTodoJob::~CreateTodoJob()
 {
-    qDebug()<<" CreateTodoJob::~CreateTodoJob()";
+    qDebug() << " CreateTodoJob::~CreateTodoJob()";
 }
 
 void CreateTodoJob::start()
 {
     // We need the full payload to attach the mail to the incidence
-    if ( !mItem.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
-        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
+    if (!mItem.loadedPayloadParts().contains(Akonadi::MessagePart::Body)) {
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(mItem);
         job->fetchScope().fetchFullPayload();
         connect(job, &Akonadi::ItemFetchJob::result, this, &CreateTodoJob::slotFetchDone);
 
-        if ( job->exec() ) {
-            if ( job->items().count() == 1 ) {
+        if (job->exec()) {
+            if (job->items().count() == 1) {
                 mItem = job->items().first();
             }
         } else {
-            qDebug()<<" createTodo Error during fetch: "<<job->errorString();
+            qDebug() << " createTodo Error during fetch: " << job->errorString();
         }
     } else {
         createTodo();
@@ -62,9 +62,9 @@ void CreateTodoJob::start()
 
 void CreateTodoJob::slotFetchDone(KJob *job)
 {
-    qDebug()<<" void CreateTodoJob::slotFetchDone(KJob *job)";
+    qDebug() << " void CreateTodoJob::slotFetchDone(KJob *job)";
     Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob *>(job);
-    if ( fetchJob->items().count() == 1 ) {
+    if (fetchJob->items().count() == 1) {
         mItem = fetchJob->items().first();
     } else {
         Q_EMIT emitResult();
@@ -75,22 +75,23 @@ void CreateTodoJob::slotFetchDone(KJob *job)
 
 void CreateTodoJob::createTodo()
 {
-    if ( !mItem.hasPayload<KMime::Message::Ptr>() ) {
-        qDebug()<<" item has not payload";
+    if (!mItem.hasPayload<KMime::Message::Ptr>()) {
+        qDebug() << " item has not payload";
         Q_EMIT emitResult();
         return;
     }
     KMime::Message::Ptr msg =  mItem.payload<KMime::Message::Ptr>();
 
-    KCalCore::Attachment::Ptr attachmentPtr(new KCalCore::Attachment( msg->encodedContent().toBase64(), KMime::Message::mimeType() ));
-    const KMime::Headers::Subject * const subject = msg->subject(false);
-    if (subject)
+    KCalCore::Attachment::Ptr attachmentPtr(new KCalCore::Attachment(msg->encodedContent().toBase64(), KMime::Message::mimeType()));
+    const KMime::Headers::Subject *const subject = msg->subject(false);
+    if (subject) {
         attachmentPtr->setLabel(subject->asUnicodeString());
+    }
     mTodoPtr->addAttachment(attachmentPtr);
 
     Akonadi::Item newTodoItem;
-    newTodoItem.setMimeType( KCalCore::Todo::todoMimeType() );
-    newTodoItem.setPayload<KCalCore::Todo::Ptr>( mTodoPtr );
+    newTodoItem.setMimeType(KCalCore::Todo::todoMimeType());
+    newTodoItem.setPayload<KCalCore::Todo::Ptr>(mTodoPtr);
 
     Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob(newTodoItem, mCollection);
     connect(createJob, &Akonadi::ItemCreateJob::result, this, &CreateTodoJob::slotCreateNewTodo);
@@ -98,8 +99,8 @@ void CreateTodoJob::createTodo()
 
 void CreateTodoJob::slotCreateNewTodo(KJob *job)
 {
-    if ( job->error() ) {
-        qDebug() << "Error during create new Todo "<<job->errorString();
+    if (job->error()) {
+        qDebug() << "Error during create new Todo " << job->errorString();
     }
     Q_EMIT emitResult();
 }

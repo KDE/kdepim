@@ -36,16 +36,17 @@
 
 #include "messageviewer_export.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class MESSAGEVIEWER_EXPORT CSSHelper : public CSSHelperBase
 {
 public:
-    explicit CSSHelper( const QPaintDevice *pd );
+    explicit CSSHelper(const QPaintDevice *pd);
 
     /** @return HTML head including style sheet definitions and the
-  &gt;body&lt; tag */
-    QString htmlHead( bool fixedFont = false ) const;
+    &gt;body&lt; tag */
+    QString htmlHead(bool fixedFont = false) const;
 };
 
 }

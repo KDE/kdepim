@@ -16,7 +16,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef FINDBARSOURCEVIEW_H
 #define FINDBARSOURCEVIEW_H
 
@@ -31,13 +30,16 @@ class FindBarSourceView : public FindBarBase
     Q_OBJECT
 
 public:
-    explicit FindBarSourceView( QPlainTextEdit * view, QWidget * parent = 0 );
+    explicit FindBarSourceView(QPlainTextEdit *view, QWidget *parent = 0);
     ~FindBarSourceView();
 
 private:
-    explicit FindBarSourceView( QWidget *parent) { Q_UNUSED(parent); }
+    explicit FindBarSourceView(QWidget *parent)
+    {
+        Q_UNUSED(parent);
+    }
     void clearSelections();
-    void searchText( bool backward, bool isAutoSearch );
+    void searchText(bool backward, bool isAutoSearch);
     void updateHighLight(bool);
     void updateSensitivity(bool);
 
@@ -45,8 +47,6 @@ private:
     QPlainTextEdit *mView;
 };
 }
-
-
 
 #endif /* FINDBARSOURCEVIEW_H */
 

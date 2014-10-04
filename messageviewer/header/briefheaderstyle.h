@@ -36,18 +36,23 @@
 
 #include "header/headerstyle.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-class BriefHeaderStyle : public HeaderStyle {
+class BriefHeaderStyle : public HeaderStyle
+{
     friend class HeaderStyle;
 protected:
     BriefHeaderStyle() : HeaderStyle() {}
     ~BriefHeaderStyle() {}
 
 public:
-    const char * name() const { return "brief"; }
+    const char *name() const
+    {
+        return "brief";
+    }
 private:
-    QString format( KMime::Message *message ) const;
+    QString format(KMime::Message *message) const;
 };
 }
 

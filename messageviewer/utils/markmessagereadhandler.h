@@ -28,7 +28,8 @@
 
 #include <QtCore/QObject>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
  * @short A viewer handler to mark viewed messages as read.
@@ -43,7 +44,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit MarkMessageReadHandler( QObject *parent = 0 );
+    explicit MarkMessageReadHandler(QObject *parent = 0);
 
     /**
      * Destroys the mark message read handler.
@@ -53,14 +54,14 @@ public:
     /**
      * @copydoc AbstractMessageLoadedHandler::setItem()
      */
-    void setItem( const Akonadi::Item &item );
+    void setItem(const Akonadi::Item &item);
 
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void handleMessages() )
+    Q_PRIVATE_SLOT(d, void handleMessages())
     //@endcond
 };
 

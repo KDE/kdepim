@@ -22,15 +22,17 @@
 
 #include <QDialog>
 #include <KConfigGroup>
-namespace Ui {
+namespace Ui
+{
 class AdBlockCreateFilterWidget;
 }
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockCreateFilterDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AdBlockCreateFilterDialog(QWidget *parent=0);
+    explicit AdBlockCreateFilterDialog(QWidget *parent = 0);
     ~AdBlockCreateFilterDialog();
 
     void setPattern(AdBlockBlockableItemsWidget::TypeElement type, const QString &pattern);

@@ -31,9 +31,6 @@
     your version.
 */
 
-
-
-
 #include "headerstrategy.h"
 #include "header/headerstrategy_p.h"
 
@@ -42,31 +39,42 @@
 //
 // HeaderStrategy abstract base:
 //
-namespace MessageViewer {
-HeaderStrategy::HeaderStrategy() {
+namespace MessageViewer
+{
+HeaderStrategy::HeaderStrategy()
+{
 
 }
 
-HeaderStrategy::~HeaderStrategy() {
+HeaderStrategy::~HeaderStrategy()
+{
 
 }
 
-QStringList HeaderStrategy::headersToDisplay() const {
+QStringList HeaderStrategy::headersToDisplay() const
+{
     return QStringList();
 }
 
-QStringList HeaderStrategy::headersToHide() const {
+QStringList HeaderStrategy::headersToHide() const
+{
     return QStringList();
 }
 
-bool HeaderStrategy::showHeader( const QString & header ) const {
-    if ( headersToDisplay().contains( header.toLower() ) ) return true;
-    if ( headersToHide().contains( header.toLower() ) ) return false;
+bool HeaderStrategy::showHeader(const QString &header) const
+{
+    if (headersToDisplay().contains(header.toLower())) {
+        return true;
+    }
+    if (headersToHide().contains(header.toLower())) {
+        return false;
+    }
     return defaultPolicy() == Display;
 }
 
-HeaderStrategy * HeaderStrategy::create( Type type ) {
-    switch ( type ) {
+HeaderStrategy *HeaderStrategy::create(Type type)
+{
+    switch (type) {
     case All:  return all();
     case Rich:   return rich();
     case Standard: return standard();
@@ -78,70 +86,86 @@ HeaderStrategy * HeaderStrategy::create( Type type ) {
     return 0; // make compiler happy
 }
 
-HeaderStrategy * HeaderStrategy::create( const QString & type ) {
+HeaderStrategy *HeaderStrategy::create(const QString &type)
+{
     const QString lowerType = type.toLower();
-    if ( lowerType == QLatin1String( "all" ) )
+    if (lowerType == QLatin1String("all")) {
         return all();
-    else if ( lowerType == QLatin1String( "rich" ) )
+    } else if (lowerType == QLatin1String("rich")) {
         return HeaderStrategy::rich();
+    }
     //if ( lowerType == "standard" ) return standard(); // not needed, see below
-    else if ( lowerType == QLatin1String( "brief" ) )
+    else if (lowerType == QLatin1String("brief")) {
         return brief();
-    else if ( lowerType == QLatin1String( "custom" ) )
+    } else if (lowerType == QLatin1String("custom")) {
         return custom();
-    else if ( lowerType == QLatin1String( "grantlee" ) )
+    } else if (lowerType == QLatin1String("grantlee")) {
         return grantlee();
+    }
     // don't kFatal here, b/c the strings are user-provided
     // (KConfig), so fail gracefully to the default:
     return standard();
 }
 
-static HeaderStrategy * allStrategy = 0;
-static HeaderStrategy * richStrategy = 0;
-static HeaderStrategy * standardStrategy = 0;
-static HeaderStrategy * briefStrategy = 0;
-static HeaderStrategy * customStrategy = 0;
-static HeaderStrategy * grantleeStrategy = 0;
+static HeaderStrategy *allStrategy = 0;
+static HeaderStrategy *richStrategy = 0;
+static HeaderStrategy *standardStrategy = 0;
+static HeaderStrategy *briefStrategy = 0;
+static HeaderStrategy *customStrategy = 0;
+static HeaderStrategy *grantleeStrategy = 0;
 
-HeaderStrategy * HeaderStrategy::all() {
-    if ( !allStrategy )
+HeaderStrategy *HeaderStrategy::all()
+{
+    if (!allStrategy) {
         allStrategy = new MessageViewer::AllHeaderStrategy();
+    }
     return allStrategy;
 }
 
-HeaderStrategy * HeaderStrategy::rich() {
-    if ( !richStrategy )
+HeaderStrategy *HeaderStrategy::rich()
+{
+    if (!richStrategy) {
         richStrategy = new MessageViewer::RichHeaderStrategy();
+    }
     return richStrategy;
 }
 
-HeaderStrategy * HeaderStrategy::standard() {
-    if ( !standardStrategy )
+HeaderStrategy *HeaderStrategy::standard()
+{
+    if (!standardStrategy) {
         standardStrategy = new MessageViewer::StandardHeaderStrategy();
+    }
     return standardStrategy;
 }
 
-HeaderStrategy * HeaderStrategy::brief() {
-    if ( !briefStrategy )
+HeaderStrategy *HeaderStrategy::brief()
+{
+    if (!briefStrategy) {
         briefStrategy = new MessageViewer::BriefHeaderStrategy();
+    }
     return briefStrategy;
 }
 
-HeaderStrategy * HeaderStrategy::custom() {
-    if ( !customStrategy )
+HeaderStrategy *HeaderStrategy::custom()
+{
+    if (!customStrategy) {
         customStrategy = new MessageViewer::CustomHeaderStrategy();
+    }
     return customStrategy;
 }
 
-void HeaderStrategy::readConfig() {
-    if(customStrategy) {
-        static_cast<MessageViewer::CustomHeaderStrategy*>(customStrategy)->loadConfig();
+void HeaderStrategy::readConfig()
+{
+    if (customStrategy) {
+        static_cast<MessageViewer::CustomHeaderStrategy *>(customStrategy)->loadConfig();
     }
 }
 
-HeaderStrategy * HeaderStrategy::grantlee() {
-    if ( !grantleeStrategy )
+HeaderStrategy *HeaderStrategy::grantlee()
+{
+    if (!grantleeStrategy) {
         grantleeStrategy = new MessageViewer::GrantleeHeaderStrategy();
+    }
     return grantleeStrategy;
 }
 

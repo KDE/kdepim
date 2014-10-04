@@ -18,9 +18,9 @@
 #ifndef SCAMATTRIBUTE_H
 #define SCAMATTRIBUTE_H
 
-
 #include <AkonadiCore/attribute.h>
-namespace MessageViewer {
+namespace MessageViewer
+{
 class ScamAttributePrivate;
 
 class ScamAttribute : public Akonadi::Attribute
@@ -33,14 +33,14 @@ public:
     ScamAttribute *clone() const;
     QByteArray type() const;
     QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
     bool isAScam() const;
     void setIsAScam(bool b);
 
 private:
     friend class ScamAttributePrivate;
-    ScamAttributePrivate * const d;
+    ScamAttributePrivate *const d;
 };
 }
 

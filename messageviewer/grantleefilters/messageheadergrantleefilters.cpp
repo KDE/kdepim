@@ -29,12 +29,11 @@ MessageHeaderGrantleeFilters::~MessageHeaderGrantleeFilters()
 {
 }
 
-
-QHash<QString, Grantlee::Filter*> MessageHeaderGrantleeFilters::filters(const QString &name)
+QHash<QString, Grantlee::Filter *> MessageHeaderGrantleeFilters::filters(const QString &name)
 {
     Q_UNUSED(name);
 
-    QHash<QString, Grantlee::Filter*> filters;
+    QHash<QString, Grantlee::Filter *> filters;
     filters.insert(QLatin1String("showlink"), new MessageHeaderEmailShowLink());
     filters.insert(QLatin1String("nameonly"), new MessageHeaderEmailNameOnly());
     return filters;

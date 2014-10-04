@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef EVENTEDIT_H
 #define EVENTEDIT_H
 
@@ -29,11 +28,13 @@
 class QLineEdit;
 class KDateTimeEdit;
 class QPushButton;
-namespace Akonadi {
+namespace Akonadi
+{
 class CollectionComboBox;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MESSAGEVIEWER_EXPORT EventEdit : public QWidget
 {
     Q_OBJECT

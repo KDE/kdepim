@@ -20,20 +20,26 @@
 
 #include "header/headerstyle.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-class EnterpriseHeaderStyle : public HeaderStyle {
+class EnterpriseHeaderStyle : public HeaderStyle
+{
     friend class HeaderStyle;
 protected:
     EnterpriseHeaderStyle() : HeaderStyle() {}
     ~EnterpriseHeaderStyle() {}
 
 public:
-    const char * name() const { return "enterprise"; }
+    const char *name() const
+    {
+        return "enterprise";
+    }
 
-    QString format( KMime::Message *message ) const;
+    QString format(KMime::Message *message) const;
 
-    bool hasAttachmentQuickList() const {
+    bool hasAttachmentQuickList() const
+    {
         return true;
     }
 };

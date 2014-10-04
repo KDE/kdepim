@@ -25,7 +25,6 @@
 *
 * ============================================================ */
 
-
 // Self Includes
 #include "adblockruletextmatchimpl.h"
 
@@ -42,14 +41,14 @@ AdBlockRuleTextMatchImpl::AdBlockRuleTextMatchImpl(const QString &filter)
     m_textToMatch.remove(QLatin1Char('*'));
 }
 
-
 bool AdBlockRuleTextMatchImpl::match(const QNetworkRequest &request, const QString &encodedUrl, const QString &encodedUrlLowerCase) const
 {
     Q_UNUSED(request);
     Q_UNUSED(encodedUrl);
-    if (m_textToMatch.isEmpty())
+    if (m_textToMatch.isEmpty()) {
         return false;
-    
+    }
+
     // Case sensitive compare is faster, but would be incorrect with encodedUrl since
     // we do want case insensitive.
     // What we do is work on a lowercase version of m_textToMatch, and compare to the lowercase
@@ -57,38 +56,38 @@ bool AdBlockRuleTextMatchImpl::match(const QNetworkRequest &request, const QStri
     return encodedUrlLowerCase.contains(m_textToMatch, Qt::CaseSensitive);
 }
 
-
 bool AdBlockRuleTextMatchImpl::isTextMatchFilter(const QString &filter)
 {
     // We don't deal with options just yet
-    if (filter.contains(QLatin1Char('$')))
+    if (filter.contains(QLatin1Char('$'))) {
         return false;
+    }
 
     // We don't deal with element matching
-    if (filter.contains(QLatin1String("##")))
+    if (filter.contains(QLatin1String("##"))) {
         return false;
+    }
 
     // We don't deal with the begin-end matching
-    if (filter.startsWith(QLatin1Char('|')) || filter.endsWith(QLatin1Char('|')))
+    if (filter.startsWith(QLatin1Char('|')) || filter.endsWith(QLatin1Char('|'))) {
         return false;
+    }
 
     // We only handle * at the beginning or the end
     int starPosition = filter.indexOf(QLatin1Char('*'));
-    while (starPosition >= 0)
-    {
-        if (starPosition != 0 && starPosition != (filter.length() - 1))
+    while (starPosition >= 0) {
+        if (starPosition != 0 && starPosition != (filter.length() - 1)) {
             return false;
+        }
         starPosition = filter.indexOf(QLatin1Char('*'), starPosition + 1);
     }
     return true;
 }
 
-
 QString AdBlockRuleTextMatchImpl::ruleString() const
 {
     return m_textToMatch;
 }
-
 
 QString AdBlockRuleTextMatchImpl::ruleType() const
 {

@@ -86,7 +86,6 @@ void FindBarBaseTest::shouldEnableDisableNextPreviousButton()
 
     QPushButton *next = qFindChild<QPushButton *>(&bar, QLatin1String("findnext"));
 
-
     bar.autoSearch(QLatin1String("FOO"));
     QVERIFY(next->isEnabled());
     QVERIFY(previous->isEnabled());
@@ -113,5 +112,4 @@ void FindBarBaseTest::shouldClearAllWhenShowBar()
     QVERIFY(status->text().isEmpty());
 }
 
-
-QTEST_MAIN( FindBarBaseTest )
+QTEST_MAIN(FindBarBaseTest)

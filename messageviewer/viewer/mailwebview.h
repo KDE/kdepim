@@ -33,7 +33,8 @@
 class QLabel;
 class KActionCollection;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 #ifndef KDEPIM_NO_WEBKIT
 class ScamDetection;
 #endif
@@ -45,10 +46,10 @@ class MESSAGEVIEWER_EXPORT MailWebView : public QTextBrowser // krazy:exclude=qc
 class MESSAGEVIEWER_EXPORT MailWebView : public KWebView
 #endif
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
 
-    explicit MailWebView(KActionCollection *actionCollection = 0, QWidget *parent=0 );
+    explicit MailWebView(KActionCollection *actionCollection = 0, QWidget *parent = 0);
     ~MailWebView();
 
     enum FindFlag {
@@ -59,39 +60,39 @@ public:
 
         NumFindFlags
     };
-    Q_DECLARE_FLAGS( FindFlags, FindFlag )
+    Q_DECLARE_FLAGS(FindFlags, FindFlag)
 
-    bool findText( const QString & test, FindFlags flags );
+    bool findText(const QString &test, FindFlags flags);
     void clearFindSelection();
 
-    void scrollUp( int pixels );
-    void scrollDown( int pixels );
+    void scrollUp(int pixels);
+    void scrollDown(int pixels);
     bool isScrolledToBottom() const;
     bool hasVerticalScrollBar() const;
-    void scrollPageDown( int percent );
-    void scrollPageUp( int percent );
-    void scrollToAnchor( const QString & anchor );
+    void scrollPageDown(int percent);
+    void scrollPageUp(int percent);
+    void scrollToAnchor(const QString &anchor);
 
     QString selectedText() const;
-    bool isAttachmentInjectionPoint( const QPoint & globalPos ) const;
-    void injectAttachments( const boost::function<QString()> & delayedHtml );
-    bool removeAttachmentMarking( const QString & id );
-    void markAttachment( const QString & id, const QString & style );
-    bool replaceInnerHtml( const QString & id, const boost::function<QString()> & delayedHtml );
-    void setElementByIdVisible( const QString & id, bool visible );
-    void setHtml( const QString & html, const QUrl & baseUrl );
+    bool isAttachmentInjectionPoint(const QPoint &globalPos) const;
+    void injectAttachments(const boost::function<QString()> &delayedHtml);
+    bool removeAttachmentMarking(const QString &id);
+    void markAttachment(const QString &id, const QString &style);
+    bool replaceInnerHtml(const QString &id, const boost::function<QString()> &delayedHtml);
+    void setElementByIdVisible(const QString &id, bool visible);
+    void setHtml(const QString &html, const QUrl &baseUrl);
     QString htmlSource() const;
     void selectAll();
     void clearSelection();
-    void scrollToRelativePosition( double pos );
+    void scrollToRelativePosition(double pos);
     double relativePosition() const;
 
-    void setAllowExternalContent( bool allow );
+    void setAllowExternalContent(bool allow);
 
-    QUrl linkOrImageUrlAt( const QPoint & global ) const;
+    QUrl linkOrImageUrlAt(const QPoint &global) const;
 
-    void setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy );
-    Qt::ScrollBarPolicy scrollBarPolicy( Qt::Orientation orientation ) const;
+    void setScrollBarPolicy(Qt::Orientation orientation, Qt::ScrollBarPolicy policy);
+    Qt::ScrollBarPolicy scrollBarPolicy(Qt::Orientation orientation) const;
 
     bool isAShortUrl(const QUrl &url) const;
     void expandUrl(const QUrl &url);
@@ -110,11 +111,11 @@ Q_SIGNALS:
     /// Emitted when the user right-clicks somewhere
     /// @param url if an URL was under the cursor, this parameter contains it. Otherwise empty
     /// @param point position where the click happened, in local coordinates
-    void popupMenu( const QUrl &url, const QUrl&imageUrl, const QPoint &point );
+    void popupMenu(const QUrl &url, const QUrl &imageUrl, const QPoint &point);
 
-    void linkHovered( const QString & link, const QString & title=QString(), const QString & textContent=QString() );
+    void linkHovered(const QString &link, const QString &title = QString(), const QString &textContent = QString());
 #ifdef KDEPIM_NO_WEBKIT
-    void linkClicked( const QUrl & link );
+    void linkClicked(const QUrl &link);
 #endif
     void messageMayBeAScam();
 
@@ -123,11 +124,11 @@ protected:
     friend class MessageViewItem;
 #endif
     /// Reimplemented to catch context menu events and emit popupMenu()
-    virtual bool event( QEvent *event );
+    virtual bool event(QEvent *event);
     /// Reimplement for access key
-    virtual void keyReleaseEvent(QKeyEvent*);
-    virtual void keyPressEvent(QKeyEvent*);
-    virtual void wheelEvent (QWheelEvent* e);
+    virtual void keyReleaseEvent(QKeyEvent *);
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual void wheelEvent(QWheelEvent *e);
 
 private Q_SLOTS:
     void hideAccessKeys();
@@ -143,7 +144,7 @@ private:
         Activated
     };
     AccessKeyState mAccessKeyActivated;
-    QList<QLabel*> mAccessKeyLabels;
+    QList<QLabel *> mAccessKeyLabels;
     QHash<QChar, QWebElement> mAccessKeyNodes;
     QHash<QString, QChar> mDuplicateLinkElements;
 
@@ -154,6 +155,6 @@ private:
 
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( MessageViewer::MailWebView::FindFlags )
+Q_DECLARE_OPERATORS_FOR_FLAGS(MessageViewer::MailWebView::FindFlags)
 
 #endif /* MESSAGEVIEWER_MAILWEBVIEW_H */

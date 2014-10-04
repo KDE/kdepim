@@ -26,18 +26,17 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-
 using namespace MessageViewer;
 AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
     : QDialog(parent),
       mCurrentType(AdBlockBlockableItemsWidget::None)
 {
-   QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-   QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-   okButton->setDefault(true);
-   okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-   connect(buttonBox, &QDialogButtonBox::accepted, this, &AdBlockCreateFilterDialog::accept);
-   connect(buttonBox, &QDialogButtonBox::rejected, this, &AdBlockCreateFilterDialog::reject);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AdBlockCreateFilterDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AdBlockCreateFilterDialog::reject);
 
     QWidget *w = new QWidget;
     mUi = new Ui::AdBlockCreateFilterWidget;
@@ -72,16 +71,16 @@ AdBlockCreateFilterDialog::~AdBlockCreateFilterDialog()
 
 void AdBlockCreateFilterDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockCreateFilterDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "AdBlockCreateFilterDialog");
+    group.writeEntry("Size", size());
 }
 
 void AdBlockCreateFilterDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockCreateFilterDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "AdBlockCreateFilterDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
@@ -97,12 +96,12 @@ void AdBlockCreateFilterDialog::setPattern(AdBlockBlockableItemsWidget::TypeElem
 void AdBlockCreateFilterDialog::initialize()
 {
     mUi->applyListElement->clear();
-    for (int i = AdBlockBlockableItemsWidget::None+1; i < AdBlockBlockableItemsWidget::MaxTypeElement; ++i) {
+    for (int i = AdBlockBlockableItemsWidget::None + 1; i < AdBlockBlockableItemsWidget::MaxTypeElement; ++i) {
         QListWidgetItem *item = new QListWidgetItem(AdBlockBlockableItemsWidget::elementTypeToI18n(static_cast<AdBlockBlockableItemsWidget::TypeElement>(i)), mUi->applyListElement);
         item->setData(ElementValue, static_cast<AdBlockBlockableItemsWidget::TypeElement>(i));
         item->setCheckState(Qt::Unchecked);
         if (i == (int)mCurrentType) {
-            item->setFlags(item->flags()&~Qt::ItemIsEnabled);
+            item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
         }
 
     }
@@ -128,11 +127,11 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
     }
 
     const QString collapseValue = mUi->collapseBlocked->itemData(mUi->collapseBlocked->currentIndex()).toString();
-    if (!collapseValue.isEmpty())
+    if (!collapseValue.isEmpty()) {
         pattern += QLatin1Char('$') + collapseValue;
+    }
 
     pattern += (collapseValue.isEmpty() ? QLatin1String("$") : QLatin1String(",")) + AdBlockBlockableItemsWidget::elementType(mCurrentType);
-
 
     if (mUi->exceptionFilter->isChecked()) {
         pattern = QLatin1String("@@") + pattern;

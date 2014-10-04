@@ -27,7 +27,8 @@ class Ui_Settings;
 
 class KConfigDialogManager;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
  * Configure widget that can be used in a KConfigDialog.
@@ -38,7 +39,7 @@ class MESSAGEVIEWER_EXPORT ConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConfigureWidget( QWidget *parent = 0 );
+    explicit ConfigureWidget(QWidget *parent = 0);
 
     ~ConfigureWidget();
 
@@ -55,9 +56,9 @@ public:
 signals:
 
     /**
-   * Emitted when the user changes the setting in some widget. Useful to enable the "Apply"
-   * button after this has been emitted.
-   */
+    * Emitted when the user changes the setting in some widget. Useful to enable the "Apply"
+    * button after this has been emitted.
+    */
     void settingsChanged();
 
 private Q_SLOTS:

@@ -66,19 +66,18 @@ void AttachmentTemporaryFilesDirs::slotRemoveTempFiles()
     deleteLater();
 }
 
-void AttachmentTemporaryFilesDirs::addTempFile( const QString &file )
+void AttachmentTemporaryFilesDirs::addTempFile(const QString &file)
 {
-    mTempFiles.append( file );
+    mTempFiles.append(file);
 }
 
-void AttachmentTemporaryFilesDirs::addTempDir( const QString &dir )
+void AttachmentTemporaryFilesDirs::addTempDir(const QString &dir)
 {
-    mTempDirs.append( dir );
+    mTempDirs.append(dir);
 }
 
 QStringList AttachmentTemporaryFilesDirs::temporaryFiles() const
 {
     return mTempFiles;
 }
-
 

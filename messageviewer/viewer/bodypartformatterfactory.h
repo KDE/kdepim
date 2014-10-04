@@ -38,9 +38,11 @@
 
 class QString;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-namespace Interface {
+namespace Interface
+{
 class BodyPartFormatter;
 }
 
@@ -51,22 +53,22 @@ class BodyPartFormatterFactory
 public:
     ~BodyPartFormatterFactory();
 
-    static const BodyPartFormatterFactory * instance();
+    static const BodyPartFormatterFactory *instance();
 
-    const Interface::BodyPartFormatter * createFor( const char * type, const char * subtype ) const;
-    const Interface::BodyPartFormatter * createFor( const QString & type, const QString & subtype ) const;
-    const Interface::BodyPartFormatter * createFor( const QByteArray & type, const QByteArray & subtype ) const;
+    const Interface::BodyPartFormatter *createFor(const char *type, const char *subtype) const;
+    const Interface::BodyPartFormatter *createFor(const QString &type, const QString &subtype) const;
+    const Interface::BodyPartFormatter *createFor(const QByteArray &type, const QByteArray &subtype) const;
 
     //
     // Only boring stuff below:
     //
 private:
     BodyPartFormatterFactory();
-    static BodyPartFormatterFactory * mSelf;
+    static BodyPartFormatterFactory *mSelf;
 private:
     // disabled
-    const BodyPartFormatterFactory & operator=( const BodyPartFormatterFactory & );
-    BodyPartFormatterFactory( const BodyPartFormatterFactory & );
+    const BodyPartFormatterFactory &operator=(const BodyPartFormatterFactory &);
+    BodyPartFormatterFactory(const BodyPartFormatterFactory &);
 };
 
 }

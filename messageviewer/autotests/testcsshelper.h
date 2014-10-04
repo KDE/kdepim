@@ -34,12 +34,13 @@
 
 #include "viewer/csshelper.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class TestCSSHelper : public CSSHelper
 {
 public:
-  explicit TestCSSHelper( const QPaintDevice *pd );
+    explicit TestCSSHelper(const QPaintDevice *pd);
 };
 
 }

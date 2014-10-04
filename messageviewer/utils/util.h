@@ -49,22 +49,26 @@ class QWidget;
 class QActionGroup;
 class QAction;
 
-namespace KMime {
+namespace KMime
+{
 class Content;
 class Message;
 }
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Item;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
  * The Util namespace contains a collection of helper functions use in
  * various places.
  */
-namespace Util {
+namespace Util
+{
 
 /**
       * Describes the type of the displayed message. This depends on the MIME structure
@@ -78,14 +82,14 @@ enum HtmlMode {
 };
 
 // return true if we should proceed, false if we should abort
-bool MESSAGEVIEWER_EXPORT checkOverwrite( const KUrl &url, QWidget *w );
+bool MESSAGEVIEWER_EXPORT checkOverwrite(const KUrl &url, QWidget *w);
 
 /**
      * Delegates opening a URL to the QDesktopServices mechanisms for that
      * on Windows and MacOSX.
      * Returns false if it did nothing (such as on other platforms).
      */
-bool MESSAGEVIEWER_EXPORT handleUrlWithQDesktopServices( const KUrl& url );
+bool MESSAGEVIEWER_EXPORT handleUrlWithQDesktopServices(const KUrl &url);
 
 /**
      * evaluates GlobalSettings->disregardUmask()
@@ -94,12 +98,12 @@ bool MESSAGEVIEWER_EXPORT handleUrlWithQDesktopServices( const KUrl& url );
      */
 int MESSAGEVIEWER_EXPORT getWritePermissions();
 
-QList<KMime::Content*> MESSAGEVIEWER_EXPORT allContents( const KMime::Content *message );
-QList<KMime::Content*> MESSAGEVIEWER_EXPORT extractAttachments( const KMime::Message *message );
-bool MESSAGEVIEWER_EXPORT saveContents( QWidget *parent,
-                                        const QList<KMime::Content*> &contents, KUrl &currentFolder );
-bool MESSAGEVIEWER_EXPORT saveContent( QWidget *parent, KMime::Content* content,
-                                       const KUrl& url );
+QList<KMime::Content *> MESSAGEVIEWER_EXPORT allContents(const KMime::Content *message);
+QList<KMime::Content *> MESSAGEVIEWER_EXPORT extractAttachments(const KMime::Message *message);
+bool MESSAGEVIEWER_EXPORT saveContents(QWidget *parent,
+                                       const QList<KMime::Content *> &contents, KUrl &currentFolder);
+bool MESSAGEVIEWER_EXPORT saveContent(QWidget *parent, KMime::Content *content,
+                                      const KUrl &url);
 
 /**
      * Finds the filename of an icon based on the given mimetype or filenames.
@@ -117,20 +121,20 @@ bool MESSAGEVIEWER_EXPORT saveContent( QWidget *parent, KMime::Content* content,
      *                              Example: "test.zip"
      * @return the full file name of the icon file
      */
-QString MESSAGEVIEWER_EXPORT fileNameForMimetype( const QString &mimeType, int iconSize,
-                                                  const QString &fallbackFileName1 = QString(),
-                                                  const QString &fallbackFileName2 = QString() );
-bool MESSAGEVIEWER_EXPORT saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget*parent, bool appendMessages = false);
+QString MESSAGEVIEWER_EXPORT fileNameForMimetype(const QString &mimeType, int iconSize,
+        const QString &fallbackFileName1 = QString(),
+        const QString &fallbackFileName2 = QString());
+bool MESSAGEVIEWER_EXPORT saveMessageInMbox(const QList<Akonadi::Item> &retrievedMsgs, QWidget *parent, bool appendMessages = false);
 
-bool MESSAGEVIEWER_EXPORT saveAttachments( const KMime::Content::List& contents, QWidget *parent, KUrl &currentFolder );
+bool MESSAGEVIEWER_EXPORT saveAttachments(const KMime::Content::List &contents, QWidget *parent, KUrl &currentFolder);
 
-bool MESSAGEVIEWER_EXPORT speakSelectedText( const QString& text, QWidget *parent);
-MESSAGEVIEWER_EXPORT QAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent );
+bool MESSAGEVIEWER_EXPORT speakSelectedText(const QString &text, QWidget *parent);
+MESSAGEVIEWER_EXPORT QAction *createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent);
 
 /**
      * Search mimetype from filename when mimetype is empty or application/octet-stream
      **/
-MESSAGEVIEWER_EXPORT KMimeType::Ptr mimetype(const QString& name);
+MESSAGEVIEWER_EXPORT KMimeType::Ptr mimetype(const QString &name);
 }
 
 }

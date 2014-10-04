@@ -33,7 +33,7 @@ bool ScamDetectionTest::scanPage(QWebFrame *frame)
     if (result) {
         foundScam = true;
     }
-    foreach(QWebFrame *childFrame, frame->childFrames()) {
+    foreach (QWebFrame *childFrame, frame->childFrames()) {
         result = MessageViewer::ScamDetection::scanFrame(childFrame->documentElement(), details);
         if (result) {
             foundScam = true;
@@ -45,11 +45,11 @@ bool ScamDetectionTest::scanPage(QWebFrame *frame)
 bool ScamDetectionTest::testHtml(const QString &content)
 {
     QWebPage page;
-    page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
-    page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
-    page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+    page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
+    page.settings()->setAttribute(QWebSettings::JavaEnabled, false);
+    page.settings()->setAttribute(QWebSettings::PluginsEnabled, false);
 
-    page.currentFrame()->setHtml( content );
+    page.currentFrame()->setHtml(content);
 
     return scanPage(page.currentFrame());
 }
@@ -121,6 +121,5 @@ void ScamDetectionTest::testShortUrl()
     QCOMPARE(testHtml(content), true);
 }
 
-
-QTEST_MAIN( ScamDetectionTest )
+QTEST_MAIN(ScamDetectionTest)
 

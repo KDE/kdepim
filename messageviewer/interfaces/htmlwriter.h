@@ -36,24 +36,27 @@
 class QByteArray;
 class QString;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 /**
   * @short An interface for HTML sinks.
   * @author Marc Mutz <mutz@kde.org>
   *
   */
-namespace Interface {
-  class HtmlWriter {
-  public:
+namespace Interface
+{
+class HtmlWriter
+{
+public:
     virtual ~HtmlWriter() {}
 
     /** Signal the begin of stuff to write, and give the CSS definitions */
-    virtual void begin( const QString & cssDefinitions ) = 0;
+    virtual void begin(const QString &cssDefinitions) = 0;
     /** Write out a chunk of text. No HTML escaping is performed. */
-    virtual void write( const QString & html ) = 0;
+    virtual void write(const QString &html) = 0;
     /** Signal the end of stuff to write. */
     virtual void end() = 0;
-  };
+};
 }
 
 /**
@@ -95,28 +98,28 @@ namespace Interface {
   * Naturally, whenever you queued data in a given session, that
   * session must be ended by calling #flush(), not #end().
   */
-class HtmlWriter : public Interface::HtmlWriter {
+class HtmlWriter : public Interface::HtmlWriter
+{
 public:
-  virtual ~HtmlWriter() {}
+    virtual ~HtmlWriter() {}
 
-  /** Stop all possibly pending processing in order to be able to
-    *  call #begin() again. */
-  virtual void reset() = 0;
+    /** Stop all possibly pending processing in order to be able to
+      *  call #begin() again. */
+    virtual void reset() = 0;
 
-  virtual void queue( const QString & str ) = 0;
-  /** (Start) flushing internal buffers, if any. */
-  virtual void flush() = 0;
+    virtual void queue(const QString &str) = 0;
+    /** (Start) flushing internal buffers, if any. */
+    virtual void flush() = 0;
 
-  /**
-    * Embed a part with Content-ID @p contentId, using url @p url.
-    */
-  virtual void embedPart( const QByteArray & contentId, const QString & url ) = 0;
+    /**
+      * Embed a part with Content-ID @p contentId, using url @p url.
+      */
+    virtual void embedPart(const QByteArray &contentId, const QString &url) = 0;
 
-  virtual void extraHead( const QString& str ) = 0;
+    virtual void extraHead(const QString &str) = 0;
 };
 
 }
-
 
 #endif // __KMAIL_INTERFACES_HTMLWRITER_H__
 

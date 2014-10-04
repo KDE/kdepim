@@ -21,13 +21,14 @@
 #include <QTreeView>
 #include <kmime/kmime_message.h>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MimeTreeModel;
 class MimePartTreeView : public QTreeView
 {
     Q_OBJECT
 public:
-    explicit MimePartTreeView(QWidget *parent=0);
+    explicit MimePartTreeView(QWidget *parent = 0);
     ~MimePartTreeView();
 
     MessageViewer::MimeTreeModel *mimePartModel() const;

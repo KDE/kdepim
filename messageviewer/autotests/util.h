@@ -21,30 +21,37 @@
 
 #include <KMime/Message>
 
-class TestHtmlWriter : public MessageViewer::HtmlWriter {
-  public:
+class TestHtmlWriter : public MessageViewer::HtmlWriter
+{
+public:
     explicit TestHtmlWriter() {}
     virtual ~TestHtmlWriter() {}
 
-
-    virtual void begin( const QString & ) {}
-    virtual void write( const QString & ) {}
+    virtual void begin(const QString &) {}
+    virtual void write(const QString &) {}
     virtual void end() {}
     virtual void reset() {}
-    virtual void queue( const QString & ) {}
+    virtual void queue(const QString &) {}
     virtual void flush() {}
-    virtual void embedPart( const QByteArray &, const QString & ) {}
-    virtual void extraHead( const QString& ) {} 
+    virtual void embedPart(const QByteArray &, const QString &) {}
+    virtual void extraHead(const QString &) {}
 };
 
-class TestCSSHelper : public MessageViewer::CSSHelper {
-  public:
-    TestCSSHelper() : MessageViewer::CSSHelper( 0 ) {}
+class TestCSSHelper : public MessageViewer::CSSHelper
+{
+public:
+    TestCSSHelper() : MessageViewer::CSSHelper(0) {}
     virtual ~TestCSSHelper() {}
 
-    QString nonQuotedFontTag() const { return QString::fromLatin1( "<" ); }
+    QString nonQuotedFontTag() const
+    {
+        return QString::fromLatin1("<");
+    }
 
-    QString quoteFontTag( int ) const { return QString::fromLatin1( "<" ); }
+    QString quoteFontTag(int) const
+    {
+        return QString::fromLatin1("<");
+    }
 };
 
-KMime::Message::Ptr readAndParseMail( const QString &mailFile );
+KMime::Message::Ptr readAndParseMail(const QString &mailFile);

@@ -66,14 +66,14 @@ AdBlockBlockableItemsWidget::AdBlockBlockableItemsWidget(QWidget *parent)
     lay->addWidget(searchLine);
     lay->addWidget(mListItems);
 
-    KConfigGroup config( MessageViewer::GlobalSettings::self()->config(),"AdBlockHeaders");
-    mListItems->header()->restoreState(config.readEntry("HeaderState",QByteArray()));
+    KConfigGroup config(MessageViewer::GlobalSettings::self()->config(), "AdBlockHeaders");
+    mListItems->header()->restoreState(config.readEntry("HeaderState", QByteArray()));
 }
 
 AdBlockBlockableItemsWidget::~AdBlockBlockableItemsWidget()
 {
-    KConfigGroup groupHeader( MessageViewer::GlobalSettings::self()->config(),"AdBlockHeaders" );
-    groupHeader.writeEntry( "HeaderState", mListItems->header()->saveState());
+    KConfigGroup groupHeader(MessageViewer::GlobalSettings::self()->config(), "AdBlockHeaders");
+    groupHeader.writeEntry("HeaderState", mListItems->header()->saveState());
     groupHeader.sync();
 }
 
@@ -86,7 +86,7 @@ void AdBlockBlockableItemsWidget::setWebFrame(QWebFrame *frame)
 QString AdBlockBlockableItemsWidget::elementTypeToI18n(AdBlockBlockableItemsWidget::TypeElement type)
 {
     QString result;
-    switch(type) {
+    switch (type) {
     case AdBlockBlockableItemsWidget::Image:
         result = i18n("Image");
         break;
@@ -124,7 +124,7 @@ QString AdBlockBlockableItemsWidget::elementTypeToI18n(AdBlockBlockableItemsWidg
 QString AdBlockBlockableItemsWidget::elementType(AdBlockBlockableItemsWidget::TypeElement type)
 {
     QString result;
-    switch(type) {
+    switch (type) {
     case AdBlockBlockableItemsWidget::Image:
         result = QLatin1String("image");
         break;
@@ -154,18 +154,18 @@ QString AdBlockBlockableItemsWidget::elementType(AdBlockBlockableItemsWidget::Ty
         break;
     case AdBlockBlockableItemsWidget::None:
     default:
-        qDebug()<<" unknown type "<<type;
+        qDebug() << " unknown type " << type;
     }
     return result;
 }
 
-void AdBlockBlockableItemsWidget::adaptSrc(QString &src,const QString &hostName)
+void AdBlockBlockableItemsWidget::adaptSrc(QString &src, const QString &hostName)
 {
-    if (src.startsWith(QLatin1String("http://")) || src.startsWith(QLatin1String("https://")) ) {
+    if (src.startsWith(QLatin1String("http://")) || src.startsWith(QLatin1String("https://"))) {
         //Nothing
     } else if (src.startsWith(QLatin1String("//"))) {
         src = QLatin1String("https:") + src;
-    } else if (src.startsWith(QLatin1Char('/'))){
+    } else if (src.startsWith(QLatin1Char('/'))) {
         src = QLatin1String("https://") + hostName + src;
     } else {
         src = QString();
@@ -180,11 +180,13 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
     Q_FOREACH (const QWebElement &img, images) {
         if (img.hasAttribute(QLatin1String("src"))) {
             QString src = img.attribute(QLatin1String("src"));
-            if (src.isEmpty())
+            if (src.isEmpty()) {
                 continue;
+            }
             adaptSrc(src, host);
-            if (src.isEmpty())
+            if (src.isEmpty()) {
                 continue;
+            }
             QTreeWidgetItem *item = new QTreeWidgetItem(mListItems);
             item->setText(Url, src);
             item->setText(Type, elementTypeToI18n(AdBlockBlockableItemsWidget::Image));
@@ -195,18 +197,20 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
     const QWebElementCollection scripts = frame->findAllElements(QLatin1String("script"));
     Q_FOREACH (const QWebElement &script, scripts) {
         QString src = script.attribute(QLatin1String("src"));
-        if (src.isEmpty())
+        if (src.isEmpty()) {
             continue;
+        }
         adaptSrc(src, host);
-        if (src.isEmpty())
+        if (src.isEmpty()) {
             continue;
+        }
         QTreeWidgetItem *item = new QTreeWidgetItem(mListItems);
         item->setText(Url, src);
         item->setText(Type, elementTypeToI18n(AdBlockBlockableItemsWidget::Script));
         item->setTextColor(FilterValue, Qt::red);
         item->setData(Type, Element, Script);
     }
-    foreach(QWebFrame *childFrame, frame->childFrames()) {
+    foreach (QWebFrame *childFrame, frame->childFrames()) {
         searchBlockableElement(childFrame);
     }
 }
@@ -214,19 +218,21 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
 void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
 {
     QTreeWidgetItem *item = mListItems->currentItem();
-    if (!item)
+    if (!item) {
         return;
+    }
 
     QMenu menu;
-    menu.addAction(i18n("Copy url"),this,SLOT(slotCopyItem()));
-    if (!item->text(FilterValue).isEmpty())
-        menu.addAction(i18n("Copy filter"),this,SLOT(slotCopyFilterItem()));
-    menu.addAction(i18n("Block item..."),this,SLOT(slotBlockItem()));
+    menu.addAction(i18n("Copy url"), this, SLOT(slotCopyItem()));
+    if (!item->text(FilterValue).isEmpty()) {
+        menu.addAction(i18n("Copy filter"), this, SLOT(slotCopyFilterItem()));
+    }
+    menu.addAction(i18n("Block item..."), this, SLOT(slotBlockItem()));
     menu.addSeparator();
     menu.addAction(i18n("Open"), this, SLOT(slotOpenItem()));
     if (!item->text(FilterValue).isEmpty()) {
         menu.addSeparator();
-        menu.addAction(i18n("Remove filter"),this,SLOT(slotRemoveFilter()));
+        menu.addAction(i18n("Remove filter"), this, SLOT(slotRemoveFilter()));
     }
     menu.exec(QCursor::pos());
 }
@@ -234,8 +240,9 @@ void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
 void AdBlockBlockableItemsWidget::slotCopyFilterItem()
 {
     QTreeWidgetItem *item = mListItems->currentItem();
-    if (!item)
+    if (!item) {
         return;
+    }
     QClipboard *cb = QApplication::clipboard();
     cb->setText(item->text(FilterValue), QClipboard::Clipboard);
 }
@@ -243,18 +250,20 @@ void AdBlockBlockableItemsWidget::slotCopyFilterItem()
 void AdBlockBlockableItemsWidget::slotOpenItem()
 {
     QTreeWidgetItem *item = mListItems->currentItem();
-    if (!item)
+    if (!item) {
         return;
+    }
     const QUrl url(item->text(Url));
-    KRun *runner = new KRun( url, this ); // will delete itself
-    runner->setRunExecutables( false );
+    KRun *runner = new KRun(url, this);   // will delete itself
+    runner->setRunExecutables(false);
 }
 
 void AdBlockBlockableItemsWidget::slotBlockItem()
 {
     QTreeWidgetItem *item = mListItems->currentItem();
-    if (!item)
+    if (!item) {
         return;
+    }
 
     QPointer<AdBlockCreateFilterDialog> dlg = new AdBlockCreateFilterDialog(this);
     dlg->setPattern(static_cast<TypeElement>(item->data(Type, Element).toInt()), item->text(Url));
@@ -268,8 +277,9 @@ void AdBlockBlockableItemsWidget::slotBlockItem()
 void AdBlockBlockableItemsWidget::slotCopyItem()
 {
     QTreeWidgetItem *item = mListItems->currentItem();
-    if (!item)
+    if (!item) {
         return;
+    }
     QClipboard *cb = QApplication::clipboard();
     cb->setText(item->text(Url), QClipboard::Clipboard);
 }
@@ -289,8 +299,9 @@ void AdBlockBlockableItemsWidget::saveFilters()
         }
     }
 
-    if (filters.isEmpty())
+    if (filters.isEmpty()) {
         return;
+    }
 
     const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
 
@@ -309,8 +320,9 @@ void AdBlockBlockableItemsWidget::saveFilters()
 void AdBlockBlockableItemsWidget::slotRemoveFilter()
 {
     QTreeWidgetItem *item = mListItems->currentItem();
-    if (!item)
+    if (!item) {
         return;
+    }
     item->setText(FilterValue, QString());
 }
 

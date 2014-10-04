@@ -61,14 +61,15 @@ void ScamDetection::scanPage(QWebFrame *frame)
         if (result) {
             foundScam = true;
         }
-        foreach(QWebFrame *childFrame, frame->childFrames()) {
+        foreach (QWebFrame *childFrame, frame->childFrames()) {
             result = scanFrame(childFrame->documentElement(), mDetails);
             if (result) {
                 foundScam = true;
             }
         }
-        if (foundScam)
+        if (foundScam) {
             Q_EMIT messageMayBeAScam();
+        }
     }
 #endif
 }
@@ -91,8 +92,8 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
                     || title.startsWith(QLatin1String("www."))) {
                 if (title.startsWith(QLatin1String("www."))) {
                     const QString completUrl =  url.scheme() + QLatin1String("://") + title;
-                    if ( completUrl != href &&
-                         href != (completUrl + QLatin1Char('/'))) {
+                    if (completUrl != href &&
+                            href != (completUrl + QLatin1Char('/'))) {
                         foundScam = true;
                     }
                 } else {
@@ -112,13 +113,13 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
             //2) detect if url href has ip and not server name.
             const QString hostname = url.host();
             if (hostname.contains(ip4regExp) && !hostname.contains(QLatin1String("127.0.0.1"))) { //hostname
-                details += QLatin1String("<li>") + i18n("This email contains a link which points to a numerical IP address (%1) instead of a typical textual website address. This is often the case in scam emails.", addWarningColor(hostname))+QLatin1String("</li>");
+                details += QLatin1String("<li>") + i18n("This email contains a link which points to a numerical IP address (%1) instead of a typical textual website address. This is often the case in scam emails.", addWarningColor(hostname)) + QLatin1String("</li>");
                 foundScam = true;
             } else if (hostname.contains(QLatin1Char('%'))) { //Hexa value for ip
-                details += QLatin1String("<li>") + i18n("This email contains a link which points to a hexadecimal IP address (%1) instead of a typical textual website address. This is often the case in scam emails.", addWarningColor(hostname))+QLatin1String("</li>");
+                details += QLatin1String("<li>") + i18n("This email contains a link which points to a hexadecimal IP address (%1) instead of a typical textual website address. This is often the case in scam emails.", addWarningColor(hostname)) + QLatin1String("</li>");
                 foundScam = true;
             } else if (url.toString().contains(QLatin1String("url?q="))) { //4) redirect url.
-                details += QLatin1String("<li>") + i18n("This email contains a link (%1) which has a redirection", addWarningColor(url.toString())) +QLatin1String("</li>");
+                details += QLatin1String("<li>") + i18n("This email contains a link (%1) which has a redirection", addWarningColor(url.toString())) + QLatin1String("</li>");
                 foundScam = true;
             } else if ((url.toString().count(QLatin1String("http://")) > 1) ||
                        (url.toString().count(QLatin1String("https://")) > 1)) { //5) more that 1 http in url.
@@ -155,5 +156,4 @@ void ScamDetection::showDetails()
     mDetailsDialog->setDetails(mDetails);
     mDetailsDialog->show();
 }
-
 

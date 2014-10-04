@@ -35,56 +35,56 @@
 
 using namespace MessageViewer;
 
-FindBarBase::FindBarBase( QWidget * parent )
-    : QWidget( parent )
+FindBarBase::FindBarBase(QWidget *parent)
+    : QWidget(parent)
 {
-    QHBoxLayout * lay = new QHBoxLayout( this );
-    lay->setMargin( 2 );
+    QHBoxLayout *lay = new QHBoxLayout(this);
+    lay->setMargin(2);
 
-    QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
+    QToolButton *closeBtn = new QToolButton(this);
+    closeBtn->setIcon(QIcon::fromTheme(QLatin1String("dialog-close")));
     closeBtn->setObjectName(QLatin1String("close"));
-    closeBtn->setIconSize( QSize( 16, 16 ) );
-    closeBtn->setToolTip( i18n( "Close" ) );
+    closeBtn->setIconSize(QSize(16, 16));
+    closeBtn->setToolTip(i18n("Close"));
 
 #ifndef QT_NO_ACCESSIBILITY
-    closeBtn->setAccessibleName( i18n( "Close" ) );
+    closeBtn->setAccessibleName(i18n("Close"));
 #endif
 
-    closeBtn->setAutoRaise( true );
-    lay->addWidget( closeBtn );
+    closeBtn->setAutoRaise(true);
+    lay->addWidget(closeBtn);
 
-    QLabel * label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
-    lay->addWidget( label );
+    QLabel *label = new QLabel(i18nc("Find text", "F&ind:"), this);
+    lay->addWidget(label);
 
-    mSearch = new KLineEdit( this );
+    mSearch = new KLineEdit(this);
     mSearch->setObjectName(QLatin1String("searchline"));
-    mSearch->setToolTip( i18n( "Text to search for" ) );
-    mSearch->setClearButtonShown( true );
-    label->setBuddy( mSearch );
-    lay->addWidget( mSearch );
+    mSearch->setToolTip(i18n("Text to search for"));
+    mSearch->setClearButtonShown(true);
+    label->setBuddy(mSearch);
+    lay->addWidget(mSearch);
 
-    mFindNextBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
-    mFindNextBtn->setToolTip( i18n( "Jump to next match" ) );
+    mFindNextBtn = new QPushButton(QIcon::fromTheme(QLatin1String("go-down-search")), i18nc("Find and go to the next search match", "Next"), this);
+    mFindNextBtn->setToolTip(i18n("Jump to next match"));
     mFindNextBtn->setObjectName(QLatin1String("findnext"));
-    lay->addWidget( mFindNextBtn );
-    mFindNextBtn->setEnabled( false );
+    lay->addWidget(mFindNextBtn);
+    mFindNextBtn->setEnabled(false);
 
-    mFindPrevBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
-    mFindPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
+    mFindPrevBtn = new QPushButton(QIcon::fromTheme(QLatin1String("go-up-search")), i18nc("Find and go to the previous search match", "Previous"), this);
+    mFindPrevBtn->setToolTip(i18n("Jump to previous match"));
     mFindPrevBtn->setObjectName(QLatin1String("findprevious"));
-    lay->addWidget( mFindPrevBtn );
-    mFindPrevBtn->setEnabled( false );
+    lay->addWidget(mFindPrevBtn);
+    mFindPrevBtn->setEnabled(false);
 
-    QPushButton * optionsBtn = new QPushButton( this );
-    optionsBtn->setText( i18n( "Options" ) );
-    optionsBtn->setToolTip( i18n( "Modify search behavior" ) );
-    mOptionsMenu = new QMenu( optionsBtn );
-    mCaseSensitiveAct = mOptionsMenu->addAction( i18n( "Case sensitive" ) );
-    mCaseSensitiveAct->setCheckable( true );
+    QPushButton *optionsBtn = new QPushButton(this);
+    optionsBtn->setText(i18n("Options"));
+    optionsBtn->setToolTip(i18n("Modify search behavior"));
+    mOptionsMenu = new QMenu(optionsBtn);
+    mCaseSensitiveAct = mOptionsMenu->addAction(i18n("Case sensitive"));
+    mCaseSensitiveAct->setCheckable(true);
 
-    optionsBtn->setMenu( mOptionsMenu );
-    lay->addWidget( optionsBtn );
+    optionsBtn->setMenu(mOptionsMenu);
+    lay->addWidget(optionsBtn);
 
     connect(closeBtn, &QToolButton::clicked, this, &FindBarBase::closeBar);
     connect(mFindNextBtn, &QPushButton::clicked, this, &FindBarBase::findNext);
@@ -92,7 +92,7 @@ FindBarBase::FindBarBase( QWidget * parent )
     connect(mCaseSensitiveAct, &QAction::toggled, this, &FindBarBase::caseSensitivityChanged);
     connect(mSearch, &KLineEdit::textChanged, this, &FindBarBase::autoSearch);
     connect(mSearch, &KLineEdit::clearButtonClicked, this, &FindBarBase::slotClearSearch);
-    
+
     mStatus = new QLabel;
     mStatus->setObjectName(QLatin1String("status"));
     QFontMetrics fm(mStatus->font());
@@ -100,7 +100,7 @@ FindBarBase::FindBarBase( QWidget * parent )
     mStatus->setFixedWidth(fm.width(mNotFoundString));
     lay->addWidget(mStatus);
 
-    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
     lay->addStretch();
     hide();
 }
@@ -109,7 +109,7 @@ FindBarBase::~FindBarBase()
 {
 }
 
-QMenu* FindBarBase::optionsMenu()
+QMenu *FindBarBase::optionsMenu()
 {
     return mOptionsMenu;
 }
@@ -119,9 +119,9 @@ QString FindBarBase::text() const
     return mSearch->text();
 }
 
-void FindBarBase::setText( const QString&text )
+void FindBarBase::setText(const QString &text)
 {
-    mSearch->setText( text );
+    mSearch->setText(text);
 }
 
 void FindBarBase::focusAndSetCursor()
@@ -137,23 +137,24 @@ void FindBarBase::slotClearSearch()
     clearSelections();
 }
 
-void FindBarBase::autoSearch( const QString& str )
+void FindBarBase::autoSearch(const QString &str)
 {
-    const bool isNotEmpty = ( !str.isEmpty() );
-    mFindPrevBtn->setEnabled( isNotEmpty );
-    mFindNextBtn->setEnabled( isNotEmpty );
-    if ( isNotEmpty )
-        QTimer::singleShot( 0, this, SLOT(slotSearchText()) );
-    else
+    const bool isNotEmpty = (!str.isEmpty());
+    mFindPrevBtn->setEnabled(isNotEmpty);
+    mFindNextBtn->setEnabled(isNotEmpty);
+    if (isNotEmpty) {
+        QTimer::singleShot(0, this, SLOT(slotSearchText()));
+    } else {
         clearSelections();
+    }
 }
 
-void FindBarBase::slotSearchText( bool backward, bool isAutoSearch )
+void FindBarBase::slotSearchText(bool backward, bool isAutoSearch)
 {
-    searchText( backward, isAutoSearch );
+    searchText(backward, isAutoSearch);
 }
 
-void FindBarBase::setFoundMatch( bool match )
+void FindBarBase::setFoundMatch(bool match)
 {
 #ifndef QT_NO_STYLE_STYLESHEET
     QString styleSheet;
@@ -178,29 +179,28 @@ void FindBarBase::setFoundMatch( bool match )
 
 }
 
-void FindBarBase::searchText( bool backward, bool isAutoSearch )
+void FindBarBase::searchText(bool backward, bool isAutoSearch)
 {
-    Q_UNUSED( backward );
-    Q_UNUSED( isAutoSearch );
+    Q_UNUSED(backward);
+    Q_UNUSED(isAutoSearch);
 }
-
 
 void FindBarBase::findNext()
 {
-    searchText( false, false );
+    searchText(false, false);
 }
 
 void FindBarBase::findPrev()
 {
-    searchText( true, false );
+    searchText(true, false);
 }
 
 void FindBarBase::caseSensitivityChanged(bool b)
 {
-    updateSensitivity( b );
+    updateSensitivity(b);
 }
 
-void FindBarBase::updateSensitivity( bool )
+void FindBarBase::updateSensitivity(bool)
 {
 }
 
@@ -209,13 +209,13 @@ void FindBarBase::slotHighlightAllChanged(bool b)
     updateHighLight(b);
 }
 
-void FindBarBase::updateHighLight( bool )
+void FindBarBase::updateHighLight(bool)
 {
 }
 
 void FindBarBase::clearSelections()
 {
-    setFoundMatch( false );
+    setFoundMatch(false);
 }
 
 void FindBarBase::closeBar()
@@ -227,35 +227,37 @@ void FindBarBase::closeBar()
     Q_EMIT hideFindBar();
 }
 
-bool FindBarBase::event(QEvent* e)
+bool FindBarBase::event(QEvent *e)
 {
     // Close the bar when pressing Escape.
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if ( shortCutOverride || e->type() == QEvent::KeyPress ) {
-        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+    if (shortCutOverride || e->type() == QEvent::KeyPress) {
+        QKeyEvent *kev = static_cast<QKeyEvent * >(e);
         if (kev->key() == Qt::Key_Escape) {
-            if ( shortCutOverride ) {
+            if (shortCutOverride) {
                 e->accept();
                 return true;
             }
             e->accept();
             closeBar();
             return true;
-        } else if ( kev->key() == Qt::Key_Enter ||
-                  kev->key() == Qt::Key_Return ) {
+        } else if (kev->key() == Qt::Key_Enter ||
+                   kev->key() == Qt::Key_Return) {
             e->accept();
-            if ( shortCutOverride ) {
+            if (shortCutOverride) {
                 return true;
             }
-            if (mSearch->text().isEmpty())
+            if (mSearch->text().isEmpty()) {
                 return true;
-            if ( kev->modifiers() & Qt::ShiftModifier )
+            }
+            if (kev->modifiers() & Qt::ShiftModifier) {
                 findPrev();
-            else if ( kev->modifiers() == Qt::NoModifier )
+            } else if (kev->modifiers() == Qt::NoModifier) {
                 findNext();
+            }
             return true;
         }
     }

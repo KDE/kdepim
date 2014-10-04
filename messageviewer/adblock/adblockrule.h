@@ -24,10 +24,8 @@
  *
  * ============================================================ */
 
-
 #ifndef ADBLOCKRULE_H
 #define ADBLOCKRULE_H
-
 
 #include "adblockruleimpl.h"
 
@@ -37,14 +35,13 @@
 class QNetworkRequest;
 class QString;
 
-namespace MessageViewer {
-enum RuleTypes
+namespace MessageViewer
 {
+enum RuleTypes {
     TextRule,
     FallbackRule,
     NullRule
 };
-
 
 class AdBlockRule
 {
@@ -59,6 +56,5 @@ private:
     QSharedPointer<AdBlockRuleImpl> m_implementation;
 };
 }
-
 
 #endif // ADBLOCKRULE_H

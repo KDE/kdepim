@@ -20,11 +20,13 @@
 
 #include <QDialog>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class RichTextEditorWidget;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class ScamDetectionDetailsDialog : public QDialog
 {
     Q_OBJECT

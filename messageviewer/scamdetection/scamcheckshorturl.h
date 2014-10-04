@@ -31,12 +31,13 @@
 class QNetworkConfigurationManager;
 class QNetworkAccessManager;
 class QNetworkReply;
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MESSAGEVIEWER_EXPORT ScamCheckShortUrl : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScamCheckShortUrl(QObject *parent=0);
+    explicit ScamCheckShortUrl(QObject *parent = 0);
     ~ScamCheckShortUrl();
 
     static bool isShortUrl(const QUrl &url);
@@ -46,7 +47,7 @@ public:
     static void loadLongUrlServices();
 
 private Q_SLOTS:
-    void slotExpandFinished(QNetworkReply*);
+    void slotExpandFinished(QNetworkReply *);
     void slotError(QNetworkReply::NetworkError error);
 
 Q_SIGNALS:

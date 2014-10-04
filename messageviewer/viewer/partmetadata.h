@@ -13,7 +13,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-
 #ifndef _MESSAGEVIEWER_PARTMETADATA_H_
 #define _MESSAGEVIEWER_PARTMETADATA_H_
 
@@ -26,41 +25,43 @@
 #include <QString>
 #include <qdatetime.h>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-class MESSAGEVIEWER_EXPORT PartMetaData {
+class MESSAGEVIEWER_EXPORT PartMetaData
+{
 public:
-  PartMetaData()
-    : sigSummary( GpgME::Signature::None ),
-      isSigned( false ),
-      isGoodSignature( false ),
-      isEncrypted( false ),
-      isDecryptable( false ),
-      inProgress( false ),
-      technicalProblem( false ),
-      isEncapsulatedRfc822Message( false )
-  {
-  }
-  GpgME::Signature::Summary sigSummary;
-  QString signClass;
-  QString signer;
-  QStringList signerMailAddresses;
-  QByteArray keyId;
-  Kpgp::Validity keyTrust;
-  QString status;  // to be used for unknown plug-ins
-  int status_code; // to be used for i18n of OpenPGP and S/MIME CryptPlugs
-  QString errorText;
-  QDateTime creationTime;
-  QString decryptionError;
-  QString auditLog;
-  GpgME::Error auditLogError;
-  bool isSigned : 1;
-  bool isGoodSignature : 1;
-  bool isEncrypted : 1;
-  bool isDecryptable : 1;
-  bool inProgress : 1;
-  bool technicalProblem : 1;
-  bool isEncapsulatedRfc822Message : 1;
+    PartMetaData()
+        : sigSummary(GpgME::Signature::None),
+          isSigned(false),
+          isGoodSignature(false),
+          isEncrypted(false),
+          isDecryptable(false),
+          inProgress(false),
+          technicalProblem(false),
+          isEncapsulatedRfc822Message(false)
+    {
+    }
+    GpgME::Signature::Summary sigSummary;
+    QString signClass;
+    QString signer;
+    QStringList signerMailAddresses;
+    QByteArray keyId;
+    Kpgp::Validity keyTrust;
+    QString status;  // to be used for unknown plug-ins
+    int status_code; // to be used for i18n of OpenPGP and S/MIME CryptPlugs
+    QString errorText;
+    QDateTime creationTime;
+    QString decryptionError;
+    QString auditLog;
+    GpgME::Error auditLogError;
+    bool isSigned : 1;
+    bool isGoodSignature : 1;
+    bool isEncrypted : 1;
+    bool isDecryptable : 1;
+    bool inProgress : 1;
+    bool technicalProblem : 1;
+    bool isEncapsulatedRfc822Message : 1;
 };
 
 }

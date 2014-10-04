@@ -21,10 +21,11 @@
 #include <qaccessible.h>
 #include <QAccessiblePlugin>
 
-class MessageViewerAccessibleWidgetFactory: public QAccessiblePlugin {
+class MessageViewerAccessibleWidgetFactory: public QAccessiblePlugin
+{
 public:
-    explicit MessageViewerAccessibleWidgetFactory( QObject *parent = 0 );
-    virtual QAccessibleInterface *create( const QString &key, QObject *object );
+    explicit MessageViewerAccessibleWidgetFactory(QObject *parent = 0);
+    virtual QAccessibleInterface *create(const QString &key, QObject *object);
     virtual QStringList keys() const;
 };
 

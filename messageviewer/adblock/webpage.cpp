@@ -27,7 +27,7 @@ WebPage::WebPage(QWidget *parent)
     MessageViewer::MyNetworkAccessManager *manager = new MessageViewer::MyNetworkAccessManager(this);
     manager->setEmitReadyReadOnMetaDataChange(true);
     manager->setCache(0);
-    QWidget* window = parent ? parent->window() : 0;
+    QWidget *window = parent ? parent->window() : 0;
     if (window) {
         manager->setWindow(window);
     }

@@ -17,7 +17,6 @@
 
 #include <qdebug.h>
 
-
 #include <QDialog>
 #include <QApplication>
 #include <KAboutData>
@@ -27,9 +26,9 @@
 #include <KConfigGroup>
 #include "messageviewer/adblock/adblocksettingwidget.h"
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("adblocksettings_gui"), i18n("adblocksettingstest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("adblocksettings_gui"), i18n("adblocksettingstest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for adblocksettings"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -45,14 +44,14 @@ int main (int argc, char **argv)
     QVBoxLayout *layout = new QVBoxLayout;
     dlg.setLayout(layout);
     layout->addWidget(w);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     QObject::connect(buttonBox, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
     QObject::connect(buttonBox, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
     layout->addWidget(buttonBox);
- 
+
     w->doLoadFromGlobalSettings();
     if (dlg.exec()) {
         w->save();

@@ -33,7 +33,8 @@
 
 #include <QDebug>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockHostMatcher
 {
 public:

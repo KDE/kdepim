@@ -20,21 +20,26 @@
 
 #include "header/headerstyle.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-class PlainHeaderStyle : public HeaderStyle {
+class PlainHeaderStyle : public HeaderStyle
+{
     friend class HeaderStyle;
 protected:
     PlainHeaderStyle() : HeaderStyle() {}
     ~PlainHeaderStyle() {}
 
 public:
-    const char * name() const { return "plain"; }
+    const char *name() const
+    {
+        return "plain";
+    }
 
-    QString format( KMime::Message *message ) const;
+    QString format(KMime::Message *message) const;
 
 private:
-    QString formatAllMessageHeaders( KMime::Message *message ) const;
+    QString formatAllMessageHeaders(KMime::Message *message) const;
 };
 }
 #endif // PLAINHEADERSTYLE_H

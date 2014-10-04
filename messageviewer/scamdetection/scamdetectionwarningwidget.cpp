@@ -37,21 +37,21 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
 
     connect(this, &ScamDetectionWarningWidget::linkActivated, this, &ScamDetectionWarningWidget::slotShowDetails);
 
-    QAction *action = new QAction( i18n( "Move to Trash" ), this );
+    QAction *action = new QAction(i18n("Move to Trash"), this);
     connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::moveMessageToTrash);
-    addAction( action );
+    addAction(action);
 
-    action = new QAction( i18n( "I confirm it's not a scam" ), this );
+    action = new QAction(i18n("I confirm it's not a scam"), this);
     connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotMessageIsNotAScam);
-    addAction( action );
+    addAction(action);
 
-    action = new QAction( i18n( "Add email to whitelist" ), this );
+    action = new QAction(i18n("Add email to whitelist"), this);
     connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotAddToWhiteList);
-    addAction( action );
+    addAction(action);
 
-    action = new QAction( i18n( "Disable scam detection for all messages" ), this );
+    action = new QAction(i18n("Disable scam detection for all messages"), this);
     connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotDisableScamDetection);
-    addAction( action );
+    addAction(action);
 }
 
 ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
@@ -84,7 +84,7 @@ void ScamDetectionWarningWidget::slotShowWarning()
 void ScamDetectionWarningWidget::slotDisableScamDetection()
 {
     if (!mUseInTestApps) {
-        MessageViewer::GlobalSettings::self()->setScamDetectionEnabled( false );
+        MessageViewer::GlobalSettings::self()->setScamDetectionEnabled(false);
         MessageViewer::GlobalSettings::self()->save();
     }
     setVisible(false);

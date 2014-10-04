@@ -34,10 +34,11 @@
 #include "headerstrategy_p.h"
 #include "settings/globalsettings.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 CustomHeaderStrategy::CustomHeaderStrategy()
-  : HeaderStrategy()
+    : HeaderStrategy()
 {
     loadConfig();
 }

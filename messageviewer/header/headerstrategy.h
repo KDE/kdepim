@@ -37,7 +37,8 @@
 class QString;
 class QStringList;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class MESSAGEVIEWER_EXPORT HeaderStrategy
 {
@@ -57,20 +58,20 @@ public:
                 Grantlee
               };
 
-    static HeaderStrategy *create( Type type );
-    static HeaderStrategy *create( const QString & type );
+    static HeaderStrategy *create(Type type);
+    static HeaderStrategy *create(const QString &type);
 
-    static HeaderStrategy * all();
-    static HeaderStrategy * rich();
-    static HeaderStrategy * standard();
-    static HeaderStrategy * brief();
-    static HeaderStrategy * custom();
-    static HeaderStrategy * grantlee();
+    static HeaderStrategy *all();
+    static HeaderStrategy *rich();
+    static HeaderStrategy *standard();
+    static HeaderStrategy *brief();
+    static HeaderStrategy *custom();
+    static HeaderStrategy *grantlee();
 
     //
     // Methods for handling the strategies:
     //
-    virtual const char * name() const = 0;
+    virtual const char *name() const = 0;
 
     void readConfig();
     //
@@ -81,7 +82,7 @@ public:
     virtual QStringList headersToDisplay() const;
     virtual QStringList headersToHide() const;
     virtual DefaultPolicy defaultPolicy() const = 0;
-    virtual bool showHeader( const QString & header ) const;
+    virtual bool showHeader(const QString &header) const;
 };
 
 }

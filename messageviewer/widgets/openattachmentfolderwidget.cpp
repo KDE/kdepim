@@ -39,13 +39,13 @@ OpenAttachmentFolderWidget::OpenAttachmentFolderWidget(QWidget *parent)
     setMessageType(Positive);
     setWordWrap(true);
     QAction *action = this->findChild<QAction *>(); // should give us the close action...
-    if ( action ) {
+    if (action) {
         connect(action, &QAction::triggered, this, &OpenAttachmentFolderWidget::slotExplicitlyClosed);
     }
 
-    action = new QAction( i18n( "Open folder where attachment was saved" ), this );
+    action = new QAction(i18n("Open folder where attachment was saved"), this);
     connect(action, &QAction::triggered, this, &OpenAttachmentFolderWidget::slotOpenAttachmentFolder);
-    addAction( action );
+    addAction(action);
 }
 
 OpenAttachmentFolderWidget::~OpenAttachmentFolderWidget()
@@ -55,8 +55,9 @@ OpenAttachmentFolderWidget::~OpenAttachmentFolderWidget()
 
 void OpenAttachmentFolderWidget::slotExplicitlyClosed()
 {
-    if (mTimer->isActive())
+    if (mTimer->isActive()) {
         mTimer->stop();
+    }
 }
 
 void OpenAttachmentFolderWidget::setFolder(const KUrl &url)
@@ -67,23 +68,24 @@ void OpenAttachmentFolderWidget::setFolder(const KUrl &url)
 void OpenAttachmentFolderWidget::slotOpenAttachmentFolder()
 {
     if (!mUrl.isEmpty()) {
-        new KRun( mUrl, this );
+        new KRun(mUrl, this);
         slotHideWarning();
     }
 }
 
 void OpenAttachmentFolderWidget::slotHideWarning()
 {
-    if (mTimer->isActive())
+    if (mTimer->isActive()) {
         mTimer->stop();
+    }
     animatedHide();
 }
 
-
 void OpenAttachmentFolderWidget::slotShowWarning()
 {
-    if (mTimer->isActive())
+    if (mTimer->isActive()) {
         mTimer->stop();
+    }
     mTimer->start();
     animatedShow();
 }

@@ -51,21 +51,21 @@ ScamAttribute *ScamAttribute::clone() const
 
 QByteArray ScamAttribute::type() const
 {
-    static const QByteArray sType( "ScamAttribute" );
+    static const QByteArray sType("ScamAttribute");
     return sType;
 }
 
 QByteArray ScamAttribute::serialized() const
 {
     QByteArray result;
-    QDataStream s( &result, QIODevice::WriteOnly );
+    QDataStream s(&result, QIODevice::WriteOnly);
     s << isAScam();
     return result;
 }
 
-void ScamAttribute::deserialize( const QByteArray &data )
+void ScamAttribute::deserialize(const QByteArray &data)
 {
-    QDataStream s( data );
+    QDataStream s(data);
     bool value = false;
     s >> value;
     d->isAScam = value;

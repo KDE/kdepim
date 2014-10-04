@@ -25,7 +25,6 @@
 *
 * ============================================================ */
 
-
 // Self Includes
 #include "adblocksettingwidget.h"
 #include "settings/globalsettings.h"
@@ -124,7 +123,7 @@ void AdBlockSettingWidget::slotUpdateManualButtons()
     const bool enabled = manualFiltersListWidget->currentItem();
     removeButton->setEnabled(enabled);
     editFilter->setEnabled(enabled);
-    exportFilters->setEnabled(manualFiltersListWidget->count()>0);
+    exportFilters->setEnabled(manualFiltersListWidget->count() > 0);
 }
 
 void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
@@ -132,22 +131,22 @@ void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
     Q_UNUSED(url)
 
     const QString hintHelpString = i18n("<qt><p>Enter an expression to filter. Filters can be defined as either:"
-                                  "<ul><li>a shell-style wildcard, e.g. <tt>http://www.example.com/ads*</tt>, "
-                                  "the wildcards <tt>*?[]</tt> may be used</li>"
-                                  "<li>a full regular expression by surrounding the string with '<tt>/</tt>', "
-                                  "e.g. <tt>/\\/(ad|banner)\\./</tt></li></ul>"
-                                  "<p>Any filter string can be preceded by '<tt>@@</tt>' to whitelist (allow) any matching URL, "
-                                  "which takes priority over any blacklist (blocking) filter.");
+                                        "<ul><li>a shell-style wildcard, e.g. <tt>http://www.example.com/ads*</tt>, "
+                                        "the wildcards <tt>*?[]</tt> may be used</li>"
+                                        "<li>a full regular expression by surrounding the string with '<tt>/</tt>', "
+                                        "e.g. <tt>/\\/(ad|banner)\\./</tt></li></ul>"
+                                        "<p>Any filter string can be preceded by '<tt>@@</tt>' to whitelist (allow) any matching URL, "
+                                        "which takes priority over any blacklist (blocking) filter.");
 
     QWhatsThis::showText(QCursor::pos(), hintHelpString);
 }
 
-
 void AdBlockSettingWidget::insertRule()
 {
     const QString rule = addFilterLineEdit->text();
-    if (rule.isEmpty())
+    if (rule.isEmpty()) {
         return;
+    }
     const int numberItem(manualFiltersListWidget->count());
     for (int i = 0; i < numberItem; ++i) {
         if (manualFiltersListWidget->item(i)->text() == rule) {
@@ -157,11 +156,10 @@ void AdBlockSettingWidget::insertRule()
     }
 
     addManualFilter(rule);
-    exportFilters->setEnabled(manualFiltersListWidget->count()>0);
+    exportFilters->setEnabled(manualFiltersListWidget->count() > 0);
     addFilterLineEdit->clear();
     hasChanged();
 }
-
 
 void AdBlockSettingWidget::removeRule()
 {
@@ -172,25 +170,25 @@ void AdBlockSettingWidget::removeRule()
     Q_FOREACH (QListWidgetItem *item, select) {
         delete item;
     }
-    exportFilters->setEnabled(manualFiltersListWidget->count()>0);
+    exportFilters->setEnabled(manualFiltersListWidget->count() > 0);
     hasChanged();
 }
 
 void AdBlockSettingWidget::doResetToDefaultsOther()
 {
-    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults( true );
-    loadWidget(checkEnableAdblock,GlobalSettings::self()->adBlockEnabledItem());
+    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults(true);
+    loadWidget(checkEnableAdblock, GlobalSettings::self()->adBlockEnabledItem());
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
     saveCheckBox(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
     loadWidget(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
-    MessageViewer::GlobalSettings::self()->useDefaults( bUseDefaults );
+    MessageViewer::GlobalSettings::self()->useDefaults(bUseDefaults);
 }
 
 void AdBlockSettingWidget::doLoadFromGlobalSettings()
 {
     manualFiltersListWidget->clear();
     automaticFiltersListWidget->clear();
-    loadWidget(checkEnableAdblock,GlobalSettings::self()->adBlockEnabledItem());
+    loadWidget(checkEnableAdblock, GlobalSettings::self()->adBlockEnabledItem());
 
     // update enabled status
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
@@ -202,23 +200,25 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     // automatic filters
     KConfig config(QLatin1String("messagevieweradblockrc"));
 
-    const QStringList itemList = config.groupList().filter( QRegExp( QLatin1String("FilterList \\d+") ) );
-    Q_FOREACH(const QString &item, itemList) {
+    const QStringList itemList = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
+    Q_FOREACH (const QString &item, itemList) {
         KConfigGroup filtersGroup(&config, item);
         const bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled"), false);
         const QString url = filtersGroup.readEntry(QLatin1String("url"));
         const QString path = filtersGroup.readEntry(QLatin1String("path"));
         const QString name = filtersGroup.readEntry(QLatin1String("name"));
         const QDateTime lastUpdate = filtersGroup.readEntry(QLatin1String("lastUpdate"), QDateTime());
-        if (url.isEmpty() || path.isEmpty() || name.isEmpty())
+        if (url.isEmpty() || path.isEmpty() || name.isEmpty()) {
             continue;
+        }
 
         QListWidgetItem *subItem = new QListWidgetItem(automaticFiltersListWidget);
-        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable| Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
-        if (isFilterEnabled)
+        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
+        if (isFilterEnabled) {
             subItem->setCheckState(Qt::Checked);
-        else
+        } else {
             subItem->setCheckState(Qt::Unchecked);
+        }
 
         subItem->setData(UrlList, url);
         subItem->setData(PathList, path);
@@ -244,22 +244,22 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     }
 }
 
-
 void AdBlockSettingWidget::save()
 {
-    if (!mChanged)
+    if (!mChanged) {
         return;
+    }
 
-    // General settings    
-    saveCheckBox(checkEnableAdblock,GlobalSettings::self()->adBlockEnabledItem());
+    // General settings
+    saveCheckBox(checkEnableAdblock, GlobalSettings::self()->adBlockEnabledItem());
     saveCheckBox(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
     saveSpinBox(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
 
     // automatic filters
     KConfig config(QLatin1String("messagevieweradblockrc"));
-    const QStringList list = config.groupList().filter( QRegExp( QLatin1String("FilterList \\d+") ) );
-    foreach ( const QString &group, list ) {
-        config.deleteGroup( group );
+    const QStringList list = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
+    foreach (const QString &group, list) {
+        config.deleteGroup(group);
     }
 
     const int numberItem(automaticFiltersListWidget->count());
@@ -269,8 +269,9 @@ void AdBlockSettingWidget::save()
         grp.writeEntry(QLatin1String("FilterEnabled"), subItem->checkState() == Qt::Checked);
         grp.writeEntry(QLatin1String("url"), subItem->data(UrlList).toString());
         grp.writeEntry(QLatin1String("name"), subItem->text());
-        if (subItem->data(LastUpdateList).toDateTime().isValid())
-           grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
+        if (subItem->data(LastUpdateList).toDateTime().isValid()) {
+            grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
+        }
         QString path = subItem->data(PathList).toString();
         if (path.isEmpty()) {
             path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("kmail2/adblockrules-%1").arg(i);
@@ -292,8 +293,9 @@ void AdBlockSettingWidget::save()
     for (int i = 0; i < manualFiltersListWidget->count(); ++i) {
         QListWidgetItem *subItem = manualFiltersListWidget->item(i);
         const QString stringRule = subItem->text();
-        if (!stringRule.trimmed().isEmpty())
+        if (!stringRule.trimmed().isEmpty()) {
             out << stringRule << '\n';
+        }
     }
 
     // -------------------------------------------------------------------------------
@@ -301,7 +303,6 @@ void AdBlockSettingWidget::save()
     emit changed(false);
     AdBlockManager::self()->reloadConfig();
 }
-
 
 void AdBlockSettingWidget::hasChanged()
 {
@@ -311,7 +312,6 @@ void AdBlockSettingWidget::hasChanged()
     mChanged = true;
     emit changed(true);
 }
-
 
 bool AdBlockSettingWidget::changed() const
 {
@@ -349,8 +349,9 @@ void AdBlockSettingWidget::slotRemoveSubscription()
         if (KMessageBox::questionYesNo(this, i18n("Do you want to delete list \"%1\"?", item->text()), i18n("Delete current list")) == KMessageBox::Yes) {
             const QString path = item->data(PathList).toString();
             if (!path.isEmpty()) {
-                if (!QFile(path).remove())
-                    qDebug()<<" we can not remove file:"<<path;
+                if (!QFile(path).remove()) {
+                    qDebug() << " we can not remove file:" << path;
+                }
             }
             delete item;
         }
@@ -381,8 +382,9 @@ void AdBlockSettingWidget::slotDeleteList(const QString &listName)
     if (item && item->text() == listName) {
         const QString path = item->data(PathList).toString();
         if (!path.isEmpty()) {
-            if (!QFile(path).remove())
-                qDebug()<<" we can not remove file:"<<path;
+            if (!QFile(path).remove()) {
+                qDebug() << " we can not remove file:" << path;
+            }
         }
         delete item;
         hasChanged();
@@ -391,7 +393,7 @@ void AdBlockSettingWidget::slotDeleteList(const QString &listName)
 
 void AdBlockSettingWidget::slotImportFilters()
 {
-    const QString filter = i18n( "*|all files (*)" );
+    const QString filter = i18n("*|all files (*)");
     const QString result = PimCommon::Util::loadToFile(filter, this, i18n("Import Filters"));
     if (result.isEmpty()) {
         return;
@@ -405,10 +407,12 @@ void AdBlockSettingWidget::slotImportFilters()
     }
 
     Q_FOREACH (const QString &element, listFilter) {
-        if (element == QLatin1String("\n"))
+        if (element == QLatin1String("\n")) {
             continue;
-        if (excludeFilter.contains(element))
+        }
+        if (excludeFilter.contains(element)) {
             continue;
+        }
         addManualFilter(element);
     }
 }
@@ -422,14 +426,15 @@ void AdBlockSettingWidget::addManualFilter(const QString &text)
 
 void AdBlockSettingWidget::slotExportFilters()
 {
-    const QString filter = i18n( "*|all files (*)" );
+    const QString filter = i18n("*|all files (*)");
     QString exportFilters;
     const int numberOfElement(manualFiltersListWidget->count());
     for (int i = 0; i < numberOfElement; ++i) {
         QListWidgetItem *subItem = manualFiltersListWidget->item(i);
         const QString stringRule = subItem->text();
-        if (!stringRule.isEmpty())
+        if (!stringRule.isEmpty()) {
             exportFilters += stringRule + QLatin1Char('\n');
+        }
     }
     PimCommon::Util::saveTextAs(exportFilters, filter, this, QUrl(), i18n("Export Filters"));
 }

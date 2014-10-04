@@ -28,50 +28,54 @@
 // Self Includes
 #include "adblockhostmatcher.h"
 
-
 using namespace MessageViewer;
 bool AdBlockHostMatcher::tryAddFilter(const QString &filter)
 {
-    if (filter.startsWith(QLatin1String("||")))
-    {
+    if (filter.startsWith(QLatin1String("||"))) {
         QString domain = filter.mid(2);
 
-        if (!domain.endsWith(QLatin1Char('^')))
+        if (!domain.endsWith(QLatin1Char('^'))) {
             return false;
+        }
 
-        if (domain.contains(QLatin1Char('$')))
+        if (domain.contains(QLatin1Char('$'))) {
             return false;
+        }
 
         domain = domain.left(domain.size() - 1);
 
-        if (domain.contains(QLatin1Char('/')) || domain.contains(QLatin1Char('*')) || domain.contains(QLatin1Char('^')))
+        if (domain.contains(QLatin1Char('/')) || domain.contains(QLatin1Char('*')) || domain.contains(QLatin1Char('^'))) {
             return false;
+        }
 
         domain = domain.toLower();
         m_hostList.insert(domain);
         return true;
     }
 
-    if (filter.startsWith(QLatin1String("@@")))
-    {
+    if (filter.startsWith(QLatin1String("@@"))) {
         QString domain = filter.mid(2);
 
-        if (domain.contains(QLatin1Char('^')))
+        if (domain.contains(QLatin1Char('^'))) {
             return false;
+        }
 
-        if (domain.contains(QLatin1Char('$')))
+        if (domain.contains(QLatin1Char('$'))) {
             return false;
+        }
 
-        if (domain.contains(QLatin1Char('*')))
+        if (domain.contains(QLatin1Char('*'))) {
             return false;
+        }
 
-        if (domain.contains(QLatin1Char('|')))
+        if (domain.contains(QLatin1Char('|'))) {
             return false;
+        }
 
-        if (domain.contains(QLatin1Char('/')))
-        {
-            if (!domain.endsWith(QLatin1Char('/')))
+        if (domain.contains(QLatin1Char('/'))) {
+            if (!domain.endsWith(QLatin1Char('/'))) {
                 return false;
+            }
         }
         domain = domain.toLower();
         m_hostList.insert(domain);

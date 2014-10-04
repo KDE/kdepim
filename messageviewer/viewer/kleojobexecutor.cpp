@@ -16,8 +16,6 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
-
 #include "kleojobexecutor.h"
 
 #include <kleo/decryptverifyjob.h>
@@ -37,75 +35,76 @@ using namespace GpgME;
 using namespace MessageViewer;
 using boost::shared_ptr;
 
-KleoJobExecutor::KleoJobExecutor( QObject* parent ) : QObject( parent )
+KleoJobExecutor::KleoJobExecutor(QObject *parent) : QObject(parent)
 {
-    setObjectName( QLatin1String("KleoJobExecutor") );
-    mEventLoop = new QEventLoop( this );
+    setObjectName(QLatin1String("KleoJobExecutor"));
+    mEventLoop = new QEventLoop(this);
 }
 
-
 GpgME::VerificationResult KleoJobExecutor::exec(
-        Kleo::VerifyDetachedJob* job,
-        const QByteArray & signature,
-        const QByteArray & signedData )
+    Kleo::VerifyDetachedJob *job,
+    const QByteArray &signature,
+    const QByteArray &signedData)
 {
     qDebug() << "Starting detached verification job";
-    connect( job, SIGNAL(result(GpgME::VerificationResult)), SLOT(verificationResult(GpgME::VerificationResult)) );
-    GpgME::Error err = job->start( signature, signedData );
-    if ( err )
-        return VerificationResult( err );
-    mEventLoop->exec( QEventLoop::ExcludeUserInputEvents );
+    connect(job, SIGNAL(result(GpgME::VerificationResult)), SLOT(verificationResult(GpgME::VerificationResult)));
+    GpgME::Error err = job->start(signature, signedData);
+    if (err) {
+        return VerificationResult(err);
+    }
+    mEventLoop->exec(QEventLoop::ExcludeUserInputEvents);
     return mVerificationResult;
 }
 
 GpgME::VerificationResult KleoJobExecutor::exec(
-        Kleo::VerifyOpaqueJob * job,
-        const QByteArray & signedData,
-        QByteArray & plainText )
+    Kleo::VerifyOpaqueJob *job,
+    const QByteArray &signedData,
+    QByteArray &plainText)
 {
     qDebug() << "Starting opaque verification job";
-    connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)), SLOT(verificationResult(GpgME::VerificationResult,QByteArray)) );
-    GpgME::Error err = job->start( signedData );
-    if ( err ) {
+    connect(job, SIGNAL(result(GpgME::VerificationResult,QByteArray)), SLOT(verificationResult(GpgME::VerificationResult,QByteArray)));
+    GpgME::Error err = job->start(signedData);
+    if (err) {
         plainText.clear();
-        return VerificationResult( err );
+        return VerificationResult(err);
     }
-    mEventLoop->exec( QEventLoop::ExcludeUserInputEvents );
+    mEventLoop->exec(QEventLoop::ExcludeUserInputEvents);
     plainText = mData;
     return mVerificationResult;
 }
 
 std::pair< GpgME::DecryptionResult, GpgME::VerificationResult > KleoJobExecutor::exec(
-        Kleo::DecryptVerifyJob * job,
-        const QByteArray & cipherText,
-        QByteArray & plainText )
+    Kleo::DecryptVerifyJob *job,
+    const QByteArray &cipherText,
+    QByteArray &plainText)
 {
     qDebug() << "Starting decryption job";
-    connect( job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)), SLOT(decryptResult(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)) );
-    GpgME::Error err = job->start( cipherText );
-    if ( err ) {
+    connect(job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)), SLOT(decryptResult(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)));
+    GpgME::Error err = job->start(cipherText);
+    if (err) {
         plainText.clear();
-        return std::make_pair( DecryptionResult( err ), VerificationResult( err ) );
+        return std::make_pair(DecryptionResult(err), VerificationResult(err));
     }
-    mEventLoop->exec( QEventLoop::ExcludeUserInputEvents );
+    mEventLoop->exec(QEventLoop::ExcludeUserInputEvents);
     plainText = mData;
-    return std::make_pair( mDecryptResult, mVerificationResult );
+    return std::make_pair(mDecryptResult, mVerificationResult);
 }
 
-GpgME::ImportResult KleoJobExecutor::exec(Kleo::ImportJob* job, const QByteArray & certData)
+GpgME::ImportResult KleoJobExecutor::exec(Kleo::ImportJob *job, const QByteArray &certData)
 {
-    connect( job, SIGNAL(result(GpgME::ImportResult)), SLOT(importResult(GpgME::ImportResult)) );
-    GpgME::Error err = job->start( certData );
-    if ( err )
-        return ImportResult( err );
-    mEventLoop->exec( QEventLoop::ExcludeUserInputEvents );
+    connect(job, SIGNAL(result(GpgME::ImportResult)), SLOT(importResult(GpgME::ImportResult)));
+    GpgME::Error err = job->start(certData);
+    if (err) {
+        return ImportResult(err);
+    }
+    mEventLoop->exec(QEventLoop::ExcludeUserInputEvents);
     return mImportResult;
 }
 
-void KleoJobExecutor::verificationResult(const GpgME::VerificationResult & result)
+void KleoJobExecutor::verificationResult(const GpgME::VerificationResult &result)
 {
     qDebug() << "Detached verification job finished";
-    Kleo::Job * job = dynamic_cast<Kleo::Job*>( sender() );
+    Kleo::Job *job = dynamic_cast<Kleo::Job *>(sender());
     assert(job);
     mVerificationResult = result;
     mAuditLogError = job->auditLogError();
@@ -113,10 +112,10 @@ void KleoJobExecutor::verificationResult(const GpgME::VerificationResult & resul
     mEventLoop->quit();
 }
 
-void KleoJobExecutor::verificationResult(const GpgME::VerificationResult & result, const QByteArray & plainText)
+void KleoJobExecutor::verificationResult(const GpgME::VerificationResult &result, const QByteArray &plainText)
 {
     qDebug() << "Opaque verification job finished";
-    Kleo::Job * job = dynamic_cast<Kleo::Job*>( sender() );
+    Kleo::Job *job = dynamic_cast<Kleo::Job *>(sender());
     assert(job);
     mVerificationResult = result;
     mData = plainText;
@@ -126,12 +125,12 @@ void KleoJobExecutor::verificationResult(const GpgME::VerificationResult & resul
 }
 
 void KleoJobExecutor::decryptResult(
-        const GpgME::DecryptionResult & decryptionresult,
-        const GpgME::VerificationResult & verificationresult,
-        const QByteArray & plainText )
+    const GpgME::DecryptionResult &decryptionresult,
+    const GpgME::VerificationResult &verificationresult,
+    const QByteArray &plainText)
 {
     qDebug() << "Decryption job finished";
-    Kleo::Job * job = dynamic_cast<Kleo::Job*>( sender() );
+    Kleo::Job *job = dynamic_cast<Kleo::Job *>(sender());
     assert(job);
     mVerificationResult = verificationresult;
     mDecryptResult = decryptionresult;
@@ -141,16 +140,15 @@ void KleoJobExecutor::decryptResult(
     mEventLoop->quit();
 }
 
-void KleoJobExecutor::importResult(const GpgME::ImportResult & result)
+void KleoJobExecutor::importResult(const GpgME::ImportResult &result)
 {
-    Kleo::Job * job = dynamic_cast<Kleo::Job*>( sender() );
+    Kleo::Job *job = dynamic_cast<Kleo::Job *>(sender());
     assert(job);
     mImportResult = result;
     mAuditLogError = job->auditLogError();
     mAuditLog = job->auditLogAsHtml();
     mEventLoop->quit();
 }
-
 
 QString KleoJobExecutor::auditLogAsHtml() const
 {

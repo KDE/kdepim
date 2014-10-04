@@ -36,7 +36,8 @@
 #include <QLabel>
 class QMouseEvent;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
   * @short The HTML statusbar widget for use with the reader.
@@ -59,7 +60,8 @@ namespace MessageViewer {
   *
   * @author Ingo Kloecker <kloecker@kde.org>, Marc Mutz <mutz@kde.org>
   **/
-class HtmlStatusBar : public QLabel {
+class HtmlStatusBar : public QLabel
+{
     Q_OBJECT
 public:
     enum UpdateMode {
@@ -67,15 +69,30 @@ public:
         Update
     };
 
-    explicit HtmlStatusBar( QWidget * parent=0 );
+    explicit HtmlStatusBar(QWidget *parent = 0);
     ~HtmlStatusBar();
 
     /** @return current mode. */
-    Util::HtmlMode mode() const { return mMode ; }
-    bool isHtml() const { return mode() == Util::Html; }
-    bool isNormal() const { return mode() == Util::Normal; }
-    bool isMultipartHtml() const { return mode() == Util::MultipartHtml; }
-    bool isMultipartPlain() const { return mode() == Util::MultipartPlain; }
+    Util::HtmlMode mode() const
+    {
+        return mMode ;
+    }
+    bool isHtml() const
+    {
+        return mode() == Util::Html;
+    }
+    bool isNormal() const
+    {
+        return mode() == Util::Normal;
+    }
+    bool isMultipartHtml() const
+    {
+        return mode() == Util::MultipartHtml;
+    }
+    bool isMultipartPlain() const
+    {
+        return mode() == Util::MultipartPlain;
+    }
 
     // Update the status bar, for example when the color scheme changed.
     void update();
@@ -89,14 +106,14 @@ public slots:
     /** Switch to "multipart plain mode". */
     void setMultipartPlainMode();
     /** Switch to mode @p m */
-    void setMode( Util::HtmlMode m, UpdateMode mode = Update );
+    void setMode(Util::HtmlMode m, UpdateMode mode = Update);
 
 signals:
     /** The user has clicked the status bar. */
     void clicked();
 
 protected:
-    void mousePressEvent( QMouseEvent * event );
+    void mousePressEvent(QMouseEvent *event);
 
 private:
     QString message() const;

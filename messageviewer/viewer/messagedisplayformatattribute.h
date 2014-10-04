@@ -23,7 +23,8 @@
 
 #include <AkonadiCore/attribute.h>
 #include "viewer/viewer.h"
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MessageDisplayFormatAttributePrivate;
 
 class MessageDisplayFormatAttribute : public Akonadi::Attribute
@@ -36,7 +37,7 @@ public:
     MessageDisplayFormatAttribute *clone() const;
     QByteArray type() const;
     QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void deserialize(const QByteArray &data);
 
     void setMessageFormat(Viewer::DisplayFormatMessage format);
     Viewer::DisplayFormatMessage messageFormat() const;
@@ -44,10 +45,9 @@ public:
     void setRemoteContent(bool remote);
     bool remoteContent() const;
 
-
 private:
     friend class MessageDisplayFormatAttributePrivate;
-    MessageDisplayFormatAttributePrivate * const d;
+    MessageDisplayFormatAttributePrivate *const d;
 };
 }
 

@@ -31,9 +31,6 @@
     your version.
 */
 
-
-
-
 #include "partnodebodypart.h"
 #include "viewer/nodehelper.h"
 
@@ -49,63 +46,75 @@ using namespace MessageViewer;
 
 static int serial = 0;
 
-PartNodeBodyPart::PartNodeBodyPart( KMime::Content *topLevelContent, KMime::Content *content,
-                                    NodeHelper *nodeHelper, const QTextCodec * codec  )
-    : Interface::BodyPart(), mTopLevelContent( topLevelContent ), mContent( content ), mCodec( codec ),
-      mDefaultDisplay( Interface::BodyPart::None ), mNodeHelper( nodeHelper )
+PartNodeBodyPart::PartNodeBodyPart(KMime::Content *topLevelContent, KMime::Content *content,
+                                   NodeHelper *nodeHelper, const QTextCodec *codec)
+    : Interface::BodyPart(), mTopLevelContent(topLevelContent), mContent(content), mCodec(codec),
+      mDefaultDisplay(Interface::BodyPart::None), mNodeHelper(nodeHelper)
 {}
 
-QString PartNodeBodyPart::makeLink( const QString & path ) const {
+QString PartNodeBodyPart::makeLink(const QString &path) const
+{
     // FIXME: use a PRNG for the first arg, instead of a serial number
-    return QString::fromLatin1( "x-kmail:/bodypart/%1/%2/%3" )
-            .arg( serial++ ).arg( mContent->index().toString() )
-            .arg( QString::fromLatin1( QUrl::toPercentEncoding( path, "/" ) ) );
+    return QString::fromLatin1("x-kmail:/bodypart/%1/%2/%3")
+           .arg(serial++).arg(mContent->index().toString())
+           .arg(QString::fromLatin1(QUrl::toPercentEncoding(path, "/")));
 }
 
-QString PartNodeBodyPart::asText() const {
-    if ( !mContent->contentType()->isText() )
+QString PartNodeBodyPart::asText() const
+{
+    if (!mContent->contentType()->isText()) {
         return QString();
+    }
     return mContent->decodedText();
 }
 
-QByteArray PartNodeBodyPart::asBinary() const {
+QByteArray PartNodeBodyPart::asBinary() const
+{
     return mContent->decodedContent();
 }
 
-QString PartNodeBodyPart::contentTypeParameter( const char * param ) const {
-    return mContent->contentType()->parameter( QString::fromLatin1(param) );
+QString PartNodeBodyPart::contentTypeParameter(const char *param) const
+{
+    return mContent->contentType()->parameter(QString::fromLatin1(param));
 }
 
-QString PartNodeBodyPart::contentDescription() const {
+QString PartNodeBodyPart::contentDescription() const
+{
     return mContent->contentDescription()->asUnicodeString();
 }
 
-QString PartNodeBodyPart::contentDispositionParameter( const char * param ) const {
-    return mContent->contentDisposition()->parameter( QString::fromLatin1(param) );
+QString PartNodeBodyPart::contentDispositionParameter(const char *param) const
+{
+    return mContent->contentDisposition()->parameter(QString::fromLatin1(param));
 }
 
-bool PartNodeBodyPart::hasCompleteBody() const {
+bool PartNodeBodyPart::hasCompleteBody() const
+{
     qWarning() << "Sorry, not yet implemented.";
     return true;
 }
 
-Interface::BodyPartMemento * PartNodeBodyPart::memento() const {
+Interface::BodyPartMemento *PartNodeBodyPart::memento() const
+{
     /*TODO(Andras) Volker suggests to use a ContentIndex->Mememnto mapping
-  Also review if the reader's bodyPartMemento should be returned or the NodeHelper's one
- */
-    return mNodeHelper->bodyPartMemento( mContent, "__plugin__" );
+    Also review if the reader's bodyPartMemento should be returned or the NodeHelper's one
+    */
+    return mNodeHelper->bodyPartMemento(mContent, "__plugin__");
 }
 
-void PartNodeBodyPart::setBodyPartMemento( Interface::BodyPartMemento * memento ) {
+void PartNodeBodyPart::setBodyPartMemento(Interface::BodyPartMemento *memento)
+{
     /*TODO(Andras) Volker suggests to use a ContentIndex->Memento mapping
-Also review if the reader's bodyPartMemento should be set or the NodeHelper's one */
-    mNodeHelper->setBodyPartMemento( mContent, "__plugin__" , memento );
+    Also review if the reader's bodyPartMemento should be set or the NodeHelper's one */
+    mNodeHelper->setBodyPartMemento(mContent, "__plugin__" , memento);
 }
 
-Interface::BodyPart::Display PartNodeBodyPart::defaultDisplay() const {
+Interface::BodyPart::Display PartNodeBodyPart::defaultDisplay() const
+{
     return mDefaultDisplay;
 }
 
-void PartNodeBodyPart::setDefaultDisplay( Interface::BodyPart::Display d ){
+void PartNodeBodyPart::setDefaultDisplay(Interface::BodyPart::Display d)
+{
     mDefaultDisplay = d;
 }

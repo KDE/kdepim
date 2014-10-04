@@ -24,7 +24,6 @@
 *
 * ============================================================ */
 
-
 // Self Includes
 #include "adblockrulenullimpl.h"
 
@@ -37,99 +36,110 @@ AdBlockRuleNullImpl::AdBlockRuleNullImpl(const QString &filter)
 {
 }
 
-
 bool AdBlockRuleNullImpl::match(const QNetworkRequest &, const QString &, const QString &) const
 {
     return false;
 }
-
 
 bool AdBlockRuleNullImpl::isNullFilter(const QString &filter)
 {
     QString parsedLine = filter;
 
     const int optionsNumber = parsedLine.lastIndexOf(QLatin1Char('$'));
-    if (optionsNumber == 0)
+    if (optionsNumber == 0) {
         return false;
+    }
 
     const QStringList options(parsedLine.mid(optionsNumber + 1).split(QLatin1Char(',')));
 
-    Q_FOREACH(const QString & option, options)
-    {
+    Q_FOREACH (const QString &option, options) {
         // NOTE:
         // I moved the check from option == QLatin1String to option.endsWith()
         // to check option && ~option. Hope it will NOT be a problem...
 
         // third_party: managed inside adblockrulefallbackimpl
-        if (option.endsWith(QLatin1String("third-party")))
+        if (option.endsWith(QLatin1String("third-party"))) {
             return false;
+        }
 
         // script
-        if (option.endsWith(QLatin1String("script")))
+        if (option.endsWith(QLatin1String("script"))) {
             return true;
+        }
 
         // image
-        if (option.endsWith(QLatin1String("image")))
+        if (option.endsWith(QLatin1String("image"))) {
             return true;
+        }
 
         // background
-        if (option.endsWith(QLatin1String("background")))
+        if (option.endsWith(QLatin1String("background"))) {
             return true;
+        }
 
         // stylesheet
-        if (option.endsWith(QLatin1String("stylesheet")))
+        if (option.endsWith(QLatin1String("stylesheet"))) {
             return true;
+        }
 
         // object
-        if (option.endsWith(QLatin1String("object")))
+        if (option.endsWith(QLatin1String("object"))) {
             return true;
+        }
 
         // xbl
-        if (option.endsWith(QLatin1String("xbl")))
+        if (option.endsWith(QLatin1String("xbl"))) {
             return true;
+        }
 
         // ping
-        if (option.endsWith(QLatin1String("ping")))
+        if (option.endsWith(QLatin1String("ping"))) {
             return true;
+        }
 
         // xmlhttprequest
-        if (option.endsWith(QLatin1String("xmlhttprequest")))
+        if (option.endsWith(QLatin1String("xmlhttprequest"))) {
             return true;
+        }
 
         // object_subrequest
-        if (option.endsWith(QLatin1String("object-subrequest")))
+        if (option.endsWith(QLatin1String("object-subrequest"))) {
             return true;
+        }
 
         // dtd
-        if (option.endsWith(QLatin1String("dtd")))
+        if (option.endsWith(QLatin1String("dtd"))) {
             return true;
+        }
 
         // subdocument
-        if (option.endsWith(QLatin1String("subdocument")))
+        if (option.endsWith(QLatin1String("subdocument"))) {
             return true;
+        }
 
         // document
-        if (option.endsWith(QLatin1String("document")))
+        if (option.endsWith(QLatin1String("document"))) {
             return true;
+        }
 
         // other
-        if (option.endsWith(QLatin1String("other")))
+        if (option.endsWith(QLatin1String("other"))) {
             return true;
+        }
 
         // collapse
-        if (option.endsWith(QLatin1String("collapse")))
+        if (option.endsWith(QLatin1String("collapse"))) {
             return true;
+        }
     }
 
     return false;
 }
 
-
 QString AdBlockRuleNullImpl::ruleString() const
 {
     return QString();
 }
-
 
 QString AdBlockRuleNullImpl::ruleType() const
 {

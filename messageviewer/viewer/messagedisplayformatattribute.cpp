@@ -57,14 +57,14 @@ MessageDisplayFormatAttribute *MessageDisplayFormatAttribute::clone() const
 
 QByteArray MessageDisplayFormatAttribute::type() const
 {
-    static const QByteArray sType( "MessageDisplayFormatAttribute" );
+    static const QByteArray sType("MessageDisplayFormatAttribute");
     return sType;
 }
 
 QByteArray MessageDisplayFormatAttribute::serialized() const
 {
     QByteArray result;
-    QDataStream s( &result, QIODevice::WriteOnly );
+    QDataStream s(&result, QIODevice::WriteOnly);
     s << messageFormat();
     s << remoteContent();
 
@@ -91,9 +91,9 @@ Viewer::DisplayFormatMessage MessageDisplayFormatAttribute::messageFormat() cons
     return d->messageFormat;
 }
 
-void MessageDisplayFormatAttribute::deserialize( const QByteArray &data )
+void MessageDisplayFormatAttribute::deserialize(const QByteArray &data)
 {
-    QDataStream s( data );
+    QDataStream s(data);
     int value = 0;
     s >> value;
     d->messageFormat = static_cast<Viewer::DisplayFormatMessage>(value);

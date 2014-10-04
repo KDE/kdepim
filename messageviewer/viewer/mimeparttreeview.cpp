@@ -29,15 +29,15 @@ using namespace MessageViewer;
 MimePartTreeView::MimePartTreeView(QWidget *parent)
     : QTreeView(parent)
 {
-    setObjectName( QLatin1String("mMimePartTree") );
+    setObjectName(QLatin1String("mMimePartTree"));
 
-    mMimePartModel = new MimeTreeModel( this );
-    setModel( mMimePartModel );
-    setSelectionMode( QAbstractItemView::ExtendedSelection );
-    setSelectionBehavior( QAbstractItemView::SelectRows );
+    mMimePartModel = new MimeTreeModel(this);
+    setModel(mMimePartModel);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
     connect(this, &MimePartTreeView::destroyed, this, &MimePartTreeView::slotMimePartDestroyed);
     setContextMenuPolicy(Qt::CustomContextMenu);
-    header()->setResizeMode( QHeaderView::ResizeToContents );
+    header()->setResizeMode(QHeaderView::ResizeToContents);
     connect(mMimePartModel, &MimeTreeModel::modelReset, this, &MimePartTreeView::expandAll);
     restoreMimePartTreeConfig();
 }
@@ -54,14 +54,14 @@ MimeTreeModel *MimePartTreeView::mimePartModel() const
 
 void MimePartTreeView::restoreMimePartTreeConfig()
 {
-    KConfigGroup grp( GlobalSettings::self()->config(), "MimePartTree" );
-    header()->restoreState( grp.readEntry( "State", QByteArray() ) );
+    KConfigGroup grp(GlobalSettings::self()->config(), "MimePartTree");
+    header()->restoreState(grp.readEntry("State", QByteArray()));
 }
 
 void MimePartTreeView::saveMimePartTreeConfig()
 {
-    KConfigGroup grp( GlobalSettings::self()->config(), "MimePartTree" );
-    grp.writeEntry( "State", header()->saveState() );
+    KConfigGroup grp(GlobalSettings::self()->config(), "MimePartTree");
+    grp.writeEntry("State", header()->saveState());
 }
 
 void MimePartTreeView::slotMimePartDestroyed()
@@ -69,7 +69,6 @@ void MimePartTreeView::slotMimePartDestroyed()
     //root is either null or a modified tree that we need to clean up
     clearModel();
 }
-
 
 void MimePartTreeView::clearModel()
 {
@@ -80,7 +79,7 @@ void MimePartTreeView::clearModel()
 void MimePartTreeView::setRoot(KMime::Content *root)
 {
     delete mMimePartModel->root();
-    mMimePartModel->setRoot( root );
+    mMimePartModel->setRoot(root);
 }
 
 KMime::Content::List MimePartTreeView::selectedContents()
@@ -89,11 +88,11 @@ KMime::Content::List MimePartTreeView::selectedContents()
     QItemSelectionModel *selectModel = selectionModel();
     QModelIndexList selectedRows = selectModel->selectedRows();
 
-    Q_FOREACH( const QModelIndex &index, selectedRows )
-    {
-        KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
-        if ( content )
-            contents.append( content );
+    Q_FOREACH (const QModelIndex &index, selectedRows) {
+        KMime::Content *content = static_cast<KMime::Content *>(index.internalPointer());
+        if (content) {
+            contents.append(content);
+        }
     }
     return contents;
 }

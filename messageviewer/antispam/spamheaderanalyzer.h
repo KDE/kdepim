@@ -39,7 +39,8 @@
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 enum SpamError {
     noError,
@@ -66,30 +67,49 @@ enum SpamError {
       couldNotFindTheThresholdField                         Couldn't find the threshold field
       couldNotConvertConfidenceToFloat                      Couldn't convert confidence to float
 */
-class SpamScore {
+class SpamScore
+{
 public:
 
     SpamScore()
-        : mError(noError), mScore( -2.0 ), mConfidence( -2.0 )
+        : mError(noError), mScore(-2.0), mConfidence(-2.0)
     {
     }
 
-    SpamScore( const QString & agent, SpamError error, float score, float confidence,
-               const QString & header, const QString & cheader )
-        : mAgent( agent ),
-          mError( error ),
-          mScore( score ),
-          mConfidence( confidence ),
-          mHeader( header ),
-          mConfidenceHeader( cheader )
+    SpamScore(const QString &agent, SpamError error, float score, float confidence,
+              const QString &header, const QString &cheader)
+        : mAgent(agent),
+          mError(error),
+          mScore(score),
+          mConfidence(confidence),
+          mHeader(header),
+          mConfidenceHeader(cheader)
     {
     }
-    QString agent() const { return mAgent; }
-    float score() const { return mScore; }
-    float confidence() const { return mConfidence; }
-    SpamError error() const { return mError; }
-    QString spamHeader() const { return mHeader; }
-    QString confidenceHeader() const { return mConfidenceHeader; }
+    QString agent() const
+    {
+        return mAgent;
+    }
+    float score() const
+    {
+        return mScore;
+    }
+    float confidence() const
+    {
+        return mConfidence;
+    }
+    SpamError error() const
+    {
+        return mError;
+    }
+    QString spamHeader() const
+    {
+        return mHeader;
+    }
+    QString confidenceHeader() const
+    {
+        return mConfidenceHeader;
+    }
 
 private:
     QString mAgent;
@@ -101,22 +121,21 @@ private:
 };
 typedef QVector<SpamScore> SpamScores;
 
-
 /**
     @short Flyweight for analysing spam headers.
     @author Patrick Audley <paudley@blackcat.ca>
   */
-class SpamHeaderAnalyzer {
+class SpamHeaderAnalyzer
+{
 public:
     /**
       @short Extract scores from known anti-spam headers
       @param message A KMime::Message to examine
       @return A list of detected scores. See SpamScore
-  */
-    static SpamScores getSpamScores( KMime::Message *message );
+    */
+    static SpamScores getSpamScores(KMime::Message *message);
 };
 
 }
-
 
 #endif // __SPAMHEADERANALYZER_H__

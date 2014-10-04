@@ -36,15 +36,14 @@
 #include <QWebElementCollection>
 #include <KLocalizedString>
 
-
 #define HIDABLE_ELEMENTS   QLatin1String("audio,img,embed,object,iframe,frame,video")
 
 /* Null network reply */
 class NullNetworkReply : public QNetworkReply
 {
 public:
-    NullNetworkReply(const QNetworkRequest &req, QObject* parent = 0)
-        :QNetworkReply(parent)
+    NullNetworkReply(const QNetworkRequest &req, QObject *parent = 0)
+        : QNetworkReply(parent)
     {
         setRequest(req);
         setUrl(req.url());
@@ -56,23 +55,31 @@ public:
     }
 
     virtual void abort() {}
-    virtual qint64 bytesAvailable() const { return 0; }
+    virtual qint64 bytesAvailable() const
+    {
+        return 0;
+    }
 
 protected:
-    virtual qint64 readData(char*, qint64) {return -1;}
+    virtual qint64 readData(char *, qint64)
+    {
+        return -1;
+    }
 };
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent)
     : KIO::AccessManager(parent)
 {
     QString c = KLocale::global()->language();
 
-    if (c == QLatin1String("C"))
+    if (c == QLatin1String("C")) {
         c = QLatin1String("en-US");
-    else
+    } else {
         c = c.replace(QLatin1Char('_') , QLatin1Char('-'));
+    }
 
     c.append(QLatin1String(", en-US; q=0.8, en; q=0.6"));
 
@@ -84,12 +91,13 @@ QNetworkReply *MyNetworkAccessManager::createRequest(Operation op, const QNetwor
     bool blocked = false;
 
     // Handle GET operations with AdBlock
-    if (op == QNetworkAccessManager::GetOperation)
+    if (op == QNetworkAccessManager::GetOperation) {
         blocked = AdBlockManager::self()->blockRequest(req);
+    }
 
     if (!blocked) {
         if (KProtocolInfo::isHelperProtocol(req.url())) {
-            (void) new KRun(req.url(), qobject_cast<QWidget*>(req.originatingObject()));
+            (void) new KRun(req.url(), qobject_cast<QWidget *>(req.originatingObject()));
             return new NullNetworkReply(req, this);
         }
         // set our "nice" accept-language header...
@@ -99,26 +107,29 @@ QNetworkReply *MyNetworkAccessManager::createRequest(Operation op, const QNetwor
         return KIO::AccessManager::createRequest(op, req, outgoingData);
     }
 
-    QWebFrame* frame = qobject_cast<QWebFrame*>(req.originatingObject());
+    QWebFrame *frame = qobject_cast<QWebFrame *>(req.originatingObject());
     if (frame) {
-        if (!mBlockedRequests.contains(frame))
+        if (!mBlockedRequests.contains(frame)) {
             connect(frame, SIGNAL(loadFinished(bool)), this, SLOT(slotApplyHidingBlockedElements(bool)));
+        }
         mBlockedRequests.insert(frame, req.url());
     }
 
     return new NullNetworkReply(req, this);
 }
 
-static void hideBlockedElements(const QUrl& url, QWebElementCollection& collection)
+static void hideBlockedElements(const QUrl &url, QWebElementCollection &collection)
 {
     for (QWebElementCollection::iterator it = collection.begin(); it != collection.end(); ++it) {
-        const QUrl baseUrl ((*it).webFrame()->baseUrl());
+        const QUrl baseUrl((*it).webFrame()->baseUrl());
         QString src = (*it).attribute(QLatin1String("src"));
-        if (src.isEmpty())
+        if (src.isEmpty()) {
             src = (*it).evaluateJavaScript(QLatin1String("this.src")).toString();
-        if (src.isEmpty())
+        }
+        if (src.isEmpty()) {
             continue;
-        const QUrl resolvedUrl (baseUrl.resolved(src));
+        }
+        const QUrl resolvedUrl(baseUrl.resolved(src));
         if (url == resolvedUrl) {
             //qDebug() << "*** HIDING ELEMENT: " << (*it).tagName() << resolvedUrl;
             (*it).removeFromDocument();
@@ -128,29 +139,36 @@ static void hideBlockedElements(const QUrl& url, QWebElementCollection& collecti
 
 void MyNetworkAccessManager::slotApplyHidingBlockedElements(bool ok)
 {
-    if (!ok)
+    if (!ok) {
         return;
+    }
 
-    if(!GlobalSettings::self()->adBlockEnabled())
+    if (!GlobalSettings::self()->adBlockEnabled()) {
         return;
+    }
 
-    if(!GlobalSettings::self()->hideAdsEnabled())
+    if (!GlobalSettings::self()->hideAdsEnabled()) {
         return;
+    }
 
-    QWebFrame* frame = qobject_cast<QWebFrame*>(sender());
-    if (!frame)
+    QWebFrame *frame = qobject_cast<QWebFrame *>(sender());
+    if (!frame) {
         return;
+    }
 
     QList<QUrl> urls = mBlockedRequests.values(frame);
-    if (urls.isEmpty())
+    if (urls.isEmpty()) {
         return;
+    }
 
     QWebElementCollection collection = frame->findAllElements(HIDABLE_ELEMENTS);
-    if (frame->parentFrame())
+    if (frame->parentFrame()) {
         collection += frame->parentFrame()->findAllElements(HIDABLE_ELEMENTS);
+    }
 
-    Q_FOREACH(const QUrl &url, urls)
+    Q_FOREACH (const QUrl &url, urls) {
         hideBlockedElements(url, collection);
+    }
 }
 
 }

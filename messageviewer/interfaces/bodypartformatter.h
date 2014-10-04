@@ -36,34 +36,37 @@
 
 #include <QObject>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-  class HtmlWriter;
+class HtmlWriter;
 
-namespace Interface {
+namespace Interface
+{
 
-  class BodyPart;
-  class BodyPartURLHandler;
+class BodyPart;
+class BodyPartURLHandler;
 
-  class BodyPartFormatter {
-  public:
+class BodyPartFormatter
+{
+public:
     virtual ~BodyPartFormatter() {}
 
     /**
-  @li Ok returned when format() generated some HTML
-  @li NeedContent returned when format() needs the body of the part
-  @li AsIcon returned when the part should be shown iconified
-  @li Failed returned when formatting failed. Currently equivalent to Ok
+    @li Ok returned when format() generated some HTML
+    @li NeedContent returned when format() needs the body of the part
+    @li AsIcon returned when the part should be shown iconified
+    @li Failed returned when formatting failed. Currently equivalent to Ok
     */
     enum Result { Ok, NeedContent, AsIcon, Failed };
 
     /**
-  Format body part \a part by generating some HTML and writing
-  that to \a writer.
+    Format body part \a part by generating some HTML and writing
+    that to \a writer.
 
-  @return the result code (see above)
+    @return the result code (see above)
     */
-    virtual Result format( BodyPart * part, HtmlWriter * writer ) const = 0;
+    virtual Result format(BodyPart *part, HtmlWriter *writer) const = 0;
 
     /**
       Variant of format that allows implementors to hook notifications up to
@@ -71,36 +74,37 @@ namespace Interface {
 
       @return the result code (see above)
     */
-    virtual Result format( BodyPart * part, HtmlWriter * writer, QObject* asyncResultObserver ) const
+    virtual Result format(BodyPart *part, HtmlWriter *writer, QObject *asyncResultObserver) const
     {
-      Q_UNUSED( asyncResultObserver );
-      return format( part, writer );
+        Q_UNUSED(asyncResultObserver);
+        return format(part, writer);
     }
-  };
+};
 
-  /**
-      @short interface for BodyPartFormatter plugins
+/**
+    @short interface for BodyPartFormatter plugins
 
-      The interface is queried by for types, subtypes, and the
-      corresponding bodypart formatter, and the result inserted into
-      the bodypart formatter factory.
+    The interface is queried by for types, subtypes, and the
+    corresponding bodypart formatter, and the result inserted into
+    the bodypart formatter factory.
 
-      Subtype alone or both type and subtype may be "*", which is
-      taken as a wildcard, so that e.g. type=text subtype=* matches
-      any text subtype, but with lesser specificity than a concrete
-      mimetype such as text/plain. type=* is only allowed when
-      subtype=*, too.
-  */
-  class BodyPartFormatterPlugin {
-  public:
+    Subtype alone or both type and subtype may be "*", which is
+    taken as a wildcard, so that e.g. type=text subtype=* matches
+    any text subtype, but with lesser specificity than a concrete
+    mimetype such as text/plain. type=* is only allowed when
+    subtype=*, too.
+*/
+class BodyPartFormatterPlugin
+{
+public:
     virtual ~BodyPartFormatterPlugin() {}
 
-    virtual const BodyPartFormatter * bodyPartFormatter( int idx ) const = 0;
-    virtual const char * type( int idx ) const = 0;
-    virtual const char * subtype( int idx ) const = 0;
+    virtual const BodyPartFormatter *bodyPartFormatter(int idx) const = 0;
+    virtual const char *type(int idx) const = 0;
+    virtual const char *subtype(int idx) const = 0;
 
-    virtual const BodyPartURLHandler * urlHandler( int idx ) const = 0;
-  };
+    virtual const BodyPartURLHandler *urlHandler(int idx) const = 0;
+};
 
 } // namespace Interface
 

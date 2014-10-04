@@ -36,9 +36,9 @@ class ContactDisplayMessageMemento : public QObject, public Interface::BodyPartM
 {
     Q_OBJECT
 public:
-    explicit ContactDisplayMessageMemento( const QString &emailAddress );
+    explicit ContactDisplayMessageMemento(const QString &emailAddress);
     ~ContactDisplayMessageMemento();
-    void processAddress( const KABC::Addressee& addressee );
+    void processAddress(const KABC::Addressee &addressee);
     bool allowToRemoteContent() const;
     KABC::Picture photo() const;
 
@@ -48,11 +48,11 @@ public:
 
 signals:
     // TODO: Factor our update and detach into base class
-    void update( MessageViewer::Viewer::UpdateMode );
+    void update(MessageViewer::Viewer::UpdateMode);
     void changeDisplayMail(Viewer::DisplayFormatMessage displayAsHtml, bool remoteContent);
 
 private Q_SLOTS:
-    void slotSearchJobFinished( KJob *job );
+    void slotSearchJobFinished(KJob *job);
 
 private:
     void searchPhoto(const KABC::AddresseeList &list);
@@ -63,7 +63,6 @@ private:
 };
 
 }
-
 
 #endif /* CONTACTDISPLAYMESSAGE_H */
 

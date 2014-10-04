@@ -23,7 +23,8 @@
 #include <QMap>
 #include <QString>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
  * This class is a replacement for KIconLoader::iconPath(), because the iconPath()
@@ -37,7 +38,7 @@ class MESSAGEVIEWER_EXPORT IconNameCache
 public:
 
     static IconNameCache *instance();
-    QString iconPath( const QString &name, int size ) const;
+    QString iconPath(const QString &name, int size) const;
 
 private:
 
@@ -47,10 +48,10 @@ private:
         QString fileName;
         int size;
 
-        bool operator < ( const Entry &other ) const;
+        bool operator < (const Entry &other) const;
     };
 
-    mutable QMap<Entry,QString> mCachedEntries;
+    mutable QMap<Entry, QString> mCachedEntries;
 };
 
 }

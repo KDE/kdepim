@@ -15,20 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "printingsettings.h"
 #include "ui_printingsettings.h"
 #include "settings/globalsettings.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
-
 using namespace MessageViewer;
 
 PrintingSettings::PrintingSettings(QWidget *parent)
-    : QWidget( parent ), mPrintingUi( new Ui_PrintingSettings )
+    : QWidget(parent), mPrintingUi(new Ui_PrintingSettings)
 {
-    mPrintingUi->setupUi( this );
+    mPrintingUi->setupUi(this);
     connect(mPrintingUi->mPrintEmptySelectedText, SIGNAL(toggled(bool)), SIGNAL(changed()));
     connect(mPrintingUi->respectExpandCollapseSettings, SIGNAL(toggled(bool)), SIGNAL(changed()));
     connect(mPrintingUi->printBackgroundColorAndImages, SIGNAL(toggled(bool)), SIGNAL(changed()));
@@ -56,10 +54,10 @@ void PrintingSettings::doLoadFromGlobalSettings()
 
 void PrintingSettings::doResetToDefaultsOther()
 {
-    const bool bUseDefaults = GlobalSettings::self()->useDefaults( true );
+    const bool bUseDefaults = GlobalSettings::self()->useDefaults(true);
     loadWidget(mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
     loadWidget(mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
     loadWidget(mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
-    GlobalSettings::self()->useDefaults( bUseDefaults );
+    GlobalSettings::self()->useDefaults(bUseDefaults);
 }
 

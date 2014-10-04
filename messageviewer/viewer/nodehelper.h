@@ -34,139 +34,142 @@
 class KUrl;
 class QTextCodec;
 
-namespace MessageViewer {
-  namespace Interface {
-    class BodyPartMemento;
-  }
+namespace MessageViewer
+{
+namespace Interface
+{
+class BodyPartMemento;
+}
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class AttachmentTemporaryFilesDirs;
 
 /** Flags for the encryption state. */
-typedef enum
-{
-    KMMsgEncryptionStateUnknown=' ',
-    KMMsgNotEncrypted='N',
-    KMMsgPartiallyEncrypted='P',
-    KMMsgFullyEncrypted='F',
-    KMMsgEncryptionProblematic='X'
+typedef enum {
+    KMMsgEncryptionStateUnknown = ' ',
+    KMMsgNotEncrypted = 'N',
+    KMMsgPartiallyEncrypted = 'P',
+    KMMsgFullyEncrypted = 'F',
+    KMMsgEncryptionProblematic = 'X'
 } KMMsgEncryptionState;
 
 /** Flags for the signature state. */
-typedef enum
-{
-    KMMsgSignatureStateUnknown=' ',
-    KMMsgNotSigned='N',
-    KMMsgPartiallySigned='P',
-    KMMsgFullySigned='F',
-    KMMsgSignatureProblematic='X'
+typedef enum {
+    KMMsgSignatureStateUnknown = ' ',
+    KMMsgNotSigned = 'N',
+    KMMsgPartiallySigned = 'P',
+    KMMsgFullySigned = 'F',
+    KMMsgSignatureProblematic = 'X'
 } KMMsgSignatureState;
-
 
 /**
  * @author Andras Mantia <andras@kdab.net>
  */
-class MESSAGEVIEWER_EXPORT NodeHelper {
+class MESSAGEVIEWER_EXPORT NodeHelper
+{
 public:
     NodeHelper();
 
     ~NodeHelper();
 
-    void setNodeProcessed( KMime::Content* node, bool recurse );
-    void setNodeUnprocessed( KMime::Content* node, bool recurse );
-    bool nodeProcessed( KMime::Content* node ) const;
+    void setNodeProcessed(KMime::Content *node, bool recurse);
+    void setNodeUnprocessed(KMime::Content *node, bool recurse);
+    bool nodeProcessed(KMime::Content *node) const;
     void clear();
     void forceCleanTempFiles();
 
-    void setEncryptionState( KMime::Content* node, const KMMsgEncryptionState state );
-    KMMsgEncryptionState encryptionState( KMime::Content *node ) const;
+    void setEncryptionState(KMime::Content *node, const KMMsgEncryptionState state);
+    KMMsgEncryptionState encryptionState(KMime::Content *node) const;
 
-    void setSignatureState( KMime::Content* node, const KMMsgSignatureState state );
-    KMMsgSignatureState signatureState( KMime::Content *node ) const;
+    void setSignatureState(KMime::Content *node, const KMMsgSignatureState state);
+    KMMsgSignatureState signatureState(KMime::Content *node) const;
 
-    KMMsgSignatureState overallSignatureState( KMime::Content* node ) const;
-    KMMsgEncryptionState overallEncryptionState( KMime::Content *node ) const;
+    KMMsgSignatureState overallSignatureState(KMime::Content *node) const;
+    KMMsgEncryptionState overallEncryptionState(KMime::Content *node) const;
 
-    void setPartMetaData( KMime::Content* node, const PartMetaData &metaData );
-    PartMetaData partMetaData( KMime::Content* node );
+    void setPartMetaData(KMime::Content *node, const PartMetaData &metaData);
+    PartMetaData partMetaData(KMime::Content *node);
 
-    static QString iconName( KMime::Content *node, int size = KIconLoader::Desktop );
+    static QString iconName(KMime::Content *node, int size = KIconLoader::Desktop);
 
     /**
      *  Set the 'Content-Type' by mime-magic from the contents of the body.
      *  If autoDecode is true the decoded body will be used for mime type
      *  determination (this does not change the body itself).
      */
-    void magicSetType( KMime::Content *node, bool autoDecode=true );
-
+    void magicSetType(KMime::Content *node, bool autoDecode = true);
 
     /**
      *  Return this mails subject, with all "forward" and "reply"
      *  prefixes removed
      */
-    static QString cleanSubject( KMime::Message *message );
+    static QString cleanSubject(KMime::Message *message);
 
     /** Attach an extra node to an existing node */
-    void attachExtraContent( KMime::Content *topLevelNode, KMime::Content* content );
-    void removeAllExtraContent( KMime::Content *topLevelNode );
+    void attachExtraContent(KMime::Content *topLevelNode, KMime::Content *content);
+    void removeAllExtraContent(KMime::Content *topLevelNode);
 
     /** Get the extra nodes attached to the @param topLevelNode and all sub-nodes of @param topLevelNode */
-    QList<KMime::Content*> extraContents( KMime::Content *topLevelNode ) const;
+    QList<KMime::Content *> extraContents(KMime::Content *topLevelNode) const;
 
     /** Return a modified message (node tree) starting from @param topLevelNode that has the original nodes and the extra nodes.
         The caller has the responsibility to delete the new message.
      */
-    KMime::Message *messageWithExtraContent( KMime::Content* topLevelNode );
+    KMime::Message *messageWithExtraContent(KMime::Content *topLevelNode);
 
     /**
      * Returns true if the given node at least one extra content node,
      *  implying that the given node is an encrypted node or otherwise a type of
      *  node that needs extra handling.
      */
-    bool isPermanentWithExtraContent( KMime::Content* node ) const;
+    bool isPermanentWithExtraContent(KMime::Content *node) const;
 
-     /** Get a QTextCodec suitable for this message part */
-    const QTextCodec * codec( KMime::Content* node );
+    /** Get a QTextCodec suitable for this message part */
+    const QTextCodec *codec(KMime::Content *node);
 
     /** Set the charset the user selected for the message to display */
-    void setOverrideCodec( KMime::Content* node, const QTextCodec* codec );
+    void setOverrideCodec(KMime::Content *node, const QTextCodec *codec);
 
-    const QTextCodec * localCodec() const { return mLocalCodec;}
+    const QTextCodec *localCodec() const
+    {
+        return mLocalCodec;
+    }
 
-    Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
+    Interface::BodyPartMemento *bodyPartMemento(KMime::Content *node, const QByteArray &which) const;
 
-    void setBodyPartMemento( KMime::Content* node, const QByteArray &which,
-                             Interface::BodyPartMemento *memento );
+    void setBodyPartMemento(KMime::Content *node, const QByteArray &which,
+                            Interface::BodyPartMemento *memento);
 
     // A flag to remember if the node was embedded. This is useful for attachment nodes, the reader
     // needs to know if they were displayed inline or not.
-    bool isNodeDisplayedEmbedded( KMime::Content* node ) const;
-    void setNodeDisplayedEmbedded( KMime::Content* node, bool displayedEmbedded );
+    bool isNodeDisplayedEmbedded(KMime::Content *node) const;
+    void setNodeDisplayedEmbedded(KMime::Content *node, bool displayedEmbedded);
 
     // Same as above, but this time determines if the node was hidden or not
-    bool isNodeDisplayedHidden( KMime::Content* node ) const;
-    void setNodeDisplayedHidden( KMime::Content* node, bool displayedHidden );
+    bool isNodeDisplayedHidden(KMime::Content *node) const;
+    void setNodeDisplayedHidden(KMime::Content *node, bool displayedHidden);
 
     /**
      * Writes the given message part to a temporary file and returns the
      * name of this file or QString() if writing failed.
      */
-    QString writeNodeToTempFile( KMime::Content* node );
+    QString writeNodeToTempFile(KMime::Content *node);
 
     /**
      * Returns the temporary file path and name where this node was saved, or an empty url
      * if it wasn't saved yet with writeNodeToTempFile()
      */
-    KUrl tempFileUrlFromNode( const KMime::Content *node );
+    KUrl tempFileUrlFromNode(const KMime::Content *node);
 
     /**
      * Creates a temporary dir for saving attachments, etc.
      * Will be automatically deleted when another message is viewed.
      * @param param Optional part of the directory name.
      */
-    QString createTempDir( const QString &param = QString() );
+    QString createTempDir(const QString &param = QString());
 
     /**
      * Cleanup the attachment temp files
@@ -176,24 +179,24 @@ public:
     /**
      * Add a file to the list of managed temporary files
      */
-    void addTempFile( const QString& file );
+    void addTempFile(const QString &file);
 
     // Get a href in the form attachment:<nodeId>?place=<place>, used by ObjectTreeParser and
     // UrlHandlerManager.
-    QString asHREF( const KMime::Content* node, const QString &place );
+    QString asHREF(const KMime::Content *node, const QString &place);
 
-    static bool isToltecMessage( KMime::Content* node );
+    static bool isToltecMessage(KMime::Content *node);
 
     /**
      * @return true if this node is a child or an encapsulated message
      */
-    static bool isInEncapsulatedMessage( KMime::Content* node );
+    static bool isInEncapsulatedMessage(KMime::Content *node);
 
     /**
      * Returns the charset for the given node. If no charset is specified
      * for the node, the defaultCharset() is returned.
      */
-    static QByteArray charset( KMime::Content *node );
+    static QByteArray charset(KMime::Content *node);
 
     /**
      * Check for prefixes @p prefixRegExps in @p str. If none
@@ -202,30 +205,30 @@ public:
      * sequence of whitespace-delimited prefixes at the beginning of
      * @p str is replaced by @p newPrefix.
      */
-    static QString replacePrefixes( const QString& str,
-                                  const QStringList& prefixRegExps,
-                                  bool replace,
-                                  const QString& newPrefix );
+    static QString replacePrefixes(const QString &str,
+                                   const QStringList &prefixRegExps,
+                                   bool replace,
+                                   const QString &newPrefix);
 
     /**
      * Return a QTextCodec for the specified charset.
      * This function is a bit more tolerant, than QTextCodec::codecForName
      */
-    static const QTextCodec* codecForName(const QByteArray& _str);
+    static const QTextCodec *codecForName(const QByteArray &_str);
 
     /**
      * Returns a usable filename for a node, that can be the filename from the
      * content disposition header, or if that one is empty, the name from the
      * content type header.
      */
-    static QString fileName( const KMime::Content *node );
+    static QString fileName(const KMime::Content *node);
 
     /**
      * Fixes an encoding received by a KDE function and returns the proper,
      * MIME-compilant encoding name instead.
      * @see encodingForName
      */
-    static QString fixEncoding( const QString &encoding ); //TODO(Andras) move to a utility class?
+    static QString fixEncoding(const QString &encoding);   //TODO(Andras) move to a utility class?
 
     /**
      * Drop-in replacement for KCharsets::encodingForName(). The problem with
@@ -233,29 +236,28 @@ public:
      * like "ISO 8859-15" instead of valid encoding names like "ISO-8859-15".
      * This function fixes this by replacing whitespace with a hyphen.
      */
-    static QString encodingForName( const QString &descriptiveName ); //TODO(Andras) move to a utility class?
+    static QString encodingForName(const QString &descriptiveName);   //TODO(Andras) move to a utility class?
 
     /**
      * Return a list of the supported encodings
      * @param usAscii if true, US-Ascii encoding will be prepended to the list.
      */
-    static QStringList supportedEncodings( bool usAscii ); //TODO(Andras) move to a utility class?
+    static QStringList supportedEncodings(bool usAscii);   //TODO(Andras) move to a utility class?
 
     static QByteArray autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text);
-    static QByteArray toUsAscii(const QString& _str, bool *ok);
+    static QByteArray toUsAscii(const QString &_str, bool *ok);
 
-    static QString fromAsString( KMime::Content* node );
+    static QString fromAsString(KMime::Content *node);
 
-    struct AttachmentDisplayInfo
-    {
-      QString label;
-      QString icon;
-      bool displayInHeader;
+    struct AttachmentDisplayInfo {
+        QString label;
+        QString icon;
+        bool displayInHeader;
     };
 
-    static AttachmentDisplayInfo attachmentDisplayInfo( KMime::Content *node );
+    static AttachmentDisplayInfo attachmentDisplayInfo(KMime::Content *node);
 
-    KMime::Content * decryptedNodeForContent( KMime::Content * content ) const;
+    KMime::Content *decryptedNodeForContent(KMime::Content *content) const;
 
     /**
      * This function returns the unencrypted message that is based on @p originalMessage.
@@ -270,12 +272,12 @@ public:
      * @return the unencrypted message or an invalid pointer if the original message didn't contain
      *         a part that needed to be modified.
      */
-    KMime::Message::Ptr unencryptedMessage( const KMime::Message::Ptr &originalMessage );
+    KMime::Message::Ptr unencryptedMessage(const KMime::Message::Ptr &originalMessage);
 
 private:
 
-    bool unencryptedMessage_helper( KMime::Content *node, QByteArray &resultingData, bool addHeaders,
-                                    int recursionLevel = 1 );
+    bool unencryptedMessage_helper(KMime::Content *node, QByteArray &resultingData, bool addHeaders,
+                                   int recursionLevel = 1);
 
     /** Check for prefixes @p prefixRegExps in #subject(). If none
         is found, @p newPrefix + ' ' is prepended to the subject and the
@@ -283,26 +285,26 @@ private:
         sequence of whitespace-delimited prefixes at the beginning of
         #subject() is replaced by @p newPrefix
     **/
-    static QString cleanSubject( KMime::Message *message, const QStringList& prefixRegExps,
-                                 bool replace, const QString& newPrefix );
+    static QString cleanSubject(KMime::Message *message, const QStringList &prefixRegExps,
+                                bool replace, const QString &newPrefix);
 
-    void mergeExtraNodes( KMime::Content *node );
-    void cleanFromExtraNodes( KMime::Content *node );
+    void mergeExtraNodes(KMime::Content *node);
+    void cleanFromExtraNodes(KMime::Content *node);
 
-    QString persistentIndex( const KMime::Content * node ) const;
+    QString persistentIndex(const KMime::Content *node) const;
 
 private:
-    QList<KMime::Content*> mProcessedNodes;
-    QList<KMime::Content*> mNodesUnderProcess;
+    QList<KMime::Content *> mProcessedNodes;
+    QList<KMime::Content *> mNodesUnderProcess;
     QMap<KMime::Content *, KMMsgEncryptionState> mEncryptionState;
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
     QSet<KMime::Content *> mDisplayEmbeddedNodes;
     QSet<KMime::Content *> mDisplayHiddenNodes;
     QTextCodec *mLocalCodec;
-    QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
-    QMap<QString, QMap<QByteArray, Interface::BodyPartMemento*> > mBodyPartMementoMap;
-    QMap<KMime::Content*, PartMetaData> mPartMetaDatas;
-    QMap<KMime::Message::Content*, QList<KMime::Content*> > mExtraContents;
+    QMap<KMime::Content *, const QTextCodec *> mOverrideCodecs;
+    QMap<QString, QMap<QByteArray, Interface::BodyPartMemento *> > mBodyPartMementoMap;
+    QMap<KMime::Content *, PartMetaData> mPartMetaDatas;
+    QMap<KMime::Message::Content *, QList<KMime::Content *> > mExtraContents;
     AttachmentTemporaryFilesDirs *mAttachmentFilesDir;
 };
 

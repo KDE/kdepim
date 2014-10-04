@@ -15,12 +15,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef MESSAGEHEADERFILTER_H
 #define MESSAGEHEADERFILTER_H
 
 #include <grantlee/filter.h>
-
 
 class MessageHeaderEmailShowLink : public Grantlee::Filter
 {
@@ -37,6 +35,5 @@ public:
 
     bool isSafe() const;
 };
-
 
 #endif // MESSAGEHEADERFILTER_H

@@ -25,7 +25,8 @@
 #include <QPointer>
 #include <QObject>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
  *  A QPointer which when destructed, deletes the object it points to.
@@ -35,26 +36,52 @@ namespace MessageViewer {
 template <class T>
 class AutoQPointer
 {
-  Q_DISABLE_COPY( AutoQPointer )
-  struct SafeBool { void func() {} };
-  typedef void (SafeBool::*save_bool)();
-  QPointer<QObject> o;
+    Q_DISABLE_COPY(AutoQPointer)
+    struct SafeBool {
+        void func() {}
+    };
+    typedef void (SafeBool::*save_bool)();
+    QPointer<QObject> o;
 public:
     AutoQPointer() : o() {}
-    explicit AutoQPointer( T * p ) : o(p) {}
-    ~AutoQPointer()  { delete o; }
-    T * data() const { return static_cast<T*>(o.data()); }
-    T * get()  const { return data(); }
-    bool isNull() const { return o.isNull(); }
-    T * operator->() const { return data(); }
-    T & operator*() const { return *data(); }
+    explicit AutoQPointer(T *p) : o(p) {}
+    ~AutoQPointer()
+    {
+        delete o;
+    }
+    T *data() const
+    {
+        return static_cast<T *>(o.data());
+    }
+    T *get()  const
+    {
+        return data();
+    }
+    bool isNull() const
+    {
+        return o.isNull();
+    }
+    T *operator->() const
+    {
+        return data();
+    }
+    T &operator*() const
+    {
+        return *data();
+    }
 #if 0 // enable when all users of operator T*() have been converted to use .get()
-    operator save_bool() const { return isNull() ? 0 : &SafeBool::func ; }
+    operator save_bool() const
+    {
+        return isNull() ? 0 : &SafeBool::func ;
+    }
 #else
     // unsafe - only provided to prevent the above warning in bool contexts
-    operator bool() const { return get(); }
+    operator bool() const
+    {
+        return get();
+    }
 #endif
-    
+
 };
 
 }

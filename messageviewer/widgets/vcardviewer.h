@@ -23,21 +23,24 @@
 #include <QDialog>
 #include <kabc/addressee.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class ContactViewer;
 }
 
-namespace KAddressBookGrantlee {
+namespace KAddressBookGrantlee
+{
 class GrantleeContactViewer;
 }
 class QPushButton;
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class VCardViewer : public QDialog
 {
     Q_OBJECT
 public:
-    explicit VCardViewer(QWidget *parent, const QByteArray& vCard);
+    explicit VCardViewer(QWidget *parent, const QByteArray &vCard);
     ~VCardViewer();
 
 private Q_SLOTS:

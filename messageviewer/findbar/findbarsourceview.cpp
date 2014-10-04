@@ -24,44 +24,44 @@
 
 using namespace MessageViewer;
 
-FindBarSourceView::FindBarSourceView( QPlainTextEdit * view, QWidget * parent )
-    : FindBarBase( parent ), mView( view )
-{  
+FindBarSourceView::FindBarSourceView(QPlainTextEdit *view, QWidget *parent)
+    : FindBarBase(parent), mView(view)
+{
 }
 
 FindBarSourceView::~FindBarSourceView()
 {
 }
 
-
-void FindBarSourceView::searchText( bool backward, bool isAutoSearch )
+void FindBarSourceView::searchText(bool backward, bool isAutoSearch)
 {
     QTextDocument::FindFlags searchOptions = 0;
-    if ( backward )
+    if (backward) {
         searchOptions |= QTextDocument::FindBackward;
-    if ( mCaseSensitiveAct->isChecked() )
+    }
+    if (mCaseSensitiveAct->isChecked()) {
         searchOptions |= QTextDocument::FindCaseSensitively;
+    }
 
-    if ( isAutoSearch ) {
+    if (isAutoSearch) {
         QTextCursor cursor = mView->textCursor();
-        cursor.setPosition( cursor.selectionStart() );
-        mView->setTextCursor( cursor );
-    } else if( !mLastSearchStr.contains( mSearch->text(), Qt::CaseSensitive )) {
+        cursor.setPosition(cursor.selectionStart());
+        mView->setTextCursor(cursor);
+    } else if (!mLastSearchStr.contains(mSearch->text(), Qt::CaseSensitive)) {
         clearSelections();
     }
     mLastSearchStr = mSearch->text();
-    const bool found = mView->find( mLastSearchStr, searchOptions );
+    const bool found = mView->find(mLastSearchStr, searchOptions);
 
-    setFoundMatch( found );
+    setFoundMatch(found);
 }
-
 
 void FindBarSourceView::clearSelections()
 {
     QTextCursor textCursor = mView->textCursor();
     textCursor.clearSelection();
-    textCursor.setPosition( 0 );
-    mView->setTextCursor( textCursor );
+    textCursor.setPosition(0);
+    mView->setTextCursor(textCursor);
 
     FindBarBase::clearSelections();
 }
@@ -74,11 +74,11 @@ void FindBarSourceView::updateHighLight(bool)
 void FindBarSourceView::updateSensitivity(bool)
 {
     QTextDocument::FindFlags searchOptions = 0;
-    if ( mCaseSensitiveAct->isChecked() )
+    if (mCaseSensitiveAct->isChecked()) {
         searchOptions |= QTextDocument::FindCaseSensitively;
+    }
     mLastSearchStr = mSearch->text();
-    const bool found = mView->find( mLastSearchStr, searchOptions );
-    setFoundMatch( found );
+    const bool found = mView->find(mLastSearchStr, searchOptions);
+    setFoundMatch(found);
 }
-
 

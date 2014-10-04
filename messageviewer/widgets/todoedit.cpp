@@ -37,8 +37,8 @@
 #include <KGuiItem>
 #include <KStandardGuiItem>
 
-
-namespace MessageViewer {
+namespace MessageViewer
+{
 MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_todoEditStubModel = 0;
 }
 
@@ -81,12 +81,12 @@ TodoEdit::TodoEdit(QWidget *parent)
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_todoEditStubModel);
     mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
-    mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
+    mCollectionCombobox->setMimeTypeFilter(QStringList() << KCalCore::Todo::todoMimeType());
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
 #ifndef QT_NO_ACCESSIBILITY
-    mCollectionCombobox->setAccessibleDescription( i18n("Todo list where the new task will be stored.") );
+    mCollectionCombobox->setAccessibleDescription(i18n("Todo list where the new task will be stored."));
 #endif
-    mCollectionCombobox->setToolTip( i18n("Todo list where the new task will be stored.") );
+    mCollectionCombobox->setToolTip(i18n("Todo list where the new task will be stored."));
     connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::currentIndexChanged), this, &TodoEdit::slotCollectionChanged);
     connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::activated), this, &TodoEdit::slotCollectionChanged);
     hbox->addWidget(mCollectionCombobox);
@@ -116,7 +116,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     hbox->addWidget(mOpenEditorButton);
 
     QPushButton *btn = new QPushButton;
-    KGuiItem::assign(btn,KStandardGuiItem::cancel());
+    KGuiItem::assign(btn, KStandardGuiItem::cancel());
     btn->setObjectName(QLatin1String("close-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new todos."));
@@ -124,9 +124,8 @@ TodoEdit::TodoEdit(QWidget *parent)
     connect(btn, &QPushButton::clicked, this, &TodoEdit::slotCloseWidget);
     hbox->addWidget(btn);
 
-
     readConfig();
-    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
     mCollectionCombobox->installEventFilter(this);
     installEventFilter(this);
 }
@@ -162,7 +161,7 @@ void TodoEdit::writeConfig()
 void TodoEdit::readConfig()
 {
     const qint64 id = MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder();
-    if (id!=-1) {
+    if (id != -1) {
         mCollectionCombobox->setDefaultCollection(Akonadi::Collection(id));
     }
 }
@@ -194,7 +193,7 @@ void TodoEdit::setMessage(const KMime::Message::Ptr &value)
 {
     if (mMessage != value) {
         mMessage = value;
-        const KMime::Headers::Subject * const subject = mMessage ? mMessage->subject(false) : 0;
+        const KMime::Headers::Subject *const subject = mMessage ? mMessage->subject(false) : 0;
         if (subject) {
             mNoteEdit->setText(i18n("Reply to \"%1\"", subject->asUnicodeString()));
             mNoteEdit->selectAll();
@@ -220,19 +219,19 @@ void TodoEdit::slotCloseWidget()
 void TodoEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        qDebug()<<" Message is null";
+        qDebug() << " Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        qDebug()<<" Collection is not valid";
+        qDebug() << " Collection is not valid";
         return;
     }
 
     if (!mNoteEdit->text().trimmed().isEmpty()) {
         mMsgWidget->setText(i18nc("%1 is summary of the todo, %2 is name of the folder in which it is stored",
                                   "New todo '%1' was added to task list '%2'", mNoteEdit->text(), collection.displayName()));
-        KCalCore::Todo::Ptr todo( new KCalCore::Todo );
+        KCalCore::Todo::Ptr todo(new KCalCore::Todo);
         todo->setSummary(mNoteEdit->text());
         mNoteEdit->clear();
 
@@ -250,17 +249,17 @@ bool TodoEdit::eventFilter(QObject *object, QEvent *e)
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
-        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+    if (shortCutOverride || e->type() == QEvent::KeyPress) {
+        QKeyEvent *kev = static_cast<QKeyEvent * >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->accept();
             slotCloseWidget();
             return true;
-        } else if ( kev->key() == Qt::Key_Enter ||
-                    kev->key() == Qt::Key_Return ||
-                    kev->key() == Qt::Key_Space) {
+        } else if (kev->key() == Qt::Key_Enter ||
+                   kev->key() == Qt::Key_Return ||
+                   kev->key() == Qt::Key_Space) {
             e->accept();
-            if ( shortCutOverride ) {
+            if (shortCutOverride) {
                 return true;
             }
             if (object == mCollectionCombobox) {
@@ -269,19 +268,19 @@ bool TodoEdit::eventFilter(QObject *object, QEvent *e)
             }
         }
     }
-    return QWidget::eventFilter(object,e);
+    return QWidget::eventFilter(object, e);
 }
 
 void TodoEdit::slotOpenEditor()
 {
-    const KMime::Headers::Subject * const subject = mMessage->subject(false);
+    const KMime::Headers::Subject *const subject = mMessage->subject(false);
     IncidenceEditorNG::IncidenceDialog *dlg = IncidenceEditorNG::IncidenceDialogFactory::createTodoEditor(
-        mNoteEdit->text(), QString(),
-        QStringList() << QString::fromLatin1(mMessage->encodedContent().toBase64()),
-        QStringList(),  // attendees
-        QStringList() << KMime::Message::mimeType(),
-        QStringList() << (subject ? subject->asUnicodeString() : QString()),
-        false, mCollection, false, this);
+                mNoteEdit->text(), QString(),
+                QStringList() << QString::fromLatin1(mMessage->encodedContent().toBase64()),
+                QStringList(),  // attendees
+                QStringList() << KMime::Message::mimeType(),
+                QStringList() << (subject ? subject->asUnicodeString() : QString()),
+                false, mCollection, false, this);
     connect(dlg, &IncidenceEditorNG::IncidenceDialog::finished, this, &TodoEdit::slotCloseWidget);
     dlg->open();
 }

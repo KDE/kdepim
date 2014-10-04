@@ -39,8 +39,8 @@
 #include <KGuiItem>
 #include <KStandardGuiItem>
 
-
-namespace MessageViewer {
+namespace MessageViewer
+{
 MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_eventEditStubModel = 0;
 }
 
@@ -75,12 +75,12 @@ EventEdit::EventEdit(QWidget *parent)
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_eventEditStubModel);
     mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
-    mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Event::eventMimeType() );
+    mCollectionCombobox->setMimeTypeFilter(QStringList() << KCalCore::Event::eventMimeType());
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
 #ifndef QT_NO_ACCESSIBILITY
-    mCollectionCombobox->setAccessibleDescription( i18n("Calendar where the new event will be stored.") );
+    mCollectionCombobox->setAccessibleDescription(i18n("Calendar where the new event will be stored."));
 #endif
-    mCollectionCombobox->setToolTip( i18n("Calendar where the new event will be stored.") );
+    mCollectionCombobox->setToolTip(i18n("Calendar where the new event will be stored."));
 
     connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::currentIndexChanged), this, &EventEdit::slotCollectionChanged);
     connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::activated), this, &EventEdit::slotCollectionChanged);
@@ -98,7 +98,7 @@ EventEdit::EventEdit(QWidget *parent)
     mStartDateTimeEdit->setObjectName(QLatin1String("startdatetimeedit"));
     //QT5 mStartDateTimeEdit->setDateTime(currentDateTime);
 #ifndef QT_NO_ACCESSIBILITY
-    mStartDateTimeEdit->setAccessibleDescription( i18n("Select start time for event.") );
+    mStartDateTimeEdit->setAccessibleDescription(i18n("Select start time for event."));
 #endif
     connect(mStartDateTimeEdit, SIGNAL(dateTimeChanged(QDateTime)),
             this, SLOT(slotStartDateTimeChanged(QDateTime)));
@@ -112,7 +112,7 @@ EventEdit::EventEdit(QWidget *parent)
     mEndDateTimeEdit->setObjectName(QLatin1String("enddatetimeedit"));
     //QT5 mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
 #ifndef QT_NO_ACCESSIBILITY
-    mEndDateTimeEdit->setAccessibleDescription( i18n("Select end time for event.") );
+    mEndDateTimeEdit->setAccessibleDescription(i18n("Select end time for event."));
 #endif
     hbox->addWidget(mEndDateTimeEdit);
 
@@ -144,7 +144,7 @@ EventEdit::EventEdit(QWidget *parent)
     hbox->addWidget(mOpenEditorButton);
 
     QPushButton *btn = new QPushButton;
-    KGuiItem::assign(btn,KStandardGuiItem::cancel());
+    KGuiItem::assign(btn, KStandardGuiItem::cancel());
     btn->setObjectName(QLatin1String("close-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new events."));
@@ -153,7 +153,7 @@ EventEdit::EventEdit(QWidget *parent)
     hbox->addWidget(btn);
 
     readConfig();
-    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
     installEventFilter(this);
     mCollectionCombobox->installEventFilter(this);
 }
@@ -221,7 +221,7 @@ void EventEdit::setMessage(const KMime::Message::Ptr &value)
 {
     if (mMessage != value) {
         mMessage = value;
-        const KMime::Headers::Subject * const subject = mMessage ? mMessage->subject(false) : 0;
+        const KMime::Headers::Subject *const subject = mMessage ? mMessage->subject(false) : 0;
         if (subject) {
             mEventEdit->setText(i18n("Reply to \"%1\"", subject->asUnicodeString()));
             mEventEdit->selectAll();
@@ -246,24 +246,24 @@ void EventEdit::slotCloseWidget()
 void EventEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        qDebug()<<" Message is null";
+        qDebug() << " Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        qDebug()<<" Collection is not valid";
+        qDebug() << " Collection is not valid";
         return;
     }
 
     const QDateTime dtstart = mStartDateTimeEdit->dateTime();
     const QDateTime dtend = mEndDateTimeEdit->dateTime();
     if (!dtstart.isValid() || !dtend.isValid()) {
-        qDebug()<<" date is not valid !";
+        qDebug() << " date is not valid !";
         return;
     }
 
     if (!mEventEdit->text().trimmed().isEmpty()) {
-        KCalCore::Event::Ptr event( new KCalCore::Event );
+        KCalCore::Event::Ptr event(new KCalCore::Event);
         event->setDtStart(KDateTime(dtstart));
         event->setDtEnd(KDateTime(dtend));
         event->setSummary(mEventEdit->text());
@@ -280,15 +280,15 @@ bool EventEdit::eventFilter(QObject *object, QEvent *e)
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if (shortCutOverride ) {
-        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+    if (shortCutOverride) {
+        QKeyEvent *kev = static_cast<QKeyEvent * >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->accept();
             slotCloseWidget();
             return true;
-        } else if ( kev->key() == Qt::Key_Enter ||
-                    kev->key() == Qt::Key_Return ||
-                    kev->key() == Qt::Key_Space) {
+        } else if (kev->key() == Qt::Key_Enter ||
+                   kev->key() == Qt::Key_Return ||
+                   kev->key() == Qt::Key_Space) {
             e->accept();
             if (object == mCollectionCombobox) {
                 mCollectionCombobox->showPopup();
@@ -296,13 +296,13 @@ bool EventEdit::eventFilter(QObject *object, QEvent *e)
             return true;
         }
     }
-    return QWidget::eventFilter(object,e);
+    return QWidget::eventFilter(object, e);
 }
 
 void EventEdit::slotStartDateTimeChanged(const QDateTime &newDateTime)
 {
     if (!newDateTime.isValid()) {
-      return;
+        return;
     }
 
     if (mEndDateTimeEdit->date() == newDateTime.date() && mEndDateTimeEdit->time() < newDateTime.time()) {
@@ -315,11 +315,10 @@ void EventEdit::slotStartDateTimeChanged(const QDateTime &newDateTime)
     mEndDateTimeEdit->setMinimumDateTime(newDateTime);
 }
 
-
 void EventEdit::slotOpenEditor()
 {
     KCalCore::Attachment::Ptr attachment(new KCalCore::Attachment(mMessage->encodedContent().toBase64(), KMime::Message::mimeType()));
-    const KMime::Headers::Subject * const subject = mMessage->subject(false);
+    const KMime::Headers::Subject *const subject = mMessage->subject(false);
     if (subject) {
         attachment->setLabel(subject->asUnicodeString());
     }

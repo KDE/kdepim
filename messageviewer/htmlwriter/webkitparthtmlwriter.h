@@ -40,26 +40,29 @@
 #include <QByteArray>
 #include <QMap>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MailWebView;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-class WebKitPartHtmlWriter : public QObject, public HtmlWriter {
+class WebKitPartHtmlWriter : public QObject, public HtmlWriter
+{
     Q_OBJECT
 public:
-    explicit WebKitPartHtmlWriter( MailWebView * view, QObject * parent=0 );
+    explicit WebKitPartHtmlWriter(MailWebView *view, QObject *parent = 0);
     ~WebKitPartHtmlWriter();
 
-    void begin( const QString & cssDefs );
+    void begin(const QString &cssDefs);
     void end();
     void reset();
-    void write( const QString & str );
-    void queue( const QString & str );
+    void write(const QString &str);
+    void queue(const QString &str);
     void flush();
-    void embedPart( const QByteArray & contentId, const QString & url );
-    void extraHead( const QString& str );
+    void embedPart(const QByteArray &contentId, const QString &url);
+    void extraHead(const QString &str);
 signals:
     void finished();
 
@@ -68,7 +71,7 @@ private:
     void insertExtraHead();
 
 private:
-    MailWebView * mHtmlView;
+    MailWebView *mHtmlView;
     QString mHtml;
     QString mExtraHead;
     enum State {

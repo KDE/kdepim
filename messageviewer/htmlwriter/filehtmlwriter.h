@@ -40,21 +40,23 @@
 
 class QString;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-class MESSAGEVIEWER_EXPORT FileHtmlWriter : public HtmlWriter {
+class MESSAGEVIEWER_EXPORT FileHtmlWriter : public HtmlWriter
+{
 public:
-    explicit FileHtmlWriter( const QString & filename );
+    explicit FileHtmlWriter(const QString &filename);
     virtual ~FileHtmlWriter();
 
-    void begin( const QString & cssDefs );
+    void begin(const QString &cssDefs);
     void end();
     void reset();
-    void write( const QString & str );
-    void queue( const QString & str );
+    void write(const QString &str);
+    void queue(const QString &str);
     void flush();
-    void embedPart( const QByteArray & contentId, const QString & url );
-    void extraHead( const QString& str );
+    void embedPart(const QByteArray &contentId, const QString &url);
+    void extraHead(const QString &str);
 private:
     void openOrWarn();
 

@@ -44,11 +44,11 @@ typedef KWebView SuperClass;
 using namespace boost;
 using namespace MessageViewer;
 
-static QString linkElementKey(const QWebElement& element)
+static QString linkElementKey(const QWebElement &element)
 {
     if (element.hasAttribute(QLatin1String("href"))) {
         const QUrl url = element.webFrame()->baseUrl().resolved(element.attribute(QLatin1String("href")));
-        QString linkKey (url.toString());
+        QString linkKey(url.toString());
         if (element.hasAttribute(QLatin1String("target"))) {
             linkKey += QLatin1Char('+');
             linkKey += element.attribute(QLatin1String("target"));
@@ -58,8 +58,7 @@ static QString linkElementKey(const QWebElement& element)
     return QString();
 }
 
-
-static bool isHiddenElement(const QWebElement& element)
+static bool isHiddenElement(const QWebElement &element)
 {
     // width property set to less than zero
     if (element.hasAttribute(QLatin1String("width")) && element.attribute(QLatin1String("width")).toInt() < 1) {
@@ -72,21 +71,21 @@ static bool isHiddenElement(const QWebElement& element)
     }
 
     // visibility set to 'hidden' in the element itself or its parent elements.
-    if (element.styleProperty(QLatin1String("visibility"),QWebElement::ComputedStyle).compare(QLatin1String("hidden"), Qt::CaseInsensitive) == 0) {
+    if (element.styleProperty(QLatin1String("visibility"), QWebElement::ComputedStyle).compare(QLatin1String("hidden"), Qt::CaseInsensitive) == 0) {
         return true;
     }
 
     // display set to 'none' in the element itself or its parent elements.
-    if (element.styleProperty(QLatin1String("display"),QWebElement::ComputedStyle).compare(QLatin1String("none"), Qt::CaseInsensitive) == 0) {
+    if (element.styleProperty(QLatin1String("display"), QWebElement::ComputedStyle).compare(QLatin1String("none"), Qt::CaseInsensitive) == 0) {
         return true;
     }
 
     return false;
 }
 
-static bool isEditableElement(QWebPage* page)
+static bool isEditableElement(QWebPage *page)
 {
-    const QWebFrame* frame = (page ? page->currentFrame() : 0);
+    const QWebFrame *frame = (page ? page->currentFrame() : 0);
     QWebElement element = (frame ? frame->findFirstElement(QLatin1String(":focus")) : QWebElement());
     if (!element.isNull()) {
         const QString tagName(element.tagName());
@@ -105,10 +104,10 @@ static bool isEditableElement(QWebPage* page)
     return false;
 }
 
-static void handleDuplicateLinkElements(const QWebElement& element, QHash<QString, QChar>* dupLinkList, QChar* accessKey)
+static void handleDuplicateLinkElements(const QWebElement &element, QHash<QString, QChar> *dupLinkList, QChar *accessKey)
 {
     if (element.tagName().compare(QLatin1String("A"), Qt::CaseInsensitive) == 0) {
-        const QString linkKey (linkElementKey(element));
+        const QString linkKey(linkElementKey(element));
         // qDebug() << "LINK KEY:" << linkKey;
         if (dupLinkList->contains(linkKey)) {
             // qDebug() << "***** Found duplicate link element:" << linkKey << endl;
@@ -116,24 +115,24 @@ static void handleDuplicateLinkElements(const QWebElement& element, QHash<QStrin
         } else if (!linkKey.isEmpty()) {
             dupLinkList->insert(linkKey, *accessKey);
         }
-        if (linkKey.isEmpty())
+        if (linkKey.isEmpty()) {
             *accessKey = QChar();
+        }
     }
 }
 
-
-MailWebView::MailWebView( KActionCollection *actionCollection, QWidget *parent )
-    : SuperClass( parent, false ),
+MailWebView::MailWebView(KActionCollection *actionCollection, QWidget *parent)
+    : SuperClass(parent, false),
       mScamDetection(new ScamDetection),
       mActionCollection(actionCollection)
 {
     setPage(new MessageViewer::WebPage(this));
-    page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
-    settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
-    settings()->setAttribute( QWebSettings::JavaEnabled, false );
-    settings()->setAttribute( QWebSettings::PluginsEnabled, false );
-    connect( page(), SIGNAL(linkHovered(QString,QString,QString)),
-             this,   SIGNAL(linkHovered(QString,QString,QString)) );
+    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
+    settings()->setAttribute(QWebSettings::JavaEnabled, false);
+    settings()->setAttribute(QWebSettings::PluginsEnabled, false);
+    connect(page(), SIGNAL(linkHovered(QString,QString,QString)),
+            this,   SIGNAL(linkHovered(QString,QString,QString)));
     connect(this, SIGNAL(loadStarted()), this, SLOT(hideAccessKeys()));
     connect(mScamDetection, SIGNAL(messageMayBeAScam()), this, SIGNAL(messageMayBeAScam()));
     connect(page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(hideAccessKeys()));
@@ -144,177 +143,183 @@ MailWebView::~MailWebView()
     delete mScamDetection;
 }
 
-bool MailWebView::event( QEvent *event )
+bool MailWebView::event(QEvent *event)
 {
-    if ( event->type() == QEvent::ContextMenu ) {
+    if (event->type() == QEvent::ContextMenu) {
         // Don't call SuperClass::event() here, it will do silly things like selecting the text
         // under the mouse cursor, which we don't want.
 
-        QContextMenuEvent const *contextMenuEvent = static_cast<QContextMenuEvent*>( event );
-        const QWebFrame * const frame = page()->currentFrame();
-        const QWebHitTestResult hit = frame->hitTestContent( contextMenuEvent->pos() );
+        QContextMenuEvent const *contextMenuEvent = static_cast<QContextMenuEvent *>(event);
+        const QWebFrame *const frame = page()->currentFrame();
+        const QWebHitTestResult hit = frame->hitTestContent(contextMenuEvent->pos());
         qDebug() << "Right-clicked URL:" << hit.linkUrl();
 
-        emit popupMenu( hit.linkUrl(), ((hit.pixmap().isNull()) ? QUrl() : hit.imageUrl()), mapToGlobal( contextMenuEvent->pos() ) );
+        emit popupMenu(hit.linkUrl(), ((hit.pixmap().isNull()) ? QUrl() : hit.imageUrl()), mapToGlobal(contextMenuEvent->pos()));
         event->accept();
         return true;
     }
-    return SuperClass::event( event );
+    return SuperClass::event(event);
 }
 
-void MailWebView::scrollDown( int pixels )
+void MailWebView::scrollDown(int pixels)
 {
     QPoint point = page()->mainFrame()->scrollPosition();
     point.ry() += pixels;
-    page()->mainFrame()->setScrollPosition( point );
+    page()->mainFrame()->setScrollPosition(point);
 }
 
-void MailWebView::scrollUp( int pixels )
+void MailWebView::scrollUp(int pixels)
 {
-    scrollDown( -pixels );
+    scrollDown(-pixels);
 }
 
 bool MailWebView::isScrolledToBottom() const
 {
-    const int pos = page()->mainFrame()->scrollBarValue( Qt::Vertical );
-    const int max = page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
+    const int pos = page()->mainFrame()->scrollBarValue(Qt::Vertical);
+    const int max = page()->mainFrame()->scrollBarMaximum(Qt::Vertical);
     return pos == max;
 }
 
-void MailWebView::scrollPageDown( int percent )
+void MailWebView::scrollPageDown(int percent)
 {
     const qint64 height =  page()->viewportSize().height();
-    const qint64 current = page()->mainFrame()->scrollBarValue( Qt::Vertical );
+    const qint64 current = page()->mainFrame()->scrollBarValue(Qt::Vertical);
     // do arithmetic in higher precision, and check for overflow:
     const qint64 newPosition = current + height * percent / 100;
-    if ( newPosition > std::numeric_limits<int>::max() )
+    if (newPosition > std::numeric_limits<int>::max()) {
         qWarning() << "new position" << newPosition << "exceeds range of 'int'!";
-    page()->mainFrame()->setScrollBarValue( Qt::Vertical, newPosition );
+    }
+    page()->mainFrame()->setScrollBarValue(Qt::Vertical, newPosition);
 }
 
-void MailWebView::scrollPageUp( int percent )
+void MailWebView::scrollPageUp(int percent)
 {
-    scrollPageDown( -percent );
+    scrollPageDown(-percent);
 }
 
 QString MailWebView::selectedText() const
 {
     //TODO HTML selection
     /* settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
-  QString textSelected = page()->currentFrame()->evaluateJavaScript(
+    QString textSelected = page()->currentFrame()->evaluateJavaScript(
     "var span = document.createElement( 'SPAN' ); span.appendChild( window.getSelection().getRangeAt(0).cloneContents() );
-  ).toString();
-  settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+    ).toString();
+    settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
 
-  return textSelected;
-*/
+    return textSelected;
+    */
     return SuperClass::selectedText();
 }
 
 bool MailWebView::hasVerticalScrollBar() const
 {
-    return page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
+    return page()->mainFrame()->scrollBarGeometry(Qt::Vertical).isValid();
 }
 
 double MailWebView::relativePosition() const
 {
-    if ( hasVerticalScrollBar() ) {
-        const double pos = page()->mainFrame()->scrollBarValue( Qt::Vertical );
-        const int height = page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
+    if (hasVerticalScrollBar()) {
+        const double pos = page()->mainFrame()->scrollBarValue(Qt::Vertical);
+        const int height = page()->mainFrame()->scrollBarMaximum(Qt::Vertical);
         return height ? pos / height : 0.0 ;
     } else {
         return 0.0;
     }
 }
 
-void MailWebView::scrollToRelativePosition( double pos )
+void MailWebView::scrollToRelativePosition(double pos)
 {
     // FIXME: This doesn't work, Qt resets the scrollbar value somewhere in the event handler.
     //        Using a singleshot timer wouldn't work either, since that introduces visible scrolling.
-    const int max = page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
-    page()->currentFrame()->setScrollBarValue( Qt::Vertical, max * pos );
+    const int max = page()->mainFrame()->scrollBarMaximum(Qt::Vertical);
+    page()->currentFrame()->setScrollBarValue(Qt::Vertical, max * pos);
 }
 
 void MailWebView::selectAll()
 {
-    page()->triggerAction( QWebPage::SelectAll );
+    page()->triggerAction(QWebPage::SelectAll);
 }
 
 void MailWebView::clearSelection()
 {
     //This is an ugly hack to remove the selection, I found no other way to do it with QWebView
-    QMouseEvent event(QEvent::MouseButtonPress, QPoint( 10, 10 ), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
-    QCoreApplication::sendEvent( page(), &event );
-    QMouseEvent event2(QEvent::MouseButtonRelease, QPoint( 10, 10 ), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
-    QCoreApplication::sendEvent( page(), &event2 );
+    QMouseEvent event(QEvent::MouseButtonPress, QPoint(10, 10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QCoreApplication::sendEvent(page(), &event);
+    QMouseEvent event2(QEvent::MouseButtonRelease, QPoint(10, 10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QCoreApplication::sendEvent(page(), &event2);
 }
 
 // Checks if the given node has a child node that is a DIV which has an ID attribute
 // with the value specified here
-static bool has_parent_div_with_id( const QWebElement & start, const QString & id )
+static bool has_parent_div_with_id(const QWebElement &start, const QString &id)
 {
-    if ( start.isNull() )
+    if (start.isNull()) {
         return false;
-
-    if ( start.tagName().toLower() == QLatin1String("div") ) {
-        if ( start.attribute( QLatin1String("id"), QString() ) == id )
-            return true;
     }
 
-    return has_parent_div_with_id( start.parent(), id );
+    if (start.tagName().toLower() == QLatin1String("div")) {
+        if (start.attribute(QLatin1String("id"), QString()) == id) {
+            return true;
+        }
+    }
+
+    return has_parent_div_with_id(start.parent(), id);
 }
 
-bool MailWebView::isAttachmentInjectionPoint( const QPoint & global ) const
+bool MailWebView::isAttachmentInjectionPoint(const QPoint &global) const
 {
     // for QTextBrowser, can be implemented as 'return false'
-    const QPoint local = page()->view()->mapFromGlobal( global );
-    const QWebHitTestResult hit = page()->currentFrame()->hitTestContent( local );
-    return has_parent_div_with_id( hit.enclosingBlockElement(), QLatin1String("attachmentInjectionPoint") );
+    const QPoint local = page()->view()->mapFromGlobal(global);
+    const QWebHitTestResult hit = page()->currentFrame()->hitTestContent(local);
+    return has_parent_div_with_id(hit.enclosingBlockElement(), QLatin1String("attachmentInjectionPoint"));
 }
 
-void MailWebView::injectAttachments( const function<QString()> & delayedHtml )
+void MailWebView::injectAttachments(const function<QString()> &delayedHtml)
 {
     // for QTextBrowser, can be implemented empty
     QWebElement doc = page()->currentFrame()->documentElement();
-    QWebElement injectionPoint = doc.findFirst( QLatin1String("*#attachmentInjectionPoint") );
-    if( injectionPoint.isNull() )
+    QWebElement injectionPoint = doc.findFirst(QLatin1String("*#attachmentInjectionPoint"));
+    if (injectionPoint.isNull()) {
         return;
+    }
 
     const QString html = delayedHtml();
-    if ( html.isEmpty() )
+    if (html.isEmpty()) {
         return;
+    }
 
-    assert( injectionPoint.tagName().toLower() == QLatin1String("div") );
-    injectionPoint.setInnerXml( html );
+    assert(injectionPoint.tagName().toLower() == QLatin1String("div"));
+    injectionPoint.setInnerXml(html);
 }
 
-void MailWebView::scrollToAnchor( const QString & anchor )
+void MailWebView::scrollToAnchor(const QString &anchor)
 {
     page()->mainFrame()->scrollToAnchor(anchor);
 }
 
-bool MailWebView::removeAttachmentMarking( const QString & id )
+bool MailWebView::removeAttachmentMarking(const QString &id)
 {
     QWebElement doc = page()->mainFrame()->documentElement();
-    QWebElement attachmentDiv = doc.findFirst( QLatin1String("*#") + id );
-    if ( attachmentDiv.isNull() )
+    QWebElement attachmentDiv = doc.findFirst(QLatin1String("*#") + id);
+    if (attachmentDiv.isNull()) {
         return false;
-    attachmentDiv.removeAttribute( QLatin1String("style") );
+    }
+    attachmentDiv.removeAttribute(QLatin1String("style"));
     return true;
 }
 
-void MailWebView::markAttachment( const QString & id, const QString & style )
+void MailWebView::markAttachment(const QString &id, const QString &style)
 {
     QWebElement doc = page()->mainFrame()->documentElement();
-    QWebElement attachmentDiv = doc.findFirst( QLatin1String("*#") + id );
-    if ( !attachmentDiv.isNull() ) {
-        attachmentDiv.setAttribute(QLatin1String( "style"), style );
+    QWebElement attachmentDiv = doc.findFirst(QLatin1String("*#") + id);
+    if (!attachmentDiv.isNull()) {
+        attachmentDiv.setAttribute(QLatin1String("style"), style);
     }
 }
 
-void MailWebView::setHtml( const QString & html, const QUrl & base )
+void MailWebView::setHtml(const QString &html, const QUrl &base)
 {
-    SuperClass::setHtml( html, base );
+    SuperClass::setHtml(html, base);
 }
 
 QString MailWebView::htmlSource() const
@@ -322,86 +327,89 @@ QString MailWebView::htmlSource() const
     return page()->mainFrame()->documentElement().toOuterXml();
 }
 
-void MailWebView::setAllowExternalContent( bool allow )
+void MailWebView::setAllowExternalContent(bool allow)
 {
-    SuperClass::setAllowExternalContent( allow );
+    SuperClass::setAllowExternalContent(allow);
 }
 
-QUrl MailWebView::linkOrImageUrlAt( const QPoint & global ) const
+QUrl MailWebView::linkOrImageUrlAt(const QPoint &global) const
 {
-    const QPoint local = page()->view()->mapFromGlobal( global );
-    const QWebHitTestResult hit = page()->currentFrame()->hitTestContent( local );
-    if ( !hit.linkUrl().isEmpty() )
+    const QPoint local = page()->view()->mapFromGlobal(global);
+    const QWebHitTestResult hit = page()->currentFrame()->hitTestContent(local);
+    if (!hit.linkUrl().isEmpty()) {
         return hit.linkUrl();
-    else if ( !hit.imageUrl().isEmpty() )
+    } else if (!hit.imageUrl().isEmpty()) {
         return hit.imageUrl();
-    else
+    } else {
         return QUrl();
+    }
 }
 
-
-void MailWebView::setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy )
+void MailWebView::setScrollBarPolicy(Qt::Orientation orientation, Qt::ScrollBarPolicy policy)
 {
-    page()->mainFrame()->setScrollBarPolicy( orientation, policy );
+    page()->mainFrame()->setScrollBarPolicy(orientation, policy);
 }
 
-Qt::ScrollBarPolicy MailWebView::scrollBarPolicy( Qt::Orientation orientation ) const
+Qt::ScrollBarPolicy MailWebView::scrollBarPolicy(Qt::Orientation orientation) const
 {
-    return page()->mainFrame()->scrollBarPolicy( orientation );
+    return page()->mainFrame()->scrollBarPolicy(orientation);
 }
 
-
-bool MailWebView::replaceInnerHtml( const QString & id, const function<QString()> & delayedHtml )
+bool MailWebView::replaceInnerHtml(const QString &id, const function<QString()> &delayedHtml)
 {
     QWebElement doc = page()->currentFrame()->documentElement();
-    QWebElement tag = doc.findFirst( QLatin1String("*#") + id );
-    if ( tag.isNull() ) {
+    QWebElement tag = doc.findFirst(QLatin1String("*#") + id);
+    if (tag.isNull()) {
         return false;
     }
-    tag.setInnerXml( delayedHtml() );
+    tag.setInnerXml(delayedHtml());
     return true;
 }
 
-void MailWebView::setElementByIdVisible( const QString & id, bool visible )
+void MailWebView::setElementByIdVisible(const QString &id, bool visible)
 {
     QWebElement doc = page()->currentFrame()->documentElement();
-    QWebElement e = doc.findFirst( QLatin1String("*#") + id );
-    Q_ASSERT( !e.isNull() );
+    QWebElement e = doc.findFirst(QLatin1String("*#") + id);
+    Q_ASSERT(!e.isNull());
 
-    if ( visible ) {
-        e.removeAttribute( QLatin1String("display") );
+    if (visible) {
+        e.removeAttribute(QLatin1String("display"));
     } else {
-        e.setStyleProperty( QLatin1String("display"), QLatin1String("none") );
+        e.setStyleProperty(QLatin1String("display"), QLatin1String("none"));
     }
 }
 
-static QWebPage::FindFlags convert_flags( MailWebView::FindFlags f )
+static QWebPage::FindFlags convert_flags(MailWebView::FindFlags f)
 {
     QWebPage::FindFlags result;
-    if ( f & MailWebView::FindWrapsAroundDocument )
+    if (f & MailWebView::FindWrapsAroundDocument) {
         result |= QWebPage::FindWrapsAroundDocument;
-    if ( f & MailWebView::FindBackward )
+    }
+    if (f & MailWebView::FindBackward) {
         result |= QWebPage::FindBackward;
-    if ( f & MailWebView::FindCaseSensitively )
+    }
+    if (f & MailWebView::FindCaseSensitively) {
         result |= QWebPage::FindCaseSensitively;
-    if ( f & MailWebView::HighlightAllOccurrences )
+    }
+    if (f & MailWebView::HighlightAllOccurrences) {
         result |= QWebPage::HighlightAllOccurrences;
+    }
     return result;
 }
 
-bool MailWebView::findText( const QString & text, FindFlags flags )
+bool MailWebView::findText(const QString &text, FindFlags flags)
 {
-    return SuperClass::findText( text, convert_flags( flags ) );
+    return SuperClass::findText(text, convert_flags(flags));
 }
 
 void MailWebView::clearFindSelection()
 {
     //WEBKIT: TODO: Find a way to unselect last selection
     // http://bugreports.qt.nokia.com/browse/QTWEBKIT-80
-    SuperClass::findText( QString(), QWebPage::HighlightAllOccurrences );
+    SuperClass::findText(QString(), QWebPage::HighlightAllOccurrences);
 }
 
-void MailWebView::keyReleaseEvent(QKeyEvent*e)
+void MailWebView::keyReleaseEvent(QKeyEvent *e)
 {
     if (GlobalSettings::self()->accessKeyEnabled() && mAccessKeyActivated == PreActivated) {
         // Activate only when the CTRL key is pressed and released by itself.
@@ -415,7 +423,7 @@ void MailWebView::keyReleaseEvent(QKeyEvent*e)
     SuperClass::keyReleaseEvent(e);
 }
 
-void MailWebView::keyPressEvent(QKeyEvent*e)
+void MailWebView::keyPressEvent(QKeyEvent *e)
 {
     if (e && hasFocus()) {
         if (GlobalSettings::self()->accessKeyEnabled()) {
@@ -434,7 +442,7 @@ void MailWebView::keyPressEvent(QKeyEvent*e)
     SuperClass::keyPressEvent(e);
 }
 
-void MailWebView::wheelEvent(QWheelEvent* e)
+void MailWebView::wheelEvent(QWheelEvent *e)
 {
     if (GlobalSettings::self()->accessKeyEnabled() && mAccessKeyActivated == PreActivated && (e->modifiers() & Qt::ControlModifier)) {
         mAccessKeyActivated = NotActivated;
@@ -444,11 +452,13 @@ void MailWebView::wheelEvent(QWheelEvent* e)
 
 bool MailWebView::checkForAccessKey(QKeyEvent *event)
 {
-    if (mAccessKeyLabels.isEmpty())
+    if (mAccessKeyLabels.isEmpty()) {
         return false;
+    }
     QString text = event->text();
-    if (text.isEmpty())
+    if (text.isEmpty()) {
         return false;
+    }
     QChar key = text.at(0).toUpper();
     bool handled = false;
     if (mAccessKeyNodes.contains(key)) {
@@ -485,7 +495,6 @@ void MailWebView::hideAccessKeys()
     }
 }
 
-
 void MailWebView::showAccessKeys()
 {
     QList<QChar> unusedKeys;
@@ -496,14 +505,14 @@ void MailWebView::showAccessKeys()
         unusedKeys << QLatin1Char(c);
     }
     if (mActionCollection) {
-        Q_FOREACH(QAction*act, mActionCollection->actions()) {
-            QAction *a = qobject_cast<QAction*>(act);
-            if(a) {
+        Q_FOREACH (QAction *act, mActionCollection->actions()) {
+            QAction *a = qobject_cast<QAction *>(act);
+            if (a) {
 #if 0 //QT5
                 const KShortcut shortCut = a->shortcut();
-                if(!shortCut.isEmpty()) {
-                    Q_FOREACH(const QChar& c, unusedKeys) {
-                        if(shortCut.conflictsWith(QKeySequence(c))) {
+                if (!shortCut.isEmpty()) {
+                    Q_FOREACH (const QChar &c, unusedKeys) {
+                        if (shortCut.conflictsWith(QKeySequence(c))) {
                             unusedKeys.removeOne(c);
                         }
                     }
@@ -515,18 +524,18 @@ void MailWebView::showAccessKeys()
 
     QList<QWebElement> unLabeledElements;
     QRect viewport = QRect(page()->mainFrame()->scrollPosition(), page()->viewportSize());
-    const QString selectorQuery (QLatin1String("a[href],"
-                                               "area,"
-                                               "button:not([disabled]),"
-                                               "input:not([disabled]):not([hidden]),"
-                                               "label[for],"
-                                               "legend,"
-                                               "select:not([disabled]),"
-                                               "textarea:not([disabled])"));
+    const QString selectorQuery(QLatin1String("a[href],"
+                                "area,"
+                                "button:not([disabled]),"
+                                "input:not([disabled]):not([hidden]),"
+                                "label[for],"
+                                "legend,"
+                                "select:not([disabled]),"
+                                "textarea:not([disabled])"));
     QList<QWebElement> result = page()->mainFrame()->findAllElements(selectorQuery).toList();
 
     // Priority first goes to elements with accesskey attributes
-    Q_FOREACH (const QWebElement& element, result) {
+    Q_FOREACH (const QWebElement &element, result) {
         const QRect geometry = element.geometry();
         if (geometry.size().isEmpty() || !viewport.contains(geometry.topLeft())) {
             continue;
@@ -534,13 +543,13 @@ void MailWebView::showAccessKeys()
         if (isHiddenElement(element)) {
             continue;    // Do not show access key for hidden elements...
         }
-        const QString accessKeyAttribute (element.attribute(QLatin1String("accesskey")).toUpper());
+        const QString accessKeyAttribute(element.attribute(QLatin1String("accesskey")).toUpper());
         if (accessKeyAttribute.isEmpty()) {
             unLabeledElements.append(element);
             continue;
         }
         QChar accessKey;
-        for (int i = 0; i < accessKeyAttribute.count(); i+=2) {
+        for (int i = 0; i < accessKeyAttribute.count(); i += 2) {
             const QChar &possibleAccessKey = accessKeyAttribute[i];
             if (unusedKeys.contains(possibleAccessKey)) {
                 accessKey = possibleAccessKey;
@@ -559,15 +568,15 @@ void MailWebView::showAccessKeys()
         }
     }
 
-
     // Pick an access key first from the letters in the text and then from the
     // list of unused access keys
     Q_FOREACH (const QWebElement &element, unLabeledElements) {
         const QRect geometry = element.geometry();
         if (unusedKeys.isEmpty()
                 || geometry.size().isEmpty()
-                || !viewport.contains(geometry.topLeft()))
+                || !viewport.contains(geometry.topLeft())) {
             continue;
+        }
         QChar accessKey;
         const QString text = element.toPlainText().toUpper();
         for (int i = 0; i < text.count(); ++i) {
@@ -577,8 +586,9 @@ void MailWebView::showAccessKeys()
                 break;
             }
         }
-        if (accessKey.isNull())
+        if (accessKey.isNull()) {
             accessKey = unusedKeys.takeFirst();
+        }
 
         handleDuplicateLinkElements(element, &mDuplicateLinkElements, &accessKey);
         if (!accessKey.isNull()) {
@@ -593,7 +603,7 @@ void MailWebView::showAccessKeys()
 void MailWebView::makeAccessKeyLabel(const QChar &accessKey, const QWebElement &element)
 {
     QLabel *label = new QLabel(this);
-    QFont font (label->font());
+    QFont font(label->font());
     font.setBold(true);
     label->setFont(font);
     label->setText(accessKey);

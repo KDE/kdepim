@@ -21,12 +21,13 @@
 #include <KMessageWidget>
 #include <KUrl>
 class QTimer;
-namespace MessageViewer {
+namespace MessageViewer
+{
 class OpenAttachmentFolderWidget : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit OpenAttachmentFolderWidget(QWidget *parent=0);
+    explicit OpenAttachmentFolderWidget(QWidget *parent = 0);
     ~OpenAttachmentFolderWidget();
 
     void setFolder(const KUrl &url);

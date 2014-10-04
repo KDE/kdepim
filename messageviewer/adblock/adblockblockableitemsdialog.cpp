@@ -22,7 +22,6 @@
 #include <KTreeWidgetSearchLine>
 #include <QMenu>
 
-
 #include <QVBoxLayout>
 #include <QTreeWidget>
 #include <QWebFrame>
@@ -35,8 +34,8 @@ using namespace MessageViewer;
 AdBlockBlockableItemsDialog::AdBlockBlockableItemsDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle( i18n("Blockable Items") );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    setWindowTitle(i18n("Blockable Items"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -71,17 +70,16 @@ void AdBlockBlockableItemsDialog::saveFilters()
 
 void AdBlockBlockableItemsDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockBlockableItemsDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "AdBlockBlockableItemsDialog");
+    group.writeEntry("Size", size());
 }
 
 void AdBlockBlockableItemsDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockBlockableItemsDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(500,300) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "AdBlockBlockableItemsDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(500, 300));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
-
 

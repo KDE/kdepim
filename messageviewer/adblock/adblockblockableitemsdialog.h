@@ -20,13 +20,14 @@
 
 #include <QDialog>
 class QWebFrame;
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockBlockableItemsWidget;
 class AdBlockBlockableItemsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AdBlockBlockableItemsDialog(QWidget *parent=0);
+    explicit AdBlockBlockableItemsDialog(QWidget *parent = 0);
     ~AdBlockBlockableItemsDialog();
 
     void setWebFrame(QWebFrame *frame);

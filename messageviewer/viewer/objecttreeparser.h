@@ -47,17 +47,19 @@
 
 class QString;
 
-namespace KMime {
+namespace KMime
+{
 class Content;
 }
 
-namespace GpgME {
+namespace GpgME
+{
 class Error;
 class ImportResult;
 }
 
-
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class PartMetaData;
 class ViewerPrivate;
@@ -66,50 +68,63 @@ class CSSHelper;
 class AttachmentStrategy;
 class NodeHelper;
 
-class ProcessResult {
+class ProcessResult
+{
 public:
-    explicit ProcessResult( NodeHelper *nodeHelper, KMMsgSignatureState  inlineSignatureState  = KMMsgNotSigned,
-                            KMMsgEncryptionState inlineEncryptionState = KMMsgNotEncrypted,
-                            bool neverDisplayInline = false,
-                            bool isImage = false )
-        : mInlineSignatureState( inlineSignatureState ),
-          mInlineEncryptionState( inlineEncryptionState ),
-          mNeverDisplayInline( neverDisplayInline ),
-          mIsImage( isImage ),
-          mNodeHelper( nodeHelper ) {}
+    explicit ProcessResult(NodeHelper *nodeHelper, KMMsgSignatureState  inlineSignatureState  = KMMsgNotSigned,
+                           KMMsgEncryptionState inlineEncryptionState = KMMsgNotEncrypted,
+                           bool neverDisplayInline = false,
+                           bool isImage = false)
+        : mInlineSignatureState(inlineSignatureState),
+          mInlineEncryptionState(inlineEncryptionState),
+          mNeverDisplayInline(neverDisplayInline),
+          mIsImage(isImage),
+          mNodeHelper(nodeHelper) {}
 
-    KMMsgSignatureState inlineSignatureState() const {
+    KMMsgSignatureState inlineSignatureState() const
+    {
         return mInlineSignatureState;
     }
-    void setInlineSignatureState( KMMsgSignatureState state ) {
+    void setInlineSignatureState(KMMsgSignatureState state)
+    {
         mInlineSignatureState = state;
     }
 
-    KMMsgEncryptionState inlineEncryptionState() const {
+    KMMsgEncryptionState inlineEncryptionState() const
+    {
         return mInlineEncryptionState;
     }
-    void setInlineEncryptionState( KMMsgEncryptionState state ) {
+    void setInlineEncryptionState(KMMsgEncryptionState state)
+    {
         mInlineEncryptionState = state;
     }
 
-    bool neverDisplayInline() const { return mNeverDisplayInline; }
-    void setNeverDisplayInline( bool display ) {
+    bool neverDisplayInline() const
+    {
+        return mNeverDisplayInline;
+    }
+    void setNeverDisplayInline(bool display)
+    {
         mNeverDisplayInline = display;
     }
 
-    bool isImage() const { return mIsImage; }
-    void setIsImage( bool image ) {
+    bool isImage() const
+    {
+        return mIsImage;
+    }
+    void setIsImage(bool image)
+    {
         mIsImage = image;
     }
 
-    void adjustCryptoStatesOfNode( KMime::Content * node ) const;
+    void adjustCryptoStatesOfNode(KMime::Content *node) const;
 
 private:
     KMMsgSignatureState mInlineSignatureState;
     KMMsgEncryptionState mInlineEncryptionState;
     bool mNeverDisplayInline : 1;
     bool mIsImage : 1;
-    NodeHelper* mNodeHelper;
+    NodeHelper *mNodeHelper;
 };
 
 /**
@@ -284,151 +299,207 @@ is used to mark an attachment in the body with a yellow border when the user cli
 in the header. Finally, parseObjectTree() creates an anchor with the id 'att%1', which is used in
 the Viewer to scroll to the attachment.
 */
-class MESSAGEVIEWER_EXPORT ObjectTreeParser {
+class MESSAGEVIEWER_EXPORT ObjectTreeParser
+{
     class CryptoProtocolSaver;
     /**
-   * @internal
-   * Copies the context of @p other, but not it's rawDecryptedBody, plainTextContent or htmlContent.
-   */
-    ObjectTreeParser( const ObjectTreeParser & other );
+    * @internal
+    * Copies the context of @p other, but not it's rawDecryptedBody, plainTextContent or htmlContent.
+    */
+    ObjectTreeParser(const ObjectTreeParser &other);
 
 public:
-    explicit ObjectTreeParser( ObjectTreeSourceIf * source,
-                               NodeHelper *nodeHelper = 0,
-                               const Kleo::CryptoBackend::Protocol * protocol=0,
-                               bool showOneMimePart=false, bool keepEncryptions=false,
-                               bool includeSignatures=true,
-                               const AttachmentStrategy * attachmentStrategy=0 );
+    explicit ObjectTreeParser(ObjectTreeSourceIf *source,
+                              NodeHelper *nodeHelper = 0,
+                              const Kleo::CryptoBackend::Protocol *protocol = 0,
+                              bool showOneMimePart = false, bool keepEncryptions = false,
+                              bool includeSignatures = true,
+                              const AttachmentStrategy *attachmentStrategy = 0);
 
-    explicit ObjectTreeParser( const ObjectTreeParser *topLevelParser,
-                               bool showOneMimePart=false, bool keepEncryptions=false,
-                               bool includeSignatures=true,
-                               const AttachmentStrategy * attachmentStrategy=0 );
+    explicit ObjectTreeParser(const ObjectTreeParser *topLevelParser,
+                              bool showOneMimePart = false, bool keepEncryptions = false,
+                              bool includeSignatures = true,
+                              const AttachmentStrategy *attachmentStrategy = 0);
     virtual ~ObjectTreeParser();
 
-    void setAllowAsync( bool allow ) { assert( !mHasPendingAsyncJobs ); mAllowAsync = allow; }
-    bool allowAsync() const { return mAllowAsync; }
+    void setAllowAsync(bool allow)
+    {
+        assert(!mHasPendingAsyncJobs);
+        mAllowAsync = allow;
+    }
+    bool allowAsync() const
+    {
+        return mAllowAsync;
+    }
 
-    bool hasPendingAsyncJobs() const { return mHasPendingAsyncJobs; }
-
-    /**
-   * The origin and purpose of this function is unknown, the ancient wisdom about it got lost during
-   * the centuries.
-   *
-   * Historicans believe that the intent of the function is to return the raw body of the mail,
-   * i.e. no charset decoding has been done yet. Sometimes CTE decoding has been done, sometimes
-   * not. For encrypted parts, this returns the content of the decrypted part. For a mail with
-   * multiple MIME parts, the results are conecated together. Not all parts are included in this.
-   *
-   * Although conecating multiple undecoded body parts with potentially different CTEs together might
-   * not seem to make any sense in these modern times, it is assumed that initially this function
-   * performed quite well, but the ancient scrolls got damaged with the ravages of time
-   * and were re-written multiple times.
-   *
-   * Do not use. Use plainTextContent() and htmlContent() instead.
-   */
-    MESSAGEVIEWER_DEPRECATED_EXPORT QByteArray rawDecryptedBody() const { return mRawDecryptedBody; }
+    bool hasPendingAsyncJobs() const
+    {
+        return mHasPendingAsyncJobs;
+    }
 
     /**
-   * The text of the message, ie. what would appear in the
-   * composer's text editor if this was edited or replied to.
-   * This is usually the content of the first text/plain MIME part.
-   */
-    QString plainTextContent() const { return mPlainTextContent; }
+    * The origin and purpose of this function is unknown, the ancient wisdom about it got lost during
+    * the centuries.
+    *
+    * Historicans believe that the intent of the function is to return the raw body of the mail,
+    * i.e. no charset decoding has been done yet. Sometimes CTE decoding has been done, sometimes
+    * not. For encrypted parts, this returns the content of the decrypted part. For a mail with
+    * multiple MIME parts, the results are conecated together. Not all parts are included in this.
+    *
+    * Although conecating multiple undecoded body parts with potentially different CTEs together might
+    * not seem to make any sense in these modern times, it is assumed that initially this function
+    * performed quite well, but the ancient scrolls got damaged with the ravages of time
+    * and were re-written multiple times.
+    *
+    * Do not use. Use plainTextContent() and htmlContent() instead.
+    */
+    MESSAGEVIEWER_DEPRECATED_EXPORT QByteArray rawDecryptedBody() const
+    {
+        return mRawDecryptedBody;
+    }
 
     /**
-   * Similar to plainTextContent(), but returns the HTML source of the first text/html MIME part.
-   *
-   * Not to be consfused with the HTML code that the message viewer widget displays, that HTML
-   * is written out by htmlWriter() and a totally different pair of shoes.
-   */
-    QString htmlContent() const { return mHtmlContent; }
+    * The text of the message, ie. what would appear in the
+    * composer's text editor if this was edited or replied to.
+    * This is usually the content of the first text/plain MIME part.
+    */
+    QString plainTextContent() const
+    {
+        return mPlainTextContent;
+    }
 
     /**
-   * Returns a plain text version of the content, which is either plainTextContent() if that exists,
-   * or htmlContent() converted to plain text otherwise.
-   */
+    * Similar to plainTextContent(), but returns the HTML source of the first text/html MIME part.
+    *
+    * Not to be consfused with the HTML code that the message viewer widget displays, that HTML
+    * is written out by htmlWriter() and a totally different pair of shoes.
+    */
+    QString htmlContent() const
+    {
+        return mHtmlContent;
+    }
+
+    /**
+    * Returns a plain text version of the content, which is either plainTextContent() if that exists,
+    * or htmlContent() converted to plain text otherwise.
+    */
     QString convertedTextContent() const;
 
     /** Returns a HTML version of the plain text mail. If the HTML content is already available, it
-   * returns the HTML content as it is.
-   */
+    * returns the HTML content as it is.
+    */
     QString convertedHtmlContent() const;
 
     /**
-   * The original charset of MIME part the plain text was extracted from.
-   *
-   * If there were more than one text/plain MIME parts in the mail, the this is the charset
-   * of the last MIME part processed.
-   */
-    QByteArray plainTextContentCharset() const { return mPlainTextContentCharset; }
-    QByteArray htmlContentCharset() const { return mHtmlContentCharset; }
+    * The original charset of MIME part the plain text was extracted from.
+    *
+    * If there were more than one text/plain MIME parts in the mail, the this is the charset
+    * of the last MIME part processed.
+    */
+    QByteArray plainTextContentCharset() const
+    {
+        return mPlainTextContentCharset;
+    }
+    QByteArray htmlContentCharset() const
+    {
+        return mHtmlContentCharset;
+    }
 
-    void setCryptoProtocol( const Kleo::CryptoBackend::Protocol * protocol ) {
+    void setCryptoProtocol(const Kleo::CryptoBackend::Protocol *protocol)
+    {
         mCryptoProtocol = protocol;
     }
-    const Kleo::CryptoBackend::Protocol* cryptoProtocol() const {
+    const Kleo::CryptoBackend::Protocol *cryptoProtocol() const
+    {
         return mCryptoProtocol;
     }
 
-    bool showOnlyOneMimePart() const { return mShowOnlyOneMimePart; }
-    void setShowOnlyOneMimePart( bool show ) {
+    bool showOnlyOneMimePart() const
+    {
+        return mShowOnlyOneMimePart;
+    }
+    void setShowOnlyOneMimePart(bool show)
+    {
         mShowOnlyOneMimePart = show;
     }
 
-    bool keepEncryptions() const { return mKeepEncryptions; }
-    void setKeepEncryptions( bool keep ) {
+    bool keepEncryptions() const
+    {
+        return mKeepEncryptions;
+    }
+    void setKeepEncryptions(bool keep)
+    {
         mKeepEncryptions = keep;
     }
 
-    bool includeSignatures() const { return mIncludeSignatures; }
-    void setIncludeSignatures( bool include ) {
+    bool includeSignatures() const
+    {
+        return mIncludeSignatures;
+    }
+    void setIncludeSignatures(bool include)
+    {
         mIncludeSignatures = include;
     }
 
     // Controls whether Toltec invitations are displayed in their raw form or as a replacement text,
     // which is used in processToltecMail().
-    void setShowRawToltecMail( bool showRawToltecMail ) { mShowRawToltecMail = showRawToltecMail; }
-    bool showRawToltecMail() const { return mShowRawToltecMail; }
+    void setShowRawToltecMail(bool showRawToltecMail)
+    {
+        mShowRawToltecMail = showRawToltecMail;
+    }
+    bool showRawToltecMail() const
+    {
+        return mShowRawToltecMail;
+    }
 
     /// Default text for processToltecMail(), which is used in messageviewer.kcfg, therefore it
     /// needs to be static here.
     static QString defaultToltecReplacementText();
 
-    const AttachmentStrategy * attachmentStrategy() const {
+    const AttachmentStrategy *attachmentStrategy() const
+    {
         return mAttachmentStrategy;
     }
 
-    HtmlWriter * htmlWriter() const { return mSource->htmlWriter(); }
+    HtmlWriter *htmlWriter() const
+    {
+        return mSource->htmlWriter();
+    }
 
-    CSSHelper * cssHelper() const { return mSource->cssHelper(); }
+    CSSHelper *cssHelper() const
+    {
+        return mSource->cssHelper();
+    }
 
-    NodeHelper * nodeHelper() const { return mNodeHelper; }
+    NodeHelper *nodeHelper() const
+    {
+        return mNodeHelper;
+    }
 
     /** Parse beginning at a given node and recursively parsing
       the children of that node and it's next sibling. */
-    void parseObjectTree( KMime::Content * node );
+    void parseObjectTree(KMime::Content *node);
 
 private:
-    void extractNodeInfos( KMime::Content *curNode, bool isFirstTextPart );
+    void extractNodeInfos(KMime::Content *curNode, bool isFirstTextPart);
 
     /**
-   * Does the actual work for parseObjectTree. Unlike parseObjectTree(), this does not change the
-   * top-level content.
-   */
-    void parseObjectTreeInternal( KMime::Content * node );
+    * Does the actual work for parseObjectTree. Unlike parseObjectTree(), this does not change the
+    * top-level content.
+    */
+    void parseObjectTreeInternal(KMime::Content *node);
 
     /** Standard children handling a.k.a. multipart/mixed (w/o
       kroupware hacks) */
-    void stdChildHandling( KMime::Content * child );
+    void stdChildHandling(KMime::Content *child);
 
-    void defaultHandling( KMime::Content * node, ProcessResult & result );
+    void defaultHandling(KMime::Content *node, ProcessResult &result);
 
     /** 1. Create a new partNode using 'content' data and Content-Description
           found in 'cntDesc'.
       2. Parse the 'node' to display the content.
-   */
-    void createAndParseTempNode( KMime::Content* parentNode, const char * content, const char * cntDesc );
+    */
+    void createAndParseTempNode(KMime::Content *parentNode, const char *content, const char *cntDesc);
 
     /** if data is 0:
       Feeds the HTML widget with the contents of the opaque signed
@@ -440,13 +511,13 @@ private:
 
       Returns whether a signature was found or not: use this to
       find out if opaque data is signed or not. */
-    bool writeOpaqueOrMultipartSignedData( KMime::Content * data,
-                                           KMime::Content & sign,
-                                           const QString & fromAddress,
-                                           bool doCheck=true,
-                                           QByteArray * cleartextData=0,
-                                           const std::vector<GpgME::Signature> & paramSignatures = std::vector<GpgME::Signature>(),
-                                           bool hideErrors=false );
+    bool writeOpaqueOrMultipartSignedData(KMime::Content *data,
+                                          KMime::Content &sign,
+                                          const QString &fromAddress,
+                                          bool doCheck = true,
+                                          QByteArray *cleartextData = 0,
+                                          const std::vector<GpgME::Signature> &paramSignatures = std::vector<GpgME::Signature>(),
+                                          bool hideErrors = false);
 
     /** Writes out the block that we use when the node is encrypted,
       but we're deferring decryption for later. */
@@ -457,102 +528,100 @@ private:
     void writeDecryptionInProgressBlock();
 
     /** Writes out the information contained in a GpgME::ImportResult */
-    void writeCertificateImportResult( const GpgME::ImportResult & res );
-
+    void writeCertificateImportResult(const GpgME::ImportResult &res);
 
     /** Returns the contents of the given multipart/encrypted
       object. Data is decypted.  May contain body parts. */
-    bool okDecryptMIME( KMime::Content& data,
-                        QByteArray& decryptedData,
-                        bool& signatureFound,
-                        std::vector<GpgME::Signature> &signatures,
-                        bool showWarning,
-                        bool& passphraseError,
-                        bool& actuallyEncrypted,
-                        bool& decryptionStarted,
-                        PartMetaData &partMetaData );
+    bool okDecryptMIME(KMime::Content &data,
+                       QByteArray &decryptedData,
+                       bool &signatureFound,
+                       std::vector<GpgME::Signature> &signatures,
+                       bool showWarning,
+                       bool &passphraseError,
+                       bool &actuallyEncrypted,
+                       bool &decryptionStarted,
+                       PartMetaData &partMetaData);
 
     /**
-   * This is called for all multipart/mixed nodes. It checks if that belongs to a Toltec mail,
-   * by checking various criteria.
-   * If it is a toltec mail, a special text, instead of the confusing toltec text, will be
-   * displayed.
-   *
-   * @return true if the mail was indeed a toltec mail, in which case the node should not be
-   *              processed further
-   */
-    bool processToltecMail( KMime::Content *node );
+    * This is called for all multipart/mixed nodes. It checks if that belongs to a Toltec mail,
+    * by checking various criteria.
+    * If it is a toltec mail, a special text, instead of the confusing toltec text, will be
+    * displayed.
+    *
+    * @return true if the mail was indeed a toltec mail, in which case the node should not be
+    *              processed further
+    */
+    bool processToltecMail(KMime::Content *node);
 
-    bool processMailmanMessage( KMime::Content* node );
+    bool processMailmanMessage(KMime::Content *node);
 
     /** Checks whether @p str contains external references. To be precise,
       we only check whether @p str contains 'xxx="http[s]:' where xxx is
       not href. Obfuscated external references are ignored on purpose.
-  */
-    static bool containsExternalReferences(const QString & str , const QString &extraHead);
+    */
+    static bool containsExternalReferences(const QString &str , const QString &extraHead);
 
 public:// (during refactoring)
 
-    bool processTextHtmlSubtype( KMime::Content * node, ProcessResult & result );
-    bool processTextPlainSubtype( KMime::Content *node, ProcessResult & result );
+    bool processTextHtmlSubtype(KMime::Content *node, ProcessResult &result);
+    bool processTextPlainSubtype(KMime::Content *node, ProcessResult &result);
 
-    bool processMultiPartMixedSubtype( KMime::Content * node, ProcessResult & result );
-    bool processMultiPartAlternativeSubtype( KMime::Content * node, ProcessResult & result );
-    bool processMultiPartDigestSubtype( KMime::Content * node, ProcessResult & result );
-    bool processMultiPartParallelSubtype( KMime::Content * node, ProcessResult & result );
-    bool processMultiPartSignedSubtype( KMime::Content * node, ProcessResult & result );
-    bool processMultiPartEncryptedSubtype( KMime::Content * node, ProcessResult & result );
+    bool processMultiPartMixedSubtype(KMime::Content *node, ProcessResult &result);
+    bool processMultiPartAlternativeSubtype(KMime::Content *node, ProcessResult &result);
+    bool processMultiPartDigestSubtype(KMime::Content *node, ProcessResult &result);
+    bool processMultiPartParallelSubtype(KMime::Content *node, ProcessResult &result);
+    bool processMultiPartSignedSubtype(KMime::Content *node, ProcessResult &result);
+    bool processMultiPartEncryptedSubtype(KMime::Content *node, ProcessResult &result);
 
-    bool processMessageRfc822Subtype( KMime::Content * node, ProcessResult & result );
+    bool processMessageRfc822Subtype(KMime::Content *node, ProcessResult &result);
 
-    bool processApplicationOctetStreamSubtype( KMime::Content * node, ProcessResult & result );
-    bool processApplicationPkcs7MimeSubtype( KMime::Content * node, ProcessResult & result );
-    bool processApplicationChiasmusTextSubtype( KMime::Content * node, ProcessResult & result );
+    bool processApplicationOctetStreamSubtype(KMime::Content *node, ProcessResult &result);
+    bool processApplicationPkcs7MimeSubtype(KMime::Content *node, ProcessResult &result);
+    bool processApplicationChiasmusTextSubtype(KMime::Content *node, ProcessResult &result);
 
-    bool decryptChiasmus( const QByteArray& data, QByteArray& bodyDecoded, QString& errorText );
-    void writeBodyString( const QByteArray & bodyString,
-                          const QString & fromAddress,
-                          const QTextCodec * codec,
-                          ProcessResult & result, bool decorate );
+    bool decryptChiasmus(const QByteArray &data, QByteArray &bodyDecoded, QString &errorText);
+    void writeBodyString(const QByteArray &bodyString,
+                         const QString &fromAddress,
+                         const QTextCodec *codec,
+                         ProcessResult &result, bool decorate);
 
-    void writePartIcon( KMime::Content * msgPart, bool inlineImage = false );
+    void writePartIcon(KMime::Content *msgPart, bool inlineImage = false);
 
-    QString sigStatusToString( const Kleo::CryptoBackend::Protocol * cryptProto,
-                               int status_code,
-                               GpgME::Signature::Summary summary,
-                               int & frameColor,
-                               bool & showKeyInfos );
-    QString writeSigstatHeader( PartMetaData & part,
-                                const Kleo::CryptoBackend::Protocol * cryptProto,
-                                const QString & fromAddress,
-                                KMime::Content *node = 0);
-    QString writeSigstatFooter( PartMetaData & part );
+    QString sigStatusToString(const Kleo::CryptoBackend::Protocol *cryptProto,
+                              int status_code,
+                              GpgME::Signature::Summary summary,
+                              int &frameColor,
+                              bool &showKeyInfos);
+    QString writeSigstatHeader(PartMetaData &part,
+                               const Kleo::CryptoBackend::Protocol *cryptProto,
+                               const QString &fromAddress,
+                               KMime::Content *node = 0);
+    QString writeSigstatFooter(PartMetaData &part);
 
     // The attachment mark is a div that is placed around the attchment. It is used for drawing
     // a yellow border around the attachment when scrolling to it. When scrolling to it, the border
     // color of the div is changed, see KMReaderWin::scrollToAttachment().
-    void writeAttachmentMarkHeader( KMime::Content *node );
+    void writeAttachmentMarkHeader(KMime::Content *node);
     void writeAttachmentMarkFooter();
 
-    void writeBodyStr( const QByteArray & bodyString,
-                       const QTextCodec * aCodec,
-                       const QString & fromAddress,
-                       KMMsgSignatureState &  inlineSignatureState,
-                       KMMsgEncryptionState & inlineEncryptionState,
-                       bool decorate );
+    void writeBodyStr(const QByteArray &bodyString,
+                      const QTextCodec *aCodec,
+                      const QString &fromAddress,
+                      KMMsgSignatureState   &inlineSignatureState,
+                      KMMsgEncryptionState &inlineEncryptionState,
+                      bool decorate);
 
-    bool isMailmanMessage( KMime::Content * curNode );
+    bool isMailmanMessage(KMime::Content *curNode);
 
 public: // KMReaderWin still needs this...
-    void writeBodyStr( const QByteArray & bodyString,
-                       const QTextCodec * aCodec,
-                       const QString & fromAddress );
-    static KMime::Content* findType( KMime::Content* content, const QByteArray& mimeType, bool deep, bool wide );
+    void writeBodyStr(const QByteArray &bodyString,
+                      const QTextCodec *aCodec,
+                      const QString &fromAddress);
+    static KMime::Content *findType(KMime::Content *content, const QByteArray &mimeType, bool deep, bool wide);
 
-    static KMime::Content* findType( KMime::Content* content, const QByteArray& mediaType, const QByteArray& subType, bool deep, bool wide );
+    static KMime::Content *findType(KMime::Content *content, const QByteArray &mediaType, const QByteArray &subType, bool deep, bool wide);
 
-    static KMime::Content* findTypeNot( KMime::Content* content, const QByteArray& mediaType, const QByteArray& subType, bool deep=true, bool wide=true );
-
+    static KMime::Content *findTypeNot(KMime::Content *content, const QByteArray &mediaType, const QByteArray &subType, bool deep = true, bool wide = true);
 
 private:
 
@@ -561,33 +630,33 @@ private:
 
     /** Change the string to `quoted' html (meaning, that the quoted
       part of the message get italized */
-    QString quotedHTML(const QString& pos, bool decorate);
+    QString quotedHTML(const QString &pos, bool decorate);
 
-    const QTextCodec * codecFor( KMime::Content * node ) const;
+    const QTextCodec *codecFor(KMime::Content *node) const;
     /** Check if the newline at position @p newLinePos in string @p s
       seems to separate two paragraphs (important for correct BiDi
       behavior, but is heuristic because paragraphs are not
       well-defined) */
-    bool looksLikeParaBreak(const QString& s, unsigned int newLinePos) const;
+    bool looksLikeParaBreak(const QString &s, unsigned int newLinePos) const;
 
 #ifdef MARCS_DEBUG
-    void dumpToFile( const char * filename, const char * dataStart, size_t dataLen );
+    void dumpToFile(const char *filename, const char *dataStart, size_t dataLen);
 #else
-    void dumpToFile( const char *, const char *, size_t ) {}
+    void dumpToFile(const char *, const char *, size_t) {}
 #endif
 
-    void copyContentFrom( const ObjectTreeParser *other );
+    void copyContentFrom(const ObjectTreeParser *other);
 
 private:
-    ObjectTreeSourceIf* mSource;
-    NodeHelper* mNodeHelper;
+    ObjectTreeSourceIf *mSource;
+    NodeHelper *mNodeHelper;
     QByteArray mRawDecryptedBody;
     QByteArray mPlainTextContentCharset;
     QByteArray mHtmlContentCharset;
     QString mPlainTextContent;
     QString mHtmlContent;
     KMime::Content *mTopLevelContent;
-    const Kleo::CryptoBackend::Protocol * mCryptoProtocol;
+    const Kleo::CryptoBackend::Protocol *mCryptoProtocol;
 
     /// Show only one mime part means that the user has selected some node in the message structure
     /// viewer that is not the root, which means the user wants to only see the selected node and its
@@ -606,7 +675,7 @@ private:
     bool mHasPendingAsyncJobs;
     bool mAllowAsync;
     bool mShowRawToltecMail;
-    const AttachmentStrategy * mAttachmentStrategy;
+    const AttachmentStrategy *mAttachmentStrategy;
     // DataUrl Icons cache
     QString mCollapseIcon;
     QString mExpandIcon;

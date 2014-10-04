@@ -22,7 +22,8 @@
 
 #include <KMessageWidget>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MESSAGEVIEWER_EXPORT ScamDetectionWarningWidget : public KMessageWidget
 {
     Q_OBJECT

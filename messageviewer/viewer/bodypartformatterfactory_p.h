@@ -34,30 +34,34 @@
 #ifndef __MESSAGEVIEWER_BODYPARTFORMATTERFACTORY_P_H__
 #define __MESSAGEVIEWER_BODYPARTFORMATTERFACTORY_P_H__
 
-
 #include <map>
 #include <qstring.h>
 
-namespace MessageViewer {
-  namespace Interface {
-    class BodyPartFormatter;
-  }
+namespace MessageViewer
+{
+namespace Interface
+{
+class BodyPartFormatter;
+}
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-namespace BodyPartFormatterFactoryPrivate {
-  struct ltstr {
-    bool operator()( const char * s1, const char * s2 ) const {
-return qstricmp( s1, s2 ) < 0;
+namespace BodyPartFormatterFactoryPrivate
+{
+struct ltstr {
+    bool operator()(const char *s1, const char *s2) const
+    {
+        return qstricmp(s1, s2) < 0;
     }
-  };
+};
 
-  typedef std::map<const char*, const Interface::BodyPartFormatter*, ltstr> SubtypeRegistry;
-  typedef std::map<const char*, SubtypeRegistry, ltstr> TypeRegistry;
+typedef std::map<const char *, const Interface::BodyPartFormatter *, ltstr> SubtypeRegistry;
+typedef std::map<const char *, SubtypeRegistry, ltstr> TypeRegistry;
 
-  // defined in bodypartformatters.cpp
-  extern void messageviewer_create_builtin_bodypart_formatters( TypeRegistry * );
+// defined in bodypartformatters.cpp
+extern void messageviewer_create_builtin_bodypart_formatters(TypeRegistry *);
 }
 
 }

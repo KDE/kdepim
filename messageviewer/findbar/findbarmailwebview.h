@@ -25,7 +25,8 @@
 # define MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
 #endif
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MailWebView;
 }
 
@@ -36,15 +37,18 @@ class FindBarMailWebView : public FindBarBase
     Q_OBJECT
 
 public:
-    explicit FindBarMailWebView( MailWebView * view, QWidget * parent = 0 );
+    explicit FindBarMailWebView(MailWebView *view, QWidget *parent = 0);
     ~FindBarMailWebView();
 
 private:
-    explicit FindBarMailWebView( QWidget *parent) { Q_UNUSED(parent); }
+    explicit FindBarMailWebView(QWidget *parent)
+    {
+        Q_UNUSED(parent);
+    }
     void clearSelections();
-    void searchText( bool backward, bool isAutoSearch );
+    void searchText(bool backward, bool isAutoSearch);
     void updateHighLight(bool);
-    void updateSensitivity( bool sensitivity );
+    void updateSensitivity(bool sensitivity);
 
 private:
     MailWebView *mView;

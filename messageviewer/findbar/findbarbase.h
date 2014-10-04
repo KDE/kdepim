@@ -34,28 +34,28 @@ class FindBarBase : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FindBarBase( QWidget * parent = 0 );
+    explicit FindBarBase(QWidget *parent = 0);
     virtual ~FindBarBase();
 
     QString text() const;
-    void setText( const QString&text );
+    void setText(const QString &text);
     void focusAndSetCursor();
-    
+
 protected:
-    virtual bool event(QEvent* e);
+    virtual bool event(QEvent *e);
     virtual void clearSelections();
     virtual void updateHighLight(bool);
-    virtual void searchText( bool backward, bool isAutoSearch );
-    virtual void updateSensitivity( bool );
+    virtual void searchText(bool backward, bool isAutoSearch);
+    virtual void updateSensitivity(bool);
 
-    void setFoundMatch( bool match );
+    void setFoundMatch(bool match);
     QMenu *optionsMenu();
 
 public slots:
     void findNext();
     void findPrev();
-    void autoSearch( const QString& str );
-    void slotSearchText( bool backward = false, bool isAutoSearch = true );
+    void autoSearch(const QString &str);
+    void slotSearchText(bool backward = false, bool isAutoSearch = true);
     void closeBar();
 
 Q_SIGNALS:

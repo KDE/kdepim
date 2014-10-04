@@ -25,7 +25,8 @@
 class QWebElement;
 class QWebFrame;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class ScamDetectionDetailsDialog;
 class ScamCheckShortUrl;
 class MESSAGEVIEWER_EXPORT ScamDetection : public QObject

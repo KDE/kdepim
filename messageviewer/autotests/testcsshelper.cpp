@@ -29,7 +29,6 @@
     your version.
 */
 
-
 #include "testcsshelper.h"
 
 #include <QColor>
@@ -37,52 +36,53 @@
 #include <QPalette>
 #include <QApplication>
 
-namespace MessageViewer {
-
-TestCSSHelper::TestCSSHelper( const QPaintDevice *pd ) :
-  CSSHelper( pd )
+namespace MessageViewer
 {
-  mRecycleQuoteColors = false;
-  mBackgroundColor = QColor( 0xff, 0xff, 0xff );
-  mForegroundColor = QColor( 0x1f, 0x1c, 0x1b );
-  mLinkColor = QColor( 0x00, 0x57, 0xae );
-  mVisitedLinkColor = QColor( 0x00, 0x69, 0xcc );
-  cPgpEncrH = QColor( 0x00, 0x80, 0xff );
-  cPgpOk1H  = QColor( 0x40, 0xff, 0x40 );
-  cPgpOk0H  = QColor( 0xff, 0xff, 0x40 );
-  cPgpWarnH = QColor( 0xff, 0xff, 0x40 );
-  cPgpErrH  = QColor( 0xff, 0x00, 0x00 );
-  cHtmlWarning = QColor( 0xff, 0x40, 0x40 );
-  for ( int i = 0 ; i < 3 ; ++i ) {
-    mQuoteColor[i] = QColor( 0x00, 0x80-i*0x10, 0x00 );
-  }
 
-  QFont defaultFont = QFont( QLatin1String( "Sans Serif" ), 9 );
-  mBodyFont = defaultFont;
-  mPrintFont = defaultFont;
-  mFixedFont = defaultFont;
-  mFixedPrintFont = defaultFont;
-  defaultFont.setItalic( true );
-  for ( int i = 0 ; i < 3 ; ++i ) {
-    mQuoteFont[i] = defaultFont;
-  }
+TestCSSHelper::TestCSSHelper(const QPaintDevice *pd) :
+    CSSHelper(pd)
+{
+    mRecycleQuoteColors = false;
+    mBackgroundColor = QColor(0xff, 0xff, 0xff);
+    mForegroundColor = QColor(0x1f, 0x1c, 0x1b);
+    mLinkColor = QColor(0x00, 0x57, 0xae);
+    mVisitedLinkColor = QColor(0x00, 0x69, 0xcc);
+    cPgpEncrH = QColor(0x00, 0x80, 0xff);
+    cPgpOk1H  = QColor(0x40, 0xff, 0x40);
+    cPgpOk0H  = QColor(0xff, 0xff, 0x40);
+    cPgpWarnH = QColor(0xff, 0xff, 0x40);
+    cPgpErrH  = QColor(0xff, 0x00, 0x00);
+    cHtmlWarning = QColor(0xff, 0x40, 0x40);
+    for (int i = 0 ; i < 3 ; ++i) {
+        mQuoteColor[i] = QColor(0x00, 0x80 - i * 0x10, 0x00);
+    }
 
-  mShrinkQuotes = false;
+    QFont defaultFont = QFont(QLatin1String("Sans Serif"), 9);
+    mBodyFont = defaultFont;
+    mPrintFont = defaultFont;
+    mFixedFont = defaultFont;
+    mFixedPrintFont = defaultFont;
+    defaultFont.setItalic(true);
+    for (int i = 0 ; i < 3 ; ++i) {
+        mQuoteFont[i] = defaultFont;
+    }
 
-  mBackingPixmapStr = QString();
-  mBackingPixmapOn = false;
+    mShrinkQuotes = false;
 
-  QPalette pal;
+    mBackingPixmapStr = QString();
+    mBackingPixmapOn = false;
 
-  pal.setColor( QPalette::Background, QColor( 0xd6, 0xd2, 0xd0 ) );
-  pal.setColor( QPalette::Foreground, QColor( 0x22, 0x1f, 0x1e ) );
-  pal.setColor( QPalette::Highlight, QColor( 0x43, 0xac, 0xe8 ) );
-  pal.setColor( QPalette::HighlightedText, QColor( 0xff, 0xff, 0xff ) );
-  pal.setColor( QPalette::Mid, QColor( 0xb3, 0xab, 0xa7 ) );
+    QPalette pal;
 
-  QApplication::setPalette( pal );
+    pal.setColor(QPalette::Background, QColor(0xd6, 0xd2, 0xd0));
+    pal.setColor(QPalette::Foreground, QColor(0x22, 0x1f, 0x1e));
+    pal.setColor(QPalette::Highlight, QColor(0x43, 0xac, 0xe8));
+    pal.setColor(QPalette::HighlightedText, QColor(0xff, 0xff, 0xff));
+    pal.setColor(QPalette::Mid, QColor(0xb3, 0xab, 0xa7));
 
-  recalculatePGPColors();
+    QApplication::setPalette(pal);
+
+    recalculatePGPColors();
 }
 
 }

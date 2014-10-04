@@ -24,7 +24,6 @@
 // filehtmlwriter.out in the current working directory
 //#define KMAIL_READER_HTML_DEBUG 1
 
-
 #include "viewer.h"
 #include "viewer_p.h"
 #include "widgets/configurewidget.h"
@@ -49,15 +48,15 @@
 #include <QWebFrame>
 #include <KGlobalSettings>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
-Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *actionCollection,
-                Qt::WindowFlags aFlags )
-    : QWidget( aParent, aFlags ), d_ptr( new ViewerPrivate( this, mainWindow, actionCollection ) )
+Viewer::Viewer(QWidget *aParent, QWidget *mainWindow, KActionCollection *actionCollection,
+               Qt::WindowFlags aFlags)
+    : QWidget(aParent, aFlags), d_ptr(new ViewerPrivate(this, mainWindow, actionCollection))
 {
     initialize();
 }
-
 
 Viewer::~Viewer()
 {
@@ -66,86 +65,87 @@ Viewer::~Viewer()
 
 void Viewer::initialize()
 {
-    connect( d_ptr, SIGNAL(replaceMsgByUnencryptedVersion()),
-             SIGNAL(replaceMsgByUnencryptedVersion()) );
-    connect( d_ptr, SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)),
-             SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)) );
-    connect( d_ptr, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
-             SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
+    connect(d_ptr, SIGNAL(replaceMsgByUnencryptedVersion()),
+            SIGNAL(replaceMsgByUnencryptedVersion()));
+    connect(d_ptr, SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)),
+            SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)));
+    connect(d_ptr, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
+            SIGNAL(urlClicked(Akonadi::Item,KUrl)));
     connect(d_ptr, &ViewerPrivate::requestConfigSync, this, &Viewer::requestConfigSync);
     connect(d_ptr, &ViewerPrivate::makeResourceOnline, this, &Viewer::makeResourceOnline);
-    connect( d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
-             SIGNAL(showReader(KMime::Content*,bool,QString)) );
+    connect(d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
+            SIGNAL(showReader(KMime::Content*,bool,QString)));
     connect(d_ptr, &ViewerPrivate::showMessage, this, &Viewer::showMessage);
-    connect( d_ptr, SIGNAL(showStatusBarMessage(QString)),
-             this, SIGNAL(showStatusBarMessage(QString)) );
-    connect( d_ptr, SIGNAL(itemRemoved()),
-             this, SIGNAL(itemRemoved()) );
+    connect(d_ptr, SIGNAL(showStatusBarMessage(QString)),
+            this, SIGNAL(showStatusBarMessage(QString)));
+    connect(d_ptr, SIGNAL(itemRemoved()),
+            this, SIGNAL(itemRemoved()));
     connect(d_ptr, &ViewerPrivate::changeDisplayMail, this, &Viewer::slotChangeDisplayMail);
     connect(d_ptr, &ViewerPrivate::moveMessageToTrash, this, &Viewer::moveMessageToTrash);
 
     connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, d_ptr, &ViewerPrivate::slotGeneralFontChanged);
 
-    setMessage( KMime::Message::Ptr(), Delayed );
+    setMessage(KMime::Message::Ptr(), Delayed);
 }
 
-void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode )
+void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode)
 {
     Q_D(Viewer);
-    if ( message == d->message() )
+    if (message == d->message()) {
         return;
-    d->setMessage( message, updateMode );
+    }
+    d->setMessage(message, updateMode);
 }
 
-
-void Viewer::setMessageItem( const Akonadi::Item &item, UpdateMode updateMode )
+void Viewer::setMessageItem(const Akonadi::Item &item, UpdateMode updateMode)
 {
     Q_D(Viewer);
-    if ( d->messageItem() == item )
+    if (d->messageItem() == item) {
         return;
-    if ( !item.isValid() || item.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
-        d->setMessageItem( item, updateMode );
+    }
+    if (!item.isValid() || item.loadedPayloadParts().contains(Akonadi::MessagePart::Body)) {
+        d->setMessageItem(item, updateMode);
     } else {
-        Akonadi::ItemFetchJob* job = createFetchJob( item );
-        connect( job, SIGNAL(result(KJob*)), d, SLOT(itemFetchResult(KJob*)) );
-        d->displaySplashPage( i18n( "Loading message..." ) );
+        Akonadi::ItemFetchJob *job = createFetchJob(item);
+        connect(job, SIGNAL(result(KJob*)), d, SLOT(itemFetchResult(KJob*)));
+        d->displaySplashPage(i18n("Loading message..."));
     }
 }
 
 QString Viewer::messagePath() const
 {
-    Q_D( const Viewer );
+    Q_D(const Viewer);
     return d->mMessagePath;
 }
 
-void Viewer::setMessagePath( const QString& path )
+void Viewer::setMessagePath(const QString &path)
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->mMessagePath = path;
 }
 
-void Viewer::displaySplashPage( const QString &info )
+void Viewer::displaySplashPage(const QString &info)
 {
-    Q_D( Viewer );
-    d->displaySplashPage( info );
+    Q_D(Viewer);
+    d->displaySplashPage(info);
 }
 
 void Viewer::enableMessageDisplay()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->enableMessageDisplay();
 }
 
-void Viewer::printMessage( const Akonadi::Item &msg )
+void Viewer::printMessage(const Akonadi::Item &msg)
 {
-    Q_D( Viewer );
-    d->printMessage( msg );
+    Q_D(Viewer);
+    d->printMessage(msg);
 }
 
-void Viewer::printPreviewMessage( const Akonadi::Item &message )
+void Viewer::printPreviewMessage(const Akonadi::Item &message)
 {
-    Q_D( Viewer );
-    d->printPreviewMessage( message );
+    Q_D(Viewer);
+    d->printPreviewMessage(message);
 }
 
 void Viewer::printPreview()
@@ -160,54 +160,53 @@ void Viewer::print()
     d->slotPrintMsg();
 }
 
-void Viewer::resizeEvent( QResizeEvent * )
+void Viewer::resizeEvent(QResizeEvent *)
 {
     Q_D(Viewer);
-    if( !d->mResizeTimer.isActive() )
-    {
+    if (!d->mResizeTimer.isActive()) {
         //
         // Combine all resize operations that are requested as long a
         // the timer runs.
         //
-        d->mResizeTimer.start( 100 );
+        d->mResizeTimer.start(100);
     }
 }
 
-void Viewer::closeEvent( QCloseEvent *e )
+void Viewer::closeEvent(QCloseEvent *e)
 {
     Q_D(Viewer);
-    QWidget::closeEvent( e );
+    QWidget::closeEvent(e);
     d->writeConfig();
 }
 
 void Viewer::slotAttachmentSaveAs()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->slotAttachmentSaveAs();
 }
 
 void Viewer::slotAttachmentSaveAll()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->slotAttachmentSaveAll();
 }
 
 void Viewer::slotSaveMessage()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->slotSaveMessage();
 }
 
-void Viewer::slotScrollUp( int pixels )
+void Viewer::slotScrollUp(int pixels)
 {
     Q_D(Viewer);
-    d->mViewer->scrollUp( qAbs( pixels ) );
+    d->mViewer->scrollUp(qAbs(pixels));
 }
 
-void Viewer::slotScrollDown( int pixels )
+void Viewer::slotScrollDown(int pixels)
 {
     Q_D(Viewer);
-    d->mViewer->scrollDown( qAbs( pixels ) );
+    d->mViewer->scrollDown(qAbs(pixels));
 }
 
 bool Viewer::atBottom() const
@@ -219,19 +218,19 @@ bool Viewer::atBottom() const
 void Viewer::slotJumpDown()
 {
     Q_D(Viewer);
-    d->mViewer->scrollPageDown( 100 );
+    d->mViewer->scrollPageDown(100);
 }
 
 void Viewer::slotScrollPrior()
 {
     Q_D(Viewer);
-    d->mViewer->scrollPageUp( 80 );
+    d->mViewer->scrollPageUp(80);
 }
 
 void Viewer::slotScrollNext()
 {
     Q_D(Viewer);
-    d->mViewer->scrollPageDown( 80 );
+    d->mViewer->scrollPageDown(80);
 }
 
 QString Viewer::selectedText() const
@@ -253,13 +252,13 @@ void Viewer::setDisplayFormatMessageOverwrite(Viewer::DisplayFormatMessage forma
     d->setDisplayFormatMessageOverwrite(format);
 }
 
-void Viewer::setHtmlLoadExtOverride( bool override )
+void Viewer::setHtmlLoadExtOverride(bool override)
 {
     Q_D(Viewer);
-    d->setHtmlLoadExtOverride( override );
+    d->setHtmlLoadExtOverride(override);
 }
 
-void Viewer::setAppName( const QString& appName )
+void Viewer::setAppName(const QString &appName)
 {
     Q_D(Viewer);
     d->mAppName = appName;
@@ -289,29 +288,29 @@ bool Viewer::isFixedFont() const
     return d->mUseFixedFont;
 
 }
-void Viewer::setUseFixedFont( bool useFixedFont )
+void Viewer::setUseFixedFont(bool useFixedFont)
 {
     Q_D(Viewer);
-    d->setUseFixedFont( useFixedFont );
+    d->setUseFixedFont(useFixedFont);
 }
 
-QWidget* Viewer::mainWindow()
+QWidget *Viewer::mainWindow()
 {
     Q_D(Viewer);
     return d->mMainWindow;
 }
 
-void Viewer::setDecryptMessageOverwrite( bool overwrite )
+void Viewer::setDecryptMessageOverwrite(bool overwrite)
 {
     Q_D(Viewer);
-    d->setDecryptMessageOverwrite( overwrite );
+    d->setDecryptMessageOverwrite(overwrite);
 }
 
-QWidget* Viewer::configWidget()
+QWidget *Viewer::configWidget()
 {
     Q_D(Viewer);
     ConfigureWidget *w = new ConfigureWidget();
-    connect( w, SIGNAL(settingsChanged()), d, SLOT(slotSettingsChanged()) );
+    connect(w, SIGNAL(settingsChanged()), d, SLOT(slotSettingsChanged()));
     return w;
 }
 
@@ -332,8 +331,8 @@ bool Viewer::event(QEvent *e)
     Q_D(Viewer);
     if (e->type() == QEvent::PaletteChange) {
         delete d->mCSSHelper;
-        d->mCSSHelper = new CSSHelper( d->mViewer );
-        d->update( Viewer::Force ); // Force update
+        d->mCSSHelper = new CSSHelper(d->mViewer);
+        d->update(Viewer::Force);   // Force update
         return true;
     }
     return QWidget::event(e);
@@ -351,179 +350,177 @@ void Viewer::slotTranslate()
     d->slotTranslate();
 }
 
-
-const AttachmentStrategy * Viewer::attachmentStrategy() const
+const AttachmentStrategy *Viewer::attachmentStrategy() const
 {
     Q_D(const Viewer);
     return d->attachmentStrategy();
 }
 
-void Viewer::setAttachmentStrategy( const AttachmentStrategy * strategy )
+void Viewer::setAttachmentStrategy(const AttachmentStrategy *strategy)
 {
     Q_D(Viewer);
-    d->setAttachmentStrategy( strategy );
+    d->setAttachmentStrategy(strategy);
 }
 
 QString Viewer::overrideEncoding() const
 {
-    Q_D( const Viewer );
+    Q_D(const Viewer);
     return d->overrideEncoding();
 }
 
-void Viewer::setOverrideEncoding( const QString &encoding )
+void Viewer::setOverrideEncoding(const QString &encoding)
 {
-    Q_D( Viewer );
-    d->setOverrideEncoding( encoding );
+    Q_D(Viewer);
+    d->setOverrideEncoding(encoding);
 
 }
 
-CSSHelper* Viewer::cssHelper() const
+CSSHelper *Viewer::cssHelper() const
 {
-    Q_D( const Viewer );
+    Q_D(const Viewer);
     return d->cssHelper();
 }
 
-
 KToggleAction *Viewer::toggleFixFontAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mToggleFixFontAction;
 }
 
 KToggleAction *Viewer::toggleMimePartTreeAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mToggleMimePartTreeAction;
 }
 
 QAction *Viewer::selectAllAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mSelectAllAction;
 }
 
-HeaderStrategy * Viewer::headerStrategy() const
+HeaderStrategy *Viewer::headerStrategy() const
 {
-    Q_D( const Viewer );
+    Q_D(const Viewer);
     return d->headerStrategy();
 }
 
-HeaderStyle * Viewer::headerStyle() const
+HeaderStyle *Viewer::headerStyle() const
 {
-    Q_D( const Viewer );
+    Q_D(const Viewer);
     return d->headerStyle();
 }
 
-void Viewer::setHeaderStyleAndStrategy( HeaderStyle * style,
-                                        HeaderStrategy * strategy )
+void Viewer::setHeaderStyleAndStrategy(HeaderStyle *style,
+                                       HeaderStrategy *strategy)
 {
-    Q_D( Viewer );
-    d->setHeaderStyleAndStrategy( style, strategy );
+    Q_D(Viewer);
+    d->setHeaderStyleAndStrategy(style, strategy);
 }
 
-void Viewer::setExternalWindow( bool b )
+void Viewer::setExternalWindow(bool b)
 {
-    Q_D( Viewer );
-    d->setExternalWindow( b );
+    Q_D(Viewer);
+    d->setExternalWindow(b);
 }
 
 QAction *Viewer::viewSourceAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mViewSourceAction;
 }
 
 QAction *Viewer::copyURLAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mCopyURLAction;
 }
 
 QAction *Viewer::copyAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mCopyAction;
 }
 
 QAction *Viewer::speakTextAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mSpeakTextAction;
 }
 
 QAction *Viewer::copyImageLocation()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mCopyImageLocation;
 }
 
 QAction *Viewer::translateAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mTranslateAction;
 }
 
 QAction *Viewer::saveAsAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mSaveMessageAction;
 }
 
 QAction *Viewer::urlOpenAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mUrlOpenAction;
 }
 
 void Viewer::setPrinting(bool enable)
 {
-    Q_D( Viewer );
-    d->setPrinting( enable );
+    Q_D(Viewer);
+    d->setPrinting(enable);
 }
 
-void Viewer::writeConfig( bool force )
+void Viewer::writeConfig(bool force)
 {
-    Q_D( Viewer );
-    d->writeConfig( force );
+    Q_D(Viewer);
+    d->writeConfig(force);
 }
 
 KUrl Viewer::urlClicked() const
 {
-    Q_D( const Viewer );
+    Q_D(const Viewer);
     return d->mClickedUrl;
 }
 
 KUrl Viewer::imageUrlClicked() const
 {
-    Q_D( const Viewer );
+    Q_D(const Viewer);
     return d->mImageUrl;
 }
 
-void Viewer::update( MessageViewer::Viewer::UpdateMode updateMode )
+void Viewer::update(MessageViewer::Viewer::UpdateMode updateMode)
 {
-    Q_D( Viewer );
-    d->update( updateMode );
+    Q_D(Viewer);
+    d->update(updateMode);
 }
 
-void Viewer::setMessagePart( KMime::Content* aMsgPart )
+void Viewer::setMessagePart(KMime::Content *aMsgPart)
 {
-    Q_D( Viewer );
-    d->setMessagePart( aMsgPart );
+    Q_D(Viewer);
+    d->setMessagePart(aMsgPart);
 }
 
 void Viewer::slotShowMessageSource()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->slotShowMessageSource();
 }
 
 void Viewer::readConfig()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->readConfig();
 }
 
-QAbstractItemModel* Viewer::messageTreeModel() const
+QAbstractItemModel *Viewer::messageTreeModel() const
 {
 #ifndef QT_NO_TREEVIEW
     return d_func()->mMimePartTree->mimePartModel();
@@ -532,92 +529,92 @@ QAbstractItemModel* Viewer::messageTreeModel() const
 #endif
 }
 
-Akonadi::ItemFetchJob* Viewer::createFetchJob( const Akonadi::Item &item )
+Akonadi::ItemFetchJob *Viewer::createFetchJob(const Akonadi::Item &item)
 {
-    Akonadi::ItemFetchJob* job = new Akonadi::ItemFetchJob( item );
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item);
     job->fetchScope().fetchAllAttributes();
-    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-    job->fetchScope().fetchFullPayload( true );
+    job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+    job->fetchScope().fetchFullPayload(true);
     job->fetchScope().fetchAttribute<MailTransport::ErrorAttribute>();
     return job;
 }
 
-void Viewer::setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy )
+void Viewer::setScrollBarPolicy(Qt::Orientation orientation, Qt::ScrollBarPolicy policy)
 {
-    Q_D( Viewer );
-    d->mViewer->setScrollBarPolicy( orientation, policy );
+    Q_D(Viewer);
+    d->mViewer->setScrollBarPolicy(orientation, policy);
 }
 
-void Viewer::addMessageLoadedHandler( AbstractMessageLoadedHandler *handler )
+void Viewer::addMessageLoadedHandler(AbstractMessageLoadedHandler *handler)
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
 
-    if ( !handler )
+    if (!handler) {
         return;
+    }
 
-    d->mMessageLoadedHandlers.insert( handler );
+    d->mMessageLoadedHandlers.insert(handler);
 }
 
-void Viewer::removeMessageLoadedHandler( AbstractMessageLoadedHandler *handler )
+void Viewer::removeMessageLoadedHandler(AbstractMessageLoadedHandler *handler)
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
 
-    d->mMessageLoadedHandlers.remove( handler );
+    d->mMessageLoadedHandlers.remove(handler);
 }
 
 void Viewer::deleteMessage()
 {
-    Q_D( Viewer );
-    emit deleteMessage( d->messageItem() );
+    Q_D(Viewer);
+    emit deleteMessage(d->messageItem());
 }
 
 void Viewer::selectAll()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->selectAll();
 }
 
 void Viewer::clearSelection()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->clearSelection();
 }
 
-
 void Viewer::copySelectionToClipboard()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->slotCopySelectedText();
 }
 
-void Viewer::setZoomFactor( qreal zoomFactor )
+void Viewer::setZoomFactor(qreal zoomFactor)
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->setZoomFactor(zoomFactor);
 }
 
 void Viewer::slotZoomReset()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->slotZoomReset();
 }
 
 void Viewer::slotZoomIn()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->slotZoomIn();
 }
 
 void Viewer::slotZoomOut()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->slotZoomOut();
 }
 
-void Viewer::setZoomTextOnly( bool textOnly )
+void Viewer::setZoomTextOnly(bool textOnly)
 {
-    Q_D( Viewer );
-    d->setZoomTextOnly( textOnly );
+    Q_D(Viewer);
+    d->setZoomTextOnly(textOnly);
 }
 
 bool Viewer::zoomTextOnly() const
@@ -628,11 +625,11 @@ bool Viewer::zoomTextOnly() const
 
 QAction *Viewer::findInMessageAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mFindInMessageAction;
 }
 
-void Viewer::slotChangeDisplayMail(Viewer::DisplayFormatMessage mode,bool loadExternal)
+void Viewer::slotChangeDisplayMail(Viewer::DisplayFormatMessage mode, bool loadExternal)
 {
     setHtmlLoadExtOverride(loadExternal);
     setDisplayFormatMessageOverwrite(mode);
@@ -641,25 +638,25 @@ void Viewer::slotChangeDisplayMail(Viewer::DisplayFormatMessage mode,bool loadEx
 
 QAction *Viewer::saveMessageDisplayFormatAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mSaveMessageDisplayFormat;
 }
 
 QAction *Viewer::resetMessageDisplayFormatAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mResetMessageDisplayFormat;
 }
 
 void Viewer::saveMainFrameScreenshotInFile(const QString &filename)
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->saveMainFrameScreenshotInFile(filename);
 }
 
 QAction *Viewer::blockImage()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mBlockImage;
 }
 
@@ -674,41 +671,39 @@ bool Viewer::adblockEnabled() const
 
 QAction *Viewer::openBlockableItems()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mBlockableItems;
 }
 
 bool Viewer::isAShortUrl(const KUrl &url) const
 {
-    Q_D( const Viewer );
+    Q_D(const Viewer);
     return d->isAShortUrl(url);
 }
 
 QAction *Viewer::expandShortUrlAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mExpandUrlAction;
 }
 
 QAction *Viewer::createTodoAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mCreateTodoAction;
 }
 
 QAction *Viewer::createEventAction()
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     return d->mCreateEventAction;
 }
 
 void Viewer::showOpenAttachmentFolderWidget(const KUrl &url)
 {
-    Q_D( Viewer );
+    Q_D(Viewer);
     d->showOpenAttachmentFolderWidget(url);
 }
 
 }
-
-
 

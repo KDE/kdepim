@@ -28,19 +28,22 @@
 class QObject;
 class QTextCodec;
 
-namespace MessageViewer {
-  class HtmlWriter;
-  class CSSHelper;
-  class AttachmentStrategy;
+namespace MessageViewer
+{
+class HtmlWriter;
+class CSSHelper;
+class AttachmentStrategy;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /**
  * Interface for object tree sources.
  * @author Andras Mantia <amantia@kdab.net>
  */
-class MESSAGEVIEWER_EXPORT ObjectTreeSourceIf  {
+class MESSAGEVIEWER_EXPORT ObjectTreeSourceIf
+{
 
 public:
 
@@ -52,13 +55,13 @@ public:
       * information to the user, for example KMail displays a HTML status bar.
       * Note: This is not called when the mode is "Normal".
       */
-    virtual void setHtmlMode( MessageViewer::Util::HtmlMode mode ) = 0;
+    virtual void setHtmlMode(MessageViewer::Util::HtmlMode mode) = 0;
 
     /** Return true if the mail should be parsed as a html mail */
     virtual bool htmlMail() = 0;
 
     /** Return true if an encrypted mail should be decrypted */
-    
+
     virtual bool decryptMessage() = 0;
 
     /** Return true if external sources should be loaded in a html mail */
@@ -70,20 +73,20 @@ public:
     virtual int levelQuote() = 0;
 
     /** The override codec that should be used for the mail */
-    virtual const QTextCodec * overrideCodec() = 0;
-    
-    virtual QString createMessageHeader( KMime::Message *message ) = 0;
+    virtual const QTextCodec *overrideCodec() = 0;
+
+    virtual QString createMessageHeader(KMime::Message *message) = 0;
 
     /** Return the wanted attachment startegy */
-    virtual const AttachmentStrategy * attachmentStrategy() = 0;
+    virtual const AttachmentStrategy *attachmentStrategy() = 0;
 
     /** Return the html write object */
-    virtual HtmlWriter * htmlWriter() = 0;
+    virtual HtmlWriter *htmlWriter() = 0;
 
     /** Return the css helper object */
-    virtual CSSHelper* cssHelper() = 0;
+    virtual CSSHelper *cssHelper() = 0;
 
-    /** The source object behind the interface. */    
+    /** The source object behind the interface. */
     virtual QObject *sourceObject() = 0;
 };
 }

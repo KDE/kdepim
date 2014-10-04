@@ -21,16 +21,21 @@
 #include "header/headerstyle.h"
 #include "messageviewer_export.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class GrantleeHeaderFormatter;
-class MESSAGEVIEWER_EXPORT GrantleeHeaderTestStyle : public HeaderStyle {
+class MESSAGEVIEWER_EXPORT GrantleeHeaderTestStyle : public HeaderStyle
+{
     friend class GrantleeHeaderStyle;
 public:
     GrantleeHeaderTestStyle();
     ~GrantleeHeaderTestStyle();
 
 public:
-    const char * name() const { return "grantleetest"; }
+    const char *name() const
+    {
+        return "grantleetest";
+    }
 
     QString format(KMime::Message *message) const;
 
@@ -38,7 +43,8 @@ public:
     void setMainFilename(const QString &);
     void setExtraDisplayHeaders(const QStringList &);
 
-    bool hasAttachmentQuickList() const {
+    bool hasAttachmentQuickList() const
+    {
         return true;
     }
 

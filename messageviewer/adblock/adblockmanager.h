@@ -24,11 +24,8 @@
 *
 * ============================================================ */
 
-
-
 #ifndef ADBLOCK_MANAGER_H
 #define ADBLOCK_MANAGER_H
-
 
 // NOTE: AdBlockPlus Filters (fast) summary
 //
@@ -121,8 +118,6 @@
 //
 // END NOTE ----------------------------------------------------------------------------------------------------------
 
-
-
 // Local Includes
 #include "adblockelementhiding.h"
 #include "adblockhostmatcher.h"
@@ -143,7 +138,8 @@ class QWebFrame;
 // Definitions
 typedef QList<MessageViewer::AdBlockRule> AdBlockRuleList;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockManager : public QObject
 {
     Q_OBJECT

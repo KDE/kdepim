@@ -48,8 +48,8 @@
 
 using namespace MessageCore;
 
-
-namespace MessageViewer {
+namespace MessageViewer
+{
 // #####################
 
 //
@@ -57,16 +57,17 @@ namespace MessageViewer {
 //
 
 HeaderStyle::HeaderStyle()
-    : mStrategy( 0 ),
-      mPrinting( false ),
-      mTopLevel( true ),
-      mNodeHelper( 0 ),
-      mAllowAsync( false ),
-      mSourceObject( 0 )
+    : mStrategy(0),
+      mPrinting(false),
+      mTopLevel(true),
+      mNodeHelper(0),
+      mAllowAsync(false),
+      mSourceObject(0)
 {
 }
 
-HeaderStyle::~HeaderStyle() {
+HeaderStyle::~HeaderStyle()
+{
 
 }
 
@@ -75,8 +76,9 @@ bool HeaderStyle::hasAttachmentQuickList() const
     return false;
 }
 
-HeaderStyle * HeaderStyle::create( Type type ) {
-    switch ( type ) {
+HeaderStyle *HeaderStyle::create(Type type)
+{
+    switch (type) {
     case Brief:  return brief();
     case Plain:  return plain();
     case Fancy:   return fancy();
@@ -90,75 +92,100 @@ HeaderStyle * HeaderStyle::create( Type type ) {
     return 0; // make compiler happy
 }
 
-HeaderStyle * HeaderStyle::create( const QString & type ) {
+HeaderStyle *HeaderStyle::create(const QString &type)
+{
     const QString lowerType = type.toLower();
-    if ( lowerType == QLatin1String("brief") ) return brief();
-    else if ( lowerType == QLatin1String("plain") )  return plain();
-    else if ( lowerType == QLatin1String("enterprise") )  return enterprise();
-    else if ( lowerType == QLatin1String("mobile") )  return mobile();
-    else if ( lowerType == QLatin1String("mobileExtended") )  return mobileExtended();
-    else if ( lowerType == QLatin1String("custom") )  return custom();
-    else if ( lowerType == QLatin1String("grantlee")) return grantlee();
+    if (lowerType == QLatin1String("brief")) {
+        return brief();
+    } else if (lowerType == QLatin1String("plain")) {
+        return plain();
+    } else if (lowerType == QLatin1String("enterprise")) {
+        return enterprise();
+    } else if (lowerType == QLatin1String("mobile")) {
+        return mobile();
+    } else if (lowerType == QLatin1String("mobileExtended")) {
+        return mobileExtended();
+    } else if (lowerType == QLatin1String("custom")) {
+        return custom();
+    } else if (lowerType == QLatin1String("grantlee")) {
+        return grantlee();
+    }
     //if ( lowerType == "fancy" ) return fancy(); // not needed, see below
     // don't kFatal here, b/c the strings are user-provided
     // (KConfig), so fail gracefully to the default:
     return fancy();
 }
 
-HeaderStyle * briefStyle = 0;
-HeaderStyle * plainStyle = 0;
-HeaderStyle * fancyStyle = 0;
-HeaderStyle * enterpriseStyle = 0;
-HeaderStyle * mobileStyle = 0;
-HeaderStyle * mobileExtendedStyle = 0;
-HeaderStyle * customStyle = 0;
-HeaderStyle * grantleeStyle = 0;
+HeaderStyle *briefStyle = 0;
+HeaderStyle *plainStyle = 0;
+HeaderStyle *fancyStyle = 0;
+HeaderStyle *enterpriseStyle = 0;
+HeaderStyle *mobileStyle = 0;
+HeaderStyle *mobileExtendedStyle = 0;
+HeaderStyle *customStyle = 0;
+HeaderStyle *grantleeStyle = 0;
 
-HeaderStyle * HeaderStyle::brief() {
-    if ( !briefStyle )
+HeaderStyle *HeaderStyle::brief()
+{
+    if (!briefStyle) {
         briefStyle = new BriefHeaderStyle();
+    }
     return briefStyle;
 }
 
-HeaderStyle * HeaderStyle::plain() {
-    if ( !plainStyle )
+HeaderStyle *HeaderStyle::plain()
+{
+    if (!plainStyle) {
         plainStyle = new MessageViewer::PlainHeaderStyle();
+    }
     return plainStyle;
 }
 
-HeaderStyle * HeaderStyle::fancy() {
-    if ( !fancyStyle )
+HeaderStyle *HeaderStyle::fancy()
+{
+    if (!fancyStyle) {
         fancyStyle = new MessageViewer::FancyHeaderStyle();
+    }
     return fancyStyle;
 }
 
-HeaderStyle * HeaderStyle::enterprise() {
-    if ( !enterpriseStyle )
+HeaderStyle *HeaderStyle::enterprise()
+{
+    if (!enterpriseStyle) {
         enterpriseStyle = new MessageViewer::EnterpriseHeaderStyle();
+    }
     return enterpriseStyle;
 }
 
-HeaderStyle * HeaderStyle::mobile() {
-    if ( !mobileStyle )
+HeaderStyle *HeaderStyle::mobile()
+{
+    if (!mobileStyle) {
         mobileStyle = new MessageViewer::MobileHeaderStyle();
+    }
     return mobileStyle;
 }
 
-HeaderStyle * HeaderStyle::mobileExtended() {
-    if ( !mobileExtendedStyle )
+HeaderStyle *HeaderStyle::mobileExtended()
+{
+    if (!mobileExtendedStyle) {
         mobileExtendedStyle = new MessageViewer::MobileExtendedHeaderStyle;
+    }
     return mobileExtendedStyle;
 }
 
-HeaderStyle * HeaderStyle::custom() {
-    if ( !customStyle )
+HeaderStyle *HeaderStyle::custom()
+{
+    if (!customStyle) {
         customStyle = new MessageViewer::CustomHeaderStyle;
+    }
     return customStyle;
 }
 
-HeaderStyle * HeaderStyle::grantlee() {
-    if ( !grantleeStyle )
+HeaderStyle *HeaderStyle::grantlee()
+{
+    if (!grantleeStyle) {
         grantleeStyle = new MessageViewer::GrantleeHeaderStyle;
+    }
     return grantleeStyle;
 }
 

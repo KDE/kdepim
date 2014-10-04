@@ -32,10 +32,10 @@ class PluginMetaData
 {
 public:
     PluginMetaData() : loaded(false) {}
-    PluginMetaData( const QString & lib, const QString & name,
-                    const QString & comment )
-        : library( lib ), nameLabel( name ),
-          descriptionLabel( comment ), loaded( false ) {}
+    PluginMetaData(const QString &lib, const QString &name,
+                   const QString &comment)
+        : library(lib), nameLabel(name),
+          descriptionLabel(comment), loaded(false) {}
     QString library;
     QString nameLabel;
     QString descriptionLabel;
@@ -53,7 +53,7 @@ public:
     QStringList types() const;
 
     /** Returns the @ref PluginMetaData structure for a given type */
-    const PluginMetaData * infoForName( const QString & type ) const;
+    const PluginMetaData *infoForName(const QString &type) const;
 
     /** Overload this method in subclasses to call @ref doScan with
         the right @p path argument */
@@ -65,18 +65,18 @@ protected:
         builtins. Subclasses must call this explicitly. It's not
         called for them in the constructor.
     **/
-    void doScan( const char * path );
+    void doScan(const char *path);
 
     /** Returns a pointer to symbol @p main_func in the library that
         implements the plugin of type @p type */
-    KLibrary::void_function_ptr mainFunc( const QString & type, const char * main_func ) const;
+    KLibrary::void_function_ptr mainFunc(const QString &type, const char *main_func) const;
 
 private:
-    const KLibrary * openLibrary( const QString & libName ) const;
+    const KLibrary *openLibrary(const QString &libName) const;
     mutable QMap< QString, PluginMetaData > mPluginMap;
 
     class Private;
-    Private * d;
+    Private *d;
 };
 
 #endif // PLUGINLOADERBASE_H

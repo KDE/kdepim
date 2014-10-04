@@ -25,25 +25,27 @@
 
 class QString;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /** An ObjectTreeSource that does not work on anything */
-class MESSAGEVIEWER_EXPORT EmptySource : public ObjectTreeSourceIf {
+class MESSAGEVIEWER_EXPORT EmptySource : public ObjectTreeSourceIf
+{
 public:
-    EmptySource( );
+    EmptySource();
     ~EmptySource();
     bool htmlMail();
     bool decryptMessage();
     bool htmlLoadExternal();
     bool showSignatureDetails();
-    void setHtmlMode( MessageViewer::Util::HtmlMode mode );
-    void setAllowDecryption( bool allowDecryption );
+    void setHtmlMode(MessageViewer::Util::HtmlMode mode);
+    void setAllowDecryption(bool allowDecryption);
     int levelQuote();
-    const QTextCodec * overrideCodec();
-    QString createMessageHeader( KMime::Message *message );
-    const AttachmentStrategy * attachmentStrategy();
-    HtmlWriter * htmlWriter();
-    CSSHelper* cssHelper();
+    const QTextCodec *overrideCodec();
+    QString createMessageHeader(KMime::Message *message);
+    const AttachmentStrategy *attachmentStrategy();
+    HtmlWriter *htmlWriter();
+    CSSHelper *cssHelper();
     QObject *sourceObject();
 
 private:

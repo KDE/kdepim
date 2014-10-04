@@ -21,34 +21,37 @@
 
 #include <KIconLoader>
 
-namespace MessageViewer {
-Q_GLOBAL_STATIC( IconNameCache, s_iconNameCache )
+namespace MessageViewer
+{
+Q_GLOBAL_STATIC(IconNameCache, s_iconNameCache)
 
-IconNameCache* IconNameCache::instance()
+IconNameCache *IconNameCache::instance()
 {
     return s_iconNameCache;
 }
 
-bool IconNameCache::Entry::operator < ( const Entry &other ) const
+bool IconNameCache::Entry::operator < (const Entry &other) const
 {
-    const int fileNameCompare = fileName.compare( other.fileName );
-    if ( fileNameCompare != 0 )
+    const int fileNameCompare = fileName.compare(other.fileName);
+    if (fileNameCompare != 0) {
         return fileNameCompare < 0;
-    else
+    } else {
         return size < other.size;
+    }
 }
 
-QString IconNameCache::iconPath( const QString &name, int size ) const
+QString IconNameCache::iconPath(const QString &name, int size) const
 {
     Entry entry;
     entry.fileName = name;
     entry.size = size;
 
-    if ( mCachedEntries.contains( entry ) )
-        return mCachedEntries.value( entry );
+    if (mCachedEntries.contains(entry)) {
+        return mCachedEntries.value(entry);
+    }
 
-    const QString fileName = KIconLoader::global()->iconPath( name, size );
-    mCachedEntries.insert( entry, fileName );
+    const QString fileName = KIconLoader::global()->iconPath(name, size);
+    mCachedEntries.insert(entry, fileName);
     return fileName;
 }
 }

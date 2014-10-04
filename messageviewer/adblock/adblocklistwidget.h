@@ -21,7 +21,8 @@
 #include <QListWidget>
 
 class QPaintEvent;
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AdBlockListWidget : public QListWidget
 {
     Q_OBJECT
@@ -33,7 +34,7 @@ private Q_SLOTS:
     void slotGeneralPaletteChanged();
 
 protected:
-    void paintEvent( QPaintEvent *event ) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QColor mTextColor;

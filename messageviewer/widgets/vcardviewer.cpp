@@ -18,8 +18,6 @@
    Boston, MA 02110-1301, USA.
  */
 
-
-
 #include "vcardviewer.h"
 #include "settings/globalsettings.h"
 #include "kaddressbookgrantlee/widget/grantleecontactviewer.h"
@@ -38,15 +36,15 @@ using KABC::Addressee;
 #include <QVBoxLayout>
 
 #ifndef KABC_ADDRESSEE_METATYPE_DEFINED
-Q_DECLARE_METATYPE( KABC::Addressee )
+Q_DECLARE_METATYPE(KABC::Addressee)
 #endif
 
 using namespace MessageViewer;
 
-VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
-    : QDialog( parent )
+VCardViewer::VCardViewer(QWidget *parent, const QByteArray &vCard)
+    : QDialog(parent)
 {
-    setWindowTitle( i18n("vCard Viewer") );
+    setWindowTitle(i18n("vCard Viewer"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -60,29 +58,29 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     buttonBox->addButton(mUser3Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &VCardViewer::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &VCardViewer::reject);
-    setModal( false );
+    setModal(false);
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
-    
+
     KGuiItem::assign(user1Button, KGuiItem(i18n("&Import")));
     KGuiItem::assign(user1Button, KGuiItem(i18n("&Next Card")));
     KGuiItem::assign(user1Button, KGuiItem(i18n("&Previous Card")));
 
-    mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer( this );
+    mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer(this);
     mContactViewer->setForceDisableQRCode(true);
     mainLayout->addWidget(mContactViewer);
     mainLayout->addWidget(buttonBox);
 
     VCardConverter vcc;
-    mAddresseeList = vcc.parseVCards( vCard );
-    if ( !mAddresseeList.empty() ) {
+    mAddresseeList = vcc.parseVCards(vCard);
+    if (!mAddresseeList.empty()) {
         itAddresseeList = mAddresseeList.constBegin();
-        mContactViewer->setRawContact( *itAddresseeList );
-        if ( mAddresseeList.size() <= 1 ) {
+        mContactViewer->setRawContact(*itAddresseeList);
+        if (mAddresseeList.size() <= 1) {
             mUser2Button->setVisible(false);
             mUser3Button->setVisible(false);
-        }
-        else
+        } else {
             mUser3Button->setEnabled(false);
+        }
         connect(user1Button, &QPushButton::clicked, this, &VCardViewer::slotUser1);
         connect(mUser2Button, &QPushButton::clicked, this, &VCardViewer::slotUser2);
         connect(mUser3Button, &QPushButton::clicked, this, &VCardViewer::slotUser3);
@@ -103,44 +101,45 @@ VCardViewer::~VCardViewer()
 
 void VCardViewer::readConfig()
 {
-    KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "VCardViewer" );
-    const QSize size = group.readEntry( "Size", QSize(300, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(MessageViewer::GlobalSettings::self()->config(), "VCardViewer");
+    const QSize size = group.readEntry("Size", QSize(300, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void VCardViewer::writeConfig()
 {
-    KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "VCardViewer" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(MessageViewer::GlobalSettings::self()->config(), "VCardViewer");
+    group.writeEntry("Size", size());
     group.sync();
 }
-
 
 void VCardViewer::slotUser1()
 {
     const KABC::Addressee contact = *itAddresseeList;
 
-    KPIM::AddContactJob *job = new KPIM::AddContactJob( contact, this, this );
+    KPIM::AddContactJob *job = new KPIM::AddContactJob(contact, this, this);
     job->start();
 }
 
 void VCardViewer::slotUser2()
 {
     // next vcard
-    mContactViewer->setRawContact( *(++itAddresseeList) );
-    if ( itAddresseeList == --(mAddresseeList.constEnd()) )
+    mContactViewer->setRawContact(*(++itAddresseeList));
+    if (itAddresseeList == --(mAddresseeList.constEnd())) {
         mUser2Button->setEnabled(false);
+    }
     mUser3Button->setEnabled(true);
 }
 
 void VCardViewer::slotUser3()
 {
     // previous vcard
-    mContactViewer->setRawContact( *(--itAddresseeList) );
-    if ( itAddresseeList == mAddresseeList.constBegin() )
+    mContactViewer->setRawContact(*(--itAddresseeList));
+    if (itAddresseeList == mAddresseeList.constBegin()) {
         mUser3Button->setEnabled(false);
+    }
     mUser2Button->setEnabled(true);
 }
 

@@ -40,7 +40,7 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     : QDialog(parent),
       mTemporaryFile(0)
 {
-    setWindowTitle( i18n("Show adblock list") );
+    setWindowTitle(i18n("Show adblock list"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -76,16 +76,16 @@ AdBlockShowListDialog::~AdBlockShowListDialog()
 
 void AdBlockShowListDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockShowListDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "AdBlockShowListDialog");
+    group.writeEntry("Size", size());
 }
 
 void AdBlockShowListDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockShowListDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "AdBlockShowListDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
@@ -108,7 +108,7 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
     delete mTemporaryFile;
     mTemporaryFile = new QTemporaryFile;
     if (!mTemporaryFile->open()) {
-        qDebug()<<"can not open temporary file";
+        qDebug() << "can not open temporary file";
         delete mTemporaryFile;
         mTemporaryFile = 0;
         return;
@@ -118,7 +118,7 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
     QUrl destUrl = QUrl::fromLocalFile(mTemporaryFile->fileName());
 
     mProgress->start();
-    KIO::FileCopyJob* job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
+    KIO::FileCopyJob *job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
     job->metaData().insert(QLatin1String("ssl_no_client_cert"), QLatin1String("TRUE"));
     job->metaData().insert(QLatin1String("ssl_no_ui"), QLatin1String("TRUE"));
     job->metaData().insert(QLatin1String("UseCache"), QLatin1String("false"));
@@ -136,7 +136,7 @@ void AdBlockShowListDialog::slotFinished(KJob *job)
         mUser1Button->setEnabled(true);
     } else {
         QFile f(mTemporaryFile->fileName());
-        if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
             mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));
         }
     }
