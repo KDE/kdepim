@@ -133,7 +133,7 @@ void ComposerImageDialogPrivate::initialize()
 {
     q->setWindowTitle(webElement.isNull() ? i18n("Insert Image") : i18n("Edit Image"));
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox( webElement.isNull() ? QDialogButtonBox::Ok : QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Apply);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(webElement.isNull() ? QDialogButtonBox::Ok : QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     q->setLayout(mainLayout);
     q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(_k_slotOkClicked()));
@@ -182,9 +182,7 @@ void ComposerImageDialogPrivate::initialize()
     sep = new KSeparator;
     lay->addWidget(sep);
 
-
     q->connect(imageWidget, SIGNAL(enableButtonOk(bool)), q, SLOT(_k_slotEnableButtonOk(bool)));
-
 
     mainLayout->addWidget(w);
     mainLayout->addWidget(buttonBox);

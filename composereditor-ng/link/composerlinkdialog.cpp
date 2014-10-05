@@ -67,7 +67,7 @@ public:
 
 void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 {
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(q);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     q->setLayout(mainLayout);

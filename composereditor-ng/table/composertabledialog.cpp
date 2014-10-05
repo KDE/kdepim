@@ -74,7 +74,7 @@ QString ComposerTableDialogPrivate::html() const
 void ComposerTableDialogPrivate::initialize()
 {
     q->setWindowTitle(i18n("Insert Table"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(q);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     q->setLayout(mainLayout);

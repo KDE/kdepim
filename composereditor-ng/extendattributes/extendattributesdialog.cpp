@@ -43,7 +43,7 @@ public:
         : q(qq)
     {
         q->setWindowTitle(i18n("Extend Attribute"));
-        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
         QVBoxLayout *mainLayout = new QVBoxLayout;
         q->setLayout(mainLayout);
         QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -54,7 +54,6 @@ public:
         QWidget *page = new QWidget(q);
         mainLayout->addWidget(page);
         mainLayout->addWidget(buttonBox);
-
 
         QVBoxLayout *lay = new QVBoxLayout(page);
         QString tagName;

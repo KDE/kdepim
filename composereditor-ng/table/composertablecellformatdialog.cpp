@@ -44,7 +44,7 @@ public:
         : webElement(element)
         , q(qq)
     {
-        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Apply);
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply);
         QWidget *mainWidget = new QWidget(q);
         QVBoxLayout *mainLayout = new QVBoxLayout;
         q->setLayout(mainLayout);

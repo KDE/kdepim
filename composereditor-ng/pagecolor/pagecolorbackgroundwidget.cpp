@@ -33,7 +33,7 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
     ui->setupUi(this);
 
     const QStringList mimetypes = KImageIO::mimeTypes(KImageIO::Reading);
-    ui->backgroundImage->setFilter(mimetypes.join( QLatin1String( " " ) ));
+    ui->backgroundImage->setFilter(mimetypes.join(QLatin1String(" ")));
     ui->groupBox->setEnabled(false);
     connect(ui->customColors, &QRadioButton::toggled, ui->groupBox, &QGroupBox::setEnabled);
 }

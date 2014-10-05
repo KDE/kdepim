@@ -90,7 +90,7 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
 {
     webElement = element;
     q->setWindowTitle(i18n("Table Format"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Apply);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply);
     QWidget *mainWidget = new QWidget(q);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     q->setLayout(mainLayout);
