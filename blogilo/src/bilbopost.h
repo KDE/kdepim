@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -29,7 +28,6 @@
 
 #include <kblog/blogpost.h>
 
-
 class BilboPostPrivate;
 
 /**
@@ -42,40 +40,40 @@ class BilboPost : public KBlog::BlogPost
 {
 public:
     BilboPost();
-    explicit BilboPost( const KBlog::BlogPost& );
-    BilboPost( const BilboPost& );
+    explicit BilboPost(const KBlog::BlogPost &);
+    BilboPost(const BilboPost &);
     ~BilboPost();
 
     QString author() const;
-    void setAuthor( const QString& );
+    void setAuthor(const QString &);
 
     int id() const;
-    void setId( const int );
+    void setId(const int);
 
     //To be used for local_post and temp_post tabels
     int localId() const;
-    void setLocalId( const int );
+    void setLocalId(const int);
 
     QString toString() const;
 
     bool isModifyTimeStamp() const;
-    void setModifyTimeStamp( bool willModify );
+    void setModifyTimeStamp(bool willModify);
 
     QList<Category> categoryList() const;
-    void setCategoryList( const QList<Category> &list );
+    void setCategoryList(const QList<Category> &list);
 
     /**
      * Set all properties of post to new one, instead of Title and Content!
     */
-    void setProperties( const BilboPost& postProp );
+    void setProperties(const BilboPost &postProp);
 
     /**
       The overloaed = operator.
     */
-    BilboPost &operator=( const BilboPost &other );
+    BilboPost &operator=(const BilboPost &other);
 
 private:
-    BilboPostPrivate * d_ptr;
+    BilboPostPrivate *d_ptr;
 };
 
 #endif

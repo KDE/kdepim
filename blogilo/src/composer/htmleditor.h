@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -27,10 +26,10 @@
 
 #include <QObject>
 
-namespace KTextEditor 
+namespace KTextEditor
 {
-    class Editor;
-    class View;
+class Editor;
+class View;
 }
 class QWidget;
 class HtmlEditorPrivate;
@@ -43,11 +42,11 @@ class HtmlEditor : public QObject
 {
     Q_OBJECT
 public:
-    static HtmlEditor* self();
+    static HtmlEditor *self();
 
-    KTextEditor::View* createView( QWidget* parent );
+    KTextEditor::View *createView(QWidget *parent);
 
-    QWidget* configPage( int number, QWidget* parent);
+    QWidget *configPage(int number, QWidget *parent);
 
 private Q_SLOTS:
     void toggleWordWrap();
@@ -59,7 +58,7 @@ private:
 
     ~HtmlEditor();
 
-    KTextEditor::Editor* mEditor;
+    KTextEditor::Editor *mEditor;
 };
 
 #endif

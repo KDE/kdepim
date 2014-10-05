@@ -29,13 +29,14 @@
 #include <KUrl>
 #include <kxmlrpcclient/client.h>
 
-namespace KBlog {
+namespace KBlog
+{
 
 class BlogPrivate
 {
-  public:
+public:
     BlogPrivate():
-      q_ptr(0)
+        q_ptr(0)
     {
     }
 
@@ -50,7 +51,7 @@ class BlogPrivate
     QString mUserAgent;
     KUrl mUrl;
     KTimeZone mTimeZone;
-    Q_DECLARE_PUBLIC( Blog )
+    Q_DECLARE_PUBLIC(Blog)
 };
 
 } //namespace KBlog

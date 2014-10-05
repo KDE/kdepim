@@ -28,7 +28,7 @@ class StorageServiceManagerSettingsJob : public QObject, public PimCommon::ISett
 {
     Q_OBJECT
 public:
-    explicit StorageServiceManagerSettingsJob(QObject *parent=0);
+    explicit StorageServiceManagerSettingsJob(QObject *parent = 0);
     ~StorageServiceManagerSettingsJob();
 
     QString youSendItApiKey() const;

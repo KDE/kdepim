@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -31,7 +30,7 @@ class BilboBlog;
 class BilboPost;
 namespace KWallet
 {
-    class Wallet;
+class Wallet;
 }
 
 /**
@@ -48,7 +47,7 @@ public:
     DBMan();
 
     ~DBMan();
-    const QMap<int, BilboBlog*> & blogList() const;
+    const QMap<int, BilboBlog *> &blogList() const;
 
     QString lastErrorText() const;
     /**
@@ -60,7 +59,7 @@ public:
      *
      * \return the instance of the DBMan
       */
-    static DBMan* self();
+    static DBMan *self();
 
     ///(BEGIN) Data retrieveing Functions:
 
@@ -71,20 +70,20 @@ public:
     QMap<QString, int> listBlogsTitle();///QString as Title, and int as blog_id
     BilboBlog *blog(int blog_id);
 
-    QList<BilboPost*> listPosts( int blog_id );
-    QMap< int, QString > listPostsTitle( int blog_id );///QString as Title, and int as post_id
-    QList<QVariantMap> listPostsInfo( int blog_id );
-    BilboPost getPostInfo( int post_id );
+    QList<BilboPost *> listPosts(int blog_id);
+    QMap< int, QString > listPostsTitle(int blog_id);  ///QString as Title, and int as post_id
+    QList<QVariantMap> listPostsInfo(int blog_id);
+    BilboPost getPostInfo(int post_id);
 
-    QMap<QString, int> listCategoriesName( int blog_id );
-    QList<Category> listCategories( int blog_id );
-    QMap<QString, bool> listCategoriesId( int blog_id );
+    QMap<QString, int> listCategoriesName(int blog_id);
+    QList<Category> listCategories(int blog_id);
+    QMap<QString, bool> listCategoriesId(int blog_id);
 
     /**
     Returns list of temporary posts, e.g. posts saved intervally or at application quit.
     Map value (e.g. int) is blog id.
     */
-    QMap<BilboPost*, int> listTempPosts();
+    QMap<BilboPost *, int> listTempPosts();
     /**
     Returns list of locally saved posts.
     Map value (e.g. int) is blog id.
@@ -97,11 +96,11 @@ public:
 
     ///Blog:
 
-    int addBlog( const BilboBlog& blog );
+    int addBlog(const BilboBlog &blog);
 
-    bool editBlog( const BilboBlog& blog );
+    bool editBlog(const BilboBlog &blog);
 
-    bool removeBlog( int blog_id );
+    bool removeBlog(int blog_id);
 
     ///Post:
 
@@ -111,54 +110,54 @@ public:
      * @param blog_id
      * @return return post id in database (deffer with postid)
      */
-    int addPost( const BilboPost& post, int blog_id );
+    int addPost(const BilboPost &post, int blog_id);
 
-    bool editPost( const BilboPost& post, int blog_id );
+    bool editPost(const BilboPost &post, int blog_id);
 
-    bool removePost( int id );
+    bool removePost(int id);
     bool removePost(int blog_id, const QString &postId);
 
-    bool clearPosts( int blog_id );
+    bool clearPosts(int blog_id);
 
     ///Category:
-    int addCategory( const QString &name, const QString &description, const QString &htmlUrl,
-                     const QString &rssUrl, const QString &categoryId, const QString &parentId, int blog_id );
-    bool clearCategories( int blog_id );
+    int addCategory(const QString &name, const QString &description, const QString &htmlUrl,
+                    const QString &rssUrl, const QString &categoryId, const QString &parentId, int blog_id);
+    bool clearCategories(int blog_id);
 
     ///File:
-    int addFile(const QString &name, int blog_id, bool isUploaded, const QString &localUrl, const QString &remoteUrl );
-    int addFile( const BilboMedia& file );
+    int addFile(const QString &name, int blog_id, bool isUploaded, const QString &localUrl, const QString &remoteUrl);
+    int addFile(const BilboMedia &file);
     int addFile();
-    bool removeFile( int fileid );
-    bool clearFiles( int blog_id );
+    bool removeFile(int fileid);
+    bool clearFiles(int blog_id);
 
-    int saveLocalEntry( const BilboPost& post, int blog_id );
-    int saveTempEntry( const BilboPost& post, int blog_id );
-    bool removeLocalEntry( const BilboPost &post );
-    bool removeLocalEntry( int local_id );
-    bool removeTempEntry( const BilboPost &post );
+    int saveLocalEntry(const BilboPost &post, int blog_id);
+    int saveTempEntry(const BilboPost &post, int blog_id);
+    bool removeLocalEntry(const BilboPost &post);
+    bool removeLocalEntry(int local_id);
+    bool removeTempEntry(const BilboPost &post);
     bool clearTempEntries();
 
     ///Auth Data:
-    QMap<QString,QString> getAuthData( int blog_id );
-    bool saveAuthData( const QMap<QString, QString>& authData, int blog_id );
-    bool clearAuthData( int blog_id );
+    QMap<QString, QString> getAuthData(int blog_id);
+    bool saveAuthData(const QMap<QString, QString> &authData, int blog_id);
+    bool clearAuthData(int blog_id);
 
     ///END
 
 private:
-    enum LocalPostState {Local=0, Temp=1};
-    int saveTemp_LocalEntry( const BilboPost& post, int blog_id, LocalPostState state );
-    QList<BilboBlog*> listBlogs();
+    enum LocalPostState {Local = 0, Temp = 1};
+    int saveTemp_LocalEntry(const BilboPost &post, int blog_id, LocalPostState state);
+    QList<BilboBlog *> listBlogs();
     bool createDB();
     bool connectDB();
     bool updateDB();
     void reloadBlogList();
 
-    static DBMan* mSelf;
+    static DBMan *mSelf;
 
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 #endif

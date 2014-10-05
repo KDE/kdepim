@@ -55,8 +55,9 @@ void BlogiloComposerWidget::slotToolSwitched(PimCommon::CustomToolsWidget::ToolT
 {
     if (type == PimCommon::CustomToolsWidget::TranslatorTool) {
         const QString text = mEditor->view()->selectedText();
-        if(!text.isEmpty())
+        if (!text.isEmpty()) {
             mCustomToolsWidget->translatorWidget()->setTextToTranslate(text);
+        }
     }
 }
 

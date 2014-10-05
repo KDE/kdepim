@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -26,7 +25,7 @@
 
 #include <qdebug.h>
 
-WaitWidget::WaitWidget(QWidget* parent )
+WaitWidget::WaitWidget(QWidget *parent)
     : QDialog(parent)
 {
     qDebug();
@@ -38,29 +37,28 @@ WaitWidget::~WaitWidget()
     qDebug();
 }
 
-void WaitWidget::setText( const QString& text )
+void WaitWidget::setText(const QString &text)
 {
     qDebug();
-    operationNameLabel->setText( text );
-    setWindowTitle( text );
+    operationNameLabel->setText(text);
+    setWindowTitle(text);
 }
 
-void WaitWidget::setMaxJobs( int max )
+void WaitWidget::setMaxJobs(int max)
 {
     qDebug();
-    progressBar->setMaximum( max );
+    progressBar->setMaximum(max);
 }
 
 void WaitWidget::jobDone()
 {
     qDebug();
-    progressBar->setValue(progressBar->value()+1);
+    progressBar->setValue(progressBar->value() + 1);
 }
 
 void WaitWidget::setBusyState()
 {
-    progressBar->setMinimum( 0 );
-    progressBar->setMaximum( 0 );
+    progressBar->setMinimum(0);
+    progressBar->setMaximum(0);
 }
-
 

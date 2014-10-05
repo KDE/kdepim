@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -33,8 +32,7 @@
 #include <kdbusservice.h>
 #include <kdelibs4configmigrator.h>
 
-
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
     Kdelibs4ConfigMigrator migrate(QLatin1String("blogilo"));
     migrate.setConfigFiles(QStringList() << QLatin1String("blogilorc"));
@@ -43,17 +41,17 @@ int main( int argc, char *argv[] )
     //QT5 TODO migrate database!
 
     KLocalizedString::setApplicationDomain("blogilo");
-    KAboutData about( QLatin1String("blogilo"), i18n( APPNAME ), QLatin1String(VERSION), i18n( "A KDE Blogging Client" ),
-                      KAboutLicense::GPL_V2, i18n( "Copyright © 2008–2014 Blogilo authors" ),
-                      QLatin1String("http://blogilo.gnufolks.org") );
-    about.addAuthor( i18n( "Mehrdad Momeny" ), i18n( "Core Developer" ), QLatin1String("mehrdad.momeny@gmail.com") );
-    about.addAuthor( i18n( "Golnaz Nilieh" ), i18n( "Core Developer" ), QLatin1String("g382nilieh@gmail.com") );
-    about.addAuthor( i18n( "Laurent Montel" ), i18n( "Core Developer" ), QLatin1String("montel@kde.org") );
-    about.addCredit( i18n( "Roozbeh Shafiee" ), i18n( "Icon designer" ), QLatin1String("roozbeh@roozbehonline.com"));
-    about.addCredit( i18n( "Sajjad Baroodkoo" ), i18n( "Icon designer" ), QLatin1String("sajjad@graphit.ir"));
+    KAboutData about(QLatin1String("blogilo"), i18n(APPNAME), QLatin1String(VERSION), i18n("A KDE Blogging Client"),
+                     KAboutLicense::GPL_V2, i18n("Copyright © 2008–2014 Blogilo authors"),
+                     QLatin1String("http://blogilo.gnufolks.org"));
+    about.addAuthor(i18n("Mehrdad Momeny"), i18n("Core Developer"), QLatin1String("mehrdad.momeny@gmail.com"));
+    about.addAuthor(i18n("Golnaz Nilieh"), i18n("Core Developer"), QLatin1String("g382nilieh@gmail.com"));
+    about.addAuthor(i18n("Laurent Montel"), i18n("Core Developer"), QLatin1String("montel@kde.org"));
+    about.addCredit(i18n("Roozbeh Shafiee"), i18n("Icon designer"), QLatin1String("roozbeh@roozbehonline.com"));
+    about.addCredit(i18n("Sajjad Baroodkoo"), i18n("Icon designer"), QLatin1String("sajjad@graphit.ir"));
 
-    about.setTranslator( i18nc("NAME OF TRANSLATORS", "Your names"),
-                         i18nc("EMAIL OF TRANSLATORS", "Your emails"));
+    about.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
+                        i18nc("EMAIL OF TRANSLATORS", "Your emails"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(about);

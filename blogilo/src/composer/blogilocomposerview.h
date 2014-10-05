@@ -21,7 +21,8 @@
 #define BLOGILOCOMPOSERVIEW_H
 
 #include <composereditor-ng/composerview.h>
-namespace PimCommon {
+namespace PimCommon
+{
 class CustomToolsWidget;
 }
 
@@ -29,7 +30,7 @@ class BlogiloComposerView : public ComposerEditorNG::ComposerView
 {
     Q_OBJECT
 public:
-    explicit BlogiloComposerView(QWidget * parent = 0);
+    explicit BlogiloComposerView(QWidget *parent = 0);
     ~BlogiloComposerView();
 
     void startEditing();

@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -40,25 +39,25 @@ and return True on success and false on failure.
 */
 class SyncUploader : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit SyncUploader( QObject *parent=0 );
+    explicit SyncUploader(QObject *parent = 0);
     ~SyncUploader();
 
     /**
     Synchronous Media file uploader!
     @return True on success, and false on failure
     */
-    bool uploadMedia( Backend *backend, BilboMedia *media );
+    bool uploadMedia(Backend *backend, BilboMedia *media);
     QString errorMessage() const;
 
 private slots:
-    void slotMediaFileUploaded( BilboMedia *media );
-    void slotMediaError( const QString &errorMessage, BilboMedia* media );
+    void slotMediaFileUploaded(BilboMedia *media);
+    void slotMediaError(const QString &errorMessage, BilboMedia *media);
 
 private:
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 #endif // SYNCUPLOADER_H

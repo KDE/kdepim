@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -23,7 +22,6 @@
 */
 
 #include "htmleditor.h"
-
 
 #include <kglobal.h>
 #include <ktexteditor/editor.h>
@@ -43,9 +41,9 @@ public:
     HtmlEditor instance;
 };
 
-Q_GLOBAL_STATIC( HtmlEditorPrivate, instancePrivate )
+Q_GLOBAL_STATIC(HtmlEditorPrivate, instancePrivate)
 
-HtmlEditor* HtmlEditor::self()
+HtmlEditor *HtmlEditor::self()
 {
     return &instancePrivate->instance;
 }
@@ -58,50 +56,50 @@ HtmlEditor::HtmlEditor() : QObject()
 HtmlEditor::~HtmlEditor()
 {
     qDebug();
-    if ( !instancePrivate.isDestroyed() ) {
+    if (!instancePrivate.isDestroyed()) {
         qDebug() << "editor deleted";
     }
 }
 
-KTextEditor::View* HtmlEditor::createView( QWidget* parent )
+KTextEditor::View *HtmlEditor::createView(QWidget *parent)
 {
-    KTextEditor::Document *document = mEditor->createDocument( parent );
-    bool result = document->setHighlightingMode( QLatin1String("html") );
-    if ( result ) {
+    KTextEditor::Document *document = mEditor->createDocument(parent);
+    bool result = document->setHighlightingMode(QLatin1String("html"));
+    if (result) {
         qDebug() << "Syntax highlighting enabled";
     }
-    KTextEditor::View *view = document->createView( parent );
+    KTextEditor::View *view = document->createView(parent);
     QMenu *menu = view->defaultContextMenu();
 
-    KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface* >( view );
+    KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface * >(view);
 
-    if ( interface ) {
-        QAction *actWordWrap = new QAction( i18n( "Dynamic Word Wrap" ), view );
-        actWordWrap->setCheckable( true );
+    if (interface) {
+        QAction *actWordWrap = new QAction(i18n("Dynamic Word Wrap"), view);
+        actWordWrap->setCheckable(true);
         connect(actWordWrap, &QAction::triggered, this, &HtmlEditor::toggleWordWrap);
 
-        QAction *actLineNumber = new QAction( i18n("Show line numbers"), view );
-        actLineNumber->setCheckable( true );
+        QAction *actLineNumber = new QAction(i18n("Show line numbers"), view);
+        actLineNumber->setCheckable(true);
         connect(actLineNumber, &QAction::triggered, this, &HtmlEditor::toggleLineNumber);
 
-        QMenu *options = new QMenu( i18n( "Options" ), qobject_cast< QWidget* >( view ) );
-        options->addAction( actWordWrap );
-        options->addAction( actLineNumber );
+        QMenu *options = new QMenu(i18n("Options"), qobject_cast< QWidget * >(view));
+        options->addAction(actWordWrap);
+        options->addAction(actLineNumber);
 
         menu->addSeparator();
-        menu->addMenu( options );
-        
-        interface->setConfigValue( QLatin1String("dynamic-word-wrap"), true );
-        actWordWrap->setChecked( true );
+        menu->addMenu(options);
+
+        interface->setConfigValue(QLatin1String("dynamic-word-wrap"), true);
+        actWordWrap->setChecked(true);
     }
-    view->setContextMenu( menu );
+    view->setContextMenu(menu);
     return view;
 }
 
-QWidget* HtmlEditor::configPage( int number, QWidget* parent )
+QWidget *HtmlEditor::configPage(int number, QWidget *parent)
 {
-    KTextEditor::ConfigPage *page = mEditor->configPage( number, parent );
-    if ( !page ) {
+    KTextEditor::ConfigPage *page = mEditor->configPage(number, parent);
+    if (!page) {
         return NULL;
     } else {
         return page;
@@ -110,17 +108,17 @@ QWidget* HtmlEditor::configPage( int number, QWidget* parent )
 
 void HtmlEditor::toggleWordWrap()
 {
-    KTextEditor::View *view = qobject_cast< KTextEditor::View* >( sender()->parent() );
-    KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface* >( view );
-    const bool result = interface->configValue( QLatin1String("dynamic-word-wrap") ).toBool();
-    interface->setConfigValue( QLatin1String("dynamic-word-wrap"), !( result ) );
+    KTextEditor::View *view = qobject_cast< KTextEditor::View * >(sender()->parent());
+    KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface * >(view);
+    const bool result = interface->configValue(QLatin1String("dynamic-word-wrap")).toBool();
+    interface->setConfigValue(QLatin1String("dynamic-word-wrap"), !(result));
 }
 
 void HtmlEditor::toggleLineNumber()
 {
-    KTextEditor::View *view = qobject_cast< KTextEditor::View* >( sender()->parent() );
-    KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface* >( view );
-    const bool result = interface->configValue( QLatin1String("line-numbers") ).toBool();
-    interface->setConfigValue( QLatin1String("line-numbers"), !( result ) );
+    KTextEditor::View *view = qobject_cast< KTextEditor::View * >(sender()->parent());
+    KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface * >(view);
+    const bool result = interface->configValue(QLatin1String("line-numbers")).toBool();
+    interface->setConfigValue(QLatin1String("line-numbers"), !(result));
 }
 

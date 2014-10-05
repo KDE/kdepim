@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -32,13 +31,13 @@ class BilboMedia;
 
 class UploadMediaDialog : public KDialog
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit UploadMediaDialog( QWidget *parent=0 );
+    explicit UploadMediaDialog(QWidget *parent = 0);
     ~UploadMediaDialog();
-    enum UploadType{BlogAPI=0, FTP};
+    enum UploadType {BlogAPI = 0, FTP};
 
-    void init( const BilboBlog* currentBlog );
+    void init(const BilboBlog *currentBlog);
 
 Q_SIGNALS:
     void sigBusy(bool isBusy);
@@ -48,8 +47,8 @@ private Q_SLOTS:
     void currentMediaChanged(const QString &);
     void slotUploadTypeChanged(int index);
     void slotMediaObjectUploaded(KJob *);
-    void slotMediaObjectUploaded(BilboMedia*);
-    void slotError( const QString &msg );
+    void slotMediaObjectUploaded(BilboMedia *);
+    void slotError(const QString &msg);
     void slotButtonClicked(int button);
 private:
     const BilboBlog *mCurrentBlog;

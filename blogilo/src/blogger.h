@@ -26,9 +26,8 @@
 #include <KUrl>
 namespace KGAPI2
 {
-    class Job;
+class Job;
 }
-
 
 /**
   @file
@@ -65,7 +64,7 @@ class BloggerPrivate;
 class KBLOG_EXPORT Blogger : public KBlog::Blog
 {
     Q_OBJECT
-  public:
+public:
     /**
       Create an object for Blogger
       @param server The blog URL
@@ -154,7 +153,6 @@ class KBLOG_EXPORT Blogger : public KBlog::Blog
     */
     void createPost(KBlog::BlogPost *post);
 
-
     /**
       Modify a post on server.
       @param post This is used to send the modified post including the correct id.
@@ -169,7 +167,7 @@ class KBLOG_EXPORT Blogger : public KBlog::Blog
     */
     void listComments(KBlog::BlogPost *post);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
       This signal is emitted when a list of comments has been fetched
       from the blogging server.
@@ -189,7 +187,6 @@ class KBLOG_EXPORT Blogger : public KBlog::Blog
     */
     void listedBlogs(const QList<QMap<QString, QString> > &blogs);
 
-
     /**
       This signal is emitted when authentication process started by
       call to authenticate() is finished.
@@ -200,17 +197,17 @@ class KBLOG_EXPORT Blogger : public KBlog::Blog
     */
     void authenticated(const QMap<QString, QString> &authData);
 
-  private:
+private:
     Q_DECLARE_PRIVATE(Blogger);
 
-    Q_PRIVATE_SLOT(d_func(), void _k_onAuthenticateFinished(KGAPI2::Job*))
-    Q_PRIVATE_SLOT(d_func(), void _k_onListBlogsFinished(KGAPI2::Job*))
-    Q_PRIVATE_SLOT(d_func(), void _k_onListRecentPostsFinished(KGAPI2::Job*))
-    Q_PRIVATE_SLOT(d_func(), void _k_onFetchPostFinished(KGAPI2::Job*))
-    Q_PRIVATE_SLOT(d_func(), void _k_onRemovePostFinished(KGAPI2::Job*))
-    Q_PRIVATE_SLOT(d_func(), void _k_onCreatePostFinished(KGAPI2::Job*))
-    Q_PRIVATE_SLOT(d_func(), void _k_onModifyPostFinished(KGAPI2::Job*))
-    Q_PRIVATE_SLOT(d_func(), void _k_onListCommentsFinished(KGAPI2::Job*))
+    Q_PRIVATE_SLOT(d_func(), void _k_onAuthenticateFinished(KGAPI2::Job *))
+    Q_PRIVATE_SLOT(d_func(), void _k_onListBlogsFinished(KGAPI2::Job *))
+    Q_PRIVATE_SLOT(d_func(), void _k_onListRecentPostsFinished(KGAPI2::Job *))
+    Q_PRIVATE_SLOT(d_func(), void _k_onFetchPostFinished(KGAPI2::Job *))
+    Q_PRIVATE_SLOT(d_func(), void _k_onRemovePostFinished(KGAPI2::Job *))
+    Q_PRIVATE_SLOT(d_func(), void _k_onCreatePostFinished(KGAPI2::Job *))
+    Q_PRIVATE_SLOT(d_func(), void _k_onModifyPostFinished(KGAPI2::Job *))
+    Q_PRIVATE_SLOT(d_func(), void _k_onListCommentsFinished(KGAPI2::Job *))
 };
 }
 

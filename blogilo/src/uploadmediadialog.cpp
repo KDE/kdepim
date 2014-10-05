@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -41,7 +40,7 @@
 
 #include <QClipboard>
 
-UploadMediaDialog::UploadMediaDialog( QWidget *parent )
+UploadMediaDialog::UploadMediaDialog(QWidget *parent)
     : KDialog(parent), mCurrentBlog(0)
 {
     QWidget *widget = new QWidget;
@@ -49,8 +48,8 @@ UploadMediaDialog::UploadMediaDialog( QWidget *parent )
     setMainWidget(widget);
     setAttribute(Qt::WA_DeleteOnClose);
 
-    setButtonText(KDialog::Ok, i18n("Upload") );
-    setWindowTitle( i18n( "Upload Media..." ) );
+    setButtonText(KDialog::Ok, i18n("Upload"));
+    setWindowTitle(i18n("Upload Media..."));
     ui.kcfg_FtpPath->setText(Settings::ftpServerPath());
     ui.kcfg_httpUrl->setText(Settings::httpUrl());
     setWindowModality(Qt::ApplicationModal);
@@ -67,40 +66,41 @@ UploadMediaDialog::~UploadMediaDialog()
     Settings::self()->save();
 }
 
-void UploadMediaDialog::init( const BilboBlog *currentBlog )
+void UploadMediaDialog::init(const BilboBlog *currentBlog)
 {
-    if ( !selectNewFile() ) {
+    if (!selectNewFile()) {
         deleteLater();
         return;
     }
     if (currentBlog) {
         mCurrentBlog = currentBlog;
-        if (mCurrentBlog->supportUploadMedia()){
-            ui.kcfg_uploadType->addItem( i18n("Blog API"), BlogAPI );
+        if (mCurrentBlog->supportUploadMedia()) {
+            ui.kcfg_uploadType->addItem(i18n("Blog API"), BlogAPI);
         }
     }
-    ui.kcfg_uploadType->addItem( i18n("FTP"), FTP);
+    ui.kcfg_uploadType->addItem(i18n("FTP"), FTP);
     slotUploadTypeChanged(ui.kcfg_uploadType->currentIndex());
     this->show();
 }
 
-void UploadMediaDialog::currentMediaChanged(const QString& newPath)
+void UploadMediaDialog::currentMediaChanged(const QString &newPath)
 {
     ui.kcfg_previewer->showPreview(KUrl(newPath));
 }
 
 bool UploadMediaDialog::selectNewFile()
 {
-    const QString mediaPath = KFileDialog::getOpenFileName( QUrl(QLatin1String("kfiledialog:///image?global")),
-                                                            QString(), this,
-                                                            i18n("Select Media to Upload"));
-    if ( mediaPath.isEmpty() )
+    const QString mediaPath = KFileDialog::getOpenFileName(QUrl(QLatin1String("kfiledialog:///image?global")),
+                              QString(), this,
+                              i18n("Select Media to Upload"));
+    if (mediaPath.isEmpty()) {
         return false;
+    }
 
     KUrl mediaUrl(mediaPath);
     ui.kcfg_urlLineEdit->setText(mediaPath);
     ui.kcfg_Name->setText(mediaUrl.fileName());
-    ui.kcfg_previewer->showPreview( mediaUrl );
+    ui.kcfg_previewer->showPreview(mediaUrl);
     return true;
 }
 
@@ -116,35 +116,35 @@ void UploadMediaDialog::slotUploadTypeChanged(int index)
 
 void UploadMediaDialog::slotButtonClicked(int button)
 {
-    if(button == KDialog::Ok) {
+    if (button == KDialog::Ok) {
         UploadType type = static_cast<UploadType>(ui.kcfg_uploadType->itemData(ui.kcfg_uploadType->currentIndex()).toInt());
-        if ( type == BlogAPI ) {///Using API!
+        if (type == BlogAPI) {  ///Using API!
             BilboMedia *media = new BilboMedia(this);
-            KUrl mediaUrl( ui.kcfg_urlLineEdit->text() );
+            KUrl mediaUrl(ui.kcfg_urlLineEdit->text());
             media->setLocalUrl(mediaUrl);
-            media->setName( ui.kcfg_Name->text().isEmpty() ? mediaUrl.fileName() : ui.kcfg_Name->text() );
-            media->setBlogId( mCurrentBlog->id() );
-            media->setMimeType( KMimeType::findByUrl( mediaUrl, 0, true )->name() );
-            Backend *b = new Backend( mCurrentBlog->id(), this);
-            connect( b, SIGNAL(sigMediaUploaded(BilboMedia*)),
-                     this, SLOT(slotMediaObjectUploaded(BilboMedia*)) );
+            media->setName(ui.kcfg_Name->text().isEmpty() ? mediaUrl.fileName() : ui.kcfg_Name->text());
+            media->setBlogId(mCurrentBlog->id());
+            media->setMimeType(KMimeType::findByUrl(mediaUrl, 0, true)->name());
+            Backend *b = new Backend(mCurrentBlog->id(), this);
+            connect(b, SIGNAL(sigMediaUploaded(BilboMedia*)),
+                    this, SLOT(slotMediaObjectUploaded(BilboMedia*)));
             connect(b, &Backend::sigError, this, &UploadMediaDialog::slotError);
             connect(b, &Backend::sigMediaError, this, &UploadMediaDialog::slotError);
-            b->uploadMedia( media );
+            b->uploadMedia(media);
             this->hide();
             emit sigBusy(true);
-        } else if ( type == FTP ) {///Upload via FTP
-            if ( ui.kcfg_FtpPath->text().isEmpty() ) {
+        } else if (type == FTP) {  ///Upload via FTP
+            if (ui.kcfg_FtpPath->text().isEmpty()) {
                 KMessageBox::sorry(this, i18n("Please insert FTP URL."));
                 return;
             }
             KUrl dest;
             dest.setUrl(ui.kcfg_FtpPath->text() , QUrl::TolerantMode);
-            if ( dest.isValid() ) {
-                if ( dest.scheme() == QLatin1String("ftp") || dest.scheme() == QLatin1String("sftp") ) {
+            if (dest.isValid()) {
+                if (dest.scheme() == QLatin1String("ftp") || dest.scheme() == QLatin1String("sftp")) {
                     KUrl src(ui.kcfg_urlLineEdit->text());
-                    dest.addPath( ui.kcfg_Name->text().isEmpty() ? src.fileName() :
-                                                                   ui.kcfg_Name->text() );
+                    dest.addPath(ui.kcfg_Name->text().isEmpty() ? src.fileName() :
+                                 ui.kcfg_Name->text());
                     KIO::FileCopyJob *job = KIO::file_copy(src, dest);
                     connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMediaObjectUploaded(KJob*)));
                     job->start();
@@ -167,13 +167,13 @@ void UploadMediaDialog::slotMediaObjectUploaded(KJob *job)
 {
     emit sigBusy(false);
     if (job->error()) {
-        qDebug()<<"Job error: "<<job->errorString();
+        qDebug() << "Job error: " << job->errorString();
         slotError(job->errorString());
     } else {
-        KIO::FileCopyJob *fcj = qobject_cast<KIO::FileCopyJob*>(job);
+        KIO::FileCopyJob *fcj = qobject_cast<KIO::FileCopyJob *>(job);
         KUrl tmpUrl(ui.kcfg_httpUrl->text());
         QString destUrl;
-        if (tmpUrl.isValid()){
+        if (tmpUrl.isValid()) {
             tmpUrl.adjustPath(KUrl::AddTrailingSlash);
             tmpUrl.setFileName(ui.kcfg_Name->text());
             destUrl = tmpUrl.prettyUrl();
@@ -181,15 +181,15 @@ void UploadMediaDialog::slotMediaObjectUploaded(KJob *job)
             destUrl = fcj->destUrl().toDisplayString();
         }
         QString msg;
-        if ( Settings::copyMediaUrl() ) {
-            QApplication::clipboard()->setText( destUrl );
-            msg = i18n( "Media uploaded, and URL copied to clipboard.\nYou can find it here:\n%1",
-                        destUrl );
+        if (Settings::copyMediaUrl()) {
+            QApplication::clipboard()->setText(destUrl);
+            msg = i18n("Media uploaded, and URL copied to clipboard.\nYou can find it here:\n%1",
+                       destUrl);
         } else {
-            msg = i18n( "Media uploaded.\nYou can find it here:\n%1",
-                        destUrl );
+            msg = i18n("Media uploaded.\nYou can find it here:\n%1",
+                       destUrl);
         }
-        KMessageBox::information(this, msg, i18n( "Successfully uploaded" ), QString(), KMessageBox::AllowLink);
+        KMessageBox::information(this, msg, i18n("Successfully uploaded"), QString(), KMessageBox::AllowLink);
         accept();
     }
 }
@@ -198,23 +198,23 @@ void UploadMediaDialog::slotMediaObjectUploaded(BilboMedia *media)
 {
     QString msg;
     emit sigBusy(false);
-    if ( Settings::copyMediaUrl() ) {
-        QApplication::clipboard()->setText( media->remoteUrl().prettyUrl() );
-        msg = i18n( "Media uploaded, and URL copied to clipboard.\nYou can find it here:\n%1",
-                    media->remoteUrl().prettyUrl() );
+    if (Settings::copyMediaUrl()) {
+        QApplication::clipboard()->setText(media->remoteUrl().prettyUrl());
+        msg = i18n("Media uploaded, and URL copied to clipboard.\nYou can find it here:\n%1",
+                   media->remoteUrl().prettyUrl());
     } else {
-        msg = i18n( "Media uploaded.\nYou can find it here:\n%1",
-                    media->remoteUrl().prettyUrl() );
+        msg = i18n("Media uploaded.\nYou can find it here:\n%1",
+                   media->remoteUrl().prettyUrl());
     }
-    KMessageBox::information(this, msg, i18n( "Successfully uploaded" ), QString(), KMessageBox::AllowLink);
+    KMessageBox::information(this, msg, i18n("Successfully uploaded"), QString(), KMessageBox::AllowLink);
     accept();
 }
 
-void UploadMediaDialog::slotError( const QString &msg )
+void UploadMediaDialog::slotError(const QString &msg)
 {
     emit sigBusy(false);
-    if ( KMessageBox::questionYesNo( this, i18n( "Media uploading failed with this result:\n%1\nTry again?", msg) )
-         == KMessageBox::Yes ) {
+    if (KMessageBox::questionYesNo(this, i18n("Media uploading failed with this result:\n%1\nTry again?", msg))
+            == KMessageBox::Yes) {
         show();
     } else {
         reject();

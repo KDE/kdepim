@@ -21,7 +21,8 @@
 #include <KConfigDialog>
 #include "bilboblog.h"
 class KConfigSkeleton;
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceManager;
 }
 
@@ -30,20 +31,18 @@ class ConfigureDialog : public KConfigDialog
 {
     Q_OBJECT
 public:
-    explicit ConfigureDialog(PimCommon::StorageServiceManager *storageManager, QWidget *parent, const QString& name, KConfigSkeleton *config );
+    explicit ConfigureDialog(PimCommon::StorageServiceManager *storageManager, QWidget *parent, const QString &name, KConfigSkeleton *config);
     ~ConfigureDialog();
 
 Q_SIGNALS:
     void blogRemoved(int);
     void blogAdded(const BilboBlog &);
     void blogEdited(const BilboBlog &);
-    void dialogDestroyed(QObject*);
+    void dialogDestroyed(QObject *);
     void settingsChanged();
-
 
 protected:
     bool hasChanged();
-
 
 private slots:
     void slotApplySettingsClicked();

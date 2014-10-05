@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -33,7 +32,6 @@
 #include <QObject>
 #include <QMap>
 
-
 class BilboMedia;
 /**
 Engine of application.
@@ -46,7 +44,7 @@ class Backend : public QObject
 {
     Q_OBJECT
 public:
-    explicit Backend( int blog_id, QObject* parent = 0 );
+    explicit Backend(int blog_id, QObject *parent = 0);
 
     ~Backend();
 
@@ -62,32 +60,32 @@ public:
      *    retrieve latest posts from server
      * @param count number of post to retrieve.
      */
-    void getEntriesListFromServer( int count );
+    void getEntriesListFromServer(int count);
 
     /**
      *    Use this to publish a post to server.
      * @param post Post to publish.
      */
-    void publishPost( BilboPost *post );
+    void publishPost(BilboPost *post);
 
     /**
      * Upload a new Media object e.g. image to server.
      * @param  media Media Object to upload.
      */
-    void uploadMedia( BilboMedia *media );
+    void uploadMedia(BilboMedia *media);
 
     /**
      * Modify an existing post.
      * Note: posiId must sets correctly.
      * @param post post to modify.
      */
-    void modifyPost( BilboPost* post );
+    void modifyPost(BilboPost *post);
 
     /**
      * Remove an existing post from server
      * @param post post to remove.
      */
-    void removePost( BilboPost *post );
+    void removePost(BilboPost *post);
 
 //     void setPostCategories( const QString postId, const QMap<QString, bool> &categoriesList );
 
@@ -99,73 +97,73 @@ public:
     * @param post a blog post with the ID identifying the blog post to fetch.
     * @see sigPostFetched()
     */
-    void fetchPost( BilboPost *post );
+    void fetchPost(BilboPost *post);
 
 protected Q_SLOTS:
-    void categoriesListed( const QList< QMap< QString, QString > > &   categories );
-    void entriesListed( const QList< KBlog::BlogPost > &posts );
-    void postPublished( KBlog::BlogPost *post );
-    void mediaUploaded( KBlog::BlogMedia *media );
-    void error( KBlog::Blog::ErrorType type, const QString &errorMessage );
-    void slotMediaError( KBlog::Blog::ErrorType type, const QString &errorMessage, KBlog::BlogMedia *media );
+    void categoriesListed(const QList< QMap< QString, QString > >    &categories);
+    void entriesListed(const QList< KBlog::BlogPost > &posts);
+    void postPublished(KBlog::BlogPost *post);
+    void mediaUploaded(KBlog::BlogMedia *media);
+    void error(KBlog::Blog::ErrorType type, const QString &errorMessage);
+    void slotMediaError(KBlog::Blog::ErrorType type, const QString &errorMessage, KBlog::BlogMedia *media);
 //     void postCategoriesSetted( const QString &postId );
-    void slotPostRemoved( KBlog::BlogPost *post );
-    void slotPostFetched( KBlog::BlogPost *post );
+    void slotPostRemoved(KBlog::BlogPost *post);
+    void slotPostFetched(KBlog::BlogPost *post);
     /**
      * This function is called after a post published fine, to insert it to DB and emit sigPostPublished.
      */
-    void savePostInDbAndEmitResult( KBlog::BlogPost *post );
+    void savePostInDbAndEmitResult(KBlog::BlogPost *post);
 
-    void bloggerAuthenticated( const QMap<QString,QString>& authData );
+    void bloggerAuthenticated(const QMap<QString, QString> &authData);
 
 Q_SIGNALS:
     /**
      * emit when a categoriesListed() Done and Categories added to DB
      * @param blog_id id of Blog owner of categories.
      */
-    void sigCategoryListFetched( int blog_id );
+    void sigCategoryListFetched(int blog_id);
 
     /**
      * emit when a entriesListed() Done and Entries added to DB
      * @param blog_id id of Blog owner of Entries.
      */
-    void sigEntriesListFetched( int blog_id );
+    void sigEntriesListFetched(int blog_id);
 
     /**
      * This signal is emitted when a post published/modified and added/edited to Database.
      * @param blog_id blog id.
      * @param post The post has been saved.
      */
-    void sigPostPublished( int blog_id, BilboPost *post );
+    void sigPostPublished(int blog_id, BilboPost *post);
 
     /**
      * This signal is emitted when a media has been uploaded to the server.
      * @param media Uploaded media Object.
      */
-    void sigMediaUploaded( BilboMedia *media );
+    void sigMediaUploaded(BilboMedia *media);
 
     /**
      * this signal is emitted when a post removed successfully.
      */
-    void sigPostRemoved( int blog_id, const BilboPost &post);
+    void sigPostRemoved(int blog_id, const BilboPost &post);
 
-    void sigPostFetched( BilboPost *post );
+    void sigPostFetched(BilboPost *post);
 
     /**
      * this signal emitted when an error occurred on current transaction.
      * @param type type of error
      * @param errorMessage error message.
      */
-    void sigError( const QString &errorMessage );
+    void sigError(const QString &errorMessage);
 
-    void sigMediaError( const QString &errorMessage, BilboMedia* media );
+    void sigMediaError(const QString &errorMessage, BilboMedia *media);
 
 private:
-    KBlog::BlogPost* preparePost( KBlog::BlogPost* post );
-    QString errorTypeToString( KBlog::Blog::ErrorType type );
+    KBlog::BlogPost *preparePost(KBlog::BlogPost *post);
+    QString errorTypeToString(KBlog::Blog::ErrorType type);
 
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 #endif

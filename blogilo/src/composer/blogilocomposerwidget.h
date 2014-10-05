@@ -29,7 +29,7 @@ class BlogiloComposerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BlogiloComposerWidget(BlogiloComposerView *view, QWidget *parent=0);
+    explicit BlogiloComposerWidget(BlogiloComposerView *view, QWidget *parent = 0);
     ~BlogiloComposerWidget();
 
     BlogiloComposerEditor *editor() const;

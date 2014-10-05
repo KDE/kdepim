@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -43,15 +42,15 @@ public:
     bool mIsPrivate;
     bool mIsNew;
 };
-SendToBlogDialog::SendToBlogDialog( bool isNew, bool isPrivate, QWidget *parent )
+SendToBlogDialog::SendToBlogDialog(bool isNew, bool isPrivate, QWidget *parent)
     : QDialog(parent), d(new Private)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    QWidget *dialog = new QWidget( this );
-    d->ui.setupUi( dialog );
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *dialog = new QWidget(this);
+    d->ui.setupUi(dialog);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -59,15 +58,16 @@ SendToBlogDialog::SendToBlogDialog( bool isNew, bool isPrivate, QWidget *parent 
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SendToBlogDialog::reject);
     mainLayout->addWidget(dialog);
     mainLayout->addWidget(buttonBox);
-    setWindowTitle( i18n( "Submitting as..." ) );
-    if ( isNew ) {
-        d->ui.pubAsModify->setEnabled( false );
-        d->ui.pubAsNewPost->setChecked( true );
+    setWindowTitle(i18n("Submitting as..."));
+    if (isNew) {
+        d->ui.pubAsModify->setEnabled(false);
+        d->ui.pubAsNewPost->setChecked(true);
     } else {
-        d->ui.pubAsModify->setChecked( true );
+        d->ui.pubAsModify->setChecked(true);
     }
-    if ( isPrivate )
+    if (isPrivate) {
         d->ui.saveDraft->setChecked(true);
+    }
     d->mIsNew = isNew;
     d->mIsPrivate = isPrivate;
 }

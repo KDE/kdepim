@@ -3,7 +3,7 @@
 
     Copyright (C) 2008-2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
     Copyright (C) 2008-2010 Golnaz Nilieh <g382nilieh@gmail.com>
-    Copyright (C) 2013 Laurent Montel <montel@kde.org> 
+    Copyright (C) 2013 Laurent Montel <montel@kde.org>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -12,7 +12,6 @@
     accepted by the membership of KDE e.V. (or its successor approved
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
-
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -50,11 +49,11 @@ class BilboBrowser: public QWidget
 public:
     /**
      * @brief BilboBrowser constructor.
-     * Creates a widget that consists of a KHTMLView, some common browsing 
+     * Creates a widget that consists of a KHTMLView, some common browsing
      * tools, and a button for getting blog style.
      * @param parent is parent widget
      */
-    explicit BilboBrowser( QWidget *parent = 0 );
+    explicit BilboBrowser(QWidget *parent = 0);
 
     /**
      * @brief BilboBrowser destructor.
@@ -66,7 +65,7 @@ public:
      * @param title is the post title.
      * @param content is the post content.
      */
-    void setHtml( const QString& title, const QString& content );
+    void setHtml(const QString &title, const QString &content);
 
     void stop();
 
@@ -81,14 +80,14 @@ protected Q_SLOTS:
 
     void slotSetBlogStyle();
 
-    void slotCompleted( bool );
+    void slotCompleted(bool);
 
-    void slotSetStatusBarText( const QString& text );
+    void slotSetStatusBarText(const QString &text);
 
     void slotViewModeChanged();
 
 private:
-    void createUi( QWidget *parent );
+    void createUi(QWidget *parent);
 
     KWebView *mWebView;
     QCheckBox *viewInBlogStyle;

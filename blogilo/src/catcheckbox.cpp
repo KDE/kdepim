@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -30,17 +29,15 @@ public:
     Category mCat;
 };
 
-CatCheckBox::CatCheckBox( QWidget* parent )
-: QCheckBox( parent ), d(new Private)
+CatCheckBox::CatCheckBox(QWidget *parent)
+    : QCheckBox(parent), d(new Private)
 {
 }
 
-
-CatCheckBox::CatCheckBox( const QString& text, QWidget* parent )
-: QCheckBox( text, parent ), d(new Private)
+CatCheckBox::CatCheckBox(const QString &text, QWidget *parent)
+    : QCheckBox(text, parent), d(new Private)
 {
 }
-
 
 CatCheckBox::~CatCheckBox()
 {
@@ -52,11 +49,9 @@ Category CatCheckBox::category() const
     return d->mCat;
 }
 
-void CatCheckBox::setCategory( const Category & category )
+void CatCheckBox::setCategory(const Category &category)
 {
     d->mCat = category;
-    this->setToolTip( d->mCat.description );
+    this->setToolTip(d->mCat.description);
 }
-
-
 

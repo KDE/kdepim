@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -31,15 +30,15 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 
-EntriesCountDialog::EntriesCountDialog( QWidget *parent )
-    : QDialog( parent )
+EntriesCountDialog::EntriesCountDialog(QWidget *parent)
+    : QDialog(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QWidget *widget = new QWidget;
     mainLayout->addWidget(widget);
-    ui.setupUi( widget );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    ui.setupUi(widget);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -51,8 +50,8 @@ EntriesCountDialog::EntriesCountDialog( QWidget *parent )
 
 EntriesCountDialog::~EntriesCountDialog()
 {
-    Settings::setShowUpdateEntriesDialog( !ui.kcfg_remember->isChecked() );
-    Settings::setUpdateEntriesCount( ui.spinCount->value() );
+    Settings::setShowUpdateEntriesDialog(!ui.kcfg_remember->isChecked());
+    Settings::setUpdateEntriesCount(ui.spinCount->value());
     Settings::self()->save();
 }
 

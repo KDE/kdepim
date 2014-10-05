@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -49,40 +48,40 @@ public:
      * @param blog_id id of blog we will edit it, for adding a blog this should be "-1"
      * @param parent Parent
      */
-    explicit AddEditBlog( int blog_id, QWidget *parent = 0, Qt::WindowFlags flags = 0 );
+    explicit AddEditBlog(int blog_id, QWidget *parent = 0, Qt::WindowFlags flags = 0);
     ~AddEditBlog();
 
 protected Q_SLOTS:
-    virtual void slotButtonClicked( int button );
+    virtual void slotButtonClicked(int button);
     void enableAutoConfBtn();
-    void enableOkButton( const QString & );
+    void enableOkButton(const QString &);
     void autoConfigure();
     void fetchBlogId();
 
-    void fetchedBlogId( const QList<QMap<QString, QString> >& list );
+    void fetchedBlogId(const QList<QMap<QString, QString> > &list);
 
     void handleFetchIDTimeout();
     void handleFetchAPITimeout();
-    void handleFetchError( KBlog::Blog::ErrorType type, const QString& errorMsg );
+    void handleFetchError(KBlog::Blog::ErrorType type, const QString &errorMsg);
 
     void slotReturnPressed();
-    void setSupportedFeatures( BilboBlog::ApiType api );
-    void slotComboApiChanged( int index );
+    void setSupportedFeatures(BilboBlog::ApiType api);
+    void slotComboApiChanged(int index);
 
-    void gotHtml( KJob * );
-    void gotXmlRpcTest( KJob *job );
+    void gotHtml(KJob *);
+    void gotXmlRpcTest(KJob *job);
 
-    void bloggerAuthenticated( const QMap<QString, QString>& authData );
+    void bloggerAuthenticated(const QMap<QString, QString> &authData);
 Q_SIGNALS:
-    void sigBlogAdded( const BilboBlog& );
-    void sigBlogEdited( const BilboBlog& );
+    void sigBlogAdded(const BilboBlog &);
+    void sigBlogEdited(const BilboBlog &);
 
 private:
-    void showWaitWidget( QString text );
+    void showWaitWidget(QString text);
     void hideWaitWidget();
 
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 #endif

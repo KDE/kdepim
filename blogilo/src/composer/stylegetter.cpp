@@ -18,7 +18,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -43,18 +42,17 @@
 
 #include <QFile>
 
-
 static const char POST_TITLE[] = "Temporary-Post-Used-For-Style-Detection-Title-";
 static const char  POST_CONTENT[] = "Temporary-Post-Used-For-Style-Detection-Content-";
 
-StyleGetter::StyleGetter( const int blogid, QObject *parent )
-    : QObject( parent )
+StyleGetter::StyleGetter(const int blogid, QObject *parent)
+    : QObject(parent)
 {
     qDebug();
-    BilboBlog *tempBlog = DBMan::self()->blog( blogid );
-    if ( tempBlog->isError() ) {
-        KMessageBox::detailedError( mParent, i18n( "Cannot fetch the selected blog style."),
-                            DBMan::self()->lastErrorText()  );
+    BilboBlog *tempBlog = DBMan::self()->blog(blogid);
+    if (tempBlog->isError()) {
+        KMessageBox::detailedError(mParent, i18n("Cannot fetch the selected blog style."),
+                                   DBMan::self()->lastErrorText());
         return;
     }
     // sets cachePath to ~/.kde4/share/apps/bilbo/blog_host_name/
@@ -62,32 +60,32 @@ StyleGetter::StyleGetter( const int blogid, QObject *parent )
 //     QString blogDir = tempBlog.url().host();
 //     qDebug() << blogDir;
 //     mCachePath = KStandardDirs::locateLocal( "data", "bilbo/" + blogDir + '/' , true );
-    QString url = QString::fromLatin1("blogilo/%1/" ).arg( blogid );
-    mCachePath = KStandardDirs::locateLocal( "data", url , true );
+    QString url = QString::fromLatin1("blogilo/%1/").arg(blogid);
+    mCachePath = KStandardDirs::locateLocal("data", url , true);
     generateRandomPostStrings();
-    mParent = qobject_cast< QWidget* >( parent );
-    Q_ASSERT( mParent );
+    mParent = qobject_cast< QWidget * >(parent);
+    Q_ASSERT(mParent);
 
     // create temp post
 
     mTempPost = new BilboPost();
-    mTempPost->setTitle( mPostTitle );
-    mTempPost->setContent( mPostContent );
-    mTempPost->setPrivate( false );
+    mTempPost->setTitle(mPostTitle);
+    mTempPost->setContent(mPostContent);
+    mTempPost->setPrivate(false);
 
-    if ( ( tempBlog->api() == BilboBlog::MOVABLETYPE_API ) ||
-         ( tempBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) ) {
-        mTempPost->setCreationDateTime( KDateTime( QDate(2000, 1, 1), QTime(0, 0), KDateTime::UTC ) );
+    if ((tempBlog->api() == BilboBlog::MOVABLETYPE_API) ||
+            (tempBlog->api() == BilboBlog::WORDPRESSBUGGY_API)) {
+        mTempPost->setCreationDateTime(KDateTime(QDate(2000, 1, 1), QTime(0, 0), KDateTime::UTC));
     }
 
-    b = new Backend( blogid );
-    connect( b, SIGNAL(sigPostPublished(int,BilboPost*)), this,
-             SLOT(slotTempPostPublished(int,BilboPost*)) );
+    b = new Backend(blogid);
+    connect(b, SIGNAL(sigPostPublished(int,BilboPost*)), this,
+            SLOT(slotTempPostPublished(int,BilboPost*)));
     connect(b, &Backend::sigError, this, &StyleGetter::slotError);
 
-    Q_EMIT sigGetStyleProgress( 10 );
+    Q_EMIT sigGetStyleProgress(10);
 
-    b->publishPost( mTempPost );
+    b->publishPost(mTempPost);
 }
 
 StyleGetter::~StyleGetter()
@@ -95,9 +93,9 @@ StyleGetter::~StyleGetter()
     qDebug();
 }
 
-QString StyleGetter::styledHtml( const int blogid,
-                                      const QString &title,
-                                      const QString &content )
+QString StyleGetter::styledHtml(const int blogid,
+                                const QString &title,
+                                const QString &content)
 {
     qDebug();
 //     BilboBlog tempBlog = DBMan::self()->getBlogInfo( blogid );
@@ -108,145 +106,143 @@ QString StyleGetter::styledHtml( const int blogid,
 //
 //     QString blogDir = tempBlog.url().host();
     //QString url = QString( "bilbo/%1/" ).arg( blogid );
-    QString url = QString::fromLatin1("blogilo/%1/" ).arg( blogid );
-    url = KStandardDirs::locateLocal( "data", url , true );
-    KUrl dest( url );
+    QString url = QString::fromLatin1("blogilo/%1/").arg(blogid);
+    url = KStandardDirs::locateLocal("data", url , true);
+    KUrl dest(url);
     dest.addPath(QLatin1String("style.html"));
     dest.setScheme(QLatin1String("file"));
 
-    if ( !dest.isValid() ) {
+    if (!dest.isValid()) {
         return QLatin1String("<html><body><h2 align='center'>") + title + QLatin1String("</h2><br>") + content + QLatin1String("</html>");
     }
-    QFile file( dest.pathOrUrl() );
-    if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+    QFile file(dest.pathOrUrl());
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         return QLatin1String("<html><body><h2 align='center'>") + title + QLatin1String("</h2><br>") + content + QLatin1String("</html>");
     }
 
     QString buffer;
-    while ( !file.atEnd() ) {
+    while (!file.atEnd()) {
         QByteArray line = file.readLine();
-        buffer.append( QString::fromUtf8( line ) );
+        buffer.append(QString::fromUtf8(line));
     }
 
-    QRegExp typeRx ( QLatin1String( "(TYPE[^>]+>)" ) );
-    buffer.remove( typeRx );
+    QRegExp typeRx(QLatin1String("(TYPE[^>]+>)"));
+    buffer.remove(typeRx);
 
-    QRegExp titleRx( QString::fromLatin1( "%1[\\d]*" ).arg( QLatin1String(POST_TITLE) ) );
-    QRegExp contentRx( QString::fromLatin1( "%1[\\d]*" ).arg( QLatin1String(POST_CONTENT )) );
+    QRegExp titleRx(QString::fromLatin1("%1[\\d]*").arg(QLatin1String(POST_TITLE)));
+    QRegExp contentRx(QString::fromLatin1("%1[\\d]*").arg(QLatin1String(POST_CONTENT)));
 
-    buffer.replace( titleRx, title );
-    buffer.replace( contentRx, content );
+    buffer.replace(titleRx, title);
+    buffer.replace(contentRx, content);
 
     return buffer;
 }
 
-void StyleGetter::slotTempPostPublished( int blogId, BilboPost* post )
+void StyleGetter::slotTempPostPublished(int blogId, BilboPost *post)
 {
     qDebug();
 
     KUrl postUrl;
 //     postUrl = post->permaLink();
     postUrl = post->link();
-    if ( postUrl.isEmpty() ) {
+    if (postUrl.isEmpty()) {
         qDebug() << "link was empty";
 //         postUrl = post->link();
         postUrl = post->permaLink();
-        if ( postUrl.isEmpty() ) {
+        if (postUrl.isEmpty()) {
             qDebug() << "permaLink was empty";
-            postUrl = KUrl( DBMan::self()->blog(blogId)->blogUrl() );
+            postUrl = KUrl(DBMan::self()->blog(blogId)->blogUrl());
         }
     }
 
-    Q_EMIT sigGetStyleProgress( 30 );
+    Q_EMIT sigGetStyleProgress(30);
 
     mTempPost = post;
-    KIO::StoredTransferJob *job = KIO::storedGet( postUrl, KIO::NoReload, KIO::HideProgressInfo );
-    connect( job, SIGNAL(result(KJob*)),
-            this, SLOT(slotHtmlCopied(KJob*)) );
+    KIO::StoredTransferJob *job = KIO::storedGet(postUrl, KIO::NoReload, KIO::HideProgressInfo);
+    connect(job, SIGNAL(result(KJob*)),
+            this, SLOT(slotHtmlCopied(KJob*)));
 
 }
 
-void StyleGetter::slotHtmlCopied( KJob *job )
+void StyleGetter::slotHtmlCopied(KJob *job)
 {
     qDebug();
-    if ( job->error() ) {
-        KMessageBox::detailedError( mParent, i18n( "Cannot get html file."),
-                            job->errorString() );
+    if (job->error()) {
+        KMessageBox::detailedError(mParent, i18n("Cannot get html file."),
+                                   job->errorString());
         sender()->deleteLater();
         return;
     }
 
-    Q_EMIT sigGetStyleProgress( 50 );
+    Q_EMIT sigGetStyleProgress(50);
 
-    QByteArray httpData( qobject_cast<KIO::StoredTransferJob*>( job )->data() );
+    QByteArray httpData(qobject_cast<KIO::StoredTransferJob *>(job)->data());
 
-    QString href( mTempPost->permaLink().url() );
-    int filenameOffset = href.lastIndexOf( QLatin1String("/") );
-    href = href.remove( filenameOffset + 1, 255 );
-    QString base( QLatin1String("<base href=\"")+href+QLatin1String("\"/>") );
+    QString href(mTempPost->permaLink().url());
+    int filenameOffset = href.lastIndexOf(QLatin1String("/"));
+    href = href.remove(filenameOffset + 1, 255);
+    QString base(QLatin1String("<base href=\"") + href + QLatin1String("\"/>"));
 
-    QRegExp rxBase( QLatin1String("(<base\\shref=[^>]+>)") );
-    if ( rxBase.indexIn( QLatin1String(httpData) ) != -1 ) {
-         httpData.replace( rxBase.cap( 1 ).toLatin1(), base.toLatin1() );
+    QRegExp rxBase(QLatin1String("(<base\\shref=[^>]+>)"));
+    if (rxBase.indexIn(QLatin1String(httpData)) != -1) {
+        httpData.replace(rxBase.cap(1).toLatin1(), base.toLatin1());
+    } else {
+        int headOffset = httpData.indexOf("<head>");
+        httpData.insert(headOffset + 6, base.toLatin1());
     }
-    else {
-        int headOffset = httpData.indexOf( "<head>" );
-        httpData.insert( headOffset + 6, base.toLatin1() );
-    }
 
-    QFile file( mCachePath + QLatin1String("style.html") );
+    QFile file(mCachePath + QLatin1String("style.html"));
 //     Q_ASSERT( dest.isValid() );
-    if ( file.exists() ) {
+    if (file.exists()) {
         file.remove();
     }
-    if (!file.open( QIODevice::WriteOnly ) ) {
-        KMessageBox::error( mParent,
-                            i18n( "Cannot write data to file %1", file.fileName() ) );
+    if (!file.open(QIODevice::WriteOnly)) {
+        KMessageBox::error(mParent,
+                           i18n("Cannot write data to file %1", file.fileName()));
         return;
     }
-    if ( file.write( httpData ) == -1 ) {
-        KMessageBox::error( mParent,
-                            i18n( "Cannot write data to file %1", file.fileName() ) );
+    if (file.write(httpData) == -1) {
+        KMessageBox::error(mParent,
+                           i18n("Cannot write data to file %1", file.fileName()));
 
         file.close();
         return;
     }
     file.close();
-    Q_EMIT sigGetStyleProgress( 70 );
+    Q_EMIT sigGetStyleProgress(70);
 //     Q_EMIT sigStyleFetched();
 
-
     //Remove temp post from the server.
-    connect( b, SIGNAL(sigPostRemoved(int,BilboPost)), this,
-             SLOT(slotTempPostRemoved(int,BilboPost)) );
-    b->removePost( mTempPost );
+    connect(b, SIGNAL(sigPostRemoved(int,BilboPost)), this,
+            SLOT(slotTempPostRemoved(int,BilboPost)));
+    b->removePost(mTempPost);
 }
 
-void StyleGetter::slotTempPostRemoved( int blog_id, const BilboPost &post)
+void StyleGetter::slotTempPostRemoved(int blog_id, const BilboPost &post)
 {
-    Q_UNUSED( blog_id );
-    Q_UNUSED( post );
+    Q_UNUSED(blog_id);
+    Q_UNUSED(post);
 
     delete mTempPost;
     b->deleteLater();
 
-    Q_EMIT sigGetStyleProgress( 100 );
+    Q_EMIT sigGetStyleProgress(100);
     Q_EMIT sigStyleFetched();
 }
 
 void StyleGetter::generateRandomPostStrings()
 {
     qDebug();
-    srand( time( 0 ) );
+    srand(time(0));
     int postRandomNumber = rand();
-    mPostTitle = QString::fromLatin1("%1%2" ).arg( QLatin1String(POST_TITLE) ).arg( postRandomNumber );
-    mPostContent = QString::fromLatin1( "%1%2" ).arg( QLatin1String(POST_CONTENT) ).arg( postRandomNumber );
+    mPostTitle = QString::fromLatin1("%1%2").arg(QLatin1String(POST_TITLE)).arg(postRandomNumber);
+    mPostContent = QString::fromLatin1("%1%2").arg(QLatin1String(POST_CONTENT)).arg(postRandomNumber);
 }
 
-void StyleGetter::slotError( const QString & errMsg )
+void StyleGetter::slotError(const QString &errMsg)
 {
     qDebug();
-    KMessageBox::detailedError( mParent, i18n( "An error occurred in the latest transaction." ), errMsg );
+    KMessageBox::detailedError(mParent, i18n("An error occurred in the latest transaction."), errMsg);
     b->deleteLater();
 }
 

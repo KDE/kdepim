@@ -27,66 +27,68 @@
 PostsTabWidget::PostsTabWidget(QWidget *parent)
     : KTabWidget(parent)
 {
-    setElideMode( Qt::ElideRight );
-    setTabsClosable( true );
-    tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );
+    setElideMode(Qt::ElideRight);
+    setTabsClosable(true);
+    tabBar()->setSelectionBehaviorOnRemove(QTabBar::SelectPreviousTab);
     setDocumentMode(true);
 
-    setMovable( true );
+    setMovable(true);
 
-    mNewTabButton = new QToolButton( this );
-    mNewTabButton->setIcon( QIcon::fromTheme( QLatin1String( "tab-new" ) ) );
+    mNewTabButton = new QToolButton(this);
+    mNewTabButton->setIcon(QIcon::fromTheme(QLatin1String("tab-new")));
     mNewTabButton->adjustSize();
-    mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
+    mNewTabButton->setToolTip(i18nc("@info:tooltip", "Open a new tab"));
 #ifndef QT_NO_ACCESSIBILITY
-    mNewTabButton->setAccessibleName( i18n( "New tab" ) );
+    mNewTabButton->setAccessibleName(i18n("New tab"));
 #endif
-    setCornerWidget( mNewTabButton, Qt::TopLeftCorner );
+    setCornerWidget(mNewTabButton, Qt::TopLeftCorner);
     connect(mNewTabButton, &QToolButton::clicked, this, &PostsTabWidget::createNewPost);
 
-    mCloseTabButton = new QToolButton( this );
-    mCloseTabButton->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
+    mCloseTabButton = new QToolButton(this);
+    mCloseTabButton->setIcon(QIcon::fromTheme(QLatin1String("tab-close")));
     mCloseTabButton->adjustSize();
-    mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
+    mCloseTabButton->setToolTip(i18nc("@info:tooltip", "Close the current tab"));
 #ifndef QT_NO_ACCESSIBILITY
-    mCloseTabButton->setAccessibleName( i18n( "Close tab" ) );
+    mCloseTabButton->setAccessibleName(i18n("Close tab"));
 #endif
-    setCornerWidget( mCloseTabButton, Qt::TopRightCorner );
+    setCornerWidget(mCloseTabButton, Qt::TopRightCorner);
     connect(mCloseTabButton, &QToolButton::clicked, this, &PostsTabWidget::closeTabClicked);
 
-    setContextMenuPolicy( Qt::CustomContextMenu );
-    connect( this, SIGNAL(customContextMenuRequested(QPoint)),
-             this, SLOT(slotTabContextMenuRequest(QPoint)) );
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(slotTabContextMenuRequest(QPoint)));
 }
 
 PostsTabWidget::~PostsTabWidget()
 {
 }
 
-void PostsTabWidget::slotTabContextMenuRequest( const QPoint &pos )
+void PostsTabWidget::slotTabContextMenuRequest(const QPoint &pos)
 {
     QTabBar *bar = tabBar();
-    if ( count() < 1 ) return;
-
-    const int indexBar = bar->tabAt( bar->mapFrom( this, pos ) );
-    if ( indexBar == -1 )
+    if (count() < 1) {
         return;
+    }
 
-    QMenu menu( this );
-    QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-    closeTab->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
+    const int indexBar = bar->tabAt(bar->mapFrom(this, pos));
+    if (indexBar == -1) {
+        return;
+    }
 
-    QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
-    allOther->setEnabled( count() > 1 );
-    allOther->setIcon( QIcon::fromTheme( QLatin1String( "tab-close-other" ) ) );
+    QMenu menu(this);
+    QAction *closeTab = menu.addAction(i18nc("@action:inmenu", "Close Tab"));
+    closeTab->setIcon(QIcon::fromTheme(QLatin1String("tab-close")));
 
-    QAction *action = menu.exec( mapToGlobal( pos ) );
+    QAction *allOther = menu.addAction(i18nc("@action:inmenu", "Close All Other Tabs"));
+    allOther->setEnabled(count() > 1);
+    allOther->setIcon(QIcon::fromTheme(QLatin1String("tab-close-other")));
 
-    if ( action == allOther ) { // Close all other tabs
+    QAction *action = menu.exec(mapToGlobal(pos));
+
+    if (action == allOther) {   // Close all other tabs
         Q_EMIT tabRemoveAllExclude(indexBar);
     } else if (action == closeTab) {
         Q_EMIT tabCloseRequested(indexBar);
     }
 }
-
 

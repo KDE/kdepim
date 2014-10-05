@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -49,8 +48,8 @@ public:
     QString mName;
     quint16 mChecksum;
 };
-BilboMedia::BilboMedia( QObject *parent )
-        : QObject( parent ), d(new Private)
+BilboMedia::BilboMedia(QObject *parent)
+    : QObject(parent), d(new Private)
 {
     d->mChecksum = 0;
 }
@@ -65,8 +64,7 @@ int BilboMedia::blogId() const
     return d->mBlogId;
 }
 
-
-void BilboMedia::setBlogId( const int blog_id )
+void BilboMedia::setBlogId(const int blog_id)
 {
     d->mBlogId = blog_id;
 }
@@ -76,7 +74,7 @@ int BilboMedia::mediaId() const
     return d->mMediaId;
 }
 
-void BilboMedia::setMediaId( const int media_id )
+void BilboMedia::setMediaId(const int media_id)
 {
     d->mMediaId = media_id;
 }
@@ -86,7 +84,7 @@ bool BilboMedia::isUploaded() const
     return d->mIsUploaded;
 }
 
-void BilboMedia::setUploaded( bool uploaded )
+void BilboMedia::setUploaded(bool uploaded)
 {
     d->mIsUploaded = uploaded;
 }
@@ -96,7 +94,7 @@ KUrl BilboMedia::localUrl() const
     return d->mLocalUrl;
 }
 
-void BilboMedia::setLocalUrl( const KUrl& url )
+void BilboMedia::setLocalUrl(const KUrl &url)
 {
     d->mLocalUrl = url;
 }
@@ -106,7 +104,7 @@ KUrl BilboMedia::remoteUrl() const
     return d->mRemoteUrl;
 }
 
-void BilboMedia::setRemoteUrl( const KUrl& url )
+void BilboMedia::setRemoteUrl(const KUrl &url)
 {
     d->mRemoteUrl = url;
 }
@@ -116,7 +114,7 @@ QString BilboMedia::mimeType() const
     return d->mMimeType;
 }
 
-void BilboMedia::setMimeType( const QString &type )
+void BilboMedia::setMimeType(const QString &type)
 {
     d->mMimeType = type;
 }
@@ -126,7 +124,7 @@ QString BilboMedia::name() const
     return d->mName;
 }
 
-void BilboMedia::setName( const QString &name )
+void BilboMedia::setName(const QString &name)
 {
     d->mName = name;
 }
@@ -136,19 +134,19 @@ QIcon BilboMedia::icon() const
     QPixmap iconPic;
     QString type;
     type = this->mimeType();
-    if ( type.contains( QLatin1String("image") ) && !this->localUrl().isEmpty() ) {
-        iconPic.load( this->localUrl().toLocalFile() );
+    if (type.contains(QLatin1String("image")) && !this->localUrl().isEmpty()) {
+        iconPic.load(this->localUrl().toLocalFile());
 //   iconPic.scaled(64, 64, Qt::IgnoreAspectRatio);
-        iconPic.scaledToHeight( 32 );
-        if ( !iconPic.isNull() ) {
-            return QIcon( iconPic );
+        iconPic.scaledToHeight(32);
+        if (!iconPic.isNull()) {
+            return QIcon(iconPic);
         } else {
             qDebug() << "iconPic is Null";
         }
     }
 
-    type.replace( QLatin1Char( '/' ), QLatin1Char( '-' ) );
-    return QIcon( type );
+    type.replace(QLatin1Char('/'), QLatin1Char('-'));
+    return QIcon(type);
 }
 
 quint16 BilboMedia::checksum() const
@@ -156,7 +154,7 @@ quint16 BilboMedia::checksum() const
     return d->mChecksum;
 }
 
-void BilboMedia::setCheckSum( quint16 sum )
+void BilboMedia::setCheckSum(quint16 sum)
 {
     d->mChecksum = sum;
 }

@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -41,30 +40,30 @@ class PostEntry: public QFrame
 {
     Q_OBJECT
 public:
-    explicit PostEntry( QWidget *parent );
+    explicit PostEntry(QWidget *parent);
     ~PostEntry();
     QString postTitle() const;
 
-    void setPostTitle( const QString &title );
-    void setPostBody( const QString &content, const QString &additionalContent=QString() );
+    void setPostTitle(const QString &title);
+    void setPostBody(const QString &content, const QString &additionalContent = QString());
 
     int currentPostBlogId() const;
-    void setCurrentPostBlogId( int blog_id );
+    void setCurrentPostBlogId(int blog_id);
 
-    BilboPost* currentPost();
-    void setCurrentPost( const BilboPost &post );
+    BilboPost *currentPost();
+    void setCurrentPost(const BilboPost &post);
 
     Qt::LayoutDirection defaultLayoutDirection() const;
-    void setDefaultLayoutDirection( Qt::LayoutDirection direction );
+    void setDefaultLayoutDirection(Qt::LayoutDirection direction);
 
     /**
      * Will Upload media files not uploaded yet, and return true on success and false on failure.
      * @param backend A Backend instant to use! will create one if NULL
      * @return true on success and false on failure.
      */
-    bool uploadMediaFiles( Backend *backend=0 );
+    bool uploadMediaFiles(Backend *backend = 0);
 
-    void submitPost ( int blogId, const BilboPost &postData );
+    void submitPost(int blogId, const BilboPost &postData);
 
     void saveLocally();
 
@@ -73,13 +72,13 @@ Q_SIGNALS:
      * emitted when title of this entry changed.
      * @param title is a QString which contains new title.
      */
-    void postTitleChanged( const QString &title );
+    void postTitleChanged(const QString &title);
     /**
      * This signal emitted when a post manipulation job e.g. Publishing a new post finished.
      * @param isError If an error occurred on publishing this will be TRUE. Otherwise FLASE
      * @param customMessage A Custom message will be shown on StatusBar.
      */
-    void postPublishingDone( bool isError, const QString &customMessage );
+    void postPublishingDone(bool isError, const QString &customMessage);
 
     /**
      * This signal is emitted when the content of VisualEditor or HtmlEditor changes.
@@ -99,7 +98,7 @@ Q_SIGNALS:
      * @param isPermanent If it's true the message will not have a timeout!
      *  so it will be shown until next message arrived
      */
-    void showStatusMessage( const QString& message, bool isPermanent);
+    void showStatusMessage(const QString &message, bool isPermanent);
 
     /**
      * This signal is emitted for operations in background, like request of some
@@ -107,14 +106,14 @@ Q_SIGNALS:
      * @param isBusy if it's true, the operation is in progress. otherwise, it
      * is finished.
      */
-    void sigBusy( bool isBusy );
+    void sigBusy(bool isBusy);
 
 public Q_SLOTS:
     void settingsChanged();
 
 protected Q_SLOTS:
-    void slotError( const QString& errMsg );
-    void slotPostPublished( int blog_id, BilboPost *post );
+    void slotError(const QString &errMsg);
+    void slotPostPublished(int blog_id, BilboPost *post);
     void slotTitleChanged();
     void showProgressBar();
     void deleteProgressBar();
@@ -126,7 +125,7 @@ protected Q_SLOTS:
      *  Sets the content of the current tab  as other tabs' contents, to apply recent
      * changes. this function executes each time the user switches between tabs.
      */
-    void slotSyncEditors( int index );
+    void slotSyncEditors(int index);
 
     void slotSetPostPreview();
 
@@ -145,17 +144,17 @@ protected:
      * Sets the given string as the HtmlEditor and VisualEditor content.
      * @param content
      */
-    void setHtmlContent( const QString &content );
+    void setHtmlContent(const QString &content);
 
-    QList <BilboMedia*> localImages() const;
-    void replaceImageSrc(const QString& src, const QString& dest);
+    QList <BilboMedia *> localImages() const;
+    void replaceImageSrc(const QString &src, const QString &dest);
 
 private:
     void createUi();
     void setCurrentPostFromEditor();
 
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 #endif

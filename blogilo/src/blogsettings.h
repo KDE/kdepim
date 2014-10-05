@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -33,13 +32,13 @@ class BlogSettings : public QWidget, public Ui::SettingsBlogsBase
 {
     Q_OBJECT
 public:
-    explicit BlogSettings( QWidget *parent = 0 );
+    explicit BlogSettings(QWidget *parent = 0);
     ~BlogSettings();
 
 signals:
-    void blogAdded( const BilboBlog &blog );
-    void blogEdited( const BilboBlog &blog );
-    void blogRemoved( int blog_id );
+    void blogAdded(const BilboBlog &blog);
+    void blogEdited(const BilboBlog &blog);
+    void blogRemoved(int blog_id);
 
 protected slots:
     void addBlog();
@@ -48,14 +47,14 @@ protected slots:
     void loadBlogsList();
 
 private slots:
-    void slotBlogAdded( const BilboBlog &blog );
-    void slotBlogEdited( const BilboBlog &blog );
+    void slotBlogAdded(const BilboBlog &blog);
+    void slotBlogEdited(const BilboBlog &blog);
     void blogsTablestateChanged();
 
 private:
-    void addBlogToList( const BilboBlog &blog );
+    void addBlogToList(const BilboBlog &blog);
     enum BlogType {
-        BlogId = QTreeWidgetItem::UserType +1
+        BlogId = QTreeWidgetItem::UserType + 1
     };
 
 };

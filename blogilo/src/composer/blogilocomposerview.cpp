@@ -17,7 +17,6 @@
   02110-1301, USA.
 */
 
-
 #include "blogilocomposerview.h"
 #include "pimcommon/widgets/customtoolswidget.h"
 
@@ -28,11 +27,11 @@
 #include <QMouseEvent>
 #include <QMenu>
 
-BlogiloComposerView::BlogiloComposerView(QWidget * parent)
+BlogiloComposerView::BlogiloComposerView(QWidget *parent)
     : ComposerEditorNG::ComposerView(parent),
       mCustomTools(0)
 {
-    settings()->setFontSize ( QWebSettings::DefaultFontSize, 14 );
+    settings()->setFontSize(QWebSettings::DefaultFontSize, 14);
 }
 
 BlogiloComposerView::~BlogiloComposerView()
@@ -50,16 +49,16 @@ void BlogiloComposerView::startEditing()
     //NOTE: it needs a mouse click!
     //any better way to make the cursor visible?
     this -> setFocus();
-    QMouseEvent mouseEventPress ( QEvent::MouseButtonPress, QPoint ( 10,10 ), Qt::LeftButton, Qt::NoButton, Qt::NoModifier );
-    QApplication::sendEvent ( this, &mouseEventPress );
-    QTimer::singleShot ( 50, this, SLOT(slotSendMouseReleaseEvent()) );
+    QMouseEvent mouseEventPress(QEvent::MouseButtonPress, QPoint(10, 10), Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
+    QApplication::sendEvent(this, &mouseEventPress);
+    QTimer::singleShot(50, this, SLOT(slotSendMouseReleaseEvent()));
 }
 
 void BlogiloComposerView::slotSendMouseReleaseEvent()
 {
-    QMouseEvent mouseEventRelease ( QEvent::MouseButtonRelease, QPoint ( 10,10 ), Qt::LeftButton, Qt::NoButton, Qt::NoModifier );
-    QApplication::sendEvent ( this, &mouseEventRelease );
-    pageAction( QWebPage::MoveToEndOfDocument )->trigger();
+    QMouseEvent mouseEventRelease(QEvent::MouseButtonRelease, QPoint(10, 10), Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
+    QApplication::sendEvent(this, &mouseEventRelease);
+    pageAction(QWebPage::MoveToEndOfDocument)->trigger();
 }
 
 void BlogiloComposerView::addExtraAction(QMenu *menu)

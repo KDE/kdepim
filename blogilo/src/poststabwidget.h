@@ -34,7 +34,7 @@ Q_SIGNALS:
     void tabRemoveAllExclude(int);
 
 private Q_SLOTS:
-    void slotTabContextMenuRequest(const QPoint&);
+    void slotTabContextMenuRequest(const QPoint &);
 
 private:
     QToolButton *mNewTabButton;

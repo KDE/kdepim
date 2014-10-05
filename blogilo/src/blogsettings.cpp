@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -31,22 +30,22 @@
 #include <QIcon>
 #include <KLocalizedString>
 
-BlogSettings::BlogSettings( QWidget *parent )
-    : QWidget( parent )
+BlogSettings::BlogSettings(QWidget *parent)
+    : QWidget(parent)
 {
-    setupUi( this );
+    setupUi(this);
 
     connect(btnAdd, &QPushButton::clicked, this, &BlogSettings::addBlog);
     connect(btnEdit, &QPushButton::clicked, this, &BlogSettings::editBlog);
     connect(btnRemove, &QPushButton::clicked, this, &BlogSettings::removeBlog);
-    connect( blogsTable, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-             this, SLOT(blogsTablestateChanged()) );
+    connect(blogsTable, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+            this, SLOT(blogsTablestateChanged()));
     connect(blogsTable, &QTreeWidget::doubleClicked, this, &BlogSettings::editBlog);
 
-    blogsTable->setHeaderLabels(QStringList()<<i18n("Title")<<i18n("URL"));
-    btnAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-    btnEdit->setIcon( QIcon::fromTheme( QLatin1String("edit-rename") ) );
-    btnRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
+    blogsTable->setHeaderLabels(QStringList() << i18n("Title") << i18n("URL"));
+    btnAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    btnEdit->setIcon(QIcon::fromTheme(QLatin1String("edit-rename")));
+    btnRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
     loadBlogsList();
 }
 
@@ -56,87 +55,88 @@ BlogSettings::~BlogSettings()
 
 void BlogSettings::addBlog()
 {
-    AddEditBlog *addEditBlogWindow = new AddEditBlog( -1, this );
-    addEditBlogWindow->setWindowModality( Qt::ApplicationModal );
-    addEditBlogWindow->setAttribute( Qt::WA_DeleteOnClose );
-    connect( addEditBlogWindow, SIGNAL(sigBlogAdded(BilboBlog)),
-             this, SLOT(slotBlogAdded(BilboBlog)) );
-    connect( addEditBlogWindow, SIGNAL(sigBlogAdded(BilboBlog)),
-             this, SIGNAL(blogAdded(BilboBlog)));
+    AddEditBlog *addEditBlogWindow = new AddEditBlog(-1, this);
+    addEditBlogWindow->setWindowModality(Qt::ApplicationModal);
+    addEditBlogWindow->setAttribute(Qt::WA_DeleteOnClose);
+    connect(addEditBlogWindow, SIGNAL(sigBlogAdded(BilboBlog)),
+            this, SLOT(slotBlogAdded(BilboBlog)));
+    connect(addEditBlogWindow, SIGNAL(sigBlogAdded(BilboBlog)),
+            this, SIGNAL(blogAdded(BilboBlog)));
     addEditBlogWindow->show();
 }
 
-void BlogSettings::slotBlogAdded( const BilboBlog &blog )
+void BlogSettings::slotBlogAdded(const BilboBlog &blog)
 {
-    addBlogToList( blog );
+    addBlogToList(blog);
 }
 
 void BlogSettings::editBlog()
 {
-    QTreeWidgetItem * item = blogsTable->currentItem();
+    QTreeWidgetItem *item = blogsTable->currentItem();
     if (item) {
-        const int blog_id = item->data( 0, BlogId ).toInt();
-        AddEditBlog *addEditBlogWindow = new AddEditBlog( blog_id, this );
-        addEditBlogWindow->setAttribute( Qt::WA_DeleteOnClose );
-        addEditBlogWindow->setWindowModality( Qt::ApplicationModal );
-        connect( addEditBlogWindow, SIGNAL(sigBlogEdited(BilboBlog)),
-                 this, SLOT(slotBlogEdited(BilboBlog)) );
-        connect( addEditBlogWindow, SIGNAL(sigBlogEdited(BilboBlog)),
-                 this, SIGNAL(blogEdited(BilboBlog)));
+        const int blog_id = item->data(0, BlogId).toInt();
+        AddEditBlog *addEditBlogWindow = new AddEditBlog(blog_id, this);
+        addEditBlogWindow->setAttribute(Qt::WA_DeleteOnClose);
+        addEditBlogWindow->setWindowModality(Qt::ApplicationModal);
+        connect(addEditBlogWindow, SIGNAL(sigBlogEdited(BilboBlog)),
+                this, SLOT(slotBlogEdited(BilboBlog)));
+        connect(addEditBlogWindow, SIGNAL(sigBlogEdited(BilboBlog)),
+                this, SIGNAL(blogEdited(BilboBlog)));
         addEditBlogWindow->show();
     }
 }
 
-void BlogSettings::slotBlogEdited( const BilboBlog &blog )
+void BlogSettings::slotBlogEdited(const BilboBlog &blog)
 {
-    QTreeWidgetItem * item = blogsTable->currentItem();
+    QTreeWidgetItem *item = blogsTable->currentItem();
     if (item) {
-        item->setText(0,blog.title());
-        item->setText(1,blog.blogUrl());
+        item->setText(0, blog.title());
+        item->setText(1, blog.blogUrl());
     }
 }
 
 void BlogSettings::removeBlog()
 {
-    QTreeWidgetItem * item = blogsTable->currentItem();
+    QTreeWidgetItem *item = blogsTable->currentItem();
     if (item) {
-        if(KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected blog?"))
-            == KMessageBox::No)
+        if (KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected blog?"))
+                == KMessageBox::No) {
             return;
-        const int blog_id = item->data( 0, BlogId ).toInt();
-        if ( DBMan::self()->removeBlog( blog_id ) ) {
+        }
+        const int blog_id = item->data(0, BlogId).toInt();
+        if (DBMan::self()->removeBlog(blog_id)) {
             delete blogsTable->currentItem();
-            emit blogRemoved( blog_id );
+            emit blogRemoved(blog_id);
         } else {
             ///cannot remove
-            qCritical()<<"Cannot remove blog with id "<<blog_id;
+            qCritical() << "Cannot remove blog with id " << blog_id;
         }
     }
 }
 
 void BlogSettings::loadBlogsList()
 {
-    QList<BilboBlog*> list = DBMan::self()->blogList().values();
+    QList<BilboBlog *> list = DBMan::self()->blogList().values();
     const int count = list.count();
-    for(int i=0; i<count; ++i) {
-        addBlogToList( *list[i] );
+    for (int i = 0; i < count; ++i) {
+        addBlogToList(*list[i]);
     }
 }
 
 void BlogSettings::blogsTablestateChanged()
 {
-    if ( blogsTable->currentItem() ) {
-        btnEdit->setEnabled( true );
-        btnRemove->setEnabled( true );
+    if (blogsTable->currentItem()) {
+        btnEdit->setEnabled(true);
+        btnRemove->setEnabled(true);
     } else {
-        btnEdit->setEnabled( false );
-        btnRemove->setEnabled( false );
+        btnEdit->setEnabled(false);
+        btnRemove->setEnabled(false);
     }
 }
 
-void BlogSettings::addBlogToList( const BilboBlog &blog )
+void BlogSettings::addBlogToList(const BilboBlog &blog)
 {
-    QTreeWidgetItem *item = new QTreeWidgetItem( blogsTable, QStringList()<<blog.title()<<blog.blogUrl() );
+    QTreeWidgetItem *item = new QTreeWidgetItem(blogsTable, QStringList() << blog.title() << blog.blogUrl());
     item->setData(0, BlogId, blog.id());
 }
 

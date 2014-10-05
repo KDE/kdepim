@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -37,13 +36,13 @@ class WaitWidget : public QDialog, public Ui::WaitWidgetBase
 {
     Q_OBJECT
 public:
-    explicit WaitWidget( QWidget* parent = 0 );
+    explicit WaitWidget(QWidget *parent = 0);
     ~WaitWidget();
     // sets the text in the label
-    void setText( const QString& text );
+    void setText(const QString &text);
     void jobDone();
     // sets the progress bar's max value
-    void setMaxJobs( int );
+    void setMaxJobs(int);
     /**
      * Set progressbar to a busy progressbar
      */

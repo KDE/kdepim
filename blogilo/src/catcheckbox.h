@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -38,18 +37,18 @@ class CatCheckBox : public QCheckBox
 {
     Q_OBJECT
 public:
-    explicit CatCheckBox( QWidget* parent = 0 );
+    explicit CatCheckBox(QWidget *parent = 0);
 
-    explicit CatCheckBox( const QString& text, QWidget* parent = 0 );
+    explicit CatCheckBox(const QString &text, QWidget *parent = 0);
 
     ~CatCheckBox();
 
     Category category() const;
-    void setCategory( const Category &category );
+    void setCategory(const Category &category);
 
 private:
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 #endif

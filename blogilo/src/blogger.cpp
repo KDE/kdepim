@@ -38,8 +38,8 @@
 #include <KGAPI/Account>
 #include <KGAPI/AuthJob>
 
-Q_DECLARE_METATYPE(KBlog::BlogPost*)
-Q_DECLARE_METATYPE(KGAPI2::Job*)
+Q_DECLARE_METATYPE(KBlog::BlogPost *)
+Q_DECLARE_METATYPE(KGAPI2::Job *)
 typedef QMap<QString, QString> KBlogInfo;
 
 #define KBLOGPOST_PROPERTY "KBlogPostProperty"
@@ -50,14 +50,14 @@ namespace KBlog
 
 class BloggerPrivate: public KBlog::BlogPrivate
 {
-  public:
+public:
     BloggerPrivate(Blogger *parent);
     virtual ~BloggerPrivate();
 
     void updateKBlogPost(KBlog::BlogPost *kblog, const KGAPI2::Blogger::PostPtr &postPtr);
     KBlog::BlogPost KGAPIPostToKBlogPost(const KGAPI2::Blogger::PostPtr &postPtr);
     QList<KBlog::BlogPost> KGAPIPostsToKBlogPosts(const KGAPI2::ObjectsList &posts);
-    KGAPI2::Blogger::PostPtr KBlogPostToKGAPI(const BlogPost * const kblog);
+    KGAPI2::Blogger::PostPtr KBlogPostToKGAPI(const BlogPost *const kblog);
 
     KBlogInfo KGAPIBlogToKBlogBlog(const KGAPI2::Blogger::BlogPtr &blogPtr);
     QList<KBlogInfo> KGAPIBlogsToKBlogBlogs(const KGAPI2::ObjectsList &blogs);
@@ -80,8 +80,8 @@ class BloggerPrivate: public KBlog::BlogPrivate
     QString secretKey;
     KGAPI2::AccountPtr account;
 
-  private:
-    Blogger * const q_ptr;
+private:
+    Blogger *const q_ptr;
     Q_DECLARE_PUBLIC(Blogger)
 };
 
@@ -144,7 +144,6 @@ QList<BlogPost> BloggerPrivate::KGAPIPostsToKBlogPosts(const KGAPI2::ObjectsList
     return blogPosts;
 }
 
-
 KBlogInfo BloggerPrivate::KGAPIBlogToKBlogBlog(const KGAPI2::Blogger::BlogPtr &blogPtr)
 {
     KBlogInfo kblogInfo;
@@ -192,31 +191,31 @@ bool BloggerPrivate::handleError(KGAPI2::Job *job)
         return true;
     }
 
-    KBlog::BlogPost *post = job->property(KBLOGPOST_PROPERTY).value<BlogPost*>();
+    KBlog::BlogPost *post = job->property(KBLOGPOST_PROPERTY).value<BlogPost *>();
 
     KBlog::Blog::ErrorType errCode = Blog::Other;
     switch (job->error()) {
-      case KGAPI2::Unauthorized: {
+    case KGAPI2::Unauthorized: {
         KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(account, apiKey, secretKey, q);
         authJob->setProperty(JOB_PROPERTY, QVariant::fromValue(job));
         q->connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
                    q, SLOT(_k_onAuthenticateFinished(KGAPI2::Job*)));
         return false;
-      }
-      case KGAPI2::AuthCancelled:
-      case KGAPI2::AuthError:
+    }
+    case KGAPI2::AuthCancelled:
+    case KGAPI2::AuthError:
         errCode = Blog::AuthenticationError;
         break;
 
-      case KGAPI2::BadRequest:
+    case KGAPI2::BadRequest:
         errCode = Blog::XmlRpc;
         break;
 
-      // Not found is handled in callers
-      case KGAPI2::NotFound:
+    // Not found is handled in callers
+    case KGAPI2::NotFound:
         return true;
 
-      default:
+    default:
         errCode = Blog::Other;
         break;
     }
@@ -231,9 +230,6 @@ bool BloggerPrivate::handleError(KGAPI2::Job *job)
     return false;
 }
 
-
-
-
 Blogger::Blogger(const KUrl &server, QObject *parent)
     : Blog(server, *new BloggerPrivate(this), parent)
 {
@@ -244,7 +240,6 @@ Blogger::~Blogger()
 {
     qDebug();
 }
-
 
 QString Blogger::interfaceName() const
 {
@@ -273,9 +268,9 @@ void Blogger::authenticate(const QMap<QString, QString> &authData)
         QList<QUrl> scopes;
         scopes << KGAPI2::Account::bloggerScopeUrl();
         account = KGAPI2::AccountPtr(new KGAPI2::Account(authData[QLatin1String("account")],
-                                                         authData[QLatin1String("accessToken")],
-                                                         authData[QLatin1String("refreshToken")],
-                                                         scopes));
+                                     authData[QLatin1String("accessToken")],
+                                     authData[QLatin1String("refreshToken")],
+                                     scopes));
         d->account = account;
     } else {
         account = KGAPI2::AccountPtr(new KGAPI2::Account);
@@ -297,7 +292,7 @@ void BloggerPrivate::_k_onAuthenticateFinished(KGAPI2::Job *job)
         return;
     }
 
-    KGAPI2::AuthJob *authJob = qobject_cast<KGAPI2::AuthJob*>(job);
+    KGAPI2::AuthJob *authJob = qobject_cast<KGAPI2::AuthJob *>(job);
     account = authJob->account();
 
     QMap<QString, QString> authData;
@@ -308,23 +303,22 @@ void BloggerPrivate::_k_onAuthenticateFinished(KGAPI2::Job *job)
     Q_EMIT q->authenticated(authData);
 
     if (authJob->property(JOB_PROPERTY).isValid()) {
-        KGAPI2::Job *originalJob = authJob->property(JOB_PROPERTY).value<KGAPI2::Job*>();
+        KGAPI2::Job *originalJob = authJob->property(JOB_PROPERTY).value<KGAPI2::Job *>();
         if (originalJob) {
             originalJob->restart();
         }
     }
 }
 
-
 void Blogger::listBlogs()
 {
     Q_D(Blogger);
 
     KGAPI2::Blogger::BlogFetchJob *fetchJob
-         = new KGAPI2::Blogger::BlogFetchJob(QLatin1String("self"),
-                                             KGAPI2::Blogger::BlogFetchJob::FetchByUserId,
-                                             d->account,
-                                             this);
+        = new KGAPI2::Blogger::BlogFetchJob(QLatin1String("self"),
+                                            KGAPI2::Blogger::BlogFetchJob::FetchByUserId,
+                                            d->account,
+                                            this);
     connect(fetchJob, SIGNAL(finished(KGAPI2::Job*)),
             this, SLOT(_k_onListBlogsFinished(KGAPI2::Job*)));
 }
@@ -338,11 +332,10 @@ void BloggerPrivate::_k_onListBlogsFinished(KGAPI2::Job *job)
     }
 
     job->deleteLater();
-    KGAPI2::FetchJob *fetchJob = qobject_cast<KGAPI2::FetchJob*>(job);
+    KGAPI2::FetchJob *fetchJob = qobject_cast<KGAPI2::FetchJob *>(job);
     const QList<KBlogInfo> blogs = KGAPIBlogsToKBlogBlogs(fetchJob->items());
     Q_EMIT q->listedBlogs(blogs);
 }
-
 
 void Blogger::listRecentPosts(int number)
 {
@@ -364,7 +357,7 @@ void BloggerPrivate::_k_onListRecentPostsFinished(KGAPI2::Job *job)
     }
 
     job->deleteLater();
-    KGAPI2::FetchJob *fetchJob = qobject_cast<KGAPI2::FetchJob*>(job);
+    KGAPI2::FetchJob *fetchJob = qobject_cast<KGAPI2::FetchJob *>(job);
     QList<BlogPost> posts = KGAPIPostsToKBlogPosts(fetchJob->items());
     QList<BlogPost>::Iterator iter, endIter = posts.end();
     for (iter = posts.begin(); iter != endIter; ++iter) {
@@ -372,7 +365,6 @@ void BloggerPrivate::_k_onListRecentPostsFinished(KGAPI2::Job *job)
     }
     Q_EMIT q->listedRecentPosts(posts);
 }
-
 
 void Blogger::fetchPost(KBlog::BlogPost *post)
 {
@@ -394,8 +386,8 @@ void BloggerPrivate::_k_onFetchPostFinished(KGAPI2::Job *job)
     }
 
     job->deleteLater();
-    KGAPI2::FetchJob *fetchJob = qobject_cast<KGAPI2::FetchJob*>(job);
-    BlogPost *kblog = fetchJob->property(KBLOGPOST_PROPERTY).value<BlogPost*>();
+    KGAPI2::FetchJob *fetchJob = qobject_cast<KGAPI2::FetchJob *>(job);
+    BlogPost *kblog = fetchJob->property(KBLOGPOST_PROPERTY).value<BlogPost *>();
     const KGAPI2::ObjectsList items = fetchJob->items();
     if (items.count() != 1) {
         Q_EMIT q->errorPost(Blog::Other, i18n("Blog post not found"), kblog);
@@ -406,7 +398,6 @@ void BloggerPrivate::_k_onFetchPostFinished(KGAPI2::Job *job)
     kblog->setStatus(BlogPost::Fetched);
     Q_EMIT q->fetchedPost(kblog);
 }
-
 
 void Blogger::removePost(KBlog::BlogPost *post)
 {
@@ -428,12 +419,10 @@ void BloggerPrivate::_k_onRemovePostFinished(KGAPI2::Job *job)
     }
 
     job->deleteLater();
-    BlogPost *kblog = job->property(KBLOGPOST_PROPERTY).value<BlogPost*>();
+    BlogPost *kblog = job->property(KBLOGPOST_PROPERTY).value<BlogPost *>();
     kblog->setStatus(BlogPost::Removed);
     Q_EMIT q->removedPost(kblog);
 }
-
-
 
 void Blogger::createPost(KBlog::BlogPost *post)
 {
@@ -456,8 +445,8 @@ void BloggerPrivate::_k_onCreatePostFinished(KGAPI2::Job *job)
     }
 
     job->deleteLater();
-    KGAPI2::CreateJob *createJob = qobject_cast<KGAPI2::CreateJob*>(job);
-    BlogPost* kblog = createJob->property(KBLOGPOST_PROPERTY).value<BlogPost*>();
+    KGAPI2::CreateJob *createJob = qobject_cast<KGAPI2::CreateJob *>(job);
+    BlogPost *kblog = createJob->property(KBLOGPOST_PROPERTY).value<BlogPost *>();
     const KGAPI2::ObjectsList items = createJob->items();
     if (items.count() != 1) {
         Q_EMIT q->errorPost(Blog::Other, i18n("Failed to create new post"), kblog);
@@ -468,7 +457,6 @@ void BloggerPrivate::_k_onCreatePostFinished(KGAPI2::Job *job)
     kblog->setStatus(BlogPost::Created);
     Q_EMIT q->createdPost(kblog);
 }
-
 
 void Blogger::modifyPost(KBlog::BlogPost *post)
 {
@@ -493,8 +481,8 @@ void BloggerPrivate::_k_onModifyPostFinished(KGAPI2::Job *job)
     }
 
     job->deleteLater();
-    KGAPI2::ModifyJob *modifyJob = qobject_cast<KGAPI2::ModifyJob*>(job);
-    BlogPost *kblog = modifyJob->property(KBLOGPOST_PROPERTY).value<BlogPost*>();
+    KGAPI2::ModifyJob *modifyJob = qobject_cast<KGAPI2::ModifyJob *>(job);
+    BlogPost *kblog = modifyJob->property(KBLOGPOST_PROPERTY).value<BlogPost *>();
     const KGAPI2::ObjectsList items = modifyJob->items();
     if (items.count() != 1) {
         Q_EMIT q->errorPost(Blog::Other, i18n("Failed to update post"), kblog);
@@ -506,13 +494,12 @@ void BloggerPrivate::_k_onModifyPostFinished(KGAPI2::Job *job)
     Q_EMIT q->modifiedPost(kblog);
 }
 
-
 void Blogger::listComments(BlogPost *post)
 {
     Q_D(Blogger);
 
     KGAPI2::Blogger::CommentFetchJob *fetchJob
-         = new KGAPI2::Blogger::CommentFetchJob(blogId(), post->postId(), d->account, this);
+        = new KGAPI2::Blogger::CommentFetchJob(blogId(), post->postId(), d->account, this);
     fetchJob->setProperty(KBLOGPOST_PROPERTY, QVariant::fromValue(post));
     connect(fetchJob, SIGNAL(finished(KGAPI2::Job*)),
             this, SLOT(_k_onListCommentsFinished(KGAPI2::Job*)));
@@ -527,13 +514,11 @@ void BloggerPrivate::_k_onListCommentsFinished(KGAPI2::Job *job)
     }
 
     job->deleteLater();
-    KGAPI2::FetchJob *fetchJob = qobject_cast<KGAPI2::FetchJob*>(job);
-    BlogPost *kblog = fetchJob->property(KBLOGPOST_PROPERTY).value<BlogPost*>();
+    KGAPI2::FetchJob *fetchJob = qobject_cast<KGAPI2::FetchJob *>(job);
+    BlogPost *kblog = fetchJob->property(KBLOGPOST_PROPERTY).value<BlogPost *>();
     const QList<KBlog::BlogComment> comments = KGAPICommentsToKBlogComments(fetchJob->items());
     Q_EMIT q->listedComments(kblog, comments);
 }
-
-
 
 #include "moc_blogger.cpp"
 

@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -33,9 +32,9 @@ class SyncUploader::Private
 {
 public:
     Private()
-    :mCurrentMedia(0),
-      loop(0),
-      success(false)
+        : mCurrentMedia(0),
+          loop(0),
+          success(false)
     {}
     BilboMedia *mCurrentMedia;
     QEventLoop *loop;
@@ -43,8 +42,8 @@ public:
     bool success;
 };
 
-SyncUploader::SyncUploader( QObject *parent )
-    :QObject(parent),d(new Private)
+SyncUploader::SyncUploader(QObject *parent)
+    : QObject(parent), d(new Private)
 {
 }
 
@@ -58,10 +57,10 @@ QString SyncUploader::errorMessage() const
     return d->error;
 }
 
-bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
+bool SyncUploader::uploadMedia(Backend *backend, BilboMedia *media)
 {
-    if (!backend || !media){
-        qCritical()<<"Media or Backend is NULL";
+    if (!backend || !media) {
+        qCritical() << "Media or Backend is NULL";
         return false;
     }
     d->loop = new QEventLoop(this);
@@ -69,25 +68,26 @@ bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
     connect(backend, &Backend::sigMediaUploaded, this, &SyncUploader::slotMediaFileUploaded);
     connect(backend, &Backend::sigMediaError, this, &SyncUploader::slotMediaError);
 
-    backend->uploadMedia( media );
-    if ( d->loop->exec()==0 )
+    backend->uploadMedia(media);
+    if (d->loop->exec() == 0) {
         return true;
-    else
+    } else {
         return false;
+    }
 }
 
-void SyncUploader::slotMediaFileUploaded( BilboMedia *media )
+void SyncUploader::slotMediaFileUploaded(BilboMedia *media)
 {
-    if (media && media == d->mCurrentMedia){
+    if (media && media == d->mCurrentMedia) {
         qDebug();
         d->success = true;
         d->loop->exit();
     }
 }
 
-void SyncUploader::slotMediaError( const QString &errorMessage, BilboMedia* media )
+void SyncUploader::slotMediaError(const QString &errorMessage, BilboMedia *media)
 {
-    if (media && media == d->mCurrentMedia){
+    if (media && media == d->mCurrentMedia) {
         d->success = false;
         d->error = errorMessage;
         d->loop->exit(1);

@@ -18,7 +18,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -33,9 +32,7 @@
 #include <QObject>
 #include <QString>
 
-
 class KJob;
-
 
 class BilboPost;
 class Backend;
@@ -56,9 +53,9 @@ public:
      * Creates an instance of StyleGetter, to fetch the style of the requested
      * blog.
      * @param blogid requested blog's id, to fetch style.
-     * @param parent 
+     * @param parent
      */
-    StyleGetter( const int blogid, QObject* parent );
+    StyleGetter(const int blogid, QObject *parent);
     /**
      * StyleGetter destructor.
      */
@@ -66,16 +63,16 @@ public:
 
     /**
      * Looks for a file named style.html for the requested blog in blogilo data
-     * directory, then writes the file content into a buffer, inserts given post 
+     * directory, then writes the file content into a buffer, inserts given post
      * title and content in the buffer, and returns it.
      * @param blogid the id of the requested blog
      * @param title title of a post to be styled.
      * @param content content of that post to be styled.
      * @return an html string which shows the post in the blog template.
      */
-    static QString styledHtml( const int blogid,
-                              const QString& title,
-                              const QString& content );
+    static QString styledHtml(const int blogid,
+                              const QString &title,
+                              const QString &content);
 Q_SIGNALS:
     /**
      * When StyleGetter finishes all jobs to get and save a blog style, this
@@ -88,14 +85,14 @@ Q_SIGNALS:
      * the operation progress.
      * @param percent is a number between 0 to 100, showing the progress in percent
      */
-    void sigGetStyleProgress( int percent );
+    void sigGetStyleProgress(int percent);
 
 private Q_SLOTS:
 //     void slotPostSent();
-    void slotTempPostPublished( int blogId, BilboPost* post );
-    void slotTempPostRemoved( int blog_id, const BilboPost &post );
-    void slotHtmlCopied( KJob* job );
-    void slotError( const QString & errMsg );
+    void slotTempPostPublished(int blogId, BilboPost *post);
+    void slotTempPostRemoved(int blog_id, const BilboPost &post);
+    void slotHtmlCopied(KJob *job);
+    void slotError(const QString &errMsg);
 
 private:
     void generateRandomPostStrings();

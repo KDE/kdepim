@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -39,43 +38,43 @@ class BilboMedia : public QObject
     Q_OBJECT
 public:
     ///BilboMedia constructor
-    explicit BilboMedia( QObject *parent = 0 );
+    explicit BilboMedia(QObject *parent = 0);
 
     ///BilboMedia destructor
     ~BilboMedia();
 
     int blogId() const;
-    void setBlogId( const int blog_id );
+    void setBlogId(const int blog_id);
 
     int mediaId() const;
-    void setMediaId( const int media_id );
+    void setMediaId(const int media_id);
 
     bool isUploaded() const;
-    void setUploaded( bool uploaded );
+    void setUploaded(bool uploaded);
 
 //     bool isLocal() const;
 //     void setLocal( bool is_local );
 
     KUrl localUrl() const;
-    void setLocalUrl( const KUrl &url );
+    void setLocalUrl(const KUrl &url);
 
     KUrl remoteUrl() const;
-    void setRemoteUrl( const KUrl &url );
+    void setRemoteUrl(const KUrl &url);
 
     QString mimeType() const;
-    void setMimeType( const QString &type );
+    void setMimeType(const QString &type);
 
     QString name() const;
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     QIcon icon() const;
 
     quint16 checksum() const;
-    void setCheckSum( quint16 sum );
+    void setCheckSum(quint16 sum);
 
 private:
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 #endif

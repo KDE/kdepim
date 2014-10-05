@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -47,7 +46,8 @@ Main window of blogilo...
  @author Golnaz Nilieh <g382nilieh@gmail.com>
 */
 
-namespace PimCommon {
+namespace PimCommon
+{
 class StorageServiceManager;
 }
 
@@ -60,7 +60,7 @@ public:
     ~MainWindow();
 
 signals:
-    void mediaFilesUploaded( int count );
+    void mediaFilesUploaded(int count);
     void settingsChanged();
 
 private slots:
@@ -68,22 +68,22 @@ private slots:
     void slotSettingsChanged();
     void slotCreateNewPost();
     void addBlog();
-    void slotPostTitleChanged( const QString& title );
-    void slotToggleToolboxVisible( bool isVisible );
-    void slotToolboxVisibilityChanged( bool isVisible );
-    void slotActivePostChanged( int tabIndex );
-    void slotNewPostOpened( BilboPost &newPost, int blog_id );
+    void slotPostTitleChanged(const QString &title);
+    void slotToggleToolboxVisible(bool isVisible);
+    void slotToolboxVisibilityChanged(bool isVisible);
+    void slotActivePostChanged(int tabIndex);
+    void slotNewPostOpened(BilboPost &newPost, int blog_id);
 
     void slotPublishPost();
 
     /**
      * Remove widget at position @p pos from main tab wigdet
      */
-    void slotRemovePostEntry( int post );
+    void slotRemovePostEntry(int post);
 
     void slotSavePostLocally();
 
-    void slotError( const QString &errorMessage );
+    void slotError(const QString &errorMessage);
 
     /**
     To open temporary posts and that posts are open at previous quit.
@@ -92,16 +92,16 @@ private slots:
     void uploadMediaObject();
 
     void optionsPreferences();
-    void postManipulationDone( bool isError, const QString &customMessage );
-    void slotBusy( bool isBusy );
+    void postManipulationDone(bool isError, const QString &customMessage);
+    void slotBusy(bool isBusy);
     void slotShowStatusMessage(const QString &message, bool isPermanent);
-    void currentBlogChanged( QAction* );
+    void currentBlogChanged(QAction *);
 
-    void slotBlogAdded( const BilboBlog &blog );
-    void slotBlogEdited( const BilboBlog &blog );
-    void slotBlogRemoved( int blog_id );
+    void slotBlogAdded(const BilboBlog &blog);
+    void slotBlogEdited(const BilboBlog &blog);
+    void slotBlogRemoved(int blog_id);
 
-    void slotDialogDestroyed( QObject *win );
+    void slotDialogDestroyed(QObject *win);
 
     void slotCloseTabClicked();
     void slotRemoveAllExclude(int);
@@ -111,21 +111,21 @@ private slots:
     void slotActionFailed(const QString &serviceName, const QString &filename);
 
 protected:
-    void keyPressEvent( QKeyEvent * event );
-    void closeEvent( QCloseEvent *event );
+    void keyPressEvent(QKeyEvent *event);
+    void closeEvent(QCloseEvent *event);
 
 private:
-    void setCurrentBlog( int blog_id );
+    void setCurrentBlog(int blog_id);
     void setupActions();
     void setupSystemTray();
     void writeConfigs();
     void initStorageService();
     void setupStatusBar();
     /**
-        Create a new post entry, 
+        Create a new post entry,
         and return pointer to it's widget (Actually return value is a PostEntry instance)
     */
-    QWidget* createPostEntry(int blog_id, const BilboPost& post);
+    QWidget *createPostEntry(int blog_id, const BilboPost &post);
 
     Toolbox *toolbox;
     QDockWidget *toolboxDock;

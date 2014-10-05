@@ -27,52 +27,51 @@
 
 #include "blogsettings.h"
 
-
 #include <KLocalizedString>
 
-ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManager, QWidget *parent, const QString& name, KConfigSkeleton *config)
+ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManager, QWidget *parent, const QString &name, KConfigSkeleton *config)
     : KConfigDialog(parent, name, config),
       mHasChanged(false)
 {
     QWidget *generalSettingsDlg = new QWidget;
-    generalSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
+    generalSettingsDlg->setAttribute(Qt::WA_DeleteOnClose);
     Ui::SettingsBase ui_prefs_base;
     Ui::EditorSettingsBase ui_editorsettings_base;
-    ui_prefs_base.setupUi( generalSettingsDlg );
+    ui_prefs_base.setupUi(generalSettingsDlg);
 
     BlogSettings *blogSettingsDlg = new BlogSettings;
-    blogSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
-    connect( blogSettingsDlg, SIGNAL(blogAdded(BilboBlog)),
-             this, SIGNAL(blogAdded(BilboBlog)) );
-    connect( blogSettingsDlg, SIGNAL(blogEdited(BilboBlog)),
-             this, SIGNAL(blogEdited(BilboBlog)) );
+    blogSettingsDlg->setAttribute(Qt::WA_DeleteOnClose);
+    connect(blogSettingsDlg, SIGNAL(blogAdded(BilboBlog)),
+            this, SIGNAL(blogAdded(BilboBlog)));
+    connect(blogSettingsDlg, SIGNAL(blogEdited(BilboBlog)),
+            this, SIGNAL(blogEdited(BilboBlog)));
     connect(blogSettingsDlg, &BlogSettings::blogRemoved, this, &ConfigureDialog::blogRemoved);
 
     QWidget *editorSettingsDlg = new QWidget;
-    editorSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
-    ui_editorsettings_base.setupUi( editorSettingsDlg );
+    editorSettingsDlg->setAttribute(Qt::WA_DeleteOnClose);
+    ui_editorsettings_base.setupUi(editorSettingsDlg);
     QWidget *advancedSettingsDlg = new QWidget;
-    advancedSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
+    advancedSettingsDlg->setAttribute(Qt::WA_DeleteOnClose);
     Ui::AdvancedSettingsBase ui_advancedsettings_base;
-    ui_advancedsettings_base.setupUi( advancedSettingsDlg );
+    ui_advancedsettings_base.setupUi(advancedSettingsDlg);
 
     mConfigStorageService = new ConfigureStorageServiceWidget(storageManager);
-    mConfigStorageService->setAttribute( Qt::WA_DeleteOnClose );
+    mConfigStorageService->setAttribute(Qt::WA_DeleteOnClose);
     connect(mConfigStorageService, &ConfigureStorageServiceWidget::changed, this, &ConfigureDialog::slotStorageServiceChanged);
 
-    addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), QLatin1String("configure") );
-    addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), QLatin1String("document-properties"));
-    addPage( editorSettingsDlg, i18nc( "Configure Page", "Editor" ), QLatin1String("accessories-text-editor"));
-    addPage( advancedSettingsDlg, i18nc( "Configure Page", "Advanced" ), QLatin1String("applications-utilities"));
-    addPage( mConfigStorageService, i18nc( "Configure Page", "Storage Service" ), QLatin1String("applications-utilities"));
+    addPage(generalSettingsDlg, i18nc("Configure Page", "General"), QLatin1String("configure"));
+    addPage(blogSettingsDlg, i18nc("Configure Page", "Blogs"), QLatin1String("document-properties"));
+    addPage(editorSettingsDlg, i18nc("Configure Page", "Editor"), QLatin1String("accessories-text-editor"));
+    addPage(advancedSettingsDlg, i18nc("Configure Page", "Advanced"), QLatin1String("applications-utilities"));
+    addPage(mConfigStorageService, i18nc("Configure Page", "Storage Service"), QLatin1String("applications-utilities"));
 
     connect(this, &ConfigureDialog::settingsChanged, this, &ConfigureDialog::settingsChanged);
     connect(this, &ConfigureDialog::destroyed, this, &ConfigureDialog::dialogDestroyed);
     connect(button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ConfigureDialog::slotApplySettingsClicked);
     connect(button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &ConfigureDialog::slotDefaultClicked);
     connect(button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &ConfigureDialog::slotApplySettingsClicked);
-    setAttribute( Qt::WA_DeleteOnClose );
-    resize( Settings::configWindowSize() );
+    setAttribute(Qt::WA_DeleteOnClose);
+    resize(Settings::configWindowSize());
     show();
 }
 
@@ -88,7 +87,7 @@ bool ConfigureDialog::hasChanged()
 
 void ConfigureDialog::slotStorageServiceChanged()
 {
-    qDebug()<<" void ConfigureDialog::slotStorageServiceChanged()";
+    qDebug() << " void ConfigureDialog::slotStorageServiceChanged()";
     mHasChanged = true;
     Q_EMIT settingsChanged();
     updateButtons();

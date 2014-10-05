@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -43,18 +42,18 @@
 #include <QVBoxLayout>
 #include <QTimer>
 
-BilboBrowser::BilboBrowser( QWidget *parent )
-    : QWidget( parent )
+BilboBrowser::BilboBrowser(QWidget *parent)
+    : QWidget(parent)
 {
     mWebView = new KWebView(this);
 
-    createUi( parent );
+    createUi(parent);
 
-    connect( mWebView, SIGNAL(loadProgress(int)),
-            browserProgress, SLOT(setValue(int)) );
+    connect(mWebView, SIGNAL(loadProgress(int)),
+            browserProgress, SLOT(setValue(int)));
     connect(mWebView, &KWebView::loadFinished, this, &BilboBrowser::slotCompleted);
-    connect( mWebView, SIGNAL(statusBarMessage(QString)), this,
-            SLOT(slotSetStatusBarText(QString)) );
+    connect(mWebView, SIGNAL(statusBarMessage(QString)), this,
+            SLOT(slotSetStatusBarText(QString)));
 }
 
 BilboBrowser::~BilboBrowser()
@@ -62,57 +61,57 @@ BilboBrowser::~BilboBrowser()
     qDebug();
 }
 
-void BilboBrowser::createUi( QWidget *parent )
+void BilboBrowser::createUi(QWidget *parent)
 {
-    btnGetStyle = new QPushButton( this );
-    btnGetStyle->setText( i18n( "Get blog style" ) );
+    btnGetStyle = new QPushButton(this);
+    btnGetStyle->setText(i18n("Get blog style"));
     connect(btnGetStyle, &QPushButton::clicked, this, &BilboBrowser::slotGetBlogStyle);
 
-    viewInBlogStyle = new QCheckBox( i18n("View post in the blog style"), this );
-    viewInBlogStyle->setChecked( Settings::previewInBlogStyle() );
-    connect( viewInBlogStyle, SIGNAL(toggled(bool)), this, SLOT(
-            slotViewModeChanged() ) );
+    viewInBlogStyle = new QCheckBox(i18n("View post in the blog style"), this);
+    viewInBlogStyle->setChecked(Settings::previewInBlogStyle());
+    connect(viewInBlogStyle, SIGNAL(toggled(bool)), this, SLOT(
+                slotViewModeChanged()));
 
-    QSpacerItem *horizontalSpacer = new QSpacerItem( 40, 20,
-                    QSizePolicy::Expanding, QSizePolicy::Minimum );
-    KSeparator *separator = new KSeparator( this );
+    QSpacerItem *horizontalSpacer = new QSpacerItem(40, 20,
+            QSizePolicy::Expanding, QSizePolicy::Minimum);
+    KSeparator *separator = new KSeparator(this);
 
-    QVBoxLayout *vlayout = new QVBoxLayout( parent );
+    QVBoxLayout *vlayout = new QVBoxLayout(parent);
     QHBoxLayout *hlayout = new QHBoxLayout();
 
-    hlayout->addWidget( viewInBlogStyle );
-    hlayout->addItem( horizontalSpacer );
-    hlayout->addWidget( btnGetStyle );
+    hlayout->addWidget(viewInBlogStyle);
+    hlayout->addItem(horizontalSpacer);
+    hlayout->addWidget(btnGetStyle);
 
-    vlayout->addLayout( hlayout );
-    vlayout->addWidget( separator );
-    vlayout->addWidget( mWebView );
+    vlayout->addLayout(hlayout);
+    vlayout->addWidget(separator);
+    vlayout->addWidget(mWebView);
 
-    browserProgress = new QProgressBar( this );
+    browserProgress = new QProgressBar(this);
     browserProgress->setFixedSize(120, 17);
 
-    browserStatus = new KStatusBar( this );
-    browserStatus->setFixedHeight( 20 );
-    browserStatus->addPermanentWidget( browserProgress );
-    vlayout->addWidget( browserStatus );
+    browserStatus = new KStatusBar(this);
+    browserStatus->setFixedHeight(20);
+    browserStatus->addPermanentWidget(browserProgress);
+    vlayout->addWidget(browserStatus);
 }
 
-void BilboBrowser::setHtml( const QString& title, const QString& content )
+void BilboBrowser::setHtml(const QString &title, const QString &content)
 {
     currentTitle = title;
     currentContent = content;
 
-    if ( browserProgress->isHidden() ) {
+    if (browserProgress->isHidden()) {
         browserProgress->show();
     }
     browserProgress->reset();
-    browserStatus->showMessage( i18n( "loading page items..." ) );
+    browserStatus->showMessage(i18n("loading page items..."));
 
-    if ( viewInBlogStyle->isChecked() ) {
-        mWebView->setHtml( StyleGetter::styledHtml( __currentBlogId, title, content ),
-                           DBMan::self()->blog(__currentBlogId)->url());
+    if (viewInBlogStyle->isChecked()) {
+        mWebView->setHtml(StyleGetter::styledHtml(__currentBlogId, title, content),
+                          DBMan::self()->blog(__currentBlogId)->url());
     } else {
-        mWebView->setHtml( QLatin1String("<html><body><h2 align='center'>") + title + QLatin1String("</h2>") + content + QLatin1String("</html>") );
+        mWebView->setHtml(QLatin1String("<html><body><h2 align='center'>") + title + QLatin1String("</h2>") + content + QLatin1String("</html>"));
     }
 }
 
@@ -124,53 +123,53 @@ void BilboBrowser::stop()
 void BilboBrowser::slotGetBlogStyle()
 {
     stop();
-    if ( __currentBlogId < 0 ) {
-        KMessageBox::information( this,
-               i18n( "Please select a blog, then try again." ),
-               i18n( "Select a blog" ) );
+    if (__currentBlogId < 0) {
+        KMessageBox::information(this,
+                                 i18n("Please select a blog, then try again."),
+                                 i18n("Select a blog"));
         return;
     }
 
-    browserStatus->showMessage( i18n( "Fetching blog style from the web..." ) );
-    if ( browserProgress->isHidden() ) {
+    browserStatus->showMessage(i18n("Fetching blog style from the web..."));
+    if (browserProgress->isHidden()) {
         browserProgress->show();
     }
     browserProgress->reset();
 
-    StyleGetter *styleGetter = new StyleGetter( __currentBlogId, this );
-    connect( styleGetter, SIGNAL(sigGetStyleProgress(int)), browserProgress,
-            SLOT(setValue(int)) );
+    StyleGetter *styleGetter = new StyleGetter(__currentBlogId, this);
+    connect(styleGetter, SIGNAL(sigGetStyleProgress(int)), browserProgress,
+            SLOT(setValue(int)));
     connect(styleGetter, &StyleGetter::sigStyleFetched, this, &BilboBrowser::slotSetBlogStyle);
 }
 
 void BilboBrowser::slotSetBlogStyle()
 {
-    browserStatus->showMessage( i18n( "Blog style fetched." ), 2000 );
+    browserStatus->showMessage(i18n("Blog style fetched."), 2000);
     Q_EMIT sigSetBlogStyle();
 
-    if ( qobject_cast< StyleGetter* >( sender() ) ) {
+    if (qobject_cast< StyleGetter * >(sender())) {
         sender()->deleteLater();
     }
 }
 
 void BilboBrowser::slotCompleted(bool ok)
 {
-    QTimer::singleShot( 1500, browserProgress, SLOT(hide()) );
-    if(!ok){
-        browserStatus->showMessage( i18n( "An error occurred in the latest transaction." ), 5000 );
+    QTimer::singleShot(1500, browserProgress, SLOT(hide()));
+    if (!ok) {
+        browserStatus->showMessage(i18n("An error occurred in the latest transaction."), 5000);
     }
 }
 
-void BilboBrowser::slotSetStatusBarText( const QString& text )
+void BilboBrowser::slotSetStatusBarText(const QString &text)
 {
     QString statusText = text;
-    statusText.remove( QLatin1String("<qt>") );
-    browserStatus->showMessage( statusText );
+    statusText.remove(QLatin1String("<qt>"));
+    browserStatus->showMessage(statusText);
 }
 
 void BilboBrowser::slotViewModeChanged()
 {
     stop();
-    setHtml( currentTitle, currentContent );
+    setHtml(currentTitle, currentContent);
 }
 

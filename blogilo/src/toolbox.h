@@ -13,7 +13,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -38,66 +37,65 @@ class Toolbox: public QWidget, public Ui::ToolboxBase
 {
     Q_OBJECT
 public:
-    explicit Toolbox( QWidget *parent );
+    explicit Toolbox(QWidget *parent);
     ~Toolbox();
 
     /**
      *    Will set current state of toolbox (Current post) properties on input pointer!
      * @param currentPost input and output of this Function.
      */
-    void getFieldsValue( BilboPost* currentPost );
-    void setFieldsValue( BilboPost* post = 0 );
-    void setCurrentBlogId( int blog_id );
-    void setCurrentPage( int index );
+    void getFieldsValue(BilboPost *currentPost);
+    void setFieldsValue(BilboPost *post = 0);
+    void setCurrentBlogId(int blog_id);
+    void setCurrentPage(int index);
     void clearFields();
 
 public slots:
     void slotReloadCategoryList();
-    void slotLoadCategoryListFromDB( int blog_id );
+    void slotLoadCategoryListFromDB(int blog_id);
     void slotUpdateEntries(int count = 0);
-    void slotLoadEntriesFromDB( int blog_id );
+    void slotLoadEntriesFromDB(int blog_id);
     void slotRemoveSelectedEntryFromServer();
     void resetFields();
-    void slotEntrySelected( QListWidgetItem *item );
+    void slotEntrySelected(QListWidgetItem *item);
     void slotEntriesCopyUrl();
-    void slotLocalEntrySelected(QTreeWidgetItem *, int column );
+    void slotLocalEntrySelected(QTreeWidgetItem *, int column);
     void reloadLocalPosts();
     void slotRemoveLocalEntry();
     void clearEntries();
     void setDateTimeNow();
 
 signals:
-    void sigEntrySelected( BilboPost &post, int blog_id );
-    void sigError( const QString& );
-    void sigBusy( bool isBusy );
+    void sigEntrySelected(BilboPost &post, int blog_id);
+    void sigError(const QString &);
+    void sigBusy(bool isBusy);
 
 protected slots:
-    void slotPostRemoved( int blog_id, const BilboPost &post );
+    void slotPostRemoved(int blog_id, const BilboPost &post);
     void openPostInBrowser();
     void copyPostTitle();
-    void requestEntriesListContextMenu( const QPoint & pos );
-    void slotError(const QString& errorMessage);
+    void requestEntriesListContextMenu(const QPoint &pos);
+    void slotError(const QString &errorMessage);
 
 private:
     enum LocalEntryType {
-        LocalEntryID = QTreeWidgetItem::UserType +1
+        LocalEntryID = QTreeWidgetItem::UserType + 1
     };
 
     enum BlogEntryType {
-        BlogEntryID = QListWidgetItem::UserType +1
+        BlogEntryID = QListWidgetItem::UserType + 1
     };
-
 
     QStringList selectedCategoriesTitle() const;
     QList<Category> selectedCategories() const;
-    void setSelectedCategories( const QStringList& );
+    void setSelectedCategories(const QStringList &);
     QStringList currentTags();
     void clearCatList();
     void unCheckCatList();
     void setButtonsIcon();
 
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 #endif

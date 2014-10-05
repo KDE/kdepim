@@ -12,7 +12,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -45,8 +44,8 @@ public:
         BLOGGER1_API = 0, METAWEBLOG_API, MOVABLETYPE_API, WORDPRESSBUGGY_API, BLOGGER_API
     };
 
-    explicit BilboBlog( QObject *parent = 0 );
-    BilboBlog( const BilboBlog & );
+    explicit BilboBlog(QObject *parent = 0);
+    BilboBlog(const BilboBlog &);
     ~BilboBlog();
 
     KBlog::Blog *blogBackend();
@@ -58,27 +57,27 @@ public:
      * @return url usable for xmlrpc!
      */
     KUrl url() const;
-    void setUrl( const KUrl& );
+    void setUrl(const KUrl &);
     QString blogid() const;
-    void setBlogId( const QString& );
+    void setBlogId(const QString &);
     QString username() const;
-    void setUsername( const QString& );
+    void setUsername(const QString &);
     QString password() const;
-    void setPassword( const QString& );
+    void setPassword(const QString &);
     QString title() const;
-    void setTitle( const QString& );
-    void setAuthData( const QMap<QString, QString> &authData );
+    void setTitle(const QString &);
+    void setAuthData(const QMap<QString, QString> &authData);
     QMap<QString, QString> authData() const;
 //     QString stylePath() const;
 //     void setStylePath( const QString& );
     ApiType api() const;
-    void setApi( const ApiType );
+    void setApi(const ApiType);
     int id() const;//id in DB
-    void setId( const int );
+    void setId(const int);
     Qt::LayoutDirection direction() const;
-    void setDirection( const Qt::LayoutDirection );
+    void setDirection(const Qt::LayoutDirection);
     QString localDirectory() const;
-    void setLocalDirectory( const QString& );
+    void setLocalDirectory(const QString &);
     bool isError() const;
     void setError(bool isError);
 
@@ -98,7 +97,7 @@ public:
 
 private:
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 #endif

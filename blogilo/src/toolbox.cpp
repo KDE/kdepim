@@ -13,7 +13,6 @@
     by the membership of KDE e.V.), which shall act as a proxy
     defined in Section 14 of version 3 of the license.
 
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -50,44 +49,45 @@
 class Toolbox::Private
 {
 public:
-    QList<CatCheckBox*> listCategoryCheckBoxes;
+    QList<CatCheckBox *> listCategoryCheckBoxes;
     int mCurrentBlogId;
     QStatusBar *statusbar;
 };
-Toolbox::Toolbox( QWidget *parent )
-    : QWidget( parent ), d(new Private)
+Toolbox::Toolbox(QWidget *parent)
+    : QWidget(parent), d(new Private)
 {
     d->mCurrentBlogId = -1;
-    if ( parent )
-        d->statusbar = qobject_cast<KXmlGuiWindow*>( parent )->statusBar();
-    else
-        d->statusbar = new QStatusBar( this );
-    setupUi( this );
+    if (parent) {
+        d->statusbar = qobject_cast<KXmlGuiWindow *>(parent)->statusBar();
+    } else {
+        d->statusbar = new QStatusBar(this);
+    }
+    setupUi(this);
     setButtonsIcon();
-    frameCat->layout()->setAlignment( Qt::AlignTop );
-    optionsDate->setDate( QDateTime::currentDateTime().date() );
-    optionsTime->setTime( QDateTime::currentDateTime().time() );
+    frameCat->layout()->setAlignment(Qt::AlignTop);
+    optionsDate->setDate(QDateTime::currentDateTime().date());
+    optionsTime->setTime(QDateTime::currentDateTime().time());
 
     connect(btnCatReload, &QPushButton::clicked, this, &Toolbox::slotReloadCategoryList);
     connect(btnEntriesUpdate, &QPushButton::clicked, this, &Toolbox::slotUpdateEntries);
     connect(btnEntriesClear, &QPushButton::clicked, this, &Toolbox::clearEntries);
 
-    connect( lstEntriesList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-             this, SLOT(slotEntrySelected(QListWidgetItem*)) );
+    connect(lstEntriesList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+            this, SLOT(slotEntrySelected(QListWidgetItem*)));
     connect(btnEntriesRemove, &QPushButton::clicked, this, &Toolbox::slotRemoveSelectedEntryFromServer);
 
     connect(btnOptionsNow, &QPushButton::clicked, this, &Toolbox::setDateTimeNow);
-    connect( localEntries, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-             this, SLOT(slotLocalEntrySelected(QTreeWidgetItem*,int)) );
+    connect(localEntries, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+            this, SLOT(slotLocalEntrySelected(QTreeWidgetItem*,int)));
     connect(btnLocalRemove, &QPushButton::clicked, this, &Toolbox::slotRemoveLocalEntry);
 
-    lblOptionsTrackBack->setVisible( false );
-    txtOptionsTrackback->setVisible( false );
-    btnCatAdd->setVisible( false );
+    lblOptionsTrackBack->setVisible(false);
+    txtOptionsTrackback->setVisible(false);
+    btnCatAdd->setVisible(false);
 
-    lstEntriesList->setContextMenuPolicy( Qt::CustomContextMenu );
-    connect( lstEntriesList, SIGNAL(customContextMenuRequested(QPoint)),
-             this, SLOT(requestEntriesListContextMenu(QPoint)) );
+    lstEntriesList->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(lstEntriesList, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(requestEntriesListContextMenu(QPoint)));
 
     QTimer::singleShot(1000, this, SLOT(reloadLocalPosts()));
 }
@@ -97,47 +97,48 @@ Toolbox::~Toolbox()
     delete d;
 }
 
-
-void Toolbox::setCurrentBlogId( int blog_id )
+void Toolbox::setCurrentBlogId(int blog_id)
 {
-    if ( d->mCurrentBlogId == blog_id )
+    if (d->mCurrentBlogId == blog_id) {
         return;
+    }
     d->mCurrentBlogId = blog_id;
-    if ( blog_id <= 0 )
+    if (blog_id <= 0) {
         return;
-    slotLoadCategoryListFromDB( blog_id );
-    slotLoadEntriesFromDB( blog_id );
-    Qt::LayoutDirection ll = DBMan::self()->blogList().value( blog_id )->direction();
-    frameCat->setLayoutDirection( ll );
-    lstEntriesList->setLayoutDirection( ll );
+    }
+    slotLoadCategoryListFromDB(blog_id);
+    slotLoadEntriesFromDB(blog_id);
+    Qt::LayoutDirection ll = DBMan::self()->blogList().value(blog_id)->direction();
+    frameCat->setLayoutDirection(ll);
+    lstEntriesList->setLayoutDirection(ll);
 }
 
 void Toolbox::slotReloadCategoryList()
 {
-    if ( d->mCurrentBlogId == -1 ) {
-        KMessageBox::sorry( this, i18n( "No blog has been selected: you have to select a blog from the Blogs page before asking for the list of categories." ) );
+    if (d->mCurrentBlogId == -1) {
+        KMessageBox::sorry(this, i18n("No blog has been selected: you have to select a blog from the Blogs page before asking for the list of categories."));
         return;
     }
 
-    Backend *b = new Backend( d->mCurrentBlogId );
+    Backend *b = new Backend(d->mCurrentBlogId);
     connect(b, &Backend::sigCategoryListFetched, this, &Toolbox::slotLoadCategoryListFromDB);
     connect(b, &Backend::sigError, this, &Toolbox::sigError);
-    emit sigBusy( true );
-    d->statusbar->showMessage( i18n( "Requesting list of categories..." ) );
+    emit sigBusy(true);
+    d->statusbar->showMessage(i18n("Requesting list of categories..."));
     b->getCategoryListFromServer();
 }
 
 void Toolbox::slotUpdateEntries(int count)
 {
-    if ( d->mCurrentBlogId == -1 ) {
-        KMessageBox::sorry( this, i18n( "No blog has been selected: you have to select a blog from the Blogs page before asking for the list of entries." ) );
+    if (d->mCurrentBlogId == -1) {
+        KMessageBox::sorry(this, i18n("No blog has been selected: you have to select a blog from the Blogs page before asking for the list of entries."));
         return;
     }
     if (count == 0) {
         count = Settings::updateEntriesCount();
-        if ( Settings::showUpdateEntriesDialog() ) {
-            QPointer<EntriesCountDialog> dia = new EntriesCountDialog( this );
-            if ( !dia->exec() ) {
+        if (Settings::showUpdateEntriesDialog()) {
+            QPointer<EntriesCountDialog> dia = new EntriesCountDialog(this);
+            if (!dia->exec()) {
                 delete dia;
                 return;
             }
@@ -145,91 +146,92 @@ void Toolbox::slotUpdateEntries(int count)
             dia->deleteLater();
         }
     }
-    Backend *entryB = new Backend( d->mCurrentBlogId, this);
-    entryB->getEntriesListFromServer( count );
+    Backend *entryB = new Backend(d->mCurrentBlogId, this);
+    entryB->getEntriesListFromServer(count);
     connect(entryB, &Backend::sigEntriesListFetched, this, &Toolbox::slotLoadEntriesFromDB);
     connect(entryB, &Backend::sigError, this, &Toolbox::sigError);
-    d->statusbar->showMessage( i18n( "Requesting list of entries..." ) );
-    setCursor( Qt::BusyCursor );
-    emit sigBusy( true );
+    d->statusbar->showMessage(i18n("Requesting list of entries..."));
+    setCursor(Qt::BusyCursor);
+    emit sigBusy(true);
 }
 
-void Toolbox::slotLoadEntriesFromDB( int blog_id )
+void Toolbox::slotLoadEntriesFromDB(int blog_id)
 {
-    if ( blog_id == -1 ) {
+    if (blog_id == -1) {
         qDebug() << "Blog Id doesn't set correctly";
         return;
     }
     lstEntriesList->clear();
-    const QList<QVariantMap> listEntries = DBMan::self()->listPostsInfo( blog_id );
+    const QList<QVariantMap> listEntries = DBMan::self()->listPostsInfo(blog_id);
     const int count = listEntries.count();
-    for ( int i=0; i < count; ++i ) {
-        QListWidgetItem *lstItem = new QListWidgetItem( listEntries[i].value(QLatin1String("title")).toString() );
+    for (int i = 0; i < count; ++i) {
+        QListWidgetItem *lstItem = new QListWidgetItem(listEntries[i].value(QLatin1String("title")).toString());
         lstItem->setToolTip(listEntries.at(i).value(QLatin1String("c_time")).toDateTime().toString());
         if (listEntries.at(i).value(QLatin1String("is_private")).toBool()) {
             lstItem->setForeground(QBrush(Qt::blue));
-            lstItem->setToolTip(i18n("%1 (Draft)",lstItem->toolTip()));
+            lstItem->setToolTip(i18n("%1 (Draft)", lstItem->toolTip()));
         }
-        lstItem->setData( BlogEntryID, listEntries.at(i).value(QLatin1String("id")).toInt() );
-        lstEntriesList->addItem( lstItem );
+        lstItem->setData(BlogEntryID, listEntries.at(i).value(QLatin1String("id")).toInt());
+        lstEntriesList->addItem(lstItem);
     }
-    d->statusbar->showMessage( i18n( "List of entries received." ), STATUSTIMEOUT );
+    d->statusbar->showMessage(i18n("List of entries received."), STATUSTIMEOUT);
     unsetCursor();
-    emit sigBusy( false );
+    emit sigBusy(false);
 }
 
-void Toolbox::slotLoadCategoryListFromDB( int blog_id )
+void Toolbox::slotLoadCategoryListFromDB(int blog_id)
 {
-    if ( blog_id == -1 ) {
+    if (blog_id == -1) {
         qDebug() << "Blog Id do not sets correctly";
         return;
     }
     clearCatList();
     QList<Category> listCategories;
-    listCategories = DBMan::self()->listCategories( blog_id );
+    listCategories = DBMan::self()->listCategories(blog_id);
 
     QList<Category>::const_iterator i;
     QList<Category>::const_iterator endIt = listCategories.constEnd();
-    for ( i = listCategories.constBegin(); i != endIt; ++i ) {
-        CatCheckBox *cb = new CatCheckBox( i->name, this );
-        cb->setCategory( *i );
-        d->listCategoryCheckBoxes.append( cb );
-        frameCat->layout()->addWidget( cb );
+    for (i = listCategories.constBegin(); i != endIt; ++i) {
+        CatCheckBox *cb = new CatCheckBox(i->name, this);
+        cb->setCategory(*i);
+        d->listCategoryCheckBoxes.append(cb);
+        frameCat->layout()->addWidget(cb);
     }
-    d->statusbar->showMessage( i18n( "List of categories received." ), STATUSTIMEOUT );
+    d->statusbar->showMessage(i18n("List of categories received."), STATUSTIMEOUT);
     unsetCursor();
-    emit sigBusy( false );
+    emit sigBusy(false);
 }
 
 void Toolbox::slotRemoveSelectedEntryFromServer()
 {
-    if (lstEntriesList->selectedItems().count() < 1)
+    if (lstEntriesList->selectedItems().count() < 1) {
         return;
-    if ( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog cannot be undone.\nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
-    == KMessageBox::Yes) {
-        BilboPost *post = new BilboPost( DBMan::self()->getPostInfo( lstEntriesList->currentItem()->
-                                                                     data(BlogEntryID).toInt() ) );
-        Backend *b = new Backend( d->mCurrentBlogId, this);
+    }
+    if (KMessageBox::warningYesNoCancel(this, i18n("Removing a post from your blog cannot be undone.\nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text()))
+            == KMessageBox::Yes) {
+        BilboPost *post = new BilboPost(DBMan::self()->getPostInfo(lstEntriesList->currentItem()->
+                                        data(BlogEntryID).toInt()));
+        Backend *b = new Backend(d->mCurrentBlogId, this);
         connect(b, &Backend::sigPostRemoved, this, &Toolbox::slotPostRemoved);
         connect(b, &Backend::sigError, this, &Toolbox::slotError);
         b->removePost(post);
-        d->statusbar->showMessage( i18n( "Removing post..." ) );
+        d->statusbar->showMessage(i18n("Removing post..."));
     }
 }
 
-void Toolbox::slotPostRemoved( int blog_id, const BilboPost &post )
+void Toolbox::slotPostRemoved(int blog_id, const BilboPost &post)
 {
-    KMessageBox::information( this, i18nc( "Post removed from Blog", "Post with title \"%1\" removed from \"%2\".",
-                                          post.title(), DBMan::self()->blogList().value(blog_id)->title() ) );
-    slotLoadEntriesFromDB( blog_id );
-    d->statusbar->showMessage( i18n( "Post removed" ), STATUSTIMEOUT );
+    KMessageBox::information(this, i18nc("Post removed from Blog", "Post with title \"%1\" removed from \"%2\".",
+                                         post.title(), DBMan::self()->blogList().value(blog_id)->title()));
+    slotLoadEntriesFromDB(blog_id);
+    d->statusbar->showMessage(i18n("Post removed"), STATUSTIMEOUT);
     sender()->deleteLater();
 }
 
-void Toolbox::slotError(const QString& errorMessage)
+void Toolbox::slotError(const QString &errorMessage)
 {
-    KMessageBox::detailedError( this, i18n( "An error occurred in the latest transaction." ), errorMessage );
-    d->statusbar->showMessage( i18nc( "Operation failed", "Failed" ), STATUSTIMEOUT );
+    KMessageBox::detailedError(this, i18n("An error occurred in the latest transaction."), errorMessage);
+    d->statusbar->showMessage(i18nc("Operation failed", "Failed"), STATUSTIMEOUT);
     sender()->deleteLater();
 }
 
@@ -238,109 +240,111 @@ void Toolbox::clearFields()
     clearCatList();
     lstEntriesList->clear();
     txtCatTags->clear();
-    chkOptionsTime->setChecked( false );
-    optionsDate->setDate( QDateTime::currentDateTime().date() );
-    optionsTime->setTime( QDateTime::currentDateTime().time() );
+    chkOptionsTime->setChecked(false);
+    optionsDate->setDate(QDateTime::currentDateTime().date());
+    optionsTime->setTime(QDateTime::currentDateTime().time());
     txtOptionsTrackback->clear();
     txtSlug->clear();
     txtSummary->clear();
-    chkOptionsComments->setChecked( true );
-    chkOptionsTrackback->setChecked( true );
-    comboOptionsStatus->setCurrentIndex( 0 );
+    chkOptionsComments->setChecked(true);
+    chkOptionsTrackback->setChecked(true);
+    comboOptionsStatus->setCurrentIndex(0);
 }
 
 void Toolbox::resetFields()
 {
     unCheckCatList();
     txtCatTags->clear();
-    chkOptionsTime->setChecked( false );
-    optionsDate->setDate( QDateTime::currentDateTime().date() );
-    optionsTime->setTime( QDateTime::currentDateTime().time() );
+    chkOptionsTime->setChecked(false);
+    optionsDate->setDate(QDateTime::currentDateTime().date());
+    optionsTime->setTime(QDateTime::currentDateTime().time());
     txtOptionsTrackback->clear();
     txtSlug->clear();
     txtSummary->clear();
-    chkOptionsComments->setChecked( true );
-    chkOptionsTrackback->setChecked( true );
-    comboOptionsStatus->setCurrentIndex( 0 );
+    chkOptionsComments->setChecked(true);
+    chkOptionsTrackback->setChecked(true);
+    comboOptionsStatus->setCurrentIndex(0);
 }
 
 void Toolbox::clearCatList()
 {
-    foreach( CatCheckBox* cat, d->listCategoryCheckBoxes ){
+    foreach (CatCheckBox *cat, d->listCategoryCheckBoxes) {
         cat->deleteLater();
     }
     d->listCategoryCheckBoxes.clear();
 }
 
-void Toolbox::getFieldsValue( BilboPost* currentPost )
+void Toolbox::getFieldsValue(BilboPost *currentPost)
 {
-    currentPost->setCategoryList( selectedCategories() );
-    currentPost->setTags( currentTags() );
-    currentPost->setModifyTimeStamp( chkOptionsTime->isChecked() );
-    if ( currentPost->status() == KBlog::BlogPost::New ) {
-        if ( chkOptionsTime->isChecked() ) {
-            currentPost->setModificationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
-            currentPost->setCreationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
+    currentPost->setCategoryList(selectedCategories());
+    currentPost->setTags(currentTags());
+    currentPost->setModifyTimeStamp(chkOptionsTime->isChecked());
+    if (currentPost->status() == KBlog::BlogPost::New) {
+        if (chkOptionsTime->isChecked()) {
+            currentPost->setModificationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
+            currentPost->setCreationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
         } else {
-            currentPost->setCreationDateTime( KDateTime::currentLocalDateTime() );
-            currentPost->setModificationDateTime( KDateTime::currentLocalDateTime() );
+            currentPost->setCreationDateTime(KDateTime::currentLocalDateTime());
+            currentPost->setModificationDateTime(KDateTime::currentLocalDateTime());
         }
     } else {
-        currentPost->setCreationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
-        currentPost->setModificationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
+        currentPost->setCreationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
+        currentPost->setModificationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
     }
-    if ( currentPost->creationDateTime().isUtc() || currentPost->modificationDateTime().isUtc() ){
-        qDebug()<<"creationDateTime was UTC!";
-        currentPost->setCreationDateTime( KDateTime( currentPost->creationDateTime().dateTime(),
-                                                    KDateTime::LocalZone ) );
-        currentPost->setModificationDateTime( KDateTime( currentPost->modificationDateTime().dateTime(),
-                                                    KDateTime::LocalZone ) );
+    if (currentPost->creationDateTime().isUtc() || currentPost->modificationDateTime().isUtc()) {
+        qDebug() << "creationDateTime was UTC!";
+        currentPost->setCreationDateTime(KDateTime(currentPost->creationDateTime().dateTime(),
+                                         KDateTime::LocalZone));
+        currentPost->setModificationDateTime(KDateTime(currentPost->modificationDateTime().dateTime(),
+                                             KDateTime::LocalZone));
     }
-    currentPost->setSlug( txtSlug->text() );
-    currentPost->setPrivate(( comboOptionsStatus->currentIndex() == 1 ) ? true : false );
-    currentPost->setCommentAllowed( chkOptionsComments->isChecked() );
-    currentPost->setTrackBackAllowed( chkOptionsTrackback->isChecked() );
-    currentPost->setSummary( txtSummary->toPlainText() );
+    currentPost->setSlug(txtSlug->text());
+    currentPost->setPrivate((comboOptionsStatus->currentIndex() == 1) ? true : false);
+    currentPost->setCommentAllowed(chkOptionsComments->isChecked());
+    currentPost->setTrackBackAllowed(chkOptionsTrackback->isChecked());
+    currentPost->setSummary(txtSummary->toPlainText());
 }
 
-void Toolbox::setFieldsValue( BilboPost* post )
+void Toolbox::setFieldsValue(BilboPost *post)
 {
-    if ( post == 0 ) {
+    if (post == 0) {
         resetFields();
-        qDebug()<<"post is NULL";
+        qDebug() << "post is NULL";
         return;
     }
 
-    setSelectedCategories( post->categories() );
-    txtCatTags->setText( post->tags().join( QLatin1String(", ") ) );
+    setSelectedCategories(post->categories());
+    txtCatTags->setText(post->tags().join(QLatin1String(", ")));
 //     qDebug() << "Post status is: " << post->status();
-    if ( post->status() == KBlog::BlogPost::New )
-        comboOptionsStatus->setCurrentIndex( 2 );
-    else if ( post->isPrivate() )
-        comboOptionsStatus->setCurrentIndex( 1 );
-    else
-        comboOptionsStatus->setCurrentIndex( 0 );
-    chkOptionsComments->setChecked( post->isCommentAllowed() );
-    chkOptionsTrackback->setChecked( post->isTrackBackAllowed() );
-    chkOptionsTime->setChecked( post->isModifyTimeStamp() );
-    if ( post->creationDateTime().isUtc() || post->modificationDateTime().isUtc() ){
-        qDebug()<<"creationDateTime was UTC!";
+    if (post->status() == KBlog::BlogPost::New) {
+        comboOptionsStatus->setCurrentIndex(2);
+    } else if (post->isPrivate()) {
+        comboOptionsStatus->setCurrentIndex(1);
+    } else {
+        comboOptionsStatus->setCurrentIndex(0);
+    }
+    chkOptionsComments->setChecked(post->isCommentAllowed());
+    chkOptionsTrackback->setChecked(post->isTrackBackAllowed());
+    chkOptionsTime->setChecked(post->isModifyTimeStamp());
+    if (post->creationDateTime().isUtc() || post->modificationDateTime().isUtc()) {
+        qDebug() << "creationDateTime was UTC!";
         post->setCreationDateTime(KDateTime(post->creationDateTime().dateTime(), KDateTime::LocalZone));
         post->setModificationDateTime(KDateTime(post->modificationDateTime().dateTime(), KDateTime::LocalZone));
     }
-    optionsTime->setTime( post->creationDateTime().time() );
-    optionsDate->setDate( post->creationDateTime().date() );
-    txtSlug->setText( QUrl::fromPercentEncoding( post->slug().toLatin1() ) );
-    txtSummary->setPlainText( post->summary() );
+    optionsTime->setTime(post->creationDateTime().time());
+    optionsDate->setDate(post->creationDateTime().date());
+    txtSlug->setText(QUrl::fromPercentEncoding(post->slug().toLatin1()));
+    txtSummary->setPlainText(post->summary());
 }
 
 QList< Category > Toolbox::selectedCategories() const
 {
     QList<Category> list;
     const int count = d->listCategoryCheckBoxes.count();
-    for ( int i = 0; i < count; ++i ) {
-        if ( d->listCategoryCheckBoxes.at(i)->isChecked() )
-            list.append( d->listCategoryCheckBoxes.at(i)->category() );
+    for (int i = 0; i < count; ++i) {
+        if (d->listCategoryCheckBoxes.at(i)->isChecked()) {
+            list.append(d->listCategoryCheckBoxes.at(i)->category());
+        }
     }
     return list;
 }
@@ -349,74 +353,77 @@ QStringList Toolbox::selectedCategoriesTitle() const
 {
     QStringList list;
     const int count = d->listCategoryCheckBoxes.count();
-    for ( int i = 0; i < count; ++i ) {
-        if ( d->listCategoryCheckBoxes.at(i)->isChecked() )
-            list.append( d->listCategoryCheckBoxes.at(i)->category().name );
+    for (int i = 0; i < count; ++i) {
+        if (d->listCategoryCheckBoxes.at(i)->isChecked()) {
+            list.append(d->listCategoryCheckBoxes.at(i)->category().name);
+        }
     }
     return list;
 }
 
-void Toolbox::setSelectedCategories( const QStringList &list )
+void Toolbox::setSelectedCategories(const QStringList &list)
 {
     unCheckCatList();
     int count = d->listCategoryCheckBoxes.count();
-    for ( int i = 0; i < count; ++i ) {
-        if ( list.contains( d->listCategoryCheckBoxes.at(i)->category().name, Qt::CaseInsensitive ) )
-            d->listCategoryCheckBoxes.at(i)->setChecked( true );
+    for (int i = 0; i < count; ++i) {
+        if (list.contains(d->listCategoryCheckBoxes.at(i)->category().name, Qt::CaseInsensitive)) {
+            d->listCategoryCheckBoxes.at(i)->setChecked(true);
+        }
     }
 }
 
 QStringList Toolbox::currentTags()
 {
-    QStringList t = txtCatTags->text().split( QRegExp( QString::fromUtf8(",|،") ), QString::SkipEmptyParts );
-    for ( int i = 0; i < t.count() ; ++i ) {
+    QStringList t = txtCatTags->text().split(QRegExp(QString::fromUtf8(",|،")), QString::SkipEmptyParts);
+    for (int i = 0; i < t.count() ; ++i) {
         t[i] = t[i].trimmed();
     }
     return t;
 }
 
-void Toolbox::slotEntrySelected( QListWidgetItem * item )
+void Toolbox::slotEntrySelected(QListWidgetItem *item)
 {
-    BilboPost post = DBMan::self()->getPostInfo( item->data( BlogEntryID ).toInt() );
+    BilboPost post = DBMan::self()->getPostInfo(item->data(BlogEntryID).toInt());
     qDebug() << "Emiting sigEntrySelected...";
-    Q_EMIT sigEntrySelected( post, d->mCurrentBlogId );
+    Q_EMIT sigEntrySelected(post, d->mCurrentBlogId);
 }
 
-void Toolbox::setCurrentPage( int index )
+void Toolbox::setCurrentPage(int index)
 {
-    box->setCurrentIndex( index );
+    box->setCurrentIndex(index);
 }
 
 void Toolbox::slotEntriesCopyUrl()
 {
-    if ( lstEntriesList->currentItem() == 0 ) {
+    if (lstEntriesList->currentItem() == 0) {
         return;
     }
-    BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( BlogEntryID ).toInt() );
-    if ( !post.permaLink().isEmpty() )
-        QApplication::clipboard()->setText( post.permaLink().toDisplayString() );
-    else if ( !post.link().isEmpty() )
-        QApplication::clipboard()->setText( post.link().toDisplayString() );
-    else
-        KMessageBox::sorry(this, i18n( "No link field is available in the database for this entry." ) );
+    BilboPost post = DBMan::self()->getPostInfo(lstEntriesList->currentItem()->data(BlogEntryID).toInt());
+    if (!post.permaLink().isEmpty()) {
+        QApplication::clipboard()->setText(post.permaLink().toDisplayString());
+    } else if (!post.link().isEmpty()) {
+        QApplication::clipboard()->setText(post.link().toDisplayString());
+    } else {
+        KMessageBox::sorry(this, i18n("No link field is available in the database for this entry."));
+    }
 }
 
 void Toolbox::unCheckCatList()
 {
     const int count = d->listCategoryCheckBoxes.count();
-    for ( int j = 0; j < count; ++j ) {
-        d->listCategoryCheckBoxes.at(j)->setChecked( false );
+    for (int j = 0; j < count; ++j) {
+        d->listCategoryCheckBoxes.at(j)->setChecked(false);
     }
 }
 
 void Toolbox::setButtonsIcon()
 {
-    btnEntriesUpdate->setIcon( QIcon::fromTheme( QLatin1String("view-refresh") ) );
-    btnEntriesRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
-    btnEntriesClear->setIcon( QIcon::fromTheme( QLatin1String("edit-clear") ) );
-    btnCatReload->setIcon( QIcon::fromTheme( QLatin1String("view-refresh") ) );
-    btnCatAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-    btnLocalRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
+    btnEntriesUpdate->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
+    btnEntriesRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    btnEntriesClear->setIcon(QIcon::fromTheme(QLatin1String("edit-clear")));
+    btnCatReload->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
+    btnCatAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    btnLocalRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
     ///TODO Add option for selecting only text or only Icon for Toolbox buttons!
 }
 
@@ -429,32 +436,33 @@ void Toolbox::reloadLocalPosts()
     QList<QVariantMap> localList = DBMan::self()->listLocalPosts();
     const int count = localList.count();
 
-    for (int i=0; i < count; ++i){
-        const QString postTitle = localList.at(i).value( QLatin1String("post_title") ).toString();
-        const QString blogTitle = localList.at(i).value( QLatin1String("blog_title") ).toString();
+    for (int i = 0; i < count; ++i) {
+        const QString postTitle = localList.at(i).value(QLatin1String("post_title")).toString();
+        const QString blogTitle = localList.at(i).value(QLatin1String("blog_title")).toString();
 
-        QTreeWidgetItem *item = new QTreeWidgetItem( localEntries, QStringList()<<postTitle<<blogTitle );
-        item->setData(0, LocalEntryID, localList.at(i).value( QLatin1String("local_id") ).toInt());
-        item->setData(1, LocalEntryID, localList.at(i).value( QLatin1String("blog_id") ).toInt());
+        QTreeWidgetItem *item = new QTreeWidgetItem(localEntries, QStringList() << postTitle << blogTitle);
+        item->setData(0, LocalEntryID, localList.at(i).value(QLatin1String("local_id")).toInt());
+        item->setData(1, LocalEntryID, localList.at(i).value(QLatin1String("blog_id")).toInt());
     }
 }
 
-void Toolbox::slotLocalEntrySelected( QTreeWidgetItem* item,int column )
+void Toolbox::slotLocalEntrySelected(QTreeWidgetItem *item, int column)
 {
-    qDebug()<<"Emitting sigEntrySelected...";
+    qDebug() << "Emitting sigEntrySelected...";
     Q_UNUSED(column);
     BilboPost post = DBMan::self()->localPost(item->data(0, LocalEntryID).toInt());
-    emit sigEntrySelected( post, item->data(1, LocalEntryID).toInt() );
+    emit sigEntrySelected(post, item->data(1, LocalEntryID).toInt());
 }
 
 void Toolbox::slotRemoveLocalEntry()
 {
     if (localEntries->currentItem()) {
-        if ( KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected local entry?"))
-            == KMessageBox::No )
+        if (KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected local entry?"))
+                == KMessageBox::No) {
             return;
-        const int local_id = localEntries->currentItem()->data(0,LocalEntryID).toInt();
-        if ( DBMan::self()->removeLocalEntry(local_id) ) {
+        }
+        const int local_id = localEntries->currentItem()->data(0, LocalEntryID).toInt();
+        if (DBMan::self()->removeLocalEntry(local_id)) {
             delete localEntries->currentItem();
         } else {
             KMessageBox::detailedError(this, i18n("Cannot remove selected local entry."),
@@ -467,63 +475,70 @@ void Toolbox::slotRemoveLocalEntry()
 
 void Toolbox::clearEntries()
 {
-    if ( d->mCurrentBlogId == -1 )
+    if (d->mCurrentBlogId == -1) {
         return;
-    if ( KMessageBox::warningContinueCancel(this, i18n("Are you sure you want to clear the list of entries?")) ==
-         KMessageBox::Cancel )
+    }
+    if (KMessageBox::warningContinueCancel(this, i18n("Are you sure you want to clear the list of entries?")) ==
+            KMessageBox::Cancel) {
         return;
-    if ( DBMan::self()->clearPosts( d->mCurrentBlogId ) )
+    }
+    if (DBMan::self()->clearPosts(d->mCurrentBlogId)) {
         lstEntriesList->clear();
-    else
-        KMessageBox::detailedSorry(this, i18n( "Cannot clear the list of entries." ) , DBMan::self()->lastErrorText());
+    } else {
+        KMessageBox::detailedSorry(this, i18n("Cannot clear the list of entries.") , DBMan::self()->lastErrorText());
+    }
 }
 
 void Toolbox::setDateTimeNow()
 {
-    optionsDate->setDate( QDate::currentDate() );
-    optionsTime->setTime( QTime::currentTime() );
+    optionsDate->setDate(QDate::currentDate());
+    optionsTime->setTime(QTime::currentTime());
 }
 
-void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
+void Toolbox::requestEntriesListContextMenu(const QPoint &pos)
 {
-    if ( lstEntriesList->selectedItems().isEmpty() )
+    if (lstEntriesList->selectedItems().isEmpty()) {
         return;
+    }
     Q_UNUSED(pos);
     QMenu *entriesContextMenu = new QMenu;
-    QAction *actEntriesOpenInBrowser = new QAction( QIcon::fromTheme(QLatin1String("applications-internet")),
-                                                    i18n("Open in browser"), entriesContextMenu );
+    QAction *actEntriesOpenInBrowser = new QAction(QIcon::fromTheme(QLatin1String("applications-internet")),
+            i18n("Open in browser"), entriesContextMenu);
     connect(actEntriesOpenInBrowser, &QAction::triggered, this, &Toolbox::openPostInBrowser);
-    QAction *actEntriesCopyUrl = new QAction( QIcon::fromTheme(QLatin1String("edit-copy")),
-                                              i18n("Copy URL"), entriesContextMenu );
+    QAction *actEntriesCopyUrl = new QAction(QIcon::fromTheme(QLatin1String("edit-copy")),
+            i18n("Copy URL"), entriesContextMenu);
     connect(actEntriesCopyUrl, &QAction::triggered, this, &Toolbox::slotEntriesCopyUrl);
-    QAction *actEntriesCopyTitle = new QAction( QIcon::fromTheme(QLatin1String("edit-copy")),
-                                                i18n("Copy title"), entriesContextMenu );
+    QAction *actEntriesCopyTitle = new QAction(QIcon::fromTheme(QLatin1String("edit-copy")),
+            i18n("Copy title"), entriesContextMenu);
     connect(actEntriesCopyTitle, &QAction::triggered, this, &Toolbox::copyPostTitle);
-    entriesContextMenu->addAction( actEntriesOpenInBrowser );
-    entriesContextMenu->addAction( actEntriesCopyUrl );
-    entriesContextMenu->addAction( actEntriesCopyTitle );
-    entriesContextMenu->exec( QCursor::pos() );
+    entriesContextMenu->addAction(actEntriesOpenInBrowser);
+    entriesContextMenu->addAction(actEntriesCopyUrl);
+    entriesContextMenu->addAction(actEntriesCopyTitle);
+    entriesContextMenu->exec(QCursor::pos());
     delete entriesContextMenu;
 }
 
 void Toolbox::openPostInBrowser()
 {
-    if ( lstEntriesList->selectedItems().isEmpty() )
+    if (lstEntriesList->selectedItems().isEmpty()) {
         return;
-    BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( BlogEntryID ).toInt() );
+    }
+    BilboPost post = DBMan::self()->getPostInfo(lstEntriesList->currentItem()->data(BlogEntryID).toInt());
     QString url;
-    if ( !post.permaLink().isEmpty() )
+    if (!post.permaLink().isEmpty()) {
         url = post.permaLink().toDisplayString(QUrl::PreferLocalFile);
-    else if ( !post.link().isEmpty() )
+    } else if (!post.link().isEmpty()) {
         url = post.link().toDisplayString(QUrl::PreferLocalFile);
-    else
-        url = DBMan::self()->blogList().value( d->mCurrentBlogId )->blogUrl();
-    KToolInvocation::invokeBrowser ( url );
+    } else {
+        url = DBMan::self()->blogList().value(d->mCurrentBlogId)->blogUrl();
+    }
+    KToolInvocation::invokeBrowser(url);
 }
 
 void Toolbox::copyPostTitle()
 {
-    if ( !lstEntriesList->selectedItems().isEmpty() )
-        QApplication::clipboard()->setText( lstEntriesList->currentItem()->text() );
+    if (!lstEntriesList->selectedItems().isEmpty()) {
+        QApplication::clipboard()->setText(lstEntriesList->currentItem()->text());
+    }
 }
 

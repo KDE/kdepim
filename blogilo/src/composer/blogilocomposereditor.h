@@ -33,9 +33,9 @@ public:
     explicit BlogiloComposerEditor(BlogiloComposerView *view, QWidget *parent);
     ~BlogiloComposerEditor();
 
-    void setReadOnly ( bool _readOnly );
-    QList< BilboMedia* > getLocalImages();
-    void replaceImageSrc(const QString& src, const QString& dest);
+    void setReadOnly(bool _readOnly);
+    QList< BilboMedia * > getLocalImages();
+    void replaceImageSrc(const QString &src, const QString &dest);
 
     void startEditing();
 
@@ -46,8 +46,8 @@ private Q_SLOTS:
     void slotToggleCode(bool);
 
 private:
-    void execCommand( const QString &cmd, const QString &arg );
-    void execCommand ( const QString &cmd );
+    void execCommand(const QString &cmd, const QString &arg);
+    void execCommand(const QString &cmd);
     bool readOnly;
     QAction *mActSplitPost;
     QAction *mActCode;
