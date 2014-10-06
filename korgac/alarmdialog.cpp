@@ -47,7 +47,7 @@
 #include <AkonadiCore/Item>
 
 #include <MailTransport/TransportManager>
-#include <KUrl>
+#include <QUrl>
 
 #include <KLocale>
 #include <KComboBox>
@@ -640,7 +640,7 @@ void AlarmDialog::eventNotification()
         beeped = true;
         Phonon::MediaObject *player =
           Phonon::createPlayer( Phonon::NotificationCategory,
-                                KUrl( alarm->audioFile() ) );
+                                QUrl::fromLocalFile( alarm->audioFile() ) );
         player->setParent( this );
         connect(player, &Phonon::MediaObject::finished, player, &Phonon::MediaObject::deleteLater);
         player->play();
@@ -1019,7 +1019,7 @@ void AlarmDialog::removeFromConfig( const QList<Akonadi::Item::Id> &ids )
     KConfigGroup incGroup( config, group );
     const QString uid = incGroup.readEntry( "UID" );
     const QDateTime remindAtDate = incGroup.readEntry( "RemindAt", QDateTime() );
-    const KUrl akonadiUrl = incGroup.readEntry( "AkonadiUrl" );
+    const QUrl akonadiUrl = incGroup.readEntry( "AkonadiUrl" );
     const Akonadi::Item::Id id = Akonadi::Item::fromUrl( akonadiUrl ).id();
     if ( !ids.contains( id ) ) {
       ConfItem ci;
