@@ -1901,7 +1901,7 @@ void ViewerPrivate::createActions()
     mCreateNoteAction = new KAction(KIcon( QLatin1String("view-pim-notes") ),i18nc("create a new note out of this message", "Create Note"), this);
     mCreateNoteAction->setIconText( i18nc("create a new note out of this message", "Create Note") );
     mCreateNoteAction->setHelpText( i18n("Allows you to create a note from this message") );
-    mCreateNoteAction->setWhatsThis( i18n( "This option starts a editor to create a note. Then you can edit the note to your liking before saving it." ) );
+    mCreateNoteAction->setWhatsThis( i18n( "This option starts an editor to create a note. Then you can edit the note to your liking before saving it." ) );
     ac->addAction(QLatin1String("create_note"), mCreateNoteAction);
     connect( mCreateNoteAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateNoteWidget()) );
 }
