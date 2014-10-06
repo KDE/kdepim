@@ -26,7 +26,7 @@
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <Item>
-#include <KDialog>
+#include <QDialog>
 #include <KCalCore/Incidence>
 #include <KDateTime>
 
@@ -55,7 +55,7 @@ class QTreeWidgetItem;
 class QSpinBox;
 class QVBoxLayout;
 
-class AlarmDialog : public KDialog
+class AlarmDialog : public QDialog
 {
   Q_OBJECT
   public:
@@ -134,6 +134,11 @@ class AlarmDialog : public KDialog
     KComboBox *mSuspendUnit;
     QTimer mSuspendTimer;
     QTreeWidgetItem *mLastItem;
+    QPushButton *mUser1Button;
+    QPushButton *mUser2Button;
+    QPushButton *mUser3Button;
+    QPushButton *mOkButton;
+
 };
 
 #endif

@@ -68,6 +68,9 @@
 #include <QSpinBox>
 #include <QTreeWidget>
 #include <QVBoxLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace KIdentityManagement;
 using namespace KCalCore;
@@ -144,7 +147,7 @@ bool ReminderTreeItem::operator<( const QTreeWidgetItem &other ) const
 typedef QList<ReminderTreeItem *> ReminderList;
 
 AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent )
-  : KDialog( parent, Qt::WindowStaysOnTopHint ),
+  : QDialog( parent, Qt::WindowStaysOnTopHint ),
     mCalendar( calendar ), mSuspendTimer( this )
 {
   // User1 => Edit...
@@ -165,22 +168,35 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
     mPos = pos;
     topBox->move( mPos );
   }
-  setMainWidget( topBox );
-  setCaption( i18nc( "@title:window", "Reminders" ) );
+  setWindowTitle( i18nc( "@title:window", "Reminders" ) );
   setWindowIcon( QIcon::fromTheme( QLatin1String("korgac") ) );
-  setButtons( Ok | User1 | User2 | User3 );
-  setDefaultButton( NoDefault );
-  setButtonText( User3, i18nc( "@action:button", "Dismiss Reminder" ) );
-  setButtonToolTip( User3, i18nc( "@info:tooltip",
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(topBox);
+  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  mUser1Button = new QPushButton;
+  buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+  mUser2Button = new QPushButton;
+  buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
+  mUser3Button = new QPushButton;
+  buttonBox->addButton(mUser3Button, QDialogButtonBox::ActionRole);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  mainLayout->addWidget(buttonBox);
+
+  mUser3Button->setText(i18nc( "@action:button", "Dismiss Reminder" ));
+  mUser3Button->setToolTip(i18nc( "@info:tooltip",
                                   "Dismiss the reminders for the selected incidences" ) );
-  setButtonText( User2, i18nc( "@action:button", "Dismiss All" ) );
-  setButtonToolTip( User2, i18nc( "@info:tooltip",
+  mUser2Button->setText(i18nc( "@action:button", "Dismiss All"));
+  mUser2Button->setToolTip( i18nc( "@info:tooltip",
                                   "Dismiss the reminders for all listed incidences" ) );
-  setButtonText( User1, i18nc( "@action:button", "Edit..." ) );
-  setButtonToolTip( User1, i18nc( "@info:tooltip",
+  mUser1Button->setText(i18nc( "@action:button", "Edit..."));
+  mUser1Button->setToolTip(i18nc( "@info:tooltip",
                                   "Edit the selected incidence" ) );
-  setButtonText( Ok, i18nc( "@action:button", "Suspend" ) );
-  setButtonToolTip( Ok, i18nc( "@info:tooltip",
+  mOkButton->setText(i18nc( "@action:button", "Suspend" ));
+  mOkButton->setToolTip(i18nc( "@info:tooltip",
                                "Suspend the reminders for the selected incidences "
                                "by the specified interval" ) );
 
@@ -241,7 +257,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
   QWidget *suspendBox = new QWidget( topBox );
   QHBoxLayout *suspendBoxHBoxLayout = new QHBoxLayout(suspendBox);
   suspendBoxHBoxLayout->setMargin(0);
-  suspendBoxHBoxLayout->setSpacing( spacingHint() );
+  //Port QT5 suspendBoxHBoxLayout->setSpacing( spacingHint() );
   mTopLayout->addWidget( suspendBox );
 
   QLabel *l = new QLabel( i18nc( "@label:spinbox", "Suspend &duration:" ), suspendBox );
@@ -281,10 +297,10 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
 
   connect(&mSuspendTimer, &QTimer::timeout, this, &AlarmDialog::wakeUp);
 
-  connect(this, &AlarmDialog::okClicked, this, &AlarmDialog::slotOk);
-  connect(this, &AlarmDialog::user1Clicked, this, &AlarmDialog::slotUser1);
-  connect(this, &AlarmDialog::user2Clicked, this, &AlarmDialog::slotUser2);
-  connect(this, &AlarmDialog::user3Clicked, this, &AlarmDialog::slotUser3);
+  connect(mOkButton, &QPushButton::clicked, this, &AlarmDialog::slotOk);
+  connect(mUser1Button, &QPushButton::clicked, this, &AlarmDialog::slotUser1);
+  connect(mUser2Button, &QPushButton::clicked, this, &AlarmDialog::slotUser2);
+  connect(mUser3Button, &QPushButton::clicked, this, &AlarmDialog::slotUser3);
 
   mIdentityManager = new CalendarSupport::IdentityManager;
 }
@@ -569,9 +585,9 @@ void AlarmDialog::show()
 //  mSuspendSpin->setValue( defSuspendVal );
 //  mSuspendUnit->setCurrentIndex( defSuspendUnit );
 
-  KDialog::show();
+  QDialog::show();
   if ( !mPos.isNull() ) {
-    KDialog::move( mPos );
+    QDialog::move( mPos );
   }
   KWindowSystem::unminimizeWindow( winId(), false );
   KWindowSystem::setState( winId(), NET::KeepAbove | NET::DemandsAttention );
@@ -789,9 +805,9 @@ void AlarmDialog::updateButtons()
 {
   const int count = selectedItems().count();
   qDebug() << "selected items=" << count;
-  enableButton( User3, count > 0 );  // enable Dismiss, if >1 selected
-  enableButton( User1, count == 1 ); // enable Edit, if only 1 selected
-  enableButton( Ok, count > 0 );     // enable Suspend, if >1 selected
+  mUser3Button->setEnabled(count>0);
+  mUser1Button->setEnabled(count==1);
+  mOkButton->setEnabled(count>0);
 }
 
 void AlarmDialog::toggleDetails( QTreeWidgetItem *item )
@@ -936,7 +952,7 @@ void AlarmDialog::keyPressEvent( QKeyEvent *e )
     return;
   }
 
-  KDialog::keyPressEvent( e );
+  QDialog::keyPressEvent( e );
 }
 
 bool AlarmDialog::openIncidenceEditorThroughKOrganizer( const Incidence::Ptr &incidence )

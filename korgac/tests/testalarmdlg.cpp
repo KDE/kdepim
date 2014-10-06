@@ -31,7 +31,7 @@
 
 #include <KAboutData>
 
-
+#include <QDateTime>
 #include <QApplication>
 #include <KLocalizedString>
 #include <QCommandLineParser>
