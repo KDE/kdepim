@@ -27,7 +27,7 @@
 #include <Collection>
 #include <Item>
 
-#include <KUrl>
+#include <QUrl>
 
 #include <QObject>
 #include <QPointer>
@@ -70,7 +70,7 @@ public:
     ~BackupJob();
 
     void setRootFolder(const Akonadi::Collection &rootFolder);
-    void setSaveLocation(const KUrl &savePath);
+    void setSaveLocation(const QUrl &savePath);
     void setArchiveType(ArchiveType type);
     void setDeleteFoldersAfterCompletion(bool deleteThem);
     void setRecursive(bool recursive);
@@ -106,7 +106,7 @@ private:
     QString collectionName(const Akonadi::Collection &collection) const;
 
     QString mRealPath;
-    KUrl mMailArchivePath;
+    QUrl mMailArchivePath;
     QDateTime mArchiveTime;
     ArchiveType mArchiveType;
     Akonadi::Collection mRootFolder;

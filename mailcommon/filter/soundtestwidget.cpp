@@ -87,7 +87,7 @@ void SoundTestWidget::openSoundDialog(KUrlRequester *)
     const QStringList soundDirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QLatin1String("sound/"), QStandardPaths::LocateDirectory);
 
     if (!soundDirs.isEmpty()) {
-        KUrl soundURL;
+        QUrl soundURL;
         QDir dir;
         dir.setFilter(QDir::Files | QDir::Readable);
 

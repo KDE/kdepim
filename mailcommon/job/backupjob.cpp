@@ -80,7 +80,7 @@ void BackupJob::setRealPath(const QString &path)
     mRealPath = path;
 }
 
-void BackupJob::setSaveLocation(const KUrl &savePath)
+void BackupJob::setSaveLocation(const QUrl &savePath)
 {
     mMailArchivePath = savePath;
 }

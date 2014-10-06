@@ -328,9 +328,9 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
     return QList<MailFilter *>();
 }
 
-void FilterImporterExporter::exportFilters(const QList<MailFilter *> &filters, const KUrl &fileName, bool saveAll)
+void FilterImporterExporter::exportFilters(const QList<MailFilter *> &filters, const QUrl &fileName, bool saveAll)
 {
-    KUrl saveUrl;
+    QUrl saveUrl;
     if (fileName.isEmpty()) {
         saveUrl = KFileDialog::getSaveUrl(
                       QDir::homePath(), QString(), d->mParent, i18n("Export Filters"));

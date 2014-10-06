@@ -74,13 +74,13 @@
 
 using namespace MessageViewer;
 
-bool Util::checkOverwrite(const KUrl &url, QWidget *w)
+bool Util::checkOverwrite(const QUrl &url, QWidget *w)
 {
     if (KIO::NetAccess::exists(url, KIO::NetAccess::DestinationSide, w)) {
         if (KMessageBox::Cancel == KMessageBox::warningContinueCancel(
                     w,
                     i18n("A file named \"%1\" already exists. "
-                         "Are you sure you want to overwrite it?", url.prettyUrl()),
+                         "Are you sure you want to overwrite it?", url.toDisplayString()),
                     i18n("Overwrite File?"),
                     KStandardGuiItem::overwrite())) {
             return false;

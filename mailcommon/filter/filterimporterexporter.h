@@ -33,7 +33,7 @@
 #include "mailcommon_export.h"
 
 #include <KSharedConfig>
-#include <KUrl>
+#include <QUrl>
 
 #include <QList>
 #include <QStringList>
@@ -80,7 +80,7 @@ public:
      * is asked from the user. The list to export is also
      * presented for confirmation/selection.
      */
-    void exportFilters(const QList<MailFilter *> &filters , const KUrl &fileName = KUrl(), bool saveAll = false);
+    void exportFilters(const QList<MailFilter *> &filters , const QUrl &fileName = QUrl(), bool saveAll = false);
 
     /**
      * Imports filters. Ask the user where to import them from

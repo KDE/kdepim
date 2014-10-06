@@ -45,6 +45,7 @@
 #include <KService>
 
 class KUrl;
+class QUrl;
 class QWidget;
 class QActionGroup;
 class QAction;
@@ -82,7 +83,7 @@ enum HtmlMode {
 };
 
 // return true if we should proceed, false if we should abort
-bool MESSAGEVIEWER_EXPORT checkOverwrite(const KUrl &url, QWidget *w);
+bool MESSAGEVIEWER_EXPORT checkOverwrite(const QUrl &url, QWidget *w);
 
 /**
      * Delegates opening a URL to the QDesktopServices mechanisms for that

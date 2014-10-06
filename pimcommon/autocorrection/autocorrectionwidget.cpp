@@ -30,7 +30,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <KFileDialog>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KUrl>
+#include <QUrl>
 
 #include <QTreeWidgetItem>
 #include <QMenu>
@@ -620,7 +620,7 @@ void AutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
 
 void AutoCorrectionWidget::slotExportAutoCorrection()
 {
-    const KUrl saveUrl = KFileDialog::getSaveUrl(QDir::homePath(), QString(), this, i18n("Export Autocorrection File"));
+    const QUrl saveUrl = KFileDialog::getSaveUrl(QDir::homePath(), QString(), this, i18n("Export Autocorrection File"));
     if (saveUrl.isEmpty()) {
         return;
     }
