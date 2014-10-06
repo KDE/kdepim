@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2011, 2012, 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2011, 2012, 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,7 +18,7 @@
 #include "filterimporterthunderbird_p.h"
 #include "mailfilter.h"
 
-#include <KUrl>
+#include <QUrl>
 #include <QDebug>
 
 #include <QFile>
@@ -97,7 +97,7 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream
                     value = lstValue.join(QLatin1String("\t"));
                     actionName = QLatin1String("add header");
                 } else if (actionName == QLatin1String("copy") || actionName == QLatin1String("transfer")) {
-                    KUrl url(value);
+                    QUrl url = QUrl::fromLocalFile(value);
                     if (url.isValid()) {
                         QString path = url.path();
                         if (path.startsWith(QLatin1Char('/'))) {
