@@ -115,7 +115,7 @@ endif()
 ########### install files ###############
 
 install(PROGRAMS
-  korgac.desktop
+  org.kde.korgac.desktop
   DESTINATION ${AUTOSTART_INSTALL_DIR}
 )
 

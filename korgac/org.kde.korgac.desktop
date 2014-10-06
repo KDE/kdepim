@@ -125,6 +125,7 @@ Terminal=false
 X-KDE-autostart-phase=2
 X-KDE-autostart-condition=korgacrc:General:Autostart:true
 X-DBUS-StartupType=Unique
+X-DBUS-ServiceName=org.kde.korgac
 
 #do not uncomment the following line, else autostart fails
 #NoDisplay=true
