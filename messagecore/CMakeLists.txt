@@ -32,7 +32,6 @@ set(messagecore_LIB_SRCS
    helpers/messagehelpers.cpp
    helpers/nodehelper.cpp
    utils/stringutil.cpp
-   widgets/annotationdialog.cpp
 )
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS

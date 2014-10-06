@@ -23,7 +23,6 @@
 
 #include "messageitem.h"
 #include "item_p.h"
-#include "messagecore/widgets/annotationdialog.h"
 #include <Akonadi/Item>
 #include <Akonadi/Monitor>
 #include <Akonadi/Tag>
@@ -70,7 +69,6 @@ public:
   QByteArray mReferencesIdMD5;         ///< set only if we're doing threading
   QByteArray mStrippedSubjectMD5;      ///< set only if we're doing threading
   Akonadi::Item mAkonadiItem;
-  QWeakPointer<MessageCore::AnnotationEditDialog> mAnnotationDialog;
   MessageItem::ThreadingStatus mThreadingStatus : 4;
   MessageItem::EncryptionState mEncryptionState : 4;
   MessageItem::SignatureState mSignatureState : 4;

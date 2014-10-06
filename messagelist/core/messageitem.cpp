@@ -22,11 +22,9 @@
 #include "messageitem.h"
 #include "messageitem_p.h"
 
-#include "messagecore/widgets/annotationdialog.h"
 #include "theme.h"
 
 #include <akonadi/item.h>
-#include <akonadi/entityannotationsattribute.h>
 #include <akonadi/tagattribute.h>
 #include <akonadi/tagfetchjob.h>
 #include <akonadi/tagfetchscope.h>
@@ -169,6 +167,7 @@ void MessageItemPrivate::invalidateTagCache()
 
 void MessageItemPrivate::invalidateAnnotationCache()
 {
+  //FIXME NOTES_ON_EMAIL
 }
 
 const MessageItem::Tag* MessageItemPrivate::bestTag() const
@@ -260,37 +259,21 @@ QList< MessageItem::Tag * > MessageItem::tagList() const
 bool MessageItem::hasAnnotation() const
 {
     Q_D( const MessageItem );
-    //TODO check for note entry?
-    return d->mAkonadiItem.hasAttribute<Akonadi::EntityAnnotationsAttribute>();
+    //FIXME NOTES_ON_EMAIL
+    return false;
 }
 
 QString MessageItem::annotation() const
 {
     Q_D( const MessageItem );
-    if ( d->mAkonadiItem.hasAttribute<Akonadi::EntityAnnotationsAttribute>() ) {
-        Akonadi::EntityAnnotationsAttribute *attr = d->mAkonadiItem.attribute<Akonadi::EntityAnnotationsAttribute>();
-        const QMap<QByteArray, QByteArray> annotations = attr->annotations();
-        if (annotations.contains("/private/comment")) {
-            return QString::fromLatin1(annotations.value("/private/comment"));
-        }
-        if (annotations.contains("/shared/comment")) {
-            return QString::fromLatin1(annotations.value("/shared/comment"));
-        }
-    }
+    //FIXME NOTES_ON_EMAIL
     return QString();
 }
 
 void MessageItem::editAnnotation()
 {
     Q_D( MessageItem );
-    if ( d->mAnnotationDialog.data() )
-        return;
-    d->mAnnotationDialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem );
-    d->mAnnotationDialog.data()->setAttribute( Qt::WA_DeleteOnClose );
-    //FIXME make async
-    if ( d->mAnnotationDialog.data()->exec() ) {
-        // invalidate the cached mHasAnnotation value
-    }
+    //FIXME: NOTES_ON_EMAIL
 }
 
 const MessageItem::Tag * MessageItemPrivate::findTagInternal( const QString &szTagId ) const
@@ -330,6 +313,7 @@ void MessageItem::invalidateTagCache()
 void MessageItem::invalidateAnnotationCache()
 {
     Q_D( MessageItem );
+    //FIXME: NOTES_ON_EMAIL
     d->invalidateAnnotationCache();
 }
 

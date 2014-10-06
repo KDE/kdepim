@@ -146,7 +146,7 @@ void NoteEdit::showNoteEdit()
 void NoteEdit::readConfig()
 {
     const qint64 id = MessageViewer::GlobalSettingsBase::self()->lastNoteSelectedFolder();
-    if (id!=-1) {
+    if (id != -1) {
         mCollectionCombobox->setDefaultCollection(Akonadi::Collection(id));
     }
 }
