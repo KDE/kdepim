@@ -39,6 +39,7 @@ private Q_SLOTS:
     void shouldReplaceAutoFraction();
     void shouldNotAddSpaceWhenWeAlreadyHaveASpace();
     void shouldAutocorrectWord();
+    void shouldNotUpperCaseFirstCharOfSentence();
 
 private:
     KSharedConfig::Ptr mConfig;

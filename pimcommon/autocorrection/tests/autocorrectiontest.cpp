@@ -374,5 +374,32 @@ void AutoCorrectionTest::shouldAutocorrectWord()
 
 }
 
+void AutoCorrectionTest::shouldNotUpperCaseFirstCharOfSentence()
+{
+    PimCommon::AutoCorrection autocorrection;
+    autocorrection.setEnabledAutoCorrection(true);
+    autocorrection.setUppercaseFirstCharOfSentence(true);
+    QSet<QString> lst;
+    lst.insert(QLatin1String("Foo."));
+    autocorrection.setUpperCaseExceptions(lst);
+
+    //Uppercase here.
+    QTextDocument doc;
+    QString text = QLatin1String("foo. blabla Foo. tt");
+    doc.setPlainText(text);
+    int position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QCOMPARE(doc.toPlainText(), text);
+
+    autocorrection.setUpperCaseExceptions(QSet<QString>());
+    doc.setPlainText(text);
+    position = text.length();
+    autocorrection.autocorrect(false, doc, position);
+    QString result = QLatin1String("foo. blabla Foo. Tt");
+    QCOMPARE(doc.toPlainText(), result);
+
+
+}
+
 
 QTEST_KDEMAIN(AutoCorrectionTest, NoGUI)
