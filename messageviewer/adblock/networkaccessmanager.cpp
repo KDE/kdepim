@@ -110,7 +110,7 @@ QNetworkReply *MyNetworkAccessManager::createRequest(Operation op, const QNetwor
     QWebFrame *frame = qobject_cast<QWebFrame *>(req.originatingObject());
     if (frame) {
         if (!mBlockedRequests.contains(frame)) {
-            connect(frame, SIGNAL(loadFinished(bool)), this, SLOT(slotApplyHidingBlockedElements(bool)));
+            connect(frame, &QWebFrame::loadFinished, this, &MyNetworkAccessManager::slotApplyHidingBlockedElements);
         }
         mBlockedRequests.insert(frame, req.url());
     }

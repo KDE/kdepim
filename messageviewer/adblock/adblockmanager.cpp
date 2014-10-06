@@ -272,7 +272,7 @@ void AdBlockManager::updateSubscription(const QString &path, const QString &url,
     job->metaData().insert(QLatin1String("no-auth"), QLatin1String("true"));
     job->setProperty("itemname", itemName);
 
-    connect(job, SIGNAL(finished(KJob*)), this, SLOT(slotFinished(KJob*)));
+    connect(job, &KIO::FileCopyJob::finished, this, &AdBlockManager::slotFinished);
 }
 
 void AdBlockManager::slotFinished(KJob *job)
