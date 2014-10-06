@@ -39,14 +39,17 @@ public:
     void setRights( const QMap<QByteArray, KIMAP::Acl::Rights> &rights );
     QMap<QByteArray, KIMAP::Acl::Rights> rights() const;
     QMap<QByteArray, KIMAP::Acl::Rights> oldRights() const;
-    QByteArray type() const;
-    Attribute *clone() const;
-    QByteArray serialized() const;
-    void deserialize( const QByteArray &data );
+    void setMyRights( KIMAP::Acl::Rights rights );
+    KIMAP::Acl::Rights myRights() const;
+    virtual QByteArray type() const;
+    virtual Attribute *clone() const;
+    virtual QByteArray serialized() const;
+    virtual void deserialize( const QByteArray &data );
 
-private:
+  private:
     QMap<QByteArray, KIMAP::Acl::Rights> mRights;
     QMap<QByteArray, KIMAP::Acl::Rights> mOldRights;
+    KIMAP::Acl::Rights mMyRights;
 };
 
 }
