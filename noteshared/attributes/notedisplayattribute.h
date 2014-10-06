@@ -75,6 +75,8 @@ public:
 
     bool autoIndent() const;
     void setAutoIndent(bool b);
+    bool operator ==( const NoteDisplayAttribute &other) const;
+
 private:
     QFont mFont;
     QFont mTitleFont;
@@ -89,6 +91,7 @@ private:
     bool mHide;
     bool mShowInTaskbar;
     bool mKeepAbove;
+    //it's an error but we can't remove it!
     bool mKeepBelove;
     bool mKeepBelow;
 };

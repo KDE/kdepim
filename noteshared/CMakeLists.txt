@@ -68,3 +68,5 @@ target_link_libraries(noteshared
 
 set_target_properties(noteshared PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS noteshared ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+add_subdirectory(attributes/tests)
