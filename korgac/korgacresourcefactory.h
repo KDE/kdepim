@@ -18,15 +18,15 @@
 #ifndef KORGACRESOURCEFACTORY_H
 #define KORGACRESOURCEFACTORY_H
 
-#include <agentfactory.h> 
+#include <agentfactory.h>
 #include <korgacagent.h>
- 
+
 class KorgacResourceFactory : public Akonadi::AgentFactory<KorgacAgent>
 {
-   Q_OBJECT
-   Q_PLUGIN_METADATA(IID "org.kde.akonadi.KorgacResource");
-public: 
-    explicit KorgacResourceFactory( QObject * parent = 0 );
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.kde.akonadi.KorgacResource");
+public:
+    explicit KorgacResourceFactory(QObject *parent = 0);
 
 };
 #endif

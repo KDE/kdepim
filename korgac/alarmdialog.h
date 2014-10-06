@@ -33,16 +33,19 @@
 #include <QPoint>
 #include <QTimer>
 
-namespace Akonadi {
-  class Item;
+namespace Akonadi
+{
+class Item;
 }
 
-namespace KIdentityManagement {
-  class IdentityManager;
+namespace KIdentityManagement
+{
+class IdentityManager;
 }
 
-namespace CalendarSupport {
-  class IncidenceViewer;
+namespace CalendarSupport
+{
+class IncidenceViewer;
 }
 
 class ReminderTreeItem;
@@ -57,17 +60,17 @@ class QVBoxLayout;
 
 class AlarmDialog : public QDialog
 {
-  Q_OBJECT
-  public:
-    explicit AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit AlarmDialog(const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent = 0);
     ~AlarmDialog();
 
-    void addIncidence( const Akonadi::Item &incidence, const QDateTime &reminderAt,
-                       const QString &displayText );
-    void setRemindAt( const QDateTime &dt );
+    void addIncidence(const Akonadi::Item &incidence, const QDateTime &reminderAt,
+                      const QString &displayText);
+    void setRemindAt(const QDateTime &dt);
     void eventNotification();
 
-  public slots:
+public slots:
     void slotOk();    // suspend
     void slotUser1(); // edit
     void slotUser2(); // dismiss all
@@ -89,40 +92,40 @@ class AlarmDialog : public QDialog
     */
     void slotCalendarChanged();
 
-  signals:
-    void reminderCount( int count );
+signals:
+    void reminderCount(int count);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void update();
-    void popupItemMenu( const QPoint &point );
+    void popupItemMenu(const QPoint &point);
 
-  protected:
-    void keyPressEvent( QKeyEvent *e );
-    void closeEvent( QCloseEvent * );
+protected:
+    void keyPressEvent(QKeyEvent *e);
+    void closeEvent(QCloseEvent *);
 
-  private:
-    static KDateTime triggerDateForIncidence( const KCalCore::Incidence::Ptr &inc,
-                                              const QDateTime &reminderAt,
-                                              QString &displayStr );
+private:
+    static KDateTime triggerDateForIncidence(const KCalCore::Incidence::Ptr &inc,
+            const QDateTime &reminderAt,
+            QString &displayStr);
 
     // Removes each Incidence-X group that has one of the specified uids
-    void removeFromConfig( const QList<Akonadi::Item::Id> & );
+    void removeFromConfig(const QList<Akonadi::Item::Id> &);
 
     // Opens through dbus, @deprecated
-    bool openIncidenceEditorThroughKOrganizer( const KCalCore::Incidence::Ptr &incidence );
+    bool openIncidenceEditorThroughKOrganizer(const KCalCore::Incidence::Ptr &incidence);
 
     // opens directly
-    bool openIncidenceEditorNG( const Akonadi::Item &incidence );
+    bool openIncidenceEditorNG(const Akonadi::Item &incidence);
 
     bool startKOrganizer();
-    ReminderTreeItem *searchByItem( const Akonadi::Item &incidence );
+    ReminderTreeItem *searchByItem(const Akonadi::Item &incidence);
     void setTimer();
-    void dismiss( QList<ReminderTreeItem *> selections );
+    void dismiss(QList<ReminderTreeItem *> selections);
     int activeCount();
     QList<ReminderTreeItem *> selectedItems() const;
     void updateButtons();
-    void toggleDetails( QTreeWidgetItem *item );
-    void showDetails( QTreeWidgetItem *item );
+    void toggleDetails(QTreeWidgetItem *item);
+    void showDetails(QTreeWidgetItem *item);
 
     Akonadi::ETMCalendar::Ptr mCalendar;
     QTreeWidget *mIncidenceTree;

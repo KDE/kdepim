@@ -26,23 +26,23 @@
 
 #include <Akonadi/Calendar/ETMCalendar>
 
-
 #include <QTimer>
 #include <QDateTime>
 #include <QSessionManager>
 class AlarmDialog;
 class AlarmDockWindow;
 
-namespace Akonadi {
-  class Item;
-  class EntityTreeModel;
+namespace Akonadi
+{
+class Item;
+class EntityTreeModel;
 }
 
 class KOAlarmClient : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit KOAlarmClient( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit KOAlarmClient(QObject *parent = 0);
     ~KOAlarmClient();
 
     // DBUS interface
@@ -55,26 +55,25 @@ class KOAlarmClient : public QObject
 
     void debugShowDialog();
 
-  public slots:
+public slots:
     void slotQuit();
 
-  protected slots:
+protected slots:
     void deferredInit();
     void checkAlarms();
-  private slots:
-    void slotCommitData( QSessionManager & );
+private slots:
+    void slotCommitData(QSessionManager &);
 
-
-  signals:
-    void reminderCount( int );
+signals:
+    void reminderCount(int);
     void saveAllSignal();
 
-  private:
+private:
     bool dockerEnabled();
     bool collectionsAvailable() const;
-    void createReminder( const Akonadi::ETMCalendar::Ptr &calendar,
-                         const Akonadi::Item &incidence,
-                         const QDateTime &dt, const QString &displayText );
+    void createReminder(const Akonadi::ETMCalendar::Ptr &calendar,
+                        const Akonadi::Item &incidence,
+                        const QDateTime &dt, const QString &displayText);
     void saveLastCheckTime();
 
     AlarmDockWindow *mDocker;  // the panel icon

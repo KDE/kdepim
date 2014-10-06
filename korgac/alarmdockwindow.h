@@ -32,31 +32,31 @@
 
 class AlarmDockWindow : public KStatusNotifierItem
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     AlarmDockWindow();
     virtual ~AlarmDockWindow();
 
-    void enableAutostart( bool enabled );
+    void enableAutostart(bool enabled);
 
-  public slots:
-    void toggleAlarmsEnabled( bool checked );
-    void toggleAutostart( bool checked );
-    void slotUpdate( int reminders );
+public slots:
+    void toggleAlarmsEnabled(bool checked);
+    void toggleAutostart(bool checked);
+    void slotUpdate(int reminders);
 
-  signals:
+signals:
     void quitSignal();
     void suspendAllSignal();
     void dismissAllSignal();
 
-  protected slots:
-    virtual void activate( const QPoint &pos );
+protected slots:
+    virtual void activate(const QPoint &pos);
     void slotQuit();
     void slotSuspendAll();
     void slotDismissAll();
 
-  private:
-    void changeSystrayIcon( bool alarmsEnabled );
+private:
+    void changeSystrayIcon(bool alarmsEnabled);
 
     QIcon mIconDisabled;
     QString mName;

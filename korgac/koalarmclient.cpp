@@ -55,276 +55,276 @@
 #include <QStandardPaths>
 #endif
 
-#include <QDebug> 
+#include <QDebug>
 #include "koalarmclient_debug.h"
 
 using namespace KCalCore;
 
-KOAlarmClient::KOAlarmClient( QObject *parent )
-  : QObject( parent ), mDocker( 0 ), mDialog( 0 )
+KOAlarmClient::KOAlarmClient(QObject *parent)
+    : QObject(parent), mDocker(0), mDialog(0)
 {
-  new KOrgacAdaptor( this );
-  Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String("/ac"), this );
-  qDebug();
+    new KOrgacAdaptor(this);
+    Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/ac"), this);
+    qDebug();
 
 #if !defined(KORGAC_AKONADI_AGENT)
-  if ( dockerEnabled() ) {
-    mDocker = new AlarmDockWindow;
-    connect(this, &KOAlarmClient::reminderCount, mDocker, &AlarmDockWindow::slotUpdate);
-    connect(mDocker, &AlarmDockWindow::quitSignal, this, &KOAlarmClient::slotQuit);
-  }
+    if (dockerEnabled()) {
+        mDocker = new AlarmDockWindow;
+        connect(this, &KOAlarmClient::reminderCount, mDocker, &AlarmDockWindow::slotUpdate);
+        connect(mDocker, &AlarmDockWindow::quitSignal, this, &KOAlarmClient::slotQuit);
+    }
 #endif
-  QStringList mimeTypes;
-  mimeTypes << Event::eventMimeType() << Todo::todoMimeType();
-  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar( mimeTypes ) );
-  mCalendar->setObjectName( QLatin1String("KOrgac's calendar") );
-  mETM = mCalendar->entityTreeModel();
+    QStringList mimeTypes;
+    mimeTypes << Event::eventMimeType() << Todo::todoMimeType();
+    mCalendar = Akonadi::ETMCalendar::Ptr(new Akonadi::ETMCalendar(mimeTypes));
+    mCalendar->setObjectName(QLatin1String("KOrgac's calendar"));
+    mETM = mCalendar->entityTreeModel();
 
-  connect(&mCheckTimer, &QTimer::timeout, this, &KOAlarmClient::checkAlarms);
-  connect( mETM, SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
-           SLOT(deferredInit()) );
-  connect( mETM, SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
-           SLOT(deferredInit()) );
+    connect(&mCheckTimer, &QTimer::timeout, this, &KOAlarmClient::checkAlarms);
+    connect(mETM, SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
+            SLOT(deferredInit()));
+    connect(mETM, SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
+            SLOT(deferredInit()));
 
-  KConfigGroup alarmGroup( KSharedConfig::openConfig(), "Alarms" );
-  const int interval = alarmGroup.readEntry( "Interval", 60 );
-  qDebug() << "KOAlarmClient check interval:" << interval << "seconds.";
-  mLastChecked = alarmGroup.readEntry( "CalendarsLastChecked", QDateTime() );
+    KConfigGroup alarmGroup(KSharedConfig::openConfig(), "Alarms");
+    const int interval = alarmGroup.readEntry("Interval", 60);
+    qDebug() << "KOAlarmClient check interval:" << interval << "seconds.";
+    mLastChecked = alarmGroup.readEntry("CalendarsLastChecked", QDateTime());
 
-  checkAlarms();
-  mCheckTimer.start( 1000 * interval );  // interval in seconds
-  connect(qApp, &QApplication::commitDataRequest, this, &KOAlarmClient::slotCommitData);
+    checkAlarms();
+    mCheckTimer.start(1000 * interval);    // interval in seconds
+    connect(qApp, &QApplication::commitDataRequest, this, &KOAlarmClient::slotCommitData);
 }
 
 KOAlarmClient::~KOAlarmClient()
 {
 #if !defined(KORGAC_AKONADI_AGENT)
-  delete mDocker;
-  delete mDialog;
+    delete mDocker;
+    delete mDialog;
 #endif
 }
 
-void checkAllItems( KCheckableProxyModel *model, const QModelIndex &parent = QModelIndex() )
+void checkAllItems(KCheckableProxyModel *model, const QModelIndex &parent = QModelIndex())
 {
-  const int rowCount = model->rowCount( parent );
-  for ( int row = 0; row < rowCount; row++ ) {
-    QModelIndex index = model->index( row, 0, parent );
-    model->setData( index, Qt::Checked, Qt::CheckStateRole );
+    const int rowCount = model->rowCount(parent);
+    for (int row = 0; row < rowCount; row++) {
+        QModelIndex index = model->index(row, 0, parent);
+        model->setData(index, Qt::Checked, Qt::CheckStateRole);
 
-    if ( model->rowCount( index ) > 0 ) {
-      checkAllItems( model, index );
+        if (model->rowCount(index) > 0) {
+            checkAllItems(model, index);
+        }
     }
-  }
 }
 
 void KOAlarmClient::deferredInit()
 {
-  if ( !collectionsAvailable() ) {
-    return;
-  }
-
-  qCDebug(KOALARMCLIENT_LOG) << "Performing delayed initialization.";
-
-  // load reminders that were active when quitting
-  KConfigGroup genGroup( KSharedConfig::openConfig(), "General" );
-  const int numReminders = genGroup.readEntry( "Reminders", 0 );
-
-  for ( int i=1; i<=numReminders; ++i ) {
-    const QString group( QString::fromLatin1( "Incidence-%1" ).arg( i ) );
-    const KConfigGroup incGroup( KSharedConfig::openConfig(), group );
-
-    const QUrl url = incGroup.readEntry( "AkonadiUrl" );
-    Akonadi::Item::Id akonadiItemId = -1;
-    if ( !url.isValid() ) {
-      // logic to migrate old KOrganizer incidence uid's to a Akonadi item.
-      const QString uid = incGroup.readEntry( "UID" );
-      if ( !uid.isEmpty() ) {
-        akonadiItemId = mCalendar->item( uid ).id();
-      }
-    } else {
-      akonadiItemId = Akonadi::Item::fromUrl( url ).id();
+    if (!collectionsAvailable()) {
+        return;
     }
 
-    if ( akonadiItemId >= 0 ) {
-      const QDateTime dt = incGroup.readEntry( "RemindAt", QDateTime() );
-      Akonadi::Item i = mCalendar->item( Akonadi::Item::fromUrl( url ).id() );
-      if ( CalendarSupport::hasIncidence( i ) && !CalendarSupport::incidence( i )->alarms().isEmpty() ) {
-        createReminder( mCalendar, i, dt, QString() );
-      }
+    qCDebug(KOALARMCLIENT_LOG) << "Performing delayed initialization.";
+
+    // load reminders that were active when quitting
+    KConfigGroup genGroup(KSharedConfig::openConfig(), "General");
+    const int numReminders = genGroup.readEntry("Reminders", 0);
+
+    for (int i = 1; i <= numReminders; ++i) {
+        const QString group(QString::fromLatin1("Incidence-%1").arg(i));
+        const KConfigGroup incGroup(KSharedConfig::openConfig(), group);
+
+        const QUrl url = incGroup.readEntry("AkonadiUrl");
+        Akonadi::Item::Id akonadiItemId = -1;
+        if (!url.isValid()) {
+            // logic to migrate old KOrganizer incidence uid's to a Akonadi item.
+            const QString uid = incGroup.readEntry("UID");
+            if (!uid.isEmpty()) {
+                akonadiItemId = mCalendar->item(uid).id();
+            }
+        } else {
+            akonadiItemId = Akonadi::Item::fromUrl(url).id();
+        }
+
+        if (akonadiItemId >= 0) {
+            const QDateTime dt = incGroup.readEntry("RemindAt", QDateTime());
+            Akonadi::Item i = mCalendar->item(Akonadi::Item::fromUrl(url).id());
+            if (CalendarSupport::hasIncidence(i) && !CalendarSupport::incidence(i)->alarms().isEmpty()) {
+                createReminder(mCalendar, i, dt, QString());
+            }
+        }
     }
-  }
 
-  KCheckableProxyModel *checkableModel = mCalendar->checkableProxyModel();
-  checkAllItems( checkableModel );
+    KCheckableProxyModel *checkableModel = mCalendar->checkableProxyModel();
+    checkAllItems(checkableModel);
 
-  // Now that everything is set up, a first check for reminders can be performed.
-  checkAlarms();
+    // Now that everything is set up, a first check for reminders can be performed.
+    checkAlarms();
 }
 
 bool KOAlarmClient::dockerEnabled()
 {
-  KConfig korgConfig( QStandardPaths::locate(QStandardPaths::ConfigLocation, QLatin1String("korganizerrc") ) );
-  KConfigGroup generalGroup( &korgConfig, "System Tray" );
-  return generalGroup.readEntry( "ShowReminderDaemon", true );
+    KConfig korgConfig(QStandardPaths::locate(QStandardPaths::ConfigLocation, QLatin1String("korganizerrc")));
+    KConfigGroup generalGroup(&korgConfig, "System Tray");
+    return generalGroup.readEntry("ShowReminderDaemon", true);
 }
 
 bool KOAlarmClient::collectionsAvailable() const
 {
-  // The list of collections must be available.
-  if ( !mETM->isCollectionTreeFetched() ) {
-    return false;
-  }
-
-  // All collections must be populated.
-  const int rowCount = mETM->rowCount();
-  for ( int row = 0; row < rowCount; ++row ) {
-    static const int column = 0;
-    const QModelIndex index = mETM->index( row, column );
-    bool haveData =
-      mETM->data( index, Akonadi::EntityTreeModel::IsPopulatedRole ).toBool();
-    if ( !haveData ) {
-      return false;
+    // The list of collections must be available.
+    if (!mETM->isCollectionTreeFetched()) {
+        return false;
     }
-  }
 
-  return true;
+    // All collections must be populated.
+    const int rowCount = mETM->rowCount();
+    for (int row = 0; row < rowCount; ++row) {
+        static const int column = 0;
+        const QModelIndex index = mETM->index(row, column);
+        bool haveData =
+            mETM->data(index, Akonadi::EntityTreeModel::IsPopulatedRole).toBool();
+        if (!haveData) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void KOAlarmClient::checkAlarms()
 {
-  KConfigGroup cfg( KSharedConfig::openConfig(), "General" );
+    KConfigGroup cfg(KSharedConfig::openConfig(), "General");
 
-  if ( !cfg.readEntry( "Enabled", true ) ) {
-    return;
-  }
+    if (!cfg.readEntry("Enabled", true)) {
+        return;
+    }
 
-  // We do not want to miss any reminders, so don't perform check unless
-  // the collections are available and populated.
-  if ( !collectionsAvailable() ) {
-    qCDebug(KOALARMCLIENT_LOG) << "Collections are not available; aborting check.";
-    return;
-  }
+    // We do not want to miss any reminders, so don't perform check unless
+    // the collections are available and populated.
+    if (!collectionsAvailable()) {
+        qCDebug(KOALARMCLIENT_LOG) << "Collections are not available; aborting check.";
+        return;
+    }
 
-  QDateTime from = mLastChecked.addSecs( 1 );
-  mLastChecked = QDateTime::currentDateTime();
+    QDateTime from = mLastChecked.addSecs(1);
+    mLastChecked = QDateTime::currentDateTime();
 
-  qCDebug(KOALARMCLIENT_LOG) << "Check:" << from.toString() << " -" << mLastChecked.toString();
+    qCDebug(KOALARMCLIENT_LOG) << "Check:" << from.toString() << " -" << mLastChecked.toString();
 
-  const Alarm::List alarms = mCalendar->alarms( KDateTime( from, KDateTime::LocalZone ),
-                                                KDateTime( mLastChecked, KDateTime::LocalZone ),
-                                                true /* exclude blocked alarms */);
+    const Alarm::List alarms = mCalendar->alarms(KDateTime(from, KDateTime::LocalZone),
+                               KDateTime(mLastChecked, KDateTime::LocalZone),
+                               true /* exclude blocked alarms */);
 
-  foreach ( const Alarm::Ptr &alarm, alarms ) {
-    const QString uid = alarm->customProperty( "ETMCalendar", "parentUid" );
-    const Akonadi::Item::Id id = mCalendar->item( uid ).id();
-    const Akonadi::Item item = mCalendar->item( id );
+    foreach (const Alarm::Ptr &alarm, alarms) {
+        const QString uid = alarm->customProperty("ETMCalendar", "parentUid");
+        const Akonadi::Item::Id id = mCalendar->item(uid).id();
+        const Akonadi::Item item = mCalendar->item(id);
 
-    createReminder( mCalendar, item, from, alarm->text() );
-  }
+        createReminder(mCalendar, item, from, alarm->text());
+    }
 }
 
-void KOAlarmClient::createReminder( const Akonadi::ETMCalendar::Ptr &calendar,
-                                    const Akonadi::Item &aitem,
-                                    const QDateTime &remindAtDate,
-                                    const QString &displayText )
+void KOAlarmClient::createReminder(const Akonadi::ETMCalendar::Ptr &calendar,
+                                   const Akonadi::Item &aitem,
+                                   const QDateTime &remindAtDate,
+                                   const QString &displayText)
 {
-  if ( !CalendarSupport::hasIncidence( aitem ) ) {
-    return;
-  }
+    if (!CalendarSupport::hasIncidence(aitem)) {
+        return;
+    }
 
 #if !defined(Q_OS_MAEMO_5) && !defined(KORGAC_AKONADI_AGENT)
-  if ( !mDialog ) {
-    mDialog = new AlarmDialog( calendar );
-    connect(this, &KOAlarmClient::saveAllSignal, mDialog, &AlarmDialog::slotSave);
-    if ( mDocker ) {
-      connect( mDialog, SIGNAL(reminderCount(int)),
-               mDocker, SLOT(slotUpdate(int)) );
-      connect( mDocker, SIGNAL(suspendAllSignal()),
-               mDialog, SLOT(suspendAll()) );
-      connect( mDocker, SIGNAL(dismissAllSignal()),
-               mDialog, SLOT(dismissAll()) );
+    if (!mDialog) {
+        mDialog = new AlarmDialog(calendar);
+        connect(this, &KOAlarmClient::saveAllSignal, mDialog, &AlarmDialog::slotSave);
+        if (mDocker) {
+            connect(mDialog, SIGNAL(reminderCount(int)),
+                    mDocker, SLOT(slotUpdate(int)));
+            connect(mDocker, SIGNAL(suspendAllSignal()),
+                    mDialog, SLOT(suspendAll()));
+            connect(mDocker, SIGNAL(dismissAllSignal()),
+                    mDialog, SLOT(dismissAll()));
+        }
     }
-  }
 
-  mDialog->addIncidence( aitem, remindAtDate, displayText );
-  mDialog->wakeUp();
+    mDialog->addIncidence(aitem, remindAtDate, displayText);
+    mDialog->wakeUp();
 #else
-  const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  Q_UNUSED( calendar );
-  Q_UNUSED( remindAtDate );
-  Q_UNUSED( displayText );
+    const Incidence::Ptr incidence = CalendarSupport::incidence(aitem);
+    Q_UNUSED(calendar);
+    Q_UNUSED(remindAtDate);
+    Q_UNUSED(displayText);
 
 #if defined(Q_OS_MAEMO_5)
-  QMaemo5InformationBox::information( 0, incidence->summary(), QMaemo5InformationBox::NoTimeout );
+    QMaemo5InformationBox::information(0, incidence->summary(), QMaemo5InformationBox::NoTimeout);
 #else
-  KNotification *notify = new KNotification( QLatin1String("reminder"), 0, KNotification::Persistent );
-  notify->setText( incidence->summary() );
-  notify->sendEvent();
+    KNotification *notify = new KNotification(QLatin1String("reminder"), 0, KNotification::Persistent);
+    notify->setText(incidence->summary());
+    notify->sendEvent();
 #endif
 
 #endif
-  saveLastCheckTime();
+    saveLastCheckTime();
 }
 
 void KOAlarmClient::slotQuit()
 {
-  emit saveAllSignal();
-  saveLastCheckTime();
-  quit();
+    emit saveAllSignal();
+    saveLastCheckTime();
+    quit();
 }
 
 void KOAlarmClient::saveLastCheckTime()
 {
-  KConfigGroup cg( KSharedConfig::openConfig(), "Alarms" );
-  cg.writeEntry( "CalendarsLastChecked", mLastChecked );
-  KSharedConfig::openConfig()->sync();
+    KConfigGroup cg(KSharedConfig::openConfig(), "Alarms");
+    cg.writeEntry("CalendarsLastChecked", mLastChecked);
+    KSharedConfig::openConfig()->sync();
 }
 
 void KOAlarmClient::quit()
 {
-  qDebug();
+    qDebug();
 #if !defined(KORGAC_AKONADI_AGENT)
-  kapp->quit();
+    kapp->quit();
 #endif
 }
 
-void KOAlarmClient::slotCommitData( QSessionManager & )
+void KOAlarmClient::slotCommitData(QSessionManager &)
 {
-  emit saveAllSignal();
-  saveLastCheckTime();
+    emit saveAllSignal();
+    saveLastCheckTime();
 }
 
 void KOAlarmClient::forceAlarmCheck()
 {
-  checkAlarms();
-  saveLastCheckTime();
+    checkAlarms();
+    saveLastCheckTime();
 }
 
 void KOAlarmClient::dumpDebug()
 {
-  KConfigGroup cfg( KSharedConfig::openConfig(), "Alarms" );
-  const QDateTime lastChecked = cfg.readEntry( "CalendarsLastChecked", QDateTime() );
-  qDebug() << "Last Check:" << lastChecked;
+    KConfigGroup cfg(KSharedConfig::openConfig(), "Alarms");
+    const QDateTime lastChecked = cfg.readEntry("CalendarsLastChecked", QDateTime());
+    qDebug() << "Last Check:" << lastChecked;
 }
 
 QStringList KOAlarmClient::dumpAlarms()
 {
-  const KDateTime start = KDateTime( QDateTime::currentDateTime().date(),
-                                     QTime( 0, 0 ), KDateTime::LocalZone );
-  const KDateTime end = start.addDays( 1 ).addSecs( -1 );
+    const KDateTime start = KDateTime(QDateTime::currentDateTime().date(),
+                                      QTime(0, 0), KDateTime::LocalZone);
+    const KDateTime end = start.addDays(1).addSecs(-1);
 
-  QStringList lst;
-  // Don't translate, this is for debugging purposes.
-  lst << QLatin1String( "AlarmDeamon::dumpAlarms() from " ) + start.toString() + QLatin1String(" to ") +
-         end.toString();
+    QStringList lst;
+    // Don't translate, this is for debugging purposes.
+    lst << QLatin1String("AlarmDeamon::dumpAlarms() from ") + start.toString() + QLatin1String(" to ") +
+        end.toString();
 
-  Alarm::List alarms = mCalendar->alarms( start, end );
-  foreach( Alarm::Ptr a, alarms ) {
-    const Incidence::Ptr parentIncidence = mCalendar->incidence( a->parentUid() );
-    lst << QLatin1String( "  " ) + parentIncidence->summary() + QLatin1String(" (") + a->time().toString() + QLatin1Char(')');
-  }
+    Alarm::List alarms = mCalendar->alarms(start, end);
+    foreach (Alarm::Ptr a, alarms) {
+        const Incidence::Ptr parentIncidence = mCalendar->incidence(a->parentUid());
+        lst << QLatin1String("  ") + parentIncidence->summary() + QLatin1String(" (") + a->time().toString() + QLatin1Char(')');
+    }
 
-  return lst;
+    return lst;
 }
 
 void KOAlarmClient::debugShowDialog()
@@ -335,30 +335,30 @@ void KOAlarmClient::debugShowDialog()
 void KOAlarmClient::hide()
 {
 #if !defined(KORGAC_AKONADI_AGENT)
-  delete mDocker;
-  mDocker = 0;
+    delete mDocker;
+    mDocker = 0;
 #endif
 }
 
 void KOAlarmClient::show()
 {
 #if !defined(KORGAC_AKONADI_AGENT)
-  if ( !mDocker ) {
-    if ( dockerEnabled() ) {
-      mDocker = new AlarmDockWindow;
-      connect(this, &KOAlarmClient::reminderCount, mDocker, &AlarmDockWindow::slotUpdate);
-      connect(mDocker, &AlarmDockWindow::quitSignal, this, &KOAlarmClient::slotQuit);
-    }
+    if (!mDocker) {
+        if (dockerEnabled()) {
+            mDocker = new AlarmDockWindow;
+            connect(this, &KOAlarmClient::reminderCount, mDocker, &AlarmDockWindow::slotUpdate);
+            connect(mDocker, &AlarmDockWindow::quitSignal, this, &KOAlarmClient::slotQuit);
+        }
 
-    if ( mDialog ) {
-      connect( mDialog, SIGNAL(reminderCount(int)),
-               mDocker, SLOT(slotUpdate(int)) );
-      connect( mDocker, SIGNAL(suspendAllSignal()),
-               mDialog, SLOT(suspendAll()) );
-      connect( mDocker, SIGNAL(dismissAllSignal()),
-               mDialog, SLOT(dismissAll()) );
+        if (mDialog) {
+            connect(mDialog, SIGNAL(reminderCount(int)),
+                    mDocker, SLOT(slotUpdate(int)));
+            connect(mDocker, SIGNAL(suspendAllSignal()),
+                    mDialog, SLOT(suspendAll()));
+            connect(mDocker, SIGNAL(dismissAllSignal()),
+                    mDialog, SLOT(dismissAll()));
+        }
     }
-  }
 #endif
 }
 

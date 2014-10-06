@@ -24,18 +24,16 @@
 
 #include <AkonadiAgentBase/AgentFactory>
 
-
 using namespace Akonadi;
 
-KorgacAgent::KorgacAgent( const QString &id )
-  : AgentBase( id ),
-    m_alarmClient( new KOAlarmClient )
+KorgacAgent::KorgacAgent(const QString &id)
+    : AgentBase(id),
+      m_alarmClient(new KOAlarmClient)
 {
 }
 
 KorgacAgent::~KorgacAgent()
 {
-  delete m_alarmClient;
+    delete m_alarmClient;
 }
-
 

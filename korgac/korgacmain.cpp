@@ -38,57 +38,57 @@ Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
 
 class ReminderDaemonApp : public KUniqueApplication
 {
-  public:
-    ReminderDaemonApp() : mClient( 0 )
+public:
+    ReminderDaemonApp() : mClient(0)
     {
-      // ensure the Quit dialog's Cancel response does not close the app
-      setQuitOnLastWindowClosed( false );
+        // ensure the Quit dialog's Cancel response does not close the app
+        setQuitOnLastWindowClosed(false);
     }
 
     int newInstance()
     {
-      // Check if we already have a running alarm daemon widget
-      if ( mClient ) {
+        // Check if we already have a running alarm daemon widget
+        if (mClient) {
+            return 0;
+        }
+
+        mClient = new KOAlarmClient;
+
         return 0;
-      }
-
-      mClient = new KOAlarmClient;
-
-      return 0;
     }
 
-  private:
+private:
     KOAlarmClient *mClient;
 };
 
 static const char korgacVersion[] = KDEPIM_VERSION;
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  K4AboutData aboutData( "korgac", QByteArray(), ki18n( "KOrganizer Reminder Daemon" ),
-                        korgacVersion, ki18n( "KOrganizer Reminder Daemon" ),
-                        K4AboutData::License_GPL,
-                        ki18n( "(c) 2003 Cornelius Schumacher" ),
-                        KLocalizedString(), "http://pim.kde.org" );
-  aboutData.addAuthor( ki18n( "Cornelius Schumacher" ), ki18n( "Former Maintainer" ),
-                       "schumacher@kde.org" );
-  aboutData.addAuthor( ki18n( "Reinhold Kainhofer" ), ki18n ( "Former Maintainer" ),
-                       "kainhofer@kde.org" );
-  aboutData.addAuthor( ki18n( "Allen Winter" ),ki18n( "Janitorial Staff" ),
-                       "winter@kde.org" );
+    K4AboutData aboutData("korgac", QByteArray(), ki18n("KOrganizer Reminder Daemon"),
+                          korgacVersion, ki18n("KOrganizer Reminder Daemon"),
+                          K4AboutData::License_GPL,
+                          ki18n("(c) 2003 Cornelius Schumacher"),
+                          KLocalizedString(), "http://pim.kde.org");
+    aboutData.addAuthor(ki18n("Cornelius Schumacher"), ki18n("Former Maintainer"),
+                        "schumacher@kde.org");
+    aboutData.addAuthor(ki18n("Reinhold Kainhofer"), ki18n("Former Maintainer"),
+                        "kainhofer@kde.org");
+    aboutData.addAuthor(ki18n("Allen Winter"), ki18n("Janitorial Staff"),
+                        "winter@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KCmdLineOptions options;
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
+    KCmdLineOptions options;
+    KCmdLineArgs::addCmdLineOptions(options);
+    KUniqueApplication::addCmdLineOptions();
 
-  if ( !ReminderDaemonApp::start() ) {
-    exit( 0 );
-  }
+    if (!ReminderDaemonApp::start()) {
+        exit(0);
+    }
 
-  ReminderDaemonApp app;
-  app.disableSessionManagement();
+    ReminderDaemonApp app;
+    app.disableSessionManagement();
 
-  return app.exec();
+    return app.exec();
 }

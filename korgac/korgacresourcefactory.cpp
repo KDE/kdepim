@@ -17,9 +17,9 @@
 
 #include "korgacresourcefactory.h"
 
-KorgacResourceFactory::KorgacResourceFactory( QObject * parent )
-  : Akonadi::AgentFactory< KorgacAgent >( "akonadi_korgac_resource", parent )
+KorgacResourceFactory::KorgacResourceFactory(QObject *parent)
+    : Akonadi::AgentFactory< KorgacAgent >("akonadi_korgac_resource", parent)
 {
-   setObjectName(QLatin1String("korgac") );
+    setObjectName(QLatin1String("korgac"));
 }
 

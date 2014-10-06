@@ -38,87 +38,86 @@
 
 using namespace KCalCore;
 
-template<class T> Akonadi::Item incidenceToItem(T* incidence)
+template<class T> Akonadi::Item incidenceToItem(T *incidence)
 {
-  Akonadi::Item item;
-  item.setPayload< QSharedPointer<T> >( QSharedPointer<T>(incidence) );
-  return item;
+    Akonadi::Item item;
+    item.setPayload< QSharedPointer<T> >(QSharedPointer<T>(incidence));
+    return item;
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( QLatin1String("testkabc"), i18n( "TestKabc" ), QLatin1String("0.1") );
-  QApplication app(argc, argv);
-  QCommandLineParser parser;
-  KAboutData::setApplicationData(aboutData);
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    KAboutData aboutData(QLatin1String("testkabc"), i18n("TestKabc"), QLatin1String("0.1"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-
-  Event *e1 = new Event;
-  e1->setSummary( QLatin1String("This is a summary.") );
-  KDateTime now = KDateTime::currentLocalDateTime();
-  e1->setDtStart( now );
-  e1->setDtEnd( now.addDays( 1 ) );
-  Alarm::Ptr a = e1->newAlarm();
+    Event *e1 = new Event;
+    e1->setSummary(QLatin1String("This is a summary."));
+    KDateTime now = KDateTime::currentLocalDateTime();
+    e1->setDtStart(now);
+    e1->setDtEnd(now.addDays(1));
+    Alarm::Ptr a = e1->newAlarm();
 //  a->setProcedureAlarm( "/usr/X11R6/bin/xeyes" );
-  a->setAudioAlarm( QLatin1String("/data/kde/share/apps/korganizer/sounds/spinout.wav") );
+    a->setAudioAlarm(QLatin1String("/data/kde/share/apps/korganizer/sounds/spinout.wav"));
 
-  Todo *t1 = new Todo;
-  t1->setSummary( QLatin1String("To-do A") );
-  t1->setDtDue( now );
-  t1->newAlarm();
+    Todo *t1 = new Todo;
+    t1->setSummary(QLatin1String("To-do A"));
+    t1->setDtDue(now);
+    t1->newAlarm();
 
-  Event *e2 = new Event;
-  e2->setSummary( QLatin1String("This is another summary. "
-                  "But it is a very long summary of total sillyness for no good reason") );
-  e2->setDtStart( now.addDays( 1 ) );
-  e2->setDtEnd( now.addDays( 2 ) );
-  e2->newAlarm();
+    Event *e2 = new Event;
+    e2->setSummary(QLatin1String("This is another summary. "
+                                 "But it is a very long summary of total sillyness for no good reason"));
+    e2->setDtStart(now.addDays(1));
+    e2->setDtEnd(now.addDays(2));
+    e2->newAlarm();
 
-  Event *e3 = new Event;
-  e3->setSummary( QLatin1String("Meet with Fred") );
-  e3->setDtStart( now.addDays( 2 ) );
-  e3->setDtEnd( now.addDays( 3 ) );
-  e3->newAlarm();
+    Event *e3 = new Event;
+    e3->setSummary(QLatin1String("Meet with Fred"));
+    e3->setDtStart(now.addDays(2));
+    e3->setDtEnd(now.addDays(3));
+    e3->newAlarm();
 
-  Todo *t2 = new Todo;
-  t2->setSummary( QLatin1String("Something big is due today") );
-  t2->setDtDue( now );
-  t2->newAlarm();
+    Todo *t2 = new Todo;
+    t2->setSummary(QLatin1String("Something big is due today"));
+    t2->setDtDue(now);
+    t2->newAlarm();
 
-  Todo *t3 = new Todo;
-  t3->setSummary( QLatin1String("Be lazy") );
-  t3->setDtDue( now );
-  t3->newAlarm();
+    Todo *t3 = new Todo;
+    t3->setSummary(QLatin1String("Be lazy"));
+    t3->setDtDue(now);
+    t3->newAlarm();
 
-  Event *e4 = new Event;
-  e4->setSummary( QLatin1String("Watch TV") );
-  e4->setDtStart( now.addSecs( 120 ) );
-  e4->setDtEnd( now.addSecs( 180 ) );
-  e4->newAlarm();
+    Event *e4 = new Event;
+    e4->setSummary(QLatin1String("Watch TV"));
+    e4->setDtStart(now.addSecs(120));
+    e4->setDtEnd(now.addSecs(180));
+    e4->newAlarm();
 
-  Akonadi::ETMCalendar::Ptr invalidPtr;
-  AlarmDialog dlg( invalidPtr );
-  dlg.addIncidence( incidenceToItem(e2), QDateTime::currentDateTime().addSecs( 60 ),
-                    QString() );
-  dlg.addIncidence( incidenceToItem(t1), QDateTime::currentDateTime().addSecs( 300 ),
-                    QLatin1String( "THIS IS DISPLAY TEXT" ) );
-  dlg.addIncidence( incidenceToItem(e4), QDateTime::currentDateTime().addSecs( 120 ),
-                    QLatin1String( "Fred and Barney get cloned" ) );
-  dlg.addIncidence( incidenceToItem(e3), QDateTime::currentDateTime().addSecs( 240 ),
-                    QString() );
-  dlg.addIncidence( incidenceToItem(e1), QDateTime::currentDateTime().addSecs( 180 ),
-                    QString() );
-  dlg.addIncidence( incidenceToItem(t2), QDateTime::currentDateTime().addSecs( 600 ),
-                    QLatin1String( "THIS IS DISPLAY TEXT" ) );
-  dlg.addIncidence( incidenceToItem(t3), QDateTime::currentDateTime().addSecs( 360 ),
-                    QString() );
-  dlg.show();
-  dlg.eventNotification();
+    Akonadi::ETMCalendar::Ptr invalidPtr;
+    AlarmDialog dlg(invalidPtr);
+    dlg.addIncidence(incidenceToItem(e2), QDateTime::currentDateTime().addSecs(60),
+                     QString());
+    dlg.addIncidence(incidenceToItem(t1), QDateTime::currentDateTime().addSecs(300),
+                     QLatin1String("THIS IS DISPLAY TEXT"));
+    dlg.addIncidence(incidenceToItem(e4), QDateTime::currentDateTime().addSecs(120),
+                     QLatin1String("Fred and Barney get cloned"));
+    dlg.addIncidence(incidenceToItem(e3), QDateTime::currentDateTime().addSecs(240),
+                     QString());
+    dlg.addIncidence(incidenceToItem(e1), QDateTime::currentDateTime().addSecs(180),
+                     QString());
+    dlg.addIncidence(incidenceToItem(t2), QDateTime::currentDateTime().addSecs(600),
+                     QLatin1String("THIS IS DISPLAY TEXT"));
+    dlg.addIncidence(incidenceToItem(t3), QDateTime::currentDateTime().addSecs(360),
+                     QString());
+    dlg.show();
+    dlg.eventNotification();
 
-  return app.exec();
+    return app.exec();
 }

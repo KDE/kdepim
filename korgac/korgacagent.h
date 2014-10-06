@@ -26,17 +26,18 @@
 
 class KOAlarmClient;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class KorgacAgent : public AgentBase, public AgentBase::ObserverV2
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit KorgacAgent( const QString &id );
+public:
+    explicit KorgacAgent(const QString &id);
     ~KorgacAgent();
 
-  private:
+private:
     KOAlarmClient *m_alarmClient;
 
 };

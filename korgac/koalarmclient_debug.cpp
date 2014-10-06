@@ -20,4 +20,3 @@
 #include "koalarmclient_debug.h"
 Q_LOGGING_CATEGORY(KOALARMCLIENT_LOG, "log_koalarmclient")
 
-
