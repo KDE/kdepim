@@ -15,6 +15,12 @@ WhatsThis=QPlaintEditor with integrate search/replace function
 IncludeFile=pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h
 Group=Input (KDE-PIM)
 
+[PimCommon::RichTextEditorWidget]
+ToolTip=A RichTextEditor with integrate search/replace function (KDE-PIM)
+WhatsThis=RichTextEditor with integrate search/replace function
+IncludeFile=pimcommon/texteditor/richtexteditor/richtexteditorwidget.h
+Group=Input (KDE-PIM)
+
 
 [PimCommon::TranslatorWidget]
 ToolTip=A widget to make translate string (KDE-PIM)
