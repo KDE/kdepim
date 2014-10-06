@@ -45,9 +45,9 @@ class AnnotationEditDialog::Private
 {
 public:
     Private()
-        : mTextEdit( 0 ),
-          mNoteType( 0 ),
-          mHasAnnotation( false )
+        : mTextEdit(0),
+          mNoteType(0),
+          mHasAnnotation(false)
     {
     }
 
@@ -57,13 +57,13 @@ public:
     bool mHasAnnotation;
 };
 
-AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *parent )
-    : QDialog( parent ), d( new Private )
+AnnotationEditDialog::AnnotationEditDialog(const Akonadi::Item &item, QWidget *parent)
+    : QDialog(parent), d(new Private)
 {
     d->mItem = item;
     //check for correct key?
     d->mHasAnnotation = item.hasAttribute<Akonadi::EntityAnnotationsAttribute>();
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -74,25 +74,25 @@ AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *
     connect(buttonBox, &QDialogButtonBox::accepted, this, &AnnotationEditDialog::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AnnotationEditDialog::reject);
 
-    if ( d->mHasAnnotation ) {
-        setWindowTitle( i18n( "Edit Note" ) );
+    if (d->mHasAnnotation) {
+        setWindowTitle(i18n("Edit Note"));
         QPushButton *user1Button = new QPushButton;
         buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-        user1Button->setText(i18n( "Delete Note"  ));
+        user1Button->setText(i18n("Delete Note"));
         user1Button->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
         connect(user1Button, &QPushButton::clicked, this, &AnnotationEditDialog::slotDeleteNote);
     } else {
-        setWindowTitle( i18n( "Add Note" ) );
+        setWindowTitle(i18n("Add Note"));
     }
 
     buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
 
-    QLabel *label = new QLabel( i18n( "Enter the text that should be stored as a note to the mail:" ) );
+    QLabel *label = new QLabel(i18n("Enter the text that should be stored as a note to the mail:"));
     QVBoxLayout *vbox = new QVBoxLayout(mainWidget);
-    d->mTextEdit = new PimCommon::RichTextEditorWidget( this );
+    d->mTextEdit = new PimCommon::RichTextEditorWidget(this);
     d->mTextEdit->setAcceptRichText(false);
-    vbox->addWidget( label );
-    vbox->addWidget( d->mTextEdit );
+    vbox->addWidget(label);
+    vbox->addWidget(d->mTextEdit);
     d->mTextEdit->setFocus();
 
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -105,13 +105,13 @@ AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *
     d->mNoteType->addItem(i18n("Shared note"), QByteArray("/shared/comment"));
 
     vbox->addLayout(hbox);
-    if ( d->mHasAnnotation && item.attribute<Akonadi::EntityAnnotationsAttribute>() ) {
+    if (d->mHasAnnotation && item.attribute<Akonadi::EntityAnnotationsAttribute>()) {
         if (item.attribute<Akonadi::EntityAnnotationsAttribute>()->contains("/private/comment")) {
             d->mNoteType->setCurrentIndex(d->mNoteType->findData(QLatin1String("/private/comment")));
-            d->mTextEdit->setPlainText( item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/private/comment") );
+            d->mTextEdit->setPlainText(item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/private/comment"));
         } else {
             d->mNoteType->setCurrentIndex(d->mNoteType->findData(QLatin1String("/shared/comment")));
-            d->mTextEdit->setPlainText( item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/shared/comment") );
+            d->mTextEdit->setPlainText(item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/shared/comment"));
         }
     }
     mainLayout->addWidget(buttonBox);
@@ -127,14 +127,14 @@ AnnotationEditDialog::~AnnotationEditDialog()
 void AnnotationEditDialog::slotAccepted()
 {
     bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
-    if ( !textIsEmpty ) {
+    if (!textIsEmpty) {
         d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
         Akonadi::EntityAnnotationsAttribute *annotation = d->mItem.attribute<Akonadi::EntityAnnotationsAttribute>(Akonadi::Entity::AddIfMissing);
         QMap<QByteArray, QByteArray> map;
         map.insert(d->mNoteType->itemData(d->mNoteType->currentIndex()).toByteArray(), d->mTextEdit->toPlainText().toUtf8());
         annotation->setAnnotations(map);
         d->mItem.addAttribute(annotation);
-    } else if ( d->mHasAnnotation && textIsEmpty ) {
+    } else if (d->mHasAnnotation && textIsEmpty) {
         d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
     }
     new Akonadi::ItemModifyJob(d->mItem);
@@ -143,10 +143,10 @@ void AnnotationEditDialog::slotAccepted()
 
 void AnnotationEditDialog::slotDeleteNote()
 {
-    const int answer = KMessageBox::warningContinueCancel( this,
-                                                           i18n( "Do you really want to delete this note?" ),
-                                                           i18n( "Delete Note?" ), KGuiItem( i18n( "Delete" ), QLatin1String("edit-delete") ) );
-    if ( answer == KMessageBox::Continue ) {
+    const int answer = KMessageBox::warningContinueCancel(this,
+                       i18n("Do you really want to delete this note?"),
+                       i18n("Delete Note?"), KGuiItem(i18n("Delete"), QLatin1String("edit-delete")));
+    if (answer == KMessageBox::Continue) {
         d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
         new Akonadi::ItemModifyJob(d->mItem);
         accept();
@@ -156,17 +156,17 @@ void AnnotationEditDialog::slotDeleteNote()
 void AnnotationEditDialog::readConfig()
 {
     KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
-    KConfigGroup group( cfg, "AnnotationEditDialog" );
-    QSize size = group.readEntry( "Size", QSize() );
-    if ( !size.isEmpty() ) {
-        resize( size );
+    KConfigGroup group(cfg, "AnnotationEditDialog");
+    QSize size = group.readEntry("Size", QSize());
+    if (!size.isEmpty()) {
+        resize(size);
     }
 }
 
 void AnnotationEditDialog::writeConfig()
 {
     KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
-    KConfigGroup group( cfg, "AnnotationEditDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(cfg, "AnnotationEditDialog");
+    group.writeEntry("Size", size());
 }
 

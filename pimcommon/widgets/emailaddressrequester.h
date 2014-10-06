@@ -25,7 +25,8 @@
 
 class KLineEdit;
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 /**
  * @short A widget to input one or more email addresses.
@@ -36,7 +37,7 @@ class PIMCOMMON_EXPORT EmailAddressRequester : public QWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY( QString text READ text WRITE setText NOTIFY textChanged USER true )
+    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged USER true)
 
 public:
     /**
@@ -44,7 +45,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit EmailAddressRequester( QWidget* parent = 0 );
+    explicit EmailAddressRequester(QWidget *parent = 0);
 
     /**
      * Destroys the email address requester.
@@ -59,7 +60,7 @@ public:
     /**
      * Sets the @p text of the email address requester.
      */
-    void setText( const QString &text );
+    void setText(const QString &text);
 
     /**
      * Returns the text of the email address requester.
@@ -69,7 +70,7 @@ public:
     /**
      * Returns the line edit that is used by the email address requester.
      */
-    KLineEdit* lineEdit() const;
+    KLineEdit *lineEdit() const;
 
 Q_SIGNALS:
     /**
@@ -81,9 +82,9 @@ Q_SIGNALS:
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotAddressBook() )
+    Q_PRIVATE_SLOT(d, void slotAddressBook())
     //@endcond
 };
 

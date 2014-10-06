@@ -33,64 +33,66 @@ using namespace PimCommon;
 class PimCommon::EmailAddressRequester::Private
 {
 public:
-    Private( EmailAddressRequester *qq )
-        : q( qq ), mLineEdit( 0 )
+    Private(EmailAddressRequester *qq)
+        : q(qq), mLineEdit(0)
     {
     }
 
     void slotAddressBook();
 
     EmailAddressRequester *q;
-    KLineEdit* mLineEdit;
-};    
+    KLineEdit *mLineEdit;
+};
 
 void EmailAddressRequester::Private::slotAddressBook()
 {
-    Akonadi::EmailAddressSelectionDialog dlg( q );
-    dlg.view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
-    if ( !dlg.exec() )
+    Akonadi::EmailAddressSelectionDialog dlg(q);
+    dlg.view()->view()->setSelectionMode(QAbstractItemView::MultiSelection);
+    if (!dlg.exec()) {
         return;
+    }
 
     QStringList addressList;
-    foreach ( const Akonadi::EmailAddressSelection &selection, dlg.selectedAddresses() )
+    foreach (const Akonadi::EmailAddressSelection &selection, dlg.selectedAddresses()) {
         addressList << selection.quotedEmail();
+    }
 
     QString text = mLineEdit->text().trimmed();
 
-    if ( !text.isEmpty() ) {
-        if ( !text.endsWith( QLatin1Char( ',' ) ) )
-            text += QLatin1String( ", " );
-        else
-            text += QLatin1Char( ' ' );
+    if (!text.isEmpty()) {
+        if (!text.endsWith(QLatin1Char(','))) {
+            text += QLatin1String(", ");
+        } else {
+            text += QLatin1Char(' ');
+        }
     }
 
-    mLineEdit->setText( text + addressList.join( QLatin1String( "," ) ) );
+    mLineEdit->setText(text + addressList.join(QLatin1String(",")));
 }
 
-EmailAddressRequester::EmailAddressRequester( QWidget *parent )
-    : QWidget( parent ),
-      d( new Private( this ) )
+EmailAddressRequester::EmailAddressRequester(QWidget *parent)
+    : QWidget(parent),
+      d(new Private(this))
 {
-    QHBoxLayout *layout = new QHBoxLayout( this );
-    layout->setSpacing( 4 );
-    layout->setMargin( 0 );
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setSpacing(4);
+    layout->setMargin(0);
 
-    d->mLineEdit = new KLineEdit( this );
+    d->mLineEdit = new KLineEdit(this);
     d->mLineEdit->setClearButtonShown(true);
     d->mLineEdit->setTrapReturnKey(true);
-    layout->addWidget( d->mLineEdit, 1 );
+    layout->addWidget(d->mLineEdit, 1);
 
+    QPushButton *button = new QPushButton(this);
+    button->setIcon(QIcon::fromTheme(QLatin1String("help-contents")));
+    button->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
+    button->setFixedHeight(d->mLineEdit->sizeHint().height());
+    button->setToolTip(i18n("Open Address Book"));
+    layout->addWidget(button);
 
-    QPushButton *button = new QPushButton( this );
-    button->setIcon( QIcon::fromTheme( QLatin1String("help-contents") ) );
-    button->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    button->setFixedHeight( d->mLineEdit->sizeHint().height() );
-    button->setToolTip( i18n( "Open Address Book" ) );
-    layout->addWidget( button );
-
-    connect( button, SIGNAL(clicked()), this, SLOT(slotAddressBook()) );
-    connect( d->mLineEdit, SIGNAL(textChanged(QString)),
-             this, SIGNAL(textChanged()) );
+    connect(button, SIGNAL(clicked()), this, SLOT(slotAddressBook()));
+    connect(d->mLineEdit, SIGNAL(textChanged(QString)),
+            this, SIGNAL(textChanged()));
 }
 
 EmailAddressRequester::~EmailAddressRequester()
@@ -103,9 +105,9 @@ void EmailAddressRequester::clear()
     d->mLineEdit->clear();
 }
 
-void EmailAddressRequester::setText( const QString &text )
+void EmailAddressRequester::setText(const QString &text)
 {
-    d->mLineEdit->setText( text );
+    d->mLineEdit->setText(text);
 }
 
 QString EmailAddressRequester::text() const
@@ -113,7 +115,7 @@ QString EmailAddressRequester::text() const
     return d->mLineEdit->text();
 }
 
-KLineEdit* EmailAddressRequester::lineEdit() const
+KLineEdit *EmailAddressRequester::lineEdit() const
 {
     return d->mLineEdit;
 }

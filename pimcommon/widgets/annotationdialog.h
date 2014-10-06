@@ -25,11 +25,13 @@
 #include <QDialog>
 #include <KConfigGroup>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Item;
 }
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 /**
  * @short A dialog for editing annotations of an email.
@@ -47,7 +49,7 @@ public:
      * @param item The item.
      * @param parent The parent widget.
      */
-    explicit AnnotationEditDialog( const Akonadi::Item &item, QWidget *parent = 0 );
+    explicit AnnotationEditDialog(const Akonadi::Item &item, QWidget *parent = 0);
 
     /**
      * Destroys the annotation edit dialog.
@@ -65,7 +67,7 @@ private Q_SLOTS:
 private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 
