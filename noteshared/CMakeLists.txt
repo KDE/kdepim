@@ -69,3 +69,5 @@ target_link_libraries(noteshared
 
 set_target_properties(noteshared PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS noteshared ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+add_subdirectory(attributes/tests)

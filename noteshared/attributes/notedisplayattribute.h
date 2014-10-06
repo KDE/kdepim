@@ -89,6 +89,7 @@ private:
     bool mHide;
     bool mShowInTaskbar;
     bool mKeepAbove;
+    //it's an error but we can't remove it!
     bool mKeepBelove;
     bool mKeepBelow;
 };
