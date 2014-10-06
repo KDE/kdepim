@@ -16,6 +16,7 @@
 */
 
 #include "notedisplayattributetest.h"
+#include <kglobalsettings.h>
 #include <qtest_kde.h>
 #include "attributes/notedisplayattribute.h"
 
@@ -32,37 +33,48 @@ NoteDisplayAttributeTest::~NoteDisplayAttributeTest()
 
 void NoteDisplayAttributeTest::shouldHaveDefaultValue()
 {
-#if 0
-    mFont(KGlobalSettings::generalFont()),
-    mTitleFont(KGlobalSettings::windowTitleFont()),
-    mBackgroundColor(Qt::yellow),
-    mForegroundgroundColor(Qt::black),
-    mSize(300,300),
-    mPosition(QPoint( -10000, -10000 )),
-    mTabSize(4),
-    mDesktop(-10),
-    mRememberDesktop(true),
-#endif
-
-
     NoteShared::NoteDisplayAttribute attribute;
     QVERIFY(attribute.autoIndent());
     QVERIFY(!attribute.keepBelow());
     QVERIFY(!attribute.keepAbove());
     QVERIFY(!attribute.showInTaskbar());
     QVERIFY(!attribute.isHidden());
-#if 0
-    QColor backgroundColor() const;
-    QColor foregroundColor() const;
-    QSize size() const;
-    bool rememberDesktop() const;
-    int tabSize() const;
-    QFont font() const;
-    QFont titleFont() const;
-    int desktop() const;
-    QPoint position() const;
-    bool showInTaskbar() const;
-#endif
+    QCOMPARE(attribute.backgroundColor(), QColor(Qt::yellow));
+    QCOMPARE(attribute.foregroundColor(), QColor(Qt::black));
+    QVERIFY(attribute.rememberDesktop());
+    QCOMPARE(attribute.tabSize(), 4);
+    QCOMPARE(attribute.font(), KGlobalSettings::generalFont());
+    QCOMPARE(attribute.titleFont(), KGlobalSettings::windowTitleFont());
+    QCOMPARE(attribute.size(), QSize(300,300));
+    QCOMPARE(attribute.desktop(), -10);
+    QCOMPARE(attribute.position(), QPoint( -10000, -10000 ));
 }
+
+void NoteDisplayAttributeTest::shouldEqualWhenCloning()
+{
+    NoteShared::NoteDisplayAttribute attribute;
+    NoteShared::NoteDisplayAttribute *attr2 = attribute.clone();
+    QVERIFY(attribute == *attr2);
+    delete attr2;
+
+    attribute.setBackgroundColor(QColor("#454545"));
+    attribute.setForegroundColor(QColor("#454545"));
+    attribute.setSize(QSize(50,70));
+    attribute.setRememberDesktop(false);
+    attribute.setTabSize(8);
+    attribute.setFont(QFont());
+    attribute.setTitleFont(QFont());
+    attribute.setDesktop(7);
+    attribute.setIsHidden(true);
+    attribute.setPosition(QPoint(7,8));
+    attribute.setShowInTaskbar(false);
+    attribute.setKeepAbove(false);
+    attribute.setKeepBelow(false);
+    attribute.setAutoIndent(false);
+    attr2 = attribute.clone();
+    QVERIFY(attribute == *attr2);
+    delete attr2;
+}
+
 
 QTEST_KDEMAIN(NoteDisplayAttributeTest, NoGUI)

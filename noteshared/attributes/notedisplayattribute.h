@@ -75,6 +75,8 @@ public:
 
     bool autoIndent() const;
     void setAutoIndent(bool b);
+    bool operator ==( const NoteDisplayAttribute &other) const;
+
 private:
     QFont mFont;
     QFont mTitleFont;

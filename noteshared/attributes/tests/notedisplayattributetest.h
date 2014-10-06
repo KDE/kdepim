@@ -28,6 +28,7 @@ public:
     ~NoteDisplayAttributeTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldEqualWhenCloning();
 };
 
 #endif // NOTEDISPLAYATTRIBUTETEST_H
