@@ -79,7 +79,11 @@ bool AbstractImporter::addFilters(const QString &filterPath, MailCommon::FilterI
         MailCommon::FilterImporterExporter importer(mImportWizard);
         QList<MailCommon::MailFilter *> listFilter = importer.importFilters(canceled, type, filterPath);
         appendFilters(listFilter);
-        addImportFilterInfo(i18np("1 filter was imported from \"%2\"", "%1 filters were imported from \"%2\"", listFilter.count(), filterPath));
+        if (canceled) {
+            addImportFilterInfo( i18n("Import filter was canceled.") );
+        } else {
+            addImportFilterInfo(i18np("1 filter was imported from \"%2\"", "%1 filters were imported from \"%2\"", listFilter.count(), filterPath));
+        }
         return true;
     } else {
         addImportFilterError(i18n("Filters file was not found"));
