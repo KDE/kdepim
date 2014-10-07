@@ -289,7 +289,7 @@ public:
             fileName = givenName + QLatin1Char('_') + a.familyName() + QLatin1String(".vcf");
         }
         // get the saveas file name
-        KUrl saveAsUrl =
+        QUrl saveAsUrl =
             KFileDialog::getSaveUrl(fileName,
                                     QString(), 0,
                                     i18n("Save Business Card"));
