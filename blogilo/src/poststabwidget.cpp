@@ -55,8 +55,7 @@ PostsTabWidget::PostsTabWidget(QWidget *parent)
     connect(mCloseTabButton, &QToolButton::clicked, this, &PostsTabWidget::closeTabClicked);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(slotTabContextMenuRequest(QPoint)));
+    connect(this, &PostsTabWidget::customContextMenuRequested, this, &PostsTabWidget::slotTabContextMenuRequest);
 }
 
 PostsTabWidget::~PostsTabWidget()

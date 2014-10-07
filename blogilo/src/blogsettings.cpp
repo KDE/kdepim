@@ -38,8 +38,7 @@ BlogSettings::BlogSettings(QWidget *parent)
     connect(btnAdd, &QPushButton::clicked, this, &BlogSettings::addBlog);
     connect(btnEdit, &QPushButton::clicked, this, &BlogSettings::editBlog);
     connect(btnRemove, &QPushButton::clicked, this, &BlogSettings::removeBlog);
-    connect(blogsTable, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-            this, SLOT(blogsTablestateChanged()));
+    connect(blogsTable, &QTreeWidget::currentItemChanged, this, &BlogSettings::blogsTablestateChanged);
     connect(blogsTable, &QTreeWidget::doubleClicked, this, &BlogSettings::editBlog);
 
     blogsTable->setHeaderLabels(QStringList() << i18n("Title") << i18n("URL"));
@@ -58,10 +57,8 @@ void BlogSettings::addBlog()
     AddEditBlog *addEditBlogWindow = new AddEditBlog(-1, this);
     addEditBlogWindow->setWindowModality(Qt::ApplicationModal);
     addEditBlogWindow->setAttribute(Qt::WA_DeleteOnClose);
-    connect(addEditBlogWindow, SIGNAL(sigBlogAdded(BilboBlog)),
-            this, SLOT(slotBlogAdded(BilboBlog)));
-    connect(addEditBlogWindow, SIGNAL(sigBlogAdded(BilboBlog)),
-            this, SIGNAL(blogAdded(BilboBlog)));
+    connect(addEditBlogWindow, &AddEditBlog::sigBlogAdded, this, &BlogSettings::slotBlogAdded);
+    connect(addEditBlogWindow, &AddEditBlog::sigBlogAdded, this, &BlogSettings::blogAdded);
     addEditBlogWindow->show();
 }
 
@@ -78,10 +75,8 @@ void BlogSettings::editBlog()
         AddEditBlog *addEditBlogWindow = new AddEditBlog(blog_id, this);
         addEditBlogWindow->setAttribute(Qt::WA_DeleteOnClose);
         addEditBlogWindow->setWindowModality(Qt::ApplicationModal);
-        connect(addEditBlogWindow, SIGNAL(sigBlogEdited(BilboBlog)),
-                this, SLOT(slotBlogEdited(BilboBlog)));
-        connect(addEditBlogWindow, SIGNAL(sigBlogEdited(BilboBlog)),
-                this, SIGNAL(blogEdited(BilboBlog)));
+        connect(addEditBlogWindow, &AddEditBlog::sigBlogEdited, this, &BlogSettings::slotBlogEdited);
+        connect(addEditBlogWindow, &AddEditBlog::sigBlogEdited, this, &BlogSettings::blogEdited);
         addEditBlogWindow->show();
     }
 }

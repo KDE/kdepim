@@ -64,8 +64,8 @@ class TextDialog : public QDialog
       QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
       okButton->setDefault(true);
       okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-      connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-      connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+      connect(buttonBox, &QDialogButtonBox::accepted, this, &TextDialog::accept);
+      connect(buttonBox, &QDialogButtonBox::rejected, this, &TextDialog::reject);
 
       mainLayout->addWidget(buttonBox);
 
@@ -92,9 +92,9 @@ AgentWidget::AgentWidget( QWidget *parent )
 {
   ui.setupUi( this );
 
-  connect( ui.instanceWidget, SIGNAL(doubleClicked(Akonadi::AgentInstance)), SLOT(configureAgent()) );
-  connect( ui.instanceWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)), SLOT(currentChanged()) );
-  connect( ui.instanceWidget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)) );
+  connect(ui.instanceWidget, &Akonadi::AgentInstanceWidget::doubleClicked, this, &AgentWidget::configureAgent);
+  connect(ui.instanceWidget, &Akonadi::AgentInstanceWidget::currentChanged, this, &AgentWidget::currentChanged);
+  connect(ui.instanceWidget, &Akonadi::AgentInstanceWidget::customContextMenuRequested, this, &AgentWidget::showContextMenu);
 
   connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()) );
   connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(selectionChanged()) );
@@ -127,7 +127,7 @@ AgentWidget::AgentWidget( QWidget *parent )
   ui.abortButton->setIcon( QIcon::fromTheme("dialog-cancel") );
   connect(ui.abortButton, &QPushButton::clicked, this, &AgentWidget::abortAgent);
   ui.restartButton->setIcon( QIcon::fromTheme( "system-reboot" ) ); //FIXME: Is using system-reboot icon here a good idea?
-  connect( ui.restartButton, SIGNAL(clicked()), SLOT(restartAgent()) );
+  connect(ui.restartButton, &QPushButton::clicked, this, &AgentWidget::restartAgent);
 
   ui.mFilterAccount->setProxy( ui.instanceWidget->agentFilterProxyModel() );
   //QT5 ui.mFilterAccount->lineEdit()->setTrapReturnKey( true );

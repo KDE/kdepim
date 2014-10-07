@@ -27,8 +27,7 @@ using namespace MessageViewer;
 AdBlockListWidget::AdBlockListWidget(QWidget *parent)
     : QListWidget(parent)
 {
-    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-            this, SLOT(slotGeneralPaletteChanged()));
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &AdBlockListWidget::slotGeneralPaletteChanged);
 }
 
 AdBlockListWidget::~AdBlockListWidget()
