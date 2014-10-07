@@ -24,12 +24,12 @@
 #ifndef UPLOADMEDIADIALOG_H
 #define UPLOADMEDIADIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include "ui_uploadmediabase.h"
 class BilboBlog;
 class BilboMedia;
 
-class UploadMediaDialog : public KDialog
+class UploadMediaDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -49,7 +49,7 @@ private Q_SLOTS:
     void slotMediaObjectUploaded(KJob *);
     void slotMediaObjectUploaded(BilboMedia *);
     void slotError(const QString &msg);
-    void slotButtonClicked(int button);
+    void slotOkClicked();
 private:
     const BilboBlog *mCurrentBlog;
     Ui::UploadMediaBase ui;

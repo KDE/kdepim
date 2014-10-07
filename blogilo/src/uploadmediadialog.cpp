@@ -39,16 +39,29 @@
 #include <QIcon>
 
 #include <QClipboard>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 UploadMediaDialog::UploadMediaDialog(QWidget *parent)
-    : KDialog(parent), mCurrentBlog(0)
+    : QDialog(parent), mCurrentBlog(0)
 {
     QWidget *widget = new QWidget;
     ui.setupUi(widget);
-    setMainWidget(widget);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOkClicked()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(widget);
+    mainLayout->addWidget(buttonBox);
     setAttribute(Qt::WA_DeleteOnClose);
 
-    setButtonText(KDialog::Ok, i18n("Upload"));
+    okButton->setText(i18n("Upload"));
     setWindowTitle(i18n("Upload Media..."));
     ui.kcfg_FtpPath->setText(Settings::ftpServerPath());
     ui.kcfg_httpUrl->setText(Settings::httpUrl());
@@ -114,52 +127,48 @@ void UploadMediaDialog::slotUploadTypeChanged(int index)
     }
 }
 
-void UploadMediaDialog::slotButtonClicked(int button)
+void UploadMediaDialog::slotOkClicked()
 {
-    if (button == KDialog::Ok) {
-        UploadType type = static_cast<UploadType>(ui.kcfg_uploadType->itemData(ui.kcfg_uploadType->currentIndex()).toInt());
-        if (type == BlogAPI) {  ///Using API!
-            BilboMedia *media = new BilboMedia(this);
-            KUrl mediaUrl(ui.kcfg_urlLineEdit->text());
-            media->setLocalUrl(mediaUrl);
-            media->setName(ui.kcfg_Name->text().isEmpty() ? mediaUrl.fileName() : ui.kcfg_Name->text());
-            media->setBlogId(mCurrentBlog->id());
-            media->setMimeType(KMimeType::findByUrl(mediaUrl, 0, true)->name());
-            Backend *b = new Backend(mCurrentBlog->id(), this);
-            connect(b, SIGNAL(sigMediaUploaded(BilboMedia*)),
-                    this, SLOT(slotMediaObjectUploaded(BilboMedia*)));
-            connect(b, &Backend::sigError, this, &UploadMediaDialog::slotError);
-            connect(b, &Backend::sigMediaError, this, &UploadMediaDialog::slotError);
-            b->uploadMedia(media);
-            this->hide();
-            emit sigBusy(true);
-        } else if (type == FTP) {  ///Upload via FTP
-            if (ui.kcfg_FtpPath->text().isEmpty()) {
-                KMessageBox::sorry(this, i18n("Please insert FTP URL."));
+    UploadType type = static_cast<UploadType>(ui.kcfg_uploadType->itemData(ui.kcfg_uploadType->currentIndex()).toInt());
+    if (type == BlogAPI) {  ///Using API!
+        BilboMedia *media = new BilboMedia(this);
+        KUrl mediaUrl(ui.kcfg_urlLineEdit->text());
+        media->setLocalUrl(mediaUrl);
+        media->setName(ui.kcfg_Name->text().isEmpty() ? mediaUrl.fileName() : ui.kcfg_Name->text());
+        media->setBlogId(mCurrentBlog->id());
+        media->setMimeType(KMimeType::findByUrl(mediaUrl, 0, true)->name());
+        Backend *b = new Backend(mCurrentBlog->id(), this);
+        connect(b, SIGNAL(sigMediaUploaded(BilboMedia*)),
+                this, SLOT(slotMediaObjectUploaded(BilboMedia*)));
+        connect(b, &Backend::sigError, this, &UploadMediaDialog::slotError);
+        connect(b, &Backend::sigMediaError, this, &UploadMediaDialog::slotError);
+        b->uploadMedia(media);
+        this->hide();
+        emit sigBusy(true);
+    } else if (type == FTP) {  ///Upload via FTP
+        if (ui.kcfg_FtpPath->text().isEmpty()) {
+            KMessageBox::sorry(this, i18n("Please insert FTP URL."));
+            return;
+        }
+        KUrl dest;
+        dest.setUrl(ui.kcfg_FtpPath->text() , QUrl::TolerantMode);
+        if (dest.isValid()) {
+            if (dest.scheme() == QLatin1String("ftp") || dest.scheme() == QLatin1String("sftp")) {
+                KUrl src(ui.kcfg_urlLineEdit->text());
+                dest.addPath(ui.kcfg_Name->text().isEmpty() ? src.fileName() :
+                             ui.kcfg_Name->text());
+                KIO::FileCopyJob *job = KIO::file_copy(src, dest);
+                connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMediaObjectUploaded(KJob*)));
+                job->start();
+                this->hide();
                 return;
             }
-            KUrl dest;
-            dest.setUrl(ui.kcfg_FtpPath->text() , QUrl::TolerantMode);
-            if (dest.isValid()) {
-                if (dest.scheme() == QLatin1String("ftp") || dest.scheme() == QLatin1String("sftp")) {
-                    KUrl src(ui.kcfg_urlLineEdit->text());
-                    dest.addPath(ui.kcfg_Name->text().isEmpty() ? src.fileName() :
-                                 ui.kcfg_Name->text());
-                    KIO::FileCopyJob *job = KIO::file_copy(src, dest);
-                    connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMediaObjectUploaded(KJob*)));
-                    job->start();
-                    this->hide();
-                    return;
-                }
-            }
-            KMessageBox::error(this, i18n("Inserted FTP URL is not a valid URL.\n"
-                                          "Note: The URL must start with \"ftp\" or \"sftp\", "
-                                          "and end with a \"/\" that indicates the directory to which the file should be uploaded."));
-            // > what is meant here?
-            // edited coles 2009 - I think it makes sense now.
         }
-    } else {
-        KDialog::slotButtonClicked(button);
+        KMessageBox::error(this, i18n("Inserted FTP URL is not a valid URL.\n"
+                                      "Note: The URL must start with \"ftp\" or \"sftp\", "
+                                      "and end with a \"/\" that indicates the directory to which the file should be uploaded."));
+        // > what is meant here?
+        // edited coles 2009 - I think it makes sense now.
     }
 }
 
