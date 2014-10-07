@@ -33,7 +33,7 @@ class QCheckBox;
 class QProgressBar;
 class KWebView;
 class QPushButton;
-class KStatusBar;
+class QStatusBar;
 
 /**
 * Implements a simple browser widget for use in blogilo Post Preview.
@@ -93,7 +93,7 @@ private:
     QCheckBox *viewInBlogStyle;
     QPushButton *btnGetStyle;
     QProgressBar *browserProgress;
-    KStatusBar *browserStatus;
+    QStatusBar *browserStatus;
 
     QString currentTitle;
     QString currentContent;

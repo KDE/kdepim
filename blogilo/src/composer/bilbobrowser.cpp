@@ -26,7 +26,7 @@
 
 #include <KWebView>
 #include <QProgressBar>
-#include <kstatusbar.h>
+#include <qstatusbar.h>
 #include <kmessagebox.h>
 #include <kseparator.h>
 #include <QPushButton>
@@ -90,7 +90,7 @@ void BilboBrowser::createUi(QWidget *parent)
     browserProgress = new QProgressBar(this);
     browserProgress->setFixedSize(120, 17);
 
-    browserStatus = new KStatusBar(this);
+    browserStatus = new QStatusBar(this);
     browserStatus->setFixedHeight(20);
     browserStatus->addPermanentWidget(browserProgress);
     vlayout->addWidget(browserStatus);
