@@ -45,12 +45,13 @@
 
 #include <KConfig>
 #include <QDebug>
-#include <KFileDialog>
 #include <KListWidgetSearchLine>
 #include <KMessageBox>
 #include <QPushButton>
+#include <KFileDialog>
 
 #include <QRegExp>
+#include <QFileDialog>
 
 using namespace MailCommon;
 
@@ -199,8 +200,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
                 break;
             }
 
-            fileName = KFileDialog::getOpenFileName(
-                           defaultPath, QString(), d->mParent, title);
+            fileName = QFileDialog::getOpenFileName(d->mParent, title,  defaultPath, QString());
             if (fileName.isEmpty()) {
                 canceled = true;
                 return QList<MailFilter *>(); // cancel
@@ -332,8 +332,7 @@ void FilterImporterExporter::exportFilters(const QList<MailFilter *> &filters, c
 {
     QUrl saveUrl;
     if (fileName.isEmpty()) {
-        saveUrl = KFileDialog::getSaveUrl(
-                      QDir::homePath(), QString(), d->mParent, i18n("Export Filters"));
+        saveUrl = KFileDialog::getSaveUrl(QDir::homePath(), QString(), d->mParent, i18n("Export Filters"));
 
         if (saveUrl.isEmpty() ||
                 !MessageViewer::Util::checkOverwrite(saveUrl, d->mParent)) {
