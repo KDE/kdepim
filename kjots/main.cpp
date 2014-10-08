@@ -32,7 +32,6 @@
 #include <kconfig.h>
 #include <qdebug.h>
 #include <KLocalizedString>
-#include <kglobal.h>
 #include <kconfiggroup.h>
 #include <KSharedConfig>
 

@@ -69,7 +69,6 @@
 #include <QAction>
 #include <KActionCollection>
 #include <KBookmarkMenu>
-#include <KFileDialog>
 #include <KFind>
 #include <KFindDialog>
 #include <KLocalizedString>
