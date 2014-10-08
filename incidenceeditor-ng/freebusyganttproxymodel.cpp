@@ -19,7 +19,7 @@
 */
 
 #include "freebusyganttproxymodel.h"
-#include "freebusyitemmodel.h"
+#include "freebusymodel/freebusyitemmodel.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>
 

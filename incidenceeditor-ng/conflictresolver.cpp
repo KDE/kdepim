@@ -21,7 +21,7 @@
 */
 
 #include "conflictresolver.h"
-#include "freebusyitemmodel.h"
+#include "freebusymodel/freebusyitemmodel.h"
 
 #include <KCalendarSystem>
 #include <KDebug>

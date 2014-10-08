@@ -24,15 +24,15 @@
 #define INCIDENCEEDITOR_CONFLICTRESOLVER_H
 
 #include "incidenceeditors-ng_export.h"
-#include "freebusyitem.h"
+#include "freebusymodel/freebusyitem.h"
 
 #include <QBitArray>
 #include <QSet>
 #include <QTimer>
 
-namespace IncidenceEditorNG {
-
 class FreeBusyItemModel;
+
+namespace IncidenceEditorNG {
 
 /**
  * Takes a list of attendees and event info (e.g., min time start, max time end)

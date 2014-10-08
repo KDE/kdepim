@@ -21,7 +21,7 @@
 #ifndef CONFLICTRESOLVERTEST_H
 #define CONFLICTRESOLVERTEST_H
 
-#include "../freebusyitem.h"
+#include "freebusymodel/freebusyitem.h"
 
 #include <KCalCore/FreeBusy>
 #include <KCalCore/Attendee>
@@ -51,7 +51,7 @@ class ConflictResolverTest : public QObject
     void insertAttendees();
     void addAttendee( const QString &email, const KCalCore::FreeBusy::Ptr &fb,
                       KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant ) ;
-    QList<IncidenceEditorNG::FreeBusyItem::Ptr> attendees;
+    QList<FreeBusyItem::Ptr> attendees;
     QWidget *parent;
     IncidenceEditorNG::ConflictResolver *resolver;
     KDateTime base, end;

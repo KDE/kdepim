@@ -24,8 +24,6 @@
 
 #include <akonadi/calendar/freebusymanager.h>
 
-using namespace IncidenceEditorNG;
-
 FreeBusyItem::FreeBusyItem( const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget )
   : mAttendee( attendee ), mTimerID( 0 ), mIsDownloading( false ), mParentWidget( parentWidget )
 {

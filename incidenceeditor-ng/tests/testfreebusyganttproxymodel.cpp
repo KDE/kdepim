@@ -20,8 +20,8 @@
 
 #include "testfreebusyganttproxymodel.h"
 #include "modeltest.h"
-#include "../freebusyitem.h"
-#include "../freebusyitemmodel.h"
+#include "freebusymodel/freebusyitem.h"
+#include "freebusymodel/freebusyitemmodel.h"
 #include "../freebusyganttproxymodel.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>

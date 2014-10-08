@@ -30,9 +30,10 @@
 
 #include <KDialog>
 
+class FreePeriodModel;
+
 namespace IncidenceEditorNG {
 
-class FreePeriodModel;
 class ConflictResolver;
 class VisualFreeBusyWidget;
 

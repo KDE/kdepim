@@ -21,15 +21,13 @@
 #ifndef INCIDENCEEDITOR_FREEPERIODMODEL_H
 #define INCIDENCEEDITOR_FREEPERIODMODEL_H
 
-#include "incidenceeditors-ng_export.h"
+#include "libkdepim/kdepim_export.h"
 
 #include <KCalCore/Period>
 
 #include <QAbstractTableModel>
 
-namespace IncidenceEditorNG {
-
-class INCIDENCEEDITORS_NG_EXPORT FreePeriodModel : public QAbstractTableModel
+class KDEPIM_EXPORT FreePeriodModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
@@ -60,7 +58,5 @@ class INCIDENCEEDITORS_NG_EXPORT FreePeriodModel : public QAbstractTableModel
     KCalCore::Period::List mPeriodList;
     friend class FreePeriodModelTest;
 };
-
-}
 
 #endif

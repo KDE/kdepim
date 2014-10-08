@@ -20,7 +20,7 @@
 
 #include "schedulingdialog.h"
 #include "conflictresolver.h"
-#include "freeperiodmodel.h"
+#include "freebusymodel/freeperiodmodel.h"
 #ifndef KDEPIM_MOBILE_UI
 #include "visualfreebusywidget.h"
 #endif

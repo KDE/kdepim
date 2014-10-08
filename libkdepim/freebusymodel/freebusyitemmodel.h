@@ -18,16 +18,15 @@
   02110-1301, USA.
 */
 
-#ifndef INCIDENCEEDITOR_FREEBUSYITEMMODEL_H
-#define INCIDENCEEDITOR_FREEBUSYITEMMODEL_H
+#ifndef FBMODEL_FREEBUSYITEMMODEL_H
+#define FBMODEL_FREEBUSYITEMMODEL_H
 
-#include "incidenceeditors-ng_export.h"
+#include "libkdepim/kdepim_export.h"
+
 #include "freebusyitem.h"
 
 #include <QAbstractItemModel>
 #include <QTimer>
-
-namespace IncidenceEditorNG {
 
 class ItemPrivateData;
 
@@ -38,7 +37,7 @@ class ItemPrivateData;
  * the 2nd-level child nodes represent the FreeBusyPeriods of the parent
  * freebusy item.
  */
-class INCIDENCEEDITORS_NG_EXPORT FreeBusyItemModel : public QAbstractItemModel
+class KDEPIM_EXPORT FreeBusyItemModel : public QAbstractItemModel
 {
   Q_OBJECT
   public:
@@ -108,7 +107,5 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItemModel : public QAbstractItemModel
     QList<FreeBusyItem::Ptr> mFreeBusyItems;
     ItemPrivateData *mRootData;
 };
-
-}
 
 #endif

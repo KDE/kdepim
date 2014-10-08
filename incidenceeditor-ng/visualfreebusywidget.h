@@ -36,9 +36,10 @@ class KComboBox;
 
 class QTreeView;
 
+class FreeBusyItemModel;
+
 namespace IncidenceEditorNG {
 
-class FreeBusyItemModel;
 class FreeBusyGanttProxyModel;
 class RowController;
 
