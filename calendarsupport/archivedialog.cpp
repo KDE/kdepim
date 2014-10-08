@@ -98,6 +98,7 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
     Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard |
     Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard );
   descLabel->setWordWrap( true );
+  descLabel->setContextMenuPolicy(Qt::NoContextMenu);
   topLayout->addWidget( descLabel );
   connect(descLabel, &QLabel::linkActivated, this, &ArchiveDialog::showWhatsThis);
 #endif
