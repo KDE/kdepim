@@ -134,7 +134,7 @@ Akonadi::Item AkonadiViewCalendar::item(const KCalCore::Incidence::Ptr &incidenc
 
         if (id == -1) {
             // Ok, we really don't know the ID, give up.
-            kWarning() << "Agenda::removeIncidence() Item to remove is invalid. uid = "
+            kDebug() << "Item is invalid. uid = "
                        << incidence->instanceIdentifier();
             return Akonadi::Item();
         }
