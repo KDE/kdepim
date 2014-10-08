@@ -27,7 +27,7 @@
 #include <ldap/ldapclient.h>
 #include <ldap/ldapclientsearch.h>
 
-#include "freebusyitemmodel.h"
+#include "freebusymodel/freebusycalendar.h"
 #include "resourceitem.h"
 
 #include <calendarviews/agenda/viewcalendar.h>
@@ -88,13 +88,9 @@ private slots:
 
     void slotLayoutChanged();
 
-    void slotFbModelLayoutChanged();
-    void slotFbModelRowsRemoved(const QModelIndex &parent, int first, int last);
-    void slotFbModelRowsAdded(const QModelIndex &parent, int first, int last);
-    void slotFbModelRowsChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-
 private:
     FreeBusyItemModel *mModel;
+    FreeBusyCalendar mFreebusyCalendar;
     ResourceItem::Ptr mOwnerItem;
     ResourceItem::Ptr mSelectedItem;
     EventViews::ViewCalendar::Ptr mFbCalendar;

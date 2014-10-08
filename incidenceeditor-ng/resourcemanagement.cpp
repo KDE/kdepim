@@ -24,7 +24,8 @@
 #include "resourcemanagement.h"
 #include "ui_resourcemanagement.h"
 #include "resourcemodel.h"
-#include "freebusyitem.h"
+#include "freebusymodel/freebusyitem.h"
+#include "freebusymodel/freebusycalendar.h"
 #include "ldaputils.h"
 
 #include "freebusyganttproxymodel.h"
@@ -52,16 +53,8 @@
 #include <QColor>
 
 #include <KDebug>
-#include <KSystemTimeZones>
 
 using namespace IncidenceEditorNG;
-
-enum FbStatus {
-    Unkown,
-    Free,
-    Busy,
-    Tentative
-};
 
 class FreebusyViewCalendar : public EventViews::ViewCalendar
 {
@@ -88,11 +81,12 @@ public:
         }
 
         switch (status) {
-        case Busy:
+        case KCalCore::FreeBusyPeriod::Busy:
             return QColor("#f00");
-        case Tentative:
+        case KCalCore::FreeBusyPeriod::BusyTentative:
+        case KCalCore::FreeBusyPeriod::BusyUnavailable:
             return QColor("#f70");
-        case Free:
+        case KCalCore::FreeBusyPeriod::Free:
             return QColor("#0f0");
         default:
             return QColor("#555");
@@ -124,21 +118,12 @@ ResourceManagement::ResourceManagement()
 
     QVariantList list;
     mModel = new FreeBusyItemModel(this);
-
-    connect(mModel, SIGNAL(layoutChanged()), SLOT(slotFbModelLayoutChanged()));
-    connect(mModel, SIGNAL(modelReset()), SLOT(slotFbModelLayoutChanged()));
-    connect(mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-                    SLOT(slotFbModelRowsRemoved(QModelIndex,int,int)));
-    connect(mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-                    SLOT(slotFbModelRowsAdded(QModelIndex,int,int)));
-    connect(mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                    SLOT(slotFbModelRowsChanged(QModelIndex,QModelIndex)));
+    mFreebusyCalendar.setModel(mModel);
 
     mAgendaView = new EventViews::AgendaView(QDate(), QDate(), false,  false);
 
-    KCalCore::Calendar::Ptr cal = KCalCore::Calendar::Ptr(new KCalCore::MemoryCalendar(KSystemTimeZones::local()));
     FreebusyViewCalendar *fbCalendar = new FreebusyViewCalendar();
-    fbCalendar->mCalendar = cal;
+    fbCalendar->mCalendar = mFreebusyCalendar.calendar();
     mFbCalendar = EventViews::ViewCalendar::Ptr(fbCalendar);
     mAgendaView->addCalendar(mFbCalendar);
 
@@ -243,8 +228,6 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj, const KLDAP::
     FreeBusyItem::Ptr freebusy( new FreeBusyItem( attendee, this ));
     mModel->clear();
     mModel->addItem(freebusy);
-
-
 }
 
 void ResourceManagement::slotLayoutChanged()
@@ -295,7 +278,6 @@ void ResourceManagement::slotOwnerSearchFinished()
               mUi->formOwner->addRow(translateLDAPAttributeForDisplay(key), new QLabel(list.join("\n")));
           }
       }
-
 }
 
 void ResourceManagement::slotDateChanged(QDate start, QDate end)
@@ -306,75 +288,5 @@ void ResourceManagement::slotDateChanged(QDate start, QDate end)
     }
     mAgendaView->showDates(start, end);
 }
-
-void ResourceManagement::slotFbModelLayoutChanged()
-{
-    if (mFbEvent.count() > 0) {
-        mFbCalendar->getCalendar()->deleteAllEvents();
-        mFbEvent.clear();
-        for (int i = mModel->rowCount()-1; i>=0; i--) {
-            QModelIndex parent = mModel->index(i, 0);
-            slotFbModelRowsAdded(parent, 0, mModel->rowCount(parent)-1);
-        }
-    }
-}
-
-void ResourceManagement::slotFbModelRowsAdded(const QModelIndex &parent, int first, int last)
-{
-    if (!parent.isValid()) {
-        return;
-    }
-    for(int i=first; i<=last; i++) {
-        QModelIndex index = mModel->index(i, 0, parent);
-
-        const KCalCore::FreeBusyPeriod &period = mModel->data(index, FreeBusyItemModel::FreeBusyPeriodRole).value<KCalCore::FreeBusyPeriod>();
-        const KCalCore::Attendee::Ptr &attendee = mModel->data(parent, FreeBusyItemModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
-        const KCalCore::FreeBusy::Ptr &fb = mModel->data(parent, FreeBusyItemModel::FreeBusyRole).value<KCalCore::FreeBusy::Ptr>();
-
-        KCalCore::Event::Ptr inc = KCalCore::Event::Ptr(new KCalCore::Event());
-        inc->setDtStart(period.start());
-        inc->setDtEnd(period.end());
-        inc->setUid(QLatin1String("fb-") + fb->uid());
-        //TODO: set to correct status if it is added to KCalCore
-        inc->setCustomProperty("FREEBUSY", "STATUS", QString::number(Busy));
-        inc->setSummary(period.summary().isEmpty()? i18n("Busy") : period.summary());
-
-        mFbEvent.insert(index, inc);
-        mFbCalendar->getCalendar()->addEvent(inc);
-
-    }
-}
-
-void ResourceManagement::slotFbModelRowsRemoved(const QModelIndex &parent, int first, int last)
-{
-    if (!parent.isValid()) {
-        for (int i = first; i<=last; i--) {
-            QModelIndex index = mModel->index(i, 0);
-            slotFbModelRowsRemoved(index, 0, mModel->rowCount(index)-1);
-        }
-    } else {
-        for(int i=first; i<=last; i++) {
-            QModelIndex index = mModel->index(i, 0, parent);
-            KCalCore::Event::Ptr inc = mFbEvent.take(index);
-            mFbCalendar->getCalendar()->deleteEvent(inc);
-        }
-    }
-}
-
-void ResourceManagement::slotFbModelRowsChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
-{
-    if (!topLeft.parent().isValid()) {
-        return;
-    }
-    for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
-        QModelIndex index = mModel->index(i, 0, topLeft.parent());
-        KCalCore::Event::Ptr inc = mFbEvent.value(index);
-        mFbCalendar->getCalendar()->beginChange(inc);
-        mFbCalendar->getCalendar()->endChange(inc);
-    }
-}
-
-
-
 
 #include "resourcemanagement.moc"

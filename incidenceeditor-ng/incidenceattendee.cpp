@@ -30,7 +30,7 @@
 #include "incidencedatetime.h"
 #include "schedulingdialog.h"
 #include "attendeecomboboxdelegate.h"
-#include "freebusyitemmodel.h"
+#include "freebusymodel/freebusyitemmodel.h"
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_dialogmoremobile.h"
 #else

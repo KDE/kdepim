@@ -20,7 +20,7 @@
 
 #include "testfreeperiodmodel.h"
 #include "modeltest.h"
-#include "../freeperiodmodel.h"
+#include "freeperiodmodel.h"
 
 #include <KCalCore/Period>
 #include <KCalCore/Duration>
@@ -30,7 +30,6 @@
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( FreePeriodModelTest, NoGUI )
-using namespace IncidenceEditorNG;
 
 void FreePeriodModelTest::testModelValidity()
 {

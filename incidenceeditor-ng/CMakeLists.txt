@@ -47,10 +47,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidenceresource.cpp
   incidencesecrecy.cpp
 
-  freebusyitem.cpp
-  freebusyitemmodel.cpp
   freebusyganttproxymodel.cpp
-  freeperiodmodel.cpp
   conflictresolver.cpp
   schedulingdialog.cpp
   groupwareuidelegate.cpp

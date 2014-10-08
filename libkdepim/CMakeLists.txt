@@ -6,8 +6,8 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-
 add_subdirectory(tests)
+add_subdirectory(freebusymodel/tests)
 add_subdirectory(pics)
 
 add_definitions(${QT_QTDBUS_DEFINITIONS})
@@ -64,6 +64,10 @@ set(kdepim_LIB_SRCS
    widgets/pimmessagebox.cpp
    widgets/overlaywidget.cpp
    widgets/tagwidgets.cpp
+   freebusymodel/freeperiodmodel.cpp
+   freebusymodel/freebusyitem.cpp
+   freebusymodel/freebusyitemmodel.cpp
+   freebusymodel/freebusycalendar.cpp
 )
 
 if (KDEPIM_INPROCESS_LDAP)
@@ -88,6 +92,7 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   ${BALOO_LIBRARIES}
 )
 
@@ -101,6 +106,7 @@ target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
 )
 
 if(MINGW)

@@ -20,8 +20,6 @@ ENDMACRO(IE_EXECUTABLE_TESTS)
 
 IE_UNIT_TESTS(
   conflictresolvertest
-  testfreebusyitemmodel
-  testfreeperiodmodel
   testfreebusyganttproxymodel
 )
 
@@ -60,4 +58,5 @@ target_link_libraries(resourcemanagement_gui
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   incidenceeditorsng
+  kdepim
 )
