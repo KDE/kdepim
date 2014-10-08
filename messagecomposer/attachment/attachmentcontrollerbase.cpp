@@ -813,7 +813,7 @@ void AttachmentControllerBase::showAddAttachmentDialog()
 #endif
 #else
     // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
-    const QString fileName = QFileDialog::getOpenFileName(d->wParent, i18n("Attach File") ,  KUrl(), QString());
+    const QString fileName = QFileDialog::getOpenFileName(d->wParent, i18n("Attach File") ,  QUrl(), QString());
     if (!fileName.isEmpty()) {
         addAttachment(KUrl::fromLocalFile(fileName));
     }
