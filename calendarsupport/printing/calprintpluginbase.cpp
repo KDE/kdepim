@@ -1538,6 +1538,7 @@ void CalPrintPluginBase::drawMonth( QPainter &p, const QDate &dt,
                                     int subDailyFlags, int holidaysFlags,
                                     bool excludeConfidential, bool excludePrivate )
 {
+  p.save();
   const KCalendarSystem *calsys = calendarSystem();
   QRect subheaderBox( box );
   subheaderBox.setHeight( subHeaderHeight() );
