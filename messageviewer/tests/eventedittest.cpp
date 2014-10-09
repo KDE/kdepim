@@ -27,6 +27,7 @@
 #include <kcalcore/event.h>
 #include <KDateTimeEdit>
 #include <KPushButton>
+#include <KStandardDirs>
 
 #include <qtest_kde.h>
 #include <qtestkeyboard.h>
@@ -195,6 +196,8 @@ void EventEditTest::shouldHideWidgetWhenSaveClicked()
 void EventEditTest::shouldSaveCollectionSettings()
 {
     MessageViewer::EventEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
     Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
     akonadicombobox->setCurrentIndex(3);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
@@ -206,6 +209,8 @@ void EventEditTest::shouldSaveCollectionSettings()
 void EventEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
 {
     MessageViewer::EventEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
     Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
     akonadicombobox->setCurrentIndex(4);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
@@ -305,8 +310,6 @@ void EventEditTest::shouldSetFocusWhenWeCallTodoEdit()
     edit.show();
     QTest::qWaitForWindowShown(&edit);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
-    noteedit->setFocus();
-    QVERIFY(noteedit->hasFocus());
     edit.setFocus();
     edit.showEventEdit();
     QVERIFY(noteedit->hasFocus());
