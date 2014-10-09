@@ -1348,6 +1348,16 @@ void ViewerPrivate::resetStateForNewMessage()
 void ViewerPrivate::setMessageInternal( const KMime::Message::Ptr message,
                                         Viewer::UpdateMode updateMode )
 {
+    QString createNoteText;
+    if ( mMessageItem.relations().isEmpty() ) {
+        createNoteText = i18nc( "create a new note out of this message", "Create Note" );
+    } else {
+        createNoteText = i18nc( "edit a note on this message", "Edit Note" );
+    }
+
+    mCreateNoteAction->setText( createNoteText );
+    mCreateNoteAction->setIconText( createNoteText );
+
     mMessage = message;
     if ( message ) {
         mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
@@ -3403,7 +3413,7 @@ void ViewerPrivate::slotExpandShortUrl()
 
 void ViewerPrivate::slotShowCreateTodoWidget()
 {
-    if (mMessage) {       
+    if (mMessage) {
         mCreateTodo->setMessage(mMessage);
         mCreateTodo->showToDoWidget();
     } else {
