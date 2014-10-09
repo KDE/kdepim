@@ -77,6 +77,7 @@ void MultiImapVacationDialog::init()
     mainLayout->addWidget(mStackedWidget);
     mTabWidget = new QTabWidget;
     mStackedWidget->addWidget(mTabWidget);
+    
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
@@ -116,7 +117,7 @@ void MultiImapVacationDialog::init()
         okButton->setDefault(true);
     } else {
         mStackedWidget->setCurrentIndex(1);
-        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+        buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
         connect(buttonBox, &QDialogButtonBox::accepted, this, &MultiImapVacationDialog::slotOkClicked);
         connect(buttonBox, &QDialogButtonBox::rejected, this, &MultiImapVacationDialog::slotCanceled);
     }
