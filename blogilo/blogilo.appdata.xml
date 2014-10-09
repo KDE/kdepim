@@ -307,6 +307,7 @@
       <li xml:lang="x-test">xxSaving your writing copy to prevent data loss, at configurable intervals.xx</li>
       <li>Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
       <li xml:lang="ca">Un corrector ortogràfic automàtic intern. (El corrector ortogràfic del KDE, usant així la majoria dels idiomes acceptats)</li>
+      <li xml:lang="de">Interne automatische Rechtschreibprüfung, dabei wird die KDE-Rechtschreibprüfung verwendet und damit viele Sprachen unterstützt</li>
       <li xml:lang="en-GB">Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
       <li xml:lang="es">Auto corrector ortográfico interno. (El corrector ortográfico de KDE usado para la mayoría de idiomas está reconocido)</li>
       <li xml:lang="fr">Vérificateur orthographique automatique intégré (utilisant le vérificateur de KDE, donc la plupart des langues sont prises en charge)</li>

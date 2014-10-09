@@ -28,6 +28,7 @@
       KJots organises all of your notes into separate books
     </p>
     <p xml:lang="ca">El KJots organitza totes les vostres notes en llibres separats.</p>
+    <p xml:lang="de">Mit KJots können Sie alle Ihre Notizen in getrennten Büchern organisieren.</p>
     <p xml:lang="en-GB">KJots organises all of your notes into separate books</p>
     <p xml:lang="es">KJots organiza todas sus notas en libretas separadas</p>
     <p xml:lang="fr">KJots organise toutes vos notes dans des livres séparés</p>
@@ -48,6 +49,7 @@
     <p>Features:</p>
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="cs">Vlastnosti:</p>
+    <p xml:lang="de">Funktionen:</p>
     <p xml:lang="en-GB">Features:</p>
     <p xml:lang="es">Características:</p>
     <p xml:lang="fr">Fonctionnalités :</p>
@@ -68,6 +70,7 @@
     <ul>
       <li>Multiple books handled</li>
       <li xml:lang="ca">Maneja múltiples llibres</li>
+      <li xml:lang="de">Mehrere Bücher können verwendet werden</li>
       <li xml:lang="en-GB">Multiple books handled</li>
       <li xml:lang="es">Manejo de libretas múltiples</li>
       <li xml:lang="fr">Gère plusieurs livres à la fois</li>

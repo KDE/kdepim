@@ -30,6 +30,7 @@
   <description>
     <p>KAddressBook stores all the personal details of your family, friends and other contacts.</p>
     <p xml:lang="ca">El KAddressBook emmagatzema totes les dades personals de la vostra família, amics i altres contactes.</p>
+    <p xml:lang="de">KAddressBook speichert alle persönlichen Kontaktdaten Ihrer Familie, Freunde und anderer Kontakte.</p>
     <p xml:lang="en-GB">KAddressBook stores all the personal details of your family, friends and other contacts.</p>
     <p xml:lang="es">KAddressBook almacena todos los detalles personales de su familia, amigos y otros contactos.</p>
     <p xml:lang="fr">KAddressBook mémorise toutes les coordonnées de votre famille, vos amis et autres contacts.</p>
@@ -76,6 +77,7 @@
     <ul>
       <li>Imports and exports to nearly every address book standard</li>
       <li xml:lang="ca">Importa i exporta a gairebé tots els estàndards de la llibreta d'adreces</li>
+      <li xml:lang="de">Import und Export fast aller Adressbuch-Standards</li>
       <li xml:lang="en-GB">Imports and exports to nearly every address book standard</li>
       <li xml:lang="es">Importa y exporta a casi todas las libretas de direcciones estándar</li>
       <li xml:lang="fr">Import et export vers presque tous les formats standards de carnet d'adresse</li>
@@ -98,6 +100,7 @@
       <li xml:lang="x-test">xxImports and exports to nearly every address book standardxx</li>
       <li>Reads .vcf format files, and can import and export vCards and csv format files</li>
       <li xml:lang="ca">Llegeix el format de fitxer .vcf, i pot importar i exportar els formats de fitxer vCard i CSV</li>
+      <li xml:lang="de">Lesen von Dateien im Format „vcf“ und Import und Export von Dateien im Format vCard und CSV</li>
       <li xml:lang="en-GB">Reads .vcf format files, and can import and export vCards and csv format files</li>
       <li xml:lang="es">Lee archivos de formato .vcf, y puede importar y exportar formatos de archivo vCard y csv</li>
       <li xml:lang="fr">Lit les fichiers au format VCF, et importe et exporte les fichiers aux formats vCard et CSV</li>
@@ -141,6 +144,7 @@
       <li xml:lang="x-test">xxCan use multiple LDAPserversxx</li>
       <li>Configurable filters and powerful search capabilities</li>
       <li xml:lang="ca">Filtres configurables i potents capacitats de cerca</li>
+      <li xml:lang="de">Einstellbare Filter und leistungsfähige Suchfunktionen</li>
       <li xml:lang="en-GB">Configurable filters and powerful search capabilities</li>
       <li xml:lang="es">Filtros configurables y poderosas capacidades de búsqueda</li>
       <li xml:lang="fr">Filtres personnalisables et fonctions de recherche poussées</li>
