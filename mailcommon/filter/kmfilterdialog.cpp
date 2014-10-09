@@ -321,7 +321,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
     QPushButton *user3Button = new QPushButton;
     buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     connect(buttonBox->button(QDialogButtonBox::Help), SIGNAL(clicked()), this, SLOT(slotHelp()));
     setModal(false);
@@ -587,8 +587,6 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
             this, SLOT(slotSaveSize()));
 
     // destruct the dialog on close and Cancel
-    connect(buttonBox->button(QDialogButtonBox::Close), SIGNAL(clicked()),
-            this, SLOT(slotFinished()));
     connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
             this, SLOT(slotFinished()));
 
