@@ -16,15 +16,11 @@
 */
 #include "followupreminderinfowidget.h"
 #include "followupreminderinfo.h"
+#include "jobs/followupremindershowmessagejob.h"
 
 #include <QTreeWidget>
 #include <QHBoxLayout>
 #include <QHeaderView>
-#include <QDBusInterface>
-#include <QDBusConnection>
-#include <QDBusReply>
-#include <QDBusConnectionInterface>
-#include <ktoolinvocation.h>
 
 #include <kicon.h>
 #include <KGlobal>
@@ -159,19 +155,8 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
 
 void FollowUpReminderInfoWidget::openShowMessage(Akonadi::Item::Id id)
 {
-    //TODO convert as kjob
-    const QString kmailInterface = QLatin1String("org.kde.kmail");
-    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered(kmailInterface);
-    if (!reply.isValid() || !reply.value()) {
-        // Program is not already running, so start it
-        QString errmsg;
-        if (KToolInvocation::startServiceByDesktopName(QLatin1String("kmail2"), QString(), &errmsg)) {
-            qDebug()<<" Can not start kmail"<<errmsg;
-            return;
-        }
-    }
-    QDBusInterface kmail(kmailInterface, QLatin1String("/KMail"), QLatin1String("org.kde.kmail.kmail"));
-    kmail.call(QLatin1String("showMail"), id);
+    FollowUpReminderShowMessageJob *job = new FollowUpReminderShowMessageJob(id);
+    job->start();
 }
 
 void FollowUpReminderInfoWidget::removeItem(FollowUpReminderInfoItem *mailItem)

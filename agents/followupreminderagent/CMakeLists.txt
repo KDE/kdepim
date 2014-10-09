@@ -27,6 +27,7 @@ install( TARGETS followupreminder ${INSTALL_TARGETS_DEFAULT_ARGS} )
 set(followupreminderagent_job_SRCS
     jobs/followupreminderjob.cpp
     jobs/followupreminderfinishtaskjob.cpp
+    jobs/followupremindershowmessagejob.cpp
 )
 
 set(followupreminderagent_SRCS
