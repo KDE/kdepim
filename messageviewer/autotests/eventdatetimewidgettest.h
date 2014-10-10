@@ -30,6 +30,8 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldSetDateTime();
     void shouldEmitSignalWhenDateTimeChanged();
+    void shouldEmitSignalWhenJustTimeChanged();
+    void shouldEmitSignalWhenJustDateChanged();
     void shouldNotEmitSignalWhenDateTimeWasNotChanged();
 
 

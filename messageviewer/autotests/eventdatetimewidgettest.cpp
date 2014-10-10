@@ -61,8 +61,33 @@ void EventDateTimeWidgetTest::shouldEmitSignalWhenDateTimeChanged()
     currentDateTime.setDate(currentDateTime.date().addDays(1));
     edit.setDateTime(currentDateTime);
 
-    //TODO fix me. We emit twice
-    QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy.count(), 1);
+}
+
+void EventDateTimeWidgetTest::shouldEmitSignalWhenJustTimeChanged()
+{
+    MessageViewer::EventDateTimeWidget edit;
+    QDateTime currentDateTime = QDateTime::currentDateTime();
+    edit.setDateTime(currentDateTime);
+
+    QSignalSpy spy(&edit, SIGNAL(dateTimeChanged(QDateTime)));
+    QTime time = currentDateTime.time().addSecs(3600);
+    edit.setTime(time);
+
+    QCOMPARE(spy.count(), 1);
+}
+
+void EventDateTimeWidgetTest::shouldEmitSignalWhenJustDateChanged()
+{
+    MessageViewer::EventDateTimeWidget edit;
+    QDateTime currentDateTime = QDateTime::currentDateTime();
+    edit.setDateTime(currentDateTime);
+
+    QSignalSpy spy(&edit, SIGNAL(dateTimeChanged(KDateTime)));
+    QDate date = currentDateTime.date().addDays(1);
+    edit.setDate(date);
+
+    QCOMPARE(spy.count(), 1);
 }
 
 void EventDateTimeWidgetTest::shouldNotEmitSignalWhenDateTimeWasNotChanged()
@@ -75,11 +100,10 @@ void EventDateTimeWidgetTest::shouldNotEmitSignalWhenDateTimeWasNotChanged()
     currentDateTime.setDate(currentDateTime.date().addDays(1));
     edit.setDateTime(currentDateTime);
 
-    //TODO fix me. We emit twice
-    QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy.count(), 1);
     edit.setDateTime(currentDateTime);
 
-    //FIXME
+    //FIX ME
     //QCOMPARE(spy.count(), 2);
 }
 
