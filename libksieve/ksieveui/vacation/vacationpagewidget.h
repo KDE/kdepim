@@ -60,6 +60,7 @@ private:
     VacationWarningWidget *mVacationWarningWidget;
     KManageSieve::SieveJob *mSieveJob;
     bool mWasActive;
+    bool mHasDateSupport;
 };
 }
 

@@ -38,7 +38,8 @@ VacationPageWidget::VacationPageWidget(QWidget *parent)
     : QWidget(parent),
       mPageScript(Script),
       mSieveJob(0),
-      mWasActive(false)
+      mWasActive(false),
+      mHasDateSupport(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
@@ -134,9 +135,10 @@ void VacationPageWidget::slotGetResult(KManageSieve::SieveJob *job, bool success
     mVacationEditWidget->setSendForSpam(sendForSpam);
     mVacationEditWidget->setDomainName(domainName);
     mVacationEditWidget->enableDomainAndSendForSpam(!VacationSettings::allowOutOfOfficeUploadButNoSettings());
-    mVacationEditWidget->enableDates(job->sieveCapabilities().contains(QLatin1String("date")));
-    mVacationEditWidget->setStartDate(startDate);
-    mVacationEditWidget->setEndDate(endDate);
+    mHasDateSupport = job->sieveCapabilities().contains(QLatin1String("date"));
+    mVacationEditWidget->enableDates(mHasDateSupport);
+    mVacationEditWidget->setStartDate(mHasDateSupport ? startDate : QDate());
+    mVacationEditWidget->setEndDate(mHasDateSupport ? endDate : QDate());
 
     //emit scriptActive( mWasActive, mServerName );
 }
@@ -152,8 +154,8 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
                                mVacationEditWidget->mailAliases(),
                                mVacationEditWidget->sendForSpam(),
                                mVacationEditWidget->domainName(),
-                               mVacationEditWidget->startDate(),
-                               mVacationEditWidget->endDate());
+                               mHasDateSupport ? mVacationEditWidget->startDate() : QDate(),
+                               mHasDateSupport ?mVacationEditWidget->endDate() : QDate());
         const bool active = mVacationEditWidget->activateVacation();
         createJob->setStatus(active, mWasActive);
         //Q_EMIT scriptActive( active, mServerName);
