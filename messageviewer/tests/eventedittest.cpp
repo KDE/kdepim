@@ -336,7 +336,7 @@ void EventEditTest::shouldEnsureEndDateIsNotBeforeStartDate()
     QCOMPARE(startDt.time(), endDateTime->time());
 }
 
-void EventEditTest::shouldShouldEnabledSaveOpenEditorButton()
+void EventEditTest::shouldEnabledSaveOpenEditorButton()
 {
     MessageViewer::EventEdit edit;
     KMime::Message::Ptr msg(new KMime::Message);
