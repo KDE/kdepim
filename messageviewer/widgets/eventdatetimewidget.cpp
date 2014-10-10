@@ -26,6 +26,8 @@ EventDateTimeWidget::EventDateTimeWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *mainLayout = new QHBoxLayout;
+    mainLayout->setSpacing(0);
+    mainLayout->setMargin(0);
     setLayout(mainLayout);
     mDateEdit = new KDateComboBox;
     mDateEdit->setObjectName(QLatin1String("eventdatecombobox"));
@@ -37,6 +39,8 @@ EventDateTimeWidget::EventDateTimeWidget(QWidget *parent)
     setDateTime(currentDateTime);
     connect(mDateEdit, SIGNAL(dateChanged(QDate)), this, SLOT(slotDateTimeChanged()));
     connect(mTimeEdit, SIGNAL(timeChanged(QTime)), this, SLOT(slotDateTimeChanged()));
+    connect(mDateEdit, SIGNAL(dateEdited(QDate)), this, SLOT(slotDateTimeChanged()));
+    connect(mTimeEdit, SIGNAL(timeEdited(QTime)), this, SLOT(slotDateTimeChanged()));
 }
 
 EventDateTimeWidget::~EventDateTimeWidget()
@@ -60,8 +64,11 @@ void EventDateTimeWidget::setMinimumDateTime(const KDateTime &dtime)
 void EventDateTimeWidget::setDateTime(const KDateTime &dTime)
 {
     if (dateTime() != dTime) {
+        blockSignals(true);
         mDateEdit->setDate(dTime.date());
         mTimeEdit->setTime(dTime.time());
+        blockSignals(false);
+        slotDateTimeChanged();
     }
 }
 
