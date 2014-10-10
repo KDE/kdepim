@@ -33,16 +33,27 @@
 #include <QHeaderView>
 #include <QList>
 #include <QStringList>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
 
 CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig,
                                         QWidget *parent )
-  : KDialog( parent ), mCategoryConfig( categoryConfig )
+  : QDialog( parent ), mCategoryConfig( categoryConfig )
 {
-  setCaption( i18n( "Edit Categories" ) );
-  setButtons( Ok /*| Apply*/ | Cancel | Help );
+  setWindowTitle( i18n( "Edit Categories" ) );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setDefault(true);
+  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
   mWidgets = new Ui::CategoryEditDialog_base();
   QWidget *widget = new QWidget( this );
   widget->setObjectName( "CategoryEdit" );
@@ -61,22 +72,23 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig,
   mWidgets->mCategories->setDragDropMode( QAbstractItemView::InternalMove );
 #endif
 
-  // unfortunately, kde-core-devel will not allow this code in KDialog
+  // unfortunately, kde-core-devel will not allow this code in QDialog
   // because these button's functionality cannot be easily generalized.
-  setButtonToolTip( Ok, i18n( "Apply changes and close" ) );
-  setButtonWhatsThis( Ok, i18n( "When clicking <b>Ok</b>, "
+  okButton->setToolTip(i18n( "Apply changes and close"  ));
+  okButton->setWhatsThis( i18n( "When clicking <b>Ok</b>, "
                                 "the settings will be handed over to the "
                                 "program and the dialog will be closed." ) );
-  setButtonToolTip( Cancel, i18n( "Cancel changes and close" ) );
-  setButtonWhatsThis( Cancel, i18n( "When clicking <b>Cancel</b>, "
+  buttonBox->button(QDialogButtonBox::Cancel)->setToolTip(i18n( "Cancel changes and close"  ));
+  buttonBox->button(QDialogButtonBox::Cancel)->setWhatsThis(i18n( "When clicking <b>Cancel</b>, "
                                     "the settings will be discarded and the "
                                     "dialog will be closed." ) );
 
-  setButtonWhatsThis( Help, i18n( "When clicking <b>Help</b>, "
+  buttonBox->button(QDialogButtonBox::Help)->setWhatsThis(i18n( "When clicking <b>Help</b>, "
                                   "a separate KHelpCenter window will open "
                                   "providing more information about the settings." ) );
 
-  setMainWidget( widget );
+  mainLayout->addWidget(widget);
+  mainLayout->addWidget(buttonBox);
 
   fillList();
 
@@ -96,9 +108,9 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig,
            this, SLOT(addSubcategory()) );
   connect( mWidgets->mButtonRemove, SIGNAL(clicked()),
            this, SLOT(remove()) );
-  connect(this, &CategoryEditDialog::okClicked, this, &CategoryEditDialog::slotOk);
-  connect(this, &CategoryEditDialog::cancelClicked, this, &CategoryEditDialog::slotCancel);
-  //connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
+  connect(okButton, &QPushButton::clicked, this, &CategoryEditDialog::slotOk);
+  connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &CategoryEditDialog::slotCancel);
+  //connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(slotApply()) );
 }
 
 CategoryEditDialog::~CategoryEditDialog()
@@ -245,7 +257,7 @@ void CategoryEditDialog::show()
     editItem( first );
   }
 */
-  KDialog::show();
+  QDialog::show();
 }
 
 void CategoryEditDialog::expandIfToplevel( QTreeWidgetItem *item )

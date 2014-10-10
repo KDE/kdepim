@@ -23,7 +23,7 @@
 
 #include "incidenceeditors_ng_export.h"
 
-#include <KDialog>
+#include <QDialog>
 
 class QTreeWidgetItem;
 
@@ -37,7 +37,7 @@ namespace CalendarSupport {
 
 namespace IncidenceEditorNG {
 
-class INCIDENCEEDITORS_NG_EXPORT CategoryEditDialog : public KDialog
+class INCIDENCEEDITORS_NG_EXPORT CategoryEditDialog : public QDialog
 {
   Q_OBJECT
   public:
