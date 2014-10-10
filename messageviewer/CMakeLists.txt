@@ -105,6 +105,7 @@ set(libmessageviewer_widgets_SRCS
   widgets/todoedit.cpp
   widgets/eventedit.cpp
   widgets/openattachmentfolderwidget.cpp
+  widgets/eventdatetimewidget.cpp
 )
 
 set(libmessageviewer_header_SRCS

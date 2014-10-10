@@ -18,6 +18,7 @@
 #include "eventedit.h"
 
 #include "messageviewer/globalsettings_base.h"
+#include "eventdatetimewidget.h"
 
 #include <KLocalizedString>
 #include <QLineEdit>
@@ -30,6 +31,7 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <QLabel>
+#include <KDateComboBox>
 
 #include <AkonadiWidgets/CollectionComboBox>
 #include <QPushButton>
@@ -94,7 +96,7 @@ EventEdit::EventEdit(QWidget *parent)
     lab = new QLabel(i18n("Start:"));
     hbox->addWidget(lab);
     KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
-    mStartDateTimeEdit = new KDateTimeEdit;
+    mStartDateTimeEdit = new EventDateTimeWidget;
     mStartDateTimeEdit->setObjectName(QLatin1String("startdatetimeedit"));
     //QT5 mStartDateTimeEdit->setDateTime(currentDateTime);
 #ifndef QT_NO_ACCESSIBILITY
@@ -108,7 +110,7 @@ EventEdit::EventEdit(QWidget *parent)
 
     lab = new QLabel(i18n("End:"));
     hbox->addWidget(lab);
-    mEndDateTimeEdit = new KDateTimeEdit;
+    mEndDateTimeEdit = new EventDateTimeWidget;
     mEndDateTimeEdit->setObjectName(QLatin1String("enddatetimeedit"));
     //QT5 mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
 #ifndef QT_NO_ACCESSIBILITY
@@ -183,6 +185,9 @@ void EventEdit::slotUpdateButtons(const QString &subject)
 void EventEdit::showEventEdit()
 {
     mEventEdit->setFocus();
+    QDateTime currentDateTime = QDateTime::currentDateTime();
+    mStartDateTimeEdit->setDateTime(currentDateTime);
+    mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
     show();
 }
 
@@ -322,7 +327,6 @@ void EventEdit::slotOpenEditor()
     if (subject) {
         attachment->setLabel(subject->asUnicodeString());
     }
-
     KCalCore::Event::Ptr event(new KCalCore::Event);
     event->setSummary(mEventEdit->text());
     event->setDtStart(KDateTime(mStartDateTimeEdit->dateTime()));

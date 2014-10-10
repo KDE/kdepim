@@ -26,7 +26,6 @@
 #include <KCalCore/Event>
 
 class QLineEdit;
-class KDateTimeEdit;
 class QPushButton;
 namespace Akonadi
 {
@@ -35,6 +34,7 @@ class CollectionComboBox;
 
 namespace MessageViewer
 {
+class EventDateTimeWidget;
 class MESSAGEVIEWER_EXPORT EventEdit : public QWidget
 {
     Q_OBJECT
@@ -74,8 +74,8 @@ private:
     KMime::Message::Ptr mMessage;
     QLineEdit *mEventEdit;
     Akonadi::CollectionComboBox *mCollectionCombobox;
-    KDateTimeEdit *mStartDateTimeEdit;
-    KDateTimeEdit *mEndDateTimeEdit;
+    EventDateTimeWidget *mStartDateTimeEdit;
+    EventDateTimeWidget *mEndDateTimeEdit;
     QPushButton *mSaveButton;
     QPushButton *mOpenEditorButton;
 };
