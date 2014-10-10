@@ -620,6 +620,7 @@ public slots:
     void slotShowCreateTodoWidget();
     void slotShowCreateEventWidget();
     void slotShowCreateNoteWidget();
+    void slotNoteItemFetched(KJob *job);
 
 signals:
     void showStatusBarMessage( const QString &message );
@@ -634,7 +635,9 @@ signals:
 
     void changeDisplayMail(Viewer::ForceDisplayTo,bool);
     void moveMessageToTrash();
+
 private:
+    void showCreateNewNoteWidget();
     QString attachmentInjectionHtml() const;
     QString recipientsQuickListLinkHtml( bool, const QString & ) const;
     void initGrantleeThemeName();
