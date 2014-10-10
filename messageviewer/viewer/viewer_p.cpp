@@ -1351,7 +1351,7 @@ void ViewerPrivate::setMessageInternal( const KMime::Message::Ptr message,
 {
     if ( mCreateNoteAction ) {
         QString createNoteText;
-        if ( mMessageItem.relations().isEmpty() ) {
+        if ( !relatedNoteRelation().isValid() ) {
             createNoteText = i18nc( "create a new note out of this message", "Create Note" );
         } else {
             createNoteText = i18nc( "edit a note on this message", "Edit Note" );
@@ -3446,18 +3446,24 @@ void ViewerPrivate::slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const 
     createJob->start();
 }
 
+Akonadi::Relation ViewerPrivate::relatedNoteRelation()
+{
+    Akonadi::Relation relation;
+    foreach (const Akonadi::Relation &r, mMessageItem.relations()) {
+        // assuming that GENERIC relations to emails are notes is a pretty horirific hack imo - aseigo
+        if (r.type() == Akonadi::Relation::GENERIC && r.right().mimeType() == Akonadi::NoteUtils::noteMimeType() ) {
+            relation = r;
+            break;
+        }
+    }
+    return relation;
+}
+
+
 void ViewerPrivate::slotShowCreateNoteWidget()
 {
     if (!mMessageItem.relations().isEmpty())  {
-        Akonadi::Relation relation;
-        foreach (const Akonadi::Relation &r, mMessageItem.relations()) {
-            // assuming that GENERIC relations to emails are notes is a pretty horirific hack imo - aseigo
-            if (r.type() == Akonadi::Relation::GENERIC/* && r.right().mimeType() == Akonadi::NoteUtils::noteMimeType(*/) {
-                relation = r;
-                break;
-            }
-        }
-
+        Akonadi::Relation relation = relatedNoteRelation();
         if (relation.isValid()) {
             Akonadi::ItemFetchJob* job = new Akonadi::ItemFetchJob(relation.right());
             job->fetchScope().fetchFullPayload(true);

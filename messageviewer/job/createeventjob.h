@@ -35,7 +35,8 @@ public:
 
 private slots:
     void slotFetchDone(KJob *job);
-    void slotCreateNewEvent(KJob *job);
+    void eventCreated(KJob *job);
+    void relationCreated(KJob *job);
 
 private:
     void createEvent();

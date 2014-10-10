@@ -39,6 +39,7 @@ public:
 
 private slots:
     void noteCreated(KJob *job);
+    void noteUpdated(KJob *job);
     void relationCreated(KJob *job);
 
 private:

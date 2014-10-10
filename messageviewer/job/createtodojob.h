@@ -35,7 +35,8 @@ public:
 
 private slots:
     void slotFetchDone(KJob *job);
-    void slotCreateNewTodo(KJob *job);
+    void todoCreated(KJob *job);
+    void relationCreated(KJob *job);
 
 private:
     void createTodo();

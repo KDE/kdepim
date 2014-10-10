@@ -21,6 +21,7 @@
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/ItemCreateJob>
+#include <Akonadi/RelationCreateJob>
 
 #include <KMime/Message>
 #include <QDebug>
@@ -37,7 +38,6 @@ CreateEventJob::CreateEventJob(const KCalCore::Event::Ptr &eventPtr, const Akona
 
 CreateEventJob::~CreateEventJob()
 {
-    qDebug()<<" CreateEventJob::~CreateEventJob()";
 }
 
 void CreateEventJob::start()
@@ -47,14 +47,6 @@ void CreateEventJob::start()
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
         job->fetchScope().fetchFullPayload();
         connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
-
-        if ( job->exec() ) {
-            if ( job->items().count() == 1 ) {
-                mItem = job->items().first();
-            }
-        } else {
-            qDebug()<<" createEvent: Error during fetch: "<<job->errorString();
-        }
     } else {
         createEvent();
     }
@@ -62,7 +54,6 @@ void CreateEventJob::start()
 
 void CreateEventJob::slotFetchDone(KJob *job)
 {
-    qDebug()<<" void CreateEventJob::slotFetchDone(KJob *job)";
     Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob *>(job);
     if ( fetchJob->items().count() == 1 ) {
         mItem = fetchJob->items().first();
@@ -80,24 +71,32 @@ void CreateEventJob::createEvent()
         Q_EMIT emitResult();
         return;
     }
-    KMime::Message::Ptr msg =  mItem.payload<KMime::Message::Ptr>();
-
-    KCalCore::Attachment::Ptr attachmentPtr(new KCalCore::Attachment( msg->encodedContent().toBase64(), KMime::Message::mimeType() ));
-    attachmentPtr->setLabel(msg->subject(false)->asUnicodeString());
-    mEventPtr->addAttachment(attachmentPtr);
 
     Akonadi::Item newTodoItem;
     newTodoItem.setMimeType( KCalCore::Event::eventMimeType() );
     newTodoItem.setPayload<KCalCore::Event::Ptr>( mEventPtr );
 
     Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob(newTodoItem, mCollection);
-    connect(createJob, SIGNAL(result(KJob*)), this, SLOT(slotCreateNewEvent(KJob*)));
+    connect(createJob, SIGNAL(result(KJob*)), this, SLOT(eventCreated(KJob*)));
 }
 
-void CreateEventJob::slotCreateNewEvent(KJob *job)
+void CreateEventJob::eventCreated(KJob *job)
 {
     if ( job->error() ) {
         qDebug() << "Error during create new Event "<<job->errorString();
+        setError( job->error() );
+        setErrorText( job->errorText() );
+        emitResult();
+    } else {
+        Akonadi::ItemCreateJob *createJob = static_cast<Akonadi::ItemCreateJob *> ( job );
+        Akonadi::Relation relation( Akonadi::Relation::GENERIC, mItem, createJob->item() );
+        Akonadi::RelationCreateJob *job = new Akonadi::RelationCreateJob( relation );
+        connect( job, SIGNAL( result( KJob * ) ), this, SLOT( relationCreated( KJob * ) ) );
     }
-    Q_EMIT emitResult();
+}
+
+void CreateEventJob::relationCreated(KJob *job)
+{
+   Q_UNUSED(job)
+   emitResult();
 }

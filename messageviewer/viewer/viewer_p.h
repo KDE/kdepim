@@ -642,6 +642,8 @@ private:
     QString recipientsQuickListLinkHtml( bool, const QString & ) const;
     void initGrantleeThemeName();
 
+    Akonadi::Relation relatedNoteRelation();
+
 public:
     NodeHelper* mNodeHelper;
     bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
