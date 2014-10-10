@@ -54,6 +54,7 @@
     <p>Features:</p>
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="cs">Vlastnosti:</p>
+    <p xml:lang="de">Funktionen:</p>
     <p xml:lang="en-GB">Features:</p>
     <p xml:lang="es">Características:</p>
     <p xml:lang="fr">Fonctionnalités :</p>
@@ -166,6 +167,7 @@
       <li xml:lang="x-test">xxConfigurable filters and powerful search capabilitiesxx</li>
       <li>Integrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizer</li>
       <li xml:lang="ca">S'integra amb els altres components del Kontact, p. ex., l'exportació dels recordatoris d'aniversari pel KOrganizer</li>
+      <li xml:lang="de">Integration mit anderen Komponenten von Kontact wie zum Beispiel der Export von Erinnerungen an Geburtstage zu KOrganizer</li>
       <li xml:lang="en-GB">Integrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizer</li>
       <li xml:lang="es">Se integra con otros componentes de Kontact, p. ej., exportación de recordatorios de cumpleaños a KOrganizer</li>
       <li xml:lang="fr">Intégré avec les autres composants de la suite Kontact, par exemple pour exporter un rappel d'anniversaire vers KOrganizer</li>
@@ -187,6 +189,7 @@
       <li xml:lang="x-test">xxIntegrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizerxx</li>
       <li>Capable of groupware integration</li>
       <li xml:lang="ca">Capaç d'integrar-se amb el treball en grup</li>
+      <li xml:lang="de">Einbindung in Groupware ist möglich</li>
       <li xml:lang="en-GB">Capable of groupware integration</li>
       <li xml:lang="es">Capaz de integración con herramientas de colaboración</li>
       <li xml:lang="fr">Possibilités d'intégration en logiciel de groupe de travail</li>

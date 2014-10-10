@@ -51,6 +51,7 @@
   <description>
     <p>Blogilo is a blogging client for KDE, which supports various blogging APIs.</p>
     <p xml:lang="ca">El Blogilo és un client de blogs pel KDE, el qual és compatible amb diversos API de blogs.</p>
+    <p xml:lang="de">Blogilo ist ein Blogging-Programm für KDE, das verschiedene Programmier-Schnittstellen (APIs) für Blog-Systeme unterstützt.</p>
     <p xml:lang="en-GB">Blogilo is a blogging client for KDE, which supports various blogging APIs.</p>
     <p xml:lang="es">Blogilo en un cliente de blogueo para KDE, que implementa varias API de blogueo.</p>
     <p xml:lang="fr">Blogilo est un client de blog pour KDE qui prend en charge diverses interfaces de programmation pour blogs.</p>
@@ -73,6 +74,7 @@
     <p>Features:</p>
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="cs">Vlastnosti:</p>
+    <p xml:lang="de">Funktionen:</p>
     <p xml:lang="en-GB">Features:</p>
     <p xml:lang="es">Características:</p>
     <p xml:lang="fr">Fonctionnalités :</p>
@@ -138,6 +140,7 @@
       <li xml:lang="x-test">xxPreviewing your post with your blog stylexx</li>
       <li>Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
       <li xml:lang="ca">Implementa les API Blogger1.0, MetaWeblog, MovableType (el Wordpress implementa tots aquests!) i Google GData (usada al blog Blogspot.com)</li>
+      <li xml:lang="de">Unterstützung für die Programmier-Schnittstellen (APIs) von Blogger1.0, MetaWeblog, MovableType (alle von Wordpress verwendet) und Google GData (verwendet auf Blogspot.com blogs)</li>
       <li xml:lang="en-GB">Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
       <li xml:lang="es">Reconoce las API Blogger1.0, MetaWeblog, MovableType (¡Wordpress reconoce todos esos!) y Google GData (usado en blogs de Blogspot.com b)</li>
       <li xml:lang="fr">Prise en charge des interfaces Blogger1.0, MetaWeblog, MovableType (Wordpress les gérant tous !) et Google GData (utilisé sur les blogs de Blogspot.com)</li>
@@ -181,6 +184,7 @@
       <li xml:lang="x-test">xxSupport for Creating/Modifying/Deleting posts.xx</li>
       <li>Support for creating drafts and scheduled posts</li>
       <li xml:lang="ca">Implementa la creació d'esborranys i articles programats</li>
+      <li xml:lang="de">Unterstützung für das Erstellen von Entwürfen und geplanten Posts</li>
       <li xml:lang="en-GB">Support for creating drafts and scheduled posts</li>
       <li xml:lang="es">Implementa la creación de borradores y envíos planificados</li>
       <li xml:lang="fr">Prise en charge de la création de d'articles brouillons et planifiés.</li>
@@ -202,6 +206,7 @@
       <li xml:lang="x-test">xxSupport for creating drafts and scheduled postsxx</li>
       <li>Support for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="ca">Implementa la pujada de fitxers de suports al vostre blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
+      <li xml:lang="de">Unterstützung für das Hochladen von Medien zu Ihrem Blog, nur z. B. für MetaWeblog und MovableType</li>
       <li xml:lang="en-GB">Support for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="es">Implementa la subida de archivos multimedia a su blog (solo en las API reconocidas, p. ej., MetaWeblog y MovableType)</li>
       <li xml:lang="fr">Prise en charge de l'envoi de fichiers multimédia vers votre blog (uniquement avec les interfaces prises en charge comme MetaWeblog et MovableType)</li>
@@ -223,6 +228,7 @@
       <li xml:lang="x-test">xxSupport for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)xx</li>
       <li>Support for Fetching your recent blog entries.</li>
       <li xml:lang="ca">Implementa l'obtenció de les vostres entrades recents al blog</li>
+      <li xml:lang="de">Unterstützung für das Holen von aktuellen Blog-Einträgen</li>
       <li xml:lang="en-GB">Support for Fetching your recent blog entries.</li>
       <li xml:lang="es">Implementa la recuperación de sus entradas recientes de blog.</li>
       <li xml:lang="fr">Prise en charge de l'accès à vos articles de blog récents.</li>
@@ -244,6 +250,7 @@
       <li xml:lang="x-test">xxSupport for Fetching your recent blog entries.xx</li>
       <li>Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="ca">Implementa afegir imatges als articles des del vostre sistema. Les pujarà en entregar l'article al blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
+      <li xml:lang="de">Unterstützung für das Hinzufügen von Bildern von Ihrem System zu Ihren Posts. Die Bilder werden beim Hochladen zusammen mit Ihrem Text zum Blog hochgeladen, das funktioniert nur bei unterstützten Programmier-Schnittstellen (APIs) wie MetaWeblog und MovableType</li>
       <li xml:lang="en-GB">Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="es">Implementa el añadido de imágenes al envió desde su sistema. Las cargará al aplicar los envíos a su blog (solo en las API reconocidas, p. ej., MetaWeblog y MovableType)</li>
       <li xml:lang="fr">Prise en charge de l'ajout d'images de votre système vers l'article. Le fichier sera envoyé lors de la soumission de l'article sur le blog (uniquement avec les interfaces prises en charge comme MetaWeblog et MovableType)</li>
@@ -265,6 +272,7 @@
       <li xml:lang="x-test">xxSupport for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)xx</li>
       <li>Support for saving local entries before publishing.</li>
       <li xml:lang="ca">Implementa el desat de les entrades locals abans de publicar-les</li>
+      <li xml:lang="de">Unterstützung für das Speichern lokaler Einträge vor der Veröffentlichung</li>
       <li xml:lang="en-GB">Support for saving local entries before publishing.</li>
       <li xml:lang="es">Implementa el guardado de entradas locales antes de publicarlas.</li>
       <li xml:lang="fr">Prise en charge de l'enregistrement d'entrées en local avant publication.</li>
@@ -286,6 +294,7 @@
       <li xml:lang="x-test">xxSupport for saving local entries before publishing.xx</li>
       <li>Saving your writing copy to prevent data loss, at configurable intervals.</li>
       <li xml:lang="ca">Desa una còpia de l'escriptura per evitar la pèrdua de dades, a intervals configurables</li>
+      <li xml:lang="de">Speicherung einer Kopie Ihrer Texte in einstellbaren Intervallen, um Datenverlust zu verhindern</li>
       <li xml:lang="en-GB">Saving your writing copy to prevent data loss, at configurable intervals.</li>
       <li xml:lang="es">Salvado de su copia escrita para evitar pérdidas de datos, a intervalos configurables.</li>
       <li xml:lang="fr">Enregistrement de votre copie de travail pour éviter de perdre les données, à intervalle configurable.</li>
