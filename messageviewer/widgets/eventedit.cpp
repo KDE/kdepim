@@ -178,6 +178,9 @@ void EventEdit::slotUpdateButtons(const QString &subject)
 void EventEdit::showEventEdit()
 {
     mEventEdit->setFocus();
+    KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
+    mStartDateTimeEdit->setDateTime(currentDateTime);
+    mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
     show();
 }
 
@@ -318,7 +321,6 @@ void EventEdit::slotOpenEditor()
     if (subject) {
         attachment->setLabel(subject->asUnicodeString());
     }
-
     KCalCore::Event::Ptr event(new KCalCore::Event);
     event->setSummary(mEventEdit->text());
     event->setDtStart(mStartDateTimeEdit->dateTime());

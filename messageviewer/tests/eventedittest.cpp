@@ -354,5 +354,44 @@ void EventEditTest::shouldShouldEnabledSaveOpenEditorButton()
     QCOMPARE(save->isEnabled(), false);
 }
 
+void EventEditTest::shouldUpdateStartEndDateWhenReopenIt()
+{
+    MessageViewer::EventEdit edit;
+    KMime::Message::Ptr msg(new KMime::Message);
+    msg->subject(true)->fromUnicodeString(QLatin1String("Test note"), "us-ascii");
+    edit.setMessage(msg);
+
+    KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
+    KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
+    QCOMPARE(startDateTime->dateTime().date(), currentDateTime.date());
+    QCOMPARE(startDateTime->dateTime().time().hour(), currentDateTime.time().hour());
+    QCOMPARE(startDateTime->dateTime().time().minute(), currentDateTime.time().minute());
+
+    KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
+    QCOMPARE(endDateTime->dateTime().date(), currentDateTime.date());
+    QCOMPARE(endDateTime->dateTime().time().hour(), currentDateTime.time().hour() + 1);
+    QCOMPARE(endDateTime->dateTime().time().minute(), currentDateTime.time().minute());
+
+    KDateTime newDateTime = currentDateTime;
+    newDateTime = newDateTime.addSecs(60*60); //+1h
+    startDateTime->setDateTime(newDateTime);
+    endDateTime->setDateTime(newDateTime);
+
+    QCOMPARE(startDateTime->dateTime(), newDateTime);
+    QCOMPARE(endDateTime->dateTime(), newDateTime);
+
+    edit.slotCloseWidget();
+
+    edit.showEventEdit();
+    QCOMPARE(startDateTime->dateTime().date(), currentDateTime.date());
+    QCOMPARE(startDateTime->dateTime().time().hour(), currentDateTime.time().hour());
+    QCOMPARE(startDateTime->dateTime().time().minute(), currentDateTime.time().minute());
+
+    QCOMPARE(endDateTime->dateTime().date(), currentDateTime.date());
+    QCOMPARE(endDateTime->dateTime().time().hour(), currentDateTime.time().hour() + 1);
+    QCOMPARE(endDateTime->dateTime().time().minute(), currentDateTime.time().minute());
+
+}
+
 
 QTEST_KDEMAIN( EventEditTest, GUI )
