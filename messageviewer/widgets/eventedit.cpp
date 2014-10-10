@@ -18,16 +18,19 @@
 #include "eventedit.h"
 
 #include "messageviewer/globalsettings_base.h"
+#include "eventdatetimewidget.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KIcon>
 #include <KDateTimeEdit>
+#include <KTimeComboBox>
 
 #include <QHBoxLayout>
 #include <QEvent>
 #include <QKeyEvent>
 #include <QLabel>
+#include <KDateComboBox>
 
 #include <Akonadi/CollectionComboBox>
 #include <KPushButton>
@@ -90,21 +93,23 @@ EventEdit::EventEdit(QWidget *parent)
     lab = new QLabel(i18n("Start:"));
     hbox->addWidget(lab);
     KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
-    mStartDateTimeEdit = new KDateTimeEdit;
+    mStartDateTimeEdit = new EventDateTimeWidget;
     mStartDateTimeEdit->setObjectName(QLatin1String("startdatetimeedit"));
-    mStartDateTimeEdit->setDateTime(currentDateTime);
+
+
 #ifndef QT_NO_ACCESSIBILITY
     mStartDateTimeEdit->setAccessibleDescription( i18n("Select start time for event.") );
 #endif
     connect(mStartDateTimeEdit, SIGNAL(dateTimeChanged(KDateTime)),
             this, SLOT(slotStartDateTimeChanged(KDateTime)));
+
     hbox->addWidget(mStartDateTimeEdit);
 
     hbox->addSpacing(5);
 
     lab = new QLabel(i18n("End:"));
     hbox->addWidget(lab);
-    mEndDateTimeEdit = new KDateTimeEdit;
+    mEndDateTimeEdit = new EventDateTimeWidget;
     mEndDateTimeEdit->setObjectName(QLatin1String("enddatetimeedit"));
     mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
 #ifndef QT_NO_ACCESSIBILITY
@@ -256,7 +261,7 @@ void EventEdit::slotReturnPressed()
     const KDateTime dtstart = mStartDateTimeEdit->dateTime();
     const KDateTime dtend = mEndDateTimeEdit->dateTime();
     if (!dtstart.isValid() || !dtend.isValid()) {
-        kDebug()<<" date is not valid !";
+        qDebug()<<" date is not valid !";
         return;
     }
 
@@ -325,6 +330,11 @@ void EventEdit::slotOpenEditor()
     event->setSummary(mEventEdit->text());
     event->setDtStart(mStartDateTimeEdit->dateTime());
     event->setDtEnd(mEndDateTimeEdit->dateTime());
+    qDebug()<<"mStartDateTimeEdit->dateTime() "<<mStartDateTimeEdit->dateTime();
+    qDebug()<<"mEndDateTimeEdit->dateTime() "<<mEndDateTimeEdit->dateTime();
+
+    qDebug()<<" mStartDateTimeEdit->date()"<<mStartDateTimeEdit->date();
+
     event->addAttachment(attachment);
 
     Akonadi::Item item;

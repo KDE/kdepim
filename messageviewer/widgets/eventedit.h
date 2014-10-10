@@ -27,13 +27,13 @@
 #include <KCalCore/Event>
 
 class KLineEdit;
-class KDateTimeEdit;
 class KPushButton;
 namespace Akonadi {
 class CollectionComboBox;
 }
 
 namespace MessageViewer {
+class EventDateTimeWidget;
 class MESSAGEVIEWER_EXPORT EventEdit : public QWidget
 {
     Q_OBJECT
@@ -73,8 +73,9 @@ private:
     KMime::Message::Ptr mMessage;
     KLineEdit *mEventEdit;
     Akonadi::CollectionComboBox *mCollectionCombobox;
-    KDateTimeEdit *mStartDateTimeEdit;
-    KDateTimeEdit *mEndDateTimeEdit;
+    EventDateTimeWidget *mStartDateTimeEdit;
+    EventDateTimeWidget *mEndDateTimeEdit;
+
     KPushButton *mSaveButton;
     KPushButton *mOpenEditorButton;
 };

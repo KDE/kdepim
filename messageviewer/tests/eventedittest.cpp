@@ -18,6 +18,7 @@
 
 #include "eventedittest.h"
 #include "widgets/eventedit.h"
+#include "widgets/eventdatetimewidget.h"
 #include "messageviewer/globalsettings_base.h"
 
 #include <Akonadi/Collection>
@@ -86,13 +87,13 @@ void EventEditTest::shouldHaveDefaultValuesOnCreation()
     QCOMPARE(save->isEnabled(), false);
 
     KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
-    KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
+    MessageViewer::EventDateTimeWidget *startDateTime = qFindChild<MessageViewer::EventDateTimeWidget *>(&edit, QLatin1String("startdatetimeedit"));
     QVERIFY(startDateTime);
     QCOMPARE(startDateTime->dateTime().date(), currentDateTime.date());
     QCOMPARE(startDateTime->dateTime().time().hour(), currentDateTime.time().hour());
     QCOMPARE(startDateTime->dateTime().time().minute(), currentDateTime.time().minute());
 
-    KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
+    MessageViewer::EventDateTimeWidget *endDateTime = qFindChild<MessageViewer::EventDateTimeWidget *>(&edit, QLatin1String("enddatetimeedit"));
     QVERIFY(endDateTime);
     QCOMPARE(endDateTime->dateTime().date(), currentDateTime.date());
     QCOMPARE(endDateTime->dateTime().time().hour(), currentDateTime.time().hour() + 1);
@@ -145,6 +146,7 @@ void EventEditTest::shouldEmitEventWhenPressEnter()
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    noteedit->setFocus();
     QSignalSpy spy(&edit, SIGNAL(createEvent(KCalCore::Event::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
@@ -233,10 +235,10 @@ void EventEditTest::shouldNotEmitCreateEventWhenDateIsInvalid()
     MessageViewer::EventEdit edit;
     KMime::Message::Ptr msg(new KMime::Message);
 
-    KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
+    MessageViewer::EventDateTimeWidget *startDateTime = qFindChild<MessageViewer::EventDateTimeWidget *>(&edit, QLatin1String("startdatetimeedit"));
     startDateTime->setDateTime(KDateTime());
 
-    KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
+    MessageViewer::EventDateTimeWidget *endDateTime = qFindChild<MessageViewer::EventDateTimeWidget *>(&edit, QLatin1String("enddatetimeedit"));
     endDateTime->setDateTime(KDateTime());
 
 
@@ -287,11 +289,11 @@ void EventEditTest::shouldHaveCorrectStartEndDateTime()
     edit.setMessage(msg);
 
     KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
-    KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
+    MessageViewer::EventDateTimeWidget *startDateTime = qFindChild<MessageViewer::EventDateTimeWidget *>(&edit, QLatin1String("startdatetimeedit"));
     startDateTime->setDateTime(currentDateTime);
 
     KDateTime endDt = currentDateTime.addDays(1);
-    KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
+    MessageViewer::EventDateTimeWidget *endDateTime = qFindChild<MessageViewer::EventDateTimeWidget *>(&edit, QLatin1String("enddatetimeedit"));
     endDateTime->setDateTime(endDt);
 
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
@@ -300,8 +302,15 @@ void EventEditTest::shouldHaveCorrectStartEndDateTime()
     QCOMPARE(spy.count(), 1);
     KCalCore::Event::Ptr eventPtr = spy.at(0).at(0).value<KCalCore::Event::Ptr>();
     QVERIFY(eventPtr);
-    QCOMPARE(eventPtr->dtStart(), currentDateTime);
-    QCOMPARE(eventPtr->dtEnd(), endDt);
+
+    QCOMPARE(eventPtr->dtStart().date(), currentDateTime.date());
+    QCOMPARE(eventPtr->dtStart().time().hour(), currentDateTime.time().hour());
+    QCOMPARE(eventPtr->dtStart().time().minute(), currentDateTime.time().minute());
+
+    QCOMPARE(eventPtr->dtEnd().date(), endDt.date());
+    QCOMPARE(eventPtr->dtEnd().time().hour(), endDt.time().hour());
+    QCOMPARE(eventPtr->dtEnd().time().minute(), endDt.time().minute());
+
 }
 
 void EventEditTest::shouldSetFocusWhenWeCallTodoEdit()
@@ -318,8 +327,8 @@ void EventEditTest::shouldSetFocusWhenWeCallTodoEdit()
 void EventEditTest::shouldEnsureEndDateIsNotBeforeStartDate()
 {
     MessageViewer::EventEdit edit;
-    KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
-    KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
+    MessageViewer::EventDateTimeWidget *startDateTime = qFindChild<MessageViewer::EventDateTimeWidget *>(&edit, QLatin1String("startdatetimeedit"));
+    MessageViewer::EventDateTimeWidget *endDateTime = qFindChild<MessageViewer::EventDateTimeWidget *>(&edit, QLatin1String("enddatetimeedit"));
 
     KDateTime startDt = startDateTime->dateTime();
     QVERIFY(startDt < endDateTime->dateTime());
@@ -362,12 +371,12 @@ void EventEditTest::shouldUpdateStartEndDateWhenReopenIt()
     edit.setMessage(msg);
 
     KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
-    KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
+    MessageViewer::EventDateTimeWidget *startDateTime = qFindChild<MessageViewer::EventDateTimeWidget *>(&edit, QLatin1String("startdatetimeedit"));
     QCOMPARE(startDateTime->dateTime().date(), currentDateTime.date());
     QCOMPARE(startDateTime->dateTime().time().hour(), currentDateTime.time().hour());
     QCOMPARE(startDateTime->dateTime().time().minute(), currentDateTime.time().minute());
 
-    KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
+    MessageViewer::EventDateTimeWidget *endDateTime = qFindChild<MessageViewer::EventDateTimeWidget *>(&edit, QLatin1String("enddatetimeedit"));
     QCOMPARE(endDateTime->dateTime().date(), currentDateTime.date());
     QCOMPARE(endDateTime->dateTime().time().hour(), currentDateTime.time().hour() + 1);
     QCOMPARE(endDateTime->dateTime().time().minute(), currentDateTime.time().minute());
@@ -377,8 +386,13 @@ void EventEditTest::shouldUpdateStartEndDateWhenReopenIt()
     startDateTime->setDateTime(newDateTime);
     endDateTime->setDateTime(newDateTime);
 
-    QCOMPARE(startDateTime->dateTime(), newDateTime);
-    QCOMPARE(endDateTime->dateTime(), newDateTime);
+    QCOMPARE(startDateTime->dateTime().time().hour(), newDateTime.time().hour());
+    QCOMPARE(startDateTime->dateTime().time().minute(), newDateTime.time().minute());
+    QCOMPARE(startDateTime->dateTime().date(), newDateTime.date());
+
+    QCOMPARE(endDateTime->dateTime().time().hour(), newDateTime.time().hour());
+    QCOMPARE(endDateTime->dateTime().time().minute(), newDateTime.time().minute());
+    QCOMPARE(endDateTime->dateTime().date(), newDateTime.date());
 
     edit.slotCloseWidget();
 
