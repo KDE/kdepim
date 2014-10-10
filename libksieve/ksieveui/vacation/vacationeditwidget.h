@@ -19,8 +19,13 @@
 #define VACATIONEDITWIDGET_H
 
 #include <QWidget>
+
+class QLabel;
 class QSpinBox;
 class QLineEdit;
+class KDateComboBox;
+
+class QDate;
 
 namespace PimCommon
 {
@@ -49,6 +54,7 @@ public:
     ~VacationEditWidget();
 
     void enableDomainAndSendForSpam(bool enable = true);
+    void enableDates(bool enable = true);
 
     bool activateVacation() const;
     void setActivateVacation(bool activate);
@@ -72,6 +78,12 @@ public:
     bool sendForSpam() const;
     void setSendForSpam(bool enable);
 
+    QDate startDate() const;
+    void setStartDate(const QDate &startDate);
+
+    QDate endDate() const;
+    void setEndDate(const QDate &endDate);
+
     void setDefault();
 
 private Q_SLOTS:
@@ -85,6 +97,10 @@ protected:
     QCheckBox *mSpamCheck;
     QCheckBox *mDomainCheck;
     QLineEdit *mDomainEdit;
+    KDateComboBox *mStartDate;
+    QLabel *mStartDateLabel;
+    KDateComboBox *mEndDate;
+    QLabel *mEndDateLabel;
 };
 }
 

@@ -80,9 +80,20 @@ QString KSieveUi::VacationUtils::defaultDomainName()
     return VacationSettings::outOfOfficeDomain();
 }
 
+QDate KSieveUi::VacationUtils::defaultStartDate()
+{
+    return QDate::currentDate();
+}
+
+QDate KSieveUi::VacationUtils::defaultEndDate()
+{
+    return defaultStartDate().addDays(7);
+}
+
 bool KSieveUi::VacationUtils::parseScript(const QString &script, QString &messageText,
         int &notificationInterval, QStringList &aliases,
-        bool &sendForSpam, QString &domainName)
+        bool &sendForSpam, QString &domainName,
+        QDate &startDate, QDate &endDate)
 {
     if (script.trimmed().isEmpty()) {
         messageText = VacationUtils::defaultMessageText();
@@ -103,7 +114,8 @@ bool KSieveUi::VacationUtils::parseScript(const QString &script, QString &messag
     VacationDataExtractor vdx;
     SpamDataExtractor sdx;
     DomainRestrictionDataExtractor drdx;
-    KSieveExt::MultiScriptBuilder tsb(&vdx, &sdx, &drdx);
+    DateExtractor dtx;
+    KSieveExt::MultiScriptBuilder tsb(&vdx, &sdx, &drdx, &dtx);
     parser.setScriptBuilder(&tsb);
     if (!parser.parse()) {
         return false;
@@ -115,13 +127,16 @@ bool KSieveUi::VacationUtils::parseScript(const QString &script, QString &messag
         sendForSpam = !sdx.found();
         domainName = drdx.domainName();
     }
+    startDate = dtx.startDate();
+    endDate = dtx.endDate();
     return true;
 }
 
 QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
         int notificationInterval,
         const AddrSpecList &addrSpecs,
-        bool sendForSpam, const QString &domain)
+        bool sendForSpam, const QString &domain,
+        const QDate &startDate, const QDate &endDate)
 {
     QString addressesArgument;
     QStringList aliases;
@@ -135,13 +150,28 @@ QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
         }
         addressesArgument += sl.join(QLatin1String(", ")) + QLatin1String(" ] ");
     }
-    QString script = QString::fromLatin1("require \"vacation\";\n\n");
+
+    QString script = QString::fromLatin1("require \"vacation\";\n");
+    if (startDate.isValid() && endDate.isValid()) {
+        script += QString::fromLatin1("require \"relational\";\n"
+                                      "require \"date\";\n\n");
+    } else {
+        script += QString::fromLatin1("\n");
+    }
+
     if (!sendForSpam)
         script += QString::fromLatin1("if header :contains \"X-Spam-Flag\" \"YES\""
                                       " { keep; stop; }\n");  // FIXME?
 
     if (!domain.isEmpty()) { // FIXME
         script += QString::fromLatin1("if not address :domain :contains \"from\" \"%1\" { keep; stop; }\n").arg(domain);
+    }
+
+    if (startDate.isValid() && endDate.isValid()) {
+        script += QString::fromLatin1("if not allof(currentdate :value \"ge\" \"date\" \"%1\","
+                                      " currentdate :value \"le\" \"date\" \"%2\")"
+                                      " { keep; stop; }\n").arg(startDate.toString(Qt::ISODate),
+                                                                endDate.toString(Qt::ISODate));
     }
 
     script += QLatin1String("vacation ");

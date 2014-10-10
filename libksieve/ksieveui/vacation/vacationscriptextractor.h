@@ -65,6 +65,18 @@ public:
         mBuilders[2] = sb3;
         assert(sb1); assert(sb2); assert(sb3);
     }
+    MultiScriptBuilder(KSieve::ScriptBuilder * sb1,
+                       KSieve::ScriptBuilder * sb2,
+                       KSieve::ScriptBuilder * sb3,
+                       KSieve::ScriptBuilder * sb4)
+        : KSieve::ScriptBuilder(), mBuilders(4)
+    {
+        mBuilders[0] = sb1;
+        mBuilders[1] = sb2;
+        mBuilders[2] = sb3;
+        mBuilders[3] = sb4;
+        assert(sb1); assert(sb2); assert(sb3); assert(sb4);
+    }
     ~MultiScriptBuilder() {}
 private:
 #ifdef FOREACH
@@ -439,6 +451,80 @@ public:
                ? mResults[QLatin1String("domainName")] : QString();
     }
 };
+
+
+// if not allof (currentDate :value "ge" date "YYYY-MM-DD",
+//               currentDate :value "le" date "YYYY-MM-DD") { keep; stop; }
+static const GenericInformationExtractor::StateNode datesNodes[] = {
+    { 0, GIE::CommandStart, "if", 1, 0, 0 },          // 0
+    { 0,   GIE::TestStart, "not", 2, 0, 0 },            // 1
+    { 0,     GIE::TestStart, "allof", 3, 0, 0 },        // 2
+
+    // handle startDate and endDate in arbitrary order
+    { 0,       GIE::TestListStart, 0, 4, 0, 0 },                 // 3
+    { 0,         GIE::TestStart, "currentdate", 5, 0, 0 },         // 4
+    { 0,           GIE::TaggedArgument, "value", 6, 0, 0 },          // 5
+    { 0,           GIE::StringArgument, "ge", 7, 9, 0 },             // 6
+    { 0,           GIE::StringArgument, "date", 8, 0, 0 },           // 7
+    { 0,           GIE::StringArgument, 0, 12, 0, "startDate" },      // 8
+    { 0,           GIE::StringArgument, "le", 10, 0, 0 },             // 9
+    { 0,           GIE::StringArgument, "date", 11, 0, 0 },          // 10
+    { 0,           GIE::StringArgument, 0, 12, 0, "endDate" },       // 11
+    { 0,         GIE::TestEnd, 0, 13, 0, 0 },                      // 12
+
+    { 0,         GIE::TestStart, "currentdate", 14, 0, 0 },        // 13
+    { 0,           GIE::TaggedArgument, "value", 15, 0, 0 },         // 14
+    { 0,           GIE::StringArgument, "le", 16, 18, 0 },           // 15
+    { 0,           GIE::StringArgument, "date", 17, 0, 0 },          // 16
+    { 0,           GIE::StringArgument, 0, 21, 0, "endDate" },       // 17
+    { 0,           GIE::StringArgument, "ge", 19, 0, 0 },            // 18
+    { 0,           GIE::StringArgument, "date", 20, 0, 0 },          // 19
+    { 0,           GIE::StringArgument, 0, 21, 0, "startDate" },     // 20
+    { 0,         GIE::TestEnd, 0, 22, 0, 0 },                      // 21
+    { 0,      GIE::TestListEnd, 0, 23, 0, 0 },                   // 22
+
+    { 0,     GIE::TestEnd, 0, 24, 0, 0 },               // 23
+    { 0,   GIE::TestEnd, 0, 25, 0, 0 },                 // 24
+
+    // block of commands, find "stop", take nested if's into account:
+    { 0,   GIE::BlockStart, 0, 26, 0, 0 },              // 25
+    { 1,     GIE::CommandStart, "stop", 29, 28, "stop" },  // 26
+    { -1,    GIE::Any, 0, 26, 0, 0 },                      // 27
+    { 0,   GIE::BlockEnd, 0, 0, 27, 0 },                // 28
+
+    { -1, GIE::Any, 0, 27, 27, 0 }                   // 29 end state
+};
+
+static const unsigned int numDatesNodes = sizeof datesNodes / sizeof *datesNodes;
+
+class DateExtractor : public GenericInformationExtractor
+{
+public:
+    DateExtractor()
+        : GenericInformationExtractor(std::vector<StateNode>(datesNodes, datesNodes+numDatesNodes))
+    {
+    }
+
+    QDate endDate() const
+    {
+        return date(QLatin1String("endDate"));
+    }
+
+    QDate startDate() const
+    {
+        return date(QLatin1String("startDate"));
+    }
+
+private:
+    QDate date(const QString &name) const {
+        if (mResults.count(name) == 0) {
+            return QDate();
+        } else {
+            return QDate::fromString(mResults.at(name), Qt::ISODate);
+        }
+    }
+};
+
 
 class VacationDataExtractor : public KSieve::ScriptBuilder
 {

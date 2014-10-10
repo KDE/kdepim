@@ -19,6 +19,7 @@
 #include "vacationutils.h"
 
 #include <KLocalizedString>
+#include <KDateComboBox>
 #include <QSpinBox>
 #include <QLineEdit>
 
@@ -65,6 +66,32 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     mTextEdit->setObjectName(QLatin1String("mTextEdit"));
     mTextEdit->setAcceptRichText(false);
     glay->addWidget(mTextEdit, row, 0, 1, 2);
+
+    // Start date
+    ++row;
+    mStartDate = new KDateComboBox(this);
+    mStartDate->setObjectName(QLatin1String("mStartDate"));
+    mStartDate->setOptions(KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords);
+    mStartDateLabel = new QLabel(i18n("&Start date:"), this);
+    mStartDateLabel->setObjectName(QLatin1String("mStartDateLabel"));
+    mStartDateLabel->setBuddy(mStartDate);
+    glay->addWidget(mStartDateLabel, row, 0);
+    glay->addWidget(mStartDate, row, 1);
+
+    // End date
+    ++row;
+    mEndDate = new KDateComboBox(this);
+    mEndDate->setObjectName(QLatin1String("mEndDate"));
+    mEndDate->setOptions(KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords);
+    mEndDateLabel = new QLabel(i18n("&End date:"), this);
+    mEndDateLabel->setObjectName(QLatin1String("mStartDateLabel"));
+    mEndDateLabel->setBuddy(mEndDate);
+    glay->addWidget(mEndDateLabel, row, 0);
+    glay->addWidget(mEndDate, row, 1);
+
+    // Hide the date edits by default - they must be enabled by caller when the
+    // server supports this feature
+    enableDates(false);
 
     // "Resent only after" spinbox and label:
     ++row;
@@ -220,6 +247,42 @@ bool VacationEditWidget::sendForSpam() const
 void VacationEditWidget::setSendForSpam(bool enable)
 {
     mSpamCheck->setChecked(!enable);
+}
+
+QDate VacationEditWidget::endDate() const
+{
+    if (mEndDate->isEnabled()) {
+        return mEndDate->date();
+    } else {
+        return QDate();
+    }
+}
+
+void VacationEditWidget::setEndDate(const QDate &endDate)
+{
+    mEndDate->setDate(endDate);
+}
+
+QDate VacationEditWidget::startDate() const
+{
+    if (mStartDate->isEnabled()) {
+        return mStartDate->date();
+    } else {
+        return QDate();
+    }
+}
+
+void VacationEditWidget::setStartDate(const QDate &startDate)
+{
+    mStartDate->setDate(startDate);
+}
+
+void VacationEditWidget::enableDates(bool enable)
+{
+    mStartDate->setVisible(enable);
+    mStartDateLabel->setVisible(enable);
+    mEndDate->setVisible(enable);
+    mEndDateLabel->setVisible(enable);
 }
 
 void VacationEditWidget::enableDomainAndSendForSpam(bool enable)

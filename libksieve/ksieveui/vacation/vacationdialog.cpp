@@ -184,3 +184,28 @@ void VacationDialog::slotDialogDefaults()
 {
     mVacationEditWidget->setDefault();
 }
+
+void VacationDialog::enableDates(bool enable)
+{
+    mVacationEditWidget->enableDates(enable);
+}
+
+QDate VacationDialog::endDate() const
+{
+    return mVacationEditWidget->endDate();
+}
+
+void VacationDialog::setEndDate(const QDate &endDate)
+{
+    mVacationEditWidget->setEndDate(endDate);
+}
+
+QDate VacationDialog::startDate() const
+{
+    return mVacationEditWidget->startDate();
+}
+
+void VacationDialog::setStartDate(const QDate &startDate)
+{
+    mVacationEditWidget->setStartDate(startDate);
+}

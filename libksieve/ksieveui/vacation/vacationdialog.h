@@ -17,6 +17,7 @@
 #include <QDialog>
 
 template <typename T> class QList;
+class QDate;
 
 namespace KMime
 {
@@ -40,6 +41,7 @@ public:
     ~VacationDialog();
 
     void enableDomainAndSendForSpam(bool enable = true);
+    void enableDates(bool enable = true);
 
     bool activateVacation() const;
     void setActivateVacation(bool activate);
@@ -62,6 +64,12 @@ public:
 
     bool sendForSpam() const;
     void setSendForSpam(bool enable);
+
+    QDate startDate() const;
+    void setStartDate(const QDate &startDate);
+
+    QDate endDate() const;
+    void setEndDate(const QDate &endDate);
 
 Q_SIGNALS:
     void okClicked();

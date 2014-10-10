@@ -112,11 +112,13 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
     QStringList aliases = VacationUtils::defaultMailAliases();
     bool sendForSpam = VacationUtils::defaultSendForSpam();
     QString domainName = VacationUtils::defaultDomainName();
+    QDate startDate = VacationUtils::defaultStartDate();
+    QDate endDate = VacationUtils::defaultEndDate();
     if (!success) {
         active = false;    // default to inactive
     }
 
-    if (!mCheckOnly && (!success || !KSieveUi::VacationUtils::parseScript(script, messageText, notificationInterval, aliases, sendForSpam, domainName)))
+    if (!mCheckOnly && (!success || !KSieveUi::VacationUtils::parseScript(script, messageText, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate)))
         KMessageBox::information(0, i18n("Someone (probably you) changed the "
                                          "vacation script on the server.\n"
                                          "KMail is no longer able to determine "
@@ -132,6 +134,9 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
         mDialog->setSendForSpam(sendForSpam);
         mDialog->setDomainName(domainName);
         mDialog->enableDomainAndSendForSpam(!VacationSettings::allowOutOfOfficeUploadButNoSettings());
+        mDialog->enableDates(job->sieveCapabilities().contains(QLatin1String("date")));
+        mDialog->setStartDate(startDate);
+        mDialog->setEndDate(endDate);
 
         connect(mDialog, &VacationDialog::okClicked, this, &Vacation::slotDialogOk);
         connect(mDialog, &VacationDialog::cancelClicked, this, &Vacation::slotDialogCancel);
@@ -158,7 +163,9 @@ void Vacation::slotDialogOk()
                            mDialog->notificationInterval(),
                            mDialog->mailAliases(),
                            mDialog->sendForSpam(),
-                           mDialog->domainName());
+                           mDialog->domainName(),
+                           mDialog->startDate(),
+                           mDialog->endDate());
     const bool active = mDialog->activateVacation();
     emit scriptActive(active, mServerName);
 

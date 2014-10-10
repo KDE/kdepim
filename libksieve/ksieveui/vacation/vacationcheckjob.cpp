@@ -16,8 +16,11 @@
 */
 
 #include "vacationcheckjob.h"
+#include "vacationutils.h"
 
 #include <kmanagesieve/sievejob.h>
+
+#include <QDate>
 
 using namespace KSieveUi;
 VacationCheckJob::VacationCheckJob(const QUrl &url, const QString &serverName, QObject *parent)
@@ -39,11 +42,29 @@ VacationCheckJob::~VacationCheckJob()
     mSieveJob = 0;
 }
 
-void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool success, const QString &/*script*/, bool active)
+void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool success, const QString &script, bool active)
 {
     mSieveJob = 0;
     if (!success) {
         active = false;    // default to inactive
     }
+
+    QDate startDate, endDate;
+
+    QString dummyStr;
+    QStringList dummyStrList;
+    int dummyInt;
+    bool dummyBool;
+
+    // If the script is active then parse it, and verify whether it has date range set
+    if (active) {
+        bool valid = VacationUtils::parseScript(script, dummyStr, dummyInt, dummyStrList, dummyBool, dummyStr, startDate, endDate);
+        // If the date range is set, mark the script as active only if the date range
+        // includes now/today
+        if (valid && startDate.isValid() && endDate.isValid()) {
+            active = (startDate <= QDate::currentDate() && endDate >= QDate::currentDate());
+        }
+    }
+
     emit scriptActive(active, mServerName);
 }

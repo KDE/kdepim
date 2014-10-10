@@ -20,6 +20,8 @@
 #include <QStringList>
 #include <QString>
 
+class QDate;
+
 namespace KMime
 {
 namespace Types
@@ -38,14 +40,18 @@ int defaultNotificationInterval();
 QStringList defaultMailAliases();
 bool defaultSendForSpam();
 QString defaultDomainName();
+QDate defaultStartDate();
+QDate defaultEndDate();
 
 QString composeScript(const QString &messageText,
                       int notificationInterval,
                       const KMime::Types::AddrSpecList &aliases,
-                      bool sendForSpam, const QString &excludeDomain);
+                      bool sendForSpam, const QString &excludeDomain,
+                      const QDate &startDate, const QDate &endDate);
 bool parseScript(const QString &script, QString &messageText,
                  int &notificationInterval, QStringList &aliases,
-                 bool &sendForSpam, QString &domainName);
+                 bool &sendForSpam, QString &domainName,
+                 QDate &startDate, QDate &endDate);
 
 }
 }
