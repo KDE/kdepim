@@ -15,7 +15,6 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QDebug>
-#include <KApplication>
 #include <KUrl>
 
 #include <AkonadiCore/item.h>
