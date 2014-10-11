@@ -45,6 +45,8 @@ DbConsole::DbConsole(QWidget* parent) :
 
   ui.queryEdit->setFont( KGlobalSettings::fixedFont() );
   ui.errorView->setFont( KGlobalSettings::fixedFont() );
+
+  ui.queryEdit->setPlainText( KGlobal::config()->group( "DBConsole" ).readEntry( "queryText" ) );
 }
 
 void DbConsole::execClicked()
@@ -64,6 +66,8 @@ void DbConsole::execClicked()
     ui.errorView->clear();
     ui.resultStack->setCurrentWidget( ui.resultViewPage );
   }
+
+  KGlobal::config()->group( "DBConsole" ).writeEntry( "queryText", query );
 }
 
 void DbConsole::copyCell()
