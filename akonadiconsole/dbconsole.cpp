@@ -40,6 +40,7 @@ DbConsole::DbConsole(QWidget* parent) :
   ui.resultView->addAction( copyAction );
 
   ui.execButton->setIcon( KIcon( "application-x-executable" ) );
+  ui.execButton->setShortcut( Qt::CTRL + Qt::Key_Return );
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
 
   ui.queryEdit->setFont( KGlobalSettings::fixedFont() );
