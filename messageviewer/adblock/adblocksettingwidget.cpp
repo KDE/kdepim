@@ -60,6 +60,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     setupUi(this);
 
     hintLabel->setText(i18n("<qt>Filter expression (e.g. <tt>http://www.example.com/ad/*</tt>, <a href=\"filterhelp\">more information</a>):"));
+    hintLabel->setContextMenuPolicy(Qt::NoContextMenu);
     connect(hintLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotInfoLinkActivated(QString)));
 
     manualFiltersListWidget->setSelectionMode(QAbstractItemView::MultiSelection);
