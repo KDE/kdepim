@@ -23,6 +23,8 @@
 #include <QAction>
 
 #include <KStandardAction>
+#include <KSharedConfig>
+#include <KConfigGroup>
 #include <QIcon>
 
 #include <QApplication>
@@ -41,10 +43,13 @@ DbConsole::DbConsole(QWidget* parent) :
   ui.resultView->addAction( copyAction );
 
   ui.execButton->setIcon( QIcon::fromTheme( "application-x-executable" ) );
+  ui.execButton->setShortcut( Qt::CTRL + Qt::Key_Return );
   connect(ui.execButton, &QPushButton::clicked, this, &DbConsole::execClicked);
 
   ui.queryEdit->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
   ui.errorView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
+
+  ui.queryEdit->setPlainText( KSharedConfig::openConfig()->group( "DBConsole" ).readEntry( "queryText" ) );
 }
 
 void DbConsole::execClicked()
@@ -64,6 +69,8 @@ void DbConsole::execClicked()
     ui.errorView->clear();
     ui.resultStack->setCurrentWidget( ui.resultViewPage );
   }
+
+  KSharedConfig::openConfig()->group( "DBConsole" ).writeEntry( "queryText", query );
 }
 
 void DbConsole::copyCell()
