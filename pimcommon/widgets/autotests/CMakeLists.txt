@@ -13,3 +13,4 @@ macro(add_pimcommon_widget_unittest _source)
 endmacro ()
 
 add_pimcommon_widget_unittest(slidecontainertest.cpp)
+add_pimcommon_widget_unittest(splittercollapsertest.cpp)
