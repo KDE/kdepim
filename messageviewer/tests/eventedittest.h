@@ -46,6 +46,7 @@ private Q_SLOTS:
     void shouldEnsureEndDateIsNotBeforeStartDate();
     void shouldEnabledSaveOpenEditorButton();
     void shouldUpdateStartEndDateWhenReopenIt();
+    void shouldDisabledSaveOpenEditorButtonWhenCollectionComboBoxIsEmpty();
 };
 
 #endif // EVENTEDITTEST_H
