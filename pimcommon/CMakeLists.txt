@@ -163,6 +163,7 @@ set(libpimcommon_widgets_SRCS
   widgets/customtoolswidget.cpp
   widgets/configureimmutablewidgetutils.cpp
   widgets/slidecontainer.cpp
+  widgets/splittercollapser.cpp
 )
 
 

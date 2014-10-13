@@ -35,6 +35,18 @@ target_link_libraries(slidecontainer_gui
   pimcommon
 )
 
+set(splittercollapser_gui_SRCS splittercollapsergui_test.cpp)
+kde4_add_executable(splittercollapsergui_test TEST ${splittercollapser_gui_SRCS})
+target_link_libraries(splittercollapsergui_test
+  ${QT_QTTEST_LIBRARY}
+  ${QT_QTCORE_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
+  ${KDE4_KDECORE_LIBS}
+  ${KDE4_KDEUI_LIBS}
+  pimcommon
+)
+
+
 
 macro(add_pimcommon_widget_unittest _source)
   set(_test ${_source} )
@@ -51,3 +63,4 @@ macro(add_pimcommon_widget_unittest _source)
 endmacro ()
 
 add_pimcommon_widget_unittest(slidecontainertest.cpp)
+add_pimcommon_widget_unittest(splittercollapsertest.cpp)
