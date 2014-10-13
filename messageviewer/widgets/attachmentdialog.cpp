@@ -19,10 +19,15 @@
 
 #include "attachmentdialog.h"
 
-#include <kdialog.h>
+#include <QDialog>
 #include <kmessagebox.h>
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <KGuiItem>
+#include <QVBoxLayout>
 using namespace MessageViewer;
 
 //---------------------------------------------------------------------
@@ -36,24 +41,33 @@ AttachmentDialog::AttachmentDialog(QWidget *parent, const QString &filenameText,
                 "your system's security.",
                 filenameText);
 
-    dialog = new KDialog(parent);
-    dialog->setCaption(i18n("Open Attachment?"));
+    dialog = new QDialog(parent);
+    dialog->setWindowTitle(i18n("Open Attachment?"));
     dialog->setObjectName(QLatin1String("attachmentSaveOpen"));
+    mButtonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
+    QPushButton *user1Button = new QPushButton;
+    mButtonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    dialog->connect(mButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    dialog->connect(mButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    
+    
+    if (!application.isEmpty()) {
+        QPushButton *user2Button = new QPushButton;
+        mButtonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+        user2Button->setText(i18n("&Open with '%1'", application));
+        connect(user2Button, SIGNAL(clicked()), this, SLOT(openClicked()));
 
-    if (application.isEmpty()) {
-        dialog->setButtons(KDialog::User3 | KDialog::User1 | KDialog::Cancel);
-    } else {
-        dialog->setButtons(KDialog::User3 | KDialog::User2 | KDialog::User1 | KDialog::Cancel);
-        dialog->setButtonText(KDialog::User2, i18n("&Open with '%1'", application));
     }
 
-    dialog->setButtonGuiItem(KDialog::User3, KStandardGuiItem::saveAs());
-    dialog->setButtonText(KDialog::User1, i18n("&Open With..."));
-    dialog->setDefaultButton(KDialog::User3);
+    QPushButton *user3Button = new QPushButton;
+    mButtonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
+ 
+    KGuiItem::assign(user3Button, KStandardGuiItem::saveAs());
+    user1Button->setText(i18n("&Open With..."));
+    user3Button->setDefault(true);
 
-    connect(dialog, SIGNAL(user3Clicked()), this, SLOT(saveClicked()));
-    connect(dialog, SIGNAL(user2Clicked()), this, SLOT(openClicked()));
-    connect(dialog, SIGNAL(user1Clicked()), this, SLOT(openWithClicked()));
+    connect(user3Button, SIGNAL(clicked()), this, SLOT(saveClicked()));
+    connect(user1Button, SIGNAL(clicked()), this, SLOT(openWithClicked()));
 }
 
 //---------------------------------------------------------------------
@@ -67,10 +81,8 @@ int AttachmentDialog::exec()
 
     bool again = false;
     const int ret = 0;
-#if 0 //QT5
-    KMessageBox::createKMessageBox(dialog, QMessageBox::Question, text, QStringList(),
+    KMessageBox::createKMessageBox(dialog, mButtonBox, QMessageBox::Question, text, QStringList(),
                                    i18n("Do not ask again"), &again, 0);
-#endif
 
     if (ret == QDialog::Rejected) {
         return Cancel;

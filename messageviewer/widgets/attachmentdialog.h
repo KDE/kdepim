@@ -22,8 +22,8 @@
 
 #include <QObject>
 
-class KDialog;
-
+class QDialog;
+class QDialogButtonBox;
 namespace MessageViewer
 {
 
@@ -59,7 +59,8 @@ private slots:
 
 private:
     QString text, dontAskName;
-    KDialog *dialog;
+    QDialog *dialog;
+    QDialogButtonBox *mButtonBox;
 };
 
 }
