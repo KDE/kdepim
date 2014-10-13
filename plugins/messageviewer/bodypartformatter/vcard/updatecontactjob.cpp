@@ -44,7 +44,7 @@ public:
         const KABC::Addressee::List contacts = searchJob->contacts();
 
         if (contacts.isEmpty()) {
-            const QString text = i18n("The VCard's primary email address is already in addressbook.");
+            const QString text = i18n("The vCard's primary email address is already in addressbook.");
             KMessageBox::information(mParentWidget, text);
             q->setError(UserDefinedError);
             q->emitResult();
@@ -71,7 +71,7 @@ public:
             return;
         }
 
-        const QString text = i18n("The VCard was updated to your address book; "
+        const QString text = i18n("The vCard was updated to your address book; "
                                   "you can add more information to this "
                                   "entry by opening the address book.");
         KMessageBox::information(mParentWidget, text, QString(), QLatin1String("updatedtokabc"));
