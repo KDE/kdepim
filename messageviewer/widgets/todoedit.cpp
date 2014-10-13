@@ -135,8 +135,9 @@ TodoEdit::~TodoEdit()
 void TodoEdit::updateButtons(const QString &subject)
 {
     const bool subjectIsNotEmpty = !subject.isEmpty();
-    mSaveButton->setEnabled(subjectIsNotEmpty);
-    mOpenEditorButton->setEnabled(subjectIsNotEmpty);
+    const bool collectionComboboxEmpty = (mCollectionCombobox->count() < 1);
+    mSaveButton->setEnabled(subjectIsNotEmpty && !collectionComboboxEmpty);
+    mOpenEditorButton->setEnabled(subjectIsNotEmpty && !collectionComboboxEmpty);
 }
 
 void TodoEdit::showToDoWidget()
