@@ -43,6 +43,7 @@ public:
 private Q_SLOTS:
     void shouldHasDefaultValue();
     void shouldCollapsedWhenClickOnButton();
+    void shouldRestoreCorrectPosition();
 };
 
 #endif // SPLITTERCOLLAPSERTEST_H
