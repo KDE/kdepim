@@ -209,6 +209,8 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
 )
 
 set_target_properties(mailcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
+add_subdirectory(widgets/tests/)
+
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(filter/filterimporter/autotests)

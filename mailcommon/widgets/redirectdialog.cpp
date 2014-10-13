@@ -197,7 +197,7 @@ void RedirectDialog::Private::slotUser2()
 
 void RedirectDialog::Private::slotAddressChanged(const QString &text)
 {
-    const bool textIsNotEmpty(!text.isEmpty());
+    const bool textIsNotEmpty(!text.trimmed().isEmpty());
     mUser1Button->setEnabled(textIsNotEmpty);
     mUser2Button->setEnabled(textIsNotEmpty);
 }
