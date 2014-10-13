@@ -17,7 +17,7 @@
 
 #include "redirectdialogtest.h"
 #include "widgets/redirectdialog.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 RedirectDialogTest::RedirectDialogTest(QObject *parent)
     : QObject(parent)
@@ -42,4 +42,4 @@ void RedirectDialogTest::shouldEnableButtonWhenWeHaveEmailForTo()
     //TODO
 }
 
-QTEST_KDEMAIN(RedirectDialogTest, GUI)
+QTEST_MAIN(RedirectDialogTest)
