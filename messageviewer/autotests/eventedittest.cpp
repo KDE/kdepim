@@ -402,5 +402,22 @@ void EventEditTest::shouldUpdateStartEndDateWhenReopenIt()
 
 }
 
+void EventEditTest::shouldDisabledSaveOpenEditorButtonWhenCollectionComboBoxIsEmpty()
+{
+    MessageViewer::EventEdit edit;
+    Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
+    //Create an empty combobox
+    akonadicombobox->setModel(new QStandardItemModel());
+    KMime::Message::Ptr msg(new KMime::Message);
+    msg->subject(true)->fromUnicodeString(QLatin1String("Test note"), "us-ascii");
+    edit.setMessage(msg);
+
+
+    QPushButton *openEditor = qFindChild<QPushButton *>(&edit, QLatin1String("open-editor-button"));
+    QPushButton *save = qFindChild<QPushButton *>(&edit, QLatin1String("save-button"));
+    QCOMPARE(openEditor->isEnabled(), false);
+    QCOMPARE(save->isEnabled(), false);
+}
+
 
 QTEST_MAIN( EventEditTest )

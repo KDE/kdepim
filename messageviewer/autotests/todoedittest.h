@@ -59,7 +59,9 @@ private slots:
     void shouldHideMessageWidget();
     void shouldHideMessageWidgetWhenAddNewMessage();
     void shouldHideMessageWidgetWhenCloseWidget();
-    void shouldShouldEnabledSaveOpenEditorButton();
+    void shouldEnabledSaveOpenEditorButton();
+    void shouldDisabledSaveOpenEditorButtonWhenCollectionComboBoxIsEmpty();
+
 };
 
 #endif // TODOEDITTEST_H

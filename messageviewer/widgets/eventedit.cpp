@@ -178,8 +178,9 @@ void EventEdit::writeConfig()
 void EventEdit::slotUpdateButtons(const QString &subject)
 {
     const bool subjectIsNotEmpty = !subject.isEmpty();
-    mSaveButton->setEnabled(subjectIsNotEmpty);
-    mOpenEditorButton->setEnabled(subjectIsNotEmpty);
+    const bool collectionComboboxEmpty = (mCollectionCombobox->count() < 1);
+    mSaveButton->setEnabled(subjectIsNotEmpty && !collectionComboboxEmpty);
+    mOpenEditorButton->setEnabled(subjectIsNotEmpty && !collectionComboboxEmpty);
 }
 
 void EventEdit::showEventEdit()
