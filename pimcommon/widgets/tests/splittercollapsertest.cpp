@@ -29,10 +29,13 @@ TestSplitter::TestSplitter(QObject *parent)
     setLayout(lay);
     splitter = new QSplitter;
     lay->addWidget(splitter);
+    splitter->setObjectName(QLatin1String("splitter"));
     edit1 = new QTextEdit;
+    edit1->setObjectName(QLatin1String("edit1"));
     splitter->addWidget(edit1);
 
     edit2 = new QTextEdit;
+    edit2->setObjectName(QLatin1String("edit2"));
     splitter->addWidget(edit2);
 }
 
@@ -60,6 +63,14 @@ void SplitterCollapserTest::shouldHasDefaultValue()
     PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
     QVERIFY(collapser);
     QVERIFY(!collapser->isCollapsed());
+
+    QTextEdit *edit1 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit1"));
+    QVERIFY(edit1);
+    QTextEdit *edit2 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit2"));
+    QVERIFY(edit2);
+
+    QSplitter *splitter = qFindChild<QSplitter *>(&testSplitter, QLatin1String("splitter"));
+    QVERIFY(splitter);
 }
 
 void SplitterCollapserTest::shouldCollapsedWhenClickOnButton()
@@ -78,6 +89,33 @@ void SplitterCollapserTest::shouldCollapsedWhenClickOnButton()
 
     QTest::mouseClick(collapser, Qt::LeftButton);
     QVERIFY(!collapser->isCollapsed());
+}
+
+void SplitterCollapserTest::shouldRestoreCorrectPosition()
+{
+    TestSplitter testSplitter;
+
+    PimCommon::SplitterCollapser *splitterCollapser = new PimCommon::SplitterCollapser(testSplitter.splitter, testSplitter.edit2);
+
+    testSplitter.show();
+    QTest::qWaitForWindowShown(&testSplitter);
+    QVERIFY(testSplitter.isVisible());
+
+    PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
+    QVERIFY(!collapser->isCollapsed());
+
+    QTextEdit *edit2 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit2"));
+
+    int size = edit2->width();
+
+    QTest::mouseClick(collapser, Qt::LeftButton);
+    QVERIFY(collapser->isCollapsed());
+    QCOMPARE(edit2->width(), 0);
+
+    QTest::mouseClick(collapser, Qt::LeftButton);
+    QVERIFY(!collapser->isCollapsed());
+    QCOMPARE(edit2->width(), size);
+
 }
 
 

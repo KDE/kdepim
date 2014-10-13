@@ -86,7 +86,8 @@ public:
     QWidget *mWidget;
     Direction mDirection;
     QTimeLine *mOpacityTimeLine;
-    int mSizeAtCollaps;
+    QList<int> mSizeAtCollaps;
+    //int mSizeAtCollaps;
 
     bool isVertical() const;
 
@@ -289,11 +290,11 @@ void SplitterCollapser::slotClicked()
     QList<int> sizes = d->mSplitter->sizes();
     const int index = d->mSplitter->indexOf(d->mWidget);
     if (d->isVisible()) {
-        d->mSizeAtCollaps = sizes[index];
+        d->mSizeAtCollaps = sizes;
         sizes[index] = 0;
     } else {
-        if (d->mSizeAtCollaps != 0) {
-            sizes[index] = d->mSizeAtCollaps;
+        if (!d->mSizeAtCollaps.isEmpty()) {
+            sizes = d->mSizeAtCollaps;
         } else {
             if (d->isVertical()) {
                 sizes[index] = d->mWidget->sizeHint().height();
