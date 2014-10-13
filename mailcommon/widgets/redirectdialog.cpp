@@ -194,7 +194,7 @@ void RedirectDialog::Private::slotUser2()
 
 void RedirectDialog::Private::slotAddressChanged( const QString &text )
 {
-    const bool textIsNotEmpty(!text.isEmpty());
+    const bool textIsNotEmpty(!text.trimmed().isEmpty());
     q->enableButton( KDialog::User1, textIsNotEmpty );
     q->enableButton( KDialog::User2, textIsNotEmpty );
 }
