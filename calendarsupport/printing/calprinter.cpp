@@ -41,6 +41,9 @@
 #include <QSplitter>
 #include <QStackedWidget>
 #include <QVBoxLayout>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace CalendarSupport;
 
@@ -172,15 +175,24 @@ void CalPrinter::updateConfig()
 
 CalPrintDialog::CalPrintDialog( int initialPrintType, PrintPlugin::List plugins,
                                 QWidget *parent, bool uniqItem )
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setCaption( i18nc( "@title:window", "Print" ) );
-  setButtons( Ok | Cancel );
+  setWindowTitle( i18nc( "@title:window", "Print" ) );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+  mOkButton->setDefault(true);
+  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  mainLayout->addWidget(buttonBox);
   setModal( true );
   QWidget *page = new QWidget( this );
   QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
   pageVBoxLayout->setMargin(0);
-  setMainWidget( page );
+  mainLayout->addWidget(page);
+  mainLayout->addWidget(buttonBox);
 
   QSplitter *splitter = new QSplitter( page );
   pageVBoxLayout->addWidget(splitter);
@@ -192,8 +204,8 @@ CalPrintDialog::CalPrintDialog( int initialPrintType, PrintPlugin::List plugins,
 
   QWidget *splitterRight = new QWidget( splitter );
   QGridLayout *splitterRightLayout = new QGridLayout( splitterRight );
-  splitterRightLayout->setMargin( marginHint() );
-  splitterRightLayout->setSpacing( spacingHint() );
+  //splitterRightLayout->setMargin( marginHint() );
+  //splitterRightLayout->setSpacing( spacingHint() );
 
   mConfigArea = new QStackedWidget( splitterRight );
   splitterRightLayout->addWidget( mConfigArea, 0, 0, 1, 2 );
@@ -262,7 +274,6 @@ CalPrintDialog::CalPrintDialog( int initialPrintType, PrintPlugin::List plugins,
     typeBox->hide();
   }
   typeLayout->insertStretch( -1, 100 );
-  connect(this, &CalPrintDialog::okClicked, this, &CalPrintDialog::slotOk);
   setMinimumSize( minimumSizeHint() );
   resize( minimumSizeHint() );
 }
@@ -274,9 +285,9 @@ CalPrintDialog::~CalPrintDialog()
 void CalPrintDialog::setPreview( bool preview )
 {
   if ( preview ) {
-    setButtonText( Ok, i18nc( "@action:button", "&Preview" ) );
+    mOkButton->setText(i18nc( "@action:button", "&Preview" ));
   } else {
-    setButtonText( Ok, KStandardGuiItem::print().text() );
+    mOkButton->setText(KStandardGuiItem::print().text());
   }
 }
 

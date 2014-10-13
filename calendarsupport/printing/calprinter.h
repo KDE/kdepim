@@ -27,8 +27,8 @@
 #include "printplugin.h"
 
 #include <KComboBox>
-#include <KDialog>
-
+#include <QDialog>
+#include <QPushButton>
 class QButtonGroup;
 class QStackedWidget;
 
@@ -97,7 +97,7 @@ class CALENDARSUPPORT_EXPORT CalPrinter : public QObject, public CalPrinterBase
     bool mUniqItem;
 };
 
-class CalPrintDialog : public KDialog
+class CalPrintDialog : public QDialog
 {
   Q_OBJECT
   public:
@@ -126,7 +126,7 @@ class CalPrintDialog : public KDialog
     QMap<int, PrintPlugin*> mPluginIDs;
     QString mPreviewText;
     KComboBox *mOrientationSelection;
-
+    QPushButton *mOkButton;
     CalPrinter::ePrintOrientation mOrientation;
 };
 
