@@ -133,11 +133,11 @@ void SplitterCollapser::Private::updatePosition()
     int x = 0;
     int y = 0;
     const QRect widgetRect = mWidget->geometry();
-    const int splitterWidth = mSplitter->width();
     const int handleWidth = mSplitter->handleWidth();
-    const int width = q->width();
 
     if (!isVertical()) {
+        const int splitterWidth = mSplitter->width();
+        const int width = q->width();
         // FIXME: Make this configurable
         y = 30;
         if (mDirection == LeftToRight) {
@@ -146,7 +146,7 @@ void SplitterCollapser::Private::updatePosition()
             } else {
                 x = 0;
             }
-        } else { // RTL
+        } else { // RightToLeft
             if (isVisible()) {
                 x = widgetRect.left() - handleWidth - width;
             } else {
@@ -155,8 +155,22 @@ void SplitterCollapser::Private::updatePosition()
         }
     } else {
         // FIXME
-        x = 0;
-        y = 0;
+        x = 30;
+        const int height = q->height();
+        const int splitterHeight = mSplitter->height();
+        if (mDirection == TopToBottom) {
+            if (isVisible()) {
+                y = widgetRect.bottom() - height;
+            } else {
+                y = 0;
+            }
+        } else { // BottomToTop
+            if (isVisible()) {
+                y = widgetRect.top() + handleWidth;
+            } else {
+                y = splitterHeight - handleWidth - height;
+            }
+        }
     }
     q->move(x, y);
 }
@@ -238,14 +252,22 @@ SplitterCollapser::SplitterCollapser(QSplitter *splitter, QWidget *widget, QWidg
     d->mSplitter = splitter;
     setParent(d->mSplitter);
 
-    if (splitter->indexOf(widget) < splitter->count() / 2) {
-        d->mDirection = LeftToRight;
-    } else {
-        d->mDirection = RightToLeft;
+    switch(splitter->orientation()) {
+    case Qt::Horizontal: {
+        if (splitter->indexOf(widget) < splitter->count() / 2) {
+            d->mDirection = LeftToRight;
+        } else {
+            d->mDirection = RightToLeft;
+        }
+        break;
     }
-    if (splitter->orientation() == Qt::Vertical) {
-        // FIXME: Ugly!
-        d->mDirection = static_cast<Direction>(int(d->mDirection) + int(TopToBottom));
+    case Qt::Vertical:
+        if (splitter->indexOf(widget) < splitter->count() / 2) {
+            d->mDirection = TopToBottom;
+        } else {
+            d->mDirection = BottomToTop;
+        }
+        break;
     }
 
     connect(this, SIGNAL(clicked()), SLOT(slotClicked()));
