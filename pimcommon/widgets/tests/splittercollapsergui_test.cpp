@@ -24,12 +24,12 @@
 #include <QTextEdit>
 #include <QHBoxLayout>
 
-SplitterCollapserGui_test::SplitterCollapserGui_test(QWidget *parent)
+SplitterCollapserGui_test::SplitterCollapserGui_test(Qt::Orientation orientation, QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     setLayout(lay);
-    QSplitter *splitter = new QSplitter;
+    QSplitter *splitter = new QSplitter(orientation);
     lay->addWidget(splitter);
     QTextEdit *rightTextEdit = new QTextEdit;
     splitter->addWidget(rightTextEdit);
@@ -50,9 +50,14 @@ int main (int argc, char **argv)
 
     KApplication app;
 
-    SplitterCollapserGui_test *w = new SplitterCollapserGui_test;
+    SplitterCollapserGui_test *w = new SplitterCollapserGui_test(Qt::Horizontal);
     w->resize(800, 600);
     w->show();
+
+    SplitterCollapserGui_test *w2 = new SplitterCollapserGui_test(Qt::Vertical);
+    w2->resize(800, 600);
+    w2->show();
+
     app.exec();
     delete w;
     return 0;
