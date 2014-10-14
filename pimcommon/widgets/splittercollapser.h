@@ -58,7 +58,6 @@ protected:
 
     void paintEvent(QPaintEvent *);
 
-
 private:
     class Private;
     Private *const d;
