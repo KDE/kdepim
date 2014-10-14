@@ -86,7 +86,7 @@ Q_SIGNALS:
      * @param collection The collection where it was created.
      */
     void incidenceCreated( const Akonadi::Item & );
-
+    void invalidCollection() const;
   protected:
     virtual void closeEvent( QCloseEvent *event );
 
@@ -113,6 +113,7 @@ Q_SIGNALS:
     Q_PRIVATE_SLOT( d_ptr, void updateAttendeeCount(int) )
     Q_PRIVATE_SLOT( d_ptr, void updateButtonStatus(bool) )
     Q_PRIVATE_SLOT( d_ptr, void showMessage(QString,KMessageWidget::MessageType) )
+    Q_PRIVATE_SLOT( d_ptr, void slotInvalidCollection() )
 };
 
 }

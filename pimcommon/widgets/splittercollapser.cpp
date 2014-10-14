@@ -33,18 +33,13 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStylePainter>
 #include <QTimeLine>
 
-// KDE
-
-// Local
-
 using namespace PimCommon;
 
 enum Direction {
-    LeftToRight = 1 << 0,
-    RightToLeft = 1 << 1,
-    Vertical = 1 << 2,
-    TopToBottom = Vertical + (1 << 0),
-    BottomToTop = Vertical + (1 << 1)
+    LeftToRight,
+    RightToLeft,
+    TopToBottom,
+    BottomToTop
 };
 
 const int TIMELINE_DURATION = 500;
@@ -86,7 +81,6 @@ public:
     Direction mDirection;
     QTimeLine *mOpacityTimeLine;
     QList<int> mSizeAtCollaps;
-    //int mSizeAtCollaps;
 
     bool isVertical() const;
 
@@ -104,14 +98,17 @@ public:
 };
 
 SplitterCollapser::Private::Private(PimCommon::SplitterCollapser *qq)
-    : q(qq)
+    : q(qq),
+      mSplitter(0),
+      mWidget(0),
+      mOpacityTimeLine(0)
 {
 
 }
 
 bool SplitterCollapser::Private::isVertical() const
 {
-    return mDirection & Vertical;
+    return (mSplitter->orientation() == Qt::Vertical);
 }
 
 bool SplitterCollapser::Private::isVisible() const
@@ -153,7 +150,6 @@ void SplitterCollapser::Private::updatePosition()
             }
         }
     } else {
-        // FIXME
         x = 30;
         const int height = q->height();
         const int splitterHeight = mSplitter->height();
@@ -298,7 +294,7 @@ bool SplitterCollapser::eventFilter(QObject *object, QEvent *event)
 
 QSize SplitterCollapser::sizeHint() const
 {
-    int extent = style()->pixelMetric(QStyle::PM_ScrollBarExtent);
+    const int extent = style()->pixelMetric(QStyle::PM_ScrollBarExtent);
     QSize sh(extent * 3 / 4, extent * 240 / 100);
     if (d->isVertical()) {
         sh.transpose();

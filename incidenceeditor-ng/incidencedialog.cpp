@@ -106,6 +106,7 @@ class IncidenceDialogPrivate : public ItemEditorUi
     void updateAttendeeCount( int newCount );
     void updateButtonStatus( bool isDirty );
     void showMessage( const QString &text, KMessageWidget::MessageType type );
+    void slotInvalidCollection();
 
     /// ItemEditorUi methods
     virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
@@ -198,6 +199,11 @@ IncidenceDialogPrivate::~IncidenceDialogPrivate()
   delete mItemManager;
   delete mEditor;
   delete mUi;
+}
+
+void IncidenceDialogPrivate::slotInvalidCollection()
+{
+  showMessage(i18n("Select a valid collection first."), KMessageWidget::Warning);
 }
 
 void IncidenceDialogPrivate::showMessage( const QString &text, KMessageWidget::MessageType type )
@@ -498,12 +504,14 @@ bool IncidenceDialogPrivate::isDirty() const
 
 bool IncidenceDialogPrivate::isValid() const
 {
+  Q_Q( const IncidenceDialog );
   if ( mEditor->isValid() ) {
     // Check if there's a selected collection.
     if ( mCalSelector->currentCollection().isValid() ) {
       return true;
     } else {
       qWarning() << "Select a collection first";
+      emit q->invalidCollection();
     }
   }
 
@@ -665,6 +673,8 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
            d->mIeAttendee, SLOT(declineForMe()) );
   connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
            d->mUi->mInvitationBar, SLOT(hide()) );
+  connect( this, SIGNAL(invalidCollection()),
+           this, SLOT(slotInvalidCollection()));
   readConfig();
 }
 
