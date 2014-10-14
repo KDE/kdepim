@@ -1884,6 +1884,20 @@ void KMFolderTree::folderToPopupMenu( MenuAction action, QObject *receiver,
     connect( menu, SIGNAL(activated(int)), receiver,
         SLOT(copySelectedToFolder(int)) );
   }
+
+  if ( action == DecCopyMessage )
+  {
+    // When saving a decrypted copy it can be useful to save the message in the 
+    // same folder. So we add this action as the first item in the popup
+    KMFolderTreeItem* fti = dynamic_cast<KMFolderTreeItem*>( currentItem() );
+    if ( fti && fti->folder() ) {
+      int menuId = menu->insertItem( i18n("Copy decrypted message to This Folder"), -1, 0 );
+      menu->insertSeparator( 1 );
+      menu->setItemEnabled( menuId, !fti->folder()->isReadOnly() );
+      aMenuToFolder->insert( menuId, fti->folder() );
+    }
+  }
+
   if ( !item ) {
     item = firstChild();
 
