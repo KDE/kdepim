@@ -34,7 +34,6 @@
 #define __KLEOPATRA_SYSTRAYICON_H__
 
 #include <utils/systemtrayicon.h>
-
 #ifndef QT_NO_SYSTEMTRAYICON
 
 #include <utils/pimpl_ptr.h>

@@ -55,8 +55,8 @@
 #include <KLocalizedString>
 #include <KAboutApplicationDialog>
 #include <k4aboutdata.h>
-#include <KGlobal>
 #include <KActionMenu>
+#include <QEventLoopLocker>
 
 #include <QMenu>
 #include <QAction>
@@ -140,6 +140,7 @@ private:
     QAction learnCertificatesAction;
 
     QPointer<KAboutApplicationDialog> aboutDialog;
+    QEventLoopLocker eventLoopLocker;
 };
 
 SysTrayIcon::Private::Private( SysTrayIcon * qq )
@@ -204,12 +205,10 @@ SysTrayIcon::Private::~Private() {}
 SysTrayIcon::SysTrayIcon( QObject * p )
     : SystemTrayIcon( p ), d( new Private( this ) )
 {
-    KGlobal::ref();
     slotEnableDisableActions();
 }
 
 SysTrayIcon::~SysTrayIcon() {
-    KGlobal::deref();
 }
 
 MainWindow * SysTrayIcon::mainWindow() const {
