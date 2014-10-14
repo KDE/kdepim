@@ -18,11 +18,14 @@
 #include "splittercollapsergui_test.h"
 #include "widgets/splittercollapser.h"
 #include <QSplitter>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+#include <qapplication.h>
+
 #include <KLocalizedString>
 #include <QTextEdit>
 #include <QHBoxLayout>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 SplitterCollapserGui_test::SplitterCollapserGui_test(int indexOfWidgetAssociateToSplitterCollapser, Qt::Orientation orientation, QWidget *parent)
     : QWidget(parent)
@@ -49,10 +52,12 @@ SplitterCollapserGui_test::~SplitterCollapserGui_test()
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "splittercollapser_gui", 0, ki18n("SplitterCollapser_Gui"),
-                       "1.0", ki18n("Test for splitter collapser widget"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.process(app);
 
-    KApplication app;
 
     SplitterCollapserGui_test *w = new SplitterCollapserGui_test(0, Qt::Horizontal);
     w->resize(800, 600);
