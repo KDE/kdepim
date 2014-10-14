@@ -24,7 +24,7 @@ class SplitterCollapserGui_test : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SplitterCollapserGui_test(QWidget *parent=0);
+    explicit SplitterCollapserGui_test(int indexOfWidgetAssociateToSplitterCollapser, Qt::Orientation orientation, QWidget *parent=0);
     ~SplitterCollapserGui_test();
 };
 

@@ -44,6 +44,10 @@ private Q_SLOTS:
     void shouldHasDefaultValue();
     void shouldCollapsedWhenClickOnButton();
     void shouldRestoreCorrectPosition();
+    void shouldRestoreCorrectPositionForFirstWidget();
+    void shouldTestVerticalSplitterFirstWidget();
+    void shouldTestVerticalSplitterSecondWidget();
+
 };
 
 #endif // SPLITTERCOLLAPSERTEST_H

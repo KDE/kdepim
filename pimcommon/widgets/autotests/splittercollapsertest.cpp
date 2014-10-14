@@ -20,7 +20,7 @@
 #include <QHBoxLayout>
 #include <QSplitter>
 #include <QTextEdit>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qtestmouse.h>
 
 TestSplitter::TestSplitter(QObject *parent)
@@ -118,7 +118,87 @@ void SplitterCollapserTest::shouldRestoreCorrectPosition()
 
 }
 
+void SplitterCollapserTest::shouldRestoreCorrectPositionForFirstWidget()
+{
+    TestSplitter testSplitter;
+
+    PimCommon::SplitterCollapser *splitterCollapser = new PimCommon::SplitterCollapser(testSplitter.splitter, testSplitter.edit1);
+
+    testSplitter.show();
+    QTest::qWaitForWindowShown(&testSplitter);
+    QVERIFY(testSplitter.isVisible());
+
+    PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
+    QVERIFY(!collapser->isCollapsed());
+
+    QTextEdit *edit1 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit1"));
+
+    int size = edit1->width();
+
+    QTest::mouseClick(collapser, Qt::LeftButton);
+    QVERIFY(collapser->isCollapsed());
+    QCOMPARE(edit1->width(), 0);
+
+    QTest::mouseClick(collapser, Qt::LeftButton);
+    QVERIFY(!collapser->isCollapsed());
+    QCOMPARE(edit1->width(), size);
+}
+
+void SplitterCollapserTest::shouldTestVerticalSplitterFirstWidget()
+{
+    TestSplitter testSplitter;
+    testSplitter.splitter->setOrientation(Qt::Vertical);
+    PimCommon::SplitterCollapser *splitterCollapser = new PimCommon::SplitterCollapser(testSplitter.splitter, testSplitter.edit1);
+
+    testSplitter.show();
+    QTest::qWaitForWindowShown(&testSplitter);
+    QVERIFY(testSplitter.isVisible());
+
+    PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
+    QVERIFY(!collapser->isCollapsed());
+
+    QTextEdit *edit1 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit1"));
+
+    int size = edit1->height();
+
+    QTest::mouseClick(collapser, Qt::LeftButton);
+    QVERIFY(collapser->isCollapsed());
+    QCOMPARE(edit1->height(), 0);
+
+    QTest::mouseClick(collapser, Qt::LeftButton);
+    QVERIFY(!collapser->isCollapsed());
+    QCOMPARE(edit1->height(), size);
+
+}
+
+void SplitterCollapserTest::shouldTestVerticalSplitterSecondWidget()
+{
+    TestSplitter testSplitter;
+    testSplitter.splitter->setOrientation(Qt::Vertical);
+    PimCommon::SplitterCollapser *splitterCollapser = new PimCommon::SplitterCollapser(testSplitter.splitter, testSplitter.edit2);
+
+    testSplitter.show();
+    QTest::qWaitForWindowShown(&testSplitter);
+    QVERIFY(testSplitter.isVisible());
+
+    PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
+    QVERIFY(!collapser->isCollapsed());
+
+    QTextEdit *edit2 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit2"));
+
+    int size = edit2->height();
+
+    QTest::mouseClick(collapser, Qt::LeftButton);
+    QVERIFY(collapser->isCollapsed());
+    QCOMPARE(edit2->height(), 0);
+
+    QTest::mouseClick(collapser, Qt::LeftButton);
+    QVERIFY(!collapser->isCollapsed());
+    QCOMPARE(edit2->height(), size);
+
+}
 
 
 
-QTEST_KDEMAIN(SplitterCollapserTest, GUI)
+
+QTEST_MAIN(SplitterCollapserTest)
