@@ -27,3 +27,10 @@ ToolTip=A widget to make translate string (KDE-PIM)
 WhatsThis=A widget to make translate string
 IncludeFile=pimcommon/translator/translatorwidget.h
 Group=Input (KDE-PIM)
+
+[PimCommon::ManageAccountWidget]
+ToolTip=A Widget to Manage Akonadi Account (KDE-PIM)
+WhatsThis=A Widget to Manage Akonadi Account
+IncludeFile=pimcommon/widgets/manageaccountwidget.h
+Group=Input (KDE-PIM)
+

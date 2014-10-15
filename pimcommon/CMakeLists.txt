@@ -164,6 +164,7 @@ set(libpimcommon_widgets_SRCS
   widgets/configureimmutablewidgetutils.cpp
   widgets/slidecontainer.cpp
   widgets/splittercollapser.cpp
+  widgets/manageaccountwidget.cpp
 )
 
 
@@ -187,6 +188,7 @@ set(libpimcommon_SRCS
 
 kde4_add_ui_files(libpimcommon_SRCS
      autocorrection/ui/autocorrectionwidget.ui
+     widgets/ui/manageaccountwidget.ui
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
