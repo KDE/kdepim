@@ -26,6 +26,7 @@ class ManageAccountWidget;
 namespace Akonadi {
 class AgentInstance;
 }
+class QAbstractItemDelegate;
 namespace PimCommon {
 class PIMCOMMON_EXPORT ManageAccountWidget : public QWidget
 {
@@ -44,6 +45,8 @@ public:
 
     QStringList excludeCapabilities() const;
     void setExcludeCapabilities(const QStringList &excludeCapabilities);
+
+    void setItemDelegate(QAbstractItemDelegate *delegate );
 
 private slots:
     void slotAccountSelected(const Akonadi::AgentInstance &current);

@@ -30,6 +30,8 @@
 #include <KWindowSystem>
 #include <KLineEdit>
 
+#include <QAbstractItemDelegate>
+
 using namespace PimCommon;
 
 ManageAccountWidget::ManageAccountWidget(QWidget *parent)
@@ -103,6 +105,11 @@ QStringList ManageAccountWidget::excludeCapabilities() const
 void ManageAccountWidget::setExcludeCapabilities(const QStringList &excludeCapabilities)
 {
     mExcludeCapabilities = excludeCapabilities;
+}
+
+void ManageAccountWidget::setItemDelegate(QAbstractItemDelegate *delegate)
+{
+    mWidget->mAccountList->view()->setItemDelegate( delegate );
 }
 
 QStringList ManageAccountWidget::capabilityFilter() const
