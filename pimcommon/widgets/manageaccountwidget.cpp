@@ -48,6 +48,11 @@ ManageAccountWidget::ManageAccountWidget(QWidget *parent)
     connect( mWidget->mRestartAccountButton, SIGNAL(clicked()),
              this, SLOT(slotRestartSelectedAccount()) );
 
+    connect( mWidget->mAccountList, SIGNAL(clicked(Akonadi::AgentInstance)),
+             SLOT(slotAccountSelected(Akonadi::AgentInstance)) );
+    connect( mWidget->mAccountList, SIGNAL(doubleClicked(Akonadi::AgentInstance)),
+             this, SLOT(slotModifySelectedAccount()) );
+
     mWidget->mAccountList->view()->setSelectionMode( QAbstractItemView::SingleSelection );
 
     mWidget->mFilterAccount->setProxy( mWidget->mAccountList->agentFilterProxyModel() );
