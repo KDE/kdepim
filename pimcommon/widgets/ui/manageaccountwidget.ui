@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AccountsCalendarWidget</class>
- <widget class="QWidget" name="AccountsCalendarWidget">
+ <class>ManageAccountWidget</class>
+ <widget class="QWidget" name="ManageAccountWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>287</width>
-    <height>291</height>
+    <width>692</width>
+    <height>578</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="KFilterProxySearchLine" name="mFilterAccount"/>
-   </item>
-   <item row="1" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
     <layout class="QVBoxLayout" name="vlay">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Incoming accounts (add at least one):</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KFilterProxySearchLine" name="mFilterAccount"/>
+     </item>
      <item>
       <layout class="QHBoxLayout" name="hlay">
        <item>
-        <widget class="Akonadi::AgentInstanceWidget" name="mAccountList" native="true"/>
+        <widget class="Akonadi::AgentInstanceWidget" name="mAccountList"/>
        </item>
        <item>
         <layout class="QVBoxLayout" name="btn_vlay">
@@ -47,6 +54,23 @@
            </property>
            <property name="text">
             <string>R&amp;emove</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="mRestartAccountButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Restart</string>
            </property>
           </widget>
          </item>
@@ -81,7 +105,7 @@
   <customwidget>
    <class>Akonadi::AgentInstanceWidget</class>
    <extends>QWidget</extends>
-   <header location="global">AkonadiWidgets/agentinstancewidget.h</header>
+   <header location="global">AkonadiWidgets/AgentInstanceWidget</header>
   </customwidget>
  </customwidgets>
  <resources/>

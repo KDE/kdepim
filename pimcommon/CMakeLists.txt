@@ -166,6 +166,7 @@ set(libpimcommon_widgets_SRCS
   widgets/emailaddressrequester.cpp
   widgets/annotationdialog.cpp
   widgets/splittercollapser.cpp
+  widgets/manageaccountwidget.cpp
 )
 
 set(libtexttospeech_SRCS
@@ -197,6 +198,7 @@ set(libpimcommon_SRCS
 
 ki18n_wrap_ui(libpimcommon_SRCS
      autocorrection/ui/autocorrectionwidget.ui
+     widgets/ui/manageaccountwidget.ui
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
