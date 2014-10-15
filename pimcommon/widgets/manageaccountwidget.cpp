@@ -59,11 +59,17 @@ ManageAccountWidget::ManageAccountWidget(QWidget *parent)
 
     mWidget->mFilterAccount->setProxy( mWidget->mAccountList->agentFilterProxyModel() );
     mWidget->mFilterAccount->lineEdit()->setTrapReturnKey( true );
+    slotAccountSelected( mWidget->mAccountList->currentAgentInstance() );
 }
 
 ManageAccountWidget::~ManageAccountWidget()
 {
     delete mWidget;
+}
+
+QAbstractItemView *ManageAccountWidget::view() const
+{
+    return mWidget->mAccountList->view();
 }
 
 void ManageAccountWidget::setSpecialCollectionIdentifier(const QString &identifier)
@@ -79,7 +85,7 @@ void ManageAccountWidget::slotAddAccount()
     Q_FOREACH(const QString &filterStr, mMimeTypeFilter) {
         filter->addMimeTypeFilter( filterStr );
     }
-    Q_FOREACH(const QString &capa, mExcludeCapabilities) {
+    Q_FOREACH(const QString &capa, mCapabilityFilter) {
         filter->addCapabilityFilter( capa );
     }
     Q_FOREACH(const QString &capa, mExcludeCapabilities) {

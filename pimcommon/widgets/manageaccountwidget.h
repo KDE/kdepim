@@ -27,6 +27,7 @@ namespace Akonadi {
 class AgentInstance;
 }
 class QAbstractItemDelegate;
+class QAbstractItemView;
 namespace PimCommon {
 class PIMCOMMON_EXPORT ManageAccountWidget : public QWidget
 {
@@ -48,6 +49,7 @@ public:
 
     void setItemDelegate(QAbstractItemDelegate *delegate );
 
+    QAbstractItemView *view() const;
 private slots:
     void slotAccountSelected(const Akonadi::AgentInstance &current);
     void slotRemoveSelectedAccount();
