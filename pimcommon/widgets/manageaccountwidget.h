@@ -36,11 +36,11 @@ public:
 
     void setSpecialCollectionIdentifier(const QString &identifier);
 
-    QString mimeTypeFilter() const;
-    void setMimeTypeFilter(const QString &mimeTypeFilter);
+    QStringList mimeTypeFilter() const;
+    void setMimeTypeFilter(const QStringList &mimeTypeFilter);
 
-    QString capabilityFilter() const;
-    void setCapabilityFilter(const QString &capabilityFilter);
+    QStringList capabilityFilter() const;
+    void setCapabilityFilter(const QStringList &capabilityFilter);
 
     QStringList excludeCapabilities() const;
     void setExcludeCapabilities(const QStringList &excludeCapabilities);
@@ -54,8 +54,8 @@ private slots:
 private:
     QString mSpecialCollectionIdentifier;
 
-    QString mMimeTypeFilter;
-    QString mCapabilityFilter;
+    QStringList mMimeTypeFilter;
+    QStringList mCapabilityFilter;
     QStringList mExcludeCapabilities;
 
     Ui::ManageAccountWidget *mWidget;

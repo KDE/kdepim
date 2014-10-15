@@ -28,6 +28,7 @@
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <KWindowSystem>
+#include <KLineEdit>
 
 using namespace PimCommon;
 
@@ -47,6 +48,10 @@ ManageAccountWidget::ManageAccountWidget(QWidget *parent)
     connect( mWidget->mRestartAccountButton, SIGNAL(clicked()),
              this, SLOT(slotRestartSelectedAccount()) );
 
+    mWidget->mAccountList->view()->setSelectionMode( QAbstractItemView::SingleSelection );
+
+    mWidget->mFilterAccount->setProxy( mWidget->mAccountList->agentFilterProxyModel() );
+    mWidget->mFilterAccount->lineEdit()->setTrapReturnKey( true );
 }
 
 ManageAccountWidget::~ManageAccountWidget()
@@ -64,8 +69,12 @@ void ManageAccountWidget::slotAddAccount()
     Akonadi::AgentTypeDialog dlg( this );
 
     Akonadi::AgentFilterProxyModel* filter = dlg.agentFilterProxyModel();
-    filter->addMimeTypeFilter( mMimeTypeFilter );
-    filter->addCapabilityFilter( mCapabilityFilter );
+    Q_FOREACH(const QString &filterStr, mMimeTypeFilter) {
+        filter->addMimeTypeFilter( filterStr );
+    }
+    Q_FOREACH(const QString &capa, mExcludeCapabilities) {
+        filter->addCapabilityFilter( capa );
+    }
     Q_FOREACH(const QString &capa, mExcludeCapabilities) {
         filter->excludeCapabilities( capa );
     }
@@ -91,24 +100,30 @@ void ManageAccountWidget::setExcludeCapabilities(const QStringList &excludeCapab
     mExcludeCapabilities = excludeCapabilities;
 }
 
-QString ManageAccountWidget::capabilityFilter() const
+QStringList ManageAccountWidget::capabilityFilter() const
 {
     return mCapabilityFilter;
 }
 
-void ManageAccountWidget::setCapabilityFilter(const QString &capabilityFilter)
+void ManageAccountWidget::setCapabilityFilter(const QStringList &capabilityFilter)
 {
     mCapabilityFilter = capabilityFilter;
+    Q_FOREACH(const QString &capability, mCapabilityFilter) {
+        mWidget->mAccountList->agentFilterProxyModel()->addCapabilityFilter(capability);
+    }
 }
 
-QString ManageAccountWidget::mimeTypeFilter() const
+QStringList ManageAccountWidget::mimeTypeFilter() const
 {
     return mMimeTypeFilter;
 }
 
-void ManageAccountWidget::setMimeTypeFilter(const QString &mimeTypeFilter)
+void ManageAccountWidget::setMimeTypeFilter(const QStringList &mimeTypeFilter)
 {
     mMimeTypeFilter = mimeTypeFilter;
+    Q_FOREACH(const QString &mimeType, mMimeTypeFilter) {
+        mWidget->mAccountList->agentFilterProxyModel()->addMimeTypeFilter( mimeType );
+    }
 }
 
 
