@@ -70,12 +70,13 @@ void FollowUpReminderJob::slotItemFetchJobDone(KJob* job)
         deleteLater();
         return;
     }
-    if ( !items.at(0).hasPayload<KMime::Message::Ptr>() ) {
+    const Akonadi::Item item = items.at(0);
+    if ( !item.hasPayload<KMime::Message::Ptr>() ) {
         kError() << "Item has not payload";
         deleteLater();
         return;
     }
-    const KMime::Message::Ptr msg = items.at(0).payload<KMime::Message::Ptr>();
+    const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
     if (msg) {
         KMime::Headers::InReplyTo *replyTo = msg->inReplyTo(false);
         if (replyTo) {
