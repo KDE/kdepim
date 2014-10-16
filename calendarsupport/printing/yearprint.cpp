@@ -63,12 +63,12 @@ void CalPrintYear::setSettingsWidget()
       const int pages = ( months - 1 ) / i + 1;
       if ( pages != prevPages ) {
         prevPages = pages;
-        cfg->mPages->addItem( QString::number( pages ), 0 );
+        cfg->mPages->addItem( QString::number( pages ), pages );
       }
     }
 
     cfg->mYear->setValue( mYear );
-    cfg->mPages->setItemText( cfg->mPages->currentIndex(), QString::number( mPages ) );
+    cfg->mPages->setCurrentIndex( cfg->mPages->findData(mPages) );
 
     cfg->mSubDays->setCurrentIndex( ( mSubDaysEvents == Text ) ? 0 : 1 );
     cfg->mHolidays->setCurrentIndex( ( mHolidaysEvents == Text ) ? 0 : 1 );
