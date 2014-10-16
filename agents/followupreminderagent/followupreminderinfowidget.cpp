@@ -57,6 +57,7 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
     : QWidget(parent),
       mChanged(false)
 {
+    setObjectName(QLatin1String("FollowUpReminderInfoWidget"));
     QHBoxLayout *hbox = new QHBoxLayout;
     mTreeWidget = new QTreeWidget;
     QStringList headers;
@@ -103,6 +104,9 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
         const QString date = KGlobal::locale()->formatDateTime( info->followUpReminderDate(), KLocale::LongDate );
         item->setText(DeadLine, date);
         item->setText(AnswerWasReceived, info->answerWasReceived() ? i18n("Received") : i18n("On hold"));
+        if (info->followUpReminderDate() < QDateTime::currentDateTime()) {
+            item->setBackgroundColor(DeadLine, Qt::red);
+        }
     }
 }
 
