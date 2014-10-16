@@ -26,6 +26,7 @@
   <name xml:lang="sv">Blogilo</name>
   <name xml:lang="uk">Blogilo</name>
   <name xml:lang="x-test">xxBlogiloxx</name>
+  <name xml:lang="zh-TW">Blogilo</name>
   <summary>A KDE Blogging Client</summary>
   <summary xml:lang="ca">Un client de blogs pel KDE</summary>
   <summary xml:lang="de">Ein Blogging-Programm für KDE</summary>
@@ -48,6 +49,7 @@
   <summary xml:lang="sv">En bloggklient för KDE</summary>
   <summary xml:lang="uk">Клієнт для ведення блогів у KDE</summary>
   <summary xml:lang="x-test">xxA KDE Blogging Clientxx</summary>
+  <summary xml:lang="zh-TW">KDE 部落格客戶端程式</summary>
   <description>
     <p>Blogilo is a blogging client for KDE, which supports various blogging APIs.</p>
     <p xml:lang="ca">El Blogilo és un client de blogs pel KDE, el qual és compatible amb diversos API de blogs.</p>
@@ -71,6 +73,7 @@
     <p xml:lang="sv">Blogilo är en bloggklient för KDE, som stöder diverse programmeringsgränssnitt för bloggar.</p>
     <p xml:lang="uk">Blogilo — клієнт для ведення блоків у KDE, у якому передбачено різноманітні програмні інтерфейси для ведення блогів.</p>
     <p xml:lang="x-test">xxBlogilo is a blogging client for KDE, which supports various blogging APIs.xx</p>
+    <p xml:lang="zh-TW">Blogilo 是一個 KDE 上的部落格客戶端程式，支援不同的部落格 API。</p>
     <p>Features:</p>
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="cs">Vlastnosti:</p>
@@ -94,6 +97,7 @@
     <p xml:lang="sv">Funktioner:</p>
     <p xml:lang="uk">Можливості:</p>
     <p xml:lang="x-test">xxFeatures:xx</p>
+    <p xml:lang="zh-TW">功能：</p>
     <ul>
       <li>A full featured WYSIWYG editor + An HTML editor</li>
       <li xml:lang="ca">Un complet editor WYSIWYG + editor d'HTML</li>
@@ -116,6 +120,7 @@
       <li xml:lang="sv">En visuell editor med fullständig funktionalitet + en HTML-editor</li>
       <li xml:lang="uk">повноцінний візуальний редактор та редактор коду HTML;</li>
       <li xml:lang="x-test">xxA full featured WYSIWYG editor + An HTML editorxx</li>
+      <li xml:lang="zh-TW">完整的所見即所得的編輯器，加上一個 HTML 編輯器</li>
       <li>Previewing your post with your blog style</li>
       <li xml:lang="ca">Vista prèvia del vostre article amb l'estil del vostre blog</li>
       <li xml:lang="de">Vorschau Ihrer Posts im Stil Ihres Blogs</li>
@@ -138,6 +143,7 @@
       <li xml:lang="sv">Förhandsgranska inlägg med bloggens stil</li>
       <li xml:lang="uk">попередній перегляд допису у стилі вашого блогу;</li>
       <li xml:lang="x-test">xxPreviewing your post with your blog stylexx</li>
+      <li xml:lang="zh-TW">以您的部落格的樣式來預覽您的文章</li>
       <li>Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
       <li xml:lang="ca">Implementa les API Blogger1.0, MetaWeblog, MovableType (el Wordpress implementa tots aquests!) i Google GData (usada al blog Blogspot.com)</li>
       <li xml:lang="de">Unterstützung für die Programmier-Schnittstellen (APIs) von Blogger1.0, MetaWeblog, MovableType (alle von Wordpress verwendet) und Google GData (verwendet auf Blogspot.com blogs)</li>
@@ -160,6 +166,7 @@
       <li xml:lang="sv">Stöd för programmeringsgränssnitten Blogger1.0, MetaWeblog, MovableType (Wordpress stöder alla dessa) och Google GData (använt för bloggar hos Blogspot.com)</li>
       <li xml:lang="uk">підтримка програмних інтерфейсів Blogger1.0, MetaWeblog, MovableType (у Wordpress передбачено усі ці програмні інтерфейси!) та Google GData (використовується у блогах Blogspot.com);</li>
       <li xml:lang="x-test">xxSupport for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIsxx</li>
+      <li xml:lang="zh-TW">支援 Blogger1.0, MetaWeblog, MovableType (Wordpress 全部都支援！) 以及 Google GData (用於 Blogspot.com) APIs</li>
       <li>Support for Creating/Modifying/Deleting posts.</li>
       <li xml:lang="ca">Implementa la creació/modificació/eliminació dels articles</li>
       <li xml:lang="de">Unterstützung für das Erstellen/Verändern/Löschen von Posts.</li>
@@ -182,6 +189,7 @@
       <li xml:lang="sv">Stöd för att skapa, ändra och ta bort inlägg.</li>
       <li xml:lang="uk">підтримка створення дописів, внесення до них змін та вилучення дописів;</li>
       <li xml:lang="x-test">xxSupport for Creating/Modifying/Deleting posts.xx</li>
+      <li xml:lang="zh-TW">支援建立、變更與刪除文章。</li>
       <li>Support for creating drafts and scheduled posts</li>
       <li xml:lang="ca">Implementa la creació d'esborranys i articles programats</li>
       <li xml:lang="de">Unterstützung für das Erstellen von Entwürfen und geplanten Posts</li>
@@ -204,6 +212,7 @@
       <li xml:lang="sv">Stöd för att skapa utkast och schemalagda inlägg</li>
       <li xml:lang="uk">підтримка створення чернеток та планування дописів;</li>
       <li xml:lang="x-test">xxSupport for creating drafts and scheduled postsxx</li>
+      <li xml:lang="zh-TW">支援建立草稿與排程發布。</li>
       <li>Support for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="ca">Implementa la pujada de fitxers de suports al vostre blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
       <li xml:lang="de">Unterstützung für das Hochladen von Medien zu Ihrem Blog, nur z. B. für MetaWeblog und MovableType</li>
@@ -226,6 +235,7 @@
       <li xml:lang="sv">Stöd för att ladda upp mediafiler till en blogg (bara med programmeringsgränssnitt som stöder det, t.ex. MetaWeblog och MovableType)</li>
       <li xml:lang="uk">підтримка вивантаження мультимедійних файлів до блогу (лише для відповідних програмних інтерфейсів, зокрема MetaWeblog та MovableType);</li>
       <li xml:lang="x-test">xxSupport for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)xx</li>
+      <li xml:lang="zh-TW">支援上傳媒體檔到您的部落格中（但 API 必須有支援，如 MetaWeblog 與 MovableType）</li>
       <li>Support for Fetching your recent blog entries.</li>
       <li xml:lang="ca">Implementa l'obtenció de les vostres entrades recents al blog</li>
       <li xml:lang="de">Unterstützung für das Holen von aktuellen Blog-Einträgen</li>
@@ -248,6 +258,7 @@
       <li xml:lang="sv">Stöd för att hämta senaste blogginlägg.</li>
       <li xml:lang="uk">підтримка отримання нещодавніх записів з вашого блогу;</li>
       <li xml:lang="x-test">xxSupport for Fetching your recent blog entries.xx</li>
+      <li xml:lang="zh-TW">支援抓取您最近的部落格文章。</li>
       <li>Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
       <li xml:lang="ca">Implementa afegir imatges als articles des del vostre sistema. Les pujarà en entregar l'article al blog (només a les API que ho accepten, p. ex., MetaWeblog i MovableType)</li>
       <li xml:lang="de">Unterstützung für das Hinzufügen von Bildern von Ihrem System zu Ihren Posts. Die Bilder werden beim Hochladen zusammen mit Ihrem Text zum Blog hochgeladen, das funktioniert nur bei unterstützten Programmier-Schnittstellen (APIs) wie MetaWeblog und MovableType</li>
