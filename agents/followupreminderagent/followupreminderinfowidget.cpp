@@ -164,6 +164,8 @@ void FollowUpReminderInfoWidget::removeItem(FollowUpReminderInfoItem *mailItem)
     if (mailItem) {
         delete mailItem;
         mChanged = true;
+    } else {
+        qDebug() << "Not item selected";
     }
 }
 
