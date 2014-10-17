@@ -21,7 +21,7 @@
 #include "../followupreminderinfowidget.h"
 #include "../followupreminderinfo.h"
 #include <QTreeWidget>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FollowupReminderNoAnswerDialogTest::FollowupReminderNoAnswerDialogTest(QObject *parent)
     : QObject(parent)
@@ -75,4 +75,4 @@ void FollowupReminderNoAnswerDialogTest::shouldAddItemInTreeList()
 }
 
 
-QTEST_KDEMAIN(FollowupReminderNoAnswerDialogTest, GUI)
+QTEST_MAIN(FollowupReminderNoAnswerDialogTest)

@@ -19,7 +19,7 @@
 #include "archivemailinfotest.h"
 #include "../archivemailinfo.h"
 #include <AkonadiCore/Collection>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <KGlobal>
 #include <KConfigGroup>
 
@@ -84,4 +84,4 @@ void ArchiveMailInfoTest::shouldCopyArchiveInfo()
 }
 
 
-QTEST_KDEMAIN(ArchiveMailInfoTest, NoGUI)
+QTEST_MAIN(ArchiveMailInfoTest)

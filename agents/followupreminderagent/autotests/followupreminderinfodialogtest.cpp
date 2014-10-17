@@ -19,7 +19,7 @@
 #include "../followupreminderinfodialog.h"
 #include "../followupreminderinfowidget.h"
 #include "../followupreminderinfo.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 
 FollowupReminderInfoDialogTest::FollowupReminderInfoDialogTest(QObject *parent)
@@ -73,4 +73,4 @@ void FollowupReminderInfoDialogTest::shouldAddItemInTreeList()
     QCOMPARE(treeWidget->topLevelItemCount(), 10);
 }
 
-QTEST_KDEMAIN(FollowupReminderInfoDialogTest, GUI)
+QTEST_MAIN(FollowupReminderInfoDialogTest)

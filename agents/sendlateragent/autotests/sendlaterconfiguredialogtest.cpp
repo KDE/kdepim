@@ -17,7 +17,7 @@
 
 
 #include "sendlaterconfiguredialogtest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 
 SendLaterConfigureDialogTest::SendLaterConfigureDialogTest(QObject *parent)
@@ -31,4 +31,4 @@ SendLaterConfigureDialogTest::~SendLaterConfigureDialogTest()
 
 }
 
-QTEST_KDEMAIN(SendLaterConfigureDialogTest, GUI)
+QTEST_MAIN(SendLaterConfigureDialogTest)
