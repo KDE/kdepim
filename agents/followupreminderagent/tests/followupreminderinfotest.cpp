@@ -20,7 +20,8 @@
 #include <KConfigGroup>
 #include <qtest_kde.h>
 
-FollowUpReminderInfoTest::FollowUpReminderInfoTest()
+FollowUpReminderInfoTest::FollowUpReminderInfoTest(QObject *parent)
+    : QObject(parent)
 {
 }
 
