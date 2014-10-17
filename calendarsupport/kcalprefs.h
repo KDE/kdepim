@@ -26,8 +26,14 @@
 #include "kcalprefs_base.h"
 
 #include <Akonadi/Entity>
+#include <Akonadi/Tag>
 
 #include <KDateTime>
+
+namespace Akonadi {
+    class Monitor;
+};
+class KJob;
 
 namespace CalendarSupport {
 
@@ -89,6 +95,30 @@ class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
   private:
     class Private;
     Private *const d;
+};
+
+/**
+ * A tag cache
+ */
+class TagCache : public QObject
+{
+  Q_OBJECT
+public:
+    TagCache();
+    Akonadi::Tag getTagByGid(const QByteArray &gid);
+
+private Q_SLOTS:
+    void onTagAdded(const Akonadi::Tag &);
+    void onTagChanged(const Akonadi::Tag &);
+    void onTagRemoved(const Akonadi::Tag &);
+    void onTagsFetched(KJob*);
+
+private:
+    void retrieveTags();
+
+    QHash<Akonadi::Tag::Id, Akonadi::Tag> mCache;
+    QHash<QByteArray, Akonadi::Tag::Id> mGidCache;
+    Akonadi::Monitor *mMonitor;
 };
 
 }

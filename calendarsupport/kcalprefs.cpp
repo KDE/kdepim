@@ -23,7 +23,12 @@
 
 #include "kcalprefs.h"
 #include "identitymanager.h"
-#include "categoryconfig.h"
+
+#include <akonadi/tagattribute.h>
+#include <akonadi/tagmodifyjob.h>
+#include <akonadi/tagfetchjob.h>
+#include <akonadi/tagfetchscope.h>
+#include <akonadi/monitor.h>
 
 #include <KMime/HeaderParsing>
 
@@ -37,6 +42,7 @@
 
 using namespace CalendarSupport;
 
+
 K_GLOBAL_STATIC( KCalPrefs, globalPrefs )
 
 class KCalPrefs::Private
@@ -45,19 +51,16 @@ class KCalPrefs::Private
     Private( KCalPrefs *qq ) : mDefaultCalendarId( -1 ), q( qq )
     {
       mDefaultCategoryColor = QColor( 151, 235, 121 );
-      mCategoryConfig = new CategoryConfig( q );
     }
 
     ~Private()
     {
-      delete mCategoryConfig;
     }
 
     KDateTime::Spec mTimeSpec;
     Akonadi::Entity::Id mDefaultCalendarId;
 
-    CategoryConfig *mCategoryConfig;
-    QHash<QString,QColor> mCategoryColors;
+    TagCache mTagCache;
     QColor mDefaultCategoryColor;
     QDateTime mDayBegins;
 
@@ -166,8 +169,6 @@ void KCalPrefs::usrReadConfig()
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
   d->mDefaultCalendarId = defaultCalendarConfig.readEntry( "Default Calendar", -1 );
 
-  // Category colors
-  d->mCategoryColors = d->mCategoryConfig->readColors();
 #if 0
   config()->setGroup( "FreeBusy" );
   if ( mRememberRetrievePw ) {
@@ -183,7 +184,6 @@ void KCalPrefs::usrReadConfig()
 void KCalPrefs::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
-  d->mCategoryConfig->setColors( d->mCategoryColors );
 
 #if 0
   if ( mRememberRetrievePw ) {
@@ -312,7 +312,10 @@ bool KCalPrefs::thatIsMe( const QString &_email )
 
 void KCalPrefs::setCategoryColor( const QString &cat, const QColor &color )
 {
-  d->mCategoryColors.insert( cat, color );
+  Akonadi::Tag tag = d->mTagCache.getTagByGid(cat.toUtf8());
+  Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing);
+  attr->setBackgroundColor(color);
+  new Akonadi::TagModifyJob(tag);
 }
 
 QColor KCalPrefs::categoryColor( const QString &cat ) const
@@ -320,7 +323,10 @@ QColor KCalPrefs::categoryColor( const QString &cat ) const
   QColor color;
 
   if ( !cat.isEmpty() ) {
-    color = d->mCategoryColors.value( cat );
+    Akonadi::Tag tag = d->mTagCache.getTagByGid(cat.toUtf8());
+    if (Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>()) {
+      color = attr->backgroundColor();
+    }
   }
 
   return color.isValid() ? color : d->mDefaultCategoryColor;
@@ -328,7 +334,7 @@ QColor KCalPrefs::categoryColor( const QString &cat ) const
 
 bool KCalPrefs::hasCategoryColor( const QString &cat ) const
 {
-  return d->mCategoryColors[ cat ].isValid();
+  return (categoryColor(cat) != d->mDefaultCategoryColor);
 }
 
 void KCalPrefs::setDayBegins( const QDateTime &dateTime )
@@ -339,4 +345,57 @@ void KCalPrefs::setDayBegins( const QDateTime &dateTime )
 QDateTime KCalPrefs::dayBegins() const
 {
   return d->mDayBegins;
+}
+
+TagCache::TagCache()
+    : QObject(),
+      mMonitor(new Akonadi::Monitor(this))
+{
+    mMonitor->setTypeMonitored(Akonadi::Monitor::Tags);
+    mMonitor->tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    connect(mMonitor, SIGNAL(tagAdded(Akonadi::Tag)), this, SLOT(onTagAdded(Akonadi::Tag)));
+    connect(mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)), this, SLOT(onTagRemoved(Akonadi::Tag)));
+    connect(mMonitor, SIGNAL(tagChanged(Akonadi::Tag)), this, SLOT(onTagChanged(Akonadi::Tag)));
+    retrieveTags();
+}
+
+Akonadi::Tag TagCache::getTagByGid(const QByteArray &gid)
+{
+    return mCache.value(mGidCache.value(gid));
+}
+
+void TagCache::onTagAdded(const Akonadi::Tag &tag)
+{
+    mCache.insert(tag.id(), tag);
+    mGidCache.insert(tag.gid(), tag.id());
+}
+
+void TagCache::onTagChanged(const Akonadi::Tag &tag)
+{
+    onTagAdded(tag);
+}
+
+void TagCache::onTagRemoved(const Akonadi::Tag &tag)
+{
+    mCache.remove(tag.id());
+    mGidCache.remove(tag.gid());
+}
+
+void TagCache::retrieveTags()
+{
+    Akonadi::TagFetchJob *tagFetchJob = new Akonadi::TagFetchJob(this);
+    tagFetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    connect(tagFetchJob, SIGNAL(result(KJob*)), this, SLOT(onTagsFetched(KJob*)));
+}
+
+void TagCache::onTagsFetched(KJob *job)
+{
+    if (job->error()) {
+        kWarning() << "Failed to fetch tags: " << job->errorString();
+        return;
+    }
+    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
+    Q_FOREACH(const Akonadi::Tag &tag, fetchJob->tags()) {
+        onTagAdded(tag);
+    }
 }
