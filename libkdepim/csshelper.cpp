@@ -347,6 +347,70 @@ namespace KPIM {
       quoteCSS += "}\n\n";
     }
 
+    // CSS definititons for invitations
+    QString invitationCSS = QString (
+        "#invitation {"
+        "  font-size: %1px !important;"
+        "}" ).arg( bodyFontSize );
+
+    invitationCSS += QString (
+        "#invitation h1 {\n"
+        "    margin: 5px 0 0 0 !important;\n"
+        "}\n"
+        "#invitation table {\n"
+        "    font-size: 13px !important;\n"
+        "    line-height: 140% !important;\n"
+        "    border-spacing: 0 !important;\n"
+        "}\n"
+        "#invitation td {\n"
+        "    vertical-align: top !important;\n"
+        "    padding: 10px 5px 0 0 !important;\n"
+        "}\n"
+        "#invitation small {\n"
+        "    color: #555 !important;\n"
+        "}\n"
+        "#invitation li {\n"
+        "    list-style-type: circle !important;\n"
+        "}\n"
+        "#invitation hr {\n"
+        "    border: 1px solid #678db2 !important;\n"
+        "}\n"
+        "#invitation .button{\n"
+        "    display: inline-block !important;\n"
+        "    font-weight: bold !important;\n"
+        "    padding: 4px 8px !important;\n"
+        "    margin-bottom: 4px !important;\n"
+        "    border: 1px solid #dedede !important;\n"
+        "    border-radius: 3px !important;\n"
+        "    background: #f5f5f5 !important;\n"
+        "}\n"
+        "#invitation .button:hover{\n"
+        "    border-color: #bebebe !important;\n"
+        "}\n"
+        "#invitation a.button {\n"
+        "    color: #555 !important !important;\n"
+        "}\n"
+        "#invitation .button img{\n"
+        "    vertical-align: middle !important;\n"
+        "    padding-right: 3px !important;\n"
+        "}\n"
+        "#invitation .leftColumn {\n"
+        "    color: #555 !important;\n"
+        "    font-weight: bold !important;\n"
+        "}\n"
+        "#invitation .firstrow  img {\n"
+        "    padding-right: 10px !important;\n"
+        "    width: 48px !important;\n"
+        "    float: left !important;\n"
+        "}\n"
+        "#invitation .firstrow td {\n"
+        "    line-height: 175% !important;\n"
+        "}\n"
+        ".floatleft {\n"
+        "    float: left !important;\n"
+        "}\n"
+    );
+
     return
       QString( "body {\n"
                "  font-family: \"%1\" ! important;\n"
@@ -525,7 +589,8 @@ namespace KPIM {
             cg.foreground().name(),
             cg.background().name() )
       .arg( cg.mid().name() )
-      + quoteCSS;
+      + quoteCSS
+      + invitationCSS;
   }
 
   QString CSSHelper::commonCssDefinitions() const {

@@ -33,12 +33,15 @@ namespace KCal {
 class Calendar;
 class Incidence;
 class IncidenceBase;
+class ScheduleMessage;
+class Attendee;
 
 class LIBKCAL_EXPORT InvitationFormatterHelper
 {
   public:
     virtual QString generateLinkURL( const QString &id ) { return id; }
     virtual QString makeLink( const QString &id, const QString &text );
+    virtual QString makeBtnLink( const QString &id, const QString &text, const QString &image );
     virtual Calendar *calendar() const { return 0; }
 };
 
@@ -88,6 +91,12 @@ class LIBKCAL_EXPORT IncidenceFormatter
 
     static QString recurrenceString( Incidence *incidence );
 
+    static QString formatGroupwareLinks(InvitationFormatterHelper *helper,
+                                        Incidence *existingIncidence,
+                                        Incidence *inc,
+                                        ScheduleMessage *msg,
+                                        bool rsvpRec,
+                                        Attendee *a);
     /*
       Returns a reminder string computed for the specified Incidence.
       Each item of the returning QStringList corresponds to a string
