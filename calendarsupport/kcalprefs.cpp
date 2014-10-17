@@ -23,7 +23,11 @@
 
 #include "kcalprefs.h"
 #include "identitymanager.h"
-#include "categoryconfig.h"
+#include "tagcache.h"
+#include "calendarsupport_debug.h"
+
+#include <AkonadiCore/TagAttribute>
+#include <AkonadiCore/TagModifyJob>
 
 #include <KMime/HeaderParsing>
 
@@ -35,8 +39,6 @@
 #include <KEMailSettings>
 #include <KSystemTimeZone>
 
-#include "calendarsupport_debug.h"
-
 using namespace CalendarSupport;
 
 Q_GLOBAL_STATIC(KCalPrefs, globalPrefs)
@@ -47,19 +49,16 @@ public:
     Private(KCalPrefs *qq) : mDefaultCalendarId(-1), q(qq)
     {
         mDefaultCategoryColor = QColor(151, 235, 121);
-        mCategoryConfig = new CategoryConfig(q);
     }
 
     ~Private()
     {
-        delete mCategoryConfig;
     }
 
     KDateTime::Spec mTimeSpec;
     Akonadi::Entity::Id mDefaultCalendarId;
 
-    CategoryConfig *mCategoryConfig;
-    QHash<QString, QColor> mCategoryColors;
+    TagCache mTagCache;
     QColor mDefaultCategoryColor;
     QDateTime mDayBegins;
 
@@ -168,8 +167,6 @@ void KCalPrefs::usrRead()
     KConfigGroup defaultCalendarConfig(config(), "Calendar");
     d->mDefaultCalendarId = defaultCalendarConfig.readEntry("Default Calendar", -1);
 
-    // Category colors
-    d->mCategoryColors = d->mCategoryConfig->readColors();
 #if 0
     config()->setGroup("FreeBusy");
     if (mRememberRetrievePw) {
@@ -185,7 +182,6 @@ void KCalPrefs::usrRead()
 bool KCalPrefs::usrSave()
 {
     KConfigGroup generalConfig(config(), "General");
-    d->mCategoryConfig->setColors(d->mCategoryColors);
 
 #if 0
     if (mRememberRetrievePw) {
@@ -314,7 +310,10 @@ bool KCalPrefs::thatIsMe(const QString &_email)
 
 void KCalPrefs::setCategoryColor(const QString &cat, const QColor &color)
 {
-    d->mCategoryColors.insert(cat, color);
+  Akonadi::Tag tag = d->mTagCache.getTagByGid(cat.toUtf8());
+  Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing);
+  attr->setBackgroundColor(color);
+  new Akonadi::TagModifyJob(tag);
 }
 
 QColor KCalPrefs::categoryColor(const QString &cat) const
@@ -322,7 +321,10 @@ QColor KCalPrefs::categoryColor(const QString &cat) const
     QColor color;
 
     if (!cat.isEmpty()) {
-        color = d->mCategoryColors.value(cat);
+        const Akonadi::Tag &tag = d->mTagCache.getTagByGid(cat.toUtf8());
+        if (Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>()) {
+            color = attr->backgroundColor();
+        }
     }
 
     return color.isValid() ? color : d->mDefaultCategoryColor;
@@ -330,7 +332,7 @@ QColor KCalPrefs::categoryColor(const QString &cat) const
 
 bool KCalPrefs::hasCategoryColor(const QString &cat) const
 {
-    return d->mCategoryColors[ cat ].isValid();
+  return (categoryColor(cat) != d->mDefaultCategoryColor);
 }
 
 void KCalPrefs::setDayBegins(const QDateTime &dateTime)
@@ -342,3 +344,5 @@ QDateTime KCalPrefs::dayBegins() const
 {
     return d->mDayBegins;
 }
+
+
