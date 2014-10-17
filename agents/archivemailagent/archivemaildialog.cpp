@@ -55,6 +55,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
 //TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mWidget = new ArchiveMailWidget(this);
     connect(mWidget, &ArchiveMailWidget::archiveNow, this, &ArchiveMailDialog::archiveNow);
+    mWidget->setObjectName(QLatin1String("archivemailwidget"));
     mainLayout->addWidget(mWidget);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
@@ -158,6 +159,7 @@ ArchiveMailWidget::ArchiveMailWidget(QWidget *parent)
     QStringList headers;
     headers << i18n("Name") << i18n("Last archive") << i18n("Next archive in") << i18n("Storage directory");
     mWidget->treeWidget->setHeaderLabels(headers);
+    mWidget->treeWidget->setObjectName(QLatin1String("treewidget"));
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
     mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -237,7 +239,11 @@ void ArchiveMailWidget::load()
     for (int i = 0 ; i < numberOfCollection; ++i) {
         KConfigGroup group = config->group(collectionList.at(i));
         ArchiveMailInfo *info = new ArchiveMailInfo(group);
-        createOrUpdateItem(info);
+        if (info->isValid()) {
+            createOrUpdateItem(info);
+        } else {
+            delete info;
+        }
     }
 }
 
