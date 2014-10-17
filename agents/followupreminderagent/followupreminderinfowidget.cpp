@@ -60,6 +60,7 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
     setObjectName(QLatin1String("FollowUpReminderInfoWidget"));
     QHBoxLayout *hbox = new QHBoxLayout;
     mTreeWidget = new QTreeWidget;
+    mTreeWidget->setObjectName(QLatin1String("treewidget"));
     QStringList headers;
     headers << i18n("To")
             << i18n("Subject")
@@ -90,24 +91,50 @@ FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()
 void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &infoList)
 {
     mTreeWidget->clear();
-    Q_FOREACH (FollowUpReminder::FollowUpReminderInfo *info, infoList) {
-        FollowUpReminderInfoItem *item = new FollowUpReminderInfoItem(mTreeWidget);
-        item->setData(0, AnswerItemId, info->answerMessageItemId());
-        item->setData(0, AnswerItemFound, info->answerWasReceived());
-        item->setText(To, info->to());
-#ifdef DEBUG_MESSAGE_ID
-        item->setText(MessageId, QString::number(info->originalMessageItemId()));
-        item->setText(AnswerMessageId, QString::number(info->answerMessageItemId()));
-#endif
-        item->setText(Subject, info->subject());
-        const QString date = KLocale::global()->formatDateTime(info->followUpReminderDate(), KLocale::LongDate);
-        item->setText(DeadLine, date);
-        item->setText(AnswerWasReceived, info->answerWasReceived() ? i18n("Received") : i18n("On hold"));
-        if (info->followUpReminderDate() < QDateTime::currentDateTime()) {
-            item->setBackgroundColor(DeadLine, Qt::red);
-        }
+    Q_FOREACH(FollowUpReminder::FollowUpReminderInfo *info, infoList) {
+        if (info->isValid())
+            createOrUpdateItem(info);
     }
 }
+
+void FollowUpReminderInfoWidget::load()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+    const QStringList filterGroups =config->groupList().filter( QRegExp( followUpItemPattern ) );
+    const int numberOfItem = filterGroups.count();
+    for (int i = 0 ; i < numberOfItem; ++i) {
+        KConfigGroup group = config->group(filterGroups.at(i));
+
+        FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo(group);
+        if (info->isValid())
+            createOrUpdateItem(info);
+        else
+            delete info;
+    }
+}
+
+void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpReminderInfo *info, FollowUpReminderInfoItem *item)
+{
+    if (!item) {
+        item = new FollowUpReminderInfoItem(mTreeWidget);
+    }
+    item->setData(0, AnswerItemId, info->answerMessageItemId());
+    item->setData(0, AnswerItemFound, info->answerWasReceived());
+    item->setText(To, info->to());
+#ifdef DEBUG_MESSAGE_ID
+    item->setText(MessageId, QString::number(info->originalMessageItemId()));
+    item->setText(AnswerMessageId, QString::number(info->answerMessageItemId()));
+#endif
+    item->setText(Subject, info->subject());
+    const QString date = KGlobal::locale()->formatDateTime( info->followUpReminderDate(), KLocale::LongDate );
+    item->setText(DeadLine, date);
+    item->setText(AnswerWasReceived, info->answerWasReceived() ? i18n("Received") : i18n("On hold"));
+    if (info->followUpReminderDate() < QDateTime::currentDateTime()) {
+        item->setBackgroundColor(DeadLine, Qt::red);
+    }
+}
+
+
 
 void FollowUpReminderInfoWidget::save()
 {

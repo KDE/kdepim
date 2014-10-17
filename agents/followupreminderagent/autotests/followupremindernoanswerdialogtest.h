@@ -15,32 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERINFODIALOG_H
-#define FOLLOWUPREMINDERINFODIALOG_H
+#ifndef FOLLOWUPREMINDERNOANSWERDIALOGTEST_H
+#define FOLLOWUPREMINDERNOANSWERDIALOGTEST_H
 
-#include <QDialog>
-#include <QList>
-class FollowUpReminderInfoWidget;
-namespace FollowUpReminder {
-class FollowUpReminderInfo;
-}
-class FollowUpReminderInfoDialog : public QDialog
+#include <QObject>
+
+
+class FollowupReminderNoAnswerDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderInfoDialog(QWidget *parent = 0);
-    ~FollowUpReminderInfoDialog();
-
-    void load();
-
-    void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info);
-
-private slots:
-    void slotSave();
-private:
-    void readConfig();
-    void writeConfig();
-    FollowUpReminderInfoWidget *mWidget;
+    explicit FollowupReminderNoAnswerDialogTest(QObject *parent=0);
+    ~FollowupReminderNoAnswerDialogTest();
 };
 
-#endif // FOLLOWUPREMINDERINFODIALOG_H
+
+
+#endif // FOLLOWUPREMINDERNOANSWERDIALOGTEST_H
+

@@ -15,32 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERINFODIALOG_H
-#define FOLLOWUPREMINDERINFODIALOG_H
 
-#include <QDialog>
-#include <QList>
-class FollowUpReminderInfoWidget;
-namespace FollowUpReminder {
-class FollowUpReminderInfo;
-}
-class FollowUpReminderInfoDialog : public QDialog
+#include "followupremindernoanswerdialogtest.h"
+#include <qtest_kde.h>
+
+FollowupReminderNoAnswerDialogTest::FollowupReminderNoAnswerDialogTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FollowUpReminderInfoDialog(QWidget *parent = 0);
-    ~FollowUpReminderInfoDialog();
 
-    void load();
+}
 
-    void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info);
+FollowupReminderNoAnswerDialogTest::~FollowupReminderNoAnswerDialogTest()
+{
 
-private slots:
-    void slotSave();
-private:
-    void readConfig();
-    void writeConfig();
-    FollowUpReminderInfoWidget *mWidget;
-};
+}
 
-#endif // FOLLOWUPREMINDERINFODIALOG_H
+QTEST_KDEMAIN(FollowupReminderNoAnswerDialogTest, GUI)

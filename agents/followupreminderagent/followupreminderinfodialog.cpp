@@ -50,6 +50,7 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     connect(okButton, &QPushButton::clicked, this, &FollowUpReminderInfoDialog::slotSave);
 
     mWidget = new FollowUpReminderInfoWidget;
+    mWidget->setObjectName(QLatin1String("FollowUpReminderInfoWidget"));
     mainLayout->addWidget(mWidget);
     mainLayout->addWidget(buttonBox);
 
@@ -100,4 +101,14 @@ void FollowUpReminderInfoDialog::writeConfig()
 void FollowUpReminderInfoDialog::slotSave()
 {
     mWidget->save();
+}
+
+void FollowUpReminderInfoDialog::load()
+{
+    mWidget->load();
+}
+
+void FollowUpReminderInfoDialog::setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info)
+{
+    mWidget->setInfo(info);
 }

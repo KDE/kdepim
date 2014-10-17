@@ -6,7 +6,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR}/
 
 # Convenience macro to add unit tests.
 macro( followupreminder_agent _source )
-  set( _test ${_source} )
+  set( _test ${_source} ../followupreminderinfodialog.cpp ../followupreminderinfowidget.cpp ../jobs/followupremindershowmessagejob.cpp)
   get_filename_component( _name ${_source} NAME_WE )
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
@@ -15,4 +15,5 @@ macro( followupreminder_agent _source )
 endmacro()
 
 followupreminder_agent(followupreminderinfotest.cpp)
-
+followupreminder_agent(followupreminderinfodialogtest.cpp)
+followupreminder_agent(followupremindernoanswerdialogtest.cpp)
