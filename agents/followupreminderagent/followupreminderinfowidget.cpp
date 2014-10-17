@@ -93,8 +93,8 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
 {
     mTreeWidget->clear();
     Q_FOREACH(FollowUpReminder::FollowUpReminderInfo *info, infoList) {
-        FollowUpReminderInfoItem *item = new FollowUpReminderInfoItem(mTreeWidget);
-        createOrUpdateItem(info, item);
+        if (info->isValid())
+            createOrUpdateItem(info);
     }
 }
 
@@ -105,8 +105,12 @@ void FollowUpReminderInfoWidget::load()
     const int numberOfItem = filterGroups.count();
     for (int i = 0 ; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
+
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo(group);
-        createOrUpdateItem(info);
+        if (info->isValid())
+            createOrUpdateItem(info);
+        else
+            delete info;
     }
 }
 
@@ -130,6 +134,7 @@ void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpRe
         item->setBackgroundColor(DeadLine, Qt::red);
     }
 }
+
 
 
 void FollowUpReminderInfoWidget::save()

@@ -18,6 +18,7 @@
 #include "followupreminderinfodialogtest.h"
 #include "../followupreminderinfodialog.h"
 #include "../followupreminderinfowidget.h"
+#include "../followupreminderinfo.h"
 #include <qtest_kde.h>
 
 
@@ -49,8 +50,26 @@ void FollowupReminderInfoDialogTest::shouldAddItemInTreeList()
     FollowUpReminderInfoDialog dlg;
     FollowUpReminderInfoWidget *infowidget = qFindChild<FollowUpReminderInfoWidget *>(&dlg, QLatin1String("FollowUpReminderInfoWidget"));
     QTreeWidget *treeWidget = qFindChild<QTreeWidget *>(infowidget, QLatin1String("treewidget"));
+    QList<FollowUpReminder::FollowUpReminderInfo *> lstInfo;
+    for (int i = 0; i<10; ++i) {
+        FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
+        lstInfo.append(info);
+    }
+    dlg.setInfo(lstInfo);
+    //We load invalid info.
+    QCOMPARE(treeWidget->topLevelItemCount(), 0);
 
+    for (int i = 0; i<10; ++i) {
+        FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
+        info->setOriginalMessageItemId(42);
+        info->setMessageId(QLatin1String("foo"));
+        info->setFollowUpReminderDate(QDateTime::currentDateTime());
+        info->setTo(QLatin1String("To"));
+        lstInfo.append(info);
+    }
 
+    dlg.setInfo(lstInfo);
+    QCOMPARE(treeWidget->topLevelItemCount(), 10);
 }
 
 QTEST_KDEMAIN(FollowupReminderInfoDialogTest, GUI)
