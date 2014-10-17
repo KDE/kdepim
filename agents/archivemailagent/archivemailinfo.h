@@ -77,6 +77,8 @@ public:
     bool isEnabled() const;
     void setEnabled(bool b);
 
+    bool operator ==(const ArchiveMailInfo &other) const;
+
 private:
     QString dirArchive(bool &dirExit) const;
     QDate mLastDateSaved;
