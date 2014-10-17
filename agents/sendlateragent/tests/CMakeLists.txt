@@ -21,4 +21,4 @@ macro( sendlater_agent _source )
 endmacro()
 
 sendlater_agent(sendlaterinfotest.cpp)
-
+sendlater_agent(sendlaterconfiguredialogtest.cpp)

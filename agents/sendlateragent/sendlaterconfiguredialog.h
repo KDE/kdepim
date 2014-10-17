@@ -19,72 +19,9 @@
 #define SENDLATERCONFIGUREDIALOG_H
 
 #include <KDialog>
-#include "ui_sendlaterconfigurewidget.h"
-
-
 #include <Akonadi/Item>
-
-#include <QTreeWidgetItem>
-
 class KAboutData;
-namespace SendLater {
-class SendLaterInfo;
-}
-
-class SendLaterItem : public QTreeWidgetItem
-{
-public:
-    explicit SendLaterItem(QTreeWidget *parent = 0);
-    ~SendLaterItem();
-
-    void setInfo(SendLater::SendLaterInfo *info);
-    SendLater::SendLaterInfo *info() const;
-
-private:
-    SendLater::SendLaterInfo *mInfo;
-};
-
-
-class SendLaterWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit SendLaterWidget( QWidget *parent = 0 );
-    ~SendLaterWidget();
-
-    enum SendLaterColumn {
-        To = 0,
-        Subject,
-        SendAround,
-        Recursive,
-        MessageId
-    };
-
-    void save();
-    void saveTreeWidgetHeader(KConfigGroup &group);
-    void restoreTreeWidgetHeader(const QByteArray &group);
-    void needToReload();
-    QList<Akonadi::Item::Id> messagesToRemove() const;
-
-private Q_SLOTS:
-    void slotRemoveItem();
-    void slotModifyItem();
-    void updateButtons();
-    void customContextMenuRequested(const QPoint &);
-    void slotSendNow();
-
-Q_SIGNALS:
-    void sendNow(Akonadi::Item::Id);
-
-private:
-    void createOrUpdateItem(SendLater::SendLaterInfo *info, SendLaterItem *item = 0);
-    void load();
-    QList<Akonadi::Item::Id> mListMessagesToRemove;
-    bool mChanged;
-    Ui::SendLaterConfigureWidget *mWidget;
-};
-
-
+class SendLaterWidget;
 class SendLaterConfigureDialog : public KDialog
 {
     Q_OBJECT
