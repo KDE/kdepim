@@ -43,6 +43,7 @@ FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
     vbox->addWidget(lab);
 
     mWidget = new FollowUpReminderInfoWidget;
+    mWidget->setObjectName(QLatin1String("FollowUpReminderInfoWidget"));
     vbox->addWidget(mWidget);
     setMainWidget(w);
     readConfig();

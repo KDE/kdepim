@@ -14,3 +14,4 @@ endmacro()
 
 followupreminder_agent(followupreminderinfotest.cpp)
 followupreminder_agent(followupreminderinfodialogtest.cpp)
+followupreminder_agent(followupremindernoanswerdialogtest.cpp)

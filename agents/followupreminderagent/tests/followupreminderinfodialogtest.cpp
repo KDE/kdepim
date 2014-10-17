@@ -56,9 +56,10 @@ void FollowupReminderInfoDialogTest::shouldAddItemInTreeList()
         lstInfo.append(info);
     }
     dlg.setInfo(lstInfo);
-    //We load invalid info.
+    //We load invalid infos.
     QCOMPARE(treeWidget->topLevelItemCount(), 0);
 
+    //Load valid infos
     for (int i = 0; i<10; ++i) {
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
         info->setOriginalMessageItemId(42);
