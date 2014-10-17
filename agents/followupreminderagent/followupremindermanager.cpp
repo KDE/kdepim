@@ -139,6 +139,7 @@ QString FollowUpReminderManager::infoToStr(FollowUpReminder::FollowUpReminderInf
     infoStr += QString::fromLatin1("Subject :%1\n").arg(info->subject());
     infoStr += QString::fromLatin1("To :%1\n").arg(info->to());
     infoStr += QString::fromLatin1("Dead Line :%1\n").arg(info->followUpReminderDate().toString());
+    infoStr += QString::fromLatin1("Answer received :%1\n").arg(info->answerWasReceived() ? QLatin1String("true") : QLatin1String("false") );
     infoStr += QLatin1String("****************************************\n");
     return infoStr;
 }
