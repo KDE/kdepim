@@ -49,6 +49,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
     mWidget = new ArchiveMailWidget(this);
+    mWidget->setObjectName(QLatin1String("archivemailwidget"));
     connect(mWidget, SIGNAL(archiveNow(ArchiveMailInfo*)), this, SIGNAL(archiveNow(ArchiveMailInfo*)));
     mainLayout->addWidget(mWidget);
     setMainWidget( mainWidget );
@@ -148,6 +149,7 @@ ArchiveMailWidget::ArchiveMailWidget( QWidget *parent )
     QStringList headers;
     headers<<i18n("Name")<<i18n("Last archive")<<i18n("Next archive in")<<i18n("Storage directory");
     mWidget->treeWidget->setHeaderLabels(headers);
+    mWidget->treeWidget->setObjectName(QLatin1String("treewidget"));
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
     mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -228,7 +230,11 @@ void ArchiveMailWidget::load()
     for (int i = 0 ; i < numberOfCollection; ++i) {
         KConfigGroup group = config->group(collectionList.at(i));
         ArchiveMailInfo *info = new ArchiveMailInfo(group);
-        createOrUpdateItem(info);
+        if (info->isValid()) {
+            createOrUpdateItem(info);
+        } else {
+            delete info;
+        }
     }
 }
 
