@@ -15,23 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERINFOTEST_H
-#define FOLLOWUPREMINDERINFOTEST_H
+#ifndef SENDLATERCONFIGUREDIALOGTEST_H
+#define SENDLATERCONFIGUREDIALOGTEST_H
+
 
 #include <QObject>
 
-class FollowUpReminderInfoTest : public QObject
+
+class SendLaterConfigureDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderInfoTest(QObject *parent=0);
-
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shoudBeNotValid();
-    void shoudBeValidEvenIfSubjectIsEmpty();
-    void shouldRestoreFromSettings();
-    void shouldCopyReminderInfo();
+    explicit SendLaterConfigureDialogTest(QObject *parent=0);
+    ~SendLaterConfigureDialogTest();
 };
 
-#endif // FOLLOWUPREMINDERINFOTEST_H
+
+
+#endif // SENDLATERCONFIGUREDIALOGTEST_H
+

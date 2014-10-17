@@ -17,6 +17,10 @@
 
 
 #include "followupremindernoanswerdialogtest.h"
+#include "../followupremindernoanswerdialog.h"
+#include "../followupreminderinfowidget.h"
+#include "../followupreminderinfo.h"
+#include <QTreeWidget>
 #include <qtest_kde.h>
 
 FollowupReminderNoAnswerDialogTest::FollowupReminderNoAnswerDialogTest(QObject *parent)
@@ -29,5 +33,46 @@ FollowupReminderNoAnswerDialogTest::~FollowupReminderNoAnswerDialogTest()
 {
 
 }
+
+void FollowupReminderNoAnswerDialogTest::shouldHaveDefaultValues()
+{
+    FollowUpReminderNoAnswerDialog dlg;
+    FollowUpReminderInfoWidget *infowidget = qFindChild<FollowUpReminderInfoWidget *>(&dlg, QLatin1String("FollowUpReminderInfoWidget"));
+    QVERIFY(infowidget);
+
+    QTreeWidget *treeWidget = qFindChild<QTreeWidget *>(infowidget, QLatin1String("treewidget"));
+    QVERIFY(treeWidget);
+
+    QCOMPARE(treeWidget->topLevelItemCount(), 0);
+}
+
+void FollowupReminderNoAnswerDialogTest::shouldAddItemInTreeList()
+{
+    FollowUpReminderNoAnswerDialog dlg;
+    FollowUpReminderInfoWidget *infowidget = qFindChild<FollowUpReminderInfoWidget *>(&dlg, QLatin1String("FollowUpReminderInfoWidget"));
+    QTreeWidget *treeWidget = qFindChild<QTreeWidget *>(infowidget, QLatin1String("treewidget"));
+    QList<FollowUpReminder::FollowUpReminderInfo *> lstInfo;
+    for (int i = 0; i<10; ++i) {
+        FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
+        lstInfo.append(info);
+    }
+    dlg.setInfo(lstInfo);
+    //We load invalid infos.
+    QCOMPARE(treeWidget->topLevelItemCount(), 0);
+
+    //Load valid infos
+    for (int i = 0; i<10; ++i) {
+        FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
+        info->setOriginalMessageItemId(42);
+        info->setMessageId(QLatin1String("foo"));
+        info->setFollowUpReminderDate(QDateTime::currentDateTime());
+        info->setTo(QLatin1String("To"));
+        lstInfo.append(info);
+    }
+
+    dlg.setInfo(lstInfo);
+    QCOMPARE(treeWidget->topLevelItemCount(), 10);
+}
+
 
 QTEST_KDEMAIN(FollowupReminderNoAnswerDialogTest, GUI)

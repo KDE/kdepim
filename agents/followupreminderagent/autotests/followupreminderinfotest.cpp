@@ -21,7 +21,8 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-FollowUpReminderInfoTest::FollowUpReminderInfoTest()
+FollowUpReminderInfoTest::FollowUpReminderInfoTest(QObject *parent)
+    : QObject(parent)
 {
 }
 

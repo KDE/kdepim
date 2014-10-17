@@ -15,23 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERINFOTEST_H
-#define FOLLOWUPREMINDERINFOTEST_H
+
+#ifndef ARCHIVEMAILINFOTEST_H
+#define ARCHIVEMAILINFOTEST_H
 
 #include <QObject>
 
-class FollowUpReminderInfoTest : public QObject
+class ArchiveMailInfoTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderInfoTest(QObject *parent=0);
+    explicit ArchiveMailInfoTest(QObject *parent=0);
+    ~ArchiveMailInfoTest();
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-    void shoudBeNotValid();
-    void shoudBeValidEvenIfSubjectIsEmpty();
+    void shouldCopyArchiveInfo();
     void shouldRestoreFromSettings();
-    void shouldCopyReminderInfo();
 };
 
-#endif // FOLLOWUPREMINDERINFOTEST_H
+
+
+#endif // ARCHIVEMAILINFOTEST_H
+

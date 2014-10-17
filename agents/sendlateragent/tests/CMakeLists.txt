@@ -4,4 +4,3 @@ target_link_libraries(sendlaterinfo_gui
   sendlater
 )
 
-

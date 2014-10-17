@@ -52,4 +52,4 @@ install(TARGETS akonadi_archivemail_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(FILES archivemailagent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
 install(FILES akonadi_archivemail_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
 
-
+add_subdirectory(autotests)

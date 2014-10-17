@@ -39,6 +39,7 @@ install( TARGETS sendlater ${INSTALL_TARGETS_DEFAULT_ARGS} )
 set(sendlateragent_SRCS
    sendlateragent.cpp
    sendlaterconfiguredialog.cpp
+   sendlaterconfigurewidget.cpp
    sendlatermanager.cpp
    sendlaterjob.cpp
    sendlaterremovemessagejob.cpp

@@ -44,9 +44,8 @@ FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::accepted, this, &FollowUpReminderNoAnswerDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &FollowUpReminderNoAnswerDialog::reject);
     setAttribute(Qt::WA_DeleteOnClose);
-    QWidget *w = new QWidget;
-    QVBoxLayout *vbox = new QVBoxLayout;
-    w->setLayout(vbox);
+    QWidget *w = new QWidget(this);
+    QVBoxLayout *vbox = new QVBoxLayout(w);
     QLabel *lab = new QLabel(i18n("You still wait an answer about this mail:"));
     vbox->addWidget(lab);
 

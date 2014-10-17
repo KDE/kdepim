@@ -15,23 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERINFOTEST_H
-#define FOLLOWUPREMINDERINFOTEST_H
 
-#include <QObject>
+#include "sendlaterconfiguredialogtest.h"
+#include <qtest_kde.h>
 
-class FollowUpReminderInfoTest : public QObject
+
+SendLaterConfigureDialogTest::SendLaterConfigureDialogTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FollowUpReminderInfoTest(QObject *parent=0);
 
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shoudBeNotValid();
-    void shoudBeValidEvenIfSubjectIsEmpty();
-    void shouldRestoreFromSettings();
-    void shouldCopyReminderInfo();
-};
+}
 
-#endif // FOLLOWUPREMINDERINFOTEST_H
+SendLaterConfigureDialogTest::~SendLaterConfigureDialogTest()
+{
+
+}
+
+QTEST_KDEMAIN(SendLaterConfigureDialogTest, GUI)

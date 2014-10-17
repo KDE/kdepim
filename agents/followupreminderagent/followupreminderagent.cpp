@@ -84,6 +84,7 @@ bool FollowUpReminderAgent::enabledAgent() const
 void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
 {
     QPointer<FollowUpReminderInfoDialog> dialog = new FollowUpReminderInfoDialog();
+    dialog->load();
     if (windowId) {
 #ifndef Q_OS_WIN
         KWindowSystem::setMainWindow(dialog, windowId);
