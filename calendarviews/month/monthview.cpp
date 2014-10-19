@@ -42,7 +42,6 @@
 #include <QTimer>
 #include <QToolButton>
 #include <QWheelEvent>
-#include <KLocale>
 #include <QLocale>
 
 using namespace EventViews;
