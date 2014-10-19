@@ -14,10 +14,12 @@ remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 
 # Convenience macro to add unit tests.
 macro( sendlater_agent _source )
-  set( _test ${_source} )
+  set( _test ${_source} ../sendlaterconfiguredialog.cpp ../sendlaterconfigurewidget.cpp)
+
+  kde4_add_ui_files(_test ../ui/sendlaterconfigurewidget.ui)
   get_filename_component( _name ${_source} NAME_WE )
   kde4_add_unit_test( ${_name} TESTNAME sendlater-${_name} ${_test} )
-  target_link_libraries( ${_name} ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} sendlater)
+  target_link_libraries( ${_name} ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} sendlater pimcommon)
 endmacro()
 
 sendlater_agent(sendlaterinfotest.cpp)
