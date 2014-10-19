@@ -36,7 +36,7 @@
 
 #include <kleo/job.h>
 
-#include <KUrl>
+#include <QUrl>
 #include <QDebug>
 #include <KLocalizedString>
 
@@ -49,7 +49,7 @@ AuditLog AuditLog::fromJob( const Job * job ) {
         return AuditLog();
 }
 
-QString AuditLog::formatLink( const KUrl & urlTemplate ) const {
+QString AuditLog::formatLink( const QUrl & urlTemplate ) const {
     // more or less the same as
     // kmail/objecttreeparser.cpp:makeShowAuditLogLink(), so any bug
     // fixed here eqally applies there:
@@ -66,8 +66,10 @@ QString AuditLog::formatLink( const KUrl & urlTemplate ) const {
     }
 
     if ( !m_text.isEmpty() ) {
-        KUrl url = urlTemplate;
-        url.addQueryItem( QLatin1String("log"), m_text );
+        QUrl url = urlTemplate;
+        QUrlQuery urlQuery(url);
+        urlQuery.addQueryItem(QLatin1String("log"), m_text);
+        url.setQuery(urlQuery);
         return QLatin1String("<a href=\"") + url.url() + QLatin1String("\">") + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + QLatin1String("</a>");
     }
 

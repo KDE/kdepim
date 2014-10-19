@@ -88,10 +88,8 @@ public:
     QPushButton * m_closeButton;
 };
 
-static KUrl auditlog_url_template() {
-    KUrl url;
-    url.setScheme( QLatin1String("kleoresultitem") );
-    url.setHost( QLatin1String("showauditlog") );
+static QUrl auditlog_url_template() {
+    QUrl url(QLatin1String("kleoresultitem://showauditlog") );
     return url;
 }
 

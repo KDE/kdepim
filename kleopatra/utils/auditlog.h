@@ -37,7 +37,7 @@
 #include <gpgme++/error.h>
 #include <gpg-error.h>
 
-class KUrl;
+class QUrl;
 
 namespace Kleo {
     class Job;
@@ -58,7 +58,7 @@ namespace Kleo {
         GpgME::Error error() const { return m_error; }
         QString text() const { return m_text; }
 
-        QString formatLink( const KUrl & urlTemplate ) const;
+        QString formatLink( const QUrl & urlTemplate ) const;
 
     private:
         QString m_text;
