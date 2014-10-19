@@ -17,6 +17,11 @@
 
 
 #include "sendlaterconfiguredialogtest.h"
+#include "../sendlaterconfiguredialog.h"
+#include "../sendlaterconfigurewidget.h"
+
+#include <QTreeWidget>
+
 #include <qtest.h>
 
 
@@ -28,6 +33,19 @@ SendLaterConfigureDialogTest::SendLaterConfigureDialogTest(QObject *parent)
 
 SendLaterConfigureDialogTest::~SendLaterConfigureDialogTest()
 {
+
+}
+
+void SendLaterConfigureDialogTest::shouldHaveDefaultValue()
+{
+    SendLaterConfigureDialog dlg;
+    SendLaterWidget *infowidget = qFindChild<SendLaterWidget *>(&dlg, QLatin1String("sendlaterwidget"));
+    QVERIFY(infowidget);
+
+    QTreeWidget *treeWidget = qFindChild<QTreeWidget *>(infowidget, QLatin1String("treewidget"));
+    QVERIFY(treeWidget);
+
+    QCOMPARE(treeWidget->topLevelItemCount(), 0);
 
 }
 
