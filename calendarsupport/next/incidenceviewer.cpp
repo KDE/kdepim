@@ -34,14 +34,14 @@
 
 #include <KJob>
 #include <KSystemTimeZone>
-#include <KTextBrowser>
+#include <QTextBrowser>
 
 #include <QVBoxLayout>
 
 using namespace CalendarSupport;
 
 TextBrowser::TextBrowser( QWidget *parent )
-  : KTextBrowser( parent )
+  : QTextBrowser( parent )
 {
 #ifdef KDEPIM_MOBILE_UI
   setFrameStyle( QFrame::NoFrame );
@@ -155,7 +155,7 @@ void IncidenceViewer::init()
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
 
-  d->mBrowser->setNotifyClick( true );
+  d->mBrowser->setOpenLinks( true );
   d->mBrowser->setMinimumHeight( 1 );
 
   layout->addWidget( d->mBrowser );

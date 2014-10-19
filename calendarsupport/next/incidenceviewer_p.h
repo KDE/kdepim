@@ -22,11 +22,11 @@
 #ifndef CALENDARSUPPORT_INCIDENCEVIEWER_P_H
 #define CALENDARSUPPORT_INCIDENCEVIEWER_P_H
 
-#include <KTextBrowser>
+#include <QTextBrowser>
 
 namespace CalendarSupport {
 
-class TextBrowser : public KTextBrowser
+class TextBrowser : public QTextBrowser
 {
   Q_OBJECT
 
