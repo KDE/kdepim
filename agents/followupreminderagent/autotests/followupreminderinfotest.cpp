@@ -43,8 +43,8 @@ void FollowUpReminderInfoTest::shoudBeNotValid()
     info.setMessageId(QLatin1String("foo"));
     QCOMPARE(info.isValid(), false);
 
-    const QDate date(2014, 1, 1);
-    info.setFollowUpReminderDate(QDateTime(date));
+    const QDate date(2014,1,1);
+    info.setFollowUpReminderDate(QDate(date));
     QCOMPARE(info.isValid(), false);
 
     const QString to = QLatin1String("kde.org");
@@ -60,8 +60,8 @@ void FollowUpReminderInfoTest::shoudBeValidEvenIfSubjectIsEmpty()
     FollowUpReminder::FollowUpReminderInfo info;
     //We need a Akonadi::Id valid and a messageId not empty and a valid date and a "To" not empty
     info.setMessageId(QLatin1String("foo"));
-    const QDate date(2014, 1, 1);
-    info.setFollowUpReminderDate(QDateTime(date));
+    const QDate date(2014,1,1);
+    info.setFollowUpReminderDate(QDate(date));
     const QString to = QLatin1String("kde.org");
     info.setTo(to);
     info.setOriginalMessageItemId(Akonadi::Item::Id(42));
@@ -72,8 +72,8 @@ void FollowUpReminderInfoTest::shouldRestoreFromSettings()
 {
     FollowUpReminder::FollowUpReminderInfo info;
     info.setMessageId(QLatin1String("foo"));
-    const QDate date(2014, 1, 1);
-    info.setFollowUpReminderDate(QDateTime(date));
+    const QDate date(2014,1,1);
+    info.setFollowUpReminderDate(QDate(date));
     const QString to = QLatin1String("kde.org");
     info.setTo(to);
     info.setOriginalMessageItemId(Akonadi::Item::Id(42));
@@ -90,8 +90,8 @@ void FollowUpReminderInfoTest::shouldCopyReminderInfo()
 {
     FollowUpReminder::FollowUpReminderInfo info;
     info.setMessageId(QLatin1String("foo"));
-    const QDate date(2014, 1, 1);
-    info.setFollowUpReminderDate(QDateTime(date));
+    const QDate date(2014,1,1);
+    info.setFollowUpReminderDate(QDate(date));
     const QString to = QLatin1String("kde.org");
     info.setTo(to);
     info.setOriginalMessageItemId(Akonadi::Item::Id(42));

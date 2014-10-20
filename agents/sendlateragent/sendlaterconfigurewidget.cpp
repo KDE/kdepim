@@ -151,7 +151,11 @@ void SendLaterWidget::load()
     for (int i = 0 ; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
         SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);
-        createOrUpdateItem(info);
+        if (info->isValid()) {
+            createOrUpdateItem(info);
+        } else {
+            delete info;
+        }
     }
     mWidget->treeWidget->setShowDefaultText(numberOfItem==0);
 }

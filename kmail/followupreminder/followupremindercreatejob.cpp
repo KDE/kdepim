@@ -15,28 +15,49 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERUTIL_H
-#define FOLLOWUPREMINDERUTIL_H
-#include "followupreminder_export.h"
-#include <KSharedConfig>
-namespace FollowUpReminder 
+#include "followupremindercreatejob.h"
+
+
+FollowupReminderCreateJob::FollowupReminderCreateJob(QObject *parent)
+    : QObject(parent)
 {
-class FollowUpReminderInfo;
-namespace FollowUpReminderUtil 
-{
-FOLLOWUPREMINDER_EXPORT bool sentLaterAgentWasRegistered();
-
-FOLLOWUPREMINDER_EXPORT bool sentLaterAgentEnabled();
-
-FOLLOWUPREMINDER_EXPORT void reload();
-
-FOLLOWUPREMINDER_EXPORT void forceReparseConfiguration();
-
-FOLLOWUPREMINDER_EXPORT KSharedConfig::Ptr defaultConfig();
-
-void writeFollowupReminderInfo(FollowUpReminder::FollowUpReminderInfo *info, bool forceReload);
 
 }
+
+FollowupReminderCreateJob::~FollowupReminderCreateJob()
+{
+
 }
 
-#endif // FOLLOWUPREMINDERUTIL_H
+void FollowupReminderCreateJob::setFollowUpReminderDate(const QDate &date)
+{
+
+}
+
+void FollowupReminderCreateJob::setOriginalMessageItemId(Akonadi::Entity::Id value)
+{
+
+}
+
+void FollowupReminderCreateJob::setMessageId(const QString &messageId)
+{
+
+}
+
+void FollowupReminderCreateJob::setTo(const QString &to)
+{
+
+}
+
+void FollowupReminderCreateJob::setFollowUpReminderDate(const QDateTime &followUpReminderDate)
+{
+
+}
+
+void FollowupReminderCreateJob::setSubject(const QString &subject)
+{
+
+}
+
+
+
