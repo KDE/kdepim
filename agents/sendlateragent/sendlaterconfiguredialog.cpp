@@ -24,11 +24,6 @@
 #include <KHelpMenu>
 #include <KMenu>
 #include <KAboutData>
-#include <KMessageBox>
-
-static QString sendLaterItemPattern = QLatin1String( "SendLaterItem \\d+" );
-
-//#define DEBUG_MESSAGE_ID
 
 SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
