@@ -120,13 +120,8 @@ void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpRe
     if (!item) {
         item = new FollowUpReminderInfoItem(mTreeWidget);
     }
-    item->setData(0, AnswerItemId, info->answerMessageItemId());
-    item->setData(0, AnswerItemFound, info->answerWasReceived());
+
     item->setText(To, info->to());
-#ifdef DEBUG_MESSAGE_ID
-    item->setText(MessageId, QString::number(info->originalMessageItemId()));
-    item->setText(AnswerMessageId, QString::number(info->answerMessageItemId()));
-#endif
     item->setText(Subject, info->subject());
     const QString date = KGlobal::locale()->formatDate( info->followUpReminderDate(), KLocale::LongDate );
     item->setText(DeadLine, date);
@@ -134,6 +129,11 @@ void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpRe
     if (info->followUpReminderDate() < QDate::currentDate()) {
         item->setBackgroundColor(DeadLine, Qt::red);
     }
+    item->setData(0, AnswerItemFound, info->answerWasReceived());
+#ifdef DEBUG_MESSAGE_ID
+    item->setText(MessageId, QString::number(info->originalMessageItemId()));
+    item->setText(AnswerMessageId, QString::number(info->answerMessageItemId()));
+#endif
 }
 
 
@@ -152,13 +152,17 @@ void FollowUpReminderInfoWidget::save()
     }
 
     const int numberOfItem(mTreeWidget->topLevelItemCount());
-    for (int i = 0; i < numberOfItem; ++i) {
+    int i = 0;
+    for (; i < numberOfItem; ++i) {
         FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(mTreeWidget->topLevelItem(i));
         if (mailItem->info()) {
-            KConfigGroup group = config->group(FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(mailItem->info()->originalMessageItemId()));
+            KConfigGroup group = config->group(FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(i));
             mailItem->info()->writeConfig(group);
         }
     }
+    ++i;
+    KConfigGroup general = config->group(QLatin1String("General"));
+    general.writeEntry("Number", i);
     config->sync();
     config->reparseConfiguration();
 }

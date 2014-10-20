@@ -21,13 +21,13 @@
 #include <QDBusInterface>
 #include "followupreminderagentsettings.h"
 
-bool FollowUpReminder::FollowUpReminderUtil::sentLaterAgentWasRegistered()
+bool FollowUpReminder::FollowUpReminderUtil::followupReminderAgentWasRegistered()
 {
     QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_followupreminder_agent"), QLatin1String("/FollowUpReminder") );
     return interface.isValid();
 }
 
-bool FollowUpReminder::FollowUpReminderUtil::sentLaterAgentEnabled()
+bool FollowUpReminder::FollowUpReminderUtil::followupReminderAgentEnabled()
 {
     return FollowUpReminderAgentSettings::self()->enabled();
 }
@@ -58,7 +58,12 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(FollowUpR
 
     KSharedConfig::Ptr config = FollowUpReminder::FollowUpReminderUtil::defaultConfig();
 
-    const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(info->originalMessageItemId());
+    KConfigGroup general = config->group(QLatin1String("General"));
+    int value = general.readEntry("Number", 0);
+    ++value;
+
+
+    const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(value);
     // first, delete all filter groups:
     const QStringList filterGroups = config->groupList().filter( groupName );
     foreach ( const QString &group, filterGroups ) {
@@ -66,6 +71,9 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(FollowUpR
     }
     KConfigGroup group = config->group(groupName);
     info->writeConfig(group);
+
+    general.writeEntry("Number", value);
+
     config->sync();
     config->reparseConfiguration();
     if (forceReload)
