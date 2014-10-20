@@ -77,6 +77,10 @@ void FollowUpReminderManager::load()
 
 void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col)
 {
+    if (mFollowUpReminderInfoList.isEmpty()) {
+        return;
+    }
+
     //If we move to trash directly => exclude it.
     if (Akonadi::SpecialMailCollections::self()->specialCollectionType(col) == Akonadi::SpecialMailCollections::Trash) {
         return;

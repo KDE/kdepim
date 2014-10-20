@@ -58,11 +58,9 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(FollowUpR
 
     KSharedConfig::Ptr config = FollowUpReminder::FollowUpReminderUtil::defaultConfig();
 
-    //TODO port
-    /*
-    const QString groupName = SendLater::SendLaterUtil::sendLaterPattern.arg(info->itemId());
+    const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(info->originalMessageItemId());
     // first, delete all filter groups:
-    const QStringList filterGroups =config->groupList().filter( groupName );
+    const QStringList filterGroups = config->groupList().filter( groupName );
     foreach ( const QString &group, filterGroups ) {
         config->deleteGroup( group );
     }
@@ -72,5 +70,4 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(FollowUpR
     config->reparseConfiguration();
     if (forceReload)
         reload();
-        */
 }

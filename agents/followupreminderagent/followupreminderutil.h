@@ -34,8 +34,9 @@ FOLLOWUPREMINDER_EXPORT void forceReparseConfiguration();
 
 FOLLOWUPREMINDER_EXPORT KSharedConfig::Ptr defaultConfig();
 
-void writeFollowupReminderInfo(FollowUpReminder::FollowUpReminderInfo *info, bool forceReload);
+FOLLOWUPREMINDER_EXPORT void writeFollowupReminderInfo(FollowUpReminder::FollowUpReminderInfo *info, bool forceReload);
 
+static QString followUpReminderPattern = QLatin1String("FollowupReminderItem %1");
 }
 }
 
