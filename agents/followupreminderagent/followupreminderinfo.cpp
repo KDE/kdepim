@@ -49,7 +49,7 @@ FollowUpReminderInfo::FollowUpReminderInfo(const FollowUpReminderInfo &info)
 void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
 {
     if (config.hasKey(QLatin1String("followUpReminderDate"))) {
-        mFollowUpReminderDate = QDateTime::fromString(config.readEntry("followUpReminderDate"), Qt::ISODate);
+        mFollowUpReminderDate = QDate::fromString(config.readEntry("followUpReminderDate"), Qt::ISODate);
     }
     mOriginalMessageItemId = config.readEntry("itemId", -1);
     mMessageId = config.readEntry("messageId", QString());
@@ -141,12 +141,12 @@ QString FollowUpReminderInfo::to() const
     return mTo;
 }
 
-QDateTime FollowUpReminderInfo::followUpReminderDate() const
+QDate FollowUpReminderInfo::followUpReminderDate() const
 {
     return mFollowUpReminderDate;
 }
 
-void FollowUpReminderInfo::setFollowUpReminderDate(const QDateTime &followUpReminderDate)
+void FollowUpReminderInfo::setFollowUpReminderDate(const QDate &followUpReminderDate)
 {
     mFollowUpReminderDate = followUpReminderDate;
 }

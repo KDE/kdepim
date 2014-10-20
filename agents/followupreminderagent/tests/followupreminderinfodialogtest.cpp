@@ -64,7 +64,7 @@ void FollowupReminderInfoDialogTest::shouldAddItemInTreeList()
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
         info->setOriginalMessageItemId(42);
         info->setMessageId(QLatin1String("foo"));
-        info->setFollowUpReminderDate(QDateTime::currentDateTime());
+        info->setFollowUpReminderDate(QDate::currentDate());
         info->setTo(QLatin1String("To"));
         lstInfo.append(info);
     }

@@ -127,10 +127,10 @@ void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpRe
     item->setText(AnswerMessageId, QString::number(info->answerMessageItemId()));
 #endif
     item->setText(Subject, info->subject());
-    const QString date = KGlobal::locale()->formatDateTime( info->followUpReminderDate(), KLocale::LongDate );
+    const QString date = KGlobal::locale()->formatDate( info->followUpReminderDate(), KLocale::LongDate );
     item->setText(DeadLine, date);
     item->setText(AnswerWasReceived, info->answerWasReceived() ? i18n("Received") : i18n("On hold"));
-    if (info->followUpReminderDate() < QDateTime::currentDateTime()) {
+    if (info->followUpReminderDate() < QDate::currentDate()) {
         item->setBackgroundColor(DeadLine, Qt::red);
     }
 }

@@ -19,7 +19,7 @@
 #define FOLLOWUPREMINDERINFO_H
 
 #include <Akonadi/Item>
-#include <QDateTime>
+#include <QDate>
 #include "followupreminder_export.h"
 class KConfigGroup;
 namespace FollowUpReminder {
@@ -42,8 +42,9 @@ public:
     void setTo(const QString &to);
     QString to() const;
 
-    QDateTime followUpReminderDate() const;
-    void setFollowUpReminderDate(const QDateTime &followUpReminderDate);
+    QDate followUpReminderDate() const;
+    void setFollowUpReminderDate(const QDate &followUpReminderDate);
+
 
     void writeConfig(KConfigGroup &config);
 
@@ -64,7 +65,7 @@ private:
     Akonadi::Item::Id mOriginalMessageItemId;
     Akonadi::Item::Id mAnswerMessageItemId;
     QString mMessageId;
-    QDateTime mFollowUpReminderDate;
+    QDate mFollowUpReminderDate;
     QString mTo;
     QString mSubject;
     bool mAnswerWasReceived;
