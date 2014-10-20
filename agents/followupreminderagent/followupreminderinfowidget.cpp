@@ -16,6 +16,7 @@
 */
 #include "followupreminderinfowidget.h"
 #include "followupreminderinfo.h"
+#include "followupreminderutil.h"
 #include "jobs/followupremindershowmessagejob.h"
 
 #include <QTreeWidget>
@@ -154,7 +155,7 @@ void FollowUpReminderInfoWidget::save()
     for (int i = 0; i < numberOfItem; ++i) {
         FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(mTreeWidget->topLevelItem(i));
         if (mailItem->info()) {
-            KConfigGroup group = config->group(QString::fromLatin1("FollowupReminderItem %1").arg(mailItem->info()->originalMessageItemId()));
+            KConfigGroup group = config->group(FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(mailItem->info()->originalMessageItemId()));
             mailItem->info()->writeConfig(group);
         }
     }
