@@ -18,7 +18,9 @@
 #ifndef FOLLOWUPREMINDERUTIL_H
 #define FOLLOWUPREMINDERUTIL_H
 #include "followupreminder_export.h"
+#include <KSharedConfig>
 namespace FollowUpReminder {
+class FollowUpReminderInfo;
 namespace FollowUpReminderUtil {
 FOLLOWUPREMINDER_EXPORT bool sentLaterAgentWasRegistered();
 
@@ -27,6 +29,10 @@ FOLLOWUPREMINDER_EXPORT bool sentLaterAgentEnabled();
 FOLLOWUPREMINDER_EXPORT void reload();
 
 FOLLOWUPREMINDER_EXPORT void forceReparseConfiguration();
+
+FOLLOWUPREMINDER_EXPORT KSharedConfig::Ptr defaultConfig();
+
+void writeFollowupReminderInfo(FollowUpReminder::FollowUpReminderInfo *info, bool forceReload);
 
 }
 }
