@@ -157,7 +157,7 @@ void FollowUpReminderInfoWidget::save()
         FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(mTreeWidget->topLevelItem(i));
         if (mailItem->info()) {
             KConfigGroup group = config->group(FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(i));
-            mailItem->info()->writeConfig(group);
+            mailItem->info()->writeConfig(group, i);
         }
     }
     ++i;
@@ -199,6 +199,7 @@ void FollowUpReminderInfoWidget::openShowMessage(Akonadi::Item::Id id)
 void FollowUpReminderInfoWidget::removeItem(FollowUpReminderInfoItem *mailItem)
 {
     if (mailItem) {
+        //TODO remove in list.
         delete mailItem;
         mChanged = true;
     } else {

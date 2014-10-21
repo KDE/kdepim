@@ -58,17 +58,22 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedCo
 
     KConfigGroup general = config->group(QLatin1String("General"));
     int value = general.readEntry("Number", 0);
+    int identifier = info->uniqueIdentifier();
+    if (identifier == -1) {
+        identifier = value;
+    }
     ++value;
 
-
-    const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(value);
+    const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(identifier);
     // first, delete all filter groups:
-    const QStringList filterGroups = config->groupList().filter( groupName );
+    const QStringList filterGroups = config->groupList();
     foreach ( const QString &group, filterGroups ) {
-        config->deleteGroup( group );
+        if (group == groupName)  {
+            config->deleteGroup( group );
+        }
     }
     KConfigGroup group = config->group(groupName);
-    info->writeConfig(group);
+    info->writeConfig(group, identifier);
 
     general.writeEntry("Number", value);
 

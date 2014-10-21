@@ -23,6 +23,7 @@ using namespace FollowUpReminder;
 FollowUpReminderInfo::FollowUpReminderInfo()
     : mOriginalMessageItemId(-1),
       mAnswerMessageItemId(-1),
+      mUniqueIdentifier(-1),
       mAnswerWasReceived(false)
 {
 }
@@ -30,6 +31,7 @@ FollowUpReminderInfo::FollowUpReminderInfo()
 FollowUpReminderInfo::FollowUpReminderInfo(const KConfigGroup &config)
     : mOriginalMessageItemId(-1),
       mAnswerMessageItemId(-1),
+      mUniqueIdentifier(-1),
       mAnswerWasReceived(false)
 {
     readConfig(config);
@@ -44,6 +46,7 @@ FollowUpReminderInfo::FollowUpReminderInfo(const FollowUpReminderInfo &info)
     mSubject = info.subject();
     mAnswerWasReceived = info.answerWasReceived();
     mAnswerMessageItemId = info.answerMessageItemId();
+    mUniqueIdentifier = info.uniqueIdentifier();
 }
 
 void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
@@ -57,6 +60,17 @@ void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
     mSubject = config.readEntry("subject", QString());
     mAnswerWasReceived = config.readEntry("answerWasReceived", false);
     mAnswerMessageItemId = config.readEntry("answerMessageItemId", -1);
+    mUniqueIdentifier = config.readEntry("identifier", -1);
+}
+
+qint32 FollowUpReminderInfo::uniqueIdentifier() const
+{
+    return mUniqueIdentifier;
+}
+
+void FollowUpReminderInfo::setUniqueIdentifier(const qint32 &uniqueIdentifier)
+{
+    mUniqueIdentifier = uniqueIdentifier;
 }
 
 Akonadi::Item::Id FollowUpReminderInfo::answerMessageItemId() const
@@ -89,17 +103,19 @@ void FollowUpReminderInfo::setSubject(const QString &subject)
     mSubject = subject;
 }
 
-void FollowUpReminderInfo::writeConfig(KConfigGroup &config )
+void FollowUpReminderInfo::writeConfig(KConfigGroup &config, qint32 identifier )
 {
     if (mFollowUpReminderDate.isValid()) {
         config.writeEntry("followUpReminderDate", mFollowUpReminderDate.toString(Qt::ISODate) );
     }
+    setUniqueIdentifier(identifier);
     config.writeEntry("messageId", mMessageId);
     config.writeEntry("itemId", mOriginalMessageItemId);
     config.writeEntry("to", mTo);
     config.writeEntry("subject", mSubject);
     config.writeEntry("answerWasReceived", mAnswerWasReceived);
     config.writeEntry("answerMessageItemId", mAnswerMessageItemId);
+    config.writeEntry("identifier", identifier);
     config.sync();
 }
 
@@ -158,6 +174,7 @@ bool FollowUpReminderInfo::operator==( const FollowUpReminderInfo& other ) const
             && mFollowUpReminderDate == other.followUpReminderDate()
             && mSubject == other.subject()
             && mAnswerWasReceived == other.answerWasReceived()
-            && mAnswerMessageItemId == other.answerMessageItemId();
+            && mAnswerMessageItemId == other.answerMessageItemId()
+            && mUniqueIdentifier == other.uniqueIdentifier();
 }
 

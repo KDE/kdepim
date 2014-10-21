@@ -36,6 +36,8 @@ private Q_SLOTS:
     void shouldConfigBeEmpty();
     void shouldAddAnItem();
     void shouldNotAddAnInvalidItem();
+    void shouldReplaceItem();
+    void shouldAddSeveralItem();
 private:
     KSharedConfig::Ptr mConfig;
     QRegExp mFollowupRegExpFilter;
