@@ -169,6 +169,7 @@ void FollowUpReminderInfoWidget::save()
 
 void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
 {
+    Q_UNUSED(pos);
     const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
     if ( !listItems.isEmpty() ) {
         FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(listItems.at(0));
