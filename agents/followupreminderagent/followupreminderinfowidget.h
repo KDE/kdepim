@@ -56,6 +56,9 @@ public:
     void save();
 
     void load();
+
+    QList<qint32> listRemoveId() const;
+
 private slots:
     void customContextMenuRequested(const QPoint &pos);
 
@@ -76,6 +79,7 @@ private:
         MessageId,
         AnswerMessageId
     };
+    QList<qint32> mListRemoveId;
     QTreeWidget *mTreeWidget;
     bool mChanged;
 };

@@ -89,6 +89,7 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
 #endif
     }
     if (dialog->exec()) {
+        //TODO remove identifier.
         mManager->load();
     }
     delete dialog;

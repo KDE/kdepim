@@ -82,3 +82,29 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedCo
     if (forceReload)
         reload();
 }
+
+void FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedConfig::Ptr config, const QList<qint32> &listRemove)
+{
+    if (listRemove.isEmpty()) {
+        return;
+    }
+
+    KConfigGroup general = config->group(QLatin1String("General"));
+    int value = general.readEntry("Number", 0);
+
+    Q_FOREACH(qint32 identifier, listRemove) {
+        const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(identifier);
+        const QStringList filterGroups = config->groupList();
+        foreach ( const QString &group, filterGroups ) {
+
+            if (group == groupName)  {
+                config->deleteGroup( group );
+                --value;
+            }
+        }
+    }
+    general.writeEntry("Number", value);
+
+    config->sync();
+    config->reparseConfiguration();
+}

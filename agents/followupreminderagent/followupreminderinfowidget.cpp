@@ -115,6 +115,11 @@ void FollowUpReminderInfoWidget::load()
     }
 }
 
+QList<qint32> FollowUpReminderInfoWidget::listRemoveId() const
+{
+    return mListRemoveId;
+}
+
 void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpReminderInfo *info, FollowUpReminderInfoItem *item)
 {
     if (!item) {
@@ -199,7 +204,7 @@ void FollowUpReminderInfoWidget::openShowMessage(Akonadi::Item::Id id)
 void FollowUpReminderInfoWidget::removeItem(FollowUpReminderInfoItem *mailItem)
 {
     if (mailItem) {
-        //TODO remove in list.
+        mListRemoveId << mailItem->info()->uniqueIdentifier();
         delete mailItem;
         mChanged = true;
     } else {
