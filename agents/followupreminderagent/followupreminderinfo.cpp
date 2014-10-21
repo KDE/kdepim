@@ -115,8 +115,7 @@ void FollowUpReminderInfo::setOriginalMessageItemId(Akonadi::Item::Id value)
 
 bool FollowUpReminderInfo::isValid() const
 {
-    return (mOriginalMessageItemId != -1 &&
-            !mMessageId.isEmpty() &&
+    return (!mMessageId.isEmpty() &&
             mFollowUpReminderDate.isValid() &&
             !mTo.isEmpty());
 }

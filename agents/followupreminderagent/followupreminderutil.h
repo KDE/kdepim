@@ -24,9 +24,10 @@ namespace FollowUpReminder
 class FollowUpReminderInfo;
 namespace FollowUpReminderUtil 
 {
-FOLLOWUPREMINDER_EXPORT bool sentLaterAgentWasRegistered();
 
-FOLLOWUPREMINDER_EXPORT bool sentLaterAgentEnabled();
+FOLLOWUPREMINDER_EXPORT bool followupReminderAgentWasRegistered();
+
+FOLLOWUPREMINDER_EXPORT bool followupReminderAgentEnabled();
 
 FOLLOWUPREMINDER_EXPORT void reload();
 

@@ -49,7 +49,7 @@ void FollowUpReminderInfoTest::shoudBeNotValid()
 
     const QString to = QLatin1String("kde.org");
     info.setTo(to);
-    QCOMPARE(info.isValid(), false);
+    QCOMPARE(info.isValid(), true);
 
     info.setOriginalMessageItemId(Akonadi::Item::Id(42));
     QCOMPARE(info.isValid(), true);
