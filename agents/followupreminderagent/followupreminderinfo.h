@@ -31,6 +31,8 @@ public:
     FollowUpReminderInfo(const KConfigGroup &config);
     FollowUpReminderInfo(const FollowUpReminderInfo &info);
 
+
+    //Can be invalid.
     Akonadi::Item::Id originalMessageItemId() const;
     void setOriginalMessageItemId(Akonadi::Item::Id value);
 
@@ -46,7 +48,7 @@ public:
     void setFollowUpReminderDate(const QDate &followUpReminderDate);
 
 
-    void writeConfig(KConfigGroup &config);
+    void writeConfig(KConfigGroup &config, qint32 identifier);
 
     QString subject() const;
     void setSubject(const QString &subject);
@@ -59,6 +61,9 @@ public:
     Akonadi::Item::Id answerMessageItemId() const;
     void setAnswerMessageItemId(const Akonadi::Item::Id &answerMessageItemId);
 
+    qint32 uniqueIdentifier() const;
+    void setUniqueIdentifier(const qint32 &uniqueIdentifier);
+
 private:
     void readConfig(const KConfigGroup &config);
     Akonadi::Item::Id mOriginalMessageItemId;
@@ -67,6 +72,7 @@ private:
     QDate mFollowUpReminderDate;
     QString mTo;
     QString mSubject;
+    qint32 mUniqueIdentifier;
     bool mAnswerWasReceived;
 };
 }

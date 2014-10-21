@@ -34,6 +34,7 @@ void FollowUpReminderInfoTest::shouldHaveDefaultValue()
     QCOMPARE(info.isValid(), false);
     QCOMPARE(info.to(), QString());
     QCOMPARE(info.subject(), QString());
+    QCOMPARE(info.uniqueIdentifier(), -1);
 }
 
 void FollowUpReminderInfoTest::shoudBeNotValid()
@@ -78,9 +79,10 @@ void FollowUpReminderInfoTest::shouldRestoreFromSettings()
     info.setTo(to);
     info.setOriginalMessageItemId(Akonadi::Item::Id(42));
     info.setSubject(QLatin1String("Subject"));
+    info.setUniqueIdentifier(42);
 
     KConfigGroup grp(KSharedConfig::openConfig(), "testsettings");
-    info.writeConfig(grp);
+    info.writeConfig(grp, info.uniqueIdentifier());
 
     FollowUpReminder::FollowUpReminderInfo restoreInfo(grp);
     QCOMPARE(info, restoreInfo);
@@ -96,6 +98,7 @@ void FollowUpReminderInfoTest::shouldCopyReminderInfo()
     info.setTo(to);
     info.setOriginalMessageItemId(Akonadi::Item::Id(42));
     info.setSubject(QLatin1String("Subject"));
+    info.setUniqueIdentifier(42);
 
     FollowUpReminder::FollowUpReminderInfo copyInfo(info);
     QCOMPARE(info, copyInfo);

@@ -35,6 +35,8 @@ public:
 
     void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info);
 
+    QList<qint32> listRemoveId() const;
+
 private slots:
     void slotSave();
 private:

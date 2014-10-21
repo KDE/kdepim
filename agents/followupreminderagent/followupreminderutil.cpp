@@ -58,17 +58,22 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedCo
 
     KConfigGroup general = config->group(QLatin1String("General"));
     int value = general.readEntry("Number", 0);
+    int identifier = info->uniqueIdentifier();
+    if (identifier == -1) {
+        identifier = value;
+    }
     ++value;
 
-
-    const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(value);
+    const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(identifier);
     // first, delete all filter groups:
-    const QStringList filterGroups = config->groupList().filter( groupName );
+    const QStringList filterGroups = config->groupList();
     foreach ( const QString &group, filterGroups ) {
-        config->deleteGroup( group );
+        if (group == groupName)  {
+            config->deleteGroup( group );
+        }
     }
     KConfigGroup group = config->group(groupName);
-    info->writeConfig(group);
+    info->writeConfig(group, identifier);
 
     general.writeEntry("Number", value);
 
@@ -76,4 +81,35 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedCo
     config->reparseConfiguration();
     if (forceReload)
         reload();
+}
+
+bool FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedConfig::Ptr config, const QList<qint32> &listRemove)
+{
+    if (listRemove.isEmpty()) {
+        return false;
+    }
+
+    bool needSaveConfig = false;
+    KConfigGroup general = config->group(QLatin1String("General"));
+    int value = general.readEntry("Number", 0);
+
+    Q_FOREACH(qint32 identifier, listRemove) {
+        const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(identifier);
+        const QStringList filterGroups = config->groupList();
+        foreach ( const QString &group, filterGroups ) {
+
+            if (group == groupName)  {
+                config->deleteGroup( group );
+                --value;
+                needSaveConfig = true;
+            }
+        }
+    }
+    if (needSaveConfig) {
+        general.writeEntry("Number", value);
+
+        config->sync();
+        config->reparseConfiguration();
+    }
+    return needSaveConfig;
 }

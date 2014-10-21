@@ -114,6 +114,11 @@ void FollowUpReminderInfoWidget::load()
     }
 }
 
+QList<qint32> FollowUpReminderInfoWidget::listRemoveId() const
+{
+    return mListRemoveId;
+}
+
 void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpReminderInfo *info, FollowUpReminderInfoItem *item)
 {
     if (!item) {
@@ -157,7 +162,7 @@ void FollowUpReminderInfoWidget::save()
         FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(mTreeWidget->topLevelItem(i));
         if (mailItem->info()) {
             KConfigGroup group = config->group(FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(i));
-            mailItem->info()->writeConfig(group);
+            mailItem->info()->writeConfig(group, i);
         }
     }
     ++i;
@@ -199,6 +204,7 @@ void FollowUpReminderInfoWidget::openShowMessage(Akonadi::Item::Id id)
 void FollowUpReminderInfoWidget::removeItem(FollowUpReminderInfoItem *mailItem)
 {
     if (mailItem) {
+        mListRemoveId << mailItem->info()->uniqueIdentifier();
         delete mailItem;
         mChanged = true;
     } else {

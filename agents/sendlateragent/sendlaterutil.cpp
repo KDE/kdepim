@@ -58,7 +58,7 @@ void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *inf
         }
         info->setDateTime(newInfoDateTime);
         //qDebug()<<"AFTER SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
-        writeSendLaterInfo(info, false);
+        writeSendLaterInfo(defaultConfig(), info, false);
     }
 }
 
@@ -67,19 +67,19 @@ KSharedConfig::Ptr SendLater::SendLaterUtil::defaultConfig()
     return KSharedConfig::openConfig(QLatin1String("akonadi_sendlater_agentrc"));
 }
 
-void SendLater::SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info, bool forceReload)
+void SendLater::SendLaterUtil::writeSendLaterInfo(KSharedConfig::Ptr config, SendLater::SendLaterInfo *info, bool forceReload)
 {
-    if (!info) {
+    if (!info || !info->isValid()) {
         return;
     }
 
-    KSharedConfig::Ptr config = SendLaterUtil::defaultConfig();
-
     const QString groupName = SendLater::SendLaterUtil::sendLaterPattern.arg(info->itemId());
     // first, delete all filter groups:
-    const QStringList filterGroups = config->groupList().filter(groupName);
-    foreach (const QString &group, filterGroups) {
-        config->deleteGroup(group);
+    const QStringList filterGroups =config->groupList();
+    foreach ( const QString &group, filterGroups ) {
+        if (group == groupName) {
+            config->deleteGroup( group );
+        }
     }
     KConfigGroup group = config->group(groupName);
     info->writeConfig(group);

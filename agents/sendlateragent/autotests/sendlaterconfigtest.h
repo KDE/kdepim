@@ -15,40 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERCONFIGTEST_H
-#define FOLLOWUPREMINDERCONFIGTEST_H
 
+#ifndef SENDLATERCONFIGTEST_H
+#define SENDLATERCONFIGTEST_H
 
 #include <QObject>
-#include <QRegExp>
 #include <KSharedConfig>
+#include <QRegExp>
 
-class FollowUpReminderConfigTest : public QObject
+class SendLaterConfigTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderConfigTest(QObject *parent=0);
-    ~FollowUpReminderConfigTest();
+    explicit SendLaterConfigTest(QObject *parent=0);
+    ~SendLaterConfigTest();
+
 private Q_SLOTS:
     void init();
     void cleanup();
     void cleanupTestCase();
     void shouldConfigBeEmpty();
     void shouldAddAnItem();
-    void shouldNotAddAnInvalidItem();
-    void shouldReplaceItem();
-    void shouldAddSeveralItem();
-    void shouldRemoveItems();
-    void shouldNotRemoveItemWhenListIsEmpty();
-    void shouldNotRemoveItemWhenItemDoesntExist();
-
-
+    void shouldNotAddInvalidItem();
 private:
     KSharedConfig::Ptr mConfig;
-    QRegExp mFollowupRegExpFilter;
+    QRegExp mSendlaterRegExpFilter;
 };
 
 
 
-#endif // FOLLOWUPREMINDERCONFIGTEST_H
+#endif // SENDLATERCONFIGTEST_H
 
