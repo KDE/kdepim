@@ -20,6 +20,7 @@
 
 
 #include <QObject>
+#include <QRegExp>
 #include <KSharedConfig>
 
 class FollowUpReminderConfigTest : public QObject
@@ -31,11 +32,13 @@ public:
 private Q_SLOTS:
     void init();
     void cleanup();
+    void cleanupTestCase();
     void shouldConfigBeEmpty();
     void shouldAddAnItem();
     void shouldNotAddAnInvalidItem();
 private:
     KSharedConfig::Ptr mConfig;
+    QRegExp mFollowupRegExpFilter;
 };
 
 

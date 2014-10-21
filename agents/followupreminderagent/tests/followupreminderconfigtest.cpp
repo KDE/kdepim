@@ -24,6 +24,7 @@
 
 
 FollowUpReminderConfigTest::FollowUpReminderConfigTest(QObject *parent)
+    : QObject(parent)
 {
 
 }
@@ -36,6 +37,7 @@ FollowUpReminderConfigTest::~FollowUpReminderConfigTest()
 void FollowUpReminderConfigTest::init()
 {
     mConfig = KSharedConfig::openConfig(QLatin1String("test-followupreminder.rc"));
+    mFollowupRegExpFilter = QRegExp( QLatin1String("FollowupReminderItem \\d+") );
     cleanup();
 }
 
@@ -47,6 +49,12 @@ void FollowUpReminderConfigTest::cleanup()
     }
     mConfig->sync();
     mConfig->reparseConfiguration();
+}
+
+void FollowUpReminderConfigTest::cleanupTestCase()
+{
+    //Make sure to clean config
+    cleanup();
 }
 
 void FollowUpReminderConfigTest::shouldConfigBeEmpty()
@@ -65,7 +73,7 @@ void FollowUpReminderConfigTest::shouldAddAnItem()
     const QString to = QLatin1String("kde.org");
     info.setTo(to);
     FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
-    const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("FollowupReminderItem \\d+") ) );
+    const QStringList itemList = mConfig->groupList().filter( mFollowupRegExpFilter );
 
     QCOMPARE(itemList.isEmpty(), false);
     QCOMPARE(itemList.count(), 1);
@@ -76,7 +84,7 @@ void FollowUpReminderConfigTest::shouldNotAddAnInvalidItem()
 {
     FollowUpReminder::FollowUpReminderInfo info;
     FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
-    const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("FollowupReminderItem \\d+") ) );
+    const QStringList itemList = mConfig->groupList().filter( mFollowupRegExpFilter );
     QCOMPARE(itemList.isEmpty(), true);
 }
 
