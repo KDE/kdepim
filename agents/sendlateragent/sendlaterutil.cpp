@@ -77,9 +77,11 @@ void SendLater::SendLaterUtil::writeSendLaterInfo(SendLater::SendLaterInfo *info
 
     const QString groupName = SendLater::SendLaterUtil::sendLaterPattern.arg(info->itemId());
     // first, delete all filter groups:
-    const QStringList filterGroups =config->groupList().filter( groupName );
+    const QStringList filterGroups =config->groupList();
     foreach ( const QString &group, filterGroups ) {
-        config->deleteGroup( group );
+        if (group == groupName) {
+            config->deleteGroup( group );
+        }
     }
     KConfigGroup group = config->group(groupName);
     info->writeConfig(group);
