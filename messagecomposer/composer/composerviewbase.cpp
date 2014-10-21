@@ -1891,7 +1891,7 @@ void MessageComposer::ComposerViewBase::setSendLaterInfo( SendLater::SendLaterIn
     mSendLaterInfo = info;
 }
 
-SendLater::SendLaterInfo *MessageComposer::ComposerViewBase::sendLaterInfo()
+SendLater::SendLaterInfo *MessageComposer::ComposerViewBase::sendLaterInfo() const
 {
     return mSendLaterInfo;
 }
