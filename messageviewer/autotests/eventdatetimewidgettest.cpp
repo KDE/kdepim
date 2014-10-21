@@ -83,7 +83,7 @@ void EventDateTimeWidgetTest::shouldEmitSignalWhenJustDateChanged()
     QDateTime currentDateTime = QDateTime::currentDateTime();
     edit.setDateTime(currentDateTime);
 
-    QSignalSpy spy(&edit, SIGNAL(dateTimeChanged(KDateTime)));
+    QSignalSpy spy(&edit, SIGNAL(dateTimeChanged(QDateTime)));
     QDate date = currentDateTime.date().addDays(1);
     edit.setDate(date);
 

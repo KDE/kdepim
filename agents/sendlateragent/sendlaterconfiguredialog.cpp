@@ -36,7 +36,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     setWindowTitle(i18n("Configure"));
     setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
@@ -45,6 +45,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SendLaterConfigureDialog::reject);
 
     mWidget = new SendLaterWidget(this);
+    mWidget->setObjectName(QLatin1String("sendlaterwidget"));
     connect(mWidget, &SendLaterWidget::sendNow, this, &SendLaterConfigureDialog::sendNow);
     mainLayout->addWidget(mWidget);
     mainLayout->addWidget(buttonBox);
