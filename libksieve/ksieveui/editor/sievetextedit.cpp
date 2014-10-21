@@ -193,7 +193,7 @@ bool SieveTextEdit::overrideShortcut(QKeyEvent* event)
             return true;
         }
     }
-    return false;
+    return PlainTextEditor::overrideShortcut(event);
 }
 
 bool SieveTextEdit::openVariableHelp()
@@ -225,7 +225,9 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
         default:
             break;
         }
-    }    
+    } else if (handleShortcut(e)) {
+        return;
+    }
     QPlainTextEdit::keyPressEvent(e);
     if (e->key() == Qt::Key_F1 && !textCursor().hasSelection()) {
         const QString word = selectedWord();
