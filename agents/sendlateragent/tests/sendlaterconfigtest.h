@@ -35,9 +35,11 @@ private Q_SLOTS:
     void cleanup();
     void cleanupTestCase();
     void shouldConfigBeEmpty();
+    void shouldAddAnItem();
+    void shouldNotAddInvalidItem();
 private:
     KSharedConfig::Ptr mConfig;
-    QRegExp mFollowupRegExpFilter;
+    QRegExp mSendlaterRegExpFilter;
 };
 
 

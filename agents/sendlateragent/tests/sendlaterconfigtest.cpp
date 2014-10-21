@@ -16,6 +16,8 @@
 */
 
 #include "sendlaterconfigtest.h"
+#include "../sendlaterinfo.h"
+#include "../sendlaterutil.h"
 #include <qtest_kde.h>
 
 
@@ -33,7 +35,7 @@ SendLaterConfigTest::~SendLaterConfigTest()
 void SendLaterConfigTest::init()
 {
     mConfig = KSharedConfig::openConfig(QLatin1String("test-sendlateragent.rc"));
-    mFollowupRegExpFilter = QRegExp( QLatin1String("SendLaterItem \\d+") );
+    mSendlaterRegExpFilter = QRegExp( QLatin1String("SendLaterItem \\d+") );
     cleanup();
 }
 
@@ -57,6 +59,37 @@ void SendLaterConfigTest::shouldConfigBeEmpty()
 {
     const QStringList filterGroups = mConfig->groupList();
     QCOMPARE(filterGroups.isEmpty(), true);
+}
+
+void SendLaterConfigTest::shouldAddAnItem()
+{
+    SendLater::SendLaterInfo info;
+    const QString to = QLatin1String("kde.org");
+    info.setTo(to);
+    info.setItemId(Akonadi::Item::Id(42));
+    info.setSubject(QLatin1String("Subject"));
+    info.setRecurrence(true);
+    info.setRecurrenceEachValue(5);
+    info.setRecurrenceUnit(SendLater::SendLaterInfo::Years);
+    const QDate date(2014,1,1);
+    info.setDateTime(QDateTime(date));
+    info.setLastDateTimeSend(QDateTime(date));
+
+
+    SendLater::SendLaterUtil::writeSendLaterInfo(mConfig, &info, false);
+    const QStringList itemList = mConfig->groupList().filter( mSendlaterRegExpFilter );
+
+    QCOMPARE(itemList.isEmpty(), false);
+    QCOMPARE(itemList.count(), 1);
+}
+
+void SendLaterConfigTest::shouldNotAddInvalidItem()
+{
+    SendLater::SendLaterInfo info;
+    SendLater::SendLaterUtil::writeSendLaterInfo(mConfig, &info, false);
+    const QStringList itemList = mConfig->groupList().filter( mSendlaterRegExpFilter );
+
+    QCOMPARE(itemList.isEmpty(), true);
 }
 
 
