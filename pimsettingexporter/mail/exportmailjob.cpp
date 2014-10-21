@@ -213,7 +213,7 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QLatin1String("kmail2.notifyrc"));
     backupConfigFile(QLatin1String("akonadi_newmailnotifier_agent.notifyrc"));
     backupConfigFile(QLatin1String("akonadi_maildispatcher_agent.notifyrc"));
-    //backupConfigFile(QLatin1String("akonadi_followupreminder_agent.notifyrc"));
+    backupConfigFile(QLatin1String("akonadi_followupreminder_agent.notifyrc"));
     backupConfigFile(QLatin1String("messagevieweradblockrc"));
     backupConfigFile(QLatin1String("messageviewer.notifyrc"));
 

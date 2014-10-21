@@ -51,12 +51,10 @@ KSharedConfig::Ptr FollowUpReminder::FollowUpReminderUtil::defaultConfig()
     return KSharedConfig::openConfig( QLatin1String("akonadi_followupreminder_agentrc") );
 }
 
-void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(FollowUpReminder::FollowUpReminderInfo *info, bool forceReload)
+void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedConfig::Ptr config, FollowUpReminder::FollowUpReminderInfo *info, bool forceReload)
 {
-    if (!info)
+    if (!info || !info->isValid())
         return;
-
-    KSharedConfig::Ptr config = FollowUpReminder::FollowUpReminderUtil::defaultConfig();
 
     KConfigGroup general = config->group(QLatin1String("General"));
     int value = general.readEntry("Number", 0);
