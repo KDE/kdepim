@@ -66,7 +66,6 @@ void FollowUpReminderConfigTest::shouldConfigBeEmpty()
 void FollowUpReminderConfigTest::shouldAddAnItem()
 {
     FollowUpReminder::FollowUpReminderInfo info;
-    //We need a Akonadi::Id valid and a messageId not empty and a valid date and a "To" not empty
     info.setMessageId(QLatin1String("foo"));
     const QDate date(2014,1,1);
     info.setFollowUpReminderDate(QDate(date));
