@@ -83,12 +83,13 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedCo
         reload();
 }
 
-void FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedConfig::Ptr config, const QList<qint32> &listRemove)
+bool FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedConfig::Ptr config, const QList<qint32> &listRemove)
 {
     if (listRemove.isEmpty()) {
-        return;
+        return false;
     }
 
+    bool needSaveConfig = false;
     KConfigGroup general = config->group(QLatin1String("General"));
     int value = general.readEntry("Number", 0);
 
@@ -100,11 +101,15 @@ void FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedC
             if (group == groupName)  {
                 config->deleteGroup( group );
                 --value;
+                needSaveConfig = true;
             }
         }
     }
-    general.writeEntry("Number", value);
+    if (needSaveConfig) {
+        general.writeEntry("Number", value);
 
-    config->sync();
-    config->reparseConfiguration();
+        config->sync();
+        config->reparseConfiguration();
+    }
+    return needSaveConfig;
 }

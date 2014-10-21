@@ -196,9 +196,47 @@ void FollowUpReminderConfigTest::shouldRemoveItems()
     QList<qint32> listRemove;
     listRemove<<43<<42;
 
-    FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(mConfig, listRemove);
+    const bool elementRemoved = FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(mConfig, listRemove);
     itemList = mConfig->groupList().filter( mFollowupRegExpFilter );
     QCOMPARE(itemList.count(), 2);
+    QVERIFY(elementRemoved);
+}
+
+void FollowUpReminderConfigTest::shouldNotRemoveItemWhenListIsEmpty()
+{
+    QList<qint32> listRemove;
+    const bool elementRemoved = FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(mConfig, listRemove);
+    QVERIFY(!elementRemoved);
+}
+
+void FollowUpReminderConfigTest::shouldNotRemoveItemWhenItemDoesntExist()
+{
+    FollowUpReminder::FollowUpReminderInfo info;
+    info.setMessageId(QLatin1String("foo"));
+    const QDate date(2014,1,1);
+    info.setFollowUpReminderDate(QDate(date));
+    const QString to = QLatin1String("kde.org");
+    info.setTo(to);
+    qint32 uniq = 42;
+    info.setUniqueIdentifier(uniq);
+    FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
+    QStringList itemList = mConfig->groupList().filter( mFollowupRegExpFilter );
+
+    info.setTo(QLatin1String("kmail.org"));
+    uniq = 43;
+    info.setUniqueIdentifier(uniq);
+    FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
+    itemList = mConfig->groupList().filter( mFollowupRegExpFilter );
+
+    uniq = 44;
+    info.setUniqueIdentifier(uniq);
+    FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
+
+
+    QList<qint32> listRemove;
+    listRemove << 55 << 75;
+    const bool elementRemoved = FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(mConfig, listRemove);
+    QVERIFY(!elementRemoved);
 }
 
 

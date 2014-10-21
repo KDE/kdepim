@@ -108,3 +108,9 @@ void FollowUpReminderInfoDialog::setInfo(const QList<FollowUpReminder::FollowUpR
 {
     mWidget->setInfo(info);
 }
+
+QList<qint32> FollowUpReminderInfoDialog::listRemoveId() const
+{
+    return mWidget->listRemoveId();
+}
+

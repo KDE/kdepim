@@ -18,6 +18,7 @@
 
 #include "followupreminderagent.h"
 #include "followupremindermanager.h"
+#include "followupreminderutil.h"
 #include "followupreminderadaptor.h"
 #include "followupreminderinfodialog.h"
 #include "followupreminderagentsettings.h"
@@ -89,8 +90,10 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
 #endif
     }
     if (dialog->exec()) {
-        //TODO remove identifier.
-        mManager->load();
+        const QList<qint32> lstRemoveItem = dialog->listRemoveId();
+        if (FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(FollowUpReminder::FollowUpReminderUtil::defaultConfig(), lstRemoveItem)) {
+            mManager->load();
+        }
     }
     delete dialog;
 }

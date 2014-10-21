@@ -39,6 +39,9 @@ private Q_SLOTS:
     void shouldReplaceItem();
     void shouldAddSeveralItem();
     void shouldRemoveItems();
+    void shouldNotRemoveItemWhenListIsEmpty();
+    void shouldNotRemoveItemWhenItemDoesntExist();
+
 
 private:
     KSharedConfig::Ptr mConfig;
