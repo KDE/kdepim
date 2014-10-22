@@ -22,8 +22,6 @@
 
 #include <QPlainTextEdit>
 
-namespace Sonnet {
-}
 namespace PimCommon {
 class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
 {

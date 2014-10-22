@@ -114,6 +114,7 @@ set(libpimcommon_texteditor_SRCS
   texteditor/commonwidget/textfindreplacewidget.cpp
   texteditor/commonwidget/texteditfindbarbase.cpp
   texteditor/commonwidget/textgotolinewidget.cpp
+  texteditor/commonwidget/textmessageindicator.cpp
   texteditor/richtexteditor/richtexteditor.cpp
   texteditor/richtexteditor/richtexteditfindbar.cpp
   texteditor/richtexteditor/richtexteditorwidget.cpp
