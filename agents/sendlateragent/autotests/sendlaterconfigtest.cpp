@@ -18,7 +18,7 @@
 #include "sendlaterconfigtest.h"
 #include "../sendlaterinfo.h"
 #include "../sendlaterutil.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 
 SendLaterConfigTest::SendLaterConfigTest(QObject *parent)
@@ -93,4 +93,4 @@ void SendLaterConfigTest::shouldNotAddInvalidItem()
 }
 
 
-QTEST_KDEMAIN(SendLaterConfigTest, NoGUI)
+QTEST_MAIN(SendLaterConfigTest)

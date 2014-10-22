@@ -19,7 +19,7 @@
 #include "followupreminderconfigtest.h"
 #include "../followupreminderutil.h"
 #include "../followupreminderinfo.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <KSharedConfig>
 
 
@@ -241,4 +241,4 @@ void FollowUpReminderConfigTest::shouldNotRemoveItemWhenItemDoesntExist()
 
 
 
-QTEST_KDEMAIN(FollowUpReminderConfigTest, NoGUI)
+QTEST_MAIN(FollowUpReminderConfigTest)
