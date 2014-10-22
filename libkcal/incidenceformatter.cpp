@@ -2145,7 +2145,7 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
   case Scheduler::Reply:
   {
     if ( replyMeansCounter( event ) ) {
-      return i18n( "%1 makes this counter proposal" ).arg( firstAttendeeName( event, sender ) );
+      return i18n( "Counter proposal" );
     }
 
     Attendee::List attendees = event->attendees();
@@ -2224,7 +2224,7 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
   }
 
   case Scheduler::Counter:
-    return i18n( "%1 makes this counter proposal" ).arg( firstAttendeeName( event, sender ) );
+    return i18n( "Counter proposal" );
 
   case Scheduler::Declinecounter:
   {
@@ -2288,7 +2288,7 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
   case Scheduler::Reply:
   {
     if ( replyMeansCounter( todo ) ) {
-      return i18n( "%1 makes this counter proposal" ).arg( firstAttendeeName( todo, sender ) );
+      return i18n( "Counter proposal" );
     }
 
     Attendee::List attendees = todo->attendees();
@@ -2376,7 +2376,7 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
   }
 
   case Scheduler::Counter:
-    return i18n( "%1 makes this counter proposal" ).arg( firstAttendeeName( todo, sender ) );
+    return i18n( "Counter proposal" );
 
   case Scheduler::Declinecounter:
   {
@@ -2415,7 +2415,7 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
   case Scheduler::Reply:
   {
     if ( replyMeansCounter( journal ) ) {
-      return i18n( "Sender makes this counter proposal" );
+      return i18n( "Counter proposal" );
     }
 
     Attendee::List attendees = journal->attendees();
@@ -2450,7 +2450,7 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
     break;
   }
   case Scheduler::Counter:
-    return i18n( "Sender makes this counter proposal" );
+    return i18n( "Counter proposal" );
   case Scheduler::Declinecounter:
     return i18n( "Sender declines the counter proposal" );
   case Scheduler::NoMethod:
