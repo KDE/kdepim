@@ -19,6 +19,7 @@
 
 #include "configfile.h"
 
+#include <KCMultiDialog>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -26,6 +27,7 @@
 
 ConfigFile::ConfigFile( const QString & configName, QObject *parent )
   : SetupObject( parent )
+  , m_editMode(false)
 {
   m_name = configName;
   m_config = new KConfig( configName );
@@ -54,6 +56,11 @@ void ConfigFile::create()
   }
 
   m_config->sync();
+
+  if (m_editMode) {
+      edit();
+  }
+
   emit finished( i18n( "Config file for %1 is writing.", m_name ) );
 }
 
@@ -88,4 +95,29 @@ void ConfigFile::setPassword(const QString& group, const QString& key, const QSt
   m_configData.append( conf );
 }
 
+void ConfigFile::edit()
+{
+    if (m_editName.isEmpty()) {
+        emit error( i18n("No given name for the configuration"));
+        return;
+    }
 
+    if (m_editName == QLatin1String("freebusy")) {
+        KCMultiDialog *dialog = new KCMultiDialog( );
+        dialog->addModule(QLatin1String("korganizer_configfreebusy.desktop"));
+        dialog->show();
+        return;
+    }
+
+    emit error( i18n("Unknown configurationname '%1'", m_editName));
+}
+
+void ConfigFile::setEditName(const QString &name)
+{
+  m_editName = name;
+}
+
+void ConfigFile::setEditMode(const bool editMode)
+{
+  m_editMode = editMode;
+}

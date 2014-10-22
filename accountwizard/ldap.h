@@ -31,6 +31,7 @@ class Ldap : public SetupObject
     ~Ldap();
     void create();
     void destroy();
+    void edit();
   public slots:
     Q_SCRIPTABLE void setUser( const QString & name );
     Q_SCRIPTABLE void setServer( const QString &server );
@@ -45,6 +46,7 @@ class Ldap : public SetupObject
     Q_SCRIPTABLE void setPageSize(const int pageSize);
     Q_SCRIPTABLE void setTimeLimit(const int timeLimit);
     Q_SCRIPTABLE void setSizeLimit(const int sizeLimit);
+    Q_SCRIPTABLE void setEditMode(const bool editMode);
 
   private:
     QString securityString();
@@ -62,6 +64,8 @@ class Ldap : public SetupObject
     int m_pageSize;
     int m_timeLimit;
     int m_sizeLimit;
+    int m_entry;
+    bool m_editMode;
 };
 
 #endif

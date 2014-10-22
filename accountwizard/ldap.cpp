@@ -18,6 +18,8 @@
 */
 
 #include "ldap.h"
+#include <libkdepim/ldap/ldapclientsearchconfig.h>
+#include <libkdepim/ldap/addhostdialog.h>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -32,6 +34,8 @@ Ldap::Ldap( QObject *parent )
   , m_pageSize(0)
   , m_timeLimit(0)
   , m_sizeLimit(0)
+  , m_entry(-1)
+  , m_editMode(false)
 {
 }
 
@@ -41,10 +45,13 @@ Ldap::~Ldap()
 
 void Ldap::create()
 {
+  //TODO: use ldapclientsearchconfig to write config
   emit info( i18n( "Setting up LDAP server..." ) );
 
-  if ( m_server.isEmpty() || m_user.isEmpty() )
+  if ( m_server.isEmpty() || m_user.isEmpty() ) {
+    emit error(i18n("Needed parameters are missing for ldap config server='%1', user='%1'", m_server, m_user));
     return;
+  }
 
   const QString host = m_server;
 
@@ -74,10 +81,14 @@ void Ldap::create()
   KConfigGroup group = c.group( "LDAP" );
   bool hasMyServer = false;
   uint selHosts = group.readEntry( "NumSelectedHosts", 0 );
-  for ( uint i = 0 ; i < selHosts && !hasMyServer; ++i )
-    if ( group.readEntry( QString::fromLatin1( "SelectedHost%1" ).arg( i ), QString() ) == host )
+  for ( uint i = 0 ; i < selHosts && !hasMyServer; ++i ) {
+    if ( group.readEntry( QString::fromLatin1( "SelectedHost%1" ).arg( i ), QString() ) == host ) {
       hasMyServer = true;
+      m_entry = i;
+    }
+  }
   if ( !hasMyServer ) {
+    m_entry = selHosts;
     group.writeEntry( "NumSelectedHosts", selHosts + 1 );
     group.writeEntry( QString::fromLatin1( "SelectedHost%1" ).arg( selHosts ), host );
     group.writeEntry( QString::fromLatin1( "SelectedBase%1" ).arg( selHosts ), basedn );
@@ -105,6 +116,10 @@ void Ldap::create()
       group.writeEntry( QString::fromLatin1( "SelectedUser%1" ).arg( selHosts ), m_user );
       group.writeEntry( QString::fromLatin1( "SelectedMech%1" ).arg( selHosts ), m_mech );
     }
+    c.sync();
+  }
+  if (m_editMode) {
+      edit();
   }
   emit finished( i18n( "LDAP set up." ) );
 }
@@ -126,6 +141,26 @@ void Ldap::destroy()
 {
   emit info( i18n( "LDAP not configuring." ) );
 }
+
+void Ldap::edit()
+{
+    if (m_entry < 0) {
+        emit error(i18n("No config found to edit"));
+        return;
+    }
+
+    KLDAP::LdapServer server;
+    KLDAP::LdapClientSearchConfig clientSearchConfig;
+    KConfigGroup group = clientSearchConfig.config()->group( "LDAP" );
+    clientSearchConfig.readConfig(server, group, m_entry, true);
+    AddHostDialog dlg(&server, 0);
+    dlg.setCaption(i18n("Edit Host"));
+
+    if ( dlg.exec() && !server.host().isEmpty() ) { //krazy:exclude=crashy
+        clientSearchConfig.writeConfig(server, group, m_entry, true);
+    }
+}
+
 
 void Ldap::setUser( const QString &user )
 {
@@ -193,3 +228,7 @@ void Ldap::setVersion(const int version)
     m_version = version;
 }
 
+void Ldap::setEditMode(const bool editMode)
+{
+    m_editMode = editMode;
+}

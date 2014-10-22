@@ -33,12 +33,14 @@ class Resource : public SetupObject
     explicit Resource( const QString &type, QObject *parent = 0 );
     void create();
     void destroy();
+    void edit();
 
   public slots:
     Q_SCRIPTABLE void setName( const QString &name );
     Q_SCRIPTABLE void setOption( const QString &key, const QVariant &value );
     Q_SCRIPTABLE QString identifier();
     Q_SCRIPTABLE void reconfigure();
+    Q_SCRIPTABLE void setEditMode(const bool editMode);
 
   private slots:
     void instanceCreateResult( KJob* job );
@@ -47,5 +49,7 @@ class Resource : public SetupObject
     QString m_typeIdentifier, m_name;
     QMap<QString, QVariant> m_settings;
     Akonadi::AgentInstance m_instance;
+
+    bool m_editMode;
 };
 #endif

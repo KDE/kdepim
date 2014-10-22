@@ -7,6 +7,10 @@ if ( ACCOUNTWIZARD_NO_GHNS )
   add_definitions( -DACCOUNTWIZARD_NO_GHNS )
 endif ()
 
+include_directories(
+  ${CMAKE_SOURCE_DIR}/libkdepim
+)
+
 set(accountwizard_srcs
   dialog.cpp
   typepage.cpp
@@ -48,10 +52,12 @@ set(accountwizard_libs
   ${KDE4_KROSSCORE_LIBS}
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KIO_LIBS}
+  ${KDE4_KCMUTILS_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${QT_QTGUI_LIBRARY}
   ${QT_QTUITOOLS_LIBRARY}
+  kdepim
 )
 
 if ( NOT ACCOUNTWIZARD_NO_GHNS )
