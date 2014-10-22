@@ -18,6 +18,7 @@
 #include "notedisplayattributetest.h"
 #include <kglobalsettings.h>
 #include <qtest_kde.h>
+#include <QFontDatabase>
 #include "attributes/notedisplayattribute.h"
 
 NoteDisplayAttributeTest::NoteDisplayAttributeTest(QObject *parent)
@@ -43,8 +44,8 @@ void NoteDisplayAttributeTest::shouldHaveDefaultValue()
     QCOMPARE(attribute.foregroundColor(), QColor(Qt::black));
     QVERIFY(attribute.rememberDesktop());
     QCOMPARE(attribute.tabSize(), 4);
-    QCOMPARE(attribute.font(), KGlobalSettings::generalFont());
-    QCOMPARE(attribute.titleFont(), KGlobalSettings::windowTitleFont());
+    QCOMPARE(attribute.font(), QFontDatabase::systemFont(QFontDatabase::GeneralFont));
+    QCOMPARE(attribute.titleFont(), QFontDatabase::systemFont(QFontDatabase::TitleFont));
     QCOMPARE(attribute.size(), QSize(300,300));
     QCOMPARE(attribute.desktop(), -10);
     QCOMPARE(attribute.position(), QPoint( -10000, -10000 ));

@@ -145,7 +145,7 @@ void SendLaterWidget::updateButtons()
 
 void SendLaterWidget::load()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     const QStringList filterGroups = config->groupList().filter( QRegExp( sendLaterItemPattern ) );
     const int numberOfItem = filterGroups.count();
     for (int i = 0 ; i < numberOfItem; ++i) {
@@ -180,7 +180,7 @@ void SendLaterWidget::save()
 {
     if (!mChanged)
         return;
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
     const QStringList filterGroups =config->groupList().filter( QRegExp( sendLaterItemPattern ) );
@@ -249,7 +249,7 @@ void SendLaterWidget::slotModifyItem()
 void SendLaterWidget::needToReload()
 {
     mWidget->treeWidget->clear();
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     config->reparseConfiguration();
     load();
 }

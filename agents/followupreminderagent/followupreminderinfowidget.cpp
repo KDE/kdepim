@@ -100,7 +100,7 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
 
 void FollowUpReminderInfoWidget::load()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     const QStringList filterGroups =config->groupList().filter( QRegExp( followUpItemPattern ) );
     const int numberOfItem = filterGroups.count();
     for (int i = 0 ; i < numberOfItem; ++i) {
@@ -127,7 +127,7 @@ void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpRe
 
     item->setText(To, info->to());
     item->setText(Subject, info->subject());
-    const QString date = KGlobal::locale()->formatDate( info->followUpReminderDate(), KLocale::LongDate );
+    const QString date = KLocale::global()->formatDate( info->followUpReminderDate(), KLocale::LongDate );
     item->setText(DeadLine, date);
     item->setText(AnswerWasReceived, info->answerWasReceived() ? i18n("Received") : i18n("On hold"));
     if (info->followUpReminderDate() < QDate::currentDate()) {

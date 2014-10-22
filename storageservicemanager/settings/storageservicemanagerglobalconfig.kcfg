@@ -6,7 +6,7 @@
   <include>kglobalsettings.h</include>
   <group name="General">
     <entry name="DownloadDirectory" type="string">
-      <default code="true">KGlobalSettings::downloadPath()</default>
+      <default code="true">QStandardPaths::writableLocation(QStandardPaths::DownloadLocation)</default>
     </entry>
     <entry name="CloseWallet" type="bool">
       <default>true</default>

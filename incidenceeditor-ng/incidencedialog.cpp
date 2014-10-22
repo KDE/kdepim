@@ -686,20 +686,20 @@ IncidenceDialog::~IncidenceDialog()
 
 void IncidenceDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "IncidenceDialog" );
     group.writeEntry( "Size", size() );
 
     const Akonadi::Collection col = d_ptr->mCalSelector->currentCollection();
     // col might not be valid if the collection wasn't found yet (the combo is async), skip saving in that case
     if (col.isValid() && col.id() != IncidenceEditorNG::GlobalSettings::self()->lastSelectedFolder()) {
         IncidenceEditorNG::GlobalSettings::self()->setLastSelectedFolder(col.id());
-        IncidenceEditorNG::GlobalSettings::self()->writeConfig();
+        IncidenceEditorNG::GlobalSettings::self()->save();
     }
 }
 
 void IncidenceDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "IncidenceDialog" );
     const QSize size = group.readEntry( "Size", QSize() );
     if ( size.isValid() ) {
         resize( size );

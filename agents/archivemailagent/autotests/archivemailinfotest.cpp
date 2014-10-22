@@ -60,7 +60,7 @@ void ArchiveMailInfoTest::shouldRestoreFromSettings()
     info.setMaximumArchiveCount(5);
     info.setEnabled(false);
 
-    KConfigGroup grp(KGlobal::config(), "testsettings");
+    KConfigGroup grp(KSharedConfig::openConfig(), "testsettings");
     info.writeConfig(grp);
 
     ArchiveMailInfo restoreInfo(grp);
