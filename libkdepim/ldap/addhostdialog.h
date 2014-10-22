@@ -22,7 +22,9 @@
 #ifndef ADDHOSTDIALOG_H
 #define ADDHOSTDIALOG_H
 
+#include "libkdepim/kdepim_export.h"
 #include <qdialog.h>
+
 
 namespace KLDAP
 {
@@ -31,7 +33,7 @@ class LdapServer;
 }
 
 class QPushButton;
-class AddHostDialog : public QDialog
+class KDEPIM_EXPORT AddHostDialog : public QDialog
 {
     Q_OBJECT
 
