@@ -83,7 +83,7 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedCo
         reload();
 }
 
-bool FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedConfig::Ptr config, const QList<qint32> &listRemove)
+bool FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedConfig::Ptr config, const QList<qint32> &listRemove, bool forceReload)
 {
     if (listRemove.isEmpty()) {
         return false;
@@ -110,6 +110,8 @@ bool FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedC
 
         config->sync();
         config->reparseConfiguration();
+        if (forceReload)
+            reload();
     }
     return needSaveConfig;
 }

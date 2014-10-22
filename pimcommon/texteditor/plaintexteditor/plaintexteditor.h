@@ -22,9 +22,6 @@
 
 #include <QPlainTextEdit>
 
-namespace Sonnet
-{
-}
 namespace PimCommon
 {
 class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
@@ -55,6 +52,9 @@ public:
 
     void setTextToSpeechSupport(bool b);
     bool textToSpeechSupport() const;
+
+public slots:
+    void slotDisplayMessageIndicator(const QString &message);
 
 private Q_SLOTS:
     void slotUndoableClear();

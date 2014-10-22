@@ -37,7 +37,7 @@ FOLLOWUPREMINDER_EXPORT KSharedConfig::Ptr defaultConfig();
 
 FOLLOWUPREMINDER_EXPORT void writeFollowupReminderInfo(KSharedConfig::Ptr config, FollowUpReminder::FollowUpReminderInfo *info, bool forceReload);
 
-FOLLOWUPREMINDER_EXPORT bool removeFollowupReminderInfo(KSharedConfig::Ptr config, const QList<qint32> &listRemove);
+FOLLOWUPREMINDER_EXPORT bool removeFollowupReminderInfo(KSharedConfig::Ptr config, const QList<qint32> &listRemove, bool forceReload = false);
 static QString followUpReminderPattern = QLatin1String("FollowupReminderItem %1");
 }
 }

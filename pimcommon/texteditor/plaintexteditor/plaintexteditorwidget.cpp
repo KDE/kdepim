@@ -73,6 +73,7 @@ void PlainTextEditorWidget::init(PlainTextEditor *customEditor)
     connect(mEditor, &PlainTextEditor::say, mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::say);
 
     mFindBar = new PimCommon::PlainTextEditFindBar(mEditor, this);
+    connect(mFindBar, SIGNAL(displayMessageIndicator(QString)), mEditor, SLOT(slotDisplayMessageIndicator(QString)));
     lay->addWidget(mFindBar);
 
     QShortcut *shortcut = new QShortcut(this);

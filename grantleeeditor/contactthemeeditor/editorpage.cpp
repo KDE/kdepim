@@ -22,6 +22,8 @@
 #include "contacttemplatewidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
+#include <pimcommon/widgets/splittercollapser.h>
+
 #include <KLocalizedString>
 
 #include <KSharedConfig>
@@ -59,10 +61,12 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
         mEditor->setPlainText(group.readEntry("defaultTemplate", QString()));
     }
     mMainSplitter->addWidget(mEditor);
-    mMainSplitter->setChildrenCollapsible(false);
     mContactTemplate = new ContactTemplateWidget(i18n("Theme Templates:"));
     connect(mContactTemplate, SIGNAL(insertTemplate(QString)), mEditor->editor(), SLOT(insertPlainText(QString)));
     mMainSplitter->addWidget(mContactTemplate);
+    mMainSplitter->setCollapsible(0, false);
+    new PimCommon::SplitterCollapser(mMainSplitter, mContactTemplate, this);
+
 
     connect(mEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
 

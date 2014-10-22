@@ -16,6 +16,7 @@
 */
 
 #include "plaintexteditor.h"
+#include "texteditor/commonwidget/textmessageindicator.h"
 
 #include <KLocalizedString>
 #include <KIconTheme>
@@ -45,8 +46,10 @@ using namespace PimCommon;
 class PlainTextEditor::PlainTextEditorPrivate
 {
 public:
-    PlainTextEditorPrivate()
-        : customPalette(false)
+    PlainTextEditorPrivate(PlainTextEditor *qq)
+        : q(qq),
+          mTextIndicator(new PimCommon::TextMessageIndicator(q)),
+          customPalette(false)
     {
         supportFeatures |= PlainTextEditor::Search;
         supportFeatures |= PlainTextEditor::SpellChecking;
@@ -56,6 +59,8 @@ public:
     {
     }
 
+    PlainTextEditor *q;
+    PimCommon::TextMessageIndicator *mTextIndicator;
     QString spellCheckingLanguage;
     QTextDocumentFragment originalDoc;
     PlainTextEditor::SupportFeatures supportFeatures;
@@ -64,7 +69,7 @@ public:
 
 PlainTextEditor::PlainTextEditor(QWidget *parent)
     : QPlainTextEdit(parent),
-      d(new PlainTextEditor::PlainTextEditorPrivate)
+      d(new PlainTextEditor::PlainTextEditorPrivate(this))
 {
     KCursor::setAutoHideCursor(this, true, false);
 }
@@ -74,7 +79,12 @@ PlainTextEditor::~PlainTextEditor()
     delete d;
 }
 
-void PlainTextEditor::contextMenuEvent(QContextMenuEvent *event)
+void PlainTextEditor::slotDisplayMessageIndicator(const QString &message)
+{
+    d->mTextIndicator->display(message);
+}
+
+void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
 {
     QMenu *popup = createStandardContextMenu();
     if (popup) {
