@@ -93,14 +93,15 @@ bool Callback::mailICal( const QString& to, const QString &iCal,
   msg->initHeader();
   msg->setSubject( subject );
   if ( GlobalSettings::self()->exchangeCompatibleInvitations() ) {
+    const QString answerStr = i18n( "Answer: " );
     if ( status == QString("cancel") )
-      msg->setSubject( i18n( "Declined: %1" ).arg(subject).replace("Answer: ","") );
+      msg->setSubject( i18n( "Declined: %1" ).arg(subject).replace( answerStr, "") );
     else if ( status == QString("tentative") )
-      msg->setSubject( i18n( "Tentative: %1" ).arg(subject).replace("Answer: ","") );
+      msg->setSubject( i18n( "Tentative: %1" ).arg(subject).replace( answerStr, "") );
     else if ( status == QString("accepted") )
-      msg->setSubject( i18n( "Accepted: %1" ).arg(subject).replace("Answer: ","") );
+      msg->setSubject( i18n( "Accepted: %1" ).arg(subject).replace( answerStr, "") );
     else if ( status == QString("delegated") )
-      msg->setSubject( i18n( "Delegated: %1" ).arg(subject).replace("Answer: ","") );
+      msg->setSubject( i18n( "Delegated: %1" ).arg(subject).replace( answerStr, "") );
   }
   msg->setTo( to );
   msg->setFrom( receiver() );
