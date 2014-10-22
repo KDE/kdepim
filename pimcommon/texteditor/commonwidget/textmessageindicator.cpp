@@ -25,6 +25,7 @@
 #include <QTimer>
 #include <QResizeEvent>
 #include <QApplication>
+#include <QDebug>
 
 using namespace PimCommon;
 TextMessageIndicator::TextMessageIndicator( QWidget * parent )
@@ -34,17 +35,20 @@ TextMessageIndicator::TextMessageIndicator( QWidget * parent )
     setObjectName( QLatin1String( "TextMessageIndicator" ) );
     setFocusPolicy( Qt::NoFocus );
     QPalette pal = palette();
-    pal.setColor( QPalette::Active, QPalette::Window, QApplication::palette().color( QPalette::Active, QPalette::Window ) );
+    pal.setColor( QPalette::Active, QPalette::Window, QApplication::palette().highlight().color());
     setPalette( pal );
     // if the layout is LtR, we can safely place it in the right position
     if ( layoutDirection() == Qt::LeftToRight )
-        move( 10, 10 );
+        move( 10, parentWidget()->height() - 10 );
     resize( 0, 0 );
     hide();
 }
 
 void TextMessageIndicator::display( const QString & message, const QString & details, Icon icon, int durationMs )
 {
+    if (message.isEmpty()) {
+        return;
+    }
     // set text
     mMessage = message;
     mDetails = details;
@@ -139,8 +143,10 @@ void TextMessageIndicator::computeSizeAndResize()
 
     // if the layout is RtL, we can move it to the right place only after we
     // know how much size it will take
+    int posX = parentWidget()->width() - geometry().width() - 20 - 1;
     if ( layoutDirection() == Qt::RightToLeft )
-        move( parentWidget()->width() - geometry().width() - 10 - 1, 10 );
+        posX = 10;
+    move( posX, parentWidget()->height() - geometry().height() - 20 );
 }
 
 

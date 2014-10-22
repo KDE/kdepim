@@ -16,6 +16,7 @@
 */
 
 #include "plaintexteditor.h"
+#include "texteditor/commonwidget/textmessageindicator.h"
 
 #include <KLocalizedString>
 #include <KGlobalSettings>
@@ -46,8 +47,10 @@ using namespace PimCommon;
 class PlainTextEditor::PlainTextEditorPrivate
 {
 public:
-    PlainTextEditorPrivate()
-        : hasSearchSupport(true),
+    PlainTextEditorPrivate(PlainTextEditor *qq)
+        : q(qq),
+          mTextIndicator(new PimCommon::TextMessageIndicator(q)),
+          hasSearchSupport(true),
           customPalette(false),
           hasSpellCheckingSupport(true)
     {
@@ -56,6 +59,8 @@ public:
     {
     }
 
+    PlainTextEditor *q;
+    PimCommon::TextMessageIndicator *mTextIndicator;
     QString spellCheckingLanguage;
     QTextDocumentFragment originalDoc;
     bool hasSearchSupport;
@@ -65,7 +70,7 @@ public:
 
 PlainTextEditor::PlainTextEditor(QWidget *parent)
     : QPlainTextEdit(parent),
-      d(new PlainTextEditor::PlainTextEditorPrivate)
+      d(new PlainTextEditor::PlainTextEditorPrivate(this))
 {
     KCursor::setAutoHideCursor(this, true, false);
 }
@@ -73,6 +78,11 @@ PlainTextEditor::PlainTextEditor(QWidget *parent)
 PlainTextEditor::~PlainTextEditor()
 {
     delete d;
+}
+
+void PlainTextEditor::slotDisplayMessageIndicator(const QString &message)
+{
+    d->mTextIndicator->display(message);
 }
 
 void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )

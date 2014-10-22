@@ -42,6 +42,9 @@ public:
     void showReplace();
     void showFind();
 
+Q_SIGNALS:
+    void displayMessageIndicator(const QString &message);
+
 protected:
     virtual bool viewIsReadOnly() const = 0;
     virtual bool documentIsEmpty() const = 0;

@@ -30,6 +30,7 @@
 #include <QKeyEvent>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -145,9 +146,11 @@ void TextEditFindBarBase::messageInfo( bool backward, bool isAutoSearch, bool fo
 {
     if ( !found && !isAutoSearch ) {
         if ( backward ) {
-            KMessageBox::information( this, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ) );
+            Q_EMIT displayMessageIndicator(i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ));
+            //KMessageBox::information( this, i18n( "Beginning of message reached.\nPhrase '%1' could not be found." ,mLastSearchStr ) );
         } else {
-            KMessageBox::information( this, i18n( "End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr ) );
+            Q_EMIT displayMessageIndicator(i18n( "End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr ));
+            //KMessageBox::information( this, i18n( "End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr ) );
         }
     }
 }

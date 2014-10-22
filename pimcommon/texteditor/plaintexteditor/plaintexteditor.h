@@ -39,6 +39,9 @@ public:
 
     virtual void setReadOnly( bool readOnly );
 
+public slots:
+    void slotDisplayMessageIndicator(const QString &message);
+
 private Q_SLOTS:
     void slotUndoableClear();
     void slotSpeakText();
