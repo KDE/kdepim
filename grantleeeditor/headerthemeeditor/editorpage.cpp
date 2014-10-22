@@ -22,6 +22,7 @@
 #include "themeeditorwidget.h"
 #include "themetemplatewidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "pimcommon/widgets/splittercollapser.h"
 
 #include <KLocale>
 #include <KGlobal>
@@ -59,10 +60,11 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
         mEditor->setPlainText(group.readEntry("defaultTemplate",QString()));
     }
     mMainSplitter->addWidget(mEditor);
-    mMainSplitter->setChildrenCollapsible(false);
     mThemeTemplate = new ThemeTemplateWidget(i18n("Theme Templates:"));
     connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor->editor(), SLOT(insertPlainText(QString)));
     mMainSplitter->addWidget(mThemeTemplate);
+    mMainSplitter->setCollapsible(0, false);
+    new PimCommon::SplitterCollapser(mMainSplitter, mThemeTemplate, this);
 
     connect(mEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
 
