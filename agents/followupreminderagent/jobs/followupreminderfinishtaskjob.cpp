@@ -16,9 +16,11 @@
 */
 
 #include "followupreminderfinishtaskjob.h"
+#include "../followupreminderinfo.h"
 
-FollowUpReminderFinishTaskJob::FollowUpReminderFinishTaskJob(QObject *parent)
-    : QObject(parent)
+FollowUpReminderFinishTaskJob::FollowUpReminderFinishTaskJob(FollowUpReminder::FollowUpReminderInfo *info, QObject *parent)
+    : QObject(parent),
+      mInfo(info)
 {
 }
 
@@ -28,6 +30,16 @@ FollowUpReminderFinishTaskJob::~FollowUpReminderFinishTaskJob()
 }
 
 void FollowUpReminderFinishTaskJob::start()
+{
+    if (mInfo->isValid() && (mInfo->todoId() != -1)) {
+        closeTodo();
+    } else {
+        Q_EMIT finishTaskFailed();
+        deleteLater();
+    }
+}
+
+void FollowUpReminderFinishTaskJob::closeTodo()
 {
 
 }

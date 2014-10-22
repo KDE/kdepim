@@ -29,8 +29,9 @@
 
 using namespace PimCommon;
 TextMessageIndicator::TextMessageIndicator( QWidget * parent )
-    : QWidget( parent ), mTimer( 0 )
-    , mLineSpacing( 0 )
+    : QWidget( parent ),
+      mTimer( 0 ),
+      mLineSpacing( 0 )
 {
     setObjectName( QLatin1String( "TextMessageIndicator" ) );
     setFocusPolicy( Qt::NoFocus );
@@ -56,8 +57,7 @@ void TextMessageIndicator::display( const QString & message, const QString & det
     mLineSpacing = 0;
     // load icon (if set)
     mSymbol = QPixmap();
-    if ( icon != None )
-    {
+    if ( icon != None ) {
         switch ( icon )
         {
         case Error:
@@ -78,10 +78,8 @@ void TextMessageIndicator::display( const QString & message, const QString & det
     update();
 
     // close the message window after given mS
-    if ( durationMs > 0 )
-    {
-        if ( !mTimer )
-        {
+    if ( durationMs > 0 ) {
+        if ( !mTimer ) {
             mTimer = new QTimer( this );
             mTimer->setSingleShot( true );
             connect( mTimer, SIGNAL(timeout()), SLOT(hide()) );
@@ -119,8 +117,7 @@ void TextMessageIndicator::computeSizeAndResize()
     int width = textRect.width(),
             height = textRect.height();
 
-    if ( !mDetails.isEmpty() )
-    {
+    if ( !mDetails.isEmpty() ) {
         // determine details text rectangle
         const QRect detailsRect = computeTextRect( mDetails, mSymbol.width() );
         width = qMax( width, detailsRect.width() );
@@ -132,8 +129,7 @@ void TextMessageIndicator::computeSizeAndResize()
     }
 
     // update geometry with icon information
-    if ( !mSymbol.isNull() )
-    {
+    if ( !mSymbol.isNull() ) {
         width += 2 + mSymbol.width();
         height = qMax( height, mSymbol.height() );
     }
@@ -154,11 +150,9 @@ bool TextMessageIndicator::eventFilter(QObject * obj, QEvent * event )
 {
     /* if the parent object (scroll area) resizes, the message should
        resize as well */
-    if (event->type() == QEvent::Resize)
-    {
+    if (event->type() == QEvent::Resize) {
         QResizeEvent *resizeEvent = static_cast<QResizeEvent *>(event);
-        if ( resizeEvent->oldSize() != resizeEvent->size() )
-        {
+        if ( resizeEvent->oldSize() != resizeEvent->size() ) {
             computeSizeAndResize();
         }
     }
@@ -171,8 +165,7 @@ void TextMessageIndicator::paintEvent( QPaintEvent * /* e */ )
     const QRect textRect = computeTextRect( mMessage, mSymbol.width() );
 
     QRect detailsRect;
-    if ( !mDetails.isEmpty() )
-    {
+    if ( !mDetails.isEmpty() ) {
         detailsRect = computeTextRect( mDetails, mSymbol.width() );
     }
 
