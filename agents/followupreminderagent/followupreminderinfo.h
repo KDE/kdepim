@@ -35,6 +35,9 @@ public:
     Akonadi::Item::Id originalMessageItemId() const;
     void setOriginalMessageItemId(Akonadi::Item::Id value);
 
+    Akonadi::Item::Id todoId() const;
+    void setTodoId(Akonadi::Item::Id value);
+
     bool isValid() const;
 
     QString messageId() const;
@@ -68,6 +71,7 @@ private:
     void readConfig(const KConfigGroup &config);
     Akonadi::Item::Id mOriginalMessageItemId;
     Akonadi::Item::Id mAnswerMessageItemId;
+    Akonadi::Item::Id mTodoId;
     QString mMessageId;
     QDate mFollowUpReminderDate;
     QString mTo;

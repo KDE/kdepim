@@ -93,13 +93,23 @@ void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId
     Q_FOREACH(FollowUpReminderInfo* info, mFollowUpReminderInfoList) {
         if (info->messageId() == messageId) {
             answerReceived(info->to());
-            //Close task
-            FollowUpReminderFinishTaskJob *job = new FollowUpReminderFinishTaskJob(this);
-            //TODO
+            FollowUpReminderFinishTaskJob *job = new FollowUpReminderFinishTaskJob(info, this);
+            connect(job, SIGNAL(finishTaskDone()), this, SLOT(slotFinishTaskDone()));
+            connect(job, SIGNAL(finishTaskFailed()), this, SLOT(slotFinishTaskFailed()));
             job->start();
             break;
         }
     }
+}
+
+void FollowUpReminderManager::slotFinishTaskDone()
+{
+    //TODO
+}
+
+void FollowUpReminderManager::slotFinishTaskFailed()
+{
+    //TODO
 }
 
 void FollowUpReminderManager::answerReceived(const QString &from)

@@ -23,6 +23,7 @@ using namespace FollowUpReminder;
 FollowUpReminderInfo::FollowUpReminderInfo()
     : mOriginalMessageItemId(-1),
       mAnswerMessageItemId(-1),
+      mTodoId(-1),
       mUniqueIdentifier(-1),
       mAnswerWasReceived(false)
 {
@@ -31,6 +32,7 @@ FollowUpReminderInfo::FollowUpReminderInfo()
 FollowUpReminderInfo::FollowUpReminderInfo(const KConfigGroup &config)
     : mOriginalMessageItemId(-1),
       mAnswerMessageItemId(-1),
+      mTodoId(-1),
       mUniqueIdentifier(-1),
       mAnswerWasReceived(false)
 {
@@ -47,6 +49,7 @@ FollowUpReminderInfo::FollowUpReminderInfo(const FollowUpReminderInfo &info)
     mAnswerWasReceived = info.answerWasReceived();
     mAnswerMessageItemId = info.answerMessageItemId();
     mUniqueIdentifier = info.uniqueIdentifier();
+    mTodoId = info.todoId();
 }
 
 void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
@@ -60,6 +63,7 @@ void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
     mSubject = config.readEntry("subject", QString());
     mAnswerWasReceived = config.readEntry("answerWasReceived", false);
     mAnswerMessageItemId = config.readEntry("answerMessageItemId", -1);
+    mTodoId = config.readEntry("todoId", -1);
     mUniqueIdentifier = config.readEntry("identifier", -1);
 }
 
@@ -115,6 +119,7 @@ void FollowUpReminderInfo::writeConfig(KConfigGroup &config, qint32 identifier )
     config.writeEntry("subject", mSubject);
     config.writeEntry("answerWasReceived", mAnswerWasReceived);
     config.writeEntry("answerMessageItemId", mAnswerMessageItemId);
+    config.writeEntry("todoId", mTodoId);
     config.writeEntry("identifier", identifier);
     config.sync();
 }
@@ -127,6 +132,16 @@ Akonadi::Item::Id FollowUpReminderInfo::originalMessageItemId() const
 void FollowUpReminderInfo::setOriginalMessageItemId(Akonadi::Item::Id value)
 {
     mOriginalMessageItemId = value;
+}
+
+Akonadi::Item::Id FollowUpReminderInfo::todoId() const
+{
+    return mTodoId;
+}
+
+void FollowUpReminderInfo::setTodoId(Akonadi::Item::Id value)
+{
+    mTodoId = value;
 }
 
 bool FollowUpReminderInfo::isValid() const
@@ -175,6 +190,7 @@ bool FollowUpReminderInfo::operator==( const FollowUpReminderInfo& other ) const
             && mSubject == other.subject()
             && mAnswerWasReceived == other.answerWasReceived()
             && mAnswerMessageItemId == other.answerMessageItemId()
-            && mUniqueIdentifier == other.uniqueIdentifier();
+            && mUniqueIdentifier == other.uniqueIdentifier()
+            && mTodoId == other.todoId();
 }
 

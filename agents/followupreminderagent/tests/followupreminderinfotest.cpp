@@ -79,6 +79,7 @@ void FollowUpReminderInfoTest::shouldRestoreFromSettings()
     info.setOriginalMessageItemId(Akonadi::Item::Id(42));
     info.setSubject(QLatin1String("Subject"));
     info.setUniqueIdentifier(42);
+    info.setTodoId(52);
 
     KConfigGroup grp(KGlobal::config(), "testsettings");
     info.writeConfig(grp, info.uniqueIdentifier());
@@ -98,6 +99,7 @@ void FollowUpReminderInfoTest::shouldCopyReminderInfo()
     info.setOriginalMessageItemId(Akonadi::Item::Id(42));
     info.setSubject(QLatin1String("Subject"));
     info.setUniqueIdentifier(42);
+    info.setTodoId(52);
 
     FollowUpReminder::FollowUpReminderInfo copyInfo(info);
     QCOMPARE(info, copyInfo);

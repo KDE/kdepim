@@ -20,16 +20,25 @@
 
 #include <QObject>
 
+namespace FollowUpReminder {
+class FollowUpReminderInfo;
+}
 class FollowUpReminderFinishTaskJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderFinishTaskJob(QObject *parent = 0);
+    explicit FollowUpReminderFinishTaskJob(FollowUpReminder::FollowUpReminderInfo *info, QObject *parent = 0);
     ~FollowUpReminderFinishTaskJob();
+
     void start();
 
 Q_SIGNALS:
     void finishTaskDone();
+    void finishTaskFailed();
+
+private:
+    void closeTodo();
+    FollowUpReminder::FollowUpReminderInfo *mInfo;
 };
 
 #endif // FOLLOWUPREMINDERFINISHTASKJOB_H

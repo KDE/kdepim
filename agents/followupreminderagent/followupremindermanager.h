@@ -40,6 +40,8 @@ public:
 private slots:
     void slotCheckFollowUpFinished(const QString &messageId);
 
+    void slotFinishTaskDone();
+    void slotFinishTaskFailed();
 private:
     void answerReceived(const QString &from);
     QString infoToStr(FollowUpReminder::FollowUpReminderInfo *info);
