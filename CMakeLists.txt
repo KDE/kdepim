@@ -192,6 +192,10 @@ else()
   find_package(LibKGAPI2 2.1.0 QUIET CONFIG)
   set_package_properties(LibKGAPI2 PROPERTIES DESCRIPTION "KDE-based library for accessing various Google services" URL "https://projects.kde.org/libkgapi" TYPE OPTIONAL PURPOSE "LibKGAPI is required to build Google Drive Storage Service")
 
+  # shared-mime-info
+  find_package(SharedMimeInfo 0.30)
+  set_package_properties(SharedMimeInfo PROPERTIES DESCRIPTION "The shared-mime-info utility" URL "http://freedesktop.org/wiki/Software/shared-mime-info" TYPE REQUIRED PURPOSE "Information about filetypes")
+
   if( LibKGAPI2_FOUND )
     add_definitions( -DKDEPIM_STORAGESERVICE_GDRIVE )
   endif()
@@ -229,6 +233,7 @@ else()
 
   # These targets will always be built before anything else.
 
+  add_subdirectory(accountwizard)
   add_subdirectory(noteshared)
   add_subdirectory(akonadi_next)
   add_subdirectory(libkdepim)
