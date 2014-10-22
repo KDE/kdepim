@@ -331,10 +331,6 @@ void EventEdit::slotOpenEditor()
     event->setSummary(mEventEdit->text());
     event->setDtStart(mStartDateTimeEdit->dateTime());
     event->setDtEnd(mEndDateTimeEdit->dateTime());
-    qDebug()<<"mStartDateTimeEdit->dateTime() "<<mStartDateTimeEdit->dateTime();
-    qDebug()<<"mEndDateTimeEdit->dateTime() "<<mEndDateTimeEdit->dateTime();
-
-    qDebug()<<" mStartDateTimeEdit->date()"<<mStartDateTimeEdit->date();
 
     event->addAttachment(attachment);
 
