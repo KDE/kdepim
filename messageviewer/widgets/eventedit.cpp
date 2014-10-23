@@ -102,8 +102,7 @@ EventEdit::EventEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     mStartDateTimeEdit->setAccessibleDescription(i18n("Select start time for event."));
 #endif
-    connect(mStartDateTimeEdit, SIGNAL(dateTimeChanged(QDateTime)),
-            this, SLOT(slotStartDateTimeChanged(QDateTime)));
+    connect(mStartDateTimeEdit, &EventDateTimeWidget::dateTimeChanged, this, &EventEdit::slotStartDateTimeChanged);
     hbox->addWidget(mStartDateTimeEdit);
 
     hbox->addSpacing(5);

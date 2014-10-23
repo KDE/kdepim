@@ -82,7 +82,7 @@ void TextMessageIndicator::display( const QString & message, const QString & det
         if ( !mTimer ) {
             mTimer = new QTimer( this );
             mTimer->setSingleShot( true );
-            connect( mTimer, SIGNAL(timeout()), SLOT(hide()) );
+            connect(mTimer, &QTimer::timeout, this, &TextMessageIndicator::hide);
         }
         mTimer->start( durationMs );
     } else if ( mTimer )

@@ -38,10 +38,10 @@ EventDateTimeWidget::EventDateTimeWidget(QWidget *parent)
     mainLayout->addWidget(mTimeEdit);
     const QDateTime currentDateTime = QDateTime::currentDateTime();
     setDateTime(currentDateTime);
-    connect(mDateEdit, SIGNAL(dateChanged(QDate)), this, SLOT(slotDateTimeChanged()));
-    connect(mTimeEdit, SIGNAL(timeChanged(QTime)), this, SLOT(slotDateTimeChanged()));
-    connect(mDateEdit, SIGNAL(dateEdited(QDate)), this, SLOT(slotDateTimeChanged()));
-    connect(mTimeEdit, SIGNAL(timeEdited(QTime)), this, SLOT(slotDateTimeChanged()));
+    connect(mDateEdit, &KDateComboBox::dateChanged, this, &EventDateTimeWidget::slotDateTimeChanged);
+    connect(mTimeEdit, &KTimeComboBox::timeChanged, this, &EventDateTimeWidget::slotDateTimeChanged);
+    connect(mDateEdit, &KDateComboBox::dateEdited, this, &EventDateTimeWidget::slotDateTimeChanged);
+    connect(mTimeEdit, &KTimeComboBox::timeEdited, this, &EventDateTimeWidget::slotDateTimeChanged);
 }
 
 EventDateTimeWidget::~EventDateTimeWidget()

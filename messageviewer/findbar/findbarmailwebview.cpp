@@ -31,7 +31,7 @@ FindBarMailWebView::FindBarMailWebView(MailWebView *view, QWidget *parent)
     QMenu *options = optionsMenu();
     mHighlightAll = options->addAction(i18n("Highlight all matches"));
     mHighlightAll->setCheckable(true);
-    connect(mHighlightAll, SIGNAL(toggled(bool)), this, SLOT(slotHighlightAllChanged(bool)));
+    connect(mHighlightAll, &QAction::toggled, this, &FindBarMailWebView::slotHighlightAllChanged);
 #endif
 }
 

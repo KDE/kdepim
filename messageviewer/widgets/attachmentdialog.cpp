@@ -47,15 +47,15 @@ AttachmentDialog::AttachmentDialog(QWidget *parent, const QString &filenameText,
     mButtonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
     QPushButton *user1Button = new QPushButton;
     mButtonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    dialog->connect(mButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    dialog->connect(mButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    dialog->connect(mButtonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
+    dialog->connect(mButtonBox, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
     
     
     if (!application.isEmpty()) {
         QPushButton *user2Button = new QPushButton;
         mButtonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
         user2Button->setText(i18n("&Open with '%1'", application));
-        connect(user2Button, SIGNAL(clicked()), this, SLOT(openClicked()));
+        connect(user2Button, &QPushButton::clicked, this, &AttachmentDialog::openClicked);
 
     }
 
@@ -66,8 +66,8 @@ AttachmentDialog::AttachmentDialog(QWidget *parent, const QString &filenameText,
     user1Button->setText(i18n("&Open With..."));
     user3Button->setDefault(true);
 
-    connect(user3Button, SIGNAL(clicked()), this, SLOT(saveClicked()));
-    connect(user1Button, SIGNAL(clicked()), this, SLOT(openWithClicked()));
+    connect(user3Button, &QPushButton::clicked, this, &AttachmentDialog::saveClicked);
+    connect(user1Button, &QPushButton::clicked, this, &AttachmentDialog::openWithClicked);
 }
 
 //---------------------------------------------------------------------

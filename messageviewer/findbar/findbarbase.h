@@ -61,7 +61,7 @@ public slots:
 Q_SIGNALS:
     void hideFindBar();
 
-private slots:
+protected slots:
     void caseSensitivityChanged(bool);
     void slotHighlightAllChanged(bool);
     void slotClearSearch();

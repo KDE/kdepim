@@ -77,7 +77,7 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget(QWidget *parent
     mSliderContainer = new PimCommon::SlideContainer(this);
 
     mFindBar = new FindBarSourceView(mTextBrowser, this);
-    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
+    connect(mFindBar, &FindBarSourceView::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
     mSliderContainer->setContent(mFindBar);
 
     lay->addWidget(mSliderContainer);

@@ -27,9 +27,9 @@ PrintingSettings::PrintingSettings(QWidget *parent)
     : QWidget(parent), mPrintingUi(new Ui_PrintingSettings)
 {
     mPrintingUi->setupUi(this);
-    connect(mPrintingUi->mPrintEmptySelectedText, SIGNAL(toggled(bool)), SIGNAL(changed()));
-    connect(mPrintingUi->respectExpandCollapseSettings, SIGNAL(toggled(bool)), SIGNAL(changed()));
-    connect(mPrintingUi->printBackgroundColorAndImages, SIGNAL(toggled(bool)), SIGNAL(changed()));
+    connect(mPrintingUi->mPrintEmptySelectedText, &QCheckBox::toggled, this, &PrintingSettings::changed);
+    connect(mPrintingUi->respectExpandCollapseSettings, &QCheckBox::toggled, this, &PrintingSettings::changed);
+    connect(mPrintingUi->printBackgroundColorAndImages, &QCheckBox::toggled, this, &PrintingSettings::changed);
 }
 
 PrintingSettings::~PrintingSettings()

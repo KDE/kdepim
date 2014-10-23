@@ -32,8 +32,7 @@ ContactDisplayMessageMemento::ContactDisplayMessageMemento(const QString &emailA
     if (!emailAddress.isEmpty()) {
         Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
         searchJob->setQuery(Akonadi::ContactSearchJob::Email, emailAddress.toLower(), Akonadi::ContactSearchJob::ExactMatch);
-        connect(searchJob, SIGNAL(result(KJob*)),
-                this, SLOT(slotSearchJobFinished(KJob*)));
+        connect(searchJob, &Akonadi::ContactSearchJob::result, this, &ContactDisplayMessageMemento::slotSearchJobFinished);
     } else {
         mFinished = true;
     }

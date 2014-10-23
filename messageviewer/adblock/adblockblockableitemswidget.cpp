@@ -53,8 +53,7 @@ AdBlockBlockableItemsWidget::AdBlockBlockableItemsWidget(QWidget *parent)
     mListItems->setContextMenuPolicy(Qt::CustomContextMenu);
     mListItems->setAlternatingRowColors(true);
     mListItems->setRootIsDecorated(false);
-    connect(mListItems, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(customContextMenuRequested(QPoint)));
+    connect(mListItems, &PimCommon::CustomTreeView::customContextMenuRequested, this, &AdBlockBlockableItemsWidget::customContextMenuRequested);
 
     QStringList lst;
     lst << i18n("Filter") << i18n("Address") << i18n("Type");
