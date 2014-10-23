@@ -54,6 +54,9 @@ public:
     virtual void createHighlighter();
 
 
+public Q_SLOTS:
+    void slotDisplayMessageIndicator(const QString &message);
+
 private Q_SLOTS:
     void slotSpeakText();
     void slotUndoableClear();

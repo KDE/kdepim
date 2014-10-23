@@ -89,6 +89,7 @@ void RichTextEditorWidget::init(RichTextEditor *customEditor)
     lay->addWidget(mEditor);
 
     mFindBar = new PimCommon::RichTextEditFindBar( mEditor, this );
+    connect(mFindBar, SIGNAL(displayMessageIndicator(QString)), mEditor, SLOT(slotDisplayMessageIndicator(QString)));
     lay->addWidget(mFindBar);
 
     QShortcut *shortcut = new QShortcut( this );
