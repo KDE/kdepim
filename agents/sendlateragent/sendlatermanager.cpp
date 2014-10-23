@@ -98,6 +98,7 @@ void SendLaterManager::createSendInfoList()
             }
         } else {
             qDebug() << " list is empty";
+            mTimer->stop();
         }
     } else {
         SendLater::SendLaterInfo *info = searchInfo(mSendLaterQueue.dequeue());

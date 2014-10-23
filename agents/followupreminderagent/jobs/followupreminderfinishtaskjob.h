@@ -19,7 +19,7 @@
 #define FOLLOWUPREMINDERFINISHTASKJOB_H
 
 #include <QObject>
-
+class KJob;
 namespace FollowUpReminder {
 class FollowUpReminderInfo;
 }
@@ -36,6 +36,9 @@ Q_SIGNALS:
     void finishTaskDone();
     void finishTaskFailed();
 
+private slots:
+    void slotItemFetchJobDone(KJob *job);
+    void slotItemModifiedResult(KJob *job);
 private:
     void closeTodo();
     FollowUpReminder::FollowUpReminderInfo *mInfo;

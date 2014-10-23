@@ -52,6 +52,7 @@ target_link_libraries(akonadi_followupreminder_agent
   KF5::AkonadiMime
   KF5::AkonadiAgentBase
   KF5::Mime
+  KF5::CalendarCore
   followupreminder
 )
 
