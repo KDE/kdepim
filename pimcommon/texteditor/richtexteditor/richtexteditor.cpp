@@ -16,6 +16,7 @@
 */
 
 #include "richtexteditor.h"
+#include "texteditor/commonwidget/textmessageindicator.h"
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -47,8 +48,10 @@ using namespace PimCommon;
 class RichTextEditor::RichTextEditorPrivate
 {
 public:
-    RichTextEditorPrivate()
-        : highLighter(0),
+    RichTextEditorPrivate(RichTextEditor *qq)
+        : q(qq),
+          mTextIndicator(new PimCommon::TextMessageIndicator(q)),
+          highLighter(0),
           speller(0),
           customPalette(false)
     {
@@ -65,6 +68,8 @@ public:
         delete speller;
     }
 
+    RichTextEditor *q;
+    PimCommon::TextMessageIndicator *mTextIndicator;
     QString spellCheckingConfigFileName;
     QString spellCheckingLanguage;
     QTextDocumentFragment originalDoc;
@@ -77,7 +82,7 @@ public:
 
 RichTextEditor::RichTextEditor(QWidget *parent)
     : QTextEdit(parent),
-      d(new RichTextEditorPrivate)
+      d(new RichTextEditorPrivate(this))
 {
     setAcceptRichText(true);
     KCursor::setAutoHideCursor(this, true, false);
@@ -86,6 +91,11 @@ RichTextEditor::RichTextEditor(QWidget *parent)
 RichTextEditor::~RichTextEditor()
 {
     delete d;
+}
+
+void RichTextEditor::slotDisplayMessageIndicator(const QString &message)
+{
+    d->mTextIndicator->display(message);
 }
 
 void RichTextEditor::defaultPopupMenu(const QPoint &pos)
