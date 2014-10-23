@@ -51,8 +51,7 @@ void ParseUserScriptJob::start()
         mSieveJob->kill();
     }
     mSieveJob = KManageSieve::SieveJob::get(mCurrentUrl);
-    connect(mSieveJob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-            this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)));
+    connect(mSieveJob, &KManageSieve::SieveJob::result, this, &ParseUserScriptJob::slotGetResult);
 }
 
 void ParseUserScriptJob::slotGetResult(KManageSieve::SieveJob *, bool, const QString &script, bool)

@@ -88,8 +88,7 @@ void VacationPageWidget::setServerUrl(const QUrl &url)
     mUrl = url;
     mVacationEditWidget->setEnabled(false);
     mSieveJob = KManageSieve::SieveJob::get(url);
-    connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
-            SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)));
+    connect(mSieveJob, &KManageSieve::SieveJob::gotScript, this, &VacationPageWidget::slotGetResult);
 }
 
 void VacationPageWidget::setServerName(const QString &serverName)

@@ -223,8 +223,7 @@ void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
     }
     disableManagerScriptsDialog(false);
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditor->script(), mWasActive, mWasActive);
-    connect(job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-            this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)));
+    connect(job, &KManageSieve::SieveJob::result, this, &ManageSieveScriptsDialog::slotPutResult);
 }
 
 void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()

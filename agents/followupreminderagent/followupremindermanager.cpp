@@ -98,8 +98,8 @@ void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId
         if (info->messageId() == messageId) {
             answerReceived(info->to());
             FollowUpReminderFinishTaskJob *job = new FollowUpReminderFinishTaskJob(info, this);
-            connect(job, SIGNAL(finishTaskDone()), this, SLOT(slotFinishTaskDone()));
-            connect(job, SIGNAL(finishTaskFailed()), this, SLOT(slotFinishTaskFailed()));
+            connect(job, &FollowUpReminderFinishTaskJob::finishTaskDone, this, &FollowUpReminderManager::slotFinishTaskDone);
+            connect(job, &FollowUpReminderFinishTaskJob::finishTaskFailed, this, &FollowUpReminderManager::slotFinishTaskFailed);
             job->start();
             break;
         }

@@ -79,13 +79,12 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     mWidget->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     mWidget->treeWidget->setDefaultText(i18n("No messages waiting..."));
 
-    connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(customContextMenuRequested(QPoint)));
+    connect(mWidget->treeWidget, &QTreeWidget::customContextMenuRequested, this, &SendLaterWidget::customContextMenuRequested);
 
-    connect(mWidget->removeItem, SIGNAL(clicked(bool)), SLOT(slotRemoveItem()));
-    connect(mWidget->modifyItem, SIGNAL(clicked(bool)), SLOT(slotModifyItem()));
-    connect(mWidget->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
-    connect(mWidget->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(slotModifyItem()));
+    connect(mWidget->removeItem, &QPushButton::clicked, this, &SendLaterWidget::slotRemoveItem);
+    connect(mWidget->modifyItem, &QPushButton::clicked, this, &SendLaterWidget::slotModifyItem);
+    connect(mWidget->treeWidget, &QTreeWidget::itemSelectionChanged, this, &SendLaterWidget::updateButtons);
+    connect(mWidget->treeWidget, &QTreeWidget::itemDoubleClicked, this, &SendLaterWidget::slotModifyItem);
     load();
     updateButtons();
 }

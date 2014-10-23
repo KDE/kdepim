@@ -50,8 +50,7 @@ NotesManager::NotesManager(QObject *parent)
     mNoteRecorder->changeRecorder()->setSession(session);
     mNoteTreeModel = new NoteShared::NotesAkonadiTreeModel(mNoteRecorder->changeRecorder(), this);
 
-    connect(mNoteTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            SLOT(slotRowInserted(QModelIndex,int,int)));
+    connect(mNoteTreeModel, &NoteShared::NotesAkonadiTreeModel::rowsInserted, this, &NotesManager::slotRowInserted);
 
     connect(mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
     connect(mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)));
@@ -148,7 +147,7 @@ void NotesManager::load()
     }
 
     mCheckAlarm->setInterval(1000 * 60 * NoteShared::NoteSharedGlobalConfig::checkInterval());
-    connect(mCheckAlarm, SIGNAL(timeout()), this, SLOT(slotCheckAlarm()));
+    connect(mCheckAlarm, &QTimer::timeout, this, &NotesManager::slotCheckAlarm);
     slotCheckAlarm();
 }
 
@@ -164,7 +163,7 @@ void NotesManager::slotAcceptConnection()
 
     if (s) {
         NoteShared::NotesNetworkReceiver *recv = new NoteShared::NotesNetworkReceiver(s);
-        connect(recv, SIGNAL(sigNoteReceived(QString,QString)), SLOT(slotNewNote(QString,QString)));
+        connect(recv, &NoteShared::NotesNetworkReceiver::sigNoteReceived, this, &NotesManager::slotNewNote);
     }
 }
 
@@ -193,7 +192,6 @@ void NotesManager::updateNetworkListener()
         // create the socket and start listening for connections
         mListener = KSocketFactory::listen(QLatin1String("knotes") , QHostAddress::Any,
                                            NoteShared::NoteSharedGlobalConfig::port());
-        connect(mListener, SIGNAL(newConnection()),
-                SLOT(slotAcceptConnection()));
+        connect(mListener, &QTcpServer::newConnection, this, &NotesManager::slotAcceptConnection);
     }
 }

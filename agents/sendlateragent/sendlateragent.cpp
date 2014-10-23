@@ -50,7 +50,7 @@ SendLaterAgent::SendLaterAgent(const QString &id)
     migrate.migrate();
 
     mManager = new SendLaterManager(this);
-    connect(mManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
+    connect(mManager, &SendLaterManager::needUpdateConfigDialogBox, this, &SendLaterAgent::needUpdateConfigDialogBox);
     new SendLaterAgentAdaptor(this);
     Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/SendLaterAgent"), this, QDBusConnection::ExportAdaptors);
     Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.SendLaterAgent"));

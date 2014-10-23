@@ -55,8 +55,7 @@ ArchiveMailAgent::ArchiveMailAgent(const QString &id)
     new ArchiveMailAgentAdaptor(this);
     Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/ArchiveMailAgent"), this, QDBusConnection::ExportAdaptors);
     Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.ArchiveMailAgent"));
-    connect(collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
-            this, SLOT(mailCollectionRemoved(Akonadi::Collection)));
+    connect(collectionMonitor, &Akonadi::Monitor::collectionRemoved, this, &ArchiveMailAgent::mailCollectionRemoved);
 
     if (enabledAgent()) {
 #ifdef DEBUG_ARCHIVEMAILAGENT

@@ -95,7 +95,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect(mGoToLine, &PimCommon::TextGoToLineWidget::moveToLine, this, &SieveEditorTextModeWidget::slotGoToLine);
 
     mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, textEditWidget);
-    connect(mFindBar, SIGNAL(displayMessageIndicator(QString)),mTextEdit, SLOT(slotDisplayMessageIndicator(QString)));
+    connect(mFindBar, &PimCommon::PlainTextEditFindBar::displayMessageIndicator, mTextEdit, &SieveTextEdit::slotDisplayMessageIndicator);
     textEditLayout->addWidget(mFindBar);
 
     mSieveEditorWarning = new SieveEditorWarning;
