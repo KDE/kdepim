@@ -96,6 +96,7 @@ void SendLaterManager::createSendInfoList()
                 slotCreateJob();
             }
         } else {
+            mTimer->stop();
             qDebug()<<" list is empty";
         }
     } else {

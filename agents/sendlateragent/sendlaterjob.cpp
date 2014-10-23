@@ -66,9 +66,11 @@ void SendLaterJob::start()
             connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished(KJob*)) );
             fetch->start();
         } else {
+            qDebug()<<" message Id is invalid";
             sendError(i18n("Not message found."), SendLaterManager::ItemNotFound);
         }
     } else {
+        qDebug()<<" Item is null. It's a bug!";
       sendError(i18n("Not message found."), SendLaterManager::UnknownError);
     }
 }
@@ -76,6 +78,7 @@ void SendLaterJob::start()
 void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
 {
     if (items.isEmpty()) {
+        qDebug()<<" slotMessageTransfered failed !";
         sendError(i18n("Not message found."), SendLaterManager::ItemNotFound);
         return;
     } else if (items.count() == 1) {
