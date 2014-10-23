@@ -47,6 +47,7 @@ target_link_libraries(akonadi_followupreminder_agent
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_KCALCORE_LIBS}
   followupreminder
 )
 

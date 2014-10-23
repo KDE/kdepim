@@ -18,6 +18,12 @@
 
 #include "followupreminderfinishtaskjob.h"
 #include "../followupreminderinfo.h"
+#include <Akonadi/Item>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemModifyJob>
+#include <QDebug>
+#include <KCalCore/Todo>
+
 
 FollowUpReminderFinishTaskJob::FollowUpReminderFinishTaskJob(FollowUpReminder::FollowUpReminderInfo *info, QObject *parent)
     : QObject(parent),
@@ -43,5 +49,51 @@ void FollowUpReminderFinishTaskJob::start()
 
 void FollowUpReminderFinishTaskJob::closeTodo()
 {
+    Akonadi::Item item(mInfo->todoId());
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotItemFetchJobDone(KJob*)) );
+}
 
+void FollowUpReminderFinishTaskJob::slotItemFetchJobDone(KJob *job)
+{
+    if ( job->error() ) {
+        qWarning() << job->errorString();
+        Q_EMIT finishTaskFailed();
+        deleteLater();
+        return;
+    }
+
+    const Akonadi::Item::List lst = qobject_cast<Akonadi::ItemFetchJob*>( job )->items();
+    if (lst.count() == 1) {
+        const Akonadi::Item item = lst.first();
+        if (!item.hasPayload<KCalCore::Todo::Ptr>()) {
+            qDebug()<<" item is not a todo.";
+            Q_EMIT finishTaskFailed();
+            deleteLater();
+            return;
+        }
+        KCalCore::Todo::Ptr todo = item.payload<KCalCore::Todo::Ptr>();
+        todo->setCompleted(true);
+        Akonadi::Item updateItem = item;
+        updateItem.setPayload<KCalCore::Todo::Ptr>( todo );
+
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( updateItem );
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotItemModifiedResult(KJob*)) );
+    } else {
+        qWarning()<<" Found item different from 1: "<<lst.count();
+        Q_EMIT finishTaskFailed();
+        deleteLater();
+        return;
+    }
+}
+
+void FollowUpReminderFinishTaskJob::slotItemModifiedResult(KJob *job)
+{
+    if ( job->error() ) {
+        qWarning() << job->errorString();
+        Q_EMIT finishTaskFailed();
+    } else {
+        Q_EMIT finishTaskDone();
+    }
+    deleteLater();
 }
