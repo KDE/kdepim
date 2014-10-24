@@ -578,7 +578,7 @@
      <item row="12" column="0" colspan="2">
       <widget class="KTabWidget" name="mTabWidget">
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="mGeneralTab">
         <attribute name="title">
@@ -586,7 +586,7 @@
         </attribute>
         <layout class="QGridLayout" name="gridLayout_9">
          <item row="2" column="1">
-          <widget class="KPIM::TagWidget" name="mTagWidget" native="true"/>
+          <widget class="Akonadi::TagWidget" name="mTagWidget" native="true"/>
          </item>
          <item row="2" column="2">
           <widget class="QLabel" name="mSecrecyLabel">
@@ -1647,9 +1647,9 @@
    <header>calendarsupport/messagewidget.h</header>
   </customwidget>
   <customwidget>
-   <class>KPIM::TagWidget</class>
+   <class>Akonadi::TagWidget</class>
    <extends>QWidget</extends>
-   <header>libkdepim/widgets/tagwidgets.h</header>
+   <header location="global">akonadi/tagwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

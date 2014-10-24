@@ -50,6 +50,7 @@ void TagWidget::onSelectionChanged(const Akonadi::Tag::List &tags)
         mCachedTagNames << tag.name();
     }
     emit selectionChanged(mCachedTagNames);
+    emit selectionChanged(tags);
 }
 
 void TagWidget::setSelection(const QStringList &tagNames)
@@ -116,6 +117,11 @@ QStringList TagSelectionDialog::selection() const
         list << tag.name();
     }
     return list;
+}
+
+Akonadi::Tag::List TagSelectionDialog::tagSelection() const
+{
+    return Akonadi::TagSelectionDialog::selection();
 }
 
 class MatchingCheckableProxyModel : public KCheckableProxyModel

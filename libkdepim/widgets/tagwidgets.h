@@ -40,8 +40,10 @@ public:
     explicit TagWidget(QWidget* parent = 0);
     void setSelection(const QStringList &);
     QStringList selection() const;
+
 signals:
     void selectionChanged(const QStringList &);
+    void selectionChanged(const Akonadi::Tag::List &);
 
 private slots:
     void onTagCreated(KJob*);
@@ -60,6 +62,7 @@ public:
     explicit TagSelectionDialog(QWidget* parent = 0);
     void setSelection(const QStringList &);
     QStringList selection() const;
+    Akonadi::Tag::List tagSelection() const;
 
 private slots:
     void onTagCreated(KJob*);

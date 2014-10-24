@@ -25,6 +25,7 @@
 #include "incidenceeditor-ng.h"
 
 #include <KMessageWidget>
+#include <Akonadi/Item>
 
 namespace IncidenceEditorNG {
 
@@ -59,7 +60,9 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
      * implementation too.
      */
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load( const Akonadi::Item &item );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
+    virtual void save( Akonadi::Item &item );
 
   private Q_SLOTS:
     void handleDirtyStatusChange( bool isDirty );

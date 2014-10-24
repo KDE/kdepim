@@ -24,7 +24,7 @@
 #include "incidenceeditors-ng_export.h"
 
 #include <KCalCore/Incidence>
-
+#include <Akonadi/Item>
 
 namespace IncidenceEditorNG {
 
@@ -45,11 +45,15 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
      * incidence is kept for comparing with the current values of the editor.
      */
     virtual void load( const KCalCore::Incidence::Ptr &incidence ) = 0;
+    /// This was introduced to replace categories with Akonadi::Tags
+    virtual void load( const Akonadi::Item &item );
 
     /**
      * Store the current values of the editor into @param incidince.
      */
     virtual void save( const KCalCore::Incidence::Ptr &incidence ) = 0;
+    /// This was introduced to replace categories with Akonadi::Tags
+    virtual void save( Akonadi::Item &item );
 
     /**
      * Returns whether or not the current values in the editor differ from the
