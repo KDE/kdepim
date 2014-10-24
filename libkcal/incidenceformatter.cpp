@@ -2557,7 +2557,7 @@ static QString invitationRsvpList( Incidence *incidence, Attendee *sender )
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
       Attendee *a = *it;
       if ( !attendeeIsOrganizer( incidence, a ) ) {
-        QString statusStr = a->statusStr();
+        QString statusStr;
         const QString iconPath = rsvpStatusIconPath( a->status() );
         tmpStr += QString( "<img src=\"%1\"/>" ).arg( iconPath );
         if ( sender && ( a->email() == sender->email() ) ) {
