@@ -2889,6 +2889,10 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
     return html;
   }
 
+  // Used suffix to indicate that the button will not trigger an immediate
+  // response but open a dialog first.
+  const QString complexActionSuffix = QString( "..." );
+
   if ( !rsvpReq && ( inc && inc->revision() == 0 ) ) {
     // Record only
     html += helper->makeBtnLink( "record", i18n( "Record" ), "dialog_ok" );
@@ -2903,18 +2907,19 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
 
     // Tentative
     html += helper->makeBtnLink( "accept_conditionally",
-                              i18n( "Accept an invitation conditionally", "Provisorily" ), "dialog_ok" );
-
+                              i18n( "Accept an invitation conditionally", "Provisorily" )
+                                + complexActionSuffix, "dialog_ok" );
     // Counter proposal
-    html += helper->makeBtnLink( "counter", i18n( "Counter proposal" ), "edit_undo" );
-
+    html += helper->makeBtnLink( "counter", i18n( "Counter proposal" ) + complexActionSuffix,
+                                 "edit_undo" );
     // Decline
     html += helper->makeBtnLink( "decline", i18n( "Decline" ), "process_stop" );
   }
 
   if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
     // Delegate
-    html += helper->makeBtnLink( "delegate", i18n( "Delegate" ), "mail_forward" );
+    html += helper->makeBtnLink( "delegate", i18n( "Delegate" ) + complexActionSuffix,
+                                 "mail_forward" );
   }
   return html;
 }
