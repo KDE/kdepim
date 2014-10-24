@@ -1176,7 +1176,7 @@ static QString cleanHtml( const QString &html )
   QRegExp rx( "<body[^>]*>(.*)</body>" );
   rx.setCaseSensitive( false );
   rx.search( html );
-  QString body = rx.cap( 1 );
+  QString body = rx.cap( 1 ).isEmpty() ? html : rx.cap( 1 );
 
   return QStyleSheet::escape( body.remove( QRegExp( "<[^>]*>" ) ).stripWhiteSpace() );
 }
@@ -1548,7 +1548,7 @@ static QString invitationDetailsIncidence( Incidence *incidence, bool noHtmlMode
         comments.append( string2HTML( *it ) );
       } else {
         if ( noHtmlMode ) {
-          comments.append( cleanHtml( "<body>" + (*it) + "</body>" ) );
+          comments.append( cleanHtml( *it ) );
         } else {
           comments.append( *it );
         }
