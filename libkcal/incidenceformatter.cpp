@@ -2604,12 +2604,11 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
 
   Attachment::List attachments = incidence->attachments();
   if ( !attachments.isEmpty() ) {
-    tmpStr += i18n( "Attached Documents:" ) + "<ol>";
+    tmpStr += "<tr>\n<td class=\"leftColumn\">" + i18n( "Attached Documents:" ) + "</td><td>";
 
     Attachment::List::ConstIterator it;
     for( it = attachments.begin(); it != attachments.end(); ++it ) {
       Attachment *a = *it;
-      tmpStr += "<li>";
       // Attachment icon
       KMimeType::Ptr mimeType = KMimeType::mimeType( a->mimeType() );
       const QString iconStr = mimeType ? mimeType->icon( a->uri(), false ) : QString( "application-octet-stream" );
@@ -2619,9 +2618,8 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
       }
       const QCString encodedLabel = KCodecs::base64Encode(a->label().utf8());
       tmpStr += helper->makeLink( "ATTACH:" + QString::fromUtf8(encodedLabel.data(), encodedLabel.length()), a->label() );
-      tmpStr += "</li>";
+      tmpStr += "<br>";
     }
-    tmpStr += "</ol>";
   }
 
   return tmpStr;
@@ -3169,7 +3167,6 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     }
   }
 
-
   // Add the attendee list
   if ( myInc ) {
     html += invitationRsvpList( existingIncidence, a );
@@ -3177,8 +3174,10 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     html += invitationAttendeeList( inc );
   }
 
-  html += "</table>";
+  // Add the attachment list
+  html += invitationAttachments( helper, inc );
 
+  html += "</table>";
 
   html += "<hr/>";
 
@@ -3190,9 +3189,6 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   // Add events on the same day
   html += displayViewFormatEventsOnSameDays ( helper->calendar(), dynamic_cast<Event*>( inc ),
                                               noHtmlMode );
-
-  // Add the attachment list
-  html += invitationAttachments( helper, inc );
 
   html += "</div>";
 
