@@ -1168,7 +1168,12 @@ QString IncidenceFormatter::extensiveDisplayStr( Calendar *calendar,
 
 static QString string2HTML( const QString& str )
 {
-  return QStyleSheet::convertFromPlainText(str, QStyleSheetItem::WhiteSpaceNormal);
+  QString html = QStyleSheet::convertFromPlainText(str, QStyleSheetItem::WhiteSpaceNormal);
+  // convertFromPlainText always butts the plain text in a paragraph.
+  // this is not helpful when you want to layout the plain text in html.
+  html = html.right( html.length() - 3 ); // remove <p>
+  html = html.left( html.length() - 4 ); // remove </p>
+  return html;
 }
 
 static QString cleanHtml( const QString &html )
