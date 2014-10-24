@@ -2909,11 +2909,13 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
     html += helper->makeBtnLink( "accept_conditionally",
                               i18n( "Accept an invitation conditionally", "Provisorily" )
                                 + complexActionSuffix, "dialog_ok" );
+
+    // Decline
+    html += helper->makeBtnLink( "decline", i18n( "Decline" ), "process_stop" );
+
     // Counter proposal
     html += helper->makeBtnLink( "counter", i18n( "Counter proposal" ) + complexActionSuffix,
                                  "edit_undo" );
-    // Decline
-    html += helper->makeBtnLink( "decline", i18n( "Decline" ), "process_stop" );
   }
 
   if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
