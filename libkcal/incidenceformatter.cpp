@@ -2903,7 +2903,7 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
 
     // Tentative
     html += helper->makeBtnLink( "accept_conditionally",
-                              i18n( "Accept conditionally", "Accept cond." ), "dialog_ok" );
+                              i18n( "Accept an invitation conditionally", "Provisorily" ), "dialog_ok" );
 
     // Counter proposal
     html += helper->makeBtnLink( "counter", i18n( "Counter proposal" ), "edit_undo" );
