@@ -1691,16 +1691,16 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
 
   html += htmlInvitationDetailsBegin();
 
-  // Start with the summary as heading
-  html += QString( "<h2>%1</h2>\n").arg( htmlCompare( invitationSummary( event, noHtmlMode ),
-                                       invitationSummary( oldevent, noHtmlMode ) ) );
+  // Start with the summary as heading and a calendar icon on the left side
+  html += QString( "<h2 class=\"summary\"><img src=\"%1\"/>%2</h2>\n").arg(
+      KGlobal::iconLoader()->iconPath( "view_pim_calendar", KIcon::Desktop )).arg(
+      htmlCompare( invitationSummary( event, noHtmlMode ),
+                   invitationSummary( oldevent, noHtmlMode ) ) );
 
   // Details table
   html += "<table>\n<tr class=\"firstrow\">";
 
-  // Decorative calendar icon on the left side
-  html += QString( "<td class=\"leftColumn\"><img src=\"%1\"></span>\n" ).arg(
-      KGlobal::iconLoader()->iconPath( "view_pim_calendar", KIcon::Desktop ) );
+  html += "<td class=\"leftColumn\">\n";
 
   html += i18n( "When:" );
 
@@ -1794,8 +1794,6 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
 
   html += invitationDetailsIncidence( event, noHtmlMode );
   html += htmlInvitationDetailsEnd();
-
-  html += "</table>";
 
   return html;
 }
