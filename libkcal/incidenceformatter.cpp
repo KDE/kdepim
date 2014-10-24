@@ -640,9 +640,9 @@ static QString displayViewFormatEventsOnSameDays( Calendar *calendar, Event *eve
   tmpStr += "<div class=\"floatleft\">\n";
   tmpStr += "<span class=\"leftColumn\">";
   if ( event->hasEndDate() && event->dateEnd().daysTo( event->dtStart().date() ) > 0 ) {
-    tmpStr += i18n( "Events on these days" );
+    tmpStr += i18n( "Events on these days:" );
   } else {
-    tmpStr += i18n( "Events on this day" );
+    tmpStr += i18n( "Events on this day:" );
   }
   tmpStr += "</span>\n";
   tmpStr += "<ul>\n";
