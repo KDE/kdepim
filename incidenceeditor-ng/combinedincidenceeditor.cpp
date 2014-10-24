@@ -113,10 +113,42 @@ void CombinedIncidenceEditor::load( const KCalCore::Incidence::Ptr &incidence )
   emit dirtyStatusChanged( false );
 }
 
+void CombinedIncidenceEditor::load( const Akonadi::Item &item )
+{
+  foreach ( IncidenceEditor *editor, mCombinedEditors ) {
+    // load() may fire dirtyStatusChanged(), reset mDirtyEditorCount to make sure
+    // we don't end up with an invalid dirty count.
+    editor->blockSignals( true );
+    editor->load( item );
+    editor->blockSignals( false );
+
+    if ( editor->isDirty() ) {
+      // We are going to crash due to assert. Print some useful info before crashing.
+      kWarning() << "Faulty editor was " << editor->objectName();
+      // kWarning() << "Incidence " << ( incidence ? incidence->uid() : "null" );
+
+      editor->printDebugInfo();
+
+      Q_ASSERT_X( false, "load", "editor shouldn't be dirty" );
+    }
+  }
+
+  mWasDirty = false;
+  mDirtyEditorCount = 0;
+  emit dirtyStatusChanged( false );
+}
+
 void CombinedIncidenceEditor::save( const KCalCore::Incidence::Ptr &incidence )
 {
   foreach ( IncidenceEditor *editor, mCombinedEditors ) {
     editor->save( incidence );
+  }
+}
+
+void CombinedIncidenceEditor::save( Akonadi::Item &item )
+{
+  foreach ( IncidenceEditor *editor, mCombinedEditors ) {
+    editor->save( item );
   }
 }
 

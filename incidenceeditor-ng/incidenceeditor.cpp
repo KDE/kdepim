@@ -83,4 +83,14 @@ void IncidenceEditor::printDebugInfo() const
   // implement this in derived classes.
 }
 
+void IncidenceEditor::load( const Akonadi::Item &item )
+{
+    Q_UNUSED(item);
+}
+
+void IncidenceEditor::save( Akonadi::Item &item )
+{
+    Q_UNUSED(item);
+}
+
 #include "moc_incidenceeditor-ng.cpp"

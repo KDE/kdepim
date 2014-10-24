@@ -34,19 +34,12 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
 {
   Q_OBJECT
   public:
-#ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceCategories( Ui::EventOrTodoMore *ui );
-#else
     explicit IncidenceCategories( Ui::EventOrTodoDesktop *ui );
-#endif
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load( const Akonadi::Item &item );
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
-
-    /**
-     * Sets the currently selected categories.
-     */
-    void setCategories( const QStringList &categories );
+    virtual void save( Akonadi::Item &item );
 
     /**
      * Returns the list of currently selected categories.
@@ -58,8 +51,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
     void printDebugInfo() const;
 
   private slots:
-    void selectCategories();
-    void onSelectionChanged(const QStringList &);
+    void onSelectionChanged(const Akonadi::Tag::List &);
 
   private:
 
@@ -71,12 +63,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
      * */
     void checkForUnknownCategories( const QStringList &categoriesToCheck );
 
-    QStringList mSelectedCategories;
-#ifdef KDEPIM_MOBILE_UI
-    Ui::EventOrTodoMore *mUi;
-#else
     Ui::EventOrTodoDesktop *mUi;
-#endif
+    Akonadi::Tag::List mSelectedTags;
+    bool mDirty;
 };
 
 }

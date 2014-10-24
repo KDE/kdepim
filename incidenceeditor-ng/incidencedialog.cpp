@@ -320,6 +320,7 @@ void IncidenceDialogPrivate::loadTemplate( const QString &templateName )
   // We add a custom property so that some fields aren't loaded, dates for example
   newInc->setCustomProperty( QByteArray("kdepim"), "isTemplate", "true");
   mEditor->load( newInc );
+  mEditor->load( newInc );
   newInc->removeCustomProperty( QByteArray(), "isTemplate");
 }
 
@@ -488,6 +489,7 @@ void IncidenceDialogPrivate::handleItemSaveFinish( EditorItemManager::SaveAction
     // Now the item is succesfull saved, reload it in the editor in order to
     // reset the dirty status of the editor.
     mEditor->load( item.payload<KCalCore::Incidence::Ptr>() );
+    mEditor->load( item );
 
     // Set the buttons to a reasonable state as well (ok and apply should be
     // disabled at this point).
@@ -546,6 +548,7 @@ void IncidenceDialogPrivate::load( const Akonadi::Item &item )
   }
 
   mEditor->load( CalendarSupport::incidence( item ) );
+  mEditor->load( item );
 
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   const QStringList allEmails = IncidenceEditorNG::EditorConfig::instance()->allEmails();
@@ -611,6 +614,7 @@ Akonadi::Item IncidenceDialogPrivate::save( const Akonadi::Item &item )
   newIncidence->setRelatedTo( incidenceInEditor->relatedTo() );
 
   mEditor->save( newIncidence );
+  mEditor->save( result );
 
   // TODO: Remove this once we support moving of events/todo's
   mCalSelector->setEnabled( false );

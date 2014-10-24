@@ -31,6 +31,7 @@
 #include <Akonadi/ItemMoveJob>
 #include <Akonadi/Monitor>
 #include <Akonadi/Session>
+#include <Akonadi/TagFetchScope>
 
 #include <KJob>
 #include <KLocalizedString>
@@ -73,14 +74,17 @@ class ItemEditorPrivate
 
     void setupMonitor();
     void moveJobFinished( KJob *job );
+    void setItem( const Akonadi::Item &item );
 };
 
 ItemEditorPrivate::ItemEditorPrivate( Akonadi::IncidenceChanger *changer, EditorItemManager *qq )
-  : q_ptr( qq ), mItemMonitor( 0 ), mIsCounterProposal( false )
+  : q_ptr( qq ), /* mItemMonitor( 0 ),  */mIsCounterProposal( false )
   , currentAction(EditorItemManager::None)
 {
   mFetchScope.fetchFullPayload();
   mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  mFetchScope.setFetchTags( true );
+  mFetchScope.tagFetchScope().setFetchIdOnly(false);
 
   mChanger = changer ? changer : new Akonadi::IncidenceChanger( new IndividualMailComponentFactory(qq), qq );
 
@@ -127,7 +131,7 @@ void ItemEditorPrivate::itemFetchResult( KJob *job )
 
   Akonadi::Item item = fetchJob->items().first();
   if ( mItemUi->hasSupportedPayload( item ) ) {
-    q->load( item );
+    setItem( item );
     if ( action != EditorItemManager::None ) {
       // Finally enable ok/apply buttons, we've finished loading
       emit q->itemSaveFinished( action );
@@ -135,6 +139,15 @@ void ItemEditorPrivate::itemFetchResult( KJob *job )
   } else {
     mItemUi->reject( ItemEditorUi::ItemHasInvalidPayload );
   }
+}
+
+void ItemEditorPrivate::setItem( const Akonadi::Item &item )
+{
+  Q_ASSERT( item.hasPayload() );
+  mPrevItem = item;
+  mItem = item;
+  mItemUi->load( item );
+  setupMonitor();
 }
 
 void ItemEditorPrivate::itemMoveResult( KJob *job )
@@ -295,16 +308,10 @@ void EditorItemManager::load( const Akonadi::Item &item )
 {
   Q_D( ItemEditor );
 
-  if ( item.hasPayload() ) {
-    d->mPrevItem = item;
-    d->mItem = item;
-    d->mItemUi->load( item );
-    d->setupMonitor();
-  } else {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
-    job->setFetchScope( d->mFetchScope );
-    connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
-  }
+  //We fetch anyways to make sure we have everything required including tags
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+  job->setFetchScope( d->mFetchScope );
+  connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
 }
 
 void EditorItemManager::save()
