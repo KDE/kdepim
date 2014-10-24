@@ -354,7 +354,7 @@ namespace KPIM {
         "}" ).arg( bodyFontSize );
 
     invitationCSS += QString (
-        "#invitation h1 {\n"
+        "#invitation h2 {\n"
         "    margin: 5px 0 0 0 !important;\n"
         "}\n"
         "#invitation table {\n"
@@ -398,10 +398,10 @@ namespace KPIM {
         "    color: #555 !important;\n"
         "    font-weight: bold !important;\n"
         "}\n"
-        "#invitation .firstrow  img {\n"
+        "#invitation .summary img {\n"
         "    padding-right: 10px !important;\n"
         "    width: 48px !important;\n"
-        "    float: left !important;\n"
+        "    vertical-align: middle !important;\n"
         "}\n"
         "#invitation .firstrow td {\n"
         "    line-height: 175% !important;\n"

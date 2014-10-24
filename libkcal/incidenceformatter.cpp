@@ -1599,7 +1599,7 @@ static QString invitationDetailsEvent( Event* event, bool noHtmlMode )
   QString html = htmlInvitationDetailsBegin();
 
   // Start with the summary as heading and a calendar icon on the left side
-  html += QString( "<h1> <img src=\"%1\"/>%2</h1>\n").arg(
+  html += QString( "<h2 class=\"summary\"><img src=\"%1\"/>%2</h2>\n").arg(
       KGlobal::iconLoader()->iconPath( "view_pim_calendar", KIcon::Desktop )).arg(
       invitationSummary( event, noHtmlMode ) );
 
@@ -1688,7 +1688,7 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
   html += htmlInvitationDetailsBegin();
 
   // Start with the summary as heading
-  html += QString( "<h1>%1</h1>\n").arg( htmlCompare( invitationSummary( event, noHtmlMode ),
+  html += QString( "<h2>%1</h2>\n").arg( htmlCompare( invitationSummary( event, noHtmlMode ),
                                        invitationSummary( oldevent, noHtmlMode ) ) );
 
   // Details table
