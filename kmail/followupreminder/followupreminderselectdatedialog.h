@@ -19,7 +19,11 @@
 #define FOLLOWUPREMINDERSELECTDATEDIALOG_H
 
 #include <QDialog>
-class KDatePicker;
+#include <AkonadiCore/Collection>
+namespace Akonadi {
+class CollectionComboBox;
+}
+class KDateComboBox;
 class FollowUpReminderSelectDateDialog : public QDialog
 {
     Q_OBJECT
@@ -31,10 +35,10 @@ public:
 
     void accept();
 
+    Akonadi::Collection collection() const;
 private:
-    void readConfig();
-    void writeConfig();
-    KDatePicker *mDatePicker;
+    KDateComboBox *mDateComboBox;
+    Akonadi::CollectionComboBox *mCollectionCombobox;
 };
 
 #endif // FOLLOWUPREMINDERSELECTDATEDIALOG_H

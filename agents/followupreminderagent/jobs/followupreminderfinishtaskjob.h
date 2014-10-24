@@ -19,6 +19,7 @@
 #define FOLLOWUPREMINDERFINISHTASKJOB_H
 
 #include <QObject>
+#include <AkonadiCore/Item>
 class KJob;
 namespace FollowUpReminder {
 class FollowUpReminderInfo;
@@ -27,7 +28,7 @@ class FollowUpReminderFinishTaskJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderFinishTaskJob(FollowUpReminder::FollowUpReminderInfo *info, QObject *parent = 0);
+    explicit FollowUpReminderFinishTaskJob(Akonadi::Item::Id id, QObject *parent = 0);
     ~FollowUpReminderFinishTaskJob();
 
     void start();
@@ -39,9 +40,10 @@ Q_SIGNALS:
 private slots:
     void slotItemFetchJobDone(KJob *job);
     void slotItemModifiedResult(KJob *job);
+
 private:
     void closeTodo();
-    FollowUpReminder::FollowUpReminderInfo *mInfo;
+    Akonadi::Item::Id mTodoId;
 };
 
 #endif // FOLLOWUPREMINDERFINISHTASKJOB_H

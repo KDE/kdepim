@@ -24,9 +24,9 @@
 #include <KCalCore/Todo>
 
 
-FollowUpReminderFinishTaskJob::FollowUpReminderFinishTaskJob(FollowUpReminder::FollowUpReminderInfo *info, QObject *parent)
+FollowUpReminderFinishTaskJob::FollowUpReminderFinishTaskJob(Akonadi::Item::Id id, QObject *parent)
     : QObject(parent),
-      mInfo(info)
+      mTodoId(id)
 {
 }
 
@@ -37,7 +37,7 @@ FollowUpReminderFinishTaskJob::~FollowUpReminderFinishTaskJob()
 
 void FollowUpReminderFinishTaskJob::start()
 {
-    if (mInfo->isValid() && (mInfo->todoId() != -1)) {
+    if (mTodoId != -1) {
         closeTodo();
     } else {
         Q_EMIT finishTaskFailed();
@@ -47,7 +47,7 @@ void FollowUpReminderFinishTaskJob::start()
 
 void FollowUpReminderFinishTaskJob::closeTodo()
 {
-    Akonadi::Item item(mInfo->todoId());
+    Akonadi::Item item(mTodoId);
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
     connect( job, SIGNAL(result(KJob*)), SLOT(slotItemFetchJobDone(KJob*)) );
 }

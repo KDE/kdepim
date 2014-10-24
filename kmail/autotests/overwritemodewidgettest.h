@@ -15,32 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERJOB_H
-#define FOLLOWUPREMINDERJOB_H
+#ifndef OVERWRITEMODEWIDGETTEST_H
+#define OVERWRITEMODEWIDGETTEST_H
 
 #include <QObject>
 
-#include <AkonadiCore/Item>
-
-class FollowUpReminderJob : public QObject
+class OverwriteModeWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderJob(QObject *parent = 0);
-    ~FollowUpReminderJob();
+    explicit OverwriteModeWidgetTest(QObject *parent = 0);
+    ~OverwriteModeWidgetTest();
 
-    void setItem(const Akonadi::Item &item);
+private Q_SLOTS:
+    void shouldHasDefaultValue();
+    void shouldChangeState();
+    void shouldEmitSignalWhenChangeState();
+    void shouldNotEmitSignalWhenWeDontChangeState();
+    void shouldEmitSignalWhenClickOnLabel();
 
-    void start();
-
-Q_SIGNALS:
-    void finished(const QString &messageId, Akonadi::Item::Id id);
-
-private slots:
-    void slotItemFetchJobDone(KJob *job);
-
-private:
-    Akonadi::Item mItem;
 };
 
-#endif // FOLLOWUPREMINDERJOB_H
+
+
+#endif // OVERWRITEMODEWIDGETTEST_H
+

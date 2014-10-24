@@ -20,6 +20,7 @@
 
 #include <KLocalizedString>
 #include <QAction>
+#include <QMenu>
 
 #include <QDebug>
 
@@ -37,21 +38,23 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
 
     connect(this, &ScamDetectionWarningWidget::linkActivated, this, &ScamDetectionWarningWidget::slotShowDetails);
 
-    QAction *action = new QAction(i18n("Move to Trash"), this);
-    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::moveMessageToTrash);
-    addAction(action);
+    QMenu *menu = new QMenu();
+    QAction *action = new QAction( i18n( "Move to Trash" ), this );
+    connect( action, SIGNAL(triggered(bool)), SIGNAL(moveMessageToTrash()) );
+    action->setMenu(menu);
+    addAction( action );
 
-    action = new QAction(i18n("I confirm it's not a scam"), this);
-    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotMessageIsNotAScam);
-    addAction(action);
+    action = new QAction( i18n( "I confirm it's not a scam" ), this );
+    menu->addAction(action);
+    connect( action, SIGNAL(triggered(bool)), SLOT(slotMessageIsNotAScam()) );
 
-    action = new QAction(i18n("Add email to whitelist"), this);
-    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotAddToWhiteList);
-    addAction(action);
+    action = new QAction( i18n( "Add email to whitelist" ), this );
+    menu->addAction(action);
+    connect( action, SIGNAL(triggered(bool)), SLOT(slotAddToWhiteList()) );
 
-    action = new QAction(i18n("Disable scam detection for all messages"), this);
-    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotDisableScamDetection);
-    addAction(action);
+    action = new QAction( i18n( "Disable scam detection for all messages" ), this );
+    menu->addAction(action);
+    connect( action, SIGNAL(triggered(bool)), SLOT(slotDisableScamDetection()) );
 }
 
 ScamDetectionWarningWidget::~ScamDetectionWarningWidget()

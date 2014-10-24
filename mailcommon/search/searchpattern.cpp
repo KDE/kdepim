@@ -677,7 +677,6 @@ SearchRule::RequiredPart SearchRuleString::requiredPart() const
             qstricmp(f, "<status>") == 0 ||
             qstricmp(f, "<tag>") == 0 ||
             qstricmp(f, "Subject") == 0 ||
-            qstricmp(f, "list-id") == 0 ||
             qstricmp(f, "from") == 0 ||
             qstricmp(f, "<any header>") == 0) {
         part = Envelope;
@@ -691,6 +690,7 @@ SearchRule::RequiredPart SearchRuleString::requiredPart() const
                qstricmp(f, "x-loop") == 0 ||
                qstricmp(f, "x-mailing-list") == 0 ||
                qstricmp(f, "x-spam-flag") == 0 ||
+               qstricmp(f, "list-id") == 0 ||
                qstricmp(f, "organization") == 0 ||
                qstricmp(f, "to") == 0) {
         part = Header;

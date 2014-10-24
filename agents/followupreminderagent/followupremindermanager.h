@@ -39,7 +39,7 @@ public:
 
     QString printDebugInfo();
 private slots:
-    void slotCheckFollowUpFinished(const QString &messageId);
+    void slotCheckFollowUpFinished(const QString &messageId, Akonadi::Item::Id id);
 
     void slotFinishTaskDone();
     void slotFinishTaskFailed();
