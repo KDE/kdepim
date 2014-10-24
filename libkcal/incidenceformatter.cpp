@@ -87,24 +87,21 @@ static QString htmlAddMailtoLink( const QString &email, const QString &name )
     KURL mailto;
     mailto.setProtocol( "mailto" );
     mailto.setPath( person.fullName() );
-    const QString iconPath = KGlobal::iconLoader()->iconPath( "mail_new", KIcon::Small );
-    str = htmlAddLink( mailto.url(), "<img valign=\"top\" src=\"" + iconPath + "\">" );
+    str = htmlAddLink( mailto.url(), name.isEmpty() ? email : name );
   }
   return str;
 }
 
 static QString htmlAddUidLink( const QString &email, const QString &name, const QString &uid )
 {
+  Q_UNUSED( name );
   QString str;
 
   if ( !uid.isEmpty() ) {
     // There is a UID, so make a link to the addressbook
-    if ( name.isEmpty() ) {
-      // Use the email address for text
-      str += htmlAddLink( "uid:" + uid, email );
-    } else {
-      str += htmlAddLink( "uid:" + uid, name );
-    }
+    const QString url = "uid:" + uid;
+    const QString iconPath = KGlobal::iconLoader()->iconPath( "view_pim_contacts", KIcon::Small );
+    str = htmlAddLink( url, "<img valign=\"middle\" src=\"" + iconPath + "\">" );
   }
   return str;
 }
@@ -1503,19 +1500,21 @@ static QString invitationPerson( const QString &email, const QString &name, cons
   // Make the uid link
   if ( !printUid.isEmpty() ) {
     personString = htmlAddUidLink( email, printName, printUid );
-  } else {
-    // No UID, just show some text
-    personString = ( printName.isEmpty() ? email : printName );
   }
-  if ( !comment.isEmpty() ) {
-    personString = i18n( "name (comment)", "%1 (%2)" ).arg( personString ).arg( comment );
-  }
-  personString += '\n';
-
   // Make the mailto link
   if ( !email.isEmpty() ) {
     personString += "&nbsp;" + htmlAddMailtoLink( email, printName );
+  } else {
+    personString = ( printName.isEmpty() ? email : printName );
   }
+
+  if ( !comment.isEmpty() ) {
+    // beware personString might already contain percent escaped values.
+    // so you can not chain qt arg replacement here.
+    // personString += i18n( "name (comment)", "%1 (%2)" ).arg( personString ).arg( comment );
+    personString += QString( " (%2)" ).arg( comment );
+  }
+
   personString += "\n";
 
   return personString;
