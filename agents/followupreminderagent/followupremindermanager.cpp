@@ -17,6 +17,7 @@
 
 #include "followupremindermanager.h"
 #include "followupreminderinfo.h"
+#include "followupreminderutil.h"
 #include "followupremindernoanswerdialog.h"
 #include "jobs/followupreminderjob.h"
 #include "jobs/followupreminderfinishtaskjob.h"
@@ -83,20 +84,26 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
         return;
 
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
-    connect(job, SIGNAL(finished(QString)), SLOT(slotCheckFollowUpFinished(QString)));
+    connect(job, SIGNAL(finished(QString,Akonadi::Item::Id)), SLOT(slotCheckFollowUpFinished(QString,Akonadi::Item::Id)));
     job->setItem(item);
     job->start();
 }
 
-void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId)
+void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId,Akonadi::Item::Id id)
 {
     Q_FOREACH(FollowUpReminderInfo* info, mFollowUpReminderInfoList) {
         if (info->messageId() == messageId) {
+            info->setAnswerMessageItemId(id);
+            info->setAnswerWasReceived(true);
             answerReceived(info->to());
-            FollowUpReminderFinishTaskJob *job = new FollowUpReminderFinishTaskJob(info, this);
-            connect(job, SIGNAL(finishTaskDone()), this, SLOT(slotFinishTaskDone()));
-            connect(job, SIGNAL(finishTaskFailed()), this, SLOT(slotFinishTaskFailed()));
-            job->start();
+            if (info->todoId() != -1) {
+                FollowUpReminderFinishTaskJob *job = new FollowUpReminderFinishTaskJob(info->todoId(), this);
+                connect(job, SIGNAL(finishTaskDone()), this, SLOT(slotFinishTaskDone()));
+                connect(job, SIGNAL(finishTaskFailed()), this, SLOT(slotFinishTaskFailed()));
+                job->start();
+            }
+            //Save item
+            FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(FollowUpReminder::FollowUpReminderUtil::defaultConfig(), info, true);
             break;
         }
     }

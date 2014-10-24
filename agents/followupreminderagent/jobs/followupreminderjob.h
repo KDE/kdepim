@@ -34,7 +34,7 @@ public:
     void start();
 
 Q_SIGNALS:
-    void finished(const QString &messageId);
+    void finished(const QString &messageId, Akonadi::Item::Id id);
 
 private slots:
     void slotItemFetchJobDone(KJob *job);

@@ -20,6 +20,7 @@
 
 #include <KLocalizedString>
 #include <KAction>
+#include <QMenu>
 
 #include <QDebug>
 
@@ -37,21 +38,23 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
 
     connect(this, SIGNAL(linkActivated(QString)), SLOT(slotShowDetails(QString)));
 
+    QMenu *menu = new QMenu();
     KAction *action = new KAction( i18n( "Move to Trash" ), this );
     connect( action, SIGNAL(triggered(bool)), SIGNAL(moveMessageToTrash()) );
+    action->setMenu(menu);
     addAction( action );
 
     action = new KAction( i18n( "I confirm it's not a scam" ), this );
+    menu->addAction(action);
     connect( action, SIGNAL(triggered(bool)), SLOT(slotMessageIsNotAScam()) );
-    addAction( action );
 
     action = new KAction( i18n( "Add email to whitelist" ), this );
+    menu->addAction(action);
     connect( action, SIGNAL(triggered(bool)), SLOT(slotAddToWhiteList()) );
-    addAction( action );
 
     action = new KAction( i18n( "Disable scam detection for all messages" ), this );
+    menu->addAction(action);
     connect( action, SIGNAL(triggered(bool)), SLOT(slotDisableScamDetection()) );
-    addAction( action );
 }
 
 ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
