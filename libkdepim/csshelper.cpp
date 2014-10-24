@@ -388,7 +388,7 @@ namespace KPIM {
         "    border-color: #bebebe !important;\n"
         "}\n"
         "#invitation a.button {\n"
-        "    color: #555 !important !important;\n"
+        "    color: #555 !important;\n"
         "}\n"
         "#invitation .button img{\n"
         "    vertical-align: middle !important;\n"
