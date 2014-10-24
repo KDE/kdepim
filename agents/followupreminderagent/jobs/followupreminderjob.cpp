@@ -82,7 +82,7 @@ void FollowUpReminderJob::slotItemFetchJobDone(KJob* job)
         if (replyTo) {
             const QString replyToIdStr = replyTo->asUnicodeString();
             qDebug()<<"Reply to"<<replyToIdStr;
-            Q_EMIT finished(replyToIdStr);
+            Q_EMIT finished(replyToIdStr, item.id());
         }
     }
     deleteLater();
