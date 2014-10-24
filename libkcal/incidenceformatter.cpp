@@ -3040,36 +3040,41 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   InvitationHeaderVisitor headerVisitor;
   headerVisitor.act( inc, existingIncidence, msg, sender );
 
-  html += headerVisitor.result();
+  QString headerResult = headerVisitor.result();
+
+  if ( !headerResult.isEmpty() ) {
+    html += headerResult + "<br>";
+  }
 
   // Some more conditional status information
+  QString eventInfo;
   if ( !myInc && a ) {
-    html += "<br/>";
-    html += "<i><u>";
     if ( rsvpRec && inc ) {
       if ( inc->revision() == 0 ) {
-        html += i18n( "Your <b>%1</b> response has been recorded" ).
+        eventInfo += i18n( "Your <b>%1</b> response has been recorded" ).
                 arg( ea->statusStr() );
       } else {
-        html += i18n( "Your status for this invitation is <b>%1</b>" ).
+        eventInfo += i18n( "Your status for this invitation is <b>%1</b>" ).
                 arg( ea->statusStr() );
       }
       rsvpReq = false;
     } else if ( msg->method() == Scheduler::Cancel ) {
-      html += i18n( "This invitation was canceled" );
+      eventInfo += i18n( "This invitation was canceled" );
     } else if ( msg->method() == Scheduler::Add ) {
-      html += i18n( "This invitation was accepted" );
+      eventInfo += i18n( "This invitation was accepted" );
     } else if ( msg->method() == Scheduler::Declinecounter ) {
       rsvpReq = true;
-      // html += rsvpRequestedStr( rsvpReq, role );
+      // eventInfo += rsvpRequestedStr( rsvpReq, role );
     } else {
       if ( isDelegated ) {
-        html += i18n( "Awaiting delegation response" );
+        eventInfo += i18n( "Awaiting delegation response" );
       } else {
-      //  html += rsvpRequestedStr( rsvpReq, role );
+      //  eventInfo += rsvpRequestedStr( rsvpReq, role );
       }
     }
-    html += "</u></i>";
+  }
+  if ( !eventInfo.isEmpty() ) {
+    html += QString( "<i><u>%1</u></i><br>" ).arg( eventInfo );
   }
 
   // Print if the organizer gave you a preset status
@@ -3086,12 +3091,12 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   }
 
   // Add the groupware links if necessary
-  html += "<br>" + formatGroupwareLinks(helper,
-                                        existingIncidence,
-                                        inc,
-                                        msg,
-                                        rsvpRec,
-                                        a);
+  html += formatGroupwareLinks(helper,
+                               existingIncidence,
+                               inc,
+                               msg,
+                               rsvpRec,
+                               a);
 
   html += "\n<hr>\n";
 
