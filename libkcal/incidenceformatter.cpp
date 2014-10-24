@@ -3177,18 +3177,18 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   // Add the attachment list
   html += invitationAttachments( helper, inc );
 
-  html += "</table>";
+  html += "\n</table>";
 
-  html += "<hr/>";
+  html += "\n<hr/>\n";
+
+  // Add events on the same day
+  html += displayViewFormatEventsOnSameDays ( helper->calendar(), dynamic_cast<Event*>( inc ),
+                                              noHtmlMode );
 
   // Check calendar
   if ( inc && inc->type() == "Event" ) {
     html += helper->makeBtnLink( "check_calendar", i18n("Check calendar..." ), "go_jump_today" );
   }
-
-  // Add events on the same day
-  html += displayViewFormatEventsOnSameDays ( helper->calendar(), dynamic_cast<Event*>( inc ),
-                                              noHtmlMode );
 
   html += "</div>";
 
