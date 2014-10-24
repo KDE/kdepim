@@ -672,7 +672,6 @@ SearchRule::RequiredPart SearchRuleString::requiredPart() const
          kasciistricmp( f, "<status>" ) == 0 ||
          kasciistricmp( f, "<tag>" ) == 0 ||
          kasciistricmp( f, "Subject" ) == 0 ||
-         kasciistricmp( f, "list-id" ) == 0 ||
          kasciistricmp( f, "from" ) == 0 ||
          kasciistricmp( f, "<any header>" )== 0) {
         part = Envelope;
@@ -683,6 +682,7 @@ SearchRule::RequiredPart SearchRuleString::requiredPart() const
                kasciistricmp( f, "cc" ) == 0 ||
                kasciistricmp( f, "bcc" ) == 0 ||
                kasciistricmp( f, "resent-from" ) == 0 ||
+               kasciistricmp( f, "list-id" ) == 0 ||
                kasciistricmp( f, "x-loop" ) == 0 ||
                kasciistricmp( f, "x-mailing-list" ) == 0 ||
                kasciistricmp( f, "x-spam-flag" ) == 0 ||
