@@ -52,7 +52,7 @@ set(KDEPIM_LIB_VERSION "4.70.0")
 set(KDEPIM_LIB_SOVERSION "5")
 
 set(QT_REQUIRED_VERSION "5.3.0")
-set(KF5_VERSION "5.3.0")
+set(KF5_VERSION "5.4.0")
 
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_BUILD_MOBILE "Build the mobile applications. Note that you have to enable KDEPIM_MOBILE_UI if you want to run these applications on a mobile device." TRUE)
