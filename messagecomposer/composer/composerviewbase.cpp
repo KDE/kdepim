@@ -888,8 +888,9 @@ void MessageComposer::ComposerViewBase::queueMessage(KMime::Message::Ptr message
 void MessageComposer::ComposerViewBase::slotQueueResult(KJob *job)
 {
     m_pendingQueueJobs--;
+    MailTransport::MessageQueueJob *qjob = static_cast<MailTransport::MessageQueueJob* >(job);
     qDebug() << "mPendingQueueJobs" << m_pendingQueueJobs;
-    Q_ASSERT(m_pendingQueueJobs >= 0);
+    Q_ASSERT( m_pendingQueueJobs >= 0 );
 
     if (job->error()) {
         qDebug() << "Failed to queue a message:" << job->errorString();
@@ -906,7 +907,7 @@ void MessageComposer::ComposerViewBase::slotQueueResult(KJob *job)
     }
 
     if (m_pendingQueueJobs == 0) {
-        emit sentSuccessfully();
+        emit sentSuccessfully(qjob->message()->messageID(false)->asUnicodeString());
     }
 }
 

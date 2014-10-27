@@ -38,10 +38,7 @@ public:
 
     void clear();
 
-    RichTextEditor *editor() const
-    {
-        return mEditor;
-    }
+    RichTextEditor *editor() const;
 
     void setReadOnly(bool readOnly);
     bool isReadOnly() const;

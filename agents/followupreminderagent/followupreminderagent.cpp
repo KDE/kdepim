@@ -29,6 +29,7 @@
 #include <AkonadiCore/dbusconnectionpool.h>
 
 #include <Kdelibs4ConfigMigrator>
+#include <AkonadiCore/Session>
 
 #include <QPointer>
 #include <QDebug>
@@ -45,12 +46,18 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/FollowUpReminder"), this, QDBusConnection::ExportAdaptors);
     Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.FollowUpReminder"));
     mManager = new FollowUpReminderManager(this);
-    changeRecorder()->itemFetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+    changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
+    changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    changeRecorder()->itemFetchScope().setFetchModificationTime( false );
     changeRecorder()->itemFetchScope().setCacheOnly(true);
-    changeRecorder()->fetchCollection(true);
+    changeRecorder()->fetchCollection( true );
+    changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
+    setNeedsNetwork(true);
     if (FollowUpReminderAgentSettings::enabled()) {
         mManager->load();
     }
+
+
     mTimer = new QTimer(this);
     connect(mTimer, &QTimer::timeout, this, &FollowUpReminderAgent::reload);
     //Reload all each 24hours
@@ -123,7 +130,7 @@ void FollowUpReminderAgent::itemAdded(const Akonadi::Item &item, const Akonadi::
 void FollowUpReminderAgent::reload()
 {
     if (enabledAgent()) {
-        mManager->load();
+        mManager->load(true);
         mTimer->start();
     }
 }

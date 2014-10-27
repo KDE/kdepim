@@ -48,6 +48,11 @@ void RichTextEditorWidget::clear()
     mEditor->clear();
 }
 
+RichTextEditor *RichTextEditorWidget::editor() const
+{
+    return mEditor;
+}
+
 void RichTextEditorWidget::setAcceptRichText(bool b)
 {
     mEditor->setAcceptRichText(b);
