@@ -64,10 +64,8 @@ FilterLogDialog::FilterLogDialog(QWidget *parent)
 {
     setWindowTitle(i18n("Filter Log Viewer"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-    QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    mainLayout->addWidget(mainWidget);
     mUser1Button = new QPushButton;
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
     mUser2Button = new QPushButton;
@@ -85,6 +83,8 @@ FilterLogDialog::FilterLogDialog(QWidget *parent)
     mainLayout->addWidget(page);
 
     mTextEdit = new PimCommon::PlainTextEditorWidget(page);
+    pageVBoxLayout->addWidget(mTextEdit);
+    
     mTextEdit->setReadOnly(true);
     mTextEdit->editor()->setWordWrapMode(QTextOption::NoWrap);
     const QStringList logEntries = FilterLog::instance()->logEntries();
@@ -154,7 +154,8 @@ FilterLogDialog::FilterLogDialog(QWidget *parent)
     QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
     hboxHBoxLayout->setMargin(0);
     pageVBoxLayout->addWidget(hbox);
-    new QLabel(i18n("Log size limit:"), hbox);
+    QLabel *logSizeLab = new QLabel(i18n("Log size limit:"), hbox);
+    hboxHBoxLayout->addWidget(logSizeLab);
     mLogMemLimitSpin = new QSpinBox(hbox);
     hboxHBoxLayout->addWidget(mLogMemLimitSpin);
     mLogMemLimitSpin->setMinimum(1);
