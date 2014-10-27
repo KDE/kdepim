@@ -125,7 +125,7 @@ void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpRe
     if (!item) {
         item = new FollowUpReminderInfoItem(mTreeWidget);
     }
-
+    item->setInfo(info);
     item->setText(To, info->to());
     item->setText(Subject, info->subject());
     const QString date = KGlobal::locale()->formatDate( info->followUpReminderDate(), KLocale::LongDate );

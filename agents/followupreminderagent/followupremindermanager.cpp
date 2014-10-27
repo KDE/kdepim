@@ -42,23 +42,23 @@ FollowUpReminderManager::~FollowUpReminderManager()
     mFollowUpReminderInfoList.clear();
 }
 
-void FollowUpReminderManager::load()
+void FollowUpReminderManager::load(bool forceReloadConfig)
 {
+    if (forceReloadConfig)
+        mConfig->reparseConfiguration();
     const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("FollowupReminderItem \\d+") ) );
     const int numberOfItems = itemList.count();
-    const QDate currentDate = QDate::currentDate();
     QList<FollowUpReminder::FollowUpReminderInfo*> noAnswerList;
     for (int i = 0 ; i < numberOfItems; ++i) {
+
         KConfigGroup group = mConfig->group(itemList.at(i));
 
         FollowUpReminderInfo *info = new FollowUpReminderInfo(group);
         if (info->isValid()) {
             if (!info->answerWasReceived()) {
                 mFollowUpReminderInfoList.append(info);
-                if( info->followUpReminderDate() > currentDate) {
-                    FollowUpReminderInfo *noAnswerInfo = new FollowUpReminderInfo(*info);
-                    noAnswerList.append(noAnswerInfo);
-                }
+                FollowUpReminderInfo *noAnswerInfo = new FollowUpReminderInfo(*info);
+                noAnswerList.append(noAnswerInfo);
             }
         } else {
             delete info;

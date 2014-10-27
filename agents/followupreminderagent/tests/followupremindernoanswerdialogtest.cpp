@@ -74,5 +74,29 @@ void FollowupReminderNoAnswerDialogTest::shouldAddItemInTreeList()
     QCOMPARE(treeWidget->topLevelItemCount(), 10);
 }
 
+void FollowupReminderNoAnswerDialogTest::shouldItemHaveInfo()
+{
+    FollowUpReminderNoAnswerDialog dlg;
+    FollowUpReminderInfoWidget *infowidget = qFindChild<FollowUpReminderInfoWidget *>(&dlg, QLatin1String("FollowUpReminderInfoWidget"));
+    QTreeWidget *treeWidget = qFindChild<QTreeWidget *>(infowidget, QLatin1String("treewidget"));
+    QList<FollowUpReminder::FollowUpReminderInfo *> lstInfo;
+
+    //Load valid infos
+    for (int i = 0; i<10; ++i) {
+        FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
+        info->setOriginalMessageItemId(42);
+        info->setMessageId(QLatin1String("foo"));
+        info->setFollowUpReminderDate(QDate::currentDate());
+        info->setTo(QLatin1String("To"));
+        lstInfo.append(info);
+    }
+
+    dlg.setInfo(lstInfo);
+    for (int i = 0; i < treeWidget->topLevelItemCount(); ++i) {
+        FollowUpReminderInfoItem *item = static_cast<FollowUpReminderInfoItem *>(treeWidget->topLevelItem(i));
+        QVERIFY(item->info());
+        QVERIFY(item->info()->isValid());
+    }
+}
 
 QTEST_KDEMAIN(FollowupReminderNoAnswerDialogTest, GUI)

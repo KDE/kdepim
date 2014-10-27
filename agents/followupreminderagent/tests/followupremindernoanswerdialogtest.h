@@ -30,6 +30,7 @@ public:
 private slots:
     void shouldHaveDefaultValues();
     void shouldAddItemInTreeList();
+    void shouldItemHaveInfo();
 };
 
 

@@ -33,7 +33,7 @@ public:
     explicit FollowUpReminderManager(QObject *parent = 0);
     ~FollowUpReminderManager();
 
-    void load();
+    void load(bool forceReloadConfig = false);
     void checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col);
 
     QString printDebugInfo();

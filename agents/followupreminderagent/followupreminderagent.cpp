@@ -26,6 +26,7 @@
 #include <KLocale>
 #include <KMime/Message>
 
+#include <Akonadi/Session>
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ItemFetchScope>
 #include <akonadi/dbusconnectionpool.h>
@@ -42,12 +43,18 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FollowUpReminder" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FollowUpReminder" ) );
     mManager = new FollowUpReminderManager(this);
+    changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
     changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    changeRecorder()->itemFetchScope().setFetchModificationTime( false );
     changeRecorder()->itemFetchScope().setCacheOnly(true);
     changeRecorder()->fetchCollection( true );
+    changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
+    setNeedsNetwork(true);
     if (FollowUpReminderAgentSettings::enabled()) {
         mManager->load();
     }
+
+
     mTimer = new QTimer(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
     //Reload all each 24hours
@@ -105,6 +112,7 @@ void FollowUpReminderAgent::configure( WId windowId )
 
 void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
+    qDebug()<<" void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )";
     if (!enabledAgent())
         return;
 
@@ -112,13 +120,14 @@ void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi:
         kDebug() << "FollowUpReminderAgent::itemAdded called for a non-message item!";
         return;
     }
+    qDebug()<<" void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )"<<item.id();
     mManager->checkFollowUp(item, collection);
 }
 
 void FollowUpReminderAgent::reload()
 {
     if (enabledAgent()) {
-        mManager->load();
+        mManager->load(true);
         mTimer->start();
     }
 }

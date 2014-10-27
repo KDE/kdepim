@@ -78,10 +78,11 @@ void FollowUpReminderJob::slotItemFetchJobDone(KJob* job)
     }
     const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
     if (msg) {
+        qDebug()<<"void FollowUpReminderJob::slotItemFetchJobDone **************************************************************************************************";
         KMime::Headers::InReplyTo *replyTo = msg->inReplyTo(false);
         if (replyTo) {
             const QString replyToIdStr = replyTo->asUnicodeString();
-            qDebug()<<"Reply to"<<replyToIdStr;
+            qDebug()<<"**************************************************** Reply to"<<replyToIdStr;
             Q_EMIT finished(replyToIdStr, item.id());
         }
     }

@@ -834,7 +834,7 @@ void MessageComposer::ComposerViewBase::queueMessage( KMime::Message::Ptr messag
         message->setHeader( new KMime::Headers::Generic( customHeader.key(), message.get(), customHeader.value(),"utf-8") );
     }
     message->assemble();
-
+    qDebug()<<" message "<<message->messageID(false)->asUnicodeString();
     connect( qjob, SIGNAL(result(KJob*)), this, SLOT(slotQueueResult(KJob*)) );
     m_pendingQueueJobs++;
     qjob->start();
@@ -846,6 +846,7 @@ void MessageComposer::ComposerViewBase::queueMessage( KMime::Message::Ptr messag
 void MessageComposer::ComposerViewBase::slotQueueResult( KJob *job )
 {
     m_pendingQueueJobs--;
+    MailTransport::MessageQueueJob *qjob = static_cast<MailTransport::MessageQueueJob* >(job);
     kDebug() << "mPendingQueueJobs" << m_pendingQueueJobs;
     Q_ASSERT( m_pendingQueueJobs >= 0 );
 
@@ -864,7 +865,7 @@ void MessageComposer::ComposerViewBase::slotQueueResult( KJob *job )
     }
 
     if( m_pendingQueueJobs == 0 ) {
-        emit sentSuccessfully();
+        emit sentSuccessfully(qjob->message()->messageID(false)->asUnicodeString());
     }
 }
 

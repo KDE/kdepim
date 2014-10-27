@@ -223,7 +223,7 @@ signals:
     /**
    * Message sending completed successfully.
    */
-    void sentSuccessfully();
+    void sentSuccessfully(const QString &messageId = QString());
     /**
    * Message sending failed with given error message.
    */
