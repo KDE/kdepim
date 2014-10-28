@@ -58,6 +58,8 @@ class SetupManager : public QObject
     Q_SCRIPTABLE void execute();
     Q_SCRIPTABLE QObject* ispDB( const QString &type );
 
+    Q_SCRIPTABLE void setupInfo( const QString &msg );
+
     void requestRollback();
 
   signals:
@@ -71,7 +73,6 @@ class SetupManager : public QObject
   private slots:
     void setupSucceeded( const QString &msg );
     void setupFailed( const QString &msg );
-    void setupInfo( const QString &msg );
 
   private:
     QString m_name, m_email, m_password;
