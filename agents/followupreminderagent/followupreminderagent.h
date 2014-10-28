@@ -32,13 +32,14 @@ public:
 
     void showConfigureDialog(qlonglong windowId = 0);
 
-    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
-
     QString printDebugInfo();
 
 public Q_SLOTS:
     void configure(WId windowId);
     void reload();
+
+protected:
+    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
 
 private:
     FollowUpReminderManager *mManager;

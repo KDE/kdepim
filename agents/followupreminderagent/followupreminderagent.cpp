@@ -30,6 +30,7 @@
 
 #include <Kdelibs4ConfigMigrator>
 #include <AkonadiCore/Session>
+#include <AkonadiCore/CollectionFetchScope>
 
 #include <QPointer>
 #include <QDebug>
@@ -46,13 +47,18 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/FollowUpReminder"), this, QDBusConnection::ExportAdaptors);
     Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.FollowUpReminder"));
     mManager = new FollowUpReminderManager(this);
-    changeRecorder()->setMimeTypeMonitored(KMime::Message::mimeType());
-    changeRecorder()->itemFetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
-    changeRecorder()->itemFetchScope().setFetchModificationTime(false);
-    changeRecorder()->itemFetchScope().setCacheOnly(true);
-    changeRecorder()->fetchCollection(true);
-    changeRecorder()->ignoreSession(Akonadi::Session::defaultSession());
     setNeedsNetwork(true);
+
+    changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
+    changeRecorder()->itemFetchScope().setCacheOnly( true );
+    changeRecorder()->itemFetchScope().setFetchModificationTime( false );
+    changeRecorder()->fetchCollection( true );
+    changeRecorder()->setChangeRecordingEnabled( false );
+    changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
+    changeRecorder()->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
+    changeRecorder()->setCollectionMonitored(Akonadi::Collection::root(), true);
+
+
     if (FollowUpReminderAgentSettings::enabled()) {
         mManager->load();
     }
