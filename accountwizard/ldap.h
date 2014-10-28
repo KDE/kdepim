@@ -37,6 +37,7 @@ class Ldap : public SetupObject
     Q_SCRIPTABLE void setServer( const QString &server );
     Q_SCRIPTABLE void setAuthenticationMethod( const QString &meth );
     Q_SCRIPTABLE void setBindDn( const QString &bindDn );
+    Q_SCRIPTABLE void setBaseDn( const QString &baseDn );
     Q_SCRIPTABLE void setPassword( const QString &password );
     Q_SCRIPTABLE void setPort(const int port);
     Q_SCRIPTABLE void setSecurity(const KLDAP::LdapServer::Security security);
@@ -60,6 +61,7 @@ class Ldap : public SetupObject
     KLDAP::LdapServer::Security m_security;
     QString m_mech;
     QString m_realm;
+    QString m_baseDn;
     int m_version;
     int m_pageSize;
     int m_timeLimit;

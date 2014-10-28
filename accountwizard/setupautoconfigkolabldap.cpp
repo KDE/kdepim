@@ -40,10 +40,11 @@ void SetupAutoconfigKolabLdap::fillLdapServer(int i, QObject *o) const
     ldapServer isp = mIspdb->ldapServers().values()[i];
     Ldap *ldapRes = qobject_cast<Ldap *>(o);
 
-    //TODO: setting dn & filter
+    //TODO: setting filter
 
     ldapRes->setServer(isp.hostname);
     ldapRes->setPort(isp.port);
+    ldapRes->setBaseDn(isp.dn);
     ldapRes->setSecurity(isp.socketType);
     ldapRes->setVersion(isp.ldapVersion);
     ldapRes->setUser(isp.username);

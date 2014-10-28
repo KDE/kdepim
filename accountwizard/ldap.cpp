@@ -48,24 +48,29 @@ void Ldap::create()
   //TODO: use ldapclientsearchconfig to write config
   emit info( i18n( "Setting up LDAP server..." ) );
 
-  if ( m_server.isEmpty() || m_user.isEmpty() ) {
-    emit error(i18n("Needed parameters are missing for ldap config server='%1', user='%1'", m_server, m_user));
+  if (m_server.isEmpty()) {
+    emit error(i18n("Needed parameters are missing for ldap config server='%1'", m_server));
+    if (m_editMode) {
+      edit();
+    }
     return;
   }
 
   const QString host = m_server;
 
   // Figure out the basedn
-  QString basedn = host;
-  // If the user gave a full email address, the domain name
-  // of that overrides the server name for the ldap dn
-  const QString user = m_user;
-  int pos = user.indexOf( QLatin1String("@") );
-  if ( pos > 0 ) {
-    const QString h = user.mid( pos+1 );
-    if ( !h.isEmpty() )
-      // The user did type in a domain on the email address. Use that
-      basedn = h;
+  QString basedn = m_baseDn.isEmpty() ? host : m_baseDn;
+  if (m_baseDn.isEmpty() && !m_user.isEmpty()) {
+      // If the user gave a full email address, the domain name
+      // of that overrides the server name for the ldap dn
+      const QString user = m_user;
+      int pos = user.indexOf( QLatin1String("@") );
+      if ( pos > 0 ) {
+        const QString h = user.mid( pos+1 );
+        if ( !h.isEmpty() )
+          // The user did type in a domain on the email address. Use that
+          basedn = h;
+      }
   }
   { // while we're here, write default domain
     KConfig c( QLatin1String("kmail2rc") );
@@ -139,7 +144,10 @@ QString Ldap::securityString()
 
 void Ldap::destroy()
 {
-  emit info( i18n( "LDAP not configuring." ) );
+  if (m_entry >= 0 ) {
+      //TODO: delete ldap entry
+      emit info(i18n("Removed LDAP entry."));
+  }
 }
 
 void Ldap::edit()
@@ -170,6 +178,11 @@ void Ldap::setUser( const QString &user )
 void Ldap::setServer( const QString &server )
 {
   m_server = server;
+}
+
+void Ldap::setBaseDn(const QString &baseDn)
+{
+  m_baseDn = baseDn;
 }
 
 void Ldap::setAuthenticationMethod(const QString& meth)
