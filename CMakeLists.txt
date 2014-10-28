@@ -275,7 +275,6 @@ if(KDEPIM_BUILD_DESKTOP)
   add_subdirectory(kalarm)
   add_subdirectory(blogilo)
 
-  add_subdirectory(kjots)
 
   add_subdirectory(kontact)
 endif()

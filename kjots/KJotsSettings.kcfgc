@@ -1,8 +1,0 @@
-# Code generation options for kconfig_compiler
-File=kjots.kcfg
-ClassName=KJotsSettings
-Singleton=true
-Mutators=Width,Height,SplitterSizes,CurrentSelection,OpenBooks,LastId,BookshelfOrder
-# Inherits=KConfigSkeleton
-# IncludeFiles=libkdepim/kpimprefs.h
-# MemberVariables=public

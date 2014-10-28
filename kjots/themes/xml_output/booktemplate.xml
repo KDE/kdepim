@@ -1,7 +1,0 @@
-<KJotsBook>
-  <Title>{{ entity.title }}</Title>{% if entity.isOpen %}
-  <Open>1</Open>{% endif %}
-  {% for entity in entity.entities %}{% if entity.isBook %}{% include "booktemplate.xml" %}
-  {% else %}{% if entity.isPage %}{% include "pagetemplate.xml" %}
-  {% endif %}{% endif %}{% endfor %}
-</KJotsBook>

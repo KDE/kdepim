@@ -1,8 +1,0 @@
-<ul>
-{% for entity in entity.entities %}
-  <li><a href="#{% if entity.isPage %}page{% else %}book{% endif %}_{{ entity.entityId }}">{{ entity.title }}</a></li>
-  {% if entity.isBook %}
-    {% include "book_toc_list.html" %}
-  {% endif %}
-{% endfor %}
-</ul>

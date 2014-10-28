@@ -1,5 +1,0 @@
-<KJotsPage>
-  <Title>{{ entity.title }}</Title>
-  <Text><![CDATA[{{ entity.content|safe }}]]>
-  </Text>
-</KJotsPage>

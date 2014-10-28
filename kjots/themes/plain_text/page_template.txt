@@ -1,4 +1,0 @@
-#########
-# Page {{ entity.title }}
-#########
-{{ entity.plainContent }}

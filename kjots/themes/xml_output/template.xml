@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE KJots>
-<KJots>
-{% for entity in entities %}{% if entity.isBook %}{% include "booktemplate.xml" %}
-{% else %}{% if entity.isPage %}{% include "pagetemplate.xml" %}
-{% endif %}{% endif %}{% endfor %}
-</KJots>

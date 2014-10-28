@@ -1,5 +1,0 @@
-#########
-# {{ entity.title }}
-#########
-{% for entity in entity.entities %}{% if entity.isBook %}{% include "book_template.txt" %}
-{% else %}{% if entity.isPage %}{% include "page_template.txt" %}{% endif %}{% endif %}{% endfor %}
