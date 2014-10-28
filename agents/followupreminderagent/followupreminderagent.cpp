@@ -25,7 +25,6 @@
 #include <KWindowSystem>
 #include <KLocale>
 #include <KMime/Message>
-
 #include <Akonadi/Session>
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ItemFetchScope>
@@ -49,7 +48,9 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     changeRecorder()->itemFetchScope().setCacheOnly(true);
     changeRecorder()->fetchCollection( true );
     changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
+    changeRecorder()->setCollectionMonitored(Akonadi::Collection::root(), true);
     setNeedsNetwork(true);
+
     if (FollowUpReminderAgentSettings::enabled()) {
         mManager->load();
     }
