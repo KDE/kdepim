@@ -23,6 +23,13 @@
 #include "setupobject.h"
 #include <KLDAP/LdapServer>
 
+class LdapTest;
+class KConfig;
+
+namespace KLDAP {
+    class LdapClientSearchConfig;
+}
+
 class Ldap : public SetupObject
 {
   Q_OBJECT
@@ -49,7 +56,12 @@ class Ldap : public SetupObject
     Q_SCRIPTABLE void setSizeLimit(const int sizeLimit);
     Q_SCRIPTABLE void setEditMode(const bool editMode);
 
+  protected:
+    virtual KConfig *config() const;
+
+    KLDAP::LdapClientSearchConfig *m_clientSearchConfig;
   private:
+    friend LdapTest;
     QString securityString();
 
     QString m_user;

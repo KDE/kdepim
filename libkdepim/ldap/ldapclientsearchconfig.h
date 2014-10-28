@@ -59,6 +59,12 @@ public:
      */
     void writeConfig( const KLDAP::LdapServer &server, KConfigGroup &group,
                       int clientNumber, bool active );
+
+    /**
+     * Should LdapClientSearchConfig ask, if it should use the KWallet to store passwords
+     */
+    void askForWallet(bool askForWallet);
+
 private Q_SLOTS:
     void slotWalletClosed();
 

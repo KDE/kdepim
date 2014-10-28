@@ -36,12 +36,20 @@ Ldap::Ldap( QObject *parent )
   , m_sizeLimit(0)
   , m_entry(-1)
   , m_editMode(false)
+  , m_clientSearchConfig(new KLDAP::LdapClientSearchConfig)
 {
 }
 
 Ldap::~Ldap()
 {
+    delete m_clientSearchConfig;
 }
+
+KConfig *Ldap::config() const
+{
+    return m_clientSearchConfig->config();
+}
+
 
 void Ldap::create()
 {
@@ -82,8 +90,8 @@ void Ldap::create()
   basedn.prepend( QLatin1String("dc=") );
 
   // Set the changes
-  KConfig c( QLatin1String("kabldaprc") );
-  KConfigGroup group = c.group( "LDAP" );
+  KConfig *c = config();
+  KConfigGroup group = c->group( "LDAP" );
   bool hasMyServer = false;
   uint selHosts = group.readEntry( "NumSelectedHosts", 0 );
   for ( uint i = 0 ; i < selHosts && !hasMyServer; ++i ) {
@@ -121,7 +129,7 @@ void Ldap::create()
       group.writeEntry( QString::fromLatin1( "SelectedUser%1" ).arg( selHosts ), m_user );
       group.writeEntry( QString::fromLatin1( "SelectedMech%1" ).arg( selHosts ), m_mech );
     }
-    c.sync();
+    c->sync();
   }
   if (m_editMode) {
       edit();
@@ -145,7 +153,40 @@ QString Ldap::securityString()
 void Ldap::destroy()
 {
   if (m_entry >= 0 ) {
-      //TODO: delete ldap entry
+      KConfig *c = config();
+      KConfigGroup group = c->group( "LDAP" );
+      int cSelHosts = group.readEntry( "NumSelectedHosts", 0 );
+      int cHosts = group.readEntry( "NumHosts", 0 );
+      QList<KLDAP::LdapServer> selHosts;
+      QList<KLDAP::LdapServer> hosts;
+      for(int i=0; i < cSelHosts; i++) {
+          if (i != m_entry) {
+              KLDAP::LdapServer server;
+              m_clientSearchConfig->readConfig(server, group, i, true);
+              selHosts.append(server);
+          }
+      }
+      for(int i=0; i < cHosts; i++) {
+          KLDAP::LdapServer server;
+          m_clientSearchConfig->readConfig(server, group, i, false);
+          hosts.append(server);
+      }
+
+      c->deleteGroup("LDAP");
+      group = KConfigGroup (c, "LDAP");
+
+      for(int i=0; i < cSelHosts - 1; i++) {
+          m_clientSearchConfig->writeConfig(selHosts.at(i), group, i, true);
+      }
+
+      for(int i=0; i < cHosts; i++) {
+          m_clientSearchConfig->writeConfig(hosts.at(i), group, i, false);
+      }
+
+      group.writeEntry( "NumSelectedHosts", cSelHosts - 1);
+      group.writeEntry( "NumHosts", cHosts );
+      c->sync();
+
       emit info(i18n("Removed LDAP entry."));
   }
 }
