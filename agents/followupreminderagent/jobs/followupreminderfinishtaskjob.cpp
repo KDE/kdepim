@@ -48,7 +48,7 @@ void FollowUpReminderFinishTaskJob::closeTodo()
 {
     Akonadi::Item item(mTodoId);
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item, this);
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotItemFetchJobDone(KJob*)));
+    connect(job, &Akonadi::ItemFetchJob::result, this, &FollowUpReminderFinishTaskJob::slotItemFetchJobDone);
 }
 
 void FollowUpReminderFinishTaskJob::slotItemFetchJobDone(KJob *job)
@@ -75,7 +75,7 @@ void FollowUpReminderFinishTaskJob::slotItemFetchJobDone(KJob *job)
         updateItem.setPayload<KCalCore::Todo::Ptr>(todo);
 
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(updateItem);
-        connect(job, SIGNAL(result(KJob*)), SLOT(slotItemModifiedResult(KJob*)));
+        connect(job, &Akonadi::ItemModifyJob::result, this, &FollowUpReminderFinishTaskJob::slotItemModifiedResult);
     } else {
         qWarning() << " Found item different from 1: " << lst.count();
         Q_EMIT finishTaskFailed();
