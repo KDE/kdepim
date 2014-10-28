@@ -485,6 +485,11 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
   }
 }
 
+void IncidenceAttachment::downloadComplete(KJob*)
+{
+   //TODO
+}
+
 void IncidenceAttachment::setupActions()
 {
   KActionCollection *ac = new KActionCollection( this );
