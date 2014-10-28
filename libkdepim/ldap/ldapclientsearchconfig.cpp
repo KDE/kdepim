@@ -34,6 +34,7 @@ class LdapClientSearchConfig::Private
 public:
     Private()
         : useWallet(false),
+          askWallet(true),
           wallet(Q_NULLPTR)
     {
 
@@ -46,6 +47,7 @@ public:
         }
     }
     bool useWallet;
+    bool askWallet;
     KWallet::Wallet *wallet;
 };
 
@@ -102,7 +104,7 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
     const QString pwdBindBNEntry = prefix + QString::fromLatin1("PwdBind%1").arg(j);
     QString pwdBindDN = config.readEntry(pwdBindBNEntry, QString());
     if (!pwdBindDN.isEmpty()) {
-        if (KMessageBox::Yes == KMessageBox::questionYesNo(Q_NULLPTR, i18n("LDAP password is stored as clear text, do you want to store it in kwallet?"),
+        if (d->askWallet && KMessageBox::Yes == KMessageBox::questionYesNo(Q_NULLPTR, i18n("LDAP password is stored as clear text, do you want to store it in kwallet?"),
                 i18n("Store clear text password in KWallet"),
                 KStandardGuiItem::yes(),
                 KStandardGuiItem::no(),
@@ -121,7 +123,7 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
             }
         }
         server.setPassword(pwdBindDN);
-    } else { //Look at in Wallet
+    } else if(d->askWallet) { //Look at in Wallet
         d->wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
         if (d->wallet) {
             d->useWallet = true;
@@ -230,3 +232,7 @@ void LdapClientSearchConfig::slotWalletClosed()
     d->wallet = Q_NULLPTR;
 }
 
+void LdapClientSearchConfig::askForWallet(bool askForWallet)
+{
+    d->askWallet = askForWallet;
+}
