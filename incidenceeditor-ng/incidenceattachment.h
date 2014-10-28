@@ -22,7 +22,7 @@
 #define INCIDENCEEDITOR_INCIDENCEATTACHMENT_H
 
 #include "incidenceeditor-ng.h"
-
+class KJob;
 namespace Ui {
   class EventOrTodoDesktop;
   class EventOrTodoMore;
@@ -74,6 +74,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
     void showSelectedAttachments();
     void slotItemRenamed ( QListWidgetItem * item );
     void slotSelectionChanged();
+    void downloadComplete(KJob*);
 
   private:
     //     void addAttachment( KCalCore::Attachment *attachment );
