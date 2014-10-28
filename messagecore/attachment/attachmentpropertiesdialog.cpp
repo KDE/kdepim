@@ -121,11 +121,12 @@ void AttachmentPropertiesDialog::Private::polishUi()
         populateMimeTypes();
         populateEncodings();
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
+        QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+        okButton->setDefault(true);
+        okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+
         q->connect(buttonBox->button(QDialogButtonBox::Help), SIGNAL(clicked()), q, SLOT(slotHelp()));
     }
-    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-    okButton->setDefault(true);
-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
     q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
     mainLayout->addWidget(buttonBox);
