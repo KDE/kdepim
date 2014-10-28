@@ -53,10 +53,11 @@ SieveDebugDialog::SieveDebugDialog(QWidget *parent)
     mainLayout->addWidget(mEdit);
     mainLayout->addWidget(buttonBox);
 
-    mEdit->editor()->setPlainText(i18n("Collecting diagnostic information about Sieve support...\n\n"));
-
-    if (!mResourceIdentifier.isEmpty()) {
-        QTimer::singleShot(0, this, SLOT(slotDiagNextAccount()));
+    if ( !mResourceIdentifier.isEmpty() ) {
+        mEdit->editor()->setPlainText( i18n( "Collecting diagnostic information about Sieve support...\n\n" ) );
+        QTimer::singleShot( 0, this, SLOT(slotDiagNextAccount()) );
+    } else {
+        mEdit->editor()->setPlainText( i18n( "No Imap Resource found." ) );
     }
     readConfig();
 }
