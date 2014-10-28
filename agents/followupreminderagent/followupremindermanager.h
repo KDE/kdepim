@@ -49,6 +49,7 @@ private:
     KSharedConfig::Ptr mConfig;
     QList<FollowUpReminder::FollowUpReminderInfo*> mFollowUpReminderInfoList;
     QPointer<FollowUpReminderNoAnswerDialog> mNoAnswerDialog;
+    bool mInitialize;
 };
 
 #endif // FOLLOWUPREMINDERMANAGER_H

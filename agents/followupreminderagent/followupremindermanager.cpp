@@ -31,7 +31,8 @@
 using namespace FollowUpReminder;
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mInitialize(false)
 {
     mConfig = KGlobal::config();
 }
@@ -57,14 +58,17 @@ void FollowUpReminderManager::load(bool forceReloadConfig)
         if (info->isValid()) {
             if (!info->answerWasReceived()) {
                 mFollowUpReminderInfoList.append(info);
-                FollowUpReminderInfo *noAnswerInfo = new FollowUpReminderInfo(*info);
-                noAnswerList.append(noAnswerInfo);
+                if (!mInitialize) {
+                    FollowUpReminderInfo *noAnswerInfo = new FollowUpReminderInfo(*info);
+                    noAnswerList.append(noAnswerInfo);
+                }
             }
         } else {
             delete info;
         }
     }
     if (!noAnswerList.isEmpty()) {
+        mInitialize = true;
         if (!mNoAnswerDialog.data()) {
             mNoAnswerDialog = new FollowUpReminderNoAnswerDialog;
         }
@@ -82,6 +86,10 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
     //If we move to trash directly => exclude it.
     if (Akonadi::SpecialMailCollections::self()->specialCollectionType(col) == Akonadi::SpecialMailCollections::Trash)
         return;
+    //Exclude outbox too
+    if (Akonadi::SpecialMailCollections::self()->specialCollectionType(col) == Akonadi::SpecialMailCollections::Outbox)
+        return;
+
 
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
     connect(job, SIGNAL(finished(QString,Akonadi::Item::Id)), SLOT(slotCheckFollowUpFinished(QString,Akonadi::Item::Id)));
