@@ -31,6 +31,7 @@
 
 #include <kemailsettings.h>
 #include <kwallet.h>
+#include <KAssistantDialog>
 
 SetupManager::SetupManager( QWidget* parent) :
   QObject(parent),
@@ -92,6 +93,7 @@ void SetupManager::execute()
 {
   m_page->setStatus( i18n( "Setting up account..." ) );
   m_page->setValid( false );
+  m_page->assistantDialog()->enableButton(KDialog::User3, false);
 
   // ### FIXME this is a bad over-simplification and would need a real topological sort
   // but for current usage it is good enough
@@ -139,6 +141,7 @@ void SetupManager::setupNext()
     m_page->setStatus( i18n( "Setup complete." ) );
     m_page->setProgress( 100 );
     m_page->setValid( true );
+    m_page->assistantDialog()->enableButton(KDialog::User3, false);
   } else {
     const int setupObjectCount = m_objectToSetup.size() + m_setupObjects.size();
     const int remainingObjectCount = setupObjectCount - m_objectToSetup.size();

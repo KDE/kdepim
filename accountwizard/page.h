@@ -40,6 +40,8 @@ class Page : public QWidget
     virtual void leavePageNextRequested();
     virtual void leavePageBackRequested();
 
+    KAssistantDialog *assistantDialog() const;
+
   signals:
     Q_SCRIPTABLE void pageEnteredNext();
     Q_SCRIPTABLE void pageEnteredBack();

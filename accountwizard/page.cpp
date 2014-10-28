@@ -50,6 +50,12 @@ void Page::nextPage()
   m_parent->next();
 }
 
+KAssistantDialog * Page::assistantDialog() const
+{
+  return m_parent;
+}
+
+
 void Page::enterPageBack() {}
 void Page::enterPageNext() {}
 void Page::leavePageBack() {}
