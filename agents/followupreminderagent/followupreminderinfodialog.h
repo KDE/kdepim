@@ -21,7 +21,8 @@
 #include <QDialog>
 #include <QList>
 class FollowUpReminderInfoWidget;
-namespace FollowUpReminder {
+namespace FollowUpReminder
+{
 class FollowUpReminderInfo;
 }
 class FollowUpReminderInfoDialog : public QDialog

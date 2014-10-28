@@ -92,25 +92,27 @@ FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()
 void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &infoList)
 {
     mTreeWidget->clear();
-    Q_FOREACH(FollowUpReminder::FollowUpReminderInfo *info, infoList) {
-        if (info->isValid())
+    Q_FOREACH(FollowUpReminder::FollowUpReminderInfo * info, infoList) {
+        if (info->isValid()) {
             createOrUpdateItem(info);
+        }
     }
 }
 
 void FollowUpReminderInfoWidget::load()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    const QStringList filterGroups =config->groupList().filter( QRegExp( followUpItemPattern ) );
+    const QStringList filterGroups = config->groupList().filter(QRegExp(followUpItemPattern));
     const int numberOfItem = filterGroups.count();
     for (int i = 0 ; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
 
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo(group);
-        if (info->isValid())
+        if (info->isValid()) {
             createOrUpdateItem(info);
-        else
+        } else {
             delete info;
+        }
     }
 }
 
@@ -127,7 +129,7 @@ void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpRe
     item->setInfo(info);
     item->setText(To, info->to());
     item->setText(Subject, info->subject());
-    const QString date = KLocale::global()->formatDate( info->followUpReminderDate(), KLocale::LongDate );
+    const QString date = KLocale::global()->formatDate(info->followUpReminderDate(), KLocale::LongDate);
     item->setText(DeadLine, date);
     item->setText(AnswerWasReceived, info->answerWasReceived() ? i18n("Received") : i18n("On hold"));
     if (info->followUpReminderDate() < QDate::currentDate()) {
@@ -140,8 +142,6 @@ void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpRe
 #endif
 }
 
-
-
 void FollowUpReminderInfoWidget::save()
 {
     if (!mChanged) {
@@ -152,7 +152,7 @@ void FollowUpReminderInfoWidget::save()
     // first, delete all filter groups:
     const QStringList filterGroups = config->groupList().filter(QRegExp(followUpItemPattern));
 
-    foreach (const QString &group, filterGroups) {
+    foreach(const QString & group, filterGroups) {
         config->deleteGroup(group);
     }
 

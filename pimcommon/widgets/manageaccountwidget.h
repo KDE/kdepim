@@ -20,15 +20,18 @@
 
 #include <QWidget>
 #include "pimcommon_export.h"
-namespace Ui {
+namespace Ui
+{
 class ManageAccountWidget;
 }
-namespace Akonadi {
+namespace Akonadi
+{
 class AgentInstance;
 }
 class QAbstractItemDelegate;
 class QAbstractItemView;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT ManageAccountWidget : public QWidget
 {
     Q_OBJECT
@@ -47,7 +50,7 @@ public:
     QStringList excludeCapabilities() const;
     void setExcludeCapabilities(const QStringList &excludeCapabilities);
 
-    void setItemDelegate(QAbstractItemDelegate *delegate );
+    void setItemDelegate(QAbstractItemDelegate *delegate);
 
     QAbstractItemView *view() const;
 private slots:

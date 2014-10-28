@@ -99,7 +99,7 @@ void Session::disconnectFromHost(bool sendLogout)
     if (m_currentJob) {
         killJob(m_currentJob);
     }
-    foreach (SieveJob *job, m_jobs) {
+    foreach(SieveJob * job, m_jobs) {
         killJob(job);
     }
     deleteLater();

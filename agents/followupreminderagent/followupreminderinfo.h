@@ -31,7 +31,6 @@ public:
     FollowUpReminderInfo(const KConfigGroup &config);
     FollowUpReminderInfo(const FollowUpReminderInfo &info);
 
-
     //Can be invalid.
     Akonadi::Item::Id originalMessageItemId() const;
     void setOriginalMessageItemId(Akonadi::Item::Id value);
@@ -49,7 +48,6 @@ public:
 
     QDate followUpReminderDate() const;
     void setFollowUpReminderDate(const QDate &followUpReminderDate);
-
 
     void writeConfig(KConfigGroup &config, qint32 identifier);
 

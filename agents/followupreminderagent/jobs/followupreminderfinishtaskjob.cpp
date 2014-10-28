@@ -23,7 +23,6 @@
 #include <QDebug>
 #include <KCalCore/Todo>
 
-
 FollowUpReminderFinishTaskJob::FollowUpReminderFinishTaskJob(Akonadi::Item::Id id, QObject *parent)
     : QObject(parent),
       mTodoId(id)
@@ -48,24 +47,24 @@ void FollowUpReminderFinishTaskJob::start()
 void FollowUpReminderFinishTaskJob::closeTodo()
 {
     Akonadi::Item item(mTodoId);
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotItemFetchJobDone(KJob*)) );
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item, this);
+    connect(job, SIGNAL(result(KJob*)), SLOT(slotItemFetchJobDone(KJob*)));
 }
 
 void FollowUpReminderFinishTaskJob::slotItemFetchJobDone(KJob *job)
 {
-    if ( job->error() ) {
+    if (job->error()) {
         qWarning() << job->errorString();
         Q_EMIT finishTaskFailed();
         deleteLater();
         return;
     }
 
-    const Akonadi::Item::List lst = qobject_cast<Akonadi::ItemFetchJob*>( job )->items();
+    const Akonadi::Item::List lst = qobject_cast<Akonadi::ItemFetchJob *>(job)->items();
     if (lst.count() == 1) {
         const Akonadi::Item item = lst.first();
         if (!item.hasPayload<KCalCore::Todo::Ptr>()) {
-            qDebug()<<" item is not a todo.";
+            qDebug() << " item is not a todo.";
             Q_EMIT finishTaskFailed();
             deleteLater();
             return;
@@ -73,12 +72,12 @@ void FollowUpReminderFinishTaskJob::slotItemFetchJobDone(KJob *job)
         KCalCore::Todo::Ptr todo = item.payload<KCalCore::Todo::Ptr>();
         todo->setCompleted(true);
         Akonadi::Item updateItem = item;
-        updateItem.setPayload<KCalCore::Todo::Ptr>( todo );
+        updateItem.setPayload<KCalCore::Todo::Ptr>(todo);
 
-        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( updateItem );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotItemModifiedResult(KJob*)) );
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(updateItem);
+        connect(job, SIGNAL(result(KJob*)), SLOT(slotItemModifiedResult(KJob*)));
     } else {
-        qWarning()<<" Found item different from 1: "<<lst.count();
+        qWarning() << " Found item different from 1: " << lst.count();
         Q_EMIT finishTaskFailed();
         deleteLater();
         return;
@@ -87,7 +86,7 @@ void FollowUpReminderFinishTaskJob::slotItemFetchJobDone(KJob *job)
 
 void FollowUpReminderFinishTaskJob::slotItemModifiedResult(KJob *job)
 {
-    if ( job->error() ) {
+    if (job->error()) {
         qWarning() << job->errorString();
         Q_EMIT finishTaskFailed();
     } else {

@@ -29,7 +29,7 @@ XMLPrintingSyntaxHighLighter::~XMLPrintingSyntaxHighLighter()
 
 void XMLPrintingSyntaxHighLighter::highlightBlock(const QString &text)
 {
-    Q_FOREACH (const Rule &rule, m_rules) {
+    Q_FOREACH(const Rule & rule, m_rules) {
         const QRegExp expression(rule.pattern);
         int index = expression.indexIn(text);
         int length = 0;
@@ -48,7 +48,7 @@ void XMLPrintingSyntaxHighLighter::init()
     QStringList testType;
     testType << QLatin1String("require");
 
-    Q_FOREACH (const QString &s, testType) {
+    Q_FOREACH(const QString & s, testType) {
         const QRegExp regex(s, Qt::CaseInsensitive);
         m_rules.append(Rule(regex, testFormat));
     }
@@ -58,7 +58,7 @@ void XMLPrintingSyntaxHighLighter::init()
     quoteFormat.setFontWeight(QFont::Bold);
     QStringList quoteType;
     quoteType << QLatin1String("quoted") << QLatin1String("hash") << QLatin1String("bracket") << QLatin1String("multiline");
-    Q_FOREACH (const QString &s, quoteType) {
+    Q_FOREACH(const QString & s, quoteType) {
         const QRegExp regex(s, Qt::CaseInsensitive);
         m_rules.append(Rule(regex, quoteFormat));
     }
@@ -69,7 +69,7 @@ void XMLPrintingSyntaxHighLighter::init()
     QStringList miscType;
     miscType << QLatin1String("control") << QLatin1String("block") << QLatin1String("script") << QLatin1String("action") << QLatin1String("comment");
     miscType << QLatin1String("num") << QLatin1String("tag") << QLatin1String("list") << QLatin1String("str") << QLatin1String("test") << QLatin1String("crlf/");
-    Q_FOREACH (const QString &s, miscType) {
+    Q_FOREACH(const QString & s, miscType) {
         const QRegExp regex(s, Qt::CaseInsensitive);
         m_rules.append(Rule(regex, misc));
     }

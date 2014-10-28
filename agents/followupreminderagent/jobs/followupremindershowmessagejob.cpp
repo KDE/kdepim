@@ -45,8 +45,8 @@ void FollowUpReminderShowMessageJob::start()
         // Program is not already running, so start it
         QString errmsg;
         if (KToolInvocation::startServiceByDesktopName(QLatin1String("kmail2"), QString(), &errmsg)) {
-            qDebug()<<" Can not start kmail"<<errmsg;
-            setError( UserDefinedError );
+            qDebug() << " Can not start kmail" << errmsg;
+            setError(UserDefinedError);
             Q_EMIT emitResult();
             return;
         }

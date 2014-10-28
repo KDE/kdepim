@@ -32,12 +32,11 @@ public:
     QTextEdit *edit2;
 };
 
-
 class SplitterCollapserTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SplitterCollapserTest(QObject *parent=0);
+    explicit SplitterCollapserTest(QObject *parent = 0);
     ~SplitterCollapserTest();
 
 private Q_SLOTS:

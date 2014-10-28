@@ -108,7 +108,7 @@ void GenerateGlobalScriptJob::writeUserScript()
                                        "\n"
                                        "require [\"include\"];\n");
 
-    Q_FOREACH (const QString &activeScript, mListUserActiveScripts) {
+    Q_FOREACH(const QString & activeScript, mListUserActiveScripts) {
         userScript += QString::fromLatin1("\ninclude :personal \"%1\"").arg(activeScript);
     }
 

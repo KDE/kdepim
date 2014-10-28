@@ -20,20 +20,17 @@
 
 #include <QObject>
 
-
 class FollowupReminderNoAnswerDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowupReminderNoAnswerDialogTest(QObject *parent=0);
+    explicit FollowupReminderNoAnswerDialogTest(QObject *parent = 0);
     ~FollowupReminderNoAnswerDialogTest();
 private slots:
     void shouldHaveDefaultValues();
     void shouldAddItemInTreeList();
     void shouldItemHaveInfo();
 };
-
-
 
 #endif // FOLLOWUPREMINDERNOANSWERDIALOGTEST_H
 

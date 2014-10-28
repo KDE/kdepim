@@ -29,11 +29,12 @@
 #include <QWidget>
 #include "pimcommon_export.h"
 class QTimer;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT TextMessageIndicator : public QWidget
 {
 public:
-    explicit TextMessageIndicator( QWidget * parent=0 );
+    explicit TextMessageIndicator(QWidget *parent = 0);
 
     enum Icon {
         None,
@@ -42,15 +43,15 @@ public:
         Error
     };
 
-    void display(const QString & message, const QString & details = QString(), Icon icon = None, int durationMs = 4000 );
+    void display(const QString &message, const QString &details = QString(), Icon icon = None, int durationMs = 4000);
 
 protected:
-    bool eventFilter(QObject * obj, QEvent * event );
-    void paintEvent( QPaintEvent * e );
-    void mousePressEvent( QMouseEvent * e );
+    bool eventFilter(QObject *obj, QEvent *event);
+    void paintEvent(QPaintEvent *e);
+    void mousePressEvent(QMouseEvent *e);
 
 private:
-    QRect computeTextRect( const QString & message, int extra_width ) const;
+    QRect computeTextRect(const QString &message, int extra_width) const;
     void computeSizeAndResize();
     QString mMessage;
     QString mDetails;

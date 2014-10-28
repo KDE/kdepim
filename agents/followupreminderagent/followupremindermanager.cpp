@@ -47,8 +47,9 @@ FollowUpReminderManager::~FollowUpReminderManager()
 
 void FollowUpReminderManager::load(bool forceReloadConfig)
 {
-    if (forceReloadConfig)
+    if (forceReloadConfig) {
         mConfig->reparseConfiguration();
+    }
     const QStringList itemList = mConfig->groupList().filter(QRegExp(QLatin1String("FollowupReminderItem \\d+")));
     const int numberOfItems = itemList.count();
     const QDate currentDate = QDate::currentDate();
@@ -94,9 +95,9 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
     job->start();
 }
 
-void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId,Akonadi::Item::Id id)
+void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId, Akonadi::Item::Id id)
 {
-    Q_FOREACH (FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
+    Q_FOREACH(FollowUpReminderInfo * info, mFollowUpReminderInfoList) {
         if (info->messageId() == messageId) {
             info->setAnswerMessageItemId(id);
             info->setAnswerWasReceived(true);
@@ -142,7 +143,7 @@ QString FollowUpReminderManager::printDebugInfo()
     if (mFollowUpReminderInfoList.isEmpty()) {
         infoStr = QLatin1String("No mail");
     } else {
-        Q_FOREACH (FollowUpReminder::FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
+        Q_FOREACH(FollowUpReminder::FollowUpReminderInfo * info, mFollowUpReminderInfoList) {
             if (!infoStr.isEmpty()) {
                 infoStr += QLatin1Char('\n');
             }
@@ -161,7 +162,7 @@ QString FollowUpReminderManager::infoToStr(FollowUpReminder::FollowUpReminderInf
     infoStr += QString::fromLatin1("Subject :%1\n").arg(info->subject());
     infoStr += QString::fromLatin1("To :%1\n").arg(info->to());
     infoStr += QString::fromLatin1("Dead Line :%1\n").arg(info->followUpReminderDate().toString());
-    infoStr += QString::fromLatin1("Answer received :%1\n").arg(info->answerWasReceived() ? QLatin1String("true") : QLatin1String("false") );
+    infoStr += QString::fromLatin1("Answer received :%1\n").arg(info->answerWasReceived() ? QLatin1String("true") : QLatin1String("false"));
     infoStr += QLatin1String("****************************************\n");
     return infoStr;
 }

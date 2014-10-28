@@ -620,7 +620,7 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     listWidget->clear();
     listWidget->createMoveUpItem();
     const QStringList lst = data.toStringList();
-    Q_FOREACH (const QString &item, lst) {
+    Q_FOREACH(const QString & item, lst) {
         const QByteArray dataItem = item.toLatin1();
         QJson::Parser parser;
         bool ok;

@@ -46,17 +46,16 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/FollowUpReminder"), this, QDBusConnection::ExportAdaptors);
     Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.FollowUpReminder"));
     mManager = new FollowUpReminderManager(this);
-    changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
-    changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-    changeRecorder()->itemFetchScope().setFetchModificationTime( false );
+    changeRecorder()->setMimeTypeMonitored(KMime::Message::mimeType());
+    changeRecorder()->itemFetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+    changeRecorder()->itemFetchScope().setFetchModificationTime(false);
     changeRecorder()->itemFetchScope().setCacheOnly(true);
-    changeRecorder()->fetchCollection( true );
-    changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
+    changeRecorder()->fetchCollection(true);
+    changeRecorder()->ignoreSession(Akonadi::Session::defaultSession());
     setNeedsNetwork(true);
     if (FollowUpReminderAgentSettings::enabled()) {
         mManager->load();
     }
-
 
     mTimer = new QTimer(this);
     connect(mTimer, &QTimer::timeout, this, &FollowUpReminderAgent::reload);

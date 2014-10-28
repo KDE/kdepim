@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "followupremindernoanswerdialogtest.h"
 #include "../followupremindernoanswerdialog.h"
 #include "../followupreminderinfowidget.h"
@@ -52,7 +51,7 @@ void FollowupReminderNoAnswerDialogTest::shouldAddItemInTreeList()
     FollowUpReminderInfoWidget *infowidget = qFindChild<FollowUpReminderInfoWidget *>(&dlg, QLatin1String("FollowUpReminderInfoWidget"));
     QTreeWidget *treeWidget = qFindChild<QTreeWidget *>(infowidget, QLatin1String("treewidget"));
     QList<FollowUpReminder::FollowUpReminderInfo *> lstInfo;
-    for (int i = 0; i<10; ++i) {
+    for (int i = 0; i < 10; ++i) {
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
         lstInfo.append(info);
     }
@@ -61,7 +60,7 @@ void FollowupReminderNoAnswerDialogTest::shouldAddItemInTreeList()
     QCOMPARE(treeWidget->topLevelItemCount(), 0);
 
     //Load valid infos
-    for (int i = 0; i<10; ++i) {
+    for (int i = 0; i < 10; ++i) {
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
         info->setOriginalMessageItemId(42);
         info->setMessageId(QLatin1String("foo"));
@@ -82,7 +81,7 @@ void FollowupReminderNoAnswerDialogTest::shouldItemHaveInfo()
     QList<FollowUpReminder::FollowUpReminderInfo *> lstInfo;
 
     //Load valid infos
-    for (int i = 0; i<10; ++i) {
+    for (int i = 0; i < 10; ++i) {
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
         info->setOriginalMessageItemId(42);
         info->setMessageId(QLatin1String("foo"));

@@ -71,7 +71,7 @@ void SieveConditionWidget::generatedScript(QString &script, QStringList &require
         KSieveUi::SieveCondition *widgetCondition = mConditionList.at(mComboBox->currentIndex());
         QWidget *currentWidget = mLayout->itemAtPosition(1, 2)->widget();
         const QStringList lstRequires = widgetCondition->needRequires(currentWidget);
-        Q_FOREACH (const QString &r, lstRequires) {
+        Q_FOREACH(const QString & r, lstRequires) {
             if (!requires.contains(r)) {
                 requires.append(r);
             }

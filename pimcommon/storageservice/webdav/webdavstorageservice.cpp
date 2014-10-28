@@ -327,7 +327,7 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     }
 
     const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data.toString());
-    Q_FOREACH (const QWebdavUrlInfo &info, lst) {
+    Q_FOREACH(const QWebdavUrlInfo & info, lst) {
         if (QUrl(info.name()).path() == currentFolder) {
             continue;
         }

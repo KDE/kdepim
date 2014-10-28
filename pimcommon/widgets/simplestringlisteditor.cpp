@@ -267,7 +267,7 @@ void SimpleStringListEditor::slotRemove()
     if (selectedItems.isEmpty()) {
         return;
     }
-    Q_FOREACH (QListWidgetItem *item, selectedItems) {
+    Q_FOREACH(QListWidgetItem * item, selectedItems) {
         delete mListBox->takeItem(mListBox->row(item));
     }
     slotSelectionChanged();

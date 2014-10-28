@@ -93,7 +93,7 @@ void AttachmentFromFolderJob::Private::compressFolder()
 
 void AttachmentFromFolderJob::Private::addEntity(const QFileInfoList &f, const QString &path)
 {
-    foreach (const QFileInfo &info, f) {
+    foreach(const QFileInfo & info, f) {
         qDebug() << q->maximumAllowedSize() << "Attachment size : " << mZip->device()->size();
 
         if (q->maximumAllowedSize() != -1 && mZip->device()->size() > q->maximumAllowedSize()) {

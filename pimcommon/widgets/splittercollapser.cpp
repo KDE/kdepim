@@ -46,7 +46,8 @@ const int TIMELINE_DURATION = 500;
 
 const qreal MINIMUM_OPACITY = 0.3;
 
-class ArrowTypes {
+class ArrowTypes
+{
 public:
     ArrowTypes()
         : mVisible(Qt::NoArrow),
@@ -225,7 +226,6 @@ void SplitterCollapser::Private::startTimeLine()
     }
 }
 
-
 SplitterCollapser::SplitterCollapser(QSplitter *splitter, QWidget *widget, QWidget *parent)
     : QToolButton(parent),
       d(new Private(this))
@@ -247,7 +247,7 @@ SplitterCollapser::SplitterCollapser(QSplitter *splitter, QWidget *widget, QWidg
     d->mSplitter = splitter;
     setParent(d->mSplitter);
 
-    switch(splitter->orientation()) {
+    switch (splitter->orientation()) {
     case Qt::Horizontal: {
         if (splitter->indexOf(widget) < splitter->count() / 2) {
             d->mDirection = LeftToRight;
@@ -366,6 +366,4 @@ void SplitterCollapser::paintEvent(QPaintEvent *)
     initStyleOption(&opt2);
     painter.drawControl(QStyle::CE_ToolButtonLabel, opt2);
 }
-
-
 

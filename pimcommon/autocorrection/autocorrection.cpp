@@ -633,7 +633,7 @@ void AutoCorrection::capitalizeWeekDays()
     }
 
     const QString trimmed = mWord.trimmed();
-    Q_FOREACH (const QString &name, mCacheNameOfDays) {
+    Q_FOREACH(const QString & name, mCacheNameOfDays) {
         if (trimmed == name) {
             const int pos = mWord.indexOf(name);
             mWord.replace(pos, 1, name.at(0).toUpper());

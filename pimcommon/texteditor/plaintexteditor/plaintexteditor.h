@@ -73,7 +73,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event);
     bool event(QEvent *ev);
     void keyPressEvent(QKeyEvent *event);
-    bool overrideShortcut(const QKeyEvent* event);
+    bool overrideShortcut(const QKeyEvent *event);
     bool handleShortcut(const QKeyEvent *event);
 
 Q_SIGNALS:

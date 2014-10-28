@@ -32,7 +32,7 @@ SieveSyntaxHighlighter::~SieveSyntaxHighlighter()
 
 void SieveSyntaxHighlighter::highlightBlock(const QString &text)
 {
-    Q_FOREACH (const Rule &rule, m_rules) {
+    Q_FOREACH(const Rule & rule, m_rules) {
         const QRegExp expression(rule.pattern);
         int index = expression.indexIn(text);
         int length = 0;
@@ -51,7 +51,7 @@ void SieveSyntaxHighlighter::addCapabilities(const QStringList &capabilities)
     keywordFormat.setFontWeight(QFont::Bold);
     QStringList keywords;
     keywords << capabilities;
-    Q_FOREACH (const QString &s, keywords) {
+    Q_FOREACH(const QString & s, keywords) {
         const QRegExp regex(QString::fromLatin1("\"%1\"").arg(s), Qt::CaseSensitive);
         m_rules.append(Rule(regex, keywordFormat));
     }
@@ -77,7 +77,7 @@ void SieveSyntaxHighlighter::init()
     keywords << QLatin1String("\\binclude\\b");
     keywords << QLatin1String("\\bglobal\\b");
     keywords << QLatin1String("\\bforeverypart\\b");
-    Q_FOREACH (const QString &s, keywords) {
+    Q_FOREACH(const QString & s, keywords) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, keywordFormat));
     }
@@ -87,7 +87,7 @@ void SieveSyntaxHighlighter::init()
     textKeywordFormat.setForeground(Qt::green);
     QStringList textKeywords;
     textKeywords << QLatin1String("\\btext:");
-    Q_FOREACH (const QString &s, textKeywords) {
+    Q_FOREACH(const QString & s, textKeywords) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, textKeywordFormat));
     }
@@ -144,7 +144,7 @@ void SieveSyntaxHighlighter::init()
               << QLatin1String("\\s:from\\b")
               << QLatin1String("\\s:first\\b")
               << QLatin1String("\\s:comparator\\b");
-    Q_FOREACH (const QString &s, matchType) {
+    Q_FOREACH(const QString & s, matchType) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, matchFormat));
     }
@@ -155,7 +155,7 @@ void SieveSyntaxHighlighter::init()
     controlFormat.setFontWeight(QFont::Bold);
     QStringList controlType;
     controlType << QLatin1String("\\bif\\b") << QLatin1String("\\belsif\\b") << QLatin1String("\\belse\\b");
-    Q_FOREACH (const QString &s, controlType) {
+    Q_FOREACH(const QString & s, controlType) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, controlFormat));
     }
@@ -184,7 +184,7 @@ void SieveSyntaxHighlighter::init()
                << QLatin1String("\\benclose\\b")
                << QLatin1String("\\breplace\\b")
                << QLatin1String("\\bextracttext\\b");
-    Q_FOREACH (const QString &s, actionType) {
+    Q_FOREACH(const QString & s, actionType) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, actionFormat));
     }
@@ -216,7 +216,7 @@ void SieveSyntaxHighlighter::init()
              << QLatin1String("\\bmetadataexists\\b")
              << QLatin1String("\\bservermetadata\\b")
              << QLatin1String("\\bservermetadataexists\\b");
-    Q_FOREACH (const QString &s, testType) {
+    Q_FOREACH(const QString & s, testType) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, testFormat));
     }

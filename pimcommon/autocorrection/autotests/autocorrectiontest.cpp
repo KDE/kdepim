@@ -395,7 +395,6 @@ void AutoCorrectionTest::shouldNotUpperCaseFirstCharOfSentence()
     QString result = QLatin1String("foo. blabla Foo. Tt");
     QCOMPARE(doc.toPlainText(), result);
 
-
 }
 
 QTEST_MAIN(AutoCorrectionTest)

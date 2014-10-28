@@ -171,7 +171,7 @@ QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
         script += QString::fromLatin1("if not allof(currentdate :value \"ge\" \"date\" \"%1\","
                                       " currentdate :value \"le\" \"date\" \"%2\")"
                                       " { keep; stop; }\n").arg(startDate.toString(Qt::ISODate),
-                                                                endDate.toString(Qt::ISODate));
+                                              endDate.toString(Qt::ISODate));
     }
 
     script += QLatin1String("vacation ");

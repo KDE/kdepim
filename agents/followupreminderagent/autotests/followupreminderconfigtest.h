@@ -18,7 +18,6 @@
 #ifndef FOLLOWUPREMINDERCONFIGTEST_H
 #define FOLLOWUPREMINDERCONFIGTEST_H
 
-
 #include <QObject>
 #include <QRegExp>
 #include <KSharedConfig>
@@ -27,7 +26,7 @@ class FollowUpReminderConfigTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderConfigTest(QObject *parent=0);
+    explicit FollowUpReminderConfigTest(QObject *parent = 0);
     ~FollowUpReminderConfigTest();
 private Q_SLOTS:
     void init();
@@ -42,13 +41,10 @@ private Q_SLOTS:
     void shouldNotRemoveItemWhenListIsEmpty();
     void shouldNotRemoveItemWhenItemDoesntExist();
 
-
 private:
     KSharedConfig::Ptr mConfig;
     QRegExp mFollowupRegExpFilter;
 };
-
-
 
 #endif // FOLLOWUPREMINDERCONFIGTEST_H
 

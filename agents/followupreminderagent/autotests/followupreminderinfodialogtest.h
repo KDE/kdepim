@@ -18,7 +18,6 @@
 #ifndef FOLLOWUPREMINDERINFODIALOGTEST_H
 #define FOLLOWUPREMINDERINFODIALOGTEST_H
 
-
 #include <QObject>
 
 class FollowupReminderInfoDialogTest : public QObject
@@ -33,8 +32,6 @@ private Q_SLOTS:
     void shouldAddItemInTreeList();
     void shouldItemHaveInfo();
 };
-
-
 
 #endif // FOLLOWUPREMINDERINFODIALOGTEST_H
 

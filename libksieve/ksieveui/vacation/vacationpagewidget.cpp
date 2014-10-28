@@ -154,7 +154,7 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
                                mVacationEditWidget->sendForSpam(),
                                mVacationEditWidget->domainName(),
                                mHasDateSupport ? mVacationEditWidget->startDate() : QDate(),
-                               mHasDateSupport ?mVacationEditWidget->endDate() : QDate());
+                               mHasDateSupport ? mVacationEditWidget->endDate() : QDate());
         const bool active = mVacationEditWidget->activateVacation();
         createJob->setStatus(active, mWasActive);
         //Q_EMIT scriptActive( active, mServerName);

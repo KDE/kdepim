@@ -79,7 +79,7 @@ void VacationManager::slotDialogCanceled()
 void VacationManager::slotDialogOk()
 {
     QList<KSieveUi::VacationCreateScriptJob *> listJob = mMultiImapVacationDialog->listCreateJob();
-    Q_FOREACH (KSieveUi::VacationCreateScriptJob *job, listJob) {
+    Q_FOREACH(KSieveUi::VacationCreateScriptJob * job, listJob) {
         connect(job, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)));
         job->start();
     }

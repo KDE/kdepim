@@ -103,7 +103,7 @@ void GDriveJob::slotChildReferenceFetchJobFinished(KGAPI2::Job *job)
     if (childRef) {
         KGAPI2::ObjectsList objects = childRef->items();
         QStringList filesIds;
-        Q_FOREACH (const KGAPI2::ObjectPtr &object, objects) {
+        Q_FOREACH(const KGAPI2::ObjectPtr & object, objects) {
             const KGAPI2::Drive::ChildReferencePtr ref = object.dynamicCast<KGAPI2::Drive::ChildReference>();
             filesIds << ref->id();
         }
@@ -122,7 +122,7 @@ void GDriveJob::slotFileFetchFinished(KGAPI2::Job *job)
     Q_ASSERT(fileFetchJob);
     QStringList listFolder;
     KGAPI2::ObjectsList objects = fileFetchJob->items();
-    Q_FOREACH (const KGAPI2::ObjectPtr &object, objects) {
+    Q_FOREACH(const KGAPI2::ObjectPtr & object, objects) {
         const KGAPI2::Drive::FilePtr file = object.dynamicCast<KGAPI2::Drive::File>();
         qDebug() << " file " << file;
 

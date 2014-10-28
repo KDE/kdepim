@@ -65,10 +65,10 @@ public:
         mBuilders[2] = sb3;
         assert(sb1); assert(sb2); assert(sb3);
     }
-    MultiScriptBuilder(KSieve::ScriptBuilder * sb1,
-                       KSieve::ScriptBuilder * sb2,
-                       KSieve::ScriptBuilder * sb3,
-                       KSieve::ScriptBuilder * sb4)
+    MultiScriptBuilder(KSieve::ScriptBuilder *sb1,
+                       KSieve::ScriptBuilder *sb2,
+                       KSieve::ScriptBuilder *sb3,
+                       KSieve::ScriptBuilder *sb4)
         : KSieve::ScriptBuilder(), mBuilders(4)
     {
         mBuilders[0] = sb1;
@@ -452,7 +452,6 @@ public:
     }
 };
 
-
 // if not allof (currentDate :value "ge" date "YYYY-MM-DD",
 //               currentDate :value "le" date "YYYY-MM-DD") { keep; stop; }
 static const GenericInformationExtractor::StateNode datesNodes[] = {
@@ -501,7 +500,7 @@ class DateExtractor : public GenericInformationExtractor
 {
 public:
     DateExtractor()
-        : GenericInformationExtractor(std::vector<StateNode>(datesNodes, datesNodes+numDatesNodes))
+        : GenericInformationExtractor(std::vector<StateNode>(datesNodes, datesNodes + numDatesNodes))
     {
     }
 
@@ -516,7 +515,8 @@ public:
     }
 
 private:
-    QDate date(const QString &name) const {
+    QDate date(const QString &name) const
+    {
         if (mResults.count(name) == 0) {
             return QDate();
         } else {
@@ -524,7 +524,6 @@ private:
         }
     }
 };
-
 
 class VacationDataExtractor : public KSieve::ScriptBuilder
 {

@@ -198,7 +198,4 @@ void SplitterCollapserTest::shouldTestVerticalSplitterSecondWidget()
 
 }
 
-
-
-
 QTEST_MAIN(SplitterCollapserTest)

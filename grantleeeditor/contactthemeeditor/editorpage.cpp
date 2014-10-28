@@ -67,7 +67,6 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
     mMainSplitter->setCollapsible(0, false);
     new PimCommon::SplitterCollapser(mMainSplitter, mContactTemplate, this);
 
-
     connect(mEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
 
     if (mType == MainPage) {

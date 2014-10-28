@@ -50,14 +50,13 @@ SplitterCollapserGui_test::~SplitterCollapserGui_test()
 
 }
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     QCommandLineParser parser;
     parser.addVersionOption();
     parser.addHelpOption();
     parser.process(app);
-
 
     SplitterCollapserGui_test *w = new SplitterCollapserGui_test(0, Qt::Horizontal);
     w->resize(800, 600);

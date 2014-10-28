@@ -66,14 +66,14 @@ void TemplateManager::initTemplatesDirectories(const QString &templatesRelativeP
 void TemplateManager::loadTemplates()
 {
     if (!mTemplatesDirectories.isEmpty()) {
-        Q_FOREACH (const QString &directory, mTemplatesDirectories) {
+        Q_FOREACH(const QString & directory, mTemplatesDirectories) {
             mDirWatch->removeDir(directory);
         }
     } else {
         return;
     }
 
-    Q_FOREACH (const QString &directory, mTemplatesDirectories) {
+    Q_FOREACH(const QString & directory, mTemplatesDirectories) {
         QDirIterator dirIt(directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot);
         while (dirIt.hasNext()) {
             dirIt.next();

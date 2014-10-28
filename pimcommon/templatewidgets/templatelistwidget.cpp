@@ -79,7 +79,7 @@ public:
     {
         if (KMessageBox::Yes == KMessageBox::questionYesNo(q, i18n("Do you want to delete selected template?"), i18n("Delete template"))) {
             const QList<QListWidgetItem *> lstSelectedItems = q->selectedItems();
-            Q_FOREACH (QListWidgetItem *item, lstSelectedItems) {
+            Q_FOREACH(QListWidgetItem * item, lstSelectedItems) {
                 if (item->data(TemplateListWidget::DefaultTemplate).toBool() == false) {
                     delete item;
                 }
@@ -198,7 +198,7 @@ public:
     {
         q->clear();
         const QList<PimCommon::defaultTemplate> templatesLst = q->defaultTemplates();
-        Q_FOREACH (const PimCommon::defaultTemplate &tmp, templatesLst) {
+        Q_FOREACH(const PimCommon::defaultTemplate & tmp, templatesLst) {
             createListWidgetItem(tmp.name, tmp.text, true);
         }
         loadTemplates(&(*config));
@@ -223,7 +223,7 @@ public:
     void saveTemplates(KConfig *configFile)
     {
         // clear everything
-        foreach (const QString &group, configFile->groupList()) {
+        foreach(const QString & group, configFile->groupList()) {
             configFile->deleteGroup(group);
         }
 

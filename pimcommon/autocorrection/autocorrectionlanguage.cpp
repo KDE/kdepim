@@ -24,7 +24,7 @@ AutoCorrectionLanguage::AutoCorrectionLanguage(QWidget *parent)
 {
     KLocale *locale = KLocale::global();
     const QStringList lstLang = locale->allLanguagesList();
-    Q_FOREACH (const QString &lang, lstLang) {
+    Q_FOREACH(const QString & lang, lstLang) {
         if (lang != QLatin1String("x-test")) {
             addItem(locale->languageCodeToName(lang) , lang);
         }

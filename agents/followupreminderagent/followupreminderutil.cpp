@@ -48,13 +48,14 @@ void FollowUpReminder::FollowUpReminderUtil::forceReparseConfiguration()
 
 KSharedConfig::Ptr FollowUpReminder::FollowUpReminderUtil::defaultConfig()
 {
-    return KSharedConfig::openConfig( QLatin1String("akonadi_followupreminder_agentrc") );
+    return KSharedConfig::openConfig(QLatin1String("akonadi_followupreminder_agentrc"));
 }
 
 void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedConfig::Ptr config, FollowUpReminder::FollowUpReminderInfo *info, bool forceReload)
 {
-    if (!info || !info->isValid())
+    if (!info || !info->isValid()) {
         return;
+    }
 
     KConfigGroup general = config->group(QLatin1String("General"));
     int value = general.readEntry("Number", 0);
@@ -67,9 +68,9 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedCo
     const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(identifier);
     // first, delete all filter groups:
     const QStringList filterGroups = config->groupList();
-    foreach ( const QString &group, filterGroups ) {
+    foreach(const QString & group, filterGroups) {
         if (group == groupName)  {
-            config->deleteGroup( group );
+            config->deleteGroup(group);
         }
     }
     KConfigGroup group = config->group(groupName);
@@ -79,8 +80,9 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedCo
 
     config->sync();
     config->reparseConfiguration();
-    if (forceReload)
+    if (forceReload) {
         reload();
+    }
 }
 
 bool FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedConfig::Ptr config, const QList<qint32> &listRemove, bool forceReload)
@@ -96,10 +98,10 @@ bool FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedC
     Q_FOREACH(qint32 identifier, listRemove) {
         const QString groupName = FollowUpReminder::FollowUpReminderUtil::followUpReminderPattern.arg(identifier);
         const QStringList filterGroups = config->groupList();
-        foreach ( const QString &group, filterGroups ) {
+        foreach(const QString & group, filterGroups) {
 
             if (group == groupName)  {
-                config->deleteGroup( group );
+                config->deleteGroup(group);
                 --value;
                 needSaveConfig = true;
             }
@@ -110,8 +112,9 @@ bool FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedC
 
         config->sync();
         config->reparseConfiguration();
-        if (forceReload)
+        if (forceReload) {
             reload();
+        }
     }
     return needSaveConfig;
 }

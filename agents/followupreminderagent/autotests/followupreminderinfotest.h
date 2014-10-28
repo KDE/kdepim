@@ -24,7 +24,7 @@ class FollowUpReminderInfoTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderInfoTest(QObject *parent=0);
+    explicit FollowUpReminderInfoTest(QObject *parent = 0);
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();

@@ -101,13 +101,13 @@ void ThemeEditorPage::slotExtraHeaderDisplayChanged(const QStringList &extraHead
     mEditorPage->preview()->slotExtraHeaderDisplayChanged(extraHeaders);
 
     QStringList result;
-    Q_FOREACH (QString var, extraHeaders) {
+    Q_FOREACH(QString var, extraHeaders) {
         var = QLatin1String("header.") + var.remove(QLatin1Char('-'));
         result << var;
     }
 
     mEditorPage->editor()->createCompleterList(result);
-    Q_FOREACH (EditorPage *page, mExtraPage) {
+    Q_FOREACH(EditorPage * page, mExtraPage) {
         page->editor()->createCompleterList(result);
     }
 }
@@ -176,7 +176,7 @@ void ThemeEditorPage::installTheme(const QString &themePath)
     const QString newPath = themePath + QDir::separator() + mDesktopPage->themeName();
     mEditorPage->setPageFileName(mDesktopPage->filename());
     mEditorPage->installTheme(newPath);
-    Q_FOREACH (EditorPage *page, mExtraPage) {
+    Q_FOREACH(EditorPage * page, mExtraPage) {
         page->installTheme(newPath);
     }
     mDesktopPage->installTheme(newPath);
@@ -227,7 +227,7 @@ void ThemeEditorPage::createZip(const QString &themeName, KZip *zip)
 {
     mEditorPage->createZip(themeName, zip);
 
-    Q_FOREACH (EditorPage *page, mExtraPage) {
+    Q_FOREACH(EditorPage * page, mExtraPage) {
         page->createZip(themeName, zip);
     }
     mDesktopPage->createZip(themeName, zip);
@@ -264,7 +264,7 @@ void ThemeEditorPage::storeTheme(const QString &directory)
     mEditorPage->setPageFileName(mDesktopPage->filename());
     mEditorPage->saveTheme(themeDirectory);
 
-    Q_FOREACH (EditorPage *page, mExtraPage) {
+    Q_FOREACH(EditorPage * page, mExtraPage) {
         page->saveTheme(themeDirectory);
     }
     mDesktopPage->saveTheme(themeDirectory);
@@ -301,7 +301,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
         mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
 
         const QStringList lstExtraPages = mThemeSession->extraPages();
-        Q_FOREACH (const QString &page, lstExtraPages) {
+        Q_FOREACH(const QString & page, lstExtraPages) {
             EditorPage *extraPage = createExtraPage(page);
             extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
         }

@@ -84,7 +84,7 @@ void PlainTextEditor::slotDisplayMessageIndicator(const QString &message)
     d->mTextIndicator->display(message);
 }
 
-void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
+void PlainTextEditor::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu *popup = createStandardContextMenu();
     if (popup) {
