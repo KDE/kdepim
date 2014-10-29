@@ -62,10 +62,13 @@ option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will build only libkl
 option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
+option(KDEPIM_NO_TEXTTOSPEECH "Do not use TextToSpeech in the kdepim applications" FALSE)
 
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative OpenGL)
 find_package(Qt5X11Extras NO_MODULE)
-find_package(Qt5TextToSpeech)
+if (NOT KDEPIM_NO_TEXTTOSPEECH)
+   find_package(Qt5TextToSpeech)
+endif()
 find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 
 find_package(Qt5Designer NO_MODULE)
@@ -124,7 +127,11 @@ if (NOT APPLE)
 endif()
 
 set(KDEPIM_HAVE_X11 ${X11_FOUND})
-set(KDEPIM_HAVE_TEXTTOSPEECH ${Qt5TextToSpeech_FOUND})
+if (KDEPIM_NO_TEXTTOSPEECH)
+  set(KDEPIM_HAVE_TEXTTOSPEECH FALSE)
+else()
+  set(KDEPIM_HAVE_TEXTTOSPEECH ${Qt5TextToSpeech_FOUND})
+endif()
 configure_file(config-kdepim.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kdepim.h )
 
 
