@@ -17,18 +17,21 @@
 
 #include "texttospeechwidget.h"
 #include "texttospeechinterface.h"
+#include "texttospeechconfigdialog.h"
 #include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QToolButton>
 #include <QDebug>
 #include <QLabel>
 #include <QSlider>
+#include <QPointer>
 
 using namespace PimCommon;
 
 TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     : QWidget(parent),
-      mState(Stop)
+      mState(Stop),
+      mNeedToHide(false)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
@@ -74,7 +77,18 @@ TextToSpeechWidget::~TextToSpeechWidget()
 
 void TextToSpeechWidget::slotConfigure()
 {
-    //TODO configure
+    if (!mConfigDialog.data()) {
+        mNeedToHide = false;
+        mConfigDialog = new TextToSpeechConfigDialog(this);
+        if (mConfigDialog->exec()) {
+            //TODO reload config
+        }
+        delete mConfigDialog;
+        if (mNeedToHide) {
+            hide();
+            mNeedToHide = false;
+        }
+    }
 }
 
 void TextToSpeechWidget::slotVolumeChanged(int value)
@@ -126,7 +140,11 @@ TextToSpeechWidget::State TextToSpeechWidget::state() const
 void TextToSpeechWidget::slotStateChanged(PimCommon::TextToSpeech::State state)
 {
     if (state == PimCommon::TextToSpeech::Ready) {
-        hide();
+        if (mConfigDialog) {
+            mNeedToHide = true;
+        } else {
+            hide();
+        }
     }
 }
 

@@ -79,6 +79,7 @@ void TextToSpeechConfigWidget::readConfig()
     mVolume->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->volume()));
     mRate->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->rate() * 100));
     mPitch->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->pitch() * 100));
+    //FIXME
     //TODO load locale
 }
 

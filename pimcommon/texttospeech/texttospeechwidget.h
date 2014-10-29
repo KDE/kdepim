@@ -18,6 +18,7 @@
 #ifndef TEXTTOSPEECHWIDGET_H
 #define TEXTTOSPEECHWIDGET_H
 
+#include <QPointer>
 #include <QWidget>
 #include "pimcommon_export.h"
 #include "pimcommon/texttospeech/texttospeech.h"
@@ -26,6 +27,7 @@ class QSlider;
 namespace PimCommon
 {
 class AbstractTextToSpeechInterface;
+class TextToSpeechConfigDialog;
 class PIMCOMMON_EXPORT TextToSpeechWidget : public QWidget
 {
     Q_OBJECT
@@ -64,6 +66,8 @@ private slots:
 
 private:
     State mState;
+    bool mNeedToHide;
+    QPointer<PimCommon::TextToSpeechConfigDialog> mConfigDialog;
     QToolButton *mStopButton;
     QToolButton *mPlayPauseButton;
     QToolButton *mConfigureButton;
