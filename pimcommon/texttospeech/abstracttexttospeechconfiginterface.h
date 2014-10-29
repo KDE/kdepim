@@ -23,7 +23,7 @@
 #include "pimcommon_export.h"
 namespace PimCommon
 {
-class AbstractTextToSpeechConfigInterface : public QObject
+class PIMCOMMON_EXPORT AbstractTextToSpeechConfigInterface : public QObject
 {
     Q_OBJECT
 public:

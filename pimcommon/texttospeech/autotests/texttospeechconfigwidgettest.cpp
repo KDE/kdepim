@@ -17,6 +17,7 @@
 
 #include "texttospeechconfigwidgettest.h"
 #include "pimcommon/texttospeech/texttospeechconfigwidget.h"
+#include "pimcommon/texttospeech/abstracttexttospeechconfiginterface.h"
 
 #include <qtest.h>
 #include <QSlider>
@@ -32,9 +33,17 @@ TextToSpeechConfigWidgetTest::~TextToSpeechConfigWidgetTest()
 {
 }
 
+void TextToSpeechConfigWidgetTest::addInterface(PimCommon::TextToSpeechConfigWidget *widget)
+{
+    PimCommon::AbstractTextToSpeechConfigInterface *interface = new PimCommon::AbstractTextToSpeechConfigInterface(this);
+    widget->setTextToSpeechConfigInterface(interface);
+}
+
+
 void TextToSpeechConfigWidgetTest::shouldHaveDefaultValue()
 {
     PimCommon::TextToSpeechConfigWidget textToSpeechConfigWidget;
+    addInterface(&textToSpeechConfigWidget);
     QSlider *volume = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("volume"));
     QVERIFY(volume);
 
@@ -53,6 +62,7 @@ void TextToSpeechConfigWidgetTest::shouldHaveDefaultValue()
 void TextToSpeechConfigWidgetTest::shouldEmitConfigChangedWhenChangeConfigValue()
 {
     PimCommon::TextToSpeechConfigWidget textToSpeechConfigWidget;
+    addInterface(&textToSpeechConfigWidget);
     QSignalSpy spy(&textToSpeechConfigWidget, SIGNAL(configChanged(bool)));
     QSlider *volume = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("volume"));
     volume->setValue(5);

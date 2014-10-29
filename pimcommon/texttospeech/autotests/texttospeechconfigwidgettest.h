@@ -19,7 +19,9 @@
 #define TEXTTOSPEECHCONFIGWIDGETTEST_H
 
 #include <QObject>
-
+namespace PimCommon {
+class TextToSpeechConfigWidget;
+}
 class TextToSpeechConfigWidgetTest : public QObject
 {
     Q_OBJECT
@@ -30,6 +32,8 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldEmitConfigChangedWhenChangeConfigValue();
+private:
+    void addInterface(PimCommon::TextToSpeechConfigWidget *widget);
 };
 
 #endif // TEXTTOSPEECHCONFIGWIDGETTEST_H

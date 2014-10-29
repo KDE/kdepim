@@ -18,9 +18,9 @@
 #ifndef TEXTTOSPEECHCONFIGINTERFACE_H
 #define TEXTTOSPEECHCONFIGINTERFACE_H
 #include "abstracttexttospeechconfiginterface.h"
-
+#include "pimcommon_export.h"
 namespace PimCommon {
-class TextToSpeechConfigInterface : public AbstractTextToSpeechConfigInterface
+class PIMCOMMON_EXPORT TextToSpeechConfigInterface : public AbstractTextToSpeechConfigInterface
 {
     Q_OBJECT
 public:
