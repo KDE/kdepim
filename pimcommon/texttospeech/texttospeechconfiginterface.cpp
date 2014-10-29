@@ -36,9 +36,12 @@ QVector<QLocale> TextToSpeechConfigInterface::availableLocales() const
     return PimCommon::TextToSpeech::self()->availableLocales();
 }
 
-QLocale TextToSpeechConfigInterface::currentLocale() const
+QLocale TextToSpeechConfigInterface::locale() const
 {
-    return PimCommon::TextToSpeech::self()->currentLocale();
+    return PimCommon::TextToSpeech::self()->locale();
 }
 
-
+void TextToSpeechConfigInterface::setLocale(const QLocale &locale)
+{
+    PimCommon::TextToSpeech::self()->setLocale(locale);
+}

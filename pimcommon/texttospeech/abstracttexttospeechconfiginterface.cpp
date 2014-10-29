@@ -35,9 +35,14 @@ QVector<QLocale> AbstractTextToSpeechConfigInterface::availableLocales() const
     return QVector<QLocale>();
 }
 
-QLocale AbstractTextToSpeechConfigInterface::currentLocale() const
+QLocale AbstractTextToSpeechConfigInterface::locale() const
 {
     return QLocale();
+}
+
+void AbstractTextToSpeechConfigInterface::setLocale(const QLocale &locale)
+{
+    Q_UNUSED(locale);
 }
 
 

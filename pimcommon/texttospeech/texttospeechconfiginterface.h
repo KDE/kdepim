@@ -28,8 +28,9 @@ public:
     ~TextToSpeechConfigInterface();
 
     QVector<QLocale> availableLocales() const Q_DECL_OVERRIDE;
-    QLocale currentLocale() const Q_DECL_OVERRIDE;
+    QLocale locale() const Q_DECL_OVERRIDE;
 
+    void setLocale(const QLocale &locale) Q_DECL_OVERRIDE;
 };
 }
 

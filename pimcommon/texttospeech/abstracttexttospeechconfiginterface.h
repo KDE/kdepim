@@ -30,7 +30,8 @@ public:
     explicit AbstractTextToSpeechConfigInterface(QObject *parent = 0);
     ~AbstractTextToSpeechConfigInterface();
     virtual QVector<QLocale> availableLocales() const;
-    virtual QLocale currentLocale() const;
+    virtual QLocale locale() const;
+    virtual void setLocale(const QLocale &locale);
 
 };
 }

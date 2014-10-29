@@ -48,7 +48,7 @@ public:
 
     int volume() const;
     QVector<QLocale> availableLocales() const;
-    QLocale currentLocale() const;
+    QLocale locale() const;
 
 public Q_SLOTS:
     void say(const QString &text);
@@ -59,7 +59,7 @@ public Q_SLOTS:
     void setRate(double rate);
     void setPitch(double pitch);
     void setVolume(int volume);
-    void setLocales(const QLocale &locale) const;
+    void setLocale(const QLocale &locale) const;
 
 Q_SIGNALS:
     void stateChanged(TextToSpeech::State);

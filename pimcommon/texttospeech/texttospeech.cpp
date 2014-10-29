@@ -178,7 +178,7 @@ QVector<QLocale> TextToSpeech::availableLocales() const
 #endif
 }
 
-void TextToSpeech::setLocales(const QLocale &locale) const
+void TextToSpeech::setLocale(const QLocale &locale) const
 {
 #if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setLocale(locale);
@@ -187,10 +187,10 @@ void TextToSpeech::setLocales(const QLocale &locale) const
 #endif
 }
 
-QLocale TextToSpeech::currentLocale() const
+QLocale TextToSpeech::locale() const
 {
 #if KDEPIM_HAVE_TEXTTOSPEECH
-    return mTextToSpeech->currentLocale();
+    return mTextToSpeech->locale();
 #else
     return QLocale();
 #endif
