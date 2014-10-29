@@ -97,6 +97,7 @@ void TextToSpeechConfigWidget::setTextToSpeechConfigInterface(AbstractTextToSpee
 
 void TextToSpeechConfigWidget::slotUpdateAvailableLocales()
 {
+    //TODO save/load locale
     mLanguage->clear();
     const QVector<QLocale> locales = mAbstractTextToSpeechConfigInterface->availableLocales();
     QLocale current = mAbstractTextToSpeechConfigInterface->currentLocale();
