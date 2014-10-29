@@ -29,7 +29,7 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-    void shouldEmitConfigChangedWhenChangeSliderValue();
+    void shouldEmitConfigChangedWhenChangeConfigValue();
 };
 
 #endif // TEXTTOSPEECHCONFIGWIDGETTEST_H

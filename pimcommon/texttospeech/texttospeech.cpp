@@ -169,4 +169,32 @@ int TextToSpeech::volume() const
 #endif
 }
 
+QVector<QLocale> TextToSpeech::availableLocales() const
+{
+#if KDEPIM_HAVE_TEXTTOSPEECH
+    return mTextToSpeech->availableLocales();
+#else
+    return QVector<QLocale>();
+#endif
+}
+
+void TextToSpeech::setLocales(const QLocale &locale) const
+{
+#if KDEPIM_HAVE_TEXTTOSPEECH
+    mTextToSpeech->setLocale(locale);
+#else
+    Q_UNUSED(locale);
+#endif
+}
+
+QLocale TextToSpeech::currentLocale() const
+{
+#if KDEPIM_HAVE_TEXTTOSPEECH
+    return mTextToSpeech->currentLocale();
+#else
+    return QLocale();
+#endif
+}
+
+
 }

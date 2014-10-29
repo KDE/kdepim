@@ -21,6 +21,7 @@
 #include <qtest.h>
 #include <QSlider>
 #include <QSignalSpy>
+#include <QComboBox>
 
 TextToSpeechConfigWidgetTest::TextToSpeechConfigWidgetTest(QObject *parent)
     : QObject(parent)
@@ -43,9 +44,12 @@ void TextToSpeechConfigWidgetTest::shouldHaveDefaultValue()
     QSlider *pitch = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("pitch"));
     QVERIFY(pitch);
 
+    QComboBox *language = qFindChild<QComboBox *>(&textToSpeechConfigWidget, QLatin1String("language"));
+    QVERIFY(language);
+    QVERIFY(language->count()>0);
 }
 
-void TextToSpeechConfigWidgetTest::shouldEmitConfigChangedWhenChangeSliderValue()
+void TextToSpeechConfigWidgetTest::shouldEmitConfigChangedWhenChangeConfigValue()
 {
     PimCommon::TextToSpeechConfigWidget textToSpeechConfigWidget;
     QSignalSpy spy(&textToSpeechConfigWidget, SIGNAL(configChanged(bool)));
@@ -60,6 +64,10 @@ void TextToSpeechConfigWidgetTest::shouldEmitConfigChangedWhenChangeSliderValue(
     QSlider *pitch = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("pitch"));
     pitch->setValue(5);
     QCOMPARE(spy.count(), 3);
+
+    QComboBox *language = qFindChild<QComboBox *>(&textToSpeechConfigWidget, QLatin1String("language"));
+    language->setCurrentIndex(3);
+    QCOMPARE(spy.count(), 4);
 }
 
 QTEST_MAIN(TextToSpeechConfigWidgetTest)

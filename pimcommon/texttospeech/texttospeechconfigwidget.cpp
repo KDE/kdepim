@@ -22,6 +22,7 @@
 
 #include <QFormLayout>
 #include <QSlider>
+#include <QComboBox>
 
 using namespace PimCommon;
 TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
@@ -47,6 +48,24 @@ TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
     connect(mPitch, &QSlider::valueChanged, this, &TextToSpeechConfigWidget::valueChanged);
     mPitch->setObjectName(QLatin1String("pitch"));
     layout->addRow(i18n("Pitch:"), mPitch);
+
+    mLanguage = new QComboBox;
+    mLanguage->setObjectName(QLatin1String("language"));
+    layout->addRow(i18n("Language:"), mLanguage);
+    connect(mLanguage, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &TextToSpeechConfigWidget::valueChanged);
+
+#if 0
+    // Populate the languages combobox before connecting its signal.
+    QVector<QLocale> locales = m_speech.availableLocales();
+    QLocale current = m_speech.currentLocale();
+    foreach (const QLocale &locale, locales) {
+        QVariant localeVariant(locale);
+        mLanguage->addItem(QLocale::languageToString(locale.language()), localeVariant);
+        if (locale.name() == current.name())
+            mLanguage->setCurrentIndex(ui.language->count() - 1);
+    }
+#endif
+
 }
 
 TextToSpeechConfigWidget::~TextToSpeechConfigWidget()

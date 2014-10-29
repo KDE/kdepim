@@ -19,6 +19,8 @@
 #define ABSTRACTTEXTTOSPEECHINTERFACE_H
 #include "pimcommon_export.h"
 #include <QObject>
+#include <QVector>
+#include <QLocale>
 namespace PimCommon
 {
 class PIMCOMMON_EXPORT AbstractTextToSpeechInterface : public QObject
@@ -32,6 +34,8 @@ public:
     virtual void say(const QString &text);
     virtual int volume() const;
     virtual void setVolume(int value);
+    virtual QVector<QLocale> availableLocales() const;
+    virtual QLocale currentLocale() const;
 
 };
 }

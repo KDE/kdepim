@@ -20,6 +20,7 @@
 #include <QWidget>
 #include "pimcommon_export.h"
 class QSlider;
+class QComboBox;
 namespace PimCommon
 {
 class PIMCOMMON_EXPORT TextToSpeechConfigWidget : public QWidget
@@ -42,6 +43,7 @@ private:
     QSlider *mVolume;
     QSlider *mRate;
     QSlider *mPitch;
+    QComboBox *mLanguage;
 };
 }
 
