@@ -40,6 +40,7 @@ TextToSpeechConfigDialog::TextToSpeechConfigDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::accepted, this, &TextToSpeechConfigDialog::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &TextToSpeechConfigDialog::reject);
     mainLayout->addWidget(buttonBox);
+    mTextToSpeechConfigWidget->readConfig();
 }
 
 TextToSpeechConfigDialog::~TextToSpeechConfigDialog()
@@ -49,6 +50,6 @@ TextToSpeechConfigDialog::~TextToSpeechConfigDialog()
 
 void TextToSpeechConfigDialog::slotAccepted()
 {
-    //TODO
+    mTextToSpeechConfigWidget->writeConfig();
     accept();
 }
