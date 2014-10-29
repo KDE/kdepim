@@ -151,7 +151,7 @@ void TextToSpeech::setPitch(double pitch)
 #endif
 }
 
-void TextToSpeech::setVolume(double volume)
+void TextToSpeech::setVolume(int volume)
 {
 #if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setVolume(volume);

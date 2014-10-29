@@ -52,8 +52,7 @@ int TextToSpeechInterface::volume() const
 
 void TextToSpeechInterface::setVolume(int value)
 {
-    //TODO verify it
-    PimCommon::TextToSpeech::self()->setVolume(value / 100);
+    PimCommon::TextToSpeech::self()->setVolume(value);
 }
 
 void TextToSpeechInterface::stateChanged(TextToSpeechWidget::State state)

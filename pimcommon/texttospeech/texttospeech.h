@@ -56,7 +56,7 @@ public Q_SLOTS:
 
     void setRate(double rate);
     void setPitch(double pitch);
-    void setVolume(double volume);
+    void setVolume(int volume);
 
 Q_SIGNALS:
     void stateChanged(TextToSpeech::State);
