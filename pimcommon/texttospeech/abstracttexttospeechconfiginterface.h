@@ -14,27 +14,27 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef ABSTRACTTEXTTOSPEECHCONFIGINTERFACE_H
+#define ABSTRACTTEXTTOSPEECHCONFIGINTERFACE_H
 
-#ifndef ABSTRACTTEXTTOSPEECHINTERFACE_H
-#define ABSTRACTTEXTTOSPEECHINTERFACE_H
-#include "pimcommon_export.h"
-#include <QObject>
-#include <QVector>
 #include <QLocale>
+#include <QVector>
+#include <QObject>
+#include "pimcommon_export.h"
 namespace PimCommon
 {
-class PIMCOMMON_EXPORT AbstractTextToSpeechInterface : public QObject
+class AbstractTextToSpeechConfigInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractTextToSpeechInterface(QObject *parent = 0);
-    ~AbstractTextToSpeechInterface();
+    explicit AbstractTextToSpeechConfigInterface(QObject *parent = 0);
+    ~AbstractTextToSpeechConfigInterface();
+    virtual QVector<QLocale> availableLocales() const;
+    virtual QLocale currentLocale() const;
 
-    virtual bool isReady() const;
-    virtual void say(const QString &text);
-    virtual int volume() const;
-    virtual void setVolume(int value);
 };
 }
 
-#endif // ABSTRACTTEXTTOSPEECHINTERFACE_H
+
+#endif // ABSTRACTTEXTTOSPEECHCONFIGINTERFACE_H
+

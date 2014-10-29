@@ -46,13 +46,3 @@ void AbstractTextToSpeechInterface::setVolume(int value)
 {
     Q_UNUSED(value);
 }
-
-QVector<QLocale> AbstractTextToSpeechInterface::availableLocales() const
-{
-    return QVector<QLocale>();
-}
-
-QLocale AbstractTextToSpeechInterface::currentLocale() const
-{
-    return QLocale();
-}

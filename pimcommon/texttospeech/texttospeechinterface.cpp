@@ -70,13 +70,3 @@ void TextToSpeechInterface::stateChanged(TextToSpeechWidget::State state)
         break;
     }
 }
-
-QVector<QLocale> TextToSpeechInterface::availableLocales() const
-{
-    return PimCommon::TextToSpeech::self()->availableLocales();
-}
-
-QLocale TextToSpeechInterface::currentLocale() const
-{
-    return PimCommon::TextToSpeech::self()->currentLocale();
-}

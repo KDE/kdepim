@@ -15,26 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ABSTRACTTEXTTOSPEECHINTERFACE_H
-#define ABSTRACTTEXTTOSPEECHINTERFACE_H
-#include "pimcommon_export.h"
-#include <QObject>
-#include <QVector>
-#include <QLocale>
-namespace PimCommon
-{
-class PIMCOMMON_EXPORT AbstractTextToSpeechInterface : public QObject
-{
-    Q_OBJECT
-public:
-    explicit AbstractTextToSpeechInterface(QObject *parent = 0);
-    ~AbstractTextToSpeechInterface();
+#include "abstracttexttospeechconfiginterface.h"
 
-    virtual bool isReady() const;
-    virtual void say(const QString &text);
-    virtual int volume() const;
-    virtual void setVolume(int value);
-};
+using namespace PimCommon;
+
+AbstractTextToSpeechConfigInterface::AbstractTextToSpeechConfigInterface(QObject *parent)
+    : QObject(parent)
+{
+
 }
 
-#endif // ABSTRACTTEXTTOSPEECHINTERFACE_H
+AbstractTextToSpeechConfigInterface::~AbstractTextToSpeechConfigInterface()
+{
+
+}
+
+QVector<QLocale> AbstractTextToSpeechConfigInterface::availableLocales() const
+{
+    return QVector<QLocale>();
+}
+
+QLocale AbstractTextToSpeechConfigInterface::currentLocale() const
+{
+    return QLocale();
+}
+
+
