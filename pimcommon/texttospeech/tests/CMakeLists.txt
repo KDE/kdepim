@@ -15,3 +15,11 @@ target_link_libraries(texttospeechgui
   Qt5::Test
   pimcommon
 )
+
+set(texttospeechconfiggui_SRCS texttospeechconfiggui.cpp)
+add_executable(texttospeechconfiggui ${texttospeechconfiggui_SRCS})
+target_link_libraries(texttospeechconfiggui
+  Qt5::Test
+  pimcommon
+)
+
