@@ -59,12 +59,14 @@ private slots:
     void slotStop();
     void slotPlayPause();
     void slotVolumeChanged(int value);
+    void updateButtonState();
+    void slotConfigure();
 
 private:
-    void updateButtonState();
     State mState;
     QToolButton *mStopButton;
     QToolButton *mPlayPauseButton;
+    QToolButton *mConfigureButton;
     AbstractTextToSpeechInterface *mTextToSpeechInterface;
     QSlider *mVolume;
 };

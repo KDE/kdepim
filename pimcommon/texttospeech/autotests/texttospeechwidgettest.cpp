@@ -54,6 +54,9 @@ void TextToSpeechWidgetTest::shouldHaveDefaultValue()
 
     QSlider *volume = qFindChild<QSlider *>(&textToSpeechWidget, QLatin1String("volumeslider"));
     QVERIFY(volume);
+
+    QToolButton *configureButton = qFindChild<QToolButton *>(&textToSpeechWidget, QLatin1String("configurebutton"));
+    QVERIFY(configureButton);
 }
 
 void TextToSpeechWidgetTest::shouldChangeButtonEnableStateWhenChangeState()

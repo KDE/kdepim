@@ -37,6 +37,7 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     QLabel *volume = new QLabel(i18n("Volume:"));
     hbox->addWidget(volume);
     mVolume = new QSlider;
+    mVolume->setMinimumWidth(100);
     mVolume->setOrientation(Qt::Horizontal);
     mVolume->setObjectName(QStringLiteral("volumeslider"));
     mVolume->setRange(0, 100);
@@ -48,10 +49,20 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     mStopButton->setToolTip(i18n("Stop"));
     connect(mStopButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotStop);
     hbox->addWidget(mStopButton);
+
     mPlayPauseButton = new QToolButton;
     mPlayPauseButton->setObjectName(QLatin1String("playpausebutton"));
     connect(mPlayPauseButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotPlayPause);
     hbox->addWidget(mPlayPauseButton);
+
+    mConfigureButton = new QToolButton;
+    mConfigureButton->setIcon(QIcon::fromTheme(QLatin1String("configure")));
+    mConfigureButton->setToolTip(i18n("Configure..."));
+    mConfigureButton->setObjectName(QLatin1String("configurebutton"));
+    connect(mConfigureButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotConfigure);
+    hbox->addWidget(mConfigureButton);
+
+
     updateButtonState();
     mTextToSpeechInterface = new TextToSpeechInterface(this, this);
     hide();
@@ -59,6 +70,11 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 
 TextToSpeechWidget::~TextToSpeechWidget()
 {
+}
+
+void TextToSpeechWidget::slotConfigure()
+{
+    //TODO configure
 }
 
 void TextToSpeechWidget::slotVolumeChanged(int value)
