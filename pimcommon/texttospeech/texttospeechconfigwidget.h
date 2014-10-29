@@ -23,6 +23,7 @@ class QSlider;
 class QComboBox;
 namespace PimCommon
 {
+class AbstractTextToSpeechConfigInterface;
 class PIMCOMMON_EXPORT TextToSpeechConfigWidget : public QWidget
 {
     Q_OBJECT
@@ -33,9 +34,11 @@ public:
     void writeConfig();
     void readConfig();
 
+    void setTextToSpeechConfigInterface(AbstractTextToSpeechConfigInterface *interface);
 private Q_SLOTS:
     void valueChanged();
 
+    void slotUpdateAvailableLocales();
 Q_SIGNALS:
     void configChanged(bool state);
 
@@ -44,6 +47,7 @@ private:
     QSlider *mRate;
     QSlider *mPitch;
     QComboBox *mLanguage;
+    AbstractTextToSpeechConfigInterface *mAbstractTextToSpeechConfigInterface;
 };
 }
 

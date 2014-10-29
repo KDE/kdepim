@@ -17,16 +17,20 @@
 
 #include "texttospeechconfigwidget.h"
 #include "settings/pimcommonsettings.h"
-
+#include "texttospeechconfigwidget.h"
+#include "abstracttexttospeechconfiginterface.h"
+#include "texttospeechconfiginterface.h"
 #include <KLocalizedString>
 
 #include <QFormLayout>
 #include <QSlider>
 #include <QComboBox>
+#include <QTimer>
 
 using namespace PimCommon;
 TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mAbstractTextToSpeechConfigInterface(new TextToSpeechConfigInterface(this))
 {
     QFormLayout *layout = new QFormLayout;
     setLayout(layout);
@@ -54,18 +58,7 @@ TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
     layout->addRow(i18n("Language:"), mLanguage);
     connect(mLanguage, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &TextToSpeechConfigWidget::valueChanged);
 
-#if 0
-    // Populate the languages combobox before connecting its signal.
-    QVector<QLocale> locales = m_speech.availableLocales();
-    QLocale current = m_speech.currentLocale();
-    foreach (const QLocale &locale, locales) {
-        QVariant localeVariant(locale);
-        mLanguage->addItem(QLocale::languageToString(locale.language()), localeVariant);
-        if (locale.name() == current.name())
-            mLanguage->setCurrentIndex(ui.language->count() - 1);
-    }
-#endif
-
+    QTimer::singleShot(0, this, SLOT(slotUpdateAvailableLocales()));
 }
 
 TextToSpeechConfigWidget::~TextToSpeechConfigWidget()
@@ -90,4 +83,23 @@ void TextToSpeechConfigWidget::writeConfig()
     mVolume->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->volume()));
     mRate->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->rate() * 100));
     mPitch->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->pitch() * 100));
+}
+
+void TextToSpeechConfigWidget::setTextToSpeechConfigInterface(AbstractTextToSpeechConfigInterface *interface)
+{
+    delete mAbstractTextToSpeechConfigInterface;
+    mAbstractTextToSpeechConfigInterface = interface;
+    slotUpdateAvailableLocales();
+}
+
+void TextToSpeechConfigWidget::slotUpdateAvailableLocales()
+{
+    const QVector<QLocale> locales = mAbstractTextToSpeechConfigInterface->availableLocales();
+    QLocale current = mAbstractTextToSpeechConfigInterface->currentLocale();
+    foreach (const QLocale &locale, locales) {
+        QVariant localeVariant(locale);
+        mLanguage->addItem(QLocale::languageToString(locale.language()), localeVariant);
+        if (locale.name() == current.name())
+            mLanguage->setCurrentIndex(mLanguage->count() - 1);
+    }
 }
