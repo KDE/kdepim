@@ -76,16 +76,18 @@ void TextToSpeechConfigWidget::valueChanged()
 
 void TextToSpeechConfigWidget::readConfig()
 {
-    PimCommon::PimCommonSettings::self()->setVolume(mVolume->value());
-    PimCommon::PimCommonSettings::self()->setRate(static_cast<double>(mRate->value() / 100));
-    PimCommon::PimCommonSettings::self()->setPitch(static_cast<double>(mPitch->value() / 100));
+    mVolume->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->volume()));
+    mRate->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->rate() * 100));
+    mPitch->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->pitch() * 100));
+    //TODO load locale
 }
 
 void TextToSpeechConfigWidget::writeConfig()
 {
-    mVolume->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->volume()));
-    mRate->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->rate() * 100));
-    mPitch->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->pitch() * 100));
+    PimCommon::PimCommonSettings::self()->setVolume(mVolume->value());
+    PimCommon::PimCommonSettings::self()->setRate(static_cast<double>(mRate->value() / 100));
+    PimCommon::PimCommonSettings::self()->setPitch(static_cast<double>(mPitch->value() / 100));
+    PimCommon::PimCommonSettings::self()->setLocale(mLanguage->currentData().value<QLocale>().name());
 }
 
 void TextToSpeechConfigWidget::setTextToSpeechConfigInterface(AbstractTextToSpeechConfigInterface *interface)
@@ -97,7 +99,6 @@ void TextToSpeechConfigWidget::setTextToSpeechConfigInterface(AbstractTextToSpee
 
 void TextToSpeechConfigWidget::slotUpdateAvailableLocales()
 {
-    //TODO save/load locale
     mLanguage->clear();
     const QVector<QLocale> locales = mAbstractTextToSpeechConfigInterface->availableLocales();
     QLocale current = mAbstractTextToSpeechConfigInterface->locale();

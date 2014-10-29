@@ -62,6 +62,7 @@ void TextToSpeech::init()
     mTextToSpeech->setRate(PimCommon::PimCommonSettings::self()->rate());
     mTextToSpeech->setPitch(PimCommon::PimCommonSettings::self()->pitch());
     mTextToSpeech->setVolume(PimCommon::PimCommonSettings::self()->volume());
+    mTextToSpeech->setLocale(QLocale(PimCommon::PimCommonSettings::self()->locale()));
     connect(mTextToSpeech, &QTextToSpeech::stateChanged, this, &TextToSpeech::slotStateChanged);
 #endif
 }
