@@ -19,6 +19,7 @@
 #include "baloodebugwidget.h"
 
 #include <QVBoxLayout>
+#include <KSharedConfig>
 
 
 using namespace PimCommon;
@@ -31,12 +32,29 @@ BalooDebugDialog::BalooDebugDialog(QWidget *parent)
     mBalooDebugWidget = new BalooDebugWidget(this);
     mBalooDebugWidget->setObjectName(QLatin1String("baloodebugwidget"));
     mainLayout->addWidget(mBalooDebugWidget);
+    readConfig();
 }
 
 BalooDebugDialog::~BalooDebugDialog()
 {
-
+    writeConfig();
 }
+
+void BalooDebugDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "BalooDebugDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
+}
+
+void BalooDebugDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "BalooDebugDialog" );
+    group.writeEntry( "Size", size() );
+}
+
 
 void BalooDebugDialog::setAkonadiId(const QString &akonadiId)
 {

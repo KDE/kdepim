@@ -19,6 +19,9 @@
 #include "baloodebugdialogtest.h"
 #include "../baloodebugdialog.h"
 #include "../baloodebugwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+
+#include <KLineEdit>
 #include <qtest_kde.h>
 
 BalooDebugDialogTest::BalooDebugDialogTest(QObject *parent)
@@ -37,6 +40,23 @@ void BalooDebugDialogTest::shouldHaveDefaultValue()
     PimCommon::BalooDebugDialog dlg;
     PimCommon::BalooDebugWidget *debugWidget = qFindChild<PimCommon::BalooDebugWidget *>(&dlg, QLatin1String("baloodebugwidget"));
     QVERIFY(debugWidget);
+    PimCommon::PlainTextEditorWidget *editorWidget = qFindChild<PimCommon::PlainTextEditorWidget *>(debugWidget, QLatin1String("plaintexteditor"));
+    QVERIFY(editorWidget);
+    KLineEdit *lineEdit = qFindChild<KLineEdit *>(debugWidget, QLatin1String("lineedit"));
+    QVERIFY(lineEdit);
+    QVERIFY(lineEdit->text().isEmpty());
+}
+
+void BalooDebugDialogTest::shouldFillLineEditWhenWeWantToSearchItem()
+{
+    PimCommon::BalooDebugDialog dlg;
+    PimCommon::BalooDebugWidget *debugWidget = qFindChild<PimCommon::BalooDebugWidget *>(&dlg, QLatin1String("baloodebugwidget"));
+    QVERIFY(debugWidget);
+    KLineEdit *lineEdit = qFindChild<KLineEdit *>(debugWidget, QLatin1String("lineedit"));
+    QVERIFY(lineEdit);
+    const QString akonadiItem = QLatin1String("Foo");
+    dlg.setAkonadiId(akonadiItem);
+    QCOMPARE(lineEdit->text(), akonadiItem);
 }
 
 QTEST_KDEMAIN(BalooDebugDialogTest, GUI)

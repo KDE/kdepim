@@ -33,6 +33,8 @@ public:
     void setAkonadiId(const QString &akonadiId);
 
 private:
+    void readConfig();
+    void writeConfig();
     BalooDebugWidget *mBalooDebugWidget;
 };
 }

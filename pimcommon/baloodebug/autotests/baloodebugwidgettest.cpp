@@ -16,8 +16,11 @@
 */
 
 #include "baloodebugwidgettest.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "../baloodebugwidget.h"
 #include <qtest_kde.h>
+#include <KLineEdit>
+#include <QPushButton>
 
 BalooDebugWidgetTest::BalooDebugWidgetTest(QObject *parent)
     : QObject(parent)
@@ -33,7 +36,44 @@ BalooDebugWidgetTest::~BalooDebugWidgetTest()
 void BalooDebugWidgetTest::shouldHaveDefaultValue()
 {
     PimCommon::BalooDebugWidget widget;
-    //TODO
+    QPushButton *button = qFindChild<QPushButton *>(&widget, QLatin1String("searchbutton"));
+    QVERIFY(button);
+    QVERIFY(!button->isEnabled());
+    KLineEdit *lineEdit = qFindChild<KLineEdit *>(&widget, QLatin1String("lineedit"));
+    QVERIFY(lineEdit);
+    QVERIFY(lineEdit->text().isEmpty());
+    PimCommon::PlainTextEditorWidget *editorWidget = qFindChild<PimCommon::PlainTextEditorWidget *>(&widget, QLatin1String("plaintexteditor"));
+    QVERIFY(editorWidget->isReadOnly());
+    QVERIFY(editorWidget);
+    QVERIFY(editorWidget->toPlainText().isEmpty());
+}
+
+void BalooDebugWidgetTest::shouldFillLineEditWhenWeWantToSearchItem()
+{
+    PimCommon::BalooDebugWidget widget;
+    KLineEdit *lineEdit = qFindChild<KLineEdit *>(&widget, QLatin1String("lineedit"));
+    const QString akonadiItem = QLatin1String("Foo");
+    widget.setAkonadiId(akonadiItem);
+    QCOMPARE(lineEdit->text(), akonadiItem);
+}
+
+void BalooDebugWidgetTest::shouldEnabledPushButtonWhenLineEditIsNotEmpty()
+{
+    PimCommon::BalooDebugWidget widget;
+    QString akonadiItem = QLatin1String("Foo");
+    widget.setAkonadiId(akonadiItem);
+    QPushButton *button = qFindChild<QPushButton *>(&widget, QLatin1String("searchbutton"));
+    QVERIFY(button->isEnabled());
+
+    akonadiItem = QLatin1String("");
+    widget.setAkonadiId(akonadiItem);
+    QVERIFY(!button->isEnabled());
+
+    //trimmed string
+    akonadiItem = QLatin1String(" ");
+    widget.setAkonadiId(akonadiItem);
+    QVERIFY(!button->isEnabled());
+
 }
 
 QTEST_KDEMAIN(BalooDebugWidgetTest, GUI)

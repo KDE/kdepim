@@ -20,7 +20,8 @@
 
 #include <QWidget>
 #include "pimcommon_export.h"
-
+class KLineEdit;
+class QPushButton;
 namespace PimCommon {
 class PlainTextEditorWidget;
 class PIMCOMMON_EXPORT BalooDebugWidget : public QWidget
@@ -31,8 +32,16 @@ public:
     ~BalooDebugWidget();
 
     void setAkonadiId(const QString &akonadiId);
+
+private Q_SLOTS:
+    void slotSearchLineTextChanged(const QString &text);
+    void slotSearch();
+    void slotResult(const QString &result);
+
 private:
     PimCommon::PlainTextEditorWidget *mPlainTextEditor;
+    KLineEdit *mLineEdit;
+    QPushButton *mSearchButton;
 };
 }
 

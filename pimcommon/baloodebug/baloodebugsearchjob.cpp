@@ -15,25 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOODEBUGWIDGETTEST_H
-#define BALOODEBUGWIDGETTEST_H
+#include "baloodebugsearchjob.h"
 
-#include <QObject>
-
-
-class BalooDebugWidgetTest : public QObject
+using namespace PimCommon;
+BalooDebugSearchJob::BalooDebugSearchJob(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit BalooDebugWidgetTest(QObject *parent = 0);
-    ~BalooDebugWidgetTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldFillLineEditWhenWeWantToSearchItem();
-    void shouldEnabledPushButtonWhenLineEditIsNotEmpty();
-};
+
+}
+
+BalooDebugSearchJob::~BalooDebugSearchJob()
+{
+
+}
+
+void BalooDebugSearchJob::start()
+{
+    //TODO
+}
+
+void BalooDebugSearchJob::setAkonadiId(const QString &id)
+{
+    mAkonadiId = id;
+}
 
 
-
-#endif // BALOODEBUGWIDGETTEST_H
 
