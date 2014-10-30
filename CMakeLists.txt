@@ -239,11 +239,11 @@ add_subdirectory(messagelist)
 add_subdirectory(templateparser)
 include (kleopatra/ConfigureChecks.cmake)
 
-#if(QGpgme_FOUND)
+if(KF5QGpgme_FOUND)
   if(Boost_TOPOLOGICAL_SORT_DIR)
     add_subdirectory(kleopatra)
   endif()
-#endif()
+endif()
 
 add_subdirectory(messageviewer)
 add_subdirectory(messagecomposer)
