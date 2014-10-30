@@ -74,13 +74,27 @@ void TextToSpeechConfigWidget::valueChanged()
     Q_EMIT configChanged(true);
 }
 
+void TextToSpeechConfigWidget::updateLocale()
+{
+    const QString localeName = PimCommon::PimCommonSettings::self()->locale();
+    if (localeName.isEmpty()) {
+        return;
+    }
+    const int countItem(mLanguage->count());
+    for (int i = 0; i < countItem; ++i) {
+        if (mLanguage->itemData(i).value<QLocale>().name() == localeName) {
+            mLanguage->setCurrentIndex(i);
+            break;
+        }
+    }
+}
+
 void TextToSpeechConfigWidget::readConfig()
 {
     mVolume->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->volume()));
     mRate->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->rate() * 100));
     mPitch->setValue(static_cast<int>(PimCommon::PimCommonSettings::self()->pitch() * 100));
-    //FIXME
-    //TODO load locale
+    updateLocale();
 }
 
 void TextToSpeechConfigWidget::writeConfig()
@@ -109,4 +123,5 @@ void TextToSpeechConfigWidget::slotUpdateAvailableLocales()
         if (locale.name() == current.name())
             mLanguage->setCurrentIndex(mLanguage->count() - 1);
     }
+    updateLocale();
 }

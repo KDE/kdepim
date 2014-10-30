@@ -43,6 +43,7 @@ Q_SIGNALS:
     void configChanged(bool state);
 
 private:
+    void updateLocale();
     QSlider *mVolume;
     QSlider *mRate;
     QSlider *mPitch;
