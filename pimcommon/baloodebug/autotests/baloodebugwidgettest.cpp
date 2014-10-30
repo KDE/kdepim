@@ -15,27 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloodebugdialog.h"
-#include "baloodebugwidget.h"
+#include "baloodebugwidgettest.h"
+#include "../baloodebugwidget.h"
+#include <qtest_kde.h>
 
-#include <QVBoxLayout>
-
-
-using namespace PimCommon;
-
-BalooDebugDialog::BalooDebugDialog(QWidget *parent)
-    : KDialog(parent)
-{
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
-    mBalooDebugWidget = new BalooDebugWidget(this);
-    mBalooDebugWidget->setObjectName(QLatin1String("baloodebugwidget"));
-    mainLayout->addWidget(mBalooDebugWidget);
-}
-
-BalooDebugDialog::~BalooDebugDialog()
+BalooDebugWidgetTest::BalooDebugWidgetTest(QObject *parent)
+    : QObject(parent)
 {
 
 }
 
+BalooDebugWidgetTest::~BalooDebugWidgetTest()
+{
 
+}
+
+void BalooDebugWidgetTest::shouldHaveDefaultValue()
+{
+    PimCommon::BalooDebugWidget widget;
+    //TODO
+}
+
+QTEST_KDEMAIN(BalooDebugWidgetTest, GUI)

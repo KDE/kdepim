@@ -26,6 +26,9 @@ class BalooDebugDialogTest : public QObject
 public:
     explicit BalooDebugDialogTest(QObject *parent = 0);
     ~BalooDebugDialogTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // BALOODEBUGDIALOGTEST_H

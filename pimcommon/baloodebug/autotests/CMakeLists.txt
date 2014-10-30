@@ -17,4 +17,4 @@ macro(add_pimcommon_baloodebug_unittest _source)
 endmacro ()
 
 add_pimcommon_baloodebug_unittest(baloodebugdialogtest.cpp)
-#add_pimcommon_baloodebug_unittest()
+add_pimcommon_baloodebug_unittest(baloodebugwidgettest.cpp)

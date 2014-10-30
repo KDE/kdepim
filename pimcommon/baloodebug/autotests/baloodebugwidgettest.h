@@ -15,27 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloodebugdialog.h"
-#include "baloodebugwidget.h"
+#ifndef BALOODEBUGWIDGETTEST_H
+#define BALOODEBUGWIDGETTEST_H
 
-#include <QVBoxLayout>
+#include <QObject>
 
 
-using namespace PimCommon;
-
-BalooDebugDialog::BalooDebugDialog(QWidget *parent)
-    : KDialog(parent)
+class BalooDebugWidgetTest : public QObject
 {
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
-    mBalooDebugWidget = new BalooDebugWidget(this);
-    mBalooDebugWidget->setObjectName(QLatin1String("baloodebugwidget"));
-    mainLayout->addWidget(mBalooDebugWidget);
-}
+    Q_OBJECT
+public:
+    explicit BalooDebugWidgetTest(QObject *parent = 0);
+    ~BalooDebugWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+};
 
-BalooDebugDialog::~BalooDebugDialog()
-{
 
-}
 
+#endif // BALOODEBUGWIDGETTEST_H
 

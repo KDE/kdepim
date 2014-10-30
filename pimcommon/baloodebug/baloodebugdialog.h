@@ -22,12 +22,15 @@
 #include "pimcommon_export.h"
 
 namespace PimCommon {
+class BalooDebugWidget;
 class PIMCOMMON_EXPORT BalooDebugDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit BalooDebugDialog(QWidget *parent=0);
     ~BalooDebugDialog();
+private:
+    BalooDebugWidget *mBalooDebugWidget;
 };
 }
 

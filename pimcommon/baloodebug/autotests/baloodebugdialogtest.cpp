@@ -17,7 +17,10 @@
 
 
 #include "baloodebugdialogtest.h"
+#include "../baloodebugdialog.h"
+#include "../baloodebugwidget.h"
 #include <qtest_kde.h>
+
 BalooDebugDialogTest::BalooDebugDialogTest(QObject *parent)
     : QObject(parent)
 {
@@ -27,6 +30,13 @@ BalooDebugDialogTest::BalooDebugDialogTest(QObject *parent)
 BalooDebugDialogTest::~BalooDebugDialogTest()
 {
 
+}
+
+void BalooDebugDialogTest::shouldHaveDefaultValue()
+{
+    PimCommon::BalooDebugDialog dlg;
+    PimCommon::BalooDebugWidget *debugWidget = qFindChild<PimCommon::BalooDebugWidget *>(&dlg, QLatin1String("baloodebugwidget"));
+    QVERIFY(debugWidget);
 }
 
 QTEST_KDEMAIN(BalooDebugDialogTest, GUI)
