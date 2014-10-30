@@ -14,7 +14,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="Pitch" type="Int" key="pitch">
       <default>0</default>
     </entry>
-    <entry name="locale" type="String" key="localename">
+    <entry name="localeName" type="String" key="localename">
       <default></default>
     </entry>
   </group>

@@ -76,7 +76,7 @@ void TextToSpeechConfigWidget::valueChanged()
 
 void TextToSpeechConfigWidget::updateLocale()
 {
-    const QString localeName = PimCommon::PimCommonSettings::self()->locale();
+    const QString localeName = PimCommon::PimCommonSettings::self()->localeName();
     if (localeName.isEmpty()) {
         return;
     }
@@ -102,7 +102,7 @@ void TextToSpeechConfigWidget::writeConfig()
     PimCommon::PimCommonSettings::self()->setVolume(mVolume->value());
     PimCommon::PimCommonSettings::self()->setRate(static_cast<double>(mRate->value() / 100));
     PimCommon::PimCommonSettings::self()->setPitch(static_cast<double>(mPitch->value() / 100));
-    PimCommon::PimCommonSettings::self()->setLocale(mLanguage->currentData().value<QLocale>().name());
+    PimCommon::PimCommonSettings::self()->setLocaleName(mLanguage->currentData().value<QLocale>().name());
 }
 
 void TextToSpeechConfigWidget::setTextToSpeechConfigInterface(AbstractTextToSpeechConfigInterface *interface)
