@@ -181,6 +181,12 @@ set(libtexttospeech_SRCS
   texttospeech/texttospeechconfigdialog.cpp
 )
 
+set(libpimcommon_baloodebug_SRCS
+  baloodebug/baloodebugdialog.cpp
+  baloodebug/baloodebugwidget.cpp
+  baloodebug/baloodebugsearchjob.cpp
+)
+
 
 set(libpimcommon_SRCS
   util/createresource.cpp
@@ -198,6 +204,8 @@ set(libpimcommon_SRCS
   ${libpimcommon_sieve_SRCS}
   ${libpimcommon_widgets_SRCS}
   ${libtexttospeech_SRCS}
+  ${libpimcommon_baloodebug_SRCS}
+
 )
 
 ki18n_wrap_ui(libpimcommon_SRCS
@@ -274,6 +282,7 @@ add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
 add_subdirectory(texttospeech/autotests)
 add_subdirectory(texttospeech/tests)
+add_subdirectory(baloodebug/autotests)
 
 
 if( LibKGAPI2_FOUND )
