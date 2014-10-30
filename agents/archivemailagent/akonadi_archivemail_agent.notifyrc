@@ -205,6 +205,7 @@ Name[sv]=Katalog finns inte
 Name[tr]=Dizin mevcut değil
 Name[uk]=Каталогу не існує
 Name[x-test]=xxDirectory does not existxx
+Name[zh_TW]=目錄不存在
 Action=Popup
 
 [Event/archivemailerror]
