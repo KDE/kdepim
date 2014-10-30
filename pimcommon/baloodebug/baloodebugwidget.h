@@ -22,6 +22,7 @@
 #include "pimcommon_export.h"
 
 namespace PimCommon {
+class PlainTextEditorWidget;
 class PIMCOMMON_EXPORT BalooDebugWidget : public QWidget
 {
     Q_OBJECT
@@ -29,6 +30,9 @@ public:
     explicit BalooDebugWidget(QWidget *parent = 0);
     ~BalooDebugWidget();
 
+    void setAkonadiId(const QString &akonadiId);
+private:
+    PimCommon::PlainTextEditorWidget *mPlainTextEditor;
 };
 }
 

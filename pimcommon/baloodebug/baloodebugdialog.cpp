@@ -38,4 +38,9 @@ BalooDebugDialog::~BalooDebugDialog()
 
 }
 
+void BalooDebugDialog::setAkonadiId(const QString &akonadiId)
+{
+    mBalooDebugWidget->setAkonadiId(akonadiId);
+}
+
 

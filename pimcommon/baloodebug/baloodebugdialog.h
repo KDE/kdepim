@@ -29,6 +29,9 @@ class PIMCOMMON_EXPORT BalooDebugDialog : public KDialog
 public:
     explicit BalooDebugDialog(QWidget *parent=0);
     ~BalooDebugDialog();
+
+    void setAkonadiId(const QString &akonadiId);
+
 private:
     BalooDebugWidget *mBalooDebugWidget;
 };

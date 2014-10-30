@@ -30,5 +30,8 @@ BalooDebugWidget::~BalooDebugWidget()
 
 }
 
+void BalooDebugWidget::setAkonadiId(const QString &akonadiId)
+{
 
+}
 
