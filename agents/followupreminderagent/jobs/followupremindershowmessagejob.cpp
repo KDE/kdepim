@@ -24,7 +24,7 @@
 #include <ktoolinvocation.h>
 
 FollowUpReminderShowMessageJob::FollowUpReminderShowMessageJob(Akonadi::Item::Id id, QObject *parent)
-    : KJob(parent),
+    : QObject(parent),
       mId(id)
 {
 }
@@ -36,22 +36,21 @@ FollowUpReminderShowMessageJob::~FollowUpReminderShowMessageJob()
 void FollowUpReminderShowMessageJob::start()
 {
     if (mId < 0) {
-        Q_EMIT emitResult();
+        qDebug()<<" value < 0";
+        deleteLater();
         return;
     }
     const QString kmailInterface = QLatin1String("org.kde.kmail");
-    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered(kmailInterface);
-    if (!reply.isValid() || !reply.value()) {
+    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(kmailInterface)) {
         // Program is not already running, so start it
         QString errmsg;
         if (KToolInvocation::startServiceByDesktopName(QLatin1String("kmail2"), QString(), &errmsg)) {
             qDebug() << " Can not start kmail" << errmsg;
-            setError(UserDefinedError);
-            Q_EMIT emitResult();
+            deleteLater();
             return;
         }
     }
     QDBusInterface kmail(kmailInterface, QLatin1String("/KMail"), QLatin1String("org.kde.kmail.kmail"));
     kmail.call(QLatin1String("showMail"), mId);
-    Q_EMIT emitResult();
+    deleteLater();
 }

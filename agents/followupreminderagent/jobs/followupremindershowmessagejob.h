@@ -18,10 +18,10 @@
 #ifndef FOLLOWUPREMINDERSHOWMESSAGEJOB_H
 #define FOLLOWUPREMINDERSHOWMESSAGEJOB_H
 
-#include <KJob>
 #include <AkonadiCore/Item>
+#include <QObject>
 
-class FollowUpReminderShowMessageJob : public KJob
+class FollowUpReminderShowMessageJob : public QObject
 {
     Q_OBJECT
 public:
