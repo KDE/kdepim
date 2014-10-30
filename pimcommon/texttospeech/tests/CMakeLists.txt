@@ -23,3 +23,10 @@ target_link_libraries(texttospeechconfiggui
   pimcommon
 )
 
+set(texttospeechconfigdialoggui_SRCS texttospeechconfigdialoggui.cpp)
+add_executable(texttospeechconfigdialoggui ${texttospeechconfigdialoggui_SRCS})
+target_link_libraries(texttospeechconfigdialoggui
+  Qt5::Test
+  pimcommon
+)
+
