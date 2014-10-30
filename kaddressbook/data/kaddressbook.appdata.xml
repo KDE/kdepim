@@ -28,6 +28,7 @@
   <name xml:lang="sv">Adressbok</name>
   <name xml:lang="uk">KAddressBook</name>
   <name xml:lang="x-test">xxKAddressBookxx</name>
+  <name xml:lang="zh-TW">KDE 通訊錄</name>
   <description>
     <p>KAddressBook stores all the personal details of your family, friends and other contacts.</p>
     <p xml:lang="ca">El KAddressBook emmagatzema totes les dades personals de la vostra família, amics i altres contactes.</p>
@@ -53,6 +54,7 @@
     <p xml:lang="sv">Adressboken lagrar all personlig information för din familj, dina vänner och andra kontakter.</p>
     <p xml:lang="uk">Програма KAddressBook здатна зберігати особисті дані для спілкування з вашою родиною, друзями та дані щодо контактів.</p>
     <p xml:lang="x-test">xxKAddressBook stores all the personal details of your family, friends and other contacts.xx</p>
+    <p xml:lang="zh-TW">KDE 通訊錄會儲存所有您的家庭、朋友與其他聯絡人的個人資料詳情。</p>
     <p>Features:</p>
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="cs">Vlastnosti:</p>
@@ -78,6 +80,7 @@
     <p xml:lang="sv">Funktioner:</p>
     <p xml:lang="uk">Можливості:</p>
     <p xml:lang="x-test">xxFeatures:xx</p>
+    <p xml:lang="zh-TW">功能：</p>
     <ul>
       <li>Imports and exports to nearly every address book standard</li>
       <li xml:lang="ca">Importa i exporta a gairebé tots els estàndards de la llibreta d'adreces</li>
@@ -103,6 +106,7 @@
       <li xml:lang="sv">Importerar och exporterar till nästan alla adressboksstandarder</li>
       <li xml:lang="uk">імпортування та експортування даних у майже довільних стандартах зберігання даних адресних книг;</li>
       <li xml:lang="x-test">xxImports and exports to nearly every address book standardxx</li>
+      <li xml:lang="zh-TW">可以匯入與匯出幾乎所有的通訊錄標準格式</li>
       <li>Reads .vcf format files, and can import and export vCards and csv format files</li>
       <li xml:lang="ca">Llegeix el format de fitxer .vcf, i pot importar i exportar els formats de fitxer vCard i CSV</li>
       <li xml:lang="de">Lesen von Dateien im Format „vcf“ und Import und Export von Dateien im Format vCard und CSV</li>
@@ -126,6 +130,7 @@
       <li xml:lang="sv">Läser filer med .vcf-format, och kan importera och exportera filer med vCard- och csv-format</li>
       <li xml:lang="uk">читання файлів у форматі .vcf, імпортування та експортування даних у форматах vCard та CSV;</li>
       <li xml:lang="x-test">xxReads .vcf format files, and can import and export vCards and csv format filesxx</li>
+      <li xml:lang="zh-TW">讀取 .vcf 格式檔案，並可匯入與匯出 vCards 與 csv 格式檔案。</li>
       <li>Can use multiple LDAPservers</li>
       <li xml:lang="ca">Pot usar múltiples servidors LDAP</li>
       <li xml:lang="de">Kann mehrere LDAP-Server verwenden</li>
@@ -149,6 +154,7 @@
       <li xml:lang="sv">Kan använda flera LDAP-servrar</li>
       <li xml:lang="uk">можливість використання декількох серверів LDAP;</li>
       <li xml:lang="x-test">xxCan use multiple LDAPserversxx</li>
+      <li xml:lang="zh-TW">可以使用多個 LDAP 伺服器</li>
       <li>Configurable filters and powerful search capabilities</li>
       <li xml:lang="ca">Filtres configurables i potents capacitats de cerca</li>
       <li xml:lang="de">Einstellbare Filter und leistungsfähige Suchfunktionen</li>
@@ -172,6 +178,7 @@
       <li xml:lang="sv">Inställningsbara filter och kraftfulla sökmöjligheter</li>
       <li xml:lang="uk">зручні фільтри та потужні можливості з пошуку;</li>
       <li xml:lang="x-test">xxConfigurable filters and powerful search capabilitiesxx</li>
+      <li xml:lang="zh-TW">可設定的過濾器與強大的搜尋機制</li>
       <li>Integrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizer</li>
       <li xml:lang="ca">S'integra amb els altres components del Kontact, p. ex., l'exportació dels recordatoris d'aniversari pel KOrganizer</li>
       <li xml:lang="de">Integration mit anderen Komponenten von Kontact wie zum Beispiel der Export von Erinnerungen an Geburtstage zu KOrganizer</li>
@@ -195,6 +202,7 @@
       <li xml:lang="sv">Integrerar med andra komponenter i Kontact, t.ex. med export av påminnelser om födelsedagar till Korganizer</li>
       <li xml:lang="uk">інтеграція з іншими компонентами Kontact, зокрема експортування нагадувань щодо днів народження до KOrganizer;</li>
       <li xml:lang="x-test">xxIntegrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizerxx</li>
+      <li xml:lang="zh-TW">可與其它的 Kontact 組件整合，如匯出生日提醒到 KOrganizer</li>
       <li>Capable of groupware integration</li>
       <li xml:lang="ca">Capaç d'integrar-se amb el treball en grup</li>
       <li xml:lang="de">Einbindung in Groupware ist möglich</li>
@@ -218,6 +226,7 @@
       <li xml:lang="sv">Klarar av integrering med grupprogram</li>
       <li xml:lang="uk">можливість інтегрування з програмним забезпеченням для групової роботи;</li>
       <li xml:lang="x-test">xxCapable of groupware integrationxx</li>
+      <li xml:lang="zh-TW">可做群組整合</li>
       <li>Powered by Akonadi</li>
       <li xml:lang="ca">Desenvolupat per a l'Akonadi</li>
       <li xml:lang="de">Unterstützt durch Akonadi</li>
@@ -240,6 +249,7 @@
       <li xml:lang="sv">Drivs av Akonadi</li>
       <li xml:lang="uk">усі додаткові можливості, роботу яких забезпечує Akonadi.</li>
       <li xml:lang="x-test">xxPowered by Akonadixx</li>
+      <li xml:lang="zh-TW">使用 Akonadi </li>
     </ul>
   </description>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kaddressbook</url>

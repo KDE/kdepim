@@ -293,6 +293,7 @@
       <li xml:lang="sv">Stöd för att lägga till bilder i inlägg från systemet. De laddas upp när ett inlägg skickas till bloggen (bara för programmeringsgränssnitt som stöder det, t.ex. MetaWeblog och MovableType)</li>
       <li xml:lang="uk">підтримка додавання до дописів зображень з вивантаженням допису на блог (лише для відповідних програмних інтерфейсів, зокрема MetaWeblog та MovableType);</li>
       <li xml:lang="x-test">xxSupport for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)xx</li>
+      <li xml:lang="zh-TW">支援從您的系統新增媒體檔到您的部落格文章中。它會在提交文章時順便上傳到部落格中（但 API 必須有支援，如 MetaWeblog 與 MovableType）</li>
       <li>Support for saving local entries before publishing.</li>
       <li xml:lang="ca">Implementa el desat de les entrades locals abans de publicar-les</li>
       <li xml:lang="de">Unterstützung für das Speichern lokaler Einträge vor der Veröffentlichung</li>
@@ -316,6 +317,7 @@
       <li xml:lang="sv">Stöd för att spara inlägg lokalt innan publicering.</li>
       <li xml:lang="uk">підтримка збереження локальних записів до оприлюднення;</li>
       <li xml:lang="x-test">xxSupport for saving local entries before publishing.xx</li>
+      <li xml:lang="zh-TW">支援在發布前先在本地端儲存</li>
       <li>Saving your writing copy to prevent data loss, at configurable intervals.</li>
       <li xml:lang="ca">Desa una còpia de l'escriptura per evitar la pèrdua de dades, a intervals configurables</li>
       <li xml:lang="de">Speicherung einer Kopie Ihrer Texte in einstellbaren Intervallen, um Datenverlust zu verhindern</li>
@@ -339,6 +341,7 @@
       <li xml:lang="sv">Sparar skriven text för att förhindra dataförlust, med inställningsbart intervall.</li>
       <li xml:lang="uk">збереження з визначеним інтервалом часу тимчасової копії для запобігання втраті даних;</li>
       <li xml:lang="x-test">xxSaving your writing copy to prevent data loss, at configurable intervals.xx</li>
+      <li xml:lang="zh-TW">依設定間隔儲存您的文章複本以免資料遺失。</li>
       <li>Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
       <li xml:lang="ca">Un corrector ortogràfic automàtic intern. (El corrector ortogràfic del KDE, usant així la majoria dels idiomes acceptats)</li>
       <li xml:lang="de">Interne automatische Rechtschreibprüfung, dabei wird die KDE-Rechtschreibprüfung verwendet und damit viele Sprachen unterstützt</li>
@@ -362,6 +365,7 @@
       <li xml:lang="sv">Intern automatisk stavningskontroll (KDE:s stavningskontroll används så de flesta språk stöds).</li>
       <li xml:lang="uk">вбудована система перевірки правопису (засіб перевірки правопису KDE, у якому передбачено підтримку багатьох поширених мов).</li>
       <li xml:lang="x-test">xxInternal auto spell checker. (KDE spell checker used so most of languages are supported)xx</li>
+      <li xml:lang="zh-TW">內部自動拼字檢查。（用 KDE 裡的拼字檢查功能，所以大部份語言都支援）</li>
     </ul>
   </description>
   <url type="homepage">http://blogilo.gnufolks.org/</url>
