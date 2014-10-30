@@ -76,10 +76,17 @@ void TextToSpeechConfigWidgetTest::shouldEmitConfigChangedWhenChangeConfigValue(
     pitch->setValue(5);
     QCOMPARE(spy.count(), 3);
 
-    //Need to fix it.
-    //QComboBox *language = qFindChild<QComboBox *>(&textToSpeechConfigWidget, QLatin1String("language"));
-    //language->setCurrentIndex(3);
-    //QCOMPARE(spy.count(), 4);
+    QComboBox *language = qFindChild<QComboBox *>(&textToSpeechConfigWidget, QLatin1String("language"));
+    language->blockSignals(true);
+    QStringList lst;
+    lst << QLatin1String("foo");
+    lst << QLatin1String("foo");
+    lst << QLatin1String("foo");
+    lst << QLatin1String("foo");
+    language->addItems(lst);
+    language->blockSignals(false);
+    language->setCurrentIndex(3);
+    QCOMPARE(spy.count(), 4);
 }
 
 QTEST_MAIN(TextToSpeechConfigWidgetTest)
