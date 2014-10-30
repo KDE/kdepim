@@ -168,6 +168,10 @@ set(libpimcommon_widgets_SRCS
   widgets/manageaccountwidget.cpp
 )
 
+set(libpimcommon_baloodebug_SRCS
+  baloodebug/baloodebugdialog.cpp
+  baloodebug/baloodebugwidget.cpp
+)
 
 
 set(libpimcommon_SRCS
@@ -185,7 +189,9 @@ set(libpimcommon_SRCS
   ${libpimcommon_acl_SRCS}
   ${libpimcommon_sieve_SRCS}
   ${libpimcommon_widgets_SRCS}
+  ${libpimcommon_baloodebug_SRCS}
 )
+
 
 kde4_add_ui_files(libpimcommon_SRCS
      autocorrection/ui/autocorrectionwidget.ui
@@ -247,6 +253,8 @@ add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/webdav/tests)
 add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
+add_subdirectory(baloodebug/autotests)
+
 
 if( LibKGAPI2_FOUND )
 add_subdirectory(storageservice/gdrive/tests/)
