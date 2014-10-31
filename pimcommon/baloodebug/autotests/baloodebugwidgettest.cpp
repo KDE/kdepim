@@ -19,6 +19,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "../baloodebugwidget.h"
 #include <qtest.h>
+#include "../baloodebugsearchpathcombobox.h"
 #include <KLineEdit>
 #include <QPushButton>
 
@@ -46,6 +47,8 @@ void BalooDebugWidgetTest::shouldHaveDefaultValue()
     QVERIFY(editorWidget->isReadOnly());
     QVERIFY(editorWidget);
     QVERIFY(editorWidget->toPlainText().isEmpty());
+    PimCommon::BalooDebugSearchPathComboBox *searchCombo = qFindChild<PimCommon::BalooDebugSearchPathComboBox *>(&widget, QLatin1String("searchpathcombo"));
+    QVERIFY(searchCombo);
 }
 
 void BalooDebugWidgetTest::shouldFillLineEditWhenWeWantToSearchItem()

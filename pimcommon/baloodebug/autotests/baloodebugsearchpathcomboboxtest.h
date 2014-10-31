@@ -15,34 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloodebugsearchjob.h"
+#ifndef BALOODEBUGSEARCHPATHCOMBOBOXTEST_H
+#define BALOODEBUGSEARCHPATHCOMBOBOXTEST_H
 
-using namespace PimCommon;
-BalooDebugSearchJob::BalooDebugSearchJob(QObject *parent)
-    : QObject(parent)
+#include <QObject>
+
+class BalooDebugSearchPathComboBoxTest : public QObject
 {
-
-}
-
-BalooDebugSearchJob::~BalooDebugSearchJob()
-{
-
-}
-
-void BalooDebugSearchJob::start()
-{
-    //TODO
-}
-
-void BalooDebugSearchJob::setAkonadiId(const QString &id)
-{
-    mAkonadiId = id;
-}
-
-void BalooDebugSearchJob::setArguments(const QStringList &args)
-{
-    mArguments = args;
-}
+    Q_OBJECT
+public:
+    explicit BalooDebugSearchPathComboBoxTest(QObject *parent = 0);
+    ~BalooDebugSearchPathComboBoxTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+};
 
 
+
+#endif // BALOODEBUGSEARCHPATHCOMBOBOXTEST_H
 

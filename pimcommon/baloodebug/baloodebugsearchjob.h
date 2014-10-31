@@ -20,6 +20,7 @@
 #define BALOODEBUGSEARCHJOB_H
 
 #include <QObject>
+#include <QStringList>
 namespace PimCommon {
 class BalooDebugSearchJob : public QObject
 {
@@ -31,10 +32,12 @@ public:
     void start();
     void setAkonadiId(const QString &id);
 
+    void setArguments(const QStringList &args);
 Q_SIGNALS:
     void result(const QString &text);
 
 private:
+    QStringList mArguments;
     QString mAkonadiId;
 };
 }

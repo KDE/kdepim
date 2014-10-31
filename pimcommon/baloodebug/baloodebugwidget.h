@@ -24,6 +24,7 @@ class KLineEdit;
 class QPushButton;
 namespace PimCommon {
 class PlainTextEditorWidget;
+class BalooDebugSearchPathComboBox;
 class PIMCOMMON_EXPORT BalooDebugWidget : public QWidget
 {
     Q_OBJECT
@@ -40,6 +41,7 @@ private Q_SLOTS:
 
 private:
     PimCommon::PlainTextEditorWidget *mPlainTextEditor;
+    PimCommon::BalooDebugSearchPathComboBox *mSearchPathComboBox;
     KLineEdit *mLineEdit;
     QPushButton *mSearchButton;
 };
