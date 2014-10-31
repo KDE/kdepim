@@ -75,7 +75,9 @@ void IncidenceCategories::save( const KCalCore::Incidence::Ptr &incidence )
 
 void IncidenceCategories::save( Akonadi::Item &item )
 {
-  item.setTags(mSelectedTags);
+  if (item.tags() != mSelectedTags) {
+    item.setTags(mSelectedTags);
+  }
 }
 
 QStringList IncidenceCategories::categories() const
