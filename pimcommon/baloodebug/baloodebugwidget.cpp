@@ -17,6 +17,7 @@
 
 #include "baloodebugwidget.h"
 #include "baloodebugsearchjob.h"
+#include "baloodebugsearchpathcombobox.h"
 #include <KLineEdit>
 #include <QPushButton>
 
@@ -41,6 +42,10 @@ BalooDebugWidget::BalooDebugWidget(QWidget *parent)
     mLineEdit->setObjectName(QLatin1String("lineedit"));
     connect(mLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchLineTextChanged(QString)));
     hbox->addWidget(mLineEdit);
+
+    mSearchPathComboBox = new PimCommon::BalooDebugSearchPathComboBox;
+    hbox->addWidget(mSearchPathComboBox);
+    mSearchPathComboBox->setObjectName(QLatin1String("searchpathcombo"));
 
     mSearchButton = new QPushButton(QLatin1String("Search"));
     mSearchButton->setObjectName(QLatin1String("searchbutton"));

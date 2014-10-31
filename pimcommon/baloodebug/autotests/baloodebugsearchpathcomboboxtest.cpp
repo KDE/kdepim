@@ -15,34 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloodebugsearchjob.h"
+#include "baloodebugsearchpathcomboboxtest.h"
+#include "../baloodebugsearchpathcombobox.h"
+#include <qtest_kde.h>
 
-using namespace PimCommon;
-BalooDebugSearchJob::BalooDebugSearchJob(QObject *parent)
+
+BalooDebugSearchPathComboBoxTest::BalooDebugSearchPathComboBoxTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-BalooDebugSearchJob::~BalooDebugSearchJob()
+BalooDebugSearchPathComboBoxTest::~BalooDebugSearchPathComboBoxTest()
 {
 
 }
 
-void BalooDebugSearchJob::start()
+void BalooDebugSearchPathComboBoxTest::shouldHaveDefaultValue()
 {
-    //TODO
+    PimCommon::BalooDebugSearchPathComboBox combox;
+    QVERIFY(combox.count()>0);
 }
 
-void BalooDebugSearchJob::setAkonadiId(const QString &id)
-{
-    mAkonadiId = id;
-}
-
-void BalooDebugSearchJob::setArguments(const QStringList &args)
-{
-    mArguments = args;
-}
-
-
-
+QTEST_KDEMAIN(BalooDebugSearchPathComboBoxTest, GUI)

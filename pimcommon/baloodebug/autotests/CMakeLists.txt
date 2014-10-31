@@ -18,3 +18,4 @@ endmacro ()
 
 add_pimcommon_baloodebug_unittest(baloodebugdialogtest.cpp)
 add_pimcommon_baloodebug_unittest(baloodebugwidgettest.cpp)
+add_pimcommon_baloodebug_unittest(baloodebugsearchpathcomboboxtest.cpp)

@@ -172,6 +172,7 @@ set(libpimcommon_baloodebug_SRCS
   baloodebug/baloodebugdialog.cpp
   baloodebug/baloodebugwidget.cpp
   baloodebug/baloodebugsearchjob.cpp
+  baloodebug/baloodebugsearchpathcombobox.cpp
 )
 
 
