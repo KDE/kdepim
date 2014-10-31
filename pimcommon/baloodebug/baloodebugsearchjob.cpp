@@ -45,4 +45,9 @@ void BalooDebugSearchJob::setArguments(const QStringList &args)
 }
 
 
+void BalooDebugSearchJob::searchPath(const QString &path)
+{
+    mPath = path;
+}
+
 
