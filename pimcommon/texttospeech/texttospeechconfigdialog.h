@@ -33,6 +33,8 @@ private Q_SLOTS:
     void slotAccepted();
 
 private:
+    void readConfig();
+    void writeConfig();
     PimCommon::TextToSpeechConfigWidget *mTextToSpeechConfigWidget;
 };
 }

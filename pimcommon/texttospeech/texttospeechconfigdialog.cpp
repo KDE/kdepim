@@ -22,6 +22,8 @@
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <kconfiggroup.h>
+#include <KSharedConfig>
 
 using namespace PimCommon;
 
@@ -41,12 +43,29 @@ TextToSpeechConfigDialog::TextToSpeechConfigDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &TextToSpeechConfigDialog::reject);
     mainLayout->addWidget(buttonBox);
     mTextToSpeechConfigWidget->readConfig();
+    readConfig();
 }
 
 TextToSpeechConfigDialog::~TextToSpeechConfigDialog()
 {
-
+    writeConfig();
 }
+
+void TextToSpeechConfigDialog::readConfig()
+{
+    KConfigGroup group(KSharedConfig::openConfig(), "TextToSpeechConfigDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(600, 400));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
+    }
+}
+
+void TextToSpeechConfigDialog::writeConfig()
+{
+    KConfigGroup group(KSharedConfig::openConfig(), "TextToSpeechConfigDialog");
+    group.writeEntry("Size", size());
+}
+
 
 void TextToSpeechConfigDialog::slotAccepted()
 {
