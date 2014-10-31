@@ -1,18 +1,17 @@
-include_directories(${CMAKE_SOURCE_DIR}/pimcommon/
-)
-
 
 macro(add_pimcommon_baloodebug_unittest _source)
   set(_test ${_source} )
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_unit_test(${_name} TESTNAME pimcommon-baloodebug-${_name} ${_test} )
+  add_executable( ${_name} ${_test} )
+  add_test( ${_name} ${_name} )
+  ecm_mark_as_test(pimcommon-baloodebug-${_name})
   target_link_libraries( ${_name}
     pimcommon
-    ${QT_QTTEST_LIBRARY}
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
+    Qt5::Test
+    Qt5::Core
+    Qt5::Gui
+    KF5::KDELibs4Support
+    
   )
 endmacro ()
 

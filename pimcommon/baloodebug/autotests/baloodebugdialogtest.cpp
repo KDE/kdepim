@@ -22,7 +22,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include <KLineEdit>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 BalooDebugDialogTest::BalooDebugDialogTest(QObject *parent)
     : QObject(parent)
@@ -59,6 +59,6 @@ void BalooDebugDialogTest::shouldFillLineEditWhenWeWantToSearchItem()
     QCOMPARE(lineEdit->text(), akonadiItem);
 }
 
-QTEST_KDEMAIN(BalooDebugDialogTest, GUI)
+QTEST_MAIN(BalooDebugDialogTest)
 
 

@@ -18,7 +18,7 @@
 #include "baloodebugwidgettest.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "../baloodebugwidget.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <KLineEdit>
 #include <QPushButton>
 
@@ -76,4 +76,4 @@ void BalooDebugWidgetTest::shouldEnabledPushButtonWhenLineEditIsNotEmpty()
 
 }
 
-QTEST_KDEMAIN(BalooDebugWidgetTest, GUI)
+QTEST_MAIN(BalooDebugWidgetTest)
