@@ -28,6 +28,8 @@ public:
     explicit BalooDebugSearchPathComboBox(QWidget *parent=0);
     ~BalooDebugSearchPathComboBox();
 
+    QString searchPath() const;
+
 private:
     void initialize();
 };

@@ -30,15 +30,19 @@ public:
     ~BalooDebugSearchJob();
 
     void start();
-    void setAkonadiId(const QString &id);
 
+    void setAkonadiId(const QString &id);
     void setArguments(const QStringList &args);
+    void searchPath(const QString &path);
+
 Q_SIGNALS:
+    void error(const QString &errorString);
     void result(const QString &text);
 
 private:
     QStringList mArguments;
     QString mAkonadiId;
+    QString mPath;
 };
 }
 

@@ -88,11 +88,18 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
     }
 
     //If we move to trash directly => exclude it.
-    if (Akonadi::SpecialMailCollections::self()->specialCollectionType(col) == Akonadi::SpecialMailCollections::Trash) {
+    Akonadi::SpecialMailCollections::Type type = Akonadi::SpecialMailCollections::self()->specialCollectionType(col);
+    if (type == Akonadi::SpecialMailCollections::Trash)
         return;
     }
     //Exclude outbox too
-    if (Akonadi::SpecialMailCollections::self()->specialCollectionType(col) == Akonadi::SpecialMailCollections::Outbox) {
+    if (type == Akonadi::SpecialMailCollections::Outbox)
+        return;
+    if (type == Akonadi::SpecialMailCollections::Drafts)
+        return;
+    if (type == Akonadi::SpecialMailCollections::Templates)
+        return;
+    if (type == Akonadi::SpecialMailCollections::SentMail)
         return;
     }
 
