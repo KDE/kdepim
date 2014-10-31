@@ -29,16 +29,14 @@
  *  you do not wish to do so, delete this exception statement from
  *  your version.
  */
-#ifndef MAILSOURCEVIEWER_H
-#define MAILSOURCEVIEWER_H
+#ifndef MAILSOURCEVIEWTEXTBROWSERWIDGET_H
+#define MAILSOURCEVIEWTEXTBROWSERWIDGET_H
 
 #include <QSyntaxHighlighter>
 #include <QPlainTextEdit>
 #include <QDialog>
 #include <KConfigGroup>
-class QTabWidget;
 
-class KTabWidget;
 namespace PimCommon
 {
 class SlideContainer;
@@ -123,25 +121,6 @@ const QRegExp htmlTagRegExp(QLatin1String("<"
 
 const QString reformat(const QString &src);
 }
-
-class MailSourceViewer : public QDialog
-{
-    Q_OBJECT
-public:
-    explicit MailSourceViewer(QWidget *parent = 0);
-    ~MailSourceViewer();
-
-    void setRawSource(const QString &source);
-    void setDisplayedSource(const QString &source);
-    void setFixedFont();
-private:
-    MailSourceViewTextBrowserWidget *mRawBrowser;
-    FindBarSourceView *mFindBar;
-#ifndef NDEBUG
-    QTabWidget *mTabWidget;
-    MailSourceViewTextBrowserWidget *mHtmlBrowser;
-#endif
-};
-
 }
-#endif // MAILSOURCEVIEWER_H
+#endif // MAILSOURCEVIEWTEXTBROWSERWIDGET_H
+

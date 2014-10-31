@@ -76,7 +76,6 @@ set(libmessageviewer_viewer_SRCS
   viewer/csshelperbase.cpp
   viewer/editorwatcher.cpp
   viewer/kleojobexecutor.cpp
-  viewer/mailsourceviewer.cpp
   viewer/htmlquotecolorer.cpp
   viewer/mimetreemodel.cpp
   viewer/nodehelper.cpp
@@ -106,6 +105,8 @@ set(libmessageviewer_widgets_SRCS
   widgets/eventedit.cpp
   widgets/openattachmentfolderwidget.cpp
   widgets/eventdatetimewidget.cpp
+  widgets/mailsourceviewer.cpp
+  widgets/mailsourceviewtextbrowserwidget.cpp
 )
 
 set(libmessageviewer_header_SRCS

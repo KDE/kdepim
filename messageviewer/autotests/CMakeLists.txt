@@ -42,6 +42,7 @@ kde4_handle_crypto_rpath_for_executable( unencryptedmessagetest )
 add_messageviewer_unittest( todoedittest.cpp )
 add_messageviewer_unittest( eventedittest.cpp )
 add_messageviewer_unittest( eventdatetimewidgettest.cpp )
+add_messageviewer_unittest( mailsourceviewtextbrowserwidgettest.cpp )
 ########### viewertest_gui ###############
 
 

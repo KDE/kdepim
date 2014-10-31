@@ -131,7 +131,7 @@
 #include "header/headerstrategy.h"
 #include "widgets/htmlstatusbar.h"
 #include "htmlwriter/webkitparthtmlwriter.h"
-#include "viewer/mailsourceviewer.h"
+#include "widgets/mailsourceviewer.h"
 #include "viewer/mimetreemodel.h"
 #include "viewer/nodehelper.h"
 #include "viewer/objecttreeparser.h"
