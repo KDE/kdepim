@@ -203,6 +203,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mZoomResetAction( 0 ),
       mToggleMimePartTreeAction( 0 ),
       mSpeakTextAction(0),
+      mCreateNoteAction(0),
       mCanStartDrag( false ),
       mHtmlWriter( 0 ),
       mSavedRelativePosition( 0 ),
@@ -1348,15 +1349,17 @@ void ViewerPrivate::resetStateForNewMessage()
 void ViewerPrivate::setMessageInternal( const KMime::Message::Ptr message,
                                         Viewer::UpdateMode updateMode )
 {
-    QString createNoteText;
-    if ( mMessageItem.relations().isEmpty() ) {
-        createNoteText = i18nc( "create a new note out of this message", "Create Note" );
-    } else {
-        createNoteText = i18nc( "edit a note on this message", "Edit Note" );
-    }
+    if ( mCreateNoteAction ) {
+        QString createNoteText;
+        if ( mMessageItem.relations().isEmpty() ) {
+            createNoteText = i18nc( "create a new note out of this message", "Create Note" );
+        } else {
+            createNoteText = i18nc( "edit a note on this message", "Edit Note" );
+        }
 
-    mCreateNoteAction->setText( createNoteText );
-    mCreateNoteAction->setIconText( createNoteText );
+        mCreateNoteAction->setText( createNoteText );
+        mCreateNoteAction->setIconText( createNoteText );
+    }
 
     mMessage = message;
     if ( message ) {
