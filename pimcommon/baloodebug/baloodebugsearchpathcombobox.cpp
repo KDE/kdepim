@@ -31,6 +31,16 @@ BalooDebugSearchPathComboBox::~BalooDebugSearchPathComboBox()
 
 }
 
+QString BalooDebugSearchPathComboBox::searchPath() const
+{
+    const int currentPathIndex = currentIndex();
+    if (currentPathIndex > -1) {
+        return itemData(currentPathIndex).toString();
+    } else {
+        return QString();
+    }
+}
+
 void BalooDebugSearchPathComboBox::initialize()
 {
     const QString xdgpath = KGlobal::dirs()->localxdgdatadir();

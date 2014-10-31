@@ -37,4 +37,10 @@ void BalooDebugSearchPathComboBoxTest::shouldHaveDefaultValue()
     QVERIFY(combox.count()>0);
 }
 
+void BalooDebugSearchPathComboBoxTest::shouldReturnPath()
+{
+    PimCommon::BalooDebugSearchPathComboBox combox;
+    QVERIFY(!combox.searchPath().isEmpty());
+}
+
 QTEST_KDEMAIN(BalooDebugSearchPathComboBoxTest, GUI)
