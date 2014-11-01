@@ -91,7 +91,7 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
     Akonadi::SpecialMailCollections::Type type = Akonadi::SpecialMailCollections::self()->specialCollectionType(col);
     if (type == Akonadi::SpecialMailCollections::Trash)
         return;
-    }
+
     //Exclude outbox too
     if (type == Akonadi::SpecialMailCollections::Outbox)
         return;
@@ -101,7 +101,6 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
         return;
     if (type == Akonadi::SpecialMailCollections::SentMail)
         return;
-    }
 
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
     connect(job, &FollowUpReminderJob::finished, this, &FollowUpReminderManager::slotCheckFollowUpFinished);
