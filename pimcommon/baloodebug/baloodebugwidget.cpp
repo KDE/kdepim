@@ -79,9 +79,15 @@ void BalooDebugWidget::slotSearch()
     PimCommon::BalooDebugSearchJob *job = new PimCommon::BalooDebugSearchJob(this);
     job->setAkonadiId(mLineEdit->text());
     connect(job, SIGNAL(result(QString)), this, SLOT(slotResult(QString)));
+    connect(job, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
 }
 
 void BalooDebugWidget::slotResult(const QString &result)
 {
     mPlainTextEditor->setPlainText(result);
+}
+
+void BalooDebugWidget::slotError(const QString &errorStr)
+{
+    mPlainTextEditor->setPlainText(QLatin1String("Error found:\n") + errorStr);
 }
