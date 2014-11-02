@@ -38,11 +38,14 @@ void MailSourceViewTextBrowserWidgetTest::shouldHaveDefaultValue()
 
     MessageViewer::MailSourceViewTextBrowser *textbrowser = qFindChild<MessageViewer::MailSourceViewTextBrowser *>(&widget, QLatin1String("textbrowser"));
     QVERIFY(textbrowser);
+    QVERIFY(!textbrowser->isHidden());
     MessageViewer::FindBarSourceView *findbar = qFindChild<MessageViewer::FindBarSourceView *>(&widget, QLatin1String("findbar"));
     QVERIFY(findbar);
+    QVERIFY(findbar->isHidden());
 
     PimCommon::TextToSpeechWidget *texttospeechwidget = qFindChild<PimCommon::TextToSpeechWidget *>(&widget, QLatin1String("texttospeech"));
     QVERIFY(texttospeechwidget);
+    QVERIFY(texttospeechwidget->isHidden());
 
 }
 
