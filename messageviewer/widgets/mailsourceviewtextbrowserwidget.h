@@ -40,6 +40,8 @@
 namespace PimCommon
 {
 class SlideContainer;
+class TextToSpeechWidget;
+class TextToSpeechInterface;
 }
 namespace MessageViewer
 {
@@ -80,13 +82,15 @@ private:
     MailSourceViewTextBrowser *mTextBrowser;
     FindBarSourceView *mFindBar;
     PimCommon::SlideContainer *mSliderContainer;
+    PimCommon::TextToSpeechWidget *mTextToSpeechWidget;
+
 };
 
 class MailSourceViewTextBrowser: public QPlainTextEdit
 {
     Q_OBJECT
 public:
-    explicit MailSourceViewTextBrowser(QWidget *parent = 0);
+    explicit MailSourceViewTextBrowser(PimCommon::TextToSpeechInterface *textToSpeechInterface, QWidget *parent = 0);
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
 private slots:
@@ -94,6 +98,8 @@ private slots:
     void slotSaveAs();
 signals:
     void findText();
+private:
+    PimCommon::TextToSpeechInterface *mTextToSpeechInterface;
 };
 
 namespace HTMLPrettyFormatter

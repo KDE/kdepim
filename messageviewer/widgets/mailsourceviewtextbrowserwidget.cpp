@@ -36,6 +36,9 @@
 #include <kpimtextedit/htmlhighlighter.h>
 #include "pimcommon/widgets/slidecontainer.h"
 #include "pimcommon/util/pimutil.h"
+#include "pimcommon/texttospeech/texttospeechwidget.h"
+#include "pimcommon/texttospeech/texttospeechinterface.h"
+
 #include <kiconloader.h>
 #include <KLocalizedString>
 #include <KStandardAction>
@@ -67,7 +70,13 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget(QWidget *parent
     QVBoxLayout *lay = new QVBoxLayout;
     setLayout(lay);
     lay->setMargin(0);
-    mTextBrowser = new MailSourceViewTextBrowser();
+    mTextToSpeechWidget = new PimCommon::TextToSpeechWidget;
+    mTextToSpeechWidget->setObjectName(QLatin1String("texttospeech"));
+    lay->addWidget(mTextToSpeechWidget);
+
+    PimCommon::TextToSpeechInterface *textToSpeechInterface = new PimCommon::TextToSpeechInterface(mTextToSpeechWidget, this);
+
+    mTextBrowser = new MailSourceViewTextBrowser(textToSpeechInterface);
     mTextBrowser->setObjectName(QLatin1String("textbrowser"));
     mTextBrowser->setLineWrapMode(QPlainTextEdit::NoWrap);
     mTextBrowser->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
@@ -115,8 +124,9 @@ MessageViewer::MailSourceViewTextBrowser *MailSourceViewTextBrowserWidget::textB
     return mTextBrowser;
 }
 
-MailSourceViewTextBrowser::MailSourceViewTextBrowser(QWidget *parent)
-    : QPlainTextEdit(parent)
+MailSourceViewTextBrowser::MailSourceViewTextBrowser(PimCommon::TextToSpeechInterface *textToSpeechInterface, QWidget *parent)
+    : QPlainTextEdit(parent),
+      mTextToSpeechInterface(textToSpeechInterface)
 {
 }
 
@@ -154,7 +164,7 @@ void MailSourceViewTextBrowser::slotSpeakText()
     } else {
         text = toPlainText();
     }
-    //MessageViewer::Util::speakSelectedText(text, this);
+    mTextToSpeechInterface->say(text);
 }
 
 void MailSourceHighlighter::highlightBlock(const QString &text)
