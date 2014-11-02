@@ -17,6 +17,7 @@
 
 #include "mailsourceviewtextbrowserwidgettest.h"
 #include "../widgets/mailsourceviewtextbrowserwidget.h"
+#include "../findbar/findbarsourceview.h"
 #include <qtest.h>
 
 MailSourceViewTextBrowserWidgetTest::MailSourceViewTextBrowserWidgetTest(QObject *parent)
@@ -34,6 +35,10 @@ void MailSourceViewTextBrowserWidgetTest::shouldHaveDefaultValue()
 {
     MessageViewer::MailSourceViewTextBrowserWidget widget;
 
+    MessageViewer::MailSourceViewTextBrowser *textbrowser = qFindChild<MessageViewer::MailSourceViewTextBrowser *>(&widget, QLatin1String("textbrowser"));
+    QVERIFY(textbrowser);
+    MessageViewer::FindBarSourceView *findbar = qFindChild<MessageViewer::FindBarSourceView *>(&widget, QLatin1String("findbar"));
+    QVERIFY(findbar);
 }
 
 QTEST_MAIN(MailSourceViewTextBrowserWidgetTest)

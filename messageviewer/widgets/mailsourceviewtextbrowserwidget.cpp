@@ -68,6 +68,7 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget(QWidget *parent
     setLayout(lay);
     lay->setMargin(0);
     mTextBrowser = new MailSourceViewTextBrowser();
+    mTextBrowser->setObjectName(QLatin1String("textbrowser"));
     mTextBrowser->setLineWrapMode(QPlainTextEdit::NoWrap);
     mTextBrowser->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     connect(mTextBrowser, &MailSourceViewTextBrowser::findText, this, &MailSourceViewTextBrowserWidget::slotFind);
@@ -75,6 +76,7 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget(QWidget *parent
     mSliderContainer = new PimCommon::SlideContainer(this);
 
     mFindBar = new FindBarSourceView(mTextBrowser, this);
+    mFindBar->setObjectName(QLatin1String("findbar"));
     connect(mFindBar, &FindBarSourceView::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
     mSliderContainer->setContent(mFindBar);
 
