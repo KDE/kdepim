@@ -21,13 +21,14 @@
 #include <KDialog>
 #include "pimcommon_export.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class BalooDebugWidget;
 class PIMCOMMON_EXPORT BalooDebugDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit BalooDebugDialog(QWidget *parent=0);
+    explicit BalooDebugDialog(QWidget *parent = 0);
     ~BalooDebugDialog();
 
     void setAkonadiId(const QString &akonadiId);
@@ -38,7 +39,6 @@ private:
     BalooDebugWidget *mBalooDebugWidget;
 };
 }
-
 
 #endif // BALOODEBUGDIALOG_H
 

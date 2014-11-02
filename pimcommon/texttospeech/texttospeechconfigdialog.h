@@ -20,13 +20,14 @@
 
 #include <QDialog>
 #include "pimcommon_export.h"
-namespace PimCommon {
+namespace PimCommon
+{
 class TextToSpeechConfigWidget;
 class PIMCOMMON_EXPORT TextToSpeechConfigDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechConfigDialog(QWidget *parent=0);
+    explicit TextToSpeechConfigDialog(QWidget *parent = 0);
     ~TextToSpeechConfigDialog();
 
 private Q_SLOTS:
@@ -38,7 +39,6 @@ private:
     PimCommon::TextToSpeechConfigWidget *mTextToSpeechConfigWidget;
 };
 }
-
 
 #endif // TEXTTOSPEECHCONFIGDIALOG_H
 

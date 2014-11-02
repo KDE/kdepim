@@ -197,5 +197,4 @@ QLocale TextToSpeech::locale() const
 #endif
 }
 
-
 }

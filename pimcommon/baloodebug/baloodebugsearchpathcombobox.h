@@ -20,12 +20,13 @@
 
 #include <QComboBox>
 #include "pimcommon_export.h"
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT BalooDebugSearchPathComboBox : public QComboBox
 {
     Q_OBJECT
 public:
-    explicit BalooDebugSearchPathComboBox(QWidget *parent=0);
+    explicit BalooDebugSearchPathComboBox(QWidget *parent = 0);
     ~BalooDebugSearchPathComboBox();
 
     QString searchPath() const;
@@ -34,7 +35,6 @@ private:
     void initialize();
 };
 }
-
 
 #endif // BALOODEBUGSEARCHPATHCOMBOBOX_H
 

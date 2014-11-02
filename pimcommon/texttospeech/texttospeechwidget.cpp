@@ -65,7 +65,6 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     connect(mConfigureButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotConfigure);
     hbox->addWidget(mConfigureButton);
 
-
     updateButtonState();
     mTextToSpeechInterface = new TextToSpeechInterface(this, this);
     hide();

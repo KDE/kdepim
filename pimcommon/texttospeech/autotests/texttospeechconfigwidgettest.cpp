@@ -39,7 +39,6 @@ void TextToSpeechConfigWidgetTest::addInterface(PimCommon::TextToSpeechConfigWid
     widget->setTextToSpeechConfigInterface(interface);
 }
 
-
 void TextToSpeechConfigWidgetTest::shouldHaveDefaultValue()
 {
     PimCommon::TextToSpeechConfigWidget textToSpeechConfigWidget;

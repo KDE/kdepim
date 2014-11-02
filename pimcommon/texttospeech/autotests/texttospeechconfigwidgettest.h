@@ -19,7 +19,8 @@
 #define TEXTTOSPEECHCONFIGWIDGETTEST_H
 
 #include <QObject>
-namespace PimCommon {
+namespace PimCommon
+{
 class TextToSpeechConfigWidget;
 }
 class TextToSpeechConfigWidgetTest : public QObject

@@ -15,18 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef BALOODEBUGSEARCHJOB_H
 #define BALOODEBUGSEARCHJOB_H
 
 #include <QObject>
 #include <QStringList>
-namespace PimCommon {
+namespace PimCommon
+{
 class BalooDebugSearchJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit BalooDebugSearchJob(QObject *parent=0);
+    explicit BalooDebugSearchJob(QObject *parent = 0);
     ~BalooDebugSearchJob();
 
     void start();
@@ -45,7 +45,6 @@ private:
     QString mPath;
 };
 }
-
 
 #endif // BALOODEBUGSEARCHJOB_H
 

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "baloodebugdialogtest.h"
 #include "../baloodebugdialog.h"
 #include "../baloodebugwidget.h"
@@ -60,5 +59,4 @@ void BalooDebugDialogTest::shouldFillLineEditWhenWeWantToSearchItem()
 }
 
 QTEST_MAIN(BalooDebugDialogTest)
-
 

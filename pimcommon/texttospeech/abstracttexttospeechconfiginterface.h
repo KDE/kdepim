@@ -36,6 +36,5 @@ public:
 };
 }
 
-
 #endif // ABSTRACTTEXTTOSPEECHCONFIGINTERFACE_H
 

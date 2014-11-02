@@ -45,4 +45,3 @@ void AbstractTextToSpeechConfigInterface::setLocale(const QLocale &locale)
     Q_UNUSED(locale);
 }
 
-

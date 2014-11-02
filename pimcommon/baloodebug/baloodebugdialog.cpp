@@ -42,23 +42,21 @@ BalooDebugDialog::~BalooDebugDialog()
 
 void BalooDebugDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "BalooDebugDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KGlobal::config(), "BalooDebugDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void BalooDebugDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "BalooDebugDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KGlobal::config(), "BalooDebugDialog");
+    group.writeEntry("Size", size());
 }
-
 
 void BalooDebugDialog::setAkonadiId(const QString &akonadiId)
 {
     mBalooDebugWidget->setAkonadiId(akonadiId);
 }
-
 

@@ -22,7 +22,8 @@
 #include "pimcommon_export.h"
 class KLineEdit;
 class QPushButton;
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditorWidget;
 class BalooDebugSearchPathComboBox;
 class PIMCOMMON_EXPORT BalooDebugWidget : public QWidget
@@ -46,7 +47,6 @@ private:
     QPushButton *mSearchButton;
 };
 }
-
 
 #endif // BALOODEBUGWIDGET_H
 

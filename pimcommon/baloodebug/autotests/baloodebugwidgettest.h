@@ -20,7 +20,6 @@
 
 #include <QObject>
 
-
 class BalooDebugWidgetTest : public QObject
 {
     Q_OBJECT
@@ -32,8 +31,6 @@ private Q_SLOTS:
     void shouldFillLineEditWhenWeWantToSearchItem();
     void shouldEnabledPushButtonWhenLineEditIsNotEmpty();
 };
-
-
 
 #endif // BALOODEBUGWIDGETTEST_H
 

@@ -19,7 +19,6 @@
 #include "../baloodebugsearchpathcombobox.h"
 #include <qtest_kde.h>
 
-
 BalooDebugSearchPathComboBoxTest::BalooDebugSearchPathComboBoxTest(QObject *parent)
     : QObject(parent)
 {
@@ -34,7 +33,7 @@ BalooDebugSearchPathComboBoxTest::~BalooDebugSearchPathComboBoxTest()
 void BalooDebugSearchPathComboBoxTest::shouldHaveDefaultValue()
 {
     PimCommon::BalooDebugSearchPathComboBox combox;
-    QVERIFY(combox.count()>0);
+    QVERIFY(combox.count() > 0);
 }
 
 void BalooDebugSearchPathComboBoxTest::shouldReturnPath()

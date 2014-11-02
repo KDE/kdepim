@@ -31,7 +31,5 @@ private Q_SLOTS:
     void shouldReturnPath();
 };
 
-
-
 #endif // BALOODEBUGSEARCHPATHCOMBOBOXTEST_H
 

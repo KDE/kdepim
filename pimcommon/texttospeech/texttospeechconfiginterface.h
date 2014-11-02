@@ -19,7 +19,8 @@
 #define TEXTTOSPEECHCONFIGINTERFACE_H
 #include "abstracttexttospeechconfiginterface.h"
 #include "pimcommon_export.h"
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT TextToSpeechConfigInterface : public AbstractTextToSpeechConfigInterface
 {
     Q_OBJECT
@@ -33,7 +34,6 @@ public:
     void setLocale(const QLocale &locale) Q_DECL_OVERRIDE;
 };
 }
-
 
 #endif // TEXTTOSPEECHCONFIGINTERFACE_H
 

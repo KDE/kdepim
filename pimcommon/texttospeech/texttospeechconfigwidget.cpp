@@ -117,11 +117,12 @@ void TextToSpeechConfigWidget::slotUpdateAvailableLocales()
     mLanguage->clear();
     const QVector<QLocale> locales = mAbstractTextToSpeechConfigInterface->availableLocales();
     QLocale current = mAbstractTextToSpeechConfigInterface->locale();
-    foreach (const QLocale &locale, locales) {
+    foreach(const QLocale & locale, locales) {
         QVariant localeVariant(locale);
         mLanguage->addItem(QLocale::languageToString(locale.language()), localeVariant);
-        if (locale.name() == current.name())
+        if (locale.name() == current.name()) {
             mLanguage->setCurrentIndex(mLanguage->count() - 1);
+        }
     }
     updateLocale();
 }
