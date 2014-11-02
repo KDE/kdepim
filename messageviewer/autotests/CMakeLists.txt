@@ -16,7 +16,7 @@ add_definitions(-DKMAIL_UNITTESTS=YES)
 macro(add_messageviewer_unittest _source)
   set(_test ${_source} util.cpp)
   get_filename_component(_name ${_source} NAME_WE)
-  add_executable( ${_name} ${_test} ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp  testcsshelper.cpp)
+  add_executable( ${_name} ${_test} ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp  testcsshelper.cpp )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(messageviewer-${_name})
   target_link_libraries( ${_name}
@@ -42,7 +42,30 @@ kde4_handle_crypto_rpath_for_executable( unencryptedmessagetest )
 add_messageviewer_unittest( todoedittest.cpp )
 add_messageviewer_unittest( eventedittest.cpp )
 add_messageviewer_unittest( eventdatetimewidgettest.cpp )
-add_messageviewer_unittest( mailsourceviewtextbrowserwidgettest.cpp )
+
+# convenience macro to add qtest unit tests
+macro(add_messageviewer_mailsourceviewbrowserwidget_unittest _source)
+  set(_test ${_source} util.cpp)
+  get_filename_component(_name ${_source} NAME_WE)
+  add_executable( ${_name} ${_test} ../widgets/mailsourceviewtextbrowserwidget.cpp ../findbar/findbarbase.cpp ../findbar/findbarsourceview.cpp )
+  add_test( ${_name} ${_name} )
+  ecm_mark_as_test(messageviewer-${_name})
+  target_link_libraries( ${_name}
+    Qt5::Test
+    KF5::KIOCore
+    Qt5::Gui
+    Qt5::Widgets
+    KF5::Mime
+    KF5::AkonadiCore
+    KF5::CalendarCore
+    KF5::PimTextEdit
+    pimcommon
+  )
+endmacro ()
+
+
+
+add_messageviewer_mailsourceviewbrowserwidget_unittest( mailsourceviewtextbrowserwidgettest.cpp )
 ########### viewertest_gui ###############
 
 

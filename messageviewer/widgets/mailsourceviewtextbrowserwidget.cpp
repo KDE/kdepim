@@ -152,7 +152,7 @@ void MailSourceViewTextBrowser::slotSpeakText()
     } else {
         text = toPlainText();
     }
-    MessageViewer::Util::speakSelectedText(text, this);
+    //MessageViewer::Util::speakSelectedText(text, this);
 }
 
 void MailSourceHighlighter::highlightBlock(const QString &text)

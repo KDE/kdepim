@@ -16,6 +16,7 @@
 */
 
 #include "mailsourceviewtextbrowserwidgettest.h"
+#include "../widgets/mailsourceviewtextbrowserwidget.h"
 #include <qtest.h>
 
 MailSourceViewTextBrowserWidgetTest::MailSourceViewTextBrowserWidgetTest(QObject *parent)
@@ -26,6 +27,12 @@ MailSourceViewTextBrowserWidgetTest::MailSourceViewTextBrowserWidgetTest(QObject
 
 MailSourceViewTextBrowserWidgetTest::~MailSourceViewTextBrowserWidgetTest()
 {
+
+}
+
+void MailSourceViewTextBrowserWidgetTest::shouldHaveDefaultValue()
+{
+    MessageViewer::MailSourceViewTextBrowserWidget widget;
 
 }
 

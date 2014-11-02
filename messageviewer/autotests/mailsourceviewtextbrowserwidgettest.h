@@ -26,6 +26,8 @@ class MailSourceViewTextBrowserWidgetTest : public QObject
 public:
     explicit MailSourceViewTextBrowserWidgetTest(QObject *parent = 0);
     ~MailSourceViewTextBrowserWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // MAILSOURCEVIEWTEXTBROWSERWIDGETTEST_H
