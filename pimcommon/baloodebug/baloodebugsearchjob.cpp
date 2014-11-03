@@ -39,9 +39,28 @@ void BalooDebugSearchJob::start()
         deleteLater();
         return;
     } else {
-        //TODO
+        mProcess = new QProcess(this);
+        connect(mProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(slotReadStandard()));
+        connect(mProcess, SIGNAL(readyReadStandardError()), this, SLOT(slotReadError()));
+        QStringList arguments;
+        arguments << mAkonadiId;
+        arguments << mPath;
+        //TODO add more arguments
+        mProcess->start(delvePath, arguments);
     }
-    //TODO
+}
+
+void BalooDebugSearchJob::slotReadStandard()
+{
+    const QByteArray stdStrg = mProcess->readAllStandardOutput();
+    Q_EMIT result(QString::fromUtf8(stdStrg));
+    deleteLater();
+}
+
+void BalooDebugSearchJob::slotReadError()
+{
+    const QByteArray errorStrg = mProcess->readAllStandardOutput();
+    Q_EMIT error(QString::fromUtf8(errorStrg));
     deleteLater();
 }
 

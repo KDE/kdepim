@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QStringList>
+class QProcess;
 namespace PimCommon
 {
 class BalooDebugSearchJob : public QObject
@@ -39,10 +40,15 @@ Q_SIGNALS:
     void error(const QString &errorString);
     void result(const QString &text);
 
+private slots:
+    void slotReadStandard();
+    void slotReadError();
+
 private:
     QStringList mArguments;
     QString mAkonadiId;
     QString mPath;
+    QProcess *mProcess;
 };
 }
 

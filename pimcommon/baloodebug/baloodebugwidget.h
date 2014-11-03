@@ -39,6 +39,7 @@ private Q_SLOTS:
     void slotSearchLineTextChanged(const QString &text);
     void slotSearch();
     void slotResult(const QString &result);
+    void slotError(const QString &errorStr);
 
 private:
     PimCommon::PlainTextEditorWidget *mPlainTextEditor;
