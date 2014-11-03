@@ -25,15 +25,24 @@ class PIMCOMMON_EXPORT BalooDebugSearchPathComboBox : public QComboBox
 {
     Q_OBJECT
 public:
+    enum SearchType {
+        Contacts = 0,
+        ContactCompleter,
+        Emails,
+        Notes
+    };
     explicit BalooDebugSearchPathComboBox(QWidget *parent=0);
     ~BalooDebugSearchPathComboBox();
 
     QString searchPath() const;
 
+    QString pathFromEnum(SearchType type) const;
+    void setSearchType(SearchType type);
 private:
     void initialize();
 };
 }
+
 
 
 #endif // BALOODEBUGSEARCHPATHCOMBOBOX_H

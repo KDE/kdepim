@@ -31,6 +31,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldFillLineEditWhenWeWantToSearchItem();
     void shouldEnabledPushButtonWhenLineEditIsNotEmpty();
+    void shouldChangeSearchType();
 };
 
 

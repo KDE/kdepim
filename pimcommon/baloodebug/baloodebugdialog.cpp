@@ -61,4 +61,9 @@ void BalooDebugDialog::setAkonadiId(const QString &akonadiId)
     mBalooDebugWidget->setAkonadiId(akonadiId);
 }
 
+void BalooDebugDialog::setSearchType(BalooDebugSearchPathComboBox::SearchType type)
+{
+    mBalooDebugWidget->setSearchType(type);
+}
+
 

@@ -20,6 +20,7 @@
 
 #include <KDialog>
 #include "pimcommon_export.h"
+#include "baloodebugsearchpathcombobox.h"
 
 namespace PimCommon {
 class BalooDebugWidget;
@@ -31,7 +32,7 @@ public:
     ~BalooDebugDialog();
 
     void setAkonadiId(const QString &akonadiId);
-
+    void setSearchType(BalooDebugSearchPathComboBox::SearchType type);
 private:
     void readConfig();
     void writeConfig();

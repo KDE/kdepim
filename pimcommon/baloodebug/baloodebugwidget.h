@@ -20,11 +20,11 @@
 
 #include <QWidget>
 #include "pimcommon_export.h"
+#include "baloodebugsearchpathcombobox.h"
 class KLineEdit;
 class QPushButton;
 namespace PimCommon {
 class PlainTextEditorWidget;
-class BalooDebugSearchPathComboBox;
 class PIMCOMMON_EXPORT BalooDebugWidget : public QWidget
 {
     Q_OBJECT
@@ -33,6 +33,7 @@ public:
     ~BalooDebugWidget();
 
     void setAkonadiId(const QString &akonadiId);
+    void setSearchType(BalooDebugSearchPathComboBox::SearchType type);
 
 private Q_SLOTS:
     void slotSearchLineTextChanged(const QString &text);

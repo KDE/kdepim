@@ -74,6 +74,11 @@ void BalooDebugWidget::setAkonadiId(const QString &akonadiId)
     mLineEdit->setText(akonadiId);
 }
 
+void BalooDebugWidget::setSearchType(BalooDebugSearchPathComboBox::SearchType type)
+{
+    mSearchPathComboBox->setSearchType(type);
+}
+
 void BalooDebugWidget::slotSearch()
 {
     PimCommon::BalooDebugSearchJob *job = new PimCommon::BalooDebugSearchJob(this);

@@ -18,8 +18,10 @@
 #include "baloodebugsearchpathcombobox.h"
 #include <KGlobal>
 #include <KStandardDirs>
-using namespace PimCommon;
 
+#include <QDebug>
+
+using namespace PimCommon;
 BalooDebugSearchPathComboBox::BalooDebugSearchPathComboBox(QWidget *parent)
     : QComboBox(parent)
 {
@@ -35,7 +37,8 @@ QString BalooDebugSearchPathComboBox::searchPath() const
 {
     const int currentPathIndex = currentIndex();
     if (currentPathIndex > -1) {
-        return itemData(currentPathIndex).toString();
+        const QString value = pathFromEnum(static_cast<PimCommon::BalooDebugSearchPathComboBox::SearchType>(itemData(currentPathIndex).toInt()));
+        return value;
     } else {
         return QString();
     }
@@ -43,9 +46,32 @@ QString BalooDebugSearchPathComboBox::searchPath() const
 
 void BalooDebugSearchPathComboBox::initialize()
 {
+    addItem(QLatin1String("Contacts"), Contacts);
+    addItem(QLatin1String("ContactCompleter"), ContactCompleter);
+    addItem(QLatin1String("Email"), Emails);
+    addItem(QLatin1String("Notes"), Notes);
+}
+
+QString BalooDebugSearchPathComboBox::pathFromEnum(SearchType type) const
+{
     const QString xdgpath = KGlobal::dirs()->localxdgdatadir();
-    addItem(QLatin1String("Contacts"), QString(xdgpath + QLatin1String("baloo/contacts/")));
-    addItem(QLatin1String("ContactCompleter"), QString(xdgpath + QLatin1String("baloo/emailContacts/")));
-    addItem(QLatin1String("Email"), QString(xdgpath + QLatin1String("baloo/email/")));
-    addItem(QLatin1String("Notes"), QString(xdgpath + QLatin1String("baloo/notes/")));
+    switch(type) {
+    case Contacts:
+        return QString(xdgpath + QLatin1String("baloo/contacts/"));
+    case ContactCompleter:
+        return QString(xdgpath + QLatin1String("baloo/emailContacts/"));
+    case Emails:
+        return QString(xdgpath + QLatin1String("baloo/email/"));
+    case Notes:
+        return QString(xdgpath + QLatin1String("baloo/notes/"));
+    }
+    return QString();
+}
+
+void BalooDebugSearchPathComboBox::setSearchType(BalooDebugSearchPathComboBox::SearchType type)
+{
+    const int indexType = findData(type);
+    if (indexType >= 0) {
+        setCurrentIndex(indexType);
+    }
 }
