@@ -168,7 +168,7 @@ void AdBlockSettingWidget::removeRule()
     if (select.isEmpty()) {
         return;
     }
-    Q_FOREACH (QListWidgetItem *item, select) {
+    Q_FOREACH(QListWidgetItem * item, select) {
         delete item;
     }
     exportFilters->setEnabled(manualFiltersListWidget->count() > 0);
@@ -202,7 +202,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     KConfig config(QLatin1String("messagevieweradblockrc"));
 
     const QStringList itemList = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
-    Q_FOREACH (const QString &item, itemList) {
+    Q_FOREACH(const QString & item, itemList) {
         KConfigGroup filtersGroup(&config, item);
         const bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled"), false);
         const QString url = filtersGroup.readEntry(QLatin1String("url"));
@@ -259,7 +259,7 @@ void AdBlockSettingWidget::save()
     // automatic filters
     KConfig config(QLatin1String("messagevieweradblockrc"));
     const QStringList list = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
-    foreach (const QString &group, list) {
+    foreach(const QString & group, list) {
         config.deleteGroup(group);
     }
 
@@ -407,7 +407,7 @@ void AdBlockSettingWidget::slotImportFilters()
         excludeFilter.append(subItem->text());
     }
 
-    Q_FOREACH (const QString &element, listFilter) {
+    Q_FOREACH(const QString & element, listFilter) {
         if (element == QLatin1String("\n")) {
             continue;
         }

@@ -206,7 +206,7 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
         headerObject.insert(QLatin1String("photourl") , xface.photoURL);
     }
 
-    Q_FOREACH (QString header, displayExtraHeaders) {
+    Q_FOREACH(QString header, displayExtraHeaders) {
         const QByteArray baHeader = header.toLocal8Bit();
         if (message->headerByType(baHeader)) {
             //Grantlee doesn't support '-' in variable name => remove it.

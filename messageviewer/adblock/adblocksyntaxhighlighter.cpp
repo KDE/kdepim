@@ -31,7 +31,7 @@ AdBlockSyntaxHighlighter::~AdBlockSyntaxHighlighter()
 
 void AdBlockSyntaxHighlighter::highlightBlock(const QString &text)
 {
-    Q_FOREACH (const Rule &rule, m_rules) {
+    Q_FOREACH(const Rule & rule, m_rules) {
         const QRegExp expression(rule.pattern);
         int index = expression.indexIn(text);
         int length = 0;

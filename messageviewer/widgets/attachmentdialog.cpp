@@ -49,8 +49,7 @@ AttachmentDialog::AttachmentDialog(QWidget *parent, const QString &filenameText,
     mButtonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
     dialog->connect(mButtonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
     dialog->connect(mButtonBox, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
-    
-    
+
     if (!application.isEmpty()) {
         QPushButton *user2Button = new QPushButton;
         mButtonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
@@ -61,7 +60,7 @@ AttachmentDialog::AttachmentDialog(QWidget *parent, const QString &filenameText,
 
     QPushButton *user3Button = new QPushButton;
     mButtonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
- 
+
     KGuiItem::assign(user3Button, KStandardGuiItem::saveAs());
     user1Button->setText(i18n("&Open With..."));
     user3Button->setDefault(true);

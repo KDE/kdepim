@@ -377,7 +377,7 @@ void EventEditTest::shouldUpdateStartEndDateWhenReopenIt()
     QCOMPARE(endDateTime->dateTime().time().minute(), currentDateTime.time().minute());
 
     QDateTime newDateTime = currentDateTime;
-    newDateTime = newDateTime.addSecs(60*60); //+1h
+    newDateTime = newDateTime.addSecs(60 * 60); //+1h
     startDateTime->setDateTime(newDateTime);
     endDateTime->setDateTime(newDateTime);
 
@@ -412,12 +412,10 @@ void EventEditTest::shouldDisabledSaveOpenEditorButtonWhenCollectionComboBoxIsEm
     msg->subject(true)->fromUnicodeString(QLatin1String("Test note"), "us-ascii");
     edit.setMessage(msg);
 
-
     QPushButton *openEditor = qFindChild<QPushButton *>(&edit, QLatin1String("open-editor-button"));
     QPushButton *save = qFindChild<QPushButton *>(&edit, QLatin1String("save-button"));
     QCOMPARE(openEditor->isEnabled(), false);
     QCOMPARE(save->isEnabled(), false);
 }
 
-
-QTEST_MAIN( EventEditTest )
+QTEST_MAIN(EventEditTest)

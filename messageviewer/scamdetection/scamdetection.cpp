@@ -61,7 +61,7 @@ void ScamDetection::scanPage(QWebFrame *frame)
         if (result) {
             foundScam = true;
         }
-        foreach (QWebFrame *childFrame, frame->childFrames()) {
+        foreach(QWebFrame * childFrame, frame->childFrames()) {
             result = scanFrame(childFrame->documentElement(), mDetails);
             if (result) {
                 foundScam = true;
@@ -81,7 +81,7 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
     QRegExp ip4regExp;
     ip4regExp.setPattern(IPv4_PATTERN);
     const QWebElementCollection allAnchor = rootElement.findAll(QLatin1String("a"));
-    Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
+    Q_FOREACH(const QWebElement & anchorElement, allAnchor) {
         //1) detect if title has a url and title != href
         const QString href = anchorElement.attribute(QLatin1String("href"));
         const QString title = anchorElement.attribute(QLatin1String("title"));

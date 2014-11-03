@@ -238,8 +238,8 @@ QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message)
         const char *end = start + data.length();
         KMime::Types::AddressList addressList;
         KMime::HeaderParsing::parseAddressList(start, end, addressList);
-        foreach (const KMime::Types::Address &addr, addressList) {
-            foreach (const KMime::Types::Mailbox &mbox, addr.mailboxList) {
+        foreach(const KMime::Types::Address & addr, addressList) {
+            foreach(const KMime::Types::Mailbox & mbox, addr.mailboxList) {
                 resentFrom.append(mbox);
             }
         }
@@ -257,8 +257,8 @@ QList<KMime::Types::Mailbox> resentToList(KMime::Message *message)
         const char *end = start + data.length();
         KMime::Types::AddressList addressList;
         KMime::HeaderParsing::parseAddressList(start, end, addressList);
-        foreach (const KMime::Types::Address &addr, addressList) {
-            foreach (const KMime::Types::Mailbox &mbox, addr.mailboxList) {
+        foreach(const KMime::Types::Address & addr, addressList) {
+            foreach(const KMime::Types::Mailbox & mbox, addr.mailboxList) {
                 resentTo.append(mbox);
             }
         }

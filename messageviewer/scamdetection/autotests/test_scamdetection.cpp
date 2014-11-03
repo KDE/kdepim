@@ -33,7 +33,7 @@ bool ScamDetectionTest::scanPage(QWebFrame *frame)
     if (result) {
         foundScam = true;
     }
-    foreach (QWebFrame *childFrame, frame->childFrames()) {
+    foreach(QWebFrame * childFrame, frame->childFrames()) {
         result = MessageViewer::ScamDetection::scanFrame(childFrame->documentElement(), details);
         if (result) {
             foundScam = true;

@@ -893,7 +893,7 @@ void ViewerPrivate::collectionFetchedForStoringDecryptedMessage(KJob *job)
     }
 
     Akonadi::Collection col;
-    Q_FOREACH (const Akonadi::Collection &c, static_cast<Akonadi::CollectionFetchJob *>(job)->collections()) {
+    Q_FOREACH(const Akonadi::Collection & c, static_cast<Akonadi::CollectionFetchJob *>(job)->collections()) {
         if (c == mMessageItem.parentCollection()) {
             col = c;
             break;
@@ -906,7 +906,7 @@ void ViewerPrivate::collectionFetchedForStoringDecryptedMessage(KJob *job)
     Akonadi::AgentInstance::List instances = Akonadi::AgentManager::self()->instances();
     const QString itemResource = col.resource();
     Akonadi::AgentInstance resourceInstance;
-    foreach (const Akonadi::AgentInstance &instance, instances) {
+    foreach(const Akonadi::AgentInstance & instance, instances) {
         if (instance.identifier() == itemResource) {
             resourceInstance = instance;
             break;
@@ -1369,7 +1369,7 @@ void ViewerPrivate::setMessageInternal(const KMime::Message::Ptr message,
 void ViewerPrivate::setMessageItem(const Akonadi::Item &item, Viewer::UpdateMode updateMode)
 {
     resetStateForNewMessage();
-    foreach (const Akonadi::Entity::Id monitoredId, mMonitor.itemsMonitoredEx()) {
+    foreach(const Akonadi::Entity::Id monitoredId, mMonitor.itemsMonitoredEx()) {
         mMonitor.setItemMonitored(Akonadi::Item(monitoredId), false);
     }
     Q_ASSERT(mMonitor.itemsMonitoredEx().isEmpty());
@@ -2125,7 +2125,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
 KMime::Content *ViewerPrivate::findContentByType(KMime::Content *content, const QByteArray &type)
 {
     KMime::Content::List list = content->contents();
-    Q_FOREACH (KMime::Content *c, list) {
+    Q_FOREACH(KMime::Content * c, list) {
         if (c->contentType()->mimeType() ==  type) {
             return c;
         }
@@ -2544,7 +2544,7 @@ QString ViewerPrivate::attachmentInjectionHtml() const
 
     QColor background = KColorScheme(QPalette::Active, KColorScheme::View).background().color();
     QString html = renderAttachments(mMessage.get(), background);
-    Q_FOREACH (KMime::Content *node, mNodeHelper->extraContents(mMessage.get())) {
+    Q_FOREACH(KMime::Content * node, mNodeHelper->extraContents(mMessage.get())) {
         html += renderAttachments(node, background);
     }
     if (html.isEmpty()) {
@@ -2594,7 +2594,7 @@ void ViewerPrivate::slotAttachmentOpenWith()
     QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
     QModelIndexList selectedRows = selectionModel->selectedRows();
 
-    Q_FOREACH (const QModelIndex &index, selectedRows) {
+    Q_FOREACH(const QModelIndex & index, selectedRows) {
         KMime::Content *content = static_cast<KMime::Content *>(index.internalPointer());
         attachmentOpenWith(content);
     }
@@ -2607,7 +2607,7 @@ void ViewerPrivate::slotAttachmentOpen()
     QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
     QModelIndexList selectedRows = selectionModel->selectedRows();
 
-    Q_FOREACH (const QModelIndex &index, selectedRows) {
+    Q_FOREACH(const QModelIndex & index, selectedRows) {
         KMime::Content *content = static_cast<KMime::Content *>(index.internalPointer());
         attachmentOpen(content);
     }
@@ -2642,7 +2642,7 @@ void ViewerPrivate::slotAttachmentView()
 {
     KMime::Content::List contents = selectedContents();
 
-    Q_FOREACH (KMime::Content *content, contents) {
+    Q_FOREACH(KMime::Content * content, contents) {
         attachmentView(content);
     }
 
@@ -2656,7 +2656,7 @@ void ViewerPrivate::slotAttachmentProperties()
         return;
     }
 
-    Q_FOREACH (KMime::Content *content, contents) {
+    Q_FOREACH(KMime::Content * content, contents) {
         attachmentProperties(content);
     }
 }
@@ -2684,7 +2684,7 @@ void ViewerPrivate::attachmentCopy(const KMime::Content::List &contents)
     }
 
     QList<QUrl> urls;
-    Q_FOREACH (KMime::Content *content, contents) {
+    Q_FOREACH(KMime::Content * content, contents) {
         KUrl kUrl = mNodeHelper->writeNodeToTempFile(content);
         QUrl url = QUrl::fromPercentEncoding(kUrl.toEncoded());
         if (!url.isValid()) {
@@ -2711,7 +2711,7 @@ void ViewerPrivate::slotAttachmentDelete()
     }
 
     bool showWarning = true;
-    Q_FOREACH (KMime::Content *content, contents) {
+    Q_FOREACH(KMime::Content * content, contents) {
         if (!deleteAttachment(content, showWarning)) {
             return;
         }
@@ -2728,7 +2728,7 @@ void ViewerPrivate::slotAttachmentEdit()
     }
 
     bool showWarning = true;
-    Q_FOREACH (KMime::Content *content, contents) {
+    Q_FOREACH(KMime::Content * content, contents) {
         if (!editAttachment(content, showWarning)) {
             return;
         }
@@ -3230,7 +3230,7 @@ void ViewerPrivate::slotMessageRendered()
 
     mPreviouslyViewedItem = mMessageItem.id();
 
-    foreach (AbstractMessageLoadedHandler *handler, mMessageLoadedHandlers) {
+    foreach(AbstractMessageLoadedHandler * handler, mMessageLoadedHandlers) {
         handler->setItem(mMessageItem);
     }
 }

@@ -136,5 +136,5 @@ PluginLoader<T, T_config> *PluginLoader<T, T_config>::mSelf = 0;
     const char * const pl##Config::path = p; \
     } \
     typedef PluginLoader< t, pl##Config > pl; \
-
+     
 #endif // PLUGINLOADER_H

@@ -24,7 +24,8 @@
 class KDateComboBox;
 class KTimeComboBox;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MESSAGEVIEWER_EXPORT EventDateTimeWidget : public QWidget
 {
     Q_OBJECT

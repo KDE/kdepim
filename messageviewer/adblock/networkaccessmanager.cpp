@@ -166,7 +166,7 @@ void MyNetworkAccessManager::slotApplyHidingBlockedElements(bool ok)
         collection += frame->parentFrame()->findAllElements(HIDABLE_ELEMENTS);
     }
 
-    Q_FOREACH (const QUrl &url, urls) {
+    Q_FOREACH(const QUrl & url, urls) {
         hideBlockedElements(url, collection);
     }
 }

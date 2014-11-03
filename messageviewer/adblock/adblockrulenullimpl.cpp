@@ -52,7 +52,7 @@ bool AdBlockRuleNullImpl::isNullFilter(const QString &filter)
 
     const QStringList options(parsedLine.mid(optionsNumber + 1).split(QLatin1Char(',')));
 
-    Q_FOREACH (const QString &option, options) {
+    Q_FOREACH(const QString & option, options) {
         // NOTE:
         // I moved the check from option == QLatin1String to option.endsWith()
         // to check option && ~option. Hope it will NOT be a problem...
